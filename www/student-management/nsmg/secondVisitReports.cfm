@@ -1,7 +1,7 @@
 <cfparam name="client.pr_regionid" default="#client.regionid#">
 <cfparam name="client.pr_cancelled" default="0">
-<cfparam name="client.reportType" default="1">
-<cfparam name="form.reportType" default="1">
+<cfparam name="client.reportType" default="2">
+<cfparam name="form.reportType" default="2">
 <Cfparam name="form.rmonth" default="#DatePart('m', '#now()#')#">
 <Cfparam name="client.pr_rmonth" default="#DatePart('m', '#now()#')#">
 <Cfparam name="resetMonth" default="0">
@@ -12,8 +12,9 @@
 <Cfparam name="inCountry" default= 1>
 <Cfparam name="PreviousReportApproved" default="0">
 
-<Cfif client.usertype lte 4 and form.reportType eq 2>
-	<cflocation url="index.cfm?curdoc=secondVisitReports" addtoken="no">
+
+<Cfif client.usertype lte 4 and form.reportType eq 1>
+	<cflocation url="index.cfm?curdoc=progress_reports" addtoken="no">
 </Cfif>
 <SCRIPT>
 <!--
@@ -55,7 +56,7 @@ function OpenLetter(url) {
      }
 </cfscript>
 <!---_Set the current year so when can set the correct start and end dates to figure if a report should be filled out---->
-<cfset year=#DateFormat(now(), 'yyyy')#>
+<cfset year=#DateFormat(now(), 'yyyy')#><title>Second Visit Reports</title>
 
 
 <cfif not client.usertype LTE 7>
@@ -129,108 +130,6 @@ function OpenLetter(url) {
                  </Cfif>
                 
            </Cfloop>
-           
-            
-       <!----
-            <cfswitch expression="#month(now())#">
-                <cfcase value="8">
-                    <!--- August --->
-                    <cfset client.pr_rmonth = 8>
-                    <Cfset startDate = DateAdd('d', -7, '#year#-08-01')>
-                    <cfset endDate = DateAdd('d', 21, '#year#-08-01')>
-                    <Cfset form.prevRepMonth = 7>
-                    <cfset repReqDate = '#year#-08-31'>
-                </cfcase>
-                <cfcase value="9">
-                    <!--- SEPT --->
-                    <cfset client.pr_rmonth = 9>
-                    <Cfset startDate = DateAdd('d', -7, '#year#-09-01')>
-                    <cfset endDate = DateAdd('d', 21, '#year#-09-01')>
-                    <Cfset form.prevRepMonth = 8>
-                    <cfset repReqDate = '#year#-09-30'>
-                </cfcase>
-                <cfcase value="10">
-                    <!--- OCT --->
-                    <cfset client.pr_rmonth = 10>
-                    <Cfset startDate = DateAdd('d', -7, '#year#-10-01')>
-                    <cfset endDate = DateAdd('d', 21, '#year#-10-01')>
-                    <Cfset form.prevRepMonth = 9>
-                    <cfset repReqDate = '#year#-10-31'>
-                </cfcase>
-                <cfcase value="11">
-                    <!--- NOV --->
-                    <cfset client.pr_rmonth = 11>
-                    <Cfset startDate = DateAdd('d', -7, '#year#-11-01')>
-                    <cfset endDate = DateAdd('d', 21, '#year#-11-01')>
-                    <Cfset form.prevRepMonth = 10>
-                    <cfset repReqDate = '#year#-11-30'>
-                </cfcase>
-                <cfcase value="12">
-                    <!--- DEC --->
-                    <cfset client.pr_rmonth = 12>
-                    <Cfset startDate = DateAdd('d', -7, '#year#-12-01')>
-                    <cfset endDate = DateAdd('d', 21, '#year#-12-01')>
-                    <Cfset form.prevRepMonth = 11>
-                    <cfset repReqDate = '#year#-12-31'>
-                </cfcase>
-                 <cfcase value="1">
-                    <!--- JAN --->
-                    <cfset client.pr_rmonth = 1>
-                    <Cfset startDate = DateAdd('d', -7, '#year#-01-01')>
-                    <cfset endDate = DateAdd('d', 21, '#year#-01-01')>
-                    <Cfset form.prevRepMonth = 12>
-                    <cfset repReqDate = '#year#-01-31'>
-                </cfcase>
-                <cfcase value="2">
-                    <!--- FEB --->
-                    <cfset client.pr_rmonth = 2>
-                    <Cfset startDate = DateAdd('d', -7, '#year#-02-01')>
-                    <cfset endDate = DateAdd('d', 21, '#year#-02-01')>
-                    <Cfset form.prevRepMonth = 1>
-                    <cfset repReqDate = '#year#-02-28'>
-                </cfcase>
-                   <cfcase value="3">
-                    <!--- MARCH --->
-                    <cfset client.pr_rmonth = 3>
-                    <Cfset startDate = DateAdd('d', -7, '#year#-03-01')>
-                    <cfset endDate = DateAdd('d', 21, '#year#-03-01')>
-                    <Cfset form.prevRepMonth = 2>
-                    <cfset repReqDate = '#year#-03-31'>
-                </cfcase>
-                <cfcase value="4">
-                    <!--- APRIL --->
-                    <cfset client.pr_rmonth = 4>
-                    <Cfset startDate = DateAdd('d', -7, '#year#-04-01')>
-                    <cfset endDate = DateAdd('d', 21, '#year#-04-01')>
-                    <Cfset form.prevRepMonth = 3>
-                    <cfset repReqDate = '#year#-04-30'>
-                </cfcase>
-                <cfcase value="5">
-                    <!--- MAY --->
-                    <cfset client.pr_rmonth = 5>
-                    <Cfset startDate = DateAdd('d', -7, '#year#-05-01')>
-                    <cfset endDate = DateAdd('d', 21, '#year#-05-01')>
-                    <Cfset form.prevRepMonth = 4>
-                    <cfset repReqDate = '#year#-05-31'>
-                </cfcase>
-                <cfcase value="6">
-                    <!--- JUNE --->
-                    <cfset client.pr_rmonth = 6>
-                    <Cfset startDate = DateAdd('d', -7, '#year#-06-01')>
-                    <cfset endDate = DateAdd('d', 21, '#year#-06-01')>
-                    <Cfset form.prevRepMonth = 5>
-                    <cfset repReqDate = '#year#-06-30'>
-                </cfcase>
-                <cfcase value="7">
-                    <!--- JULY --->
-                    <cfset client.pr_rmonth = 7>
-                    <Cfset startDate = DateAdd('d', -7, '#year#-07-01')>
-                    <cfset endDate = DateAdd('d', 21, '#year#-07-01')>
-                    <Cfset form.prevRepMonth = 6>
-                    <cfset repReqDate = '#year#-07-31'>
-                </cfcase>
-            </cfswitch>
-			---->
         </cfif>
  </cfif>
 
@@ -314,6 +213,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
 	font-weight: bold;
 	background-color: #CCCCCC;
 }
+
 -->
 </style>
 
@@ -321,13 +221,13 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
   <tr height=24>
         <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
         <td width=26 background="pics/header_background.gif"><img src="pics/current_items.gif"></td>
-        <td background="pics/header_background.gif"><h2>Reports</h2></td>
-        <td background="pics/header_background.gif" align="right"><a href="index.cfm?curdoc=forms/progress_report_list">Progress Reports submitted prior to 09/16/2009</a></td>
+        <td background="pics/header_background.gif"><h2>Second Visit Reports</h2></td>
+        <td background="pics/header_background.gif" align="right"></td>
         <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
     </tr>
 </table>
 
-<cfform action="index.cfm?curdoc=progress_reports" method="post">
+<cfform action="index.cfm?curdoc=secondVisitReports" method="post">
 <input name="submitted" type="hidden" value="1">
 <table border=0 cellpadding=4 cellspacing=0 class="section" width=100%>
 	<Tr>
@@ -366,46 +266,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
         </td>
 	</cfif>
     
-    <Cfif reportOptions.showPhase eq 1>
-    	<Cfif client.reportType eq 1>
-            <td>
-                Phase<br />
-                <select name="rmonth">
-                  <option value="0"></option>
-                  
-                  <option value="9"  <cfif client.pr_rmonth EQ 9>selected</cfif>>Sep Report</option>
-                  <option value="10" <cfif client.pr_rmonth EQ 10>selected</cfif>>Oct Report</option>
-                  <option value="11" <cfif client.pr_rmonth EQ 11>selected</cfif>>Nov Report</option>
-                  <option value="12" <cfif client.pr_rmonth EQ 12>selected</cfif>>Dec Report</option>
-                  <option value="1"  <cfif client.pr_rmonth EQ 1>selected</cfif>>Jan Report</option>
-                  <option value="2"  <cfif client.pr_rmonth EQ 2>selected</cfif>>Feb Report</option>
-                  <option value="3"  <cfif client.pr_rmonth EQ 3>selected</cfif>>Mar Report</option>
-                  <option value="4"  <cfif client.pr_rmonth EQ 4>selected</cfif>>Apr Report</option>
-                  <option value="5"  <cfif client.pr_rmonth EQ 5>selected</cfif>>May Report</option>
-                  <option value="6"  <cfif client.pr_rmonth EQ 6>selected</cfif>>Jun Report</option>
-                  <option value="7"  <cfif client.pr_rmonth EQ 7>selected</cfif>>Jul Report</option>
-                  <option value="8"  <cfif client.pr_rmonth EQ 8>selected</cfif>>Aug Report</option>
-                </select>
-                <input type="hidden" name="prevRepMonth" value="#form.prevRepMonth#" />
-                </td>
-        </Cfif>
-        <!----
-        <Cfif client.reportType eq 3>
-            <td>
-                Time Frame<br />
-                <select name="rmonth">
-                	<option value="0"></option>
-                    <option value="9" <cfif client.pr_rmonth EQ 9>selected</cfif>>Student Update 1 - Due Sept 1</option>
-                    <option value="11" <cfif client.pr_rmonth EQ 11>selected</cfif>>Student Update 2 - Due Nov 2</option>
-                    <option value="1" <cfif client.pr_rmonth EQ 1>selected</cfif>>Student Update 3 - Due Jan 1</option>
-                    <option value="3" <cfif client.pr_rmonth EQ 3>selected</cfif>>Student Update 4 - Due Mar 1</option>
-                    <option value="5" <cfif client.pr_rmonth EQ 5 >selected</cfif>>Student Update 5 - Due May 1</option>
-                    <option value="7" <cfif client.pr_rmonth EQ 7 >selected</cfif>>Student Update 6 - Due July 1</option>
-                </select>            
-            </td>
-        </Cfif>
-		---->
-    </Cfif>
+
         <td>
             Status<br />
 			<select name="cancelled">
@@ -425,38 +286,23 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
 </table>
 </cfform>
 
-
-<cfset datelimit = DateFormat(DateAdd('m', -2, now()),'yyyy-mm-dd')>
-
-<!--- the supervising rep (smg_students.arearepid) and the regional advisor (user_access_rights.advisorid) are normally the same as the ones in the report
-(progress_reports.fk_sr_user & fk_ra_user) but since we want to display students without reports, we can't use the report fields here.
-But in the output below we use the report fields where a report has been submitted, otherwise use the student and user fields. --->
+<!---Get the current reports.  Old reports are retrieved below---->
 <cfquery name="getResults" datasource="#application.dsn#">
-    SELECT smg_students.studentid, smg_students.uniqueid, smg_students.firstname, smg_students.familylastname, smg_programs.type as programType,
-        smg_students.arearepid, smg_students.secondVisitRepID, rep.firstname as rep_firstname, rep.lastname as rep_lastname,
+    SELECT smg_students.studentid, smg_students.uniqueid, smg_students.firstname, smg_students.familylastname, smg_programs.type as programType, smg_students.hostid,
+     		 smg_students.date_host_fam_approved, smg_students.arearepid, smg_students.secondVisitRepID, rep.firstname as rep_firstname, rep.lastname as rep_lastname,
         <!--- alias advisor.userid here instead of using user_access_rights.advisorid because the later can be 0 and we want null, and the 0 might be phased out later. --->
-        advisor.userid AS advisorid, advisor.firstname as advisor_firstname, advisor.lastname as advisor_lastname, 
-       
-        smg_program_type.aug_report, smg_program_type.oct_report, smg_program_type.dec_report, smg_program_type.feb_report, smg_program_type.april_report, smg_program_type.june_report
+        advisor.userid AS advisorid, advisor.firstname as advisor_firstname, advisor.lastname as advisor_lastname
+  
     FROM smg_students
-   
-    <cfif client.reportType EQ 1 or client.reportType eq 3>
-    INNER JOIN smg_users rep ON smg_students.arearepid = rep.userid
-    <cfelse>
     INNER JOIN smg_users rep ON smg_students.secondVisitRepID = rep.userid
-    </cfif>
     INNER JOIN user_access_rights ON (
-    	<cfif client.reportType EQ 1 or client.reportType eq 3>
-		smg_students.arearepid = user_access_rights.userid
-        AND smg_students.regionassigned = user_access_rights.regionid
-		<cfelse>
+    	
         smg_students.secondVisitRepID = user_access_rights.userid
         AND smg_students.regionassigned = user_access_rights.regionid
-    	</cfif>
+    	
     )
     LEFT JOIN smg_users advisor ON user_access_rights.advisorid = advisor.userid
     INNER JOIN smg_programs ON smg_students.programid = smg_programs.programid
-    INNER JOIN smg_program_type ON smg_programs.type = smg_program_type.programtypeid
     WHERE smg_students.regionassigned =
     <cfif client.usertype LTE 4>
     	<cfqueryparam cfsqltype="cf_sql_integer" value="#client.pr_regionid#">
@@ -469,31 +315,21 @@ But in the output below we use the report fields where a report has been submitt
     <cfelse>
         AND smg_students.canceldate >= '#datelimit#'
     </cfif>
-    <!----Only Progress Reports have active and fieldviewable variables---->
-    <cfif client.reportType EQ 1 OR client.reportType eq 3>
-    AND smg_programs.progress_reports_active = 1
-    AND smg_programs.fieldviewable = 1
-    </cfif>
+
     <!--- regional advisor sees only their reps or their students. --->
     
 		<cfif client.usertype EQ 6>
             AND (
                 user_access_rights.advisorid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
                 OR smg_students.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-                <Cfif client.reportType eq 2>
                 OR smg_students.secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-                </Cfif>
+               
             )
         <!--- supervising reps sees only their students. --->
         <cfelseif client.usertype EQ 7>
-        	<Cfif client.reportType eq 2>
-             	AND smg_students.secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-              <cfelse>
-                AND smg_students.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-        	</Cfif>
-		<cfelseif client.usertype eq 15>
         	AND smg_students.secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-        
+    	<cfelseif client.usertype eq 15>
+        	AND smg_students.secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
         </cfif>
 
     <!--- include the advisorid and arearepid because we're grouping by those in the output, just in case two have the same first and last name. --->
@@ -501,31 +337,27 @@ But in the output below we use the report fields where a report has been submitt
 </cfquery>
 
 
-
-
 <cfif getResults.recordCount GT 0>
 
 	<!--- get the reports, used in a query of query below, because LEFT JOIN is too slow in mySQL. --->
     <cfquery name="get_reports" datasource="#application.dsn#">
-        SELECT *
+       SELECT *
         FROM progress_reports
         WHERE fk_student IN (#valueList(getResults.studentid)#)
-        <cfif client.reportType eq 1 or client.reportType eq 3>
-        AND pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.pr_rmonth#">
-        </cfif>
-        AND fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.reportType#">
+        AND fk_reportType = 2
     </cfquery>
+    
 	
     <table width=100% class="section">
         <cfoutput query="getResults" group="advisorid">
       
             <cfif currentRow NEQ 1>
                 <tr>
-                    <td colspan=9 height="25">&nbsp;</td>
+                    <td colspan=11 height="25">&nbsp;</td>
                 </tr>
             </cfif>
             <tr>
-                <td colspan=9 class="advisor">
+                <td colspan=11 class="advisor">
                     <cfif advisorid EQ ''>
                         Reports Directly to Regional Director
                     <cfelse>
@@ -533,21 +365,18 @@ But in the output below we use the report fields where a report has been submitt
                   </cfif>
                 </td>
             </tr>
-            <Cfif client.reportType eq 2>
-            	<cfset groupBy = "secondVisitRepID">
-            <cfelse>
-                <cfset groupBy = "areaRepID">
-            </Cfif>
-            	<cfoutput group="#groupBy#">
-          
             	
-             
-                <tr>
-                    <td colspan=9 class="rep">#rep_firstname# #rep_lastname# <cfif client.reportType eq 1>(#arearepid#)<cfelse>(#secondVisitRepID#)</cfif></td>
+            	<cfset groupBy = "secondVisitRepID">
+            	<cfoutput group="#groupBy#">
+          		<Cfset subSetOfKids = ''>
+			    <tr>
+                    <td colspan=11 class="rep">#rep_firstname# #rep_lastname# (#secondVisitRepID#)</td>
                 <tr>
                 <tr align="left">
                     <th width="15">&nbsp;</th>
                     <th>Student</th>
+                    <th>Days Placed</th>
+                    <th>Host</th>
                     <th>Submitted</th>
                     <th>Action</th>
                     <th>SR Approved</th>
@@ -556,16 +385,25 @@ But in the output below we use the report fields where a report has been submitt
                     <th>Facilitator Approved</th>
                     <th>Rejected</th>
                 </tr>
-                <cfset mycurrentRow = 0>
+                 <cfset mycurrentRow = 0>
                 <cfoutput>
                     <cfquery name="get_report" dbtype="query">
-                        SELECT *
+                        SELECT * 
                         FROM get_reports
                         WHERE fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
-                        AND fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.reportType#">
+                        AND fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
                     </cfquery>
-                    <!----Get Flight info to make sure in states and decideif a report is needed for that student---->
-                    <cfquery name="arrivalInfo" datasource="#application.dsn#">
+                    
+				<!----Figure out how long they have been placed with this host family and host family info---->
+                <Cfquery name="hostHistory" datasource="#application.dsn#">
+                SELECT isWelcomeFamily, isRelocation, original_place,  welcome_family, relocation, h.familyLastName as hostLastName
+                FROM smg_hosthistory
+                LEFT JOIN smg_hosts h on h.hostid = smg_hosthistory.hostid
+                WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
+                AND smg_hostHistory.hostid = #getResults.hostid#
+                </cfquery> 
+                <Cfif hostHistory.original_place is 'yes'>
+                	<cfquery name="arrivalInfo" datasource="#application.dsn#">
                     SELECT max(dep_date) as dep_date
                     FROM smg_flight_info
                     WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
@@ -577,87 +415,35 @@ But in the output below we use the report fields where a report has been submitt
                    	<cfelse>
                     	<cfset arrivalDate = '#arrivalInfo.dep_Date#'>
                     </Cfif>
-                    
-                    <cfquery name="departureInfo" datasource="#application.dsn#">
-                    SELECT max(dep_date) as dep_date
-                    FROM smg_flight_info
-                    WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
-                    AND flight_type = 'departure'
-                    </cfquery>
-                    <!----If no departure info is on file, we set to July 1, the latest to make sure---->
-                    <Cfif arrivalInfo.recordcount eq 0  or departureInfo.dep_date eq ''>
-                    	<Cfset departureDate = '#DateRange.endDate#'>
-                   	<cfelse>
-                    	<cfset departureDate = '#departureInfo.dep_date#'>
-                    </Cfif>
-                   
-						
-					<Cfif client.reportType eq 1>
-						 <!---Check if previous months report is approved---->
-                        
-                        <Cfquery name="checkPreviousReports" datasource="#application.dsn#">
-                        select pr_rd_approved_date, pr_ny_approved_date, pr_sr_approved_date
-                        FROM progress_reports
-                        where fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
-                        AND fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.reportType#">
-                        and fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
-                        and pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#prevRepMonth#">
-                        </cfquery>
-                        <!----check if this is the first report for this student---->
-                        <Cfquery name="checkIfFirst" datasource="#application.dsn#">
-                        select *
-                        FROM progress_reports
-                        where fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
-                        AND fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.reportType#">
-                        and fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
-                        </cfquery>
-                        <!---If null, previous report has NOT been approved---->
-                        
-                        <Cfif checkPreviousReports.pr_rd_approved_date is not '' or checkPreviousReports.pr_ny_approved_date is not '' or checkPreviousReports.pr_sr_approved_date is not ''>
-                        	<Cfset PreviousReportApproved = 1>
-                        </Cfif>
-                      
-                        
-                        
-                    <cfelse>
-                    	<cfset PreviousReportApproved = 1>
-                      
-                    </Cfif>
-                    <!----For Aug/Sep and June, we need to check if student is int he country.---->
-                     <Cfif client.pr_rmonth eq 9>
-                     
-							<Cfif #datePart('m', '#arrivalDate#')# eq 8 or #datePart('m', '#arrivalDate#')# eq 9>
-                         		<Cfset PreviousReportApproved = 1>
-                     		</Cfif>
-                     
-                      <Cfelseif client.pr_rmonth eq 8>
-                      
-                            <Cfif #datePart('m', '#arrivalDate#')# gt 8>
-                           		<Cfset inCountry = 0>
-                            <Cfelse>
-                                <Cfset PreviousReportApproved = 1>
-                            </Cfif>
-                        
-					   <Cfelseif client.pr_rmonth eq 6>
-							<Cfif #datePart('m', '#departureDate#')# lt #datePart('m', '#repReqDate#')#>
-                           		<Cfset inCountry = 0>
-                            </Cfif>
-                       </Cfif>
-                    
-                    
-                   <cfset mycurrentRow = mycurrentRow + 1>
-                   <tr bgcolor="#iif(mycurrentRow MOD 2 ,DE("eeeeee") ,DE("white") )#">
+                 	<cfset daysPlaced = #DateDiff('d','#arrivaldate#','#now()#')#>
+                <Cfelse>
+                	<cfset daysPlaced = #DateDiff('d','#date_host_fam_approved#','#now()#')#>
+                	
+            	</Cfif>
+         	
+               
+                
+       
+                <!----display info for the current report---->
+                  <cfset mycurrentRow = mycurrentRow + 1>
+                   <tr <Cfif hostHistory.welcome_family eq 1>bgcolor="##bed1fc"<cfelse> bgcolor="#iif(mycurrentRow MOD 2 ,DE("eeeeee") ,DE("white") )#"</cfif>>
                         <td>&nbsp;</td>
                         <td>
                         	<!--- put in red if user is the supervising rep for this student.  don't do for usertype 7 because they see only those students. --->
                             <a href="javascript:OpenLetter('reports/PlacementInfoSheet.cfm?uniqueID=#getResults.uniqueID#');">
-							<cfif arearepid EQ client.userid and client.usertype NEQ 7>
-                        		<font color="FF0000"><strong>#firstname# #familylastname# (#studentid#)</strong></font>
+							<cfif getResults.arearepid EQ client.userid and client.usertype NEQ 7>
+                        		<font color="FF0000"><strong>#getResults.firstname# #getResults.familylastname# (#getResults.studentid#)</strong></font>
                             <cfelse>
-                        		#firstname# #familylastname# (#studentid#)
+                        		#getResults.firstname# #getResults.familylastname# (#getResults.studentid#)
                             </cfif>
                             </a>
                         </td>
+                  
+                        <td>
+                     	  #daysPlaced#
+                         </td>
+                        <td>#hostHistory.hostlastname# (#hostid#)</td>
+                      
                         <td>#yesNoFormat(get_report.recordCount)#</td>
                         <td>
 
@@ -666,45 +452,33 @@ But in the output below we use the report fields where a report has been submitt
 								<cfif client.usertype LTE 4 or listFind("#get_report.fk_secondVisitRep#,#get_report.fk_sr_user#,#get_report.fk_ra_user#,#get_report.fk_rd_user#,#get_report.fk_ny_user#, #get_report.fk_secondVisitRep#", client.userid)>
 									<!--- restrict view of report until the supervising rep approves it. --->
                                     <!----check the type of report, use appropriate person to view---->
-									<cfif client.reportType EQ 2>
+								
                                         <cfset submittingRep = '#secondVisitRepID#'>
-                                    <cfelse>
-                                        <Cfset submittingRep = '#arearepid#'>
-                                    </cfif>
+                                    
                                     <cfif get_report.pr_sr_approved_date EQ '' and submittingRep NEQ client.userid>
                                         <!----allow office to view so can delete if needed---->
                                         <Cfif listfind('1,12313,13799,510', client.userid)>
-                                        <form action="index.cfm?curdoc=progress_report_info" method="post" name="theForm_#get_report.pr_id#" id="theForm_#get_report.pr_id#">
-                                        <input type="hidden" name="pr_id" value="#get_report.pr_id#">
-                                        </form>
-											<cfif client.reportType EQ 2>
+                                       
                                             <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#get_report.pr_id#">
-                                            <cfelse>
-                                            <a href="javascript:document.theForm_#get_report.pr_id#.submit();">
-                                            </cfif>
+                                           
                                         </cfif>	
                                         Pending</a>
                                     	<!----end allow view to delete---->
                                     <cfelse>
-                                        <form action="index.cfm?curdoc=progress_report_info" method="post" name="theForm_#get_report.pr_id#" id="theForm_#get_report.pr_id#">
-                                        <input type="hidden" name="pr_id" value="#get_report.pr_id#">
-                                        </form>
-                                        <cfif client.reportType EQ 2>
+                                        
                                         <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#get_report.pr_id#">View</a>
-                                        <cfelse>
-                                        <a href="javascript:document.theForm_#get_report.pr_id#.submit();">View</a>
-                                    	</cfif>
+                                       
                                     </cfif>
                                 <cfelse>
                                 	N/A 
                                 </cfif>
 							<!--- add report link --->
-                            <cfelse>
+                        <cfelse>
                             <!----check the type of report, use appropriate person to view---->
                             <cfif client.reportType EQ 2>
-                            	<cfset submittingRep = '#secondVisitRepID#'>
+                            	<cfset submittingRep = '#getResults.secondVisitRepID#'>
                             <cfelse>
-                            	<Cfset submittingRep = '#arearepid#'>
+                            	<Cfset submittingRep = '#getResults.arearepid#'>
                             </cfif>
                             <Cfif client.pr_rmonth eq 10>
                         		<Cfset PreviousReportApproved = 1>
@@ -715,7 +489,7 @@ But in the output below we use the report fields where a report has been submitt
 									<cfelseif (#submittingRep# EQ client.userid and PreviousReportApproved eq 1) OR client.reportType EQ 2  >
                                 
                                         <form action="index.cfm?curdoc=forms/pr_add" method="post">
-                                        <input type="hidden" name="studentid" value="#studentid#">
+                                        <input type="hidden" name="studentid" value="#getResults.studentid#">
                                         <input type="hidden" name="type_of_report" value="#client.reportType#">
                                         <input type="hidden" name="month_of_report" value="#client.pr_rmonth#">
                                         <input name="Submit" type="image" src="pics/new.gif" alt="Add New Report" border=0>
@@ -728,13 +502,13 @@ But in the output below we use the report fields where a report has been submitt
                                     
                                  <Cfset PreviousReportApproved = 0> 
                                  <cfset inCountry = 1>
-                            </cfif>
+                        </cfif>
                           
 					
                         </td>
                         <td>#dateFormat(get_report.pr_sr_approved_date, 'mm/dd/yyyy')#</td>
                         <td>
-							<cfif advisorid EQ ''>
+							<cfif getResults.advisorid EQ ''>
                                N/A
                             <cfelse>
                                 #dateFormat(get_report.pr_ra_approved_date, 'mm/dd/yyyy')#
@@ -743,12 +517,174 @@ But in the output below we use the report fields where a report has been submitt
                         <td>#dateFormat(get_report.pr_rd_approved_date, 'mm/dd/yyyy')#</td>
                         <td>#dateFormat(get_report.pr_ny_approved_date, 'mm/dd/yyyy')#</td>
                         <td>#dateFormat(get_report.pr_rejected_date, 'mm/dd/yyyy')#</td>
+                    </tr>    
+                <cfset subSetOfKids = listAppend(subSetOfKids, #studentid#)>
+        		
+				</cfoutput>
+                
+                <!----Display previous kids assigned to this rep and any reports that might have been filled out---->
+                
+                <cfset secondMyCurrentRow = 1>
+                <cfquery name="previousKids" datasource="#application.dsn#">
+                SELECT *, smg_students.firstname, smg_students.familylastname, smg_students.uniqueid, smg_students.hostid as currentHostID, smg_hosts.familylastname as hostlastname
+                FROM progress_reports
+                LEFT JOIN smg_students on smg_students.studentid = fk_student
+                LEFT JOIN smg_hosts on smg_hosts.hostid = fk_host
+                WHERE fk_secondVisitRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#secondVisitRepID#">
+                AND fk_student NOT IN (#subSetOfKids#)
+                AND fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
+                order by smg_students.familylastname
+                </cfquery>
+                
+				<cfif previousKids.recordcount gt 0>
+                
+                <Cfquery name="hostHistory" datasource="#application.dsn#">
+                SELECT isWelcomeFamily, isRelocation, original_place,  welcome_family, relocation, h.familyLastName as hostLastName
+                FROM smg_hosthistory
+                LEFT JOIN smg_hosts h on h.hostid = smg_hosthistory.hostid
+                WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#previousKids.fk_student#">
+                AND smg_hostHistory.hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#previousKids.fk_host#">
+                </cfquery> 
+                
+                <Cfif hostHistory.original_place is 'yes'>
+                	<cfquery name="arrivalInfo" datasource="#application.dsn#">
+                    SELECT max(dep_date) as dep_date
+                    FROM smg_flight_info
+                    WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#previousKids.fk_student#">
+                    AND flight_type = 'arrival'
+                    </cfquery>
+                    <!----If no arrival info is on file, we set to August 1, the earliest to make sure---->
+					<Cfif arrivalInfo.recordcount eq 0 or arrivalInfo.dep_date eq ''>
+                    	<Cfset arrivalDate = '#DateRange.startDate#'>
+                   	<cfelse>
+                    	<cfset arrivalDate = '#arrivalInfo.dep_Date#'>
+                    </Cfif>
+                 	<cfset daysPlaced = #DateDiff('d','#arrivaldate#','#now()#')#>
+                <Cfelse>
+                	<cfset daysPlaced = #DateDiff('d','#date_host_fam_approved#','#now()#')#>
+                	
+            	</Cfif>
+                <!----
+                <cfquery name="secondHostHistory" datasource="#application.dsn#">
+                select *
+                from smg_hosthistory
+                where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#previousKids.fk_student#">
+                and hostid !=<cfqueryparam cfsqltype="cf_sql_integer" value="#previousKids.currentHostID#">
+                and relocation = 'yes'
+                </cfquery>
+				<cfif secondHostHistory.recordcount gt 0>
+                <Cfdump var="#secondHostHistory#">
+                </cfif>
+				---->
+                    <tr>
+                        <td colspan=11><strong><font color=##2d5674>Previously Assigned</font></strong> </td>
                     </tr>
-                </cfoutput>
+                   
+                    <!----
+                    <tr align="left">
+                        <th width="15">&nbsp;</th>
+                        <th>Student</th>
+                        <th>Days Placed</th>
+                        <th>Host</th>
+                        <th>Submitted</th>
+                        <th>Action</th>
+                        <th>SR Approved</th>
+                        <th>RA Approved</th>
+                        <th>RD Approved</th>
+                        <th>Facilitator Approved</th>
+                        <th>Rejected</th>
+                    </tr>
+					<Cfif hostHistory.welcome_family eq 1>bgcolor="##bed1fc"<cfelse></cfif>
+					---->
+                    <cfloop query="previousKids">
+                     <tr  bgcolor="#iif(secondMyCurrentRow MOD 2 ,DE("eeeeee") ,DE("white") )#">
+                        <td width="15">&nbsp;</td>
+                        <td><a href="javascript:OpenLetter('reports/PlacementInfoSheet.cfm?uniqueID=#previousKids.uniqueID#');">#firstname# #familylastname# (#fk_student#)</a></td>
+                        <td>#daysPlaced#</td>
+                        <td>#hostlastname# (#fk_host#)</td>
+                        <td><cfif previousKids.pr_sr_approved_date is ''>No<cfelse>Yes</cfif></td>
+                        <td>
+                        <cfif previousKids.recordCount>
+                            	<!--- access is limited to: client.usertype LTE 4, second vist rep, supervising rep, regional advisor, regional director, and facilitator. --->
+								<cfif client.usertype LTE 4 or listFind("#get_report.fk_secondVisitRep#,#get_report.fk_sr_user#,#get_report.fk_ra_user#,#get_report.fk_rd_user#,#get_report.fk_ny_user#, #get_report.fk_secondVisitRep#", client.userid)>
+									<!--- restrict view of report until the supervising rep approves it. --->
+                                    <!----check the type of report, use appropriate person to view---->
+								
+                                        <cfset submittingRep = '#previousKids.fk_secondVisitRep#'>
+                                        
+                                    
+                                    <cfif pr_sr_approved_date EQ '' and submittingRep NEQ client.userid>
+                                        <!----allow office to view so can delete if needed---->
+                                        <Cfif listfind('1,12313,13799,510', client.userid)>
+                                            <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#pr_id#">
+                                        </cfif>	
+                                        Pending</a>
+                                    	<!----end allow view to delete---->
+                                    <cfelse>
+                                                                              
+                                        <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#pr_id#">View</a>
+                                        
+                                    </cfif>
+                                <cfelse>
+                                	N/A 
+                                </cfif>
+							<!--- add report link --->
+                        <cfelse>
+                            <!----check the type of report, use appropriate person to view---->
+                            
+                            	<cfset submittingRep = '#secondVisitRepID#'>
+                            
+                            <Cfif client.pr_rmonth eq 10>
+                        		<Cfset PreviousReportApproved = 1>
+                            </Cfif>
+                            	<!--- to add a progress report, user must be the supervising rep, and the program has a report for this phase. --->
+                          			<Cfif inCountry eq 0>
+                                    Not in Country - No Report Required
+									<cfelseif (#submittingRep# EQ client.userid and PreviousReportApproved eq 1) OR client.reportType EQ 2  >
+
+                                
+                                        <form action="index.cfm?curdoc=forms/pr_add" method="post">
+                                        <input type="hidden" name="studentid" value="#studentid#">
+                                        <input type="hidden" name="type_of_report" value="2">
+                                        <input type="hidden" name="month_of_report" value="#client.pr_rmonth#">
+                                        <input name="Submit" type="image" src="pics/new.gif" alt="Add New Report" border=0>
+                                        </form>
+                                    <cfelseif PreviousReportApproved eq 0>
+                                       Waiting on Previous Report Approval 
+                                    <Cfelse>
+                                    	Report Not Submitted
+                                     </cfif>
+                                    
+                                 <Cfset PreviousReportApproved = 0> 
+                                 <cfset inCountry = 1>
+                        </cfif>
+                        
+                        </td>
+						<td>#dateFormat(previousKids.pr_sr_approved_date, 'mm/dd/yyyy')#</td>
+                        <td>
+							<cfif getResults.advisorid EQ ''>
+                               N/A
+                            <cfelse>
+                                #dateFormat(previousKids.pr_ra_approved_date, 'mm/dd/yyyy')#
+                          </cfif>
+                        </td>
+                        <td>#dateFormat(previousKids.pr_rd_approved_date, 'mm/dd/yyyy')#</td>
+                        <td>#dateFormat(previousKids.pr_ny_approved_date, 'mm/dd/yyyy')#</td>
+                        <td>#dateFormat(previousKids.pr_rejected_date, 'mm/dd/yyyy')#</td>
+                    </tr>
+                    <Cfset secondMyCurrentRow = #secondMyCurrentRow# +1>
+                    </cfloop>
+              	</cfif>
+               
+                
+              </cfoutput>
             </cfoutput>
-        </cfoutput>
+    
     </table>
 
+
+
+<!----end of page---->
     <table width=100% bgcolor="#eeeeee" class="section">
         <tr>
             <td>
@@ -759,11 +695,20 @@ But in the output below we use the report fields where a report has been submitt
                   </tr>
                 </table>
             </td>
+            
             <td>
                 <table>
                   <tr>
                     <td bgcolor="#CCCCCC" width="15">&nbsp;</td>
                     <td>Supervising Rep</td>
+                  </tr>
+                </table>
+            </td>
+             <td>
+                <table>
+                  <tr>
+                    <td bgcolor="#bed1fc" width="15">&nbsp;</td>
+                    <td>Welcome Family</td>
                   </tr>
                 </table>
             </td>
@@ -788,4 +733,7 @@ But in the output below we use the report fields where a report has been submitt
 		<td width=100% background="pics/header_background_footer.gif"></td>
 		<td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td>
 	</tr>
-</table>
+</table>                 
+
+</body>
+</html>

@@ -389,7 +389,7 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
 
 <table cellpadding="2" cellspacing="0">
 
-<cfif form.report_mode EQ 'view'>
+<cfif form.report_mode EQ 'view' and client.usertype lt 8>
       <tr>
         <th bgcolor="cccccc" colspan="2">Status</th>
       </tr>
