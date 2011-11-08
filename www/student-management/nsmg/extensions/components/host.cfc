@@ -722,7 +722,8 @@
                 SELECT
 					hl.ID,
                     hl.hashID,
-                    hl.statusID,	
+                    hl.statusID,
+                    hl.followUpID,	
                     hl.regionID,
                     hl.areaRepID,                    				
                     hl.firstName,
@@ -741,7 +742,9 @@
                     hl.dateLastLoggedIn,
                     hl.dateCreated,
                     hl.dateUpdated,
-                    <!--- State --->
+                    <!--- Follow Up Representative --->
+                    CONCAT(fu.firstName, ' ', fu.lastName) AS followUpAssigned,
+					<!--- State --->
                     st.state,
                     <!--- Region --->
                     r.regionName AS regionAssigned,
@@ -754,6 +757,8 @@
                     alk.name AS statusAssigned
                 FROM 
                     smg_host_lead hl
+                LEFT OUTER JOIN
+                	smg_users fu ON fu.userID = hl.followUpID    
                 LEFT OUTER JOIN
                 	smg_states st ON st.id = hl.stateID
                 LEFT OUTER JOIN
@@ -850,6 +855,7 @@
     
 	<cffunction name="updateHostLead" access="public" returntype="void" output="false" hint="Updates host lead JN">
         <cfargument name="ID" type="numeric" required="yes" hint="ID is required">
+        <cfargument name="followUpID" type="numeric" required="yes" hint="followUpID is required">
         <cfargument name="regionID" type="numeric" required="yes" hint="regionID is required">        
         <cfargument name="areaRepID" type="numeric" required="yes" hint="areaRepID is required">
         <cfargument name="statusID" type="numeric" required="yes" hint="statusID is required">
@@ -862,6 +868,9 @@
 			
 			// Get current host lead information
 			qGetHostLead = getHostLeadByID(ID=ARGUMENTS.ID);				
+
+			// Get User Information
+			qGetFollowUpUser = APPLICATION.CFC.USER.getUserByID(userID=ARGUMENTS.followUpID);
 
 			// Get User Information
 			qGetUser = APPLICATION.CFC.USER.getUserByID(userID=ARGUMENTS.areaRepID);
@@ -921,6 +930,13 @@
         </cfsavecontent>
     
         <cfscript>	
+			// Follow Up User
+			if ( ARGUMENTS.followUpID NEQ qGetHostLead.followUpID ) {
+				// Assign new area rep 
+				vActions = vActions & "Follow Up Representative: #qGetFollowUpUser.firstName# #qGetFollowUpUser.lastName# ###qGetFollowUpUser.userID# <br /> #CHR(13)#";
+				
+			}
+		
 			// Region
 			if ( ARGUMENTS.regionID NEQ qGetHostLead.regionID ) {
 				// Get Region Information
@@ -928,7 +944,7 @@
 				// Assign new region
 				vActions = vActions & "Region: #qGetRegion.regionName# ###qGetRegion.regionID# <br /> #CHR(13)#";
 			}
-			
+
 			// Area Representative
 			if ( ARGUMENTS.areaRepID NEQ qGetHostLead.areaRepID ) {
 				// Assign new area rep 
@@ -1010,9 +1026,10 @@
                 UPDATE
                     smg_host_lead
                 SET
-                    statusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.statusID#">,
-                    regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">,
-                    areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.areaRepID#">
+                    statusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.statusID)#">,
+                    followUpID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.followUpID)#">,
+                    regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">,
+                    areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.areaRepID)#">
                 WHERE	                        
                     ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
         </cfquery>
@@ -1106,8 +1123,9 @@
 	<cffunction name="getHostLeadsRemote" access="remote" returnFormat="json" output="false" hint="Returns host leads in Json format">
         <cfargument name="pageNumber" type="numeric" default="1" hint="Page number is not required">
         <cfargument name="keyword" type="string" default="" hint="keyword is not required">
-        <cfargument name="regionID" type="string" default="" hint="regionID is not required">
-        <cfargument name="stateID" type="string" default="" hint="keyword is not required">
+        <cfargument name="followUpID" type="numeric" default="0" hint="followUpID is not required">
+        <cfargument name="regionID" type="string" default="0" hint="regionID is not required">
+        <cfargument name="stateID" type="string" default="0" hint="keyword is not required">
         <cfargument name="statusID" type="string" default="" hint="statusID is not required">
         <cfargument name="sortBy" type="string" default="dateCreated" hint="sortBy is not required">
         <cfargument name="sortOrder" type="string" default="DESC" hint="sortOrder is not required">
@@ -1131,6 +1149,7 @@
                     <!--- CONVERT(hl.hashID USING utf8) AS hashID, --->                    
                     CONCAT(hl.hashID, '&') AS hashID,
                     hl.statusID,
+                    hl.followUpID,
                     hl.regionID,
                     hl.areaRepID,
                     hl.firstName,
@@ -1146,6 +1165,8 @@
                     hl.isListSubscriber,
                     DATE_FORMAT(hl.dateCreated, '%m/%e/%Y') as dateCreated,
                     DATE_FORMAT(hl.dateLastLoggedIn, '%m/%e/%Y') as dateLastLoggedIn,
+                    <!--- Follow Up Representative --->
+                    CONCAT(fu.firstName, ' ', fu.lastName) AS followUpAssigned,
                     <!--- State --->
                     st.state,
                     <!--- Region --->
@@ -1156,6 +1177,8 @@
                     alk.name AS statusAssigned
                 FROM 
                     smg_host_lead hl
+                LEFT OUTER JOIN
+                	smg_users fu ON fu.userID = hl.followUpID    
                 LEFT OUTER JOIN
                 	smg_states st ON st.id = hl.stateID
                 LEFT OUTER JOIN
@@ -1188,11 +1211,22 @@
                     AND
                         r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
                 </cfif>
+
+                <!--- Screnner --->
+                <cfif CLIENT.userType EQ 26>
+                	AND
+                    	hl.followUpID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                </cfif>
                 
                 <!--- RA and AR can only see leads assigned to them --->
                 <cfif ListFind("6,7,9", CLIENT.userType)>
                 	AND
                     	hl.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                </cfif>
+
+				<cfif VAL(ARGUMENTS.followUpID)>
+                    AND
+                        hl.followUpID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.followUpID#">
                 </cfif>
 				
 				<cfif VAL(ARGUMENTS.regionID)>

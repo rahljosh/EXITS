@@ -27,7 +27,6 @@
 			// Check if we have a valid student
 			if ( qAuthenticateCandidate.recordCount ) {
 					
-							
 			}
 		}
 	</cfscript>

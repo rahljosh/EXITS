@@ -5,7 +5,9 @@
 	Date:		December 11, 2009
 	Desc:		ISEUSA.com Host Family Leads
 
-	Updated:	02/01/2011 - Ability to assign a host lead to a region/area rep
+	Updated:	11/08/2011 - Ability to assign a lead to a follow up user
+	
+				02/01/2011 - Ability to assign a host lead to a region/area rep
 				and enter status
 				
 				Office User  	Assign a region (required)
@@ -34,6 +36,7 @@
 		// Param Form Variables
 		param name="FORM.submitted" default=0;
 		param name="FORM.hostLeadJNID" default=0;
+		param name="FORM.followUpID" default=0;
 		param name="FORM.companyID" default=0;
 		param name="FORM.regionID" default=0;
 		param name="FORM.areaRepID" default=0;
@@ -71,29 +74,37 @@
 			foreignID=qGetHostLead.ID
 		);
 		
+		// Follow Up User List
+		qGetFollowUpUserList = APPLICATION.CFC.USER.getUsers(userType=26);
+		
 		// FORM SUBMITTED
 		if ( FORM.submitted ) {
 			
-			// Data Validation - Allow a comment if there is only initial status on the history
-			if ( NOT VAL(FORM.regionID) AND qGetHostLeadHistory.recordCount GT 1 ) {
-				// Get all the missing items in a list
-				SESSION.formErrors.Add('You must select a region');
-			}			
-
-			if ( NOT VAL(FORM.statusID) ) {
-				// Get all the missing items in a list
-				SESSION.formErrors.Add('You must select a status');
-			}			
+			// Host Lead User is able to enter a comment only
+			if ( CLIENT.userType NEQ 26 ) {
 			
-			if ( ListFind("3,8", FORM.statusID) AND NOT LEN(FORM.comments) ) {
-				// Get all the missing items in a list
-				SESSION.formErrors.Add('This is a final decision. Comments are required.');
-			}			
+				// Data Validation - Allow a comment if there is only initial status on the history
+				if ( NOT VAL(FORM.regionID) AND qGetHostLeadHistory.recordCount GT 1 ) {
+					// Get all the missing items in a list
+					SESSION.formErrors.Add('You must select a region');
+				}			
+	
+				if ( NOT VAL(FORM.statusID) ) {
+					// Get all the missing items in a list
+					SESSION.formErrors.Add('You must select a status');
+				}			
+				
+				if ( ListFind("3,8", FORM.statusID) AND NOT LEN(FORM.comments) ) {
+					// Get all the missing items in a list
+					SESSION.formErrors.Add('This is a final decision. Comments are required.');
+				}			
+				
+				// Managers Must Assign an Area Representative
+				if ( CLIENT.userType EQ 5 AND NOT VAL(FORM.areaRepID) ) {
+					// Get all the missing items in a list
+					SESSION.formErrors.Add('You must select an area representative');
+				}
 			
-			// Managers Must Assign an Area Representative
-			if ( CLIENT.userType EQ 5 AND NOT VAL(FORM.areaRepID) ) {
-				// Get all the missing items in a list
-				SESSION.formErrors.Add('You must select an area representative');
 			}
 			
 			// Check if there are no errors
@@ -105,6 +116,7 @@
 				// Update / Add History Host Lead
 				APPLICATION.CFC.HOST.updateHostLead(
 					ID=FORM.ID,					
+					followUpID=FORM.followUpID,
 					regionID=FORM.regionID,
 					areaRepID=FORM.areaRepID,
 					statusID=FORM.statusID,
@@ -132,6 +144,7 @@
 			
 		} else {			
 			// Set FORM Values
+			FORM.followUpID = qGetHostLead.followUpID;
 			FORM.companyID = qGetHostLead.companyID;
 			FORM.regionID = qGetHostLead.regionID;
 			FORM.areaRepID = qGetHostLead.areaRepID;
@@ -223,7 +236,7 @@
                 <input type="hidden" name="submitted" value="1" />
                 <input type="hidden" name="ID" value="#ID#" />
                 <input type="hidden" name="KEY" value="#key#" />
-
+                
                 <table width="95%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
                     <tr class="projectHelpTitle">
                         <th colspan="2">Family Information</th>
@@ -317,9 +330,28 @@
                         <tr class="projectHelpTitle">
                             <th colspan="2">Follow Up Information</th>
                         </tr>
+
                         <tr>
-                            <th width="45%" align="right" valign="top" style="padding-top:10px;"><label for="companyID">Company:</label></th>
+                            <th width="45%" align="right" valign="top" style="padding-top:10px;"><label for="companyID">Follow Up Representative:</label></th>
                             <td width="55%" style="padding-top:10px;">
+								<!--- Only Office Can Assign a Follow Up UserID --->
+                                <cfif ListFind("1,2,3,4", CLIENT.userType)>
+                                    <select name="followUpID" id="followUpID" class="largeField">
+                                        <option value="0" <cfif NOT VAL(FORM.followUpID)>selected="selected"</cfif> >Unassigned</option>
+                                        <cfloop query="qGetFollowUpUserList">
+                                            <option value="#qGetFollowUpUserList.userID#" <cfif FORM.followUpID EQ qGetFollowUpUserList.userID>selected="selected"</cfif> >#qGetFollowUpUserList.firstName# #qGetFollowUpUserList.lastName# (###qGetFollowUpUserList.userID#)</option>
+                                        </cfloop>
+                                    </select>
+                                <cfelse>
+                                    <input type="hidden" name="followUpID" value="#FORM.followUpID#" />
+                                    #qGetHostLead.followUpAssigned#
+                                </cfif>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th align="right" valign="top" style="padding-top:10px;"><label for="companyID">Company:</label></th>
+                            <td style="padding-top:10px;">
                                 <!--- Only Office Can Assign a Company --->
                                 <cfif ListFind("1,2,3,4", CLIENT.userType)>
                                     <select name="companyID" id="companyID" class="mediumField">
@@ -330,7 +362,11 @@
                                     </select>
                                 <cfelse>
                                     <input type="hidden" name="companyID" value="#FORM.companyID#" />
-                                    #qGetHostLead.companyShort#
+                                    <cfif LEN(qGetHostLead.companyShort)>
+                                    	#qGetHostLead.companyShort#
+                                    <cfelse>
+                                    	n/a
+                                    </cfif>
                                 </cfif>
                             </td>
                         </tr>
@@ -351,15 +387,19 @@
                                     <p class="formNote">Assign a region to give it's manager access to this lead</p>
                                 <cfelse>
                                     <input type="hidden" name="regionID" value="#FORM.regionID#" />
-                                    #qGetHostLead.regionAssigned#
+                                    <cfif LEN(qGetHostLead.regionAssigned)>
+                                    	#qGetHostLead.regionAssigned#
+                                    <cfelse>
+                                    	n/a
+                                    </cfif>
                                 </cfif>
                             </td>
                         </tr>
                         <tr>
                             <th align="right" valign="top"><label for="areaRepID">Area Representative:</label></th>
                             <td>
-                            	<!--- Only Managers can assign an Area Rep. --->
-								<cfif CLIENT.userType EQ 5>
+                                <!--- Only Managers can assign an Area Rep. --->
+                                <cfif CLIENT.userType EQ 5>
                                    <cfselect
                                         name="areaRepID" 
                                         id="areaRepID"
@@ -380,20 +420,28 @@
                         <tr>
                             <th align="right" valign="top"><label for="statusID">Status:</label></th>
                             <td>
-                                <select name="statusID" id="statusID" class="xLargeField" onchange="displayFinalDecision();">
-                                    <option value="0" <cfif FORM.statusID EQ 0>selected="selected"</cfif> >Please Select a Status</option>
-                                    <cfloop query="qGetStatus">
-                                        <option value="#qGetStatus.fieldID#" <cfif FORM.statusID EQ qGetStatus.fieldID>selected="selected"</cfif> >#qGetStatus.name#</option>
-                                    </cfloop>
-                                </select>
+                                <cfif CLIENT.userType NEQ 26>
+                                    
+                                    <select name="statusID" id="statusID" class="xLargeField" onchange="displayFinalDecision();">
+                                        <option value="0" <cfif FORM.statusID EQ 0>selected="selected"</cfif> >Please Select a Status</option>
+                                        <cfloop query="qGetStatus">
+                                            <option value="#qGetStatus.fieldID#" <cfif FORM.statusID EQ qGetStatus.fieldID>selected="selected"</cfif> >#qGetStatus.name#</option>
+                                        </cfloop>
+                                    </select>
+                                    
+                                    <p id="pFinalDecision" class="formWarning displayNone">
+                                        PS: This is a final decision, this lead will be removed from your active list. 
+                                        <br />
+                                        You can still find it under your host lead list by filtering by current status.
+                                    </p>
                                 
-                                <p id="pFinalDecision" class="formWarning displayNone">
-                                	PS: This is a final decision, this lead will be removed from your active list. 
-                                    <br />
-                                    You can still find it under your host lead list by filtering by current status.
-                                </p>
+                                <cfelse>
+                                    <input type="hidden" name="statusID" value="#FORM.statusID#" />
+                                    #qGetHostLead.statusAssigned#
+                                </cfif>
                             </td>
                         </tr>
+
                         <tr>
                             <th align="right" valign="top">Comments:</th>
                             <td>
