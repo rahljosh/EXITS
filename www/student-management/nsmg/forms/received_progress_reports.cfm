@@ -5,7 +5,91 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #2
 </style>
 
 <title>Progress Reports</title>
+<CFif isDefined('form.addReportNow')>
+<Cfset form.studentid = #url.stuid#>
+ <cfquery name="get_student" datasource="#application.dsn#">
+        SELECT secondVisitRepID, arearepid, placerepid, intrep, regionassigned, hostid, programid, companyid
+        FROM smg_students
+        WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.studentid#">
+    </cfquery>
+    
+    <cfset form.companyid = get_student.companyid>
+    <cfset form.fk_sr_user = get_student.arearepid>
+    <cfset form.fk_pr_user = get_student.placerepid>
+    <cfset form.fk_secondVisitRep = form.secondVisitRepID>
+    <Cfset form.programid = get_student.programid>
+    <cfset form.fk_host = form.hostid>
+    <cfset form.fk_intrep_user = get_student.intrep>
+    
+    <cfquery name="get_advisor_for_rep" datasource="#application.dsn#">
+        SELECT advisorid
+        FROM user_access_rights
+        WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student.arearepid#">
+        AND regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student.regionassigned#">
+    </cfquery>
+    <cfset form.fk_ra_user = get_advisor_for_rep.advisorid>
+	<!--- advisorid can be 0 and we want null, and the 0 might be phased out later. --->
+	<cfif form.fk_ra_user EQ 0>
+	    <cfset form.fk_ra_user = ''>
+    </cfif>
+	
+    <cfquery name="get_regional_director" datasource="#application.dsn#">
+        SELECT smg_users.userid
+        FROM smg_users
+        INNER JOIN user_access_rights on smg_users.userid = user_access_rights.userid
+        WHERE user_access_rights.usertype = 5
+        AND user_access_rights.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student.regionassigned#">
+        AND smg_users.active = 1
+    </cfquery>
+    
+    <cfset form.fk_rd_user = get_regional_director.userid>
+    <cfif form.fk_rd_user EQ ''>
+    	Regional Director is missing.  Report may not be added.
+        <cfabort>
+    </cfif>
 
+    <cfquery name="get_facilitator" datasource="#application.dsn#">
+        SELECT regionfacilitator
+        FROM smg_regions
+        WHERE regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student.regionassigned#">
+    </cfquery>
+    <cfset form.fk_ny_user = get_facilitator.regionfacilitator>
+    <cfif form.fk_ny_user EQ 0 or form.fk_ny_user EQ ''>
+    	Facilitator is missing.  Report may not be added.
+        <cfabort>
+    </cfif>
+    
+            <cfquery datasource="#application.dsn#">
+            INSERT INTO progress_reports (fk_reportType, fk_student, pr_uniqueid, pr_month_of_report, fk_program, fk_secondVisitRep, fk_sr_user, fk_pr_user, fk_ra_user, fk_rd_user, fk_ny_user, fk_host, fk_intrep_user)
+            VALUES (
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#client.reportType#">,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#form.studentid#">,
+            <cfqueryparam cfsqltype="cf_sql_idstamp" value="#createuuid()#">,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#DatePart('m','#now()#')#">,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#">,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_secondVisitRep#">,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_sr_user#">,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_pr_user#">,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_ra_user#" null="#yesNoFormat(trim(form.fk_ra_user) EQ '')#">,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_rd_user#">,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_ny_user#">,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_host#">,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_intrep_user#">
+            )  
+        </cfquery>
+        <cfquery name="get_id" datasource="#application.dsn#">
+            SELECT MAX(pr_id) AS pr_id
+            FROM progress_reports
+        </cfquery>
+
+    
+	<cfquery  datasource="#application.dsn#">
+    	insert into secondVisitAnswers (fk_reportID, fk_studentID)
+        			values(#get_id.pr_id#, #form.studentid#)
+    </Cfquery>
+
+    
+</CFif>
 <table width="100%" cellspacing="5">
   <tr>
     <td>
@@ -24,7 +108,7 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #2
     FROM progress_reports
     LEFT JOIN reportTrackingType on reportTrackingType.reportTypeID = progress_reports.fk_reportType
     WHERE fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.stuid#">
-    ORDER BY pr_id DESC
+    ORDER BY fk_reportType, pr_id DESC
 </cfquery>
 
 <table width="100%" border=0 cellpadding=4 cellspacing=0 class="section">
@@ -50,7 +134,7 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #2
                 <td>
 					<!--- restrict view of report until the supervising rep approves it.
 					(we're intentionally not including the other checks to only allow SR, RA, etc. to view like on the progress report list) --->
-                    <cfif pr_sr_approved_date EQ '' and fk_sr_user NEQ client.userid>
+                    <cfif (pr_sr_approved_date EQ '' and fk_sr_user NEQ client.userid) OR (client.usertype eq 8 and pr_ny_approved_date EQ '')>
                         Pending
                     <cfelse>
                         <form action="../index.cfm?curdoc=progress_report_info" method="post" name="theForm_#pr_id#" id="theForm_#pr_id#" target="_blank">
@@ -122,10 +206,58 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #2
 
 <table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
 	<tr>
-		<td align="center"><input type="image" value="close window" src="../pics/close.gif" onClick="javascript:window.close()"></td>
+		<td align="center">
+        <table>
+        	<Tr>
+            	<Td>
+       				<input type="image" value="close window" src="../pics/close.png" height="50%"  onClick="javascript:window.close()">
+        		</Td>
+                <Td>
+					<Cfif client.usertype lte 4>
+                    <cfoutput>
+                    <Form method="post" action="received_progress_reports.cfm?stuid=#url.stuid#"><input type="image" src="../pics/2visit.png" height="50%" />
+                    <input type="hidden" name="addReport" />
+                    </Form>
+                    </cfoutput>
+                    </Cfif>
+        		</Td>
+            </Tr>
+         </table>
+        </td>
+    	
     </tr>
 </table>
+<cfif isDefined('form.addReport')>
 
+<table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
+	<Tr>
+    	<td>
+        	Enter the ID number of the rep for this particular report.  Once you hit submit, the rep will be able to access the report from their online reports matrix.
+        </td>
+    </Tr>
+    <tr>
+    	<Td>
+        
+        <cfoutput>
+        <Form method="post" action="received_progress_reports.cfm?stuid=#url.stuid#">
+        <input type="hidden" name="addReportNow" />
+        <table>
+        	<Tr>
+            	<Td>Second Visit Rep ID:</Td><td> <input type="text" name="secondVisitRepID" size=5/></td>
+            </Tr>
+            <tr>
+            	<td>Host Family ID:</Td><td> <input type="text" name="hostID" size=5/></td>
+            </tr>
+            <tr>
+            	<Td colspan=2><input type="image" src="../pics/submit.gif" /> </Td>
+            </tr>
+          </table>
+      	</Form>
+        </cfoutput>
+        </Td>
+    </Tr>
+</table>
+</cfif>
 <table width=100% cellpadding=0 cellspacing=0 border=0>
 	<tr>
 		<td width=9 valign="top" height=12><img src="../pics/footer_leftcap.gif" ></td>
