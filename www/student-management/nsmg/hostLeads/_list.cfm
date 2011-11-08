@@ -17,7 +17,8 @@
 
     <cfscript>	
 		// Param URL Variables
-		param name="FORM.keyword" default="";	
+		param name="FORM.keyword" default="";
+		param name="FORM.followUpID" default=0;	
 		param name="FORM.regionID" default=0;	
 		param name="FORM.stateID" default=0;	
 		param name="FORM.statusID" default="";	
@@ -27,6 +28,9 @@
 		
 		// Make sure records have a valid hashID and the initial record in the history table
 		APPLICATION.CFC.HOST.setHostLeadDataIntegrity();
+	
+		// Follow Up User List
+		qGetFollowUpUserList = APPLICATION.CFC.USER.getUsers(userType=26);
 	
 		// Get User Regions
 		qGetRegions = APPLICATION.CFC.REGION.getUserRegions(
@@ -81,6 +85,7 @@
 
 		// FORM Variables
 		var keyword = $("#keyword").val();
+		var followUpID = $("#followUpID").val();
 		var regionID = $("#regionID").val();
 		var stateID = $("#stateID").val();
 		var statusID = $("#statusID").val();
@@ -111,7 +116,7 @@
 		hf.setCallbackHandler(populateList); 
 		hf.setErrorHandler(myErrorHandler); 
 		// This time, pass the intRep ID to the getHostLeadList CFC function. 
-		hf.getHostLeadsRemote(pageNumber,keyword,regionID,stateID,statusID,sortBy,sortOrder,pageSize);
+		hf.getHostLeadsRemote(pageNumber,keyword,followUpID,regionID,stateID,statusID,sortBy,sortOrder,pageSize);
 	} 
 
 	// Callback function to handle the results returned by the getHostLeadList function and populate the table. 
@@ -402,6 +407,17 @@
                 <label for="keyword">Keyword</label> <br />
                 <input type="text" name="keyword" id="keyword" class="largeField" maxlength="50" />
             </td>  
+            <cfif ListFind("1,2,3,4", CLIENT.userType)>
+                <td class="listTitle">
+                    <label for="followUpID">Follow Up Rep</label> <br />   
+                    <select name="followUpID" id="followUpID" class="largeField">
+                        <option value="0" <cfif NOT VAL(FORM.followUpID)>selected="selected"</cfif> ></option>
+                        <cfloop query="qGetFollowUpUserList">
+                            <option value="#qGetFollowUpUserList.userID#" <cfif FORM.followUpID EQ qGetFollowUpUserList.userID>selected="selected"</cfif> >#qGetFollowUpUserList.firstName# #qGetFollowUpUserList.lastName# (###qGetFollowUpUserList.userID#)</option>
+                        </cfloop>
+                    </select>
+                </td> 
+            </cfif>         
             <td class="listTitle">
                 <label for="regionID">Region</label> <br />   
                 <select name="regionID" id="regionID" class="mediumField">

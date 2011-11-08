@@ -32,34 +32,39 @@
         <cfquery 
 			name="qGetUsers" 
 			datasource="#APPLICATION.dsn#">
-                SELECT
-					*
+                SELECT DISTINCT
+					u.*
                 FROM 
-                    smg_users
+                    smg_users u
+                INNER JOIN
+                	user_access_rights uar ON uar.userID = u.userID
                 WHERE
                 	1 = 1
 
 				<cfif VAL(ARGUMENTS.userID)>
                 	AND	
-                    	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                    	u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
                 </cfif>
                     
-				<cfif VAL(ARGUMENTS.usertype)>
-                	AND	
-                    	usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.usertype#">
-                </cfif>
-                
                 <cfif LEN(ARGUMENTS.isActive)>
                 	AND
-                    	active = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isActive#">
+                    	u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isActive#">
+                </cfif>
+
+				<cfif VAL(ARGUMENTS.usertype)>
+                	AND	
+                    	uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.usertype#">
                 </cfif>
                 
+                GROUP BY
+                	u.userID 
+                                   
 				<cfif VAL(ARGUMENTS.usertype)>
                     ORDER BY 
-                        businessName                
+                        u.businessName                
                 <cfelse>
                     ORDER BY 
-                        lastName
+                        u.lastName
                 </cfif>
 		</cfquery>
 		   
