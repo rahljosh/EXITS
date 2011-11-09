@@ -212,10 +212,10 @@
 			var vUserListCASE = '11364'; // Stacy Brewer
 			
 			// ESI
-			var vListESI = '11364'; // Stacy Brewer
+			var vListESI = '11364,16761'; // Stacy Brewer | Stacy Brewer
 			
 			// Stores all IDs so we can check quickly and return a masked SSN
-			var vAllowedIDList = '7657,9719,11364';
+			var vAllowedIDList = '7657,9719,11364,16761';
 			
 			// Stores the return variable
 			var vReturnSSN = '';
