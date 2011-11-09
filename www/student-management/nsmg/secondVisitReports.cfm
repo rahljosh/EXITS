@@ -11,7 +11,9 @@
 <cfparam name="repDUeDate" default="">
 <Cfparam name="inCountry" default= 1>
 <Cfparam name="PreviousReportApproved" default="0">
-
+<!----
+<cfparam name="form.selectedProgram" default="">
+---->
 
 <Cfif client.usertype lte 4 and form.reportType eq 1>
 	<cflocation url="index.cfm?curdoc=progress_reports" addtoken="no">
@@ -25,6 +27,12 @@ function OpenLetter(url) {
 }
 //-->
 </script>
+<!----
+<Cfscript>
+	//Check if paperwork is complete for season
+	qGetPrograms = APPLICATION.CFC.program.getPrograms(companyid=client.companyid,isActive=1);
+</cfscript>
+---->
 
 <cfscript>
     //by creating the function inside of a cfscript, it should be able to work in CF5.
@@ -250,7 +258,21 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
     	Second Host Family Visit    
         </Cfif>
         </td>
+        <!----
+        <td>
+        Programs <br />
+ 
+              	 <cfselect 
+                  name="qGetPrograms" 
+                  id="qGetPrograms" multiple="no"
+                  query="qGetPrograms"
+                  value="programID"
+                  display="name"
+                  selected="#client.selectedProgram#"/>
     
+      
+        </td>
+    ---->
 	<cfif client.usertype LTE 4>
        <td>
 			<!--- GET ALL REGIONS --->
@@ -392,22 +414,37 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                         FROM get_reports
                         WHERE fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
                         AND fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
+                        AND fk_secondVisitRep = #secondVisitRepID#
                     </cfquery>
                     
 				<!----Figure out how long they have been placed with this host family and host family info---->
                 <Cfquery name="hostHistory" datasource="#application.dsn#">
-                SELECT isWelcomeFamily, isRelocation, original_place,  welcome_family, relocation, h.familyLastName as hostLastName
+                SELECT isWelcomeFamily, isRelocation, original_place,  welcome_family, relocation
                 FROM smg_hosthistory
                 LEFT JOIN smg_hosts h on h.hostid = smg_hosthistory.hostid
                 WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
-                AND smg_hostHistory.hostid = #getResults.hostid#
+                AND smg_hostHistory.hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#getResults.hostid#">
                 </cfquery> 
-                <Cfif hostHistory.original_place is 'yes'>
+                <cfquery name="checkHostHistoryOriginal" datasource="#application.dsn#">
+                select hostid
+                from smg_hosthistory
+                where original_place = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
+                and studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
+                </cfquery>
+                <cfquery name="hostName" datasource="#application.dsn#">
+                select familyLastName
+                from smg_hosts
+                where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#getResults.hostid#">
+                </cfquery>
+               <!----
+			   <cfif histHistory.recordcount gt 0>OR(checkHostHistoryOriginal.hostid eq #hostHistory.hostid#)
+			   ---->
+                <Cfif hostHistory.original_place is 'yes' >
                 	<cfquery name="arrivalInfo" datasource="#application.dsn#">
                     SELECT max(dep_date) as dep_date
                     FROM smg_flight_info
                     WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
-                    AND flight_type = 'arrival'
+                    AND flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
                     </cfquery>
                     <!----If no arrival info is on file, we set to August 1, the earliest to make sure---->
 					<Cfif arrivalInfo.recordcount eq 0 or arrivalInfo.dep_date eq ''>
@@ -442,7 +479,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                         <td>
                      	  #daysPlaced#
                          </td>
-                        <td>#hostHistory.hostlastname# (#hostid#)</td>
+                        <td>#hostName.familylastname# (#hostid#)</td>
                       
                         <td>#yesNoFormat(get_report.recordCount)#</td>
                         <td>
@@ -533,6 +570,12 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                 WHERE fk_secondVisitRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#secondVisitRepID#">
                 AND fk_student NOT IN (#subSetOfKids#)
                 AND fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
+                 <cfif client.usertype LTE 4>
+                 AND smg_students.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.pr_regionid#">
+                    <!--- don't use client.pr_regionid because if they change access level this is not reset. --->
+                    <cfelse>
+                  AND smg_students.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.regionid#">
+                    </cfif>
                 order by smg_students.familylastname
                 </cfquery>
                 
@@ -561,6 +604,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                     </Cfif>
                  	<cfset daysPlaced = #DateDiff('d','#arrivaldate#','#now()#')#>
                 <Cfelse>
+                
                 	<cfset daysPlaced = #DateDiff('d','#date_host_fam_approved#','#now()#')#>
                 	
             	</Cfif>
@@ -712,10 +756,11 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                   </tr>
                 </table>
             </td>
-		<!--- don't do for usertype 7 because they see only students they're supervising. --->
+		<!--- don't do for usertype 7 because they see only students they're supervising. 
         <cfif client.usertype NEQ 7>
             <td><font color="FF0000"><strong>Students that you're supervising</strong></font></td>
         </cfif>
+		--->
         </tr>
     </table>
            
