@@ -1,0 +1,100 @@
+.basictab{
+	padding: 2px 0;
+	margin-left: 0;
+	border-bottom: 0px solid gray;
+	list-style-type: none;
+	margin-bottom: 0;
+	text-align: left; /*set to left, center, or right to align the menu as desired*/
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.basictab li{
+	display: inline;
+	margin: 0;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+.basictab li a{
+text-decoration: none;
+padding: 3px 7px;
+margin-right: 2px;
+border: 0px solid gray;
+border-bottom: none;
+background-color: white;
+color: black;
+}
+
+
+.basictab li a:visited{
+color: black;
+}
+
+.basictab li a:hover{
+background-color: #CCC;
+color: black;
+}
+
+.basictab li a:active{
+color: black;
+}
+
+.basictab li.selected a{ /*selected tab effect*/
+	position: relative;
+	top: 1px;
+	padding-top: 4px;
+	background-color: #CCC;
+	color: black;
+}
+
+
+.submenustyle{
+	border-top-width: 0;
+	width: 95%;
+	display: none;
+	filter:alpha(opacity=0);
+	-moz-opacity:0;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000;
+	background-color: #CCC;
+	border-right-width: 0;
+	border-bottom-width: 0;
+	border-left-width: 0;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: black;
+	border-right-color: black;
+	border-bottom-color: black;
+	border-left-color: black;
+	padding-top: 2px;
+	padding-right: 10px;
+	padding-bottom: 2px;
+	padding-left: 10px;
+	margin-right: auto;
+	margin-left: 0px;
+	text-align: center;
+	font-weight: bold;
+}
+
+* html .submenustyle{ /*IE only width definition*/
+width: 100%;
+}
+
+.submenustyle a{
+	padding: 1px 10px;
+	text-decoration: none;
+	color: #000;
+	border-right-width: 1px;
+	border-right-style: solid;
+	border-right-color: #666;
+}
+
+.submenustyle a:hover{
+	background-color: #CCC;
+	color: #FFF;
+}
