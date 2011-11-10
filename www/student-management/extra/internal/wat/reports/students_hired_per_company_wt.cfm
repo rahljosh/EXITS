@@ -154,7 +154,7 @@
 
     <table width="95%" cellpadding="4" cellspacing="0" border="0" align="center">
         <tr valign="middle" height="24">
-            <td valign="middle" bgcolor="##E4E4E4" class="title1" colspan=2>
+            <td valign="middle" bgcolor="##E4E4E4" class="title1" colspan="2">
             	<font size="2" face="Verdana, Arial, Helvetica, sans-serif">&nbsp; Host Company Reports -> All Active Candidates</font>
 			</td>                
         </tr>
@@ -191,7 +191,7 @@
             </td>            
         </tr>
         <tr>
-            <td colspan=2 align="center"><br />
+            <td colspan="2" align="center"><br />
                 <input type="submit" value="Generate Report" class="style1" /><br />
             </td>
         </tr>
@@ -221,7 +221,7 @@
 
             <table width="98%" cellpadding="4" cellspacing="0" align="center" style="margin-top:10px; margin-bottom:20px; border:1px solid ##4F8EA4; line-height:15px;"> 
                 <tr>
-                    <td colspan="16">
+                    <td colspan="14">
                             <strong>#qGetHostCompany.name# - Total candidates: #qTotalPerHostCompany.recordCount#</strong> 
                             (
                                 #totalPerHostCompanyCSBPlacements# CSB; &nbsp; 
@@ -232,19 +232,20 @@
                     </td>
                 </tr>
                 <tr style="background-color:##4F8EA4; color:##FFF; padding:5px; font-weight:bold; font-size: 11px; vertical-align:top;">
-                    <td>ID</Td>
-                    <td>Last Name</Td>
-                    <td>First Name</Td>
-                    <td>Sex</td>
-                    <td>DOB</Td>
-                    <td>Country</td>
-                    <td>Email</td>
-                    <td>SSN</Td>
-                    <td>Start Date</td>
-                    <td>End Date</td>
-                    <td>Intl. Rep.</td>
-                    <td>Option</td>
-                    <td>English Assessment CSB</td>
+                    <td width="3%">ID</Td>
+                    <td width="12%">Last Name</Td>
+                    <td width="8%">First Name</Td>
+                    <td width="3%">Sex</td>
+                    <td width="5%">DOB</Td>
+                    <td width="8%">Country</td>
+                    <td width="12%">Email</td>
+                    <td width="5%">DS-2019</td>
+                    <td width="5%">SSN</Td>
+                    <td width="5%">Start Date</td>
+                    <td width="5%">End Date</td>
+                    <td width="10%">Intl. Rep.</td>
+                    <td width="7%">Option</td>
+                    <td width="12%">English Assessment CSB</td>
                 </tr>
                 <cfloop query="qTotalPerHostCompany">
                     <tr bgcolor="###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#">
@@ -255,7 +256,8 @@
                         <td class="style1">#dateformat(qTotalPerHostCompany.dob, 'mm/dd/yyyy')#</td>
                         <td class="style1">#qTotalPerHostCompany.countryname#</td>
                         <td class="style1"><a href="mailto:#qTotalPerHostCompany.email#" class="style4">#qTotalPerHostCompany.email#</a></td>
-                        <td>
+                        <td class="style1">#qTotalPerHostCompany.ds2019#</td>
+                        <td class="style1">
                         	<cfif ListFind("1,2,3,4", CLIENT.userType) AND LEN(qTotalPerHostCompany.SSN)>
                             	<span class="style1">#APPLICATION.CFC.UDF.displaySSN(qTotalPerHostCompany.SSN)#</span>
                             </cfif>                        
@@ -264,7 +266,7 @@
                             <td><span class="style1">#dateformat(qTotalPerHostCompany.startdate, 'mm/dd/yyyy')#</span></td>
                             <td><span class="style1">#dateformat(qTotalPerHostCompany.enddate, 'mm/dd/yyyy')# </span></td>
                         <cfelse>
-                            <td colspan=2 align="center"><span class="style1">Awaiting DS-2019</span></td>
+                            <td colspan="2" align="center"><span class="style1">Awaiting DS-2019</span></td>
                         </cfif>
                         <td><span class="style1">#qTotalPerHostCompany.businessname#</span></td>
                         <td><span class="style1">#qTotalPerHostCompany.wat_placement#</span></td>
@@ -289,7 +291,7 @@
                         </cfquery>
 
                     	<tr bgcolor="###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#">
-                        	<td colspan="16" class="style1" style="border-top:1px solid ###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("E4E4E4") ,DE("FFFFFF") )#;">
+                        	<td colspan="14" class="style1" style="border-top:1px solid ###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("E4E4E4") ,DE("FFFFFF") )#;">
                             	<strong>Reason:</strong> 
                                 <cfloop query="qGetHostHistory">
                                 	#qGetHostHistory.reason_host# <br />
