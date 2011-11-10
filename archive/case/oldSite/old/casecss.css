@@ -1,0 +1,346 @@
+.bodycopy {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	text-align: justify;
+	padding-top: 0px;
+	padding-right: 75px;
+	padding-bottom: 0px;
+	padding-left: 50px;
+}
+.header {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: bold;
+	text-decoration: underline;
+	text-align: center;
+}
+#topBullets {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 150px;
+	text-align: center;
+	background-image: url(images/IntLogin.png);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 18px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.toprightlinks1:hover{
+	background-image: url(images/IntLoginMO.png);
+}
+.toprightlinks2 {
+	color: #FF0;
+	text-align: right;
+	display: block;
+	float: left;
+	width: 150px;
+	text-align: center;
+	background-image: url(images/AssociateEmail.png);
+	background-repeat: no-repeat;
+	height: 18px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.toprightlinks2:hover{
+	background-image: url(images/MOAssociateEmail.png);
+}
+.toprightlinks3 {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 150px;
+	text-align: center;
+	background-image: url(images/HeadNews.png);
+	background-repeat: no-repeat;
+	height: 18px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.toprightlinks3:hover{
+	background-image: url(images/MOHeadNews.png);
+}
+.toprightlinks4 {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 150px;
+	text-align: center;
+	background-image: url(images/ContactUs.png);
+	background-repeat: no-repeat;
+	height: 18px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.toprightlinks4:hover{
+	background-image: url(images/MOContactUs.png);
+}
+.toprightlinks5 {
+	text-align: right;
+	display: block;
+	float: left;
+	width: 150px;
+	text-align: center;
+	background-image: url(images/FAQ.png);
+	background-repeat: no-repeat;
+	height: 18px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+}
+.toprightlinks5:hover{
+	background-image: url(images/MOFAQ.png);
+}
+#accountlogin {
+	background-image: url(images/accountlogin.jpg);
+	height: 32px;
+	width: 221px;
+	background-image: url(images/accountlogin.jpg);
+}
+#accountslice {
+	background-image: url(images/acctloginslice.jpg);
+	background-repeat: repeat-y;
+	height: 149px;
+	width: 221px;
+	text-align: left;
+}
+#banner {
+	background-image: url(images/banner.jpg);
+	height: 210px;
+	width: 1024px;
+}
+#hostslice {
+	background-repeat: repeat-y;
+	width: 221px;
+	height: 167px;
+	background-image: url(images/acctloginslice.jpg);
+}
+#home {
+	background-image: url(images/home.jpg);
+	height: 35px;
+	width: 182px;
+}
+#hostslice{
+}
+#home:active{
+	background-image: url(images/AChome.gif);
+}
+#aboutcase {
+	background-image: url(images/aboutcase.jpg);
+	height: 35px;
+	width: 166px;
+}
+#aboutcase:hover{
+	background-image: url(images/MOaboutcase.gif);
+}
+#aboutcase:active{
+	background-image: url(images/ACaboutcase.gif);
+}#hostfamilies {
+	background-image: url(images/hostfamilies.jpg);
+	height: 35px;
+	width: 159px;
+}
+#hostfamilies:hover{
+	background-image: url(images/MOhostfamilies.gif);
+}
+#hostfamilies:active{
+	background-image: url(images/AChostfamilies.gif);
+}
+#students {
+	background-image: url(images/students.jpg);
+	height: 35px;
+	width: 157px;
+}
+#students:hover{
+	background-image: url(images/MOstudents.gif);
+}
+#students:active{
+	background-image: url(images/ACstudents.gif);
+}
+#representatives {
+	background-image: url(images/representatives.jpg);
+	height: 35px;
+	width: 173px;
+}
+#representatives:hover{
+	background-image: url(images/MOrepresentatives.gif);
+}
+#representatives:active{
+	background-image: url(images/ACrepresentatives.gif);
+}
+#contactcase {
+	background-image: url(images/contactcase.jpg);
+	height: 35px;
+	width: 187px;
+}
+#contactcase:hover{
+	background-image: url(images/MOcontactcase.gif);
+}
+#contactcase:active{
+	background-image: url(images/ACcontactcase.gif);
+}#hostfamilyinfo {
+	background-image: url(images/hostfamilyinfo.jpg);
+	height: 31px;
+	width: 221px;
+}
+#studentinfo {
+	background-image: url(images/studentinfo.jpg);
+	height: 31px;
+	width: 221px;
+}
+#studentslice {
+	background-image: url(images/acctloginslice.jpg);
+	background-repeat: repeat-y;
+	height: 180px;
+	width: 221px;
+}
+#studentbottom {
+	background-image: url(images/studentbottom.jpg);
+	height: 24px;
+	width: 221px;
+}
+#repinfo {
+	background-image: url(images/repinfo.jpg);
+	height: 31px;
+	width: 221px;
+}
+#repslice {
+	background-image: url(images/acctloginslice.jpg);
+	height: 100px;
+	width: 221px;
+}
+#repbottom {
+	background-image: url(images/repbottom.jpg);
+	height: 20px;
+	width: 221px;
+}
+#footer {
+	background-image: url(images/footer.jpg);
+	height: 65px;
+	width: 1024px;
+	background-repeat: no-repeat;
+}
+.footertext {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #FFF;
+	text-align: center;
+	line-height: 12px;
+	padding-top: 18px;
+	word-spacing: 3px;
+}
+.copyright {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: lighter;
+	word-spacing: 0px;
+	font-style: oblique;
+	line-height: 16px;
+}
+#bannerlinks {
+	clear: right;
+	float: right;
+	width: 200px;
+	position: relative;
+	visibility: inherit;
+	z-index: 1;
+	height: 135px;
+	top: 40px;
+}
+.login {
+	clear: left;
+	float: left;
+	visibility: inherit;
+	z-index: 2;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 8px;
+	color: #000;
+	text-indent: 30px;
+	height: 150px;
+	width: 200px;
+	position: relative;
+	top: 0px;
+	padding-top: 15px;
+	vertical-align: bottom;
+}
+.HostSliceText {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 12px;
+	text-align: left;
+	text-indent: 35px;
+	font-weight: bold;
+	position: relative;
+}
+.loginform{
+	text-align: right;
+	display: block;
+	float: left;
+	width: 175px;
+	text-align: left;
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 18px;
+	margin-top: 0px;
+	margin-right: 2px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+	vertical-align: bottom;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: bold;
+	color: #000;
+	position: relative;
+	text-indent: 25pt;
+}#bodytop {
+	background-image: url(images/bodytop.jpg);
+	height: 32px;
+	width: 803px;
+}
+.List {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	list-style-image: url(images/arrow.png);
+	line-height: 12px;
+	padding-top: 10px;
+}
+#body {
+	background-image: url(images/bodyslice.jpg);
+	background-repeat: repeat-y;
+	width: 803px;
+	height: 725px;
+}
