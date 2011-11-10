@@ -169,7 +169,7 @@
                     
                     <p>		
                         <h3>
-                            A spot has been reserved for you <cfif VAL(qGetSiblingsRegistered.recordCount)> and #ValueList(qGetSiblingsRegistered.name)# </cfif> on the <strong>#qGetTourDetails.tour_name#</strong> tour.
+                            A spot has been reserved for you <cfif VAL(qGetSiblingsRegistered.recordCount)> and #ValueList(qGetSiblingsRegistered.name)# </cfif> on the <strong>#qGetRegistrationInfo.tour_name#</strong> tour.
                         </h3>
                             
                         <font color="red">* * Your spot will not be confirmed until permission form has been received by MPD Tours America.Please work on getting this completed as soon as possible * *</font> 
@@ -194,7 +194,7 @@
                         <a href="http://trips.exitsapplication.com/frequently-asked-questions.cfm">http://trips.exitsapplication.com/frequently-asked-questions.cfm</a>
                     </p>
                     
-                    <p>If you have any questions that are not answerd please don't hesitate to contact us at #APPLICATION.MPD.email#. </p>
+                    <p>If you have any questions that are not answerd please don't hesitate to contact us at info@mpdtoursamerica.com. </p>
                     
                     <p>See you soon!</p>
                     
