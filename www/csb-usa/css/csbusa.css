@@ -1,0 +1,436 @@
+body {
+	margin: 0; /* it's good practice to zero the margin and padding of the body element to account for differing browser defaults */
+	padding: 0;
+	text-align: center; /* this centers the container in IE 5* browsers. The text is then set to the left aligned default in the #container selector */
+	color: #000;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 12px;
+	background-color: #D5D6D8;
+	background-image: url(../images/background_03.png);
+	background-repeat: repeat-x;
+}
+.oneColFixCtrHdr #container {
+	width: 780px;
+	text-align: left; /* this overrides the text-align: center on the body element. */
+	background-color: #FFFFFF;
+	background-repeat: no-repeat;
+	background-position: center top;
+	border: thin solid #999;
+	padding: 0px;
+	margin-top: 0;
+	margin-right: auto;
+	margin-bottom: 0;
+	margin-left: auto;
+}
+.oneColFixCtrHdr #header {
+	background-color: #FFF;
+	background-image: url(../images/header_02.png);
+	background-repeat: no-repeat;
+	background-position: center;
+	height: 121px;
+	padding-top: 0;
+	padding-right: 10px;
+	padding-bottom: 0;
+	padding-left: 20px;
+	cursor: pointer;
+}
+.oneColFixCtrHdr #header h1 {
+	margin: 0; /* zeroing the margin of the last element in the #header div will avoid margin collapse - an unexplainable space between divs. If the div has a border around it, this is not necessary as that also avoids the margin collapse */
+	padding: 10px 0; /* using padding instead of margin will allow you to keep the element away from the edges of the div */
+}
+.oneColFixCtrHdr #mainContent {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 14px;
+	padding-top: 20;
+	padding-right: 27px;
+	padding-bottom: 0px;
+	padding-left: 27px;
+	margin-top: 23px;
+}
+.oneColFixCtrHdr #mainContent0mg {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 14px;
+	padding-top: 0;
+	padding-right: 27px;
+	padding-bottom: 0px;
+	padding-left: 27px;
+	margin-top: 0px;
+}
+
+.oneColFixCtrHdr .bStrip {
+	background-color: #374C87;
+	height: 60px;
+	bottom: -12%;
+	display: block;
+}
+.oneColFixCtrHdr .gStrip {
+	background-color: #059347;
+	height: 60px;
+	bottom: -12%;
+	display: block;
+}
+.clearfix {
+	display: block;
+	clear: both;
+	height: 15px;
+}
+.clearfixG {
+	display: block;
+	clear: both;
+	height: 30px;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 18px;
+	font-weight: bold;
+	letter-spacing: 3px;
+	text-align: center;
+	color: #059347;
+}
+.clearfixB {
+	display: block;
+	clear: both;
+	height: 30px;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 18px;
+	font-weight: bold;
+	letter-spacing: 3px;
+	text-align: center;
+	color: #364B86;
+}
+.clearfixT {
+	display: block;
+	clear: both;
+	height: 20px;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	letter-spacing: 5px;
+	text-align: center;
+	color: #364B86;
+}
+.clearfixFillB {
+	display: block;
+	clear: both;
+	height: 20px;
+	letter-spacing: 5px;
+	text-align: center;
+	background-color: #364B86;
+}
+.clearfixFillG {
+	display: block;
+	clear: both;
+	height: 20px;
+	letter-spacing: 5px;
+	text-align: center;
+	background-color: #059347;
+}
+.clearfix1px {
+	display: block;
+	clear: both;
+	height: 2px;
+}
+.sideLeft {
+	float: left;
+	height: 265px;
+	width: 330px;
+	margin-left: 50px;
+	background-repeat: no-repeat;
+	text-align: center;
+	background-position: top;
+}
+.sideLeft p {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 14px;
+	color: #FFF;
+	font-weight: bold;
+	text-align: center;
+	line-height: 0px;
+}
+.sideRight {
+	clear: right;
+	float: right;
+	height: 260px;
+	width: 325px;
+	margin-right: 50px;
+	background-repeat: no-repeat;
+	text-align: center;
+	background-position: top;
+}
+.sideRight p {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 14px;
+	color: #FFF;
+	font-weight: bold;
+	text-align: center;
+	line-height: 0px;
+}
+.greenBar {
+	background-image: url(../images/topBar_05.png);
+	height: 53px;
+	top: 0px;
+}
+.greenBar p {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 24px;
+	color: #FFF;
+	font-weight: bold;
+	text-align: left;
+	padding-left: 35px;
+	line-height: 32px;
+}
+.italicBold {
+	font-style: italic;
+	font-weight: bold;
+}
+a:link {
+	color: #FFF;
+	text-decoration: none;
+}
+a:visited {
+	text-decoration: none;
+	color: #FFF;
+}
+a:hover {
+	text-decoration: none;
+	color: #FFF;
+}
+a:active {
+	text-decoration: none;
+	color: #FFF;
+}
+
+.black{
+	color: #000;
+	text-decoration: none;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.black:link {
+	color: #000;
+	text-decoration: none;
+}
+.black:visited {
+	text-decoration: none;
+	color: #000;
+}
+.black:hover {
+	text-decoration: none;
+	color: #374C87;
+}
+.black:active {
+	text-decoration: none;
+	color: #000;
+}
+.checkin {
+	float: right;
+	height: 50px;
+	width: 150px;
+	padding: 10px;
+}
+.14ptBoldLinks {
+	font-size: 14px;
+	color: #374C87;
+	font-weight: bold;
+}
+.14ptBoldLinks:link {
+	color: #374C87;
+	text-decoration: none;
+}
+.14ptBoldLinks:visited {
+	text-decoration: none;
+	color: #374C87;
+}
+.14ptBoldLinks:hover {
+	text-decoration: none;
+	color: #CCC;
+}
+.14ptBoldLinks:active {
+	text-decoration: none;
+	color: #364B86;
+}
+.hTags {
+	font-family: Verdana, Geneva, sans-serif;
+	color: #374C87;
+	font-weight: bold;
+}
+.BLinks {
+	font-family: Verdana, Geneva, sans-serif;
+	color: #374C87;
+	font-weight: bold;
+	padding-bottom: 5px;
+}
+.BLinks:link {
+	color: #374C87;
+	text-decoration: none;
+}
+.BLinks:visited {
+	text-decoration: none;
+	color: #374C87;
+}
+.BLinks:hover {
+	text-decoration: none;
+	color: #CCC;
+}
+.BLinks:active {
+	text-decoration: none;
+	color: #364B86;
+}
+p, h, ul {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 11px;
+	line-height: 17px;
+	text-align: justify;
+}
+.picPlace {
+	float: right;
+	width: 150px;
+	margin-bottom: 10px;
+	margin-left: 20px;
+	margin-top: 0px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: bold;
+	color: #999;
+	text-align: center;
+}
+.picPlaceW {
+	float: right;
+	width: 250px;
+	margin-bottom: 10px;
+	margin-left: 20px;
+	margin-top: 0px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: bold;
+	color: #999;
+	text-align: center;
+}
+.blackN{
+	color: #000;
+	text-decoration: none;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 11px;
+	line-height: 17px;
+}
+
+.blackN:link {
+	color: #000;
+	text-decoration: none;
+}
+.blackN:visited {
+	text-decoration: none;
+	color: #000;
+}
+.blackN:hover {
+	text-decoration: none;
+	color: #374C87;
+	font-weight: bold;
+}
+.blackN:active {
+	text-decoration: none;
+	color: #000;
+}#partBullets {
+	height: 150px;
+	width: 270px;
+	margin-left: 35px;
+	margin-top: 30px;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 11px;
+	position: relative;
+	z-index: 11;
+	float: left;
+}
+.swtParticipants {
+	background-image: url(../SWT/images/participantsSM.jpg);
+	height: 201px;
+	width: 781px;
+}
+.subMenu {
+	height: 160px;
+	margin-top: 15px;
+	margin-left: 35px;
+	padding-top: 30px;
+	width: 500px;
+}
+.redText {
+	color: #F00;
+}
+ul, ol, li {
+	text-align: left;
+}
+.bold {
+	font-weight: bold;
+}
+.numeric {
+	list-style-type: upper-roman;
+}
+.none {
+	list-style-type: none;
+}
+.circle {
+	list-style-type: circle;
+}
+.square {
+	list-style-type: square;
+}
+.resHeader {
+	background-color: #000;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #FFF;
+	padding-top: 3px;
+	padding-right: 15px;
+	padding-bottom: 3px;
+	padding-left: 15px;
+	text-align: center;
+}
+#tabsDiv {
+	padding-left: 0px;
+	padding-top: 12px;
+	padding-bottom: 0px;
+	margin: 0px;
+	height: 100%;
+}
+.oneColFixCtrHdr #container .animation img {
+	border-bottom-width: medium;
+	border-bottom-style: groove;
+	border-bottom-color: #999;
+	border-top-width: medium;
+	border-top-style: groove;
+	border-top-color: #999;
+}
+h2 {
+	border-bottom-width: medium;
+	border-bottom-style: double;
+	border-bottom-color: #000;
+}
+/* SWT LInks*/
+.swtblack{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #000;
+	text-decoration: none;
+}
+
+.swtblack:link {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #000;
+	text-decoration: none;
+}
+.swtblack:visited {
+	text-decoration: none;
+	color: #000;
+}
+.swtblack:hover {
+	text-decoration: none;
+	color: #374C87;
+}
+.swtblack:active {
+	text-decoration: none;
+	color: #000;
+}
