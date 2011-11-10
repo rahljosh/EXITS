@@ -1,0 +1,52 @@
+body {
+	background-image: url(images/back.jpg);
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 10px;
+}
+.text {
+	font-family: Verdana;
+	font-size: 10px;
+	font-style: normal;
+	text-align: justify;
+}
+.top {
+	font-family: Verdana;
+	font-size: 10px;
+	font-style: normal;
+	text-align: justify;
+	color:#00411a;
+}
+.bottom {
+	font-family: Verdana;
+	font-size: 10px;
+	font-style: normal;
+	color:#ffffff;
+	text-align:center;
+}
+.MenuItens {
+	font-family: Verdana;
+	text-decoration:none;
+	font-size: 10px;
+	font-weight: bold;
+	color: #FFF;
+	text-align: center;
+}
+.MenuItens:hover {
+	color: #9DD7F9;
+}
+.LinkItens {
+	font-family: Verdana;
+	text-decoration:none;
+	font-size: 10px;
+	font-weight: bold;
+	color:#00411a;
+	text-align: center;
+}
+.LinkItens:hover {
+	color:#00411a;
+	text-decoration:underline;
+	font-weight: bold;
+}
+ul li {
+	margin-bottom:5px;
+}
