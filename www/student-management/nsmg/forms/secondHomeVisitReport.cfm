@@ -85,7 +85,7 @@
                 </cfquery>
             </cfif>
             
-            <cflocation url="index.cfm?curdoc=progress_reports">
+            <cflocation url="index.cfm?curdoc=secondVisitReports">
        
         </cfif>
         
@@ -330,7 +330,7 @@
             </cfquery>
             
             <!--- Successfully Updated - Go to Next Page --->
-            <cflocation url="index.cfm?curdoc=progress_reports" addtoken="No">
+            <cflocation url="index.cfm?curdoc=secondHomeVisitReport" addtoken="No">
         
 		</cfif> 
         <!--- NOT SESSION.formErrors.length() --->
@@ -371,8 +371,10 @@
 		// Program Information
 		qGetProgramInfo = APPLICATION.CFC.PROGRAM.getPrograms(programid=qGetStudentInfo.programid);
 		
+		
 		//Host Family Info
-		qGetHosts = APPLICATION.CFC.HOST.getHosts(hostID=qGetStudentInfo.hostID);
+		qGetHosts = APPLICATION.CFC.HOST.getHosts(hostID=getReport.fk_hostID);
+		
 	</cfscript>
     
 </cfsilent>  
@@ -914,7 +916,7 @@
 	</cfif>
     
     <div align="center">
-	    <a href="index.cfm?curdoc=progress_reports">Back to Reports</a>
+	    <a href="index.cfm?curdoc=secondHomeVisitReport">Back to Reports</a>
     </div>
 
 </cfoutput>
