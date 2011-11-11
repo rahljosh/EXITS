@@ -7,16 +7,6 @@
     <cfparam name="CLIENT.companyid" default="0">
     <cfparam name="CLIENT.support_email" default="Faith Mayer <Faith.E.Mayer@maine.gov>">
 
-	<!--- called by: forms/user_form.cfm, user_info.cfm, flash/login.cfm (forget password form), forms/pr_reject.cfm, forms/pr_email.cfm app_process/finalize_transfer.cfm, student_app/resend_elcome_student.cfm, student_app/querys/resend_welcome_student.cfm
-        student_app/querys/start_student.cfm
-        student_app/querys/qr_deny_application.cfm
-        student_app/querys/help_desk
-        student_app/student_assign_pass
-        student_app/error_message.cfm
-        student_app/email_form.cfm
-        student_app_app_recived
-    --->
-
 	<cffunction name="send_mail" access="public" returntype="void">
         <cfargument name="email_from" default="Faith Mayer <Faith.E.Mayer@maine.gov>" required="true">
 		<cfargument name="email_to" type="string" required="true">

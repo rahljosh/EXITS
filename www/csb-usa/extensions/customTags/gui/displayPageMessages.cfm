@@ -57,42 +57,6 @@
             
             <cfswitch expression="#ATTRIBUTES.messageType#">
 			
-				<!--- Error displayed on login --->
-                <cfcase value="login">
-                
-                    <table border="0" cellspacing="0" cellpadding="0" class="pageMessages">
-                    <tr>
-                        <td>
-                        
-                            <!--- Loop over the messages --->
-                            <ul class="list">
-                                
-                                <!--- Loop over the message --->
-                                <cfloop from="1" to="#ArrayLen(ATTRIBUTES.pageMessages)#" index="i">
-                                   <li>#ATTRIBUTES.pageMessages[i]#</li>        	
-                                </cfloop>
-        
-                            </ul>
-                            
-                        </td>
-                    </tr>
-                    </table>
-
-                    <script type="text/javascript">
-						// FadeIn and FadeOut Message
-                    	$(".pageMessages").fadeIn().fadeOut(5000);
-                    </script>
-
-					<cfscript>
-                        // Check to see if we are supposed to clear the queue 
-                        if ( ATTRIBUTES.Clear ) {
-							ATTRIBUTES.pageMessages.Clear();
-							SESSION.pageMessages.clear();
-                        }
-                    </cfscript>
-                
-                </cfcase>
-            
 				<!--- Error displayed on sections --->
                 <cfcase value="section">
                     
