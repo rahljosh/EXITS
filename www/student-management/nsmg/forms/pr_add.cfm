@@ -92,16 +92,18 @@
     <cfset form.companyid = get_student.companyid>
     <cfset form.fk_sr_user = get_student.arearepid>
     <cfset form.fk_pr_user = get_student.placerepid>
-    <cfset form.fk_secondVisitRep = get_student.secondVisitRepID>
-    
+    <Cfif not isDefined('form.fk_secondVisitRep')>
+    	<cfset form.fk_secondVisitRep = get_student.secondVisitRepID>
+    </Cfif>
     <cfset form.programid = get_student.programid>
     <cfif form.programid EQ 0 or form.programid EQ ''>
     	Program is missing.  Report may not be added.
         <cfabort>
     </cfif>
-    
-    <cfset form.fk_host = get_student.hostid>
-    <cfif form.fk_host EQ 0 or form.fk_host EQ ''>
+    <Cfif not isDefined('form.fk_host')>
+    	<cfset form.fk_host = get_student.hostid>
+    </Cfif>
+	<cfif form.fk_host EQ 0 or form.fk_host EQ ''>
     	Host Family is missing.  Report may not be added.
         <cfabort>
     </cfif>
