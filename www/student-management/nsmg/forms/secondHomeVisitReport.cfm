@@ -373,7 +373,7 @@
 		
 		
 		//Host Family Info
-		qGetHosts = APPLICATION.CFC.HOST.getHosts(hostID=getReport.fk_hostID);
+		qGetHosts = APPLICATION.CFC.HOST.getHosts(hostID=get_Report.fk_host);
 		
 	</cfscript>
     
@@ -916,7 +916,7 @@
 	</cfif>
     
     <div align="center">
-	    <a href="index.cfm?curdoc=secondHomeVisitReport">Back to Reports</a>
+	    <a href="index.cfm?curdoc=secondVisitReport">Back to Reports</a>
     </div>
 
 </cfoutput>
