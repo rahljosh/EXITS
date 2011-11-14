@@ -71,8 +71,7 @@
                         <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.NonISE, CLIENT.companyID)>
                             AND 
                                 companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-                        <!--- ISE Apps --->
-						<cfelse>
+                        <cfelse>
                             AND
                                 companyID NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.NonISE#" list="yes"> )
                         </cfif>	

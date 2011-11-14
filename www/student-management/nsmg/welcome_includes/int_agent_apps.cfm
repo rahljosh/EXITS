@@ -68,12 +68,15 @@
                                 AND 
                                     app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#"> 
                             </cfif>
-                            
-                            <!--- Keep Exchange Service Information Apps separate --->
-                            <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ESI, CLIENT.companyID)>
-                            	AND
-                                	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-                            </cfif>
+                           
+							<!--- Filter for Case, WEP, Canada and ESI --->
+                            <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.NonISE, CLIENT.companyID)>
+                                AND 
+                                    companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                            <cfelse>
+                                AND
+                                    companyID NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.NonISE#" list="yes"> )
+                            </cfif>	
                             
                         </cfquery>
                      
