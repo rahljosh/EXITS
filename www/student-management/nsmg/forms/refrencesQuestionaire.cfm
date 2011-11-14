@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Refrences Questionaire</title>
+<title>Refrences Questionnaire</title>
  <link rel="stylesheet" media="all" type="text/css"href="../linked/css/baseStyle.css" />
 <style type="text/css">
 	body{
@@ -164,7 +164,7 @@ where refid = #url.ref#
             />
 <div id="stylized" class="myform">
  
-        <h1>References Questionaire</h1>
+        <h1>References Questionnaire</h1>
 
   
         <p>
