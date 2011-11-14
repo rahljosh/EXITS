@@ -11,8 +11,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>HIGH SCHOOL INVOICE BATCHING FOR STANDARD FEES</title>
-
+<title>HIGH SCHOOL INVOICE BATCH FOR STANDARD FEES</title>
 <style type="text/css">
 <!--
     table.frame
@@ -66,7 +65,7 @@
     <tr valign=middle height=24>
         <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
         <td width=26 background="pics/header_background.gif"><img src="pics/students.gif"></td>
-        <td background="pics/header_background.gif"><h2>HIGH SCHOOL INVOICE BATCHING FOR STANDARD FEES</h2></td>
+        <td background="pics/header_background.gif"><h2>HIGH SCHOOL INVOICE BATCH FOR STANDARD FEES</h2></td>
         <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
     </tr>
 </table>
@@ -198,6 +197,8 @@ smg_charges
 		smg_users su ON ss.intrep = su.userid
     WHERE
 		ss.active = 1
+    AND
+    	intrep != 0
     <cfif form.placed EQ 1>
     AND
     	ss.host_fam_approved <= 4
@@ -294,15 +295,15 @@ smg_charges
 			<!--- AND companyid = #getHSstud.companyid# --->
 			AND active = 1
 			</cfquery> 
-				   
+			  
 			<cfif month(getHSstud.enddate) EQ 12>
-				<cfset amount = #getHSstud.12_month_price#>
+				<cfset amount = #Val(getHSstud.12_month_price)#>
 				<cfelseif  dateDiff('m',getHSstud.startdate, getHSstud.enddate) GT 6>
-					 <cfset amount = #getHSstud.10_month_price#>
+					 <cfset amount = #Val(getHSstud.10_month_price)#>
 					 <cfelse>
-						<cfset amount = #getHSstud.5_month_price#>
+						<cfset amount = #Val(getHSstud.5_month_price)#>
 			</cfif>
-		   
+		    
 			<cfif checkDeposit.recordCount EQ 0>
 				<cfset amountDue = #variables.amount#>
 				<cfelse>
