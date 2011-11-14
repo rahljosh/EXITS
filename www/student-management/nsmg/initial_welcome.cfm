@@ -445,7 +445,9 @@
                         	<a href="index.cfm?curdoc=calendar/index">WebEx Calendar</a> <br />
                         </cfif>
                        <cfif client.companyid lte 5>
-                        <a href="uploadedfiles/pdf_docs/Pre%20AYP%20Bonus%202011.pdf" target="_blank">Click Here For Exciting Bonuses For The Placing Season!</a>
+                       2012 Placing Season Bonuses!<BR />
+                        <a href="uploadedfiles/pdf_docs/ISE/promotion/Pre-Ayp%20Bonus%202012.pdf" target="_blank">Pre-AYP</a> :: 
+                        <a href="uploadedfiles/pdf_docs/ISE/promotion/Early%20Placement%20Bonus%202012.pdf" target="_blank">Early Placement</a>
                    		</cfif>
                         
                     </td>
@@ -535,6 +537,10 @@
                                 </Tr>
                                 
                             <cfloop query="get_new_users"> 
+                            	<cfscript>
+                                	//Check if paperwork is complete for season
+									CheckPaperwork = APPLICATION.CFC.udf.paperworkCompleted(userid=get_new_users..userid,season=9);
+								</cfscript>
 								<!--- put * if user is the advisor for this user. --->
                                 <cfif advisorid EQ CLIENT.userid>
                                     <font color="FF0000" size="4"><strong>*</strong></font>
@@ -552,7 +558,9 @@
                                 <cfelse>
                                     <a href="index.cfm?curdoc=user_info&userid=#userid#">#firstname# #lastname#</a> of #city#, #state#
                                 </cfif>
-                                </td><Td><cfif get_new_users.active eq 0>Not Active, <CFif client.usertype eq 4><a href="?curdoc=forms/user_paperwork&userid=#userid#"></cfif>Verification Needed</a><cfelse>Account Active</cfif></Td>
+                                </td><Td>
+								
+								<cfif CheckPaperwork.complete eq 0>Not Active, <CFif client.usertype eq 4><a href="?curdoc=forms/user_paperwork&userid=#userid#"></cfif>Verification Needed</a><cfelse>Account Active</cfif></Td>
                                 </Tr>
                             </cfloop>
                             </table>
