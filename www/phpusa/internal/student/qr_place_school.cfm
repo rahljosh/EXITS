@@ -29,16 +29,20 @@
             s.familyLastName,
             s.intRep,
             php.assignedID, 
+            php.programid,
             php.arearepid, 
             php.placerepid, 
             php.schoolID, 
             php.hostid,
+            smg_programs.programname,
             ps.schoolName,
             intRep.businessName
         FROM 
         	php_students_in_program php
         INNER JOIN
         	smg_students s ON s.studentID = php.studentID
+        INNER JOIN
+        	smg_programs ON smg_programs.programid = php.programid
         LEFT OUTER JOIN
         	php_schools ps ON ps.schoolID = php.schoolID    
         LEFT OUTER JOIN
@@ -118,6 +122,7 @@
                 <tr><td>This email is to let you know that a student changed school in the database.</td></tr>
                 <tr><td>Intl. Rep.: #qGetProgramInfo.businessname# (###qGetProgramInfo.intRep#) </td></tr>
                 <tr><td>Student: #qGetProgramInfo.firstname# #qGetProgramInfo.familylastname# (###qGetProgramInfo.studentID# - Assigned ID ###qGetProgramInfo.assignedID#)</td></tr>
+                <tr><td>Program: #qGetProgramInfo.programname# (###qGetProgramInfo.programID#) </td></tr>
                 <tr><td>Change Date: #DateFormat(now(), 'mm/dd/yyyy')#</td></tr>
                 <tr><td>Previous School: #qGetProgramInfo.schoolName# (###qGetProgramInfo.schoolID#) </td></tr>
                 <tr><td>New School: #qGetNewSchool.schoolName# (###qGetNewSchool.schoolID#)</td></tr>
