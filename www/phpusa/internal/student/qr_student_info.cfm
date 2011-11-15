@@ -30,12 +30,15 @@
             stu_prog.i20no,
             stu_prog.i20received,
             stu_prog.canceldate,
+            smg_programs.programname,
             u.businessname,
             sc.schoolname
         FROM 
         	smg_students s
         INNER JOIN 
         	php_students_in_program stu_prog ON stu_prog.studentID = s.studentID
+        INNER JOIN
+        	smg_programs ON smg_programs.programid = stu_prog.programID
         LEFT JOIN 
         	smg_users u ON u.userid = s.intrep
         LEFT JOIN 
@@ -199,7 +202,7 @@
 
     
     <!--- Email Finance Department --->
-	<cfmail to="#AppEmail.finance#, bmccready@iseusa.com" 
+	<cfmail to="#AppEmail.finance#" 
     	from="#AppEmail.support#" 
         subject="PHP Cancelation - #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)" 
         type="html" 
@@ -213,6 +216,7 @@
 			<tr><td>This email is to let you know that a student was canceled in the database.</td></tr>
 			<tr><td>Intl. Rep.: #qGetStudentInfo.businessname# (###qGetStudentInfo.intRep#) </td></tr>
 			<tr><td>Student: #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID# - Assigned ID ###qGetStudentInfo.assignedID#)</td></tr>
+            <tr><td>Program: #qGetStudentInfo.programname# (###qGetStudentInfo.programID#) </td></tr>
             <tr><td>Cancel Date: #DateFormat(FORM.date_canceled, 'mm/dd/yyyy')#</td></tr>
 			<tr><td>Cancel Reason: #FORM.Reason_canceled#</td></tr>
             <tr><td>Applying School: <cfif LEN(qGetStudentInfo.schoolname)> #qGetStudentInfo.schoolname# <cfelse> n/a </cfif> </td></tr>
