@@ -56,9 +56,6 @@
     <cfparam name="FORM.doc_class_schedule" default="">    
     
     <cfscript>
-		// Get Student Arrival
-		qGetArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=qGetStudentInfo.studentID, flightType='arrival', flightLegOption='last');
-		
 		// Get Eligible Host Family Members
 		qGetEligibleCBCFamilyMembers = APPLICATION.CFC.CBC.getEligibleHostMember(hostID=qGetStudentInfo.hostID,studentID=qGetStudentInfo.studentID);
 	</cfscript>
@@ -588,7 +585,7 @@
                         <td class="reportTitleLeftClean" colspan="2">
                             Arrival Date Compliance
                             &nbsp; - &nbsp;
-                            <cfif isDate(qGetArrival.dep_date) AND qGetArrival.dep_date LT now()>
+                            <cfif VAL(vHasStudentArrived)>
                                 Student arrived on: #DateFormat(qGetArrival.dep_date, 'mm/dd/yyyy')#
                             <cfelseif isDate(qGetArrival.dep_date) AND qGetArrival.dep_date GTE now()>
                                 Student is going to arrive on: #DateFormat(qGetArrival.dep_date, 'mm/dd/yyyy')#

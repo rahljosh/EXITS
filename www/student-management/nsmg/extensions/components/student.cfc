@@ -949,6 +949,13 @@
 			var vUpdatedBy = 'n/a';
 			var vActions = '';			
 			
+			var hasHostIDChanged = 0;
+			var hasSchoolIDChanged = 0;
+			var hasPlaceRepIDChanged = 0;
+			var hasAreaRepIDChanged = 0;
+			var hasSecondVisitRepIDChanged = 0;
+			var hasDoublePlacementIDChanged = 0;
+
 			// Set to 1 to add an extra line on the history
 			var vAddExtraLine = 0;
 			
@@ -999,6 +1006,7 @@
 				if ( VAL(ARGUMENTS.hostID) AND VAL(qGetStudentInfo.hostID) AND qGetStudentInfo.hostID NEQ ARGUMENTS.hostID ) {
 					vQueryType = 'insert';
 					vAddExtraLine = 1;
+					hasHostIDChanged = 1;
 					
 					// Start building record
 					vActions = vActions & "<strong>New Placement Information - Pending HQ Approval</strong>  <br /> #CHR(13)#";
@@ -1008,16 +1016,16 @@
 						vActions = vActions & "<strong>Host Family Updated</strong> <br /> #CHR(13)#";
 					}
 	
-					if ( LEN(ARGUMENTS.hostIDReason) ) {
-						vActions = vActions & "Reason: #ARGUMENTS.hostIDReason# <br /> #CHR(13)#";
-					}
-	
 					if ( VAL(ARGUMENTS.isWelcomeFamily) ) {
-						vActions = vActions & "This is a welcome family <br /> #CHR(13)#";
+						vActions = vActions & "<strong>This is a welcome family</strong> <br /> #CHR(13)#";
 					}
 	
 					if ( VAL(ARGUMENTS.isRelocation) ) {
-						vActions = vActions & "This is a relocation <br /> #CHR(13)#";
+						vActions = vActions & "<strong>This is a relocation</strong> <br /> #CHR(13)#";
+					}
+
+					if ( LEN(ARGUMENTS.hostIDReason) ) {
+						vActions = vActions & "Reason: #ARGUMENTS.hostIDReason# <br /> #CHR(13)#";
 					}
 	
 				}
@@ -1032,6 +1040,7 @@
 				if ( VAL(ARGUMENTS.schoolID) AND VAL(qGetStudentInfo.schoolID) AND qGetStudentInfo.schoolID NEQ ARGUMENTS.schoolID ) {
 					vQueryType = 'update';
 					vAddExtraLine = 1;
+					hasSchoolIDChanged = 1;
 					
 					// Add Message if info has been updated
 					if ( VAL(qGetStudentInfo.schoolID) ) {
@@ -1058,6 +1067,7 @@
 				if ( VAL(ARGUMENTS.placeRepID) AND VAL(qGetStudentInfo.placeRepID) AND qGetStudentInfo.placeRepID NEQ ARGUMENTS.placeRepID ) {
 					vQueryType = 'update';
 					vAddExtraLine = 1;
+					hasPlaceRepIDChanged = 1;
 
 					// Add Message if info has been updated
 					if ( VAL(qGetStudentInfo.placeRepID) ) {
@@ -1083,6 +1093,7 @@
 				if ( VAL(ARGUMENTS.areaRepID) AND VAL(qGetStudentInfo.areaRepID) AND qGetStudentInfo.areaRepID NEQ ARGUMENTS.areaRepID ) {
 					vQueryType = 'update';
 					vAddExtraLine = 1;
+					hasAreaRepIDChanged = 1;
 
 					// Add Message if info has been updated
 					if ( VAL(qGetStudentInfo.areaRepID) ) {
@@ -1108,6 +1119,7 @@
 				if ( VAL(qGetStudentInfo.secondVisitRepID) AND VAL(ARGUMENTS.secondVisitRepID) AND qGetStudentInfo.secondVisitRepID NEQ ARGUMENTS.secondVisitRepID ) {
 					vQueryType = 'update';
 					vAddExtraLine = 1;
+					hasSecondVisitRepIDChanged = 1;
 
 					// Add Message if info has been updated
 					if ( VAL(qGetStudentInfo.secondVisitRepID) ) {
@@ -1124,6 +1136,7 @@
 				} else if ( VAL(ARGUMENTS.secondVisitRepID) AND qGetStudentInfo.secondVisitRepID NEQ ARGUMENTS.secondVisitRepID ) {
 					vQueryType = 'update';
 					vAddExtraLine = 1;
+					hasSecondVisitRepIDChanged = 1;
 					
 					vActions = vActions & "<strong>2<sup>nd</sup> Representative Visit Added</strong> <br /> #CHR(13)#";
 
@@ -1139,6 +1152,7 @@
 				if ( VAL(qGetStudentInfo.doublePlace) AND VAL(ARGUMENTS.doublePlace) AND qGetStudentInfo.doublePlace NEQ ARGUMENTS.doublePlace ) {
 					vQueryType = 'update';
 					vAddExtraLine = 1;
+					hasDoublePlacementIDChanged = 1;
 
 					// Add Message if info has been updated
 					if ( VAL(qGetStudentInfo.doublePlace) ) {
@@ -1159,6 +1173,7 @@
 				} else if ( NOT VAL(qGetStudentInfo.doublePlace) AND VAL(ARGUMENTS.doublePlace) AND qGetStudentInfo.doublePlace NEQ ARGUMENTS.doublePlace ) {
 					vQueryType = 'update';
 					vAddExtraLine = 1;
+					hasDoublePlacementIDChanged = 1;
 
 					vActions = vActions & "<strong>Double Placement Added</strong> <br /> #CHR(13)#";
 
@@ -1173,6 +1188,7 @@
 				} else if ( ARGUMENTS.placementStatus NEQ 'Approved' AND VAL(qGetStudentInfo.doublePlace) AND NOT VAL(ARGUMENTS.doublePlace) ) {
 					vQueryType = 'update';
 					vAddExtraLine = 1;
+					hasDoublePlacementIDChanged = 1;
 					
 					vActions = vActions & "<strong>Double Placement Removed</strong> <br /> #CHR(13)#";	
 					// Previous Supervising Representative for reference
@@ -1218,12 +1234,18 @@
                         smg_hosthistory	
                     (
                         studentID, 
-                        hostID,                     
-                        schoolID, 
+                        hostID,  
+                        hasHostIDChanged,                   
+                        schoolID,
+                        hasSchoolIDChanged, 
                         placeRepID, 
+                        hasPlaceRepIDChanged,
                         areaRepID,
+                        hasAreaRepIDChanged,
                         secondVisitRepID, 
+                        hasSecondVisitRepIDChanged,
                         doublePlacementID,
+                        hasDoublePlacementIDChanged,
                         changedBy,
                         isWelcomeFamily,
                         isRelocation,
@@ -1234,12 +1256,18 @@
                     VALUES
                     (
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">,                    
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.schoolID)#">, 
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(hasHostIDChanged)#">,                    
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.schoolID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(hasSchoolIDChanged)#">,   
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.placeRepID)#">, 
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(hasPlaceRepIDChanged)#">, 
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.areaRepID)#">, 
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(hasAreaRepIDChanged)#">, 
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.secondVisitRepID)#">, 
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(hasSecondVisitRepIDChanged)#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(hasDoublePlacementIDChanged)#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.changedBy)#">, 
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isWelcomeFamily)#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isRelocation)#">, 
@@ -1285,7 +1313,27 @@
                     UPDATE
                         smg_hosthistory	
                     SET
-                        schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.schoolID)#"> ,                   
+                        <cfif VAL(hasSchoolIDChanged)>
+                        	hasSchoolIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="#hasSchoolIDChanged#">,                
+                        </cfif>
+                        
+                        <cfif VAL(hasPlaceRepIDChanged)>
+                        	hasPlaceRepIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="#hasPlaceRepIDChanged#">,
+                        </cfif>
+                        
+                        <cfif VAL(hasAreaRepIDChanged)>
+                        	hasAreaRepIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="#hasAreaRepIDChanged#">,
+                        </cfif>
+                        
+                        <cfif VAL(hasAreaRepIDChanged)>
+                        	hasSecondVisitRepIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="#hasSecondVisitRepIDChanged#">,
+                        </cfif>
+                        
+                        <cfif VAL(hasDoublePlacementIDChanged)>
+                        	hasDoublePlacementIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="#hasDoublePlacementIDChanged#">,
+                       	</cfif> 
+
+                        schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.schoolID)#">,  
                         placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.placeRepID)#">,
                         areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.areaRepID)#">,
                         secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.secondVisitRepID)#">,
@@ -1311,11 +1359,17 @@
                     h.companyID,
                     h.studentID,
                     h.hostID,
+                    h.hasHostIDChanged,
                     h.schoolID,
+                    h.hasSchoolIDChanged,
                     h.placeRepID,
+                    h.hasPlaceRepIDChanged,
                     h.areaRepID,
+                    h.hasAreaRepIDChanged,
                     h.secondVisitRepID,
+                    h.hasSecondVisitRepIDChanged,
                     h.doublePlacementID,
+                    h.hasDoublePlacementIDChanged,
                     h.changedBy,
                     h.isWelcomeFamily,
                     h.isRelocation,

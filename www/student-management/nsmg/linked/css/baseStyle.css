@@ -207,6 +207,10 @@
 	font-weight:bold;
 }
 
+.placementMgmtChanged {
+	background-color:#FF6;	
+}
+
 #actionButtons form {
 	display:inline;
 	margin:15px;
