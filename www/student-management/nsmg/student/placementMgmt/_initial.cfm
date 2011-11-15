@@ -587,7 +587,7 @@
 			$("#reason").val("");
 			
 			$("#isRelocation0").attr('checked', false);
-			$("#isRelocation1").attr('checked', false);
+			// $("#isRelocation1").attr('checked', false);
 			
 			$("#isWelcomeFamily0").attr('checked', false);
 			$("#isWelcomeFamily1").attr('checked', false);
@@ -625,13 +625,6 @@
 		$("#" + div).slideDown();	
 		
 		$("#tableDisplaySaveButton").slideDown();
-	
-	}
-	
-	// Modal Confirmation
-	var setFamilyAsPermanent = function() { 
-		
-		test = 'Are you sure you want to set this family as permanent?';
 	
 	}
 	
@@ -957,12 +950,17 @@
                     <cfif VAL(qGetStudentInfo.hostID)>
                         <div class="placementMgmtLinks">
                             [ 
-                            <a href="../../index.cfm?curdoc=host_fam_info&hostid=#qGetStudentInfo.hostID#" target="_blank">More Info</a>  
+                            <a href="../../index.cfm?curdoc=host_fam_info&hostid=#qGetStudentInfo.hostID#" target="_blank">More Information</a>  
                             |
-                            <a href="javascript:displayUpdateField('divHostID','hostID');">Update</a> 
-							| 
-                            <a href="javascript:displayHiddenForm('unplaceStudentForm');">Unplace Student</a> 
-                            <cfif qGetStudentInfo.welcome_family EQ 1 AND ListFind("1,2,3,4,5", CLIENT.userType)>
+                            <a href="javascript:displayUpdateField('divHostID','hostID');">Update</a> 							
+                            
+                            <!--- Display only if student has not arrived --->
+                            <cfif NOT VAL(vHasStudentArrived)>
+                            	| 
+                                <a href="javascript:displayHiddenForm('unplaceStudentForm');">Unplace Student</a> 
+                            </cfif>
+                            
+							<cfif qGetStudentInfo.welcome_family EQ 1 AND ListFind("1,2,3,4,5", CLIENT.userType)>
                                 |
                                 <a href="javascript:setFamilyAsPermanent();">Set as Permanent</a> 
                             </cfif>
@@ -975,7 +973,7 @@
 
                     <cfif VAL(qGetStudentInfo.schoolID)>
                         <div class="placementMgmtLinks">
-                            [ <a href="../../index.cfm?curdoc=school_info&schoolID=#qGetStudentInfo.schoolID#" target="_blank">More Info</a> 
+                            [ <a href="../../index.cfm?curdoc=school_info&schoolID=#qGetStudentInfo.schoolID#" target="_blank">More Information</a> 
                             |
                             <a href="javascript:displayUpdateField('divSchoolID','schoolID');">Update</a> 
                             ]                        
@@ -1018,6 +1016,14 @@
                             <!--- Display only if it's an update --->
                             <cfif VAL(qGetStudentInfo.hostID)>
                             
+								<!--- Relocation - Display only if student has arrived --->
+                                <span>Is this a Relocation? <em>*</em></span>
+                                <input type="radio" value="0" name="isRelocation" id="isRelocation0" checked="checked" #vDisableRelocation# <cfif FORM.isRelocation EQ 0> checked="checked" </cfif> >
+                                <label for="isRelocation0">No</label>                            
+                                &nbsp;                            
+                                <input type="radio" value="1" name="isRelocation" id="isRelocation1" #vDisableRelocation# <cfif FORM.isRelocation EQ 1> checked="checked" </cfif> >
+                                <label for="isRelocation1">Yes</label>
+                        
 								<!--- Reason --->
                                 <span>Please indicate why you are changing the host family: <em>*</em></span>
                                 <select name="hostIDReason" id="hostIDReason" class="xLargeField">
@@ -1031,16 +1037,6 @@
                                     <option value="Other" <cfif FORM.hostIDReason EQ 'Other'> checked="checked" </cfif> >Other</option>				
                                 </select>
     							
-                                <!--- Display only if student has arrived --->
-                                	
-								<!--- Relocation --->
-                                <span>Is this a Relocation? <em>*</em> </span>
-                                <input type="radio" value="0" name="isRelocation" id="isRelocation0" <cfif FORM.isRelocation EQ 0> checked="checked" </cfif> >
-                                <label for="isRelocation0">No</label>                            
-                                &nbsp;                            
-                                <input type="radio" value="1" name="isRelocation" id="isRelocation1" <cfif FORM.isRelocation EQ 1> checked="checked" </cfif> >
-                                <label for="isRelocation1">Yes</label>
-                        
                         	</cfif>
                                                     
                         </div>
@@ -1148,7 +1144,7 @@
                     
                     <cfif VAL(qGetStudentInfo.placeRepID)>
                         <div class="placementMgmtLinks">
-                            [ <a href="../../index.cfm?curdoc=user_info&userID=#qGetStudentInfo.placeRepID#" target="_blank">More Info</a> 
+                            [ <a href="../../index.cfm?curdoc=user_info&userID=#qGetStudentInfo.placeRepID#" target="_blank">More Information</a> 
                             | 
                             <a href="javascript:displayUpdateField('divPlaceRepID','placeRepID');">Update</a> ] 
                         </div>
@@ -1159,7 +1155,7 @@
                     
                     <cfif VAL(qGetStudentInfo.areaRepID)>
                         <div class="placementMgmtLinks">
-                            [ <a href="../../index.cfm?curdoc=user_info&userID=#qGetStudentInfo.areaRepID#" target="_blank">More Info</a> 
+                            [ <a href="../../index.cfm?curdoc=user_info&userID=#qGetStudentInfo.areaRepID#" target="_blank">More Information</a> 
                             |
                             <a href="javascript:displayUpdateField('divAreaRepID','areaRepID');">Update</a> ] 
                         </div>
@@ -1276,7 +1272,7 @@
                     
                     <cfif VAL(qGetStudentInfo.secondVisitRepID)>
                         <div class="placementMgmtLinks">
-                            [ <a href="../../index.cfm?curdoc=user_info&userID=#qGetStudentInfo.secondVisitRepID#" target="_blank">More Info</a> 
+                            [ <a href="../../index.cfm?curdoc=user_info&userID=#qGetStudentInfo.secondVisitRepID#" target="_blank">More Information</a> 
                             |
                             <a href="javascript:displayUpdateField('divSecondVisitRepID','secondVisitRepID');">Update</a> ] 
                         </div>
@@ -1287,7 +1283,7 @@
                     
                     <cfif VAL(qGetStudentInfo.doublePlace)>
                         <div class="placementMgmtLinks">
-                            [ <a href="../../index.cfm?curdoc=student_info&studentID=#qGetStudentInfo.doublePlace#" target="_blank">More Info</a> 
+                            [ <a href="../../index.cfm?curdoc=student_info&studentID=#qGetStudentInfo.doublePlace#" target="_blank">More Information</a> 
                             |
                             <a href="javascript:displayUpdateField('divDoublePlace','doublePlace');">Update</a> ] 
                         </div>

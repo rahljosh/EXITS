@@ -277,6 +277,45 @@
 	</cffunction>
 
 
+	<!--- This removes foreign accents from online application fields --->
+	<cffunction name="convertToOrdinal" access="public" returntype="string" output="false" hint="Converts a number to ordinal">
+    	<cfargument name="num" hint="Numeric">
+
+		<cfscript>
+			/**
+			 * Returns the 2 character english text ordinal for numbers.
+			 * 
+			 * @param num      Number you wish to return the ordinal for. (Required)
+			 * @return Returns a string. 
+			 * @author Mark Andrachek (hallow@webmages.com) 
+			 * @version 1, November 5, 2003 
+			 */
+			  // if the right 2 digits are 11, 12, or 13, set num to them.
+			  // Otherwise we just want the digit in the one's place.
+			  var two=Right(VAL(ARGUMENTS.num),2);
+			  var ordinal="";
+			  switch(two) {
+				   case "11": 
+				   case "12": 
+				   case "13": { num = two; break; }
+				   default: { num = Right(num,1); break; }
+			  }
+			
+			  // 1st, 2nd, 3rd, everything else is "th"
+			  switch(num) {
+				   case "1": { ordinal = num & "st"; break; }
+				   case "2": { ordinal = num & "nd"; break; }
+				   case "3": { ordinal = num & "rd"; break; }
+				   default: { ordinal = num & "th"; break; }
+			  }
+			
+			  // return the text.
+			  return ordinal;
+        </cfscript>
+		   
+	</cffunction>
+
+
 	<!--- 
 		The entity name must immediately follow the '&' in the entity reference. 
 		Use &amp; instead of & in XML (and in XHTML). 

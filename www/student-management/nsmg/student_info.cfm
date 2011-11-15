@@ -345,7 +345,7 @@
                                         <!---- <cfset ImageScaleToFit(myimage, 250, 135)> ---->
                                         <cfimage source="#myImage#" action="writeToBrowser" border="0" width="135px"><br />
                                        
-                                        <cfif CLIENT.usertype lte 4><A href="qr_delete_picture.cfm?student=#studentPicture.name#&studentID=#studentID#">Remove Picture</a></cfif>
+                                        <cfif listFind("1,2,3,4", CLIENT.userType)><A href="qr_delete_picture.cfm?student=#studentPicture.name#&studentID=#studentID#">Remove Picture</a></cfif>
                                         
                                         <cfcatch type="any">
                                             <img src="pics/no_stupicture.jpg" width="135">
@@ -471,12 +471,13 @@
 				<!----All Users---->
 				<a href="javascript:openPopUp('forms/place_menu.cfm?studentID=#qGetStudentInfo.studentID#', 800, 600);">Placement Management</a>
 				
-                <cfif CLIENT.userID EQ 510>
-                	<a href="student/placementMgmt/index.cfm?uniqueID=#qGetStudentInfo.uniqueID#" class="jQueryModalPL">New Placement Management</a>
+                <cfif listFind("1,2,3,4", CLIENT.userType)>
+                <a href="student/placementMgmt/index.cfm?uniqueID=#qGetStudentInfo.uniqueID#" class="jQueryModalPL">New Placement Management</a>
+                <a href="student/placementMgmt/index.cfm?uniqueID=#qGetStudentInfo.uniqueID#&action=paperwork" class="jQueryModalPL">Placement Paperwork</a>
                 </cfif>
                 
 				<!--- OFFICE USERS ONLY --->
-				<cfif CLIENT.usertype LTE 4> 
+				<cfif listFind("1,2,3,4", CLIENT.userType)> 
 					<!---- <a href="" onClick="javascript: win=window.open('insurance/insurance_management.cfm?studentID=#qGetStudentInfo.studentID#', 'Settings', 'height=400, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Insurance Management</a> ---->	
 					<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#qGetStudentInfo.studentID#', 700, 500);" class="nav_bar">Representative Payments</a> 					
                     <a href="javascript:openPopUp('forms/missing_documents.cfm', 450, 500);" class="nav_bar">Missing Documents</a>
