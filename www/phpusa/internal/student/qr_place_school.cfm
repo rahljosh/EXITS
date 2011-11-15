@@ -108,7 +108,7 @@
         </cfquery>	
 
 		<!--- Email Finance Department --->
-        <cfmail to="#AppEmail.finance#" 
+        <cfmail to="#AppEmail.finance#, bmccready@iseusa.com" 
             from="#AppEmail.support#" 
             subject="PHP School Change Notification - #qGetProgramInfo.firstname# #qGetProgramInfo.familylastname# (###qGetProgramInfo.studentID#)" 
             type="html" 
