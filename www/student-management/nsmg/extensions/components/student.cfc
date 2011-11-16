@@ -313,7 +313,8 @@
         <cfargument name="hostID" hint="hostID is required">
         <cfargument name="isWelcomeFamily" default="0" hint="isWelcomeFamily is not required">
         <cfargument name="isRelocation" default="0" hint="isRelocation is not required">
-        <cfargument name="hostIDReason" default="" hint="hostIDReason is not required">
+        <cfargument name="changePlacementReasonID" default="" hint="changePlacementReasonID is not required">
+        <cfargument name="changePlacementExplanation" default="" hint="changePlacementExplanation is not required">
         <cfargument name="schoolID" hint="schoolID is required">   
         <cfargument name="schoolIDReason" default="" hint="schoolIDReason is not required">     
         <cfargument name="placeRepID" hint="placeRepID is required">
@@ -337,7 +338,8 @@
 			insertPlacementHistory(
 				studentID = ARGUMENTS.studentID,					   
 				hostID = ARGUMENTS.hostID,
-				hostIDReason = ARGUMENTS.hostIDReason,
+				changePlacementReasonID = ARGUMENTS.changePlacementReasonID,
+				changePlacementExplanation = ARGUMENTS.changePlacementExplanation,
 				schoolID = ARGUMENTS.schoolID,
 				schoolIDReason = ARGUMENTS.schoolIDReason,
 				placeRepID = ARGUMENTS.placeRepID,
@@ -921,7 +923,8 @@
         <cfargument name="changedBy" hint="changedBy is required">
         <cfargument name="userType" hint="userType is required">
         <cfargument name="hostID" default="0" hint="hostID is not required">
-        <cfargument name="hostIDReason" default="" hint="hostIDReason is not required">
+        <cfargument name="changePlacementReasonID" default="" hint="changePlacementReasonID is not required">
+        <cfargument name="changePlacementExplanation" default="" hint="changePlacementExplanation is not required">
         <cfargument name="isWelcomeFamily" default="0" hint="welcome_family is not required">
         <cfargument name="isRelocation" default="0" hint="relocation is not required">
         <cfargument name="schoolID" default="0" hint="schoolID is not required">        
@@ -1024,8 +1027,12 @@
 						vActions = vActions & "<strong>This is a relocation</strong> <br /> #CHR(13)#";
 					}
 
-					if ( LEN(ARGUMENTS.hostIDReason) ) {
-						vActions = vActions & "Reason: #ARGUMENTS.hostIDReason# <br /> #CHR(13)#";
+					if ( VAL(ARGUMENTS.changePlacementReasonID) ) {						
+						vActions = vActions & "Reason: #APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(applicationID=1,fieldKey='changePlacementReason',fieldID=ARGUMENTS.changePlacementReasonID).name# <br /> #CHR(13)#";
+					}
+					
+					if ( LEN(ARGUMENTS.changePlacementExplanation) ) {
+						vActions = vActions & "Explanation: #ARGUMENTS.changePlacementExplanation# <br /> #CHR(13)#";
 					}
 	
 				}
@@ -1235,7 +1242,9 @@
                     (
                         studentID, 
                         hostID,  
-                        hasHostIDChanged,                   
+                        hasHostIDChanged,
+                        changePlacementReasonID,
+                        changePlacementExplanation,                   
                         schoolID,
                         hasSchoolIDChanged, 
                         placeRepID, 
@@ -1257,7 +1266,9 @@
                     (
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">,
-                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(hasHostIDChanged)#">,                    
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(hasHostIDChanged)#">, 
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.changePlacementReasonID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.changePlacementExplanation#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.schoolID)#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(hasSchoolIDChanged)#">,   
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.placeRepID)#">, 
@@ -1313,7 +1324,7 @@
                     UPDATE
                         smg_hosthistory	
                     SET
-                        <cfif VAL(hasSchoolIDChanged)>
+						<cfif VAL(hasSchoolIDChanged)>
                         	hasSchoolIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="#hasSchoolIDChanged#">,                
                         </cfif>
                         

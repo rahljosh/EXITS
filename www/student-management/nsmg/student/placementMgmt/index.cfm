@@ -408,9 +408,9 @@
                 <tr class="reportCenterTitle"> 
                     <th>
                     	<cfif vPlacementStatus EQ 'unplaced'>
-                        	PLACEMENT HISTORY
+                        	PLACEMENT HISTORY - #DateFormat(qGetPlacementHistory.dateofchange, 'mm/dd/yyyy')#
                         <cfelse>
-                        	#APPLICATION.CFC.UDF.convertToOrdinal(qGetPlacementHistory.recordCount)# PLACEMENT (CURRENT)
+                        	#APPLICATION.CFC.UDF.convertToOrdinal(qGetPlacementHistory.recordCount)# PLACEMENT (CURRENT) - #DateFormat(qGetPlacementHistory.dateofchange, 'mm/dd/yyyy')#
                         </cfif>
                     </th>
                 </tr>
@@ -525,9 +525,9 @@
                         <tr class="reportCenterTitle"> 
                             <th>
                             	<cfif qGetPlacementHistory.currentRow EQ qGetPlacementHistory.recordCount>
-                                	ORIGINAL PLACEMENT
+                                	ORIGINAL PLACEMENT - #DateFormat(qGetPlacementHistory.dateofchange, 'mm/dd/yyyy')#
                                 <cfelse>
-                                	#APPLICATION.CFC.UDF.convertToOrdinal(vCardinalCount)# PLACEMENT 
+                                	#APPLICATION.CFC.UDF.convertToOrdinal(vCardinalCount)# PLACEMENT - #DateFormat(qGetPlacementHistory.dateofchange, 'mm/dd/yyyy')#
                                 </cfif>
                             </th>
                         </tr>
@@ -552,7 +552,7 @@
                                 foreignTable='smg_hostHistory',
                                 foreignID=qGetPlacementHistory.historyID,
                                 sortBy='dateCreated',
-                                sortOrder='ASC'
+                                sortOrder='DESC'
                             );
                         </cfscript>
     

@@ -469,12 +469,13 @@
 		<div id="subMenuNav"> 
 			<div id="subMenuLinks">  
 				<!----All Users---->
-				<a href="javascript:openPopUp('forms/place_menu.cfm?studentID=#qGetStudentInfo.studentID#', 800, 600);">Placement Management</a>
-				
-                <cfif listFind("1,2,3,4", CLIENT.userType)>
-                <a href="student/placementMgmt/index.cfm?uniqueID=#qGetStudentInfo.uniqueID#" class="jQueryModalPL">New Placement Management</a>
+                <a href="student/placementMgmt/index.cfm?uniqueID=#qGetStudentInfo.uniqueID#" class="jQueryModalPL">Placement Management</a>
                 <a href="student/placementMgmt/index.cfm?uniqueID=#qGetStudentInfo.uniqueID#&action=paperwork" class="jQueryModalPL">Placement Paperwork</a>
-                </cfif>
+                
+				<!--- Keep Old Accessible for Program Managers (Brian, Bill, Bob and Gary) --->
+                <cfif CLIENT.userType EQ 1 OR ListFind("12313,8731,8743,12431 " , CLIENT.userID)>
+    				<a href="javascript:openPopUp('forms/place_menu.cfm?studentID=#qGetStudentInfo.studentID#', 800, 600);">Old Placement Management</a>
+	            </cfif>    
                 
 				<!--- OFFICE USERS ONLY --->
 				<cfif listFind("1,2,3,4", CLIENT.userType)> 
