@@ -34,7 +34,7 @@
 	AppEmail = APPLICATION.EMAIL;
 
 	APPLICATION.EMAIL.support = 'support@phpusa.com';
-	APPLICATION.EMAIL.finance = 'marcel@student-management.com';
+	APPLICATION.EMAIL.finance = 'marcel@student-management.com;bmccready@iseusa.com;luke@phpusa.com';
 	APPLICATION.EMAIL.programManager = 'luke@phpusa.com';
 	APPLICATION.EMAIL.errors = 'errors@student-management.com';
 	
@@ -98,6 +98,25 @@
 	APPLICATION.PATH.PHP.schoolImage = APPLICATION.PATH.PHP.base & "newschools/";
 	APPLICATION.PATH.PHP.pics = APPLICATION.PATH.PHP.base & "pics/"; 
 	
+
+	/* 
+		Create the constant object in the application scope - can be used to store states, countries and statuses 
+		that are often used in the system so we do not need to call the database to get them
+	*/
+	APPLICATION.CONSTANTS = StructNew();
+	
+	/********************
+		APPLICATION TYPE - These are the values stored on application table
+	********************/ 	
+	APPLICATION.CONSTANTS.TYPE = StructNew();	
+	APPLICATION.CONSTANTS.TYPE.publicHighSchool = 1;
+	APPLICATION.CONSTANTS.TYPE.privateHighSchool = 2;
+	APPLICATION.CONSTANTS.TYPE.hostFamily = 3;
+	APPLICATION.CONSTANTS.TYPE.wat = 4;
+	APPLICATION.CONSTANTS.TYPE.trainee = 5;
+	APPLICATION.CONSTANTS.TYPE.hostFamilyLead = 6;
+	APPLICATION.CONSTANTS.TYPE.EXITS = 7;
+
 
 	/********************
 		EXITS SPECIFIC
