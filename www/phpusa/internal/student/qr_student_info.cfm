@@ -37,7 +37,7 @@
         	smg_students s
         INNER JOIN 
         	php_students_in_program stu_prog ON stu_prog.studentID = s.studentID
-        INNER JOIN
+        LEFT OUTER JOIN
         	smg_programs ON smg_programs.programid = stu_prog.programID
         LEFT JOIN 
         	smg_users u ON u.userid = s.intrep
@@ -48,9 +48,10 @@
 		AND 
         	stu_prog.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.assignedID#">
         <!--- 
-			AND stu_prog.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> --->
+			AND stu_prog.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
+		--->
     </cfquery>
-
+	
 </cfsilent>
 
 <cfif NOT IsDefined('FORM.studentID')>
@@ -202,8 +203,8 @@
 
     
     <!--- Email Finance Department --->
-	<cfmail to="#AppEmail.finance#, bmccready@iseusa.com" 
-    	from="#AppEmail.support#" 
+	<cfmail to="#APPLICATION.EMAIL.finance#" 
+    	from="#APPLICATION.EMAIL.support#" 
         subject="PHP Cancelation - #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)" 
         type="html" 
         failto="support@phpusa.com">
