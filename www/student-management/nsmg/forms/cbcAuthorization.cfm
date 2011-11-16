@@ -217,7 +217,7 @@ body {
                         <!----Email to Student---->    
             <cfsavecontent variable="repEmailMessage">
               <Cfoutput>	
-              **********This emai is sent to the user submitting the CBC*******************
+              
                 Attached is a copy of the Criminal Background Check Authorization you electronically signed.  A copy is also available at any time via 'My Information' when logged into EXITS.
                 <br /><br />
                 Regards-<Br />
@@ -226,7 +226,11 @@ body {
                 </cfsavecontent>
                 
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                
                     <cfinvokeargument name="email_to" value="#client.email#">       
+					<!----
+                    <cfinvokeargument name="email_to" value="gary@iseusa.com"> 
+					---->
                     <cfinvokeargument name="email_from" value="""#client.companyshort# Support"" <#client.emailfrom#>">
                     <cfinvokeargument name="email_subject" value="CBC Authorization">
                     <cfinvokeargument name="email_message" value="#repEmailMessage#">
@@ -234,8 +238,7 @@ body {
                 </cfinvoke>	
               <cfsavecontent variable="programEmailMessage">
                 <cfoutput>				
-                **********This emai is sent to the Program Manager*******************<Br>
-                *****************#progManager.pm_email#<br>**********************
+               
                 #form.signature# (#userid#) has submitted their CBC authorization. 
                 Please run and review the CBC.<Br><Br>
                 
@@ -245,7 +248,13 @@ body {
                 </cfsavecontent>
                 
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                    <cfinvokeargument name="email_to" value="#client.email#">       
+                	<!----
+					 **********This emai is sent to the Program Manager*******************<Br>
+                *****************#progManager.pm_email#<br>**********************
+                    <cfinvokeargument name="email_to" value="gary@iseusa.com">      
+                    ---->
+                    <cfinvokeargument name="email_to" value="#progManager.pm_email#"> 
+					      
                     <cfinvokeargument name="email_from" value="""#client.companyshort# Support"" <#client.emailfrom#>">
                     <cfinvokeargument name="email_subject" value="Agreeement for #client.name#">
                     <cfinvokeargument name="email_message" value="#programEmailMessage#">

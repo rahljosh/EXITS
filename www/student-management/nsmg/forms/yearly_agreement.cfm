@@ -1,28 +1,10 @@
-	<Cfset season = 9>
-	<!---_Check Agreement---->
-    <Cfquery name="checkAgreement" datasource="#application.dsn#">
-    select ar_cbc_auth_form, ar_agreement
-    from smg_users_paperwork
-    where userid = #client.userid#
-    and seasonid = #season#
-    </cfquery>
-    <!----Check Refrences---->
-    <Cfquery name="checkReferences" datasource="#application.dsn#">
-    select *
-    from smg_user_references
-    where referencefor = #client.userid#
-    </cfquery>
-    <!----Check Employmenthistory---->
-    <Cfquery name="employHistory" datasource="#application.dsn#">
-    select *
-    from smg_users_employment_history
-    where fk_userid = #client.userid#
-    </cfquery>  
-    <Cfquery name="prevExperience" datasource="#application.dsn#">
-    select prevOrgAffiliation, prevAffiliationName
-    from smg_users
-    where userid = #client.userid#
-    </cfquery>
+    
+            <Cfscript>
+                //Check if paperwork is complete for season
+				qPaperWork = APPLICATION.CFC.udf.paperworkCompleted(userid=URL.userid,season=9);
+			</cfscript>
+
+
     
 <style type="text/css">
     .outline {
@@ -41,31 +23,19 @@
 	padding-left: 20px;
 }
 </style>
-    
-     <Cfif employHistory.recordcount gte 1 AND (prevExperience.prevOrgAffiliation eq 0 OR (prevExperience.prevOrgAffiliation eq 1 and prevExperience.prevAffiliationName is not ''))>
-     	<Cfset previousExperience = 1>
-     <cfelse>
-     	<Cfset previousExperience = 0>
-     </Cfif> 
-     <Cfif checkAgreement.ar_cbc_auth_form is not '' AND checkAgreement.ar_agreement is not '' AND checkReferences.recordcount eq 4 and CLIENT.agreement_needed eq 1 and previousExperience eq 1 >
-       <cfset temp = DeleteClientVariable("agreement_needed")> 
-
-	<div align="Center">
-    <meta http-equiv="refresh" content="5;url=index.cfm?curdoc=initial_welcome" />
-    <div class="yellowbox">
-    <h1>All your paperwork has been filed out.</h1>
-    Current Reps: Access to EXITS is now re-activated.  You will be redirected shortly. <br />
-    New Reps: Once you information has been reviewed and approved you will receive an email with further information.
-    </div>
-    <cfabort> 	
-     </Cfif>
   
 
-    
+  <Cfif qPaperWork.complete eq 1>
+	<cfset temp = DeleteClientVariable("agreement_needed")>
+  	<cflocation url ="index.cfm?curdoc=initial_welcome">
+  </Cfif>
 <div align="Center">
 <div class="yellowbox">
-<p>The information below needs to be updated for the new season.  Access to <strong>EXITS</strong> is disabled until these agreements have been signed, and information submited.</p>
-<p><strong>ALL FOUR SECTIONS ARE REQUIRED</strong></p></div><br />
+
+<p>The information below needs to be updated for the new season.  Access to <strong>EXITS</strong> has been disabled until these agreements have been signed, information submited and reference chack as well as background check is compelete.<br /><Br />  Once your information has been verified you will receive an email with further information.</p>
+<p><strong>ALL FOUR SECTIONS ARE REQUIRED</strong></p>
+
+</div><br />
 <cfoutput>
 <div class="outline">
 <table width="100%" align="center"  cellspacing=5 cellpadding=4>
@@ -75,7 +45,7 @@
 	<Tr>
 	  	<Td><h2>Services Agreement</h2></Td>
         <td align="center" >
-			<cfif checkAgreement.ar_agreement is ''>
+			<cfif qPaperWork.arAgreement is ''>
         		<a href="javascript:openPopUp('forms/displayRepAgreement.cfm?curdoc=displayRepAgreement', 640, 800);"><img src="pics/infoNeeded.png" width="120" height="30" border="0" /></a>
             <cfelse>
              <img src="pics/noInfo.png" width="120" height="30" border="0" />
@@ -85,7 +55,7 @@
     <Tr>
 	  	<Td><h2>CBC Authorization</h2></Td>
         <td align="center">
-        	<cfif checkAgreement.ar_cbc_auth_form is ''>
+        	<cfif qPaperWork.cbcAuth is ''>
             	<a href="javascript:openPopUp('forms/cbcAuthorization.cfm?curdoc=cbcAuthorization', 640, 800);"><img src="pics/infoNeeded.png" width="120" height="30" border="0" /></a>
             <cfelse>
             	 <img src="pics/noInfo.png" width="120" height="30" border="0" />
@@ -95,7 +65,7 @@
     <Tr>
 	  	<Td><h2>Employment History</h2></Td>
         <td align="center">
-        	<cfif previousExperience eq 0>
+        	<cfif qPaperWork.prevExperience eq 0>
             	<a href="javascript:openPopUp('forms/employmentHistory.cfm?curdoc=employmentHistory', 640, 800);"><img src="pics/infoNeeded.png" width="120" height="30" border="0" /></a>
             <cfelse>
             	 <img src="pics/noInfo.png" width="120" height="30" border="0" />
@@ -103,11 +73,17 @@
         </td>
     </tr> 
     <Tr >
-	  	 <Td><h2>References</h2></Td><td align="left" <cfif checkReferences.recordcount lt 2></cfif>>
-          	<cfif checkReferences.recordcount lt 4>
-          		<a href="javascript:openPopUp('forms/repRefs.cfm?curdoc=repRefs', 640, 800);">Additional Ref's Needed </a>
+	  	 <Td><h2>References</h2></Td><td align="left" <cfif qPaperWork.numberRef lt 2></cfif>>
+          	<cfif qPaperWork.numberRef lt 4>
+          		<a href="javascript:openPopUp('forms/repRefs.cfm?curdoc=repRefs', 640, 800);"><img src="pics/infoNeeded.png" width="120" height="30" border="0" /></a>
+                
          	<cfelse>
-           	  <img src="pics/noInfo.png" width="120" height="30" border="0" />
+           	  
+              <cfif qPaperWork.ref1 is '' OR qPaperWork.ref2 is ''>
+                Waiting on reference verification
+              <cfelse>
+                <img src="pics/noInfo.png" width="120" height="30" border="0" />
+              </cfif>
             </cfif>
          </td>
     </Tr>

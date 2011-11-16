@@ -153,7 +153,11 @@ where userid = #client.userid#
                 </cfsavecontent>
                 
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                    <cfinvokeargument name="email_to" value="#client.email#">       
+               
+                    <cfinvokeargument name="email_to" value="#client.email#">   
+				 <!----  
+                  <cfinvokeargument name="email_to" value="gary@iseusa.com">   
+                   ---->
                     <cfinvokeargument name="email_from" value="""#client.companyshort# Support"" <#client.emailfrom#>">
                     <cfinvokeargument name="email_subject" value="Agreement">
                     <cfinvokeargument name="email_message" value="#repEmailMessage#">
