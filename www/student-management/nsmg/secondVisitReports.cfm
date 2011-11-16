@@ -590,7 +590,17 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                                                </form>
                                                     </Td>
                                                     <td>
-                                                   <cfif client.usertype lte 4>
+                                                   <cfif client.userid eq 8731 or 
+												   		 client.userid eq 1 or 
+														 client.userid eq 510 or
+														 client.userid eq 12431 or 
+														 client.userid eq 12313 or
+														 client.userid eq 12389 or
+														 client.userid eq 16652 or
+														 client.userid eq 8743 or
+														 client.userid eq 11364 or
+														 client.userid eq 13799
+														 >
                                                      <form action="index.cfm?curdoc=secondVisitReports" method="post">
                                                         <input type="hidden" name="hideReport" />
                                                         <input type="hidden" name="fk_student" value="#studentid#">
@@ -701,7 +711,17 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                                         <em>#checkBlock2.firstname# #checkBlock2.lastname# determined that this report was not required
                                          on #dateFormat(checkBlock2.dateChanged, 'mm/dd/yyyy')#</em> 									</td>
                                                     <td>
-                                        <cfif client.usertype lte 4>
+                                        <cfif client.userid eq 8731 or 
+												   		 client.userid eq 1 or 
+														 client.userid eq 510 or
+														 client.userid eq 12431 or 
+														 client.userid eq 12313 or
+														 client.userid eq 12389 or
+														 client.userid eq 16652 or
+														 client.userid eq 8743 or
+														 client.userid eq 11364 or
+														 client.userid eq 13799
+														 >
                                         <form action="index.cfm?curdoc=secondVisitReports" method="post">
                                                 <input type="hidden" name="unHideReport" value="#checkBlock2.id#" />
                                                 <input type="hidden" name="selectedProgram" value="#client.selectedProgram#" />
