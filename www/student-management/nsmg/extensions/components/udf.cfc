@@ -480,4 +480,73 @@
 			</cfscript>
 	</cffunction>
 
+<!---Check if paperwork is complete for a specific user for a specific season ---->
+	<cffunction name="paperworkCompleted" access="public" returntype="query">
+    	<cfargument name="season" type="numeric" required="yes" default=9 hint="This should be what ever season you want to check on." />
+        <cfargument name="userid" type="numeric" required="yes" default="" hint="Pass in user id you want to check on">
+        
+    	<!----Check Agreement---->
+        <Cfquery name="checkAgreement" datasource="#application.dsn#">
+        select ar_cbc_auth_form, ar_agreement,ar_ref_quest1,ar_ref_quest2
+        from smg_users_paperwork
+        where userid =  <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
+        and seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.season)#">
+        </cfquery>
+        <!----Check Refrences---->
+        <Cfquery name="checkReferences" datasource="#application.dsn#">
+        select *
+        from smg_user_references
+        where referencefor = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
+        
+        </cfquery>
+        <!----Check Employmenthistory---->
+        <Cfquery name="employHistory" datasource="#application.dsn#">
+        select *
+        from smg_users_employment_history
+        where fk_userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
+        </cfquery>  
+        <Cfquery name="prevExperience" datasource="#application.dsn#">
+        select prevOrgAffiliation, prevAffiliationName
+        from smg_users
+        where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
+        </cfquery>
+        
+    	 <Cfif employHistory.recordcount gte 1 AND (prevExperience.prevOrgAffiliation eq 0 OR (prevExperience.prevOrgAffiliation eq 1 and prevExperience.prevAffiliationName is not ''))>
+     	<Cfset previousExperience = 1>
+     <cfelse>
+     	<Cfset previousExperience = 0>
+     </Cfif> 
+    
+    <Cfif checkAgreement.ar_cbc_auth_form is not '' AND checkAgreement.ar_agreement is not ''AND checkAgreement.ar_ref_quest1 is not '' AND checkAgreement.ar_ref_quest2 is not '' and  checkReferences.recordcount eq 4 and previousExperience eq 1 >
+    	<cfset isComplete = 1>
+     <cfelse>
+     	<cfset isComplete = 0>
+     </Cfif>
+     <cfscript>
+			// This is the query that is returned
+			qPaperWork = QueryNew("Complete, prevExperience,arAgreement,cbcAuth,ref1,ref2,numberRef");
+	    </cfscript>
+     
+     <cfscript>
+     // Insert blank first row
+				QueryAddRow(qPaperWork);
+				QuerySetCell(qPaperWork, "Complete", #isComplete#);
+				QuerySetCell(qPaperWork, "prevExperience", #previousExperience#);
+                QuerySetCell(qPaperWork, "arAgreement", '#checkAgreement.ar_agreement#');
+				QuerySetCell(qPaperWork, "cbcAuth", '#checkAgreement.ar_cbc_auth_form#');
+				QuerySetCell(qPaperWork, "ref1", '#checkAgreement.ar_ref_quest1#');
+				QuerySetCell(qPaperWork, "ref2", '#checkAgreement.ar_ref_quest2#');
+				QuerySetCell(qPaperWork, "numberRef", #checkReferences.recordcount#);
+                
+ 	
+			
+			
+	</cfscript>		
+		
+			<cfreturn  qPaperWork>			
+		
+	 
+			
+	 
+    </cffunction>
 </cfcomponent>
