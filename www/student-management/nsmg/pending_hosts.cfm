@@ -1,20 +1,27 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Pending Placements</title>
-</head>
+<script language="javascript">	
+    // Document Ready!
+    $(document).ready(function() {
 
-<body>
+		// JQuery Modal - Refresh Student Info page after closing placement management
+		$(".jQueryModalPL").colorbox( {
+			width:"60%", 
+			height:"90%", 
+			iframe:true,
+			overlayClose:false,
+			escKey:false, 
+			onClosed:function(){ window.location.reload(); }
+		});	
 
-<SCRIPT LANGUAGE="JavaScript"> 
-<!-- Begin
-function formHandler(form){
-var URL = document.form.sele_region.options[document.form.sele_region.selectedIndex].value;
-window.location.href = URL;
-}
-// End -->
-</SCRIPT>
+	});
+	
+	<!-- Begin
+		function formHandler(form){
+			var URL = document.form.sele_region.options[document.form.sele_region.selectedIndex].value;
+			window.location.href = URL;
+		}
+	// End -->
+</script> 	
+
 
 <div class="application_section_header">Pending Placements</div>
 
@@ -23,13 +30,15 @@ window.location.href = URL;
 
 	<cfquery name="pending_hosts" datasource="MySQL">
 		SELECT 
-        	s.host_fam_approved, 
             s.studentid, 
+            s.uniqueID,
             s.hostid, 
             s.firstname, 
             s.familylastname as student_lastname, 
             s.regionassigned, 
             s.dateplaced,
+        	s.host_fam_approved,
+            s.date_host_fam_approved, 
 			h.familylastname, 
             h.fatherfirstname, 
             h.fatherlastname, 
@@ -119,14 +128,14 @@ window.location.href = URL;
 	
 	<cfquery name="pending_hosts" datasource="MySQL">
 		SELECT 
-        	s.host_fam_approved, 
-            s.studentid, 
+            s.studentid,
+            s.uniqueID, 
             s.hostid, 
+            s.host_fam_approved, 
             s.firstname, 
             s.familylastname as student_lastname, 
             s.regionassigned, 
             s.dateplaced,
-            s.host_fam_approved,
 			h.familylastname, 
             h.fatherfirstname, 
             h.fatherlastname, 
@@ -186,7 +195,7 @@ window.location.href = URL;
 <cfif client.usertype EQ 7>
 	The following list shows the placements that you have submitted and the status of that placement.  If the report is marked Rejected, you can click on piece of the Host Information to see 
 	why it was rejected and then make the neccesary changes or remove the placement.
-<Cfelse>
+<cfelse>
 	The following students have been tentatively placed with this hosts indicated.  Please review the host information by clicking on any host information.  To approve, please visit the student's page or click on the link below and go to Placement Management, you will have the option to Approve or Reject the Placement.
 </cfif>
 <br><br>
@@ -207,75 +216,100 @@ div.scroll {
 		<td colspan=5 align="center" bgcolor="#afcee3"><strong>S T U D E N T &nbsp;&nbsp;&nbsp; I N F O</strong></td><td colspan=6 align="center" bgcolor="#ede3d0"><strong>H O S T &nbsp;&nbsp;&nbsp; I N F O</strong></td>
 	</tr>
 	<tr>
-
-        <td >Student ID</td>
-		<td >Last Name</td>
-		<td >First Name</td>
-		<td >Region</td>
-		<td >Program</td>
-		<td >Host ID</td>
-		<td >Last Name(s)</td>
-		<td >First Name(s)</td>
-        <td >Date Placed</td>
+        <td>Student ID</td>
+		<td>Last Name</td>
+		<td>First Name</td>
+		<td>Region</td>
+		<td>Program</td>
+		<td>Host ID</td>
+		<td>Last Name(s)</td>
+		<td>First Name(s)</td>
+        <td>Last Approval</td>
         <td>Rejected in..</td>
-
     </tr>
 
 <cfoutput query="pending_hosts">
+
     <cfquery name="kidsAtHome" datasource="mysql">
-        select count(childid) as kidcount
-        from smg_host_children
-        where liveathome = 'yes'
-        and 
+        SELECT 
+        	count(childid) AS kidcount
+        FROM 
+        	smg_host_children
+        WHERE 
+        	liveathome = 'yes'
+        AND 
             hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#hostid#">
         AND
             isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">    
     </cfquery>
-<!----check for single placement---->
-	<Cfset father=0>
+    
+	<!----check for single placement---->
+	<cfset father=0>
     <cfset mother=0>
-    <Cfif pending_hosts.fatherfirstname is not ''>
+    
+    <cfif pending_hosts.fatherfirstname is not ''>
         <cfset father = 1>
-    </Cfif>
-    <Cfif pending_hosts.motherfirstname is not ''>
+    </cfif>
+    
+    <cfif pending_hosts.motherfirstname is not ''>
         <cfset mother = 1>
-    </Cfif>
-    <cfset totalfam = #mother# + #father# + #kidsAtHome.kidcount#>
+    </cfif>
+    
+    <cfset totalfam = mother + father + kidsAtHome.kidcount>
 
-    <Cfif totalfam gt 1>
-    	<cfset DisplayEndDate = #DateAdd('d', 4, '#dateplaced#')#>
+    <cfif totalfam gt 1 AND IsDate(date_host_fam_approved)>
+    	<cfset DisplayEndDate = #DateAdd('d', 4, date_host_fam_approved)#>
         <cfset singleFam = 0>
-   	<Cfelse>
-    	<cfset DisplayEndDate = #DateAdd('d', 14, '#dateplaced#')#>
-    </Cfif>
+   	<cfelseif IsDate(date_host_fam_approved)>
+    	<cfset DisplayEndDate = #DateAdd('d', 14, date_host_fam_approved)#>
+    </cfif>
 
-    <tr bgcolor="<Cfif host_fam_Approved EQ '7'>FCC8C8<cfelseif host_fam_Approved is '6'>FDFF6D<cfelseif host_fam_approved is '5'>A0E1A1<cfelseif host_fam_approved is '99'>FB8822</cfif>">
-
-            <td>#studentid#</td>
-            <td>#student_lastname#</td>
-            <td>#firstname#</td>
-            <td>
-                <cfif CLIENT.companyID EQ 5>
-                	#companyShort# - 
-                </cfif>
-                #regionname#
-            </td>
-            <td>#programname#</td>
-            <td><a href="javascript:openPopUp('forms/place_menu.cfm?studentID=#studentID#', 800, 600);">#hostid#</a></td>
-            <td><a href="javascript:openPopUp('forms/place_menu.cfm?studentID=#studentID#', 800, 600);"><cfif fatherlastname is motherlastname> #fatherlastname#<Cfelseif fatherlastname is''> #motherlastname# <Cfelseif motherlastname is ''>#fatherlastname#<Cfelse>#fatherlastname# #motherlastname#</cfif></td>
-            <td><a href="javascript:openPopUp('forms/place_menu.cfm?studentID=#studentID#', 800, 600);">#fatherfirstname# <Cfif fatherfirstname is '' or motherfirstname is ''><cfelse>&</Cfif> #motherfirstname#</td>
-            <td>#DateFormat(dateplaced,'mm/dd/yyyy')#</td>
-            <td><Cfif host_fam_approved eq 99>
-           <!----If rejected, show how long its been rejected.---->
-            <cfset dtFrom = ParseDateTime( "#DisplayEndDate#" ) />
-			<cfset dtTo = Now() />
-			<cfset dtDiff = (dtTo - dtFrom) />
-            #DateFormat( dtDiff, "d" )# d
-            #TimeFormat( dtDiff, "h" )# h 
-           	<cfelse>
+    <tr bgcolor="<cfif host_fam_Approved EQ '7'>FCC8C8<cfelseif host_fam_Approved is '6'>FDFF6D<cfelseif host_fam_approved is '5'>A0E1A1<cfelseif host_fam_approved is '99'>FB8822</cfif>">
+        <td>#studentid#</td>
+        <td>#student_lastname#</td>
+        <td>#firstname#</td>
+        <td>
+            <cfif CLIENT.companyID EQ 5>
+                #companyShort# - 
+            </cfif>
+            #regionname#
+        </td>
+        <td>#programname#</td>
+        <td><a href="student/placementMgmt/index.cfm?uniqueID=#uniqueID#" class="jQueryModalPL">#hostid#</a></td>
+        <td>
+        	<a href="student/placementMgmt/index.cfm?uniqueID=#uniqueID#" class="jQueryModalPL">
+				<cfif fatherlastname is motherlastname> 
+                	#fatherlastname#
+				<cfelseif fatherlastname is''>
+                	#motherlastname# 
+				<cfelseif motherlastname is ''>
+                	#fatherlastname#
+				<cfelse>
+                	#fatherlastname# #motherlastname#
+				</cfif>
+            </a>
+		</td>
+        <td>
+        	<a href="student/placementMgmt/index.cfm?uniqueID=#uniqueID#" class="jQueryModalPL">
+            	#fatherfirstname# 
+				<cfif LEN(fatherfirstname) AND LEN(motherfirstname)>
+                	&
+				</cfif> 
+                #motherfirstname#
+            </a>
+        </td>
+        <td>#DateFormat(date_host_fam_approved,'mm/dd/yyyy')#</td>
+        <td>
+            <cfif host_fam_approved eq 99>
+                <!----If rejected, show how long its been rejected.---->
+                <cfset dtFrom = ParseDateTime(DisplayEndDate) />
+                <cfset dtTo = Now() />
+                <cfset dtDiff = (dtTo - dtFrom) />
+                 #DateFormat( dtDiff, "d" )# d #TimeFormat( dtDiff, "h" )# h 
+            <cfelse>
                 <cf_timer dateEnd="#DisplayEndDate#">
-		   	</cfif>
-	    </td>
+            </cfif>
+        </td>
     </tr>
     <tr>
         <td></td>
@@ -285,7 +319,7 @@ div.scroll {
 
 <br>
 <table align="Center" cellpadding =4 cellspacing =0 class="nav_bar">
-<th bgcolor="CC0000" ><font color="white">Key</th>
+<th bgcolor="CC0000" ><font color="white">Key</font></th>
 	<tr>
 		<td>Waiting for approval from...</td>
 	</tr>
@@ -303,6 +337,3 @@ div.scroll {
 	</tr>
 </table>
 *you can over-ride anyone below you in the approval process.  You can not approve past your level.	
-
-</body>
-</html>

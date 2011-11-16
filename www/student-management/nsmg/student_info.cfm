@@ -208,9 +208,7 @@
     </cfquery>
     
 </cfsilent>
-<!----
-<cfdump var="#qGetStudentInfo#">
----->
+
 <script type="text/javascript" src="student_info.js"></script>
 	
 <script language="javascript">	

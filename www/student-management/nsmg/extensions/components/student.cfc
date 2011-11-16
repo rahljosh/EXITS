@@ -370,14 +370,20 @@
                     secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.secondVisitRepID)#">,
                     doublePlace = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">,
                     welcome_family = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isWelcomeFamily)#">,
+                    
+                    <!--- Approve if placement previously approved and changed by Office --->
+                    <cfif ListFind("1,2,3,4", ARGUMENTS.userType) AND ListFind("1,2,3,4", qGetStudentInfo.host_fam_approved)>					
+						host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userType#">,
 					<!--- Approve if entering by Area Rep --->
-                    <cfif ARGUMENTS.userType EQ 7>
-                    	host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userType#">,
-                        date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-                    <cfelse>
-                    	host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="10">,
-                        date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">
+                    <cfelseif ARGUMENTS.userType EQ 7>                        	
+                        host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userType#">,
+                    <!--- Set to lowest approval level --->
+					<cfelse>
+                        host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="10">,
                     </cfif> 
+                    
+                    <!--- Used to track last approval --->
+                    date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
 				WHERE
                 	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
 		</cfquery>
@@ -490,20 +496,31 @@
 		<cfargument name="doublePlace" hint="doublePlace ID is required">
         <cfargument name="userType" hint="userType is required">
 
+			<cfscript>
+                // Get Student Info
+                var qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID);				
+            </cfscript>
+            
             <cfquery 
                 datasource="#APPLICATION.DSN#">
                     UPDATE
                         smg_students
                     SET
                         doublePlace = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">,
-                        <!--- Approve if entering by Area Rep --->
-						<cfif ARGUMENTS.userType EQ 7>                        	
+                        
+						<!--- Approve if placement previously approved and changed by Office --->
+                        <cfif ListFind("1,2,3,4", ARGUMENTS.userType) AND ListFind("1,2,3,4", qGetStudentInfo.host_fam_approved)>					
                             host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userType#">,
-                            date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-                        <cfelse>
+                        <!--- Approve if entering by Area Rep --->
+                        <cfelseif ARGUMENTS.userType EQ 7>                        	
+                            host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userType#">,
+                        <!--- Set to lowest approval level --->
+						<cfelse>
                             host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="10">,
-                            date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">
                         </cfif> 
+                        
+						<!--- Used to track last approval --->
+                        date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                     WHERE
                         studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
             </cfquery>
@@ -647,11 +664,11 @@
                 UPDATE
                 	smg_students
 				SET
-                    host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userType)#">,
                     <!--- Set Placement Date if Approved by NY Office - Only first time approval --->
                     <cfif ListFind("1,2,3,4", ARGUMENTS.userType) AND NOT IsDate(qGetStudentInfo.datePlaced)>
                     	dateplaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                     </cfif>
+                    host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userType)#">,
                     date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
 				WHERE
                 	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
@@ -782,20 +799,30 @@
         <cfargument name="userType" hint="userType is required">
         <cfargument name="reason" default="" hint="reason is not required">
         
+        <cfscript>
+			// Get Student Info
+			var qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID);				
+		</cfscript>
+        
         <cfquery 
 			datasource="#APPLICATION.DSN#">
                 UPDATE
                 	smg_students
 				SET
                     welcome_family = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
-					<!--- Approve if entering by Area Rep --->
-                    <cfif ARGUMENTS.userType EQ 7>                        	
+                    
+                    <!--- Approve if placement previously approved and changed by Office --->
+                    <cfif ListFind("1,2,3,4", ARGUMENTS.userType) AND ListFind("1,2,3,4", qGetStudentInfo.host_fam_approved)>					
                         host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userType#">,
-                        date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-                    <cfelse>
+					<!--- Approve if entering by Area Rep --->
+                    <cfelseif ARGUMENTS.userType EQ 7> 
+                        host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userType#">,
+                    <!--- Set to lowest approval level --->
+					<cfelse>
                         host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="10">,
-                        date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">
-                    </cfif> 
+                    </cfif>
+                     
+                    date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
 				WHERE
                 	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
 		</cfquery>
