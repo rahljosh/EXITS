@@ -20,7 +20,8 @@
     <!--- Host --->
     <cfparam name="FORM.hostIDSuggest" default="" />
     <cfparam name="FORM.hostID" default="0" />
-    <cfparam name="FORM.hostIDReason" default="" />
+    <cfparam name="FORM.changePlacementReasonID" default="" />
+    <cfparam name="FORM.changePlacementExplanation" default="" />
     <cfparam name="FORM.isWelcomeFamily" default="" />
     <cfparam name="FORM.isRelocation" default="" />
     <!--- School --->
@@ -44,9 +45,10 @@
     <cfscript>
 		// Check if Host Family is in compliance
 		vHostInCompliance = APPLICATION.CFC.CBC.checkHostFamilyCompliance(hostID=qGetStudentInfo.hostID, studentID=qGetStudentInfo.studentID);
-	</cfscript>
-    
-    <cfscript>
+
+		// Get Training Options
+		qGetRelocationReason = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(applicationID=1,fieldKey='changePlacementReason');
+
 		// FORM Submitted - Update Info
 		if ( listLen(FORM.subAction) GT 1 ) {
 			
@@ -62,13 +64,51 @@
 					SESSION.formErrors.Add("You must answer whether is a welcome family or not");
 				}			
 	
-				if ( NOT LEN(FORM.hostIDReason) ) {
-					SESSION.formErrors.Add("You must select a reason for changing host family");
-				}			
-	
 				if ( NOT LEN(FORM.isRelocation) ) {
 					SESSION.formErrors.Add("You must answer whether is a relocation or not");
 				}			
+			
+				if ( NOT VAL(FORM.changePlacementReasonID) ) {
+					SESSION.formErrors.Add("You must select a reason for changing host family");
+				}	
+				
+				if ( ListFind("1,2,3,8,9,10", FORM.changePlacementReasonID) AND NOT LEN(FORM.changePlacementExplanation) ) {
+				
+					switch(FORM.changePlacementReasonID) {
+					
+						case 1: {
+							SESSION.formErrors.Add("You must list date reported to Department");
+							break;
+						}
+						
+						case 2: {
+							SESSION.formErrors.Add("You must explain behavior");
+							break;
+						}
+					
+						case 3: {
+							SESSION.formErrors.Add("You must explain why student changed schools");
+							break;
+						}
+						
+						case 8: {
+							SESSION.formErrors.Add("You must explain circumstances");
+							break;
+						}
+
+						case 9: {
+							SESSION.formErrors.Add("You must explain incompability");
+							break;
+						}
+
+						case 10: {
+							SESSION.formErrors.Add("Other requires a sufficient narrative description");
+							break;
+						}
+					
+					} // switch
+					
+				} // if
 			
 			}
 			
@@ -149,7 +189,8 @@
 					hostID = FORM.hostID,
 					isWelcomeFamily = FORM.isWelcomeFamily,
 					isRelocation = FORM.isRelocation,
-					hostIDReason = FORM.hostIDReason,
+					changePlacementReasonID = FORM.changePlacementReasonID,
+					changePlacementExplanation = FORM.changePlacementExplanation,
 					schoolID = FORM.schoolID,
 					schoolIDReason = FORM.schoolIDReason,
 					placeRepID = FORM.placeRepID,
@@ -405,10 +446,6 @@
 
 </cfsilent>
 
-<!--- DELETE THIS --->
-<cfset vHostInCompliance = ''>
-<!--- DELETE THIS --->
-
 <script language="javascript">
 	// Display warning when page is ready
 	$(document).ready(function() {
@@ -416,6 +453,9 @@
 		// opener.location.reload();
 		// Display Form Fields
 		displayFormFields();
+		
+		// Display Change Placecement
+		displayChangePlacementReason();
 		
 	});
 	
@@ -549,6 +589,33 @@
 	
 	}
 
+	var displayChangePlacementReason = function() {
+		
+		// These required explanations
+		aDetailsRequired = [1, 2, 3, 8, 9, 10];
+		
+		// Get Change Placement Reason ID Value		
+		vGetPlacementReasonID = $("#changePlacementReasonID").val();
+		
+		// Hide Forms
+		$(".changePlacementOptions").fadeOut('fast');
+		$("#changePlacementExplanation").val("");
+		
+		// loop through array
+		$.each( aDetailsRequired, function(intIndex, objValue) {
+
+				if ( vGetPlacementReasonID == objValue ) {
+					// Display Form
+					$("#changePlacementReasonID" + vGetPlacementReasonID).slideDown();
+					$("#changePlacementExplanation").slideDown();
+				}
+
+			}
+			
+		);
+
+	}
+
 	var displayHiddenForm = function(formID, buttonID) {
 		
 		// Hide Button ( Approval/Reject | Resubmit )
@@ -628,6 +695,7 @@
 	
 	}
 	
+	// Display Approval Button
 	var displayApprovalButton = function(divID) { 
 	
 		if( $("#" + divID).css("display") == "none" ) {
@@ -1025,18 +1093,29 @@
                                 <label for="isRelocation1">Yes</label>
                         
 								<!--- Reason --->
-                                <span>Please indicate why you are changing the host family: <em>*</em></span>
-                                <select name="hostIDReason" id="hostIDReason" class="xLargeField">
-                                    <option value="" <cfif NOT LEN(FORM.hostIDReason)> checked="checked" </cfif> >Select a Reason</option>
-                                    <option value="Incompatibility with host family" <cfif FORM.hostIDReason EQ 'Incompatibility with host family'> checked="checked" </cfif> >Incompatibility with host family</option>
-                                    <option value="Conflict with host sibling" <cfif FORM.hostIDReason EQ 'Conflict with host sibling'> checked="checked" </cfif> >Conflict with host sibling</option>
-                                    <option value="Incompatibility with school" <cfif FORM.hostIDReason EQ 'Incompatibility with school'> checked="checked" </cfif> >Incompatibility with school</option>
-                                    <option value="Host family change of situation (e.g., move, illness, etc.)" <cfif FORM.hostIDReason EQ 'Host family change of situation (e.g., move, illness, etc.)'> checked="checked" </cfif> >Host family change of situation (e.g., move, illness, etc.)</option>
-                                    <option value="Move from welcome family to permanent family" <cfif FORM.hostIDReason EQ 'Move from welcome family to permanent family'> checked="checked" </cfif> >Move from welcome family to permanent family</option>
-                                    <option value="Paperwork was not submitted in a timely fashion" <cfif FORM.hostIDReason EQ 'Paperwork was not submitted in a timely fashion'> checked="checked" </cfif> >Paperwork was not submitted in a timely fashion</option>
-                                    <option value="Other" <cfif FORM.hostIDReason EQ 'Other'> checked="checked" </cfif> >Other</option>				
-                                </select>
+                                <span>Please indicate why you are changing the host family: <em>*</em></span> 
+                                <select name="changePlacementReasonID" id="changePlacementReasonID" class="xxLargeField" onchange="displayChangePlacementReason();">
+                                    <option value="0" <cfif NOT VAL(FORM.changePlacementReasonID)> selected="selected" </cfif> >Select a Reason</option>
+                                    <cfloop query="qGetRelocationReason">
+                                        <option value="#qGetRelocationReason.fieldID#" <cfif FORM.changePlacementReasonID EQ qGetRelocationReason.fieldID> selected="selected" </cfif> >#qGetRelocationReason.name#</option>
+                                    </cfloop>
+								</select>
     							
+                                <!--- Options 1,2,3,8,9,10 require an explanation --->
+								<span id="changePlacementReasonID1" class="changePlacementOptions" style="display:none">List date reported to Department <em>*</em></span>
+                                
+                                <span id="changePlacementReasonID2" class="changePlacementOptions" style="display:none">Explain behavior <em>*</em></span>
+                                
+                                <span id="changePlacementReasonID3" class="changePlacementOptions" style="display:none">Explain why student changed schools <em>*</em></span>
+                                
+                                <span id="changePlacementReasonID8" class="changePlacementOptions" style="display:none">Explain circumstances <em>*</em></span>
+                                
+                                <span id="changePlacementReasonID9" class="changePlacementOptions" style="display:none">Explain incompability <em>*</em></span>
+                                
+                                <span id="changePlacementReasonID10" class="changePlacementOptions" style="display:none">Explain <em>*</em></span>
+                                
+                                <textarea name="changePlacementExplanation" id="changePlacementExplanation" class="xLargeTextArea changePlacementOptions displayNone">#FORM.changePlacementExplanation#</textarea>
+                                                                
                         	</cfif>
                                                     
                         </div>
