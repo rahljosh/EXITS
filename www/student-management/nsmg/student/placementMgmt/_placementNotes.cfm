@@ -84,16 +84,6 @@
                 </table>                    
             </cfcase>
             
-            <cfcase value="pending">
-                <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center" style="padding:10px 0px 10px 0px;">   
-                    <tr>
-                        <td align="center" style="color:##3b5998;">
-                            Placement has not been approved. You are going to have acess to this section once the placement has been approved.
-                        </td>
-                    </tr>    
-                </table>                             
-            </cfcase>
-            
             <cfdefaultcase>
                 
                	<table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center"> 
