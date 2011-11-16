@@ -14,11 +14,16 @@ select firstname, lastname, address, address2, city, state, zip
 from smg_users
 where userid = #client.userid#
 </cfquery>
+<Cfquery name="companyInfo" datasource="#application.dsn#">
+select *
+from smg_companies
+where companyid = #client.companyid#
+</cfquery>
 <Cfset years = '2012-2013'>
 <Cfoutput>
 <div align="center">
 
-INTERNATIONAL STUDENT EXCHANGE<br />
+#companyInfo.companyname#<br />
 AYP #years# SERVICES AGREEMENT
 </div>
 <p>This SERVICES AGREEMENT is entered into this 
@@ -26,20 +31,20 @@ AYP #years# SERVICES AGREEMENT
 <strong><u>#DateFormat(now(), 'd')#</u></strong> day of <strong><u>#DateFormat(now(), 'mmmm')#</u></strong>, <strong><u>#DateFormat(now(), 'yyyy')#</u></strong>
 
 
-(the "Effective Date") by and between International Student Exchange (ISE) a not-for-profit
-corporation located at 119 Cooper St, Babylon, NY 11702 and
+(the "Effective Date") by and between #companyInfo.companyname# (#companyInfo.companyshort_nocolor#) a not-for-profit
+corporation located at #companyInfo.address#, #companyInfo.city#, #companyInfo.state# #companyInfo.zip# and
 <strong><u>#repInfo.firstname# #repInfo.lastname#</u></strong>, an individual residing at
 <strong><u>#repInfo.address# #repInfo.address2# #repInfo.city#, #repInfo.state#, #repInfo.zip#</u></strong> (the "Area Representative" or "AR").</p>
 </Cfoutput>
-<p>WHEREAS, ISE assists international foreign exchange students who wish to study in
+<p>WHEREAS, #companyInfo.companyshort_nocolor# assists international foreign exchange students who wish to study in
   the United States with the process of coming to and staying in the U.S., including placing the
   students with U.S. host families; and</p>
-<p> WHEREAS, to further its objectives, ISE desires to engage the services of the Area
+<p> WHEREAS, to further its objectives, #companyInfo.companyshort_nocolor# desires to engage the services of the Area
   Representative to locate and interact with the host families, schools and exchange students as
   required by the U.S. State Department and the Council on Standards for International
   Educational Travel; and</p>
-<p>  WHEREAS, ISE wishes to engage the Area Representative as an independent
-  contractor, but not an employee, agent, legal representative, partner or joint venturer of ISE,
+<p>  WHEREAS, #companyInfo.companyshort_nocolor# wishes to engage the Area Representative as an independent
+  contractor, but not an employee, agent, legal representative, partner or joint venturer of #companyInfo.companyshort_nocolor#,
   and the Area Representative wishes to be so engaged pursuant to the terms and conditions of
   this Agreement.</p>
 <p>NOW, THEREFORE, in consideration of the foregoing and the mutual agreements and
@@ -54,27 +59,27 @@ corporation located at 119 Cooper St, Babylon, NY 11702 and
   August 31, 2013, unless otherwise agreed in writing between the parties or unless
   earlier terminated pursuant to Section 7 hereof.</p></li>
   <li><u> Services</u>
-  <p>In connection with the conduct of ISE's activities, the Area Representative will perform
+  <p>In connection with the conduct of #companyInfo.companyshort_nocolor#'s activities, the Area Representative will perform
   the following services: locate, screen and secure placements in homes of high quality
-  families for ISE-sponsored students for AYP #years#; secure school acceptance in
+  families for #companyInfo.companyshort_nocolor#-sponsored students for AYP #years#; secure school acceptance in
   writing for those student(s); and supervise designated AYP #years# student(s) stay in
   the United States (collectively, the "Services"). The Area Representative acknowledges
   that the performance of the Services is subject to the regulations and guidelines of the
   U.S. State Department ("State Department"), and the Council on Standards for
   International Educational Travel ("CSIET"). All Services shall be performed to the
-  highest professional standard and shall be performed to ISE's reasonable satisfaction in
+  highest professional standard and shall be performed to #companyInfo.companyshort_nocolor#'s reasonable satisfaction in
   accordance with State Department regulations and CSIET guidelines, which are
   reviewed during the annual AR training. Failure to adhere to these standards may
   result in termination of this Agreement.</p></li>
   <li><u>Independent Contractor.</u>
   <p>(a) In the performance of Services pursuant to this Agreement, the Area
-  Representative will be an independent contractor of ISE and will not be
+  Representative will be an independent contractor of #companyInfo.companyshort_nocolor# and will not be
   deemed to be an employee or to be in a joint venture, partnership or
   agency relationship.</p>
   <p>(b) The Area Representative understands and agrees that there is no
-  obligation on the part of ISE to give the Area Representative any student
+  obligation on the part of #companyInfo.companyshort_nocolor# to give the Area Representative any student
   placement assignment over any specific period, and any such assignment
-  is in the sole and absolute discretion of ISE.</p>
+  is in the sole and absolute discretion of #companyInfo.companyshort_nocolor#.</p>
   <p>(c) This Agreement is not exclusive. The Area Representative may perform
   services for others during the Term of this Agreement, in accordance with
   the nondisclosure statement contained herein and that the Area
@@ -82,7 +87,7 @@ corporation located at 119 Cooper St, Babylon, NY 11702 and
   <p>(d) The Area Representative will make all reports and file all returns and pay
   all taxes to all appropriate governmental agencies, including the Internal
   Revenue Service, reflecting that the Area Representative is an independent
-  contractor of ISE. ISE will not be required to withhold any amounts from
+  contractor of #companyInfo.companyshort_nocolor#. #companyInfo.companyshort_nocolor# will not be required to withhold any amounts from
   compensation for federal, state or local taxes, or for Social Security,
   unemployment insurance or other related taxes.</p>
   <p>(e) The Area Representative will be responsible for payment of his/her own
@@ -97,29 +102,29 @@ corporation located at 119 Cooper St, Babylon, NY 11702 and
   Information form and provide two (2) personal and professional
   references prior to placing any students with host families.</p>
  <p>(g) Criminal Background Check
-  For each Service Agreement cycle, ISE will process a Criminal Background
+  For each Service Agreement cycle, #companyInfo.companyshort_nocolor# will process a Criminal Background
   Check for the Area Representative.</p>
-  <li><u>ISE Representative</u>
-  <p>ISE shall designate in writing a supervisor to review the performance and quality of the
+  <li><u>#companyInfo.companyshort_nocolor# Representative</u>
+  <p>#companyInfo.companyshort_nocolor# shall designate in writing a supervisor to review the performance and quality of the
   Services on a discretionary basis and take any necessary steps to ensure performance by
   the Area Representative of such Services is commensurate with the standards set forth
   in Section 3 above and as established by the U.S. Department of State and CSIET.<p>
   <li><u> Charges for Services</u>
   <p>In full consideration of the Area Representative providing and furnishing the Services
-  hereunder, ISE shall pay the Area Representative the fee(s) set forth in Schedule 1
+  hereunder, #companyInfo.companyshort_nocolor# shall pay the Area Representative the fee(s) set forth in Schedule 1
   attached hereto.</p>
   <li><u> Community Service Requirement</u>
   <p>Area Representatives are required to organize or coordinate a five (5) hour community
   service project (or projects) for the students that they supervise. All community service
-  hours for participating student must be entered in to the ISE database by April 25, 2012.</p>
+  hours for participating student must be entered in to the #companyInfo.companyshort_nocolor# database by April 25, 2012.</p>
   <li><u>Training Requirement</u>
   <p>The Area Representative is required to participate in an annual training session, either
   in person or via internet training.</p>
   <li><u> Non-Disclosure</u>
-  <p>The ISE Area Representative agrees not to disclose or otherwise publish any
+  <p>The #companyInfo.companyshort_nocolor# Area Representative agrees not to disclose or otherwise publish any
   information related to Area Representatives, Managers, host families, and schools
-  contained in the ISE database. Any materials or information provided by ISE to the
-  Area Representative shall be the sole property of ISE and shall be returned to ISE at the
+  contained in the #companyInfo.companyshort_nocolor# database. Any materials or information provided by #companyInfo.companyshort_nocolor# to the
+  Area Representative shall be the sole property of #companyInfo.companyshort_nocolor# and shall be returned to #companyInfo.companyshort_nocolor# at the
   conclusion of this agreement.</p>
   <li><u>Termination</u>
   <p>This Agreement may be terminated at will by either party at any time. Upon
@@ -134,7 +139,7 @@ corporation located at 119 Cooper St, Babylon, NY 11702 and
   laws. The Area Representative agrees that the Area Representative will be subject to the
   personal jurisdiction of the courts of the State of New York for any matter relating to
   this Agreement; provided, however, nothing herein shall be deemed to preclude or
-  prevent ISE from bringing any action or claim to enforce the provisions of this
+  prevent #companyInfo.companyshort_nocolor# from bringing any action or claim to enforce the provisions of this
   Agreement in any other appropriate state or from having jurisdiction over the Area
   Representative. This Agreement shall not be construed either in favor of or against
   either party. To the extent that any specific provision of this Agreement is deemed
@@ -168,8 +173,8 @@ corporation located at 119 Cooper St, Babylon, NY 11702 and
   delegation and such agent, subcontractor or corporation shall carry out
   the terms of this Agreement;</p>
   <p>(g) Nothing herein shall be construed as a license, grant or right to use any
-  ISE trademarks, logos, or materials without the express written consent of
-  ISE in each and every case.</p>
+  #companyInfo.companyshort_nocolor# trademarks, logos, or materials without the express written consent of
+  #companyInfo.companyshort_nocolor# in each and every case.</p>
 
   <div align="center">SCHEDULE 1 - <u>SCHEDULE OF PAYMENTS</u></div>
   <p>All payments will follow the schedule outlined below:</p>
@@ -339,7 +344,7 @@ corporation located at 119 Cooper St, Babylon, NY 11702 and
 <ol>
 
 <li><strong> 2012 Area Representative Bonus</strong>
-<p>(a) <strong>2012 Fast-Track Placement Bonus:</strong> A bonus of $1,500 will be paid by ISE to
+<p>(a) <strong>2012 Fast-Track Placement Bonus:</strong> A bonus of $1,500 will be paid by #companyInfo.companyshort_nocolor# to
 the AR each time the AR has successfully placed a group of five (5) August
 arriving students in five (5) permanent homes and submitted all Department
 of State and CSIET mandated documentation prior to April 15, 2012.</p><p>
@@ -369,7 +374,7 @@ earned for placement of additional groups of five students.</p>
     </tr>
 </Table>
 <p>
-(b)<strong> Early Placement Bonus:</strong> A bonus of $1,000 will be paid by ISE to the AR each
+(b)<strong> Early Placement Bonus:</strong> A bonus of $1,000 will be paid by #companyInfo.companyshort_nocolor# to the AR each
 time the AR has successfully placed a group of five (5) August arriving
 students in five (5) permanent homes prior to June 1st of the applicable
 calendar year and upon receipt, prior to June 1st, submitted the Department of
@@ -405,7 +410,7 @@ placement of additional groups of five students.</p>
 </Table>
 
 
-<p>(c) <strong>Placement Paperwork Bonus:</strong> A bonus of $500 will be paid by ISE to the AR
+<p>(c) <strong>Placement Paperwork Bonus:</strong> A bonus of $500 will be paid by #companyInfo.companyshort_nocolor# to the AR
 each time the AR has successfully placed a group of five (5) August arriving
 students in five (5) permanent homes prior to August 1st of the applicable
 calendar year and upon receipt, prior to August 1st, submitted the
@@ -457,20 +462,20 @@ dates will not be eligible for payment.</p>
 </li>
 <li><strong>Terms and Conditions</strong></li>
 <ul>
-<li>ISE will accept placements on a first-come, first-serve basis and will not be obligated
+<li>#companyInfo.companyshort_nocolor# will accept placements on a first-come, first-serve basis and will not be obligated
 to make any payment for a placement that it does not accept.</li>
-<li>AR should notify ISE of a potential placement as soon as possible and submit all
+<li>AR should notify #companyInfo.companyshort_nocolor# of a potential placement as soon as possible and submit all
 paperwork (described below) within seven (7) days of such notification. Failure to
 submit required paperwork could result in forfeiture of all payments.</li>
 <li> Placement payments will be made upon receipt of the completed and signed Host
 Family Application with pictures, School and Community Profile, Criminal
-Background Check Forms and School Acceptance Form in the ISE main office. As
+Background Check Forms and School Acceptance Form in the #companyInfo.companyshort_nocolor# main office. As
 indicated by a * in the payment schedule, placement payments will be made within
 30 days of receipt of the required documents.</li>
-<li>Supervision payments will be triggered by ISE having complete student evaluations
+<li>Supervision payments will be triggered by #companyInfo.companyshort_nocolor# having complete student evaluations
 for the months preceding the payment period. Supervision payments will not be
 made unless signed Student and Host Family Orientation Signoff forms have been
-received in the ISE main office. To avoid delay or forfeiture of payment, approved
+received in the #companyInfo.companyshort_nocolor# main office. To avoid delay or forfeiture of payment, approved
 evaluations must be submitted by the 1st of the evaluative month. Evaluations
 submitted beyond 30 days from the due date listed on each report will not be
 eligible for payment.</li>
@@ -480,11 +485,11 @@ program early.</li>
 will move with the student to the new AR.</li>l
 <li>In the case of a re-location, the requirements above will apply just as if it were a new
 placement. Relocations must be reported to the immediate supervisor.</li>
-<li>If ISE collects a cancellation fee for any placement that is canceled by a student for
+<li>If #companyInfo.companyshort_nocolor# collects a cancellation fee for any placement that is canceled by a student for
 an inappropriate reason, a $150 placement fee will be paid. In order to receive this
 payment all placements must have been completed and the signed Host Family
 Application with pictures, School and Community Profile and School Acceptance
-Form in the ISE main office within two weeks of the cancellation.</li>
+Form in the #companyInfo.companyshort_nocolor# main office within two weeks of the cancellation.</li>
 <li> A deduction in the amount of $100 will be applied towards the placement fee for all
 placements that are generated by host family leads from Google ad leads. Any leads
 produced from Google ads that result in a placement will require this $100
@@ -494,7 +499,7 @@ deduction to be applied to the placement fee.</li>
 <p>For purposes of this Schedule, the following definitions shall apply:
 <ol class="letters">
 <li> "Placement" means the act of locating and securing a confirmed homestay
-and school acceptance for an ISE-sponsored exchange student, as further
+and school acceptance for an #companyInfo.companyshort_nocolor#-sponsored exchange student, as further
 defined in the State Department regulations and CSIET guidelines.
 </li>
 <li> "Supervise" or "Supervision" means contact with the student(s) placed by the
@@ -511,8 +516,8 @@ on or about mid-June of the following year.</li>
 commencing on or about January 1st and ending on or about
 mid-December of the same year.</li>
 <li> "Program" shall mean the homestay of an international
-exchange student while he/she is simultaneously attending a
-high school as an ISE-sponsored exchange student.</li>
+exchange student while he/she is simultaneously attending a 
+high school as an #companyInfo.companyshort_nocolor#-sponsored exchange student.</li>
 </p>
 
 
