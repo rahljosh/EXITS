@@ -379,7 +379,7 @@ order by current
 
 <p><span class="redtext">* Required fields </span></p>
 
-<cfif remainingEmployers gt 0>
+
 <form method="post" action="employmentHistory.cfm?curdoc=employmentHistory<Cfif isDefined('url.edit')>&edit=#url.edit#</cfif>">
 
 <input type="hidden" name="insert" />
@@ -474,7 +474,7 @@ order by current
       <td align="right"><Cfif isDefined('url.edit')><a href="employmentHistory.cfm?curdoc=employmentHistory"><img src="../pics/buttons/goBack_44.png" border=0/></a> <input name="Submit" type="image" src="../pics/buttons/update_44.png" border=0><cfelse><input name="Submit" type="image" src="../pics/buttons/addEmployer.png" border=0></Cfif></td>
       </tr>
   </table>
-  </cfif>
+ 
 <!-- end border --></div>
 
            
@@ -490,7 +490,7 @@ order by current
     </div>
     </cfif>
 </form>
-<Cfif remainingEmployers eq 0>
+<Cfif remainingEmployers lte 0>
 
 <Br>
 
