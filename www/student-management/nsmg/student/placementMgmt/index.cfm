@@ -95,11 +95,11 @@
 		// Calculate total of family members
 		vTotalFamilyMembers = 0;
 		
-		if ( NOT LEN(qGetHostInfo.fatherFirstName) ) {
+		if ( LEN(qGetHostInfo.fatherFirstName) ) {
 			vTotalFamilyMembers = vTotalFamilyMembers + 1;
 		}
 		
-		if ( NOT LEN(qGetHostInfo.motherFirstName) ) {
+		if ( LEN(qGetHostInfo.motherFirstName) ) {
 			vTotalFamilyMembers = vTotalFamilyMembers + 1;
 		}
 		
