@@ -81,7 +81,7 @@
         <div class="HF_boxW"></div>
 <div class="HF_boxOrg">
 <h2>Important Things To Know</h2>
-<h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />THE STUDENT AS A MEMBER OF YOUR FAMILY</h1>
+<h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />THE STUDENT IS A MEMBER OF YOUR FAMILY</h1>
 <ul><li>Do not treat the student like a guest, no matter how tempted you are.</li>
  <li>Encourage the student to come to you with any issues or concerns first so that you have a chance to help
 them solve problems.</li>
