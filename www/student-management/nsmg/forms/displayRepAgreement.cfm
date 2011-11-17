@@ -241,8 +241,8 @@ and userid = #client.userid#
               <input type="text" name="signature" size=25 /><Br />#client.name#
               </td>
             </tr>
-         <tr>
-         	<Td colspan=2 align="center"><Br /><input type="image" src="../pics/buttons_SUBMIT.png" height=75%/></Td>
+         <tr>                                  
+         	<Td colspan=2 align="center"><Br /><input type="image" src="../pics/buttons_SUBMIT.png" /></Td>
         </table>
         </form>
      <cfelse>

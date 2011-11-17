@@ -419,7 +419,7 @@ General Information Services, Inc. within the two-year period preceding my reque
               </td>
             </tr>
          <tr>
-         	<Td colspan=2 align="center"><Br /><input type="image" src="../pics/buttons_SUBMIT.png" height=75%/></Td>
+         	<Td colspan=2 align="center"><Br /><input type="image" src="../pics/buttons_SUBMIT.png"/></Td>
         </table>
        
      <cfelse>
