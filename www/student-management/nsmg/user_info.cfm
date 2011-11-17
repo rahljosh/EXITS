@@ -1416,8 +1416,8 @@
                                	<Td>#firstname# #lastname#</Td><td>#phone#</td>
                                 <Td>
                                 
-                                <Cfif client.usertype lte 5 and client.userid neq userid>
-									<Cfif checkRefReport.recordcount eq 0 and client.usertype lte 5 >
+                                <Cfif client.usertype lte 6 and client.userid neq userid>
+									<Cfif checkRefReport.recordcount eq 0 and client.usertype lte 6 >
                                      <a href="javascript:openPopUp('forms/refrencesQuestionaire.cfm?ref=#refid#&rep=#userid#', 680, 800);">Submit Report
                                     <cfelse>
                                    <a href="javascript:openPopUp('forms/viewRefrencesQuestionaire.cfm?reportid=#checkRefReport.id#', 640, 800);">View Report</a>
