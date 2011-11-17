@@ -42,7 +42,7 @@
         <div class="HFsidebarLW">
         <div class="HFpicL"></div>
      <br />   <br />
-     <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />Every Family Member will have a Unique Experience?</h1>
+     <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />Every Family Member will have a Unique Experience</h1>
           <ul><li>You and your family will be exploring your differences, discovering surprising similarities, and teaching your new son or daughter about your American values and beliefs.</li>
 <li>Your Family will be seeing the United States through a new pair of eyes of an inquisitive teen, and rediscovering the simple things that we often take for granted a baseball or football game, a community picnic, even window-shopping at the mall!</li>
 <li>Your children will enjoy sharing school, community and family information with an &quot;adopted&quot; brother or sister.</li>
