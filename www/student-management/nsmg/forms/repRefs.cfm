@@ -271,10 +271,32 @@ td {
 		qGetRegionalManager = APPLICATION.CFC.user.getRegionalManager(regionID=client.regionid);
  </cfscript>
 <cfelse>
-	 <cfset qGetRegionalManager = #client.programmanager_email#>
+	 <cfset qGetRegionalManager.email = #client.programmanager_email#>
 </Cfif>
 
-
+ <cfquery 
+			name="qGetRegionalAdviser" datasource="#APPLICATION.dsn#">
+                SELECT 
+                	u.userid,
+                    u.firstName,
+                    u.lastName,
+                    u.email,
+                    u.phone,
+                    u.work_phone,
+                    r.regionName
+                FROM 
+                	smg_users u
+                INNER JOIN 
+                	user_access_rights uar ON u.userid = uar.userid
+				INNER JOIN
+                	smg_regions r ON r.regionID = uar.regionID                    
+                WHERE 
+                	u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                AND 
+                    uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="6">
+                AND 
+                	uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.regionID#">
+</cfquery>
 <div class="wrapper">
  
 <div class="greyHeader">
@@ -342,13 +364,15 @@ where referencefor = #client.userid#
                 </cfoutput>
                 </cfsavecontent>
                 
-                <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                    <cfinvokeargument name="email_to" value="#qGetRegionalManager.email#">     
+               	<cfinvoke component="nsmg.cfc.email" method="send_mail">
+                    <cfinvokeargument name="email_to" value="#qGetRegionalManager.email#"> 
+                    <cfif qGetRegionalAdviser.email is not ''>
+                    <cfinvokeargument name="email_cc" value="#qGetRegionalAdviser.email#"> 
+                    </cfif>    
                     <cfinvokeargument name="email_from" value="""#client.companyshort# Support"" <#client.emailfrom#>">
                     <cfinvokeargument name="email_subject" value="References">
                     <cfinvokeargument name="email_message" value="#programEmailMessage#">
-                    <cfinvokeargument name="email_file" value="C:/websites/student-management/nsmg/uploadedfiles/users/#client.userid#/Season#season#cbcAuthorization.pdf">
-                </cfinvoke>	     
+                 </cfinvoke>       
 <p>No additional references are required.
     <SCRIPT LANGUAGE="JavaScript"><!--
 			setTimeout('self.close()',2000);
