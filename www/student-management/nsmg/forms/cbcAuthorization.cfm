@@ -264,15 +264,16 @@ body {
                 <cfquery name="updatePaperwork" datasource="#application.dsn#">
                 update smg_users_paperwork
                 set ar_cbc_auth_form = #CreateODBCDate(now())#,
+                ar_info_sheet = #CreateODBCDate(now())#,
                 cbcSig = <Cfqueryparam cfsqltype="cf_sql_varchar" value="#form.signature#"> 
                 where userid = <Cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#"> 
                 AND seasonid = <Cfqueryparam cfsqltype="cf_sql_integer" value="#season#">
                 </cfquery>
             <cfelse>
                 <cfquery name="updatePaperwork" datasource="#application.dsn#">
-               INSERT INTO smg_users_paperwork (ar_cbc_auth_form, userid, seasonid,fk_companyid, cbcSig)
+               INSERT INTO smg_users_paperwork (ar_cbc_auth_form, userid, seasonid,fk_companyid, cbcSig, ar_info_sheet)
                values (#CreateODBCDate(now())#, <Cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">,
-                        <Cfqueryparam cfsqltype="cf_sql_integer" value="#season#">,<Cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">, <Cfqueryparam cfsqltype="cf_sql_varchar" value="#form.signature#">)
+                        <Cfqueryparam cfsqltype="cf_sql_integer" value="#season#">,<Cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">, <Cfqueryparam cfsqltype="cf_sql_varchar" value="#form.signature#">, #CreateODBCDate(now())#)
                 </cfquery>
 			</cfif>
    
