@@ -369,7 +369,7 @@
                     areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.areaRepID)#">,
                     secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.secondVisitRepID)#">,
                     doublePlace = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">,
-                    welcome_family = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isWelcomeFamily)#">,
+                    isWelcomeFamily = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isWelcomeFamily)#">,
                     
                     <!--- Keep Approval if placement previously approved and changed by Office and host and school are not changed --->
                     <cfif
@@ -578,7 +578,7 @@
                     placeRepID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
                     areaRepID =  <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
 					secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
-                    welcome_family = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+                    isWelcomeFamily = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
                     doubleplace = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
                     host_fam_approved = <cfqueryparam cfsqltype="cf_sql_bit" value="10">,
                     date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
@@ -823,7 +823,7 @@
                 UPDATE
                 	smg_students
 				SET
-                    welcome_family = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+                    isWelcomeFamily = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
                     
                     <!--- Approve if placement previously approved and changed by Office --->
                     <cfif ListFind("1,2,3,4", ARGUMENTS.userType) AND ListFind("1,2,3,4", qGetStudentInfo.host_fam_approved)>					
@@ -983,8 +983,8 @@
         <cfargument name="hostID" default="0" hint="hostID is not required">
         <cfargument name="changePlacementReasonID" default="" hint="changePlacementReasonID is not required">
         <cfargument name="changePlacementExplanation" default="" hint="changePlacementExplanation is not required">
-        <cfargument name="isWelcomeFamily" default="0" hint="welcome_family is not required">
-        <cfargument name="isRelocation" default="0" hint="relocation is not required">
+        <cfargument name="isWelcomeFamily" default="0" hint="isWelcomeFamily is not required">
+        <cfargument name="isRelocation" default="0" hint="isRelocation is not required">
         <cfargument name="schoolID" default="0" hint="schoolID is not required">        
         <cfargument name="schoolIDReason" default="" hint="schoolIDReason is not required">     
         <cfargument name="placeRepID" default="0" hint="placeRepID is not required">
@@ -1443,8 +1443,8 @@
                     h.isWelcomeFamily,
                     h.isRelocation,
                     h.original_place,
-                    h.welcome_family,
-                    h.relocation,
+                    h.isWelcomeFamily,
+                    h.isRelocation,
                     h.reason,
                     h.actions,
                     h.dateOfChange,

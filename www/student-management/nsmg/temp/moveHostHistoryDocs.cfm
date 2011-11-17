@@ -59,8 +59,19 @@
 
 <cfoutput>
 
+
+    <!--- Welcome Family | Student Table --->
+    <cfquery datasource="mySQL">
+        UPDATE 
+            smg_students
+        SET 
+            isWelcomeFamily = 1
+        WHERE 
+            welcome_family = 1    
+	</cfquery>
+
 	
-    <!--- Welcome Family --->
+    <!--- Welcome Family | History Table --->
     <cfquery datasource="mySQL">
         UPDATE 
             smg_hostHistory

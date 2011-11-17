@@ -130,18 +130,18 @@
 				WHERE studentid = '#get_students_region.studentid#'
 			</cfquery>
 			<cfquery name="get_place_date" datasource="MySql">
-				SELECT hist.dateofchange, hist.relocation
+				SELECT hist.dateofchange, hist.isRelocation
 				FROM smg_hosthistory hist
 				WHERE hist.studentid = '#get_students_region.studentid#' 
 					AND hist.hostid = '#first_acceptance.hostid#' 
 				GROUP BY hist.studentid 
 			</cfquery>
 			<cfquery name="get_relocation" datasource="MySql">
-				SELECT hist.dateofchange, hist.relocation
+				SELECT hist.dateofchange, hist.isRelocation
 				FROM smg_hosthistory hist
 				WHERE hist.studentid = '#get_students_region.studentid#' 
 					AND hist.hostid = '#first_acceptance.hostid#'
-					AND hist.relocation = 'yes'
+					AND hist.isRelocation = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 				GROUP BY hist.studentid 
 			</cfquery>
 			<cfif first_acceptance.school_acceptance GT get_arrival.dep_date OR first_acceptance.school_acceptance EQ ''>					
@@ -153,7 +153,7 @@
 					<td><cfif repfirstname EQ '' and replastname EQ ''><font color="red">Missing or Unknown</font><cfelse><u>#repfirstname# #replastname# (###userid#)</u></cfif></td>
 					<td>#firstname# #familylastname# (###studentid#)</td>
 					<td><cfif get_place_date.dateofchange NEQ ''>#DateFormat(get_place_date.dateofchange, 'mm/dd/yyyy')#<cfelse>Not Available - Current #DateFormat(dateplaced, 'mm/dd/yyyy')#</cfif></td>
-					<td><cfif get_relocation.relocation EQ 'yes'>yes<cfelse>no</cfif></td>
+					<td><cfif get_relocation.isRelocation EQ 1>yes<cfelse>no</cfif></td>
 					<td><cfif get_arrival.dep_date NEQ ''>#DateFormat(get_arrival.dep_date, 'mm/dd/yyyy')#<cfelse>No flight info</cfif></td>
 					<td><cfif first_acceptance.school_acceptance NEQ ''>#DateFormat(first_acceptance.school_acceptance, 'mm/dd/yyyy')#<cfelse>No school acceptance date</cfif></td>
 				</tr>

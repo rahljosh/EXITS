@@ -105,7 +105,7 @@ function areYouSure() {
 				</cfselect>
 			</td>
 		</tr>
-		<tr><td width="30%">Is this a Welcome Family?</td><td><cfinput type="radio" value="0" name="welcome_family" required="yes" message="Please answer both questions">No &nbsp;<cfinput type="radio" value="1" name="welcome_family" required="yes" message="Please answer both questions">Yes</td></tr>
+		<tr><td width="30%">Is this a Welcome Family?</td><td><cfinput type="radio" value="0" name="isWelcomeFamily" required="yes" message="Please answer both questions">No &nbsp;<cfinput type="radio" value="1" name="isWelcomeFamily" required="yes" message="Please answer both questions">Yes</td></tr>
 	</table><br>
 	<table width="580" align="center">
 		<tr>
@@ -131,7 +131,7 @@ function areYouSure() {
 
 <table width="580" align="center">
 	<!--- Welcome Family --->
-	<cfif get_student_info.welcome_family EQ 1 AND listFind("1,2,3,4,5", CLIENT.userType)>
+	<cfif get_student_info.isWelcomeFamily EQ 1 AND listFind("1,2,3,4,5", CLIENT.userType)>
 		<tr><th>*** This is a WELCOME FAMILY ***</th></tr>
 		<tr><td align="center"><a href="place_host_perm.cfm?studentid=#studentid#" onclick="return areYouSure(this);">Update this family to PERMANENT</a><br /><br /></td></tr>
 	</cfif>	

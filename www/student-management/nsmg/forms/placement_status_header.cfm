@@ -12,7 +12,7 @@ where programid = #get_student_info.programid#
 <cfquery name="get_host_info" datasource="MySQL">
 	SELECT DISTINCT stu.studentid, stu.firstname, stu.familylastname, stu.middlename, stu.hostid, stu.arearepid, stu.placerepid, stu.secondVisitRepID, stu.schoolid, 
 		stu.uniqueid, stu.dateplaced, stu.host_fam_approved, stu.date_host_fam_approved, stu.address, stu.address2, stu.city, stu.country, stu.programid,
-		stu.zip,  stu.fax, stu.email, stu.phone, stu.welcome_family,
+		stu.zip,  stu.fax, stu.email, stu.phone, stu.isWelcomeFamily,
 		h.motherfirstname, h.fatherfirstname, h.familylastname as hostlastname, h.hostid as hostfamid
 	FROM smg_students stu
 	LEFT JOIN smg_hosts h ON stu.hostid = h.hostid

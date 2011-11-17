@@ -107,10 +107,10 @@
                     dep_date DESC
 			</cfquery>		
 			<cfquery name="get_relocation" datasource="MySql">
-				SELECT hist.dateofchange, hist.relocation
+				SELECT hist.dateofchange, hist.isRelocation
 				FROM smg_hosthistory hist
 				WHERE hist.studentid = '#studentid#' 
-					AND hist.relocation = 'yes'
+					AND hist.isRelocation = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 			</cfquery>
 			
 			<cfif get_arrival.dep_date LT get_cbc.date_authorized AND get_relocation.recordcount EQ '0'>					

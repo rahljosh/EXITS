@@ -38,14 +38,14 @@
 		<tr><td align="center"><input type="image" value="close window" src="../pics/back.gif" onClick="javascript:history.back()"></td></tr>
 	</table>
 	<cfabort>
-<cfelseif not IsDefined('form.welcome_family')>
+<cfelseif not IsDefined('form.isWelcomeFamily')>
 	<cfinclude template="../forms/placement_status_header.cfm">
 	<table width="480" align="center"><tr><td align="center"><h3>In order to continue you must answer the welcome family question.</h3></td></tr></table><br>
 	<table width="480" align="center">
 		<tr><td align="center"><input type="image" value="close window" src="../pics/back.gif" onClick="javascript:history.back()"></td></tr>
 	</table>
 	<cfabort>
-<cfelseif not IsDefined('form.relocation')>
+<cfelseif not IsDefined('form.isRelocation')>
 	<cfinclude template="../forms/placement_status_header.cfm">
 	<table width="480" align="center"><tr><td align="center"><h3>In order to continue you must answer the relocation question.</h3></td></tr></table><br>
 	<table width="480" align="center">
@@ -59,10 +59,10 @@
 <!--- insert new row into host history --->
 <cfquery name="host_history" datasource="MySQL"> 
 	INSERT INTO smg_hosthistory	
-		(hostid, studentid, reason, dateofchange, arearepid, placerepid, schoolid, changedby, relocation, welcome_family)
+		(hostid, studentid, reason, dateofchange, arearepid, placerepid, schoolid, changedby, isRelocation, isWelcomeFamily)
 	VALUES ('#get_student_info.hostid#', '#get_student_info.studentid#', '#form.reason#', #CreateODBCDateTime(now())#, 
 		'#get_student_info.arearepid#', '#get_student_info.placerepid#', '#get_student_info.schoolid#', 
-	    '#CLIENT.userid#', '#form.relocation#', '#form.welcome_family#')
+	    '#CLIENT.userid#', '#form.isRelocation#', '#form.isWelcomeFamily#')
 </cfquery>
 
 <!--- GET LAST HISTORY TO INSERT HOST DOCUMENTS --->
@@ -122,7 +122,7 @@
 			placerepid = '0',
 			dateplaced = NULL,
 			date_pis_received = NULL,
-			welcome_family = '0',
+			isWelcomeFamily = '0',
 			<!--- SCHOOL SECTION --->
 			doc_school_accept_date = NULL,
 			doc_school_sign_date = NULL,
@@ -132,7 +132,7 @@
 			hostid = '#form.available_families#',
 			dateplaced = #CreateODBCDateTime(now())#,
 			date_pis_received = #CreateODBCDateTime(now())#,
-			welcome_family = '#form.welcome_family#',
+			isWelcomeFamily = '#form.isWelcomeFamily#',
 		</cfif>
 		date_host_fam_approved = #CreateODBCDateTime(now())#,
 		<cfif ListFind(CLIENT.userType, "5,6,7")>

@@ -47,7 +47,7 @@
             s.fax, 
             s.email, 
             s.phone, 
-            s.welcome_family,
+            s.isWelcomeFamily,
             p.seasonID,
             h.motherfirstname, 
             h.fatherfirstname, 
@@ -358,7 +358,7 @@
                                         <cfelseif qGetStudentInfo.hostfamid EQ ''>
                                             <font color="##CC3300">Host Family (###qGetStudentInfo.hostid#) was not found in the system.</font>						
                                         <cfelse>
-											<cfif qGetStudentInfo.welcome_family EQ 1>*** This is a Welcome Family ***<br /></cfif>	                       
+											<cfif qGetStudentInfo.isWelcomeFamily EQ 1>*** This is a Welcome Family ***<br /></cfif>	                       
 											
 											<cfif CLIENT.totalfam EQ 1 AND qGetStudentInfo.seasonID GT 8>
                                                 <font color="##CC0000">*** Single Person Placement***<br /></font>

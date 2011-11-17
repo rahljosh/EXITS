@@ -74,22 +74,22 @@ and flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
 			</cfselect>
 		</td>
 	</tr>
-	<tr><td width="30%">Is this a Welcome Family? </td><td><cfinput type="radio" value="0" name="welcome_family" required="yes" message="Please answer both questions">No &nbsp;<cfinput type="radio" value="1" name="welcome_family" required="yes" message="Please answer both questions">Yes</td></tr>
+	<tr><td width="30%">Is this a Welcome Family? </td><td><cfinput type="radio" value="0" name="isWelcomeFamily" required="yes" message="Please answer both questions">No &nbsp;<cfinput type="radio" value="1" name="isWelcomeFamily" required="yes" message="Please answer both questions">Yes</td></tr>
 	<tr><td valign="top">Is this a Relocation? </td>
     
     <td>
     <cfif  qGetFlightInfo.arrivalUS lt #now()#>
-    <cfinput type="radio" value="no" name="relocation" required="yes" message="Please answer both questions">No 
-    &nbsp;<cfinput type="radio" value="yes" name="relocation" required="yes" message="Please answer both questions">Yes
+    <cfinput type="radio" value="0" name="isRelocation" required="yes" message="Please answer both questions">No 
+    &nbsp;<cfinput type="radio" value="1" name="isRelocation" required="yes" message="Please answer both questions">Yes
      </td>
     <cfelse>
    
-    <input type="radio" value="no" name="relocation" checked disabled="disabled">No* 
-    &nbsp;<input type="radio" value="yes" name="relocation" disabled="disabled">Yes 
+    <input type="radio" value="0" name="isRelocation" checked disabled="disabled">No* 
+    &nbsp;<input type="radio" value="1" name="isRelocation" disabled="disabled">Yes 
     </td>
     <tr>
     <td colspan=2><font size=-1><em>* #get_student_info.firstname# has not arrived in the US, therefor this can not be classified as a relocation</em></font></td>
-    <input type="hidden" name="relocation" value="no" />
+    <input type="hidden" name="isRelocation" value="no" />
     </cfif>
    </tr>
    </tr>

@@ -14,7 +14,7 @@
 
 <cfquery name="permanent_family" datasource="MySql">
 	UPDATE smg_students
-	SET welcome_family = '0'
+	SET isWelcomeFamily = '0'
 	WHERE studentid = <cfqueryparam value="#url.studentid#" cfsqltype="cf_sql_integer" maxlength="6">
 	LIMIT 1
 </cfquery>

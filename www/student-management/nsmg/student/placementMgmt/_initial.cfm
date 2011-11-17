@@ -421,7 +421,7 @@
 			FORM.studentID = qGetStudentInfo.studentID;
 			FORM.uniqueID = qGetStudentInfo.uniqueID;
 			FORM.hostID = qGetStudentInfo.hostID;		
-			FORM.isWelcomeFamily = qGetStudentInfo.welcome_family;		
+			FORM.isWelcomeFamily = qGetStudentInfo.isWelcomeFamily;		
 			FORM.schoolID = qGetStudentInfo.schoolID;
 			FORM.placeRepID = qGetStudentInfo.placeRepID;
 			FORM.areaRepID = qGetStudentInfo.areaRepID;
@@ -1028,7 +1028,7 @@
                                 <a href="javascript:displayHiddenForm('unplaceStudentForm');">Unplace Student</a> 
                             </cfif>
                             
-							<cfif qGetStudentInfo.welcome_family EQ 1 AND ListFind("1,2,3,4,5", CLIENT.userType)>
+							<cfif qGetStudentInfo.isWelcomeFamily EQ 1 AND ListFind("1,2,3,4,5", CLIENT.userType)>
                                 |
                                 <a href="javascript:displayHiddenForm('setAsPermanentForm');">Set as Permanent</a> 
                             </cfif>
@@ -1131,7 +1131,7 @@
                             <!--- HF Information --->   
                             <cfelseif VAL(qGetStudentInfo.hostID)>
                                 
-                                <cfif qGetStudentInfo.welcome_family EQ 1>
+                                <cfif qGetStudentInfo.isWelcomeFamily EQ 1>
                                     *** This is a Welcome Family ***<br />
                                 </cfif>	                       
                                 
