@@ -104,7 +104,7 @@
                         </cfif>
                     </div>
                     <div style="padding: 2px;">
-						#client.name# [<a href="index.cfm">Home</a>] [ <a href="logout.cfm">Logout</a> ]
+						#client.name# [<a href="index.cfm">Home</a>] [ <a href="index.cfm?curdoc=logout">Logout</a> ]
                     </div>
                     </td>
                     <!----<td>
