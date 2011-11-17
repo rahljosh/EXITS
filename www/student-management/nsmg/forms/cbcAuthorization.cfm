@@ -256,7 +256,7 @@ body {
                     <cfinvokeargument name="email_to" value="#progManager.pm_email#"> 
 					      
                     <cfinvokeargument name="email_from" value="""#client.companyshort# Support"" <#client.emailfrom#>">
-                    <cfinvokeargument name="email_subject" value="Agreeement for #client.name#">
+                    <cfinvokeargument name="email_subject" value="CBC Authorization for #client.name#">
                     <cfinvokeargument name="email_message" value="#programEmailMessage#">
                   
                 </cfinvoke>	     
