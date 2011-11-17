@@ -452,7 +452,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                     
 				<!----Figure out how long they have been placed with this host family and host family info---->
                 <Cfquery name="hostHistory" datasource="#application.dsn#">
-                SELECT isWelcomeFamily, isRelocation, original_place,  welcome_family, relocation
+                SELECT isWelcomeFamily, isRelocation, original_place,  isWelcomeFamily, isRelocation
                 FROM smg_hosthistory
                 LEFT JOIN smg_hosts h on h.hostid = smg_hosthistory.hostid
                 WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
@@ -508,7 +508,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
        
                 <!----display info for the current report---->
                   <cfset mycurrentRow = mycurrentRow + 1>
-                   <tr <Cfif hostHistory.welcome_family eq 1>bgcolor="##bed1fc"<cfelse> bgcolor="#iif(mycurrentRow MOD 2 ,DE("eeeeee") ,DE("white") )#"</cfif>>
+                   <tr <Cfif hostHistory.isWelcomeFamily eq 1>bgcolor="##bed1fc"<cfelse> bgcolor="#iif(mycurrentRow MOD 2 ,DE("eeeeee") ,DE("white") )#"</cfif>>
                         <td>&nbsp;</td>
                         <td>
                         	<!--- put in red if user is the supervising rep for this student.  don't do for usertype 7 because they see only those students. --->
@@ -655,7 +655,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
               
                <cfif getPrevHosts.recordcount gt 0>
                        <Cfquery name="checkWelcome" datasource="#application.dsn#">
-                           select  distinct hh.hostID, hh.studentid, h.familylastname, welcome_family
+                           select  distinct hh.hostID, hh.studentid, h.familylastname, isWelcomeFamily
                            from smg_hostHistory hh
                            LEFT JOIN smg_hosts h on h.hostid = hh.hostid
                            where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
@@ -671,7 +671,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                        where hostid = #hostID#
                        </cfquery>
                        <Cfif welcomeCheck.recordcount eq 1>
-                       	<cfset isWelcomeFam = #welcomeCheck.welcome_family#>
+                       	<cfset isWelcomeFam = #welcomeCheck.isWelcomeFamily#>
                        <cfelse>
                        	 <Cfset isWelcomeFam = 0>
                        </Cfif>
@@ -848,7 +848,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                  
                  <Cfif kidsMissingReportsNoLongerAssigned.recordcount gt 0>  
                  	<Cfquery name="checkWelcomeFamily" datasource="#application.dsn#">
-                    	SELECT hh.welcome_Family, hh.original_place, hh.hostid, hh.dateofchange, h.familylastname as hostlast
+                    	SELECT hh.isWelcomeFamily, hh.original_place, hh.hostid, hh.dateofchange, h.familylastname as hostlast
                         FROM smg_hosthistory hh
                         LEFT JOIN smg_hosts h on h.hostid = hh.hostid
                         WHERE hh.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value=" #studentid#">
@@ -886,7 +886,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                         
                       
                         
-                         <tr <Cfif checkWelcomeFamily.welcome_family eq 1>bgcolor="##bed1fc"<cfelse> bgcolor="#iif(secondMyCurrentRow MOD 2 ,DE("eeeeee") ,DE("white") )#" </cfif>>
+                         <tr <Cfif checkWelcomeFamily.isWelcomeFamily eq 1>bgcolor="##bed1fc"<cfelse> bgcolor="#iif(secondMyCurrentRow MOD 2 ,DE("eeeeee") ,DE("white") )#" </cfif>>
                         <td width="15">&nbsp;</td>
                         <td><a href="javascript:OpenLetter('reports/PlacementInfoSheet.cfm?uniqueID=#previousKids.uniqueID#');">#firstname# #familylastname# (#studentid#)</a></td>
                         <td>#daysPlaced#</td>
@@ -955,7 +955,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                   
                <!----This is for Displaying kids with reports---->   
                 <Cfquery name="hostHistory" datasource="#application.dsn#">
-                SELECT isWelcomeFamily, isRelocation, original_place,  welcome_family, relocation, h.familyLastName as hostLastName
+                SELECT isWelcomeFamily, isRelocation, original_place,  isWelcomeFamily, isRelocation, h.familyLastName as hostLastName
                 FROM smg_hosthistory
                 LEFT JOIN smg_hosts h on h.hostid = smg_hosthistory.hostid
                 WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#previousKids.fk_student#">
@@ -992,7 +992,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
 			 <cfset secondSubSetOfKids = ''>
              <cfset secondSubSetOfHosts = ''>
                     <cfloop query="previousKids">
-                     <tr <Cfif hostHistory.welcome_family eq 1>bgcolor="##bed1fc"<cfelse> bgcolor="#iif(secondMyCurrentRow MOD 2 ,DE("eeeeee") ,DE("white") )#" </cfif>>
+                     <tr <Cfif hostHistory.isWelcomeFamily eq 1>bgcolor="##bed1fc"<cfelse> bgcolor="#iif(secondMyCurrentRow MOD 2 ,DE("eeeeee") ,DE("white") )#" </cfif>>
                         <td width="15">&nbsp;</td>
                         <td><a href="javascript:OpenLetter('reports/PlacementInfoSheet.cfm?uniqueID=#previousKids.uniqueID#');">#firstname# #familylastname# (#fk_student#)</a></td>
                         <td>#daysPlaced#</td>

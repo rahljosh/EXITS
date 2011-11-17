@@ -10,7 +10,7 @@
 	WHERE studentid = '#client.studentid#'
 </cfquery>
 
-<cfif not IsDefined('form.welcome_family')>
+<cfif not IsDefined('form.isWelcomeFamily')>
 	<cfinclude template="../forms/placement_status_header.cfm">
 	<table width="480" align="center"><tr><td align="center"><h3>In order to continue you must answer the welcome family question.</h3></td></tr></table><br>
 	<table width="480" align="center">
@@ -30,15 +30,15 @@
 			SET hostid = #form.available_families#,
 				dateplaced = #CreateODBCDateTime(now())#,
 				date_pis_received = #CreateODBCDateTime(now())#,
-				welcome_family = '#form.welcome_family#'
+				isWelcomeFamily = '#form.isWelcomeFamily#'
 		WHERE studentid = '#client.studentid#'
 		LIMIT 1
 	</cfquery>
 	
 	<cfif double_check_placement.arearepid NEQ '0' and double_check_placement.placerepid NEQ '0' and double_check_placement.schoolid NEQ '0' and check_history.recordcount is '0'>		
 		<cfquery name="create_original_placement" datasource="MySql">
-			INSERT INTO smg_hosthistory	(hostid, studentid, schoolid, original_place, welcome_family, dateofchange, arearepid, placerepid, changedby, reason)
-			VALUES('#form.available_families#', '#double_check_placement.studentid#', '#double_check_placement.schoolid#', 'yes', '#form.welcome_family#',
+			INSERT INTO smg_hosthistory	(hostid, studentid, schoolid, original_place, isWelcomeFamily, dateofchange, arearepid, placerepid, changedby, reason)
+			VALUES('#form.available_families#', '#double_check_placement.studentid#', '#double_check_placement.schoolid#', 'yes', '#form.isWelcomeFamily#',
 			 #CreateODBCDateTime(now())#, '#double_check_placement.arearepid#', '#double_check_placement.placerepid#', '#client.userid#', 'Original Placement')
 		</cfquery>
 	</cfif>

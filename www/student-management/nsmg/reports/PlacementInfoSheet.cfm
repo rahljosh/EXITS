@@ -115,13 +115,13 @@
     <cfquery name="qGetHistory" datasource="MySql">
         SELECT 
         	historyid, 
-            	relocation
+            isRelocation
         FROM 
         	smg_hosthistory
         WHERE 
         	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentid#">
         AND
-        	relocation = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
+        	isRelocation = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         ORDER BY 
         	historyid DESC
     </cfquery>
@@ -296,7 +296,7 @@
                     </div>
                 </cfif>
                 
-				<cfif qGetStudentInfo.welcome_family EQ 1>	
+				<cfif qGetStudentInfo.isWelcomeFamily EQ 1>	
                     <div class="alert" align="Center">
                         <h3>This is a welcome family.  Permanent family information will be sent shortly.</h3>
                     </div>
@@ -643,7 +643,7 @@
                                     <td>
 										<cfif LEN(qGetStudentInfo.placement_notes)>#qGetStudentInfo.placement_notes#<br /><br /></cfif>		
                                         
-                                        <cfif NOT VAL(qGetHistory.recordcount) OR qGetHistory.relocation EQ 'no'>
+                                        <cfif NOT VAL(qGetHistory.recordcount) OR qGetHistory.isRelocation EQ 'no'>
                                             The student should plan to arrive within five days from start of school. Please advise us of 
                                             #qGetStudentInfo.firstname#'s arrival information as soon as possible. Please upload flight information through EXITS.
                                         </cfif><br />

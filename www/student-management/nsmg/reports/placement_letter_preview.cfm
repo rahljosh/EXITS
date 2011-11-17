@@ -108,7 +108,7 @@ window.close();
 
 <!--- get history to check if this is a relocation --->
 <cfquery name="get_history" datasource="MySql">
-SELECT historyid, relocation
+SELECT historyid, isRelocation
 FROM smg_hosthistory
 WHERE hostid <> '0' AND studentid = '#get_student_info.studentid#'
 ORDER BY historyid DESC
@@ -313,13 +313,13 @@ ORDER BY historyid DESC
 		<tr><td>
 		<cfif get_student_info.placement_notes is ''><cfelse>#get_student_info.placement_notes#<br></cfif>		
 		We will be sending you the complete Host Family application shortly. 
-		<cfif get_history.recordcount is '0' or get_history.relocation is 'no'>
+		<cfif get_history.recordcount is 0 or get_history.isRelocation is 0>
 		The student should plan to arrive within five days from start of school. Please advise us of 
 		#get_student_info.firstname#'s arrival information as soon as possible.
 		<cfelse>
 		Note: this is a RELOCATION.
 		</cfif><br>		
-		<cfif get_student_info.welcome_family EQ 1>PLEASE NOTE THIS IS A WELCOME FAMILY</cfif>	
+		<cfif get_student_info.isWelcomeFamily EQ 1>PLEASE NOTE THIS IS A WELCOME FAMILY</cfif>	
 		</td></tr>
 </table><br>
 

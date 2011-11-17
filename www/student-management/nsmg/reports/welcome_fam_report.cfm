@@ -40,7 +40,7 @@
 	WHERE active = '1'
 		AND hostid != '0' 
 		AND host_fam_approved < '5'
-		AND welcome_family = '1'
+		AND isWelcomeFamily = '1'
 		AND (<cfloop list=#form.programid# index='prog'>
 			programid = #prog# 
 			<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
@@ -76,7 +76,7 @@
 			AND regionassigned = '#get_regions.regionid#'
 			AND hostid != '0' 
 			AND host_fam_approved < '5'
-			AND welcome_family = '1'
+			AND isWelcomeFamily = '1'
 			AND (<cfloop list="#form.programid#" index="prog">
 			programid = #prog# 
 			<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
@@ -96,7 +96,7 @@
 			AND regionassigned = '#current_region#' 
 			AND hostid != '0'
 			AND host_fam_approved < '5'
-			AND welcome_family = '1'
+			AND isWelcomeFamily = '1'
  			AND (<cfloop list=#form.programid# index='prog'>
 			programid = #prog# 
 			<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
@@ -128,7 +128,7 @@
 				</cfquery>
 				<cfquery name="update" datasource="MySql">
 					UPDATE	smg_hosthistory			
-					SET welcome_family = '1'
+					SET isWelcomeFamily = '1'
 					WHERE historyid = '#get.historyid#' 
 					LIMIT 1
 				</cfquery>

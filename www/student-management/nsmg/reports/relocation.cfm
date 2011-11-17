@@ -45,7 +45,7 @@
 	FROM smg_hosthistory hist
 	INNER JOIN smg_students s ON s.studentid = hist.studentid
 	WHERE s.active = '1' 
-		AND hist.relocation = 'yes' 
+		AND hist.isRelocation = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 		AND (<cfloop list=#form.programid# index='prog'>
 			s.programid = #prog# 
 			<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
@@ -86,7 +86,7 @@
 		FROM smg_hosthistory hist
 		INNER JOIN smg_students s ON s.studentid = hist.studentid
 		WHERE s.active = '1' 
-			AND hist.relocation = 'yes' 
+			AND hist.isRelocation = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 			AND s.regionassigned = '#get_region.regionid#'
 			AND (<cfloop list=#form.programid# index='prog'>
 				s.programid = #prog# 
@@ -121,7 +121,7 @@
 			LEFT JOIN smg_hosts h ON hist.hostid = h.hostid
 			LEFT JOIN smg_users u ON hist.changedby = u.userid
 			WHERE hist.studentid = #get_students_in_region.studentid# 
-				AND relocation = 'yes'
+				AND isRelocation = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 			ORDER BY hist.dateofchange desc, hist.historyid DESC
 		</cfquery>
 		<tr bgcolor="#iif(get_students_in_region.currentrow MOD 2 ,DE("ededed") ,DE("white") )#"><td colspan="2">

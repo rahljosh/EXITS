@@ -93,10 +93,10 @@
 				ORDER BY date_authorized
 			</cfquery>
 			<cfquery name="get_relocation" datasource="MySql">
-				SELECT hist.dateofchange, hist.relocation
+				SELECT hist.dateofchange, hist.isRelocation
 				FROM smg_hosthistory hist
 				WHERE hist.studentid = '#studentid#' 
-					AND hist.relocation = 'yes'
+					AND hist.isRelocation = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 			</cfquery>
 			
 			<cfif date_host_fam_approved LT get_cbc.date_authorized AND get_relocation.recordcount>					

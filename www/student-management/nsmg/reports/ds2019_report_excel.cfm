@@ -20,7 +20,7 @@
 <Cfquery name="get_students" datasource="MySQL">
 	SELECT 
 		s.studentid, s.firstname, s.familylastname, s.programid, s.ds2019_no, s.regionassigned, s.dateplaced, s.intrep, s.companyid,
-		s.placerepid, s.arearepid, s.hostid, s.schoolid, s.programid, s.welcome_family, s.sevis_activated,
+		s.placerepid, s.arearepid, s.hostid, s.schoolid, s.programid, s.isWelcomeFamily, s.sevis_activated,
 		p.programname,
 		h.familylastname as hostfamily, h.fatherfirstname, h.fatherlastname, h.motherfirstname, h.motherlastname, 
 		h.address as hostaddress, h.address2 as hostaddress2, h.city as hostcity, h.state as hoststate, h.zip as hostzip,
@@ -123,7 +123,7 @@
 			<td>#fatherfirstname#</td>
 			<td><cfif motherlastname NEQ fatherlastname>#motherlastname#</cfif></td>
 			<td>#motherfirstname#</td>
-			<td align="center"><cfif welcome_family EQ 1>Welcome<cfelse>Permanent</cfif></td>
+			<td align="center"><cfif isWelcomeFamily EQ 1>Welcome<cfelse>Permanent</cfif></td>
 			<td><cfif hostaddress EQ ''>#hostaddress2#<cfelse>#hostaddress#</cfif></td>
 			<td>#hostcity#</td>
 			<td align="center">#hoststate#</td>
@@ -139,12 +139,12 @@
 		<!--- CREATE NEW HISTORY --->
 		<cfquery name="create_history" datasource="MySql">
 			INSERT INTO smg_csiet_history
-				(companyid, datecreated, timecreated, csietid, studentid, hostid, welcome_family, host_lastname, host_address, host_city, host_state, host_zip, 
+				(companyid, datecreated, timecreated, csietid, studentid, hostid, isWelcomeFamily, host_lastname, host_address, host_city, host_state, host_zip, 
 				schoolid, school_name, school_address, school_city, school_state, school_zip, programid, regionid, placement_date,
 				placerepid,  place_firstname, place_lastname, arearepid, area_firstname, area_lastname, sevis_initial)
 			VALUES
 				('#companyid#', #CreateODBCDateTime(todaydate)#, #CreateODBCTime(todaydate)#, '#currentrow#', '#studentid#', '#hostid#', 
-				'#welcome_family#', '#hostfamily#', '<cfif hostaddress EQ ''>#hostaddress2#<cfelse>#hostaddress#</cfif>', '#hostcity#', 
+				'#isWelcomeFamily#', '#hostfamily#', '<cfif hostaddress EQ ''>#hostaddress2#<cfelse>#hostaddress#</cfif>', '#hostcity#', 
 				'#hoststate#', '#hostzip#', '#schoolid#', '#schoolname#', '<cfif schooladdress EQ ''>#schooladdress2#<cfelse>#schooladdress#</cfif>',
 				'#schoolcity#', '#schoolstate#', '#schoolzip#', '#programid#', '#regionassigned#', 
 				<cfif dateplaced EQ ''>NULL<cfelse>#CreateODBCDate(dateplaced)#</cfif>, '#placerepid#', '#place_firstname#', '#place_lastname#',
