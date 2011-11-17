@@ -329,7 +329,7 @@
         <cfargument name="userType" hint="userType is required">
         <cfargument name="reason" default="" hint="reason is not required">
         <cfargument name="placementStatus" default="" hint="Unplaced/Incomplete/Pending/Approved/Rejected">
-       
+            
         <cfscript>	
 			// Get Student Info
 			var qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID);
@@ -371,16 +371,27 @@
                     doublePlace = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">,
                     welcome_family = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isWelcomeFamily)#">,
                     
-                    <!--- Approve if placement previously approved and changed by Office --->
-                    <cfif ListFind("1,2,3,4", ARGUMENTS.userType) AND ListFind("1,2,3,4", qGetStudentInfo.host_fam_approved)>					
-						host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userType#">,
-					<!--- Approve if entering by Area Rep --->
-                    <cfelseif ARGUMENTS.userType EQ 7>                        	
+                    <!--- Keep Approval if placement previously approved and changed by Office and host and school are not changed --->
+                    <cfif
+						ListFind("1,2,3,4", ARGUMENTS.userType) <!--- Office User --->
+					AND 
+						ListFind("1,2,3,4", qGetStudentInfo.host_fam_approved) <!--- Placement Approved --->
+					AND	
+						qGetStudentInfo.hostID EQ ARGUMENTS.hostID <!--- HF Not Changed --->
+					AND	
+						qGetStudentInfo.schoolID EQ ARGUMENTS.schoolID <!--- School Not Changed --->
+					>
                         host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userType#">,
+                   
+                    <!--- Approve if entering by Area Rep --->
+                    <cfelseif ARGUMENTS.userType EQ 7>
+                        host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userType#">,
+                        
                     <!--- Set to lowest approval level --->
 					<cfelse>
                         host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="10">,
-                    </cfif> 
+                        
+                    </cfif>
                     
                     <!--- Used to track last approval --->
                     date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
@@ -798,10 +809,13 @@
         <cfargument name="changedBy" hint="changedBy is required">
         <cfargument name="userType" hint="userType is required">
         <cfargument name="reason" default="" hint="reason is not required">
+        <cfargument name="dateSetHostPermanent" default="" hint="dateSetHostPermanent is not required">
         
         <cfscript>
 			// Get Student Info
-			var qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID);				
+			var qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID);
+			
+			vHostHistoryID = getPlacementHistory(studentID=ARGUMENTS.studentID).historyID;			
 		</cfscript>
         
         <cfquery 
@@ -827,6 +841,17 @@
                 	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
 		</cfquery>
         
+        <!--- Update Host History - Insert Permanent Date --->
+        <cfquery 
+            datasource="#APPLICATION.DSN#">
+                UPDATE
+                    smg_hosthistory	
+                SET
+                    dateSetHostPermanent = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateSetHostPermanent#">
+                WHERE
+                    historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vHostHistoryID)#">
+        </cfquery>
+        
 		<cfscript>
 			// Insert New History - It tracks placement statuses only, placement updates are tracked on smg_hostHistory
 			insertPlacementActionHistory(
@@ -834,7 +859,8 @@
 				changedBy=ARGUMENTS.changedBy,
 				userType=ARGUMENTS.userType,
 				reason=ARGUMENTS.reason,
-				placementAction='setFamilyAsPermanent'
+				placementAction='setFamilyAsPermanent',
+				dateSetHostPermanent=ARGUMENTS.dateSetHostPermanent
 			);
         </cfscript>
         
@@ -848,6 +874,7 @@
         <cfargument name="userType" hint="userType is required">
         <cfargument name="reason" default="" hint="Field is used for rejection/resubmit comments">
         <cfargument name="placementAction" default="" hint="Approve/Reject/Resubmit/unplaceStudent/setFamilyAsPermanent">
+        <cfargument name="dateSetHostPermanent" default="" hint="dateSetHostPermanent is not required">
 	
     	<cfscript>
 			// History ID
@@ -909,7 +936,11 @@
 				
 				// SET FAMILY AS PERMANENT
 				case 'setFamilyAsPermanent':
-					vActions = "<strong>Host Family Set as Permanent</strong> <br /> #CHR(13)#";
+					if ( isDate(ARGUMENTS.dateSetHostPermanent ) ) {
+						vActions = "<strong>Host Family Set as Permanent as of #DateFormat(ARGUMENTS.dateSetHostPermanent,'mm/dd/yyyy')# </strong> <br /> #CHR(13)#";
+					} else {
+						vActions = "<strong>Host Family Set as Permanent</strong> <br /> #CHR(13)#";
+					}						
 					break; 
 
 			} //end switch
@@ -1072,13 +1103,14 @@
 				
 				// School Information
 				if ( VAL(ARGUMENTS.schoolID) AND VAL(qGetStudentInfo.schoolID) AND qGetStudentInfo.schoolID NEQ ARGUMENTS.schoolID ) {
+					
 					vQueryType = 'update';
 					vAddExtraLine = 1;
 					hasSchoolIDChanged = 1;
 					
 					// Add Message if info has been updated
 					if ( VAL(qGetStudentInfo.schoolID) ) {
-						vActions = vActions & "<strong>School Updated</strong> <br /> #CHR(13)#";
+						vActions = vActions & "<strong>School Updated - Pending HQ Approval</strong> <br /> #CHR(13)#";
 						// Previous School for reference
 						qGetSchoolInfo = APPLICATION.CFC.SCHOOL.getSchools(schoolID=qGetStudentInfo.schoolID);
 						vActions = vActions & "Previous School: #qGetSchoolInfo.schoolName# ###qGetSchoolInfo.schoolID# <br /> #CHR(13)#";
@@ -1096,7 +1128,7 @@
 					vActions = vActions & "<br /> #CHR(13)#";
 					vAddExtraLine = 0;
 				}
-				
+								
 				// Placing Representative
 				if ( VAL(ARGUMENTS.placeRepID) AND VAL(qGetStudentInfo.placeRepID) AND qGetStudentInfo.placeRepID NEQ ARGUMENTS.placeRepID ) {
 					vQueryType = 'update';
@@ -1346,8 +1378,7 @@
         <cfif ARGUMENTS.placementAction NEQ 'setDoublePlacement' AND vQueryType EQ 'update'>
 
             <cfquery 
-                datasource="#APPLICATION.DSN#"
-                result="newRecord">
+                datasource="#APPLICATION.DSN#">
                     UPDATE
                         smg_hosthistory	
                     SET

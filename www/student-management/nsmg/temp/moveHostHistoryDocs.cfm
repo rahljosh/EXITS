@@ -16,7 +16,19 @@
 
 	<cfsetting requesttimeout="9999">
 
-	<!--- Get Host History --->
+	<!--- Get Host History Missing Date Created --->
+    <cfquery name="qGetMissingDateCreated" datasource="mySQL">
+        SELECT 
+        	historyID,
+            dateOfChange,
+            dateCreated        
+        FROM
+        	smg_hosthistory
+        WHERE
+        	dateCreated IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+    </cfquery>
+
+	<!--- Get Host Docs History --->
     <cfquery name="qGetHostDocHistory" datasource="mySQL">
         SELECT 
         	docHistoryID,
@@ -38,7 +50,7 @@
             doc_ref_check1,
             doc_ref_form_2,
             doc_ref_check2,
-            doc_host_orientation          
+            doc_host_orientation  
         FROM
         	smg_hostDocsHistory
     </cfquery>
@@ -73,8 +85,26 @@
 
     <p>relocation records updated</p>
     
+    
+    <!--- Update Date Created --->
+    <cfloop query="qGetMissingDateCreated">
+    
+        <cfquery datasource="mySQL">
+            UPDATE 
+            	smg_hostHistory
+            SET
+                dateCreated = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#qGetMissingDateCreated.dateOfChange#" null="#NOT IsDate(qGetMissingDateCreated.dateOfChange)#">
+            WHERE
+                historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetMissingDateCreated.historyID#">            
+        </cfquery>
+    
+    </cfloop>
+    
+    <p>#qGetMissingDateCreated.recordCount# - date created records</p>
+
 
     <!--- Host Docs History --->
+    <!---
     <cfloop query="qGetHostDocHistory">
     
         <cfquery datasource="mySQL">
@@ -104,6 +134,7 @@
     </cfloop>
     
     <p>#qGetHostDocHistory.recordCount# - host docs records</p>
+    --->
     
 </cfoutput>   
 

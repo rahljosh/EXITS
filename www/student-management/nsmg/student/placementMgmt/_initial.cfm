@@ -24,6 +24,7 @@
     <cfparam name="FORM.changePlacementExplanation" default="" />
     <cfparam name="FORM.isWelcomeFamily" default="" />
     <cfparam name="FORM.isRelocation" default="" />
+    <cfparam name="FORM.dateSetHostPermanent" default="#DateFormat(now(), 'mm/dd/yyyy')#" />
     <!--- School --->
     <cfparam name="FORM.schoolID" default="0" />  
     <cfparam name="FORM.schoolIDReason" default="" />
@@ -295,20 +296,31 @@
 		
 		// SET FAMILY AS PERMANENT
 		} else if ( FORM.subAction EQ 'setFamilyAsPermanent' ) {
-			
-			// Set Family As Permanent - Insert into history
-			APPLICATION.CFC.STUDENT.setFamilyAsPermanent(
-				studentID = FORM.studentID,								 
-				changedBy = CLIENT.userID,								 
-				userType = CLIENT.userType
-			 );
 
-			// Set Page Message
-			SESSION.pageMessages.Add("Host Family has been set as permanent.");
-			
-			// Reload page
-			location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");		
+			// Data Validation
+			if ( NOT IsDate(FORM.dateSetHostPermanent) ) {
+				SESSION.formErrors.Add("You must enter what date did this host family become permanent");
+			}			
 
+			// Check if there are no errors
+			if ( NOT SESSION.formErrors.length() ) {				
+
+				// Set Family As Permanent - Insert into history
+				APPLICATION.CFC.STUDENT.setFamilyAsPermanent(
+					studentID = FORM.studentID,								 
+					changedBy = CLIENT.userID,								 
+					userType = CLIENT.userType,
+					dateSetHostPermanent=FORM.dateSetHostPermanent
+				 );
+	
+				// Set Page Message
+				SESSION.pageMessages.Add("Host Family has been set as permanent.");
+				
+				// Reload page
+				location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");		
+		
+			}
+		
 		// RESUBMIT PLACEMENT
 		} else if ( FORM.subAction EQ 'resubmit' ) {
 			
@@ -500,6 +512,11 @@
 		<cfelseif FORM.subAction EQ 'unplace'>
 		
 			displayHiddenForm('unplaceStudentForm');
+			
+		// Display only if setting family as permanent
+		<cfelseif FORM.subAction EQ 'setFamilyAsPermanent'>
+
+			displayHiddenForm('setAsPermanentForm');
 
 		</cfif>
 		
@@ -737,32 +754,6 @@
 		});	
 		
 	}
-	
-	// Modal Confirmation - Set Host Family As Permanent
-	var setFamilyAsPermanent = function(divID) { 	
-	
-		$(function() {
-			// a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
-			$( "#dialog:ui-dialog" ).dialog( "destroy" );
-		
-			$( "#dialog-setFamilyPermanent-confirm" ).dialog({
-				resizable: false,
-				height:160,
-				modal: true,
-				buttons: {
-					"Confirm": function() {
-						$( this ).dialog( "close" );
-						// Submit Form
-						$("#setPermanentForm").submit();
-					},
-					Cancel: function() {
-						$( this ).dialog( "close" );
-					}
-				}
-			});
-		});	
-		
-	}
 </script>
 
 <cfoutput>
@@ -772,11 +763,6 @@
 	<!--- Approve Placement - Modal Dialog Box --->
     <div id="dialog-approvePlacement-confirm" title="Approve this Placement?" class="displayNone"> 
         <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Please confirm below you would like to approve this placement.</p> 
-    </div> 
-    
-    <!--- Set as Permanent - Modal Dialog Box --->
-    <div id="dialog-setFamilyPermanent-confirm" title="Set Host Family as Permanent?" class="displayNone"> 
-        <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Please confirm below you would like to set this host family as permanent.</p> 
     </div> 
     
 	<!--- End of Modal Dialogs --->
@@ -963,10 +949,10 @@
             
         </cfswitch>
 
-		<!--- Unplace Student ---->
         <tr>
             <td align="center">
                 
+                <!--- Unplace Student ---->
                 <form name="unplaceStudentForm" id="unplaceStudentForm" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="displayNone" style="margin-top:10px; margin-bottom:10px;">
                     <input type="hidden" name="subAction" id="subAction" value="unplace" />
                     <input type="hidden" name="studentID" id="studentID" value="#FORM.studentID#" />
@@ -985,16 +971,30 @@
                     </table>
 
                 </form>    
+				
+                <!--- Set Family as Permanent --->
+                <form name="setAsPermanentForm" id="setAsPermanentForm" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="displayNone"  style="margin-top:10px; margin-bottom:10px;">
+                    <input type="hidden" name="subAction" id="subAction" value="setFamilyAsPermanent" />
+                    <input type="hidden" name="studentID" id="studentID" value="#FORM.studentID#" />
 
+                    <table width="680px" border="0" cellpadding="4" cellspacing="0" class="" align="center">                            				
+                        <tr class="reportCenterTitle"> 
+                            <th>SET FAMILY AS PERMANENT</th>
+                        </tr>
+                        <tr>
+                            <td class="placementMgmtInfo" align="center">
+                                <label class="reportTitleLeftClean" for="dateSetHostPermanent">What date did this family become permanent?</label>
+                                <input type="text" name="dateSetHostPermanent" id="dateSetHostPermanent" class="datePicker" value="#DateFormat(FORM.dateSetHostPermanent, 'mm/dd/yyyy')#">
+                                <input type="image" name="submit" src="../../student_app/pics/submit.gif" alt="Set Family As Permanent" style="display:block;" />    
+                            </td>
+                        </tr>
+                    </table>
+
+                </form> 
+                   
             </td>
-        </tr>                                                                                                
+        </tr>    
     </table>                                                
-
-	<!--- Set Family as Permanent --->
-    <form name="setPermanent" id="setPermanentForm" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="displayNone">
-    	<input type="hidden" name="subAction" id="subAction" value="setFamilyAsPermanent" />
-        <input type="hidden" name="studentID" id="studentID" value="#FORM.studentID#" />
-	</form>            
 
 	<!--- Placement Form --->   
     <cfform name="placementMgmt" id="placementMgmt" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
@@ -1030,7 +1030,7 @@
                             
 							<cfif qGetStudentInfo.welcome_family EQ 1 AND ListFind("1,2,3,4,5", CLIENT.userType)>
                                 |
-                                <a href="javascript:setFamilyAsPermanent();">Set as Permanent</a> 
+                                <a href="javascript:displayHiddenForm('setAsPermanentForm');">Set as Permanent</a> 
                             </cfif>
                             ]                                
                         </div>
