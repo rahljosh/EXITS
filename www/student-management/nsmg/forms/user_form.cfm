@@ -19,7 +19,7 @@
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.SSN" default="">
     <cfparam name="FORM.sex" default="">
-    <cfparam name="FORM.changepass" default="0">
+    <cfparam name="FORM.changepass" default="1">
     <cfparam name="FORM.bypass_checklist" default="0">
     <cfparam name="FORM.invoice_access" default="0">
     <cfparam name="FORM.active" default="0">
@@ -33,7 +33,9 @@
 	<cfscript>
         // Get Current User Information
         qGetUserInfo = APPLICATION.CFC.USER.getUserByID(userID=VAL(URL.userID));
-    
+		
+    	
+		
         // Get Current User Information
         qGetUserComplianceInfo = APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID);
     
@@ -45,8 +47,7 @@
     
         // allow SSN Field - If null or user has access.
         if ( NOT LEN(qGetUserInfo.SSN) OR qGetUserComplianceInfo.compliance EQ 1 ) {
-            
-			vDisplaySSN = 1;
+            vDisplaySSN = 1;
 			
 			if ( NOT VAL(FORM.submitted) ) {
 				
@@ -138,6 +139,16 @@
             </cfif>
         </cfquery>
     </cfif>
+    	<cfif isDefined("FORM.email")>
+        <cfquery name="check_email" datasource="#application.dsn#">
+            SELECT userid
+            FROM smg_users 
+            WHERE email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(FORM.email)#">
+            <cfif not new>
+                AND userid <> <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
+            </cfif>
+        </cfquery>
+    </cfif>
 
 	<cfif FORM.lookup_success NEQ "1">
 		<cfset errorMsg = 'Please lookup the address.'>
@@ -183,6 +194,8 @@
 		<cfset errorMsg = "Please enter the Username.">
 	<cfelseif isDefined("FORM.username") and check_username.recordcount NEQ 0>
 		<cfset errorMsg = "Sorry, this Username has already been entered in the database.">
+    <cfelseif isDefined("FORM.email") and check_email.recordcount NEQ 0>
+		<cfset errorMsg = "Sorry, this email address has already been entered in the database.">
 	<cfelseif new and trim(FORM.password) EQ ''>
 		<cfset errorMsg = "Please enter the Password.">
 	<cfelseif new and trim(FORM.confirm_password) EQ ''>
@@ -202,12 +215,12 @@
 		<!--- encrypt the SSN. --->
 		<cfscript>
 			// SSN - Will update if it's blank or there is a new number
-            if ( VAL(vDisplaySSN) AND isValid("social_security_number", Trim(FORM.SSN)) ) {
+            if ( isValid("social_security_number", Trim(FORM.SSN)) ) {
                 // Encrypt Social
                 FORM.SSN = APPLICATION.CFC.UDF.encryptVariable(FORM.SSN);
                 // Update
                 vUpdateSSN = 1;
-            } else if ( VAL(vDisplaySSN) AND NOT LEN(FORM.SSN) ) {
+            } else if ( NOT LEN(FORM.SSN) ) {
                 // Update - Erase SSN
                 vUpdateSSN = 1;
             }
@@ -379,7 +392,16 @@
                     <cfinvokeargument name="userid" value="#get_id.userid#">
                 </cfinvoke>
             </cfif>
-
+			<!--- send email for initial paperwork --->
+            <cfif FORM.usertype EQ 7> <!--- Do Not Send Email / Account Needs to be activated --->
+                <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                    <cfinvokeargument name="email_to" value="#FORM.email#">
+					<cfinvokeargument name="email_replyto" value="#client.email#">
+                    <cfinvokeargument name="email_subject" value="Account Created - more info needed">
+                    <cfinvokeargument name="include_content" value="newUserMoreInfo">
+                    <cfinvokeargument name="userid" value="#get_id.userid#">
+                </cfinvoke>
+            </cfif>
             <!--- company & regional access record was added above for usertype 8, so go to user info page. --->
             <cfif FORM.usertype EQ 8>
             	<cflocation url="index.cfm?curdoc=user_info&userid=#get_id.userid#" addtoken="No">
@@ -469,18 +491,16 @@
     
     <!--- we're coming from add_user.cfm --->
     <cfset FORM.usertype = URL.usertype>
-    <cfset temp_password = "temp#RandRange(100000, 999999)#">
-    
+    <cfscript>
+    //Random Password for account, if needed
+		temp_password = APPLICATION.CFC.UDF.randomPassword(length=8);
+    </cfscript>
     <cfset FORM.password = temp_password>
     <cfset FORM.confirm_password = temp_password>
     <cfset FORM.changepass = 1>
     <cfset FORM.datecreated = now()>
     <!----If Regional Manager/Advisor is creating account, set active to NO.  Once approved, account will be set to active.---->
-	<cfif ListFind("5,6", CLIENT.userType)>
-    	<cfset FORM.active = 0>
-    <cfelse>
-		<cfset FORM.active = 1>
-	</cfif>
+	<cfset FORM.active = 1>
     <!--- International users don't have the lookup. --->
     <cfif FORM.usertype EQ 8>
 		<cfset FORM.lookup_success = 1>
