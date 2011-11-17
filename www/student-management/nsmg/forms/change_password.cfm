@@ -11,8 +11,8 @@
 		<cfset errorMsg = "Please verify the New Password.">
 	<cfelseif trim(form.old_password) EQ trim(form.new_password)>
 		<cfset errorMsg = "New Password cannot be the same as Old Password.">
-	<cfelseif len(trim(form.new_password)) LT 6>
-		<cfset errorMsg = "New Password must be at least 6 characters.">
+	<cfelseif len(trim(form.new_password)) LT 8>
+		<cfset errorMsg = "New Password must be at least 8 characters.">
 	<cfelseif trim(form.new_password) NEQ trim(form.verify_new_password)>
 		<cfset errorMsg = "Verify New Password must be the same as New Password.">
 	</cfif>
@@ -107,7 +107,7 @@ function checkForm() {
 Please follow these guidlines when creating your password:<br>
 <ol>
 <li>Cannot re-use your existing password.</li>
-<li>Must be at least 6 characters.</li>
+<li>Must be at least 8 characters.</li>
 <li>Must include both alphabetic and numeric characters.</li>
 <li>Cannot be a substring of your Email.</li>
 <li>Should not be easily recognizable passwords, such as your name, birth dates, or names of children.</li>
@@ -116,7 +116,7 @@ Please follow these guidlines when creating your password:<br>
 <span class="redtext">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Required fields</span>
 <table border=0 cellpadding=4 cellspacing=0>
     <tr>
-    	<td class="label">Old Password: <span class="redtext">*</span></td>
+    	<td class="label">Current Password: <span class="redtext">*</span></td>
         <td><cfinput type="password" name="old_password" value="#form.old_password#" size="20" maxlength="15" required="yes" validate="noblanks" message="Please enter the Old Password."></td>
     </tr>
     <tr>
