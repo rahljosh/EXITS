@@ -116,7 +116,26 @@
 
 <div id="q1">
 <p><strong>1. How much do HOST FAMILIES receive for HOSTING a STUDENT?</strong><br />
-  Families DO NOT receive compensation as a volunteer HOST FAMILY. Instead, they receive many blessings and benefits by hosting. However, when people do volunteer to become a host family, they maybe entitled to a $50 per month tax deduction. Check with your accountant to make sure this deduction is available for you.</p>
+  The United States Department of State mandates that host families are not compensated for volunteering to host a foreign exchange student.  Instead, they receive many blessings and benefits by hosting. However, when people do volunteer to become a host family, they maybe entitled to a $50 per month tax deduction. Check with your accountant to make sure this deduction is available for you.</p>
+  <p>&dagger;<strong><a
+href="http://ecfr.gpoaccess.gov/cgi/t/text/text-idx?c=ecfr&sid=bfef5f6152d538eed70ad639c221a216&rgn=div8&view=text&node=22:1.0.1.7.37.2.1.6&idno=22"
+target="_blank" class=external>CFR Title 22, Part 62, Subpart B,
+&sect;62.25 (j)(2)</a></strong><br />
+<em>Utilize a standard application form developed by the sponsor that
+includes, at a minimum, all data fields provided in Appendix F,
+"Information to be Collected on Secondary School Student Host Family
+Applications". The form must include a statement stating that: "The
+income data collected will be used solely for the purposes of
+determining that the basic needs of the exchange student can be met,
+including three quality meals and transportation to and from school
+activities." Such application form must be signed and dated at the
+time of application by all potential host family applicants. The host
+family application must be designed to provide a detailed summary and
+profile of the host family, the physical home environment (to include
+photographs of the host family home's exterior and grounds, kitchen,
+student's bedroom, bathroom, and family or living room), family
+composition, and community environment. Exchange students are not
+permitted to reside with their relatives.</em></p>
 </div>
 
 <p><a href="#top" class="GyLink">Back to the top.</a></p>
@@ -200,7 +219,7 @@ EXCHANGE STUDENTS are 15-18 years old when they enter the U.S. The high school t
 <li>Have principal family members over the age of 25.</li>
 <li>Provide the EXCHANGE STUDENT with a bed and a place to study. AN EXCHANGE STUDENT may not share a bed. An EXCHANGE STUDENT may share a room, but only with a host sibling of the same gender who is within five years of the student's age.</li>
 <li>Provide breakfast, lunch, dinner and snacks for the EXCHANGE STUDENT. The EXCHANGE STUDENT is prepared to buy lunch on school days.</li>
-<li>Be financially secure and able to assume the costs of HOSTING a teenager.  Many families do enjoy supplying the extras at times of their choice.</li></div>
+<li>Be financially secure and able to assume the costs of HOSTING a teenager. Many families do enjoy supplying the extras at times of their choice.</li></div>
 
 <p><a href="#top" class="GyLink">Back to the top.</a></p>
 
@@ -226,7 +245,7 @@ EXCHANGE STUDENTS are 15-18 years old when they enter the U.S. The high school t
 
 <div id="q12">
 <p><strong>12. How will our EXCHANGE STUDENT get around?</strong><br />
-  The Alliance understands that you are very busy with work responsibilities and extra-curricular activities. Our EXCHANGE STUDENTS are not allowed to drive, but will take school and public buses whenever available. They often make friends who drive. HOST FAMILY members are not expected to be chauffeurs, but to simply offer the EXCHANGE STUDENT a ride when it is convenient.</p></div>
+  ISE understands that you are very busy with work responsibilities and extra-curricular activities. Our EXCHANGE STUDENTS are not allowed to drive, but will take school and public buses whenever available. They often make friends who drive. HOST FAMILY members are not expected to be chauffeurs, but to simply offer the EXCHANGE STUDENT a ride when it is convenient and help them make alternative arrangements.</p></div>
 
 <p><a href="#top" class="GyLink">Back to the top.</a></p>
 
@@ -234,7 +253,7 @@ EXCHANGE STUDENTS are 15-18 years old when they enter the U.S. The high school t
  
  <div id="q13"> 
 <p><strong>13. What kind of support will Program give the HOST FAMILY and EXCHANGE STUDENT?</strong><br />
-  A professionally trained Local Representative will be assigned to work with HOST FAMILY and EXCHANGE STUDENT for the entire program. Your AREA REPRESENTATIVE will visit with you and your student monthly, offering advice and support. The AREA REPRESENTATIVE will maintain regular contact with your local high schooland complete a quarterly report, evaluating your EXCHANGE STUDENT'S progress in family life, academic achievement and social activity. Your AREA REPRESENTATIVE, in turn, is supported by a team of dedicated regional and national program staff, available 24/7 in case of emergency.</p></div>
+  A professionally trained Local Representative will be assigned to work with HOST FAMILY and EXCHANGE STUDENT for the entire program. Your AREA REPRESENTATIVE will visit with you and your student monthly, offering advice and support. The AREA REPRESENTATIVE will maintain regular contact with your local high school and complete a monthly report, evaluating your EXCHANGE STUDENT'S progress in family life, academic achievement and social activity. Your AREA REPRESENTATIVE, in turn, is supported by a team of dedicated regional and national program staff, available 24/7 in case of emergency.</p></div>
 
 <p><a href="#top" class="GyLink">Back to the top.</a></p>
 
@@ -266,7 +285,7 @@ EXCHANGE STUDENTS are 15-18 years old when they enter the U.S. The high school t
 
 <div id="q17">
 <p><strong>17. How long is the EXCHANGE STUDENT'S stay?</strong><br />
-  Year EXCHANGE STUDENTS arrive in August for a 10 month academic stay, returning home to their home country in June. Semester EXCHANGE STUDENTS come for a 5 month stay -  some will arrive in August and stay until January and others arrive in January and stay until June. EXCHANGE STUDENTS from the Southern Hemisphere can come in January for the 12 month program</p></div>
+  School year EXCHANGE STUDENTS arrive in August for a 10 month academic stay, returning home to their home country in June. Semester EXCHANGE STUDENTS come for a 5 month stay - some will arrive in August and stay until January and others arrive in January and stay until June. EXCHANGE STUDENTS from the Southern Hemisphere can come in January for the 12 month program</p></div>
 
 <p><a href="#top" class="GyLink">Back to the top.</a></p>
 
