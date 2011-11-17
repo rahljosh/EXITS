@@ -31,6 +31,9 @@
 	
 		// Get Training records for this user
 		qGetTraining = APPLICATION.CFC.USER.getTraining(userID=URL.userid);
+		  
+    	//Check if paperwork is complete for season
+		CheckPaperwork = APPLICATION.CFC.udf.paperworkCompleted(userid=URL.userid,season=9);
 	</cfscript>
 
 	<!----Rep Info---->
@@ -93,7 +96,7 @@
     from smg_user_references
     where referencefor = #userid#
     </cfquery>	
-    
+
     <!--- get the access level of the user viewed.
     If null, then user viewing won't have access to username, etc. --->
     <cfinvoke component="nsmg.cfc.user" method="get_access_level" returnvariable="uar_usertype">
@@ -350,7 +353,7 @@
 	<tr>
 		<td>
 			<!----Personal Information---->
-			<table width="100%" cellpadding="0" cellspacing="0" border="0" height="24" >
+		  <table width="100%" cellpadding="0" cellspacing="0" border="0" height="24" >
 				<tr valign="middle" height="24">
 					<td height="24" width="13" background="pics/header_leftcap.gif">&nbsp;</td>
 					<td width="26" background="pics/header_background.gif"><img src="pics/user.gif"></td>
@@ -434,13 +437,15 @@
                         <strong>User Entered:</strong>&nbsp;&nbsp; #DateFormat(datecreated, 'mm/dd/yyyy')#<br>
                         <strong>Last Changed:</strong>&nbsp;&nbsp; #DateFormat(lastchange, 'mm/dd/yyyy')# #timeFormat(lastchange)#<br>
                         <strong>Status:</strong>&nbsp;&nbsp; <cfif active EQ 1>Active<cfelse>Inactive</cfif><br>
+                        <strong>Login Fully Enabled:</strong><cfif CheckPaperwork.Complete eq 0>No - <em><font size=-1>Waiting on paperwork to be signed</font></em><Br /><cfelse>Yes</cfif><Br />
+                        
                         <cfif CLIENT.userType EQ 1>
                             <strong>Username:</strong>&nbsp;&nbsp;#username#<br>
                             <strong>Password:</strong>&nbsp;&nbsp;#password#<br>
                         <cfelseif CLIENT.usertype LT uar_usertype> <!--- CLIENT.usertype LTE 4 OR - protect passwords --->
                             <strong>Username:</strong>&nbsp;&nbsp;#username#<br>
                             <strong>Password:</strong>&nbsp;&nbsp;#password#<br>
-                        </cfif>
+                      </cfif>
                         <!--- change password: if viewing own profile. --->
                         <cfif CLIENT.userid EQ rep_info.userid>
                             <a href="index.cfm?curdoc=forms/change_password">Change Password</a><br>
@@ -461,8 +466,8 @@
 					<td width="9" valign="top" height="12"><img src="pics/footer_leftcap.gif" ></td>
 					<td width="100%" background="pics/header_background_footer.gif"></td>
 					<td width="9" valign="top"><img src="pics/footer_rightcap.gif"></td>
-				</tr>
-			</table>
+			  </tr>
+		  </table>
 		</td>
 	</tr>
 </table><br>
@@ -1389,7 +1394,7 @@
                             	<Tr>
                                 	<Td>Name</Td><Td>Phone</Td>                                
                                     <td>
-										<Cfif client.usertype lte 6 and client.userid neq userid>
+										<Cfif client.usertype lte 5 and client.userid neq userid>
 										Report</cfif>
                                     </td>
                                     <td>Status</td>
@@ -1411,8 +1416,8 @@
                                	<Td>#firstname# #lastname#</Td><td>#phone#</td>
                                 <Td>
                                 
-                                <Cfif client.usertype lte 6 and client.userid neq userid>
-									<Cfif checkRefReport.recordcount eq 0 and client.usertype lte 6 >
+                                <Cfif client.usertype lte 5 and client.userid neq userid>
+									<Cfif checkRefReport.recordcount eq 0 and client.usertype lte 5 >
                                      <a href="javascript:openPopUp('forms/refrencesQuestionaire.cfm?ref=#refid#&rep=#userid#', 680, 800);">Submit Report
                                     <cfelse>
                                    <a href="javascript:openPopUp('forms/viewRefrencesQuestionaire.cfm?reportid=#checkRefReport.id#', 640, 800);">View Report</a>
