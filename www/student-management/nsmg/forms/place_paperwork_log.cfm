@@ -29,7 +29,7 @@
 	
 <cfquery name="get_paperwork_log" datasource="MySql">
 	SELECT * 
-	FROM smg_hostdocshistory
+	FROM smg_hostHistory
 	WHERE historyid = <cfqueryparam value="#url.historyid#" cfsqltype="cf_sql_integer">
 </cfquery>
 

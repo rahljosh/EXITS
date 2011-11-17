@@ -452,7 +452,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                     
 				<!----Figure out how long they have been placed with this host family and host family info---->
                 <Cfquery name="hostHistory" datasource="#application.dsn#">
-                SELECT isWelcomeFamily, isRelocation, original_place,  isWelcomeFamily, isRelocation
+                SELECT original_place,  isWelcomeFamily, isRelocation
                 FROM smg_hosthistory
                 LEFT JOIN smg_hosts h on h.hostid = smg_hosthistory.hostid
                 WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
@@ -955,7 +955,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                   
                <!----This is for Displaying kids with reports---->   
                 <Cfquery name="hostHistory" datasource="#application.dsn#">
-                SELECT isWelcomeFamily, isRelocation, original_place,  isWelcomeFamily, isRelocation, h.familyLastName as hostLastName
+                SELECT original_place,  isWelcomeFamily, isRelocation, h.familyLastName as hostLastName
                 FROM smg_hosthistory
                 LEFT JOIN smg_hosts h on h.hostid = smg_hosthistory.hostid
                 WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#previousKids.fk_student#">

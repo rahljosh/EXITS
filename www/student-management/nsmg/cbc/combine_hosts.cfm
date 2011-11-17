@@ -123,26 +123,12 @@
 		WHERE hostid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">		
 	</cfquery>
 
-	<!--- GET HOST DOC HISTORY --->
-	<cfquery name="host_doc_history" datasource="MySQL">
-		SELECT hostid
-		FROM smg_hostdocshistory
-		WHERE hostid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">		
-	</cfquery>
-	<!--- MOVE HOST DOC HISTORY --->
-	<cfquery name="move_host_doc_history" datasource="MySQL">
-		UPDATE smg_hostdocshistory
-		SET hostid = <cfqueryparam value="#form.to#" cfsqltype="cf_sql_integer">
-		WHERE hostid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">		
-	</cfquery>
-
 	<Table cellpadding=6 cellspacing="0" align="center" width="50%">
 		<tr><th colspan="2" bgcolor="e2efc7">Combining Host Families</th></tr>
 		<tr><th colspan="2">Records moved from : ###form.from#  &nbsp; to : ###form.to#</th></tr>
 		<tr><td align="right" width="200">Students :</td><td width="450">#students.recordcount#</td></tr>
 		<tr><td align="right">CBCs : </td><td>#cbc.recordcount#</td></tr>
 		<tr><td align="right">Host History :</td><td>#host_history.recordcount#</td></tr>
-		<tr><td align="right">Host Docs History :</td><td>#host_doc_history.recordcount#</td></tr>
 		<tr><td colspan="2">&nbsp;</td></tr>
 		<tr><th colspan="2">Deletion Information</th></tr>
 		
@@ -165,14 +151,8 @@
 			FROM smg_hosthistory
 			WHERE hostid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">		
 		</cfquery>
-		<!--- GET HOST DOC HISTORY --->
-		<cfquery name="host_doc_history" datasource="MySQL">
-			SELECT hostid
-			FROM smg_hostdocshistory
-			WHERE hostid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">		
-		</cfquery>
 	
-		<cfif students.recordcount EQ 0 AND cbc.recordcount EQ 0 AND host_history.recordcount EQ 0 AND host_doc_history.recordcount EQ 0>
+		<cfif students.recordcount EQ 0 AND cbc.recordcount EQ 0 AND host_history.recordcount EQ 0>
 			<!--- DELETE HOST --->
 			<cfquery name="delete_host" datasource="MySql">
 				DELETE 

@@ -512,14 +512,12 @@
 <Cfif history_dates.recordcount is not 0>
 	<!--- PLACEMENT HISTORY --->
 	<cfquery name="placement_history" datasource="MySQL">
-		SELECT hist.hostid, hist.reason, hist.studentid, hist.dateofchange, hist.arearepid, hist.placerepid, 
-			   hist.schoolid, hist.changedby, hist.original_place, hist.historyid,
+		SELECT hist.*, 
 			   h.familylastname,
 	    	   place.firstname as placefirstname, place.lastname as placelastname,
 			   changedby.firstname as changedbyfirstname, changedby.lastname as changedbylastname
 		FROM smg_hosthistory hist
 		INNER JOIN smg_hosts h ON hist.hostid = h.hostid
-		INNER JOIN smg_hostdocshistory ON smg_hostdocshistory.historyid = hist.historyid
 		LEFT OUTER JOIN smg_users place ON hist.placerepid = place.userid
 		LEFT OUTER JOIN smg_users changedby ON hist.changedby = changedby.userid
 		WHERE hist.studentid = #client.studentid#
@@ -529,16 +527,11 @@
   	<Table width=580 cellpadding=3 cellspacing=0 align="center" class="history">
 	<tr><td colspan="5" align="center"><font color="a8a8a8">P A P E R W O R K &nbsp; L O G </font><br><br></td></tr>
 	<cfoutput query="placement_history">
-		<cfquery name="get_status" datasource="MySql">
-		SELECT *
-		FROM smg_hostdocshistory
-		WHERE historyid = #placement_history.historyid#
-		</cfquery>
 		<!--- If Paperwork is complete --->
-		<cfif get_status.date_pis_received is not '' and get_status.doc_full_host_app_date is not '' and get_status.doc_letter_rec_date is not ''
-		and get_status.doc_rules_rec_date is not '' and get_status.doc_photos_rec_date is not '' and get_status.doc_school_accept_date is not ''
-		and get_status.doc_school_profile_rec is not '' and get_status.doc_conf_host_rec is not '' and get_status.doc_ref_form_1 is not ''
-		and get_status.doc_ref_form_2 is not ''>
+		<cfif placement_history.date_pis_received is not '' and placement_history.doc_full_host_app_date is not '' and placement_history.doc_letter_rec_date is not ''
+		and placement_history.doc_rules_rec_date is not '' and placement_history.doc_photos_rec_date is not '' and placement_history.doc_school_accept_date is not ''
+		and placement_history.doc_school_profile_rec is not '' and placement_history.doc_conf_host_rec is not '' and placement_history.doc_ref_form_1 is not ''
+		and placement_history.doc_ref_form_2 is not ''>
 			<cfset paperwork_image = 'check_ok'>  <!--- paperwork complete image --->
 		<cfelse>
 			<cfset paperwork_image = 'check_notok'>  <!--- paperwork incomplete image --->

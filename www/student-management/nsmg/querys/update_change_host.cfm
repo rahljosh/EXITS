@@ -59,44 +59,32 @@
 <!--- insert new row into host history --->
 <cfquery name="host_history" datasource="MySQL"> 
 	INSERT INTO smg_hosthistory	
-		(hostid, studentid, reason, dateofchange, arearepid, placerepid, schoolid, changedby, isRelocation, isWelcomeFamily)
+		(
+        	hostid, studentid, reason, dateofchange, arearepid, placerepid, schoolid, changedby, isRelocation, isWelcomeFamily,
+			date_pis_received, doc_full_host_app_date, doc_letter_rec_date, doc_rules_rec_date,
+			doc_photos_rec_date, doc_school_accept_date, doc_school_sign_date, doc_class_schedule, doc_school_profile_rec, 
+			doc_conf_host_rec, doc_date_of_visit, doc_ref_form_1, doc_ref_check1, doc_ref_form_2, doc_ref_check2, doc_host_orientation        
+        )
 	VALUES ('#get_student_info.hostid#', '#get_student_info.studentid#', '#form.reason#', #CreateODBCDateTime(now())#, 
 		'#get_student_info.arearepid#', '#get_student_info.placerepid#', '#get_student_info.schoolid#', 
-	    '#CLIENT.userid#', '#form.isRelocation#', '#form.isWelcomeFamily#')
-</cfquery>
-
-<!--- GET LAST HISTORY TO INSERT HOST DOCUMENTS --->
-<cfquery name="get_last_history" datasource="MySql">
-	SELECT MAX(historyid) as historyid
-	FROM smg_hosthistory
-</cfquery>
-	
-<!--- INSERT HISTORY DOCUMENTS --->
-<cfquery name="host_docs_history" datasource="MySql">
-	INSERT INTO smg_hostdocshistory
-			(historyid, hostid, studentid, date_pis_received, doc_full_host_app_date, doc_letter_rec_date, doc_rules_rec_date,
-			doc_photos_rec_date, doc_school_accept_date, doc_school_sign_date, doc_class_schedule, doc_school_profile_rec, 
-			doc_conf_host_rec, doc_date_of_visit, doc_ref_form_1, doc_ref_check1, doc_ref_form_2, doc_ref_check2, doc_host_orientation)
-	 VALUES ('#get_last_history.historyid#', '#hostid#', '#studentid#',
-			<cfif date_pis_received EQ ''>NULL<cfelse>#CreateODBCDateTime(date_pis_received)#</cfif>,		
-			<cfif doc_full_host_app_date EQ ''>NULL<cfelse>#CreateODBCDate(doc_full_host_app_date)#</cfif>,
-			<cfif doc_letter_rec_date EQ ''>NULL<cfelse>#CreateODBCDate(doc_letter_rec_date)#</cfif>,
-			<cfif doc_rules_rec_date EQ ''>NULL<cfelse>#CreateODBCDate(doc_rules_rec_date)#</cfif>,
-			<cfif doc_photos_rec_date EQ ''>NULL<cfelse>#CreateODBCDate(doc_photos_rec_date)#</cfif>,
-			<cfif doc_school_accept_date EQ ''>NULL<cfelse>#CreateODBCDate(doc_school_accept_date)#</cfif>,
-			<cfif doc_school_sign_date EQ ''>NULL<cfelse>#CreateODBCDate(doc_school_sign_date)#</cfif>,
-			<cfif doc_class_schedule EQ ''>NULL<cfelse>#CreateODBCDate(doc_class_schedule)#</cfif>,
-			<cfif doc_school_profile_rec EQ ''>NULL<cfelse>#CreateODBCDate(doc_school_profile_rec)#</cfif>,
-			
-			<cfif doc_conf_host_rec EQ ''>NULL<cfelse>#CreateODBCDate(doc_conf_host_rec)#</cfif>,
-			<cfif doc_date_of_visit EQ ''>NULL<cfelse>#CreateODBCDate(doc_date_of_visit)#</cfif>,
-			
-			<cfif doc_ref_form_1 EQ ''>NULL<cfelse>#CreateODBCDate(doc_ref_form_1)#</cfif>,
-			<cfif doc_ref_check1 EQ ''>NULL<cfelse>#CreateODBCDate(doc_ref_check1)#</cfif>,
-			<cfif doc_ref_form_2 EQ ''>NULL<cfelse>#CreateODBCDate(doc_ref_form_2)#</cfif>,
-			<cfif doc_ref_check2 EQ ''>NULL<cfelse>#CreateODBCDate(doc_ref_check2)#</cfif>,
-			
-			<cfif host_arrival_orientation EQ ''>NULL<cfelse>#CreateODBCDate(host_arrival_orientation)#</cfif>)
+	    '#CLIENT.userid#', '#form.isRelocation#', '#form.isWelcomeFamily#',
+		<cfif date_pis_received EQ ''>NULL<cfelse>#CreateODBCDateTime(date_pis_received)#</cfif>,		
+        <cfif doc_full_host_app_date EQ ''>NULL<cfelse>#CreateODBCDate(doc_full_host_app_date)#</cfif>,
+        <cfif doc_letter_rec_date EQ ''>NULL<cfelse>#CreateODBCDate(doc_letter_rec_date)#</cfif>,
+        <cfif doc_rules_rec_date EQ ''>NULL<cfelse>#CreateODBCDate(doc_rules_rec_date)#</cfif>,
+        <cfif doc_photos_rec_date EQ ''>NULL<cfelse>#CreateODBCDate(doc_photos_rec_date)#</cfif>,
+        <cfif doc_school_accept_date EQ ''>NULL<cfelse>#CreateODBCDate(doc_school_accept_date)#</cfif>,
+        <cfif doc_school_sign_date EQ ''>NULL<cfelse>#CreateODBCDate(doc_school_sign_date)#</cfif>,
+        <cfif doc_class_schedule EQ ''>NULL<cfelse>#CreateODBCDate(doc_class_schedule)#</cfif>,
+        <cfif doc_school_profile_rec EQ ''>NULL<cfelse>#CreateODBCDate(doc_school_profile_rec)#</cfif>,
+        <cfif doc_conf_host_rec EQ ''>NULL<cfelse>#CreateODBCDate(doc_conf_host_rec)#</cfif>,
+        <cfif doc_date_of_visit EQ ''>NULL<cfelse>#CreateODBCDate(doc_date_of_visit)#</cfif>,
+        <cfif doc_ref_form_1 EQ ''>NULL<cfelse>#CreateODBCDate(doc_ref_form_1)#</cfif>,
+        <cfif doc_ref_check1 EQ ''>NULL<cfelse>#CreateODBCDate(doc_ref_check1)#</cfif>,
+        <cfif doc_ref_form_2 EQ ''>NULL<cfelse>#CreateODBCDate(doc_ref_form_2)#</cfif>,
+        <cfif doc_ref_check2 EQ ''>NULL<cfelse>#CreateODBCDate(doc_ref_check2)#</cfif>,
+        <cfif host_arrival_orientation EQ ''>NULL<cfelse>#CreateODBCDate(host_arrival_orientation)#</cfif>
+		)
 </cfquery>
 
 <cfif form.available_families EQ '0' and get_facilitator.recordcount GT 0 and get_rep.recordcount NEQ 0>
