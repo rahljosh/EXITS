@@ -77,20 +77,21 @@
 <div id="top"></div>
 <div class="faqInfo">
 
-<h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />Our Representatives</h1>
+<h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />Our Representative</h1>
 
 
 
-<ul><li>Is the person who has arranged the student's stay and secured permission for the student to
-  attend the local high school</li>
-  <li>Is the person you and the student will go to for help.</li>
- <li>Will contact you and the student monthly. You may request a meeting at any time in between. IF YOU OR
-  THE STUDENT DO NOT HEAR FROM YOUR AREA REPRESENTATIVE, please notify ISE at 800-
-  766-4656</li>
- <li>Is trained to be open and objective.</li>
-  <li>Will help you with any problem you have.</li>
-  <li>Will give advice and answer questions.</li>
-  <li>Will contact the school to check the progress of the student and report back to the ISE New York Office.</li></ul>
+<ul>
+  <li>Our representative is the person who has arranged the student's stay and secured permission for the student to
+  attend at the local high school.</li>
+  <li>Our representative is the person you and the student will go to for help.</li>
+ <li>Our representative will contact you and the student monthly. You may request a meeting at any time in between. IF YOU OR
+  THE STUDENT DO NOT HEAR FROM YOUR AREA REPRESENTATIVE, please notify<strong> ISE at 800-
+  766-4656</strong></li>
+ <li>Our representative is trained to be open and objective.</li>
+  <li>Our representative will help you with any problem you have.</li>
+  <li>Our representative will give advice and answer questions.</li>
+  <li>Our representative will contact the school to check the progress of the student and report back to the ISE New York Office.</li></ul>
 
 
 
