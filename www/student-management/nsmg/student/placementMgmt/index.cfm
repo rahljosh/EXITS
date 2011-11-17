@@ -399,7 +399,7 @@
             </cfdefaultcase>
         
         </cfswitch>
-
+		
 		<!--- History --->
         <cfif URL.action EQ 'initial' AND VAL(qGetPlacementHistory.recordCount)>
             

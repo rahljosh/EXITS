@@ -284,33 +284,56 @@
 		<cfscript>
 			/**
 			 * Returns the 2 character english text ordinal for numbers.
-			 * 
-			 * @param num      Number you wish to return the ordinal for. (Required)
-			 * @return Returns a string. 
-			 * @author Mark Andrachek (hallow@webmages.com) 
-			 * @version 1, November 5, 2003 
-			 */
-			  // if the right 2 digits are 11, 12, or 13, set num to them.
-			  // Otherwise we just want the digit in the one's place.
-			  var two=Right(VAL(ARGUMENTS.num),2);
-			  var ordinal="";
-			  switch(two) {
-				   case "11": 
-				   case "12": 
-				   case "13": { num = two; break; }
-				   default: { num = Right(num,1); break; }
-			  }
+			**/
 			
-			  // 1st, 2nd, 3rd, everything else is "th"
-			  switch(num) {
-				   case "1": { ordinal = num & "st"; break; }
-				   case "2": { ordinal = num & "nd"; break; }
-				   case "3": { ordinal = num & "rd"; break; }
-				   default: { ordinal = num & "th"; break; }
-			  }
+			// if the right 2 digits are 11, 12, or 13, set num to them.
+			// Otherwise we just want the digit in the one's place.
+			var two = Right(VAL(ARGUMENTS.num),2);
+			var ordinal="";
 			
-			  // return the text.
-			  return ordinal;
+			/*
+			switch(two) {
+				case "11": 
+				case "12": 
+				case "13": { 
+					num = two; 
+					break; 
+				}
+				default: { 
+					num = Right(num,1); 
+					break; 
+				}
+			}
+			*/
+
+			// 1st, 2nd, 3rd, everything else is "th"
+			switch( num ) {
+				case "1":
+				case "21":
+				case "31": { 
+					ordinal = num & "st"; 
+					break; 
+				}
+				case "2":
+				case "22":
+				case "32": { 
+					ordinal = num & "nd"; 
+					break; 
+				}
+				case "3":
+				case "23":
+				case "33": { 
+					ordinal = num & "rd"; 
+					break; 
+				}
+				default: { 
+					ordinal = num & "th"; 
+					break; 
+				}
+			}
+			
+			// return the text.
+			return ordinal;
         </cfscript>
 		   
 	</cffunction>
@@ -451,7 +474,6 @@
          
 			<!--- We have 4 of the arguments.length needed to satisfy the requirements, create rest of the password. --->
             <cfloop index="intChar" from="#(ArrayLen( arrPassword ) + 1)#" to="#ARGUMENTS.length#" step="1">
-             
             
                 <cfset arrPassword[ intChar ] = Mid(
                 strAllValidChars,
@@ -474,79 +496,91 @@
             do this by converting the array to a list and then just
             providing no delimiters (empty string delimiter).
             --->
-            <cfset strPassword = ArrayToList(arrPassword,"") />
-            <cfscript>
-				return(strPassword);
-			</cfscript>
+		<cfscript>
+            strPassword = ArrayToList(arrPassword,"");
+            
+            return(strPassword);
+        </cfscript>
+
 	</cffunction>
 
-<!---Check if paperwork is complete for a specific user for a specific season ---->
+
+	<!---Check if paperwork is complete for a specific user for a specific season ---->
 	<cffunction name="paperworkCompleted" access="public" returntype="query">
     	<cfargument name="season" type="numeric" required="yes" default=9 hint="This should be what ever season you want to check on." />
         <cfargument name="userid" type="numeric" required="yes" default="" hint="Pass in user id you want to check on">
         
     	<!----Check Agreement---->
-        <Cfquery name="checkAgreement" datasource="#application.dsn#">
-        select ar_cbc_auth_form, ar_agreement,ar_ref_quest1,ar_ref_quest2
-        from smg_users_paperwork
-        where userid =  <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
-        and seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.season)#">
+        <cfquery name="checkAgreement" datasource="#APPLICATION.DSN#">
+            SELECT 
+            	ar_cbc_auth_form, ar_agreement,ar_ref_quest1,ar_ref_quest2
+            FROM 
+            	smg_users_paperwork
+            WHERE 
+            	userid =  <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
+            AND 
+            	seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.season)#">
         </cfquery>
+        
         <!----Check Refrences---->
-        <Cfquery name="checkReferences" datasource="#application.dsn#">
-        select *
-        from smg_user_references
-        where referencefor = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
-        
+        <cfquery name="checkReferences" datasource="#APPLICATION.DSN#">
+            SELECT 
+            	*
+            FROM 
+            	smg_user_references
+            WHERE 
+            	referencefor = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
         </cfquery>
+        
         <!----Check Employmenthistory---->
-        <Cfquery name="employHistory" datasource="#application.dsn#">
-        select *
-        from smg_users_employment_history
-        where fk_userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
+        <cfquery name="employHistory" datasource="#APPLICATION.DSN#">
+            SELECT 
+            	*
+            FROM 
+            	smg_users_employment_history
+            WHERE 
+            	fk_userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
         </cfquery>  
-        <Cfquery name="prevExperience" datasource="#application.dsn#">
-        select prevOrgAffiliation, prevAffiliationName
-        from smg_users
-        where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
+        
+        <cfquery name="prevExperience" datasource="#APPLICATION.DSN#">
+            SELECT 
+                prevOrgAffiliation, 
+                prevAffiliationName
+            FROM 
+                smg_users
+            WHERE 
+                userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
         </cfquery>
         
-    	 <Cfif employHistory.recordcount gte 1 AND (prevExperience.prevOrgAffiliation eq 0 OR (prevExperience.prevOrgAffiliation eq 1 and prevExperience.prevAffiliationName is not ''))>
-     	<Cfset previousExperience = 1>
-     <cfelse>
-     	<Cfset previousExperience = 0>
-     </Cfif> 
+		<cfif employHistory.recordcount GTE 1 AND (prevExperience.prevOrgAffiliation EQ 0 OR (prevExperience.prevOrgAffiliation EQ 1 and prevExperience.prevAffiliationName NEQ ''))>
+	        <cfset previousExperience = 1>
+        <cfelse>
+    	    <cfset previousExperience = 0>
+        </cfif> 
     
-    <Cfif checkAgreement.ar_cbc_auth_form is not '' AND checkAgreement.ar_agreement is not ''AND checkAgreement.ar_ref_quest1 is not '' AND checkAgreement.ar_ref_quest2 is not '' and  checkReferences.recordcount eq 4 and previousExperience eq 1 >
-    	<cfset isComplete = 1>
-     <cfelse>
-     	<cfset isComplete = 0>
-     </Cfif>
-     <cfscript>
+		<cfif checkAgreement.ar_cbc_auth_form NEQ '' AND checkAgreement.ar_agreement NEQ '' AND checkAgreement.ar_ref_quest1 NEQ '' AND checkAgreement.ar_ref_quest2 NEQ '' AND checkReferences.recordcount EQ 4 AND previousExperience EQ 1 >
+            <cfset isComplete = 1>
+		<cfelse>
+            <cfset isComplete = 0>
+        </cfif>
+     
+	 	<cfscript>
 			// This is the query that is returned
 			qPaperWork = QueryNew("Complete, prevExperience,arAgreement,cbcAuth,ref1,ref2,numberRef");
-	    </cfscript>
-     
-     <cfscript>
-     // Insert blank first row
-				QueryAddRow(qPaperWork);
-				QuerySetCell(qPaperWork, "Complete", #isComplete#);
-				QuerySetCell(qPaperWork, "prevExperience", #previousExperience#);
-                QuerySetCell(qPaperWork, "arAgreement", '#checkAgreement.ar_agreement#');
-				QuerySetCell(qPaperWork, "cbcAuth", '#checkAgreement.ar_cbc_auth_form#');
-				QuerySetCell(qPaperWork, "ref1", '#checkAgreement.ar_ref_quest1#');
-				QuerySetCell(qPaperWork, "ref2", '#checkAgreement.ar_ref_quest2#');
-				QuerySetCell(qPaperWork, "numberRef", #checkReferences.recordcount#);
-                
- 	
 			
+			 // Insert blank first row
+			QueryAddRow(qPaperWork);
+			QuerySetCell(qPaperWork, "Complete", isComplete);
+			QuerySetCell(qPaperWork, "prevExperience", previousExperience);
+			QuerySetCell(qPaperWork, "arAgreement", checkAgreement.ar_agreement);
+			QuerySetCell(qPaperWork, "cbcAuth", checkAgreement.ar_cbc_auth_form);
+			QuerySetCell(qPaperWork, "ref1", checkAgreement.ar_ref_quest1);
+			QuerySetCell(qPaperWork, "ref2", checkAgreement.ar_ref_quest2);
+			QuerySetCell(qPaperWork, "numberRef", checkReferences.recordcount);
 			
-	</cfscript>		
-		
-			<cfreturn  qPaperWork>			
-		
-	 
-			
-	 
+			return qPaperWork;
+		</cfscript>		
+    		
     </cffunction>
+    
 </cfcomponent>
