@@ -148,7 +148,7 @@
 <li><a href="?" target="_self" ><strong>Hosting Requirements</strong></a>
 	<ul>
 <li><a href="become-a-host-familyJW.cfm?page=/HostFamily/family-requirements" target="_self">Family Requirements</a></li>
-<li><a href="hostApp">Host Application</a></li>
+<li><a href="meet-our-studentsJW.cfm" target="_self" >Host Application</a></li>
 </ul>
 </li>
 
