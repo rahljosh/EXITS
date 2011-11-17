@@ -11,9 +11,14 @@ select email, whocreated, firstname, lastname
 from smg_users
 where userid = #url.userid#
 </Cfquery>
+ <Cfscript>
+		//Check if paperwork is complete for season
+		qGetRegionalManager = APPLICATION.CFC.user.getRegionalManager(regionID=client.regionid);
+ </cfscript>
+ 
    <cfinvoke component="nsmg.cfc.email" method="send_mail">
                     <cfinvokeargument name="email_to" value="#userEmail.email#">
-					
+					<cfinvokeargument name="email_cc" value="#qGetRegionalManager.email#">  
                     <cfinvokeargument name="email_subject" value="New Account Created / Login Information">
                     <cfinvokeargument name="include_content" value="send_login">
                     <cfinvokeargument name="userid" value="#url.userid#">
