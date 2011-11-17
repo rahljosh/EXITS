@@ -76,28 +76,29 @@
 
 <div id="top"></div>
 <div class="faqInfo">
-<h1>What International Exchange Students say they Have Learned from their Host Family</h1>
+<h1>What International Exchange Students Say They Have Learned From Their Host Family</h1>
 
 
 
 <ul>
-	<li><strong>"America way of life"</strong> &#8211; Sarah</li>
+	<li><strong>"Americans way of life"</strong> &#8211; Sarah</li>
 	<li><strong>"I learned to share and to live in a way I never did before"</strong> &#8211; Laura</li>
 	<li><strong>"I learned to love another family and to have the support of another person"</strong> &#8211; Clara</li>
 	<li><strong>"A different family structure then my own"</strong> &#8211; Coco</li>
-	<li><strong>"I Learned how to be a sister and how to compromise"</strong> &#8211; Benedkte</li>
-	<li><strong>"Going to Church isn't bad I like going"</strong> &#8211; Simon</li>
+	<li><strong>"I learned how to be a sister and how to compromise"</strong> &#8211; Benedkte</li>
+	<li><strong>"Going to church isn't bad. I liked going"</strong> &#8211; Simon</li>
 	<li><strong>"Another day of thinking"</strong> &#8211; Victor</li>
 	<li><strong>"They have a good relationship"</strong> &#8211; Juan</li>
 	<li><strong>"Patience and Strength"</strong> &#8211; Juan</li>
 	<li><strong>"How to accept a different culture and how it is to have a sister"</strong> &#8211; Karin</li>
 	<li><strong>"Their different point of view and how things happen in real life, everything is different, even eating"</strong> &#8211; Khoa</li>
 	<li><strong>"Even though they have a family that they focus on, preparing their children for the next step in their lives"</strong> &#8211; Susi</li>
-<li><strong>"I can do things I've never done before"</strong> &#8211; Joev</li>
+<li><strong>"I can do things, I had never done before"</strong> &#8211; Joev</li>
 	<li><strong>"How to share a room and clean it."</strong></li>
-	<li><strong>"My Host Dad teaches me about many thins, he is very knowledgeable"</strong> &#8211; Dorothy</li>
-	<li><strong>"The way of even shopping and cooking are different. I see every family is different on how the get along"</strong> &#8211; Sabrina</li>
-	<li><strong>"All the little things you have to learn buy experience"</strong> &#8211; Sami</li>
+	<li><strong>"My host dad taught me many things, he is very knowledgeable"</strong> &#8211; Dorothy</li>
+	<li><strong>"The way of even shopping and cooking are different&quot;. </strong> &#8211; Sabrina</li>
+	<li><strong>&quot;I recognized that every family is different and how they get along"</strong> &#8211; Sabrina</li>
+	<li><strong>"All the little things you learn through experience"</strong> &#8211; Sami</li>
 	<li><strong>"Language & fast food!"</strong> &#8211; Sofia</li></ul>
 
 
