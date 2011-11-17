@@ -23,7 +23,7 @@
 	<li>Enhances Cross-Cultural Skills</li>
 	<li>Develops Leadership and International Involvement</li></ul>
     <br /><br /> 
-   <div class="HFgradient"> <h5>ISE, International Student Exchange, opens doors for teens to cross cultural borders. Hosting promotes peace through cross-cultural contact. ISE is making a difference for the world of tomorrow, by break down barriers to understanding today.</h5></div>
+   <div class="HFgradient"> <h5>ISE, International Student Exchange, opens doors for teens to cross cultural borders. Hosting promotes peace through cross-cultural contact. ISE is making a difference for the world of tomorrow, by breaking down barriers to understanding today.</h5></div>
      <br />
       <!--end HFsidebarR--></div>
         <div class="HFsidebarL">
