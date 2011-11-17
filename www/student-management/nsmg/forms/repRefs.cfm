@@ -265,7 +265,14 @@ td {
             and fk_companyid = #client.companyid#
             </Cfif>
         </cfquery>
-
+<Cfif client.usertype gt 5>
+ <Cfscript>
+		//Check if paperwork is complete for season
+		qGetRegionalManager = APPLICATION.CFC.user.getRegionalManager(regionID=client.regionid);
+ </cfscript>
+<cfelse>
+	 <cfset qGetRegionalManager = #client.programmanager_email#>
+</Cfif>
 
 
 <div class="wrapper">
@@ -336,7 +343,7 @@ where referencefor = #client.userid#
                 </cfsavecontent>
                 
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                    <cfinvokeargument name="email_to" value="bhause@iseusa.com">       
+                    <cfinvokeargument name="email_to" value="#qGetRegionalManager.email#">     
                     <cfinvokeargument name="email_from" value="""#client.companyshort# Support"" <#client.emailfrom#>">
                     <cfinvokeargument name="email_subject" value="References">
                     <cfinvokeargument name="email_message" value="#programEmailMessage#">
