@@ -55,7 +55,7 @@ culture.</li>
 <div class="HFgradient">       
 <h1 class="HFheaderSub">The "hosting experience" strengthens the family through increased interaction among family members. The addition of the new extended family member enhances the family setting and improves mutual respect as a family.</div><br />
 
-<h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />What is a Host:</h1>
+<h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />What is a Host Family:</h1>
 <p>A host family is a vital part of the cultural exchange, immersing the student
 in a variety of activities while in the host country. The host family plays a
 large role in offering the student a view of another country and gains the
@@ -80,7 +80,7 @@ You don't need to have teenagers to host &#8211; you can host
 if you have young children, adult children, or no children
 at all. If yours is a non-traditional household interested in
 sharing your home with a foreign exchange scholarship
-student, organizations will generally consider your
+student,  ISE will consider your
 application to host following special selection procedures.</p><!--end HFgradient --></div>
     <br />
  
