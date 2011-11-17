@@ -1,6 +1,7 @@
 <cfcomponent>
 	
     <cfparam name="CLIENT.companyID" default="0">
+    <cfparam name="season" default="8">
     <!----This should be removed when SMG uses the global login page---->
 	   
 	<!--- Login.  called by: flash/login.cfm --->
@@ -74,7 +75,7 @@
         <cfset CLIENT.company_submitting = submitting_info.website>
         <cfset APPLICATION.company_short = submitting_info.website>
         <cfset CLIENT.app_menu_comp = CLIENT.companyid>
-        <cfset CLIENT.exits_url = "https://" & submitting_info.url_ref>
+        <cfset CLIENT.exits_url = "http://" & submitting_info.url_ref>
         <cfset CLIENT.color = submitting_info.company_color>
 
 
@@ -273,7 +274,25 @@
       	  		<cfset CLIENT.verify_info = 1>
             </cfif>
 		</cfif>
-
+        
+		<!--- this usertype doesn't need to verify information or submit agreements --->
+        <cfif listfind("5,6,7", CLIENT.usertype)>
+        	<!---Check if new user agreement is needed. --->
+            <Cfset url.userid = "#qAuthenticateUser.userID#">
+            
+            <Cfscript>
+                //Check if paperwork is complete for season
+				qPaperWork = APPLICATION.CFC.udf.paperworkCompleted(userid=url.userid,season=9);
+			</cfscript>
+            <cfdump var='#qPaperWork#'>
+			<cfif  qPaperWork.complete eq 0>
+            	<!--- this is checked in APPLICATION.cfm and redirected if set. --->
+                <cfset CLIENT.agreement_needed= 1>
+            </cfif>
+           <cfdump var='#client#'>
+         
+		</cfif>
+         
         <!--- change password --->
         <cfif qAuthenticateUser.changepass EQ 1>
 			<!--- this is checked in APPLICATION.cfm and redirected if set. --->
