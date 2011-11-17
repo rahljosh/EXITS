@@ -30,6 +30,25 @@
 	.sectionSubHead			{font-size:11px;font-weight:bold;}
 	.thin-border			{border: 4px solid ##000000;}
 	.thin-border-bottom		{border-bottom: 1px solid #000000;}
+	.wrapper {
+			padding: 10px;
+			width: 750px;
+			margin-right: auto;
+			margin-left: auto;
+			border: medium solid #999;
+			font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+			font-size: 12px;
+		}
+		.wrapper .grey {
+			background-color: #EFEFEF;
+			padding: 10px;
+		}
+		.id {
+			width: 225px;
+			margin-right: auto;
+			margin-left: auto;
+			padding: 0px;
+		}
 	-->
 </style>
 
