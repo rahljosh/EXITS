@@ -99,7 +99,7 @@ used on: forms/school_form.cfm, host_fam_form.cfm, user_form.cfm --->
     <!--- force agreement. --->
     <cfelseif isDefined("client.agreement_needed")>
 	    <!--- allow user only on yearly agreement page. --->
-    	<cfif NOT (isDefined("url.curdoc") AND listFindNoCase("forms/yearly_agreement,repRefs,displayRepAgreement,cbcAuthorization,employmentHistory", url.curdoc))>
+    	<cfif NOT (isDefined("url.curdoc") AND listFindNoCase("forms/yearly_agreement,repRefs,displayRepAgreement,cbcAuthorization,employmentHistory,logout", url.curdoc))>
         	<cflocation url="/nsmg/index.cfm?curdoc=forms/yearly_agreement&userid=#client.userid#" addtoken="no"><br />
 		</cfif>
     </cfif>
