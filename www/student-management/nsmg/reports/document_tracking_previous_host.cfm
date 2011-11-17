@@ -136,8 +136,6 @@
         	smg_students s
         INNER JOIN
         	smg_hosthistory hist ON hist.studentID = s.studentID
-        INNER JOIN 
-            smg_hostdocshistory doc_hist ON doc_hist.historyid = hist.historyid            
 		LEFT OUTER JOIN 
         	smg_users u ON hist.placerepid = u.userid
 		WHERE 
@@ -185,8 +183,6 @@
         	smg_students s
         INNER JOIN
         	smg_hosthistory hist ON hist.studentID = s.studentID
-        INNER JOIN 
-            smg_hostdocshistory doc_hist ON doc_hist.historyid = hist.historyid                
 		WHERE 
         	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND 
@@ -213,39 +209,39 @@
         </cfif>
         AND 
             (
-                    doc_hist.doc_full_host_app_date IS NULL 
+                    hist.doc_full_host_app_date IS NULL 
                 OR 
-                    doc_hist.doc_letter_rec_date IS NULL 
+                    hist.doc_letter_rec_date IS NULL 
                 OR 
-                    doc_hist.doc_rules_rec_date IS NULL 
+                    hist.doc_rules_rec_date IS NULL 
                 OR 
-                    doc_hist.doc_photos_rec_date IS NULL 
+                    hist.doc_photos_rec_date IS NULL 
                 OR 
-                    doc_hist.doc_school_accept_date IS NULL 
+                    hist.doc_school_accept_date IS NULL 
                 OR 
-                    doc_hist.doc_school_sign_date IS NULL 
+                    hist.doc_school_sign_date IS NULL 
                 OR 
-                    doc_hist.doc_class_schedule IS NULL 
+                    hist.doc_class_schedule IS NULL 
                 OR 
-                    doc_hist.doc_school_profile_rec IS NULL 
+                    hist.doc_school_profile_rec IS NULL 
                 OR 
-                    doc_hist.doc_conf_host_rec IS NULL 
+                    hist.doc_conf_host_rec IS NULL 
                 OR 
-                    doc_hist.doc_date_of_visit IS NULL 
+                    hist.doc_date_of_visit IS NULL 
                 OR 
-                    doc_hist.doc_ref_form_1 IS NULL 
+                    hist.doc_ref_form_1 IS NULL 
                 OR 
-                    doc_hist.doc_ref_check1 IS NULL 
+                    hist.doc_ref_check1 IS NULL 
                 OR 
-                    doc_hist.doc_ref_form_2 IS NULL 
+                    hist.doc_ref_form_2 IS NULL 
                 OR 
-                    doc_hist.doc_ref_check2 IS NULL 
-				<!--- Not in the history     
-                    doc_hist.stu_arrival_orientation,
-                    doc_hist.host_arrival_orientation IS NULL 
-                --->    
+                    hist.doc_ref_check2 IS NULL 
                 OR 
-                    doc_hist.doc_host_orientation IS NULL
+                    hist.stu_arrival_orientation  IS NULL
+                OR 
+                    hist.host_arrival_orientation IS NULL 
+                OR 
+                    hist.doc_host_orientation IS NULL
             )
 		<cfif client.usertype EQ 6>
 			AND 
@@ -278,32 +274,28 @@
                     smg_hosts.hostID,
                     smg_hosts.familyLastName as hostFamilyLastName,
                     hist.dateofchange,
-                    doc_hist.date_pis_received,
-                    doc_hist.doc_full_host_app_date,
-                    doc_hist.doc_letter_rec_date,
-                    doc_hist.doc_rules_rec_date,
-                    doc_hist.doc_photos_rec_date,
-                    doc_hist.doc_school_accept_date,
-                    doc_hist.doc_school_sign_date,
-                    doc_hist.doc_class_schedule,
-                    doc_hist.doc_school_profile_rec,
-                    doc_hist.doc_conf_host_rec,
-                    doc_hist.doc_date_of_visit,
-                    doc_hist.doc_ref_form_1,
-                    doc_hist.doc_ref_check1,
-                    doc_hist.doc_ref_form_2,
-                    doc_hist.doc_ref_check2,
-                    <!--- Not in the history     
-                        doc_hist.stu_arrival_orientation,
-						doc_hist.host_arrival_orientation IS NULL 
-                    --->    
-                    doc_hist.doc_host_orientation
+                    hist.date_pis_received,
+                    hist.doc_full_host_app_date,
+                    hist.doc_letter_rec_date,
+                    hist.doc_rules_rec_date,
+                    hist.doc_photos_rec_date,
+                    hist.doc_school_accept_date,
+                    hist.doc_school_sign_date,
+                    hist.doc_class_schedule,
+                    hist.doc_school_profile_rec,
+                    hist.doc_conf_host_rec,
+                    hist.doc_date_of_visit,
+                    hist.doc_ref_form_1,
+                    hist.doc_ref_check1,
+                    hist.doc_ref_form_2,
+                    hist.doc_ref_check2,
+                    hist.stu_arrival_orientation,
+                    hist.host_arrival_orientation,
+                    hist.doc_host_orientation
                 FROM 
                     smg_students s
                 INNER JOIN
                     smg_hosthistory hist ON hist.studentID = s.studentID
-                INNER JOIN 
-                    smg_hostdocshistory doc_hist ON doc_hist.historyid = hist.historyid  
                 LEFT OUTER JOIN 
                 	smg_hosts ON smg_hosts.hostID = hist.hostID                      
                 WHERE 
@@ -334,41 +326,39 @@
                 </cfif>
                 AND 
                     (
-                            doc_hist.doc_full_host_app_date IS NULL 
+                            hist.doc_full_host_app_date IS NULL 
                         OR 
-                            doc_hist.doc_letter_rec_date IS NULL 
+                            hist.doc_letter_rec_date IS NULL 
                         OR 
-                            doc_hist.doc_rules_rec_date IS NULL 
+                            hist.doc_rules_rec_date IS NULL 
                         OR 
-                            doc_hist.doc_photos_rec_date IS NULL 
+                            hist.doc_photos_rec_date IS NULL 
                         OR 
-                            doc_hist.doc_school_accept_date IS NULL 
+                            hist.doc_school_accept_date IS NULL 
                         OR 
-                            doc_hist.doc_school_sign_date IS NULL 
+                            hist.doc_school_sign_date IS NULL 
                         OR 
-                            doc_hist.doc_class_schedule IS NULL 
+                            hist.doc_class_schedule IS NULL 
                         OR 
-                            doc_hist.doc_school_profile_rec IS NULL 
+                            hist.doc_school_profile_rec IS NULL 
                         OR 
-                            doc_hist.doc_conf_host_rec IS NULL 
+                            hist.doc_conf_host_rec IS NULL 
                         OR 
-                            doc_hist.doc_date_of_visit IS NULL 
+                            hist.doc_date_of_visit IS NULL 
                         OR 
-                            doc_hist.doc_ref_form_1 IS NULL 
+                            hist.doc_ref_form_1 IS NULL 
                         OR 
-                            doc_hist.doc_ref_check1 IS NULL 
+                            hist.doc_ref_check1 IS NULL 
                         OR 
-                            doc_hist.doc_ref_form_2 IS NULL 
+                            hist.doc_ref_form_2 IS NULL 
                         OR 
-                            doc_hist.doc_ref_check2 IS NULL 
-						<!--- Not in the history     
+                            hist.doc_ref_check2 IS NULL 
                         OR
-                            doc_hist.stu_arrival_orientation IS NULL    
+                            hist.stu_arrival_orientation IS NULL    
 						OR	
-							doc_hist.host_arrival_orientation IS NULL 
-						--->    
+							hist.host_arrival_orientation IS NULL 
                         OR 
-                            doc_hist.doc_host_orientation IS NULL
+                            hist.doc_host_orientation IS NULL
                     )
                 ORDER BY                	
                 	s.familylastname,
@@ -421,10 +411,8 @@
 								<cfif doc_ref_check1 EQ ''>Ref. 1 Check Date &nbsp; &nbsp;</cfif>
 								<cfif doc_ref_form_2 EQ ''>Ref. 2 &nbsp; &nbsp;</cfif>
 								<cfif doc_ref_check2 EQ ''>Ref. 2 Check Date &nbsp; &nbsp;</cfif>
-								<!--- 
-									<cfif stu_arrival_orientation EQ ''>Student Orientation &nbsp; &nbsp;</cfif> 
-									<cfif host_arrival_orientation EQ ''>HF Orientation &nbsp; &nbsp;</cfif>
-								--->
+								<cfif stu_arrival_orientation EQ ''>Student Orientation &nbsp; &nbsp;</cfif> 
+                                <cfif host_arrival_orientation EQ ''>HF Orientation &nbsp; &nbsp;</cfif>
                                 <cfif doc_class_schedule EQ ''>Class Schedule &nbsp; &nbsp;</cfif>
                             </font></i></td>		
                         </tr>								
