@@ -132,6 +132,7 @@
             s.uniqueID, 
             s.hostid, 
             s.host_fam_approved, 
+            s.date_host_fam_approved, 
             s.firstname, 
             s.familylastname as student_lastname, 
             s.regionassigned, 

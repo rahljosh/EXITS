@@ -390,7 +390,6 @@
                     <!--- Set to lowest approval level --->
 					<cfelse>
                         host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="10">,
-                        
                     </cfif>
                     
                     <!--- Used to track last approval --->
@@ -583,6 +582,7 @@
                     host_fam_approved = <cfqueryparam cfsqltype="cf_sql_bit" value="10">,
                     date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     datePlaced = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    datePISEmailed = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     <!--- Placement Notes --->
                     placement_notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">,
 					<!--- Single Placement Paperwork --->
@@ -668,6 +668,13 @@
         <cfscript>
 			// Get Student Info
 			var qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID);
+			
+			var vUpdateDatePlaced = 0;
+			
+			// Set Placement Date if Approved by NY Office - Only first time approval
+			if ( ListFind("1,2,3,4", ARGUMENTS.userType) AND NOT IsDate(qGetStudentInfo.datePlaced) ) {
+				vUpdateDatePlaced = 1;
+			}
 		</cfscript>
         
         <cfquery 
@@ -675,8 +682,7 @@
                 UPDATE
                 	smg_students
 				SET
-                    <!--- Set Placement Date if Approved by NY Office - Only first time approval --->
-                    <cfif ListFind("1,2,3,4", ARGUMENTS.userType) AND NOT IsDate(qGetStudentInfo.datePlaced)>
+                    <cfif VAL(vUpdateDatePlaced)>
                     	dateplaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                     </cfif>
                     host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userType)#">,
@@ -684,6 +690,26 @@
 				WHERE
                 	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
 		</cfquery>
+        
+        <!--- Set Placement Date on the history if Approved by NY Office - Only first time approval--->
+        <cfif VAL(vUpdateDatePlaced)>
+        	
+            <cfscript>
+				// Get History ID
+				vHostHistoryID = getPlacementHistory(studentID=ARGUMENTS.studentID).historyID;
+			</cfscript>
+            
+            <cfquery 
+                datasource="#APPLICATION.DSN#">
+                    UPDATE
+                        smg_hostHistory
+                    SET
+                        dateplaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                    WHERE
+                        historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vHostHistoryID)#">
+            </cfquery>
+            
+        </cfif>
         
 		<cfscript>
             /*** Holding it for now as per Brian Hause request - 06/02/2011 ****/
@@ -795,7 +821,7 @@
         <cfinvoke component="nsmg.cfc.email" method="send_mail">
             <cfinvokeargument name="email_to" value="#qGetPlacingRepresentative.email#">
             <cfinvokeargument name="email_cc" value="#qGetRegionalManager.email#">
-            <cfinvokeargument name="email_subject" value="Placement Rejected - Student #qGetStudentInfo.firstName# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentid#)">
+            <cfinvokeargument name="email_subject" value="Placement Rejected - Student #qGetStudentInfo.firstName# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)">
             <cfinvokeargument name="email_message" value="#vEmailRejectMessage#">
             <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
         </cfinvoke>
@@ -1281,18 +1307,62 @@
 			
 			// Add paragraph tag to set this update
 			vActions = "<p>#vActions#</p>";
-
-			/*
-			writedump(vActions);
-			writedump(vQueryType);
-			writedump(arguments);
-			abort;
-			*/
 		</cfscript>
         
 		<!--- Insert History Information --->
         <cfif vQueryType EQ 'insert'>        
             
+            <!--- Host Family Updated --->
+
+            <!--- Reset Fields on the Student Table --->
+            <cfquery 
+                datasource="#APPLICATION.DSN#">
+					UPDATE
+                    	smg_students
+                    SET
+                        host_fam_approved = <cfqueryparam cfsqltype="cf_sql_bit" value="10">,
+                        date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        datePlaced = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        datePISEmailed = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+						<!--- Placement Notes --->
+                        placement_notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">,
+                        <!--- Single Placement Paperwork --->
+                        doc_single_place_auth = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_single_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_single_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,	
+                        doc_single_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_single_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        <!--- Paperwork Received --->
+                        date_pis_received = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_full_host_app_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_photos_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_school_profile_rec = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_date_of_visit = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_conf_host_rec2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_date_of_visit2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_income_ver_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        <!--- Arrival Date Compliance --->
+                        doc_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        <!--- Student Application --->
+                        orig_app_Sent_host = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">,
+                        copy_app_school = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">,
+                        copy_app_super = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">,
+                        <!--- Arrival Orientation --->
+                        stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        host_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_class_schedule = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+	            	WHERE
+    					studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+			</cfquery>
+                                    
             <cfquery 
                 datasource="#APPLICATION.DSN#"
                 result="newRecord">
@@ -1346,7 +1416,7 @@
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                     )
             </cfquery>
-        
+            
         	<cfscript>
 				// Set History ID
 				vHostHistoryID = newRecord.GENERATED_KEY;
@@ -1443,8 +1513,6 @@
                     h.isWelcomeFamily,
                     h.isRelocation,
                     h.original_place,
-                    h.isWelcomeFamily,
-                    h.isRelocation,
                     h.reason,
                     h.actions,
                     h.dateOfChange,
@@ -1486,15 +1554,101 @@
                 LEFT JOIN 
                     smg_users user ON h.changedby = user.userID
                 WHERE 
-                    h.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+                    h.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
                 ORDER BY 
-                    h.dateUpdated DESC, 
+                    h.dateCreated DESC, 
                     h.historyid DESC
         </cfquery>
                 
         <cfreturn qGetPlacementHistory>
     </cffunction>
 
+
+	<!--- Get Placement History --->
+	<cffunction name="getHostHistoryByID" access="public" returntype="query" output="false" hint="Returns placement history">
+    	<cfargument name="studentID" hint="studentID is required">
+        <cfargument name="historyID" hint="historyID is required">
+        
+        <cfquery 
+        	name="qGetHostHistoryByID" 
+            datasource="#APPLICATION.DSN#">
+                SELECT 
+                    historyID,
+                    companyID,
+                    studentID,
+                    hostID,
+                    hasHostIDChanged,
+                    schoolID,
+                    hasSchoolIDChanged,
+                    placeRepID,
+                    hasPlaceRepIDChanged,
+                    areaRepID,
+                    hasAreaRepIDChanged,
+                    secondVisitRepID,
+                    hasSecondVisitRepIDChanged,
+                    doublePlacementID,
+                    hasDoublePlacementIDChanged,
+                    changedBy,
+                    isWelcomeFamily,
+                    isRelocation,
+                    original_place,
+                    reason,
+                    changePlacementReasonID,
+                    changePlacementExplanation,
+                    datePlaced,
+                    datePISEmailed,
+                    dateSetHostPermanent,
+                    <!--- Single Person Placement Paperwork --->
+                    doc_single_place_auth,
+					doc_single_ref_form_1,
+                    doc_single_ref_check1,
+                    doc_single_ref_form_2,
+					doc_single_ref_check2,
+                    <!--- Placement Paperwork --->
+                    date_pis_received,
+                    doc_full_host_app_date,
+                    doc_letter_rec_date,
+                    doc_rules_rec_date,
+                    doc_photos_rec_date,
+                    doc_school_profile_rec,
+                    doc_conf_host_rec,
+                    doc_date_of_visit,
+                    <!---
+                    doc_conf_host_rec2,
+                    doc_date_of_visit2,
+					--->
+                    doc_ref_form_1,
+                    doc_ref_check1,
+                    doc_ref_form_2,
+                    doc_ref_check2,
+                    doc_host_orientation,
+                    doc_income_ver_date,
+                    <!--- Arrival Compliance --->
+                    doc_school_accept_date,
+                    doc_school_sign_date,
+                    <!--- Original Student --->
+                    orig_app_sent_host,
+                    copy_app_school,
+                    copy_app_super,
+                    <!--- Arrival Orientation --->
+                    stu_arrival_orientation,
+                    host_arrival_orientation,
+                    doc_class_schedule,
+                    actions,
+                    dateOfChange,
+                    dateCreated,
+                    dateUpdated
+                FROM 
+                    smg_hosthistory
+                WHERE 
+                    historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.historyID)#">
+                AND
+                	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+        </cfquery>
+                
+        <cfreturn qGetHostHistoryByID>
+    </cffunction>
+    
 
 	<!--- Placement Paperwork --->
 	<cffunction name="updatePlacementPaperwork" access="public" returntype="void" output="false" hint="Update Placement Paperwork">
@@ -1657,13 +1811,20 @@
         <cfargument name="host_arrival_orientation" default="" hint="host_arrival_orientation is not required">
         <cfargument name="doc_class_schedule" default="" hint="doc_class_schedule is not required">    
         
+        <cfscript>
+			// Get Current Placement Information
+			qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID);
+		</cfscript>
+        
         <!--- Update Host History Documents --->
         <cfquery 
 			datasource="#APPLICATION.DSN#">
                 UPDATE
 	                smg_hosthistory
                 SET 
-                    <!--- Single Person Placement Paperwork --->
+					datePlaced = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetStudentInfo.datePlaced#" null="#NOT IsDate(qGetStudentInfo.datePlaced)#">,
+                    datePISEmailed = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetStudentInfo.datePISEmailed#" null="#NOT IsDate(qGetStudentInfo.datePISEmailed)#">,
+					<!--- Single Person Placement Paperwork --->
                     doc_single_place_auth = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_place_auth#" null="#NOT IsDate(ARGUMENTS.doc_single_place_auth)#">,
                     doc_single_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_form_1#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_form_1)#">,
                     doc_single_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_check1#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_check1)#">,
