@@ -325,7 +325,9 @@
             </td>
         </tr>
     </table>
-    
+     <table>
+    	<Tr>
+        	<Td width=80%>
     <!----News & Announcements---->
     <table width=100% cellpadding=0 cellspacing=0 border="0" height=24>
         <tr height=24>
@@ -336,7 +338,7 @@
             <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
         </tr>
     </table>
-    
+   
     <table width=100% cellpadding="4" cellspacing=0 border="0" class="section">
         <tr>
            <td  valign="top" width="100%"><br>
@@ -391,7 +393,39 @@
     
     <!----footer of table---->
     <cfinclude template="table_footer.cfm">
-    
+    	</td>
+        <Td>
+        <cfif client.companyid lte 5>
+        		  <!----Special Announcements---->
+    <table width=100% cellpadding=0 cellspacing=0 border="0" height=24>
+        <tr height=24>
+            <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
+            <td width=26 background="pics/header_background.gif"><img src="pics/news.gif"></td>
+            <td background="pics/header_background.gif"><h2>Bonuses!</h2></td>
+            <td background="pics/header_background.gif" width=16></td>
+            <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
+        </tr>
+    </table>
+        <table width=100% cellpadding="4" cellspacing=0 border="0" class="section">
+        <tr>
+           <td  valign="top" width="100%">
+           <img src="pics/Bonuses.png" height=200 />
+           </td>
+           <td align="center">
+           
+                        
+           <h2><a href="uploadedfiles/pdf_docs/ISE/promotion/Pre-Ayp%20Bonus%202012.pdf" target="_blank">Pre-AYP Bonuses!</a></h2>
+           <br />
+           <h2><a href="uploadedfiles/pdf_docs/ISE/promotion/Early%20Placement%20Bonus%202012.pdf" target="_blank">Early Placement</a></h2>
+           </td>
+           </tr>
+         </table>
+        <!----footer of table---->
+    <cfinclude template="table_footer.cfm">
+    </cfif>
+        </Td>
+     </tr>
+  </table>
 </cfif>
     
 <br>
@@ -429,9 +463,9 @@
                 <tr valign="top">
                     <td style="line-height:20px;">
                     	<!----<a href="index.cfm?curdoc=forms/startHostApp">Start a Host App</a><br />---->
-                        <Cfif client.userid eq 1 or client.userid eq 12313 or client.userid eq 16728 or client.userid eq 8731>
+                        
                         <a href="index.cfm?curdoc=forms/yearly_agreement">Please complete your annual area representative agreement and paperwork!<br /></a>
-                        </Cfif>
+                      
                         <a href="index.cfm?curdoc=progress_reports">Online Reports</a><br>
                         
                         
@@ -537,10 +571,12 @@
                                 </Tr>
                                 
                             <cfloop query="get_new_users"> 
+                           
                             	<cfscript>
                                 	//Check if paperwork is complete for season
 									CheckPaperwork = APPLICATION.CFC.udf.paperworkCompleted(userid=get_new_users..userid,season=9);
 								</cfscript>
+								
 								<!--- put * if user is the advisor for this user. --->
                                 <cfif advisorid EQ CLIENT.userid>
                                     <font color="FF0000" size="4"><strong>*</strong></font>
