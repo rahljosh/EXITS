@@ -416,7 +416,7 @@
                         
            <h2><a href="uploadedfiles/pdf_docs/ISE/promotion/Pre-Ayp%20Bonus%202012.pdf" target="_blank">Pre-AYP Bonuses!</a></h2>
            <br />
-           <h2><a href="uploadedfiles/pdf_docs/ISE/promotion/Early%20Placement%20Bonus%202012.pdf" target="_blank">Early Placement</a></h2>
+           <h2><a href="uploadedfiles/pdf_docs/ISE/promotion/Early_Placement_Bonus_2012.pdf" target="_blank">Early Placement</a></h2>
            </td>
            </tr>
          </table>
