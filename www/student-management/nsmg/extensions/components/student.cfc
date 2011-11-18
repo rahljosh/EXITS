@@ -334,6 +334,9 @@
 			// Get Student Info
 			var qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID);
 			
+			// Set this to 1 if only second visit is updated
+			var vIsOnlySecondVisitRepUpdated = 0;
+			
 			// Insert-Update Placement History
 			insertPlacementHistory(
 				studentID = ARGUMENTS.studentID,					   
@@ -356,6 +359,29 @@
 				userType = ARGUMENTS.userType,
 				placementStatus = ARGUMENTS.placementStatus
 			);
+			
+			if ( ARGUMENTS.userType EQ 5 ) {
+			
+				// Placement status shouldn't change when a RM updates only a second visit rep
+				if (
+						ARGUMENTS.hostID EQ qGetStudentInfo.hostID
+					AND
+						ARGUMENTS.schoolID EQ qGetStudentInfo.schoolID
+					AND
+						ARGUMENTS.placeRepID EQ qGetStudentInfo.placeRepID
+					AND
+						ARGUMENTS.areaRepID EQ qGetStudentInfo.areaRepID
+					AND
+						ARGUMENTS.doublePlace EQ qGetStudentInfo.doublePlace
+					AND
+						ARGUMENTS.secondVisitRepID NEQ qGetStudentInfo.secondVisitRepID ) {
+					
+					// Do not reset status
+					vIsOnlySecondVisitRepUpdated = 1;
+					
+				}
+				
+			} // if ( ARGUMENTS.userType EQ 5 ) {			
 		</cfscript>
 		
         <cfquery 
@@ -370,27 +396,32 @@
                     secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.secondVisitRepID)#">,
                     doublePlace = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">,
                     isWelcomeFamily = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isWelcomeFamily)#">,
+					
+					<!--- Area Representative | Reset status to 7 --->
+                    <cfif ARGUMENTS.userType EQ 7>
+                        host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="7">,
                     
-                    <!--- Keep Approval if placement previously approved and changed by Office and host and school are not changed --->
-                    <cfif
+					<!--- Regional Advisor | If current status > usertype, set status back for approval --->
+					<cfelseif ARGUMENTS.userType EQ 6 AND listFind("1,2,3,4,5", qGetStudentInfo.host_fam_approved)>
+                        host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="6">,
+					
+					<!--- Regional Manager | If current status > usertype, set status back for approval --->
+					<cfelseif ARGUMENTS.userType EQ 5 AND listFind("1,2,3,4", qGetStudentInfo.host_fam_approved) AND NOT VAL(vIsOnlySecondVisitRepUpdated)>
+                        host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="5">,
+					
+					<!--- Office | Reset status if changing hostID or SchoolID --->
+                    <cfelseif 
 						ListFind("1,2,3,4", ARGUMENTS.userType) <!--- Office User --->
-					AND 
-						ListFind("1,2,3,4", qGetStudentInfo.host_fam_approved) <!--- Placement Approved --->
-					AND	
-						qGetStudentInfo.hostID EQ ARGUMENTS.hostID <!--- HF Not Changed --->
-					AND	
-						qGetStudentInfo.schoolID EQ ARGUMENTS.schoolID <!--- School Not Changed --->
+					AND
+						(
+						 	qGetStudentInfo.hostID NEQ ARGUMENTS.hostID <!--- HF Changed --->
+						OR	
+							qGetStudentInfo.schoolID NEQ ARGUMENTS.schoolID <!--- School Changed --->
+						)
 					>
-                        host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userType#">,
-                   
-                    <!--- Approve if entering by Area Rep --->
-                    <cfelseif ARGUMENTS.userType EQ 7>
-                        host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userType#">,
-                        
-                    <!--- Set to lowest approval level --->
-					<cfelse>
-                        host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="10">,
-                    </cfif>
+                        host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="5">,
+                    
+					</cfif>
                     
                     <!--- Used to track last approval --->
                     date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
@@ -518,16 +549,20 @@
                     SET
                         doublePlace = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">,
                         
-						<!--- Approve if placement previously approved and changed by Office --->
-                        <cfif ListFind("1,2,3,4", ARGUMENTS.userType) AND ListFind("1,2,3,4", qGetStudentInfo.host_fam_approved)>					
-                            host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userType#">,
-                        <!--- Approve if entering by Area Rep --->
-                        <cfelseif ARGUMENTS.userType EQ 7>                        	
-                            host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userType#">,
-                        <!--- Set to lowest approval level --->
-						<cfelse>
-                            host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="10">,
-                        </cfif> 
+						<!--- Area Representative | Reset status to 7 --->
+                        <cfif ARGUMENTS.userType EQ 7>
+                            host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="7">,
+                        
+                        <!--- Regional Advisor | If current status > usertype, set status back for approval --->
+                        <cfelseif ARGUMENTS.userType EQ 6 AND listFind("1,2,3,4,5", qGetStudentInfo.host_fam_approved)>
+                            host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="6">,
+                        
+                        <!--- Regional Manager | If current status > usertype, set status back for approval --->
+                        <cfelseif ARGUMENTS.userType EQ 5 AND listFind("1,2,3,4", qGetStudentInfo.host_fam_approved)>
+                            host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="5">,
+                        
+                        <!--- Office Update | Status stays the same --->
+                        </cfif>
                         
 						<!--- Used to track last approval --->
                         date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
@@ -851,17 +886,21 @@
 				SET
                     isWelcomeFamily = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
                     
-                    <!--- Approve if placement previously approved and changed by Office --->
-                    <cfif ListFind("1,2,3,4", ARGUMENTS.userType) AND ListFind("1,2,3,4", qGetStudentInfo.host_fam_approved)>					
-                        host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userType#">,
-					<!--- Approve if entering by Area Rep --->
-                    <cfelseif ARGUMENTS.userType EQ 7> 
-                        host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userType#">,
-                    <!--- Set to lowest approval level --->
-					<cfelse>
-                        host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="10">,
+                    <!--- Area Representative | Reset status to 7 --->
+                    <cfif ARGUMENTS.userType EQ 7>
+                        host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="7">,
+                    
+                    <!--- Regional Advisor | If current status > usertype, set status back for approval --->
+                    <cfelseif ARGUMENTS.userType EQ 6 AND listFind("1,2,3,4,5", qGetStudentInfo.host_fam_approved)>
+                        host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="6">,
+                    
+                    <!--- Regional Manager | If current status > usertype, set status back for approval --->
+                    <cfelseif ARGUMENTS.userType EQ 5 AND listFind("1,2,3,4", qGetStudentInfo.host_fam_approved)>
+                        host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="5">,
+                    
+                    <!--- Office Update | Status stays the same --->
                     </cfif>
-                     
+
                     date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
 				WHERE
                 	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
@@ -957,7 +996,7 @@
 					
 				// UNPLACE STUDENT
 				case 'unplaceStudent':
-					vActions = "<strong>Student Set to Unplaced</strong>  <br /> #CHR(13)#";			
+					vActions = "<strong>Student Set to Unplaced</strong> <br /> #CHR(13)#";			
 					break; 
 				
 				// SET FAMILY AS PERMANENT
@@ -1079,7 +1118,7 @@
 			if ( ARGUMENTS.placementStatus EQ 'Unplaced' ) {
 				
 				vQueryType = 'insert';
-				vActions = vActions & "<strong>New Placement Information - Pending HQ Approval</strong>  <br /> #CHR(13)#";
+				vActions = vActions & "<strong>New Placement Information - Pending HQ Approval</strong> <br /> #CHR(13)#";
 				
 				// Welcome Family Information
 				if ( VAL(ARGUMENTS.isWelcomeFamily) ) {
@@ -1096,7 +1135,7 @@
 					hasHostIDChanged = 1;
 					
 					// Start building record
-					vActions = vActions & "<strong>New Placement Information - Pending HQ Approval</strong>  <br /> #CHR(13)#";
+					vActions = vActions & "<strong>New Placement Information - Pending HQ Approval</strong> <br /> #CHR(13)#";
 					
 					// Add Message if info has been updated
 					if ( VAL(qGetStudentInfo.hostID) ) {
@@ -1362,7 +1401,12 @@
 	            	WHERE
     					studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
 			</cfquery>
-                                    
+            
+            <cfscript>
+				// Set Old Records to Inactive
+				setHostHistoryInactive(studentID=ARGUMENTS.studentID);			
+			</cfscript>
+            
             <cfquery 
                 datasource="#APPLICATION.DSN#"
                 result="newRecord">
@@ -1389,6 +1433,7 @@
                         isRelocation,
                         dateOfChange, 
                         reason,
+                        isActive,
                         dateCreated
                     )
                     VALUES
@@ -1413,6 +1458,7 @@
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isRelocation)#">, 
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#vActions#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="1">,
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                     )
             </cfquery>
@@ -1485,6 +1531,22 @@
                 
 	</cffunction>
 
+	
+    <!--- Set Old Host History Records as Inactive --->
+	<cffunction name="setHostHistoryInactive" access="public" returntype="void" output="false" hint="Set Old Host History Records as Inactive">
+    	<cfargument name="studentID" hint="studentID is required">
+
+            <cfquery 
+                datasource="#APPLICATION.DSN#">
+                	UPDATE
+                    	smg_hostHistory
+                    SET
+                    	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                    WHERE
+                    	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+			</cfquery>                    
+    </cffunction>
+    
 
 	<!--- Get Placement History --->
 	<cffunction name="getPlacementHistory" access="public" returntype="query" output="false" hint="Returns placement history">
@@ -1515,6 +1577,7 @@
                     h.original_place,
                     h.reason,
                     h.actions,
+                    h.datePlaced,
                     h.dateOfChange,
                     h.dateCreated,
                     h.dateUpdated,

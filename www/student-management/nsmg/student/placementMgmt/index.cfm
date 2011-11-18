@@ -417,9 +417,9 @@
                 <tr class="reportCenterTitle"> 
                     <th>
                     	<cfif vPlacementStatus EQ 'unplaced'>
-                        	PLACEMENT HISTORY - #DateFormat(qGetPlacementHistory.dateofchange, 'mm/dd/yyyy')#
+                        	PLACEMENT HISTORY - #DateFormat(qGetPlacementHistory.datePlaced, 'mm/dd/yyyy')#
                         <cfelse>
-                        	#APPLICATION.CFC.UDF.convertToOrdinal(qGetPlacementHistory.recordCount)# PLACEMENT - #DateFormat(qGetPlacementHistory.dateofchange, 'mm/dd/yyyy')# (CURRENT)
+                        	#APPLICATION.CFC.UDF.convertToOrdinal(qGetPlacementHistory.recordCount)# PLACEMENT - #DateFormat(qGetPlacementHistory.datePlaced, 'mm/dd/yyyy')# (CURRENT)
                         </cfif>
 
                         <div style="float:right; padding-right:5px; width:170px;">
@@ -490,8 +490,7 @@
                     <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
                         <tr bgcolor="###iif(qGetPlacementHistory.currentrow MOD 2 ,DE("edeff4") ,DE("FFFFFF") )#">
                             <td class="reportTitleLeftClean" width="20%">Date</td>
-                            <td class="reportTitleLeftClean" width="60%">Actions</td>
-                            <td class="reportTitleLeftClean" width="20%">&nbsp;</td>
+                            <td class="reportTitleLeftClean" width="80%">Actions</td>
                         </tr>
                     </table>
                     
@@ -499,8 +498,7 @@
                         <cfloop query="qGetActionsHistory">
                             <tr>
                                 <td valign="top" width="20%">#DateFormat(qGetActionsHistory.dateUpdated, 'mm/dd/yyyy')# at #TimeFormat(qGetActionsHistory.dateUpdated, 'hh:mm tt')# <!--- EST ---></td>
-                                <td width="60%">#qGetActionsHistory.actions#</td>
-                                <td width="20%">&nbsp;</td>
+                                <td width="80%">#qGetActionsHistory.actions#</td>
                             </tr>                        
                         </cfloop>
 					</table>                        
@@ -526,9 +524,9 @@
                         <tr class="reportCenterTitle"> 
                             <th align="center">
                             	<cfif qGetPlacementHistory.currentRow EQ qGetPlacementHistory.recordCount>
-                                	ORIGINAL PLACEMENT - #DateFormat(qGetPlacementHistory.dateofchange, 'mm/dd/yyyy')#
+                                	ORIGINAL PLACEMENT - #DateFormat(qGetPlacementHistory.datePlaced, 'mm/dd/yyyy')#
                                 <cfelse>
-                                	#APPLICATION.CFC.UDF.convertToOrdinal(vCardinalCount)# PLACEMENT - #DateFormat(qGetPlacementHistory.dateofchange, 'mm/dd/yyyy')#
+                                	#APPLICATION.CFC.UDF.convertToOrdinal(vCardinalCount)# PLACEMENT - #DateFormat(qGetPlacementHistory.datePlaced, 'mm/dd/yyyy')#
                                 </cfif>
                                 
                                 <div style="float:right; padding-right:5px; width:170px;">
