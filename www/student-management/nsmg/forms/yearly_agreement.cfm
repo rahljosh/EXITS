@@ -50,15 +50,17 @@
      <cfelse>
      	<Cfset previousExperience = 0>
      </Cfif> 
+     
      <Cfif checkAgreement.ar_cbc_auth_form is not '' AND checkAgreement.ar_agreement is not '' AND checkReferences.recordcount gte 4 and previousExperience eq 1 >
-     <cfif checkActive.active eq 1 and checkActive.accountCreationVerified eq 1>
+     <cfif (checkActive.active eq 1 and checkActive.accountCreationVerified gte 1)>
        <cfset temp = DeleteClientVariable("agreement_needed")> 
 	 </cfif>
+
 	<div align="Center">
     
     <div class="yellowbox">
     <h1>All your paperwork has been filed out.</h1>
-    <Cfif checkActive.active eq 1 and checkActive.accountCreationVerified eq 1>
+    <Cfif checkActive.active eq 1 and checkActive.accountCreationVerified gte 1>
     <meta http-equiv="refresh" content="5;url=index.cfm?curdoc=initial_welcome" />
     Access to EXITS is now re-activated.  You will be redirected shortly. <br />
     <cfelse>
