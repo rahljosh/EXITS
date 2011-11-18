@@ -275,7 +275,7 @@
             </cfif>
 		</cfif>
         
-		<!--- this usertype doesn't need to verify information or submit agreements --->
+		<!--- this usertype doesn't need to verify information or submit agreements 
         <cfif listfind("5,6,7", CLIENT.usertype)>
         	<!---Check if new user agreement is needed. --->
             <Cfset url.userid = "#qAuthenticateUser.userID#">
@@ -284,14 +284,15 @@
                 //Check if paperwork is complete for season
 				qPaperWork = APPLICATION.CFC.udf.paperworkCompleted(userid=url.userid,season=9);
 			</cfscript>
-            <cfdump var='#qPaperWork#'>
+            
 			<cfif  qPaperWork.complete eq 0>
             	<!--- this is checked in APPLICATION.cfm and redirected if set. --->
                 <cfset CLIENT.agreement_needed= 1>
             </cfif>
-           <cfdump var='#client#'>
+          
          
 		</cfif>
+		--->
          
         <!--- change password --->
         <cfif qAuthenticateUser.changepass EQ 1>
