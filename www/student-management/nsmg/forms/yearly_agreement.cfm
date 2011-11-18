@@ -59,7 +59,7 @@
 	<div align="Center">
     
     <div class="yellowbox">
-    <h1>All your paperwork has been filed out.</h1>
+    <h1>All your paperwork has been filled out.</h1>
     <Cfif checkActive.active eq 1 and checkActive.accountCreationVerified gte 1>
     <meta http-equiv="refresh" content="5;url=index.cfm?curdoc=initial_welcome" />
     Access to EXITS is now re-activated.  You will be redirected shortly. <br />
