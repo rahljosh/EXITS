@@ -224,7 +224,7 @@ body {
                 #client.companyshort#
               </Cfoutput>
                 </cfsavecontent>
-                
+                <Cfif qGetUserInfo.accountCreationVerified is '' or qGetUserInfo.accountCreationVerified eq 0>
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
                 
                     <cfinvokeargument name="email_to" value="#client.email#">       
@@ -246,7 +246,7 @@ body {
                 
                 </cfoutput>
                 </cfsavecontent>
-                
+                </Cfif>
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
                 	<!----
 					 **********This emai is sent to the Program Manager*******************<Br>
