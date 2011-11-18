@@ -463,9 +463,9 @@
                 <tr valign="top">
                     <td style="line-height:20px;">
                     	<!----<a href="index.cfm?curdoc=forms/startHostApp">Start a Host App</a><br />---->
-                        
-                        <a href="index.cfm?curdoc=forms/yearly_agreement">Please complete your annual area representative agreement and paperwork!<br /></a>
-                      
+                        <cfif client.companyid neq 14>
+                        	<a href="index.cfm?curdoc=forms/yearly_agreement">Please complete your annual area representative agreement and paperwork!<br /></a>
+                        </cfif>
                         <a href="index.cfm?curdoc=progress_reports">Online Reports</a><br>
                         
                         
