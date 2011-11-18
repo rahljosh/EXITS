@@ -384,11 +384,9 @@
 
                     <!--- PIS Sent to Intl. Representative --->
                     <tr> 
-                        <td width="15%">&nbsp;</td>
-                        <td width="55%"><label for="check_date_pis_received">PIS Emailed to International Representative</label></td>
-                        <td width="30%">
-                        	n/a
-                        </td>
+                        <td>&nbsp;</td>
+                        <td><label for="check_date_pis_received">PIS Emailed to International Representative</label></td>
+                        <td>#DateFormat(qGetStudentInfo.datePISEmailed, 'mm/dd/yyyy')#</td>
                     </tr>
                 
                     <!--- Placement Information Sheet --->
@@ -491,12 +489,12 @@
                         <!--- 2nd Confidential Host Family Visit Form --->
                         <tr> 
                             <td class="paperworkLeftColumn">
-                                <input type="checkbox" name="check_doc_conf_host_rec2" id="check_doc_conf_host_rec2" class="editPage displayNone" <cfif isDate(qGetSecondVisitReport.pr_sr_approved_date)>checked</cfif> disabled="disabled">
+                                <input type="checkbox" name="check_doc_conf_host_rec2" id="check_doc_conf_host_rec2" class="editPage displayNone" <cfif isDate(FORM.doc_conf_host_rec2)>checked</cfif> disabled="disabled">
                             </td>
                             <td><label for="check_doc_conf_host_rec2">2nd Confidential Host Family Visit Form</label></td>
                             <td>
-                                <span class="readOnly displayNone">#DateFormat(qGetSecondVisitReport.pr_sr_approved_date, 'mm/dd/yyyy')#</span>
-                                <input type="text" name="doc_conf_host_rec2" id="doc_conf_host_rec2" class="datePicker editPage displayNone" value="#DateFormat(qGetSecondVisitReport.pr_sr_approved_date, 'mm/dd/yyyy')#" maxlength="10" disabled="disabled">
+                                <span class="readOnly displayNone">#DateFormat(FORM.doc_conf_host_rec2, 'mm/dd/yyyy')#</span>
+                                <input type="text" name="doc_conf_host_rec2" id="doc_conf_host_rec2" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_conf_host_rec2, 'mm/dd/yyyy')#" maxlength="10" disabled="disabled">
                             </td>
                         </tr>
 
@@ -505,8 +503,8 @@
                             <td>&nbsp;</td>
                             <td><label for="doc_date_of_visit2">Date of 2nd Visit</label></td>
                             <td>
-                                <span class="readOnly displayNone">#DateFormat(qGetSecondVisitReport.dateOfVisit, 'mm/dd/yyyy')#</span>
-                                <input type="text" name="doc_date_of_visit2" id="doc_date_of_visit2" class="datePicker editPage displayNone" value="#DateFormat(qGetSecondVisitReport.dateOfVisit, 'mm/dd/yyyy')#" maxlength="10" disabled="disabled">
+                                <span class="readOnly displayNone">#DateFormat(FORM.doc_date_of_visit2, 'mm/dd/yyyy')#</span>
+                                <input type="text" name="doc_date_of_visit2" id="doc_date_of_visit2" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_date_of_visit2, 'mm/dd/yyyy')#" maxlength="10" disabled="disabled">
                             </td>
                         </tr>
                     </cfif>

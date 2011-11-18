@@ -25,13 +25,17 @@
     <!--- Param FORM Variables --->    
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.emailTo" default="">
- 			<Cfif isDefined('form.NewDatePlaced')>
-            	<cfquery name="updatePlacementDate" datasource="#application.dsn#">
-                update smg_students
-                set date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_date" value="#form.newDatePlaced#">
-                where uniqueid = <cfqueryparam cfsqltype="integer" value="#url.uniqueID#">
-                </Cfquery>
-            </Cfif>
+
+	<!---
+    <Cfif isDefined('form.NewDatePlaced')>
+        <cfquery name="updatePlacementDate" datasource="#APPLICATION.DSN#">
+        update smg_students
+        set date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_date" value="#form.newDatePlaced#">
+        where uniqueID = <cfqueryparam cfsqltype="integer" value="#url.uniqueID#">
+        </Cfquery>
+    </Cfif>
+    --->
+            
     <cfscript>
 		// Create Structure to store errors
 		Errors = StructNew();
@@ -88,9 +92,8 @@
 
 		}
 	</cfscript>
-	
     
-    <cfquery name="qGetSchool_dates" datasource="MySql">
+    <cfquery name="qGetSchool_dates" datasource="#APPLICATION.DSN#">
         SELECT 
         	schooldateid, 
             schoolid, 
@@ -112,7 +115,7 @@
     </cfquery>
     
     <!--- get history to check if this is a relocation --->
-    <cfquery name="qGetHistory" datasource="MySql">
+    <cfquery name="qGetHistory" datasource="#APPLICATION.DSN#">
         SELECT 
         	historyid, 
             isRelocation
@@ -125,11 +128,15 @@
         ORDER BY 
         	historyid DESC
     </cfquery>
-        <!---number kids at home---->
+    
+    <!---number kids at home---->
     <cfquery name="kidsAtHome" dbtype="query">
-    select count(childid)
-    from qGetHostChildren
-    where liveathome = 'yes'
+        SELECT 
+        	count(childid)
+        FROM 
+        	qGetHostChildren
+        WHERE
+        	liveathome = 'yes'
     </cfquery>
     
 </cfsilent>
@@ -149,10 +156,9 @@
 <Cfif qGetHostFamily.motherfirstname is not ''>
 	<cfset mother = 1>
 </Cfif>
-<cfset totalfam = #mother# + #father# + #kidsAtHome.recordcount#>
+<cfset totalfam = mother + father + kidsAtHome.recordcount>
 
 <Cfoutput>
-
 
 <!----Approve Link---->
 <cfsavecontent variable="approveLink">
@@ -233,14 +239,14 @@
 				  client.userid eq 8731 or 
 				  client.userid eq 8743 or 
 				  client.userid eq 12431>
-             <tr>	
-                <td align="Center" valign="center">
-                   Placement Date: &nbsp; <input name="NewDatePlaced" type="text" size=15 value="#DateFormat(qGetStudentInfo.date_host_fam_approved, 'mm/dd/yyyy')#">		
-                </td>
-                <td calign="Center">
-                    
-                </td>
-            </tr>
+                 <tr>	
+                    <td align="Center" valign="center">
+                       Placement Date: &nbsp; <input name="NewDatePlaced" type="text" size=15 value="#DateFormat(qGetStudentInfo.date_host_fam_approved, 'mm/dd/yyyy')#">		
+                    </td>
+                    <td calign="Center">
+                        
+                    </td>
+                </tr>
             </cfif>
 			
             <tr>
@@ -686,7 +692,21 @@
         
 		<!--- FORM Submitted --->
         <cfif FORM.submitted AND NOT VAL(ArrayLen(Errors.Messages))>
-        
+        	
+            <!--- Set Date Emailed --->
+            <cfif NOT isDate(qGetStudentInfo.datePISEmailed)>
+            
+                <cfquery datasource="#APPLICATION.DSN#">
+                    UPDATE
+                        smg_students
+                    SET
+						datePISEmailed = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                    WHERE
+                        studentID = <cfqueryparam cfsqltype="integer" value="#qGetStudentInfo.studentID#">                 	
+                </cfquery>
+            
+            </cfif>
+            
             <cfsavecontent variable="PlacementInfo">
                 <!--- Include PIS Template --->
                 #PlacementInfo#
@@ -740,10 +760,7 @@
                 <cfinvokeargument name="email_file" value="#AppPath.temp##qGetStudentInfo.studentID#-placementInfo.pdf">
          		<!----Attach the ID Card---->       
                 <cfinvokeargument name="email_file2" value="#AppPath.temp##qGetStudentInfo.studentID#-idCard.pdf">
-               
-               
             </cfinvoke>
-           
         
             <script language="JavaScript">
 				// Close Window

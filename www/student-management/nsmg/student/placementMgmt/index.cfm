@@ -18,6 +18,7 @@
 	<!--- Param local Variables --->
 	<cfparam name="URL.action" default="initial">
     <cfparam name="URL.uniqueID" default="" />
+    <cfparam name="URL.historyID" default="" />
     
     <!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0" />
@@ -27,6 +28,7 @@
     <!--- Student --->
     <cfparam name="FORM.studentID" default="0" />
     <cfparam name="FORM.uniqueID" default="" />
+    <cfparam name="FORM.historyID" default="" />
 
     <cfscript>
 		// Store Section on FORM Variable
@@ -34,6 +36,10 @@
 			FORM.action = URL.action;	
 		}
 	
+		if ( VAL(URL.historyID) ) {
+			FORM.historyID = URL.historyID;	
+		}
+		
 		// Get Student Information
 		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(uniqueID=URL.uniqueID);
 		
@@ -383,7 +389,7 @@
         <!--- Include Template --->
         <cfswitch expression="#FORM.action#">
         
-            <cfcase value="initial,paperwork,placementNotes" delimiters=",">
+            <cfcase value="initial,paperwork,paperworkHistory,placementNotes" delimiters=",">
         
                 <!--- Include template --->
                 <cfinclude template="_#FORM.action#.cfm" />
@@ -607,7 +613,9 @@
                                 <tr bgcolor="###iif(qGetPlacementHistory.currentrow MOD 2 ,DE("FFFFFF") ,DE("edeff4") )#">
                                     <td class="reportTitleLeftClean" width="20%">Date</td>
                                     <td class="reportTitleLeftClean" width="60%">Actions</td>
-                                    <td class="reportTitleLeftClean" width="20%">View Paperwork</td>
+                                    <td class="reportTitleLeftClean" width="20%">
+                                    	<a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&action=paperworkHistory&historyID=#qGetPlacementHistory.historyID#">[ View Paperwork History ]</a>
+                                    </td>
                                 </tr>
 							</table>
                             
