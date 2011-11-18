@@ -258,6 +258,7 @@
         <cfargument name="usertype" type="numeric" hint="usertype is required">
         <cfargument name="userID" type="numeric" hint="userID is required">
         <cfargument name="regionID" type="numeric" hint="regionID is required">
+        <cfargument name="is2ndVisitIncluded" default="0" type="numeric" hint="is2ndVisitIncluded is not required">
         
         <!--- Office Users --->
         <cfif ListFind("1,2,3,4", ARGUMENTS.userType)>
@@ -276,8 +277,15 @@
                     	u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                     AND 
                     	uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
-                    AND 
-                    	uar.usertype IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )
+                    
+                    <cfif VAL(is2ndVisitIncluded)>
+                        AND 
+                            uar.usertype IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7,15" list="yes"> )
+                    <cfelse>
+                        AND 
+                            uar.usertype IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )
+                    </cfif>
+                    
                     ORDER BY 
                     	u.lastname,
                         u.firstName
@@ -309,8 +317,15 @@
                     	
                         <!--- Regional Manager --->
                     	<cfcase value="5">
-                            AND 
-                                uar.userType IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )
+                        
+							<cfif VAL(is2ndVisitIncluded)>
+                                AND 
+                                    uar.usertype IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7,15" list="yes"> )
+                            <cfelse>
+                                AND 
+                                    uar.usertype IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )
+                            </cfif>
+                            
                         </cfcase>
                         
                         <!--- Regional Advisor - Returns users under them --->
@@ -321,8 +336,8 @@
                             	u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
                         </cfcase>
                         
-                    	<!--- Area Representative - Returns itself --->	
-                    	<cfcase value="7">
+                    	<!--- Area Representative | 2nd Visit Representative - Returns itself --->	
+                    	<cfcase value="7,15">
                         	AND
                             	u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
                         </cfcase>
