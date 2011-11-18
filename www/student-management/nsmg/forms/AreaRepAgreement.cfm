@@ -35,7 +35,7 @@ AYP #years# SERVICES AGREEMENT
 corporation located at #companyInfo.address#, #companyInfo.city#, #companyInfo.state# #companyInfo.zip# and
 <strong><u>#repInfo.firstname# #repInfo.lastname#</u></strong>, an individual residing at
 <strong><u>#repInfo.address# #repInfo.address2# #repInfo.city#, #repInfo.state#, #repInfo.zip#</u></strong> (the "Area Representative" or "AR").</p>
-</Cfoutput>
+
 <p>WHEREAS, #companyInfo.companyshort_nocolor# assists international foreign exchange students who wish to study in
   the United States with the process of coming to and staying in the U.S., including placing the
   students with U.S. host families; and</p>
@@ -186,7 +186,7 @@ corporation located at #companyInfo.address#, #companyInfo.city#, #companyInfo.s
         <td><strong><u>Date of Payment</u></strong></td>
         <td><strong><u>Amount of Payment</u></strong></td>
   	</Tr>
-    <tr bgcolor="#F8F8F8">
+    <tr bgcolor="##F8F8F8">
     	<td>Placement*</td>
         <Td>Paperwork*</Td>
         <td>$150</td>
@@ -196,7 +196,7 @@ corporation located at #companyInfo.address#, #companyInfo.city#, #companyInfo.s
         <Td> October 15 </Td>
         <td>$100</td>
     </tr>    
-    <tr bgcolor="#F8F8F8">
+    <tr bgcolor="##F8F8F8">
     	<td> Supervision Phase 2</td>
         <Td> December 15 </Td>
         <td>$100</td>
@@ -216,7 +216,7 @@ corporation located at #companyInfo.address#, #companyInfo.city#, #companyInfo.s
         <td><strong><u>Month of Payment</u></strong></td>
         <td><strong><u>Amount of Payment</u></strong></td>
     </Tr>
-    <tr bgcolor="#F8F8F8">
+    <tr bgcolor="##F8F8F8">
     	<td>Placement*</td>
         <td>Paperwork*</td>
         <Td>$150</Td>
@@ -226,7 +226,7 @@ corporation located at #companyInfo.address#, #companyInfo.city#, #companyInfo.s
         <td>February 15</td>
         <Td> $100</Td>
     </Tr>    
-    <tr bgcolor="#F8F8F8">
+    <tr bgcolor="##F8F8F8">
     	<td>Supervision Phase 4</td>
         <td> April 15</td>
         <Td> $100</Td>
@@ -256,7 +256,7 @@ corporation located at #companyInfo.address#, #companyInfo.city#, #companyInfo.s
         <td>Paperwork*</td>
         <Td>$150</Td>
     </Tr>
-    <tr bgcolor="#F8F8F8">
+    <tr bgcolor="##F8F8F8">
     	<td>Supervision Phase 1**</td>
         <Td>October 15 </Td>
         <td>$80</td>
@@ -266,7 +266,7 @@ corporation located at #companyInfo.address#, #companyInfo.city#, #companyInfo.s
         <Td>December 15 </Td>
         <td>$80</td>
     </tr>
-    <tr bgcolor="#F8F8F8">
+    <tr bgcolor="##F8F8F8">
     	<td>Supervision Phase 3</td>
         <Td>February 15 </Td>
         <td>$80</td>
@@ -276,7 +276,7 @@ corporation located at #companyInfo.address#, #companyInfo.city#, #companyInfo.s
         <td>April 15</td>
         <Td>$80</Td>
     </Tr>  
-    <tr bgcolor="#F8F8F8">
+    <tr bgcolor="##F8F8F8">
     	<td>Supervision Phase 5</td>
         <td>June 15</td>
         <Td>$80</Td>
@@ -304,7 +304,7 @@ corporation located at #companyInfo.address#, #companyInfo.city#, #companyInfo.s
         <td>Paperwork*</td>
         <Td>$150</Td>
     </Tr>
-     <tr bgcolor="#F8F8F8">
+     <tr bgcolor="##F8F8F8">
     	<td>Supervision Phase 3**</td>
         <Td>February 15 </Td>
         <td>$85</td>
@@ -314,7 +314,7 @@ corporation located at #companyInfo.address#, #companyInfo.city#, #companyInfo.s
         <td>April 15</td>
         <Td>$85</Td>
     </Tr>  
-    <tr bgcolor="#F8F8F8">
+    <tr bgcolor="##F8F8F8">
     	<td>Supervision Phase 5</td>
         <td>June 15</td>
         <Td>$85</Td>
@@ -324,7 +324,7 @@ corporation located at #companyInfo.address#, #companyInfo.city#, #companyInfo.s
         <Td>October 15 </Td>
         <td>$85</td>
     </tr>    
-    <tr bgcolor="#F8F8F8">
+    <tr bgcolor="##F8F8F8">
     	<td>Supervision Phase 2</td>
         <Td>December 15 </Td>
         <td>$85</td>
@@ -357,19 +357,19 @@ earned for placement of additional groups of five students.</p>
     	<th align="center"><u>Complete August Arriving Fast<br /> Track Placements Prior to April 15th</u></th>
         <th align="center" valign="top"><u>Total Fast Track Bonus</u></th>
     </tr>
-    <tr bgcolor="#F8F8F8">
+    <tr bgcolor="##F8F8F8">
     	<td align="center">5</td><td align="center"> $1,500</td>
     </tr>
     <tr>
     	<td align="center">10</td><td align="center"> $3,000</td>
     </tr>
-    <tr bgcolor="#F8F8F8">
+    <tr bgcolor="##F8F8F8">
     	<td align="center">15</td><td align="center"> $4,500</td>
     </tr>
     <tr>
     	<td align="center">20</td><td align="center"> $6,000</td>
     </tr>
-    <tr bgcolor="#F8F8F8">
+    <tr bgcolor="##F8F8F8">
     	<td align="center">25</td><td align="center"> $7,500</td>
     </tr>
 </Table>
@@ -392,19 +392,19 @@ placement of additional groups of five students.</p>
     	<th align="center"><u>Complete August Arriving Early<br /> Placements Prior to June 1st</u></th>
         <th align="center" valign="top"><u>Total Early Placement Bonus</u></th>
     </tr>
-    <tr bgcolor="#F8F8F8">
+    <tr bgcolor="##F8F8F8">
     	<td align="center">5</td><td align="center"> $1,000</td>
     </tr>
     <tr>
     	<td align="center">10</td><td align="center"> $2,000</td>
     </tr>
-    <tr bgcolor="#F8F8F8">
+    <tr bgcolor="##F8F8F8">
     	<td align="center">15</td><td align="center"> $3,000</td>
     </tr>
     <tr>
     	<td align="center">20</td><td align="center"> $4,000</td>
     </tr>
-    <tr bgcolor="#F8F8F8">
+    <tr bgcolor="##F8F8F8">
     	<td align="center">25</td><td align="center"> $5,000</td>
     </tr>
 </Table>
@@ -427,25 +427,25 @@ cannot be applied to the Placement Paperwork Bonus.</p>
     	<th align="center"><u>Complete August Arriving<Br /> Placements Prior to August 1st</u></th>
         <th align="center" valign="top"><u>Total Placement Paperwork Bonus</u></th>
     </tr>
-    <tr bgcolor="#F8F8F8">
+    <tr bgcolor="##F8F8F8">
     	<td align="center">5</td><td align="center"> $500</td>
     </tr>
     <tr>
     	<td align="center">10</td><td align="center"> $1,000</td>
     </tr>
-    <tr bgcolor="#F8F8F8">
+    <tr bgcolor="##F8F8F8">
     	<td align="center">15</td><td align="center"> $1,500</td>
     </tr>
     <tr>
     	<td align="center">20</td><td align="center"> $2,000</td>
     </tr>
-    <tr bgcolor="#F8F8F8">
+    <tr bgcolor="##F8F8F8">
     	<td align="center">25</td><td align="center"> $2,500</td>
     </tr>
      <tr>
     	<td align="center">&darr;</td><td align="center">&darr;</td>
     </tr>
-    <tr bgcolor="#F8F8F8">
+    <tr bgcolor="##F8F8F8">
     	<td align="center">50</td><td align="center"> $5,000</td>
     </tr>
 </Table>
@@ -519,7 +519,7 @@ mid-December of the same year.</li>
 exchange student while he/she is simultaneously attending a 
 high school as an #companyInfo.companyshort_nocolor#-sponsored exchange student.</li>
 </p>
-
+</Cfoutput>
 
 </body>
 </html>
