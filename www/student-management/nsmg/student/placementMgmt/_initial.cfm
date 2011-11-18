@@ -1380,9 +1380,9 @@
                             
                             <select name="secondVisitRepID" id="secondVisitRepID" class="xLargeField">
                                 <option value="0">Select a 2nd Representative Visit</option>
-                                <cfloop query="qGetAvailableReps">
-                                    <option value="#qGetAvailableReps.userid#" <cfif qGetAvailableReps.userID EQ FORM.secondVisitRepID> selected="selected" </cfif> >
-                                        #qGetAvailableReps.firstname# #qGetAvailableReps.lastname# (###qGetAvailableReps.userid#)
+                                <cfloop query="qGetAvailable2ndVisitReps">
+                                    <option value="#qGetAvailable2ndVisitReps.userid#" <cfif qGetAvailable2ndVisitReps.userID EQ FORM.secondVisitRepID> selected="selected" </cfif> >
+                                        #qGetAvailable2ndVisitReps.firstname# #qGetAvailable2ndVisitReps.lastname# (###qGetAvailable2ndVisitReps.userid#)
                                     </option>
                                 </cfloop>
                             </select>

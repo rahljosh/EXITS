@@ -473,9 +473,9 @@
                 </tr>
                 <cfloop query="qGetHostLeadHistory">
                     <tr bgcolor="###iif(qGetHostLeadHistory.currentrow MOD 2 ,DE("FFFFE6") ,DE("FFFFFF") )#">
-                        <td valign="top">#DateFormat(qGetHostLeadHistory.dateUpdated, 'mm/dd/yy')# at #TimeFormat(qGetHostLeadHistory.dateUpdated, 'hh:mm tt')# EST</td>
-                        <td valign="top">#qGetHostLeadHistory.actions#</td>
-                        <td valign="top">#qGetHostLeadHistory.comments#</td>
+                        <td valign="top" width="20%">#DateFormat(qGetHostLeadHistory.dateUpdated, 'mm/dd/yy')# at #TimeFormat(qGetHostLeadHistory.dateUpdated, 'hh:mm tt')# EST</td>
+                        <td valign="top" width="30%">#qGetHostLeadHistory.actions#</td>
+                        <td valign="top" width="50%">#qGetHostLeadHistory.comments#</td>
                     </tr>
                 </cfloop>
             </table>   

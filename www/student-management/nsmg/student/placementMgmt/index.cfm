@@ -77,6 +77,9 @@
 		// Get Available Reps
 		qGetAvailableReps = APPLICATION.CFC.USER.getSupervisedUsers(userType=CLIENT.userType, userID=CLIENT.userID, regionID=qGetStudentInfo.regionAssigned);
 
+		// Get Available 2nd Visit Reps
+		qGetAvailable2ndVisitReps = APPLICATION.CFC.USER.getSupervisedUsers(userType=CLIENT.userType, userID=CLIENT.userID, regionID=qGetStudentInfo.regionAssigned, is2ndVisitIncluded=1);
+			
 		// Get Area Rep
 		qGetAreaRepInfo = APPLICATION.CFC.USER.getUserByID(userID=qGetStudentInfo.areaRepID);
 
@@ -416,8 +419,12 @@
                     	<cfif vPlacementStatus EQ 'unplaced'>
                         	PLACEMENT HISTORY - #DateFormat(qGetPlacementHistory.dateofchange, 'mm/dd/yyyy')#
                         <cfelse>
-                        	#APPLICATION.CFC.UDF.convertToOrdinal(qGetPlacementHistory.recordCount)# PLACEMENT (CURRENT) - #DateFormat(qGetPlacementHistory.dateofchange, 'mm/dd/yyyy')#
+                        	#APPLICATION.CFC.UDF.convertToOrdinal(qGetPlacementHistory.recordCount)# PLACEMENT - #DateFormat(qGetPlacementHistory.dateofchange, 'mm/dd/yyyy')# (CURRENT)
                         </cfif>
+
+                        <div style="float:right; padding-right:5px; width:170px;">
+                            <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&action=paperwork">[ View Paperwork ]</a>
+                        </div>
                     </th>
                 </tr>
             </table>
@@ -449,43 +456,31 @@
                     <td width="15%" <cfif qGetPlacementHistory.hasHostIDChanged> class="placementMgmtChanged" </cfif> >
                         <cfif VAL(qGetPlacementHistory.hostID)>
                             #qGetPlacementHistory.familyLastName# (###qGetPlacementHistory.hostID#)
-                        <cfelse>
-                            n/a
                         </cfif>
                     </td>
                     <td width="17%" <cfif qGetPlacementHistory.hasSchoolIDChanged> class="placementMgmtChanged" </cfif> >
 						<cfif VAL(qGetPlacementHistory.schoolID)>                            
                             #qGetPlacementHistory.schoolName# (###qGetPlacementHistory.schoolID#)
-                        <cfelse>
-                            n/a
                         </cfif>
                     </td>
                     <td width="17%" <cfif qGetPlacementHistory.hasPlaceRepIDChanged> class="placementMgmtChanged" </cfif> >
                         <cfif VAL(qGetPlacementHistory.placeRepID)>
                             #qGetPlacementHistory.placeFirstName# #qGetPlacementHistory.placeLastName# (###qGetPlacementHistory.placeRepID#)
-						<cfelse>
-                            n/a
                         </cfif>
                     </td>
                     <td width="17%" <cfif qGetPlacementHistory.hasAreaRepIDChanged> class="placementMgmtChanged" </cfif> >
                         <cfif VAL(qGetPlacementHistory.areaRepID)>
                             #qGetPlacementHistory.areaFirstName# #qGetPlacementHistory.areaLastName# (###qGetPlacementHistory.areaRepID#)
-                        <cfelse>
-                            n/a
                         </cfif>
                     </td>
                     <td width="17%" <cfif qGetPlacementHistory.hasSecondVisitRepIDChanged> class="placementMgmtChanged" </cfif> >
                         <cfif VAL(qGetPlacementHistory.secondVisitRepID)>
                             #qGetPlacementHistory.secondRepFirstName# #qGetPlacementHistory.secondRepLastName# (###qGetPlacementHistory.secondVisitRepID#)
-                        <cfelse>
-                            n/a
                         </cfif>
                     </td>
                     <td width="17%" <cfif qGetPlacementHistory.hasDoublePlacementIDChanged> class="placementMgmtChanged" </cfif> >
 						<cfif VAL(qGetPlacementHistory.doublePlacementID)>
                             #qGetPlacementHistory.doublePlacementFirstName# #qGetPlacementHistory.doublePlacementLastName# (###qGetPlacementHistory.doublePlacementID#)
-                        <cfelse>
-                            n/a
                         </cfif>
                     </td>
                 </tr>
@@ -527,14 +522,22 @@
                         vCardinalCount = vCardinalCount - 1;
                     </cfscript>
 
-                    <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">                            				
+                    <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section" align="center" style="border:1px solid ##ccc;">                            				
                         <tr class="reportCenterTitle"> 
-                            <th>
+                            <th align="center">
                             	<cfif qGetPlacementHistory.currentRow EQ qGetPlacementHistory.recordCount>
                                 	ORIGINAL PLACEMENT - #DateFormat(qGetPlacementHistory.dateofchange, 'mm/dd/yyyy')#
                                 <cfelse>
                                 	#APPLICATION.CFC.UDF.convertToOrdinal(vCardinalCount)# PLACEMENT - #DateFormat(qGetPlacementHistory.dateofchange, 'mm/dd/yyyy')#
                                 </cfif>
+                                
+                                <div style="float:right; padding-right:5px; width:170px;">
+									<cfif VAL(qGetPlacementHistory.hostID)>
+                                    	<a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&action=paperworkHistory&historyID=#qGetPlacementHistory.historyID#">[ View Paperwork History ]</a>
+                                    <cfelse>
+                                        &nbsp;                            
+                                    </cfif>
+                                </div>
                             </th>
                         </tr>
                     </table>
@@ -566,43 +569,31 @@
                             <td width="15%" <cfif qGetPlacementHistory.hasHostIDChanged> class="placementMgmtChanged" </cfif> >
                                 <cfif VAL(qGetPlacementHistory.hostID)>
                                     #qGetPlacementHistory.familyLastName# (###qGetPlacementHistory.hostID#)
-                                <cfelse>
-                                    n/a
                                 </cfif>
                             </td>
                             <td width="17%" <cfif qGetPlacementHistory.hasSchoolIDChanged> class="placementMgmtChanged" </cfif> >
                                 <cfif VAL(qGetPlacementHistory.schoolID)>                            
                                     #qGetPlacementHistory.schoolName# (###qGetPlacementHistory.schoolID#)
-                                <cfelse>
-                                    n/a
                                 </cfif>
                             </td>
                             <td width="17%" <cfif qGetPlacementHistory.hasPlaceRepIDChanged> class="placementMgmtChanged" </cfif> >
                                 <cfif VAL(qGetPlacementHistory.placeRepID)>
                                     #qGetPlacementHistory.placeFirstName# #qGetPlacementHistory.placeLastName# (###qGetPlacementHistory.placeRepID#)
-                                <cfelse>
-                                    n/a
                                 </cfif>
                             </td>
                             <td width="17%" <cfif qGetPlacementHistory.hasAreaRepIDChanged> class="placementMgmtChanged" </cfif> >
                                 <cfif VAL(qGetPlacementHistory.areaRepID)>
                                     #qGetPlacementHistory.areaFirstName# #qGetPlacementHistory.areaLastName# (###qGetPlacementHistory.areaRepID#)
-                                <cfelse>
-                                    n/a
                                 </cfif>
                             </td>
                             <td width="17%" <cfif qGetPlacementHistory.hasSecondVisitRepIDChanged> class="placementMgmtChanged" </cfif> >
                                 <cfif VAL(qGetPlacementHistory.secondVisitRepID)>
                                     #qGetPlacementHistory.secondRepFirstName# #qGetPlacementHistory.secondRepLastName# (###qGetPlacementHistory.secondVisitRepID#)
-                                <cfelse>
-                                    n/a
                                 </cfif>
                             </td>
                             <td width="17%" <cfif qGetPlacementHistory.hasDoublePlacementIDChanged> class="placementMgmtChanged" </cfif> >
                                 <cfif VAL(qGetPlacementHistory.doublePlacementID)>
                                     #qGetPlacementHistory.doublePlacementFirstName# #qGetPlacementHistory.doublePlacementLastName# (###qGetPlacementHistory.doublePlacementID#)
-                                <cfelse>
-                                    n/a
                                 </cfif>
                             </td>
                         </tr>
@@ -611,19 +602,16 @@
                         <cfif qGetActionsHistory.recordCount>
                             <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
                                 <tr bgcolor="###iif(qGetPlacementHistory.currentrow MOD 2 ,DE("FFFFFF") ,DE("edeff4") )#">
-                                    <td class="reportTitleLeftClean" width="20%">Date</td>
-                                    <td class="reportTitleLeftClean" width="60%">Actions</td>
-                                    <td class="reportTitleLeftClean" width="20%">
-                                    	<a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&action=paperworkHistory&historyID=#qGetPlacementHistory.historyID#">[ View Paperwork History ]</a>
-                                    </td>
+                                    <td class="reportTitleLeftClean" width="25%">Date</td>
+                                    <td class="reportTitleLeftClean" width="75%">Actions</td>
                                 </tr>
 							</table>
                             
                             <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section paperwork" align="center">
                                 <cfloop query="qGetActionsHistory">
                                     <tr>
-                                        <td valign="top" width="20%">#DateFormat(qGetActionsHistory.dateUpdated, 'mm/dd/yyyy')# at #TimeFormat(qGetActionsHistory.dateUpdated, 'hh:mm tt')# <!--- EST ---></td>
-                                        <td width="90%">#qGetActionsHistory.actions#</td>
+                                        <td valign="top" width="25%">#DateFormat(qGetActionsHistory.dateUpdated, 'mm/dd/yyyy')# at #TimeFormat(qGetActionsHistory.dateUpdated, 'hh:mm tt')# <!--- EST ---></td>
+                                        <td width="75%">#qGetActionsHistory.actions#</td>
                                     </tr>                        
                                 </cfloop>
 							</table>
