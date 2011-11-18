@@ -224,7 +224,7 @@ body {
                 #client.companyshort#
               </Cfoutput>
                 </cfsavecontent>
-                <Cfif qGetUserInfo.accountCreationVerified is '' or qGetUserInfo.accountCreationVerified eq 0>
+                
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
                 
                     <cfinvokeargument name="email_to" value="#client.email#">       
@@ -236,6 +236,8 @@ body {
                     <cfinvokeargument name="email_message" value="#repEmailMessage#">
                     <cfinvokeargument name="email_file" value="C:/websites/student-management/nsmg/uploadedfiles/users/#client.userid#/Season#season#cbcAuthorization.pdf">
                 </cfinvoke>	
+            
+             <Cfif qGetUserInfo.accountCreationVerified is '' or qGetUserInfo.accountCreationVerified eq 0>  
               <cfsavecontent variable="programEmailMessage">
                 <cfoutput>				
                
@@ -246,7 +248,7 @@ body {
                 
                 </cfoutput>
                 </cfsavecontent>
-                </Cfif>
+                
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
                 	<!----
 					 **********This emai is sent to the Program Manager*******************<Br>
@@ -259,7 +261,9 @@ body {
                     <cfinvokeargument name="email_subject" value="CBC Authorization for #client.name#">
                     <cfinvokeargument name="email_message" value="#programEmailMessage#">
                   
-                </cfinvoke>	     
+                </cfinvoke>	 
+             </Cfif>    
+             
             <cfif checkSeason.recordcount gt 0> 
                 <cfquery name="updatePaperwork" datasource="#application.dsn#">
                 update smg_users_paperwork
