@@ -381,7 +381,7 @@
 					
 				}
 				
-			} // if ( ARGUMENTS.userType EQ 5 ) {			
+			}		
 		</cfscript>
 		
         <cfquery 
@@ -646,11 +646,9 @@
                     doc_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     doc_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     <!--- Student Application --->
-                    orig_app_Sent_host = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">,
                     copy_app_school = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">,
-                    copy_app_super = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">,
                 	<!--- Arrival Orientation --->
-                    stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    <!--- stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" null="yes">, | should never reset --->
                     host_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     doc_class_schedule = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
                 WHERE 
@@ -956,7 +954,7 @@
 			switch(ARGUMENTS.userType) { 
 				
 				case 1: case 2: case 3: case 4:
-					vUpdatedBy = 'Headquarters';
+					vUpdatedBy = 'Office';
 					break; 
 					
 				case 5: 
@@ -1346,14 +1344,33 @@
 			
 			// Add paragraph tag to set this update
 			vActions = "<p>#vActions#</p>";
-		</cfscript>
+		</cfscript>       
+        
+        <!--- School Updated | Reset Fields on the Student Table --->
+        <cfif VAL(hasSchoolIDChanged)>
+        
+            <cfquery 
+                datasource="#APPLICATION.DSN#">
+					UPDATE
+                    	smg_students
+                    SET
+						<!--- Arrival Date Compliance --->
+                        doc_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        <!--- Student Application --->
+                        copy_app_school = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">,
+                        doc_class_schedule = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+	            	WHERE
+    					studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+			</cfquery>
+        
+        </cfif>
+        
         
 		<!--- Insert History Information --->
         <cfif vQueryType EQ 'insert'>        
             
-            <!--- Host Family Updated --->
-
-            <!--- Reset Fields on the Student Table --->
+            <!--- Host Family Updated | Reset Fields on the Student Table --->
             <cfquery 
                 datasource="#APPLICATION.DSN#">
 					UPDATE
@@ -1387,24 +1404,16 @@
                         doc_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                         doc_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                         doc_income_ver_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        <!--- Arrival Date Compliance --->
-                        doc_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        doc_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        <!--- Student Application --->
-                        orig_app_Sent_host = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">,
-                        copy_app_school = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">,
-                        copy_app_super = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">,
                         <!--- Arrival Orientation --->
-                        stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        host_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        doc_class_schedule = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                        <!--- stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" null="yes">, | should never reset --->
+                        host_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
 	            	WHERE
     					studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
 			</cfquery>
             
             <cfscript>
 				// Set Old Records to Inactive
-				setHostHistoryInactive(studentID=ARGUMENTS.studentID);			
+				setHostHistoryInactive(studentID=ARGUMENTS.studentID);	
 			</cfscript>
             
             <cfquery 
@@ -1466,6 +1475,80 @@
         	<cfscript>
 				// Set History ID
 				vHostHistoryID = newRecord.GENERATED_KEY;
+				
+				// Insert Placement Log History
+				
+				// Insert Host ID Track
+				if ( VAL(ARGUMENTS.hostID) ) {
+	
+					insertPlacementTracking(
+						historyID=vHostHistoryID,
+						studentID=ARGUMENTS.studentID,
+						fieldName='hostID',
+						fieldID=ARGUMENTS.hostID
+					);
+				
+				}
+				
+				// Insert School ID Track
+				if ( VAL(ARGUMENTS.schoolID) ) {
+	
+					insertPlacementTracking(
+						historyID=vHostHistoryID,
+						studentID=ARGUMENTS.studentID,
+						fieldName='schoolID',
+						fieldID=ARGUMENTS.schoolID
+					);
+				
+				}
+				
+				// Insert Place Rep ID Track
+				if ( VAL(ARGUMENTS.placeRepID) ) {
+	
+					insertPlacementTracking(
+						historyID=vHostHistoryID,
+						studentID=ARGUMENTS.studentID,
+						fieldName='placeRepID',
+						fieldID=ARGUMENTS.placeRepID
+					);
+				
+				}
+				
+				// Insert Area Rep ID Track
+				if ( VAL(ARGUMENTS.areaRepID) ) {
+	
+					insertPlacementTracking(
+						historyID=vHostHistoryID,
+						studentID=ARGUMENTS.studentID,
+						fieldName='areaRepID',
+						fieldID=ARGUMENTS.areaRepID
+					);
+				
+				}
+				
+				// Insert Second Visit Rep Track
+				if ( VAL(ARGUMENTS.secondVisitRepID) ) {
+	
+					insertPlacementTracking(
+						historyID=vHostHistoryID,
+						studentID=ARGUMENTS.studentID,
+						fieldName='secondVisitRepID',
+						fieldID=ARGUMENTS.secondVisitRepID
+					);
+				
+				}
+				
+				// Insert Double Placement Track
+				if ( VAL(ARGUMENTS.doublePlace) ) {
+	
+					insertPlacementTracking(
+						historyID=vHostHistoryID,
+						studentID=ARGUMENTS.studentID,
+						fieldName='doublePlace',
+						fieldID=ARGUMENTS.doublePlace
+					);
+				
+				}
             </cfscript>
             
         </cfif>
@@ -1487,6 +1570,80 @@
 					actions=vActions
 				);			
 		
+			}
+			
+			// Insert Placement Log History
+			
+			// Insert Host ID Track
+			if ( VAL(hasHostIDChanged) AND VAL(ARGUMENTS.hostID) ) {
+
+				insertPlacementTracking(
+					historyID=vHostHistoryID,
+					studentID=ARGUMENTS.studentID,
+					fieldName='hostID',
+					fieldID=ARGUMENTS.hostID
+				);
+			
+			}
+			
+			// Insert School ID Track
+			if ( VAL(hasSchoolIDChanged) AND VAL(ARGUMENTS.schoolID) ) {
+
+				insertPlacementTracking(
+					historyID=vHostHistoryID,
+					studentID=ARGUMENTS.studentID,
+					fieldName='schoolID',
+					fieldID=ARGUMENTS.schoolID
+				);
+			
+			}
+			
+			// Insert Place Rep ID Track
+			if ( VAL(hasPlaceRepIDChanged) AND VAL(ARGUMENTS.placeRepID) ) {
+
+				insertPlacementTracking(
+					historyID=vHostHistoryID,
+					studentID=ARGUMENTS.studentID,
+					fieldName='placeRepID',
+					fieldID=ARGUMENTS.placeRepID
+				);
+			
+			}
+			
+			// Insert Area Rep ID Track
+			if ( VAL(hasAreaRepIDChanged) AND VAL(ARGUMENTS.areaRepID) ) {
+
+				insertPlacementTracking(
+					historyID=vHostHistoryID,
+					studentID=ARGUMENTS.studentID,
+					fieldName='areaRepID',
+					fieldID=ARGUMENTS.areaRepID
+				);
+			
+			}
+			
+			// Insert Second Visit Rep Track
+			if ( VAL(hasSecondVisitRepIDChanged) AND VAL(ARGUMENTS.secondVisitRepID) ) {
+
+				insertPlacementTracking(
+					historyID=vHostHistoryID,
+					studentID=ARGUMENTS.studentID,
+					fieldName='secondVisitRepID',
+					fieldID=ARGUMENTS.secondVisitRepID
+				);
+			
+			}
+			
+			// Insert Double Placement Track
+			if ( VAL(hasDoublePlacementIDChanged) AND VAL(ARGUMENTS.doublePlace) ) {
+
+				insertPlacementTracking(
+					historyID=vHostHistoryID,
+					studentID=ARGUMENTS.studentID,
+					fieldName='doublePlace',
+					fieldID=ARGUMENTS.doublePlace
+				);
+			
 			}
 		</cfscript> 
         
@@ -1510,7 +1667,7 @@
                         	hasAreaRepIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="#hasAreaRepIDChanged#">,
                         </cfif>
                         
-                        <cfif VAL(hasAreaRepIDChanged)>
+                        <cfif VAL(hasSecondVisitRepIDChanged)>
                         	hasSecondVisitRepIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="#hasSecondVisitRepIDChanged#">,
                         </cfif>
                         
@@ -1529,6 +1686,37 @@
         
 		</cfif>
                 
+	</cffunction>
+
+
+	<!--- INSERT FLIGHT --->
+	<cffunction name="insertPlacementTracking" access="public" returntype="void" output="false" hint="Inserts Placement Tracking to the log">
+    	<cfargument name="historyID" hint="historyID is required">
+        <cfargument name="studentID" hint="studentID is required">
+        <cfargument name="fieldName" default="0" hint="fieldName is not required">
+        <cfargument name="fieldID" default="0" hint="fieldID is not required">
+		
+        <cfquery 
+			datasource="#APPLICATION.DSN#">
+                INSERT INTO 
+                    smg_hostHistoryTracking
+                (
+                    historyID,
+                    studentID,
+                    fieldName,
+                    fieldID,
+                    dateCreated
+                )
+                VALUES 
+                (
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.historyID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fieldName#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.fieldID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                ) 
+        </cfquery>
+
 	</cffunction>
 
 	
@@ -1689,10 +1877,8 @@
                     <!--- Arrival Compliance --->
                     doc_school_accept_date,
                     doc_school_sign_date,
-                    <!--- Original Student --->
-                    orig_app_sent_host,
+                    <!--- Student Application --->
                     copy_app_school,
-                    copy_app_super,
                     <!--- Arrival Orientation --->
                     stu_arrival_orientation,
                     host_arrival_orientation,
@@ -1742,10 +1928,8 @@
         <!--- Arrival Compliance --->
         <cfargument name="doc_school_accept_date" default="" hint="doc_school_accept_date is not required">
         <cfargument name="doc_school_sign_date" default="" hint="doc_school_sign_date is not required">
-        <!--- Original Student --->
-        <cfargument name="orig_app_sent_host" default="" hint="orig_app_sent_host is not required">
+        <!--- Student Application --->
         <cfargument name="copy_app_school" default="" hint="copy_app_school is not required">
-        <cfargument name="copy_app_super" default="" hint="copy_app_super is not required">
         <!--- Arrival Orientation --->
         <cfargument name="stu_arrival_orientation" default="" hint="stu_arrival_orientation is not required">
         <cfargument name="host_arrival_orientation" default="" hint="host_arrival_orientation is not required">
@@ -1781,10 +1965,8 @@
                     <!--- Arrival Compliance --->
                     doc_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_accept_date#" null="#NOT IsDate(ARGUMENTS.doc_school_accept_date)#">,
                     doc_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_sign_date#" null="#NOT IsDate(ARGUMENTS.doc_school_sign_date)#">,
-					<!--- Original Student --->
-                    orig_app_sent_host = <cfqueryparam cfsqltype="cf_sql_varchar" value="#YesNoFormat(VAL(ARGUMENTS.orig_app_sent_host))#">,
+					<!--- Student Application --->
                     copy_app_school = <cfqueryparam cfsqltype="cf_sql_varchar" value="#YesNoFormat(VAL(ARGUMENTS.copy_app_school))#">,
-                    copy_app_super = <cfqueryparam cfsqltype="cf_sql_varchar" value="#YesNoFormat(VAL(ARGUMENTS.copy_app_super))#">,
 					<!--- Arrival Orientation --->
                     stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.stu_arrival_orientation#" null="#NOT IsDate(ARGUMENTS.stu_arrival_orientation)#">,
                     host_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.host_arrival_orientation#" null="#NOT IsDate(ARGUMENTS.host_arrival_orientation)#">,
@@ -1824,9 +2006,7 @@
 				doc_school_accept_date = ARGUMENTS.doc_school_accept_date,
 				doc_school_sign_date = ARGUMENTS.doc_school_sign_date,
 				// Original Student
-				orig_app_sent_host = ARGUMENTS.orig_app_sent_host,
 				copy_app_school = ARGUMENTS.copy_app_school,
-				copy_app_super = ARGUMENTS.copy_app_super,
 				// Arrival Orientation
 				stu_arrival_orientation = ARGUMENTS.stu_arrival_orientation,
 				host_arrival_orientation = ARGUMENTS.host_arrival_orientation,
@@ -1865,10 +2045,8 @@
         <!--- Arrival Compliance --->
         <cfargument name="doc_school_accept_date" default="" hint="doc_school_accept_date is not required">
         <cfargument name="doc_school_sign_date" default="" hint="doc_school_sign_date is not required">
-        <!--- Original Student --->
-        <cfargument name="orig_app_sent_host" default="" hint="orig_app_sent_host is not required">
+        <!--- Student Application --->
         <cfargument name="copy_app_school" default="" hint="copy_app_school is not required">
-        <cfargument name="copy_app_super" default="" hint="copy_app_super is not required">
         <!--- Arrival Orientation --->
         <cfargument name="stu_arrival_orientation" default="" hint="stu_arrival_orientation is not required">
         <cfargument name="host_arrival_orientation" default="" hint="host_arrival_orientation is not required">
@@ -1912,10 +2090,8 @@
                     <!--- Arrival Compliance --->
                     doc_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_accept_date#" null="#NOT IsDate(ARGUMENTS.doc_school_accept_date)#">,
                     doc_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_sign_date#" null="#NOT IsDate(ARGUMENTS.doc_school_sign_date)#">,
-					<!--- Original Student --->
-                    orig_app_sent_host = <cfqueryparam cfsqltype="cf_sql_varchar" value="#YesNoFormat(VAL(ARGUMENTS.orig_app_sent_host))#">,
+					<!--- Student Application --->
                     copy_app_school = <cfqueryparam cfsqltype="cf_sql_varchar" value="#YesNoFormat(VAL(ARGUMENTS.copy_app_school))#">,
-                    copy_app_super = <cfqueryparam cfsqltype="cf_sql_varchar" value="#YesNoFormat(VAL(ARGUMENTS.copy_app_super))#">,
 					<!--- Arrival Orientation --->
                     stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.stu_arrival_orientation#" null="#NOT IsDate(ARGUMENTS.stu_arrival_orientation)#">,
                     host_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.host_arrival_orientation#" null="#NOT IsDate(ARGUMENTS.host_arrival_orientation)#">,

@@ -36,9 +36,7 @@
 		doc_class_schedule = <cfif form.doc_class_schedule EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_class_schedule)#</cfif>,
 		doc_income_ver_date =  <cfif form.doc_income_ver_date EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_income_ver_date)#</cfif>,
         
-		orig_app_Sent_host = '#form.orig_app_sent_host#',
 		copy_app_school = '#form.copy_app_school#',
-		copy_app_super = '#form.copy_app_super#',
 		
 		stu_arrival_orientation = <cfif form.stu_orientation_date EQ ''>NULL<cfelse>#CreateODBCDate(form.stu_orientation_date)#</cfif>,
 		host_arrival_orientation = <cfif form.host_orientation_date EQ ''>NULL<cfelse>#CreateODBCDate(form.host_orientation_date)#</cfif>

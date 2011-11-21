@@ -428,20 +428,10 @@
 		<td><u>Student Application</u></td>
 	</tr>
 	<tr>
-		<Td><cfif orig_app_sent_host is 'no'>
-			<input type="radio" name="orig_app_sent_host" value="yes" <cfif edit is 'no'>disabled</cfif>>Yes <input type="radio" name="orig_app_sent_host" value="no" checked <cfif edit is 'no'>disabled</cfif>>No<cfelse>
-			<input type="radio" name="orig_app_sent_host"  value="yes" checked <cfif edit is 'no'>disabled</cfif>>Yes <input type="radio" name="orig_app_sent_host" value="no" <cfif edit is 'no'>disabled</cfif>>No</cfif>&nbsp;&nbsp;&nbsp;Original Student App to Host Family</td>
-	</tr>
-	<tr>
 		<Td><cfif copy_app_school is 'no'>
 			<input type="radio" name="copy_app_school" value="yes" <cfif edit is 'no'>disabled</cfif>>Yes <input type="radio" name="copy_app_school" value="no" checked <cfif edit is 'no'>disabled</cfif>>No<cfelse>
 			<input type="radio" name="copy_app_school"  value="yes" checked <cfif edit is 'no'>disabled</cfif>>Yes <input type="radio" name="copy_app_school" value="no" <cfif edit is 'no'>disabled</cfif>>No</cfif>&nbsp;&nbsp;&nbsp;Copy to School</td>
 	
-	</tr>
-	<tr>
-		<Td><cfif copy_app_super is 'no'>
-			<input type="radio" name="copy_app_super" value="yes" <cfif edit is 'no'>disabled</cfif>>Yes <input type="radio" name="copy_app_super" value="no" checked <cfif edit is 'no'>disabled</cfif>>No<cfelse>
-			<input type="radio" name="copy_app_super"  value="yes" checked <cfif edit is 'no'>disabled</cfif>>Yes <input type="radio" name="copy_app_super" value="no" <cfif edit is 'no'>disabled</cfif>>No</cfif>&nbsp;&nbsp;&nbsp;Copy to Supervising Rep</td>
 	</tr>
 </table><br>
 

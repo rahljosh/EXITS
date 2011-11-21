@@ -13,7 +13,7 @@
 <cfsilent>
 
 	<!--- Import CustomTag --->
-    <cfimport taglib="../../extensions/customTags/gui/" prefix="gui" />	
+    <cfimport taglib="../../extensions/customTags/gui/" prefix="gui" />
 	
     <!--- Param FORM Variables --->
 
@@ -47,9 +47,7 @@
     <cfparam name="FORM.mothercbc_form" default="">
     <cfparam name="FORM.childIDList" default="">
     <!--- Original Student --->
-    <cfparam name="FORM.orig_app_sent_host" default="">
     <cfparam name="FORM.copy_app_school" default="">
-    <cfparam name="FORM.copy_app_super" default="">
     <!--- Arrival Orientation --->
     <cfparam name="FORM.stu_arrival_orientation" default="">
     <cfparam name="FORM.host_arrival_orientation" default="">
@@ -124,9 +122,7 @@
 				doc_school_accept_date = FORM.doc_school_accept_date,
 				doc_school_sign_date = FORM.doc_school_sign_date,
 				// Original Student
-				orig_app_sent_host = FORM.orig_app_sent_host,
 				copy_app_school = FORM.copy_app_school,
-				copy_app_super = FORM.copy_app_super,
 				// Arrival Orientation
 				stu_arrival_orientation = FORM.stu_arrival_orientation,
 				host_arrival_orientation = FORM.host_arrival_orientation,
@@ -194,9 +190,7 @@
 				FORM["cbc_form_received" & qGetEligibleCBCFamilyHistoryMembers.childID[i]] = qGetEligibleCBCFamilyHistoryMembers.cbc_form_received[i];
 			}
 			// Original Student
-			FORM.orig_app_sent_host = qGetHostHistory.orig_app_sent_host;
 			FORM.copy_app_school = qGetHostHistory.copy_app_school;
-			FORM.copy_app_super = qGetHostHistory.copy_app_super;
 			// Arrival Orientation
 			FORM.stu_arrival_orientation = qGetHostHistory.stu_arrival_orientation;
 			FORM.host_arrival_orientation = qGetHostHistory.host_arrival_orientation;
@@ -207,25 +201,29 @@
 			Set Compliance Notifications
 		***************************************/
 		
-		// Single Placement Paperwork
-		if ( vTotalHistoryFamilyMembers EQ 1 AND qGetProgramInfo.seasonid GT 7 ) {
-
-			if ( isDate(FORM.doc_single_ref_check1) AND FORM.doc_single_ref_check1 GT qGetHostHistory.datePlaced ) {
-				SESSION.formErrors.Add("Date of Single Placement Reference Check 1 is out of compliance");
+		if ( AND isDate(qGetHostHistory.datePlaced)  ) {
+		
+			// Single Placement Paperwork
+			if ( vTotalHistoryFamilyMembers EQ 1 AND qGetProgramInfo.seasonid GT 7 ) {
+	
+				if ( isDate(FORM.doc_single_ref_check1) AND FORM.doc_single_ref_check1 GT qGetHostHistory.datePlaced ) {
+					SESSION.formErrors.Add("Date of Single Placement Reference Check 1 is out of compliance");
+				}
+		
+				if ( isDate(FORM.doc_single_ref_check2) AND FORM.doc_single_ref_check2 GT qGetHostHistory.datePlaced ) {
+					SESSION.formErrors.Add("Date of Single Placement Reference Check 2 is out of compliance");
+				}
+	
+			}
+			
+			if ( isDate(FORM.doc_date_of_visit) AND FORM.doc_date_of_visit GT qGetHostHistory.datePlaced ) {
+				SESSION.formErrors.Add("Confidential Host Family Date of Visit is out of compliance");
 			}
 	
-			if ( isDate(FORM.doc_single_ref_check2) AND FORM.doc_single_ref_check2 GT qGetHostHistory.datePlaced ) {
-				SESSION.formErrors.Add("Date of Single Placement Reference Check 2 is out of compliance");
+			if ( isDate(FORM.doc_date_of_visit2) AND FORM.doc_date_of_visit2 GT qGetHostHistory.datePlaced ) {
+				SESSION.formErrors.Add("2nd Confidential Host Family Date of Visit is out of compliance");
 			}
-
-		}
-		
-		if ( isDate(FORM.doc_date_of_visit) AND FORM.doc_date_of_visit GT qGetHostHistory.datePlaced ) {
-			SESSION.formErrors.Add("Confidential Host Family Date of Visit is out of compliance");
-		}
-
-		if ( isDate(FORM.doc_date_of_visit2) AND FORM.doc_date_of_visit2 GT qGetHostHistory.datePlaced ) {
-			SESSION.formErrors.Add("2nd Confidential Host Family Date of Visit is out of compliance");
+			
 		}
 	</cfscript>
             
@@ -698,35 +696,12 @@
        </table>
        
       <table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center">  	
-            <!--- Original Student Application to Host Family ---->
-            <tr>
-                <td width="15%" class="paperworkLeftColumn">
-                    <input type="checkbox" name="orig_app_sent_host" id="orig_app_sent_host" value="1" class="editPage displayNone" <cfif FORM.orig_app_sent_host EQ 'yes'>checked="checked"</cfif> >
-                </td>
-                <td width="85%">    
-                    <label for="orig_app_sent_host">Original Student Application to Host Family</label>
-                </td>
-                
-            </tr>
-            
             <!--- Copy to School ---->
             <tr>
-                <td class="paperworkLeftColumn">
+                <td width="15%" class="paperworkLeftColumn">
                     <input type="checkbox" name="copy_app_school" id="copy_app_school" value="1" class="editPage displayNone" <cfif FORM.copy_app_school EQ 'yes'>checked="checked"</cfif> >
-               </td>
-               <td>     
-                    <label for="copy_app_school">Copy to School</label>
-                </td>
-            </tr>
-
-            <!--- Copy to Supervising Representative ---->
-            <tr>
-                <td class="paperworkLeftColumn">
-                    <input type="checkbox" name="copy_app_super" id="copy_app_super" value="1" class="editPage displayNone" <cfif FORM.copy_app_super EQ 'yes'>checked="checked"</cfif> >
-               </td>
-               <td>     
-                    <label for="copy_app_super">Copy to Supervising Representative</label>
-                </td>
+               	</td>
+               	<td width="85%"><label for="copy_app_school">Copy to School</label></td>
             </tr>
         </table>   
         
