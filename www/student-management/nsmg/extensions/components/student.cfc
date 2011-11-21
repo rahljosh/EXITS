@@ -706,7 +706,7 @@
 			
 			var vUpdateDatePlaced = 0;
 			
-			// Set Placement Date if Approved by NY Office - Only first time approval
+			// Set Placement Date if Approved by Headquarters - Only first time approval
 			if ( ListFind("1,2,3,4", ARGUMENTS.userType) AND NOT IsDate(qGetStudentInfo.datePlaced) ) {
 				vUpdateDatePlaced = 1;
 			}
@@ -726,7 +726,7 @@
                 	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
 		</cfquery>
         
-        <!--- Set Placement Date on the history if Approved by NY Office - Only first time approval--->
+        <!--- Set Placement Date on the history if Approved by Headquarters - Only first time approval--->
         <cfif VAL(vUpdateDatePlaced)>
         	
             <cfscript>
@@ -956,7 +956,7 @@
 			switch(ARGUMENTS.userType) { 
 				
 				case 1: case 2: case 3: case 4:
-					vUpdatedBy = 'NY Office';
+					vUpdatedBy = 'Headquarters';
 					break; 
 					
 				case 5: 
@@ -1095,7 +1095,7 @@
 			switch(ARGUMENTS.userType) { 
 				
 				case 1: case 2: case 3: case 4:
-					vUpdatedBy = 'NY Office';
+					vUpdatedBy = 'Headquarters';
 					break; 
 					
 				case 5: 
@@ -3710,7 +3710,7 @@
                             ny_date_rejected = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,  
                         </cfcase>
 
-						<!--- NY Office --->
+						<!--- Headquarters --->
                         <cfcase value="office">
                             ny_user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.approvedBy)#">,
 							<cfif VAL(ARGUMENTS.isApproved)>
@@ -3919,7 +3919,7 @@
                     SET
                         <cfswitch expression="#ARGUMENTS.userType#">
                         	
-                            <!--- NY Office --->
+                            <!--- Headquarters --->
                         	<cfcase value="1,2,3,4">
                                 ny_date_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
                                 ny_date_rejected = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
