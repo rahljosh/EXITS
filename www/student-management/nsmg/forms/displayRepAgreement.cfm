@@ -99,7 +99,7 @@ where userid = #client.userid#
 </cfquery>
 
 <Cfif isDefined('form.sign')>
- 	<Cfset expectedSig = '#repInfo.firstname# #repInfo.lastname#'>
+ 	<Cfset expectedSig = '#trim(repInfo.firstname)# #trim(repInfo.lastname)#'>
     <Cfif #trim(form.Signature)# is #trim(expectedSig)#>
     	<Cfset sigMatch = 0>
     <cfelse>

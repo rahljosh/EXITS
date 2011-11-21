@@ -98,7 +98,7 @@ body {
 
 
 <Cfif isDefined('form.sign')>
-	<Cfset expectedSig = '#qGetUserInfo.firstname# #qGetUserInfo.lastname#'>
+	<Cfset expectedSig = '#trim(qGetUserInfo.firstname)# #trim(qGetUserInfo.lastname)#'>
     <Cfif #trim(form.Signature)# is #trim(expectedSig)#>
     	<Cfset sigMatch = 0>
     <cfelse>
@@ -237,7 +237,7 @@ body {
                     <cfinvokeargument name="email_file" value="C:/websites/student-management/nsmg/uploadedfiles/users/#client.userid#/Season#season#cbcAuthorization.pdf">
                 </cfinvoke>	
             
-             <Cfif qGetUserInfo.accountCreationVerified is '' or qGetUserInfo.accountCreationVerified eq 0>  
+             <Cfif (qGetUserInfo.accountCreationVerified is '')>  
               <cfsavecontent variable="programEmailMessage">
                 <cfoutput>				
                
