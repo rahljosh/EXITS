@@ -211,7 +211,7 @@ $(document).ready(function() {
 				</tr>
 				<tr>
 					<td valign="top">
-                    <Cfif get_latest_status.status gte 8>
+                    <Cfif get_latest_status.status gte 8 AND NOT ListFind("1,2,3,4", CLIENT.userType)>
                     	#qAppPrograms.app_program#
                         <input type="hidden" value="#qAppPrograms.app_programid#" name="app_indicated_program">
                     <cfelse>
@@ -223,7 +223,7 @@ $(document).ready(function() {
 						</cfselect>
                      </Cfif>
                         <br><br><em>Specific Program</em><Br>
-                 <cfif get_latest_status.status gte 8>
+                 <cfif get_latest_status.status gte 8 AND NOT ListFind("1,2,3,4", CLIENT.userType)>
                  		<Cfquery name="qProgramName" datasource="#application.dsn#">
                         select programName
                         from smg_programs 
