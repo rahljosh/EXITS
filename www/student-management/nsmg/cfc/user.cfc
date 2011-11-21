@@ -335,14 +335,15 @@
     		</cfif>
             
         </cfif>
-<!----Determining what time frame / date to use.  DOSCertificationNeeded.cfm is in place, this just needs to be uncommented and the date trime frame updated to what ever is needed.----->
-<!----Block users who have not taken the DOS training---->
+        
+	<!----Determining what time frame / date to use.  DOSCertificationNeeded.cfm is in place, this just needs to be uncommented and the date trime frame updated to what ever is needed.----->
+    <!----Block users who have not taken the DOS training---->
 
 	<!----List to allow companies to by pass DOS test.  (1,2,3,4,5,12) ---->
         <cfif listfind("1,2,3,4,5,10,12", CLIENT.companyid)>
 
 			<!---- For Accounts Created after Sept 1, 2010 / Check if WebEX Training has been completed ---->
-            <cfif listfind('5,6,7', CLIENT.usertype) AND DateDiff('d',qAuthenticateUser.trainingDeadlineDate, now()) GTE 21>
+            <cfif listfind('5,6,7', CLIENT.usertype) AND DateDiff('d',qAuthenticateUser.trainingDeadlineDate, now()) GTE 21 AND NOT APPLICATION.IsServerLocal>
                 
                     <cfquery name="DOSCertification" datasource="#application.dsn#">
                         SELECT

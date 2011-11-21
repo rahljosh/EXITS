@@ -426,8 +426,13 @@
 			FORM.placeRepID = qGetStudentInfo.placeRepID;
 			FORM.areaRepID = qGetStudentInfo.areaRepID;
 			FORM.secondVisitRepID = qGetStudentInfo.secondVisitRepID;
-			FORM.doublePlace = qGetStudentInfo.doublePlace;
-
+			FORM.doublePlace = qGetStudentInfo.doublePlace;		
+			
+			// Set subAction to placementInformation if any information is missing
+			if ( vPlacementStatus EQ 'Incomplete' ) {
+				FORM.subAction = 'placementInformation';	
+			}
+			
 		}
 		
 		// Set number of errors
@@ -1413,7 +1418,7 @@
         					
                             <cfelseif CLIENT.userType EQ 7>
                             	
-                                2<sup>nd</sup> Representative will be assigned by your Regional Advisor/Manager.
+                                2<sup>nd</sup> Representative will be assigned by your Regional Manager.
                             
                             </cfif>
                         
