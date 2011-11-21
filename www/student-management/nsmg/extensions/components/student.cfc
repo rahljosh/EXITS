@@ -1544,7 +1544,7 @@
 					insertPlacementTracking(
 						historyID=vHostHistoryID,
 						studentID=ARGUMENTS.studentID,
-						fieldName='doublePlace',
+						fieldName='doublePlacementID',
 						fieldID=ARGUMENTS.doublePlace
 					);
 				
@@ -1640,7 +1640,7 @@
 				insertPlacementTracking(
 					historyID=vHostHistoryID,
 					studentID=ARGUMENTS.studentID,
-					fieldName='doublePlace',
+					fieldName='doublePlacementID',
 					fieldID=ARGUMENTS.doublePlace
 				);
 			

@@ -489,16 +489,16 @@
                 <cfif qGetActionsHistory.recordCount>
                     <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
                         <tr bgcolor="###iif(qGetPlacementHistory.currentrow MOD 2 ,DE("edeff4") ,DE("FFFFFF") )#">
-                            <td class="reportTitleLeftClean" width="20%">Date</td>
-                            <td class="reportTitleLeftClean" width="80%">Actions</td>
+                            <td class="reportTitleLeftClean" width="25%">Date</td>
+                            <td class="reportTitleLeftClean" width="75%">Actions</td>
                         </tr>
                     </table>
                     
                     <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section paperwork" align="center">
                         <cfloop query="qGetActionsHistory">
                             <tr>
-                                <td valign="top" width="20%">#DateFormat(qGetActionsHistory.dateUpdated, 'mm/dd/yyyy')# at #TimeFormat(qGetActionsHistory.dateUpdated, 'hh:mm tt')# <!--- EST ---></td>
-                                <td width="80%">#qGetActionsHistory.actions#</td>
+                                <td valign="top" width="25%">#DateFormat(qGetActionsHistory.dateUpdated, 'mm/dd/yyyy')# at #TimeFormat(qGetActionsHistory.dateUpdated, 'hh:mm tt')# <!--- EST ---></td>
+                                <td width="75%">#qGetActionsHistory.actions#</td>
                             </tr>                        
                         </cfloop>
 					</table>                        
