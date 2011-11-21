@@ -318,7 +318,7 @@
                 <table  align="center" border="0" cellpadding="4" cellspacing="0" width="800">
                     <tr>           
                         <td colspan=5 align="center"><img src="../pics/HFbanner.png" /></Td>
-                    </td>
+                    </tr>
                     <tr>
                         <td valign="top">
     
@@ -366,7 +366,7 @@
 							<!----Address & Contact Info----> 
                             <Table>
                                 <tr>
-                                	<td width="100" valign="top"><span class="title">Address:</td>
+                                	<td width="100" valign="top"><span class="title">Address:</span></td>
 	                                <td>
                                     	#qGetHostFamily.address#<br />
     		                            <a href="http://en.wikipedia.org/wiki/#qGetHostFamily.city#,_#qGetHostFamily.state#" target="_blank" class="wiki">#qGetHostFamily.city# #qGetHostFamily.state# </a>, #qGetHostFamily.zip#
@@ -734,9 +734,9 @@
             
             <!--- Save PDF File --->
             
-            <cffile action="write" file="#AppPath.temp##qGetStudentInfo.studentID#-placementInfo.pdf" output="#profile#" nameconflict="overwrite">    
+            <cffile action="write" file="#APPLICATION.PATH.TEMP##qGetStudentInfo.studentID#-placementInfo.pdf" output="#profile#" nameconflict="overwrite">    
             
-            <cfdocument filename="#AppPath.temp##CLIENT.studentid#-idCard.pdf" format="PDF" backgroundvisible="yes" overwrite="yes" fontembed="yes" localurl="no">
+            <cfdocument filename="#APPLICATION.PATH.TEMP##qGetStudentInfo.studentID#-idCard.pdf" format="PDF" backgroundvisible="yes" overwrite="yes" fontembed="yes" localurl="no">
 
                 <cfscript>
 					// form.pr_id and form.report_mode are required for the progress report in print mode.
@@ -757,9 +757,9 @@
                 <cfinvokeargument name="email_message" value="#emailMessage#">
                 <cfinvokeargument name="email_from" value="""#qGetCompany.companyshort_nocolor# - #qGetFacilitator.firstname# #qGetFacilitator.lastname#"" <#qGetFacilitator.email#>">
                 <!--- Attach Students Profile  --->
-                <cfinvokeargument name="email_file" value="#AppPath.temp##qGetStudentInfo.studentID#-placementInfo.pdf">
+                <cfinvokeargument name="email_file" value="#APPLICATION.PATH.temp##qGetStudentInfo.studentID#-placementInfo.pdf">
          		<!----Attach the ID Card---->       
-                <cfinvokeargument name="email_file2" value="#AppPath.temp##qGetStudentInfo.studentID#-idCard.pdf">
+                <cfinvokeargument name="email_file2" value="#APPLICATION.PATH.temp##qGetStudentInfo.studentID#-idCard.pdf">
             </cfinvoke>
         
             <script language="JavaScript">
