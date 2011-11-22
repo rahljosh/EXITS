@@ -25,16 +25,22 @@
     <!--- Param FORM Variables --->    
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.emailTo" default="">
+    <cfparam name="FORM.NewDatePlaced" default="">
 
-	<!---
-    <Cfif isDefined('form.NewDatePlaced')>
+    <cfif IsDate(FORM.NewDatePlaced)>
+    
         <cfquery name="updatePlacementDate" datasource="#APPLICATION.DSN#">
-        update smg_students
-        set date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_date" value="#form.newDatePlaced#">
-        where uniqueID = <cfqueryparam cfsqltype="integer" value="#url.uniqueID#">
-        </Cfquery>
-    </Cfif>
-    --->
+        	UPDATE 
+				smg_students
+        	SET
+				datePlaced = <cfqueryparam cfsqltype="cf_sql_date" value="#form.newDatePlaced#">
+        	WHERE
+				uniqueID = <cfqueryparam cfsqltype="integer" value="#url.uniqueID#">
+        </cfquery>
+        
+        <cflocation url="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" addtoken="no">
+        
+    </cfif>
             
     <cfscript>
 		// Create Structure to store errors
@@ -123,8 +129,6 @@
         	smg_hosthistory
         WHERE 
         	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentid#">
-        AND
-        	isRelocation = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         ORDER BY 
         	historyid DESC
     </cfquery>
@@ -139,7 +143,27 @@
         	liveathome = 'yes'
     </cfquery>
     
+    <cfscript>
+		father=0;
+		mother=0;
+		
+		if ( LEN(qGetHostFamily.fatherfirstname) ) {
+			father = 1;
+		}
+
+		if ( LEN(qGetHostFamily.motherfirstname) ) {
+			mother = 1;
+		}
+		
+		totalfam = mother + father + kidsAtHome.recordcount;
+	</cfscript>
+    
 </cfsilent>
+
+<!--- Page Header --->
+<gui:pageHeader
+	headerType="applicationNoHeader"
+/>	
 
 <script language="javascript">
 	function enableButtons() {
@@ -147,16 +171,6 @@
 		window.close();
 	}
 </script>
-
-<Cfset father=0>
-<cfset mother=0>
-<Cfif qGetHostFamily.fatherfirstname is not ''>
-	<cfset father = 1>
-</Cfif>
-<Cfif qGetHostFamily.motherfirstname is not ''>
-	<cfset mother = 1>
-</Cfif>
-<cfset totalfam = mother + father + kidsAtHome.recordcount>
 
 <Cfoutput>
 
@@ -188,15 +202,16 @@
 <cfsavecontent variable="openPrint">
 
     <body onLoad="print();">
-    <!----
-        <table width="800" border="0" cellpadding="2" cellspacing="2" class="section"  align="Center" bgcolor="##D6F9D5">
-            <tr>
-                <td width=50%>PRINTED: #DateFormat(now(), 'mmm. d, yyyy')# at #TimeFormat(now(), 'HH:mm')# by #CLIENT.name#</td>
-                <td align="right"><a href="PlacementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#&showemail"><img src="../pics/email.gif" border="0" alt=" Email "></a></td>
-            </tr>
-        </table>
-    </body>
----->
+    	<!----
+			<table width="800" border="0" cellpadding="2" cellspacing="2" class="section"  align="Center" bgcolor="##D6F9D5">
+				<tr>
+					<td width=50%>PRINTED: #DateFormat(now(), 'mmm. d, yyyy')# at #TimeFormat(now(), 'HH:mm')# by #CLIENT.name#</td>
+					<td align="right"><a href="PlacementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#&showemail"><img src="../pics/email.gif" border="0" alt=" Email "></a></td>
+				</tr>
+			</table>
+		---->
+	</body>
+	
 </cfsavecontent>
 
 <!--- Save Email Option as Link --->
@@ -207,7 +222,7 @@
         <input type="hidden" name="uniqueID" value="#qGetStudentInfo.uniqueID#" />
         <input type="hidden" name="profileType" value="email" />
         
-        <table width="800" border="0" cellpadding="2" cellspacing="2" class="section"  align="Center" bgcolor="##D6F9D5">
+        <table class="profileTable" align="center">
 			<!--- Display Errors --->
             <cfif VAL(ArrayLen(Errors.Messages))>
                 <tr>
@@ -231,21 +246,14 @@
                     <a href="PlacementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#&print=1"><img src="../pics/print.png"  border="0" alt=" Print "></a>
                 </td>
             </tr>
-            <!----Only allow Josh-1, Brian-12313, Diana - 1077, Marcus - 510, Bill - 8731, Bob - 8743, Gary -12431 to change the dates---->
-            <cfif client.userid eq 1 or 
-			      client.userid eq 12313 or  
-				  client.userid eq 1077 or 
-				  client.userid eq 510 or 
-				  client.userid eq 8731 or 
-				  client.userid eq 8743 or 
-				  client.userid eq 12431>
+            
+            <!----Only allow Josh-1, Brian-12313, Marcus - 510, Bill - 8731, Bob - 8743, Gary -12431 to change the dates---->
+            <cfif IsDate(qGetStudentInfo.datePlaced) AND listFind("1,12313,510,8731,8743,12431", CLIENT.userID)>			  
                  <tr>	
                     <td align="Center" valign="center">
-                       Placement Date: &nbsp; <input name="NewDatePlaced" type="text" size=15 value="#DateFormat(qGetStudentInfo.date_host_fam_approved, 'mm/dd/yyyy')#">		
+                       Placement Date: &nbsp; <input name="NewDatePlaced" type="text" value="#DateFormat(qGetStudentInfo.datePlaced, 'mm/dd/yyyy')#" class="datePicker">		
                     </td>
-                    <td calign="Center">
-                        
-                    </td>
+                    <td calign="Center">&nbsp;</td>
                 </tr>
             </cfif>
 			
@@ -308,7 +316,7 @@
                     </div>
 				</cfif>
                 
-				<cfif VAL(qGetHistory.recordcount)>
+				<cfif VAL(qGetHistory.isRelocation)>
                     <div class="alert" align="Center">
                         <h3>This is a relocation. The student will be moving to this host family and/or school shortly.</h3>
                     </div>
@@ -383,12 +391,7 @@
                                
                                 <tr>
                                 	<td width="100" valign="top"><span class="title">Placed: </span></td>
-                                    <td>
-                                   
-                                    #DateFormat(qGetStudentInfo.date_host_fam_approved, 'mmmm d, yyyy')#
-                                   
-                                    </td>
-                                	
+                                    <td>#DateFormat(qGetStudentInfo.datePlaced, 'mmmm d, yyyy')#</td>
                                 </tr>
 								
                             </table>
@@ -649,7 +652,7 @@
                                     <td>
 										<cfif LEN(qGetStudentInfo.placement_notes)>#qGetStudentInfo.placement_notes#<br /><br /></cfif>		
                                         
-                                        <cfif NOT VAL(qGetHistory.recordcount) OR qGetHistory.isRelocation EQ 'no'>
+                                        <cfif NOT VAL(qGetHistory.isRelocation)>
                                             The student should plan to arrive within five days from start of school. Please advise us of 
                                             #qGetStudentInfo.firstname#'s arrival information as soon as possible. Please upload flight information through EXITS.
                                         </cfif><br />
@@ -801,3 +804,9 @@
 </cfswitch>
 
 </cfoutput>
+
+<!--- Page Footer --->
+<gui:pageFooter
+	footerType="application"
+/>
+
