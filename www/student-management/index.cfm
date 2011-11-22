@@ -15,8 +15,8 @@
 	
 <!--- Relocate to Login Page if we are not at www.student-management.com --->
 <cfif CGI.HTTP_HOST NEQ 'www.student-management.com'>
-    
+
 	<!--- Redirect to Login Page --->
     <cflocation url="login.cfm" addtoken="no">
-    
+
 </cfif>    
