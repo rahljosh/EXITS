@@ -274,29 +274,15 @@ td {
 	 <cfset qGetRegionalManager.email = #client.programmanager_email#>
 </Cfif>
 
- <cfquery 
-			name="qGetRegionalAdviser" datasource="#APPLICATION.dsn#">
-                SELECT 
-                	u.userid,
-                    u.firstName,
-                    u.lastName,
-                    u.email,
-                    u.phone,
-                    u.work_phone,
-                    r.regionName
-                FROM 
-                	smg_users u
-                INNER JOIN 
-                	user_access_rights uar ON u.userid = uar.userid
-				INNER JOIN
-                	smg_regions r ON r.regionID = uar.regionID                    
-                WHERE 
-                	u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                AND 
-                    uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="6">
-                AND 
-                	uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.regionID#">
-</cfquery>
+			<cfquery name="qGetRegionalAdviser" datasource="#APPLICATION.dsn#">
+                select uar.advisorid, u.email
+                from user_access_rights uar
+                LEFT JOIN smg_users u on u.userid = uar.advisorid
+                where uar.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+			</cfquery>
+<cfif qGetRegionalAdviser.recordcount eq 0>
+	<Cfset qGetRegionalAdviser.email = ''>
+</cfif>
 <div class="wrapper">
  
 <div class="greyHeader">
