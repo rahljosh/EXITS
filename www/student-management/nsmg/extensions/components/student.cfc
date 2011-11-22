@@ -3364,6 +3364,7 @@
 			// Get Formatted Flight Information
 			flightInfoReport = printFlightInformation(
 				studentID=ARGUMENTS.studentID,
+				programID=qGetStudentFullInformation.programID,
 				flightID=ARGUMENTS.flightID,
 				sendEmailTo=ARGUMENTS.sendEmailTo,
 				isPHPStudent=ARGUMENTS.isPHPStudent
