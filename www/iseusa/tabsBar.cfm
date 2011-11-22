@@ -34,7 +34,7 @@
 	<!--- All other pages --->
     <div class="tabsBar">
         <a href="#APPLICATION.siteURL#meet-our-students.cfm" class="tabs1"></a>
-        <Cfif cgi.SCRIPT_NAME is '/become-a-host-familyJW.cfm'>
+        <Cfif cgi.SCRIPT_NAME is '/become-a-host-family.cfm'>
             <a href="#APPLICATION.siteURL#become-a-host-family.cfm" class="tabs2selected"></a>
         <cfelse>
             <a href="#APPLICATION.siteURL#become-a-host-family.cfm" class="tabs2"></a>
