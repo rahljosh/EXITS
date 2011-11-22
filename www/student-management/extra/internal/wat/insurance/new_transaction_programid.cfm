@@ -17,6 +17,7 @@
     <cfparam name="FORM.intrep" default="">
     <cfparam name="FORM.extra_insurance_typeid" default="">
     <cfparam name="FORM.verification_received" default="">
+    <cfparam name="FORM.getDatesFrom" default="">
 
 	<cfscript>
 		if ( NOT VAL(FORM.programid) ) {
@@ -34,11 +35,16 @@
 			abort;
 		}
 		
+		if ( NOT ListFind("program,flightInformation", FORM.getDatesFrom) ) {
+			WriteOutput( "Please select get dates from option");
+			abort;
+		}
+		
 		// Set XLS File Name
 		XLSFileName = 'WAT_Enroll_Confort50L_#DateFormat(now(),'mm-dd-yyyy')#_#TimeFormat(now(),'hh-mm-ss-tt')#.xls';
 	</cfscript>
 
-	<!--- get student info --->
+	<!--- Get Candidates --->
     <cfquery name="qGetCandidates" datasource="MySQL">
         SELECT 
             c.candidateID, 
@@ -87,8 +93,6 @@
             u.businessname, 
             c.lastname, 
             c.firstname
-            
-        LIMIT 1
     </cfquery>
 
 	<cfscript>
@@ -137,28 +141,50 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
         </tr>
         <cfloop query="qGetCandidates">
             
+            <cfscript>
+				vStartDate = qGetCandidates.startDate;
+				vEndDate = qGetCandidates.endDate;
+				
+				if ( FORM.getDatesFrom EQ 'flightInformation' ) {
+
+					// Get Arrival Information
+					vStartDate = APPLICATION.CFC.FLIGHTINFORMATION.getFlightInformationByCandidateID(
+						candidateID=qGetCandidates.candidateID,
+						flightType='arrival'
+					).departDate;
+				
+					// Get Departure Information
+					vEndDate = APPLICATION.CFC.FLIGHTINFORMATION.getFlightInformationByCandidateID(
+						candidateID=qGetCandidates.candidateID,
+						flightType='departure',
+						getLastLeg=1
+					).departDate;
+
+				}
+			</cfscript>
+            
             <tr>
                 <td>#qGetCandidates.lastName#</td>
                 <td>#qGetCandidates.firstName#</td>
                 <td>#DateFormat(qGetCandidates.dob, 'dd/mmm/yyyy')#</td>
                 <td>
-                    <cfif IsDate(qGetCandidates.startDate)>
-                        #DateFormat(qGetCandidates.startDate, 'dd/mmm/yyyy')#
+                    <cfif IsDate(vStartDate)>
+                        #DateFormat(vStartDate, 'dd/mmm/yyyy')#
                     <cfelse>
-                        Missing
+                        MISSING
                     </cfif>
                 </td>
                 <td>
-                    <cfif IsDate(qGetCandidates.endDate)>
-                        #DateFormat(qGetCandidates.endDate, 'dd/mmm/yyyy')#
+                    <cfif IsDate(vEndDate)>
+                        #DateFormat(vEndDate, 'dd/mmm/yyyy')#
                     <cfelse>
-                        Missing
+                        MISSING
                     </cfif>
                 </td>
                 <td>&nbsp;</td>
                 <td>
-                  	<cfif IsDate(qGetCandidates.startDate) AND IsDate(qGetCandidates.endDate)>
-                    	#DateDiff("d", qGetCandidates.startDate, qGetCandidates.endDate)#
+                  	<cfif IsDate(vStartDate) AND IsDate(vEndDate)>
+                    	#DateDiff("d", vStartDate, vEndDate)#
                     </cfif>             
     			</td>            
                 <td>
@@ -170,7 +196,8 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                 </td>                              
             </tr>
             
-            <cfif LEN(qGetCandidates.policycode) AND IsDate(qGetCandidates.startDate) AND IsDate(qGetCandidates.endDate)>
+            <!---
+            <cfif LEN(qGetCandidates.policycode) AND IsDate(vStartDate) AND IsDate(vEndDate)>
 
                     <cfquery datasource="MySql">
                         UPDATE 
@@ -207,8 +234,8 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidates.sex#">, 
                             <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidates.dob#">, 
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidates.countrycode#">,
-                            <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidates.startdate#">, 
-                            <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidates.enddate#">, 
+                            <cfqueryparam cfsqltype="cf_sql_date" value="#vStartDate#">, 
+                            <cfqueryparam cfsqltype="cf_sql_date" value="#vEndDate#">, 
                             <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="new">, 
                             <cfqueryparam cfsqltype="cf_sql_integer" value="1">
@@ -216,6 +243,7 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                     </cfquery>
 	
             </cfif>
+            --->
             
         </cfloop>
         

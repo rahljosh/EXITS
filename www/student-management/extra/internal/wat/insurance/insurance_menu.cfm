@@ -17,7 +17,8 @@
     <cfparam name="FORM.intRep" default="0">
     <cfparam name="FORM.verification_received" default="">
     <cfparam name="FORM.submitted" default="0">
-
+    <cfparam name="FORM.getDatesFrom" default="program">
+    
     <cfquery name="qGetInsuranceTypeList" datasource="MySql">
         SELECT 
         	insutypeid, type
@@ -137,6 +138,17 @@
                                                     bind="cfc:extra.extensions.components.user.getVerificationDate({intRep},{programID})" /> 
 											</td>
 										</tr>
+                                        
+                                        <tr>
+											<td class="style1" valign="top">Get Dates From :</td>
+											<td class="style1" align="left">
+                                                <select name="getDatesFrom" id="getDatesFrom" class="style1">
+                                                	<option value="program" <cfif FORM.getDatesFrom EQ 'program' > selected="selected" </cfif> >Use Program Dates</option>
+                                                    <option value="flightInformation" <cfif FORM.getDatesFrom EQ 'flightInformation' > selected="selected" </cfif> >Use Flight Arrival</option>
+                                                </select>
+											</td>
+										</tr>
+
 										<tr>
 											<td class="style1">Insurance Type</td>
 											<td><cfselect name="extra_insurance_typeid" query="qGetInsuranceTypeList" value="insutypeid" display="type" class="style1" /></td>
