@@ -622,7 +622,7 @@
 					secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
                     isWelcomeFamily = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
                     doubleplace = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
-                    host_fam_approved = <cfqueryparam cfsqltype="cf_sql_bit" value="10">,
+                    host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="10">,
                     date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     datePlaced = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     datePISEmailed = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
@@ -1414,7 +1414,7 @@
 					UPDATE
                     	smg_students
                     SET
-                        host_fam_approved = <cfqueryparam cfsqltype="cf_sql_bit" value="10">,
+                        host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="10">,
                         date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                         datePlaced = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                         datePISEmailed = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
