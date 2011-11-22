@@ -177,10 +177,17 @@
 <!----Approve Link---->
 <cfsavecontent variable="approveLink">
 
-    <table width="800" border="0" cellpadding="2" cellspacing="2" class="section"  align="Center" bgcolor="##D6F9D5">
+    <table class="profileTable" align="center" style="margin-top:10px;">
         <tr>
             <Td align="center">
-			    <a href="javascript:enableButtons()">I have read and checked the Placement Letter Above and am ready to Approve or Deny. <br /> Clicking continue will close this window and enable the Approve/Deny button on the placement menu.<br /><img src="../pics/continue.gif" border="0"></a><br />
+			    <a href="javascript:enableButtons();">
+                	I have read and checked the Placement Letter Above and am ready to Approve or Deny. 
+                    <br /> 
+                    Clicking continue will close this window and enable the Approve/Deny button on the placement menu.
+                    <br />
+                    <img src="../pics/continue.gif" border="0">
+                </a>
+                <br />
             </td>
         </tr>
     </table>
@@ -236,7 +243,7 @@
             </cfif>	
             <tr>	
                 <td align="Center" valign="center">
-                    Send this profile to: &nbsp; <input type="text" name="emailTo" value="#qIntlRep.email#" size="30" maxlength="100" />			
+                    Send this PIS to: &nbsp; <input type="text" name="emailTo" value="#qIntlRep.email#" size="30" maxlength="100" />			
                 </td>
                 <td calign="Center">
                     <input name="Submit" type="image" src="../pics/submit.gif" border="0" alt=" Send Email ">
