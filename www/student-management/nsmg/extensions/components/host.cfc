@@ -523,6 +523,12 @@
 	</cffunction>
 
 
+	<!--- ------------------------------------------------------------------------- ----
+		
+		HOST LEADS
+	
+	----- ------------------------------------------------------------------------- --->
+
 	<cffunction name="getHostLeads" access="public" returntype="query" output="false" hint="Gets host leads entered from ISEUSA.com">
         <cfargument name="sortBy" type="string" default="dateCreated" hint="sortBy is not required">
         <cfargument name="sortOrder" type="string" default="ASC" hint="sortOrder is not required">
@@ -1420,5 +1426,121 @@
     <!--- 
 		End of Remote Functions 
 	--->
+    
+    
+    <!--- 
+		Host Lead Reports 
+	--->
+	<cffunction name="getHostLeadFollowUpReport" access="public" returntype="query" output="false" hint="Gets host leads report">
+        <cfargument name="followUpID" type="numeric" default="0" hint="followUpID is not required">
+        <cfargument name="regionID" type="string" default="0" hint="regionID is not required">
+        <cfargument name="statusID" type="string" default="" hint="statusID is not required">
+        <cfargument name="dateFrom" type="string" default="" hint="dateFrom is not required">
+        <cfargument name="dateTo" type="string" default="" hint="dateTo is not required">
+        
+        <cfquery 
+			name="qGetHostLeadFollowUpReport" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+					hl.ID,
+                    hl.hashID,
+                    hl.statusID,
+                    hl.followUpID,
+                    hl.regionID,
+                    hl.areaRepID,
+                    hl.firstName,
+                    hl.lastName,
+                    hl.address,
+                    hl.address2,
+                    hl.city,
+                    hl.zipCode,
+                    hl.phone,
+                    hl.email,
+                    hl.hearAboutUs,
+                    hl.hearAboutUsDetail,
+                    hl.isListSubscriber,
+                    DATE_FORMAT(hl.dateCreated, '%m/%e/%Y') as dateCreated,
+                    DATE_FORMAT(hl.dateLastLoggedIn, '%m/%e/%Y') as dateLastLoggedIn,
+                    <!--- Follow Up Representative --->
+                    CONCAT(fu.firstName, ' ', fu.lastName) AS followUpAssigned,
+                    <!--- State --->
+                    st.state,
+                    <!--- Region --->
+                    r.regionName AS regionAssigned,
+                    <!--- Area Representative --->
+                    CONCAT(u.firstName, ' ', u.lastName) AS areaRepAssigned,
+                    <!--- Status --->
+                    alk.name AS statusAssigned
+                FROM 
+                    smg_host_lead hl
+                LEFT OUTER JOIN
+                	smg_users fu ON fu.userID = hl.followUpID    
+                LEFT OUTER JOIN
+                	smg_states st ON st.id = hl.stateID
+                LEFT OUTER JOIN
+                	smg_regions r ON r.regionID = hl.regionID
+                LEFT OUTER JOIN
+                	smg_users u ON u.userID = hl.areaRepID    
+                LEFT OUTER JOIN
+                	applicationLookUp alk ON alk.fieldID = hl.statusID 
+						AND
+                        	alk.applicationID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CONSTANTS.type.hostFamilyLead#">
+                    	AND 
+                            alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="hostLeadStatus">
+                WHERE
+                	hl.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+
+                <cfif isDate(ARGUMENTS.dateFrom) AND isDate(ARGUMENTS.dateTo)>
+                	AND 
+                    (
+                        hl.dateCreated 
+                        BETWEEN 
+                        	<cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateFrom#"> 
+	                    AND 
+    	                    <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d', 1, ARGUMENTS.dateTo)#">
+                    )                 	
+                <cfelse>
+                	<!--- Get Only Leads Entered as of 04/01/2011 --->
+                    AND
+                        (
+                            hl.dateCreated >= <cfqueryparam cfsqltype="cf_sql_date" value="2011/04/01">
+                        OR
+                            hl.dateLastLoggedIn IS NOT NULL	
+                        )
+                </cfif>
+
+				<cfif CLIENT.companyID NEQ 5>
+                    AND
+                        r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                </cfif>
+
+				<cfif VAL(ARGUMENTS.followUpID)>
+                    AND
+                        hl.followUpID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.followUpID#">
+                </cfif>
+				
+				<cfif VAL(ARGUMENTS.regionID)>
+                    AND
+                        hl.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
+                </cfif>
+
+                <cfif VAL(ARGUMENTS.statusID)>
+                    AND
+                        hl.statusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.statusID#">
+				</cfif>
+                
+                ORDER BY
+                    hl.dateCreated DESC,
+                    hl.lastName
+		</cfquery>
+		   
+		<cfreturn qGetHostLeadFollowUpReport>
+	</cffunction>    
+
+	<!--- ------------------------------------------------------------------------- ----
+		
+		END OF HOST LEADS
+	
+	----- ------------------------------------------------------------------------- --->
     
 </cfcomponent>

@@ -292,9 +292,14 @@
                     <!--- Host Leads - ISE Only --->
 					<cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
                         <ul>
-                            <li><a href="index.cfm?curdoc=hostLeads/index">Host Family Leads</a></li>   
-                   			<cfif ListFind(#allowedUsers#,'#client.userid#')>
-                                 	<li><a href="index.cfm?curdoc=hostApplication/hostAppIndex">Host Family Apps</a></li>
+                            <li>
+                            	<a href="index.cfm?curdoc=hostLeads/index">Host Family Leads</a>
+                                <ul>
+                                    <li><a href="index.cfm?curdoc=hostLeads/index&action=report">Reports</a></li>
+                                </ul>
+                            </li>   
+                   			<cfif ListFind(allowedUsers, CLIENT.userid)>
+                            	<li><a href="index.cfm?curdoc=hostApplication/hostAppIndex">Host Family Apps</a></li>
                        		</cfif>
                         </ul>
 					</cfif>

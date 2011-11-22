@@ -84,6 +84,7 @@
     	<cfargument name="applicationID" hint="applicationID is required">
     	<cfargument name="foreignTable" hint="foreignTable is required. This is what defines a group of data">
         <cfargument name="foreignID" hint="foreignID is required">
+        <cfargument name="enteredByID" default="" hint="enteredByID is not required">
         <cfargument name="sortBy" type="string" default="dateCreated" hint="sortBy is not required">
         <cfargument name="sortOrder" type="string" default="DESC" hint="sortOrder is not required">
 
@@ -118,6 +119,12 @@
                     ah.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">
                 AND 
                     ah.foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.foreignID#">
+                
+                <cfif VAL(ARGUMENTS.enteredByID)>
+                    AND 
+                        ah.enteredByID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.enteredByID#">
+                </cfif>
+                
                 ORDER BY
 					
                 <cfswitch expression="#ARGUMENTS.sortBy#">
