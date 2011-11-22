@@ -124,7 +124,7 @@ where active = 1
             <cfloop query="questions">
                 <cfquery datasource="#application.dsn#">
                 insert into areaRepQuestionaireAnswers (fk_reportID, fk_questionID, answer)
-                                    values(#reportid.reportid#, #id#, '#Evaluate("form." & id)#')
+                                    values(#reportid.reportid#, #id#, <Cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('form.' & id)#"> )
                 </cfquery>
             </cfloop>
             <body onload="opener.location.reload()">
