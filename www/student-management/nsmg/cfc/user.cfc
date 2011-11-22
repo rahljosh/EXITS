@@ -75,7 +75,7 @@
         <cfset CLIENT.company_submitting = submitting_info.website>
         <cfset APPLICATION.company_short = submitting_info.website>
         <cfset CLIENT.app_menu_comp = CLIENT.companyid>
-        <cfset CLIENT.exits_url = "http://" & submitting_info.url_ref>
+        <cfset CLIENT.exits_url = "https://" & submitting_info.url_ref>
         <cfset CLIENT.color = submitting_info.company_color>
 
 
