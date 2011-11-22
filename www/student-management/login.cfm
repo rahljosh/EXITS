@@ -1,3 +1,7 @@
+<!----redirect to SSL---->
+	<Cfif cgi.SERVER_PORT eq 80>
+    <cflocation url="https://#cgi.http_host#" addtoken="no">
+    </cfif>
 <!--- Kill Extra Output --->
 <cfsilent>
 
