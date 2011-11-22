@@ -237,10 +237,10 @@ body {
                     <cfinvokeargument name="email_file" value="C:/websites/student-management/nsmg/uploadedfiles/users/#client.userid#/Season#season#cbcAuthorization.pdf">
                 </cfinvoke>	
             
-             <Cfif (qGetUserInfo.accountCreationVerified is '')>  
+             <Cfif qGetUserInfo.accountCreationVerified lt 1>  
               <cfsavecontent variable="programEmailMessage">
                 <cfoutput>				
-               
+                
                 #form.signature# (#userid#) has submitted their CBC authorization. 
                 Please run and review the CBC.<Br><Br>
                 
@@ -251,7 +251,7 @@ body {
                 
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
                 	<!----
-					 **********This emai is sent to the Program Manager*******************<Br>
+					**********This emai is sent to the Program Manager*******************<Br>
                 *****************#progManager.pm_email#<br>**********************
                     <cfinvokeargument name="email_to" value="gary@iseusa.com">      
                     ---->
