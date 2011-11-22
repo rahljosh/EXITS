@@ -77,6 +77,8 @@
                     s.intRep,
                     s.areaRepID,
                     s.placeRepID,
+                    s.doublePlace,
+                    s.secondVisitRepID,
                     s.firstName,
                     s.familyLastName,
                     s.dob,
@@ -600,6 +602,12 @@
         <cfscript>
 			// Get Student Info
 			var qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID);
+			
+            // Get Facilitator Email
+            var qGetFacilitator = APPLICATION.CFC.REGION.getRegionFacilitatorByRegionID(regionID=qGetStudentInfo.regionAssigned);
+			
+            // Get Current User
+            var qGetChangedByUser = APPLICATION.CFC.USER.getUserByID(userID=ARGUMENTS.changedBy);
 		</cfscript>
         
         <cfquery 
@@ -654,7 +662,7 @@
                 WHERE 
                 	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
     	</cfquery>
-        
+
 		<cfscript>
 			// Insert History - It tracks placement statuses only, placement updates are tracked on smg_hostHistory
 			insertPlacementActionHistory(
@@ -687,6 +695,36 @@
 
 			}
         </cfscript>
+
+		<!--- Email Facilitator --->        
+        <cfif IsValid("email", qGetFacilitator.email)>
+        
+            <!--- Email Template --->
+            <cfsavecontent variable="vEmailUnplaceNotification">
+                <cfoutput>
+                    <p>Dear #qGetFacilitator.firstName# #qGetFacilitator.lastName#,</p>
+                    
+                    <p>
+                        This e-mail is to inform you that #qGetStudentInfo.firstName# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#) 
+                        - Region #qGetFacilitator.regionName# has been <strong>unplaced</strong> as of <strong>#DateFormat(now(), 'mm/dd/yyyy')#</strong> 
+                        by #qGetChangedByUser.firstName# #qGetChangedByUser.lastName# (###qGetChangedByUser.userID#).
+                    </p>
+                    
+                    <p>
+                        Reason for unplacing the student: #ARGUMENTS.reason#
+                    </p>
+                </cfoutput>                
+            </cfsavecontent>
+        
+			<!--- Email Placing Representative and Regional Manager --->
+            <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                <cfinvokeargument name="email_to" value="#qGetFacilitator.email#">
+                <cfinvokeargument name="email_subject" value="Unplaced Notification for Student #qGetStudentInfo.firstName# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)">
+                <cfinvokeargument name="email_message" value="#vEmailUnplaceNotification#">
+                <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
+            </cfinvoke>
+        
+        </cfif>
         
     </cffunction>
 
