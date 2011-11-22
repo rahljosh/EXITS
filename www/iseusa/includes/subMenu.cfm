@@ -135,44 +135,44 @@
 
 <div class="menu">
 	<ul>
-<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/why-host-family" target="_self" ><strong>Why Host?</strong></a>
+<li><a href="become-a-host-family.cfm?page=/HostFamily/why-host-family" target="_self" ><strong>Why Host?</strong></a>
 	<ul>
-<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/how-important-hosting" target="_self">How Important is Hosting?</a></li>
-<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/host-family-benefits" target="_self">Benefits from Hosting</a></li>
-<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/hosting-lasts-lifetime" target="_self">Hosting Lasts a Lifetime</a></li>
+<li><a href="become-a-host-family.cfm?page=/HostFamily/how-important-hosting" target="_self">How Important is Hosting?</a></li>
+<li><a href="become-a-host-family.cfm?page=/HostFamily/host-family-benefits" target="_self">Benefits from Hosting</a></li>
+<li><a href="become-a-host-family.cfm?page=/HostFamily/hosting-lasts-lifetime" target="_self">Hosting Lasts a Lifetime</a></li>
 	</ul>
 </li>
 
-<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/what-is-a-host" target="_self" ><strong>What is a Host?</strong></a></li>
+<li><a href="become-a-host-family.cfm?page=/HostFamily/what-is-a-host" target="_self" ><strong>What is a Host?</strong></a></li>
 
 <li><a href="?" target="_self" ><strong>Hosting Requirements</strong></a>
 	<ul>
-<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/family-requirements" target="_self">Family Requirements</a></li>
-<li><a href="meet-our-studentsJW.cfm" target="_self" >Host Application</a></li>
+<li><a href="become-a-host-family.cfm?page=/HostFamily/family-requirements" target="_self">Family Requirements</a></li>
+<li><a href="meet-our-students.cfm" target="_self" >Host Application</a></li>
 </ul>
 </li>
 
 <li><a href="index.cfm?page=RefForm" target="_self" ><strong>Resources</strong></a>
 	<ul>
-	<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/host-family-support" target="_self">Support</a></li>
-	<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/rules-policies" target="_self">Rules & Policies</a></li>
-	<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/insurance-information" target="_self">Insurance Information</a></li>
-	<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/cultural-adjustments" target="_self">Cultural Adjustments</a></li>
+	<li><a href="become-a-host-family.cfm?page=/HostFamily/host-family-support" target="_self">Support</a></li>
+	<li><a href="become-a-host-family.cfm?page=/HostFamily/rules-policies" target="_self">Rules & Policies</a></li>
+	<li><a href="become-a-host-family.cfm?page=/HostFamily/insurance-information" target="_self">Insurance Information</a></li>
+	<li><a href="become-a-host-family.cfm?page=/HostFamily/cultural-adjustments" target="_self">Cultural Adjustments</a></li>
 	</ul>
 </li>
 
-<li><a href="meet-our-studentsJW.cfm" target="_self" ><strong>Students</strong></a>
+<li><a href="meet-our-students.cfm" target="_self" ><strong>Students</strong></a>
 	<ul>
-    <li><a href="become-a-host-familyJW.cfm?page=/HostFamily/about-our-students" target="_self">About Our Students</a></li>
-	<li><a href="meet-our-studentsJW.cfm" target="_self">Meet Our Students</a></li>
-	<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/student-have-learned" target="_self">What Students Have Learned</a></li>
+    <li><a href="become-a-host-family.cfm?page=/HostFamily/about-our-students" target="_self">About Our Students</a></li>
+	<li><a href="meet-our-students.cfm" target="_self">Meet Our Students</a></li>
+	<li><a href="become-a-host-family.cfm?page=/HostFamily/student-have-learned" target="_self">What Students Have Learned</a></li>
 	</ul>
 </li>
 
-<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/host-family-faq" target="_self" ><strong>FAQ</strong></a>
+<li><a href="become-a-host-family.cfm?page=/HostFamily/host-family-faq" target="_self" ><strong>FAQ</strong></a>
 <ul>
-	<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/host-family-faq" target="_self">Hosting a Student FAQ</a></li>
-	<li><a href="become-a-host-familyJW.cfm?page=/HostFamily/being-host-family-faq" target="_self">Being a Host Family FAQ</a></li>
+	<li><a href="become-a-host-family.cfm?page=/HostFamily/host-family-faq" target="_self">Hosting a Student FAQ</a></li>
+	<li><a href="become-a-host-family.cfm?page=/HostFamily/being-host-family-faq" target="_self">Being a Host Family FAQ</a></li>
 	</ul>
 </li>
 	</ul>

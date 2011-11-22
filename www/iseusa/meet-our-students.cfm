@@ -349,7 +349,7 @@
                         Please see your login information below.
                         <br /> <br />
                         
-                        Email Address: #qCheckEmail.email#<br />
+                        User: #qCheckEmail.email#<br />
                         Password: #qCheckEmail.password#<br /> <br />
                         
                         Visit <a href="#APPLICATION.siteURL#meet-our-students.cfm">#APPLICATION.siteURL#meet-our-students.cfm</a> to meet our students. <br /> <br />
@@ -697,21 +697,20 @@
             
             <div class="whtMiddle">
             
-		        <p class="header1">Meet Our Students</p>
-        	    
-                <div class="subPic">
-                	
-                    <img src="images/subMeetStudents.png" width="415" height="277" alt="Meet our Students" />
-            
-            		<div class="meetStudentsLogin">
-
-						<!--- Login --->
-                        <cfform name="loginForm" id="loginForm" method="post" action="http://#cgi.SERVER_NAME##cgi.SCRIPT_NAME#" class="#loginFormClass#">
+	          <div class="HformSideR">
+			    <img src="images/hostFamily/HFformPic_03.png" width="392" height="398" />
+                <div class="loginTop"></div>
+                <div class="loginMid">
+<!--- Login --->
+          <cfform name="loginForm" id="loginForm" method="post" action="http://#cgi.SERVER_NAME##cgi.SCRIPT_NAME#" class="#loginFormClass#">
                         <input type="hidden" name="type" value="login" />
-
-							<p class="sub-header">Login</p>
-                            
-                            <p> &nbsp; &nbsp; If you have already submited your contact information, please use the login information you received to login and view incoming students.</p>
+                      
+						<h3>Login</h3>
+                
+                            <p><em>If you have already submited your contact information,<br />
+                            please use the login information you received to login and <br />
+                            and view incoming students.</em></p>
+                            <div class="HFormpicR"><a href="javascript:displayForgotPass();" class="HFform_wtext"><img src="images/hostFamily/HFformPic_09.png" width="100" border="0" /></a><br/><a href="javascript:displayForgotPass();" class="HFform_wtext"> Forgot Password? </a></div>
 							
 							<!--- Display Errors --->
                             <cfif FORM.type EQ 'login' AND VAL(ArrayLen(pageMsg.Errors))>
@@ -726,28 +725,28 @@
                                 </p>
                             </cfif>	
                             
-                            <label for="loginEmail" class="inputLabel">Email Address <span class="requiredField">*</span> </label> 
-                            <cfinput type="text" name="loginEmail" id="loginEmail" value="#FORM.loginEmail#" maxlength="100" class="largeInput" required="yes" message="Please enter a valid email address."  />          							
+                            <label for="loginEmail" class="HFform_wtext">Email Address <span class="requiredField">*</span> </label> 
+                            <cfinput type="text" name="loginEmail" id="loginEmail" value="#FORM.loginEmail#" maxlength="50" class="largeInput" required="yes" message="Please enter a valid email address."  />          							
 
-                            <label for="loginPassword" class="inputLabel">Password <span class="requiredField">*</span> </label>                                   
-                            <cfinput type="password" name="loginPassword" id="loginPassword" maxlength="10" class="largeInput" required="yes" message="Please enter a password." />                                    
+                            <label for="loginPassword" class="HFform_wtext">Password <span class="requiredField">*</span> </label>                                   
+                            <cfinput type="password" name="loginPassword" id="loginPassword" maxlength="50" class="largeInput" required="yes" message="Please enter a password." />                                    
                             
                             <span class="requiredFieldNote">* Required Fields</span>
 							
-                            <input type="image" src="images/submitRed.png" />
+                            <input type="image" src="images/hostFamily/HFform_login.png" />
                             
-                            <a href="javascript:displayForgotPass();"> Forgot Password? </a>
                             
-                        </cfform>
+                            
+                </cfform>
 
 
 						<!--- Forgot Password Form --->
                         <cfform name="forgotPassForm" id="forgotPassForm" method="post" action="http://#cgi.SERVER_NAME##cgi.SCRIPT_NAME#" class="#forgotPassClass#">
                         <input type="hidden" name="type" value="forgotPassword" />
 							
-                            <h1> Retrieve Password </h1>
+                            <h3> Retrieve Password </h3>
 
-                            <p> &nbsp; &nbsp; Please enter your email address to have your password emailed to you.</p>
+                            <p> <em>Please enter your email address to have your password<br />emailed to you.</em></p>
 
 							<!--- Display Messages/Errors --->
                             <cfif FORM.type EQ 'forgotPassword' AND VAL(ArrayLen(pageMsg.Messages))>
@@ -770,43 +769,33 @@
                                 </p>
                             </cfif>	
                             
-                            <label for="loginEmail" class="inputLabel">Email Address <span class="requiredField">*</span> </label> 
+                            <label for="loginEmail" class="HFform_wtext">Email Address <span class="requiredField">*</span> </label> 
                             <cfinput type="text" name="loginEmail" id="loginEmail" value="#FORM.loginEmail#" maxlength="100" class="largeInput" required="yes" message="Please enter a valid email address."  />          							
                             
                             <span class="requiredFieldNote">* Required Field</span>
 							
-                            <input type="image" src="images/submitRed.png" />
+                            <input type="image" src="images/hostFamily/HFform_submit.png" /><br /><br />
                             
-                            <a href="javascript:displayForgotPass();"> Back to Login </a>
+                            <a href="javascript:displayForgotPass();" class="HFform_wtext"> Back to Login </a>
                             
-                        </cfform>
-                        
-					</div> <!-- end loginbox -->
-                    
-				</div><!-- end subPic -->
-                
-                <div class="meetStudentsForm">
-					
-                    <p class="sub-header">Register</p>
-                    
-                    <!--- Check if user is allowed to register --->
+                        </cfform><!--end loginMid--></div>
+                <div class="loginBot"></div>
+<!--end HformSideR--></div>
+        <div class="HformSideL">
+         <!--- Check if user is allowed to register --->
                     <cfif allowAccess>
                     	
 						<cfif FORM.type EQ 'newAccount' AND NOT VAL(ArrayLen(pageMsg.Errors))>
 
                             <!--- Thank You For Registering --->
-                            <div style="height:510px;">
+                            <div style="width:290px;">
                             
-                                <p class="pageMessage">
-                                	Thank you for registering with ISE. <br /><br />
+<p class="pageMessage">Thank you for registering with ISE. <br /><br />
+             Your login information has been sent to the email address provided. <br /><br />
+              Please follow the instructions on the email to meet our students. <br /><br />
+              Please click on "Forgot Password" and enter your email address to have your login information re-sent to you. <br /><br />
                                     
-                                    Your login information has been sent to the email address provided. <br /><br />
-                                                                        
-                                    Please follow the instructions on the email to meet our students. <br /><br />
-                                    
-                                    Please click on "Forgot Password" and enter your email address to have your login information re-sent to you. <br /><br />
-                                    
-                                    If you have any questions, please contact us at <a href="mailto:support@iseusa.com">support@iseusa.com</a> <br /><br />
+             If you have any questions, please contact us at <a href="mailto:support@iseusa.com">support@iseusa.com</a> <br /><br />
 
                                		International Student Exchange
                                 </p>
@@ -814,73 +803,73 @@
                             </div>
 						
                         <cfelse>
-							<!--- Registration Form --->
-                            
-                            <p>&nbsp; &nbsp; Fill out this form to learn more about our students and hosting through ISE! Our students are great ambassadors of their home countries and are excited to bring their cultures to communities in the United States.</p>
-                            <p>&nbsp; &nbsp; In order to protect the privacy of our students, we do ask that you provide your name and address in order to ensure the utmost security of our students. </p>
-                            <p>&nbsp; &nbsp; Once you register, you will be permitted to view select student profiles. </p>
-                        
-                            <!--- Display Errors --->
-                            <cfif FORM.type EQ 'newAccount' AND VAL(ArrayLen(pageMsg.Errors))>
+                        <!--- Registration Form --->	
+     <br />
+     <img src="images/hostFamily/BeaHost.png" /><br />
+     <h4>Fill out this form to learn more about being a host family through ISE!</h4>
+<p>Our students are great ambassadors of their home countries and are excited to bring their cultures to communities in the United States.</p>
+<p> In order to protect the privacy of our students, we do ask that you provide your name and address in order to ensure the utmost security of our students.</p>
+<p><strong>Once you register, you will be permitted to view select student profiles.</strong></p>
+          <br /> <!--- Display Errors --->
+<cfif FORM.type EQ 'newAccount' AND VAL(ArrayLen(pageMsg.Errors))>
                                 <p class="errorMessage">
                                     
-                                    <span>Please review the following item(s):</span>
-                                
-                                    <cfloop from="1" to="#ArrayLen(pageMsg.Errors)#" index="i">
-                                       &nbsp; &bull; #pageMsg.Errors[i]# <br />        	
+                                    Please review the following item(s):
+						<cfloop from="1" to="#ArrayLen(pageMsg.Errors)#" index="i">
+                  				   &nbsp; &bull; #pageMsg.Errors[i]# <br />        	
                                     </cfloop>
                                 
-                                </p>
-                            </cfif>	
+                                </p></cfif>	
+        
                         	
-                            <cfform name="newAccount" id="newAccount" method="post" action="#cgi.SCRIPT_NAME#">
-                            <input type="hidden" name="type" value="newAccount" />
-                            <input type="hidden" name="strCaptcha" value="#FORM.strCaptcha#">
-                            <input type="hidden" name="captchaHash" value="#FORM.captchaHash#">
+<cfform name="newAccount" id="newAccount" method="post" action="#cgi.SCRIPT_NAME#">
+<input type="hidden" name="type" value="newAccount" />
+ <input type="hidden" name="strCaptcha" value="#FORM.strCaptcha#">
+<input type="hidden" name="captchaHash" value="#FORM.captchaHash#">
                             
-                            <label for="lastName" class="inputLabel">Family Last Name <span class="requiredField">*</span></label>
-                            <cfinput type="text" name="lastName" id="lastName" value="#FORM.lastName#" maxlength="100" class="largeInput" required="yes" message="Please enter a family last name."/> 
+<label for="lastName" class="HFform_text">Family Last Name <span class="requiredField">*</span></label>
+<cfinput type="text" name="lastName" id="lastName" value="#FORM.lastName#" maxlength="100" class="largeInput" required="yes" message="Please enter a family last name."/> 
                             
-                            <label for="firstName" class="inputLabel">Your First Name <span class="requiredField">*</span></label>
+                            <label for="firstName" class="HFform_text">Your First Name <span class="requiredField">*</span></label>
                             <cfinput type="text" name="firstName" id="firstName" value="#FORM.firstName#" maxlength="100"  class="largeInput" required="yes" message="Please enter a first name." /> 
                            
-                            <label for="address" class="inputLabel">Address <span class="requiredField">*</span></label>
+                            <label for="address" class="HFform_text">Address <span class="requiredField">*</span></label>
                             <cfinput type="text" name="address" id="address" value="#FORM.address#" maxlength="100" class="largeInput" required="yes" message="Please enter an address." />
                             
-                            <label for="address2" class="inputLabel">Additional Address Info</label>
+                            <label for="address2" class="HFform_text">Additional Address Info</label>
                             <cfinput type="text" name="address2" id="address2" value="#FORM.address2#" maxlength="100" class="largeInput" /> 
                             
-                            <label for="city" class="inputLabel">City <span class="requiredField">*</span></label>
+                            <label for="city" class="HFform_text">City <span class="requiredField">*</span></label>
                             <cfinput type="text" name="city" id="city" value="#FORM.city#" maxlength="100" class="largeInput" required="yes" message="Please enter a city." />
                             
-                            <label for="stateID" class="inputLabel">State <span class="requiredField">*</span></label>
+                            <label for="stateID" class="HFform_text">State <span class="requiredField">*</span></label>
                             <cfselect name="stateID" id="stateID" class="largeInput" required="yes" message="Please select a state.">
                                 <option value="0"></option>
-                                <cfloop query="qStateList">
+          <cfloop query="qStateList">
                                     <option value="#qStateList.id#" <cfif FORM.stateID EQ qStateList.id> selected="selected" </cfif> >#qStateList.state# - #qStateList.statename#</option>
-                                </cfloop>
+                            </cfloop>
                             </cfselect>
                             
-                            <label for="zipCode" class="inputLabel">Zipcode - 5 digits only <span class="requiredField">*</span></label>
+                            <label for="zipCode" class="HFform_text">Zipcode - 5 digits only <span class="requiredField">*</span></label>
                             <cfinput type="text" name="zipCode" id="zipCode" value="#FORM.zipCode#" maxlength="5" class="largeInput" required="yes" message="Please enter a valid zip code." validateat="onSubmit" validate="zipcode" />
                             
-                            <label for="phone" class="inputLabel">Phone Number <span class="requiredField">*</span></label>
+                            <label for="phone" class="HFform_text">Phone Number <span class="requiredField">*</span></label>
                             <cfinput type="text" name="phone" id="phone" value="#FORM.phone#" maxlength="20" class="largeInput" required="yes"  message="Please enter a phone number xxx xxx-xxxx." pattern="(999) 999-9999" validateat="onSubmit" validate="telephone"/>
                             
-                            <label for="email" class="inputLabel">Email <span class="requiredField">*</span></label>
+                            <label for="email" class="HFform_text">Email <span class="requiredField">*</span></label>
                             <cfinput type="text" name="email" id="email" value="#FORM.email#" maxlength="100" class="largeInput" required="yes" message="Please enter a valid email address." validateat="onSubmit" validate="email" />
     
-                            <label for="hearAboutUs" class="inputLabel">How did you hear about us <span class="requiredField">*</span></label>
+                            <label for="hearAboutUs" class="HFform_text">How did you hear about us <span class="requiredField">*</span></label>
                             <cfselect name="hearAboutUs" id="hearAboutUs" class="largeInput" required="yes" message="Please tell us how you hear about ISE." onChange="displayExtraField(this.value);"> 			
                                 <option value=""></option>
-                                <cfloop index="i" from="1" to="#ArrayLen(CONSTANTS.hearAboutUs)#" step="1">
+          <cfloop index="i" from="1" to="#ArrayLen(CONSTANTS.hearAboutUs)#" step="1">
                                     <option value="#CONSTANTS.hearAboutUs[i]#" <cfif CONSTANTS.hearAboutUs[i] EQ FORM.hearAboutUs> selected="selected" </cfif> >#CONSTANTS.hearAboutUs[i]#</option>
-                                </cfloop>
+                            </cfloop>
                             </cfselect>
                             
                             <div id="divExtraField" class="hiddenDiv">
                                 <label for="hearAboutUsDetail" id="labelHearAboutUs" class="inputLabel"></label>
-                                <span id="spanHearAboutUs" class="inputNote"></span>
+                                <span id="spanHearAboutUs" class="HFform_text"></span>
                                 <cfinput type="text" name="hearAboutUsDetail" id="hearAboutUsDetail" value="#FORM.hearAboutUsDetail#" maxlength="100" class="largeInput" />
                             </div>
                                                 
@@ -891,17 +880,17 @@
                             
                             <div style="clear:both;">&nbsp;</div>
                             
-                            <label for="captcha" class="inputLabel">Please enter text in image above <span class="requiredField">*</span></label>
+                            <label for="captcha" class="HFform_text">Please enter text in image above <span class="requiredField">*</span></label>
                             <cfinput type="text" name="captcha" id="captcha" class="largeInput" required="yes" message="Please enter text as displayed in the image above">
                             
                             <div style="clear:both;">&nbsp;</div>
     						
-                            <a href="/terms-and-conditions.cfm" target="_blank">Click to view the Terms and Conditions</a>
+                            <a href="/terms-and-conditions.cfm" target="_blank" class="HFform_italic">Click to view the Terms and Conditions</a>
 
                             <div style="clear:both;">&nbsp;</div>
                             
                             <cfinput type="checkbox" name="isListSubscriber" id="isListSubscriber" value="1">
-                            <label for="isListSubscriber" class="inputCheckbox">I have read and agree to the Terms and Conditions and Privacy Policy.</label> 
+                            <label for="isListSubscriber" class="HFform_italic">I have read and agree to the Terms and Conditions and Privacy Policy.</label> 
                             <!--- 
 								<cfinput type="checkbox" name="isListSubscriber" id="isListSubscriber" value="1" checked="yes">
 								<label for="isListSubscriber" class="inputCheckbox">Would you like to join our mailing list?</label>							
@@ -909,24 +898,25 @@
                             
                             <span class="requiredFieldNote">* Required Fields</span>
                             
-                            <input type="image" src="images/submitRed.png" />
+                            <input type="image" src="images/hostFamily/HFform_submit.png" />
                             
                             </cfform>
                         
-                        </cfif> <!--- FORM.type EQ 'newAccount' AND  NOT VAL(ArrayLen(pageMsg.Errors)) --->
+                       </cfif> <!--- FORM.type EQ 'newAccount' AND  NOT VAL(ArrayLen(pageMsg.Errors)) --->
                     
                     <!--- Not US user --->
 					<cfelse>
-                    	<div style="height:510px;">
+                    	<div style="width:280px;">
 	                        <p>&nbsp; &nbsp; We are sorry but only United States based users are allowed to register to meet our upcoming students.</p>
     					</div>                
-                    </cfif>                    
-                    
-                </div>
-     		
-            	<br />
-
-			</div> <!-- end whtMiddle -->
+                    </cfif>
+          
+      <!--end HformSideL--></div><br />
+     <div class="clearfix">&nbsp;</div>
+<div class="HFtopPic"><img src="images/hostFamily/HF_bar.jpg" width="700" height="13" /></div>
+<div class="clearfix">&nbsp;</div>
+			<!-- end whtMiddle --></div> 
+            
 
       		<div class="whtBottom"></div>
       
