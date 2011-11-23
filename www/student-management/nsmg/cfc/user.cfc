@@ -276,7 +276,7 @@
 		</cfif>
         
 		<!--- this usertype doesn't need to verify information or submit agreements --->
-        <cfif listfind("5,6,7", CLIENT.usertype) AND (qAuthenticateUser.accountCreationVerified neq 1)>
+        <cfif listfind("5,6,7", CLIENT.usertype) AND (qAuthenticateUser.accountCreationVerified lt 1)>
         	<!---Check if new user agreement is needed. --->
             <Cfset url.userid = "#qAuthenticateUser.userID#">
             
