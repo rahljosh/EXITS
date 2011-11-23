@@ -196,7 +196,6 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                 </td>                              
             </tr>
             
-            <!---
             <cfif LEN(qGetCandidates.policycode) AND IsDate(vStartDate) AND IsDate(vEndDate)>
 
                     <cfquery datasource="MySql">
@@ -243,7 +242,6 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                     </cfquery>
 	
             </cfif>
-            --->
             
         </cfloop>
         
