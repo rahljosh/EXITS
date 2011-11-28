@@ -201,7 +201,7 @@
 			Set Compliance Notifications
 		***************************************/
 		
-		if ( AND isDate(qGetHostHistory.datePlaced)  ) {
+		if ( isDate(qGetHostHistory.datePlaced)  ) {
 		
 			// Single Placement Paperwork
 			if ( vTotalHistoryFamilyMembers EQ 1 AND qGetProgramInfo.seasonid GT 7 ) {
