@@ -229,7 +229,8 @@
         <input type="hidden" name="uniqueID" value="#qGetStudentInfo.uniqueID#" />
         <input type="hidden" name="profileType" value="email" />
         
-        <table class="profileTable" align="center">
+        <table width="810px" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" style="margin-bottom:10px;">
+            <tr><th colspan="2">Email/Print PIS</th></tr>
 			<!--- Display Errors --->
             <cfif VAL(ArrayLen(Errors.Messages))>
                 <tr>
@@ -253,17 +254,6 @@
                     <a href="PlacementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#&print=1"><img src="../pics/print.png"  border="0" alt=" Print "></a>
                 </td>
             </tr>
-            
-            <!----Only allow Josh-1, Brian-12313, Marcus - 510, Bill - 8731, Bob - 8743, Gary -12431 to change the dates---->
-            <cfif IsDate(qGetStudentInfo.datePlaced) AND listFind("1,12313,510,8731,8743,12431", CLIENT.userID)>			  
-                 <tr>	
-                    <td align="Center" valign="center">
-                       Placement Date: &nbsp; <input name="NewDatePlaced" type="text" value="#DateFormat(qGetStudentInfo.datePlaced, 'mm/dd/yyyy')#" class="datePicker">		
-                    </td>
-                    <td calign="Center">&nbsp;</td>
-                </tr>
-            </cfif>
-			
             <tr>
            		<td align="right">Do you want to add a message?</td>
                 <td>
@@ -284,6 +274,35 @@
 		</table>
         
     </form>
+    
+
+
+	<!----Only allow Josh-1, Brian-12313, Marcus - 510, Bill - 8731, Bob - 8743, Gary -12431 to change the dates---->
+    <cfif IsDate(qGetStudentInfo.datePlaced) AND listFind("1,12313,510,8731,8743,12431", CLIENT.userID)>		
+
+        <form name="PlacementInfoSheet.cfm" method="post">
+            <input type="hidden" name="submitted" value="1" />
+            <input type="hidden" name="uniqueID" value="#qGetStudentInfo.uniqueID#" />
+            <table width="810px" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" style="margin-bottom:10px;">
+                 <tr><th colspan="2">Update Placement Date</th></tr>
+                 <tr>	
+                    <td class="subTitleRight">Current Date:</td>
+                    <td class="subTitleLeft">#DateFormat(qGetStudentInfo.datePlaced, 'mm/dd/yyyy')#</td>
+                </tr>
+				<tr>	
+                    <td class="subTitleRight">New Date: </td>
+                    <td class="subTitleLeft"><input name="NewDatePlaced" type="text" value="#DateFormat(FORM.NewDatePlaced, 'mm/dd/yyyy')#" class="datePicker"></td>
+                </tr>
+                <tr>
+                	<td colspan="2" align="center">
+                    	<input name="Submit" type="image" src="../pics/submit.gif" border="0" alt=" Update Placement Date ">
+                    </td>
+                </tr>
+			</table>
+	    </form>
+
+    </cfif>
+
       
 </cfsavecontent>
 
