@@ -149,39 +149,43 @@
             ec.firstname, 
             ec.lastname, 
             ec.active, 
+            ec.startDate,
             ec.enddate,
-            p.programname            
-        FROM 
-        	extra_candidates ec
-        LEFT JOIN 
-        	smg_programs p ON p.programid = ec.programid
-        WHERE 
-        	ec.hostcompanyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.hostCompanyID)#"> 
-        AND 
-        	ec.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-        AND
-            ec.enddate > <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-        ORDER BY 
-        	p.programid
-    </cfquery>
-
-    <cfquery name="qGetUpcomingTrainees" datasource="MySql">
-        SELECT 
-        	ec.firstname,
-            ec.lastname, 
-            ec.active, 
-            ec.startdate,
             p.programname            
         FROM 
         	extra_candidates ec
         INNER JOIN 
         	smg_programs p ON p.programid = ec.programid
+        INNER JOIN
+        	extra_candidate_place_company ecpc ON ecpc.candidateID = ec.candidateID
+            	AND 
+                	ecpc.hostcompanyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.hostCompanyID)#"> 
         WHERE 
-        	ec.hostcompanyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.hostCompanyID)#"> 
-        AND 
-        	ec.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-        AND
-            ec.startdate > <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">            
+        	ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+        ORDER BY 
+        	p.programid
+    </cfquery>
+
+    <cfquery name="qGetInactiveTrainees" datasource="MySql">
+        SELECT 
+        	ec.candidateid, 
+            ec.uniqueid, 
+            ec.firstname, 
+            ec.lastname, 
+            ec.active, 
+            ec.startDate,
+            ec.enddate,
+            p.programname            
+        FROM 
+        	extra_candidates ec
+        INNER JOIN 
+        	smg_programs p ON p.programid = ec.programid
+        INNER JOIN
+        	extra_candidate_place_company ecpc ON ecpc.candidateID = ec.candidateID
+            	AND 
+                	ecpc.hostcompanyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.hostCompanyID)#"> 
+        WHERE 
+        	ec.status != <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         ORDER BY 
         	p.programid
     </cfquery>
@@ -924,11 +928,12 @@
                 
                             <table width="100%" cellpadding="3" cellspacing="3" border="0">
                                 <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
-                                    <td colspan="3" class="style2" bgcolor="##8FB6C9">&nbsp;:: Current Trainees</td>
+                                    <td colspan="4" class="style2" bgcolor="##8FB6C9">&nbsp;:: Current Trainees</td>
                                 </tr>
                                 <tr>
                                     <td class="style1"><u>Trainee</u></td>
-                                    <td class="style1"><u>Program</u></td>                                
+                                    <td class="style1"><u>Program</u></td> 
+                                    <td class="style1"><u>Start Date</u></td>                               
                                     <td class="style1"><u>End Date</u></td>
                                 </tr>
                                 <cfloop query="qGetCurrentTrainees">
@@ -937,6 +942,7 @@
                                             <a href="index.cfm?curdoc=candidate/candidate_info&uniqueid=#qGetCurrentTrainees.uniqueid#" class="style4Big">#qGetCurrentTrainees.firstname# #qGetCurrentTrainees.lastname#</a>
                                         </td>
                                         <td class="style1">#qGetCurrentTrainees.programname#</td>
+                                        <td class="style1">#DateFormat(qGetCurrentTrainees.startDate, 'mm/dd/yyyy')#</td>
                                         <td class="style1">#DateFormat(qGetCurrentTrainees.enddate, 'mm/dd/yyyy')#</td>
                                     </tr>
                                 </cfloop>
@@ -953,32 +959,34 @@
                 
                 <br />
     
-                <!--- Upcoming Trainees --->
+                <!--- Inactive/Canceled Trainees --->
                 <table width="800px" border="1" cellpadding="3" cellspacing="3" align="center" bordercolor="##C7CFDC" bgcolor="##ffffff">	
                     <tr>
                         <td bordercolor="##FFFFFF">
                 
                             <table width="100%" cellpadding="3" cellspacing="3" border="0">
                                 <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
-                                    <td colspan="3" class="style2" bgcolor="##8FB6C9">&nbsp;:: Current Trainees</td>
+                                    <td colspan="4" class="style2" bgcolor="##8FB6C9">&nbsp;:: Inactive/Canceled Trainees</td>
                                 </tr>
                                 <tr>
                                     <td class="style1"><u>Trainee</u></td>
-                                    <td class="style1"><u>Program</u></td>                                
+                                    <td class="style1"><u>Program</u></td> 
+                                    <td class="style1"><u>Start Date</u></td>                               
                                     <td class="style1"><u>End Date</u></td>
                                 </tr>
-                                <cfloop query="qGetUpcomingTrainees">
+                                <cfloop query="qGetInactiveTrainees">
                                     <tr>
                                         <td class="style1">
-                                            <a href="index.cfm?curdoc=candidate/candidate_info&uniqueid=#qGetUpcomingTrainees.uniqueid#" class="style4Big">#qGetUpcomingTrainees.firstname# #qGetUpcomingTrainees.lastname#</a>
+                                            <a href="index.cfm?curdoc=candidate/candidate_info&uniqueid=#qGetInactiveTrainees.uniqueid#" class="style4Big">#qGetInactiveTrainees.firstname# #qGetInactiveTrainees.lastname#</a>
                                         </td>
-                                        <td class="style1">#qGetUpcomingTrainees.programname#</td>
-                                        <td class="style1">#DateFormat(qGetUpcomingTrainees.enddate, 'mm/dd/yyyy')#</td>
+                                        <td class="style1">#qGetInactiveTrainees.programname#</td>
+                                        <td class="style1">#DateFormat(qGetInactiveTrainees.startDate, 'mm/dd/yyyy')#</td>   
+                                        <td class="style1">#DateFormat(qGetInactiveTrainees.enddate, 'mm/dd/yyyy')#</td>
                                     </tr>
                                 </cfloop>
-                                <cfif NOT VAL(qGetUpcomingTrainees.recordCount)>
+                                <cfif NOT VAL(qGetInactiveTrainees.recordCount)>
                                     <tr>
-                                        <td class="style1" colspan="3">There are no upcoming trainees for this company</td>
+                                        <td class="style1" colspan="3">There are no inactive trainees for this company</td>
                                     </tr>
                                 </cfif>
                             </table>
