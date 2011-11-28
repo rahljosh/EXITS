@@ -25,8 +25,13 @@
 	<cfparam name="CLIENT.userID" default="0">
     <cfparam name="CLIENT.studentID" default="0"> 
     <cfparam name="CLIENT.userType" default="0">
-    <cfparam name="CLIENT.exits_url" default="https://ise.exitsapplication.com">  
-
+    
+    <cfif APPLICATION.isServerLocal>
+    	<cfparam name="CLIENT.exits_url" default="http://ise.exitsapplication.com">  
+	<cfelse>
+		<cfparam name="CLIENT.exits_url" default="https://ise.exitsapplication.com">      	
+    </cfif>
+    
     <cfquery name="qCompanyInfo" datasource="mysql">
         SELECT
             companyID,
