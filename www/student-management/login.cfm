@@ -1,9 +1,12 @@
-<!----redirect to SSL---->
-	<Cfif cgi.SERVER_PORT eq 80>
-    <cflocation url="https://#cgi.http_host#" addtoken="no">
-    </cfif>
 <!--- Kill Extra Output --->
 <cfsilent>
+
+	<cfscript>
+		// redirect to SSL
+		if ( NOT APPLICATION.isServerLocal AND CGI.SERVER_PORT EQ 80 ) {
+			location("https://#CGI.HTTP_HOST#", "no");
+		}
+	</cfscript>
 
 	<!--- Param Form Variables --->
     <cfparam name="FORM.username" default="">

@@ -71,14 +71,21 @@
             <cfoutput>#CGI.server_name#</cfoutput>
             <cfabort>
         </cfif>
+        	
+		<cfscript>
+			CLIENT.company_submitting = submitting_info.website;
+			CLIENT.app_menu_comp = CLIENT.companyid;
+			CLIENT.color = submitting_info.company_color;
+			
+			if ( APPLICATION.isServerLocal ) {
+				CLIENT.exits_url = "http://" & submitting_info.url_ref;
+			} else {
+				CLIENT.exits_url = "http://" & submitting_info.url_ref;	
+			}
+			
+			APPLICATION.company_short = submitting_info.website;
+		</cfscript>
         
-        <cfset CLIENT.company_submitting = submitting_info.website>
-        <cfset APPLICATION.company_short = submitting_info.website>
-        <cfset CLIENT.app_menu_comp = CLIENT.companyid>
-        <cfset CLIENT.exits_url = "https://" & submitting_info.url_ref>
-        <cfset CLIENT.color = submitting_info.company_color>
-
-
 		<!--- student login --->
         <cfquery name="qAuhenticateStudent" datasource="#APPLICATION.dsn#">
             SELECT studentID, firstname, familylastname
