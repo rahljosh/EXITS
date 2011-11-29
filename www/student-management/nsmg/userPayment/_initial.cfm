@@ -30,7 +30,7 @@
         AND
         	hostid != <cfqueryparam cfsqltype="cf_sql_bit" value="0">
         AND 
-        	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyID#">
+        	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         ORDER BY 
         	familyLastName
     </cfquery>
@@ -49,7 +49,7 @@
         WHERE 
         	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         AND
-        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyID#">
+        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         GROUP BY
         	u.userID
         ORDER BY 
@@ -70,7 +70,7 @@
         WHERE 
         	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         AND
-        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyID#">
+        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         GROUP BY
         	u.userID
         ORDER BY 
@@ -91,7 +91,7 @@
         WHERE 
         	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         AND
-        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyID#">
+        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         GROUP BY
         	u.userID
         ORDER BY 
@@ -99,7 +99,7 @@
     </cfquery>
     
     <!--- GET CURRENT AND HISTORY PLACE AND SUPER --->
-    <cfquery name="qGetReps" datasource="MySql">
+    <cfquery name="qGetSplitPaymentReps" datasource="MySql">
         <!--- Area History --->
         SELECT DISTINCT 
         	u.userid,
@@ -114,7 +114,7 @@
         WHERE 
         	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         AND
-        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyID#">
+        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
 
         UNION
 		
@@ -130,7 +130,7 @@
         WHERE 
         	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         AND 
-        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyID#">
+        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
 
         UNION
 		
@@ -148,7 +148,7 @@
         WHERE 
         	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         AND 
-        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyID#">
+        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
 
         UNION
 
@@ -164,8 +164,26 @@
         WHERE 
         	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         AND 
-        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyID#">
+        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
 		
+        UNION
+
+        <!--- Second Rep History --->
+        SELECT DISTINCT 
+        	u.userid,
+            u.firstName, 
+            u.lastname             
+        FROM 
+        	smg_students s
+        INNER JOIN 
+        	smg_hosthistory h ON h.studentID = s.studentID
+        INNER JOIN 
+        	smg_users u ON h.secondVisitRepID = u.userid
+        WHERE 
+        	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+        AND 
+        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+
         UNION
             
 		<!--- Second Rep Active --->
@@ -180,8 +198,28 @@
         WHERE 
         	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         AND 
-        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyID#">
+        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
 
+        UNION
+        
+        <!--- Area Rep History | Place Rep History | Second Rep History | New Table --->
+        SELECT DISTINCT 
+        	u.userid,
+            u.firstName, 
+            u.lastname             
+        FROM 
+        	smg_users u
+        INNER JOIN
+        	smg_hostHistoryTracking sht ON sht.fieldID = u.userID
+            	AND
+                	sht.fieldName IN ( <cfqueryparam cfsqltype="cf_sql_varchar" value="areaRepID,placeRepID,secondVisitRepID" list="yes"> )
+        INNER JOIN 
+        	smg_students s ON sht.studentID = s.studentID
+            AND	
+                s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+            AND 
+                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        
         GROUP BY 
         	userid
         ORDER BY 
@@ -233,7 +271,7 @@
 <form method="post" action="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=selectPayment">
     <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;">
         <tr>
-            <td colspan="2" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">Select Representative from List</td>
+            <td colspan="2" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">Select Representative from List &nbsp; (Representatives current linked to a student)</td>
         </tr>	
 		<!--- Display Error Message --->
         <cfif URL.errorSection EQ 'selectRepresentative'> 
@@ -375,8 +413,8 @@
             <td>
                 <select name="areaRepID" class="xLargeField">
                     <option value="0"></option>
-                    <cfloop query="qGetReps">
-                        <option value="#userid#">#lastname#, #firstName# (#userid#)</option>
+                    <cfloop query="qGetSplitPaymentReps">
+                        <option value="#qGetSplitPaymentReps.userid#">#qGetSplitPaymentReps.lastname#, #qGetSplitPaymentReps.firstName# (###qGetSplitPaymentReps.userid#)</option>
                     </cfloop>
                 </select>
             </td>

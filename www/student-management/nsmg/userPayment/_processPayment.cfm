@@ -597,7 +597,7 @@
                         <cfif vAllowSuperPayment>
                         
                             <td valign="top">
-                                <select name="#qGetSupervisedStudentList.studentID#superPaymentTypeID" class="largeField">
+                                <select name="#qGetSupervisedStudentList.studentID#superPaymentTypeID" class="xLargeField">
                                     <option value="#qGetsupervisedPaymentType.id#">#qGetsupervisedPaymentType.type#</option>
                                 </select>
                             </td>
@@ -605,7 +605,7 @@
                             	<cfinput type="text" name="#qGetSupervisedStudentList.studentID#superAmount" value="#vPlaceAmoutToBePaid#" class="smallField" required="yes" message="Oops! You forgot to enter the amount for student #qGetSupervisedStudentList.studentID#.">
                             </td>
                             <td valign="top" style="color:##F00">
-                                <input type="text" name="#qGetSupervisedStudentList.studentID#superComment" class="largeField">
+                                <input type="text" name="#qGetSupervisedStudentList.studentID#superComment" class="xLargeField">
                             </td>
 							<!--- Display Previous Payment Information --->
                             <cfloop query="qCheckSupervisedCharges">
@@ -762,7 +762,7 @@
                         <cfif vAllowPlacePayment>
                         
                             <td valign="top">
-                                <select name="#qGetPlacedStudentList.studentID#placePaymentTypeID" class="largeField">
+                                <select name="#qGetPlacedStudentList.studentID#placePaymentTypeID" class="xLargeField">
                                     <option value="#qGetPlacementPaymentType.id#">#qGetPlacementPaymentType.type#</option>
                                 </select>
                             </td>
@@ -770,7 +770,7 @@
                                 <cfinput type="text" name="#qGetPlacedStudentList.studentID#placeAmount" class="smallField" value="#vPlaceAmoutToBePaid#" required="yes" message="Oops! You forgot to enter the amount for student #qGetPlacedStudentList.studentID#.">
                             </td>
                             <td valign="top" style="color:##F00">
-                                <input type="text" name="#qGetPlacedStudentList.studentID#placeComment" class="largeField">
+                                <input type="text" name="#qGetPlacedStudentList.studentID#placeComment" class="xLargeField">
 								
                                 <!--- Placement Paperwork Alert --->
                                 <cfif LEN(vCheckPlacementPaperwork)>
@@ -908,7 +908,7 @@
                         <cfif vAllowSecondVisitPayment>
                         
                             <td valign="top">
-                                <select name="#qGetSecondVisitStudentList.studentID#SecondVisitPaymentTypeID" class="largeField">
+                                <select name="#qGetSecondVisitStudentList.studentID#SecondVisitPaymentTypeID" class="xLargeField">
                                     <option value="#qGetSecondVisitPaymentType.id#">#qGetSecondVisitPaymentType.type#</option>
                                 </select>
                             </td>
@@ -916,7 +916,7 @@
                                 <cfinput type="text" name="#qGetSecondVisitStudentList.studentID#SecondVisitAmount" class="smallField" value="#vSecondVisitAmoutToBePaid#" required="yes" message="Oops! You forgot to enter the amount for student #qGetSecondVisitStudentList.studentID#.">
                             </td>
                             <td valign="top" style="color:##F00">
-                                <input type="text" name="#qGetSecondVisitStudentList.studentID#SecondVisitComment" class="largeField">
+                                <input type="text" name="#qGetSecondVisitStudentList.studentID#SecondVisitComment" class="xLargeField">
 								
                                 <!--- Display Previous Payment Information --->
                                 <cfloop query="qCheckSecondVisitCharges">
