@@ -26,12 +26,6 @@
     <cfparam name="CLIENT.studentID" default="0"> 
     <cfparam name="CLIENT.userType" default="0">
     
-    <cfif APPLICATION.isServerLocal>
-    	<cfparam name="CLIENT.exits_url" default="http://ise.exitsapplication.com">  
-	<cfelse>
-		<cfparam name="CLIENT.exits_url" default="https://ise.exitsapplication.com">      	
-    </cfif>
-    
     <cfquery name="qCompanyInfo" datasource="mysql">
         SELECT
             companyID,
@@ -64,6 +58,12 @@
 		// Store Application.IsServerLocal - This needs be declare before the other CFC components
 		APPLICATION.IsServerLocal = APPLICATION.CFC.UDF.IsServerLocal();
 	</cfscript>
+
+    <cfif APPLICATION.isServerLocal>
+    	<cfparam name="CLIENT.exits_url" default="http://ise.exitsapplication.com">  
+	<cfelse>
+		<cfparam name="CLIENT.exits_url" default="https://ise.exitsapplication.com">      	
+    </cfif>
 
 	<!--- Include Application Config Files --->
 	<cfinclude template="nsmg/extensions/config/_app_index.cfm" />    
