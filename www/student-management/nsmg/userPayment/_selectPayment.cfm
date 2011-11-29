@@ -159,9 +159,33 @@
                         p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('yyyy', -1, now())#">
             INNER JOIN 
                 smg_hosthistory h ON h.studentID = s.studentID
-             WHERE 
+            WHERE 
                 h.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
-             AND 
+            AND 
+                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+			
+            UNION
+            
+            <!--- Area Rep History | New Table --->
+            SELECT DISTINCT 
+                s.studentID, 
+                s.familyLastName, 
+                s.firstName,
+                s.programID, 
+                programName
+            FROM 
+                smg_students s
+            INNER JOIN
+                smg_programs p ON p.programID = s.programID
+                    AND
+                        p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('yyyy', -1, now())#">
+            INNER JOIN
+                smg_hostHistoryTracking sht ON sht.fieldID = u.userID
+                    AND
+                        sht.fieldName = <cfqueryparam cfsqltype="cf_sql_varchar" value="areaRepID">
+                    AND
+                    	sht.fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
+            WHERE 
                 s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
 
             GROUP BY 
@@ -219,6 +243,30 @@
                 h.placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
              AND 
                 s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+			
+            UNION
+            
+            <!--- Place Rep History | New Table --->
+            SELECT DISTINCT 
+                s.studentID, 
+                s.familyLastName, 
+                s.firstName,
+                s.programID, 
+                programName
+            FROM 
+                smg_students s
+            INNER JOIN
+                smg_programs p ON p.programID = s.programID
+                    AND
+                        p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('yyyy', -1, now())#">
+            INNER JOIN
+                smg_hostHistoryTracking sht ON sht.fieldID = u.userID
+                    AND
+                        sht.fieldName = <cfqueryparam cfsqltype="cf_sql_varchar" value="placeRepID">
+                    AND
+                    	sht.fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
+            WHERE 
+                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
 
             GROUP BY 
                 studentID        
@@ -252,6 +300,58 @@
         	AND
             	s.studentID =<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
         </cfif>
+        
+		<!--- Split Payments - Display All students from the placement history --->
+        <cfif FORM.isSplitPayment>
+            UNION
+            
+            SELECT DISTINCT 
+                s.studentID, 
+                s.familyLastName, 
+                s.firstName,
+                s.programID, 
+                programName
+            FROM 
+                smg_students s
+            INNER JOIN
+                smg_programs p ON p.programID = s.programID
+                    AND
+                        p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('yyyy', -1, now())#">
+            INNER JOIN 
+                smg_hosthistory h ON h.studentID = s.studentID
+             WHERE 
+                h.secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
+             AND 
+                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+			
+            UNION
+            
+            <!--- Place Rep History | New Table --->
+            SELECT DISTINCT 
+                s.studentID, 
+                s.familyLastName, 
+                s.firstName,
+                s.programID, 
+                programName
+            FROM 
+                smg_students s
+            INNER JOIN
+                smg_programs p ON p.programID = s.programID
+                    AND
+                        p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('yyyy', -1, now())#">
+            INNER JOIN
+                smg_hostHistoryTracking sht ON sht.fieldID = u.userID
+                    AND
+                        sht.fieldName = <cfqueryparam cfsqltype="cf_sql_varchar" value="secondVisitRepID">
+                    AND
+                    	sht.fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
+            WHERE 
+                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+
+            GROUP BY 
+                studentID        
+		</cfif>               
+		<!--- End of Split Payments - Display All students pl --->
 
         ORDER BY 
         	studentID DESC
@@ -281,7 +381,7 @@
                 <tr>
                     <td colspan="5" style="font-weight:bold;">
                         Please, select type of payment for the supervised students: 
-                        <cfselect name="supervisedPaymentType" query="qGetsupervisedPaymentType" value="id" display="type" queryPosition="below" class="largeField">
+                        <cfselect name="supervisedPaymentType" query="qGetsupervisedPaymentType" value="id" display="type" queryPosition="below" class="xLargeField">
                             <option value="">-- Select a Type --</option>
                         </cfselect>
                     </td>
@@ -326,7 +426,7 @@
                 <tr>
                     <td colspan="5" style="font-weight:bold;">
                         Please, select type of payment for the placed students: 
-                        <cfselect name="placedPaymentType" query="qGetPlacedPaymentType" value="id" display="type" queryPosition="below" class="largeField">
+                        <cfselect name="placedPaymentType" query="qGetPlacedPaymentType" value="id" display="type" queryPosition="below" class="xLargeField">
                             <option value="">-- Select a Type --</option>
                         </cfselect>
                     </td>
@@ -371,7 +471,7 @@
                 <tr>
                     <td colspan="5" style="font-weight:bold;">
                         Please, select type of payment for the second visit students: 
-                        <cfselect name="secondVisitPaymentType" query="qGetSecondVisitPaymentType" value="id" display="type" queryPosition="below" class="largeField">
+                        <cfselect name="secondVisitPaymentType" query="qGetSecondVisitPaymentType" value="id" display="type" queryPosition="below" class="xLargeField">
                             <!--- <option value="">-- Select a Type --</option> --->
                         </cfselect>
                     </td>
