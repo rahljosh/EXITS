@@ -27,21 +27,6 @@
     <cfparam name="FORM.emailTo" default="">
     <cfparam name="FORM.NewDatePlaced" default="">
 
-    <cfif IsDate(FORM.NewDatePlaced)>
-    
-        <cfquery name="updatePlacementDate" datasource="#APPLICATION.DSN#">
-        	UPDATE 
-				smg_students
-        	SET
-				datePlaced = <cfqueryparam cfsqltype="cf_sql_date" value="#form.newDatePlaced#">
-        	WHERE
-				uniqueID = <cfqueryparam cfsqltype="integer" value="#url.uniqueID#">
-        </cfquery>
-        
-        <cflocation url="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" addtoken="no">
-        
-    </cfif>
-            
     <cfscript>
 		// Create Structure to store errors
 		Errors = StructNew();
@@ -98,7 +83,35 @@
 
 		}
 	</cfscript>
+
+	<!--- Update Date Placed | Update on both tables students and smg_hostHistory --->
+    <cfif IsDate(FORM.NewDatePlaced)>
     
+        <cfquery datasource="#APPLICATION.DSN#">
+        	UPDATE 
+				smg_students
+        	SET
+				datePlaced = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.newDatePlaced#">
+        	WHERE
+				uniqueID = <cfqueryparam cfsqltype="integer" value="#URL.uniqueID#">
+        </cfquery>
+        
+        <cfquery datasource="#APPLICATION.DSN#">
+        	UPDATE 
+				smg_hostHistory
+        	SET
+				datePlaced = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.newDatePlaced#">
+        	WHERE
+				studentID = <cfqueryparam cfsqltype="integer" value="#qGetStudentInfo.studentID#">
+            AND
+            	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+            LIMIT 1
+        </cfquery>
+        
+        <cflocation url="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" addtoken="no">
+        
+    </cfif>
+            
     <cfquery name="qGetSchool_dates" datasource="#APPLICATION.DSN#">
         SELECT 
         	schooldateid, 
@@ -768,8 +781,8 @@
             <cfdocument filename="#APPLICATION.PATH.TEMP##qGetStudentInfo.studentID#-idCard.pdf" format="PDF" backgroundvisible="yes" overwrite="yes" fontembed="yes" localurl="no">
 
                 <cfscript>
-					// form.pr_id and form.report_mode are required for the progress report in print mode.
-					// form.pdf is used to not display the logo which isn't working on the PDF. 
+					// FORM.pr_id and FORM.report_mode are required for the progress report in print mode.
+					// FORM.pdf is used to not display the logo which isn't working on the PDF. 
 					URL.studentID = qGetStudentInfo.studentID;
 					FORM.report_mode = 'print';
 					FORM.pdf = 1;
