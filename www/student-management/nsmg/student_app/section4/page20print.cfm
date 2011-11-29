@@ -144,9 +144,11 @@
 	
 	<table width="660" border=0 cellpadding=2 cellspacing=0 align="center">
 		<tr><td><div align="justify">
+        <!----
 			If you would like to specify a region, select option A, 
 			confirm your request of region, print this page, sign it and upload it back into the system with original signatures.<br>
 			If you do not want a regional choice, select option B. 
+			---->
 			If option B is selected you do not need to print this page, sign it and upload it back into the system.</div>
 		    <br><br></td></tr>	
 		<tr>
@@ -160,20 +162,19 @@
 		</tr>	
 		<tr>
 		  <td>			
-				<b>Note: There will be additional charges if you make a regional choice, please contact your representative for details.</b><br>
-				<br>
-				
+				<h3>Note: There will be additional charges if you make a regional choice, please contact your representative for details.</h3>
 				
                     
                     <table width=670 border=0 cellpadding=0 cellspacing=0 align="center">
-                        <tr><td colspan="3"><h1>Select your regions below, then click Next:</h1><br><br></td></tr>
+                        <tr><td colspan="3"><h2>Select your region below</h2><br><br></td></tr>
                         <tr>
-                            <td valign="top"><input type="radio" name="region_choice" value="6" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '6'>checked</cfif>>West<br><img src="https://ise.exitsapplication.com/nsmg/student_app/pics/west.jpg"></td>
-                            <td valign="top"><input type="radio" name="region_choice" value="7" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '7'>checked</cfif>>Central<br><img src="https://ise.exitsapplication.com/nsmg/student_app/pics/central.jpg"></td>
+                            <td valign="top"><input type="radio" name="region_choice" value="6" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '6'>checked</cfif>>West<br>
+                            <img src="https://ise.exitsapplication.com/nsmg/student_app/pics/west.jpg" width="25%"></td>
+                            <td valign="top"><input type="radio" name="region_choice" value="7" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '7'>checked</cfif>>Central<br><img src="https://ise.exitsapplication.com/nsmg/student_app/pics/central.jpg" width="50%"></td>
                         </tr>
                         <tr>
-                            <td valign="top"><input type="radio" name="region_choice" value="8" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '8'>checked</cfif>>South<br><img src="https://ise.exitsapplication.com/nsmg/student_app/pics/south.jpg"></td>
-                            <td valign="top"><input type="radio" name="region_choice" value="9" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '9'>checked</cfif>>East<br><img src="https://ise.exitsapplication.com/nsmg/student_app/pics/east.jpg"></td>
+                            <td valign="top"><input type="radio" name="region_choice" value="8" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '8'>checked</cfif>>South<br><img src="https://ise.exitsapplication.com/nsmg/student_app/pics/south.jpg" width="50%"></td>
+                            <td valign="top"><input type="radio" name="region_choice" value="9" onChange="DataChanged();" <cfif check_guarantee.app_region_guarantee EQ '9'>checked</cfif>>East<br><img src="https://ise.exitsapplication.com/nsmg/student_app/pics/east.jpg" width="50%"></td>
                            
                         </tr>
                     </table>	
