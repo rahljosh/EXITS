@@ -84,6 +84,7 @@
                     ec.candidateID,
                     ec.firstName,
                     ec.lastName,
+                    eh.name as hostCompanyName,
                     u.businessName,
 					efi.ID,
                     efi.programID,
@@ -107,6 +108,8 @@
                         	efi.dateUpdated >= DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL -25 HOUR)    
 				INNER JOIN
                 	smg_users u ON u.userID = ec.intRep
+				LEFT JOIN                 
+                    extra_hostcompany eh ON ec.hostcompanyID = eh.hostcompanyID
                 WHERE
                     flightType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.flightType)#">
                 ORDER BY
