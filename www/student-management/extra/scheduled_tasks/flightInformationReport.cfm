@@ -37,7 +37,7 @@
             <cfoutput query="qGetArrivals" group="candidateID">
                 
                 <div style="color: ##666; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">
-                    #qGetArrivals.firstName# #qGetArrivals.lastName# (###qGetArrivals.candidateID#) - #qGetArrivals.businessName#
+                    #qGetArrivals.firstName# #qGetArrivals.lastName# (###qGetArrivals.candidateID#) - #qGetArrivals.hostCompanyName# - #qGetArrivals.businessName#
                 </div>
 				
                 <table cellspacing="1" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px;">	
@@ -97,7 +97,7 @@
             <cfoutput query="qGetDepartures" group="candidateID">
                 
                 <div style="color: ##666; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">
-                    #qGetDepartures.firstName# #qGetDepartures.lastName# (###qGetDepartures.candidateID#) - #qGetDepartures.businessName#
+                    #qGetDepartures.firstName# #qGetDepartures.lastName# (###qGetDepartures.candidateID#) - #qGetDepartures.hostCompanyName# - #qGetDepartures.businessName#
                 </div>
 
                 <table cellspacing="1" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px;">	
@@ -160,7 +160,7 @@
 	if ( qGetArrivals.recordCount OR qGetDepartures.recordCount ) {
 	
 		APPLICATION.CFC.EMAIL.sendEmail(
-			emailTo=APPLICATION.EMAIL.flightReport,
+			emailTo=APPLICATION.EMAIL.flightReport ,
 			emailSubject='EXTRA - WAT - Daily Flight Report',
 			emailMessage=flightReport
 		);
