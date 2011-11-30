@@ -18,6 +18,7 @@
     <cfparam name="FORM.verification_received" default="">
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.getDatesFrom" default="program">
+    <cfparam name="FORM.flightEndDate" default="">
     
     <cfquery name="qGetInsuranceTypeList" datasource="MySql">
         SELECT 
@@ -95,7 +96,7 @@
 										<tr bgcolor="##C2D1EF"><td class="style2" bgcolor="##8FB6C9" colspan="2">&nbsp;:: Enroll Candidates - Excel Spreadsheet</td></tr>
 										<tr>
 											<td class="style1" valign="top">Program :</td>
-											<td class="style1" align="left">
+											<td class="style1">
                                                 <cfselect
                                                     name="programID" 
                                                     id="programID"
@@ -111,7 +112,7 @@
 										</tr>
 										<tr>
 											<td class="style1">Intl. Rep. :</td>
-											<td class="style1" align="left">
+											<td class="style1">
                                                 <cfselect
                                                     name="intRep" 
                                                     id="intRep"
@@ -124,7 +125,7 @@
 										</tr>
                                         <tr>
 											<td class="style1" valign="top">Verification Received :</td>
-											<td class="style1" align="left">
+											<td class="style1">
                                                 <cfselect 
                                                     name="verification_received"
                                                     id="verification_received"
@@ -138,17 +139,24 @@
                                                     bind="cfc:extra.extensions.components.user.getVerificationDate({intRep},{programID})" /> 
 											</td>
 										</tr>
-                                        
                                         <tr>
 											<td class="style1" valign="top">Get Dates From :</td>
-											<td class="style1" align="left">
+											<td class="style1">
                                                 <select name="getDatesFrom" id="getDatesFrom" class="style1">
                                                 	<option value="program" <cfif FORM.getDatesFrom EQ 'program' > selected="selected" </cfif> >Use Program Dates</option>
-                                                    <option value="flightInformation" <cfif FORM.getDatesFrom EQ 'flightInformation' > selected="selected" </cfif> >Use Flight Arrival</option>
+                                                    <option value="flightInformation" <cfif FORM.getDatesFrom EQ 'flightInformation' > selected="selected" </cfif> >Use Flight Information</option>
                                                 </select>
 											</td>
 										</tr>
-
+                                        <tr>
+											<td class="style1" colspan="2">Please enter an end date if flight information option is selected</td>
+										</tr>
+                                        <tr>
+											<td class="style1" valign="top">End Date:</td>
+                                            <td class="style1">
+                                            	<input type="text" name="flightEndDate" id="flightEndDate" class="datePicker" value="#DateFormat(FORM.flightEndDate, 'mm/dd/yyyy')#" />
+                                            </td>
+										</tr>
 										<tr>
 											<td class="style1">Insurance Type</td>
 											<td><cfselect name="extra_insurance_typeid" query="qGetInsuranceTypeList" value="insutypeid" display="type" class="style1" /></td>
@@ -170,7 +178,7 @@
 										<tr bgcolor="##C2D1EF"><td class="style2" bgcolor="##8FB6C9" colspan="2">&nbsp;:: Candidates to be Insured</td></tr>
 										<tr>
 											<td class="style1" valign="top">Program :</td>
-											<td class="style1" align="left">
+											<td class="style1">
                                                 <cfselect
                                                     name="programID" 
                                                     id="programID2"
@@ -186,7 +194,7 @@
 										</tr>
 										<tr>
 											<td class="style1">Intl. Rep. :</td>
-											<td class="style1" align="left">
+											<td class="style1">
                                                 <cfselect
                                                     name="intRep" 
                                                     id="intRep2"
@@ -199,7 +207,7 @@
 										</tr>
                                         <tr>
 											<td class="style1" valign="top">Verification Received :</td>
-											<td class="style1" align="left">
+											<td class="style1">
                                                 <cfselect 
                                                     name="verification_received" 
                                                     id="verification_received2"
@@ -274,7 +282,7 @@
 										<tr bgcolor="##C2D1EF"><td class="style2" bgcolor="##8FB6C9" colspan="2">&nbsp;:: Manual Transaction - Excel Spreadsheet</td></tr>														
 										<tr>
 											<td class="style1">Transaction Type :</td>
-											<td class="style1" align="left">
+											<td class="style1">
 												<select name="transtype"  class="style1">
 													<option value=""></option>
 													<option value="new">New App</option>
