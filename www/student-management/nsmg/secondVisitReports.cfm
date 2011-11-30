@@ -800,17 +800,17 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                                         <td>
                                          <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#pr_id#"><img src="pics/buttons/greyedView.png" /></a>
                                        </td>
-                                         <td>#dateFormat(get_report.pr_sr_approved_date, 'mm/dd/yyyy')#</td>
+                                         <td>#dateFormat(indReports.pr_sr_approved_date, 'mm/dd/yyyy')#</td>
                                         <td>
                                             <cfif getResults.advisorid EQ ''>
                                                N/A
                                             <cfelse>
-                                                #dateFormat(get_report.pr_ra_approved_date, 'mm/dd/yyyy')#
+                                                #dateFormat(indReports.pr_ra_approved_date, 'mm/dd/yyyy')#
                                           </cfif>
                                         </td>
-                                        <td>#dateFormat(get_report.pr_rd_approved_date, 'mm/dd/yyyy')#</td>
-                                        <td>#dateFormat(get_report.pr_ny_approved_date, 'mm/dd/yyyy')#</td>
-                                        <td>#dateFormat(get_report.pr_rejected_date, 'mm/dd/yyyy')#</td>
+                                        <td>#dateFormat(indReports.pr_rd_approved_date, 'mm/dd/yyyy')#</td>
+                                        <td>#dateFormat(indReports.pr_ny_approved_date, 'mm/dd/yyyy')#</td>
+                                        <td>#dateFormat(indReports.pr_rejected_date, 'mm/dd/yyyy')#</td>
                                  		 </cfif>
                                     </tr>
                                     <tr>
