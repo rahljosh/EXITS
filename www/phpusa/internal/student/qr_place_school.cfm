@@ -110,7 +110,7 @@
 		<!--- Email Finance Department --->
         <cfmail to="#APPLICATION.EMAIL.finance#" 
             from="#APPLICATION.EMAIL.support#" 
-            subject="PHP School Change Notification - #qGetProgramInfo.firstname# #qGetProgramInfo.familylastname# (###qGetProgramInfo.studentID#)" 
+            subject="PHP School Change Notification - #qGetProgramInfo.firstname# #qGetProgramInfo.familylastname# (###qGetProgramInfo.studentID#) - #qGetProgramInfo.programname# (###qGetProgramInfo.programID#)" 
             type="html" 
             failto="support@phpusa.com">
             <table align="center">
