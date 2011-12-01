@@ -43,19 +43,15 @@
                 <table cellspacing="1" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px;">	
                     <tr style="color: ##fff; font-weight: bold; text-align:center; background-color: ##0069aa;">
                         <td style="padding:4px 0px 4px 0px;">Arrival Date</td>
-                        <td style="padding:4px 0px 4px 0px;">Arrival <br /> Airport Code</td>
-                        <td style="padding:4px 0px 4px 0px;">Arrival <br /> Time</td>
-                        <td style="padding:4px 0px 4px 0px;">Arrival <br /> Flight <br /> Number</td>
-                        <td style="padding:4px 0px 4px 0px;">Overnight <br /> Flight</td>
+                        <td style="padding:4px 0px 4px 0px;">Arrival Airport</td>
+                        <td style="padding:4px 0px 4px 0px;">Arrival Time / Flight #</td>
                     </tr>                                
 
                     <cfoutput>
                         <tr style="text-align:center; <cfif qGetArrivals.currentRow MOD 2>background-color: ##EEEEEE;</cfif> ">
                             <td style="padding:4px 0px 4px 0px;">#qGetArrivals.departDate#</td>
                             <td style="padding:4px 0px 4px 0px;">#qGetArrivals.arriveAirportCode#</td>
-                            <td style="padding:4px 0px 4px 0px;">#qGetArrivals.arriveTime#</td>
-                            <td style="padding:4px 0px 4px 0px;">#qGetArrivals.flightNumber#</td>>
-                            <td style="padding:4px 0px 4px 0px;">#qGetArrivals.isOvernightFlight#</td>
+                            <td style="padding:4px 0px 4px 0px;">#qGetArrivals.arriveTime# / #qGetArrivals.flightNumber#</td>
                         </tr>                         
                     </cfoutput>    						
                 
@@ -95,19 +91,15 @@
                 <table cellspacing="1" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px;">	
                     <tr style="color: ##fff; font-weight: bold; text-align:center; background-color: ##0069aa;">
                         <td style="padding:4px 0px 4px 0px;">Departure Date</td>
-                        <td style="padding:4px 0px 4px 0px;">Departure <br /> Airport Code</td>
-                        <td style="padding:4px 0px 4px 0px;">Departure <br /> Time</td>
-                        <td style="padding:4px 0px 4px 0px;">Departure <br />Flight <br /> Number</td>
-                        <td style="padding:4px 0px 4px 0px;">Overnight <br /> Flight</td>
+                        <td style="padding:4px 0px 4px 0px;">Departure Airport</td>
+                        <td style="padding:4px 0px 4px 0px;">Departure Time / Flight #</td>
                     </tr>                                
 
                     <cfoutput>
                         <tr style="text-align:center; <cfif qGetDepartures.currentRow MOD 2>background-color: ##EEEEEE;</cfif> ">
                             <td style="padding:4px 0px 4px 0px;">#qGetDepartures.departDate#</td>
                             <td style="padding:4px 0px 4px 0px;">#qGetDepartures.departAirportCode#</td>
-                            <td style="padding:4px 0px 4px 0px;">#qGetDepartures.departTime#</td>
-                            <td style="padding:4px 0px 4px 0px;">#qGetDepartures.flightNumber#</td>
-                            <td style="padding:4px 0px 4px 0px;">#qGetDepartures.isOvernightFlight#</td>
+                            <td style="padding:4px 0px 4px 0px;">#qGetDepartures.departTime# / #qGetDepartures.flightNumber#</td>
                         </tr>                         
                     </cfoutput>    						
                 
