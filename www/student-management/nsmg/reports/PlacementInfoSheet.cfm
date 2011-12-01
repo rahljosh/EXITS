@@ -91,7 +91,7 @@
         	UPDATE 
 				smg_students
         	SET
-				datePlaced = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.newDatePlaced#">
+				datePlaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(FORM.newDatePlaced)#">
         	WHERE
 				uniqueID = <cfqueryparam cfsqltype="integer" value="#URL.uniqueID#">
         </cfquery>
@@ -100,7 +100,7 @@
         	UPDATE 
 				smg_hostHistory
         	SET
-				datePlaced = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.newDatePlaced#">
+				datePlaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(FORM.newDatePlaced)#">
         	WHERE
 				studentID = <cfqueryparam cfsqltype="integer" value="#qGetStudentInfo.studentID#">
             AND

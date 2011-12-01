@@ -259,6 +259,16 @@
         <cfargument name="userID" type="numeric" hint="userID is required">
         <cfargument name="regionID" type="numeric" hint="regionID is required">
         <cfargument name="is2ndVisitIncluded" default="0" type="numeric" hint="is2ndVisitIncluded is not required">
+        <cfargument name="includeUserIDs" default="" hint="area reps will be able to see themselves and current assigned users on the list">
+        
+        <cfscript>
+			// Set List of Users
+			var vListOfUserIds = ARGUMENTS.userID;
+			
+			if ( LEN(ARGUMENTS.includeUserIDs) ) {
+				vListOfUserIds = ListAppend(vListOfUserIds, ARGUMENTS.includeUserIDs);
+			}
+		</cfscript>
         
         <!--- Office Users --->
         <cfif ListFind("1,2,3,4", ARGUMENTS.userType)>
@@ -331,15 +341,17 @@
                         <!--- Regional Advisor - Returns users under them --->
                     	<cfcase value="6">
                             AND 
-                                uar.advisorid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
-                            OR
-                            	u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+                                (
+                                	uar.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+	                            OR
+                                    u.userID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfUserIds#" list="yes"> )
+                                )
                         </cfcase>
                         
                     	<!--- Area Representative | 2nd Visit Representative - Returns itself --->	
                     	<cfcase value="7,15">
                         	AND
-                            	u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+                                u.userID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfUserIds#" list="yes"> )
                         </cfcase>
                         
                     </cfswitch>

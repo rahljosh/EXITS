@@ -42,7 +42,12 @@
 		
 		// Get Student Information
 		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(uniqueID=URL.uniqueID);
-		
+
+		// Set a list of current reps assigned to student
+		vCurrentUsersAssigned = '';
+		vCurrentUsersAssigned = ListAppend(vCurrentUsersAssigned, qGetStudentInfo.areaRepID);
+		vCurrentUsersAssigned = ListAppend(vCurrentUsersAssigned, qGetStudentInfo.placeRepID);
+
 		// Get Student Arrival
 		qGetArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=qGetStudentInfo.studentID, flightType='arrival', flightLegOption='lastLeg');
 		
@@ -75,10 +80,19 @@
 		qGetAvailableSchools = APPLICATION.CFC.SCHOOL.getSchools(stateList=APPLICATION.CFC.USER.getUserStateListByRegionID(regionID=qGetStudentInfo.regionassigned));
 		
 		// Get Available Reps
-		qGetAvailableReps = APPLICATION.CFC.USER.getSupervisedUsers(userType=CLIENT.userType, userID=CLIENT.userID, regionID=qGetStudentInfo.regionAssigned);
+		qGetAvailableReps = APPLICATION.CFC.USER.getSupervisedUsers(
+			userType=CLIENT.userType, 
+			userID=CLIENT.userID, 
+			regionID=qGetStudentInfo.regionAssigned,
+			includeUserIDs=vCurrentUsersAssigned);
 
 		// Get Available 2nd Visit Reps
-		qGetAvailable2ndVisitReps = APPLICATION.CFC.USER.getSupervisedUsers(userType=CLIENT.userType, userID=CLIENT.userID, regionID=qGetStudentInfo.regionAssigned, is2ndVisitIncluded=1);
+		qGetAvailable2ndVisitReps = APPLICATION.CFC.USER.getSupervisedUsers(
+			userType=CLIENT.userType, 
+			userID=CLIENT.userID, 
+			regionID=qGetStudentInfo.regionAssigned, 
+			is2ndVisitIncluded=1, 
+			includeUserIDs=qGetStudentInfo.secondVisitRepID);
 			
 		// Get Area Rep
 		qGetAreaRepInfo = APPLICATION.CFC.USER.getUserByID(userID=qGetStudentInfo.areaRepID);
@@ -87,7 +101,7 @@
 		qGetPlaceRepInfo = APPLICATION.CFC.USER.getUserByID(userID=qGetStudentInfo.placeRepID);
 
 		// Get 2nd Visit Rep Info
-		qGetSecondVisitRepID = APPLICATION.CFC.USER.getUserByID(userID=qGetStudentInfo.secondVisitRepID);
+		qGetSecondVisitRepInfo = APPLICATION.CFC.USER.getUserByID(userID=qGetStudentInfo.secondVisitRepID);
 		
 		// Get Available Double Placement
 		qGetAvailableDoublePlacement = APPLICATION.CFC.STUDENT.getAvailableDoublePlacement(regionID=qGetStudentInfo.regionassigned, studentID=qGetStudentInfo.studentID);
@@ -497,7 +511,7 @@
                     <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section paperwork" align="center">
                         <cfloop query="qGetActionsHistory">
                             <tr>
-                                <td valign="top" width="25%">#DateFormat(qGetActionsHistory.dateUpdated, 'mm/dd/yyyy')# at #TimeFormat(qGetActionsHistory.dateUpdated, 'hh:mm tt')# <!--- EST ---></td>
+                                <td valign="top" width="25%">#DateFormat(qGetActionsHistory.dateCreated, 'mm/dd/yyyy')# at #TimeFormat(qGetActionsHistory.dateCreated, 'hh:mm tt')# <!--- EST ---></td>
                                 <td width="75%">#qGetActionsHistory.actions#</td>
                             </tr>                        
                         </cfloop>
@@ -608,7 +622,7 @@
                             <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section paperwork" align="center">
                                 <cfloop query="qGetActionsHistory">
                                     <tr>
-                                        <td valign="top" width="25%">#DateFormat(qGetActionsHistory.dateUpdated, 'mm/dd/yyyy')# at #TimeFormat(qGetActionsHistory.dateUpdated, 'hh:mm tt')# <!--- EST ---></td>
+                                        <td valign="top" width="25%">#DateFormat(qGetActionsHistory.dateCreated, 'mm/dd/yyyy')# at #TimeFormat(qGetActionsHistory.dateCreated, 'hh:mm tt')# <!--- EST ---></td>
                                         <td width="75%">#qGetActionsHistory.actions#</td>
                                     </tr>                        
                                 </cfloop>

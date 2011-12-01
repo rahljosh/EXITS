@@ -1406,15 +1406,15 @@
                         <div id="divSecondVisitRepIDInfo">
 							
 							<!--- 2nd Representative Deleted / Not Found  --->
-                            <cfif VAL(qGetStudentInfo.secondVisitRepID) AND NOT VAL(qGetSecondVisitRepID.recordCount)>
+                            <cfif VAL(qGetStudentInfo.secondVisitRepID) AND NOT VAL(qGetSecondVisitRepInfo.recordCount)>
                                 
                                 <font color="##CC3300">2<sup>nd</sup> Representative (###qGetStudentInfo.secondVisitRepID#) was not found in the system.</font>
                                 
                             <!--- 2nd Representative Information ---> 
                             <cfelseif VAL(qGetStudentInfo.secondVisitRepID)>
                             
-                                #qGetSecondVisitRepID.firstName# #qGetSecondVisitRepID.lastName# (###qGetSecondVisitRepID.userID#) <br />
-                                #qGetSecondVisitRepID.city#, #qGetSecondVisitRepID.state# #qGetSecondVisitRepID.zip#
+                                #qGetSecondVisitRepInfo.firstName# #qGetSecondVisitRepInfo.lastName# (###qGetSecondVisitRepInfo.userID#) <br />
+                                #qGetSecondVisitRepInfo.city#, #qGetSecondVisitRepInfo.state# #qGetSecondVisitRepInfo.zip#
         					
                             <cfelseif CLIENT.userType EQ 7>
                             	
