@@ -432,13 +432,13 @@
 		</cfquery>
         
         <cfscript>
-			/*********************************************************
-				Double Placement - Automatically assign/remove/update
-			*********************************************************/
+			/*******************************************************************************
+				Double Placement - Automatically assign/remove/update for the second record
+			*******************************************************************************/
 			
-			/*********************************************************
+			/*******************************************************************************
 				Add New Double Placement
-			**********************************************************/
+			********************************************************************************/
 			if ( VAL(ARGUMENTS.doublePlace) AND NOT VAL(qGetStudentInfo.doublePlace) ) {
 				
                 // Insert-Update Placement History
@@ -451,22 +451,22 @@
 					placementAction='setDoublePlacement'
 				);
 				
-				// Update Double Placement Record on the second record
+				// Update Double Placement Record
 				updateDoublePlacement(
 					studentID = ARGUMENTS.doublePlace,					   
 					doublePlace = ARGUMENTS.studentID,
 					userType = ARGUMENTS.userType
 				);
 
-			/*********************************************************
+			/*******************************************************************************
 				Double Placement Assigned to a Different Student 
 				Remove previous and add new double placement
-			**********************************************************/
+			********************************************************************************/
 			} else if ( VAL(ARGUMENTS.doublePlace) AND ARGUMENTS.doublePlace NEQ qGetStudentInfo.doublePlace ) {
 				
-				/*********************************************************
+				/*******************************************************************************
 					Remove Double Placement
-				**********************************************************/
+				********************************************************************************/
 
                 // Insert-Update Placement History
                 insertPlacementHistory(
@@ -478,16 +478,16 @@
 					placementAction='setDoublePlacement'
 				);
 				
-				// Update Double Placement Record on the second record
+				// Update Double Placement Record
 				updateDoublePlacement(
 					studentID = qGetStudentInfo.doublePlace,					   
 					doublePlace = 0,
 					userType = ARGUMENTS.userType
 				);
 			
-				/*********************************************************
-					Add New Double Placement
-				**********************************************************/
+				/*******************************************************************************
+					Add New Double Placement Automatically
+				********************************************************************************/
 				
                 // Insert-Update Placement History
                 insertPlacementHistory(
@@ -499,16 +499,16 @@
 					placementAction='setDoublePlacement'
 				);
 				
-				// Update Double Placement Record on the second record
+				// Update Double Placement Record
 				updateDoublePlacement(
 					studentID = ARGUMENTS.doublePlace,					   
 					doublePlace = ARGUMENTS.studentID,
 					userType = ARGUMENTS.userType
 				);
 
-			/*********************************************************
-				Remove Double Placement
-			**********************************************************/
+			/*******************************************************************************
+				Remove Double Placement Automatically
+			********************************************************************************/
 			} else if ( NOT VAL(ARGUMENTS.doublePlace) AND VAL(qGetStudentInfo.doublePlace) ) {
 				
                 // Insert-Update Placement History
@@ -541,7 +541,9 @@
 
 			<cfscript>
                 // Get Student Info
-                var qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID);				
+                var qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID);	
+				
+				var vHostHistoryID = getPlacementHistory(studentID=ARGUMENTS.studentID).historyID;
             </cfscript>
             
             <cfquery 
@@ -571,7 +573,18 @@
                     WHERE
                         studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
             </cfquery>
-
+			
+            <!--- Update History --->
+            <cfquery 
+                datasource="#APPLICATION.DSN#">
+                    UPDATE
+                        smg_hostHistory
+                    SET
+                        doublePlacementID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">
+                    WHERE
+                        historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vHostHistoryID)#">
+            </cfquery>
+            
 	</cffunction>
 
 
@@ -1164,7 +1177,7 @@
 			// STUDENT IS PLACED - CHECK FOR UPDATES
 			} else {
 
-				// Host Family
+				// Host Family Updated
 				if ( VAL(ARGUMENTS.hostID) AND VAL(qGetStudentInfo.hostID) AND qGetStudentInfo.hostID NEQ ARGUMENTS.hostID ) {
 					vQueryType = 'insert';
 					vAddExtraLine = 1;
@@ -1204,8 +1217,9 @@
 				
 				// School Information
 				if ( VAL(ARGUMENTS.schoolID) AND VAL(qGetStudentInfo.schoolID) AND qGetStudentInfo.schoolID NEQ ARGUMENTS.schoolID ) {
-					
-					vQueryType = 'update';
+					if ( NOT LEN(vQueryType) ) { 
+						vQueryType = 'update';
+					}
 					vAddExtraLine = 1;
 					hasSchoolIDChanged = 1;
 					
@@ -1232,7 +1246,9 @@
 								
 				// Placing Representative
 				if ( VAL(ARGUMENTS.placeRepID) AND VAL(qGetStudentInfo.placeRepID) AND qGetStudentInfo.placeRepID NEQ ARGUMENTS.placeRepID ) {
-					vQueryType = 'update';
+					if ( NOT LEN(vQueryType) ) { 
+						vQueryType = 'update';
+					}
 					vAddExtraLine = 1;
 					hasPlaceRepIDChanged = 1;
 
@@ -1258,7 +1274,9 @@
 				
 				// Supervising Representative
 				if ( VAL(ARGUMENTS.areaRepID) AND VAL(qGetStudentInfo.areaRepID) AND qGetStudentInfo.areaRepID NEQ ARGUMENTS.areaRepID ) {
-					vQueryType = 'update';
+					if ( NOT LEN(vQueryType) ) { 
+						vQueryType = 'update';
+					}
 					vAddExtraLine = 1;
 					hasAreaRepIDChanged = 1;
 
@@ -1284,7 +1302,9 @@
 				
 				// 2nd Representative Visit
 				if ( VAL(qGetStudentInfo.secondVisitRepID) AND VAL(ARGUMENTS.secondVisitRepID) AND qGetStudentInfo.secondVisitRepID NEQ ARGUMENTS.secondVisitRepID ) {
-					vQueryType = 'update';
+					if ( NOT LEN(vQueryType) ) { 
+						vQueryType = 'update';
+					}
 					vAddExtraLine = 1;
 					hasSecondVisitRepIDChanged = 1;
 
@@ -1301,7 +1321,9 @@
 					}
 
 				} else if ( VAL(ARGUMENTS.secondVisitRepID) AND qGetStudentInfo.secondVisitRepID NEQ ARGUMENTS.secondVisitRepID ) {
-					vQueryType = 'update';
+					if ( NOT LEN(vQueryType) ) { 
+						vQueryType = 'update';
+					}
 					vAddExtraLine = 1;
 					hasSecondVisitRepIDChanged = 1;
 					
@@ -1317,7 +1339,9 @@
 				
 				// Update Double Placement 
 				if ( VAL(qGetStudentInfo.doublePlace) AND VAL(ARGUMENTS.doublePlace) AND qGetStudentInfo.doublePlace NEQ ARGUMENTS.doublePlace ) {
-					vQueryType = 'update';
+					if ( NOT LEN(vQueryType) ) { 
+						vQueryType = 'update';
+					}
 					vAddExtraLine = 1;
 					hasDoublePlacementIDChanged = 1;
 
@@ -1338,7 +1362,9 @@
 				
 				// Add Double Placement
 				} else if ( NOT VAL(qGetStudentInfo.doublePlace) AND VAL(ARGUMENTS.doublePlace) AND qGetStudentInfo.doublePlace NEQ ARGUMENTS.doublePlace ) {
-					vQueryType = 'update';
+					if ( NOT LEN(vQueryType) ) { 
+						vQueryType = 'update';
+					}
 					vAddExtraLine = 1;
 					hasDoublePlacementIDChanged = 1;
 
@@ -1352,8 +1378,10 @@
 					}
 
 				// Remove Double Placement	
-				} else if ( ARGUMENTS.placementStatus NEQ 'Approved' AND VAL(qGetStudentInfo.doublePlace) AND NOT VAL(ARGUMENTS.doublePlace) ) {
-					vQueryType = 'update';
+				} else if ( VAL(qGetStudentInfo.doublePlace) AND NOT VAL(ARGUMENTS.doublePlace) ) { // ARGUMENTS.placementStatus NEQ 'Approved'
+					if ( NOT LEN(vQueryType) ) { 
+						vQueryType = 'update';
+					}
 					vAddExtraLine = 1;
 					hasDoublePlacementIDChanged = 1;
 					
@@ -1685,8 +1713,8 @@
 			}
 		</cfscript> 
         
-        <!--- Update History if not doing any of these actions below (they do not require a history update except setDoublePlacement which is updated outside the history function) --->
-        <cfif ARGUMENTS.placementAction NEQ 'setDoublePlacement' AND vQueryType EQ 'update'>
+        <!--- Update History --->
+        <cfif vQueryType EQ 'update'>
 
             <cfquery 
                 datasource="#APPLICATION.DSN#">
