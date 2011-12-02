@@ -59,9 +59,6 @@
     
 </cfif>
 
-
-
-
 <!--- HOST COMPANY HISTORY --->
 <cfif qGetCandidateInfo.hostCompanyID NEQ FORM.hostCompanyID>
 	
@@ -138,7 +135,6 @@
 <cfelse>
     <cfset sendemail = 'yes'>
 </cfif>
-
 
 <cfquery name="edit_candidate" datasource="mysql">
     UPDATE 

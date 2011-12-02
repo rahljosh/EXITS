@@ -122,7 +122,7 @@
         	hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidate.hostCompanyID#">
     </Cfquery>
 
-    <cfquery name="qCheckNewCandidate" datasource="mysql">
+    <cfquery name="qCheckNewCandidate" datasource="mySQL">
         SELECT 
         	candidateID, 
             firstname, 
@@ -144,7 +144,7 @@
         	candidateID != <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidate.candidateID#">
     </cfquery>
 
-    <cfquery name="qGetExtraJobs" datasource="mysql">
+    <cfquery name="qGetExtraJobs" datasource="mySQL">
         SELECT 
         	id, 
             title, 
@@ -184,7 +184,7 @@
         	subfieldid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidate.subfieldid)#">
     </cfquery>
 
-    <cfquery name="qDepartureInfo" datasource="mysql">
+    <cfquery name="qDepartureInfo" datasource="mySQL">
         SELECT 
 			*
         FROM
@@ -197,7 +197,7 @@
         	departDate DESC            
     </cfquery>
     
-    <cfquery name="qArrivalInfo" datasource="mysql">
+    <cfquery name="qArrivalInfo" datasource="mySQL">
         SELECT 
         	*
         FROM 
@@ -208,6 +208,53 @@
         	flightType = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
 		ORDER BY
         	departDate DESC            
+    </cfquery>
+	
+    <cfquery name="qGetQuaterlyEvaluation" datasource="mySQL">
+        SELECT 
+        	candidateID,
+            monthEvaluation,
+            dateApproved
+        FROM 
+        	extra_evaluation
+        WHERE	
+        	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidate.candidateID#">  
+    </cfquery>
+
+    <cfquery name="qGetFebQuaterlyEvaluation" dbtype="query">
+        SELECT 
+        	dateApproved
+        FROM 
+        	qGetQuaterlyEvaluation
+        WHERE	
+        	monthEvaluation = <cfqueryparam cfsqltype="cf_sql_integer" value="5">  
+    </cfquery>
+
+    <cfquery name="qGetMayQuaterlyEvaluation" dbtype="query">
+        SELECT 
+        	dateApproved
+        FROM 
+        	qGetQuaterlyEvaluation
+        WHERE	
+        	monthEvaluation = <cfqueryparam cfsqltype="cf_sql_integer" value="5">  
+    </cfquery>
+
+    <cfquery name="qGetAugQuaterlyEvaluation" dbtype="query">
+        SELECT 
+        	dateApproved
+        FROM 
+        	qGetQuaterlyEvaluation
+        WHERE	
+        	monthEvaluation = <cfqueryparam cfsqltype="cf_sql_integer" value="8">  
+    </cfquery>
+
+    <cfquery name="qGetNovQuaterlyEvaluation" dbtype="query">
+        SELECT 
+        	dateApproved
+        FROM 
+        	qGetQuaterlyEvaluation
+        WHERE	
+        	monthEvaluation = <cfqueryparam cfsqltype="cf_sql_integer" value="11">  
     </cfquery>
 
 </cfsilent>    
@@ -324,7 +371,7 @@
 
 <!--- candidate does not exist --->
 <cfif NOT VAL(qGetCandidate.recordcount)>
-	The candidate ID you are looking for was not found. This could be for a number of reasons.<br><br>
+	The candidate ID you are looking for was not found. This could be for a number of reasons.<br /><br />
 	<ul>
 		<li>the candidate record was deleted or renumbered
 		<li>the link you are following is out of date
@@ -344,7 +391,7 @@
 					<td class="title1">&nbsp; &nbsp; Candidate Information </td>
 				</tr>
 			</table>
-			<br>
+			<br />
 
 			<cfform name="CandidateInfo" method="post" action="?curdoc=candidate/qr_edit_candidate&uniqueid=#qGetCandidate.uniqueid#" onsubmit="return checkHistory(#VAL(qGetCandidate.programid)#, #VAL(qCandidatePlacedCompany.hostCompanyID)#);">
 			<input type="hidden" name="candidateID" value="#qGetCandidate.candidateID#">
@@ -363,7 +410,7 @@
 										<tr>
 											<td width="135" valign="top">			
 												<cfif '#FileExists("#AppPath.candidatePicture##qGetCandidate.candidateID#.#qGetCandidate.picture_type#")#'>
-													<img src="../uploadedfiles/web-candidates/#qGetCandidate.candidateID#.#qGetCandidate.picture_type#" width="135" /><br>
+													<img src="../uploadedfiles/web-candidates/#qGetCandidate.candidateID#.#qGetCandidate.picture_type#" width="135" /><br />
 													<a  class="style4Big" href="" onClick="javascript: win=window.open('candidate/upload_picture.cfm?uniqueID=#uniqueID#', 'Settings', 'height=305, width=636, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><b><center>Change Picture</center></b></a>
 												<cfelse>
 													<a class=nav_bar href="" onClick="javascript: win=window.open('candidate/upload_picture.cfm?uniqueID=#qGetCandidate.uniqueID#', 'Settings', 'height=305, width=636, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="../pics/no_logo.jpg" width="135" border="0"></a>
@@ -384,7 +431,7 @@
                                             <td align="center" colspan="2"><span class="style4">[ <a href='candidate/candidate_profile.cfm?uniqueID=#qGetCandidate.uniqueID#' target="_blank"><span class="style4">profile</span></a> ]</span></td>
                                         </tr>
                                         <tr>
-                                            <td align="center" colspan="2" class="style1"><cfif qGetCandidate.dob EQ ''>n/a<cfelse>#dateformat (qGetCandidate.dob, 'mm/dd/yyyy')# - #datediff('yyyy',qGetCandidate.dob,now())# year old</cfif> - <cfif qGetCandidate.sex EQ 'm'>Male<cfelse>Female</cfif></td>
+                                            <td align="center" colspan="2" class="style1"><cfif qGetCandidate.dob EQ ''>n/a<cfelse>#dateformat(qGetCandidate.dob, 'mm/dd/yyyy')# - #datediff('yyyy',qGetCandidate.dob,now())# year old</cfif> - <cfif qGetCandidate.sex EQ 'm'>Male<cfelse>Female</cfif></td>
                                         </tr> 
                                         <tr>
                                             <td width="18%" align="right" class="style1"><b>Intl. Rep.:</b></td>
@@ -416,7 +463,7 @@
                                         <tr>
                                             <td align="center" class="style1"><b>Date of Birth:</b></td>
                                             <td class="style1">
-                                            	<cfinput type="text" name="dob" class="style1" size=12 value="#dateformat (qGetCandidate.dob, 'mm/dd/yyyy')#" maxlength="35" validate="date" message="Date of Birth (MM/DD/YYYY)" required="yes">
+                                            	<cfinput type="text" name="dob" class="style1" size=12 value="#dateformat(qGetCandidate.dob, 'mm/dd/yyyy')#" maxlength="35" validate="date" message="Date of Birth (MM/DD/YYYY)" required="yes">
                                             	&nbsp; 
                                                 <b>Sex:</b> 
                                                 <input type="radio" name="sex" value="M" required="yes" message="You must specify the candidate's sex." <cfif qGetCandidate.sex Eq 'M'>checked="checked"</cfif>>Male &nbsp; &nbsp;
@@ -457,7 +504,7 @@
 				</tr>
 			</table>
 			
-			<br>
+			<br />
         
             <cfif qCheckNewCandidate.recordcount gt 0>
                 <table width="770" border="0" cellpadding="0" cellspacing="0" align="center">	
@@ -477,7 +524,7 @@
                         </td>
                     </tr>
                 </table>
-                <br>
+                <br />
             </cfif>
 
             <table width="770" border="0" cellpadding="0" cellspacing="0" align="center">	
@@ -490,7 +537,7 @@
                                 <td bordercolor="##FFFFFF">
                                 
                                     <table width="100%" cellpadding="5" cellspacing="0" border="0">
-                                        <tr bgcolor="C2D1EF" bordercolor="##FFFFFF">
+                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
                                             <td colspan="2" class="style2" bgcolor="8FB6C9">&nbsp;:: Personal Information</td>
                                         </tr>
                                         <tr>
@@ -618,7 +665,7 @@
                             </tr>
                         </table>
                         
-                        <br>
+                        <br />
                         
                         <!--- EMERGENCY CONTACT --->
                         <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
@@ -656,7 +703,7 @@
                             </tr>
                         </table>
                         
-                        <br>
+                        <br />
                         
                         <!--- LETTERS --->
                         <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
@@ -675,7 +722,7 @@
                             </tr>
                         </table>
                         
-                        <br>
+                        <br />
 
                         <!--- EVALUATIONS --->
                         <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
@@ -711,8 +758,65 @@
 							</tr>                                                                    
 						</table>                            
 
-                        <br>
+                        <br />
                         
+                        <!--- Quaterly Questionnaires --->
+                        <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+                                <td bordercolor="##FFFFFF">
+                                
+                                    <table width="100%" cellpadding=3 cellspacing="0" border="0">
+                                        <tr bgcolor="##C2D1EF">
+                                            <td colspan="4" class="style2" bgcolor="8FB6C9">&nbsp;:: Quaterly Questionnaire</td>
+                                        </tr>
+                                        <tr>
+                                            <td width="30%" class="style1" align="right"><b>February:</b></td>
+                                            <td width="70%" class="style1">
+                                            	<cfif isDate(qGetFebQuaterlyEvaluation.dateApproved)>
+                                                	#dateformat(qGetFebQuaterlyEvaluation.dateApproved, 'mm/dd/yyyy')#
+                                                <cfelse>                                                
+                                                	n/a
+												</cfif>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right"><b>May:</b></td>
+                                            <td class="style1">
+                                            	<cfif isDate(qGetMayQuaterlyEvaluation.dateApproved)>
+                                                	#dateformat(qGetMayQuaterlyEvaluation.dateApproved, 'mm/dd/yyyy')#
+                                                <cfelse>                                                
+                                                	n/a
+												</cfif>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right"><b>August:</b></td>
+                                            <td class="style1">
+                                            	<cfif isDate(qGetAugQuaterlyEvaluation.dateApproved)>
+                                                	#dateformat(qGetAugQuaterlyEvaluation.dateApproved, 'mm/dd/yyyy')#
+                                                <cfelse>                                                
+                                                	n/a
+												</cfif>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right"><b>November:</b></td>
+                                            <td class="style1">
+                                            	<cfif isDate(qGetNovQuaterlyEvaluation.dateApproved)>
+                                                	#dateformat(qGetNovQuaterlyEvaluation.dateApproved, 'mm/dd/yyyy')#
+                                                <cfelse>                                                
+                                                	n/a
+												</cfif>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    
+                                </td>	
+                            </tr>
+                        </table>     
+
+                        <br />
+                                           
                         <!---DOCUMENTS CONTROL --->
                         <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
                             <tr>
@@ -810,7 +914,7 @@
                                     </td>
                                 </tr>
                             </table>                        
-                            <br>
+                            <br />
                         </div>
                         
                         <!--- HOST COMPANY INFO --->
@@ -819,7 +923,7 @@
                                 <td bordercolor="##FFFFFF" valign="top">
                                 
                                     <table width="100%" cellpadding="5" cellspacing="0" border="0">
-                                        <tr bgcolor="C2D1EF">
+                                        <tr bgcolor="##C2D1EF">
                                             <td colspan="2" class="style2" bgcolor="8FB6C9">&nbsp;:: Host Company Information [<a href="javascript:openWindow('candidate/candidate_host_history.cfm?unqid=#uniqueID#', 400, 750);"><font class="style3" color="FFFFFF"> History </font></a>]</span></td>
                                         </tr>
                                         <tr>
@@ -862,18 +966,18 @@
                                             <td class="style1" align="right"><b>Start Date:</b></td>
                                             <td class="style1">
                                             	<span class="readOnly">
-                                                	#dateformat (qCandidatePlacedCompany.startdate, 'mm/dd/yyyy')#
+                                                	#dateformat(qCandidatePlacedCompany.startdate, 'mm/dd/yyyy')#
                                                  </span>
-                                                 <input type="text" name="host_startdate" class="style1 editPage" size=30 value="#dateformat (qCandidatePlacedCompany.startdate, 'mm/dd/yyyy')#" maxlength="10">
+                                                 <input type="text" name="host_startdate" class="style1 editPage" size=30 value="#dateformat(qCandidatePlacedCompany.startdate, 'mm/dd/yyyy')#" maxlength="10">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="style1" align="right"><b>End Date:</b></td>
                                             <td class="style1">
                                             	<span class="readOnly">
-                                                	#dateformat (qCandidatePlacedCompany.enddate, 'mm/dd/yyyy')#
+                                                	#dateformat(qCandidatePlacedCompany.enddate, 'mm/dd/yyyy')#
                                                 </span>    
-                                                <input type="text" name="host_enddate" class="style1 editPage" size=30 value="#dateformat (qCandidatePlacedCompany.enddate, 'mm/dd/yyyy')#" maxlength="10">
+                                                <input type="text" name="host_enddate" class="style1 editPage" size=30 value="#dateformat(qCandidatePlacedCompany.enddate, 'mm/dd/yyyy')#" maxlength="10">
                                             </td>
                                         </tr>
                                         
@@ -883,7 +987,7 @@
                             </tr>
                         </table>
                         
-                        <br>
+                        <br />
                         
                         <!--- PROGRAM INFO --->
                         <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
@@ -934,7 +1038,7 @@
                             </tr>
                         </table>
                         
-                        <br>
+                        <br />
                                         
                         <!----DS2019 Form---->
                         <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
@@ -942,7 +1046,7 @@
                                 <td bordercolor="##FFFFFF">
                                 
                                     <table width="100%" cellpadding=3 cellspacing="0" border="0">
-                                        <tr bgcolor="C2D1EF">
+                                        <tr bgcolor="##C2D1EF">
                                             <td colspan="4" class="style2" bgcolor="8FB6C9">&nbsp;:: Form DS-2019</td>
                                         </tr>	
                                         
@@ -1087,7 +1191,7 @@
                             </tr>
                         </table>
                         
-                        <br> 
+                        <br /> 
                        
                         <!--- INSURANCE INFO --->
                         <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
@@ -1139,7 +1243,7 @@
                             </tr>
                         </table>
                         
-                        <br>
+                        <br />
                         
                         <!--- FLIGHT INFO --->
                         <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
@@ -1147,7 +1251,7 @@
                                 <td bordercolor="##FFFFFF">
                                 
                                     <table width="100%" cellpadding=3 cellspacing="0" border="0">
-                                        <tr bgcolor="C2D1EF">
+                                        <tr bgcolor="##C2D1EF">
                                             <td colspan="4" class="style2" bgcolor="8FB6C9">&nbsp;:: Flight Info</td>
                                         </tr>	
                                         <tr>
@@ -1168,7 +1272,7 @@
                 </tr>
             </table>
             
-            <br>
+            <br />
                     
 			<!---- EDIT/UPDATE BUTTONS ---->
 			<cfif client.usertype LTE 4>
@@ -1191,7 +1295,7 @@
                     </tr>
                 </table>
                 
-                <br>
+                <br />
 			</cfif>
 
             </cfform>

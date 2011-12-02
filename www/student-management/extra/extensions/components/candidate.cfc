@@ -684,9 +684,9 @@
     </cffunction>
  
  
-	<!-------------------------------------------------- 
+	<!------------------------------------------------------------ 
 		Check Required Candidate and Section Fields 
-	--------------------------------------------------->
+	------------------------------------------------------------->
 	<cffunction name="checkCandidateRequiredFields" access="public" returntype="struct" output="false" hint="Check if required fields were answered">
         <cfargument name="candidateID" type="numeric" required="yes" hint="candidateID" />
         <cfargument name="sectionName" type="string" required="yes" hint="Section name" />
@@ -878,9 +878,9 @@
 	</cffunction>
 
 
-	<!-------------------------------------------------- 
+	<!------------------------------------------------------------
 		EXTRA - Intranet
-	--------------------------------------------------->
+	------------------------------------------------------------->
 
 	<cffunction name="getCandidatePlacementInformation" access="public" returntype="query" output="false" hint="Gets host company information for a candidate">
     	<cfargument name="candidateID" required="yes" hint="candidateID is required">
@@ -928,9 +928,9 @@
 	</cffunction>
 
 
-	<!--------------------------------------------------
+	<!------------------------------------------------------------
 		Candidate Incident Report 
-	--------------------------------------------------->
+	------------------------------------------------------------->
 	<cffunction name="getIncidentReport" access="public" returntype="query" output="false" hint="Gets a incidents for a candidate">
     	<cfargument name="incidentID" default="" hint="incidentID is not required">
         <cfargument name="candidateID" default="" hint="candidateID is not required">
@@ -1061,14 +1061,14 @@
         </cfif>
         	
 	</cffunction>
-	<!-------------------------------------------------- 
+	<!------------------------------------------------------------ 
 		End of Candidate Incident Report 
-	--------------------------------------------------->
+	------------------------------------------------------------->
 
 
-	<!-------------------------------------------------- 
+	<!------------------------------------------------------------ 
 		Check-In Update Tool
-	--------------------------------------------------->
+	------------------------------------------------------------->
 	<cffunction name="getCheckInToolStudentList" access="remote" returnFormat="json" output="false" hint="Returns verification report list in Json format">
     	<cfargument name="intRep" default="0" hint="candidateID is not required">
         <cfargument name="programID" default="0" hint="programID is not required">
@@ -1145,14 +1145,14 @@
 		</cfquery>
 		   
 	</cffunction>
-	<!-------------------------------------------------- 
+	<!------------------------------------------------------------ 
 		End of Check-In Update Tool
-	--------------------------------------------------->
+	------------------------------------------------------------->
 
 
-	<!-------------------------------------------------- 
+	<!------------------------------------------------------------ 
 		Monthly Evaluation Tool
-	--------------------------------------------------->
+	------------------------------------------------------------->
 	<cffunction name="getMonthlyEvaluationList" access="remote" returnFormat="json" output="false" hint="Returns verification report list in Json format">
     	<cfargument name="intRep" default="0" hint="International Representative is not required">
         <cfargument name="programID" default="0" hint="programID is not required">
@@ -1267,14 +1267,14 @@
         </cfif>
         		   
 	</cffunction>
-	<!-------------------------------------------------- 
+	<!------------------------------------------------------------ 
 		End of Monthly Evaluation Tool
-	--------------------------------------------------->
+	------------------------------------------------------------->
 
 
-	<!-------------------------------------------------- 
+	<!------------------------------------------------------------ 
 		Candidate Profile Update Tool
-	--------------------------------------------------->
+	------------------------------------------------------------->
 	<cffunction name="getEnglishAssessmentToolList" access="remote" returnFormat="json" output="false" hint="Returns verification report list in Json format">
 		<cfargument name="keyword" default="" hint="Keyword used in search">
     	<cfargument name="intRep" default="0" hint="International Representative is not required">
@@ -1359,14 +1359,14 @@
 		</cfquery>
 		   
 	</cffunction>
-	<!-------------------------------------------------- 
+	<!------------------------------------------------------------ 
 		End of Candidate Profile Update Tool
-	--------------------------------------------------->
+	------------------------------------------------------------>
 
 
-	<!--------------------------------------------------
+	<!------------------------------------------------------------
 		DS-2019 Online Verification Tool 
-	--------------------------------------------------->
+	------------------------------------------------------------->
 	<cffunction name="getVerificationList" access="remote" returnFormat="json" output="false" hint="Returns verification report list in Json format">
     	<cfargument name="intRep" default="0" hint="International Representative is not required">
         <cfargument name="receivedDate" default="" hint="Filter by verification received date">
@@ -1515,9 +1515,93 @@
 		</cfquery>
 		   
 	</cffunction>
-	<!-------------------------------------------------- 
+	<!------------------------------------------------------------ 
 		End of DS-2019 Online Verification Tool 
-	--------------------------------------------------->
+	------------------------------------------------------------>
 
+
+	<!------------------------------------------------------------ 
+		Trainee - Candidate Quaterly Questionnaire
+	------------------------------------------------------------->
+	<cffunction name="getTraineeQuaterlyReport" access="remote" returnFormat="json" output="false" hint="Returns verification report list in Json format">
+    	<cfargument name="intRep" default="0" hint="International Representative is not required">
+        <cfargument name="programID" default="0" hint="programID is not required">
+        <cfargument name="monthEvaluation" default="" hint="monthEvaluation (2,5,8,11)">
+        
+        <cfquery 
+			name="qGetTraineeQuaterlyReport" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT
+					ec.uniqueID,
+                    ec.candidateID,
+                    ec.firstName,
+                    ec.lastName,
+                    DATE_FORMAT(ec.startDate, '%m/%e/%Y') AS startDate,
+                    DATE_FORMAT(ec.endDate, '%m/%e/%Y') AS endDate,
+                    IFNULL(u.businessName, '') AS businessName,
+                    IFNULL(p.programName, '') AS programName,
+                    IFNULL(eh.name, '') AS hostCompanyName,
+                    IFNULL(DATE_FORMAT(ee.dateCreated, '%m/%e/%Y'), '') AS dateSubmitted, 
+                    IFNULL(DATE_FORMAT(ee.dateApproved, '%m/%e/%Y'), '') AS dateApproved                    
+                FROM 
+                    extra_candidates ec
+				INNER JOIN
+                	smg_users u ON u.userID = ec.intRep
+                LEFT OUTER JOIN
+                	smg_programs p ON p.programID = ec.programID
+                LEFT OUTER JOIN
+                	extra_hostCompany eh ON eh.hostCompanyID = ec.hostCompanyID
+                LEFT OUTER JOIN
+                	extra_evaluation ee ON ee.candidateID = ec.candidateID
+                   		AND
+                        	ee.monthEvaluation = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.monthEvaluation)#">
+                WHERE
+                    ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                AND
+                	ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                AND    
+                    ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
+                AND
+		        	ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
+                
+				<cfif VAL(ARGUMENTS.intRep)>
+                    AND
+                        ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.intRep#">
+                </cfif>
+
+				<cfif VAL(ARGUMENTS.programID)>
+                    AND
+                        ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">
+                </cfif>
+                
+			ORDER BY
+            	ec.lastName,
+                ec.firstName
+		</cfquery>
+		   
+		<cfreturn qGetTraineeQuaterlyReport>
+	</cffunction>
+    
+    
+	<cffunction name="confirmQuaterlyReportReceived" access="remote" returntype="void" hint="Updates quaterly report on record.">
+        <cfargument name="candidateID" required="yes" hint="candidateID is required">
+        <cfargument name="monthEvaluation" required="yes" hint="monthEvaluation (2,5,8,11)">
+    
+        <cfquery 
+            datasource="#APPLICATION.DSN.Source#">
+                UPDATE
+                    extra_evaluation
+                SET
+                    dateApproved = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                WHERE
+                    candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
+                AND
+                    monthEvaluation = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.monthEvaluation#">
+        </cfquery>
+        		   
+	</cffunction>
+	<!------------------------------------------------------------ 
+		End of Trainee - Candidate Quaterly Questionnaire
+	------------------------------------------------------------->
 
 </cfcomponent>

@@ -47,15 +47,16 @@
 		<td bgcolor="##8FB6C9">
             <a class="item1" href="">Tools</a>
             <div class="section">
-				<a class="item2" href="?curdoc=insurance/insurance_menu">Insurance</a>
+				<a class="item2" href="?curdoc=tools/idcards_select">ID Cards</a>
+                <a class="item2" href="?curdoc=insurance/insurance_menu">Insurance</a>
 					<div class="section">
 						<a class="item2" href="?curdoc=insurance/intl_rep_insurance">Intl. Rep Insurance Type</a>
 						<a class="item2" href="?curdoc=insurance/insurance_policies">Insurance Policies</a>
 					</div>
-				<a class="item2" href="?curdoc=tools/idcards_select">ID Cards</a>
+				<a class="item2" href="?curdoc=tools/labels_select_pro">Labels</a>
 				<a class="item2" href="?curdoc=tools/programs">Programs &nbsp;</a>
-				<a class="item2" href="?curdoc=tools/labels_select_pro">Labels &nbsp; &nbsp; &nbsp; &nbsp;</a>
-				
+                <a class="item2" href="?curdoc=tools/quaterlyReports">Quaterly Reports</a>
+            	<a class="item2" href="?curdoc=tools/traineeEvaluations">Trainee Evaluations</a>
 			</div>
 		</td>
 		<td bgcolor="##8FB6C9">
