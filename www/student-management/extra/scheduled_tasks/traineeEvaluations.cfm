@@ -39,21 +39,21 @@
 			Attached to this email you will find the evaluation form {evaluationType}. 
 			The trainee’s supervisor should print the form, fill it in, date it and sign it together with the trainee. Then the form should be either: <br /> <br />
 			
-			1)	 scanned and emailed to <a href=""mailto:sergei@iseusa.com"">sergei@iseusa.com</a> (preferably) <br /> <br />
+			1) scanned and emailed to <a href=""mailto:sergei@iseusa.com"">sergei@iseusa.com</a> (preferably) <br /> <br />
 			
 			OR <br /> <br />
 			
-			2)	 faxed to 631.422.3708 attention to Sergei Chernyshov <br /> <br />   
+			2) faxed to 631.422.3708 attention to Sergei Chernyshov <br /> <br />   
 			
 			OR <br /> <br />
 			
-			3)	sent via regular mail to: <br /> <br />
+			3) sent via regular mail to: <br /> <br />
 			
 			Sergei Chernyshov <br />
 			119 Cooper Street <br />
 			Babylon, NY, 11702 <br /> <br />
 			
-			<p>This is an automated email that will be sent every week until the evaluation form is received by ISE.</p>			
+			<p>This is an automated email that will be sent every week until the evaluation form is received.</p>			
 			
 			<p>Should you have any questions, please feel free to contact me. <br />
 			Thank you for your understanding.</p>	
@@ -271,7 +271,8 @@
 	<cfscript>
 		// set email to
 		vEmailFrom = 'sergei@iseusa.com';
-		vEmailCC = 'sergei@iseusa.com';
+		//vEmailCC = 'marcus@iseusa.com';
+		//vEmailCC = 'sergei@iseusa.com';
 	
 		// Email Midterm - Loop Through Query
 		For ( i=1;i LTE qGetMidterm.Recordcount; i=i+1 ) {
@@ -284,7 +285,7 @@
 				vEmailTo = qGetMidterm.email[i] & ';';	
 			}
 
-			// check if we have a valid email for the candidate
+			// check if we have a valid email for the host company
 			if ( IsValid("email", qGetMidterm.hostEmail[i]) ) {
 				vEmailTo = vEmailTo & qGetMidterm.hostEmail[i];	
 			}
@@ -302,7 +303,7 @@
 					emailMessage=vMidTermEvaluation,
 					emailFilePath=APPLICATION.PATH.TRAINEE.PDFDOCS & "ISE_Midterm Evaluation.pdf",
 					emailPriority=1,
-					footerType="emailRegular",
+					footerType="emailNoInfo",
 					companyID=7
 				);
 			
@@ -399,7 +400,7 @@
 	</tr>
     <cfloop query="qGetSummative">
         <tr>
-            <td style="border-bottom:1px solid ##999;">###qGetMidterm.candidateID# #qGetSummative.firstName# #qGetSummative.lastName#</td>
+            <td style="border-bottom:1px solid ##999;">###qGetSummative.candidateID# #qGetSummative.firstName# #qGetSummative.lastName#</td>
             <td style="border-bottom:1px solid ##999; border-left:1px solid ##999;">#qGetSummative.email#</td>
             <td style="border-bottom:1px solid ##999; border-left:1px solid ##999;">#qGetSummative.programName#</td>
             <td style="border-bottom:1px solid ##999; border-left:1px solid ##999;">#DateFormat(qGetSummative.ds2019_startDate, 'mm/dd/yyyy')#</td>
