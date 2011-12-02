@@ -22,7 +22,7 @@
 		// Get flights updated in the last 24 hours
 		qGetDepartures = APPLICATION.CFC.FLIGHTINFORMATION.getDailyFlightReport(flightType='Departure');	
 	</cfscript>
-
+    
 </cfsilent>
 
 <cfsavecontent variable="flightReport">
@@ -44,7 +44,7 @@
                     <tr style="color: ##fff; font-weight: bold; text-align:center; background-color: ##0069aa;">
                         <td style="padding:4px 0px 4px 0px;">Arrival Date</td>
                         <td style="padding:4px 0px 4px 0px;">Arrival Airport</td>
-                        <td style="padding:4px 0px 4px 0px;">Arrival Time / Flight #</td>
+                        <td style="padding:4px 0px 4px 0px;">Arrival Time / Flight ##</td>
                     </tr>                                
 
                     <cfoutput>
@@ -92,7 +92,7 @@
                     <tr style="color: ##fff; font-weight: bold; text-align:center; background-color: ##0069aa;">
                         <td style="padding:4px 0px 4px 0px;">Departure Date</td>
                         <td style="padding:4px 0px 4px 0px;">Departure Airport</td>
-                        <td style="padding:4px 0px 4px 0px;">Departure Time / Flight #</td>
+                        <td style="padding:4px 0px 4px 0px;">Departure Time / Flight ##</td>
                     </tr>                                
 
                     <cfoutput>
