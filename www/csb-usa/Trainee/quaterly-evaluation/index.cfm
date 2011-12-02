@@ -29,7 +29,36 @@
     <cfparam name="FORM.hostCompanyEvaluation" default="">
     <cfparam name="FORM.hasHostCompanyConcern" default="">
     <cfparam name="FORM.hostCompanyConcernDetails" default="">
+	
+    <cfscript>
+		// Set Current Month Evaluation
+		vCurrentMonth = Month(now());
+		
+		// Set Month of Evaluation Report
+		vMonthEvaluation = '';
+		
+		switch(vCurrentMonth) {
+			
+			// February
+			case 2: case 3: case 4: {
+				vMonthEvaluation = 2;
+			}
+			// May
+			case 5: case 6: case 7: {
+				vMonthEvaluation = 5;
+			}
+			// August
+			case 8: case 9: case 10: {
+				vMonthEvaluation = 8;
+			}
+			// November
+			case 11: case 12: case 1: {
+				vMonthEvaluation = 11;
+			}
 
+		}
+	</cfscript>
+    
     <cfquery name="qGetCandidateInfo" datasource="mysql">
 		SELECT
         	candidateID,
@@ -47,6 +76,17 @@
             </cfif>
     </cfquery>
 
+    <cfquery name="qCheckReportReceived" datasource="mysql">
+        SELECT
+            candidateID
+        FROM
+            extra_evaluation
+        WHERE
+            candidateID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(qGetCandidateInfo.candidateID)#">
+        AND	
+            monthEvaluation = <cfqueryparam cfsqltype="cf_sql_integer" value="#vMonthEvaluation#">
+    </cfquery>
+    
 	<!----First check to see if its being submitted---->
     <cfif FORM.submitted>
     
@@ -144,6 +184,27 @@
                     SESSION.formErrors.Add("We could not locate your account, please make sure you typed in the correct SEVIS number");
                 }			
             </cfscript>
+            
+            <cfquery name="qCheckReportReceived" datasource="mysql">
+                SELECT
+                    candidateID
+                FROM
+                    extra_evaluation
+                WHERE
+                    candidateID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(qLookUpCandidate.candidateID)#">
+                AND	
+                	monthEvaluation = <cfqueryparam cfsqltype="cf_sql_integer" value="#vMonthEvaluation#">
+            </cfquery>
+            
+            <cfscript>
+                // Data Validation
+                
+                // Report Already Submitted
+                if ( qCheckReportReceived.recordCount ) {
+                    // Get all the missing items in a list
+                    SESSION.formErrors.Add("You have already submitted the #MonthAsString(vMonthEvaluation)# Quaterly Questionnaire. No action is required from you at this time. Thank you!");
+                }			
+            </cfscript>
         
         </cfif>
             
@@ -155,7 +216,7 @@
                 	extra_evaluation
                 (
                 	candidateID,
-                    <!--- monthEvaluation, --->
+                    monthEvaluation,
                     hasHousingChanged,
                     housingChangedDetails,
                     hostCompanyEvaluation,
@@ -166,7 +227,7 @@
                 	VALUES 
               	(
                 	<cfqueryparam cfsqltype="cf_sql_integer" value="#qLookUpCandidate.candidateID#">,
-                    <!--- <cfqueryparam cfsqltype="cf_sql_varchar" value="#URL.uniqueID#">, --->
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#vMonthEvaluation#">,
                     <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.hasHousingChanged)#">,
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingChangedDetails#">,
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hostCompanyEvaluation#">,
@@ -178,6 +239,8 @@
         	
             <cfsavecontent variable="reportDetails">
             	<cfoutput>
+                    <h3>CSB - Mandatory Trainee #MonthAsString(vMonthEvaluation)# Quaterly Questionnaire - #DateFormat(Now(), 'mm/dd/yyyy')#.</h3>
+                    
                     <p>1. SEVIS Number: <strong>#FORM.ds2019#</strong> </p>
                     
                     <p>2. Last name: <strong>#FORM.lastName# (###qLookUpCandidate.candidateID#)</strong> </p>
@@ -213,9 +276,11 @@
                 </cfoutput>            
             </cfsavecontent>
             
-            <cfmail to="sergei@iseusa.com" cc="#FORM.email#" from="info@csb-usa.com" subject="#FORM.lastName# #FORM.firstName# (###qLookUpCandidate.candidateID#) CSB Trainee - Quaterly Questionnaire" type="html">
-                <h3>CSB - Mandatory Trainee Quaterly Questionnaire - #DateFormat(Now(), 'mm/dd/yyyy')#.</h3>
-                
+            <cfmail 
+            	to="sergei@iseusa.com" 
+                <!--- cc="#FORM.email#"  --->
+                from="info@csb-usa.com" 
+                subject="#FORM.lastName# #FORM.firstName# (###qLookUpCandidate.candidateID#) - CSB Trainee #MonthAsString(vMonthEvaluation)# Quaterly Questionnaire Submitted" type="html">
                 #reportDetails#
 			</cfmail>
                 
@@ -239,7 +304,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>CSB - Quaterly Questionnaire</title>
+<title><cfoutput>CSB Trainee #MonthAsString(vMonthEvaluation)# Quaterly Questionnaire</cfoutput></title>
 <link rel="stylesheet" href="../../linked/css/baseStyle.css" type="text/css">
 <style type="text/css">
 	body table  {
@@ -332,13 +397,13 @@
 
     <div class="wrapper">
     
-        <div class="header">CSB - Quaterly Questionnaire</div>
+        <div class="header">CSB Trainee #MonthAsString(vMonthEvaluation)# Quaterly Questionnaire</div>
         
 		<!--- Check if there are no errors --->
         <cfif FORM.submitted AND NOT SESSION.formErrors.length()>
 
             <div class="info">
-                <h3>The following information has been succesfully submitted to CSB Trainee from the CSB - Mandatory Trainee Quaterly Questionnaire.</h3>
+                <h3>The following information has been succesfully submitted to CSB.</h3>
             </div>
             
             <div class="grey">
@@ -364,9 +429,18 @@
                 formErrors="#SESSION.formErrors.GetCollection()#"
                 messageType="section"
                 />
-        
-            <div class="grey">
+
+			<!--- Report Received --->
+            <cfif qCheckReportReceived.recordCount>
+                <div class="errors">
+                    <p>You have already submitted the #MonthAsString(vMonthEvaluation)# Quaterly Questionnaire.</p>
+                    <p>&nbsp;</p>
+                    <p>No action is required from you at this time. Thank you!</p>
+                </div>
+            </cfif>  
             
+            <div class="grey">
+            	
                 <cfform name="form" id="form" action="#CGI.SCRIPT_NAME#" method="post">
                     <input type="hidden" name="submitted" value="1"/>
                     
@@ -403,8 +477,8 @@
                             </td>
                         </tr>
                         <tr>
-                        	<td colspan="2" class="bold">
-                            	<label for="housingChangedDetails">If Yes and you did not previously inform CSB, please provide your full new housing address, email and contact phone number</label> 
+                            <td colspan="2" class="bold">
+                                <label for="housingChangedDetails">If Yes and you did not previously inform CSB, please provide your full new housing address, email and contact phone number</label> 
                             </td>
                         </tr>
                         <tr>
@@ -416,8 +490,8 @@
                         
                         <tr>
                             <td colspan="2" class="bold">
-                            	<label for="hostCompanyEvaluation">6. Please write a short evaluation of your host company in the space provided</label> 
-                            	<span class="required">*</span>
+                                <label for="hostCompanyEvaluation">6. Please write a short evaluation of your host company in the space provided</label> 
+                                <span class="required">*</span>
                             </td>
                         </tr>
                         <tr>
@@ -429,8 +503,8 @@
                         
                         <tr>
                             <td colspan="2" class="bold">
-                            	7. Do you have any current problems or concerns about the program or your host company?
-                            	<span class="required">*</span>
+                                7. Do you have any current problems or concerns about the program or your host company?
+                                <span class="required">*</span>
                             </td>
                         </tr>
                         <tr>
@@ -443,7 +517,7 @@
                             </td>
                         </tr>
                         <tr>
-                        	<td colspan="2"  class="bold"><label for="hostCompanyConcernDetails">If Yes, please list and provide full details (where/what/who/why)</label></td>
+                            <td colspan="2"  class="bold"><label for="hostCompanyConcernDetails">If Yes, please list and provide full details (where/what/who/why)</label></td>
                         </tr>
                         
                         <tr>
@@ -457,9 +531,12 @@
                         
                         <tr><td colspan="2"><span class="required">*Required Fields</span></td></tr>
                         
-                        <tr>
-                            <td colspan="2" align="center" valign="middle"><input type="submit" name="submit" id="submit" value="Submit" /></td>
-                        </tr>
+                        <cfif NOT VAL(qCheckReportReceived.recordCount)>
+                            <tr>
+                                <td colspan="2" align="center" valign="middle"><input type="submit" name="submit" id="submit" value="Submit" /></td>
+                            </tr>
+                        </cfif>
+                        
                     </table>
                 </cfform>
                 
