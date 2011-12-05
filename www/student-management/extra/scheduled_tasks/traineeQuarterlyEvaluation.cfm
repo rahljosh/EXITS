@@ -102,6 +102,7 @@
             ec.lastName,
             ec.email,
             ec.ds2019_startDate,
+            DATE_ADD(ec.ds2019_startDate, INTERVAL 2 MONTH) AS evaluationDate,
             ec.ds2019_endDate,
             p.programName,
             hc.hostCompanyID,
@@ -121,7 +122,13 @@
         	ec.doc_midterm_evaluation IS NULL
         AND 
             ec.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vProgramList#" list="yes"> )
-        
+            
+        <!--- Include candidates that have started the program for at least 2 months --->
+        AND
+        	CURDATE() >= DATE_ADD(ec.ds2019_startDate, INTERVAL 2 MONTH) 
+        AND 
+            CURDATE() <= DATE_ADD(ec.ds2019_endDate, INTERVAL 2 MONTH)
+            
 		<!--- Evaluation not received --->
         AND
         	ec.candidateID NOT IN (
