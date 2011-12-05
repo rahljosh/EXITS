@@ -1521,15 +1521,15 @@
 
 
 	<!------------------------------------------------------------ 
-		Trainee - Candidate Quaterly Questionnaire
+		Trainee - Candidate Quarterly Questionnaire
 	------------------------------------------------------------->
-	<cffunction name="getTraineeQuaterlyReport" access="remote" returnFormat="json" output="false" hint="Returns verification report list in Json format">
+	<cffunction name="getTraineeQuarterlyReport" access="remote" returnFormat="json" output="false" hint="Returns verification report list in Json format">
     	<cfargument name="intRep" default="0" hint="International Representative is not required">
         <cfargument name="programID" default="0" hint="programID is not required">
         <cfargument name="monthEvaluation" default="" hint="monthEvaluation (2,5,8,11)">
         
         <cfquery 
-			name="qGetTraineeQuaterlyReport" 
+			name="qGetTraineeQuarterlyReport" 
 			datasource="#APPLICATION.DSN.Source#">
                 SELECT
 					ec.uniqueID,
@@ -1579,11 +1579,11 @@
                 ec.firstName
 		</cfquery>
 		   
-		<cfreturn qGetTraineeQuaterlyReport>
+		<cfreturn qGetTraineeQuarterlyReport>
 	</cffunction>
     
     
-	<cffunction name="confirmQuaterlyReportReceived" access="remote" returntype="void" hint="Updates quaterly report on record.">
+	<cffunction name="confirmQuarterlyReportReceived" access="remote" returntype="void" hint="Updates quarterly report on record.">
         <cfargument name="candidateID" required="yes" hint="candidateID is required">
         <cfargument name="monthEvaluation" required="yes" hint="monthEvaluation (2,5,8,11)">
     
@@ -1601,7 +1601,7 @@
         		   
 	</cffunction>
 	<!------------------------------------------------------------ 
-		End of Trainee - Candidate Quaterly Questionnaire
+		End of Trainee - Candidate Quarterly Questionnaire
 	------------------------------------------------------------->
 
 </cfcomponent>
