@@ -135,7 +135,7 @@
 				);
 				
 				// Set Page Message
-				SESSION.pageMessages.Add("Thank you for applying to GPA. Your application has successfully been submitted.");
+				SESSION.pageMessages.Add("Thank you for applying to The MacDuffie School. Your application has successfully been submitted.");
 				
 				// Reload page with updated information
 				location("#CGI.SCRIPT_NAME#?action=submit", "no");
@@ -223,7 +223,7 @@
                 <input type="hidden" name="submitted" value="1" />
 				
 				<cfif printApplication>
-                    <p class="legend"><strong>Note:</strong> Thank you for applying to GPA. Your application has been submitted. </p>
+                    <p class="legend"><strong>Note:</strong> Thank you for applying to The MacDuffie School. Your application has been submitted. </p>
 				<cfelse>
                     <p class="legend"><strong>Note:</strong> Required fields are marked with an asterisk (<em>*</em>). Once you submit your application you will no longer be able to make any changes. </p>
                 </cfif>
