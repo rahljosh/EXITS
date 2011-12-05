@@ -210,7 +210,7 @@
         	departDate DESC            
     </cfquery>
 	
-    <cfquery name="qGetQuaterlyEvaluation" datasource="mySQL">
+    <cfquery name="qGetQuarterlyEvaluation" datasource="mySQL">
         SELECT 
         	candidateID,
             monthEvaluation,
@@ -221,38 +221,38 @@
         	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidate.candidateID#">  
     </cfquery>
 
-    <cfquery name="qGetFebQuaterlyEvaluation" dbtype="query">
+    <cfquery name="qGetFebQuarterlyEvaluation" dbtype="query">
         SELECT 
         	dateApproved
         FROM 
-        	qGetQuaterlyEvaluation
+        	qGetQuarterlyEvaluation
         WHERE	
         	monthEvaluation = <cfqueryparam cfsqltype="cf_sql_integer" value="5">  
     </cfquery>
 
-    <cfquery name="qGetMayQuaterlyEvaluation" dbtype="query">
+    <cfquery name="qGetMayQuarterlyEvaluation" dbtype="query">
         SELECT 
         	dateApproved
         FROM 
-        	qGetQuaterlyEvaluation
+        	qGetQuarterlyEvaluation
         WHERE	
         	monthEvaluation = <cfqueryparam cfsqltype="cf_sql_integer" value="5">  
     </cfquery>
 
-    <cfquery name="qGetAugQuaterlyEvaluation" dbtype="query">
+    <cfquery name="qGetAugQuarterlyEvaluation" dbtype="query">
         SELECT 
         	dateApproved
         FROM 
-        	qGetQuaterlyEvaluation
+        	qGetQuarterlyEvaluation
         WHERE	
         	monthEvaluation = <cfqueryparam cfsqltype="cf_sql_integer" value="8">  
     </cfquery>
 
-    <cfquery name="qGetNovQuaterlyEvaluation" dbtype="query">
+    <cfquery name="qGetNovQuarterlyEvaluation" dbtype="query">
         SELECT 
         	dateApproved
         FROM 
-        	qGetQuaterlyEvaluation
+        	qGetQuarterlyEvaluation
         WHERE	
         	monthEvaluation = <cfqueryparam cfsqltype="cf_sql_integer" value="11">  
     </cfquery>
@@ -760,20 +760,20 @@
 
                         <br />
                         
-                        <!--- Quaterly Questionnaires --->
+                        <!--- Quarterly Questionnaires --->
                         <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
                             <tr>
                                 <td bordercolor="##FFFFFF">
                                 
                                     <table width="100%" cellpadding=3 cellspacing="0" border="0">
                                         <tr bgcolor="##C2D1EF">
-                                            <td colspan="4" class="style2" bgcolor="8FB6C9">&nbsp;:: Quaterly Questionnaire</td>
+                                            <td colspan="4" class="style2" bgcolor="8FB6C9">&nbsp;:: Quarterly Questionnaire</td>
                                         </tr>
                                         <tr>
                                             <td width="30%" class="style1" align="right"><b>February:</b></td>
                                             <td width="70%" class="style1">
-                                            	<cfif isDate(qGetFebQuaterlyEvaluation.dateApproved)>
-                                                	#dateformat(qGetFebQuaterlyEvaluation.dateApproved, 'mm/dd/yyyy')#
+                                            	<cfif isDate(qGetFebQuarterlyEvaluation.dateApproved)>
+                                                	#dateformat(qGetFebQuarterlyEvaluation.dateApproved, 'mm/dd/yyyy')#
                                                 <cfelse>                                                
                                                 	n/a
 												</cfif>
@@ -782,8 +782,8 @@
                                         <tr>
                                             <td class="style1" align="right"><b>May:</b></td>
                                             <td class="style1">
-                                            	<cfif isDate(qGetMayQuaterlyEvaluation.dateApproved)>
-                                                	#dateformat(qGetMayQuaterlyEvaluation.dateApproved, 'mm/dd/yyyy')#
+                                            	<cfif isDate(qGetMayQuarterlyEvaluation.dateApproved)>
+                                                	#dateformat(qGetMayQuarterlyEvaluation.dateApproved, 'mm/dd/yyyy')#
                                                 <cfelse>                                                
                                                 	n/a
 												</cfif>
@@ -792,8 +792,8 @@
                                         <tr>
                                             <td class="style1" align="right"><b>August:</b></td>
                                             <td class="style1">
-                                            	<cfif isDate(qGetAugQuaterlyEvaluation.dateApproved)>
-                                                	#dateformat(qGetAugQuaterlyEvaluation.dateApproved, 'mm/dd/yyyy')#
+                                            	<cfif isDate(qGetAugQuarterlyEvaluation.dateApproved)>
+                                                	#dateformat(qGetAugQuarterlyEvaluation.dateApproved, 'mm/dd/yyyy')#
                                                 <cfelse>                                                
                                                 	n/a
 												</cfif>
@@ -802,8 +802,8 @@
                                         <tr>
                                             <td class="style1" align="right"><b>November:</b></td>
                                             <td class="style1">
-                                            	<cfif isDate(qGetNovQuaterlyEvaluation.dateApproved)>
-                                                	#dateformat(qGetNovQuaterlyEvaluation.dateApproved, 'mm/dd/yyyy')#
+                                            	<cfif isDate(qGetNovQuarterlyEvaluation.dateApproved)>
+                                                	#dateformat(qGetNovQuarterlyEvaluation.dateApproved, 'mm/dd/yyyy')#
                                                 <cfelse>                                                
                                                 	n/a
 												</cfif>

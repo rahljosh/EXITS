@@ -1,6 +1,6 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		traineeQuaterlyEvaluation.cfm
+	File:		traineeQuarterlyEvaluation.cfm
 	Author:		Marcus Melo
 	Date:		December 2, 2011
 	Desc:		Scheduled Task - Sends out an email every quarter 
@@ -47,7 +47,7 @@
 		}
 		
 		// Store Midterm Email Body in a variable
-		savecontent variable="vQuaterlyEvaluationEmailBody" {
+		savecontent variable="vQuarterlyEvaluationEmailBody" {
 			WriteOutput(
 			"
 				<p>Dear Participant,</p>
@@ -64,7 +64,7 @@
 				</p>
 				
 				<p>
-					<a href=""{vQuaterlyEvaluationLink}"">CSB Quaterly Evaluation</a>
+					<a href=""{vQuarterlyEvaluationLink}"">CSB Quarterly Evaluation</a>
 				</p>
 				
 				<p>
@@ -72,7 +72,7 @@
 				</p>
 
 				<p>
-					{vQuaterlyEvaluationLink} 
+					{vQuarterlyEvaluationLink} 
 				</p>				
 				
 				<p>	
@@ -149,15 +149,15 @@
 			if ( IsValid("email", qGetActiveCandidates.email[i]) ) {
 		
 				// Change variable on email to display correct evaluation link
-				vQuaterlyEvaluationLink = ReplaceNoCase(vQuaterlyEvaluationEmailBody, "{vQuaterlyEvaluationLink}", "http://www.csb-usa.com/trainee/quaterly-evaluation/?uniqueID=#qGetActiveCandidates.uniqueID[i]#", "All");
+				vQuarterlyEvaluationLink = ReplaceNoCase(vQuarterlyEvaluationEmailBody, "{vQuarterlyEvaluationLink}", "http://www.csb-usa.com/trainee/quarterly-evaluation/?uniqueID=#qGetActiveCandidates.uniqueID[i]#", "All");
 		
 				// Email
 				APPLICATION.CFC.EMAIL.sendEmail(
 					emailFrom=vEmailFrom,
 					emailTo=qGetActiveCandidates.email[i],
 					emailReplyTo=vEmailFrom,
-					emailSubject=qGetActiveCandidates.firstName[i] & ' ' & qGetActiveCandidates.lastName[i] & " CSB Trainee #MonthAsString(vMonthEvaluation)# Quaterly Questionnaire",
-					emailMessage=vQuaterlyEvaluationLink,
+					emailSubject=qGetActiveCandidates.firstName[i] & ' ' & qGetActiveCandidates.lastName[i] & " CSB Trainee #MonthAsString(vMonthEvaluation)# Quarterly Questionnaire",
+					emailMessage=vQuarterlyEvaluationLink,
 					emailPriority=1,
 					footerType="emailNoInfo",
 					companyID=7
@@ -175,7 +175,7 @@
 <!--- MidTerm --->
 <table width="100%" cellpadding="3" cellspacing="0" style="margin:10px; border:1px solid ##999;">
 	<tr>
-    	<th colspan="8" style="border-bottom:1px solid ##999;">Quaterly Evaluation - #MonthAsString(vMonthEvaluation)# 1st</th>
+    	<th colspan="8" style="border-bottom:1px solid ##999;">Quarterly Evaluation - #MonthAsString(vMonthEvaluation)# 1st</th>
 	</tr>        
 	<tr>
     	<td style="border-bottom:1px solid ##999;">Candidate</td>

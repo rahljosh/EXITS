@@ -55,7 +55,7 @@
 					</div>
 				<a class="item2" href="?curdoc=tools/labels_select_pro">Labels</a>
 				<a class="item2" href="?curdoc=tools/programs">Programs &nbsp;</a>
-                <a class="item2" href="?curdoc=tools/quaterlyReports">Quaterly Reports</a>
+                <a class="item2" href="?curdoc=tools/quarterlyReports">Quarterly Reports</a>
             	<a class="item2" href="?curdoc=tools/traineeEvaluations">Trainee Evaluations</a>
 			</div>
 		</td>

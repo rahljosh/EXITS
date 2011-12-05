@@ -1,9 +1,9 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		quaterlyReports.cfm
+	File:		quarterlyReports.cfm
 	Author:		Marcus Melo
 	Date:		November 14, 2011
-	Desc:		Quaterly Report Update Tool 
+	Desc:		Quarterly Report Update Tool 
 
 	Updated:  	
 
@@ -90,7 +90,7 @@
 		c.setErrorHandler(myErrorHandler); 
 		
 		// This time, pass the intlRep ID to the getCandidateList CFC function. 
-		c.getTraineeQuaterlyReport(intlRep,programID,monthEvaluation);
+		c.getTraineeQuarterlyReport(intlRep,programID,monthEvaluation);
 	} 
 
 	// Callback function to handle the results returned by the getCandidateList function and populate the table. 
@@ -153,9 +153,9 @@
 				tableBody += '<td class="style5">' + startDate + '</td>';
 				tableBody += '<td class="style5">' + endDate + '</td>';
 				tableBody += '<td class="style5" align="center">' + dateSubmitted + '</td>';	
-				// Display Quaterly Options
+				// Display Quarterly Options
 				if ( dateSubmitted != '' && dateApproved == '' ) {
-					tableBody += '<td class="style5" align="center"><a href="javascript:setQuaterlyReportReceived(' + candidateID + ',' + monthEvaluation + ');" class="style4">[Set as Received]</a></td>';
+					tableBody += '<td class="style5" align="center"><a href="javascript:setQuarterlyReportReceived(' + candidateID + ',' + monthEvaluation + ');" class="style4">[Set as Received]</a></td>';
 				} else {
 					tableBody += '<td class="style5" align="center">' + dateApproved + '</td>';
 				}
@@ -169,7 +169,7 @@
 
 	
 	// --- START OF VERICATION RECEIVED --- //
-	var setQuaterlyReportReceived = function(candidateID, monthEvaluation) {
+	var setQuarterlyReportReceived = function(candidateID, monthEvaluation) {
 		
 		// Create an instance of the proxy. 
 		var c = new candidate();
@@ -179,14 +179,14 @@
 		c.setErrorHandler(myErrorHandler); 
 		
 		// This time, pass the intlRep ID to the getCandidateList CFC function. 
-		c.confirmQuaterlyReportReceived(candidateID, monthEvaluation);
+		c.confirmQuarterlyReportReceived(candidateID, monthEvaluation);
 		
 	}
 	
 	var checkInReceived = function(candidateID) {
 		
 		// Set up page message, fade in and fade out after 2 seconds
-		$("#updateMessage").text("Quaterly report for candidate #" + candidateID + " received").fadeIn().fadeOut(3000);
+		$("#updateMessage").text("Quarterly report for candidate #" + candidateID + " received").fadeIn().fadeOut(3000);
 
 		// Fade out record from search list
 		$("#" + candidateID).fadeOut("slow");
@@ -271,7 +271,7 @@
 
 	<!--- Table Header --->    
     <gui:tableHeader
-        tableTitle="Quaterly Questionnaire Tool"
+        tableTitle="Quarterly Questionnaire Tool"
     />
 
 	<!--- This holds the candidate information messages --->
