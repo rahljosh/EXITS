@@ -580,6 +580,9 @@
                     UPDATE
                         smg_hostHistory
                     SET
+                        <cfif qGetStudentInfo.doublePlace NEQ ARGUMENTS.doublePlace>
+	                        hasDoublePlacementIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="1">,
+                        </cfif>                        
                         doublePlacementID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">
                     WHERE
                         historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vHostHistoryID)#">
@@ -1714,7 +1717,7 @@
 		</cfscript> 
         
         <!--- Update History --->
-        <cfif vQueryType EQ 'update'>
+        <cfif vQueryType EQ 'update' AND ARGUMENTS.placementAction NEQ 'setDoublePlacement'>
 
             <cfquery 
                 datasource="#APPLICATION.DSN#">
