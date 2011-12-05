@@ -92,11 +92,8 @@
 		}	
 	</cfscript>
 
-	<!--- Get Midterm Evaluations --->
+	<!--- Get Active Candidates Pending Evaluation --->
     <cfquery name="qGetActiveCandidates" datasource="#APPLICATION.DSN.Source#">
-		<!--- 6 Month Program - N/A --->	
-		
-		<!--- 12 Month Program - To be sent beginning of 6th month--->	
         SELECT DISTINCT
             ec.candidateID,
             ec.uniqueID,
@@ -139,16 +136,11 @@
 		ORDER BY
         	p.programID,
             ec.lastName 
-            
-        <!--- DELETE THIS ---->    
-        LIMIT 2
     </cfquery>
 
 	<cfscript>
 		// set email to
 		vEmailFrom = 'sergei@iseusa.com';
-		//vEmailCC = 'marcus@iseusa.com';
-		//vEmailCC = 'sergei@iseusa.com';
 	
 		// Email Midterm - Loop Through Query
 		For ( i=1;i LTE qGetActiveCandidates.Recordcount; i=i+1 ) {
@@ -162,9 +154,7 @@
 				// Email
 				APPLICATION.CFC.EMAIL.sendEmail(
 					emailFrom=vEmailFrom,
-					//emailTo=qGetActiveCandidates.email[i],
-					emailTo='sergei@iseusa.com',
-					//emailCC=vEmailCC,
+					emailTo=qGetActiveCandidates.email[i],
 					emailReplyTo=vEmailFrom,
 					emailSubject=qGetActiveCandidates.firstName[i] & ' ' & qGetActiveCandidates.lastName[i] & " CSB Trainee #MonthAsString(vMonthEvaluation)# Quaterly Questionnaire",
 					emailMessage=vQuaterlyEvaluationLink,
