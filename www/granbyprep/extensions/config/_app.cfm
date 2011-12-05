@@ -26,7 +26,7 @@
 	/***** Create APPLICATION.SCHOOL structure / Stores School Information *****/
 	APPLICATION.SCHOOL = StructNew();		
 	APPLICATION.SCHOOL.name = 'The MacDuffie School';
-	APPLICATION.SCHOOL.address = '66 School Street';
+	APPLICATION.SCHOOL.address = '66 School Street';	
 	APPLICATION.SCHOOL.city = 'Granby';
 	APPLICATION.SCHOOL.state = 'MA';
 	APPLICATION.SCHOOL.zipCode = '01033';
@@ -34,8 +34,8 @@
 	APPLICATION.SCHOOL.phone = '(413) 467-1601';
 	
 	// School Departments
-	APPLICATION.SCHOOL.headMaster = 'Brian Chatterley ';
-	APPLICATION.SCHOOL.admissions = 'Anneke Skidmore';
+	APPLICATION.SCHOOL.headMaster = 'Steve Griffin';
+	APPLICATION.SCHOOL.admissions = 'Susan Clayton';
 
 	
 	/***** Create APPLICATION.SETTINGS structure / Stores System Information *****/
@@ -108,14 +108,14 @@
 		APPLICATION.PATH.base = 'C:/websites/granbyprep/';
 
 		// Email Settings
-		APPLICATION.EMAIL.headMaster = 'bchatterley@macduffie.org;sclayton@macduffie.org';
+		APPLICATION.EMAIL.headMaster = 'sclayton@macduffie.org'; // bchatterley@macduffie.org;
 		APPLICATION.EMAIL.admissions = 'admissions@macduffie.org;sclayton@macduffie.org';
-		APPLICATION.EMAIL.admissionsOfficer = 'askidmore@macduffie.org;sclayton@macduffie.org'; // askidmore@granbyprep.com
-		APPLICATION.EMAIL.submittedApplication = 'sclayton@macduffie.org;askidmore@granbyprep.com;bchatterley@macduffie.org';
+		APPLICATION.EMAIL.admissionsOfficer = 'sclayton@macduffie.org'; // askidmore@granbyprep.com;askidmore@macduffie.org
+		APPLICATION.EMAIL.submittedApplication = 'sclayton@macduffie.org'; // askidmore@granbyprep.com;bchatterley@macduffie.org
 		APPLICATION.EMAIL.contactUs = 'admissions@macduffie.org'; // info@granbyprep.com
-		APPLICATION.EMAIL.support = 'support@granbyprep.com';
-		APPLICATION.EMAIL.errors = 'errors@granbyprep.com';
-		APPLICATION.EMAIL.finance = 'bchatterley@macduffie.org';	
+		APPLICATION.EMAIL.support = 'admissions@macduffie.org'; // support@granbyprep.com
+		APPLICATION.EMAIL.errors = 'errors@student-management.com';
+		APPLICATION.EMAIL.finance = 'sclayton@macduffie.org';	
 		
 	}
 

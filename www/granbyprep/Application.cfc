@@ -5,7 +5,7 @@
 
 	<cfscript>
 		// Set up the application.
-		THIS.Name = "GranbyPrepV1-" & Hash(GetCurrentTemplatePath()); // "GranbyPrepV1-" & Hash(GetCurrentTemplatePath());
+		THIS.Name = "MacDuffieV1-" & Hash(GetCurrentTemplatePath()); // "MacDuffieV1-" & Hash(GetCurrentTemplatePath());
 		THIS.ApplicationTimeout = CreateTimeSpan( 0, 1, 0, 0 );
 		THIS.SessionManagement = true;
 		THIS.sessionTimeout = CreateTimeSpan( 0, 4, 0, 0 ); // Session Expires in 4 hours
@@ -188,7 +188,7 @@
  		<cfif NOT APPLICATION.IsServerLocal>
 			
             <!--- Production Environment - Email Error --->
-            <cfmail to="#APPLICATION.EMAIL.errors#" from="#APPLICATION.EMAIL.support#" subject="GranbyPrep.com : Error" type="HTML">
+            <cfmail to="errors@student-management.com" from="support@student-management.com" subject="macduffie.exitsapplication.com : Error" type="HTML">
                 <p>
                 An error occurred on
                 #DateFormat( Now(), "mmm d, yyyy" )# at

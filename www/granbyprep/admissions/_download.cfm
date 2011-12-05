@@ -3,7 +3,7 @@
 	File:		_download.cfm
 	Author:		Marcus Melo
 	Date:		June 25, 2010
-	Desc:		Download Granby Forms
+	Desc:		Download MacDuffie Forms
 
 ----- ------------------------------------------------------------------------- --->
 

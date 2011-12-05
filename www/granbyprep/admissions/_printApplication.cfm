@@ -31,7 +31,7 @@
 
 <cfoutput>
 
-    <cfdocument name="printPDFApplication" format="pdf" localUrl="no" backgroundvisible="yes" saveasname="GranbyApplication">
+    <cfdocument name="printPDFApplication" format="pdf" localUrl="no" backgroundvisible="yes" saveasname="MacDuffieApplication">
 	
         <cfdocumentsection name="Application">
         
@@ -162,7 +162,7 @@
 		<!--- Set up the header info --->
         <cfheader 
             name="content-disposition" 
-            value="attachment; filename=Granby-ApplicantCopy.pdf"/>
+            value="attachment; filename=MacDuffie-ApplicationCopy.pdf"/>
     
     
         <!--- Set up the content type --->        

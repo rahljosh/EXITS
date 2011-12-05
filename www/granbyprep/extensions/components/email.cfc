@@ -64,13 +64,13 @@
 
                     If you have any questions about the application please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
                     
-                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br />
+                    <!--- For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br /> --->
 
                     #APPLICATION.SCHOOL.name# <br />
                     #APPLICATION.SCHOOL.address# <br />
                     #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode# <br />
                     Phone: #APPLICATION.SCHOOL.phone# <br />
-                    Toll Free: #APPLICATION.SCHOOL.tollFree# <br />                    
+                    <!--- Toll Free: #APPLICATION.SCHOOL.tollFree# <br /> --->                   
                 </cfsavecontent>
             
             </cfcase>
@@ -94,13 +94,13 @@
                     
                     If you have any questions about the application please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
                     
-                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br />
+                    <!--- For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br /> --->
 
                     #APPLICATION.SCHOOL.name# <br />
                     #APPLICATION.SCHOOL.address# <br />
                     #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode# <br />
                     Phone: #APPLICATION.SCHOOL.phone# <br />
-                    Toll Free: #APPLICATION.SCHOOL.tollFree# <br />                    
+                    <!--- Toll Free: #APPLICATION.SCHOOL.tollFree# <br /> --->                   
                 </cfsavecontent>
             
             </cfcase>
@@ -125,13 +125,13 @@
 					
                     If you have any questions about the application please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
                     
-                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br />
+                    <!--- For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br /> --->
 
                     #APPLICATION.SCHOOL.name# <br />
                     #APPLICATION.SCHOOL.address# <br />
                     #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode# <br />
                     Phone: #APPLICATION.SCHOOL.phone# <br />
-                    Toll Free: #APPLICATION.SCHOOL.tollFree# <br />                    
+                    <!--- Toll Free: #APPLICATION.SCHOOL.tollFree# <br /> --->                   
                 </cfsavecontent>
             
             </cfcase>
@@ -153,13 +153,13 @@
                     
                     If you have any questions please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
                     
-                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br />
+                    <!--- For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br /> --->
 
                     #APPLICATION.SCHOOL.name# <br />
                     #APPLICATION.SCHOOL.address# <br />
                     #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode# <br />
                     Phone: #APPLICATION.SCHOOL.phone# <br />
-                    Toll Free: #APPLICATION.SCHOOL.tollFree# <br />                    
+                    <!--- Toll Free: #APPLICATION.SCHOOL.tollFree# <br />  --->                  
                 </cfsavecontent>
             
             </cfcase>
@@ -175,7 +175,7 @@
                 <cfsavecontent variable="stEmailStructure.message">
                 	<p>#qGetStudentInfo.firstName# #qGetStudentInfo.lastName#-</p>
 					
-                    Thank you for applying to GPA. You have successfully submitted your online application for admission. <br /><br />
+                    Thank you for applying to The MacDuffie School. You have successfully submitted your online application for admission. <br /><br />
 					
                     Please contact our Admissions Office to set up an interview. <br /><br />
 
@@ -185,18 +185,18 @@
                     #APPLICATION.SCHOOL.name# <br />
                     #APPLICATION.SCHOOL.address# <br />
                     #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode# <br />
-                    Phone: #APPLICATION.SCHOOL.phone# <br />
-                    Toll Free: #APPLICATION.SCHOOL.tollFree# <br /><br />                 
+                    Phone: #APPLICATION.SCHOOL.phone# <br /><br />
+                    <!--- Toll Free: #APPLICATION.SCHOOL.tollFree# <br /><br /> --->
                     
                     If you have any questions please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
                     
-                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br />
+                    <!--- For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br /> --->
 
                     #APPLICATION.SCHOOL.name# <br />
                     #APPLICATION.SCHOOL.address# <br />
                     #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode# <br />
                     Phone: #APPLICATION.SCHOOL.phone# <br />
-                    Toll Free: #APPLICATION.SCHOOL.tollFree# <br />                    
+                    <!--- Toll Free: #APPLICATION.SCHOOL.tollFree# <br /> --->                   
                 </cfsavecontent>
             
             </cfcase>
@@ -220,7 +220,7 @@
                     #APPLICATION.SCHOOL.address# <br />
                     #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode# <br />
                     Phone: #APPLICATION.SCHOOL.phone# <br />
-                    Toll Free: #APPLICATION.SCHOOL.tollFree# <br />                    
+                    <!--- Toll Free: #APPLICATION.SCHOOL.tollFree# <br /> --->
                 </cfsavecontent>
             
             </cfcase>
@@ -273,13 +273,13 @@
 
                     If you have any questions about the application please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
                     
-                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br />
+                    <!--- For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br /> --->
 
                     #APPLICATION.SCHOOL.name# <br />
                     #APPLICATION.SCHOOL.address# <br />
                     #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode# <br />
                     Phone: #APPLICATION.SCHOOL.phone# <br />
-                    Toll Free: #APPLICATION.SCHOOL.tollFree# <br />                    
+                    <!---  Toll Free: #APPLICATION.SCHOOL.tollFree# <br /> --->                    
                 </cfsavecontent>
             
             </cfcase>
@@ -303,13 +303,13 @@
 
                     If you have any questions about the application please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
                     
-                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br />
+                    <!--- For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br /> --->
 
                     #APPLICATION.SCHOOL.name# <br />
                     #APPLICATION.SCHOOL.address# <br />
                     #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode# <br />
                     Phone: #APPLICATION.SCHOOL.phone# <br />
-                    Toll Free: #APPLICATION.SCHOOL.tollFree# <br />                    
+                    <!--- Toll Free: #APPLICATION.SCHOOL.tollFree# <br /> --->
                 </cfsavecontent>
             
             </cfcase>
@@ -334,13 +334,13 @@
 
                     If you have any questions about the application please contact us at <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
                     
-                    For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br />
+                    <!--- For technical issues please email support at <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br /> --->
 
                     #APPLICATION.SCHOOL.name# <br />
                     #APPLICATION.SCHOOL.address# <br />
                     #APPLICATION.SCHOOL.city#, #APPLICATION.SCHOOL.state# #APPLICATION.SCHOOL.zipCode# <br />
                     Phone: #APPLICATION.SCHOOL.phone# <br />
-                    Toll Free: #APPLICATION.SCHOOL.tollFree# <br />                    
+                    <!--- Toll Free: #APPLICATION.SCHOOL.tollFree# <br /> --->
                 </cfsavecontent>
             
             </cfcase>
@@ -355,7 +355,7 @@
 	</cffunction>
 
 	
-	<cffunction name="sendEmail" access="public" returntype="void" hint="Sends email from the system with the Granby header/footer">
+	<cffunction name="sendEmail" access="public" returntype="void" hint="Sends email from the system with the MacDuffie header/footer">
         <cfargument name="emailFrom" type="string" default="#APPLICATION.EMAIL.support#" hint="Email From Address">
 		<cfargument name="emailTo" type="string" required="true" hint="Email To is required">
 		<cfargument name="emailReplyTo" type="string" default="" hint="Email Address to reply">
