@@ -261,15 +261,6 @@
         <cfargument name="is2ndVisitIncluded" default="0" type="numeric" hint="is2ndVisitIncluded is not required">
         <cfargument name="includeUserIDs" default="" hint="area reps will be able to see themselves and current assigned users on the list">
         
-        <cfscript>
-			// Set List of Users
-			var vListOfUserIds = ARGUMENTS.userID;
-			
-			if ( LEN(ARGUMENTS.includeUserIDs) ) {
-				vListOfUserIds = ListAppend(vListOfUserIds, ARGUMENTS.includeUserIDs);
-			}
-		</cfscript>
-        
         <!--- Office Users --->
         <cfif ListFind("1,2,3,4", ARGUMENTS.userType)>
             
@@ -294,6 +285,12 @@
                     <cfelse>
                         AND 
                             uar.usertype IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )
+                    </cfif>
+
+                    <!--- Include Current Assigned User --->
+                    <cfif LEN(ARGUMENTS.includeUserIDs)>
+                    	OR
+                            u.userID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.includeUserIDs#" list="yes"> )
                     </cfif>
                     
                     ORDER BY 
@@ -341,21 +338,23 @@
                         <!--- Regional Advisor - Returns users under them --->
                     	<cfcase value="6">
                             AND 
-                                (
-                                	uar.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
-	                            OR
-                                    u.userID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfUserIds#" list="yes"> )
-                                )
+                               	uar.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
                         </cfcase>
                         
-                    	<!--- Area Representative | 2nd Visit Representative - Returns itself --->	
+                    	<!--- Area Representative | 2nd Visit Representative - Returns themselves --->	
                     	<cfcase value="7,15">
                         	AND
-                                u.userID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfUserIds#" list="yes"> )
+                                u.userID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#" list="yes"> )
                         </cfcase>
                         
                     </cfswitch>
-
+					
+                    <!--- Include Current Assigned User --->
+                    <cfif LEN(ARGUMENTS.includeUserIDs)>
+                    	OR
+                            u.userID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.includeUserIDs#" list="yes"> )
+                    </cfif>
+                    
                     ORDER BY 
                     	u.lastname,
                         u.firstName
