@@ -91,9 +91,9 @@
                             <td width="30%">
 								<cfif qGetTripTotalRegisteredStudents.total GTE qGetTourDetails.spotLimit AND NOT VAL(qGetTourDetails.extraMaleSpot) AND NOT VAL(qGetTourDetails.extraFemaleSpot)>
                                     <font color='##FF0000' size="2" style="font-weight:bold; text-align:center;">This trip is full! <br /> No More Seats Available!</font>
-                                <cfelseif qGetTourDetails.total GTE qGetTourDetails.totalSpots>
+                                <cfelseif qGetTripTotalRegisteredStudents.total GTE qGetTourDetails.totalSpots>
                                      <font color='##FF0000' size="2" style="font-weight:bold; text-align:center;">This trip is full! <br /> No More Seats Available!</font>
-                                <cfelseif qGetTourDetails.total EQ qGetTourDetails.spotLimit>
+                                <cfelseif qGetTripTotalRegisteredStudents.total EQ qGetTourDetails.spotLimit>
                                 	<input type="image" name="submit" src="extensions/images/reserve_class.png" alt="Reserve Spot" />
                                     <font color='##FF0000' size="2" style="font-weight:bold; text-align:center;">Limited Seats Available!</font>                                    
                                 <cfelseif qGetTourDetails.tour_status EQ 'Cancelled'>
