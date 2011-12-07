@@ -179,7 +179,7 @@
             LEFT OUTER JOIN
                 smg_students s ON s.studentID = srp.studentID                                
             WHERE
-               srp.agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#"> 
+               srp.agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRepInfo.userID#"> 
             AND                
                 srp.date = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#URL.timeStamp#">
             AND
@@ -203,7 +203,7 @@
             LEFT OUTER JOIN
                 smg_students s ON s.studentID = srp.studentID                                
             WHERE
-               srp.agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#"> 
+               srp.agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRepInfo.userID#"> 
             AND    
                 srp.date = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#URL.timeStamp#">
             AND
@@ -227,7 +227,7 @@
             LEFT OUTER JOIN
                 smg_students s ON s.studentID = srp.studentID                                
             WHERE
-               srp.agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#"> 
+               srp.agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRepInfo.userID#"> 
             AND    
                 srp.date = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#URL.timeStamp#">
             AND
@@ -845,6 +845,45 @@
 				</tr>
 
                 <cfloop query="qGetSecondVisitStudentList">
+
+                    <cfquery name="qGetSecondVisitReports" datasource="MySQL">
+                        SELECT                                 
+                            pr.pr_ID,
+                            pr.fk_reportType,
+                            pr.fk_student,
+                            pr.pr_ny_approved_date,
+                            pr.fk_secondVisitRep,
+                            pr.fk_host,
+                            u.userID,
+                            u.firstName,
+                            u.lastName                                                      
+                        FROM 
+                            progress_reports pr
+                        INNER JOIN
+                        	smg_users u ON u.userID = pr.fk_secondVisitRep
+                        WHERE 
+                            pr.fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetSecondVisitStudentList.studentID#">
+                        AND	
+                        	pr.fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="2"> 
+                    </cfquery>
+                     
+                    <cfquery name="qGetCurrentUserSecondVisitReport" dbtype="query">
+                        SELECT                                 
+                            *                                                      
+                        FROM 
+                            qGetSecondVisitReports
+                        WHERE 
+                        	fk_secondVisitRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRepInfo.userID#">
+                    </cfquery>
+
+                    <cfquery name="qGetOtherSecondVisitReport" dbtype="query">
+                        SELECT                                 
+                            *                                                      
+                        FROM 
+                            qGetSecondVisitReports
+                        WHERE 
+                        	fk_secondVisitRep != <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRepInfo.userID#">
+                    </cfquery>
 					
                     <cfquery name="qCheckSecondVisitCharges" datasource="MySQL">
                         SELECT                                 
@@ -918,6 +957,35 @@
                             <td valign="top" style="color:##F00">
                                 <input type="text" name="#qGetSecondVisitStudentList.studentID#SecondVisitComment" class="xLargeField">
 								
+								<!--- Display report history --->
+                                <cfif NOT VAL(qGetCurrentUserSecondVisitReport.recordCount)>
+                                	<p>
+                                    	*** A second visit report submitted by #qGetRepInfo.firstName# #qGetRepInfo.lastName# could not be found on EXITS ***
+                                    </p>
+                                    
+                                    <cfif VAL(qGetOtherSecondVisitReport.recordCount)>
+                                    
+                                    	<p>Report(s) submitted by other users</p>
+                                    
+                                        <cfloop query="qGetOtherSecondVisitReport">
+                                            <p>
+												- #qGetOtherSecondVisitReport.firstName# #qGetOtherSecondVisitReport.lastName# (###qGetOtherSecondVisitReport.userID#)                                               
+												and approved on #DateFormat(qGetOtherSecondVisitReport.pr_ny_approved_date, 'mm/dd/yyyy')# 
+                                            </p>
+                                        </cfloop>
+									
+                                    </cfif>
+                                                                        
+                                <cfelseif NOT IsDate(qGetCurrentUserSecondVisitReport.pr_ny_approved_date)>
+                                	<p>
+                                    	*** A second visit report was found but it has not been approved by NY ***
+                                    </p>
+                                <cfelseif IsDate(qGetCurrentUserSecondVisitReport.pr_ny_approved_date)>
+                                	<p style="color:##006; font-weight:bold;">
+                                    	*** Report received and approved by NY office on #DateFormat(qGetCurrentUserSecondVisitReport.pr_ny_approved_date, 'mm/dd/yyyy')#  ***
+                                    </p>
+                                </cfif>
+								
                                 <!--- Display Previous Payment Information --->
                                 <cfloop query="qCheckSecondVisitCharges">
                                     <p>
@@ -926,7 +994,7 @@
                                         - Rep: #qCheckSecondVisitCharges.firstName# #qCheckSecondVisitCharges.lastname# <br />
                                         - Total Paid: #DollarFormat(qCheckSecondVisitCharges.amount)#
                                     </p>
-								</cfloop>                               
+								</cfloop>   
                             </td>
                             
                         <cfelse>
