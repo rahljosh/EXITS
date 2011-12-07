@@ -180,7 +180,7 @@
                     AND
                         p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('yyyy', -1, now())#">
             INNER JOIN
-                smg_hostHistoryTracking sht ON sht.fieldID = u.userID
+                smg_hostHistoryTracking sht ON sht.studentID = s.studentID
                     AND
                         sht.fieldName = <cfqueryparam cfsqltype="cf_sql_varchar" value="areaRepID">
                     AND
@@ -260,7 +260,7 @@
                     AND
                         p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('yyyy', -1, now())#">
             INNER JOIN
-                smg_hostHistoryTracking sht ON sht.fieldID = u.userID
+                smg_hostHistoryTracking sht ON sht.studentID = s.studentID
                     AND
                         sht.fieldName = <cfqueryparam cfsqltype="cf_sql_varchar" value="placeRepID">
                     AND
@@ -340,7 +340,7 @@
                     AND
                         p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('yyyy', -1, now())#">
             INNER JOIN
-                smg_hostHistoryTracking sht ON sht.fieldID = u.userID
+                smg_hostHistoryTracking sht ON sht.studentID = s.studentID
                     AND
                         sht.fieldName = <cfqueryparam cfsqltype="cf_sql_varchar" value="secondVisitRepID">
                     AND

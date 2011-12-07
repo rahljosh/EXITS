@@ -80,7 +80,7 @@
 			if ( APPLICATION.isServerLocal ) {
 				CLIENT.exits_url = "http://" & submitting_info.url_ref;
 			} else {
-				CLIENT.exits_url = "http://" & submitting_info.url_ref;	
+				CLIENT.exits_url = "https://" & submitting_info.url_ref;	
 			}
 			
 			APPLICATION.company_short = submitting_info.website;
