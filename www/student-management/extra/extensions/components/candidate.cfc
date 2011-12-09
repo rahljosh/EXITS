@@ -913,11 +913,15 @@
                 ecpc.isTransferHousingAddressReceived,
                 ecpc.isTransferJobOfferReceived,
                 ecpc.isTransferSevisUpdated,
-                ecpc.dateTransferConfirmed
+                ecpc.dateTransferConfirmed,
+                ej.ID AS jobID,
+                ej.title AS jobTitle
             FROM
                 extra_candidate_place_company ecpc
             INNER JOIN
                 extra_hostcompany eh ON eh.hostCompanyID = ecpc.hostCompanyID
+            LEFT OUTER JOIN
+            	extra_jobs ej ON ej.ID = ecpc.jobID
             WHERE 
                 ecpc.candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">
             AND 	
@@ -1603,5 +1607,29 @@
 	<!------------------------------------------------------------ 
 		End of Trainee - Candidate Quarterly Questionnaire
 	------------------------------------------------------------->
+    
+    <cffunction name="getCandidateJobTitle" access="remote" returntype="query" hint="Returns candidate's job title for a given host company">
+    	<cfargument name="candidateID" required="yes">
+        <cfargument name="hostCompanyID" required="yes">
+    
+        <cfquery name="getCandidateJobTitle" datasource="#APPLICATION.DSN.Source#">
+            SELECT
+                ecpc.jobID,
+                ej.title
+            FROM
+                extra_candidate_place_company ecpc
+            LEFT JOIN
+                extra_jobs ej
+            ON
+                ej.ID = ecpc.jobID
+            WHERE
+                candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">
+            AND
+                ecpc.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostCompanyID)#">
+        </cfquery>
+        
+        <cfreturn getCandidateJobTitle>
+        
+    </cffunction>
 
 </cfcomponent>

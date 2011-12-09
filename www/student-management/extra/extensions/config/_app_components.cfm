@@ -37,6 +37,9 @@
 	// Store the initialized flight information Library object in the Application scope
 	APPLICATION.CFC.flightInformation = CreateCFC("flightInformation").Init();
 
+	// Store the initialized flight information Library object in the Application scope
+	APPLICATION.CFC.hostCompany = CreateCFC("hostCompany").Init();
+
 	// Store the initialized lookUpTables Library object in the Application scope
 	APPLICATION.CFC.lookUpTables = CreateCFC("lookUpTables").Init();
 	

@@ -84,12 +84,14 @@
                 ehc.name,
                 ehc.authenticationType, 
                 ehc.EIN, 
-                ehc.workmensCompensation,  
+                ehc.workmensCompensation,
+                ecpc.jobID AS jobTitleID,  
                 ecpc.selfJobOfferStatus,
                 ecpc.selfConfirmationName,
                 ecpc.selfConfirmationDate,
                 ecpc.selfConfirmationMethod,  
-                ecpc.selfConfirmationNotes,          
+                ecpc.selfConfirmationNotes,
+                ej.title AS jobTitle,          
                 u.businessName
             FROM
                 extra_candidates ec
@@ -99,6 +101,8 @@
                     	ecpc.hostCompanyID = ec.hostCompanyID 
 					AND 
                     	ecpc.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+            LEFT OUTER JOIN
+            	extra_jobs ej ON ej.ID = ecpc.jobID
             LEFT OUTER JOIN 
                 extra_hostcompany ehc ON ehc.hostcompanyid = ecpc.hostcompanyid                
             INNER JOIN 
@@ -317,6 +321,7 @@
                         <th align="left" class="#tableTitleClass#">Start Date</th>
                         <th align="left" class="#tableTitleClass#">End Date</th>
                         <th align="left" class="#tableTitleClass#">Placement Information</th>
+                        <th align="left" class="#tableTitleClass#">Job Title</th>
                         <th align="left" class="#tableTitleClass#">Job Offer Status</th>
                         <th align="left" class="#tableTitleClass#">Contact Date</th>
                         <th align="left" class="#tableTitleClass#">Contact Name</th>
@@ -344,6 +349,7 @@
                             <td class="style1">
                                 <a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qTotalPerAgent.hostCompanyID#" target="_blank" class="style4">#qTotalPerAgent.name#</a>
                             </td>
+                            <td class="style1">#qTotalPerAgent.jobTitle#</td>
                             <td class="style1">#qTotalPerAgent.selfJobOfferStatus#</td>
                             <td class="style1">#DateFormat(qTotalPerAgent.selfConfirmationDate, 'mm/dd/yyyy')#</td>
                             <td class="style1">#qTotalPerAgent.selfConfirmationName#</td>

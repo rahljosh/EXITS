@@ -17,6 +17,8 @@
     <cfparam name="URL.uniqueID" default="">
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.candidateID" default="0">
+    <cfparam name="FORM.jobID" default="0">
+    <cfparam name="FORM.hostcompanyID" default="0">
 
     <cfscript>
 		// Get Candidate Information
@@ -174,7 +176,7 @@
         WHERE 
             hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidate.requested_placement)#">
     </cfquery>
-    
+
 </cfsilent>
 
 <script type='text/javaScript'>
@@ -1014,7 +1016,7 @@
                                                     </cfif>
                                                 </span>
                                                 
-                                                <select name="hostcompanyID" id="hostcompanyID" class="style1 editPage" onChange="displayHostReason(#VAL(qCandidatePlaceCompany.hostCompanyID)#, this.value); displaySelfPlacementInfo();"> 
+                                                <select name="hostCompanyID" id="hostCompanyID" class="style1 editPage xLargeField" onChange="displayHostReason(#VAL(qCandidatePlaceCompany.hostCompanyID)#, this.value); displaySelfPlacementInfo();"> 
 	                                                <option value="0">Unplaced</option>
                                                     <cfloop query="qHostCompanyList">
                                                     	<option value="#qHostCompanyList.hostcompanyID#" <cfif qCandidatePlaceCompany.hostCompanyID EQ qHostCompanyList.hostcompanyID>selected</cfif> > 
@@ -1026,6 +1028,23 @@
                                                         </option>
                                                     </cfloop>
                                                 </select>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                        	<td class="style1" align="right" width="30%"><strong>Job Title:</strong></td>
+                                            <td class="style1" align="left" width="70%">
+                                            	<span class="readOnly">#qCandidatePlaceCompany.jobTitle#</span>
+                                                <cfselect 
+                                                    name="jobID"
+                                                    id="jobID"
+                                                    class="style1 editPage xLargeField"
+                                                    multiple="no"
+                                                    value="ID"
+                                                    display="title"
+                                                    selected="#qCandidatePlaceCompany.jobID#"
+                                                    bind="cfc:extra.extensions.components.hostCompany.getJobTitle({hostCompanyID})"
+                                                    bindonload="true" /> 
                                             </td>
                                         </tr>
                                         

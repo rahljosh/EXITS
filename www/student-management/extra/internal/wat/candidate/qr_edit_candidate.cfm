@@ -17,6 +17,7 @@
 <cfparam name="FORM.watDateEvaluation1" default="">
 <cfparam name="FORM.watDateEvaluation2" default="">
 <!--- Placement Information --->
+<cfparam name="FORM.jobID" default="0">
 <cfparam name="FORM.selfJobOfferStatus" default="Pending">
 <cfparam name="FORM.selfConfirmationName" default="">
 <cfparam name="FORM.selfConfirmationMethod" default="">
@@ -213,6 +214,7 @@
             (
                 candidateID, 
                 hostCompanyID, 
+                jobID,
                 placement_date, 
                 startdate, 
                 enddate, 
@@ -234,6 +236,7 @@
             (	
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.candidateID#">, 
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">, 
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.jobID#">,
                 <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                 <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.program_startdate#" null="#NOT IsDate(FORM.program_startdate)#">,
                 <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.program_enddate#" null="#NOT IsDate(FORM.program_enddate)#">,
@@ -260,6 +263,7 @@
             UPDATE 
                 extra_candidate_place_company
             SET 
+                jobID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.jobID#">,
                 startdate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.program_startdate#" null="#NOT IsDate(FORM.program_startdate)#">,
                 enddate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.program_enddate#" null="#NOT IsDate(FORM.program_enddate)#">,
                 status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
