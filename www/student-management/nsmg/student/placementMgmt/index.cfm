@@ -47,7 +47,18 @@
 		vCurrentUsersAssigned = '';
 		vCurrentUsersAssigned = ListAppend(vCurrentUsersAssigned, qGetStudentInfo.areaRepID);
 		vCurrentUsersAssigned = ListAppend(vCurrentUsersAssigned, qGetStudentInfo.placeRepID);
+		
+		// Get list of states that USERS and HOST FAMILIES are assigned to
+		vListOfStates = APPLICATION.CFC.HOST.getHostStateListByRegionID(regionID=qGetStudentInfo.regionassigned);
+		vListOfUserStates = APPLICATION.CFC.USER.getUserStateListByRegionID(regionID=qGetStudentInfo.regionassigned);
 
+		// Loop through user state list and insert the ones that are not duplicate
+		For ( i=1; i LTE ListLen(vListOfUserStates); i=i+1 ) {
+			if ( NOT ListContainsNoCase(vListOfStates, ListGetAt(vListOfUserStates, i)) ) {
+				vListOfStates = ListAppend(vListOfStates, ListGetAt(vListOfUserStates, i));
+			}
+		}
+		
 		// Get Student Arrival
 		qGetArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=qGetStudentInfo.studentID, flightType='arrival', flightLegOption='lastLeg');
 		
@@ -77,7 +88,7 @@
 		qGetHostKidsAtHome = APPLICATION.CFC.HOST.getHostMemberByID(hostID=qGetStudentInfo.hostID,liveAtHome='yes');
 		
 		// Get Available Schools based on area reps state
-		qGetAvailableSchools = APPLICATION.CFC.SCHOOL.getSchools(stateList=APPLICATION.CFC.USER.getUserStateListByRegionID(regionID=qGetStudentInfo.regionassigned));
+		qGetAvailableSchools = APPLICATION.CFC.SCHOOL.getSchools(stateList=vListOfStates);
 		
 		// Get Available Reps
 		qGetAvailableReps = APPLICATION.CFC.USER.getSupervisedUsers(
