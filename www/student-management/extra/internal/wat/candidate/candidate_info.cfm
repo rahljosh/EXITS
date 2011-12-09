@@ -1010,7 +1010,7 @@
                                             	<span class="readOnly">
                                                 	<!--- Office View Only --->
                                                     <cfif ListFind("1,2,3,4", CLIENT.userType)>
-	                                                    <a href="?curdoc=hostcompany/hostCompanyInfo&hostcompanyID=#qCandidatePlaceCompany.hostcompanyID#" class="style4"><strong>#qCandidatePlaceCompany.hostCompanyName#</strong></a>
+	                                                    <a href="?curdoc=hostcompany/hostCompanyInfo&hostcompanyID=#qCandidatePlaceCompany.hostcompanyID#" class="style4" target="_blank"><strong>#qCandidatePlaceCompany.hostCompanyName#</strong></a>
                                                 	<cfelse>
                                                     	#qCandidatePlaceCompany.hostCompanyName#
                                                     </cfif>
