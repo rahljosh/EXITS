@@ -256,11 +256,15 @@
 			$("#trReasonInfo").fadeIn("fast");
 			$(".trTransferInfo").fadeIn("fast");
 			
-			// Reset Transfer Data
+			// Fade Out is this a transfer answer
+			$("#readOnlyTransfer").fadeOut("fast");
 			
 		} else {
 			// Hide Transfer Information
 			$(".trTransferInfo").fadeOut("fast");
+			
+			// Fade Out is this a transfer answer
+			$("#readOnlyTransfer").fadeOut("fast");
 		}	
 		
 		// Display/Hide Self Placemet Info
@@ -1067,8 +1071,8 @@
                                         <tr id="trReasonInfo" class="hiddenField trReasonInfo">
                                         	<td class="style1" align="right" width="30%"><strong>Is this a transfer?</strong></td>
                                             <td class="style1" width="70%">
-                                            	<cfif LEN(qCandidatePlaceCompany.isTransfer)>
-                                                	<span class="readOnly">#YesNoFormat(VAL(qCandidatePlaceCompany.isTransfer))#</span>
+												<cfif LEN(qCandidatePlaceCompany.isTransfer)>
+                                                	<span id="readOnlyTransfer" class="readOnly">#YesNoFormat(VAL(qCandidatePlaceCompany.isTransfer))#</span>
                                                 </cfif>
                                                 <select name="isTransfer" id="isTransfer" class="style1 editPage transferField smallField" onChange="displayTransferInfo();">
                                                 	<option value=""> </option>

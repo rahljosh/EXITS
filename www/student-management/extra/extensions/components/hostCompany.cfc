@@ -30,7 +30,7 @@
         <cfquery name="qGetJobTitle" 
         	datasource="MySQL">
             SELECT
-                id,
+                ID,
                 title
             FROM
                 extra_jobs
@@ -42,9 +42,23 @@
                 </cfif>
             ORDER BY
                 title
-        </cfquery>
+        </cfquery>        
         
-        <cfreturn qGetJobTitle>
+        <cfscript>
+			qNewGetJobTitle = QueryNew("ID, title");
+			
+			QueryAddRow(qNewGetJobTitle, 1);
+			QuerySetCell(qNewGetJobTitle, "ID", 0);	
+			QuerySetCell(qNewGetJobTitle, "title", "---- Select a Job Title ----");
+			
+			For ( i=1; i LTE qGetJobTitle.recordCount; i=i+1 ) {
+				QueryAddRow(qNewGetJobTitle, 1);
+				QuerySetCell(qNewGetJobTitle, "ID", qGetJobTitle.ID[i]);	
+				QuerySetCell(qNewGetJobTitle, "title", qGetJobTitle.title[i]);
+			}
+			
+			return qNewGetJobTitle;
+		</cfscript>
         
 	</cffunction>
 
