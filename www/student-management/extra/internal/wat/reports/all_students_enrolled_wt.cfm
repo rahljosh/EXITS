@@ -80,12 +80,22 @@
                 ec.intrep, 
                 ec.wat_placement,
                 ec.email,
+                ecpc.jobID AS jobTitleID,
+                ej.title AS jobTitle,
                 ehc.name, 
                 ehc.city,
                 ss.state,                
                 u.businessName
             FROM
                 extra_candidates ec
+            LEFT JOIN
+            	extra_candidate_place_company ecpc ON ecpc.candidateID = ec.candidateID
+                AND
+                	ec.hostcompanyid = ecpc.hostCompanyID
+				AND 
+                    ecpc.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+            LEFT JOIN
+            	extra_jobs ej ON ej.id = ecpc.jobID
             LEFT JOIN 
                 extra_hostcompany ehc ON ehc.hostcompanyid = ec.hostcompanyid
             INNER JOIN 
@@ -336,6 +346,7 @@
                     <th align="left" class="#tableTitleClass#">Start Date</th>
                     <th align="left" class="#tableTitleClass#">End Date</th>
                     <th align="left" class="#tableTitleClass#">Placement Information</th>
+                    <th align="left" class="#tableTitleClass#">Job Title</th>
                     <th align="left" class="#tableTitleClass#">City</th>
                     <th align="left" class="#tableTitleClass#">State</th>
                     <th align="left" class="#tableTitleClass#">DS-2019</th>
@@ -373,6 +384,7 @@
 	                        	#qTotalPerAgent.name#
                         	</a>
                         </td>
+                        <td class="style1">#qTotalPerAgent.jobTitle#</td>
                         <td class="style1">#qTotalPerAgent.city#</td>
                         <td class="style1">#qTotalPerAgent.state#</td>
                         <td class="style1">#qTotalPerAgent.ds2019#</td>

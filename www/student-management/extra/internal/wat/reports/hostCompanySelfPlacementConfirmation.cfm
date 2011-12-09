@@ -57,6 +57,8 @@
                 ec.ds2019,
                 ec.startdate, 
                 ec.enddate,
+                ecpc.jobID AS jobTitleID,
+                ej.title AS jobTitle,
                 <!--- Host Company --->
                 ehc.hostCompanyID,
                 ehc.name AS hostCompanyName,
@@ -73,6 +75,8 @@
                     	ecpc.hostCompanyID = ec.hostCompanyID 
 					AND 
                     	ecpc.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+            LEFT JOIN
+            	extra_jobs ej ON ej.id = ecpc.jobID
             INNER JOIN
                 extra_hostcompany ehc ON ehc.hostcompanyid = ecpc.hostcompanyid  
                 
@@ -250,6 +254,7 @@
                         <th width="25%" align="left" class="#tableTitleClass#">Candidate</Th>
                         <th width="10%" align="left" class="#tableTitleClass#">Gender</th>
                         <th width="18%" align="left" class="#tableTitleClass#">Country</th>
+                        <th width="18%" align="left" class="#tableTitleClass#">Job Title</th>
                         <th width="11%" align="left" class="#tableTitleClass#">Start Date</th>
                         <th width="11%" align="left" class="#tableTitleClass#">End Date</th>
                         <th width="25%" align="left" class="#tableTitleClass#">Email</th>		
@@ -276,6 +281,7 @@
                             </td>
                             <td class="style1">#qGetResults.sex#</td>
                             <td class="style1">#qGetResults.countryName#</td>
+                            <td class="style1">#qGetResults.jobTitle#</td>
                             <td class="style1">#DateFormat(qGetResults.startdate, 'mm/dd/yyyy')#</td>
                             <td class="style1">#DateFormat(qGetResults.enddate, 'mm/dd/yyyy')#</td>
                             <td class="style1">#qGetResults.email#</td>
