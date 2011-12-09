@@ -138,8 +138,8 @@
 		if ( numberOfRecords > 0 ) {
 	
 			//Display query set info
-			var paginationInfo = '<td id="topPageNavigation" colspan="9" align="center"> Displaying <strong>' + recordFrom + '</strong> to: <strong>' + recordTo + '</strong> of <strong>' + numberOfRecords + '</strong> records <br>';
-				paginationInfo += 'Total Number of Pages: <strong>' + numberOfPages + '</strong><br></td>';
+			var paginationInfo = '<td id="topPageNavigation" colspan="12" align="center"> <p> Displaying <strong>' + recordFrom + '</strong> to: <strong>' + recordTo + '</strong> of <strong>' + numberOfRecords + '</strong> records <br />';
+				paginationInfo += 'Total Number of Pages: <strong>' + numberOfPages + '</strong></p></td>';
 	
 			// Clear current information and append pagination info
 			$("#loadPaginationInfo").empty().append(paginationInfo);
@@ -164,8 +164,8 @@
 				$pager.find('#' + pageNumber).addClass('selectedLink');
 				 
 				//the links that will take user one place forward and on place back
-				var $previousLink = $('<a href="" id="prev">   Previous   </a>');
-				var $nextLink = $('<a href="" id="next">   Next   </a>');
+				var $previousLink = $('<a href="" id="prev" class="previousPage" title="Go To Previous Page"> [Previous Page] </a>');
+				var $nextLink = $('<a href="" id="next" class="nextPage" title="Go To Next Page"> [Next Page] </a>');
 				//previous and next links with handler that prevents the default event of hyperlink, and calls buildTable() on each click;
 				if ( pageNumber != 1 ) {
 					$previousLink.prependTo($pager).click(function(event){event.preventDefault();getHostLeadList(prevPageNumber);});
@@ -267,7 +267,7 @@
 				tableBody += '<td>' + regionAssigned + '</td>';
 				tableBody += '<td>' + areaRepAssigned + '</td>';
 				tableBody += '<td>' + statusAssigned + '</td>';
-				<cfif ListFind('1,2,3,4', CLIENT.userType)>
+				<cfif ListFind('1,2', CLIENT.userType)>
 					tableBody += '<td align="center"><a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="jQueryModal">[Details]</a> &nbsp; | &nbsp; <a href="javascript:confirmDeleteHostLead(' + id + ');">[Delete]</a></td>';
 				<cfelse>
 					tableBody += '<td align="center"><a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="jQueryModal">[Details]</a></td>';
@@ -367,16 +367,28 @@
 		display:none;
 	}
 
+	/* Page Navigation */
+	.nextPage {
+		padding-left:10px;		
+	}
+	
+	.previousPage {
+		padding-right:10px;		
+	}
+	
 	.selectedLink { 
-		background-color: #ffffe6; 
+		background-color: #E2EFC7; 
 		font-family:Arial, Helvetica, sans-serif; 
-		font-size:15px; 
+		font-size:18px; 
 		font-weight:bold;
+		padding-left:4px;
+		margin:0px 5px 0px 3px;
+		text-align:center;
 	}
 	
 	.notSelectedLinks { 
 		font-family:Arial, Helvetica, sans-serif; 
-		font-size:12px;
+		font-size:14px;
 	}
 </style>
 
@@ -441,7 +453,8 @@
             <td class="listTitle">
                 <label for="statusID">Status</label> <br />   
                 <select name="statusID" id="statusID" class="largeField">
-                    <option value="" <cfif NOT LEN(FORM.statusID)>selected="selected"</cfif> ></option>
+                	<option value="All" <cfif FORM.statusID EQ 'All'>selected="selected"</cfif> >All</option>
+                    <option value="" <cfif NOT LEN(FORM.statusID)>selected="selected"</cfif> >Pending Action</option>
                     <cfloop query="qGetStatus">
                     	<option value="#qGetStatus.fieldID#" <cfif FORM.statusID EQ qGetStatus.fieldID>selected="selected"</cfif> >#qGetStatus.name#</option>
                     </cfloop>
@@ -484,7 +497,7 @@
         
         <cfif ListFind('1,2,3,4', CLIENT.userType)>
             <tr>
-                <td align="center" colspan="8">
+                <td align="center" colspan="12">
                     <a class="jQueryModal" href="hostLeads/index.cfm?action=export">[ Export to Constant Contact ]</a>
                 </td>
             </tr>                        

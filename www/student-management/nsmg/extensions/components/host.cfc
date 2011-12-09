@@ -1243,7 +1243,7 @@
                 <cfif VAL(ARGUMENTS.statusID)>
                     AND
                         hl.statusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.statusID#">
-                <cfelse>
+                <cfelseif ARGUMENTS.statusID NEQ 'All'>
                 	<!--- Do not display final dispositions: 3=Not Interested / 8=Converted to Host Family --->
                     AND
 						hl.statusID NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="3,8" list="yes"> )
