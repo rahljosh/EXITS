@@ -297,7 +297,8 @@
                 </cfif>
                     
                 ORDER BY 
-                	firstname, familylastname
+                	firstname, 
+                    familylastname
 		</cfquery>
 		   
 		<cfreturn qGetAvailableDoublePlacement>

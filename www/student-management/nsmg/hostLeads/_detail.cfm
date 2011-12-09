@@ -83,8 +83,8 @@
 			// Host Lead User is able to enter a comment only
 			if ( CLIENT.userType NEQ 26 ) {
 			
-				// Data Validation - Allow a comment if there is only initial status on the history
-				if ( NOT VAL(FORM.regionID) AND qGetHostLeadHistory.recordCount GT 1 ) {
+				// Data Validation - Allow adding comment only up to 3 times, after that region is required
+				if ( NOT VAL(FORM.regionID) AND qGetHostLeadHistory.recordCount GT 3 ) {
 					// Get all the missing items in a list
 					SESSION.formErrors.Add('You must select a region');
 				}			
