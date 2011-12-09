@@ -18,7 +18,7 @@
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.candidateID" default="0">
     <cfparam name="FORM.jobID" default="0">
-    <cfparam name="FORM.hostcompanyID" default="0">
+    <cfparam name="FORM.hostCompanyID" default="0">
 
     <cfscript>
 		// Get Candidate Information
@@ -155,7 +155,7 @@
         
     <cfquery name="qHostCompanyList" datasource="MySQL">
         SELECT 
-        	hostcompanyID,
+        	hostCompanyID,
             name 
         FROM 
         	extra_hostcompany
@@ -169,12 +169,12 @@
     
     <cfquery name="qRequestedPlacement" dbtype="query">
         SELECT 
-        	hostcompanyID,
+        	hostCompanyID,
             name 
         FROM 
         	qHostCompanyList
         WHERE 
-            hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidate.requested_placement)#">
+            hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidate.requested_placement)#">
     </cfquery>
 
 </cfsilent>
@@ -274,7 +274,7 @@
 
 	var displaySelfPlacementInfo = function() { 
 		// Get Placement Info
-		getHostID = $("#hostcompanyID").val();
+		getHostID = $("#hostCompanyID").val();
 		// Get Program Option
 		getProgramOption = $("#wat_placement").val();
 		// Get Transfer Info - Do not display self placement if it's a transfer
@@ -1014,7 +1014,7 @@
                                             	<span class="readOnly">
                                                 	<!--- Office View Only --->
                                                     <cfif ListFind("1,2,3,4", CLIENT.userType)>
-	                                                    <a href="?curdoc=hostcompany/hostCompanyInfo&hostcompanyID=#qCandidatePlaceCompany.hostcompanyID#" class="style4" target="_blank"><strong>#qCandidatePlaceCompany.hostCompanyName#</strong></a>
+	                                                    <a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qCandidatePlaceCompany.hostCompanyID#" class="style4" target="_blank"><strong>#qCandidatePlaceCompany.hostCompanyName#</strong></a>
                                                 	<cfelse>
                                                     	#qCandidatePlaceCompany.hostCompanyName#
                                                     </cfif>
@@ -1023,7 +1023,7 @@
                                                 <select name="hostCompanyID" id="hostCompanyID" class="style1 editPage xLargeField" onChange="displayHostReason(#VAL(qCandidatePlaceCompany.hostCompanyID)#, this.value); displaySelfPlacementInfo();"> 
 	                                                <option value="0">Unplaced</option>
                                                     <cfloop query="qHostCompanyList">
-                                                    	<option value="#qHostCompanyList.hostcompanyID#" <cfif qCandidatePlaceCompany.hostCompanyID EQ qHostCompanyList.hostcompanyID>selected</cfif> > 
+                                                    	<option value="#qHostCompanyList.hostCompanyID#" <cfif qCandidatePlaceCompany.hostCompanyID EQ qHostCompanyList.hostCompanyID>selected</cfif> > 
 															<cfif LEN(qHostCompanyList.name) GT 55>
                                                                 #Left(qHostCompanyList.name, 52)#...
                                                             <cfelse>
@@ -1301,7 +1301,7 @@
                                                 <span class="readOnly">
                                                 	<!--- Office View Only --->
                                                     <cfif ListFind("1,2,3,4", CLIENT.userType)>
-	                                                    <a href="?curdoc=hostcompany/hostCompanyInfo&hostcompanyID=#qRequestedPlacement.hostcompanyID#" class="style4"><strong>#qRequestedPlacement.name#</strong></a>
+	                                                    <a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qRequestedPlacement.hostCompanyID#" class="style4"><strong>#qRequestedPlacement.name#</strong></a>
                                                     <cfelse>
                                                     	#qRequestedPlacement.name#
                                                     </cfif>
@@ -1309,7 +1309,7 @@
                                                 <select name="requested_placement" class="style1 editPage xLargeField">
                                                     <option value="0"></option>
                                                     <cfloop query="qHostCompanyList">
-                                                    	<option value="#qHostCompanyList.hostcompanyID#" <cfif qGetCandidate.requested_placement EQ qHostCompanyList.hostcompanyID>selected</cfif>> 
+                                                    	<option value="#qHostCompanyList.hostCompanyID#" <cfif qGetCandidate.requested_placement EQ qHostCompanyList.hostCompanyID>selected</cfif>> 
 															<cfif LEN(qHostCompanyList.name) GT 40>
                                                                 #Left(qHostCompanyList.name, 52)#...
                                                             <cfelse>
