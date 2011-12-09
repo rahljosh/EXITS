@@ -367,6 +367,8 @@
                     regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
                 AND
                 	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                AND
+                	state != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
                 GROUP BY
                 	state
                 ORDER BY

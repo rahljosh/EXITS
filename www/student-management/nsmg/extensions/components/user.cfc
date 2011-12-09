@@ -91,7 +91,7 @@
 
 
 	<cffunction name="getUserStateListByRegionID" access="public" returntype="string" output="false" hint="Returns a list of user states assigned to a region">
-    	<cfargument name="regionID" type="numeric" hint="userID is required">
+    	<cfargument name="regionID" type="numeric" hint="regionID is required">
 
         <cfquery 
 			name="qGetUserStateListByRegionID" 
