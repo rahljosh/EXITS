@@ -105,9 +105,9 @@
 				as listed and discussed at the orientation meeting.  I know that violation of any of these guidelines can result in probationary
 				action and could result in termination of my exchange program.
 				<br><br>
-				I further acknowledge that I have been provided with a copy of the U.S. Department of State Exchange Visitor Program
+				<cfif client.companyid NEQ 14>I further acknowledge that I have been provided with a copy of the U.S. Department of State Exchange Visitor Program
 Welcome Brochure, the U.S. Department of State letter to students, and that I agree to follow all U.S. Department of State
-Rules and Regulations. The exchange program has fulfilled its obligation to provide me with an orientation session upon
+Rules and Regulations.</cfif> The exchange program has fulfilled its obligation to provide me with an orientation session upon
 arrival by a designated representative to explain the rules governing the program.
 				<br>
 			</div>

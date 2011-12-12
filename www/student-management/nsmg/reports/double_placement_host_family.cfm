@@ -116,8 +116,8 @@
 
 <table width=650 border=0 align="center" bgcolor="FFFFFF">
 <tr><td class="style1"><div align="justify">
-	<p>As you may know, the Department of State requires that the student, the natural family and the international representative 
-	agree in writing to any double placements.</p>
+	<cfif client.companyid NEQ 14><p>As you may know, the Department of State requires that the student, the natural family and the international representative 
+	agree in writing to any double placements.</p></cfif>
 	<p>Please sign on the lines below and return to #companyshort.companyshort_nocolor# so that we may finalize the placement.</p>
 	</div>
 </td></tr>
