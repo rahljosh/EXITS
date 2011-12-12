@@ -113,7 +113,7 @@
             spotLimit,
             extraMaleSpot,
             extraFemaleSpot,
-            SUM(total) AS total
+            SUM(totalRegistrations) AS totalRegistrations
         FROM
         (
         
@@ -126,7 +126,7 @@
                 t.spotLimit,
                 t.extraMaleSpot,
                 t.extraFemaleSpot,                
-                COUNT(st.studentID) AS total
+                COUNT(st.studentID) AS totalRegistrations
             FROM 
                 smg_tours t
             LEFT OUTER JOIN
@@ -152,7 +152,7 @@
                 t.spotLimit,
                 t.extraMaleSpot,
                 t.extraFemaleSpot,                
-                COUNT(sts.siblingID) AS total
+                COUNT(sts.siblingID) AS totalRegistrations
             FROM 
                 smg_tours t
             INNER JOIN	

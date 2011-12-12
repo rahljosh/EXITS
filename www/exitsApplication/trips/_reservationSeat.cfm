@@ -111,13 +111,13 @@
 		vIsTripFull = 0;
 		
 		// Check if trip is full
-		if ( qGetTripTotalRegisteredStudents.total EQ qGetTourDetails.totalSpots ) {
+		if ( qGetTripTotalRegisteredStudents.total GTE qGetTourDetails.totalSpots ) {
 			
 			vIsTripFull = 1;
 			SESSION.formErrors.Add("Unfortunately this trip is FULL and you can no longer register");
 			
 		// Check if trip has reached the registration limit
-		} else if ( qGetTripTotalRegisteredStudents.total EQ qGetTourDetails.spotLimit ) {
+		} else if ( qGetTripTotalRegisteredStudents.total GTE qGetTourDetails.spotLimit ) {
 			
 			// Check Male Registration
 			if ( vTotalMaleRegistering GT qGetTourDetails.extraMaleSpot ) {
