@@ -53,17 +53,19 @@
                     <p style="margin:3px;">
                    		Status: 
                         <strong>
-							<cfif qGetTourList.total GTE qGetTourList.spotLimit AND NOT VAL(qGetTourList.extraMaleSpot) AND NOT VAL(qGetTourList.extraFemaleSpot)>
-                            	Full - No more seats available
-                            <cfelseif qGetTourList.total GTE qGetTourList.totalSpots>
-                                 Full - No more seats available
-                            <cfelseif qGetTourList.total EQ qGetTourList.spotLimit>
-                                Limited Seats Available                                 
-                            <cfelseif qGetTourList.tour_status EQ 'Cancelled'>
-                                 Cancelled
-                            <cfelse> 
-                                 Seats Available 
-                            </cfif>
+							<cfif qGetTourList.tour_status EQ 'Cancelled'>
+                            	Cancelled
+                            <cfelseif qGetTourList.totalRegistrations LT qGetTourList.spotLimit>
+                                Seats Available
+							<cfelseif qGetTourList.totalRegistrations GTE qGetTourList.totalSpots>
+								Full - No more seats available
+                            <cfelseif qGetTourList.totalRegistrations GTE qGetTourList.spotLimit AND ( VAL(qGetTourList.extraMaleSpot) OR VAL(qGetTourList.extraFemaleSpot) )>
+                            	Limited Seats Available
+							<cfelseif qGetTourList.totalRegistrations GTE qGetTourList.spotLimit AND NOT VAL(qGetTourList.extraMaleSpot) AND NOT VAL(qGetTourList.extraFemaleSpot)>
+								Full - No more seats available
+                            <cfelse>
+                            	Full - No more seats available             
+							</cfif>
                         </strong>    
                     </p>
                 </form>
