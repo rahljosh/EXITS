@@ -115,13 +115,13 @@
         	smg_school_dates scd ON s.schoolid = scd.schoolid
         WHERE 
         	1=1		
-
-		<!--- Filter ESI Schools --->
+		<!----ESI Wants to see all schools, not just the ones they entered---->
+		<!--- Filter ESI Schools
 		<cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ESI, CLIENT.companyID)>
         	AND
             	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         </cfif>
-		
+		 --->
 		<cfif LEN(stateShort)>
             AND 
             	s.state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stateShort#">

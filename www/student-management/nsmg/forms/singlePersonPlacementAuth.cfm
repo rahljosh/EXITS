@@ -36,12 +36,12 @@
             <br /><br />
             <Table align="Center" width=90%>
             	<Tr>
-                	<Td colspan=3><p>The U.S Department of State requires Student exchange visitors and natural parents agree in writing to a single person placement. A single person is defined as someone living alone without children or family members.<sup>*</sup></p><br />
+                	<Td colspan=3><Cfif client.companyid NEQ 14><p>The U.S Department of State requires Student exchange visitors and natural parents agree in writing to a single person placement. A single person is defined as someone living alone without children or family members.<sup>*</sup></p><br />
                     <p>I, <strong><u>#studentfaminfo.firstname# #studentfaminfo.familylastname#</u></strong>, agree to live with a
 single person during my exchange year. I understand this type of placement has
-been additionally screened by #client.companyshort#.</p><br />
+been additionally screened by #client.companyshort#.</p><br /></Cfif>
 <p><cfif studentFamInfo.fathersname is not '' AND studentFamInfo.mothersname is not ''>We<cfelse>I</cfif>, <u><strong>#studentFamInfo.fathersname# <cfif studentFamInfo.fathersname is not ''>&amp;</cfif> #studentFamInfo.mothersname#</strong></u>, agree to a single person placement for our son or daughter
-during his/her exchange year. I/we understand this type of placement has been additionally screened by #client.companyshort#.</p>
+during his/her exchange year. <cfif client.companyid NEQ 14>I/we understand this type of placement has been additionally screened by #client.companyshort#.</cfif></p>
         </Td>
 	</Tr>
  	<tr>
@@ -71,9 +71,11 @@ during his/her exchange year. I/we understand this type of placement has been ad
     	<td>#client.companyshort# Signature  </td><td></td><td>Date - MM/DD/YYYY</td>
     </tr>
     <tr>		
-        <Td colspan=3><br /><br /><div align="center"></div><Br /><br /><Br />
+        <Td colspan=3><br /><br /><div align="center"></div>
+        <cfif client.companyid NEQ 14>
+        <Br /><br /><Br />
       <font size=-2><strong>*CFR Title 22, Part 62, Subpart B, &sect;62.25 (j)(9)</strong><br />
-       <em>Ensure that a potential single adult host parent without a child in the home undergoes a secondary level review by an organizational representative other than the individual who recruited and selected the applicant. Such secondary review should include demonstrated evidence of the individual's friends or family who can provide an additional support network for the exchange student and evidence of the individual's ties to his/her community. Both the exchange student and his or her natural parents must agree in writing in advance of the student's placement with a single adult host parent without a child in the home.</em></font></Td>
+       <em>Ensure that a potential single adult host parent without a child in the home undergoes a secondary level review by an organizational representative other than the individual who recruited and selected the applicant. Such secondary review should include demonstrated evidence of the individual's friends or family who can provide an additional support network for the exchange student and evidence of the individual's ties to his/her community. Both the exchange student and his or her natural parents must agree in writing in advance of the student's placement with a single adult host parent without a child in the home.</em></font></cfif></Td>
     </Tr>
 </table>
 </cfoutput>

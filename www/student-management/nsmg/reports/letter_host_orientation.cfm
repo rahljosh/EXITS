@@ -89,8 +89,8 @@
 					<li>Students are expected to depart five days from the last day of school.</li>
 				</ul>
 				In addition, this document serves as an acknowledgement that a designated representative of the exchange organization
-performed an in-home interview, that you have received a host family handbook, and that you received a copy of the U.S.
-Department of State letter to host families. Your signature also confirms you have been provided the name and contact
+performed an in-home interview, that you have received a host family handbook<cfif client.companyid NEQ 14>, and that you received a copy of the U.S.
+Department of State letter to host families</cfif>. Your signature also confirms you have been provided the name and contact
 information of a supervising representative who will be available to objectively assist you and the student during the
 program.
 				<br><br>
