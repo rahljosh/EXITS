@@ -338,13 +338,17 @@
                         <!--- Regional Advisor - Returns users under them --->
                     	<cfcase value="6">
                             AND 
-                               	uar.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+                               	(
+                                	uar.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+	                            OR
+    	                        	u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+        						)
                         </cfcase>
                         
                     	<!--- Area Representative | 2nd Visit Representative - Returns themselves --->	
                     	<cfcase value="7,15">
                         	AND
-                                u.userID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#" list="yes"> )
+                                u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
                         </cfcase>
                         
                     </cfswitch>
