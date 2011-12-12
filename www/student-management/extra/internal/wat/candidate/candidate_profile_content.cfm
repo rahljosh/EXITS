@@ -39,9 +39,13 @@
     
             <table cellpadding="0" cellspacing="0" border="0" style="line-height:25px;" width="100%">        
                 <tr>
-                    <td><font color="Gray" style="font-weight:bold;">Name:</font></td>
-                    <td>#get_candidate_unqid.firstname# #get_candidate_unqid.middlename# #get_candidate_unqid.lastname# (###get_candidate_unqid.candidateid#)</td>
+                    <td><font color="Gray" style="font-weight:bold;">Last Name:</font></td>
+                    <td><strong>#get_candidate_unqid.lastname#</strong> (###get_candidate_unqid.candidateid#)</td>
                 </tr>	
+                <tr>
+                    <td><font color="Gray" style="font-weight:bold;">First Name:</font></td>
+                    <td>#get_candidate_unqid.firstname#</td>
+                </tr>
                 <tr>
                     <td><font color="Gray" style="font-weight:bold;">Sex:</font></td>
                     <td>
