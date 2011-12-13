@@ -761,7 +761,7 @@
 	}
 </script>
 
-<cfoutput> <cfset vHostInCompliance = ''>
+<cfoutput>
 
 	<!--- Modal Dialogs --->
     
