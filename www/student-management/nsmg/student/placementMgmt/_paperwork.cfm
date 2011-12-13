@@ -376,14 +376,14 @@
                     <!--- PIS Approved --->
                     <tr> 
                         <td width="15%">&nbsp;</td>
-                        <td width="55%"><label for="check_date_pis_received">Date Placed ( Headquarters Office Approval Date )</label></td>
+                        <td width="55%"><label>Date Placed ( Headquarters Office Approval Date )</label></td>
                         <td width="30%">#DateFormat(qGetStudentInfo.datePlaced, 'mm/dd/yyyy')#</td>
                     </tr>
 
                     <!--- PIS Sent to Intl. Representative --->
                     <tr> 
                         <td>&nbsp;</td>
-                        <td><label for="check_date_pis_received">PIS Emailed to International Representative</label></td>
+                        <td><label>PIS Emailed to International Representative</label></td>
                         <td>#DateFormat(qGetStudentInfo.datePISEmailed, 'mm/dd/yyyy')#</td>
                     </tr>
                 
