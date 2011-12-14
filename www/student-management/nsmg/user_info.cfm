@@ -1109,69 +1109,6 @@
                         <td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
                     </tr>
                 </table>
-                <table width="100%" cellpadding=2 cellspacing="0" border="0" class="section">
-                    <tr style="line-height:20px;"><td><b>Season: #get_paperwork.season#</td></tr>
-                <Cfif region_company_access.recordcount eq 1 and region_company_access.usertype neq 15>
-                    <tr bgcolor="##FFFFFF"><td width="40%">AR Information Sheet</td>
-                        <td><input type="checkbox" name="ar_info_sheet_check" disabled="disabled" <cfif get_paperwork.ar_info_sheet NEQ ''>checked="checked"</cfif>>
-                            Date: #DateFormat(get_paperwork.ar_info_sheet, 'mm/dd/yyyy')#				
-                        </td>
-                    </tr>
-                    <tr><td>AR Ref. Questionnaire ##1</td>
-                        <td><input type="checkbox" name="ar_ref_quest1_check" disabled="disabled" <cfif get_paperwork.ar_ref_quest1 NEQ ''>checked="checked"</cfif>> 
-                            Date: #DateFormat(get_paperwork.ar_ref_quest1, 'mm/dd/yyyy')#					
-                        </td>
-                    </tr>
-                    <tr bgcolor="##FFFFFF"><td>AR Ref. Questionnaire ##2</td>
-                        <td><input type="checkbox" name="ar_ref_quest2_check" disabled="disabled" <cfif get_paperwork.ar_ref_quest2 NEQ ''>checked="checked"</cfif>> 
-                            Date: #DateFormat(get_paperwork.ar_ref_quest2, 'mm/dd/yyyy')#					
-                        </td>
-                    </tr>
-                    <tr><td>CBC Authorization Form</td>
-                        <td><input type="checkbox" name="ar_cbc_auth_form_check" disabled="disabled" <cfif get_paperwork.ar_cbc_auth_form NEQ ''>checked="checked"</cfif>> 
-                           Date:
-						   <cfif get_paperwork.cbcSig is not ''>
-									<Cfif user_compliance.compliance EQ 1 OR client.userid eq userid or client.usertype eq 1>
-                                     <a href="javascript:openPopUp('uploadedfiles/users/#userid#/Season#get_paperwork.seasonid#cbcAuthorization.pdf', 640, 800);">
-                                    </cfif> 
-                         	</cfif>
-                           
-                             #DateFormat(get_paperwork.ar_cbc_auth_form, 'mm/dd/yyyy')#</a>			
-                        </td>
-                    </tr>
-                    <tr bgcolor="##FFFFFF"><td>AR Agreement</td>
-                        <td><input type="checkbox" name="ar_agreement_check" disabled="disabled" <cfif get_paperwork.ar_agreement NEQ ''>checked="checked"</cfif>> 
-                            Date:
-                            	<cfif get_paperwork.agreeSig is not ''>
-                               		 <Cfif user_compliance.compliance EQ 1 OR client.userid eq userid or client.usertype eq 1>
-                                	 	<a href="javascript:openPopUp('uploadedfiles/users/#userid#/Season#get_paperwork.seasonid#AreaRepAgreement.pdf', 640, 800);">
-                                     </cfif>
-   								</cfif>
-                             #DateFormat(get_paperwork.ar_agreement, 'mm/dd/yyyy')#</a>
-                        </td>
-                    </tr>
-                    <tr><td>AR Training Sign-off Form</td>
-                        <td><input type="checkbox" name="ar_training_check" disabled="disabled" <cfif get_paperwork.ar_training NEQ ''>checked="checked"</cfif>> 
-                            Date: #DateFormat(get_paperwork.ar_training, 'mm/dd/yyyy')#
-                        </td>
-                    </tr>
-                  </Cfif>	
-                    <tr><td>2nd Visit User Info Sheet</td>
-                        <td><input type="checkbox" name="ar_secondVisist_check" disabled="disabled" <cfif get_paperwork.secondVisit NEQ ''>checked="checked"</cfif>> 
-                            Date: #DateFormat(get_paperwork.secondVisit, 'mm/dd/yyyy')#
-                        </td>
-                    </tr>						
-                </table>
-                <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                    <tr valign="bottom">
-                        <td width="9" valign="top" height="12"><img src="pics/footer_leftcap.gif" ></td>
-                        <td width="100%" background="pics/header_background_footer.gif"></td>
-                        <td width="9" valign="top"><img src="pics/footer_rightcap.gif"></td>
-                    </tr>
-                </table>
-            </td>
-            <td width="5">&nbsp;</td>
-            <td width="50%" valign="top">
                 <!----CBC---->
                 <cfquery name="get_cbc_user" datasource="#application.dsn#">
                     SELECT cbcid, userid, date_authorized , date_sent, date_received, requestid, smg_users_cbc.seasonid, flagcbc, smg_seasons.season, batchid
@@ -1208,6 +1145,85 @@
                     OR cbc.cbc_type = 'mother' AND ((h.motherssn = '#rep_info.ssn#' AND h.motherssn != '') OR (h.motherfirstname = '#rep_info.firstname#' AND h.motherlastname = '#rep_info.lastname#' <cfif rep_info.dob NEQ ''>AND h.motherdob = '#DateFormat(rep_info.dob,'yyyy/mm/dd')#'</cfif>))
                     
                 </cfquery>
+                <Cfquery name="currentSeasonCBC" dbtype="query">
+                select date_received
+                from get_cbc_user
+                where seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(get_paperwork.seasonid)#"> 
+                and userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.userid#"> 
+                </Cfquery>
+                <table width="100%" cellpadding=2 cellspacing="0" border="0" class="section">
+                    <tr style="line-height:20px;"><td><b>Season: #get_paperwork.season#</td></tr>
+                <Cfif region_company_access.recordcount eq 1 and region_company_access.usertype neq 15>
+                    <tr bgcolor="##FFFFFF"><td width="40%">AR Information Sheet</td>
+                        <td><input type="checkbox" name="ar_info_sheet_check" disabled="disabled" <cfif get_paperwork.ar_info_sheet NEQ ''>checked="checked"</cfif>>
+                            Date: #DateFormat(get_paperwork.ar_info_sheet, 'mm/dd/yyyy')#				
+                        </td>
+                    </tr>
+                    <tr><td>AR Ref. Questionnaire ##1</td>
+                        <td><input type="checkbox" name="ar_ref_quest1_check" disabled="disabled" <cfif get_paperwork.ar_ref_quest1 NEQ ''>checked="checked"</cfif>> 
+                            Date: #DateFormat(get_paperwork.ar_ref_quest1, 'mm/dd/yyyy')#					
+                        </td>
+                    </tr>
+                    <tr bgcolor="##FFFFFF"><td>AR Ref. Questionnaire ##2</td>
+                        <td><input type="checkbox" name="ar_ref_quest2_check" disabled="disabled" <cfif get_paperwork.ar_ref_quest2 NEQ ''>checked="checked"</cfif>> 
+                            Date: #DateFormat(get_paperwork.ar_ref_quest2, 'mm/dd/yyyy')#					
+                        </td>
+                    </tr>
+                    <tr><td>CBC Authorization Form</td>
+                        <td><input type="checkbox" name="ar_cbc_auth_form_check" disabled="disabled" <cfif get_paperwork.ar_cbc_auth_form NEQ ''>checked="checked"</cfif>> 
+                           Date:
+						   <cfif get_paperwork.cbcSig is not ''>
+									<Cfif user_compliance.compliance EQ 1 OR client.userid eq userid or client.usertype eq 1>
+                                     <a href="javascript:openPopUp('uploadedfiles/users/#userid#/Season#get_paperwork.seasonid#cbcAuthorization.pdf', 640, 800);">
+                                    </cfif> 
+                         	</cfif>
+                           
+                             #DateFormat(get_paperwork.ar_cbc_auth_form, 'mm/dd/yyyy')#</a>			
+                        </td>
+                    </tr>
+                    <tr><td>CBC Processed</td>
+                        <td><input type="checkbox" name="ar_cbc_auth_processed" disabled="disabled" <cfif currentSeasonCBC.recordcount NEQ 0>checked="checked"</cfif>> 
+                           Date:
+						   
+                           <Cfif currentSeasonCBC.recordcount neq 0>
+                             #DateFormat(currentSeasonCBC.date_processed, 'mm/dd/yyyy')#</a>			
+                           </Cfif>
+                        </td>
+                    </tr>
+                    <tr bgcolor="##FFFFFF"><td>AR Agreement</td>
+                        <td><input type="checkbox" name="ar_agreement_check" disabled="disabled" <cfif get_paperwork.ar_agreement NEQ ''>checked="checked"</cfif>> 
+                            Date:
+                            	<cfif get_paperwork.agreeSig is not ''>
+                               		 <Cfif user_compliance.compliance EQ 1 OR client.userid eq userid or client.usertype eq 1>
+                                	 	<a href="javascript:openPopUp('uploadedfiles/users/#userid#/Season#get_paperwork.seasonid#AreaRepAgreement.pdf', 640, 800);">
+                                     </cfif>
+   								</cfif>
+                             #DateFormat(get_paperwork.ar_agreement, 'mm/dd/yyyy')#</a>
+                        </td>
+                    </tr>
+                    <tr><td>AR Training Sign-off Form</td>
+                        <td><input type="checkbox" name="ar_training_check" disabled="disabled" <cfif get_paperwork.ar_training NEQ ''>checked="checked"</cfif>> 
+                            Date: #DateFormat(get_paperwork.ar_training, 'mm/dd/yyyy')#
+                        </td>
+                    </tr>
+                  </Cfif>	
+                    <tr><td>2nd Visit User Info Sheet</td>
+                        <td><input type="checkbox" name="ar_secondVisist_check" disabled="disabled" <cfif get_paperwork.secondVisit NEQ ''>checked="checked"</cfif>> 
+                            Date: #DateFormat(get_paperwork.secondVisit, 'mm/dd/yyyy')#
+                        </td>
+                    </tr>						
+                </table>
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr valign="bottom">
+                        <td width="9" valign="top" height="12"><img src="pics/footer_leftcap.gif" ></td>
+                        <td width="100%" background="pics/header_background_footer.gif"></td>
+                        <td width="9" valign="top"><img src="pics/footer_rightcap.gif"></td>
+                    </tr>
+                </table>
+            </td>
+            <td width="5">&nbsp;</td>
+            <td width="50%" valign="top">
+                
                 <table width="100%" cellpadding="0" cellspacing="0" border="0" height="24">
                     <tr valign="middle" height="24">
                         <td height="24" width="13" background="pics/header_leftcap.gif">&nbsp;</td>
