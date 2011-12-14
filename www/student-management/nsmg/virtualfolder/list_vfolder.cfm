@@ -96,6 +96,11 @@
                 newwindow=window.open(url, 'PrintFile', 'height=580, width=790, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); 
                 if (window.focus) {newwindow.focus()}
             }
+			function OpenApp(url)
+			{ 
+				newwindow=window.open(url, 'ViewFile', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); 
+				if (window.focus) {newwindow.focus()}
+			}
             // -->
         </script>
 
@@ -144,6 +149,10 @@
         </table>
 
         <table width="98%" border="0" cellpadding="4" cellspacing="0" class="section" align="center" style="padding-bottom:15px;">
+        	<tr>
+            	<th colspan=6>Upload through Virtual Folder</th>
+            </tr>
+                
             <tr bgcolor="##e2efc7" style="font-weight:bold;">
                 <td>Name</td>
                 <td>Size</td>
@@ -216,7 +225,82 @@
             </cfloop>
 		
         </table>
+<cfset currentDirectory = "#AppPath.onlineApp.virtualFolder##qGetStudentInfo.studentID#/page22">
+<!--- Check to see if the Directory exists. --->
+<cfif NOT DirectoryExists(currentDirectory)>
+   <!--- If TRUE, create the directory. --->
+   <cfdirectory action = "create" directory = "#currentDirectory#" mode="777">
+</cfif>
 
+<cfdirectory directory="#currentDirectory#" name="mydirectory" sort="datelastmodified DESC" filter="*.*">
+<cfquery name="check_allergies" datasource="#application.dsn#">
+select has_an_allergy
+from smg_student_app_health
+where studentid = #qGetStudentInfo.studentID#
+</cfquery>
+		<table width="98%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
+        	<Tr>
+            	<td><br />
+                </td>
+            </Tr>
+        </table>
+		   <table width="98%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
+        	<tr>
+            	<th colspan=6>Uploaded through Supplements on Student App</th>
+            </tr>
+      
+	<tr bgcolor="##e2efc7" style="font-weight:bold;">
+	  <td><em>Name</em></td>
+	  <td><em>Size</em></td>
+	  <td><em>Modified</em></td>
+	  <td><em>View</em></td>
+	  <td><!----<em>Delete</em>----></td>
+	</tr>
+    <cfif VAL(check_allergies.has_an_allergy)>
+        <tr>
+            <td><a href="?curdoc=section3/allergy_info_request">Allergy Clarification Form</a></td>
+        </tr>
+    </cfif>
+    
+	<cfif NOT VAL(mydirectory.recordcount)>
+		<tr><td colspan="5">No file has been uploaded.</td></tr>
+	</cfif>
+
+	<cfloop query="mydirectory">
+		<cfset newsize = mydirectory.size / '1024'>
+        <tr bgcolor="#iif(mydirectory.currentrow MOD 2 ,DE("white") ,DE("CCCCCC") )#">
+          <td><a href="javascript:OpenApp('../uploadedfiles/virtualfolder/#qGetStudentInfo.studentID#/page22/#name#');">#mydirectory.name#</a></td>
+          <td>#Round(newsize)# kb</td>
+          <td>#mydirectory.dateLastModified#</td>
+          <td>
+          
+          
+          
+          
+            <cfif ListFind("jpg,peg,gif,tif,png", Right(name, 3))>
+                <a href="javascript:OpenApp('../student_app/section4/page22printfile.cfm?studentid=#qGetStudentInfo.studentID#&page=page22&file=#URLEncodedFormat(name)#');"><img src="vfolderview.gif" border="0" alt="View File"></img></a>
+            <cfelse>
+                <a href="javascript:OpenApp('../uploadedfiles/virtualfolder/#qGetStudentInfo.studentID#/page22/#name#');"><img src="vfolderview.gif" border="0" alt="View File"></img></a>
+            </cfif>
+          </td>	
+          <td>
+          <!----
+            <cfform method="post" name="page22delete" action="#AppPath.onlineApp.uploadURL#qr_delete_page22.cfm?referrer=#CGI.HTTP_HOST#">
+                <cfinput type="hidden" name="deletefile" value="#mydirectory.name#">
+                <cfinput type="hidden" name="studentid" value="#qGetStudentInfo.studentID#">
+                <cfinput type="image" name="submit" src="pics/delete.gif" alt="Delete this file" onclick="return areYouSure(this);"> 
+            </cfform>
+			---->
+          </td>
+        </tr>
+	</cfloop>
+</table>
+<table width="98%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
+        	<Tr>
+            	<td><br />
+                </td>
+            </Tr>
+        </table>
 		<!--- UPLOADING FILES --->
         <form method="post" action="qr_upload_file.cfm" name="Upload" enctype="multipart/form-data" onSubmit="return ProcessForm()">
         	<input type="hidden" name="unqID" value="#qGetStudentInfo.uniqueid#">	
