@@ -14,7 +14,25 @@
     </Cfquery>
 	
 </Cfif>
+<cfparam name="form.pr_action" default="">
 
+<cfswitch expression="#form.pr_action#">
+	<cfcase value="delete_report">
+    <cfquery datasource="#application.dsn#">
+        DELETE FROM progress_report_dates
+        WHERE fk_progress_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.pr_id#">
+    </cfquery>
+    <cfquery datasource="#application.dsn#">
+        DELETE FROM x_pr_questions
+        WHERE fk_progress_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.pr_id#">
+    </cfquery>
+    <cfquery datasource="#application.dsn#">
+        DELETE FROM progress_reports
+        WHERE pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.pr_id#">
+    </cfquery>
+    <cflocation url="index.cfm?curdoc=secondVisitReports" addtoken="no">
+    </cfcase>
+</cfswitch>
 
 <cfparam name="client.pr_regionid" default="#client.regionid#">
 <cfparam name="client.pr_cancelled" default="0">
@@ -114,6 +132,7 @@ function OpenLetter(url) {
 
 <Cfif #form.rmonth# neq 0 AND resetMonth eq 0>
 	<Cfset client.pr_rmonth = #form.rmonth#>
+
       <Cfloop from="#DateRange.startDate#" to="#DateRange.endDate#" index=i step="#CreateTimeSpan(31,0,0,0)#">
                 <Cfif client.pr_rmonth eq "#DatePart('m', '#i#')#">
                     <Cfset client.pr_rmonth = '#DatePart('m', '#i#')#'>
@@ -397,7 +416,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
     </cfquery>
     
 	
-    <table width=100% class="section" cellpadding=4 cellspacing="0">
+    <table width=100% class="section" cellpadding=4 cellspacing="0" border=0>
         <cfoutput query="getResults" group="advisorid">
       	<Cfset checkBlock.recordcount = 0>
             <cfif currentRow NEQ 1>
@@ -449,7 +468,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                         AND fk_host = <cfqueryparam cfsqltype="cf_sql_integer" value="#hostid#">
                         AND fk_secondVisitRep = #secondVisitRepID#
                     </cfquery>
-                    
+                   
 				<!----Figure out how long they have been placed with this host family and host family info---->
                 <Cfquery name="hostHistory" datasource="#application.dsn#">
                 SELECT original_place,  isWelcomeFamily, isRelocation
@@ -539,7 +558,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                                     
                                     <cfif get_report.pr_sr_approved_date EQ '' and submittingRep NEQ client.userid>
                                         <!----allow office to view so can delete if needed---->
-                                        <Cfif listfind('1,12313,13799,510', client.userid)>
+                                        <Cfif listfind('1,12313,13799,510,12431,16652,12389', client.userid)>
                                        
                                             <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#get_report.pr_id#">
                                            
@@ -548,7 +567,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                                     	<!----end allow view to delete---->
                                     <cfelse>
                                         
-                                        <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#get_report.pr_id#"><img src="pics/buttons/greyedView.png" /></a>
+                                        <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#get_report.pr_id#"><img src="pics/buttons/greyedView.png" border=0 /></a>
                                        
                                     </cfif>
                                 <cfelse>
@@ -651,6 +670,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
                and hh.hostid != <cfqueryparam cfsqltype="cf_sql_integer" value="#hostid#"> 
                and hh.hostid != <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
+               
 			   </cfquery>
               
                <cfif getPrevHosts.recordcount gt 0>
@@ -661,6 +681,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                            where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
                            and hh.hostid != <cfqueryparam cfsqltype="cf_sql_integer" value="#hostid#"> 
                            and hh.hostid != <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
+
                        </cfquery>
 			   
   	                   <cfloop query="getPrevHosts">
@@ -682,12 +703,15 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                             <td></td>
                             <Td>#familylastname# (#hostid#)</Td>
                         <cfquery name="indReports" datasource="#application.dsn#">
-                        select *
+                        select *, u.firstname as svFirst, u.lastname as svLast
                         from progress_reports
+                        left join smg_users u on u.userid = progress_reports.fk_secondvisitrep
                         where fk_student = #studentid#
                         and fk_host = #hostid# 
                         and fk_reportType = 2
+                        
                         </cfquery>
+                      
                         <!----check if block on report should be in place---->
                         <Cfquery name="checkBlock2" datasource="#application.dsn#">
                         SELECT hr.id, hr.dateChanged, u.firstname, u.lastname
@@ -739,7 +763,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
 
                       
                             <td>
-                                <Table cellspacing="0" cellpadding="2">
+                                <Table cellspacing="0" cellpadding="2" >
                                     <Tr>
                                         <TD>
                                        
@@ -773,8 +797,27 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                       </cfif>
                             <cfelse>         
                                  <Cfloop query="indReports">          
+                                    <cfif getResults.secondvisitrepid neq indReports.fk_secondvisitrep>
+                                 	<td  colspan = 2>
+                                    <cfelse>
+                              
                                     
-                                 	<td><cfif pr_sr_approved_date is ''>No<cfelse>Yes</cfif></td>
+                                    </cfif>
+									<Td>
+									
+									
+                                    <cfif getResults.secondvisitrepid neq fk_secondvisitrep>
+                                     <Cfif client.usertype lte 4><a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#indReports.pr_id#"></Cfif>
+                                     <font size=-1><em> #svFirst# #svLast# (#fk_secondvisitrep#)
+                                      <Cfif client.usertype lte 4>
+                                     </a>
+                                     </Cfif></em></font>
+                                    <Cfelse>
+                                    <cfif pr_sr_approved_date is ''>No<cfelse>Yes</cfif>
+                                    </cfif>
+                                    
+                                    
+                                    </td>
                                     <cfif checkBlock2.recordcount gt 0>
                                         <Td colspan=6>
                                             <table>
@@ -796,10 +839,12 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                                         
                                         </Td>
                                        </tr>
-                                        <Cfelse>
-                                        <td>
-                                         <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#pr_id#"><img src="pics/buttons/greyedView.png" /></a>
-                                       </td>
+                                   <Cfelse>
+                                        <cfif getResults.secondvisitrepid eq fk_secondvisitrep>
+                                            <td>
+                                             <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#pr_id#"><img src="pics/buttons/greyedView.png" border=0 /></a>
+                                            </td>
+                                       </cfif>
                                          <td>#dateFormat(indReports.pr_sr_approved_date, 'mm/dd/yyyy')#</td>
                                         <td>
                                             <cfif getResults.advisorid EQ ''>
@@ -811,19 +856,74 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                                         <td>#dateFormat(indReports.pr_rd_approved_date, 'mm/dd/yyyy')#</td>
                                         <td>#dateFormat(indReports.pr_ny_approved_date, 'mm/dd/yyyy')#</td>
                                         <td>#dateFormat(indReports.pr_rejected_date, 'mm/dd/yyyy')#</td>
-                                 		 </cfif>
-                                    </tr>
+                                 		 </tr></cfif>
+                                    
                                     <tr>
                                     	<td>&nbsp;</td>
                                     </tr>
                                  </Cfloop>
                             </cfif>
+                           
                         </cfloop>
                         
                </cfif>     
-                    
-                         
-               
+                    <Cfquery name="checkManual" datasource="#application.dsn#">
+                    select *, h.familylastname
+                    from progress_reports
+                    left join smg_hosts h on h.hostid = progress_reports.fk_host
+                    where fk_student =  <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
+                    and manual = 1
+                    </cfquery>
+                     <Cfif checkManual.recordcount gt 0>
+                     <Cfquery name="checkWelcome" datasource="#application.dsn#">
+                           select  distinct hh.hostID, hh.studentid, h.familylastname, isWelcomeFamily
+                           from smg_hostHistory hh
+                           LEFT JOIN smg_hosts h on h.hostid = hh.hostid
+                           where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#checkManual.fk_student#">
+                           and hh.hostid != <cfqueryparam cfsqltype="cf_sql_integer" value="#checkManual.fk_host#"> 
+                           and hh.hostid != <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
+                       </cfquery>
+                   
+                    	<cfloop query="checkManual">
+                        <Cfquery name="welcomeCheck" dbtype="query">
+                       select *
+                       from checkWelcome
+                       where hostid = #hostID#
+                       </cfquery>
+                       <Cfif welcomeCheck.recordcount eq 1>
+                       	<cfset isWelcomeFam2 = #welcomeCheck.isWelcomeFamily#>
+                       <cfelse>
+                       	 <Cfset isWelcomeFam2 = 0>
+                       </Cfif>
+                       
+                       
+                      	<Tr <Cfif isWelcomeFam2 eq 1>bgcolor="##bed1fc"</cfif>> 
+                           <Td colspan=3></Td>
+                           <td>#checkManual.familylastname# (#checkManual.fk_host#)</td>
+                           <Td><Cfif #checkManual.pr_sr_approved_date# is ''> No<cfelse>Yes</Cfif> </Td>
+                           <td>
+                           <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#pr_id#">
+                                   <Cfif #checkManual.pr_sr_approved_date# is ''>
+                                   	 <img src="pics/buttons/greenNew.png" alt="Add New Report" border=0>
+                            		<Cfelse>
+                                      <img src="pics/buttons/greyedView.png" alt="Edit Report" border=0>
+                                    </Cfif>
+                            </a>
+                            </td>
+                            <td>#dateFormat(checkManual.pr_sr_approved_date, 'mm/dd/yyyy')#</td>
+                            <td>
+                                <cfif checkManual.fk_ra_user EQ ''>
+                                   N/A
+                                <cfelse>
+                                    #dateFormat(checkManual.pr_ra_approved_date, 'mm/dd/yyyy')#
+                              </cfif>
+                            </td>
+                            <td>#dateFormat(checkManual.pr_rd_approved_date, 'mm/dd/yyyy')#</td>
+                            <td>#dateFormat(checkManual.pr_ny_approved_date, 'mm/dd/yyyy')#</td>
+                            <td>#dateFormat(checkManual.pr_rejected_date, 'mm/dd/yyyy')#</td>
+                        </Tr>  
+                        </cfloop>  
+                    </Cfif>
                
 				</cfoutput>
                 
@@ -981,21 +1081,148 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                 	<cfset daysPlaced = #DateDiff('d','#date_host_fam_approved#','#now()#')#>
                 	
             	</Cfif>
-         
-                    <tr>
-                        <td colspan=11><strong><font color=##2d5674>Previously Assigned</font></strong> </td>
-                    </tr>
+         ---->
+        	 
+                   
                    
              <!----
 			 Display the pervious kids WITH reports that were assigned to this person
 			 ---->
-			 <cfset secondSubSetOfKids = ''>
-             <cfset secondSubSetOfHosts = ''>
+             <!----Kids from old Placement Management---->
+			 <Cfquery name="previousKids" datasource="#application.dsn#">
+               <!----  SELECT hh.studentid
+                 FROM smg_hosthistory hh
+                 WHERE hh.secondVIsitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#getResults.secondvisitrepid#"> 
+                 AND  hh.studentid not in
+                     (SELECT studentid
+                      FROM smg_students
+                      WHERE secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#getResults.secondvisitrepid#"> )
+                      ---->
+                      SELECT hh.studentid
+                        FROM smg_hosthistory hh
+                        WHERE hh.secondVIsitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#getResults.secondvisitrepid#">
+                        AND  hh.studentid not in
+                             (SELECT studentid
+                              FROM smg_students
+                              WHERE secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#getResults.secondvisitrepid#"> )
+                           
+                        UNION       
+                             
+                        SELECT
+                            sht.studentid
+                        FROM
+                            smg_hostHistoryTracking sht
+                        
+                        WHERE 
+                            fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#getResults.secondvisitrepid#">
+                        AND 
+                            fieldName = 'secondVisitRepID'
+                        AND sht.studentid NOT IN 
+                          (SELECT hh.studentid
+                           FROM smg_hosthistory hh
+                           WHERE hh.secondVIsitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#getResults.secondvisitrepid#">) 
+          
+			  </cfquery>
+
+             
+             
+             
+             <cfif previousKids.recordcount>
+             	 <tr>
+                        <td colspan=11><strong><font color=##2d5674>Previously Assigned</font></strong> </td>
+                    </tr>
+             </cfif>
+            		 
                     <cfloop query="previousKids">
+                   
+                    <Cfquery name="reportInfo" datasource="#application.dsn#">
+                    select pr.pr_id, pr.fk_student,pr.pr_sr_approved_Date, pr.manual, fk_ra_user, pr.fk_host, pr_ra_approved_date, pr_rd_approved_date, pr_ny_approved_date,  s.studentid, pr_rejected_date, s.firstname, s.familylastname,
+                    h.familylastname as hostLast, s.firstname, s.familylastname
+                    from smg_students s
+                    LEFT OUTER join progress_reports pr on  pr.fk_student = s.studentid
+                    LEFT JOIN smg_hosts h on h.hostid = pr.fk_host
+                    where pr.fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#previousKids.studentid#">
+                    AND fk_secondvisitrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#getResults.secondvisitrepid#">
+                    AND pr.fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
+                    
+                    </cfquery>
+                    
+                    <Cfif reportInfo.recordcount eq 0>
+               
+                    <Cfquery name="missingKid" datasource="#application.dsn#">
+                    select firstname, familylastname
+                    from smg_students
+                    where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#previousKids.studentid#">                    
+                    </Cfquery>
+                    <tr  bgcolor="#iif(previousKids.currentRow MOD 2 ,DE("eeeeee") ,DE("white") )#" >
+                    	<Td></Td>
+                        <Td>#missingKid.firstname# #missingkid.familylastname# (#previousKids.studentid#)</Td>
+                        <td></td>
+                        <td>Host Fam</td>
+                        <td>No</td>
+                        <td>  <form action="index.cfm?curdoc=forms/pr_add" method="post">
+                                 
+                                    <input type="hidden" name="studentid" value="#previousKids.studentid#">
+                                    <input type="hidden" name="type_of_report" value="2">
+                                    <input type="hidden" name="month_of_report" value="#client.pr_rmonth#">
+                                    <input type="hidden" name="fk_host" value="" />
+                                    <input type="hidden" name="fk_secondVisitRep" value="#getResults.secondVisitRepID#">
+                                    <input name="Submit" type="image" src="pics/buttons/greenNew.png" alt="Add New Report" border=0>
+                                </form>
+                       </td>
+                       <td colspan=5></td>
+                    </tr>
+                    <cfelse>
+                    <Cfquery name="checkWelcome" datasource="#application.dsn#">
+                           select  distinct hh.hostID, hh.studentid, h.familylastname, isWelcomeFamily
+                           from smg_hostHistory hh
+                           LEFT JOIN smg_hosts h on h.hostid = hh.hostid
+                           where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#reportInfo.studentid#">
+                           and hh.hostid != <cfqueryparam cfsqltype="cf_sql_integer" value="#reportInfo.fk_host#"> 
+                           and hh.hostid != <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
+                       </cfquery>
+                      <Cfquery name="welcomeCheck" dbtype="query">
+                       select *
+                       from checkWelcome
+                       where hostid = #reportInfo.fk_host#
+                       </cfquery>
+                       <Cfif welcomeCheck.recordcount eq 1>
+                       	<cfset isWelcomeFam3 = #welcomeCheck.isWelcomeFamily#>
+                       <cfelse>
+                       	 <Cfset isWelcomeFam3 = 0>
+                       </Cfif>
+                      <tr  <Cfif isWelcomeFam3 eq 1>bgcolor="##bed1fc"<cfelse> bgcolor="#iif(previousKids.currentRow MOD 2 ,DE("eeeeee") ,DE("white") )#"</cfif> >
+                    	<Td></Td>
+                        <Td>#reportInfo.firstname# #reportInfo.familylastname# (#reportInfo.studentid#)</Td>
+                        <td></td>
+                        <td>#reportInfo.hostlast#</td>
+                        <td>Yes</td>
+                        <td>  <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#reportInfo.pr_id#">
+                                <img src="pics/buttons/greyedView.png" alt="Edit Report" border=0>
+                              </a>
+                       </td>
+                       <td>#dateFormat(reportInfo.pr_sr_approved_date, 'mm/dd/yyyy')#</td>
+                            <td>
+                                <cfif reportInfo.fk_ra_user EQ ''>
+                                   N/A
+                                <cfelse>
+                                    #dateFormat(reportInfo.pr_ra_approved_date, 'mm/dd/yyyy')#
+                              </cfif>
+                            </td>
+                            <td>#dateFormat(reportInfo.pr_rd_approved_date, 'mm/dd/yyyy')#</td>
+                            <td>#dateFormat(reportInfo.pr_ny_approved_date, 'mm/dd/yyyy')#</td>
+                            <td>#dateFormat(reportInfo.pr_rejected_date, 'mm/dd/yyyy')#</td>
+                    </tr>
+                    </Cfif>
+                    </cfloop>
+                    <tr>
+                    	<td>&nbsp;</td>
+                    </tr>
+                    <!----
                      <tr <Cfif hostHistory.isWelcomeFamily eq 1>bgcolor="##bed1fc"<cfelse> bgcolor="#iif(secondMyCurrentRow MOD 2 ,DE("eeeeee") ,DE("white") )#" </cfif>>
                         <td width="15">&nbsp;</td>
                         <td><a href="javascript:OpenLetter('reports/PlacementInfoSheet.cfm?uniqueID=#previousKids.uniqueID#');">#firstname# #familylastname# (#fk_student#)</a></td>
-                        <td>#daysPlaced#</td>
+                        <td></td>
                         <td>#hostlastname# (#fk_host#)</td>
                         <td><cfif previousKids.pr_sr_approved_date is ''>No<cfelse>Yes</cfif></td>
                         <td>
