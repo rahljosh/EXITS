@@ -28,8 +28,18 @@
 <!--- letter header --->
 <table width=650 align="center" border=0 bgcolor="FFFFFF">
 	<tr>
-	<td><img src="../pics/logos/#client.companyid#.gif"  alt="" border="0" align="left"></td>	
+	<td>
+    <table cellpadding="0" cellspacing="0">
+    	<tr>
+        	<td><img src="../pics/logos/#client.companyid#.gif"  alt="" border="0" align="left" height=110></td>
+        </tr>
+        <tr>
+        	<td><font size=-1> #DateFormat(now(), 'mmmm dd, yyyy')#</font></td>
+        </tr>
+    </table>
+    </td>	
 	<td valign="top" align="right"> 
+    	<font size=-1>
 		<div align="right"><span id="titleleft">
 		#companyshort.companyname#<br>
 		#companyshort.address#<br>
@@ -38,14 +48,15 @@
 		<cfif companyshort.toll_free is ''><cfelse> Toll Free: #companyshort.toll_free#<br></cfif>
 		<cfif companyshort.fax is ''><cfelse> Fax: #companyshort.fax#<br></cfif>
         <cfif companyshort.generalContactEmail is ''><cfelse> Email: #companyshort.generalContactEmail#<br></cfif></div>
+        </font>
 	</td></tr>		
 </table>
-<br>
+
 <!--- line --->
 <table width=650 align="center" border=0 bgcolor="FFFFFF">
 <tr><td><hr width=90% align="center"></td></tr>
 </table>
-<br>
+
 <!--- School info --->
 <table width=650 align="center" border=0 bgcolor="FFFFFF">
 	<tr>
@@ -61,9 +72,9 @@
 			From: #DateFormat(program_info.startdate, 'mmm dd, yyyy')# to #DateFormat(program_info.enddate, 'mmm dd, yyyy')#	
 		</td>
 	</tr>
-	<tr><td align="right" colspan="2">#DateFormat(now(), 'dddd, mmmm dd, yyyy')#</td></tr>
+	<tr><td align="right" colspan="2"></td></tr>
 </table>
-<br><br>
+
 <!--- student info --->
 <table width=650 align="center" border=0 bgcolor="FFFFFF">
 <tr><td><b>Student: #get_letter_info.firstname# #get_letter_info.familylastname# from #get_letter_info.countryname#</b></td></tr>
@@ -80,20 +91,23 @@
 			#get_letter_info.h_city#, #get_letter_info.h_state# #get_letter_info.h_zip#<br>
 			<Cfif get_letter_info.h_phone is ''><cfelse>Phone: &nbsp; #get_letter_info.h_phone#<br></Cfif>
 		</td>
-		<td align="right"><div align="justify">
+		<td align="left"><div align="justify">
 			<b>Area Representative:</b><br>
 			#get_letter_info.ar_firstname# #get_letter_info.ar_lastname#<br>
 			#get_letter_info.ar_address#<br>
 			<Cfif get_letter_info.ar_address2 is ''><cfelse>#get_letter_info.ar_address2#<br></Cfif>
-			#get_letter_info.ar_city#, #get_letter_info.ar_state# #get_letter_info.ar_zip#<br>
+			#get_letter_info.ar_city#, #get_letter_info.ar_state# #get_letter_info.ar_zip#
+         </div>
+        </td>
+        <td>
+        <b>Rep. Contact Information:</b><br>
             <Cfif get_letter_info.regionname is not ''>Region: #get_letter_info.regionname#<br></Cfif>
 			<Cfif get_letter_info.ar_phone is ''><cfelse>Phone: &nbsp; #get_letter_info.ar_phone#<br></Cfif>
             <Cfif get_letter_info.ar_email is ''><cfelse>Email: &nbsp; #get_letter_info.ar_email#<br></Cfif>
 		</div></td>
 	</tr>
 </table>
-<br>
-
+<br />
 <table width=650 align="center" border=0 bgcolor="FFFFFF">
 <tr><td><div align="justify">
 <p>
@@ -137,11 +151,22 @@ any time during #get_letter_info.firstname#'<cfif #right(get_letter_info.firstna
 </p>
 </cfif>
 
-<br>
 
 <p>
 Very truly yours,<br><br>
 #companyshort.lettersig#<br>
 #companyshort.companyname#<br>
 </p></div></td></tr>
+</table>
+<Cfif client.companyid NEQ 14>
+<!--- line --->
+<table width=650 align="center" border=0 bgcolor="FFFFFF">
+<tr><td><hr width=90% align="center"></td></tr>
+</table>
+<table width=100%>
+	<tr>
+    	<td align="center"><font color="##999999"><font size=-2>U.S. Department of State &middot; 2200 C St. NW &middot; Washington D.C. 20037 &middot; 866.283.9090 &middot; jvisas@state.gov</font></font></td>
+    </tr>
+</table>
+</Cfif>
 </cfoutput>
