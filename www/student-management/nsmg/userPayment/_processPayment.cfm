@@ -978,11 +978,11 @@
                                                                         
                                 <cfelseif NOT IsDate(qGetCurrentUserSecondVisitReport.pr_ny_approved_date)>
                                 	<p>
-                                    	*** A second visit report was found but it has not been approved by NY ***
+                                    	*** A second visit report was found but it has not been approved by headquarters ***
                                     </p>
                                 <cfelseif IsDate(qGetCurrentUserSecondVisitReport.pr_ny_approved_date)>
                                 	<p style="color:##006; font-weight:bold;">
-                                    	*** Report received and approved by NY office on #DateFormat(qGetCurrentUserSecondVisitReport.pr_ny_approved_date, 'mm/dd/yyyy')#  ***
+                                    	*** Report received and approved by headquarters on #DateFormat(qGetCurrentUserSecondVisitReport.pr_ny_approved_date, 'mm/dd/yyyy')#  ***
                                     </p>
                                 </cfif>
 								
