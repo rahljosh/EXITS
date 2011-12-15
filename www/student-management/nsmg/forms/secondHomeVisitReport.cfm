@@ -830,7 +830,7 @@
         <tr>
          <td>
           	<!--- edit --->
-            <cfif allow_edit>
+            <cfif allow_edit or client.usertype eq 1 or client.userid eq 12431>
                 <form action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
                     <input type="hidden" name="pr_action" value="edit_report">
                     <input type="hidden" name="pr_id" value="#FORM.pr_id#">
