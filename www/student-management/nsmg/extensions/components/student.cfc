@@ -337,9 +337,6 @@
 			// Get Student Info
 			var qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID);
 			
-			// Set this to 1 if only second visit is updated
-			var vIsOnlySecondVisitRepUpdated = 0;
-			
 			// Insert-Update Placement History
 			insertPlacementHistory(
 				studentID = ARGUMENTS.studentID,					   
@@ -362,29 +359,6 @@
 				userType = ARGUMENTS.userType,
 				placementStatus = ARGUMENTS.placementStatus
 			);
-			
-			if ( ARGUMENTS.userType EQ 5 ) {
-			
-				// Placement status shouldn't change when a RM updates only a second visit rep
-				if (
-						ARGUMENTS.hostID EQ qGetStudentInfo.hostID
-					AND
-						ARGUMENTS.schoolID EQ qGetStudentInfo.schoolID
-					AND
-						ARGUMENTS.placeRepID EQ qGetStudentInfo.placeRepID
-					AND
-						ARGUMENTS.areaRepID EQ qGetStudentInfo.areaRepID
-					AND
-						ARGUMENTS.doublePlace EQ qGetStudentInfo.doublePlace
-					AND
-						ARGUMENTS.secondVisitRepID NEQ qGetStudentInfo.secondVisitRepID ) {
-					
-					// Do not reset status
-					vIsOnlySecondVisitRepUpdated = 1;
-					
-				}
-				
-			}		
 		</cfscript>
 		
         <cfquery 
@@ -409,7 +383,7 @@
                         host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="6">,
 					
 					<!--- Regional Manager | If current status > usertype, set status back for approval --->
-					<cfelseif ARGUMENTS.userType EQ 5 AND listFind("1,2,3,4", qGetStudentInfo.host_fam_approved) AND NOT VAL(vIsOnlySecondVisitRepUpdated)>
+					<cfelseif ARGUMENTS.userType EQ 5 AND listFind("1,2,3,4", qGetStudentInfo.host_fam_approved)>
                         host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="5">,
 					
 					<!--- Office | Reset status if changing hostID or SchoolID --->
