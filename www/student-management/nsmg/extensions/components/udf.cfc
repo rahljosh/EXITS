@@ -277,7 +277,7 @@
 	</cffunction>
 
 
-	<!--- This removes foreign accents from online application fields --->
+	<!--- Converts a number to ordinal --->
 	<cffunction name="convertToOrdinal" access="public" returntype="string" output="false" hint="Converts a number to ordinal">
     	<cfargument name="num" hint="Numeric">
 

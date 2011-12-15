@@ -644,7 +644,7 @@
                     datePlaced = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     datePISEmailed = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     <!--- Placement Notes --->
-                    placement_notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">,
+                    placement_notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="">,
 					<!--- Single Placement Paperwork --->
                     doc_single_place_auth = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     doc_single_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
@@ -1451,7 +1451,7 @@
                         datePlaced = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                         datePISEmailed = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
 						<!--- Placement Notes --->
-                        placement_notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">,
+                        placement_notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="">,
                         <!--- Single Placement Paperwork --->
                         doc_single_place_auth = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                         doc_single_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
