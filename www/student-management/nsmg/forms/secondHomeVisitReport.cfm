@@ -872,7 +872,7 @@
           <td>
           	<!--- delete --->
             <cfif allow_delete>
-                <form action="index.cfm?curdoc=progress_report_info" method="post" onclick="return confirm('Are you sure you want to delete this report?')">
+                <form action="index.cfm?curdoc=secondVisitReports" method="post" onclick="return confirm('Are you sure you want to delete this report?')">
                     <input type="hidden" name="pr_action" value="delete_report">
                     <input type="hidden" name="pr_id" value="#FORM.pr_id#">
                     <input name="Submit" type="image" src="pics/delete.gif" alt="Delete Report" border=0>
