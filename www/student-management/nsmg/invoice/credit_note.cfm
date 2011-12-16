@@ -131,12 +131,23 @@ ORDER BY
               <img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_banner.gif"/>
             <cfelse>
                 <cfswitch expression="#credit_info.testCompId#">
-                    <cfcase value="8">
+                
+                	<!--- Extra --->
+                    <cfcase value="7,8">
                           <img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_banner.gif"/>
                     </cfcase>
+                    
+                    <!--- CASE --->
 					<cfcase value="10">
 						<img src="http#linkSSL#://jan.case-usa.org/nsmg/pics/case_banner.jpg" width="665" height="113" align="Center">
                     </cfcase>
+                    
+                    <!--- ESI --->
+                    <cfcase value="14">
+                        <img src="http#linkSSL#://es.exitsapplication.com/nsmg/pics/esiBanner.jpg" width="665" height="80" align="center" />
+                    </cfcase>
+                    
+                    <!--- ISE --->
                     <cfdefaultcase>
                         <img src="http#linkSSL#://www.student-management.com/nsmg/pics/ise_banner.jpg" align="Center">
 
