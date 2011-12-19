@@ -233,7 +233,6 @@ smg_charges
     ORDER BY
 		studentid
     </cfquery>
-    
    
     <cfloop query="getHSstud">
 		
@@ -597,6 +596,7 @@ ORDER BY companyid
     FROM smg_charges
     WHERE invoiceid = 0
     AND agentid != 0
+    AND companyid IN (1,2,3,4,10,12)
 	GROUP BY agentid, groupCompId
     <!--- AND companyid = #getCompId.companyid# --->
     </cfquery>
