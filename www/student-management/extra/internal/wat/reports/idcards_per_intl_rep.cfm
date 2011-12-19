@@ -30,6 +30,8 @@
             h.address as hostaddress, 
             h.city as hostcity,             
             h.zip as hostzip,
+            h.supervisor,
+            h.phone,
             s.state as hoststate            
         FROM 
         	extra_candidates c 
@@ -126,6 +128,9 @@
                 // Default Sponsor
                 setSponsor = 'WAT';	
             }
+			
+			vPhoneNumber = Replace(qGetCandidates.phone, "(", "");
+			vPhoneNumber = Replace(vPhoneNumber, ")", "-");                                                                                    
     	</cfscript>    
 	        
 		<cfif NOT VAL(pagebreak)>				
@@ -155,7 +160,6 @@
                         <p class="style1">#APPLICATION.CSB[setSponsor].phoneIDCard#</p>
                         <p class="style5">&nbsp;</p>
                         <p class="style3">Student: <b>#Firstname# #lastname# (###candidateid#)</b></p>
-                        <p class="style1">Please see reverse for the insurance information.</p>
                     </td>
                 </tr>
             </table>
@@ -168,22 +172,24 @@
                             <tr>
                                 <td width="50%" align="left" valign="top">
                                     <p class="style2">Host Company: #hostcompanyname#</p>
+                                    <p class="style2">Primary Contact: #supervisor#</p>															
+                                    <p class="style2">Phone Number: 1-#vPhoneNumber#</p>
                                     <p class="style2">Address: #hostaddress#</p>	
                                     <p class="style2">#hostcity#, #hoststate# #hostzip#</p>						
                                     <p class="style2">&nbsp;</p>	
-                                    <p class="style2">Exchange Visitor Program Number:</p>															
-                                    <p class="style2">#APPLICATION.CSB[setSponsor].programNumber#</p>
-                                    <p class="style2">&nbsp;</p>
                                 </td>
                                 <td width="50%" align="right" valign="top">
                                     <!---
                                     <p class="style2">Head Office Contact: Anca</p>
                                     <p class="style2">#APPLICATION.CSB[setSponsor].phoneIDCard#</p><br />
 									--->
-                                    <p class="style2">Department of State Exchange Visitor Program:</p>
-                                    <p class="style2">1-202-401-5810</p>
-                                    <p class="style2">Emergency Contact Phone Number: #APPLICATION.CSB[setSponsor].phoneIDCard#</p>
+                                    <p class="style2">Emergency Phone Number: #APPLICATION.CSB[setSponsor].phoneIDCard#</p>
                                     <p class="style2">&nbsp;</p>
+                                    <p class="style2">US Department of State:</p>
+                                    <p class="style2">1-866-283-9090</p>
+                                    <p class="style2">&nbsp;</p>	
+                                    <p class="style2">Exchange Visitor Program Number:</p>															
+                                    <p class="style2">#APPLICATION.CSB[setSponsor].programNumber#</p>
                                 </td>
                             </tr>
                         </table>
