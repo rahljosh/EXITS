@@ -77,10 +77,7 @@
 		
 		// Get Region Assigned - Used in the hostFamily
 		qGetRegionAssigned = APPLICATION.CFC.REGION.getRegions(qGetStudentInfo.regionAssigned);
-		
-		// Get Available Families
-		qGetAvailableHostFamilies = APPLICATION.CFC.HOST.getHosts(regionID=qGetStudentInfo.regionassigned);
-		
+			
 		// Get Host Family Information
 		qGetHostInfo = APPLICATION.CFC.HOST.getHosts(hostID=qGetStudentInfo.hostID);
 		
