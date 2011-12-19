@@ -89,7 +89,7 @@ function NextPage() {
 <!----Get Regions that have been canceled for students Program---->
 <Cfquery name="unAvailableRegions" datasource="MySQL">
 select fk_regionID
-from regionStateClosure
+from regionStateClosure sc
 where fk_programid = #get_student_info.programid#
 <Cfif client.companyid lte 5 or client.companyid eq 12>
 and sc.fk_companyid = 1
