@@ -183,7 +183,8 @@
                                     <p class="style2">Head Office Contact: Anca</p>
                                     <p class="style2">#APPLICATION.CSB[setSponsor].phoneIDCard#</p><br />
 									--->
-                                    <p class="style2">Emergency Phone Number: #APPLICATION.CSB[setSponsor].phoneIDCard#</p>
+                                    <p class="style2">Emergency Phone Number:</p>
+                                    <p class="style2">#APPLICATION.CSB[setSponsor].phoneIDCard#</p>
                                     <p class="style2">&nbsp;</p>
                                     <p class="style2">US Department of State:</p>
                                     <p class="style2">1-866-283-9090</p>
