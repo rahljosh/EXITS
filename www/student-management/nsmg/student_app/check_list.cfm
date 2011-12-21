@@ -627,7 +627,7 @@
     <cfif CLIENT.companyID EQ 14 OR ListFind("14,15,16", smg_students.app_indicated_program)> 
 		<tr><td><font color="0000FF">This page does not apply to your program</font><br></td></tr>
     <cfelseif smg_student_app_state_requested.state1 GT 0 or smg_student_app_state_requested.state2 GT 0 or smg_student_app_state_requested.state3 GT 0>
-    	<tr><td>You've requested a state guarantee, therefor a regional guarantee is not available. </td></tr>
+    	<tr><td>You've requested a state preference, therefor a region preference is not available. </td></tr>
     <cfelse>    
 		<cfif (DateFormat(now(), 'mm') EQ 4 OR dateFormat(now(), 'mm') EQ 5) AND (get_student_info.app_indicated_program EQ 1 OR get_student_info.app_indicated_program EQ '2')> 
             <tr><td><font color="0000FF">This page is not available in April or May.</font><br></td></tr> 
@@ -682,7 +682,7 @@
             <cfelse>
                 <!--- student has choosen state guarantee --->
                 <Cfif check_guarantee.app_region_guarantee gt 0>
-                <tr><td><font color="0000FF">State Guarantee is not available if you have selected a Regional Guarantee.  </font><br></td></tr>
+                <tr><td><font color="0000FF">State Preference is not available if you have selected a Region Preference.  </font><br></td></tr>
                 
                 <cfelseif smg_student_app_state_requested.recordcount GT 0 AND smg_student_app_state_requested.state1 GT 0>
                     <cfif check_21_upload.recordcount EQ 0>

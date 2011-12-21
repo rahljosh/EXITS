@@ -90,7 +90,7 @@ WHERE 	<cfloop list=#form.programid# index='prog'>
 					<td width="10%"><b>Gender</b></td>
 					<td width="10%"><b>DOB</b></td>
 					<td width="20%"><b>Country</b></td>
-					<td width="14%"><b>Region Guarantee</b></td></tr>	
+					<td width="14%"><b>Region Preference</b></td></tr>	
 				<cfoutput query="get_students">
 				<tr bgcolor="#iif(get_students.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
 					<td>#studentid#</td>

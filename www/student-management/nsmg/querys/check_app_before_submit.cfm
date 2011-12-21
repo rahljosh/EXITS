@@ -10,7 +10,7 @@ body {font:Arial, Helvetica, sans-serif;}
 	<tr>
 		<Td>
 		Please wait while your application information is being checked.<br><br>
-		While this initial check does not guarantee that our application will not be rejected,<br>
+		While this initial check does not preference that our application will not be rejected,<br>
 		it will catch many common mistakes.
 		</Td>
 	</tr>

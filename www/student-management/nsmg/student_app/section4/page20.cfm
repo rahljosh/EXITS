@@ -13,7 +13,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 	<link rel="stylesheet" type="text/css" href="app.css">
-	<title>Page [20] - Regional Guarantee</title>
+	<title>Page [20] - Region Preference</title>
 </head>
 <body <cfif check_guarantee.app_region_guarantee NEQ '0' AND check_guarantee.app_region_guarantee NEQ ''>onLoad="hideAll(); changeDiv('1','block');"</cfif>>
 
@@ -143,13 +143,13 @@ and sc.fk_companyid = #client.companyid#
         <td width="42" class="tableside"><img src="pics/p_topright.gif" width="42"></td>
 	</tr>
 </table>
-<!--- If student has selected a state guarantee, don't show regional guarantee --->
+<!--- If student has selected a state Preference, don't show regional Preference --->
 <Cfif (checkStates.recordcount neq 0) > 
 	<cfif (checkStates.state1 neq 0 AND checkStates.state2 nEQ 0 AND checkStates.state3 nEQ 0)>
 	<div class="section"><br><br>
 	<table width="670" cellpadding=2 cellspacing=0 align="center">
 		<tr>
-			<td>You have already requested a State Guarantee.  You can not select both a Regional and State Guarantee.  If you would like to request a Regional Guarantee, please remove your requested State Guarantee. </td>
+			<td>You have already requested a State Preference.  You can not select both a Regional and State Preference.  If you would like to request a Region Preference, please remove your requested State Preference. </td>
 		</tr>
 	</table><br><br>
 	</div>

@@ -276,11 +276,11 @@
 			<table cellpadding="3" width="100%">
 				<tr bgcolor="e2efc7"><td colspan="2"><span class="get_attention"><b>:: </b></span>Region</td></tr>
 				<tr><td>Assigned to Region :</td><td><cfif get_region_info.recordcount NEQ '0'><b>#get_region_info.regionname#</b><cfelse> Unassigned </cfif></td></tr>
-				<tr><td>Guaranteed :</td>
+				<tr><td>Region / State Preference :</td>
 					<td><cfif get_student_info.regionguar is 'yes' and get_student_info.regionassigned is not 0><input type="radio" name="regionguar" value="yes" checked disabled>Yes <input type="radio" name="regionguar" value="no" disabled>No 
 						<cfelse><input type="radio" name="regionguar" value="yes" disabled>Yes <input type="radio" name="regionguar" value="no" checked disabled>No</cfif></td></tr>
-				<tr><td>Region Guaranteed :</td><td><cfif region_guarantee.recordcount EQ '0'> n/a <cfelse> #region_guarantee.regionname# </cfif></td></tr>
-				<tr><td>State Guaranteed :</td><td><cfif state_guarantee.recordcount EQ '0'> n/a <cfelse> #state_guarantee.statename# </cfif></td></tr>				
+				<tr><td>Region Preference :</td><td><cfif region_guarantee.recordcount EQ '0'> n/a <cfelse> #region_guarantee.regionname# </cfif></td></tr>
+				<tr><td>State Preference :</td><td><cfif state_guarantee.recordcount EQ '0'> n/a <cfelse> #state_guarantee.statename# </cfif></td></tr>				
 			</table>	
 		</td>	
 	</tr>

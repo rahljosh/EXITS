@@ -53,7 +53,7 @@
 			where subofregion = #url.id#
 		</cfquery>
 		<cfif sub_regions.recordcount is 0>
-		No regional guarantee regions defined, use form below to add regions.
+		No regional Preference regions defined, use form below to add regions.
 		<cfelse>
 		<cfloop query="sub_regions">
 		-- #regionname#
@@ -67,7 +67,7 @@
 		<textarea cols="40" rows="5" name="subregion"></textarea>
 		</td>
 	</tr>
-	<tr><td><h3>Regional Guarantee Fee: &nbsp; &nbsp; <input type="text" value="#get_region_info.regional_guarantee#" name="regional_guarantee" size=8></input></h3> </td></tr>
+	<tr><td><h3>Region Preference Fee: &nbsp; &nbsp; <input type="text" value="#get_region_info.regional_guarantee#" name="regional_guarantee" size=8></input></h3> </td></tr>
 </table>
 
 <table border=0 cellpadding=4 cellspacing=0 width=100% class="section">

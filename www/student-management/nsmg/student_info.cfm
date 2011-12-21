@@ -613,10 +613,10 @@
 					</td>
 				</tr>
 				<tr class="displayNoGuarantee">
-                	<td>Regional Preference :</td>
+                	<td>Region Preference :</td>
 					<td>n/a</td>
 				</tr>
-				<tr class="displayGuarantee"><td>Regional Preference :</td>
+				<tr class="displayGuarantee"><td>Region Preference :</td>
 					<td>
                         <cfif FORM.edit EQ 'no'>
                         
@@ -645,11 +645,11 @@
 					</td>
 				</tr>
 				<tr class="displayNoGuarantee">
-                	<td>State Guaranteed :</td>
+                	<td>State Preference :</td>
 					<td>n/a</td>
 				</tr>
 				<tr class="displayGuarantee">
-                	<td>State Guaranteed :</td>
+                	<td>State Preference :</td>
 					<td>
                     	<select name="state_guarantee" id="state_guarantee" <cfif FORM.edit EQ 'no'> disabled </cfif> > <!---  onChange="FeeWaived(#jan_app#);" --->
                             <option value="0">--- Select a State ---</option>
@@ -662,10 +662,10 @@
                 <!----
 				<cfif qStudentInfo.studentID neq 28304>
 					<tr id="nfee_waived">
-						<td width="140px">Guarantee Fee Waived</td>
+						<td width="140px">Preference Fee Waived</td>
 						<td>n/a</td>
 					</tr>
-					<tr id="fee_waived"><td >Guarantee Fee Waived</td>
+					<tr id="fee_waived"><td >Preference Fee Waived</td>
 						<td width="140px">
 							<input type="radio" name="jan_app" value=0 onClick="FeeWaived2();" <cfif jan_app EQ 0>checked</cfif> <cfif FORM.edit EQ 'no' OR jan_app NEQ '2'>disabled</cfif> >no 
 							<input type="radio" name="jan_app"  value=1 onClick="FeeWaived2();" <cfif jan_app EQ 1>checked</cfif> <cfif FORM.edit EQ 'no' OR jan_app NEQ '2'>disabled</cfif> >yes

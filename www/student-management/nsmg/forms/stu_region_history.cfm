@@ -47,8 +47,8 @@
 <table width="100%" border=0 cellpadding=1 cellspacing=0 class="section">
 	<tr><th>Assigned On</th>
 		<th>Region</th>
-		<th>Region Guarantee</th>
-		<th>State Guarantee</th>
+		<th>Region Preference</th>
+		<th>State Preference</th>
 		<th>Reason</th>
 		<th>Assigned By</th>
 	</tr>

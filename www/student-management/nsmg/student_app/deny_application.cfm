@@ -126,7 +126,7 @@ function CheckCompany() {
 			</table>
 	</td></tr>
 	<tr>
-		<td><em>International Representative</em></td><td><em>Regional Guarantee</em></td><td><em>State Guarnatee</em></td>
+		<td><em>International Representative</em></td><td><em>Region Preference</em></td><td><em>State Preference</em></td>
 	</tr>
 	<tr>
 		<td valign="bottom">#get_intrep.businessname#<br><img src="pics/line.gif" width="195" height="1" border="0" align="absmiddle"></td>

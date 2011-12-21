@@ -81,7 +81,7 @@ function NextPage() {
 	if ( (document.page21.state_select[0].checked) && ((document.page21.state1.value == document.page21.state2.value) || (document.page21.state1.value == document.page21.state3.value) ||  (document.page21.state2.value == document.page21.state3.value))) {
 	 	alert("You must select 3 different states, please review your choices and submit this page again.");
 		  return false; }
-	alert("If you would like a State Guarantee, you must select three different options."); 
+	alert("If you would like a State Preference, you must select three different options."); 
 --->
 
 <Cfset doc = 'page21'>
@@ -187,7 +187,7 @@ and sc.fk_companyid = #client.companyid#
 	<div class="section"><br><br>
 	<table width="670" cellpadding=2 cellspacing=0 align="center">
 		<tr>
-			<td>You have already requested a Regional Guarantee.  You can not select both a Regional and State Guarantee.  If you would like to request a State Guarantee, please remove your requested Regional Guarantee. </td>
+			<td>You have already requested a Region Preference.  You can not select both a Regional and State Preference.  If you would like to request a State Preference, please remove your requested Region Preference. </td>
 		</tr>
 	</table><br><br>
 	</div>

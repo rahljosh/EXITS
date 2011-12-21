@@ -209,7 +209,7 @@
 
 <cfoutput>
 <table width='650' cellpadding=6 cellspacing="0" align="center" class="box">
-<tr><td align="left" colspan="2"><font color="CC0000">* Regional / State Guarantee</font></td><td align="right" colspan="2">CTRL-F to search</td></tr>
+<tr><td align="left" colspan="2"><font color="CC0000">* Regional / State Preference</font></td><td align="right" colspan="2">CTRL-F to search</td></tr>
 <tr><td colspan="4"><b><i>Criteria used in this search :</i></b></td></tr>
 <tr>
 	<td width="25%"><i>Active : &nbsp;</i><cfif form.active is '1'>Yes</cfif><cfif form.active EQ '0'>No</cfif><cfif form.active is '2'>n/a</cfif></td>
@@ -230,7 +230,7 @@
 	<td width="25%"><i>Narrative : &nbsp;</i><cfif form.interests_other EQ ''>n/a<cfelse>#form.interests_other#</cfif></td>	
 </tr>
 <tr>
-	<td width="25%"><i>State Guarantee : &nbsp;</i><cfif form.stateid EQ '0'>n/a<cfelse>#students.state#</cfif></td>
+	<td width="25%"><i>State Preference : &nbsp;</i><cfif form.stateid EQ '0'>n/a<cfelse>#students.state#</cfif></td>
 	<td width="25%"><i>Program(s) : &nbsp;</i><cfif form.programid EQ '0'>n/a<cfelse>
 						<Cfquery name="get_program" datasource="MySQL">
 						SELECT programname FROM smg_programs WHERE	
