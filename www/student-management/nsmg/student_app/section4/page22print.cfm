@@ -313,7 +313,7 @@ function PrintFile(url)
 			<td>#page19.dateLastModified#</td>
 		</tr>
 	</cfif>
-	<tr bgcolor="##CCCCCC"><td colspan="3"><b>Page 20 - Region Guarantee</b></td></tr>
+	<tr bgcolor="##CCCCCC"><td colspan="3"><b>Page 20 - Region Preference</b></td></tr>
 	<cfif NOT VAL(page20.recordcount)>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>
@@ -328,7 +328,7 @@ function PrintFile(url)
 			<td>#page20.dateLastModified#</td>
 		</tr>
 	</cfif>
-	<tr bgcolor="##CCCCCC"><td colspan="3"><b>Page 21 - State Guarantee</b></td></tr>
+	<tr bgcolor="##CCCCCC"><td colspan="3"><b>Page 21 - State Preference</b></td></tr>
 	<cfif NOT VAL(page21.recordcount)>
 		<tr><td colspan="3">No file has been uploaded.</td></tr>
 	<cfelse>

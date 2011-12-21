@@ -157,8 +157,8 @@ Order by birthdate
 		<font size=+2><b>#companyshort.companyshort#</b></font><br>
 		Program: #program_name.programname#<br>
 		Region: #regions.regionname# 
-		<cfif #get_student_info.regionguar# is 'yes'><b> - #region_guarantee.regionname# Guaranteed</b></cfif>
-		<cfif #get_student_info.state_guarantee# NEQ 0><b> - #get_state_guarantee.statename# Guaranteed</b></cfif><br>
+		<cfif #get_student_info.regionguar# is 'yes'><b> - #region_guarantee.regionname# Preference</b></cfif>
+		<cfif #get_student_info.state_guarantee# NEQ 0><b> - #get_state_guarantee.statename# Preference</b></cfif><br>
 		<cfif get_student_info.scholarship is '1'>Participant of Scholarship Program</cfif></td>
 	</div><td><img src="../pics/logos/5.gif"  alt="" border="0" align="right"></td></tr>	
 </table>

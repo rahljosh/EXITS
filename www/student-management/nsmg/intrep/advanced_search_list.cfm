@@ -225,7 +225,7 @@ div.scroll {
 		</cfif>
 	</cfif></font></td>
 </tr>
-<tr><td align="left"><font color="CC0000">&nbsp; * Regional / State Guarantee</font></td>
+<tr><td align="left"><font color="CC0000">&nbsp; * Regional / State Preference</font></td>
 	<td align="right"><font color="CC0000">CTRL-F to search &nbsp;</font></td>
 </tr>
 

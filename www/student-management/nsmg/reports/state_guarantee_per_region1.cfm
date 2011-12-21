@@ -184,7 +184,7 @@ WHERE 	(<cfloop list=#form.programid# index='prog'>
 					<td width="7%" align="center">Gender</td>
 					<td width="9%">Country</td>
 					<td width="10%">State Preference</td>
-                    <td width="10%">Regional Preference</td>
+                    <td width="10%">Region Preference</td>
 				
 					<td width="11%">Host Name</td>
 					<td width="10%">Host Phone</td>

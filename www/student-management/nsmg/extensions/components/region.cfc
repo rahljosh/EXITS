@@ -27,7 +27,7 @@
 	<cffunction name="getRegions" access="public" returntype="query" output="false" hint="Gets a list of regions, if regionID is passed gets a region by ID">
     	<cfargument name="regionID" default="0" hint="regionID is not required">        
         <cfargument name="companyID" default="0" hint="companyID is not required">
-        <cfargument name="includeGuaranteed" default="0" hint="Set to 1 to include regional guaranteed">
+        <cfargument name="includeGuaranteed" default="0" hint="Set to 1 to include region preference">
         <cfargument name="isActive" default="1" hint="isActive is not required.">
               
         <cfquery 
@@ -330,7 +330,7 @@
 				// Add first row "Select a Guarantee"
 				QueryAddRow(qReturnGurantee);
 				QuerySetCell(qReturnGurantee, "regionID", 0);	
-				QuerySetCell(qReturnGurantee, "regionName", "---- Select a Guarantee ----");
+				QuerySetCell(qReturnGurantee, "regionName", "---- Select a Preference ----");
 
 				For ( i=1; i LTE qGetRegionGuaranteeRemote.recordCount; i=i+1 ) {
 					QueryAddRow(qReturnGurantee);

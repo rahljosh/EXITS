@@ -259,7 +259,7 @@
 </div>
 <table width=100% bgcolor="##ffffe6" class="section">
 	<tr>
-		<td>Students in Green have been added since your last vist.</td><td align="center"><font color="##CC0000">* Regional or State Guarantee</font></td><td align="right">CTRL-F to search</td>
+		<td>Students in Green have been added since your last vist.</td><td align="center"><font color="##CC0000">* Region / State Preference.</font></td><td align="right">CTRL-F to search</td>
 	</tr>
 </table>
 

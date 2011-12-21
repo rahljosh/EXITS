@@ -30,7 +30,7 @@
 	<tr>
 		<Td>
 		Please wait while your application information is being checked. Do not close this window or click your back button.<br><br>
-		While this initial check does not guarantee that your application will not be denyd,
+		While this initial check does not guarantee that your application will not be denied,
 		it will catch many common mistakes.<br><br>
 		Your local representative may deny your application and request more information, once that information
 		completed, simply submit your app. again.<br>

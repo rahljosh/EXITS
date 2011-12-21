@@ -370,10 +370,10 @@
                 </tr>
                
                  <tr class="displayNone additionalInformation">
-                    <td align="right">Region Guarantee: </td>
+                    <td align="right">Region Preference: </td>
                     <td>
 		                <cfif NOT LEN(qGetStudentInfo.app_region_guarantee) OR NOT VAL(qGetStudentInfo.app_region_guarantee)>
-        		            N/A - to assign a guarantee, update region choice on app
+        		            N/A - to assign a preference, update region choice on app
                 	    <cfelse>
                               <cfselect
                                   bind="cfc:nsmg.extensions.components.region.getRegionGuaranteeRemote({regionID})"
@@ -387,7 +387,7 @@
 					</td>
 				</tr>
                 <tr class="displayNone additionalInformation">
-                    <td align="right">State Guarantee: </td>
+                    <td align="right">State Preference: </td>
                     <td>
                         <cfif NOT VAL(qGetStatesRequested.state1) OR NOT VAL(qGetStatesRequested.recordcount)>
                             N/A - to assign state, update choices on app.

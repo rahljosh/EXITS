@@ -53,7 +53,7 @@
 <table border=0 cellpadding=4 cellspacing=2 width=100% class="section">
 <tr><td>
 	<font size=-1>Total Regions: <Cfoutput>#qGetRegionInfo.recordcount#</Cfoutput></font>
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="3333FF"> * Regional Preference</font><br>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="3333FF"> * Region Preference</font><br>
 </td></tr>
 </table>
 
@@ -64,7 +64,7 @@
 	<tr><td>
 		#regionname# - #firstname# #lastname# [ <a href="?curdoc=tools/edit_region&id=#regionid#">edit</a> ] <br> 
 		Status: <cfif qGetRegionInfo.active is 1><font color="3333FF">Active</font><cfelse><font color="red">Inactive</font></cfif><br>
-		Regional Preference: $#regional_guarantee#<br>
+		Region Preference: $#regional_guarantee#<br>
 		<cfquery name="subregions" datasource="MySQL">
 			select regionname
 			from smg_regions 

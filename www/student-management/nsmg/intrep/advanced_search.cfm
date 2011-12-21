@@ -113,7 +113,7 @@
 				</select></td></tr>
 		<tr><td class="label">Text in the narrative :</td>
 			<td><input type="text" name="interests_other" size="25" maxlength="25"></td></tr>
-		<tr><td class="label">State Guarantee :</td>
+		<tr><td class="label">State Preference :</td>
 			<td><select name="stateid" size="1">
 				<option value="0">None</option>
 						<cfloop query="get_states"><option value="#id#">#statename#</option></cfloop>

@@ -177,7 +177,7 @@
                     </cfif>
                 </td>
             </tr>	
-            <tr><td valign="top">Region Guarantee: </td>
+            <tr><td valign="top">Region Preference: </td>
                 <td style="font-weight:bold">
                     <cfswitch expression="#VAL(qGetRegionPreference.app_region_guarantee)#">
                         
@@ -220,7 +220,7 @@
                 </td>
             </tr>
             <tr>
-            	<td valign="top">State Guarantee: </td>
+            	<td valign="top">State Preference: </td>
                 <td style="font-weight:bold">
                     <cfif NOT VAL(qGetStatePrefence.recordcount)>
                         n/a
@@ -260,8 +260,7 @@
                         application appears on your unplaced students list, you must complete 
                         the information listed in the Student Information Screen since this is 
                         only recorded after the student's application has been assigned to your 
-                        company.  This includes assigning a program, a region, a region 
-                        guarantee or a state guarantee.<br /><br />
+                        company.  This includes assigning a program, a region or a state preference.<br /><br />
                         
                         Please also remember to send out acceptance letters and to fill out the 
                         missing documents page as you do for all paper applications.<br /><br />

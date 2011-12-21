@@ -204,7 +204,7 @@
 
             <form action="reports/students_region_guarantee.cfm" method="POST" target="blank">
                 <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
-                    <tr><td colspan="2" class="reportTitle">Students - Region Guarantee Only</td></tr>
+                    <tr><td colspan="2" class="reportTitle">Students - Region Preference Only</td></tr>
                     <tr>
                         <td class="reportFieldTitle">Program:</td>
                         <td>

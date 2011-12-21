@@ -46,8 +46,8 @@
 						<option value="1">Deposit Fee</option>
 						<option value="2">Program Fee</option>
 						<option value="3">Insurance</option>
-						<option value="4">Region Guarantee</option>
-						<option value="5">State Guarantee</option>
+						<option value="4">Region Preference</option>
+						<option value="5">State Preference</option>
 						<option value="6">SEVIS Fee</option>
 						<option value="7">Pre-AYP English Camp</option>
 						<option value="8">Cancelation Fee</option>

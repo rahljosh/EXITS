@@ -13,7 +13,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 	<link rel="stylesheet" type="text/css" <cfoutput>href="#path#app.css"</cfoutput>>
-	<title>Page [21] - State Guarantee</title>
+	<title>Page [21] - State Preference</title>
 </head>
 <body <cfif not IsDefined('url.curdoc')>onLoad="print()"</cfif>>
 
@@ -110,7 +110,7 @@
 	<div class="section"><br><br>
 	<table width="670" cellpadding=2 cellspacing=0 align="center">
 		<tr>
-			<td>You have already requested a Regional Guarantee.  You can not select both a Regional and State Guarantee.  If you would like to request a State Guarantee, please remove your requested Regional Guarantee. </td>
+			<td>You have already requested a Region Preference.  You can not select both a Regional and State Preference.  If you would like to request a State Preference, please remove your requested Region Preference. </td>
 		</tr>
 	</table><br><br>
 	</div>

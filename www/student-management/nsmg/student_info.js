@@ -143,12 +143,12 @@ var formValidation = function(previousRegionID, previousProgramID) {
 	currentRegionReason = $("#region_reason").val();
 	
 	if ( (document.studentForm.regionguar[0].checked) && (document.studentForm.rguarantee.value == '0') && (document.studentForm.state_guarantee.value == '0') ) {
-		alert("You must select either a State or a Region Guarantee.");
+		alert("You must select either a State or a Region Preference.");
 	  	return false; 
 	}	
 	
 	if ( (document.studentForm.regionguar[0].checked) && (document.studentForm.rguarantee.value != '0') && (document.studentForm.state_guarantee.value != '0') ) {
-		alert("You cannot select both region and state guarantee. You must select either a State or a Region Guarantee.");
+		alert("You cannot select both region and state preference. You must select either a State or a Region preference.");
 		return false; 
 	}			  	
 
