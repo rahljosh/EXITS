@@ -471,7 +471,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                    
 				<!----Figure out how long they have been placed with this host family and host family info---->
                 <Cfquery name="hostHistory" datasource="#application.dsn#">
-                SELECT original_place,  isWelcomeFamily, isRelocation
+                SELECT original_place,  isWelcomeFamily, isRelocation, datePlaced
                 FROM smg_hosthistory
                 LEFT JOIN smg_hosts h on h.hostid = smg_hosthistory.hostid
                 WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
@@ -492,7 +492,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
 			   <cfif (checkHostHistoryOriginal.hostID eq hostName.hostid)>
                		<cfset isWithOriginal = 'yes'>
                </cfif>
-               <Cfif isWithOriginal is 'no' and date_host_fam_approved lt #dateRange.startdate#>
+               <Cfif isWithOriginal is 'no' and hostHistory.datePlaced lt #dateRange.startdate#>
                		<cfset isWithOriginal = 'yes'>
                </Cfif>
 			   
@@ -511,7 +511,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                     </Cfif>
                  	<cfset daysPlaced = #DateDiff('d','#arrivaldate#','#now()#')#>
                 <Cfelse>
-                	<cfset daysPlaced = #DateDiff('d','#date_host_fam_approved#','#now()#')#>
+                	<cfset daysPlaced = #DateDiff('d','#hostHistory.datePlaced#','#now()#')#>
                 	
             	</Cfif>
          		<Cfquery name="checkBlock" datasource="#application.dsn#">
