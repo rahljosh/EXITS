@@ -21,7 +21,8 @@
 				ar_ref_quest1 = <cfif form["ar_ref_quest1_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_ref_quest1_" & x])#</cfif>,
 				ar_ref_quest2 = <cfif form["ar_ref_quest2_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_ref_quest2_" & x])#</cfif>,
 				ar_cbc_auth_form = <cfif form["ar_cbc_auth_form_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_cbc_auth_form_" & x])#</cfif>,
-				ar_agreement = <cfif form["ar_agreement_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_agreement_" & x])#</cfif>,
+				ar_cbAuthReview = <cfif form["ar_cbAuthReview_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_cbAuthReview_" & x])#</cfif>,
+                ar_agreement = <cfif form["ar_agreement_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_agreement_" & x])#</cfif>,
 				ar_training = <cfif form["ar_training_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_training_" & x])#</cfif>,
                 secondVisit = <cfif form["ar_secondVisit_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_secondVisit_" & x])#</cfif>
 			WHERE paperworkid = '#form["paperworkid_" & x]#'
@@ -42,6 +43,7 @@
 				<cfif form.ar_ref_quest1 EQ ''>NULL<cfelse>#CreateODBCDate(form.ar_ref_quest1)#</cfif>,
 				<cfif form.ar_ref_quest2 EQ ''>NULL<cfelse>#CreateODBCDate(form.ar_ref_quest2)#</cfif>,
 				<cfif form.ar_cbc_auth_form EQ ''>NULL<cfelse>#CreateODBCDate(form.ar_cbc_auth_form)#</cfif>,
+                <cfif form.ar_cbAuthReview EQ ''>NULL<cfelse>#CreateODBCDate(form.ar_cbAuthReview)#</cfif>,
 				<cfif form.ar_agreement EQ ''>NULL<cfelse>#CreateODBCDate(form.ar_agreement)#</cfif>,
 				<cfif form.ar_training EQ ''>NULL<cfelse>#CreateODBCDate(form.ar_training)#</cfif>,
                 <cfif form.ar_secondVisit EQ ''>NULL<cfelse>#CreateODBCDate(form.ar_secondVisit)#</cfif>)
