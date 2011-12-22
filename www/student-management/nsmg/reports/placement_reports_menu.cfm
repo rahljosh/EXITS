@@ -263,7 +263,7 @@
                     <table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
                         <tr><th colspan="3" bgcolor="##e2efc7">Missing Placement Docs</th></tr>
                         <tr align="left">
-                            <td valign="top">Program :</td>
+                            <td width="20%" valign="top">Program :</td>
                             <td>
                                 <select name="programid" size="6" multiple>
                                     <cfloop query="get_program">
@@ -294,7 +294,6 @@
                                 </td>		
                             </tr>
                         </cfif>
-
                         <tr align="left">
                             <td>Send as email to manager :</td>
                             <td>
@@ -321,26 +320,65 @@
 				<cfform action="reports/document_tracking_previous_host.cfm" method="POST" target="blank">
 					<table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
 						<tr><th colspan="2" bgcolor="##e2efc7">Missing Previous Placement Docs</th></tr>
-						<tr align="left">
-							<td valign="top">Program :</td>
-							<td>
-							<select name="programid" multiple size="6" selected>
-							<cfloop query="get_program">
-                                <option value="#ProgramID#"> #programname#</option> </cfloop>
-							</select>
-							</td>
-						</tr>
+                        <tr align="left">
+                            <td width="20%" valign="top">Program :</td>
+                            <td>
+                                <select name="programid" size="6" multiple>
+                                    <cfloop query="get_program">
+                                        <option value="#ProgramID#">#programname#</option>
+                                    </cfloop>
+                                </select>		
+                            </td>
+                        </tr>
                         <tr align="left">
                             <td valign="top">Region :</td>
-                            <td colspan="2"><cfselect enabled="Yes" name="regionid" size="6" multiple> <cfloop query="get_regions">
-                              <option value="#regionid#" <cfif get_regions.recordcount eq 1>selected</cfif>>#regionname#
-                                <cfif #get_program.currentrow# eq 1></cfif>
-                              </option>
-                            </cfloop> </cfselect></td>
+                            <td>
+                                <select name="regionID" size="6" multiple> 
+                                    <cfloop query="get_regions">
+                                        <option value="#get_regions.regionid#" <cfif get_regions.recordcount eq 1>selected</cfif>>#get_regions.regionname#</option>
+                                    </cfloop> 
+                                </select>
+                            </td>
                         </tr>
-                        <tr><td width="5">From : </td><td><cfinput type="text" name="dateFrom" size="8" maxlength="10" value="mm/dd/yyyy" OnClick="this.value='';"></cfinput></td></tr>
-                        <tr><td width="5">To : </td><td><cfinput type="text" name="dateTo" size="8" maxlength="10" value="mm/dd/yyyy" OnClick="this.value='';"></cfinput></td></tr><tr>		
-						<tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
+                        <!--- Add Option to List by Facilitator --->
+                        <cfif ListFind("1,2,3,4", CLIENT.userType)>
+                            <tr align="left">
+                                <td>Facilitator :</td>
+                                <td>
+                                    <select name="facilitatorID" size="1">
+                                        <option value="0">All </option>		
+                                        <cfloop query="get_facilitators"><option value="#get_facilitators.userid#">#get_facilitators.firstname# #get_facilitators.lastname#</option></cfloop>
+                                    </select>
+                                </td>		
+                            </tr>
+                        </cfif>
+                        <tr align="left">
+                            <td>Report By :</td>
+                            <td>
+                                <select name="reportBy"> 
+                                    <option value="Placing">Placing Representative</option>	
+                                    <option value="Supervising">Supervising Representative</option>	
+                                </select>
+                            </td>
+                        </tr>
+                        <tr align="left">
+                        	<td>Date Placed From : </td>
+                        	<td><input type="text" name="dateFrom" size="8" maxlength="10" value="" class="datePicker"></td>
+                        </tr>
+                        <tr align="left">
+                        	<td>To : </td>
+                            <td><input type="text" name="dateTo" size="8" maxlength="10" value="" class="datePicker"></td>
+                        </tr>
+                        <tr align="left">
+                            <td>Send as email to manager :</td>
+                            <td>
+                                <input type="radio" name="sendemail" id="sendPreviousEmailNo" value="0" checked="checked"> <label for="sendPreviousEmailNo">No</label>  
+                                <input type="radio" name="sendemail" id="sendPreviousEmailYes" value="1"> <label for="sendPreviousEmailYes">Yes</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td>
+                        </tr>
 					</table>
 				</cfform>
             </td>

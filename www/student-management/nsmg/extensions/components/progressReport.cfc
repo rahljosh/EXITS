@@ -235,6 +235,7 @@
     
 	<cffunction name="getSecondHostFamilyVisitReport" access="public" returntype="query" output="false" hint="Gets the second host family visit">
     	<cfargument name="studentID" hint="studentID is required">
+        <cfargument name="hostID" default="" hint="hostID is not required">
         <cfargument name="hasNYApproved" default="0" hint="Set to 1 to get only the approved record">
 		
         <cfquery 
@@ -262,6 +263,7 @@
                     sva.pets,
                     sva.other,
                     sva.dateOfVisit,
+                    pReport.fk_host,
                     pReport.pr_sr_approved_date,
                     pReport.pr_ra_approved_date,
                     pReport.pr_rd_approved_date,
@@ -277,10 +279,15 @@
                             AND
                                 pReport.pr_ny_approved_date IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">                    
                         </cfif>
+                        
+						<cfif LEN(ARGUMENTS.hostID)>
+                            AND 
+                                pReport.fk_host = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">   
+                        </cfif> 
                 WHERE
-                    sva.fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">    
+                    sva.fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">   
 		</cfquery>
-
+        
 		<cfreturn qGetSecondHostFamilyVisitReport>
 	</cffunction>
 

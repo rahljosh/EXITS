@@ -3,438 +3,588 @@
 	File:		document_tracking_previous_host.cfm
 	Author:		Marcus Melo
 	Date:		October 06, 2009
-	Desc:		Gets missing placement documents from previous host families.
+	Desc:		Missing previous placement paperwork
 
 	Updated: 	
 
 ----- ------------------------------------------------------------------------- --->
 
-<!--- Kill extra output --->
+<!--- Kill Extra Output --->
 <cfsilent>
-
-	<!--- Param variables --->
+	
+    <!--- Param FORM variables --->
 	<cfparam name="FORM.programID" default="0">
-    <cfparam name="FORM.regionID" default="0">
+    <cfparam name="FORM.regionID" default="">
+    <cfparam name="FORM.facilitatorID" default="0">
+	<cfparam name="FORM.reportBy" default="Placing"> <!--- Placing/Supervising representatives --->
+    <cfparam name="FORM.sendEmail" default="0">
     <cfparam name="FORM.dateFrom" default="">
     <cfparam name="FORM.dateTo" default="">
 
-	<cfscript>
-		// Make sure we have valid dates, if not set them as ''
-		if (NOT IsDate(FORM.dateFrom) OR NOT isDate(FORM.dateTo)) {
-			FORM.dateFrom = '';
-			FORM.dateTo = '';
+    <!-----Company Information----->
+    <cfinclude template="../querys/get_company_short.cfm">
+	
+    <cfscript>
+		// Declare variables
+		listAdvisorUsers = '';
+		
+		// Define if we are getting students by supervising or placing rep
+		if ( reportBy EQ 'Placing' ) {
+			tableField = 'placeRepID';	
+		} else {
+			tableField = 'areaRepID';
 		}
-	</cfscript>  
+	</cfscript>
+    	
+	<!--- Get Program --->
+    <cfquery name="qGetPrograms" datasource="MYSQL">
+        SELECT	
+            programID,
+            programName
+        FROM 	
+            smg_programs 
+        LEFT JOIN 
+            smg_program_type ON type = programtypeid
+        WHERE
+            programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> ) 
+    </cfquery> 
     
+	<!--- get company region --->
+    <cfquery name="qGetRegions" datasource="MySQL">
+        SELECT 
+        	r.regionID, 
+            r.regionname,
+            u.firstName,
+            u.lastName
+        FROM 
+        	smg_regions r
+		LEFT OUTER JOIN 
+        	smg_users u ON r.regionFacilitator = u.userID            
+        WHERE 
+        	r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+		
+        <cfif LEN(FORM.regionID)>
+            AND
+                r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> ) 
+        </cfif>
+            
+		<cfif VAL(FORM.facilitatorID)>
+			AND 
+            	r.regionFacilitator = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.facilitatorID#">
+		</cfif>            
+        
+        ORDER BY 
+        	r.regionname
+    </cfquery> 
+
+	<!--- Advisors --->
+	<cfif CLIENT.usertype EQ 6> 
     
+        <cfquery name="qGetUsersUnderAdvisor" datasource="MySql">
+            SELECT DISTINCT
+            	userID
+            FROM 
+            	user_access_rights
+            WHERE 
+                advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+            AND 
+            	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+			GROUP BY
+            	userID                
+        </cfquery>
+        
+        <cfscript>
+			// populate list of users under advisor
+			listAdvisorUsers = ValueList(qGetUsersUnderAdvisor.userID);
+			// include current user
+        	listAdvisorUsers = ListAppend(listAdvisorUsers, CLIENT.userID);
+		</cfscript>
+        
+    </cfif>
+
 </cfsilent>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Document Tracking Previous Placements</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>EXITS - Missing Previous Placement Documents</title>
 <link rel="stylesheet" href="reports.css" type="text/css">
 </head>
+
 <body>
 
-<cfif NOT VAL(FORM.programid) OR NOT VAL(FORM.regionid)>
-	<cfinclude template="../forms/error_message.cfm">
+<cfif NOT VAL(FORM.programID)>
+	Please select at least one program.
+    <cfabort>
 </cfif>
 
-<!--- Get Program --->
-<cfquery name="get_program" datasource="MYSQL">
-	SELECT	
-    	programID,
-        programname
-	FROM 	
-    	smg_programs 
-	LEFT JOIN 
-    	smg_program_type ON type = programtypeid
-	WHERE 	
-    	(
-        	<cfloop list="#FORM.programid#" index="prog">
-				programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#prog#">
-				<cfif NOT ListLast(FORM.programid) EQ prog> OR </cfif>
-			</cfloop> 
-        )
-</cfquery> 
-
-
-<!-----Company Information----->
-<cfinclude template="../querys/get_company_short.cfm">
-
-
-<!--- get company region --->
-<cfquery name="get_regions" datasource="MySQL">
-	SELECT 
-    	regionid,  
-        regionname
-	FROM 
-    	smg_regions
-	WHERE 
-    	company = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#"> 
-    AND (
-            <cfloop list="#FORM.regionid#" index="reg">
-                regionid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#reg#">
-                <cfif NOT ListLast(FORM.regionid) EQ reg> OR </cfif>
-            </cfloop>
-        )
-	ORDER BY 
-    	regionname
-</cfquery> 
-
-
-<!--- advisors --->
-<cfif client.usertype EQ 6>
-	<cfquery name="get_users_under_adv" datasource="MySql">
-		SELECT 
-        	userid
-		FROM 
-        	user_access_rights
-		WHERE 
-    		advisorid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#"> 
-        AND 
-        	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
-	</cfquery>
-    
-	<cfset ad_users = ValueList(get_users_under_adv.userid, ',')>
-	<cfset ad_users = ListAppend(ad_users, client.userid)>
+<cfif LEN(FORM.regionID) AND VAL(FORM.facilitatorID)>
+	Please select either a region or a facilitator.
+    <cfabort>
 </cfif>
-<!--- advisors --->
-
 
 <cfoutput>
 
-<table width="100%" cellpadding=4 cellspacing="0" align="center">
-	<tr><td><span class="application_section_header">#companyshort.companyshort# - Previous HF Missing Placement Documents Report</span></td></tr>
-</table><br>
+<!--- Store Report Header in a Variable --->
+<cfsavecontent variable="reportHeader">
 
-<table width="100%" cellpadding=4 cellspacing="0" align="center" frame="box">
-	<tr><td align="center">
-		Program(s) Included in this Report:<br>
-		<cfloop query="get_program"><b>#programname# &nbsp; (#ProgramID#)</b><br></cfloop>
-	</td></tr>
-</table><br>
-
-
-<!--- table header --->
-<table width="100%" cellpadding=4 cellspacing="0" align="center" frame="box">	
-	<tr><th width="85%">Region</th> <th width="15%">Total Assigned</th></tr>
-	<tr><td width="85%">Placing Representative</td><td width="15%" align="center">Total</td></tr>
-</table><br>
-
-<cfloop query="get_regions">
+	<table width="100%" cellpadding="4" cellspacing="0" align="center" style="border:1px solid ##000;">
+		<tr>
+			<td align="center">
+				<span class="application_section_header">#companyshort.companyshort# - Missing Previous Placement Documents Report</span> <br />
+				Program(s) Included in this Report:<br />
+				<cfloop query="qGetPrograms">
+					<strong>#qGetPrograms.programname# &nbsp; (###qGetPrograms.programID#)</strong><br />
+				</cfloop>
+			</td>
+		</tr>
+        <tr>
+       		<td align="center">
+				Region(s) Included in this Report:<br />
+				<cfloop query="qGetRegions">
+					<strong>#qGetRegions.regionName# &nbsp; (###qGetRegions.regionID#)</strong><br />
+				</cfloop>
+            </td>
+		</tr>            
+	</table>
 	
-	<cfset current_region = get_regions.regionid>
-	
-	<Cfquery name="getRepIDs" datasource="MySQL">
-		SELECT 
-        	s.placerepid, 
-            CONCAT(u.firstname, ' ', u.lastname) as name
-		FROM 
-        	smg_students s
+	<br />
+
+</cfsavecontent>
+
+<!--- Display Report Header --->
+#reportHeader#
+
+<cfloop query="qGetRegions">
+    
+    <cfscript>
+        // Get Regional Manager
+        qGetRegionalManager = APPLICATION.CFC.USER.getRegionalManager(regionID=qGetRegions.regionID);
+    </cfscript>
+    
+    <cfquery name="qGetAllStudentsInRegion" datasource="MySQL">
+        SELECT 
+            s.studentID, 
+            s.countryresident, 
+            s.firstname, 
+            s.familylastname, 
+            s.sex, 
+            s.programID, 
+            s.areaRepID,
+            s.placeRepID,
+            hist.datePlaced,
+            hist.date_pis_received, 
+            hist.doc_full_host_app_date,
+            hist.doc_letter_rec_date, 
+            hist.doc_rules_rec_date, 
+            hist.doc_photos_rec_date, 
+            hist.doc_school_accept_date, 
+            hist.doc_school_profile_rec,
+            hist.doc_conf_host_rec, 
+            hist.doc_date_of_visit, 
+            hist.doc_ref_form_1, 
+            hist.doc_ref_form_2, 
+            hist.doc_single_place_auth,
+            hist.stu_arrival_orientation, 
+            hist.host_arrival_orientation, 
+            hist.doc_class_schedule,
+            <!--- Added 02/02/2011 --->
+            <!--- Required starting Aug 11 --->
+            hist.doc_income_ver_date,
+            <!--- Required for Single Parents in effect now --->
+            hist.doc_single_ref_check1,
+            hist.doc_single_ref_check2,
+            <!--- hist.doc_conf_host_rec2, Progress Report --->
+            secondVisitReport.pr_ny_approved_date,
+            <!--- End of Added 02/02/2011 --->
+            p.seasonID,
+            u.userID,
+            u.email as repEmail,
+            CONCAT(u.firstName, ' ', u.lastName) AS repName,
+            h.hostID, 
+            h.motherFirstName, 
+            h.fatherFirstName, 
+            h.familyLastName as hostLastName 
+        FROM 
+            smg_students s
         INNER JOIN
         	smg_hosthistory hist ON hist.studentID = s.studentID
-		LEFT OUTER JOIN 
-        	smg_users u ON hist.placerepid = u.userid
-		WHERE 
-        	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            	AND 
+                	hist.hostID != s.hostID
+        INNER JOIN
+            smg_programs p on p.programid = s.programid
+        INNER JOIN
+            smg_hosts h ON h.hostID = hist.hostID
+        LEFT OUTER JOIN 
+            smg_users u ON s.#tableField# = u.userID
+        <!--- Second Visit Report - Check the report itself and not the fields on placement paperwork --->
+        LEFT OUTER JOIN 
+            progress_reports secondVisitReport ON secondVisitReport.fk_student = s.studentID
+                AND
+                	secondVisitReport.fk_host = hist.hostID
+                AND
+                    secondVisitReport.fk_reporttype = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
+                AND
+                    secondVisitReport.pr_ny_approved_date IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">                    
+        WHERE 
+        <!--- Regular Students --->
+            s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND 
-        	s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_regions.regionid#">
+            s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegions.regionID#"> 
         AND 
-        	s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
         AND 
-        	s.onhold_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
-        AND 
-        	(
-            	<cfloop list="#FORM.programid#" index='prog'>
-            		s.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#prog#">
-            		<cfif NOT ListLast(FORM.programid) EQ prog> OR </cfif>
-            	</cfloop> 
-            )
-        <!--- Advisors --->
-        <cfif client.usertype EQ 6>
-            AND 
-            	( 
-                    <cfloop list="#ad_users#" index='i' delimiters = ",">
-                        s.placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
-						<cfif NOT ListLast(ad_users) EQ i> OR </cfif> 
-                    </Cfloop>
-                )
-        </cfif>	
+            s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> ) 
         <!--- From / To Dates --->
         <cfif LEN(FORM.dateFrom) AND LEN(FORM.dateTo)> 
         	AND
-            	hist.dateofchange >= <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(FORM.dateFrom)#">
+            	hist.datePlaced >= <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(FORM.dateFrom)#">
         	AND
-            	hist.dateofchange <= <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(FORM.dateTo)#">
-        </cfif>
-        GROUP BY
-        	placerepid
-		ORDER BY 
-        	name
-	</cfquery>
-	
-	<Cfquery name="get_total_in_region" datasource="MySQL">
-		SELECT 
-        	s.studentid
-		FROM 
-        	smg_students s
-        INNER JOIN
-        	smg_hosthistory hist ON hist.studentID = s.studentID
-		WHERE 
-        	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        AND 
-        	s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_regions.regionid#">
-        AND 
-        	s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
-        AND 
-        	s.onhold_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
-        AND	
-        	hist.hostID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-        AND 
-        	(
-        		<cfloop list="#FORM.programid#" index='prog'>
-		            s.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#prog#">
-        		    <cfif NOT ListLast(FORM.programid) EQ prog> OR </cfif>
-	            </cfloop> 
-            )
-        <!--- From / To Dates --->
-        <cfif LEN(FORM.dateFrom) AND LEN(FORM.dateTo)> 
-        	AND
-            	hist.dateofchange >= <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(FORM.dateFrom)#">
-        	AND
-            	hist.dateofchange <= <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(FORM.dateTo)#">
-        </cfif>
+            	hist.datePlaced <= <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(FORM.dateTo)#">
+        </cfif>       
         AND 
             (
-                    hist.doc_full_host_app_date IS NULL 
-                OR 
-                    hist.doc_letter_rec_date IS NULL 
-                OR 
-                    hist.doc_rules_rec_date IS NULL 
-                OR 
-                    hist.doc_photos_rec_date IS NULL 
-                OR 
-                    hist.doc_school_accept_date IS NULL 
-                OR 
-                    hist.doc_school_sign_date IS NULL 
-                OR 
-                    hist.doc_class_schedule IS NULL 
-                OR 
-                    hist.doc_school_profile_rec IS NULL 
-                OR 
-                    hist.doc_conf_host_rec IS NULL 
-                OR 
-                    hist.doc_date_of_visit IS NULL 
-                OR 
-                    hist.doc_ref_form_1 IS NULL 
-                OR 
-                    hist.doc_ref_check1 IS NULL 
-                OR 
-                    hist.doc_ref_form_2 IS NULL 
-                OR 
-                    hist.doc_ref_check2 IS NULL 
-                OR 
-                    hist.stu_arrival_orientation  IS NULL
-                OR 
-                    hist.host_arrival_orientation IS NULL 
-                OR 
-                    hist.doc_host_orientation IS NULL
+                hist.doc_full_host_app_date IS NULL 
+            OR 
+                hist.doc_letter_rec_date IS NULL 
+            OR 
+                hist.doc_rules_rec_date IS NULL 
+            OR
+                hist.doc_photos_rec_date IS NULL 
+            OR 
+                hist.doc_school_accept_date IS NULL 
+            OR 
+                hist.doc_school_profile_rec IS NULL 
+            OR
+                hist.doc_conf_host_rec IS NULL 
+            OR 
+                hist.doc_date_of_visit IS NULL 
+            OR 
+                hist.doc_ref_form_1 IS NULL 
+            OR 
+                hist.doc_ref_form_2 IS NULL
+            OR 
+                hist.stu_arrival_orientation IS NULL 
+            OR 
+                hist.host_arrival_orientation IS NULL 
+            OR 
+                hist.doc_class_schedule IS NULL
             )
-		<cfif client.usertype EQ 6>
-			AND 
-            	( 
-                    <cfloop list="#ad_users#" index='i' delimiters = ",">
-                    	s.placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
-                        <cfif NOT ListLast(ad_users) EQ i> OR </cfif> 
-                    </Cfloop>
-                )
-		</cfif>				
-	</cfquery> 
-	   
-	<table width="100%" cellpadding=4 cellspacing="0" align="center" frame="below">	
-		<tr><th width="85%" bgcolor="##CCCCCC">#get_regions.regionname#</th><td width="15%" align="center" bgcolor="##CCCCCC"><b>#get_total_in_region.recordcount#</b></td></tr>
-	</table><br>
-    
-	<cfif get_total_in_region.recordcount NEQ 0>
-
-        <cfloop query="getRepIDs">
-    
-            <Cfquery name="get_students_region" datasource="MySQL">
-                SELECT 
-                    s.studentid, 
-                    s.countryresident, 
-                    s.firstname, 
-                    s.familylastname, 
-                    s.sex, 
-                    s.programid, 
-                    s.placerepid,
-                    smg_hosts.hostID,
-                    smg_hosts.familyLastName as hostFamilyLastName,
-                    hist.dateofchange,
-                    hist.date_pis_received,
-                    hist.doc_full_host_app_date,
-                    hist.doc_letter_rec_date,
-                    hist.doc_rules_rec_date,
-                    hist.doc_photos_rec_date,
-                    hist.doc_school_accept_date,
-                    hist.doc_school_sign_date,
-                    hist.doc_class_schedule,
-                    hist.doc_school_profile_rec,
-                    hist.doc_conf_host_rec,
-                    hist.doc_date_of_visit,
-                    hist.doc_ref_form_1,
-                    hist.doc_ref_check1,
-                    hist.doc_ref_form_2,
-                    hist.doc_ref_check2,
-                    hist.stu_arrival_orientation,
-                    hist.host_arrival_orientation,
-                    hist.doc_host_orientation
-                FROM 
-                    smg_students s
-                INNER JOIN
-                    smg_hosthistory hist ON hist.studentID = s.studentID
-                LEFT OUTER JOIN 
-                	smg_hosts ON smg_hosts.hostID = hist.hostID                      
-                WHERE 
-                    s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
+      
+        <!--- Added 02/02/2011 / Required starting Aug 11 --->                                                               
+        OR
+        	(
+                    s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                 AND 
-                    s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#current_region#"> 
+                    s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegions.regionID#"> 
                 AND 
-                    s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#"> 
+                    s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
                 AND 
-                    s.onhold_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4"> 
+                    s.onhold_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
                 AND 
-                    s.placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#getRepIDs.placerepid#"> 
-                AND	
-                    hist.hostID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">                    
-                AND 
-                    (
-                        <cfloop list="#FORM.programid#" index="prog">
-                            s.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#prog#"> 
-                            <cfif NOT ListLast(FORM.programid) EQ prog> OR</cfif>
-                        </cfloop> 
-                    )
+                    s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> ) 
+                AND
+                    p.seasonID >= <cfqueryparam cfsqltype="cf_sql_integer" value="8">
 				<!--- From / To Dates --->
                 <cfif LEN(FORM.dateFrom) AND LEN(FORM.dateTo)> 
                     AND
-                        hist.dateofchange >= <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(FORM.dateFrom)#">
+                        hist.datePlaced >= <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(FORM.dateFrom)#">
                     AND
-                        hist.dateofchange <= <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(FORM.dateTo)#">
-                </cfif>
+                        hist.datePlaced <= <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(FORM.dateTo)#">
+                </cfif>       
                 AND 
-                    (
-                            hist.doc_full_host_app_date IS NULL 
-                        OR 
-                            hist.doc_letter_rec_date IS NULL 
-                        OR 
-                            hist.doc_rules_rec_date IS NULL 
-                        OR 
-                            hist.doc_photos_rec_date IS NULL 
-                        OR 
-                            hist.doc_school_accept_date IS NULL 
-                        OR 
-                            hist.doc_school_sign_date IS NULL 
-                        OR 
-                            hist.doc_class_schedule IS NULL 
-                        OR 
-                            hist.doc_school_profile_rec IS NULL 
-                        OR 
-                            hist.doc_conf_host_rec IS NULL 
-                        OR 
-                            hist.doc_date_of_visit IS NULL 
-                        OR 
-                            hist.doc_ref_form_1 IS NULL 
-                        OR 
-                            hist.doc_ref_check1 IS NULL 
-                        OR 
-                            hist.doc_ref_form_2 IS NULL 
-                        OR 
-                            hist.doc_ref_check2 IS NULL 
-                        OR
-                            hist.stu_arrival_orientation IS NULL    
-						OR	
-							hist.host_arrival_orientation IS NULL 
-                        OR 
-                            hist.doc_host_orientation IS NULL
-                    )
-                ORDER BY                	
-                	s.familylastname,
-                    hist.dateofchange DESC                  
-            </cfquery> 
-            
-            <cfif get_students_region.recordcount NEQ 0> 
-    			
-                <table width="100%" cellpadding=4 cellspacing="0" align="center" frame="below">
-                    <tr>
-                    	<td width="85%" align="left">
-                            &nbsp; 
-                            <cfif NOT LEN(getRepIDs.name)>
-                                <font color="red">Missing OR Unknown</font>
-                            <cfelse>
-                                #getRepIDs.name#
-                            </cfif>
-                        </td>
-                        <td width="15%" align="center">
-                        	#get_students_region.recordcount#
-                        </td>
-                    </tr>
-                </table>
-                                    
-                <table width="100%" frame=below cellpadding=4 cellspacing="0" align="center" frame="border">
-                    <tr>
-                        <td width="4%">ID</th>
-                        <td width="18%">Student</td>
-                        <td width="8%">Change Date</td>
-                        <td width="10%">Host Family</td>
-                        <td width="60%">Missing Documents</td>
-                    </tr>	
-                    <cfloop query="get_students_region">			 
-                        <tr bgcolor="#iif(get_students_region.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
-                            <td>#studentid#</td>
-                            <td>#firstname# #familylastname#</td>
-                            <td>#DateFormat(dateofchange, 'mm/dd/yyyy')#</td>
-                            <td>#hostFamilyLastName# (#hostID#)</td>
-                            <td align="left"><i><font size="-2">
-                                <cfif doc_full_host_app_date EQ ''>Host Family &nbsp; &nbsp;</cfif>
-								<cfif doc_letter_rec_date EQ ''>HF Letter &nbsp; &nbsp;</cfif>
-								<cfif doc_rules_rec_date EQ ''>HF Rules &nbsp; &nbsp;</cfif>
-								<cfif doc_photos_rec_date EQ ''>HF Photos &nbsp; &nbsp;</cfif>
-								<cfif doc_school_accept_date EQ ''>School Acceptance &nbsp; &nbsp;</cfif>
-								<cfif doc_school_sign_date EQ ''>School Acceptance Signature Date &nbsp; &nbsp;</cfif>
-								<cfif doc_school_profile_rec EQ ''>School & Community Profile &nbsp; &nbsp;</cfif>
-                                <cfif doc_conf_host_rec EQ ''>Visit Form &nbsp; &nbsp;</cfif>
-                                <cfif doc_date_of_visit EQ ''>Date of Visit &nbsp; &nbsp; </cfif>
-                                <cfif doc_ref_form_1 EQ ''>Ref. 1 &nbsp; &nbsp;</cfif>
-								<cfif doc_ref_check1 EQ ''>Ref. 1 Check Date &nbsp; &nbsp;</cfif>
-								<cfif doc_ref_form_2 EQ ''>Ref. 2 &nbsp; &nbsp;</cfif>
-								<cfif doc_ref_check2 EQ ''>Ref. 2 Check Date &nbsp; &nbsp;</cfif>
-								<cfif stu_arrival_orientation EQ ''>Student Orientation &nbsp; &nbsp;</cfif> 
-                                <cfif host_arrival_orientation EQ ''>HF Orientation &nbsp; &nbsp;</cfif>
-                                <cfif doc_class_schedule EQ ''>Class Schedule &nbsp; &nbsp;</cfif>
-                            </font></i></td>		
-                        </tr>								
-                    </cfloop>	
-                </table>
-                <br>				
-            </cfif>  <!--- get_students_region.recordcount NEQ 0 ---> 
-        
-        </cfloop> <!--- cfloop query="getRepIDs" --->
-	
-	<cfelse><!---  get_total_in_region.recordcount --->
-			
-        <table width="100%" cellpadding=4 cellspacing="0" align="center">
-            <tr><td>There are none students missing documents.</td></tr>
-        </table>
-            
-	</cfif> <!---  get_total_in_region.recordcount --->
+                    (                   	
+                        hist.doc_income_ver_date IS NULL
+                    OR
+                        hist.doc_single_ref_check1 IS NULL
+                    OR
+                        hist.doc_single_ref_check2 IS NULL            
+                    <!--- 
+                        Second Visit Report - Check the report itself - OR hist.doc_conf_host_rec2 IS NULL
+                    --->
+                    OR
+                        secondVisitReport.pr_ny_approved_date IS NULL 
+                    )                        
+        	)
+        ORDER BY            
+            repName,
+            s.firstName,
+            hist.datePlaced DESC
+    </cfquery> 
+
+    <cfquery name="qGetRepsInRegion" dbtype="query">
+        SELECT DISTINCT	
+            userID,
+            repName,
+            repEmail
+        FROM 
+            qGetAllStudentsInRegion
+        ORDER BY
+            repName            
+    </cfquery> 
     
-</cfloop> <!--- cfloop query="get_regions" --->
+	<!--- Save Report in a Variable --->
+    <cfsavecontent variable="documentTrackingReport">
+
+        <table width="100%" cellpadding="4" cellspacing="0" align="center" style="border:1px solid ##000;">	
+            <tr bgcolor="##CCCCCC">	
+                <th width="85%">Facitator:  #qGetRegions.firstName# #qGetRegions.lastName# &nbsp; - &nbsp; #qGetRegions.regionname#</th>
+                <td width="15%" align="center"><strong>#qGetAllStudentsInRegion.recordcount# student(s)</strong></td>
+            </tr>
+        </table>
+
+		<cfif qGetAllStudentsInRegion.recordcount>
+
+            <cfloop query="qGetRepsInRegion">
+           
+            	<cfquery name="checkRepAssign" dbtype="query">
+                    SELECT 
+                    	studentid, 
+                        familylastname, 
+                        firstname
+                    FROM 
+                    	qGetAllStudentsInRegion
+                    WHERE
+                    	placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                </cfquery>
+                
+				<cfif checkRepAssign.recordcount neq 0>
+                    <table bgcolor="##FFFF99" width=100%>
+                        <Tr>
+                            <Td>
+                                There is a problem with a student in this report:<br />
+                                <A href="../index.cfm?curdoc=student_info&studentid=#checkRepAssign.studentid#" target="_blank">#checkRepAssign.studentid#</a> does not have a rep assigned to them but has a host family assinged to them. <br /><BR />
+                                Please assign a rep to them and re-run this report.  <br />
+                                You can click on the students name, a new window will open, assign a rep and then just refresh this window.
+                            </Td>
+                         </Tr>
+                      </table>
+                      <br /><br /><br />
+                    <cfabort>  
+                </cfif>
+             
+                <cfquery name="qGetStudentsByRep" dbtype="query">
+                    SELECT 	
+                        *
+                    FROM 
+                        qGetAllStudentsInRegion
+                    WHERE 
+                        #tableField# = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRepsInRegion.userID#">
+                    ORDER BY
+                        firstName,
+                        familyLastName                    
+                </cfquery> 
+            	
+                <cfif qGetStudentsByRep.recordcount> 
+            
+                    <br />				
+            
+                    <table width="100%" cellpadding="4" cellspacing="0" align="center" style="border:1px solid ##999;">
+                        <tr bgcolor="##ededed">
+                            <td width="85%" align="left">
+                                <strong>
+                                    #FORM.reportBy# Representative: 
+                                    <cfif LEN(qGetRepsInRegion.repName)>
+                                        #qGetRepsInRegion.repName# (###qGetRepsInRegion.userID#)
+                                    <cfelse>
+                                        <font color="red">Missing or Unknown</font>
+                                    </cfif>
+                                </strong>                                    
+                            </td>
+                            <td width="15%" align="center">#qGetStudentsByRep.recordcount# student(s)</td>
+                        </tr>
+                    </table>
+                                        
+                    <table width="100%" cellpadding="4" cellspacing="0" align="center" style="border:1px solid ##999;">
+                        <tr>
+                            <td width="4%" style="border-bottom:1px solid ##999;"><strong>ID</strong></td>
+                            <td width="18%" style="border-bottom:1px solid ##999;"><strong>Student</strong></td>
+                            <td width="15%" style="border-bottom:1px solid ##999;"><strong>Host Family</strong></td>
+                            <td width="8%" style="border-bottom:1px solid ##999;"><strong>Date Placed</strong></td>
+                            <td width="55%" style="border-bottom:1px solid ##999;"><strong>Missing Documents</strong></td>
+                        </tr>	
+                        <cfloop query="qGetStudentsByRep">		
+                        
+                            <!--- Get number of host kids at home ---->
+                            <cfquery name="qHostFamKids" datasource="#application.dsn#">
+                                SELECT 
+                                    childID
+                                FROM 
+                                    smg_host_children
+                                WHERE
+                                    liveathome = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
+                                AND
+                                    hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentsByRep.hostID#">
+                                AND	
+                                	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                            </cfquery>
+                            
+                            <cfscript>
+                                isFatherHome = 0;
+                                isMotherHome = 0;
+                                
+                                // Father is Home
+                                if ( LEN(qGetStudentsByRep.fatherFirstName) ) {
+                                    isFatherHome = 1;
+                                }
+                                
+                                if ( LEN(qGetStudentsByRep.motherFirstName) ) {
+                                    isMotherHome = 1;
+                                }
+                                
+                                totalFamilyMembers = isFatherHome + isMotherHome + qHostFamKids.recordCount;
+
+                                // Set Variable to Handle Missing Documents
+                                missingDocumentsList = '';
+							
+                                // Required for Single Parents 
+                                if ( qGetStudentsByRep.seasonID GTE 8 AND totalFamilyMembers EQ 1 ) { // 
+                                     if ( NOT LEN(qGetStudentsByRep.doc_single_place_auth) ) {
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "Single Person Placement Verification &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+									
+									// Date of S.P. Reference Check 1
+                                    if ( NOT LEN(qGetStudentsByRep.doc_single_ref_check1) ) {
+                                        missingDocumentsList = ListAppend(missingDocumentsList, "Ref Check (Single) &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    }
+                                    // Date of S.P. Reference Check 2
+                                    if ( NOT LEN(qGetStudentsByRep.doc_single_ref_check2) ) {
+                                        missingDocumentsList = ListAppend(missingDocumentsList, "2nd Ref Check (Single) &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    }
+                                }
+                                // Placement Information Sheet
+                                if ( NOT LEN(qGetStudentsByRep.date_pis_received) ) {
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "Placement Information Sheet &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+                                // Host Application Received
+                                if ( NOT LEN(qGetStudentsByRep.doc_full_host_app_date) ) {
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "Host Family &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+                                // Host Family Letter Received
+                                if ( NOT LEN(qGetStudentsByRep.doc_letter_rec_date) ) {
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "HF Letter &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+                                // Host Family Rules Form
+                                if ( NOT LEN(qGetStudentsByRep.doc_rules_rec_date) ) {
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "HF Rules &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+                                // Host Family Photos
+                                if ( NOT LEN(qGetStudentsByRep.doc_photos_rec_date) ) {
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "HF Photos &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+                                // School & Community Profile Form
+                                if ( NOT LEN(qGetStudentsByRep.doc_school_profile_rec) ) {
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "School & Community Profile &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+                                // Confidential Host Family Visit Form
+                                if ( NOT LEN(qGetStudentsByRep.doc_conf_host_rec) ) {
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "Visit Form &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+                                // Confidential Host Family Visit Form - Date of Visit
+                                if ( NOT LEN(qGetStudentsByRep.doc_date_of_visit) ) {
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "Date of Visit &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+                                // Reference Form 1
+                                if ( NOT LEN(qGetStudentsByRep.doc_ref_form_1) ) {
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "Ref. 1 &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+                                // Reference Form 2
+                                if ( NOT LEN(qGetStudentsByRep.doc_ref_form_2) ) {
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "Ref. 2 &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+                                // School Acceptance Form
+                                if ( NOT LEN(qGetStudentsByRep.doc_school_accept_date) ) {
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "School Acceptance &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }								
+                                
+                                // Required starting Aug 11
+                                if ( qGetStudentsByRep.seasonID GTE 8 ) {
+                                    // Income Verification Form
+                                    if ( NOT LEN(qGetStudentsByRep.doc_income_ver_date) ) {
+                                        missingDocumentsList = ListAppend(missingDocumentsList, "Income Verification &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    }
+                                    // 2nd Confidential Host Family Visit Form
+                                    if ( NOT LEN(qGetStudentsByRep.pr_ny_approved_date) ) { 
+                                        missingDocumentsList = ListAppend(missingDocumentsList, "2nd Conf. Host Visit &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    }
+                                    
+                                }  
+                                
+                                // Student Orientation
+                                if ( NOT LEN(qGetStudentsByRep.stu_arrival_orientation) ) {
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "Student Orientation &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+                                // HF Orientation
+                                if ( NOT LEN(qGetStudentsByRep.host_arrival_orientation) ) {
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "HF Orientation &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+                                // Class Schedule
+                                if ( NOT LEN(qGetStudentsByRep.doc_class_schedule) ) {
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "Class Schedule &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+                            </cfscript>
+                            
+                            <cfif LEN(missingDocumentsList)>
+                                <tr bgcolor="###iif(qGetStudentsByRep.currentrow MOD 2 ,DE("EDEDED") ,DE("FFFFFF") )#">
+                                    <td>#qGetStudentsByRep.studentID#</td>
+                                    <td>#qGetStudentsByRep.firstname# #qGetStudentsByRep.familylastname#</td>
+                                    <td>#qGetStudentsByRep.hostLastName# (###qGetStudentsByRep.hostID#)</td>
+                                    <td>#DateFormat(qGetStudentsByRep.datePlaced, 'mm/dd/yyyy')#</td>
+                                    <td align="left"><i><font size="-2">#missingDocumentsList#</font></i></td>		
+                                </tr>	
+                            </cfif>
+                                                                                        
+                        </cfloop>	
+                      
+                    </table>
+                                    
+                </cfif>  <!--- qGetStudentsByRep.recordcount ---> 
+        
+            </cfloop> <!--- cfloop query="qGetRepsInRegion" --->
+        
+        <cfelse> <!---  qGetAllStudentsInRegion.recordcount --->
+            
+            <table width="100%" cellpadding="4" cellspacing="0" align="center" style="border:1px solid ##999;">
+                <tr>
+                    <td width="85%" align="center">There are no students missing documents for the selected programs.</td>
+                    <td width="15%">&nbsp;</td>
+                </tr>
+            </table>
+                        
+        </cfif> <!---  qGetAllStudentsInRegion.recordcount --->
+    
+        <br />
+
+	</cfsavecontent>
+
+	<!--- Display Report --->
+    #documentTrackingReport#
+
+	<!--- Email Regional Managers --->        
+    <cfif VAL(FORM.sendEmail) AND qGetAllStudentsInRegion.recordcount AND IsValid("email", qGetRegionalManager.email) AND IsValid("email", CLIENT.email)>
+    	
+        <cfsavecontent variable="emailBody">
+            <!--- Display Report Header --->
+            #reportHeader#	
+                                
+            <!--- Display Report --->
+            #documentTrackingReport#
+        </cfsavecontent>
+
+        <cfinvoke component="nsmg.cfc.email" method="send_mail">
+            <cfinvokeargument name="email_to" value="#qGetRegionalManager.email#">
+            <cfinvokeargument name="email_cc" value="#CLIENT.email#">
+            <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
+            <cfinvokeargument name="email_subject" value="MISSING PREVIOUS PLACEMENT DOCUMENTS REPORT - #companyshort.companyshort# - #qGetRegions.regionName# Region">
+            <cfinvokeargument name="email_message" value="#emailBody#">
+        </cfinvoke>
+            
+    </cfif>   <!--- Email Regional Managers --->       
+                
+</cfloop> <!--- cfloop query="qGetRegions" --->
 
 </cfoutput>
-<br>
 
 </body>
 </html>

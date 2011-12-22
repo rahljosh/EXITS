@@ -78,7 +78,7 @@
 	<!--- Advisors --->
 	<cfif CLIENT.usertype EQ 6> 
     
-        <cfquery name="get_users_under_adv" datasource="MySql">
+        <cfquery name="qGetUsersUnderAdvisor" datasource="MySql">
             SELECT DISTINCT
             	userID
             FROM 
@@ -93,7 +93,7 @@
         
         <cfscript>
 			// populate list of users under advisor
-			listAdvisorUsers = ValueList(get_users_under_adv.userID);
+			listAdvisorUsers = ValueList(qGetUsersUnderAdvisor.userID);
 			// include current user
         	listAdvisorUsers = ListAppend(listAdvisorUsers, CLIENT.userID);
 		</cfscript>
@@ -133,10 +133,18 @@
 				<span class="application_section_header">#companyshort.companyshort# - Missing Placement Documents Report</span> <br />
 				Program(s) Included in this Report:<br />
 				<cfloop query="qGetPrograms">
-					<strong>#programname# &nbsp; (#programID#)</strong><br />
+					<strong>#qGetPrograms.programname# &nbsp; (###qGetPrograms.programID#)</strong><br />
 				</cfloop>
 			</td>
 		</tr>
+        <tr>
+       		<td align="center">
+				Region(s) Included in this Report:<br />
+				<cfloop query="qGetRegions">
+					<strong>#qGetRegions.regionName# &nbsp; (###qGetRegions.regionID#)</strong><br />
+				</cfloop>
+            </td>
+		</tr>            
 	</table>
 	
 	<br />
@@ -163,6 +171,7 @@
             s.programID, 
             s.areaRepID,
             s.placeRepID,
+            s.datePlaced,
             s.date_pis_received, 
             s.doc_full_host_app_date,
             s.doc_letter_rec_date, 
@@ -203,8 +212,11 @@
             smg_hosts h ON h.hostID = s.hostID
         LEFT OUTER JOIN 
             smg_users u ON s.#tableField# = u.userID
+        <!--- Second Visit Report - Check the report itself and not the fields on placement paperwork --->
         LEFT OUTER JOIN 
             progress_reports secondVisitReport ON secondVisitReport.fk_student = s.studentID
+                AND
+                	secondVisitReport.fk_host = s.hostID
                 AND
                     secondVisitReport.fk_reporttype = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
                 AND
@@ -251,30 +263,32 @@
       
         <!--- Added 02/02/2011 / Required starting Aug 11 --->                                                               
         OR
-            s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        AND 
-            s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegions.regionID#"> 
-        AND 
-            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
-        AND 
-            s.onhold_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
-        AND 
-            s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> ) 
-        AND
-            p.seasonID >= <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-        AND 
-            (                   	
-                s.doc_income_ver_date IS NULL
-            OR
-                s.doc_single_ref_check1 IS NULL
-            OR
-                s.doc_single_ref_check2 IS NULL            
-			<!--- 
-				Second Visit Report - Check the report itself - OR s.doc_conf_host_rec2 IS NULL
-			--->
-            OR
-            	secondVisitReport.pr_ny_approved_date IS NULL 
-            )                        
+        	(
+                    s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                AND 
+                    s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegions.regionID#"> 
+                AND 
+                    s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                AND 
+                    s.onhold_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
+                AND 
+                    s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> ) 
+                AND
+                    p.seasonID >= <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+                AND 
+                    (                   	
+                        s.doc_income_ver_date IS NULL
+                    OR
+                        s.doc_single_ref_check1 IS NULL
+                    OR
+                        s.doc_single_ref_check2 IS NULL            
+                    <!--- 
+                        Second Visit Report - Check the report itself - OR s.doc_conf_host_rec2 IS NULL
+                    --->
+                    OR
+                        secondVisitReport.pr_ny_approved_date IS NULL 
+                    )                        
+        	)
         ORDER BY
             repName,
             s.firstName            
@@ -367,8 +381,9 @@
                         <tr>
                             <td width="4%" style="border-bottom:1px solid ##999;"><strong>ID</strong></td>
                             <td width="18%" style="border-bottom:1px solid ##999;"><strong>Student</strong></td>
-                            <td width="8%" style="border-bottom:1px solid ##999;"><strong>Placement</strong></td>
-                            <td width="70%" style="border-bottom:1px solid ##999;"><strong>Missing Documents</strong></td>
+                            <td width="15%" style="border-bottom:1px solid ##999;"><strong>Host Family</strong></td>
+                            <td width="8%" style="border-bottom:1px solid ##999;"><strong>Date Placed</strong></td>
+                            <td width="55%" style="border-bottom:1px solid ##999;"><strong>Missing Documents</strong></td>
                         </tr>	
                         <cfloop query="qGetStudentsByRep">		
                         
@@ -495,7 +510,8 @@
                                 <tr bgcolor="###iif(qGetStudentsByRep.currentrow MOD 2 ,DE("EDEDED") ,DE("FFFFFF") )#">
                                     <td>#qGetStudentsByRep.studentID#</td>
                                     <td>#qGetStudentsByRep.firstname# #qGetStudentsByRep.familylastname#</td>
-                                    <td>#DateFormat(qGetStudentsByRep.date_pis_received, 'mm/dd/yyyy')#</td>
+                                    <td>#qGetStudentsByRep.hostLastName# (###qGetStudentsByRep.hostID#)</td>
+                                    <td>#DateFormat(qGetStudentsByRep.datePlaced, 'mm/dd/yyyy')#</td>
                                     <td align="left"><i><font size="-2">#missingDocumentsList#</font></i></td>		
                                 </tr>	
                             </cfif>
@@ -541,7 +557,7 @@
             <cfinvokeargument name="email_to" value="#qGetRegionalManager.email#">
             <cfinvokeargument name="email_cc" value="#CLIENT.email#">
             <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
-            <cfinvokeargument name="email_subject" value="Missing Documents Report - #companyshort.companyshort# - #qGetRegions.regionName# Region">
+            <cfinvokeargument name="email_subject" value="MISSING PLACEMENT DOCUMENTS REPORT - #companyshort.companyshort# - #qGetRegions.regionName# Region">
             <cfinvokeargument name="email_message" value="#emailBody#">
         </cfinvoke>
             
