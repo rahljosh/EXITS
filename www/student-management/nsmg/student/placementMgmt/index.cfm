@@ -121,7 +121,7 @@
 		qGetPlacementHistory = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=qGetStudentInfo.studentID);
 		
 		// Get Second Host Family Visit
-		qGetSecondVisitReport = APPLICATION.CFC.PROGRESSREPORT.getSecondHostFamilyVisitReport(studentID=qGetStudentInfo.studentID, hasNYApproved=1);
+		qGetSecondVisitReport = APPLICATION.CFC.PROGRESSREPORT.getSecondHostFamilyVisitReport(studentID=qGetStudentInfo.studentID, hostID=qGetStudentInfo.hostID);
 		
 		// Calculate total of family members
 		vTotalFamilyMembers = 0;

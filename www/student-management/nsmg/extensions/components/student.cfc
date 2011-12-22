@@ -634,8 +634,6 @@
                     doc_school_profile_rec = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     doc_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     doc_date_of_visit = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    doc_conf_host_rec2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    doc_date_of_visit2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     doc_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     doc_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     doc_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
@@ -1441,8 +1439,6 @@
                         doc_school_profile_rec = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                         doc_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                         doc_date_of_visit = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        doc_conf_host_rec2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        doc_date_of_visit2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                         doc_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                         doc_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                         doc_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
@@ -1908,10 +1904,6 @@
                     doc_school_profile_rec,
                     doc_conf_host_rec,
                     doc_date_of_visit,
-                    <!---
-                    doc_conf_host_rec2,
-                    doc_date_of_visit2,
-					--->
                     doc_ref_form_1,
                     doc_ref_check1,
                     doc_ref_form_2,
@@ -1962,8 +1954,6 @@
         <cfargument name="doc_school_profile_rec" default="" hint="doc_school_profile_rec is not required">
         <cfargument name="doc_conf_host_rec" default="" hint="doc_conf_host_rec is not required">
         <cfargument name="doc_date_of_visit" default="" hint="doc_date_of_visit is not required">
-        <cfargument name="doc_conf_host_rec2" default="" hint="doc_conf_host_rec2 is not required">
-        <cfargument name="doc_date_of_visit2" default="" hint="doc_date_of_visit2 is not required">
         <cfargument name="doc_ref_form_1" default="" hint="doc_ref_form_1 is not required">
         <cfargument name="doc_ref_check1" default="" hint="doc_ref_check1 is not required">
         <cfargument name="doc_ref_form_2" default="" hint="doc_ref_form_2 is not required">
@@ -1999,8 +1989,6 @@
                     doc_school_profile_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_profile_rec#" null="#NOT IsDate(ARGUMENTS.doc_school_profile_rec)#">,
                     doc_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_conf_host_rec#" null="#NOT IsDate(ARGUMENTS.doc_conf_host_rec)#">,
                     doc_date_of_visit = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_date_of_visit#" null="#NOT IsDate(ARGUMENTS.doc_date_of_visit)#">,
-                    doc_conf_host_rec2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_conf_host_rec2#" null="#NOT IsDate(ARGUMENTS.doc_conf_host_rec2)#">,
-                    doc_date_of_visit2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_date_of_visit2#" null="#NOT IsDate(ARGUMENTS.doc_date_of_visit2)#">,
                     doc_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_form_1#" null="#NOT IsDate(ARGUMENTS.doc_ref_form_1)#">,
                     doc_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_check1#" null="#NOT IsDate(ARGUMENTS.doc_ref_check1)#">,
                     doc_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_form_2#" null="#NOT IsDate(ARGUMENTS.doc_ref_form_2)#">,
@@ -2039,8 +2027,6 @@
 				doc_school_profile_rec = ARGUMENTS.doc_school_profile_rec,
 				doc_conf_host_rec = ARGUMENTS.doc_conf_host_rec,
 				doc_date_of_visit = ARGUMENTS.doc_date_of_visit,
-				doc_conf_host_rec2 = ARGUMENTS.doc_conf_host_rec2,
-				doc_date_of_visit2 = ARGUMENTS.doc_date_of_visit2,
 				doc_ref_form_1 = ARGUMENTS.doc_ref_form_1,
 				doc_ref_check1 = ARGUMENTS.doc_ref_check1,
 				doc_ref_form_2 = ARGUMENTS.doc_ref_form_2,
@@ -2079,8 +2065,6 @@
         <cfargument name="doc_school_profile_rec" default="" hint="doc_school_profile_rec is not required">
         <cfargument name="doc_conf_host_rec" default="" hint="doc_conf_host_rec is not required">
         <cfargument name="doc_date_of_visit" default="" hint="doc_date_of_visit is not required">
-        <cfargument name="doc_conf_host_rec2" default="" hint="doc_conf_host_rec2 is not required">
-        <cfargument name="doc_date_of_visit2" default="" hint="doc_date_of_visit2 is not required">
         <cfargument name="doc_ref_form_1" default="" hint="doc_ref_form_1 is not required">
         <cfargument name="doc_ref_check1" default="" hint="doc_ref_check1 is not required">
         <cfargument name="doc_ref_form_2" default="" hint="doc_ref_form_2 is not required">
@@ -2124,8 +2108,6 @@
                     doc_school_profile_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_profile_rec#" null="#NOT IsDate(ARGUMENTS.doc_school_profile_rec)#">,
                     doc_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_conf_host_rec#" null="#NOT IsDate(ARGUMENTS.doc_conf_host_rec)#">,
                     doc_date_of_visit = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_date_of_visit#" null="#NOT IsDate(ARGUMENTS.doc_date_of_visit)#">,
-                    doc_conf_host_rec2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_conf_host_rec2#" null="#NOT IsDate(ARGUMENTS.doc_conf_host_rec2)#">,
-                    doc_date_of_visit2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_date_of_visit2#" null="#NOT IsDate(ARGUMENTS.doc_date_of_visit2)#">,
                     doc_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_form_1#" null="#NOT IsDate(ARGUMENTS.doc_ref_form_1)#">,
                     doc_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_check1#" null="#NOT IsDate(ARGUMENTS.doc_ref_check1)#">,
                     doc_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_form_2#" null="#NOT IsDate(ARGUMENTS.doc_ref_form_2)#">,
@@ -2179,9 +2161,7 @@
                     doc_single_ref_form_1,
                     doc_single_ref_check1,
                     doc_single_ref_form_2,
-                    doc_single_ref_check2,
-                    doc_conf_host_rec2,
-                    doc_date_of_visit2
+                    doc_single_ref_check2
                 FROM 
                 	smg_students
                 WHERE 

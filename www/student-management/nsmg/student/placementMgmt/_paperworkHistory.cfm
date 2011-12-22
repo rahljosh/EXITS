@@ -60,6 +60,9 @@
 		// Get Host Family Information
 		qGetHostHistoryInfo = APPLICATION.CFC.HOST.getHosts(hostID=qGetHostHistory.hostID);
 
+		// Get Second Host Family Visit
+		qGetHistorySecondVisitReport = APPLICATION.CFC.PROGRESSREPORT.getSecondHostFamilyVisitReport(studentID=qGetStudentInfo.studentID, hostID=qGetHostHistory.hostID);
+
 		// Get Eligible Host Family Members
 		qGetEligibleCBCFamilyHistoryMembers = APPLICATION.CFC.CBC.getEligibleHostMember(hostID=qGetHostHistory.hostID,studentID=qGetStudentInfo.studentID);
 
@@ -109,10 +112,6 @@
 				doc_school_profile_rec = FORM.doc_school_profile_rec,
 				doc_conf_host_rec = FORM.doc_conf_host_rec,
 				doc_date_of_visit = FORM.doc_date_of_visit,				
-				// doc_conf_host_rec2 = qGetSecondVisitReport.pr_sr_approved_date,
-				// doc_date_of_visit2 = qGetSecondVisitReport.dateOfVisit,
-				// doc_conf_host_rec2 = FORM.doc_conf_host_rec2,
-				// doc_date_of_visit2 = FORM.doc_date_of_visit2,
 				doc_ref_form_1 = FORM.doc_ref_form_1,
 				doc_ref_check1 = FORM.doc_ref_check1,
 				doc_ref_form_2 = FORM.doc_ref_form_2,
@@ -331,7 +330,7 @@
                     <td width="55%"><label for="check_doc_single_place_auth">Single Person Placement Verification</label></td>
                     <td width="30%">
                         <span class="readOnly displayNone">#DateFormat(FORM.doc_single_place_auth, 'mm/dd/yyyy')#</span>
-                        <input type="text" name="doc_single_place_auth" id="doc_single_place_auth" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_single_place_auth, 'mm/dd/yyyy')#" maxlength="10">
+                        <input type="text" name="doc_single_place_auth" id="doc_single_place_auth" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_single_place_auth, 'mm/dd/yyyy')#">
                     </td>
                 </tr>
                 
@@ -343,7 +342,7 @@
                     <td><label for="check_doc_single_ref_form_1">Single Person Placement Reference 1</label></td>
                     <td>
                         <span class="readOnly displayNone">#DateFormat(FORM.doc_single_ref_form_1, 'mm/dd/yyyy')#</span>
-                        <input type="text" name="doc_single_ref_form_1" id="doc_single_ref_form_1" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_single_ref_form_1, 'mm/dd/yyyy')#" maxlength="10">
+                        <input type="text" name="doc_single_ref_form_1" id="doc_single_ref_form_1" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_single_ref_form_1, 'mm/dd/yyyy')#">
                     </td>
                 </tr>
                 
@@ -353,7 +352,7 @@
                     <td><label for="doc_single_ref_check1">Date of Single Placement Reference Check 1</label></td>
                     <td>
                         <span class="readOnly displayNone">#DateFormat(FORM.doc_single_ref_check1, 'mm/dd/yyyy')#</span>
-                        <input type="text" name="doc_single_ref_check1" id="doc_single_ref_check1" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_single_ref_check1, 'mm/dd/yyyy')#" maxlength="10">
+                        <input type="text" name="doc_single_ref_check1" id="doc_single_ref_check1" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_single_ref_check1, 'mm/dd/yyyy')#">
                     </td>
                 </tr>
                 
@@ -365,7 +364,7 @@
                     <td><label for="check_doc_single_ref_form_2">Single Person Placement Reference 2</label></td>
                     <td>
                         <span class="readOnly displayNone">#DateFormat(FORM.doc_single_ref_form_2, 'mm/dd/yyyy')#</span>
-                        <input type="text" name="doc_single_ref_form_2" id="doc_single_ref_form_2" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_single_ref_form_2, 'mm/dd/yyyy')#" maxlength="10">
+                        <input type="text" name="doc_single_ref_form_2" id="doc_single_ref_form_2" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_single_ref_form_2, 'mm/dd/yyyy')#">
                     </td>
                 </tr>
                 
@@ -375,7 +374,7 @@
                     <td><label for="doc_single_ref_check2">Date of Single Placement Reference Check 2</label></td>
                     <td>
                         <span class="readOnly displayNone">#DateFormat(FORM.doc_single_ref_check2, 'mm/dd/yyyy')#</span>
-                        <input type="text" name="doc_single_ref_check2" id="doc_single_ref_check2" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_single_ref_check2, 'mm/dd/yyyy')#" maxlength="10">
+                        <input type="text" name="doc_single_ref_check2" id="doc_single_ref_check2" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_single_ref_check2, 'mm/dd/yyyy')#">
                     </td>
                 </tr>
             </table>
@@ -392,20 +391,20 @@
         
         <table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center"> 
 
-            <!--- PIS Approved --->
+			<!--- PIS Approved --->
             <tr> 
-                <td width="15%">&nbsp;</td>
-                <td width="55%"><label>Date Placed ( Headquarters Office Approval Date )></label></td>
-                <td width="30%">#DateFormat(qGetHostHistory.datePlaced, 'mm/dd/yyyy')#</td>
+                <td width="15%" class="paperworkLeftColumn"><input type="checkbox" name="datePlacedCheckBox" id="datePlaced" class="editPage" <cfif isDate(qGetHostHistory.datePlaced)>checked</cfif> disabled="disabled"></td>
+                <td width="55%"><label>Date Placed ( Headquarters Approval Date )</label></td>
+                <td width="30%"><input type="text" name="datePlaced" id="datePlaced" class="datePicker" value="#DateFormat(qGetHostHistory.datePlaced, 'mm/dd/yyyy')#" disabled="disabled"></td>
             </tr>
 
             <!--- PIS Sent to Intl. Representative --->
             <tr> 
-                <td>&nbsp;</td>
+                <td class="paperworkLeftColumn"><input type="checkbox" name="datePISEmailedCheckBox" id="datePISEmailed" class="editPage" <cfif isDate(qGetHostHistory.datePISEmailed)>checked</cfif> disabled="disabled"></td>
                 <td><label>PIS Emailed to International Representative</label></td>
-                <td>#DateFormat(qGetHostHistory.datePISEmailed, 'mm/dd/yyyy')#</td>
+                <td><input type="text" name="datePISEmailed" id="datePISEmailed" class="datePicker" value="#DateFormat(qGetHostHistory.datePISEmailed, 'mm/dd/yyyy')#" disabled="disabled"></td>
             </tr>
-        
+
             <!--- Placement Information Sheet --->
             <tr>
                 <td class="paperworkLeftColumn">
@@ -414,7 +413,7 @@
                 <td><label for="check_date_pis_received">Placement Information Sheet</label></td>
                 <td>
                     <span class="readOnly displayNone">#DateFormat(FORM.date_pis_received, 'mm/dd/yyyy')#</span>
-                    <input type="text" name="date_pis_received" id="date_pis_received" class="datePicker editPage displayNone" value="#DateFormat(FORM.date_pis_received, 'mm/dd/yyyy')#" maxlength="10">
+                    <input type="text" name="date_pis_received" id="date_pis_received" class="datePicker editPage displayNone" value="#DateFormat(FORM.date_pis_received, 'mm/dd/yyyy')#">
                 </td>
             </tr>
             
@@ -426,7 +425,7 @@
                 <td><label for="check_doc_full_host_app_date">Host Family Application Received</label></td>
                 <td>
                     <span class="readOnly displayNone">#DateFormat(FORM.doc_full_host_app_date, 'mm/dd/yyyy')#</span>
-                    <input type="text" name="doc_full_host_app_date" id="doc_full_host_app_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_full_host_app_date, 'mm/dd/yyyy')#" maxlength="10">
+                    <input type="text" name="doc_full_host_app_date" id="doc_full_host_app_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_full_host_app_date, 'mm/dd/yyyy')#">
                 </td>
             </tr>
 
@@ -438,7 +437,7 @@
                 <td><label for="check_doc_letter_rec_date">Host Family Letter Received</label></td>
                 <td>
                     <span class="readOnly displayNone">#DateFormat(FORM.doc_letter_rec_date, 'mm/dd/yyyy')#</span>
-                    <input type="text" name="doc_letter_rec_date" id="doc_letter_rec_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_letter_rec_date, 'mm/dd/yyyy')#" maxlength="10">
+                    <input type="text" name="doc_letter_rec_date" id="doc_letter_rec_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_letter_rec_date, 'mm/dd/yyyy')#">
                 </td>
             </tr>
             
@@ -450,7 +449,7 @@
                 <td><label for="check_doc_rules_rec_date">Host Family Rules Form</label></td>
                 <td>
                     <span class="readOnly displayNone">#DateFormat(FORM.doc_rules_rec_date, 'mm/dd/yyyy')#</span>
-                    <input type="text" name="doc_rules_rec_date" id="doc_rules_rec_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_rules_rec_date, 'mm/dd/yyyy')#" maxlength="10">
+                    <input type="text" name="doc_rules_rec_date" id="doc_rules_rec_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_rules_rec_date, 'mm/dd/yyyy')#">
                 </td>
             </tr>
 
@@ -462,7 +461,7 @@
                 <td><label for="check_doc_photos_rec_date">Host Family Photos</label></td>
                 <td>
                     <span class="readOnly displayNone">#DateFormat(FORM.doc_photos_rec_date, 'mm/dd/yyyy')#</span>
-                    <input type="text" name="doc_photos_rec_date" id="doc_photos_rec_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_photos_rec_date, 'mm/dd/yyyy')#" maxlength="10">
+                    <input type="text" name="doc_photos_rec_date" id="doc_photos_rec_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_photos_rec_date, 'mm/dd/yyyy')#">
                 </td>
             </tr>
             
@@ -474,7 +473,7 @@
                 <td><label for="check_doc_school_profile_rec">School & Community Profile Form</label></td>
                 <td>
                     <span class="readOnly displayNone">#DateFormat(FORM.doc_school_profile_rec, 'mm/dd/yyyy')#</span>
-                    <input type="text" name="doc_school_profile_rec" id="doc_school_profile_rec" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_school_profile_rec, 'mm/dd/yyyy')#" maxlength="10">
+                    <input type="text" name="doc_school_profile_rec" id="doc_school_profile_rec" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_school_profile_rec, 'mm/dd/yyyy')#">
                 </td>
             </tr>
             
@@ -486,7 +485,7 @@
                 <td><label for="check_doc_conf_host_rec">Confidential Host Family Visit Form</label></td>
                 <td>
                     <span class="readOnly displayNone">#DateFormat(FORM.doc_conf_host_rec, 'mm/dd/yyyy')#</span>
-                    <input type="text" name="doc_conf_host_rec" id="doc_conf_host_rec" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_conf_host_rec, 'mm/dd/yyyy')#" maxlength="10">
+                    <input type="text" name="doc_conf_host_rec" id="doc_conf_host_rec" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_conf_host_rec, 'mm/dd/yyyy')#">
                 </td>
             </tr>
             
@@ -496,34 +495,29 @@
                 <td><label for="doc_date_of_visit">Date of Visit</label></td>
                 <td>
                     <span class="readOnly displayNone">#DateFormat(FORM.doc_date_of_visit, 'mm/dd/yyyy')#</span>
-                    <input type="text" name="doc_date_of_visit" id="doc_date_of_visit" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_date_of_visit, 'mm/dd/yyyy')#" maxlength="10">
+                    <input type="text" name="doc_date_of_visit" id="doc_date_of_visit" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_date_of_visit, 'mm/dd/yyyy')#">
                 </td>
             </tr>
             
             <!--- Second Host Family Visit Report - Get Dates from Progress Report Section --->
             <cfif qGetProgramInfo.seasonid GT 7>
-            
-                <!--- 2nd Confidential Host Family Visit Form --->
+
+				<!--- 2nd Confidential Host Family Visit Form --->
                 <tr> 
                     <td class="paperworkLeftColumn">
-                        <input type="checkbox" name="check_doc_conf_host_rec2" id="check_doc_conf_host_rec2" class="editPage displayNone" <cfif isDate(FORM.doc_conf_host_rec2)>checked</cfif> disabled="disabled">
+                        <input type="checkbox" name="pr_ny_approved_dateCheckBox" id="pr_ny_approved_date" class="editPage" <cfif isDate(qGetHistorySecondVisitReport.pr_ny_approved_date)>checked</cfif> disabled="disabled">
                     </td>
-                    <td><label for="check_doc_conf_host_rec2">2nd Confidential Host Family Visit Form</label></td>
-                    <td>
-                        <span class="readOnly displayNone">#DateFormat(FORM.doc_conf_host_rec2, 'mm/dd/yyyy')#</span>
-                        <input type="text" name="doc_conf_host_rec2" id="doc_conf_host_rec2" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_conf_host_rec2, 'mm/dd/yyyy')#" maxlength="10" disabled="disabled">
-                    </td>
+                    <td><label>2nd Confidential Host Family Visit Form ( Headquarters Approval )</label></td>
+                    <td><input type="text" name="pr_ny_approved_date" id="pr_ny_approved_date" class="datePicker" value="#DateFormat(qGetHistorySecondVisitReport.pr_ny_approved_date, 'mm/dd/yyyy')#" disabled="disabled"></td>
                 </tr>
-
+    
                 <!--- Date of 2nd Visit --->
                 <tr> 
                     <td>&nbsp;</td>
-                    <td><label for="doc_date_of_visit2">Date of 2nd Visit</label></td>
-                    <td>
-                        <span class="readOnly displayNone">#DateFormat(FORM.doc_date_of_visit2, 'mm/dd/yyyy')#</span>
-                        <input type="text" name="doc_date_of_visit2" id="doc_date_of_visit2" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_date_of_visit2, 'mm/dd/yyyy')#" maxlength="10" disabled="disabled">
-                    </td>
+                    <td><label>Date of 2nd Visit</label></td>
+                    <td><input type="text" name="dateOfVisit" id="dateOfVisit" class="datePicker" value="#DateFormat(qGetHistorySecondVisitReport.dateOfVisit, 'mm/dd/yyyy')#" disabled="disabled"></td>
                 </tr>
+            
             </cfif>
             
             <!--- Reference Form 1 --->
@@ -534,7 +528,7 @@
                 <td><label for="check_doc_ref_form_1">Reference Form 1</label></td>
                 <td>
                     <span class="readOnly displayNone">#DateFormat(FORM.doc_ref_form_1, 'mm/dd/yyyy')#</span>
-                    <input type="text" name="doc_ref_form_1" id="doc_ref_form_1" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_ref_form_1, 'mm/dd/yyyy')#" maxlength="10">
+                    <input type="text" name="doc_ref_form_1" id="doc_ref_form_1" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_ref_form_1, 'mm/dd/yyyy')#">
                 </td>
             </tr>
 
@@ -544,7 +538,7 @@
                 <td><label for="doc_ref_check1">Date of Reference Check 1</label></td>
                 <td>
                     <span class="readOnly displayNone">#DateFormat(FORM.doc_ref_check1, 'mm/dd/yyyy')#</span>
-                    <input type="text" name="doc_ref_check1" id="doc_ref_check1" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_ref_check1, 'mm/dd/yyyy')#" maxlength="10">
+                    <input type="text" name="doc_ref_check1" id="doc_ref_check1" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_ref_check1, 'mm/dd/yyyy')#">
                 </td>
             </tr>
              
@@ -556,7 +550,7 @@
                 <td><label for="check_doc_ref_form_2">Reference Form 2</label></td>
                 <td>
                     <span class="readOnly displayNone">#DateFormat(FORM.doc_ref_form_2, 'mm/dd/yyyy')#</span>
-                    <input type="text" name="doc_ref_form_2" id="doc_ref_form_2" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_ref_form_2, 'mm/dd/yyyy')#" maxlength="10">
+                    <input type="text" name="doc_ref_form_2" id="doc_ref_form_2" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_ref_form_2, 'mm/dd/yyyy')#">
                 </td>
             </tr>
             
@@ -566,7 +560,7 @@
                 <td><label for="doc_ref_check2">Date of Reference Check 2</label></td>
                 <td>
                     <span class="readOnly displayNone">#DateFormat(FORM.doc_ref_check2, 'mm/dd/yyyy')#</span>
-                    <input type="text" name="doc_ref_check2" id="doc_ref_check2" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_ref_check2, 'mm/dd/yyyy')#" maxlength="10">
+                    <input type="text" name="doc_ref_check2" id="doc_ref_check2" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_ref_check2, 'mm/dd/yyyy')#">
                 </td>
             </tr>
             
@@ -578,7 +572,7 @@
                 <td><label for="check_doc_income_ver_date">Income Verification Form</label></td>
                 <td>
                     <span class="readOnly displayNone">#DateFormat(FORM.doc_income_ver_date, 'mm/dd/yyyy')#</span>
-                    <input type="text" name="doc_income_ver_date" id="doc_income_ver_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_income_ver_date, 'mm/dd/yyyy')#" maxlength="10">
+                    <input type="text" name="doc_income_ver_date" id="doc_income_ver_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_income_ver_date, 'mm/dd/yyyy')#">
                 </td>
             </tr>
         </table>
@@ -610,7 +604,7 @@
                 <td width="55%"><label for="check_doc_school_accept_date">School Acceptance Form</label></td>
                 <td width="30%">
                     <span class="readOnly displayNone">#DateFormat(FORM.doc_school_accept_date, 'mm/dd/yyyy')#</span>
-                    <input type="text" name="doc_school_accept_date" id="doc_school_accept_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_school_accept_date, 'mm/dd/yyyy')#" maxlength="10">
+                    <input type="text" name="doc_school_accept_date" id="doc_school_accept_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_school_accept_date, 'mm/dd/yyyy')#">
                 </td>
             </tr>
             
@@ -620,7 +614,7 @@
                 <td><label for="doc_school_sign_date">Date of Signature</label></td>
                 <td>
                     <span class="readOnly displayNone">#DateFormat(FORM.doc_school_sign_date, 'mm/dd/yyyy')#</span>
-                    <input type="text" name="doc_school_sign_date" id="doc_school_sign_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_school_sign_date, 'mm/dd/yyyy')#" maxlength="10">
+                    <input type="text" name="doc_school_sign_date" id="doc_school_sign_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_school_sign_date, 'mm/dd/yyyy')#">
                 </td>
             </tr>				
         </table>
@@ -643,7 +637,7 @@
                 <td width="55%"><label for="check_fathercbc_form">Host Father</label></td>
                 <td width="30%">
                     <span class="readOnly displayNone">#DateFormat(FORM.fathercbc_form, 'mm/dd/yyyy')#</span>
-                    <input type="text" name="fathercbc_form" id="fathercbc_form" class="datePicker editPage displayNone" value="#DateFormat(FORM.fathercbc_form, 'mm/dd/yyyy')#" maxlength="10">
+                    <input type="text" name="fathercbc_form" id="fathercbc_form" class="datePicker editPage displayNone" value="#DateFormat(FORM.fathercbc_form, 'mm/dd/yyyy')#">
                 </td>
             </tr>
             
@@ -655,7 +649,7 @@
                 <td><label for="check_mothercbc_form">Host Mother</label></td>
                 <td>
                     <span class="readOnly displayNone">#DateFormat(FORM.mothercbc_form, 'mm/dd/yyyy')#</span>
-                    <input type="text" name="mothercbc_form" id="mothercbc_form" class="datePicker editPage displayNone" value="#DateFormat(FORM.mothercbc_form, 'mm/dd/yyyy')#" maxlength="10">
+                    <input type="text" name="mothercbc_form" id="mothercbc_form" class="datePicker editPage displayNone" value="#DateFormat(FORM.mothercbc_form, 'mm/dd/yyyy')#">
                 </td>
             </tr>
         </table>
@@ -678,7 +672,7 @@
                     <td width="55%"><label for="member#qGetEligibleCBCFamilyHistoryMembers.currentRow#check">#qGetEligibleCBCFamilyHistoryMembers.name# #qGetEligibleCBCFamilyHistoryMembers.lastname# - #qGetEligibleCBCFamilyHistoryMembers.age# years old</label></td>
                     <td width="30%">
                         <span class="readOnly displayNone">#DateFormat(qGetEligibleCBCFamilyHistoryMembers.cbc_form_received, 'mm/dd/yyyy')#</span>
-                        <input type="text" name="cbc_form_received#qGetEligibleCBCFamilyHistoryMembers.childID#" id="cbc_form_received#qGetEligibleCBCFamilyHistoryMembers.childID#" class="datePicker editPage displayNone" value="#DateFormat(FORM['cbc_form_received' & qGetEligibleCBCFamilyHistoryMembers.childID], 'mm/dd/yyyy')#" maxlength="10">
+                        <input type="text" name="cbc_form_received#qGetEligibleCBCFamilyHistoryMembers.childID#" id="cbc_form_received#qGetEligibleCBCFamilyHistoryMembers.childID#" class="datePicker editPage displayNone" value="#DateFormat(FORM['cbc_form_received' & qGetEligibleCBCFamilyHistoryMembers.childID], 'mm/dd/yyyy')#">
                     </td>
                 </tr>
             </cfloop>
@@ -722,7 +716,7 @@
                 <td width="55%"><label for="check_stu_arrival_orientation">Student Orientation</label></td>
                 <td width="30%">
                     <span class="readOnly displayNone">#DateFormat(FORM.stu_arrival_orientation, 'mm/dd/yyyy')#</span>
-                    <input type="text" name="stu_arrival_orientation" id="stu_arrival_orientation" class="datePicker editPage displayNone" value="#DateFormat(FORM.stu_arrival_orientation, 'mm/dd/yyyy')#" maxlength="10">
+                    <input type="text" name="stu_arrival_orientation" id="stu_arrival_orientation" class="datePicker editPage displayNone" value="#DateFormat(FORM.stu_arrival_orientation, 'mm/dd/yyyy')#">
                 </td>
             </tr>
             
@@ -734,7 +728,7 @@
                 <td><label for="check_host_arrival_orientation">Host Family Orientation</label></td>
                 <td>
                     <span class="readOnly displayNone">#DateFormat(FORM.host_arrival_orientation, 'mm/dd/yyyy')#</span>
-                    <input type="text" name="host_arrival_orientation" id="host_arrival_orientation" class="datePicker editPage displayNone" value="#DateFormat(FORM.host_arrival_orientation, 'mm/dd/yyyy')#" maxlength="10">
+                    <input type="text" name="host_arrival_orientation" id="host_arrival_orientation" class="datePicker editPage displayNone" value="#DateFormat(FORM.host_arrival_orientation, 'mm/dd/yyyy')#">
                 </td>
             </tr>
             
@@ -746,7 +740,7 @@
                 <td><label for="check_doc_class_schedule">Class Schedule</label></td>
                 <td>
                     <span class="readOnly displayNone">#DateFormat(FORM.doc_class_schedule, 'mm/dd/yyyy')#</span>
-                    <input type="text" name="doc_class_schedule" id="doc_class_schedule" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_class_schedule, 'mm/dd/yyyy')#" maxlength="10">
+                    <input type="text" name="doc_class_schedule" id="doc_class_schedule" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_class_schedule, 'mm/dd/yyyy')#">
                 </td>
             </tr>
         </table>
