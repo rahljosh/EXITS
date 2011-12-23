@@ -423,6 +423,34 @@
         <!----footer of table---->
     <cfinclude template="table_footer.cfm">
     </cfif>
+     <cfif client.companyid eq 10>
+        		  <!----Special Announcements---->
+    <table width=100% cellpadding=0 cellspacing=0 border="0" height=24>
+        <tr height=24>
+            <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
+            <td width=26 background="pics/header_background.gif"><img src="pics/news.gif"></td>
+            <td background="pics/header_background.gif"><h2>Bonuses!</h2></td>
+            <td background="pics/header_background.gif" width=16></td>
+            <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
+        </tr>
+    </table>
+        <table width=100% cellpadding="4" cellspacing=0 border="0" class="section">
+        <tr>
+           <td  valign="top" width="100%">
+           <img src="pics/Bonuses.png" height=200 />
+           </td>
+           <td align="center">
+           
+                        
+           <h2><a href="uploadedfiles/pdf_docs/CASE/promotion/PreAypBonus.pdf" target="_blank">Pre-AYP Bonuses!</a></h2>
+           <br />
+           <h2><a href="uploadedfiles/pdf_docs/CASE/promotion/Early_Placement_Bonus_2012.pdf" target="_blank">Early Placement</a></h2>
+           </td>
+           </tr>
+         </table>
+        <!----footer of table---->
+    <cfinclude template="table_footer.cfm">
+    </cfif>
         </Td>
      </tr>
   </table>
