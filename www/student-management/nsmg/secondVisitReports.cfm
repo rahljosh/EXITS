@@ -796,14 +796,17 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                             </tr>
                       </cfif>
                             <cfelse>         
-                                 <Cfloop query="indReports">          
+                                 <Cfloop query="indReports">      
+                                 <cfif indReports.currentrow gt 1>
+                                 	<td colspan=3><td>#getprevhosts.familylastname# (#getprevhosts.hostid#)</td>
+                                 </cfif>    
                                     <cfif getResults.secondvisitrepid neq indReports.fk_secondvisitrep>
-                                 	<td  colspan = 2>
+                                 	<td colspan=2>
                                     <cfelse>
-                              
+                              		<td>
                                     
                                     </cfif>
-									<Td>
+									
 									
 									
                                     <cfif getResults.secondvisitrepid neq fk_secondvisitrep>
