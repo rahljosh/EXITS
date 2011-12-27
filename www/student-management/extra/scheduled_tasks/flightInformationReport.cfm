@@ -49,7 +49,13 @@
 
                     <cfoutput>
                         <tr style="text-align:center; <cfif qGetArrivals.currentRow MOD 2>background-color: ##EEEEEE;</cfif> ">
-                            <td style="padding:4px 0px 4px 0px;">#qGetArrivals.departDate#</td>
+                            <td style="padding:4px 0px 4px 0px;">
+								<cfif qGetArrivals.isOvernightFlight EQ 1>
+                                    #DateFormat(DateAdd("d", 1, qGetArrivals.departDate), 'mm/dd/yyyy')# 
+                                <cfelse>
+                                    #qGetArrivals.departDate#
+                                </cfif>
+                        	</td>
                             <td style="padding:4px 0px 4px 0px;">#qGetArrivals.arriveAirportCode#</td>
                             <td style="padding:4px 0px 4px 0px;">#qGetArrivals.arriveTime# / #qGetArrivals.flightNumber#</td>
                         </tr>                         
