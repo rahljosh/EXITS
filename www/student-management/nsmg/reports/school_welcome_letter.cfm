@@ -112,7 +112,7 @@
 <tr><td><div align="justify">
 <p>
 #companyshort.companyname# would like to thank you for allowing #get_letter_info.firstname# #get_letter_info.familylastname#
-to attend your school. <cfif client.companyid NEQ 14>#companyshort.companyshort_nocolor# has issued a DS 2019 for #get_letter_info.firstname# and 
+to attend your school. <cfif client.companyid NEQ 14>#companyshort.companyshort_nocolor# has issued a #CLIENT.DSFormName# for #get_letter_info.firstname# and 
 #get_letter_info.firstname# is now in the process of securing a J1 visa. Upon arrival #get_letter_info.firstname# will have 
 received a visa from the US consulate.</cfif>
 </p>

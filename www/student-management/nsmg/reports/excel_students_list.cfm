@@ -61,7 +61,7 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
 	<td><b>Last Name</b></td>
 	<td><b>Sex</b></td>
 	<td><b>Country</b></td>
-	<td><b>DS 2019</b></td>
+	<td><b>#CLIENT.DSFormName#</b></td>
 	<td><b>Email</b></td>
 	<td><b>Program</b></td>
 	<td><b>Region</b></td>						

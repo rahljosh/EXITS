@@ -54,7 +54,7 @@
 		<td align="center" width="50%" valign="top">
 			<cfform action="reports/ds2019_report_excel.cfm" method="POST">
 			<Table cellpadding=6 cellspacing="0" align="center" width="100%">
-				<tr><th colspan="2" bgcolor="e2efc7">DOS - EXCEL SPREADSHEET - DS 2019 Placement Report</th></tr>
+				<tr><th colspan="2" bgcolor="e2efc7">DOS - EXCEL SPREADSHEET - #CLIENT.DSFormName# Placement Report</th></tr>
 				<tr align="left">
 					<td>Program :</td>
 					<td><select name="programid" multiple  size="6">
@@ -75,7 +75,7 @@
 		<td align="center" width="50%" valign="top">
 			<cfform action="reports/ds2019_report.cfm" method="POST" target="blank">
 			<Table cellpadding=6 cellspacing="0" align="center" width="100%">
-				<tr><th colspan="2" bgcolor="e2efc7">DOS - DS 2019 Placement Report</th></tr>
+				<tr><th colspan="2" bgcolor="e2efc7">DOS - #CLIENT.DSFormName# Placement Report</th></tr>
 				<tr align="left">
 					<td>Program :</td>
 					<td><select name="programid" multiple  size="6">
@@ -90,7 +90,7 @@
 		<td align="center" width="50%" valign="top">
 			<cfform action="reports/ds2019_report_ver.cfm" method="POST" target="blank">
 			<Table cellpadding=6 cellspacing="0" align="center" width="100%">
-				<tr><th colspan="2" bgcolor="e2efc7">DOS - DS 2019 Placement Report by Region</th></tr>
+				<tr><th colspan="2" bgcolor="e2efc7">DOS - #CLIENT.DSFormName# Placement Report by Region</th></tr>
 				<tr align="left">
 					<td>Program :</td>
 					<td><select name="programid" multiple  size="6">
@@ -173,7 +173,7 @@
 		<td align="center" width="50%" valign="top">
 			<Table cellpadding=6 cellspacing="0" align="center" width="100%">
 			<cfform action="reports/ds2019_history.cfm" method="POST" target="blank">
-				<tr><th colspan="2" bgcolor="e2efc7">DOS - DS 2019 Placement Report</th></tr>
+				<tr><th colspan="2" bgcolor="e2efc7">DOS - #CLIENT.DSFormName# Placement Report</th></tr>
 				<tr>
 					<TD>History Files :</td>
 					<TD><select name="datecreated" size="1">
@@ -184,7 +184,7 @@
 			</cfform>
 			<tr><td>&nbsp;</td></tr>
 			<cfform action="reports/ds2019_history_word.cfm" method="POST">
-				<tr><th colspan="2" bgcolor="e2efc7">DOS - DS 2019 Placement Report - Word Format</th></tr>
+				<tr><th colspan="2" bgcolor="e2efc7">DOS - #CLIENT.DSFormName# Placement Report - Word Format</th></tr>
 				<tr>
 					<TD>History Files :</td>
 					<TD><select name="datecreated" size="1">
@@ -219,7 +219,7 @@
 		<td align="center" width="50%" valign="top">
 			<cfform action="reports/ds2019_history_random.cfm" method="POST" target="blank">
 			<Table cellpadding=6 cellspacing="0" align="center" width="100%">
-				<tr><th colspan="2" bgcolor="e2efc7">CSIET - DS 2019 According to Random numbers</th></tr>
+				<tr><th colspan="2" bgcolor="e2efc7">CSIET - #CLIENT.DSFormName# According to Random numbers</th></tr>
 				<tr>
 					<TD>History Files :</td>
 					<TD><select name="datecreated" size="1">
@@ -235,7 +235,7 @@
 		<td align="center" width="50%" valign="top">
 			<cfform action="reports/ds2019_history_rand_excel.cfm" method="POST" target="blank">
 			<Table cellpadding=6 cellspacing="0" align="center" width="100%">
-				<tr><th colspan="2" bgcolor="e2efc7">DOS - DS 2019 According to Random numbers (Excel File)</th></tr>
+				<tr><th colspan="2" bgcolor="e2efc7">DOS - #CLIENT.DSFormName# According to Random numbers (Excel File)</th></tr>
 				<tr>
 					<TD>History Files :</td>
 					<TD><select name="datecreated" size="1">

@@ -30,7 +30,7 @@
 	<tr><td>
 		<cfform method="post" action="?curdoc=sevis/amend_dates_extract" enctype="multipart/form-data">
 		File Name &nbsp; : &nbsp; <input type="text" name="filename" size="50">
-		<div align="center"><input type="submit" value="Update DS 2019"></div>
+		<div align="center"><input type="submit" value="Update #CLIENT.DSFormName#"></div>
 		</cfform>
 	</td></tr>
 	</table>

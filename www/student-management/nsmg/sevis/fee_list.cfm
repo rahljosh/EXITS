@@ -67,7 +67,7 @@
         <td>Intl. Representative</td>
         <td>Student</td>
         <td>DOB</td>
-        <td>DS-2019 Number</td>
+        <td>#CLIENT.DSFormName# Number</td>
         <td align="center">Batch ID</td>
     </tr>
 	<cfloop query="qGetStudentList">

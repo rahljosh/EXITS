@@ -380,7 +380,7 @@
                                         <td>###studentid#</td>
                                     </tr>
                                     <tr>
-                                        <td><span class="title">DS-2019</span></td>
+                                        <td><span class="title">#CLIENT.DSFormName#</span></td>
                                         <td>#ds2019_no#</td>
                                     </tr>
                                     <tr>

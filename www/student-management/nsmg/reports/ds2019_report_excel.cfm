@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>DOS - DS 2019 Report - EXCEL SPREADSHEET</title>
+<title>DOS - #CLIENT.DSFormName# Report - EXCEL SPREADSHEET</title>
 <link rel="stylesheet" href="reports.css" type="text/css">
 </head>
 

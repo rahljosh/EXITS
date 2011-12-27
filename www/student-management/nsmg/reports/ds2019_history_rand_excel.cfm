@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>DS 2019 History</title>
+<title>#CLIENT.DSFormName# History</title>
 <link rel="stylesheet" href="reports.css" type="text/css">
 </head>
 
@@ -65,7 +65,7 @@ relatively correct Internet Explorer behavior. --->
 		<th>CSIET Random ID</th>
 		<th>Intl. Rep.</th>
 		<th>Student</th>
-		<th>DS 2019</th>
+		<th>#CLIENT.DSFormName#</th>
 		<th>Program</th>
 		<th>Region</th>
 		<th>Placement Date</th>

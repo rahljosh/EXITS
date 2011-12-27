@@ -9,7 +9,7 @@
 <!--- REGION LIST --->
 <cfinclude template="../querys/get_regions.cfm">
 
-<span class="application_section_header">DS-2019 Verification</span><br>
+<span class="application_section_header">#CLIENT.DSFormName# Verification</span><br>
 <div align="center">Select a program to view the list</div><br>
 
 <table width="95%" align="center" cellpadding=5 cellspacing="0">
@@ -17,7 +17,7 @@
 	<td width="50%">
 		<cfform action="reports/ds2019_list.cfm" method="POST" target="_blank">
 		<Table class="nav_bar" cellpadding=5 cellspacing="0" align="left" width="100%">
-		<tr><th colspan="2" bgcolor="#ededed">DS-2019 Verification Report not received</th></tr>
+		<tr><th colspan="2" bgcolor="#ededed">#CLIENT.DSFormName# Verification Report not received</th></tr>
 		<TR>
 			<TD>Program :</td>
 			<TD><select name="programid" multiple size="6">
@@ -34,7 +34,7 @@
 	<td width="50%">
 		<cfform action="reports/ds2019_list_printed.cfm" method="POST" target="_blank">
 		<Table class="nav_bar" cellpadding=5 cellspacing="0" align="left" width="100%">
-		<tr><th colspan="2" bgcolor="#ededed">DS 2019 Verification Report Received</th></tr>
+		<tr><th colspan="2" bgcolor="#ededed">#CLIENT.DSFormName# Verification Report Received</th></tr>
 		<TR>
 			<TD>Program :</td>
 			<TD><select name="programid" multiple size="6">
@@ -55,7 +55,7 @@
 	<td width="50%">
 		<cfform action="reports/ds2019_be_issued.cfm" method="POST" target="_blank">
 		<Table class="nav_bar" cellpadding=5 cellspacing="0" align="left" width="100%">
-		<tr><th colspan="2" bgcolor="#ededed">DS-2019 Forms to be issued</th></tr>
+		<tr><th colspan="2" bgcolor="#ededed">#CLIENT.DSFormName# Forms to be issued</th></tr>
 		<TR>
 			<TD>Program :</td>
 			<TD><select name="programid" multiple size="6">
@@ -83,7 +83,7 @@
 <tr>
 	<td valign="top">
 		<Table class="nav_bar" align="left" cellpadding=5 cellspacing="0">
-			<tr><th colspan="2" bgcolor="#ededed">DS-2019 Verification Report</th></tr>
+			<tr><th colspan="2" bgcolor="#ededed">#CLIENT.DSFormName# Verification Report</th></tr>
 			<tr>
 				<TD>Program :</td>
 					<td><select name="programid" size="1">

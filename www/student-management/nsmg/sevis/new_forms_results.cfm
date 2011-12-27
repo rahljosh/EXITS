@@ -26,11 +26,11 @@
 <cfif not IsDefined("form.filename") or form.filename is ''>
 	<br>
 	<Table class="nav_bar" cellpadding=6 cellspacing="0" align="center" width="98%">
-	<tr><th bgcolor="#ededed">Update DS 2019 Numbers</th></tr>
+	<tr><th bgcolor="#ededed">Update #CLIENT.DSFormName# Numbers</th></tr>
 	<tr><td>
 		<cfform method="post" action="?curdoc=sevis/extract_from_sevis" enctype="multipart/form-data">
 		File Name &nbsp; : &nbsp; <input type="text" name="filename" size="50">
-		<div align="center"><input type="submit" value="Update DS 2019"></div>
+		<div align="center"><input type="submit" value="Update #CLIENT.DSFormName#"></div>
 		</cfform>
 	</td></tr>
 	</table>

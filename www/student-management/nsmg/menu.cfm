@@ -59,7 +59,7 @@
                 <li>
                     <a href="##">Tools</a>
                     <ul>
-						<li><a href="index.cfm?curdoc=tools/verification_received">DS-2019 Verification List</a></li>                        
+						<li><a href="index.cfm?curdoc=tools/verification_received">#CLIENT.DSFormName# Verification List</a></li>                        
                         <li><a href="index.cfm?curdoc=intRep/index&action=flightInformationList">Flight Information</a></li>
                         <li><a href="index.cfm?curdoc=intrep/email_welcome">Email Messages</a></li>
                         <li><a href="index.cfm?curdoc=intrep/update_alerts">News Messages</a></li>
@@ -107,7 +107,7 @@
                 <li>
                     <a href="index.cfm?curdoc=helpdesk/help_desk_list">Tools</a>
                     <ul>
-   						<li><a href="index.cfm?curdoc=tools/verification_received">DS-2019 Verification List</a></li>                        
+   						<li><a href="index.cfm?curdoc=tools/verification_received">#CLIENT.DSFormName# Verification List</a></li>                        
                         <li><a href="index.cfm?curdoc=intRep/index&action=flightInformationList">Flight Information</a></li>
                     </ul>
                 </li>
@@ -349,7 +349,7 @@
     
                         <li><a href="index.cfm?curdoc=tools/countries">Countries</a></li>
 
-    					<li><a href="index.cfm?curdoc=tools/verification_received">DS-2019 Verification List</a></li>
+    					<li><a href="index.cfm?curdoc=tools/verification_received">#CLIENT.DSFormName# Verification List</a></li>
 
     					<li><a href="index.cfm?curdoc=tools/importFLSID">FLS Import Tool</a></li>
                     

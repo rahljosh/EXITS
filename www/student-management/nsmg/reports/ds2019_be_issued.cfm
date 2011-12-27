@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>DS-2019 - Forms to be issued.</title>
+<title>#CLIENT.DSFormName# - Forms to be issued.</title>
 </head>
 
 <body>
@@ -47,7 +47,7 @@
 
 <cfoutput>
 <table width='80%' cellpadding=6 cellspacing="0" align="center">
-<span class="application_section_header">#companyshort.companyshort# - DS-2019 to be Issued</span>
+<span class="application_section_header">#companyshort.companyshort# - #CLIENT.DSFormName# to be Issued</span>
 </table><br>
 
 <table width='80%' cellpadding=6 cellspacing="0" align="center" frame="box">

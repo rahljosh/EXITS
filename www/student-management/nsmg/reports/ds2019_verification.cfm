@@ -90,7 +90,7 @@
 
 <div id="pagecell_reports">
 <hr width=80% color="000000">
-<div align="center"><h3>DS 2019 Verification Report</h3></div>
+<div align="center"><h3>#CLIENT.DSFormName# Verification Report</h3></div>
 
 <cfoutput>
 <div align="center"><h4>Total of #get_student.recordcount# student(s).</h4></b></div>
@@ -129,7 +129,7 @@
 		<table>
 			<tr><td valign="top"><div align="justify">
 			Please review the report and make any necessary corrections. After you have made the corrections, sign the form, scan and email it back to me at #APPLICATION.CFC.UDF.displayAdmissionsInformation(displayInfo='emailLink')#.
-			Once I receive the signed from, I will print the DS-2019 form for your student(s) and send them to you.
+			Once I receive the signed from, I will print the #CLIENT.DSFormName# form for your student(s) and send them to you.
 			</div></td>
 			<td align="right">
 				<table width="300" align="right" frame="border" cellpadding=2 cellspacing="0">

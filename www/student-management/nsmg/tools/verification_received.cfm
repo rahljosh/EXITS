@@ -402,7 +402,7 @@
 		<!--- Table Header --->    
         <gui:tableHeader
             imageName="students.gif"
-            tableTitle="DS-2019 Student Correction"
+            tableTitle="#CLIENT.DSFormName# Student Correction"
             tableRightTitle=""
         />
         
@@ -479,7 +479,7 @@
 	<!--- Table Header --->    
     <gui:tableHeader
         imageName="students.gif"
-        tableTitle="DS-2019 Verification List"
+        tableTitle="#CLIENT.DSFormName# Verification List"
         tableRightTitle=""
     />
     

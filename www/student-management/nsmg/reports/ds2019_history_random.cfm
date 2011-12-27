@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>DS 2019 History</title>
+<title>#CLIENT.DSFormName# History</title>
 <link rel="stylesheet" href="reports.css" type="text/css">
 </head>
 
@@ -64,7 +64,7 @@
 	<tr>
 		<td width="50">&nbsp;</td>
 		<td><img src="../pics/logos/#client.companyid#.gif"  alt="" border="0" align="left"></td>
-		<td valign="middle" align="left"><font size="+3"><b>DS 2019 - History File <br> From #DateFormat(get_history.datecreated, 'mm/dd/yyyy')# - #TimeFormat(get_history.timecreated, 'hh:mm tt')#</b></font></td>		
+		<td valign="middle" align="left"><font size="+3"><b>#CLIENT.DSFormName# - History File <br> From #DateFormat(get_history.datecreated, 'mm/dd/yyyy')# - #TimeFormat(get_history.timecreated, 'hh:mm tt')#</b></font></td>		
 	</tr>
 	<tr><td colspan="3"><hr width=100% align="center"></td></tr>
 </table>
@@ -94,7 +94,7 @@
 			</tr>
 			<tr>
 				<td align="left">&nbsp;</td>
-				<td align="right"><b>DS 2019 Number :</b></td><td>#ds2019_no#</td>
+				<td align="right"><b>#CLIENT.DSFormName# Number :</b></td><td>#ds2019_no#</td>
 				<td align="right"><b>Program :</b></td><td>#programname#</td>			
 			</tr>
 			<tr>			
@@ -121,7 +121,7 @@
 		<table width='650' align="center">
 			<tr>
 			<td align="left" width="200"><!--- #DateFormat(now(), 'mm/dd/yyyy')# --->08/31/2006</td>
-			<td align="center">DS 2019 Placement Report</td>
+			<td align="center">#CLIENT.DSFormName# Placement Report</td>
 			<td align="right" width="200">Page #pagenumber#  of  #totalpages#</td></tr>
 		</table>
 		<div style="page-break-after:always;"></div>
@@ -133,7 +133,7 @@
 		<table width='650' align="center">
 			<tr>
 			<td align="left" width="200">#DateFormat(now(), 'mm/dd/yyyy')#</td>
-			<td align="center">DS 2019 Placement Report</td>
+			<td align="center">#CLIENT.DSFormName# Placement Report</td>
 			<td align="right" width="200">Page #pagenumber# of  #totalpages#</td></tr>
 		</table>	
 	</cfif>
