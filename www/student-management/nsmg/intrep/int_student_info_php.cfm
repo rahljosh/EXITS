@@ -230,7 +230,7 @@
 	<tr>
 		<td width="50%" valign="top">
 			<table cellpadding="3" width="100%">
-				<tr bgcolor="e2efc7"><td colspan="3"><span class="get_attention"><b>:: </b></span>DS-2019 Form</td></tr>
+				<tr bgcolor="e2efc7"><td colspan="3"><span class="get_attention"><b>:: </b></span>#CLIENT.DSFormName# Form</td></tr>
 				<tr>		
 					<td width="4"><Cfif verification_received EQ ''><input type="checkbox" name="verification_box" disabled> <cfelse> <input type="checkbox" name="verification_box" checked disabled> </cfif>
 					<td>I-20 Verification Received &nbsp; Date: &nbsp; #DateFormat(verification_received, 'mm/dd/yyyy')#</td>

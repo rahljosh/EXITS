@@ -102,7 +102,7 @@
 </cfif>
 
 <cfif NOT VAL(qGetStudents.recordcount)>
-	<p>There are no students to populate the DS 2019 Verification Report for the programs selected.</p>
+	<p>There are no students to populate the #CLIENT.DSFormName# Verification Report for the programs selected.</p>
     <div align="center"><input type="image" src="../pics/close.gif" value="Close" onClick="javascript:window.close()"></div>
 	<cfabort>
 </cfif>
@@ -132,7 +132,7 @@
                     <ol>
                     	<li>Login to your EXITS account</li>
                         <li>Click on TOOLS which can be found in the menu bar along the top of the page</li>
-                        <li>Choose DS2019 verification list</li>
+                        <li>Choose #CLIENT.DSFormName# verification list</li>
                         <li>A list of all your students for the upcoming program will be shown on this page</li>
                         <li>If all the information is correct for a student, click <strong>RECEIVED</strong> in the right side column</li>
                         <li>
@@ -173,8 +173,8 @@
         	to="#qGetStudents.intRepEmail#"
         	bcc="#qGetCurrentUser.email#" 
         	replyto="#qGetCurrentUser.email#"
-			FROM="""#companyshort.companyshort_nocolor# DS-2019 Verification"" <#client.support_email#>"
-			subject="#companyshort.companyshort_nocolor# - DS 2019 Verification Report" 
+			FROM="""#companyshort.companyshort_nocolor# #CLIENT.DSFormName# Verification"" <#client.support_email#>"
+			subject="#companyshort.companyshort_nocolor# - #CLIENT.DSFormName# Verification Report" 
             type="html">
 			<HTML>
 			<HEAD>
@@ -205,7 +205,7 @@
 			
             <hr width=80% color="000000">
             <div align="center"><h4>#qGetStudents.businessname#</h4></div>
-            <div align="center"><h3>DS 2019 Verification Reminder</h3></div>
+            <div align="center"><h3>#CLIENT.DSFormName# Verification Reminder</h3></div>
             <div align="center"><h4>Total of #studentCount# student(s).</h4></b></div>
             <hr width=80% color="000000">
             <!--- Insert Student Table list --->
@@ -226,7 +226,7 @@
 	<!--- Insert Student Table list --->
     <hr width=80% color="000000">
     <div align="center"><h4>#qGetStudents.businessname#</h4></div>
-    <div align="center"><h3>DS 2019 Verification Report</h3></div>
+    <div align="center"><h3>#CLIENT.DSFormName# Verification Report</h3></div>
     <div align="center"><h4>Total of #studentCount# student(s).</h4></b></div>
     <div align="center"><font size="-2">PS: Better if printed in landscape format.</font></div>
     <hr width=80% color="000000">
@@ -234,7 +234,7 @@
 	<br>
     
     <cfif VAL(FORM.send_email) AND IsValid("email", qGetStudents.intRepEmail) AND IsValid("email", qGetCurrentUser.email)>
-        <p style="color:##3333CC; font-weight:bold" align="center">DS2019 Report was sent to &nbsp; #qGetStudents.intRepEmail# &nbsp; on &nbsp; #dateformat(now(), 'mm/dd/yyyy')# &nbsp; at &nbsp; #timeformat(now(), 'hh:mm:ss tt')#</p>
+        <p style="color:##3333CC; font-weight:bold" align="center">#CLIENT.DSFormName# Report was sent to &nbsp; #qGetStudents.intRepEmail# &nbsp; on &nbsp; #dateformat(now(), 'mm/dd/yyyy')# &nbsp; at &nbsp; #timeformat(now(), 'hh:mm:ss tt')#</p>
    	<cfelseif NOT IsValid("email", qGetStudents.intRepEmail)>
 		<p style="color:##F00"><h4>*** There is not a valid email address for #qGetStudents.businessname#. Email has not been sent. Please update the International Representative's accoutn and try again.  ***</h4></p>
 	<cfelseif NOT IsValid("email", qGetCurrentUser.email)>

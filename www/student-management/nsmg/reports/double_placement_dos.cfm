@@ -105,7 +105,7 @@ per the requirements stated in the Exchange Visitor program regulations at CFR 6
 <tr>
 	<td width="20" class="style1" valign="top">1.</td>
 	<td width="300" class="style1" valign="top">#UCASE(RTRIM(get_student_info.firstname))# #UCASE(RTRIM(get_student_info.familylastname))# <br>
-		DS2019 no.: &nbsp; #get_student_info.ds2019_no# <br>
+		#CLIENT.DSFormName# no.: &nbsp; #get_student_info.ds2019_no# <br>
 		Program Start Date: &nbsp; #DateFormat(get_student_info.startdate, 'mm/dd/yyyy')#</td>
 	<td class="style1" valign="top"><p>FROM</p>
 	  <p>GENDER</p></td>
@@ -118,7 +118,7 @@ per the requirements stated in the Exchange Visitor program regulations at CFR 6
 	<cfelse>
 	<td class="style1" valign="top">2.</td>
 	<td width="300" class="style1" valign="top">#UCASE(RTRIM(double_placement.firstname))# #UCASE(RTRIM(double_placement.familylastname))# <br>
-		DS2019 no.: &nbsp; #double_placement.ds2019_no# <br>
+		#CLIENT.DSFormName# no.: &nbsp; #double_placement.ds2019_no# <br>
 		Program Start Date: &nbsp; #DateFormat(double_placement.startdate, 'mm/dd/yyyy')#</td>
 	<td class="style1" valign="top"><p>FROM</p>
 	  <p>GENDER</p></td>

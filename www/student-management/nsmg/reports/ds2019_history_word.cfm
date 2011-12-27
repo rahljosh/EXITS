@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>DS 2019 History</title>
+<title>#CLIENT.DSFormName# History</title>
 </head>
 
 <body>
@@ -76,7 +76,7 @@
 	<tr>
 		<td width="50">&nbsp;</td>
 		<td class="label" align="center"><font size="+3"><b>#companyshort.companyshort#</b></font></td>
-		<td class="label" align="center" colspan="3"><font size="+3"><b>DS 2019 - Placement Report</b></font></td>		
+		<td class="label" align="center" colspan="3"><font size="+3"><b>#CLIENT.DSFormName# - Placement Report</b></font></td>		
 	</tr>
 	<cfloop query="get_history">
 		<tr>
@@ -91,7 +91,7 @@
 		</tr>
 		<tr>
 			<td align="left">&nbsp;</td>
-			<td align="right"><b>DS 2019 Number :</b></td><td>#ds2019_no#</td>
+			<td align="right"><b>#CLIENT.DSFormName# Number :</b></td><td>#ds2019_no#</td>
 			<td align="right"><b>Address :</b></td><td>#school_address#</td>			
 		</tr>
 		<tr>

@@ -110,7 +110,7 @@ relatively correct Internet Explorer behavior. --->
 						<p class="style1">#toll_free#</p>
 						<p class="style5">&nbsp;</p>
 						<p class="style3">STUDENT : <b>#Firstname# #familylastname#</b></p>
-						<p class="style2">DS-2019 : #ds2019_no# &nbsp; &nbsp; ID : ## #studentid#</p>
+						<p class="style2">#CLIENT.DSFormName# : #ds2019_no# &nbsp; &nbsp; ID : ## #studentid#</p>
 						</td>
                     </tr>
 					</table>

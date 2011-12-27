@@ -79,7 +79,7 @@
         </tr>
         
         <tr>
-            <td><a href="?curdoc=reports/ds2019_list_select_pro">DS-2019 - Students List, Placement and Verification Reports</a></td>
+            <td><a href="?curdoc=reports/ds2019_list_select_pro">#CLIENT.DSFormName# - Students List, Placement and Verification Reports</a></td>
             <td><a href="?curdoc=reports/graphics_menu">Statistical Graphics</a></td>
         </tr>
         

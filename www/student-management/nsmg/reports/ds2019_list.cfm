@@ -52,7 +52,7 @@
 
 <cfoutput>
 <table width='80%' cellpadding=6 cellspacing="0" align="center">
-<span class="application_section_header">#companyshort.companyshort# - DS-2019 Verification Report not Received</span>
+<span class="application_section_header">#companyshort.companyshort# - #CLIENT.DSFormName# Verification Report not Received</span>
 </table><br>
 
 <table width='80%' cellpadding=6 cellspacing="0" align="center" frame="box">

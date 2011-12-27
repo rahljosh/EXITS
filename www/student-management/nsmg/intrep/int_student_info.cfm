@@ -342,12 +342,12 @@
 	<tr>
 		<td width="50%" valign="top">
 			<table cellpadding="3" width="100%">
-				<tr bgcolor="e2efc7"><td colspan="3"><span class="get_attention"><b>:: </b></span>DS-2019 Form</td></tr>
+				<tr bgcolor="e2efc7"><td colspan="3"><span class="get_attention"><b>:: </b></span>#CLIENT.DSFormName# Form</td></tr>
 				<tr>		
 					<td width="4"><Cfif verification_received EQ ''><input type="checkbox" name="verification_box" disabled> <cfelse> <input type="checkbox" name="verification_box" checked disabled> </cfif>
-					<td>DS 2019 Verification Received &nbsp; Date: &nbsp; #DateFormat(verification_received, 'mm/dd/yyyy')#</td>
+					<td>#CLIENT.DSFormName# Verification Received &nbsp; Date: &nbsp; #DateFormat(verification_received, 'mm/dd/yyyy')#</td>
 				</tr>
-				<tr><td></td><td>DS-2019 number : &nbsp; <cfif ds2019_no EQ ''>n/a<cfelse>#ds2019_no#</cfif></td></tr>	
+				<tr><td></td><td>#CLIENT.DSFormName# number : &nbsp; <cfif ds2019_no EQ ''>n/a<cfelse>#ds2019_no#</cfif></td></tr>	
 				<tr>
 					<td width="4"><cfif int_Agent.accepts_sevis_fee EQ '1'><input type="checkbox" name="accepts_sevis_fee" checked disabled><cfelse><input type="checkbox" name="accepts_sevis_fee" disabled></cfif></td>
 					<td><cfif int_Agent.accepts_sevis_fee EQ ''>

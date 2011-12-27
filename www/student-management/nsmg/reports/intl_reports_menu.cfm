@@ -108,7 +108,7 @@
             
                 <cfform action="reports/email_ds2019_verification.cfm" method="POST" target="blank">
                     <Table class="nav_bar" cellpadding="6" cellspacing="0" align="left"  width="100%">
-                        <tr><th colspan="2" bgcolor="e2efc7">DS-2019 Verification Reports</th></tr>
+                        <tr><th colspan="2" bgcolor="e2efc7">#CLIENT.DSFormName# Verification Reports</th></tr>
                         <tr align="left">
                             <TD>Program :</td>
                             <TD>

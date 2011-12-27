@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>DS 2019 History</title>
+<title>#CLIENT.DSFormName# History</title>
 <link rel="stylesheet" href="reports.css" type="text/css">
 </head>
 

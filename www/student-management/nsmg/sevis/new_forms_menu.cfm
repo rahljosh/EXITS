@@ -53,7 +53,7 @@
 </table><br>
 <cfform action="sevis/new_forms_xml.cfm" method="POST" target="blank">
 <Table class="nav_bar" cellpadding=6 cellspacing="0" align="center" width="96%">
-	<tr><th colspan="2" bgcolor="ededed">DS-2019 Create XML Files (Up to 250 students)</th></tr>
+	<tr><th colspan="2" bgcolor="ededed">#CLIENT.DSFormName# Create XML Files (Up to 250 students)</th></tr>
 	<tr align="left">
 		<td width="15%">Program :</td>
 		<td>
@@ -77,7 +77,7 @@
 	<th align="center" bgcolor="ededed">SEVIS Batch Create Forms XML Results Extractor</th></tr>
 	<tr><td bgcolor="ededed"><cfform method="post" action="?curdoc=sevis/new_forms_results" enctype="multipart/form-data">
 		File Name &nbsp; : &nbsp; <input type="text" name="filename" size="50">
-		<div align="center"><input type="submit" value="Update DS 2019"></div>
+		<div align="center"><input type="submit" value="Update #CLIENT.DSFormName#"></div>
 		</cfform></td></tr>
 </table><br>
 </cfoutput>

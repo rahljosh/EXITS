@@ -251,7 +251,7 @@
 	<tr>
 		<td align="justify" colspan = 2>
 			<p>#companyshort.companyname# would like to thank you for allowing #firstname# #familylastname#
-			to attend your school. #companyshort.companyshort_nocolor# has issued a DS 2019 for #firstname# and 
+			to attend your school. #companyshort.companyshort_nocolor# has issued a #CLIENT.DSFormName# for #firstname# and 
 			#firstname# is now in the process of securing a J1 visa. Upon arrival #firstname# will have 
 			received a visa from the US consulate.
 			</p>

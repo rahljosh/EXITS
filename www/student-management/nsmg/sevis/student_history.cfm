@@ -45,8 +45,8 @@
 		<th>Sent Date</th>
 		<th>Host Family</th>
 		<th>School</th>
-		<th>DS2019 Start</th>
-		<th>DS2019 End</th>
+		<th>#CLIENT.DSFormName# Start</th>
+		<th>#CLIENT.DSFormName# End</th>
 	</tr>
 	<cfloop query="get_history">
 		<tr bgcolor="<cfif currentrow MOD 2 EQ 0>##ffffe6<cfelse>##e2efc7</cfif>">

@@ -300,7 +300,7 @@
                                     </tr>
                                    <Cfif client.companyid neq 14>
                                     <tr>
-                                        <td><span class="title">DS-2019</span></td>
+                                        <td><span class="title">#CLIENT.DSFormName#</span></td>
                                         <td>#ds2019_no#</td>
                                     </tr>
                                     </Cfif>
