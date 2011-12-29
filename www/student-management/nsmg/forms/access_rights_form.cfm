@@ -210,7 +210,7 @@
                         </cfif>
                     )
                 </cfquery>
-                  <Cfif client.companyid lte 5 or client.companyid eq 12>
+               <Cfif client.companyid lte 5 or client.companyid eq 12>
         	   <cfif ListFind("6,7", form.usertype) >
                    <cfquery name="newUserInfo" datasource="#application.dsn#">
                    select u.firstname, u.lastname, u.email, u.address, u.address2, u.city, u.state, u.zip, u.phone, u.email
@@ -222,7 +222,13 @@
                    from smg_usertype
                    where usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.usertype#">
                    </cfquery>
-                     
+                   <cfquery name="regionalManager" datasource="#application.dsn#">
+                    select u.email, u.firstname
+                    from smg_users u
+                    left join user_access_rights uar on uar.userid = u.userid
+                    where uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionid#">
+                    and uar.usertype = 5
+                   </cfquery>
                    <cfsavecontent variable="email_message">
                                    
                    <cfoutput>
@@ -241,6 +247,8 @@
                    <br /><br />
                    Email: #newUserInfo.email#<br />
                    Phone: #newUserInfo.phone#<br />
+                  
+                  
                    
                    </cfoutput>
                    
@@ -250,8 +258,12 @@
                     
                     <!--- send email --->
                     <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                        
+                       
                        <cfinvokeargument name="email_to" value="megan@iseusa.com">
+                       
+                       <cfif regionalManager.email is not ''>
+                       	<cfinvokeargument name="email_cc" value=" #regionalManager.email#">
+                       </cfif>
                    		<!----
                         <cfinvokeargument name="email_to" value="josh@pokytrails.com">
                         ---->

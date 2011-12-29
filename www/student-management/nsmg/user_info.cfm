@@ -160,7 +160,7 @@
             
             <cfquery name="get_user" datasource="#application.dsn#">
                 SELECT 
-                	email
+                	email, accountCreationVerified
                 FROM 
                 	smg_users
                 WHERE 
@@ -171,7 +171,11 @@
                 <cfinvokeargument name="email_to" value="#get_user.email#">
                 <cfinvokeargument name="email_replyto" value="#CLIENT.email#">
                 <cfinvokeargument name="email_subject" value="Login Information">
-                <cfinvokeargument name="include_content" value="resend_login">
+                <cfif get_user.accountCreationVerified eq 1>
+                	<cfinvokeargument name="include_content" value="resend_login">
+                <cfelse>
+                	<cfinvokeargument name="include_content" value="newUserMoreInfo">
+                </cfif>
                 <cfinvokeargument name="userid" value="#URL.userid#">
             </cfinvoke>
             
@@ -1181,7 +1185,8 @@
                              #DateFormat(get_paperwork.ar_cbc_auth_form, 'mm/dd/yyyy')#</a>			
                         </td>
                     </tr>
-                    <tr><td>CBC Processed</td>
+                    
+                    <tr><td>CBC Verified</td>
                         <td><input type="checkbox" name="ar_cbc_auth_processed" disabled="disabled" <cfif currentSeasonCBC.recordcount NEQ 0>checked="checked"</cfif>> 
                            Date:
 						   
@@ -1190,6 +1195,7 @@
                            </Cfif>
                         </td>
                     </tr>
+					
                     <tr bgcolor="##FFFFFF"><td>AR Agreement</td>
                         <td><input type="checkbox" name="ar_agreement_check" disabled="disabled" <cfif get_paperwork.ar_agreement NEQ ''>checked="checked"</cfif>> 
                             Date:

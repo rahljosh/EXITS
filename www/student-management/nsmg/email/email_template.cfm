@@ -14,29 +14,13 @@
             WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#userid#">
         </cfquery>
     
-        <cfif include_content EQ 'resend_login'>
-            <p>****This email has been resent.  You may or may not be prompted to change your password, depending on your account settings.****</p>
-        </cfif>
+        
     
-        <p>An account has been created for you on the #client.companyname# website.  Your account login information is below.</p>
+        <p>A request for your login information to be sent to you was submitted by #client.name#. </p>
         
         <p>Login ID / Username: #get_user.username#<br />
     Password: #get_user.password#</p>
         
-        <p>Upon your first login, you will then be prompted to change your password from the temporary password to one of your choosing.  </p>
-        
-        <p>After you have successfully completed your login, you can change your password, username or any other account information by going to Users 
-        from the main menu and clicking on your name, then on Edit.  All changes that you make will be immediate.</p> 
-        
-        <p>Few things to keep in mind when changing your password:<br />
-            <ol>
-                <li>Cannot re-use your existing password.</li>
-                <li>Must be at least 8 characters.</li>
-                <li>Must include both alphabetic and numeric characters.</li>
-                <li>Cannot be a substring of your Email.</li>
-                <li>Should not be easily recognizable passwords, such as your name, birth dates, or names of children.</li>
-            </ol>
-        </p>
         
         <p>You can login immediately by visiting:  <a href="#CLIENT.exits_url#">#CLIENT.exits_url#</a>  and log in with the information above.</p> 
         
@@ -58,9 +42,7 @@
             WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#userid#">
         </cfquery>
     	
-        <cfif include_content EQ 'resendMoreInfo'>
-            <p>****This email has been resent.  You may or may not be prompted to change your password, depending on your account settings.****</p>
-        </cfif>
+       
     
         
 
