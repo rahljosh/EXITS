@@ -85,7 +85,7 @@
 			
 			APPLICATION.company_short = submitting_info.website;
 		</cfscript>
-        
+
 		<!--- student login --->
         <cfquery name="qAuhenticateStudent" datasource="#APPLICATION.dsn#">
             SELECT studentID, firstname, familylastname
@@ -272,6 +272,13 @@
         
         <!--- this is used only in APPLICATION.cfm to logout after 24 hours. --->
         <cfset CLIENT.thislogin = dateFormat(now(), 'mm/dd/yyyy')>
+
+        <cfscript>
+			// Set DOS Form Name
+        	if ( CLIENT.companyID EQ 14 ) {
+				CLIENT.DSFormName = "I-20";
+			}
+		</cfscript>
 
 		<!--- this usertype doesn't need to verify information. --->
         <cfif CLIENT.usertype NEQ 11>
