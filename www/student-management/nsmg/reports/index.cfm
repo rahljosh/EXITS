@@ -23,6 +23,8 @@
 	WHERE userid = <cfqueryparam value="#client.userid#" cfsqltype="cf_sql_integer">
 </cfquery>
 
+<cfoutput>
+
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
 	<tr valign=middle height=24>
 		<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
@@ -213,6 +215,8 @@
 		<td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td>
 	</tr>
 </table>
+
+</cfoutput>
 
 <!----
 <cfdirectory action="list" directory="d:\web\newsmg\reports\" name="reports" sort="name asc" filter="*.cfm">
