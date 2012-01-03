@@ -38,7 +38,7 @@
         INNER JOIN
         	smg_programs p ON p.programID = s.programID
                 AND
-                    p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('yyyy', -1, now())#">
+                    p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', -13, now())#">
         WHERE 
             s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
 
