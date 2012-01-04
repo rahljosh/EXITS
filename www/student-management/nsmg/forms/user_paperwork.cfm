@@ -273,7 +273,12 @@ function CheckDates(ckname, frname) {
 								Date: <cfinput type="text" name="ar_ref_quest2_#currentrow#" value="#DateFormat(ar_ref_quest2, 'mm/dd/yyyy')#" size="8" maxlength="10" validate="date">						
 							</td>
 						</tr>
-						<tr  height="34"  bgcolor="##EEEEEE" <Cfif get_rep.accountCreationVerified eq 0 and ar_cbc_auth_form is ''> bgcolor="##FFCBC4" </cfif>><td ><cfif ar_cbc_auth_form EQ ''>
+						<tr  height="34"  bgcolor="##EEEEEE" <Cfif get_rep.accountCreationVerified eq 0 and ar_cbc_auth_form is ''> bgcolor="##FFCBC4" </cfif>><td >
+						 <cfif region_company_access.usertypeid eq 15>
+                          Not Required for User Type
+                          <cfelse>
+						
+						<cfif ar_cbc_auth_form EQ ''>
 									<cfinput type="checkbox" name="ar_cbc_auth_form_check_#currentrow#" OnClick="CheckDates('ar_cbc_auth_form_check_#currentrow#', 'ar_cbc_auth_form_#currentrow#');"> 
 								<cfelse>
                                 	<cfif cbcSig is ''>
@@ -292,6 +297,7 @@ function CheckDates(ckname, frname) {
                                  </a>
                                 <cfelse>
                                 	 <cfinput type="text" name="ar_cbc_auth_form_#currentrow#" value="#DateFormat(ar_cbc_auth_form, 'mm/dd/yyyy')#" size="8" maxlength="10" validate="date">						</cfif>
+                               </cfif>
 							</td>
 						</tr>
                          <tr  height="34" <Cfif get_rep.accountCreationVerified eq 0 and ar_cbcAuthReview is '' > bgcolor="##FFCBC4" </cfif>><td>
