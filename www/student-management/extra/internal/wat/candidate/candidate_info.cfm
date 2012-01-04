@@ -257,14 +257,14 @@
 			$(".trTransferInfo").fadeIn("fast");
 			
 			// Fade Out is this a transfer answer
-			$("#readOnlyTransfer").fadeOut("fast");
+			// $("#readOnlyTransfer").fadeOut("fast");
 			
 		} else {
 			// Hide Transfer Information
 			$(".trTransferInfo").fadeOut("fast");
 			
 			// Fade Out is this a transfer answer
-			$("#readOnlyTransfer").fadeOut("fast");
+			// $("#readOnlyTransfer").fadeOut("fast");
 		}	
 		
 		// Display/Hide Self Placemet Info
