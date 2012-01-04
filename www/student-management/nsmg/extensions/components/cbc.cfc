@@ -507,6 +507,7 @@
                         u.date_authorized,
                         u.date_sent,
                         u.date_received,
+                        u.date_approved,
                         u.xml_received,
                         u.notes,
                         u.flagCBC,
@@ -644,6 +645,8 @@
         <cfargument name="companyID" required="yes" hint="companyID is required">
         <cfargument name="flagCBC" default="0" hint="flagCBC is required. Values 0 or 1">
         <cfargument name="dateAuthorized" required="yes" hint="Date of Authorization">
+        <cfargument name="dateApproved" required="yes" hint="Date of approval, either null or date approved">
+ 
 
             <cfquery 
             	datasource="#APPLICATION.dsn#">
@@ -652,11 +655,13 @@
                     SET 	
                     	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
                         flagcbc = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.flagCBC#">,
+                        date_approved =  <cfif LEN(ARGUMENTS.dateApproved)><cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(ARGUMENTS.dateApproved)#"><cfelse>NULL</cfif>,
                         date_authorized = <cfif LEN(ARGUMENTS.dateAuthorized)><cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.dateAuthorized)#"><cfelse>NULL</cfif>
                     WHERE 
                     	cbcid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.cbcID#">
             </cfquery>	
 
+    
 	</cffunction>
 
     
