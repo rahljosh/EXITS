@@ -547,7 +547,14 @@ smg_charges
 					WHERE stuid = #getHSstud.studentid#
 					AND programid = #getHSstud.programid#
 					AND agentid = #getHSstud.intrep#
-					AND companyid = #getHSstud.companyid#
+                    <cfswitch expression="#getHSstud.companyid#">
+                    	<cfcase value="1,2,3,4,12">
+                        	AND companyid IN (1,2,3,4,12)
+                        </cfcase>
+                        <cfdefaultcase>
+                        	AND companyid = #getHSstud.companyid#
+                        </cfdefaultcase>
+                    </cfswitch>
 					AND type = 'program fee'
 					AND active = 1
 					</cfquery>
