@@ -85,7 +85,7 @@
 			
 			APPLICATION.company_short = submitting_info.website;
 		</cfscript>
-
+        
 		<!--- student login --->
         <cfquery name="qAuhenticateStudent" datasource="#APPLICATION.dsn#">
             SELECT studentID, firstname, familylastname
@@ -273,13 +273,6 @@
         <!--- this is used only in APPLICATION.cfm to logout after 24 hours. --->
         <cfset CLIENT.thislogin = dateFormat(now(), 'mm/dd/yyyy')>
 
-        <cfscript>
-			// Set DOS Form Name
-        	if ( CLIENT.companyID EQ 14 ) {
-				CLIENT.DSFormName = "I-20";
-			}
-		</cfscript>
-
 		<!--- this usertype doesn't need to verify information. --->
         <cfif CLIENT.usertype NEQ 11>
         	<!--- Verify user info. New user will have null, or it's been 90 days. --->
@@ -290,7 +283,7 @@
 		</cfif>
         
 		<!--- this usertype doesn't need to verify information or submit agreements --->
-        <cfif listfind("5,6,7", CLIENT.usertype) AND (qAuthenticateUser.accountCreationVerified lt 1)>
+        <cfif listfind("5,6,7,15", CLIENT.usertype) AND (qAuthenticateUser.accountCreationVerified lt 1)>
         	<!---Check if new user agreement is needed. --->
             <Cfset url.userid = "#qAuthenticateUser.userID#">
             
