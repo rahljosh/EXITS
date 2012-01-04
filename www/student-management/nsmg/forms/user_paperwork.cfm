@@ -141,6 +141,7 @@ function CheckDates(ckname, frname) {
 <cfform name="form" action="?curdoc=forms/user_paperwork_qr"method="post">
 <cfinput type="hidden" name="userid" value="#userid#">
 <cfinput type="hidden" name="count" value="#get_paperwork.recordcount#">
+<cfinput type="hidden" name="submittedUserType" value="#region_company_access.usertype#">
 
 <table border=0 cellpadding=0 cellspacing=0 width="100%" class="section">
 
@@ -149,8 +150,8 @@ function CheckDates(ckname, frname) {
 		
 	<cfloop query="region_company_access">
 		#companyshort# : #regionname# (#regionid#)<br />
-									</cfloop>
-			</td>
+	</cfloop>
+		</td>
 	</tr>
 	
 	
@@ -198,6 +199,7 @@ function CheckDates(ckname, frname) {
 					<tr  height="34" bgcolor="##EEEEEE"  <Cfif get_rep.accountCreationVerified eq 0 and get_paperwork.recordcount eq 0 > bgcolor="##FFCBC4" </cfif>><td>
                    <cfif region_company_access.usertypeid eq 15>
                           Not Required for User Type
+                          
                           <cfelse>
 							<cfif region_company_access.usertypeid neq 15>
                                 <cfinput type="checkbox" name="ar_cbc_auth_form_check" OnClick="CheckDates('ar_cbc_auth_form_check', 'ar_cbc_auth_form');"> 
@@ -214,6 +216,7 @@ function CheckDates(ckname, frname) {
                     <tr  height="34"  <Cfif get_rep.accountCreationVerified eq 0 and get_paperwork.recordcount eq 0 > bgcolor="##FFCBC4" </cfif>><td>
                      <cfif region_company_access.usertypeid eq 15>
                           Not Required for User Type
+                          
                           <cfelse>
                           
 						<cfinput type="checkbox" name="ar_cbcAuthReview_check" OnClick="CheckDates('ar_cbcAuthReview_check', 'ar_cbcAuthReview');" disabled> 
