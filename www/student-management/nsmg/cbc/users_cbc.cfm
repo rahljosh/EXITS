@@ -94,7 +94,8 @@
 					cbcID=FORM["cbcID" & i],
 					companyID=FORM["companyID" & i],
 					flagCBC=flagValue,
-					dateAuthorized=FORM["date_authorized" & i]
+					dateAuthorized=FORM["date_authorized" & i],
+					dateApproved = FORM["date_approved" & i]
 				);
 				
 			} // End of for
@@ -252,6 +253,19 @@
 </cfsilent>
 
 <cfoutput>
+<head>
+	<SCRIPT LANGUAGE="JavaScript">
+    <!-- Begin
+    function CheckDates(ckname, frname) {
+        if (document.form.elements[ckname].checked) {
+            document.form.elements[frname].value = "#DateFormat(now(), 'mm/dd/yyyy')#";
+            }
+        else { 
+            document.form.elements[frname].value = '';  
+        }
+    }
+    //  End -->
+    </script>
 
 	<script language="javascript">	
         // Document Ready!
@@ -267,7 +281,27 @@
             });		
     
         });
-    </script> 	
+		</script> 	
+        <script type="text/javascript">
+		function zp(n){
+		return n<10?("0"+n):n;
+		}
+		function insertDate(t,format){
+		var now=new Date();
+		var DD=zp(now.getDate());
+		var MM=zp(now.getMonth()+1);
+		var YYYY=now.getFullYear();
+		var YY=zp(now.getFullYear()%100);
+		format=format.replace(/DD/,DD);
+		format=format.replace(/MM/,MM);
+		format=format.replace(/YYYY/,YYYY);
+		format=format.replace(/YY/,YY);
+		t.value=format;
+		}
+		</script>
+</head>	
+
+    
     
     <cfif NOT VAL(userID)>
         Sorry, an error has ocurred. Please go back and try again.
@@ -307,7 +341,8 @@
             <tr><td colspan="6">&nbsp;</td></tr>
             <tr>
             	<th colspan="6" bgcolor="##e2efc7">#qGetUser.firstname# #qGetUser.lastname# (###qGetUser.userID#)</th>
-            	<th bgcolor="##e2efc7"><a href="cbc/userInfo.cfm?userID=#qGetUser.userID#" class="jQueryModal">Edit User Info</a></th>
+            	<th bgcolor="##e2efc7" colspan=2><a href="cbc/userInfo.cfm?userID=#qGetUser.userID#" class="jQueryModal">Edit User Info</a></th>
+                
             </tr>
             <tr style="font-weight:bold;">
                 <td valign="top">Company</td>
@@ -317,6 +352,7 @@
                 <td valign="top">CBC Received <br><font size="-2">mm/dd/yyyy</font></td>
                 <td valign="top">Request ID</td>
                 <td valign="top">Flag CBC</td>
+                <td valign="top">CBC Approved</td>
             </tr>
             <!--- User UPDATE --->
             <cfif VAL(qGetCBCUser.recordcount)>
@@ -351,6 +387,13 @@
                         <td><cfif NOT LEN(date_received)>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
                         <td><a href="cbc/view_user_cbc.cfm?userID=#qGetCBCUser.userID#&cbcID=#qGetCBCUser.cbcID#&file=batch_#qGetCBCUser.batchID#_user_#qGetCBCUser.userID#_rec.xml" target="_blank">#requestid#</a></td>
                         <td><input type="checkbox" name="flagCBC_#currentrow#" <cfif VAL(flagCBC)>checked="checked"</cfif>></td>
+                        <td> 
+                        
+                        
+						Date: <input type="text" name="date_approved#currentrow#" message="Please input a valid date."  <cfif date_approved is ''>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif> value="#DateFormat(date_approved, 'mm/dd/yyyy')#" size="8" maxlength="10" >	
+                       
+                        </td>
+                        
                     </tr>
                 </cfloop>
             </cfif>

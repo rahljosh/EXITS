@@ -44,7 +44,9 @@
 	padding-left: 20px;
 }
 </style>
-    
+    <cfif client.usertype eq 15>
+    	<cfset checkAgreement.ar_cbc_auth_form = 'Not Required for Usertype'>
+    </cfif>
      <Cfif employHistory.recordcount gte 1 AND (prevExperience.prevOrgAffiliation eq 0 OR (prevExperience.prevOrgAffiliation eq 1 and prevExperience.prevAffiliationName is not ''))>
      	<Cfset previousExperience = 1>
      <cfelse>
@@ -92,6 +94,7 @@
           </cfif> 
         </td>
     </tr>    
+    <cfif client.usertype neq 15>
     <Tr>
 	  	<Td><h2>CBC Authorization</h2></Td>
         <td align="center">
@@ -102,6 +105,7 @@
           </cfif>
         </td>
     </tr>  
+    </cfif>
     <Tr>
 	  	<Td><h2>Employment History</h2></Td>
         <td align="center">
