@@ -368,7 +368,7 @@
           <td align="right" valign="top" rowspan=2>
                 <!--- Intl. Rep Pictures --->
                <cfif (ListFind("5,6,7,9", CLIENT.userType)
-					 and ListFind("1,2,3,4,5,12", CLIENT.companyid)) >  
+					 and ListFind("1,2,3,4,5,10,12", CLIENT.companyid)) >  
                 <cfif CLIENT.usertype EQ 8>
                     <cfset pic_num = RandRange(1,34)>
                     <img src="pics/intrep/#pic_num#.jpg"><br>
