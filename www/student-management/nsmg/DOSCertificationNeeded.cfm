@@ -96,7 +96,7 @@ function highlight(checkbox) {
   
   <br /><br />
   
-  Don't worry, you didn't do anything wrong, all new accounts are suspended if you haven't completed the 'Department of State Certification Test' within 30 days of your account being created. All Area Representatives are required to take the DOS Certification Test.<Br />
+  Don't worry, you didn't do anything wrong, all new accounts are suspended if you haven't completed the 'Department of State Certification Test' within 21 days of your account being created. All Area Representatives are required to take the DOS Certification Test.<Br />
   <Br />
   You should have received an email from no_reply@traincaster.com with your login information. To take the test and/or retrieve your login information please visit:</p>
 <p class="infoBold"> <a href="https://doslocalcoordinatortraining.traincaster.com/" target="_blank">https://doslocalcoordinatortraining.traincaster.com</a> <br />
