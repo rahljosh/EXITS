@@ -274,6 +274,22 @@
 	background-color:#3b5998; 
 }
 
+.blueThemeReportTable th.center {
+	padding:5px;
+	color:#FFFFFF;
+	text-align:center;
+	font-weight:bold;
+	text-transform:none;
+	background-color:#3b5998; 
+}
+
+.blueThemeReportTable .alert {
+	color:#FFFFFF;
+	font-weight:bold;
+	border-bottom:1px solid #FFFFFF;
+	background-color:#F00; 
+}
+
 .blueThemeReportTable td.subTitleLeft {
 	color:#3b5998;
 	font-weight:bold;
