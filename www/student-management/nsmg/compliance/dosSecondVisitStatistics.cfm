@@ -6,6 +6,12 @@
 	Desc:		2nd Visit Compliance Report
 
 	Updated:	
+
+	Rules: 		Permanent Family 
+					- 2nd Visit Report within 60 days
+				Temporary Family 
+					- 2nd Visit Report within 30 days
+					- Then every 30 days from the date of the previous visit (NEED TO BE ADDED)
 				
 ----- ------------------------------------------------------------------------- --->
 
@@ -20,6 +26,7 @@
 		param name="FORM.programID" default=0;	
 		param name="FORM.regionID" default=0;	
 		
+		// Set Current Row used to display light blue color on the table
 		vCurrentRow = 0;
 		
 		// Get Programs
@@ -39,7 +46,9 @@
             <!--- Region --->
             regionID,
             regionName,
-            pr_ny_approved_date
+            <!--- 2nd Visit Report --->
+            pr_ny_approved_date,
+            dateOfVisit
         FROM
             (		
                 <!--- Query to Get Approved Reports --->
@@ -94,7 +103,8 @@
                     ) AS dateStartWindowCompliance,
                     r.regionID,
                     r.regionName,
-                    pr.pr_ny_approved_date
+                    pr.pr_ny_approved_date,
+                    sva.dateOfVisit
                 FROM 	
                     smg_students s
                 INNER JOIN
@@ -107,6 +117,8 @@
                         pr.fk_host = ht.hostID 
                     AND
                         pr.pr_ny_approved_date IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">   
+                INNER JOIN	
+                	secondVisitAnswers sva ON sva.fk_reportID = pr.pr_ID
                 INNER JOIN
                     smg_regions r ON r.regionID = s.regionAssigned     
                     AND
@@ -170,7 +182,8 @@
                     ) AS dateStartWindowCompliance,
                     r.regionID,
                     r.regionName,
-                    CAST('' AS DATE) AS pr_ny_approved_date
+                    CAST('' AS DATE) AS pr_ny_approved_date,
+                    CAST('' AS DATE) AS dateOfVisit
                 FROM 	
                     smg_students s
                 INNER JOIN
@@ -287,7 +300,7 @@
                     FROM
                         qFilterResultsByRegion
                     WHERE
-                        pr_ny_approved_date > dateEndWindowCompliance 
+                        dateOfVisit > dateEndWindowCompliance 
                 </cfquery>
                 
                 <cfscript>
@@ -300,12 +313,12 @@
         
                 <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
                     <td>#qFilterResultsByRegion.regionName#</td>
-                    <td align="center">#qTotalStudents.recordCount#</td>
-                    <td align="center">#qFilterResultsByRegion.recordCount#</td>
-                    <td align="center">#qTotalLate.recordCount#</td>
-                    <td align="center">#qTotalMissing.recordCount#</td>
-                    <td align="center">#vTotalOutOfCompliance#</td>
-                    <td align="center">#vTotalOutCompliancePercentage#%</td>
+                    <td class="center">#qTotalStudents.recordCount#</td>
+                    <td class="center">#qFilterResultsByRegion.recordCount#</td>
+                    <td class="center">#qTotalLate.recordCount#</td>
+                    <td class="center">#qTotalMissing.recordCount#</td>
+                    <td class="center">#vTotalOutOfCompliance#</td>
+                    <td class="center">#vTotalOutCompliancePercentage#%</td>
                 </tr>
             
             </cfif>
