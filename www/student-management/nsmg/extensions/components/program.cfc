@@ -26,13 +26,13 @@
 	
 	<cffunction name="getPrograms" access="public" returntype="query" output="false" hint="Gets a list of programs, if programID is passed gets a program by ID">
     	<cfargument name="programID" default="0" hint="programID is not required">
+        <cfargument name="programIDList" default="" hint="List of program IDs">
         <cfargument name="isActive" default="" hint="IsActive is not required">
         <cfargument name="dateActive" default="" hint="DateActive is not required">
         <cfargument name="companyID" default="" hint="CompanyID is not required">
         <cfargument name="isEndingSoon" default="0" hint="Get only programs that are ending soon for the insurance extension/early return">
         <cfargument name="isFullYear" default="0" hint="Get only 10 month programs">
         <cfargument name="isUpcomingProgram" default="0" hint="Get only upcoming programs, used to assign new student applications at the time of approval">  
-              
               
         <cfquery 
 			name="qGetPrograms" 
@@ -85,6 +85,11 @@
                     	p.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">
                 </cfif>
                 
+                <cfif LEN(ARGUMENTS.programIDList)>
+                	AND
+                    	p.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programIDList#" list="yes"> )
+                </cfif>
+                
 				<cfif LEN(ARGUMENTS.isActive)>
                 	AND
                     	p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.isActive)#">
@@ -116,7 +121,7 @@
                    p.startDate DESC,
                    p.programName
 		</cfquery>
-		   
+           
 		<cfreturn qGetPrograms>
 	</cffunction>
 
@@ -213,12 +218,11 @@
 		<cfreturn qGetOnlineAppPrograms>
 	</cffunction>
     
+    
 	<!----Get available acive programs that match the type of program selected---->
     <cffunction access="remote" name="qGetActiveInternalPrograms" output="no" returntype="query" hint="Gets a list of active programs associated with the program type indicated. Needs to get the program type id." verifyclient="no" securejson="false">
-
     	<cfargument name="programTypeID" default="0" hint="programTypeID is not required">
 		
-        
         <cfquery 
 			name="qGetActiveInternalPrograms" 
 			datasource="#APPLICATION.dsn#">
@@ -264,6 +268,7 @@
 		</cfscript>
 	</cffunction>
 
+
 	<cffunction name="insertProgramHistory" access="public" returntype="void" output="false" hint="Inserts a program history">
     	<cfargument name="studentID" hint="studentID is required">
         <cfargument name="programID" hint="programID is required">
@@ -292,5 +297,6 @@
 		</cfquery>
 
 	</cffunction>
+
 
 </cfcomponent>

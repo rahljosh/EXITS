@@ -297,7 +297,7 @@
                         <td width="50%" align="left" valign="top">
                             <form name="secondVisit" action="index.cfm?curdoc=compliance/dosSecondVisitCompliance" method="POST" target="blank">
                                 <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
-                                    <tr><th colspan="2" bgcolor="##e2efc7">2<sup>nd</sup> Visit Representative Compliance</th></tr>
+                                    <tr><th colspan="2" bgcolor="##e2efc7">2<sup>nd</sup> Visit Representative Compliance By Region</th></tr>
                                     <tr align="left">
                                         <td valign="top">Program :</td>
                                         <td>
@@ -322,7 +322,34 @@
                                 </table>
                             </form>
                         </td>
-                        <td width="50%" align="right" valign="top">&nbsp;</td>
+                        <td width="50%" align="right" valign="top">
+                            <form name="secondVisitStatistics" action="index.cfm?curdoc=compliance/dosSecondVisitStatistics" method="POST" target="blank">
+                                <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
+                                    <tr><th colspan="2" bgcolor="##e2efc7">2<sup>nd</sup> Visit Representative Statistics By Region</th></tr>
+                                    <tr align="left">
+                                        <td valign="top">Program :</td>
+                                        <td>
+                                            <select name="programID" multiple="yes" size="5" class="xLargeField">
+                                                <cfloop query="qGetPrograms">
+                                                    <option value="#qGetPrograms.programID#">#qGetPrograms.programName#</option>
+                                                </cfloop>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr align="left">
+                                        <td valign="top">Region :</td>
+                                        <td>
+                                            <select name="regionID" multiple size="5" class="xLargeField">
+                                                <cfloop query="qGetRegions"><option value="#qGetRegions.regionID#">#qGetRegions.regionname#</option></cfloop>
+                                            </select>
+                                        </td>		
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </td>
                     </tr>
                 </table><br />
                 
