@@ -344,20 +344,20 @@ function getStyleObject(objectId) {
 				<tr valign=middle height=24>
 					<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
 					<td width=26 background="pics/header_background.gif"><img src="pics/clock.gif"></td>
-					<td background="pics/header_background.gif"><h2>Insurance and SEVIS Info</td><td background="pics/header_background.gif" width=16><!--- <a href="edit_regional_access"><img src="pics/edit.png" border=0 alt="Edit"></a> ---></td>
+					<td background="pics/header_background.gif"><h2>Insurance and SEVIS Info</h2></td><td background="pics/header_background.gif" width=16><!--- <a href="edit_regional_access"><img src="pics/edit.png" border=0 alt="Edit"></a> ---></td>
 					<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
 				</tr>
 			</table>
 			<table width=100% cellpadding=10 cellspacing=0 border=0 class="section" >
 				<tr>
 					<td style="line-height:20px;" valign="top">
-						<cfif rep_info.insurance_policy_type is ''><font color="FF0000">Missing insurance type for this Agent</font>
-							<cfelseif rep_info.insurance_policy_type is 'none'>Does not take insurance provided by SMG
-							<cfelse>Takes #rep_info.insurance_policy_type# insurance provided by SMG
-						</cfif><br>
-						<cfif rep_info.accepts_sevis_fee is ''>Missing SEVIS fee information
-							<cfelseif rep_info.accepts_sevis_fee is '0'>Does not accept SEVIS fee
-							<cfelse>Accepts SEVIS fee.
+						<!--- Insurance Information --->
+						<cfif rep_info.accepts_sevis_fee is ''>
+                        	Missing SEVIS fee information
+						<cfelseif rep_info.accepts_sevis_fee is '0'>
+                        	Does not accept SEVIS fee
+						<cfelse>
+                        	Accepts SEVIS fee.
 						</cfif><br>
 					</td>
 				</tr>

@@ -34,7 +34,6 @@ WHERE ( <cfloop list=#form.programid# index='prog'>
         u.businessname, 
         u.email, 
         u.accepts_sevis_fee, 
-        u.insurance_policy_type,
 		p.programid, 
         p.programname,
 		r.regionname, 
@@ -144,12 +143,7 @@ WHERE ( <cfloop list=#form.programid# index='prog'>
 				</cfif>
             </td>
 			<td>
-				<cfif insurance_policy_type is 'none'>
-                	none
-				<cfelse>
-					<cfif insurance is ''><font color="FF0000">not issued</font>
-					<cfelse>#DateFormat(insurance, 'mm/dd/yyyy')#</cfif>
-				</cfif>
+				<!--- Insurance --->
            </td>
 		</tr>							
 	</cfoutput>	

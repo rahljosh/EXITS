@@ -93,7 +93,7 @@
 					businessphone, billing_company, billing_address, billing_address2, billing_city, billing_country, billing_zip, billing_phone,
 					billing_fax, billing_email, billing_contact, fax, usertype, accessrights, regions, compliance, comments, datecreated, datecancelled,
 					active, phone_listing, limited_phone_details, defaultcompany, repcontract_received, date_contract_received, firstlogin, lastlogin,
-					insurance_policy_type, insurance_typeid, advisor_id, account_credit, insurance_charge, invoice_access, ins_deductable, 10_month_price, 
+					insurance_typeid, advisor_id, account_credit, insurance_charge, invoice_access, ins_deductable, 10_month_price, 
 					5_month_price, 10_month_ins, 5_month_ins, whocreatedaccount, datefirstlogin, accepts_sevis_fee, changepass, dob, cbc_auth_received, 
 					cbc_auth_type, studentcontactemail, logo, congrats_email)
 				VALUES		
@@ -108,7 +108,7 @@
 					<cfif get_backup.datecancelled EQ ''>NULL<cfelse>#CreateODBCDate(get_backup.datecancelled)#</cfif>, '0', '#get_backup.phone_listing#', 
 					'#get_backup.limited_phone_details#', '#get_backup.defaultcompany#', '#get_backup.repcontract_received#', 
 					<cfif get_backup.date_contract_received EQ ''>NULL<cfelse>#CreateODBCDate(get_backup.date_contract_received)#</cfif>, 
-					'#get_backup.firstlogin#', <cfif get_backup.lastlogin EQ ''>NULL<cfelse>#CreateODBCDateTime(get_backup.lastlogin)#</cfif>, '#get_backup.insurance_policy_type#',
+					'#get_backup.firstlogin#', <cfif get_backup.lastlogin EQ ''>NULL<cfelse>#CreateODBCDateTime(get_backup.lastlogin)#</cfif>,
 					'#get_backup.insurance_typeid#', '#get_backup.advisor_id#', '#get_backup.account_credit#', '#get_backup.insurance_charge#', '#get_backup.invoice_access#', 
 					'#get_backup.ins_deductable#', '#get_backup.10_month_price#', '#get_backup.5_month_price#', '#get_backup.10_month_ins#', '#get_backup.5_month_ins#', 
 					'#get_backup.whocreatedaccount#', <cfif get_backup.datefirstlogin EQ ''>NULL<cfelse>#CreateODBCDateTime(get_backup.datefirstlogin)#</cfif>, 
@@ -136,7 +136,7 @@ OLD TABLE
 					businessphone, billing_company, billing_address, billing_address2, billing_city, billing_country, billing_zip, billing_phone,
 					billing_fax, billing_email, billing_contact, fax, usertype, accessrights, regions, compliance, comments, datecreated, datecancelled,
 					active, phone_listing, limited_phone_details, defaultcompany, repcontract_received, date_contract_received, firstlogin, lastlogin,
-					insurance_policy_type, insurance_typeid, advisor_id, account_credit, insurance_charge, invoice_access, ins_deductable, 10_month_price, 
+					insurance_typeid, advisor_id, account_credit, insurance_charge, invoice_access, ins_deductable, 10_month_price, 
 					5_month_price, 10_month_ins, 5_month_ins, whocreatedaccount, datefirstlogin, accepts_sevis_fee, changepass, dob, cbc_auth_received, 
 					cbc_auth_type)
 				VALUES		
@@ -151,7 +151,7 @@ OLD TABLE
 					<cfif get_backup.datecancelled EQ ''>NULL<cfelse>#CreateODBCDate(get_backup.datecancelled)#</cfif>, '0', '#get_backup.phone_listing#', 
 					'#get_backup.limited_phone_details#', '#get_backup.defaultcompany#', '#get_backup.repcontract_received#', 
 					<cfif get_backup.date_contract_received EQ ''>NULL<cfelse>#CreateODBCDate(get_backup.date_contract_received)#</cfif>, 
-					'#get_backup.firstlogin#', <cfif get_backup.lastlogin EQ ''>NULL<cfelse>#CreateODBCDateTime(get_backup.lastlogin)#</cfif>, '#get_backup.insurance_policy_type#',
+					'#get_backup.firstlogin#', <cfif get_backup.lastlogin EQ ''>NULL<cfelse>#CreateODBCDateTime(get_backup.lastlogin)#</cfif>,
 					'#get_backup.insurance_typeid#', '#get_backup.advisor_id#', '#get_backup.account_credit#', '#get_backup.insurance_charge#', '#get_backup.invoice_access#', 
 					'#get_backup.ins_deductable#', '#get_backup.10_month_price#', '#get_backup.5_month_price#', '#get_backup.10_month_ins#', '#get_backup.5_month_ins#', 
 					'#get_backup.whocreatedaccount#', <cfif get_backup.datefirstlogin EQ ''>NULL<cfelse>#CreateODBCDateTime(get_backup.datefirstlogin)#</cfif>, 
@@ -168,7 +168,7 @@ NEW TABLE INCLUDE NEW FIELDS
 					businessphone, billing_company, billing_address, billing_address2, billing_city, billing_country, billing_zip, billing_phone,
 					billing_fax, billing_email, billing_contact, fax, usertype, accessrights, regions, compliance, comments, datecreated, datecancelled,
 					active, phone_listing, limited_phone_details, defaultcompany, repcontract_received, date_contract_received, firstlogin, lastlogin,
-					insurance_policy_type, insurance_typeid, advisor_id, account_credit, insurance_charge, invoice_access, ins_deductable, 10_month_price, 
+					insurance_typeid, advisor_id, account_credit, insurance_charge, invoice_access, ins_deductable, 10_month_price, 
 					5_month_price, 10_month_ins, 5_month_ins, whocreatedaccount, datefirstlogin, accepts_sevis_fee, changepass, dob, cbc_auth_received, 
 					cbc_auth_type, studentcontactemail, logo, congrats_email)
 				VALUES		
@@ -183,7 +183,7 @@ NEW TABLE INCLUDE NEW FIELDS
 					<cfif get_backup.datecancelled EQ ''>NULL<cfelse>#CreateODBCDate(get_backup.datecancelled)#</cfif>, '0', '#get_backup.phone_listing#', 
 					'#get_backup.limited_phone_details#', '#get_backup.defaultcompany#', '#get_backup.repcontract_received#', 
 					<cfif get_backup.date_contract_received EQ ''>NULL<cfelse>#CreateODBCDate(get_backup.date_contract_received)#</cfif>, 
-					'#get_backup.firstlogin#', <cfif get_backup.lastlogin EQ ''>NULL<cfelse>#CreateODBCDateTime(get_backup.lastlogin)#</cfif>, '#get_backup.insurance_policy_type#',
+					'#get_backup.firstlogin#', <cfif get_backup.lastlogin EQ ''>NULL<cfelse>#CreateODBCDateTime(get_backup.lastlogin)#</cfif>,
 					'#get_backup.insurance_typeid#', '#get_backup.advisor_id#', '#get_backup.account_credit#', '#get_backup.insurance_charge#', '#get_backup.invoice_access#', 
 					'#get_backup.ins_deductable#', '#get_backup.10_month_price#', '#get_backup.5_month_price#', '#get_backup.10_month_ins#', '#get_backup.5_month_ins#', 
 					'#get_backup.whocreatedaccount#', <cfif get_backup.datefirstlogin EQ ''>NULL<cfelse>#CreateODBCDateTime(get_backup.datefirstlogin)#</cfif>, 
