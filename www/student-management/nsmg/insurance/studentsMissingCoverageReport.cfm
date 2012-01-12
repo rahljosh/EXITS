@@ -120,6 +120,7 @@
        		<td>Student ID</td>
             <td>Student Name</td>
             <td>Date of Birth</td>
+            <td>#CLIENT.dsFormName#</td>
             <td>Policy Type</td>
             <td>Program Name</td>
             <td>Date Placed</td>
@@ -135,6 +136,7 @@
                 <td>###qGetResults.studentID#</td>
                 <td>#qGetResults.firstName# #qGetResults.familyLastName#</td>
                 <td>#DateFormat(qGetResults.dob, 'dd/mmm/yyyy')#</td>
+                <td>#qGetResults.ds2019_no#</td>
                 <td>#qGetResults.type#</td>
                 <td>#qGetResults.programName#</td>
                 <td>#DateFormat(qGetResults.datePlaced, 'dd/mmm/yyyy')#</td>
@@ -143,7 +145,7 @@
         </cfloop>
         <cfif NOT VAL(qGetResults.recordCount)>
         	<tr bgcolor="##D5DCE5">
-            	<td colspan="8" align="center">No Students Found</td>
+            	<td colspan="9" align="center">No Students Found</td>
             </tr>
         </cfif>
     </table>

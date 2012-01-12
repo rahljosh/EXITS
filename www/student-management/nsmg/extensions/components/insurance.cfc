@@ -576,6 +576,7 @@
                     s.firstname, 
                     s.familyLastName, 
                     s.dob,
+                    s.ds2019_no,
                     s.email,
                     s.datePlaced, 
                     u.businessName,

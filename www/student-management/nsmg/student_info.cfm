@@ -791,12 +791,12 @@
                         <cfswitch expression="#qInsuranceHistory.type#">
                         
                             <cfcase value="N">
-                                <td>Enrollment</td>
+                                <td>Enrolled</td>
                                 <td>From #DateFormat(qInsuranceHistory.startDate, 'mm/dd/yyyy')# to #DateFormat(qInsuranceHistory.endDate, 'mm/dd/yyyy')#</td>
                             </cfcase>
                             
                             <cfcase value="EX">
-                                <td>Extension</td>
+                                <td>Extended</td>
                                 <td>From #DateFormat(qInsuranceHistory.startDate, 'mm/dd/yyyy')# to #DateFormat(qInsuranceHistory.endDate, 'mm/dd/yyyy')#</td>
                             </cfcase>
 
