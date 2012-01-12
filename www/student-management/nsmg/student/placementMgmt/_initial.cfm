@@ -527,8 +527,8 @@
 		
 		<cfif NOT ListFindNoCase(FORM.subAction, "reject") AND CLIENT.userType NEQ 7>
 		
-			// Always show the 2nd Visit Rep if it's not assigned AND not submitting a rejection form
-			if ( $("#secondVisitRepID").val() == 0 && $("#validationErrors").val() != 0 ) { 
+			// Always show the 2nd Visit Rep if it's not assigned and not submitting a rejection form
+			if ( $("#secondVisitRepID").val() == 0 ) { // && $("#validationErrors").val() != 0 
 				vDisplaySaveButton = 1;
 				$("#divSecondVisitRepIDInfo").slideUp();
 				$("#divSecondVisitRepID").slideDown();
@@ -544,8 +544,8 @@
 
 		<cfif NOT ListFindNoCase(FORM.subAction, "reject")>
 			
-			// Always show the double placement if student is not assigned AND not submitting a rejection form
-			if ( $("#doublePlace").val() == 0 && $("#validationErrors").val() != 0 ) { 
+			// Always show the double placement if student is not assigned and not submitting a rejection form
+			if ( $("#doublePlace").val() == 0  ) { // && $("#validationErrors").val() != 0
 				vDisplaySaveButton = 1;
 				$("#divDoublePlaceInfo").slideUp();
 				$("#divDoublePlace").slideDown();
