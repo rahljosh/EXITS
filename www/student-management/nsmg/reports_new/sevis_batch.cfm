@@ -101,7 +101,7 @@
     <cfquery name="getResults" datasource="#application.dsn#">
         SELECT smg_students.studentid, smg_students.firstname, smg_students.familylastname, smg_students.sex,
 			smg_students.sevis_batchid, smg_students.sevis_bulkid, smg_students.insurance, smg_students.sevis_fee_paid_date,
-        	smg_students.intrep, smg_users.businessname, smg_users.accepts_sevis_fee, smg_users.insurance_policy_type,
+        	smg_students.intrep, smg_users.businessname, smg_users.accepts_sevis_fee,
         	smg_countrylist.countryname, smg_sevis.datecreated as sevisdate, smg_sevisfee.datecreated as feedate		
         FROM smg_students
         INNER JOIN smg_users ON smg_students.intrep = smg_users.userid
@@ -191,15 +191,7 @@
                             </cfif>
                         </td>
                         <td>
-							<cfif insurance_policy_type is 'none'>
-                                none
-                            <cfelse>
-                                <cfif insurance is ''>
-                                    <font color="FF0000">not issued</font>
-                                <cfelse>
-                                    #DateFormat(insurance, 'mm/dd/yyyy')#
-                                </cfif>
-                            </cfif>
+							<!--- Insurance --->
                        </td>
                     </tr>
                 </cfoutput>

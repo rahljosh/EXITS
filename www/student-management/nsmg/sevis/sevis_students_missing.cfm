@@ -19,7 +19,7 @@ WHERE ( <cfloop list=#form.programid# index='prog'>
 	SELECT DISTINCT 
 		s.studentid, s.countryresident, s.firstname, s.familylastname, s.intrep, s.programid, s.sex, s.dateapplication,
 		s.sevis_batchid, s.sevis_bulkid, s.insurance,
-		u.userid, u.businessname, u.email, u.accepts_sevis_fee, u.insurance_policy_type,
+		u.userid, u.businessname, u.email, u.accepts_sevis_fee,
 		p.programid, p.programname,
 		r.regionname, r.regionid,
 		c.countryname,
@@ -106,11 +106,9 @@ WHERE ( <cfloop list=#form.programid# index='prog'>
 					<cfif feedate is ''><font color="FF0000">not issued</font>
 					<cfelse>#DateFormat(feedate, 'mm/dd/yyyy')#</cfif>
 				</cfif></td>
-			<td><cfif insurance_policy_type is 'none'>none
-				<cfelse>
-					<cfif insurance is ''><font color="FF0000">not issued</font>
-					<cfelse>#DateFormat(insurance, 'mm/dd/yyyy')#</cfif>
-				</cfif></td></tr>							
+			<td>
+            	<!--- Insurance --->
+            </td></tr>							
 	</cfoutput>	
 	</table><br>
 </cfoutput><br>

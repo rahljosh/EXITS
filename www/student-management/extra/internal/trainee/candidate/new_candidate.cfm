@@ -393,7 +393,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 														<font color="FF0000">Missing Policy Type</font>
 													<cfelseif smg_users.insurance_typeid EQ '1'> n/a
 													<cfelse> 
-													#smg_users.insurance_policy_type#	</cfif>--->	</td>
+													</cfif>--->	</td>
 											</tr>
 											<tr>
 												<td><!---<Cfif insured_date is ''><input type="checkbox" name="insured_date" disabled><Cfelse><input type="checkbox" name="insured_date" checked disabled></cfif>---></td>
