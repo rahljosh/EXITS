@@ -258,8 +258,8 @@
 	</cffunction>
 
 
-	<!--- This removes foreign accents from online application fields --->
-	<cffunction name="removeAccent" access="public" returntype="string" output="false" hint="Remove foreign acccents from a string">
+	<!--- This removes foreign accents FROM online application fields --->
+	<cffunction name="removeAccent" access="public" returntype="string" output="false" hint="Remove foreign acccents FROM a string">
     	<cfargument name="varString" hint="String">
 
 		<cfscript>
@@ -424,12 +424,7 @@
             <!--- Set up additional valid password chars. --->
             <cfset strOtherChars = "~!@##$%^&*" />
             <!----Make one string of available chars.---->
-            <cfset strAllValidChars = (
-                strLowerCaseAlpha &
-                strUpperCaseAlpha &
-                strNumbers &
-                strOtherChars
-                ) />
+            <cfset strAllValidChars = ( strLowerCaseAlpha & strUpperCaseAlpha & strNumbers & strOtherChars ) />
          
             <!---Create an array to contain the password --->
             <cfset arrPassword = ArrayNew( 1 ) />
@@ -444,51 +439,29 @@
             - must have at least 1 non-alphanumeric char.
             --->
          
-            <!--- Select the random number from our number set. --->
-            <cfset arrPassword[ 1 ] = Mid(
-            strNumbers,
-            RandRange( 1, Len( strNumbers ) ),
-            1
-            ) />
+            <!--- Select the random number FROM our number set. --->
+            <cfset arrPassword[ 1 ] = Mid( strNumbers, RandRange( 1, Len( strNumbers ) ), 1 ) />
              
-            <!--- Select the random letter from our lower case set. --->
-            <cfset arrPassword[ 2 ] = Mid(
-            strLowerCaseAlpha,
-            RandRange( 1, Len( strLowerCaseAlpha ) ),
-            1
-            ) />
+            <!--- Select the random letter FROM our lower case set. --->
+            <cfset arrPassword[ 2 ] = Mid( strLowerCaseAlpha, RandRange( 1, Len( strLowerCaseAlpha ) ), 1 ) />
              
-            <!--- Select the random letter from our upper case set. --->
-            <cfset arrPassword[ 3 ] = Mid(
-            strUpperCaseAlpha,
-            RandRange( 1, Len( strUpperCaseAlpha ) ),
-            1
-            ) />
+            <!--- Select the random letter FROM our upper case set. --->
+            <cfset arrPassword[ 3 ] = Mid( strUpperCaseAlpha, RandRange( 1, Len( strUpperCaseAlpha ) ), 1 ) />
             
-            <!--- Select the random letter from our upper case set. --->
-            <cfset arrPassword[ 4 ] = Mid(
-            strOtherChars,
-            RandRange( 1, Len( strOtherChars ) ),
-            1
-            ) />
+            <!--- Select the random letter FROM our upper case set. --->
+            <cfset arrPassword[ 4 ] = Mid( strOtherChars, RandRange( 1, Len( strOtherChars ) ), 1 ) />
          
 			<!--- We have 4 of the arguments.length needed to satisfy the requirements, create rest of the password. --->
-            <cfloop index="intChar" from="#(ArrayLen( arrPassword ) + 1)#" to="#ARGUMENTS.length#" step="1">
+            <cfloop index="intChar" FROM="#(ArrayLen( arrPassword ) + 1)#" to="#ARGUMENTS.length#" step="1">
             
-                <cfset arrPassword[ intChar ] = Mid(
-                strAllValidChars,
-                RandRange( 1, Len( strAllValidChars ) ),
-                1
-                ) />
+                <cfset arrPassword[ intChar ] = Mid( strAllValidChars, RandRange( 1, Len( strAllValidChars ) ), 1 ) />
              
             </cfloop>
          
 			<!---
             Jumble up the password. 
             --->
-            <cfset CreateObject( "java", "java.util.Collections" ).Shuffle(
-            arrPassword
-            ) />
+            <cfset CreateObject( "java", "java.util.Collections" ).Shuffle( arrPassword ) />
          
 			<!---
             We now have a randomly shuffled array. Now, we just need
@@ -509,17 +482,25 @@
 	<cffunction name="paperworkCompleted" access="public" returntype="query">
     	<cfargument name="season" type="numeric" required="yes" default=9 hint="This should be what ever season you want to check on." />
         <cfargument name="userid" type="numeric" required="yes" default="" hint="Pass in user id you want to check on">
+        
         <!----check CBC has been approved---->
         <cfquery name="cbcCheck" datasource="#APPLICATION.DSN#">
-        select date_approved
-        from smg_users_cbc
-        where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
-        and seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.season)#">
+            SELECT 
+            	date_approved
+            FROM 
+            	smg_users_cbc
+            WHERE 
+            	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
+            AND 
+            	seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.season)#">
         </cfquery>
+        
     	<!----Check Agreement---->
         <cfquery name="checkAgreement" datasource="#APPLICATION.DSN#">
             SELECT 
-            	ar_cbc_auth_form, ar_agreement,ar_ref_quest1,ar_ref_quest2
+            	ar_cbc_auth_form, 
+                ar_agreement,
+                ar_ref_quest1,ar_ref_quest2
             FROM 
             	smg_users_paperwork
             WHERE 
@@ -558,15 +539,17 @@
                 userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
         </cfquery>
         
-		<cfif employHistory.recordcount GTE 1 AND (prevExperience.prevOrgAffiliation EQ 0 OR (prevExperience.prevOrgAffiliation EQ 1 and prevExperience.prevAffiliationName NEQ ''))>
+		<cfif employHistory.recordcount GTE 1 AND (prevExperience.prevOrgAffiliation EQ 0 OR (prevExperience.prevOrgAffiliation EQ 1 AND prevExperience.prevAffiliationName NEQ '') )>
 	        <cfset previousExperience = 1>
         <cfelse>
     	    <cfset previousExperience = 0>
         </cfif> 
-    	<cfif client.usertype eq 15>
+        
+    	<cfif CLIENT.usertype eq 15>
         	<cfset checkAgreement.ar_cbc_auth_form = 'Not Required for Usertype'>
         </cfif>
-		<cfif checkAgreement.ar_cbc_auth_form NEQ '' AND checkAgreement.ar_agreement NEQ '' AND checkAgreement.ar_ref_quest1 NEQ '' AND checkAgreement.ar_ref_quest2 NEQ '' AND checkReferences.recordcount EQ 4 AND previousExperience EQ 1 >
+        
+		<cfif checkAgreement.ar_cbc_auth_form NEQ '' AND checkAgreement.ar_agreement NEQ '' AND checkAgreement.ar_ref_quest1 NEQ '' AND checkAgreement.ar_ref_quest2 NEQ '' AND checkReferences.recordcount EQ 4 AND previousExperience EQ 1>
             <cfset isComplete = 1>
 		<cfelse>
             <cfset isComplete = 0>
@@ -592,83 +575,94 @@
     </cffunction>
     
     
-    
-    
     <!---Get paperwork  for a specific user for all  seasons on record ---->
 	<cffunction name="allpaperworkCompleted" access="public" returntype="query">
-    
-       
         <cfargument name="userid" type="numeric" required="yes" default="" hint="Pass in user id you want to check on">
         <cfargument name="seasonid" type="numeric" required="no" default="0" hint="if you want just of a specific season not passed in returns all seasons">
        
     	<!----Check Agreement---->
-      	
         <cfquery name="checkAgreement" datasource="#APPLICATION.DSN#">
-                  SELECT p.paperworkid, 
-                  p.userid, 
-                  p.seasonid, 
-                  p.ar_info_sheet, 
-                  p.ar_ref_quest1, 
-                  p.ar_ref_quest2, 
-                  p.ar_cbc_auth_form, 
-                  p.ar_agreement, 
-                  p.ar_training, 	
-                  p.secondVisit, 
-                  p.agreeSig,
-            	  s.season, 
-                  p.cbcSig
-        FROM smg_users_paperwork p
-        LEFT JOIN smg_seasons s ON s.seasonid = p.seasonid
-        WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
-        <cfif client.companyid eq 10>
-            AND
-                fk_companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="10">
-        <cfelse>
-            AND
-                fk_companyid != <cfqueryparam cfsqltype="cf_sql_integer" value="10"> 
-        </cfif>
-        <cfif val(ARGUMENTS.seasonid)>
-        	and p.seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonid)#">
-        </cfif>
-        ORDER BY p.seasonid DESC
-
+			SELECT 
+            	p.paperworkid, 
+                p.userid, 
+                p.seasonid, 
+                p.ar_info_sheet, 
+                p.ar_ref_quest1, 
+                p.ar_ref_quest2, 
+                p.ar_cbc_auth_form, 
+                p.ar_agreement, 
+                p.ar_training, 	
+                p.secondVisit, 
+                p.agreeSig,
+            	s.season, 
+                p.cbcSig
+        	FROM 
+        		smg_users_paperwork p
+        	LEFT JOIN 
+            	smg_seasons s ON s.seasonid = p.seasonid
+        	WHERE 
+            	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
+                
+				<cfif CLIENT.companyid eq 10>
+                    AND
+                        fk_companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="10">
+                <cfelse>
+                    AND
+                        fk_companyid != <cfqueryparam cfsqltype="cf_sql_integer" value="10"> 
+                </cfif>
+            
+				<cfif val(ARGUMENTS.seasonid)>
+                    AND p.seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonid)#">
+                </cfif>
+                
+            ORDER BY 
+                p.seasonid DESC
         </cfquery>
      
-	 <cfscript>
+		<cfscript>
 			// This is the query that is returned
 			qAllPaperWork = QueryNew("paperworkid,userid,seasonid,ar_info_sheet,ar_ref_quest1,ar_ref_quest2,ar_cbcAuthReview,ar_cbc_auth_form,ar_agreement,ar_training,secondVisit,agreeSig,cbcSig, season");
-	 </cfscript>
+        </cfscript>
      
-     <cfloop query="checkAgreement">
-      <!----check CBC has been approved---->
-        <cfquery name="cbcCheck" datasource="#APPLICATION.DSN#">
-        select date_approved, seasonid
-        from smg_users_cbc
-        where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
-        and seasonid = #checkAgreement.seasonid#
-        </cfquery>
+		<cfloop query="checkAgreement">
+
+			<!----check CBC has been approved---->
+            <cfquery name="cbcCheck" datasource="#APPLICATION.DSN#">
+                SELECT 
+                	date_approved, 
+                    seasonid
+                FROM 
+                	smg_users_cbc
+                WHERE 
+                	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
+                AND 
+                	seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#checkAgreement.seasonid#">
+            </cfquery>
 	 	
-        <cfscript>
-			 // Insert blank first row
-			QueryAddRow(qAllPaperWork);
-			QuerySetCell(qAllPaperWork, "paperworkid", checkAgreement.paperworkid);
-			QuerySetCell(qAllPaperWork, "userid", checkAgreement.userid);
-			QuerySetCell(qAllPaperWork, "seasonid", checkAgreement.seasonid);
-			QuerySetCell(qAllPaperWork, "ar_info_sheet", checkAgreement.ar_info_sheet);
-			QuerySetCell(qAllPaperWork, "ar_ref_quest1", checkAgreement.ar_ref_quest1);
-			QuerySetCell(qAllPaperWork, "ar_ref_quest2", checkAgreement.ar_ref_quest2);
-			QuerySetCell(qAllPaperWork, "ar_cbcAuthReview", cbcCheck.date_approved);
-	        QuerySetCell(qAllPaperWork, "ar_cbc_auth_form", checkAgreement.ar_cbc_auth_form);
-			QuerySetCell(qAllPaperWork, "ar_agreement", checkAgreement.ar_agreement);
-			QuerySetCell(qAllPaperWork, "ar_training", checkAgreement.ar_training);
-			QuerySetCell(qAllPaperWork, "secondVisit", checkAgreement.secondVisit);
-			QuerySetCell(qAllPaperWork, "agreeSig", checkAgreement.agreeSig);
-			QuerySetCell(qAllPaperWork, "cbcSig", checkAgreement.cbcSig);
-			QuerySetCell(qAllPaperWork, "season", checkAgreement.season);
-		</cfscript>		
-	</cfloop>    	
+			<cfscript>
+                 // Insert blank first row
+                QueryAddRow(qAllPaperWork);
+                QuerySetCell(qAllPaperWork, "paperworkid", checkAgreement.paperworkid);
+                QuerySetCell(qAllPaperWork, "userid", checkAgreement.userid);
+                QuerySetCell(qAllPaperWork, "seasonid", checkAgreement.seasonid);
+                QuerySetCell(qAllPaperWork, "ar_info_sheet", checkAgreement.ar_info_sheet);
+                QuerySetCell(qAllPaperWork, "ar_ref_quest1", checkAgreement.ar_ref_quest1);
+                QuerySetCell(qAllPaperWork, "ar_ref_quest2", checkAgreement.ar_ref_quest2);
+                QuerySetCell(qAllPaperWork, "ar_cbcAuthReview", cbcCheck.date_approved);
+                QuerySetCell(qAllPaperWork, "ar_cbc_auth_form", checkAgreement.ar_cbc_auth_form);
+                QuerySetCell(qAllPaperWork, "ar_agreement", checkAgreement.ar_agreement);
+                QuerySetCell(qAllPaperWork, "ar_training", checkAgreement.ar_training);
+                QuerySetCell(qAllPaperWork, "secondVisit", checkAgreement.secondVisit);
+                QuerySetCell(qAllPaperWork, "agreeSig", checkAgreement.agreeSig);
+                QuerySetCell(qAllPaperWork, "cbcSig", checkAgreement.cbcSig);
+                QuerySetCell(qAllPaperWork, "season", checkAgreement.season);
+            </cfscript>	
+            	
+		</cfloop>   
+         	
 		<cfscript>
             return qAllPaperWork;
         </cfscript>	
+        
     </cffunction>
 </cfcomponent>
