@@ -786,36 +786,31 @@
 					</td>
 				</tr>
                 <cfloop query="qInsuranceHistory">
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td>
-							<cfswitch expression="#qInsuranceHistory.type#">
+                	<tr>
+                    	<td>&nbsp;</td>
+                        <cfswitch expression="#qInsuranceHistory.type#">
+                        
+                            <cfcase value="N">
+                                <td>Enrollment</td>
+                                <td>From #DateFormat(qInsuranceHistory.startDate, 'mm/dd/yyyy')# to #DateFormat(qInsuranceHistory.endDate, 'mm/dd/yyyy')#</td>
+                            </cfcase>
                             
-                            	<cfcase value="N">
-                                	Enrollment
-                                </cfcase>
-                                
-                            	<cfcase value="R">
-                                	Return
-                                </cfcase>
-                                
-                            	<cfcase value="EX">
-                                	Extension
-                                </cfcase>
-                                
-                            	<cfcase value="X">
-                                	Cancelation
-                                </cfcase>
-                            	
-                                <cfdefaultcase>
-                                	#qInsuranceHistory.type#
-                                </cfdefaultcase>
+                            <cfcase value="EX">
+                                <td>Extension</td>
+                                <td>From #DateFormat(qInsuranceHistory.startDate, 'mm/dd/yyyy')# to #DateFormat(qInsuranceHistory.endDate, 'mm/dd/yyyy')#</td>
+                            </cfcase>
+
+                            <cfcase value="R,X">
+                                <td>Cancelled</td> <!--- Cancelation / Return | Invert the dates --->
+                                <td>From #DateFormat(qInsuranceHistory.endDate, 'mm/dd/yyyy')# to #DateFormat(qInsuranceHistory.startDate, 'mm/dd/yyyy')#</td>
+                            </cfcase>
                             
-                            </cfswitch>
-                        </td>
-                        <td>
-                            From #DateFormat(qInsuranceHistory.startDate, 'mm/dd/yyyy')# to #DateFormat(qInsuranceHistory.endDate, 'mm/dd/yyyy')# 
-                        </td>
+                            <cfdefaultcase>
+                                <td>#qInsuranceHistory.type#</td>
+                                <td>From #DateFormat(qInsuranceHistory.startDate, 'mm/dd/yyyy')# to #DateFormat(qInsuranceHistory.endDate, 'mm/dd/yyyy')#</td>
+                            </cfdefaultcase>
+                        
+                        </cfswitch>
                     </tr>
                 </cfloop>
 			</table>
