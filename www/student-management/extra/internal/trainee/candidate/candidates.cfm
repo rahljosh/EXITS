@@ -17,7 +17,7 @@
 		AND            
         	status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">      
         AND 
-            DATE_ADD(ds2019_enddate, INTERVAL 15 DAY) < now()
+            DATE_ADD(ds2019_enddate, INTERVAL 30 DAY) < now()
         LIMIT 1
     </cfquery>
 
