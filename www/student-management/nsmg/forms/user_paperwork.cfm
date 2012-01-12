@@ -239,7 +239,7 @@ function CheckDates(ckname, frname) {
 					</tr>			
 				</table>
 			</cfif>
-
+         
 			<!--- EXISTING SEASON PAPERWORK --->
 			<cfloop query="get_paperwork">
 				<!--- OFFICE --->
