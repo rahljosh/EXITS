@@ -527,8 +527,8 @@
 		
 		<cfif NOT ListFindNoCase(FORM.subAction, "reject") AND CLIENT.userType NEQ 7>
 		
-			// Always show the 2nd Visit Rep if it's not assigned and not submitting a rejection form
-			if ( $("#secondVisitRepID").val() == 0 || $("#validationErrors").val() != 0 ) { 
+			// Always show the 2nd Visit Rep if it's not assigned AND not submitting a rejection form
+			if ( $("#secondVisitRepID").val() == 0 && $("#validationErrors").val() != 0 ) { 
 				vDisplaySaveButton = 1;
 				$("#divSecondVisitRepIDInfo").slideUp();
 				$("#divSecondVisitRepID").slideDown();
@@ -544,8 +544,8 @@
 
 		<cfif NOT ListFindNoCase(FORM.subAction, "reject")>
 			
-			// Always show the double placement if student is not assigned and not submitting a rejection form
-			if ( $("#doublePlace").val() == 0 || $("#validationErrors").val() != 0 ) { 
+			// Always show the double placement if student is not assigned AND not submitting a rejection form
+			if ( $("#doublePlace").val() == 0 && $("#validationErrors").val() != 0 ) { 
 				vDisplaySaveButton = 1;
 				$("#divDoublePlaceInfo").slideUp();
 				$("#divDoublePlace").slideDown();
@@ -1346,7 +1346,7 @@
                 </td>
             </tr>
         </table>                        
-    
+    	
     
         <!--- 2nd Representative Visit | Double Placement --->      
         <table width="90%" border="0" cellpadding="2" cellspacing="0" class="sectionBorderOnly" align="center">                            				
@@ -1357,8 +1357,12 @@
                     <cfif VAL(qGetStudentInfo.secondVisitRepID)>
                         <div class="placementMgmtLinks">
                             [ <a href="../../index.cfm?curdoc=user_info&userID=#qGetStudentInfo.secondVisitRepID#" target="_blank">More Information</a> 
-                            |
-                            <a href="javascript:displayUpdateField('divSecondVisitRepID','secondVisitRepID');">Update</a> ] 
+                            
+                            <cfif NOT VAL(qGetSecondVisitReport.recordCount) AND NOT ListFind(CLIENT.userType, "5,6,7")>
+                                |
+                                <a href="javascript:displayUpdateField('divSecondVisitRepID','secondVisitRepID');">Update</a> 
+                            </cfif>
+                            ] 
                         </div>
 					</cfif>                    
                 </td>
