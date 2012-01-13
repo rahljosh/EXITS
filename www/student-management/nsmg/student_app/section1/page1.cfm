@@ -32,6 +32,15 @@
 
 <cfinclude template="../querys/get_student_info.cfm">
 
+<cfscript>
+	// Get Canada Area Choice
+	qGetCanadaAreaChoiceList = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(
+		applicationID=APPLICATION.CONSTANTS.type.publicHighSchool,
+		fieldKey='canadaAreaChoice',
+		includeFieldIDList=get_student_info.app_canada_area
+	);
+</cfscript>
+
 <cfquery name="qGetIntlRep" datasource="MySql">
 	SELECT userid, businessname
 	FROM smg_users 
@@ -63,7 +72,6 @@
         isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
     AND
         companyID LIKE ( <cfqueryparam cfsqltype="cf_sql_varchar" value="%#CLIENT.companyID#%"> )
-
 </cfquery>
 
 <cfquery name="qAppPrograms" dbtype="query">
@@ -140,7 +148,7 @@ function displayCanada() {
 		$(".canadaAreaDiv").fadeIn("slow");		
 		$(".additionalProgramDiv").fadeOut("slow");		
 	} else {
-		$("##app_canada_area").val("");
+		$("##app_canada_area").val(0);
 		$(".canadaAreaDiv").fadeOut("slow");
 		$(".additionalProgramDiv").fadeIn("slow");	
 	}
@@ -269,9 +277,9 @@ $(document).ready(function() {
                 <tr class="canadaAreaDiv" style="display:none">
 					<td valign="top">
                         <select name="app_canada_area" id="app_canada_area" class="large">
-                            <option value=""></option>
-                            <cfloop index="i" from="1" to="#ArrayLen(CONSTANTS.canadaAreas)#" step="1">
-                                <option value="#CONSTANTS.canadaAreas[i]#" <cfif CONSTANTS.canadaAreas[i] EQ get_student_info.app_canada_area> selected="selected" </cfif> >#CONSTANTS.canadaAreas[i]#</option>
+                            <option value="0"></option>
+                            <cfloop query="qGetCanadaAreaChoiceList">
+                                <option value="#qGetCanadaAreaChoiceList.fieldID#" <cfif qGetCanadaAreaChoiceList.fieldID EQ get_student_info.app_canada_area> selected="selected" </cfif> >#qGetCanadaAreaChoiceList.name#</option>
                             </cfloop>
                         </select>	
 					</td>

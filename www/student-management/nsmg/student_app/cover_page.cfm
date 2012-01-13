@@ -19,17 +19,20 @@
     
     <cfscript>
 		if ( LEN(URL.unqID) ) {
-		
 			qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(uniqueID=URL.unqID);
 			CLIENT.studentID = qGetStudentInfo.studentID;
-
 		} else {
-		
 			qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=CLIENT.studentID);
-
 		}
 		
 		qGetIntlRep = APPLICATION.CFC.USER.getUserByID(userID=qGetStudentInfo.intrep);
+		
+		// Get Canada Area Choice
+		qGetSelectedCanadaAreaChoice = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(
+			applicationID=APPLICATION.CONSTANTS.type.publicHighSchool,
+			fieldKey='canadaAreaChoice',
+			fieldID=qGetStudentInfo.app_canada_area
+		);
 	</cfscript>
     
     <cfquery name="qGetApplicationProgram" datasource="MySQL">
@@ -157,10 +160,10 @@
             	<td>Program Information: </td>
                 <td style="font-weight:bold">#qGetApplicationProgram.app_program#</td>
             </tr>
-            <cfif LEN(qGetStudentInfo.app_canada_area)>
+            <cfif qGetSelectedCanadaAreaChoice.recordCount>
                 <tr>
                 	<td>Area in Canada: </td>
-                    <td style="font-weight:bold">#qGetStudentInfo.app_canada_area#</td>
+                    <td style="font-weight:bold">#qGetSelectedCanadaAreaChoice.name#</td>
                 </tr>
             </cfif>
             <tr>

@@ -27,9 +27,10 @@
 	<cffunction name="getApplicationLookUp" access="public" returntype="query" output="false" hint="Returns a list from ApplicationLookUp Table. This table was created to store values used throughout the system">
     	<cfargument name="applicationID" hint="applicationID is required">
     	<cfargument name="fieldKey" hint="fieldKey is required. This is what defines a group of data">
-        <cfargument name="fieldID" default="0" hint="fieldID is not required">
+        <cfargument name="fieldID" default="" hint="fieldID is not required">
     	<cfargument name="isActive" default="1" hint="isActive is not required">
         <cfargument name="sortBy" type="string" default="fieldID" hint="sortBy is not required">
+        <cfargument name="includeFieldIDList" default="" hint="includeFieldIDList is not required, display inactive data">
 
         <cfquery 
         	name="qGetApplicationLookUp"
@@ -46,17 +47,31 @@
 				FROM
                 	applicationLookUp
 				WHERE
-                	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.isActive#">
-                AND 
                     applicationID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationID#">
                 AND 
                     fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fieldKey#">
-
-				<cfif VAL(ARGUMENTS.fieldID)>
+                
+                <!--- If fieldID is passed, return it, if not return a list of active fields --->
+				<cfif LEN(ARGUMENTS.fieldID)>
 	                AND 
-                        fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.fieldID#">
-                </cfif>                        
+                        fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.fieldID)#">
+                <cfelseif LEN(ARGUMENTS.isActive)>
+                    AND 
+                        isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isActive)#">
+				</cfif>                        
 				
+                <!--- Include current selected to the list if current selected is inactive --->
+                <cfif LEN(ARGUMENTS.includeFieldIDList)>
+                	OR
+                    (
+                        applicationID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationID#">
+                    AND 
+                        fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fieldKey#">
+	                AND 
+                        fieldID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.includeFieldIDList)#" list="yes"> )
+                    )
+                </cfif>
+                
                 ORDER BY
                 
                 <cfswitch expression="#ARGUMENTS.sortBy#">
@@ -73,7 +88,8 @@
                         fieldKey
                     </cfdefaultcase>
     
-                </cfswitch>   
+                </cfswitch>  
+                
         </cfquery> 
 
 		<cfreturn qGetApplicationLookUp>

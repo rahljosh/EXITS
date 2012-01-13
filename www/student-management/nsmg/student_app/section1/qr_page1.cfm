@@ -17,7 +17,7 @@
 
 <!--- Param Form Variables --->
 <cfparam name="FORM.app_indicated_program" default="0">
-<cfparam name="FORM.app_canada_area" default="">
+<cfparam name="FORM.app_canada_area" default="0">
 <cfparam name="FORM.internalProgram" default="0">
 <cfparam name="FORM.app_additional_program" default="0">
 
@@ -68,7 +68,7 @@
 			app_indicated_program = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.app_indicated_program#">,  
             programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.internalProgram#" >,
 			app_additional_program = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.app_additional_program#">,  
-			app_canada_area = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.app_canada_area#">,
+			app_canada_area = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.app_canada_area)#">,
             address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
 			city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
 			zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,

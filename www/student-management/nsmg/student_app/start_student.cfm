@@ -23,7 +23,7 @@
     <cfparam name="FORM.email2" default="">
     <cfparam name="FORM.phone" default="">
     <cfparam name="FORM.app_indicated_program" default="0">
-    <cfparam name="FORM.app_canada_area" default="">
+    <cfparam name="FORM.app_canada_area" default="0">
     <cfparam name="FORM.app_additional_program" default="0">
     <cfparam name="FORM.extdeadline" default="0">    
     <cfparam name="FORM.programID" default="0">  
@@ -42,6 +42,12 @@
 		appDays = 15;
 		// Updated from 30 to 90 days - Marcus Melo - 11/20/2009
 		remainingDays = 90;
+		
+		// Get Canada Area Choice
+		qGetCanadaAreaChoiceList = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(
+			applicationID=APPLICATION.CONSTANTS.type.publicHighSchool,
+			fieldKey='canadaAreaChoice'
+		);
 	</cfscript>
 
 	<!--- Queries --->
@@ -196,7 +202,7 @@
 				ArrayAppend(Errors.Messages, "Please select a program.");
 			}
 			
-			if ( ListFind(canadaIDList, FORM.app_indicated_program) AND NOT LEN(FORM.app_canada_area) ) {
+			if ( ListFind(canadaIDList, FORM.app_indicated_program) AND NOT VAL(FORM.app_canada_area) ) {
 				ArrayAppend(Errors.Messages, "Please select an area in Canada.");
 			}
 		</cfscript>
@@ -280,7 +286,7 @@
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.app_indicated_program#">, 
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.internalProgram#">, 
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.app_additional_program#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.app_canada_area#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.app_canada_area)#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#randid#">, 
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#setIntRepID#">, 
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#setBranchID#">, 
@@ -437,7 +443,7 @@
 		if ( $.ListFind(canadaList, currentProgram, ',') ) {
 			$(".canadaAreaDiv").fadeIn("slow");															
 		} else {
-			$("##app_canada_area").val("");
+			$("##app_canada_area").val(0);
 			$(".canadaAreaDiv").fadeOut("slow");			
 		}
 	}
@@ -587,9 +593,9 @@
             <td>
                 <div class="canadaAreaDiv" style="display:none">
                     <select name="app_canada_area" id="app_canada_area" class="large">
-                        <option value=""></option>
-                        <cfloop index="i" from="1" to="#ArrayLen(CONSTANTS.canadaAreas)#" step="1">
-                            <option value="#CONSTANTS.canadaAreas[i]#" <cfif CONSTANTS.canadaAreas[i] EQ FORM.app_canada_area> selected="selected" </cfif> >#CONSTANTS.canadaAreas[i]#</option>
+                        <option value="0"></option>
+                        <cfloop query="qGetCanadaAreaChoiceList">
+                            <option value="#qGetCanadaAreaChoiceList.fieldID#" <cfif qGetCanadaAreaChoiceList.fieldID EQ FORM.app_canada_area> selected="selected" </cfif> >#qGetCanadaAreaChoiceList.name#</option>
                         </cfloop>
                     </select>	
 				</div>
