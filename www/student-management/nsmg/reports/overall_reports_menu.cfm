@@ -374,7 +374,7 @@
 
             <cfform action="reports/total_students_graduated.cfm" method="POST" target="blank">
                 <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
-                    <tr><td colspan="2" class="reportTitle">Total of Graduated Students per Country (12th grade)</td></tr>
+                    <tr><td colspan="2" class="reportTitle">Total of Graduated Students per Intl. Rep. (12th grade)</td></tr>
                         <tr>
                             <td class="reportFieldTitle">Program:</td>
                             <td>
@@ -385,21 +385,6 @@
                                 </select>               
                             </td>
                         </tr>
-                    <tr>
-                        <td class="reportFieldTitle">Country:</td>
-                        <td>
-                            <select name="countryid">			
-                                <option value="0">All Countries</option>
-                                <cfloop query="get_countries">
-                                    <option value="#Countryid#">#countryname#</option>
-                                </cfloop>
-                            </select>               
-                        </td>
-                    </tr>
-                    <tr>
-                    	<td></td>
-                        <td><input type="text" size="8" name="dateplaced" class="datePicker" maxlength="10" readonly="yes"></td>
-                    </tr>
                     <tr><td colspan="2" class="reportTitle"><input type="image" src="pics/view.gif" align="center" border="0"></td></tr>
                 </table>
             </cfform>

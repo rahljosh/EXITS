@@ -2,6 +2,8 @@
 	table.nav_bar { font-size: 10px; background-color: #ffffe6; border: 1px solid e2efc7; }
 </style>
 
+<cfparam name="URL.all" default="0">
+
 <cfinclude template="../querys/get_programs.cfm">
 <cfinclude template="../querys/get_regions.cfm">
 <cfinclude template="../querys/get_intl_rep.cfm">
@@ -15,10 +17,10 @@
 		<td width=26 background="pics/header_background.gif"><img src="pics/students.gif"></td>
 		<td background="pics/header_background.gif"><h2>Excel Spreadsheet Reports</h2></td>
 		<td background="pics/header_background.gif" align="right">
-			<cfif NOT IsDefined('url.all')>
-				<a href="?curdoc=reports/excel_generator&all=1">Show All Programs</a>
+			<cfif NOT VAL(URL.all)>
+				<a href="?curdoc=reports/excel_generator_menu&all=1">Show All Programs</a>
 			<cfelse>
-				<a href="?curdoc=reports/excel_generator">Show Active Programs Only</a>
+				<a href="?curdoc=reports/excel_generator_menu">Show Active Programs Only</a>
 			</cfif>
 		</td>
 		<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
@@ -254,7 +256,7 @@
 				<TD colspan="2">&nbsp; &nbsp;	
 			  		<select name="regionid" multiple size="6">
 					<option value="none" selected>All Regions</option>
-					<cfoutput query="get_regions"><option value="#regionid#"><cfif client.companyid is 5>#CompanyShort_nocolor# - </cfif>#RegionName# </option></cfoutput>
+					<cfoutput query="get_regions"><option value="#regionid#">#RegionName# </option></cfoutput>
 					</select>
 				</td>
 			</tr>			
