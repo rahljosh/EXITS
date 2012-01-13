@@ -19,6 +19,15 @@
 
 <cfinclude template="../querys/get_student_info.cfm">
 
+<cfscript>
+	// Get Canada Area Choice
+	qGetSelectedCanadaAreaChoice = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(
+		applicationID=APPLICATION.CONSTANTS.type.publicHighSchool,
+		fieldKey='canadaAreaChoice',
+		fieldID=get_student_info.app_canada_area
+	);
+</cfscript>
+
 <cfquery name="get_intrep" datasource="MySql">
 	SELECT userid, businessname
 	FROM smg_users 
@@ -114,7 +123,7 @@ where programid = #get_student_info.programid#
 								<td><em>Additional Programs</em></td>
 							</tr>
 							<tr>
-								<td>#assignedProgram.programname# - #app_programs.app_program# -  <cfif LEN(get_student_info.app_canada_area)> - #get_student_info.app_canada_area#</cfif> <br><img src="#path#pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
+								<td>#assignedProgram.programname# - #app_programs.app_program# <cfif LEN(qGetSelectedCanadaAreaChoice.name)> - #qGetSelectedCanadaAreaChoice.name#</cfif> <br><img src="#path#pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
 								<td><cfif app_other_programs.recordcount EQ '0'>None<cfelse>
                                 <cfloop list="#get_student_info.app_additional_program#" index=i>
                                 <cfquery name="app_other_programs" datasource="MySQL">
