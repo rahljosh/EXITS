@@ -197,17 +197,22 @@
 	
 	// Used in the Online Application
 	APPLICATION.CONSTANTS.canadaAreas = ArrayNew(1);	
-	APPLICATION.CONSTANTS.canadaAreas[1] = "Calgary";
-	APPLICATION.CONSTANTS.canadaAreas[2] = "Comox";
+	// APPLICATION.CONSTANTS.canadaAreas[1] = "Calgary";
+	// APPLICATION.CONSTANTS.canadaAreas[2] = "Comox";
 	APPLICATION.CONSTANTS.canadaAreas[3] = "Edmonton";
-	APPLICATION.CONSTANTS.canadaAreas[4] = "Golden Hills";
+	//APPLICATION.CONSTANTS.canadaAreas[4] = "Golden Hills";
 	APPLICATION.CONSTANTS.canadaAreas[5] = "Nova Scotia";
-	APPLICATION.CONSTANTS.canadaAreas[6] = "Ottawa, Ontario";
+	// APPLICATION.CONSTANTS.canadaAreas[6] = "Ottawa, Ontario";
 	APPLICATION.CONSTANTS.canadaAreas[7] = "Richmond";
 	APPLICATION.CONSTANTS.canadaAreas[8] = "Saskatoon";
-	APPLICATION.CONSTANTS.canadaAreas[9] = "Southeast Kootenay";
+	// APPLICATION.CONSTANTS.canadaAreas[9] = "Southeast Kootenay";
 	APPLICATION.CONSTANTS.canadaAreas[10] = "Winnipeg";
-	
+	APPLICATION.CONSTANTS.canadaAreas[11] = "Sea to Sky, BC";
+	APPLICATION.CONSTANTS.canadaAreas[12] = "Central Okanagan, BC";
+	APPLICATION.CONSTANTS.canadaAreas[13] = "Hastings and Prince Edward, Ontario";
+	APPLICATION.CONSTANTS.canadaAreas[14] = "Rocky Mountain, BC";
+	APPLICATION.CONSTANTS.canadaAreas[15] = "Victoria, BC";
+
 	
 	// This stores list of Users IDs that have access to certain areas of the system
 	APPLICATION.AllowedIDs = StructNew();
