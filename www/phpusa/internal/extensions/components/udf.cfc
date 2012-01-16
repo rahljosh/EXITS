@@ -71,6 +71,7 @@
         
 	</cffunction>
 
+
 	<!--- This removes foreign accents from online application fields --->
 	<cffunction name="removeAccent" access="public" returntype="string" output="false" hint="Remove foreign acccents from a string">
     	<cfargument name="varString" hint="String">
@@ -145,6 +146,68 @@
 						
 			return(ARGUMENTS.Text);
 		</cfscript>
+	</cffunction>
+
+
+	<!--- Converts a number to ordinal --->
+	<cffunction name="convertToOrdinal" access="public" returntype="string" output="false" hint="Converts a number to ordinal">
+    	<cfargument name="num" hint="Numeric">
+
+		<cfscript>
+			/**
+			 * Returns the 2 character english text ordinal for numbers.
+			**/
+			
+			// if the right 2 digits are 11, 12, or 13, set num to them.
+			// Otherwise we just want the digit in the one's place.
+			var two = Right(VAL(ARGUMENTS.num),2);
+			var ordinal="";
+			
+			/*
+			switch(two) {
+				case "11": 
+				case "12": 
+				case "13": { 
+					num = two; 
+					break; 
+				}
+				default: { 
+					num = Right(num,1); 
+					break; 
+				}
+			}
+			*/
+
+			// 1st, 2nd, 3rd, everything else is "th"
+			switch( num ) {
+				case "1":
+				case "21":
+				case "31": { 
+					ordinal = num & "st"; 
+					break; 
+				}
+				case "2":
+				case "22":
+				case "32": { 
+					ordinal = num & "nd"; 
+					break; 
+				}
+				case "3":
+				case "23":
+				case "33": { 
+					ordinal = num & "rd"; 
+					break; 
+				}
+				default: { 
+					ordinal = num & "th"; 
+					break; 
+				}
+			}
+			
+			// return the text.
+			return ordinal;
+        </cfscript>
+		   
 	</cffunction>
 
 </cfcomponent>

@@ -55,21 +55,21 @@
 		if ( NOT VAL(FORM.noFlight) ) {
 		
 			// Get Students that needs to be insured
-			qGetStudents = APPCFC.INSURANCE.getStudentsToInsure(programID=FORM.programID, policyID=FORM.policyID);
+			qGetStudents = APPLICATION.CFC.INSURANCE.getStudentsToInsure(programID=FORM.programID, policyID=FORM.policyID);
 
 		// Get Students with no flight information
 		} else {
 
 			// Get Students that needs to be insured
-			qGetStudents = APPCFC.INSURANCE.getStudentsToInsureNoFlight(programID=FORM.programID, policyID=FORM.policyID, startDate=FORM.startDate);
+			qGetStudents = APPLICATION.CFC.INSURANCE.getStudentsToInsureNoFlight(programID=FORM.programID, policyID=FORM.policyID, startDate=FORM.startDate);
 
 		}
 		
 		// Get Company Short
-		companyShort = APPCFC.COMPANY.getCompanies(companyID=CLIENT.companyID).companyShort_noColor;
+		companyShort = APPLICATION.CFC.COMPANY.getCompanies(companyID=CLIENT.companyID).companyShort_noColor;
 		
 		// Get Policy Type
-		policyName = APPCFC.INSURANCE.getInsurancePolicies(insuTypeID=FORM.policyID).shortType;
+		policyName = APPLICATION.CFC.INSURANCE.getInsurancePolicies(insuTypeID=FORM.policyID).shortType;
 	
 		// Set XLS File Name
 		XLSFileName = '#companyShort#_#policyName#_#DateFormat(now(),'mm-dd-yyyy')#_#TimeFormat(now(),'hh-mm-ss-tt')#.xls';
@@ -154,7 +154,7 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
 	
 				<cfscript>
 					// Update Insurace Record and Insert History
-					APPCFC.INSURANCE.insertInsuranceHistory(
+					APPLICATION.CFC.INSURANCE.insertInsuranceHistory(
 						studentID=qGetStudents.studentID,
 						assignedID=qGetStudents.assignedID,
 						programID=qGetStudents.programID,
@@ -165,7 +165,7 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
 					);
 					
 					// Update Flight Information Record - Link flight information to PHP assignedID
-					APPCFC.FLIGHTINFORMATION.setAssignedID(
+					APPLICATION.CFC.FLIGHTINFORMATION.setAssignedID(
 						studentID=qGetStudents.studentID,
 						assignedID=qGetStudents.assignedID,
 						programID=qGetStudents.programID,

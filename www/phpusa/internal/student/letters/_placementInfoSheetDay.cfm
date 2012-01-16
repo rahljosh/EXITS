@@ -208,8 +208,8 @@
                             <td width="42%">
 								<cfif LEN(qGetHostFamily.fatherfirstname)>
                                     #qGetHostFamily.fatherfirstname# #qGetHostFamily.fatherlastname#, 
-                                    <cfif IsDate(qGetHostFamily.fatherDOB)>
-                                        (#DateDiff('yyyy', qGetHostFamily.fatherDOB, now())#)
+                                    <cfif IsNumeric(qGetHostFamily.fatherBirth)>
+                                        (#Year(now())-qGetHostFamily.fatherBirth#)
                                     </cfif>
                                 <cfelse>
                                 	n/a
@@ -249,8 +249,8 @@
                             <td>
 								<cfif LEN(qGetHostFamily.motherfirstname)>
                                     #qGetHostFamily.motherfirstname# #qGetHostFamily.motherlastname#, 
-                                    <cfif IsDate(qGetHostFamily.motherDOB)>
-                                        (#DateDiff('yyyy', qGetHostFamily.motherDOB, now())#)
+                                    <cfif IsNumeric(qGetHostFamily.motherBirth)>
+                                        (#Year(now())-qGetHostFamily.motherBirth#)
                                     </cfif>
                                 <cfelse>
                                 	n/a
@@ -647,7 +647,7 @@
             <gui:pageHeader
                 headerType="applicationNoHeader"
                  width="98%"
-                imagePath="../"
+                filePath="../"
             />	
 
             <cfif SESSION.pageMessages.length()>
@@ -679,7 +679,7 @@
             <gui:pageFooter
                 footerType="application"
                  width="98%"
-                imagePath="../"
+                filePath="../"
             />
             
             <script language="javascript">
@@ -696,7 +696,7 @@
             <gui:pageHeader
                 headerType="applicationNoHeader"
                  width="98%"
-                imagePath="../"
+                filePath="../"
             />	
 
             <cfif SESSION.formErrors.length()>
@@ -728,7 +728,7 @@
             <gui:pageFooter
                 footerType="application"
                  width="98%"
-                imagePath="../"
+                filePath="../"
             />
   
         </cfdefaultcase>

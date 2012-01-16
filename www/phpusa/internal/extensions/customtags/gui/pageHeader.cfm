@@ -38,7 +38,7 @@
 		/>
 
 	<cfparam 
-		name="ATTRIBUTES.imagePath"
+		name="ATTRIBUTES.filePath"
 		type="string"
         default=""
 		/>
@@ -50,7 +50,7 @@
 		/>
 
 	<cfparam 
-		name="ATTRIBUTES.imagePath"
+		name="ATTRIBUTES.filePath"
 		type="string"
         default="../"
 		/>
@@ -81,28 +81,29 @@
                     <meta name="Author" content="Private High School Program">
                     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
                     <title>Private High School Program</title>
-                    <link rel="shortcut icon" href="#ATTRIBUTES.imagePath#pics/favicon.ico" type="image/x-icon" />
-                    <link rel="stylesheet" href="#ATTRIBUTES.imagePath#phpusa.css" type="text/css">
-                    <link rel="stylesheet" href="#ATTRIBUTES.imagePath#linked/css/colorBox.css" type="text/css"> <!-- Color Box -->
-                    <link rel="stylesheet" href="#ATTRIBUTES.imagePath#linked/css/baseStyle.css" type="text/css"> <!-- Base Style -->
+                    <link rel="shortcut icon" href="#ATTRIBUTES.filePath#pics/favicon.ico" type="image/x-icon" />
+                    <link rel="stylesheet" href="#ATTRIBUTES.filePath#phpusa.css" type="text/css">
+                    <link rel="stylesheet" href="#ATTRIBUTES.filePath#linked/css/colorBox.css" type="text/css"> <!-- Color Box -->
+                    <link rel="stylesheet" href="#ATTRIBUTES.filePath#linked/css/baseStyle.css" type="text/css"> <!-- Base Style -->
                     <cfoutput>
                         <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
                         <script src="#APPLICATION.PATH.jQuery#" type="text/javascript"></script> <!-- jQuery -->
                         <script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
                     </cfoutput>
-                    <script type="text/javascript" src="#ATTRIBUTES.imagePath#linked/js/jquery.tools.min.js"></script> <!-- JQuery Tools Includes: Modal tooltip, colorBox, MaskedInput, TimePicker -->
-                    <script type="text/javascript" src="#ATTRIBUTES.imagePath#linked/js/basescript.js"></script> <!-- Base Script -->
+                    <script type="text/javascript" src="#ATTRIBUTES.filePath#linked/js/jquery.tools.min.js"></script> <!-- JQuery Tools Includes: Modal tooltip, colorBox, MaskedInput, TimePicker -->
+                    <script type="text/javascript" src="#ATTRIBUTES.filePath#linked/js/jquery.cfjs.js"></script> <!-- JQuery CF Functions -->
+                    <script type="text/javascript" src="#ATTRIBUTES.filePath#linked/js/basescript.js"></script> <!-- Base Script -->
                 </head>
                 <body>
 
                     <table width="#ATTRIBUTES.width#" align="center" cellspacing="0" cellpadding="0">
                         <tr>
-                            <td height="12" align="right" background="#ATTRIBUTES.imagePath#images/top_02.gif" >
-                                <img src="#ATTRIBUTES.imagePath#images/top_01.gif" width="11" height="12">
+                            <td height="12" align="right" background="#ATTRIBUTES.filePath#images/top_02.gif" >
+                                <img src="#ATTRIBUTES.filePath#images/top_01.gif" width="11" height="12">
                             </td>
-                            <td width="99%" background="#ATTRIBUTES.imagePath#images/top_02.gif" height="12">&nbsp;</td>
-                            <td height="12" align="left" background="#ATTRIBUTES.imagePath#images/top_02.gif" >
-                                <img src="#ATTRIBUTES.imagePath#images/top_03.gif" width="11" height="12">
+                            <td width="99%" background="#ATTRIBUTES.filePath#images/top_02.gif" height="12">&nbsp;</td>
+                            <td height="12" align="left" background="#ATTRIBUTES.filePath#images/top_02.gif" >
+                                <img src="#ATTRIBUTES.filePath#images/top_03.gif" width="11" height="12">
                             </td>
                         </tr>
                     </table>
@@ -154,17 +155,18 @@
                     <meta name="Author" content="Private High School Program">
                     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
                     <title>Private High School Program</title>
-                    <link rel="shortcut icon" href="#ATTRIBUTES.imagePath#pics/favicon.ico" type="image/x-icon" />
-                    <link rel="stylesheet" href="#ATTRIBUTES.imagePath#phpusa.css" type="text/css">
-                    <link rel="stylesheet" href="#ATTRIBUTES.imagePath#linked/css/colorBox.css" type="text/css"> <!-- Color Box -->
-                    <link rel="stylesheet" href="#ATTRIBUTES.imagePath#linked/css/baseStyle.css" type="text/css"> <!-- Base Style -->
+                    <link rel="shortcut icon" href="#ATTRIBUTES.filePath#pics/favicon.ico" type="image/x-icon" />
+                    <link rel="stylesheet" href="#ATTRIBUTES.filePath#phpusa.css" type="text/css">
+                    <link rel="stylesheet" href="#ATTRIBUTES.filePath#linked/css/colorBox.css" type="text/css"> <!-- Color Box -->
+                    <link rel="stylesheet" href="#ATTRIBUTES.filePath#linked/css/baseStyle.css" type="text/css"> <!-- Base Style -->
                     <cfoutput>
                         <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab --> 
                         <script src="#APPLICATION.PATH.jQuery#" type="text/javascript"></script> <!-- jQuery -->
                         <script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
                     </cfoutput>
-                    <script type="text/javascript" src="#ATTRIBUTES.imagePath#linked/js/jquery.tools.min.js"></script> <!-- JQuery Tools Includes: Modal tooltip, colorBox, MaskedInput, TimePicker -->
-                    <script type="text/javascript" src="#ATTRIBUTES.imagePath#linked/js/basescript.js"></script> <!-- Base Script -->
+                    <script type="text/javascript" src="#ATTRIBUTES.filePath#linked/js/jquery.tools.min.js"></script> <!-- JQuery Tools Includes: Modal tooltip, colorBox, MaskedInput, TimePicker -->
+                    <script type="text/javascript" src="#ATTRIBUTES.filePath#linked/js/jquery.cfjs.js"></script> <!-- JQuery CF Functions -->
+                    <script type="text/javascript" src="#ATTRIBUTES.filePath#linked/js/basescript.js"></script> <!-- Base Script -->
                 </head>
                 <body>
 			</cfcase>

@@ -9,7 +9,7 @@
     <!--- Param Form Variables --->
 	<cfparam name="FORM.hostID" default="0">
 	<cfparam name="FORM.assignedID" default="0">
-    <cfparam name="FORM.is_welcome_family" default="0">
+    <cfparam name="FORM.isWelcomeFamily" default="0">
 
 	<!--- get student info by uniqueID --->
     <cfinclude template="../querys/get_student_unqid.cfm">
@@ -66,7 +66,7 @@
             	php_students_in_program
 			SET 
             	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostID#">,
-                is_welcome_family = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.is_welcome_family)#">
+                isWelcomeFamily = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isWelcomeFamily)#">
 			
             WHERE 
             	assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qProgramInfo.assignedID#">
@@ -154,7 +154,7 @@
             	php_students_in_program
 			SET 
             	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostID#">,
-                is_welcome_family = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.is_welcome_family)#">,
+                isWelcomeFamily = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isWelcomeFamily)#">,
 				dateplaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDateTime(now())#">
 			WHERE 
             	assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_unqid.assignedID#">
@@ -166,9 +166,8 @@
 			UPDATE smg_students
 			SET hostID = '#FORM.hostID#',
 				dateplaced = #CreateODBCDateTime(now())#,
-				date_pis_received = #CreateODBCDateTime(now())#,		
 				host_fam_approved = '7',
-				date_host_fam_approved = #CreateODBCDateTime(now())#,
+				dateApproved = #CreateODBCDateTime(now())#,
 				doubleplace = '0',
 				doc_full_host_app_date = NULL,
 				doc_letter_rec_date = NULL,

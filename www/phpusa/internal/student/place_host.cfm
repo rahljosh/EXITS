@@ -3,7 +3,7 @@
 	
     <!--- Param FORM variables --->
     <cfparam name="FORM.hostID" default="0">
-    <cfparam name="FORM.is_welcome_family" default="0">
+    <cfparam name="FORM.isWelcomeFamily" default="0">
 
 	<!--- get student info by uniqueID --->
     <cfinclude template="../querys/get_student_unqid.cfm">
@@ -197,8 +197,8 @@
             </tr>
             <tr>
                 <td>
-                	<input type="radio" name="is_welcome_family" id="welcomeFamilyNo" value="0" <cfif NOT VAL(FORM.is_welcome_family)>checked</cfif> > <label for="welcomeFamilyNo">No</label>
-                    <input type="radio" name="is_welcome_family" id="welcomeFamilyYes" value="1" <cfif VAL(FORM.is_welcome_family)>checked</cfif> > <label for="welcomeFamilyYes">Yes</label>
+                	<input type="radio" name="isWelcomeFamily" id="welcomeFamilyNo" value="0" <cfif NOT VAL(FORM.isWelcomeFamily)>checked</cfif> > <label for="welcomeFamilyNo">No</label>
+                    <input type="radio" name="isWelcomeFamily" id="welcomeFamilyYes" value="1" <cfif VAL(FORM.isWelcomeFamily)>checked</cfif> > <label for="welcomeFamilyYes">Yes</label>
                 </td>
             </tr>            
             <Tr>
@@ -268,8 +268,8 @@
             </tr>
             <tr>
                 <td>
-                	<input type="radio" name="is_welcome_family" id="welcomeFamilyNo" value="0" <cfif NOT VAL(FORM.is_welcome_family)>checked</cfif> > <label for="welcomeFamilyNo">No</label>
-                    <input type="radio" name="is_welcome_family" id="welcomeFamilyYes" value="1" <cfif VAL(FORM.is_welcome_family)>checked</cfif> > <label for="welcomeFamilyYes">Yes</label>
+                	<input type="radio" name="isWelcomeFamily" id="welcomeFamilyNo" value="0" <cfif NOT VAL(FORM.isWelcomeFamily)>checked</cfif> > <label for="welcomeFamilyNo">No</label>
+                    <input type="radio" name="isWelcomeFamily" id="welcomeFamilyYes" value="1" <cfif VAL(FORM.isWelcomeFamily)>checked</cfif> > <label for="welcomeFamilyYes">Yes</label>
                 </td>
             </tr>            
 			<tr><td colspan="2">Please indicate why you are changing the host family:<br><textarea cols=50 rows=4 name="reason"></textarea></td></tr>

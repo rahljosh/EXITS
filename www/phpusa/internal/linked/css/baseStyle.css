@@ -22,13 +22,18 @@ h2 a {
 }
 
 .section {
-	border-top: 1px solid #c6c6c6;; 
+	border-top: 1px solid #c6c6c6; 
 	border-right: 2px solid #c6c6c6;
 	border-left: 2px solid #c6c6c6;
 	border-bottom: 0px; 
 	background: #ffffff;
 }
 
+.sectionBorderOnly {
+	border-right: 2px solid #c6c6c6; 
+	border-left: 2px solid #c6c6c6; 
+	background: #ffffff;
+}
 
 /********************************************
 	PAGE MESSAGE
@@ -191,46 +196,72 @@ div.errors ol {
 
 
 /********************************************
-	START OF FORM FIELDS
+	FORM FIELDS
 ********************************************/
+.columnTitle {
+	font-weight:bold;	
+	vertical-align:top;
+}
+
+.columTitleRight {
+	font-weight:bold;	
+	text-align:right;
+	vertical-align:top;
+}
+
+.defaultForm input { 
+	border: 1px solid #999; 
+	/* margin-bottom: .5em; */		
+}
+
+.defaultForm select {
+	border: 1px solid #999; 
+	/* margin-bottom: .5em; */		
+}
+
 .fieldSize40 {
 	width:40px;
-	border:1px solid #021157;	
+	border:1px solid #999;	
 }
 
 .fieldSize60 {
 	width:60px;
-	border:1px solid #021157;	
+	border:1px solid #999;	
 }
 
 .fieldSize70 {
 	width:70px;
-	border:1px solid #021157;	
+	border:1px solid #999;	
 }
 
 .fieldSize100 {
 	width:100px;
-	border:1px solid #021157;	
+	border:1px solid #999;	
+}
+
+.datePicker {
+	width:80px;
+	border:1px solid #999;	
 }
 
 .smallField {
-	width:80px;
-	border:1px solid #021157;	
+	width : 80px;
+	border:1px solid #999;	
 }
 
 .mediumField {
-	width:130px;
-	border:1px solid #021157;	
+	width : 140px;
+	border:1px solid #999;	
 }
 
 .largeField {
-	width:200px;
-	border:1px solid #021157;	
+	width : 200px;
+	border:1px solid #999;	
 }
 
 .xLargeField {
-	width:250px;
-	border:1px solid #021157;	
+	width : 260px;
+	border:1px solid #999;	
 }
 
 .largeTextArea {
@@ -254,9 +285,129 @@ div.errors ol {
 	border:1px solid #999;	
 }
 
+.formNote {
+	width:100%;
+	display:inline-table;
+	padding:2px 0 0 0;
+	margin:0 0 0 2px;
+	font-size:0.8em;
+}
 
+.formRequiredNote {
+	color:#F00;
+	width:100%;
+	display:inline-table;
+	padding:2px 0 0 0;
+	margin:0 0 0 2px;
+	font-weight:bold;
+	font-size:0.8em;
+}
+
+.formWarning {
+	color:#F00;
+	padding:2px 0 0 0;
+	margin:0 0 0 2px;
+	font-size:0.8em;
+	font-weight:bold;
+}
+
+.displayNone {
+	display:none;
+}
+
+.submitButton {
+	cursor:pointer;
+	width:80px;
+	padding:2px;
+	margin-top:15px; 
+	margin-bottom: .5em; 		
+	border: 1px solid #999; 
+}
 /********************************************
 	END OF FORM FIELDS
+********************************************/
+
+
+/********************************************
+	PLACEMENT MANAGEMENT
+********************************************/
+
+.placementMgmtInfo {
+	/* font-size:0.9em; */
+	background-color:#edeff4; 
+	margin-right:10px; 
+	padding:5px; 
+	min-height:80px;	
+}
+
+.placementMgmtInfo em {
+	font-weight:bold;
+	color:#F00;
+}
+
+.placementMgmtInfo span {
+	display:table;
+	margin-top:10px;
+	color:#3b5998;
+	font-weight:bold;
+	text-align:left;
+}
+
+.placementTopLinks {
+	font-weight:bold; 
+	letter-spacing:1px;
+	text-transform:uppercase; 
+}
+
+.placementMgmtLinks {
+	float:right;
+	font-size:0.8em;
+	font-weight:normal;	
+	padding:0px 10px 0px 0px;	
+}
+
+.placementMgmtLinks a {
+	font-weight:bold;
+}
+
+.placementMgmtChanged {
+	background-color:#FF6;	
+}
+
+#actionButtons form {
+	display:inline;
+	margin:15px;
+}
+
+.singlePlacementAlert {
+	width:550;
+	height:55px;
+	border:#666;
+	background-color:#FF9797;
+	text-align:center;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	vertical-align:center;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.paperwork td {
+	height:2em;
+	border-bottom:1px solid #edeff4;	
+}
+
+.paperwork td p {
+	margin:0px;
+}
+
+.paperworkLeftColumn {
+	text-align:right; 
+	padding-right:10px;
+}
+
+/********************************************
+	END OF PLACEMENT MANAGEMENT
 ********************************************/
 
 
@@ -298,6 +449,149 @@ div.errors ol {
 	text-align:right;
 	padding:5px;
 }
+
+.blueThemeReportTable {
+	border:1px solid #3b5998;
+	margin-top:10px;
+}
+
+.blueThemeReportTable th {
+	padding:5px;
+	color:#FFFFFF;
+	font-weight:bold;
+	background-color:#3b5998; 
+	text-transform:uppercase;
+}
+
+.blueThemeReportTable th.left {
+	padding:5px;
+	color:#FFFFFF;
+	text-align:left;
+	font-weight:bold;
+	text-transform:none;
+	background-color:#3b5998; 
+}
+
+.blueThemeReportTable td.subTitleLeft {
+	color:#3b5998;
+	font-weight:bold;
+	border-bottom:#3b5998;
+	border-bottom:1px solid #EDEFF4;
+}
+
+.blueThemeReportTable td.subTitleCenter {
+	color:#3b5998;
+	font-weight:bold;
+	text-align:center;
+	border-bottom:1px solid #EDEFF4;
+}
+
+.blueThemeReportTable td.subTitleRight {
+	color:#3b5998;
+	font-weight:bold;
+	text-align:right;
+	border-bottom:1px solid #EDEFF4;
+}
+
+.blueThemeReportTable td.summaryLeft {
+	color:#000;
+	font-weight:bold;
+	border-bottom:#3b5998;
+}
+
+.blueThemeReportTable td.summaryCenter {
+	color:#000;
+	font-weight:bold;
+	text-align:center;
+}
+
+.blueThemeReportTable td.summaryRight {
+	color:#000;
+	font-weight:bold;
+	text-align:right;
+	padding-right:5px;
+}
+
+.blueThemeReportTable tr.on {
+	background-color:#EDEFF4;
+}
+
+.blueThemeReportTable tr.off {
+	background-color:#FFFFFF;
+}
+
+.blueThemeReportTable td.center {
+	text-align:center;
+}
+
+/* End of Blue Theme Report */
+
+
+/* Facebook Style */
+.reportTableBorder {
+	border:1px solid #3b5998;
+	margin-top:10px;
+}
+
+.reportCenterTitle {
+	color:#FFFFFF;
+	font-weight:bold;
+	text-align:center;	
+	background-color:#3b5998; 
+}
+
+.reportLeftTitle {
+	padding:5px;
+	color:#FFFFFF;
+	font-weight:bold;
+	background-color:#3b5998; 
+}
+
+.reportCenterTitle a {
+	color:#FFFFFF;
+	font-weight:bold;	
+}
+
+.reportTitleLeftClean {
+	padding:5px;
+	color:#3b5998;
+	font-weight:bold;
+	text-align:left;
+}
+
+.reportTitleLeftClean a:link, a:visited {
+	color: #5E748C;
+	text-decoration: none;
+}
+
+.reportTitleLeftClean a:hover{
+	text-decoration: underline;
+}
+
+.fieldCenterTitle {
+	padding:5px;
+	display:block;
+	margin-bottom:3px;
+	color:#3b5998;
+	font-weight:bold;
+	text-align:center;
+}
+
+.reportTitleLeftClean em {
+	color:#F00;
+	font-weight:bold;
+}
+
+.reportTitleLeftClean label {
+	font-size:1em;
+	color:#3b5998;
+	font-weight:bold;
+	text-align:left;
+}
+
+.reportTitleLeftClean td {
+	padding-left:10px;
+}
 /********************************************
-	END OF REPORTS 
+	END OF REPORTS
 ********************************************/

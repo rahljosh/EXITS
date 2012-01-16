@@ -55,7 +55,7 @@
 		</cfif>
 	</cfloop>
 
-	<cfif date_pis_received NEQ '' AND doc_full_host_app_date NEQ '' AND doc_letter_rec_date NEQ ''
+	<cfif doc_full_host_app_date NEQ '' AND doc_letter_rec_date NEQ ''
 		AND doc_rules_rec_date NEQ '' AND doc_photos_rec_date NEQ '' AND doc_school_accept_date NEQ ''
 		AND doc_school_profile_rec NEQ '' AND doc_conf_host_rec NEQ '' AND doc_ref_form_1 NEQ ''
 		AND doc_ref_form_2 NEQ '' AND get_host.fathercbc_form NEQ '' AND get_host.mothercbc_form NEQ '' AND member_missing EQ 0>	
@@ -70,7 +70,7 @@
 </cfif>
 
 <!--- PLACEMENT NOTES --->
-<cfif placement_notes EQ ''>
+<cfif placementNotes EQ ''>
 	<cfset notes_image = 'notes_1'>
 <cfelse>
 	<cfset notes_image = 'notes_3'>

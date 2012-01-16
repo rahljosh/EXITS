@@ -20,7 +20,7 @@
 	APPLICATION.CFC.UDF = CreateCFC("udf").Init();
 	
 	// Store Application.IsServerLocal - This needs be declare before the other CFC components
-	APPLICATION.IsServerLocal = AppCFC.UDF.IsServerLocal();
+	APPLICATION.IsServerLocal = APPLICATION.CFC.UDF.IsServerLocal();
 	
 	// Store the initialized company object in the Application scope
 	APPLICATION.CFC.company = CreateCFC("company").Init();

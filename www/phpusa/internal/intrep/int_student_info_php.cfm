@@ -31,7 +31,7 @@
 		s.weekend_curfew, s.letter, s.height, s.weight, s.haircolor, s.eyecolor, s.graduated, s.direct_placement, 
 		s.direct_place_nature, s.insurance, s.cancelinsurancedate, s.termination_date, 
 		s.notes, s.yearsenglish, s.estgpa, s.transcript, s.language_eval, s.social_skills, s.health immunization, s.health,
-		s.minorauthorization, s.placement_notes, s.needs_smoking_house, s.likes_pets, s.accepts_private_high,
+		s.minorauthorization, s.needs_smoking_house, s.likes_pets, s.accepts_private_high,
 		s.app_completed_school, s.visano, s.grades, s.slep_Score, s.convalidation_needed, s.other_missing_docs,
 		s.verification_received, s.flight_info_notes, s.scholarship, s.app_current_status, s.php_wishes_graduate, s.php_grade_student,
 		<!--- FROM THE NEW TABLE PHP_STUDENTS_IN_PROGRAM --->		

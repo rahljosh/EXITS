@@ -7,20 +7,28 @@
 	<!--- IF STUDENTS IN PROGRAM IS NOT DEFINED --->
     <cfif NOT VAL(URL.assignedID)>
         
-        <cfquery name="get_assignedID" datasource="#application.dsn#">
-            SELECT s.studentid,
-                stu_prog.assignedID
-            FROM smg_students s
-            INNER JOIN php_students_in_program stu_prog ON stu_prog.studentid = s.studentid
-            WHERE s.uniqueid = <cfqueryparam value="#URL.unqID#" cfsqltype="cf_sql_char">
-            ORDER BY stu_prog.active DESC, assignedID
+        <cfquery name="qGetAssignedID" datasource="#application.dsn#">
+            SELECT 
+            	s.studentid,
+                st.assignedID
+            FROM 
+            	smg_students s
+            INNER JOIN 
+            	php_students_in_program st ON st.studentid = s.studentid
+            WHERE 
+            	s.uniqueid = <cfqueryparam value="#URL.unqID#" cfsqltype="cf_sql_char">
+            ORDER BY 
+            	st.active DESC, 
+                assignedID
         </cfquery>
         
-        <cfset URL.assignedID = get_assignedID.assignedID>
+        <cfset URL.assignedID = qGetAssignedID.assignedID>
+        
     </cfif>
     
     <cfquery name="get_student_unqID" datasource="#application.dsn#">
-        SELECT s.studentid, uniqueid, familylastname, firstname, middlename, fathersname, fatheraddress,
+        SELECT
+        	s.studentid, uniqueid, familylastname, firstname, middlename, fathersname, fatheraddress,
             fatheraddress2, fathercity, fathercountry, fatherzip, fatherbirth, fathercompany, fatherworkphone,
             fatherworkposition, fatherworktype, fatherenglish, motherenglish, mothersname, motheraddress,
             motheraddress2, mothercity, mothercountry, motherzip, motherbirth, mothercompany, motherworkphone,
@@ -34,23 +42,27 @@
             weekend_curfew, letter, height, weight, haircolor, eyecolor, graduated, direct_placement, 
             direct_place_nature, termination_date, 
             notes, yearsenglish, estgpa, transcript, language_eval, social_skills, health immunization, health,
-            minorauthorization, placement_notes, needs_smoking_house, likes_pets, accepts_private_high,
+            minorauthorization, needs_smoking_house, likes_pets, accepts_private_high,
             app_completed_school, visano, grades, slep_Score, convalidation_needed, other_missing_docs, 
             flight_info_notes, scholarship, app_current_status, php_wishes_graduate, php_grade_student,  
             php_passport_copy, 
             <!--- FROM THE NEW TABLE PHP_STUDENTS_IN_PROGRAM --->		
-            stu_prog.assignedID, stu_prog.companyid, stu_prog.programid, stu_prog.hostid, stu_prog.schoolid, stu_prog.placerepid, stu_prog.arearepid,
-            stu_prog.dateplaced, stu_prog.school_acceptance, stu_prog.active, stu_prog.i20no, stu_prog.i20received, stu_prog.i20note,
-            stu_prog.i20sent, stu_prog.doubleplace, stu_prog.canceldate, stu_prog.cancelreason, stu_prog.insurancedate, stu_prog.insurancecanceldate,
-            stu_prog.hf_placement, stu_prog.hf_application, stu_prog.sevis_fee_paid, stu_prog.transfer_type,
-            stu_prog.doc_evaluation9, stu_prog.doc_evaluation12, stu_prog.doc_evaluation2, stu_prog.doc_evaluation4, stu_prog.doc_evaluation6, 
-            stu_prog.doc_grade1, stu_prog.doc_grade2, stu_prog.doc_grade3, stu_prog.doc_grade4, stu_prog.doc_grade5, stu_prog.doc_grade6,stu_prog.doc_grade7,
-            stu_prog.doc_grade8,
-            stu_prog.return_student, stu_prog.flightinfo_sent, stu_prog.flightinfo_received, stu_prog.flightinfo_no, stu_prog.flightinfo_note
-        FROM smg_students s
-        INNER JOIN php_students_in_program stu_prog ON stu_prog.studentid = s.studentid
-        WHERE uniqueid = <cfqueryparam value="#URL.unqID#" cfsqltype="cf_sql_char">
-            AND stu_prog.assignedID = <cfqueryparam value="#URL.assignedID#" cfsqltype="cf_sql_integer" maxlength="5">
+            st.assignedID, st.companyid, st.programid, st.hostid, st.schoolid, st.placerepid, st.arearepid,
+            st.dateplaced, st.school_acceptance, st.active, st.i20no, st.i20received, st.i20note,
+            st.i20sent, st.doubleplace, st.canceldate, st.cancelreason, st.insurancedate, st.insurancecanceldate,
+            st.hf_placement, st.hf_application, st.sevis_fee_paid, st.transfer_type,
+            st.doc_evaluation9, st.doc_evaluation12, st.doc_evaluation2, st.doc_evaluation4, st.doc_evaluation6, 
+            st.doc_grade1, st.doc_grade2, st.doc_grade3, st.doc_grade4, st.doc_grade5, st.doc_grade6,st.doc_grade7,
+            st.doc_grade8, placementNotes,
+            st.return_student, st.flightinfo_sent, st.flightinfo_received, st.flightinfo_no, st.flightinfo_note
+        FROM 
+        	smg_students s
+        INNER JOIN 
+        	php_students_in_program st ON st.studentid = s.studentid
+        WHERE 
+        	uniqueid = <cfqueryparam value="#URL.unqID#" cfsqltype="cf_sql_char">
+        AND 
+        	st.assignedID = <cfqueryparam value="#URL.assignedID#" cfsqltype="cf_sql_integer" maxlength="5">
     </cfquery>
 
 </cfsilent>
