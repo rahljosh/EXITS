@@ -22,7 +22,7 @@
     <cfquery name="qGetStudentInfo" datasource="mysql">
         SELECT DISTINCT stu.studentid, stu.firstname, stu.familylastname, stu.middlename, stu.address, stu.address2, stu.city, stu.country, stu.zip,
                stu.fax, stu.email, stu.phone, 
-               php.hostid, php.schoolid, php.arearepid, php.placerepid, php.dateplaced, php.is_welcome_family,
+               php.hostid, php.schoolid, php.arearepid, php.placerepid, php.dateplaced, php.isWelcomeFamily,
                h.familylastname as hostlastname, h.hostid as hostfamid,
                sc.schoolname, sc.schoolid as highschoolid,
                area.firstname as areafirstname, area.lastname as arealastname, area.userid as areaid,
@@ -195,7 +195,7 @@ td.dash {  font-size: 12px; border-bottom: 1px dashed #201D3E;}
 							<font color="CC3300">Host Family (#hostid#) was not found in the system.</font>
 						<cfelse>
 							#hostlastname# (###hostid#)
-                            <cfif VAL(qGetStudentInfo.is_welcome_family)> <br> This is a welcome/temp family.</cfif>
+                            <cfif VAL(qGetStudentInfo.isWelcomeFamily)> <br> This is a welcome/temp family.</cfif>
 						</cfif>	
 					</td>
 				</tr>

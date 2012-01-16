@@ -16,10 +16,10 @@
 
 	<cfscript>
 		//Get Insurance Policies
-		qGetInsurancePolicies = APPCFC.INSURANCE.getInsurancePolicies(provider="global");
+		qGetInsurancePolicies = APPLICATION.CFC.INSURANCE.getInsurancePolicies(provider="global");
 		
 		// Get Insurance History
-		qGetInsuranceHistory = APPCFC.INSURANCE.getInsuranceHistory();
+		qGetInsuranceHistory = APPLICATION.CFC.INSURANCE.getInsuranceHistory();
     </cfscript>
 
 </cfsilent>

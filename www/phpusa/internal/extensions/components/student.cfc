@@ -35,141 +35,132 @@
 			datasource="#APPLICATION.dsn#">
                 SELECT 
                 	s.studentid, 
-                    uniqueid, 
-                    familylastname, 
-                    firstname, 
-                    middlename, 
-                    fathersname, 
-                    fatheraddress,
-                    fatheraddress2, 
-                    fathercity, 
-                    fathercountry, 
-                    fatherzip, 
-                    fatherbirth, 
-                    fathercompany, 
-                    fatherworkphone,
-                    fatherworkposition, 
-                    fatherworktype, 
-                    fatherenglish,
-                    motherenglish, 
-                    mothersname, 
-                    motheraddress,
-                    motheraddress2, 
-                    mothercity, 
-                    mothercountry,
-                    motherzip,
-                    motherbirth, 
-                    mothercompany, 
-                    motherworkphone,
-                    motherworkposition, 
-                    motherworktype, 
-                    emergency_phone, 
-                    emergency_name, 
-                    emergency_address, 
-                    emergency_country, 
-                    address, 
-                    address2, 
-                    city, 
-                    country, 
-                    zip, 
-                    phone, 
-                    fax, 
-                    email, 
-                    citybirth,
-                    countrybirth,
-                    countryresident, 
-                    countrycitizen, 
-                    sex, 
-                    dob, 
-                    religiousaffiliation, 
-                    dateapplication, 
-                    entered_by,
-                    passportnumber, 
-                    intrep, 
-                    current_state, 
-                    approved, 
-                    band, 
-                    orchestra, 
-                    comp_sports, 
-                    cell_phone, 
-                    additional_phone,
-                    emergency_name, 
-                    emergency_phone, 
-                    convalidation_completed,
-                    familyletter, 
-                    pictures, 
-                    interests, 
-                    interests_other, 
-                    religious_participation, 
-                    churchfam, 
-                    churchgroup,
-                    smoke, 
-                    animal_allergies, 
-                    med_allergies, 
-                    other_allergies, 
-                    chores, 
-                    chores_list, 
-                    weekday_curfew, 
-                    weekend_curfew, 
-                    letter, height, 
-                    weight, haircolor, 
-                    eyecolor, graduated, 
-                    direct_placement, 
-                    direct_place_nature, 
-                    termination_date, 
-                    notes,
-                    yearsenglish, 
-                    estgpa, 
-                    transcript, 
-                    language_eval, 
-                    social_skills, 
-                    health immunization, 
-                    health,
-                    minorauthorization, 
-                    placement_notes, 
-                    needs_smoking_house, 
-                    likes_pets, 
-                    accepts_private_high,
-                    app_completed_school, 
-                    visano, 
-                    grades, 
-                    slep_Score, 
-                    convalidation_needed, 
-                    other_missing_docs, 
-                    flight_info_notes,
-                    scholarship, app_current_status, 
-                    php_wishes_graduate, 
-                    php_grade_student,  
-                    php_passport_copy, 
+                    s.uniqueid, 
+                    s.familylastname, 
+                    s.firstname, 
+                    s.middlename, 
+                    s.fathersname, 
+                    s.fatheraddress,
+                    s.fatheraddress2, 
+                    s.fathercity, 
+                    s.fathercountry, 
+                    s.fatherzip, 
+                    s.fatherbirth, 
+                    s.fathercompany, 
+                    s.fatherworkphone,
+                    s.fatherworkposition, 
+                    s.fatherworktype, 
+                    s.fatherenglish,
+                    s.motherenglish, 
+                    s.mothersname, 
+                    s.motheraddress,
+                    s.motheraddress2, 
+                    s.mothercity, 
+                    s.mothercountry,
+                    s.motherzip,
+                    s.motherbirth, 
+                    s.mothercompany, 
+                    s.motherworkphone,
+                    s.motherworkposition, 
+                    s.motherworktype, 
+                    s.emergency_phone, 
+                    s.emergency_name, 
+                    s.emergency_address, 
+                    s.emergency_country, 
+                    s.address, 
+                    s.address2, 
+                    s.city, 
+                    s.country, 
+                    s.zip, 
+                    s.phone, 
+                    s.fax, 
+                    s.email, 
+                    s.citybirth,
+                    s.countrybirth,
+                    s.countryresident, 
+                    s.countrycitizen, 
+                    s.sex, 
+                    s.dob, 
+                    s.religiousaffiliation, 
+                    s.dateapplication, 
+                    s.entered_by,
+                    s.passportnumber, 
+                    s.intrep, 
+                    s.current_state, 
+                    s.approved, 
+                    s.band, 
+                    s.orchestra, 
+                    s.comp_sports, 
+                    s.cell_phone, 
+                    s.additional_phone,
+                    s.emergency_name, 
+                    s.emergency_phone, 
+                    s.convalidation_completed,
+                    s.familyletter, 
+                    s.pictures, 
+                    s.interests, 
+                    s.interests_other, 
+                    s.religious_participation, 
+                    s.churchfam, 
+                    s.churchgroup,
+                    s.smoke, 
+                    s.animal_allergies, 
+                    s.med_allergies, 
+                    s.other_allergies, 
+                    s.chores, 
+                    s.chores_list, 
+                    s.weekday_curfew, 
+                    s.weekend_curfew, 
+                    s.letter, height, 
+                    s.weight, haircolor, 
+                    s.eyecolor, graduated, 
+                    s.direct_placement, 
+                    s.direct_place_nature, 
+                    s.termination_date, 
+                    s.notes,
+                    s.yearsenglish, 
+                    s.estgpa, 
+                    s.transcript, 
+                    s.language_eval, 
+                    s.social_skills, 
+                    s.health immunization, 
+                    s.health,
+                    s.minorauthorization, 
+                    s.placement_notes, 
+                    s.needs_smoking_house, 
+                    s.likes_pets, 
+                    s.accepts_private_high,
+                    s.app_completed_school, 
+                    s.visano, 
+                    s.grades, 
+                    s.slep_Score, 
+                    s.convalidation_needed, 
+                    s.other_missing_docs, 
+                    s.flight_info_notes,
+                    s.scholarship, app_current_status, 
+                    s.php_wishes_graduate, 
+                    s.php_grade_student,  
+                    s.php_passport_copy, 
                     <!--- FROM THE PHP_STUDENTS_IN_PROGRAM TABLE --->		
                     php.assignedID, 
-                    php.companyID, 
-                    php.programID, 
-                    php.hostID, 
-                    php.schoolID, 
-                    php.placerepID, 
-                    php.arearepID,
-                    php.dateplaced, 
-                    php.school_acceptance, 
-                    php.active, 
-                    php.i20no, 
-                    php.i20received, 
-                    php.i20note,
-                    php.i20sent, 
-                    php.doubleplace, 
-                    php.canceldate, 
-                    php.cancelreason,
-                    php.insurancedate, 
-                    php.insurancecanceldate,
-                    php.hf_placement, 
-                    php.hf_application, 
-                    php.sevis_fee_paid, 
-                    php.transfer_type,
-                    php.doc_evaluation9,
-                    php.doc_evaluation12, 
+                    php.studentID,
+                    php.companyID,
+                    php.programID,
+                    php.hostID,
+                    php.isWelcomeFamily,
+                    php.schoolID,
+                    php.areaRepID,
+                    php.placeRepID,
+                    php.doublePlace,
+                    php.placementNotes,
+                    php.datePlaced,
+                    php.dateApproved,
+                    php.datePISEmailed,
                     php.doc_evaluation2, 
                     php.doc_evaluation4, 
-                    php.doc_evaluation6, 
+                    php.doc_evaluation6,
+                    php.doc_evaluation9,
+                    php.doc_evaluation12, 
                     php.doc_grade1, 
                     php.doc_grade2,
                     php.doc_grade3, 
@@ -178,11 +169,37 @@
                     php.doc_grade6,
                     php.doc_grade7,
                     php.doc_grade8,
+                    php.active,
+                    php.canceldate, 
+                    php.cancelreason,
+					php.canceledBy,
+                    php.insurancedate, 
+                    php.insuranceCancelDate,
+                    php.transfer_type,
                     php.return_student, 
-                    php.flightinfo_sent, 
-                    php.flightinfo_received,
                     php.flightinfo_no, 
-                    php.flightinfo_note
+                    php.flightinfo_received,
+                    php.flightinfo_sent, 
+                    php.flightinfo_note,
+                    php.welcome_letter_printed,
+                    php.school_acceptance, 
+                    php.sevis_fee_paid, 
+                    php.i20no, 
+                    php.i20received, 
+                    php.i20note,
+                    php.i20sent, 
+                    php.hf_placement, 
+                    php.hf_application, 
+					php.doc_letter_rec_date,
+                    php.doc_rules_rec_date,
+                    php.doc_photos_rec_date,
+                    php.doc_school_profile_rec,
+                    php.doc_conf_host_rec,
+                    php.doc_ref_form_1,
+                    php.doc_ref_form_2,
+                    php.inputBy,
+                    php.dateCreated,
+                    php.dateUpdated
                 FROM 
                 	smg_students s
                 INNER JOIN 
@@ -209,37 +226,12 @@
                     AND
                         php.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.programID)#">
                 </cfif>
-
+			
+            ORDER BY
+            	php.assignedID DESC                
 		</cfquery>
 		   
 		<cfreturn qGetStudentByID>
-	</cffunction>
-
-
-	<cffunction name="isStudentAssignedToPHP" access="public" returntype="numeric" output="false" hint="Returns 1 if student is assigned to PHP">
-    	<cfargument name="studentID" default="0" hint="studentID is not required">
-
-        <cfquery 
-			name="qIsStudentAssignedToPHP" 
-			datasource="#APPLICATION.dsn#">
-                SELECT 
-                    studentID
-                FROM 
-                    php_students_in_program
-                WHERE 
-                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
-				AND
-                	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-        </cfquery>
-		
-        <cfscript>
-			if ( qIsStudentAssignedToPHP.recordCount ) {
-				return 1;
-			} else {
-				return 0;
-			}		
-		</cfscript>
-        
 	</cffunction>
 
 
@@ -250,7 +242,7 @@
         <cfargument name="assignedID" default="" hint="assignedID is not required">
 
         <cfquery 
-			name="qGetPHPStudent" 
+			name="qGetStudentFullInformationByID" 
 			datasource="#APPLICATION.dsn#">
                 SELECT 
                     s.studentID, 
@@ -331,215 +323,1141 @@
                                     
         </cfquery>
 
-        <cfreturn qGetPHPStudent>            
+        <cfreturn qGetStudentFullInformationByID>            
+	</cffunction>
+
+
+	<cffunction name="getAvailableDoublePlacement" access="public" returntype="query" output="false" hint="Gets placed available students for double placement">
+        <cfargument name="studentID" default="0" hint="studentID is not required">
+              
+        <cfquery 
+			name="qGetAvailableDoublePlacement" 
+			datasource="#APPLICATION.DSN#">
+                SELECT 
+                	s.studentID, 
+                    s.familyLastName,
+                    s.firstName,
+                    p.programName
+                FROM 
+                	smg_students s
+				INNER JOIN
+                	php_students_in_program php ON php.studentID = s.studentID
+                    AND
+                        php.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                    AND
+                        php.hostID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                        
+                    <cfif LEN(ARGUMENTS.studentID)>
+                        AND
+                            php.studentID != <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+                    </cfif>
+				INNER JOIN
+                	smg_programs p ON p.programID = php.programID			                    
+               	ORDER BY 
+                	s.firstname,
+                    s.familylastname
+		</cfquery>
+		   
+		<cfreturn qGetAvailableDoublePlacement>
 	</cffunction>
 
 
 	<!--- ------------------------------------------------------------------------- ----
 		
-		FLIGHT INFORMATION
+		Placement Management
 	
 	----- ------------------------------------------------------------------------- --->
 
-	<cffunction name="getFlightInformation" access="public" returntype="query" output="false" hint="Gets flight information by studentID and type">
-    	<cfargument name="studentID" hint="studentID is required">
-        <cfargument name="flightType" hint="PreAypArrival/Arrival/Departure is required">
-        <cfargument name="programID" default="0" hint="programID is not required">
-        <cfargument name="flightLegOption" default="" hint="firstLeg/lastLeg to get first or last leg of the flight">
-        
+	<cffunction name="updatePlacementInformation" access="public" returntype="void" output="false" hint="Update placement information / Approval process must be separate">
+        <cfargument name="studentID" hint="studentID is required">
+        <cfargument name="assignedID" hint="assignedID is required">
+        <cfargument name="hostID" hint="hostID is required">
+        <cfargument name="isWelcomeFamily" default="0" hint="isWelcomeFamily is not required">
+        <cfargument name="isRelocation" default="0" hint="isRelocation is not required">
+        <cfargument name="changePlacementExplanation" default="" hint="changePlacementExplanation is not required">
+        <cfargument name="schoolID" hint="schoolID is required">   
+        <cfargument name="schoolIDReason" default="" hint="schoolIDReason is not required">     
+        <cfargument name="placeRepID" hint="placeRepID is required">
+        <cfargument name="placeRepIDReason" default="" hint="placeRepIDReason is not required"> 
+		<cfargument name="areaRepID" hint="areaRepID is required">
+        <cfargument name="areaRepIDReason" default="" hint="areaRepIDReason is not required"> 
+		<cfargument name="doublePlace" hint="doublePlace ID is required">
+        <cfargument name="doublePlaceReason" default="" hint="doublePlaceReason is not required"> 
+        <cfargument name="changedBy" hint="changedBy is required">
+        <cfargument name="userType" hint="userType is required">
+        <cfargument name="reason" default="" hint="reason is not required">
+        <cfargument name="placementStatus" default="" hint="Unplaced/Incomplete/Pending/Approved/Rejected">
+            
+        <cfscript>	
+			// Get Student Info
+			var qGetStudentInfo = getStudentByID(assignedID=ARGUMENTS.assignedID);
+			
+			// Insert-Update Placement History
+			insertPlacementHistory(
+				studentID = ARGUMENTS.studentID,
+				assignedID = ARGUMENTS.assignedID,
+				hostID = ARGUMENTS.hostID,
+				changePlacementExplanation = ARGUMENTS.changePlacementExplanation,
+				schoolID = ARGUMENTS.schoolID,
+				schoolIDReason = ARGUMENTS.schoolIDReason,
+				placeRepID = ARGUMENTS.placeRepID,
+				placeRepIDReason = ARGUMENTS.placeRepIDReason,
+				areaRepID = ARGUMENTS.areaRepID,
+				areaRepIDReason = ARGUMENTS.areaRepIDReason,
+				doublePlace = ARGUMENTS.doublePlace,
+				doublePlaceReason = ARGUMENTS.doublePlaceReason,
+				isWelcomeFamily = ARGUMENTS.isWelcomeFamily,
+				isRelocation = ARGUMENTS.isRelocation,
+				changedBy = ARGUMENTS.changedBy,
+				userType = ARGUMENTS.userType,
+				placementStatus = ARGUMENTS.placementStatus
+			);
+		</cfscript>
+		
         <cfquery 
-			name="qGetFlightInformation" 
-			datasource="#APPLICATION.dsn#">
-                SELECT 
-                    flightID,                     
-                    studentID,
-                    companyID,
-                    programID,
-                    enteredByID, 
-                    dep_date, 
-                    dep_city, 
-                    dep_aircode, 
-                    dep_time, 
-                    flight_number, 
-                    arrival_city, 
-                    arrival_aircode, 
-                    arrival_time, 
-                    overnight, 
-                    flight_type,
-                    dateCreated,
-                    dateUpdated,
-                    isCompleted,
-                    isDeleted
-                FROM 
-                    smg_flight_info
-                WHERE 
-                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#"> 
-                AND 
-                    flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightType#">
-				AND
-                	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                    
-				<cfif VAL(ARGUMENTS.programID)>
-                    AND 
-                        programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">
-                </cfif> 
-				
-                <cfswitch expression="#ARGUMENTS.flightLegOption#">
-                
-                	<cfcase value="firstLeg">
-                        ORDER BY 
-                            dep_date
-						LIMIT 1                            
-                    </cfcase>
-
-                	<cfcase value="lastLeg">
-                        ORDER BY 
-                            dep_date DESC
-						LIMIT 1                            
-                    </cfcase>
-
-                	<cfdefaultcase>
-                        ORDER BY 
-                            flightID,
-                            dep_date, 
-                            dep_time
-                    </cfdefaultcase>
-                
-                </cfswitch>
+			datasource="#APPLICATION.DSN#">
+                UPDATE
+                	php_students_in_program
+				SET
+                    hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">,
+                    isWelcomeFamily = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isWelcomeFamily)#">,
+                    schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.schoolID)#">,
+                    placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.placeRepID)#">,
+                    areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.areaRepID)#">,
+                    doublePlace = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">,
+                    <cfif NOT IsDate(qGetStudentInfo.datePlaced)>
+                    	dateplaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                    </cfif>
+                    <!--- Used to track last approval --->
+                    dateApproved = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+				WHERE
+                	assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.assignedID)#">
 		</cfquery>
-		   
-		<cfreturn qGetFlightInformation>
+        
+        <cfscript>
+			/*******************************************************************************
+				Double Placement - Automatically assign/remove/update for the second record
+			*******************************************************************************/
+
+			// Get Student Info // Get Assigned ID
+			var qGetDoublePlacementInfo = getStudentByID(ARGUMENTS.doublePlace);	
+
+			/*******************************************************************************
+				Add New Double Placement
+			********************************************************************************/
+			if ( VAL(ARGUMENTS.doublePlace) AND NOT VAL(qGetStudentInfo.doublePlace) ) {
+				
+                // Insert-Update Placement History
+                insertPlacementHistory(
+					studentID = ARGUMENTS.doublePlace,
+					assignedID = qGetDoublePlacementInfo.assignedID,
+					doublePlace = ARGUMENTS.studentID,
+					doublePlaceReason = 'Double placement automatically assigned',
+					changedBy = ARGUMENTS.changedBy,
+					userType = ARGUMENTS.userType,
+					placementAction='setDoublePlacement'
+				);
+				
+				// Update Double Placement Record
+				updateDoublePlacement(
+					studentID = ARGUMENTS.doublePlace,
+					assignedID = qGetDoublePlacementInfo.assignedID,
+					doublePlace = ARGUMENTS.studentID,
+					userType = ARGUMENTS.userType
+				);
+
+			/*******************************************************************************
+				Double Placement Assigned to a Different Student 
+				Remove previous and add new double placement
+			********************************************************************************/
+			} else if ( VAL(ARGUMENTS.doublePlace) AND ARGUMENTS.doublePlace NEQ qGetStudentInfo.doublePlace ) {
+				
+				/*******************************************************************************
+					Remove Double Placement
+				********************************************************************************/
+
+                // Insert-Update Placement History
+                insertPlacementHistory(
+					studentID = ARGUMENTS.doublePlace,
+					assignedID = qGetDoublePlacementInfo.assignedID,
+					doublePlace = 0,
+					doublePlaceReason = 'Double placement student assigned to a different student - automatically removed',
+					changedBy = ARGUMENTS.changedBy,
+					userType = ARGUMENTS.userType,
+					placementAction='setDoublePlacement'
+				);
+				
+				// Update Double Placement Record
+				updateDoublePlacement(
+					studentID = ARGUMENTS.doublePlace,
+					assignedID = qGetDoublePlacementInfo.assignedID,
+					doublePlace = 0,
+					userType = ARGUMENTS.userType
+				);
+			
+				/*******************************************************************************
+					Add New Double Placement Automatically
+				********************************************************************************/
+				
+                // Insert-Update Placement History
+                insertPlacementHistory(
+					studentID = ARGUMENTS.doublePlace,
+					assignedID = qGetDoublePlacementInfo.assignedID,
+					doublePlace = ARGUMENTS.studentID,
+					doublePlaceReason = 'Double placement automatically assigned',
+					changedBy = ARGUMENTS.changedBy,
+					userType = ARGUMENTS.userType,
+					placementAction='setDoublePlacement'
+				);
+				
+				// Update Double Placement Record
+				updateDoublePlacement(
+					studentID = ARGUMENTS.doublePlace,
+					assignedID = qGetDoublePlacementInfo.assignedID,
+					doublePlace = ARGUMENTS.studentID,
+					userType = ARGUMENTS.userType
+				);
+
+			/*******************************************************************************
+				Remove Double Placement Automatically
+			********************************************************************************/
+			} else if ( NOT VAL(ARGUMENTS.doublePlace) AND VAL(qGetStudentInfo.doublePlace) ) {
+				
+                // Insert-Update Placement History
+                insertPlacementHistory(
+					studentID = ARGUMENTS.doublePlace,
+					assignedID = qGetDoublePlacementInfo.assignedID,
+					doublePlace = 0,
+					doublePlaceReason = 'Double placement automatically removed',
+					changedBy = ARGUMENTS.changedBy,
+					userType = ARGUMENTS.userType,
+					placementAction='setDoublePlacement'
+				);
+				
+				// Update Double Placement Record on the second record
+				updateDoublePlacement(
+					studentID = ARGUMENTS.doublePlace,
+					assignedID = qGetDoublePlacementInfo.assignedID,
+					doublePlace = 0,
+					userType = ARGUMENTS.userType
+				);
+			
+			}
+		</cfscript>
+	
 	</cffunction>
 
 
-	<cffunction name="getFlightInformationByFlightID" access="public" returntype="query" output="false" hint="Gets flight information by flightID">
-    	<cfargument name="flightID" hint="flightID is required">
-        <cfargument name="studentID" default="0" hint="studentID is not required">
-		        
+	<cffunction name="updateDoublePlacement" access="public" returntype="void" output="false" hint="Updates a Double Placement Record">
+        <cfargument name="studentID" hint="studentID is required">
+        <cfargument name="assignedID" hint="assignedID is required">
+		<cfargument name="doublePlace" hint="doublePlace ID is required">
+        <cfargument name="userType" hint="userType is required">
+
+			<cfscript>
+				var vHostHistoryID = getPlacementHistory(studentID=ARGUMENTS.studentID, assignedID=ARGUMENTS.assignedID).historyID;
+            </cfscript>
+            
+            <cfquery 
+                datasource="#APPLICATION.DSN#">
+                    UPDATE
+                        php_students_in_program
+                    SET
+                        doublePlace = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">,
+						<!--- Used to track last approval --->
+                        dateApproved = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                    WHERE
+                        assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.assignedID)#">
+            </cfquery>
+			
+            <!--- Update History --->
+            <cfquery 
+                datasource="#APPLICATION.DSN#">
+                    UPDATE
+                        smg_hostHistory
+                    SET
+                        <cfif qGetStudentInfo.doublePlace NEQ ARGUMENTS.doublePlace>
+	                        hasDoublePlacementIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="1">,
+                        </cfif>                        
+                        doublePlacementID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">
+                    WHERE
+                        historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vHostHistoryID)#">
+            </cfquery>
+            
+	</cffunction>
+
+
+	<cffunction name="updatePlacementNotes" access="public" returntype="void" output="false" hint="Updates placement notes">
+        <cfargument name="assignedID" hint="assignedID is required">
+		<cfargument name="placementNotes" default="" hint="placementNotes is not required">
+
+            <cfquery 
+                datasource="#APPLICATION.DSN#">
+                    UPDATE
+                        php_students_in_program
+                    SET
+                        placementNotes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.placementNotes#">
+                    WHERE
+                        assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.assignedID)#">
+            </cfquery>
+
+	</cffunction>
+
+
+	<!--- Unplace Student --->
+	<cffunction name="unplaceStudent" access="public" returntype="void" output="false" hint="Unplaces a student">
+        <cfargument name="studentID" hint="studentID is required">
+        <cfargument name="assignedID" hint="assignedID is required">
+        <cfargument name="changedBy" hint="changedBy is required">
+        <cfargument name="userType" hint="userType is required">
+        <cfargument name="reason" default="" hint="reason is not required">
+		
+        <cfscript>
+			// Get Student Info
+			var qGetStudentInfo = getStudentByID(assignedID=ARGUMENTS.assignedID);
+			
+            // Get Current User
+            var qGetChangedByUser = APPLICATION.CFC.USER.getUsers(userID=ARGUMENTS.changedBy);
+		</cfscript>
+        
         <cfquery 
-			name="qGetFlightInformationByFlightID" 
-			datasource="#APPLICATION.dsn#">
-                SELECT 
-                    flightID,                     
-                    studentID,
-                    companyID,
-                    programID,
-                    enteredByID, 
-                    dep_date, 
-                    dep_city, 
-                    dep_aircode, 
-                    dep_time, 
-                    flight_number, 
-                    arrival_city, 
-                    arrival_aircode, 
-                    arrival_time, 
-                    overnight, 
-                    flight_type,
-                    dateCreated,
-                    dateUpdated,
-                    isCompleted,
-                    isDeleted
-                FROM 
-                    smg_flight_info
+			datasource="#APPLICATION.DSN#">
+                UPDATE 
+                	php_students_in_program
+                SET 
+					hostID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+                    isWelcomeFamily = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+                    schoolID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+                    placeRepID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+                    areaRepID =  <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+                    doubleplace = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+                    dateApproved = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    datePlaced = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    datePISEmailed = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    <!--- Placement Notes --->
+                    placementNotes = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">,
+					<!--- Paperwork Received --->
+                    doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_photos_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_school_profile_rec = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
                 WHERE 
-                    flightID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.flightID#">
-                <cfif VAL(ARGUMENTS.studentID)>
-                    AND	
-                        studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">           
-				</cfif>                        
+                	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+    	</cfquery>
+
+		<cfscript>
+			// Insert History - It tracks placement statuses only, placement updates are tracked on smg_hostHistory
+			insertPlacementActionHistory(
+				studentID=ARGUMENTS.studentID,
+				assignedID=ARGUMENTS.assignedID,
+				changedBy=ARGUMENTS.changedBy,
+				userType=ARGUMENTS.userType,
+				reason=ARGUMENTS.reason,
+				placementAction='unplaceStudent'
+			);
+
+        	// Check if there was a double placement, if so remove it automatically 
+			if ( VAL(qGetStudentInfo.doublePlace) ) {
+				
+                // Insert-Update Placement History
+                insertPlacementHistory(
+					studentID = qGetStudentInfo.doublePlace,
+					doublePlace = 0,
+					doublePlaceReason = 'Double placement student set to unplaced - automatically removed',
+					changedBy = ARGUMENTS.changedBy,
+					userType = ARGUMENTS.userType,
+					placementAction='setDoublePlacement'
+				);
+				
+				// Update Double Placement Record on the second record
+				updateDoublePlacement(
+					studentID = qGetStudentInfo.doublePlace,
+					doublePlace = 0,
+					userType = ARGUMENTS.userType
+				);
+
+			}
+        </cfscript>
+
+    </cffunction>
+
+
+    <!--- Set Host Family as Permanent --->
+	<cffunction name="setFamilyAsPermanent" access="public" returntype="void" output="false" hint="Sets a host family as permanent">
+        <cfargument name="studentID" hint="studentID is required">
+        <cfargument name="assignedID" hint="assignedID is required">
+        <cfargument name="changedBy" hint="changedBy is required">
+        <cfargument name="userType" hint="userType is required">
+        <cfargument name="reason" default="" hint="reason is not required">
+        <cfargument name="dateSetHostPermanent" default="" hint="dateSetHostPermanent is not required">
+        
+        <cfscript>
+			// Get Student Info
+			var qGetStudentInfo = getStudentByID(assignedID=ARGUMENTS.assignedID);
+			
+			vHostHistoryID = getPlacementHistory(studentID=ARGUMENTS.studentID, assignedID=ARGUMENTS.assignedID).historyID;			
+		</cfscript>
+        
+        <cfquery 
+			datasource="#APPLICATION.DSN#">
+                UPDATE
+                	php_students_in_program
+				SET
+                    isWelcomeFamily = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+                    <!--- Used to track last approval --->
+                    dateApproved = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+				WHERE
+                	assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.assignedID)#">
 		</cfquery>
-		   
-		<cfreturn qGetFlightInformationByFlightID>
+        
+        <!--- Update Host History - Insert Permanent Date --->
+        <cfquery 
+            datasource="#APPLICATION.DSN#">
+                UPDATE
+                    smg_hosthistory	
+                SET
+                    dateSetHostPermanent = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateSetHostPermanent#">
+                WHERE
+                    historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vHostHistoryID)#">
+        </cfquery>
+        
+		<cfscript>
+			// Insert New History - It tracks placement statuses only, placement updates are tracked on smg_hostHistory
+			insertPlacementActionHistory(
+				studentID=ARGUMENTS.studentID,
+				assignedID=ARGUMENTS.assignedID,
+				changedBy=ARGUMENTS.changedBy,
+				userType=ARGUMENTS.userType,
+				reason=ARGUMENTS.reason,
+				placementAction='setFamilyAsPermanent',
+				dateSetHostPermanent=ARGUMENTS.dateSetHostPermanent
+			);
+        </cfscript>
+        
 	</cffunction>
 
 	
-    <!--- UPDATE FLIGHT NOTES --->
-	<cffunction name="updateFlightNotes" access="public" returntype="void" output="false" hint="Updates Flight Information Notes">
-    	<cfargument name="studentID" hint="studentID is required">
-        <cfargument name="flightNotes" default="" hint="Notes is not required">
+    <!--- Insert Placement Action History --->
+	<cffunction name="insertPlacementActionHistory" access="public" returntype="void" output="false" hint="Actions: Approve/Reject/Resubmit/unplaceStudent/setPermanent, it does not require any update to the history record">
+        <cfargument name="studentID" hint="studentID is required">
+        <cfargument name="assignedID" hint="assignedID is required">
+        <cfargument name="changedBy" hint="changedBy is required">
+        <cfargument name="userType" hint="userType is required">
+        <cfargument name="reason" default="" hint="Field is used for rejection/resubmit comments">
+        <cfargument name="placementAction" default="" hint="Approve/Reject/Resubmit/unplaceStudent/setFamilyAsPermanent">
+        <cfargument name="dateSetHostPermanent" default="" hint="dateSetHostPermanent is not required">
+	
+    	<cfscript>
+			// History ID
+			var vHostHistoryID = 0;
+			
+			// Set Action Message
+			var vUpdatedBy = 'n/a';
+			var vActions = '';			
+			
+			// Get User Information
+			qGetEnteredBy = APPLICATION.CFC.USER.getUsers(userID=ARGUMENTS.changedBy);
 
-        <cfquery 
-			datasource="#APPLICATION.dsn#">
-                UPDATE 
-                    smg_students
-                SET 
-                    flight_info_notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightNotes#">
-                WHERE 
-                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
-                LIMIT 1
-        </cfquery> 
+			// Set Track Placement Status Action Message
+			switch(ARGUMENTS.userType) { 
+				
+				case 1: case 2: case 3: case 4:
+					vUpdatedBy = 'Office';
+					break; 
+					
+				case 5: 
+					vUpdatedBy = 'Regional Manager';
+					break; 
 
+				case 6: 
+					vUpdatedBy = 'Regional Advisor';
+					break; 
+
+				case 7: 
+					vUpdatedBy = 'Supervising Representative';
+					break; 
+					
+			} 
+			//end switch
+		
+			// SET ACTION MESSAGE - THESE ARE BASED ON THE PLACEMENT ACTION
+			
+			// Set Track Placement Status Action Message
+			switch(ARGUMENTS.placementAction) { 
+
+				// PLACEMENT APPROVED
+				case 'Approve':
+					vActions = "<strong>Placement Approved by #vUpdatedBy#</strong> <br /> #CHR(13)#";
+					break; 
+
+				// PLACEMENT REJECTED
+				case 'Reject':
+					vActions = "<strong>Placement Rejected by #vUpdatedBy#</strong> <br /> #CHR(13)#";
+					break; 
+
+				// PLACEMENT RESUBMITTED
+				case 'Resubmit':
+					vActions = "<strong>Placement Resubmitted by #vUpdatedBy#</strong> <br /> #CHR(13)#";
+					break; 
+					
+				// UNPLACE STUDENT
+				case 'unplaceStudent':
+					vActions = "<strong>Student Set to Unplaced</strong> <br /> #CHR(13)#";			
+					break; 
+				
+				// SET FAMILY AS PERMANENT
+				case 'setFamilyAsPermanent':
+					if ( isDate(ARGUMENTS.dateSetHostPermanent ) ) {
+						vActions = "<strong>Host Family Set as Permanent as of #DateFormat(ARGUMENTS.dateSetHostPermanent,'mm/dd/yyyy')# </strong> <br /> #CHR(13)#";
+					} else {
+						vActions = "<strong>Host Family Set as Permanent</strong> <br /> #CHR(13)#";
+					}						
+					break; 
+
+			} //end switch
+			
+			// Reason
+			if ( LEN(ARGUMENTS.reason) ) {
+				vActions = vActions & "Comment: #ARGUMENTS.reason# <br /> #CHR(13)#";
+			}
+			
+			// Add User Information
+			vActions = vActions & "Updated by: #qGetEnteredBy.firstName# #qGetEnteredBy.lastName# (###qGetEnteredBy.userID#) - #vUpdatedBy# <br /> #CHR(13)#";
+			
+			// Add paragraph tag to set this update
+			vActions = "<p>#vActions#</p>";
+			
+			// Get Current History
+			vHostHistoryID = getPlacementHistory(studentID=ARGUMENTS.studentID, assignedID=ARGUMENTS.assignedID).historyID;
+				
+			if ( VAL(vHostHistoryID) ) {
+				
+				// Insert Actions Into Separate Table
+				APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
+					applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,
+					foreignTable='smg_hostHistory',
+					foreignID=vHostHistoryID,
+					enteredByID=VAL(ARGUMENTS.changedBy),
+					actions=vActions
+				);			
+		
+			}
+		</cfscript>
+    
+    </cffunction>
+    
+    
+	<cffunction name="insertPlacementHistory" access="public" returntype="void" output="false" hint="Insert Placement History and returns the newly creted ID">
+        <cfargument name="studentID" hint="studentID is required">
+        <cfargument name="assignedID" hint="assignedID is required">
+        <cfargument name="changedBy" hint="changedBy is required">
+        <cfargument name="userType" hint="userType is required">
+        <cfargument name="hostID" default="0" hint="hostID is not required">
+        <cfargument name="changePlacementExplanation" default="" hint="changePlacementExplanation is not required">
+        <cfargument name="isWelcomeFamily" default="0" hint="isWelcomeFamily is not required">
+        <cfargument name="isRelocation" default="0" hint="isRelocation is not required">
+        <cfargument name="schoolID" default="0" hint="schoolID is not required">        
+        <cfargument name="schoolIDReason" default="" hint="schoolIDReason is not required">     
+        <cfargument name="placeRepID" default="0" hint="placeRepID is not required">
+        <cfargument name="placeRepIDReason" default="" hint="placeRepIDReason is not required"> 
+		<cfargument name="areaRepID" default="0" hint="areaRepID is not required">
+        <cfargument name="areaRepIDReason" default="" hint="areaRepIDReason is not required"> 
+        <cfargument name="doublePlace" default="0" hint="doublePlace is required">
+        <cfargument name="doublePlaceReason" default="" hint="doublePlaceReason is not required"> 
+        <cfargument name="reason" default="" hint="Field is used for rejection/resubmit comments">
+        <cfargument name="placementStatus" default="" hint="Unplaced/Rejected/Approved/Pending/Incomplete">
+        <cfargument name="placementAction" default="" hint="setDoublePlacement">
+        
+        <cfscript>
+			// History ID
+			var vHostHistoryID = 0;
+			
+			// Set whether we are updating or inserting a record
+			var vQueryType = '';
+			
+			// Set Action Message
+			var vUpdatedBy = 'n/a';
+			var vActions = '';			
+			
+			var hasHostIDChanged = 0;
+			var hasSchoolIDChanged = 0;
+			var hasPlaceRepIDChanged = 0;
+			var hasAreaRepIDChanged = 0;
+			var hasDoublePlacementIDChanged = 0;
+
+			// Set to 1 to add an extra line on the history
+			var vAddExtraLine = 0;
+						
+			// Get Current Placement Information
+			qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID, assignedID=ARGUMENTS.assignedID);
+
+			// Get User Information
+			qGetEnteredBy = APPLICATION.CFC.USER.getUsers(userID=ARGUMENTS.changedBy);
+
+			// Set Track Placement Status Action Message
+			switch(ARGUMENTS.userType) { 
+				
+				case 1: case 2: case 3: case 4:
+					vUpdatedBy = 'Headquarters';
+					break; 
+					
+				case 5: 
+					vUpdatedBy = 'Regional Manager';
+					break; 
+
+				case 6: 
+					vUpdatedBy = 'Regional Advisor';
+					break; 
+
+				case 7: 
+					vUpdatedBy = 'Supervising Representative';
+					break; 
+					
+			} //end switch
+			
+			// Updating Placement Information - Check if we need to update/insert history record
+
+			// STUDENT IS UNPLACED - SET MESSAGE
+			if ( ARGUMENTS.placementStatus EQ 'Unplaced' ) {
+				
+				vQueryType = 'insert';
+				vActions = vActions & "<strong>New Placement Information</strong> <br /> #CHR(13)#";
+
+				// Welcome Family Information
+				if ( VAL(ARGUMENTS.isWelcomeFamily) ) {
+					vActions = vActions & "This is a welcome family <br /> #CHR(13)#";
+				}
+			
+			// STUDENT IS PLACED - CHECK FOR UPDATES
+			} else {
+
+				// Host Family Updated
+				if ( NOT VAL(qGetStudentInfo.hostID) AND VAL(ARGUMENTS.hostID) ) {
+					vQueryType = 'update';
+					vAddExtraLine = 1;
+					hasHostIDChanged = 1;
+					
+					// Add Message if info has been updated
+					vActions = vActions & "<strong>Host Family Updated</strong> <br /> #CHR(13)#";
+					
+					if ( VAL(ARGUMENTS.isWelcomeFamily) ) {
+						vActions = vActions & "<strong>This is a welcome family</strong> <br /> #CHR(13)#";
+					}
+				
+				} else if ( VAL(ARGUMENTS.hostID) AND VAL(qGetStudentInfo.hostID) AND qGetStudentInfo.hostID NEQ ARGUMENTS.hostID ) {
+					vQueryType = 'insert';
+					vAddExtraLine = 1;
+					hasHostIDChanged = 1;
+					
+					// Start building record
+					
+					// Add Message if info has been updated
+					if ( VAL(qGetStudentInfo.hostID) ) {
+						vActions = vActions & "<strong>Host Family Updated</strong> <br /> #CHR(13)#";
+					}
+					
+					if ( VAL(ARGUMENTS.isWelcomeFamily) ) {
+						vActions = vActions & "<strong>This is a welcome family</strong> <br /> #CHR(13)#";
+					}
+	
+					if ( VAL(ARGUMENTS.isRelocation) ) {
+						vActions = vActions & "<strong>This is a relocation</strong> <br /> #CHR(13)#";
+					}
+
+					if ( LEN(ARGUMENTS.changePlacementExplanation) ) {
+						vActions = vActions & "Explanation: #ARGUMENTS.changePlacementExplanation# <br /> #CHR(13)#";
+					}
+	
+				}
+
+				// Add Extra Line
+				if ( VAl(vAddExtraLine) ) {
+					vActions = vActions & "<br /> #CHR(13)#";
+					vAddExtraLine = 0;
+				}
+				
+				// School Information
+				if ( VAL(ARGUMENTS.schoolID) AND VAL(qGetStudentInfo.schoolID) AND qGetStudentInfo.schoolID NEQ ARGUMENTS.schoolID ) {
+					if ( NOT LEN(vQueryType) ) { 					
+						vQueryType = 'update';
+					}
+					vAddExtraLine = 1;
+					hasSchoolIDChanged = 1;
+					
+					// Add Message if info has been updated
+					if ( VAL(qGetStudentInfo.schoolID) ) {
+						vActions = vActions & "<strong>School Updated</strong> <br /> #CHR(13)#";
+						// Previous School for reference
+						qGetSchoolInfo = APPLICATION.CFC.SCHOOL.getSchools(schoolID=qGetStudentInfo.schoolID);
+						vActions = vActions & "Previous School: #qGetSchoolInfo.schoolName# ###qGetSchoolInfo.schoolID# <br /> #CHR(13)#";
+						// School Paperwork Received
+					}				
+	
+					if ( LEN(ARGUMENTS.schoolIDReason) ) {
+						vActions = vActions & "Reason: #ARGUMENTS.schoolIDReason# <br /> #CHR(13)#";
+					}
+					
+				}
+
+				// Add Extra Line
+				if ( VAl(vAddExtraLine) ) {
+					vActions = vActions & "<br /> #CHR(13)#";
+					vAddExtraLine = 0;
+				}
+								
+				// Placing Representative
+				if ( NOT VAL(qGetStudentInfo.placeRepID) AND VAL(ARGUMENTS.placeRepID) OR ( VAL(ARGUMENTS.placeRepID) AND VAL(qGetStudentInfo.placeRepID) AND qGetStudentInfo.placeRepID NEQ ARGUMENTS.placeRepID ) ) {
+					if ( NOT LEN(vQueryType) ) { 
+						vQueryType = 'update';
+					}
+					vAddExtraLine = 1;
+					hasPlaceRepIDChanged = 1;
+
+					// Add Message if info has been updated
+					if ( VAL(qGetStudentInfo.placeRepID) ) {
+						vActions = vActions & "<strong>Placing Representative Updated</strong> <br /> #CHR(13)#";
+						// Previous Placing Representative for reference
+						qGetPlacingRep = APPLICATION.CFC.USER.getUsers(userID=qGetStudentInfo.placeRepID);
+						vActions = vActions & "Previous Representative: #qGetPlacingRep.firstName# #qGetPlacingRep.lastName# ###qGetPlacingRep.userID# <br /> #CHR(13)#";
+					}
+	
+					if ( LEN(ARGUMENTS.placeRepIDReason) ) {
+						vActions = vActions & "Reason: #ARGUMENTS.placeRepIDReason# <br /> #CHR(13)#";
+					}
+
+				}
+
+				// Add Extra Line
+				if ( VAl(vAddExtraLine) ) {
+					vActions = vActions & "<br /> #CHR(13)#";
+					vAddExtraLine = 0;
+				} 
+				
+				// Supervising Representative
+				if ( NOT VAL(qGetStudentInfo.areaRepID) AND VAL(ARGUMENTS.areaRepID) OR ( VAL(ARGUMENTS.areaRepID) AND VAL(qGetStudentInfo.areaRepID) AND qGetStudentInfo.areaRepID NEQ ARGUMENTS.areaRepID ) ) {
+					if ( NOT LEN(vQueryType) ) { 
+						vQueryType = 'update';
+					}
+					vAddExtraLine = 1;
+					hasAreaRepIDChanged = 1;
+
+					// Add Message if info has been updated
+					if ( VAL(qGetStudentInfo.areaRepID) ) {
+						vActions = vActions & "<strong>Supervising Representative Updated</strong> <br /> #CHR(13)#";
+						// Previous Supervising Representative for reference
+						qGetSupervisingRep = APPLICATION.CFC.USER.getUsers(userID=qGetStudentInfo.areaRepID);
+						vActions = vActions & "Previous Representative: #qGetSupervisingRep.firstName# #qGetSupervisingRep.lastName# ###qGetSupervisingRep.userID# <br /> #CHR(13)#";
+					}
+	
+					if ( LEN(ARGUMENTS.areaRepIDReason) ) {
+						vActions = vActions & "Reason: #ARGUMENTS.areaRepIDReason# <br /> #CHR(13)#";
+					}
+
+				}
+
+				// Add Extra Line
+				if ( VAl(vAddExtraLine) ) {
+					vActions = vActions & "<br /> #CHR(13)#";
+					vAddExtraLine = 0;
+				}
+
+				// Update Double Placement 
+				if ( VAL(qGetStudentInfo.doublePlace) AND VAL(ARGUMENTS.doublePlace) AND qGetStudentInfo.doublePlace NEQ ARGUMENTS.doublePlace ) {
+					if ( NOT LEN(vQueryType) ) { 
+						vQueryType = 'update';
+					}
+					vAddExtraLine = 1;
+					hasDoublePlacementIDChanged = 1;
+
+					// Add Message if info has been updated
+					if ( VAL(qGetStudentInfo.doublePlace) ) {
+						vActions = vActions & "<strong>Double Placement Updated</strong> <br /> #CHR(13)#";	
+						// Previous Supervising Representative for reference
+						qGetDoublePlacementInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=qGetStudentInfo.doublePlace);
+						vActions = vActions & "Previous Student: #qGetDoublePlacementInfo.firstName# #qGetDoublePlacementInfo.familyLastName# ###qGetDoublePlacementInfo.studentID# <br /> #CHR(13)#";
+					}
+					
+					if ( ARGUMENTS.placementAction EQ 'setDoublePlacement' AND LEN(ARGUMENTS.doublePlaceReason) ) {
+						// Automatically Assigned Message
+						vActions = vActions & "Message: #ARGUMENTS.doublePlaceReason# <br /> #CHR(13)#";
+					} else if ( LEN(ARGUMENTS.doublePlaceReason) ) {
+						vActions = vActions & "Reason: #ARGUMENTS.doublePlaceReason# <br /> #CHR(13)#";
+					}
+				
+				// Add Double Placement
+				} else if ( NOT VAL(qGetStudentInfo.doublePlace) AND VAL(ARGUMENTS.doublePlace) AND qGetStudentInfo.doublePlace NEQ ARGUMENTS.doublePlace ) {
+					if ( NOT LEN(vQueryType) ) { 
+						vQueryType = 'update';
+					}
+					vAddExtraLine = 1;
+					hasDoublePlacementIDChanged = 1;
+
+					vActions = vActions & "<strong>Double Placement Added</strong> <br /> #CHR(13)#";
+
+					if ( ARGUMENTS.placementAction EQ 'setDoublePlacement' AND LEN(ARGUMENTS.doublePlaceReason) ) {
+						// Automatically Assigned Message
+						vActions = vActions & "Message: #ARGUMENTS.doublePlaceReason# <br /> #CHR(13)#";
+					} else if ( LEN(ARGUMENTS.doublePlaceReason) ) {
+						vActions = vActions & "Reason: #ARGUMENTS.doublePlaceReason# <br /> #CHR(13)#";
+					}
+
+				// Remove Double Placement	
+				} else if ( VAL(qGetStudentInfo.doublePlace) AND NOT VAL(ARGUMENTS.doublePlace) ) { // ARGUMENTS.placementStatus NEQ 'Approved'
+					if ( NOT LEN(vQueryType) ) { 
+						vQueryType = 'update';
+					}
+					vAddExtraLine = 1;
+					hasDoublePlacementIDChanged = 1;
+					
+					vActions = vActions & "<strong>Double Placement Removed</strong> <br /> #CHR(13)#";	
+					// Previous Supervising Representative for reference
+					qGetDoublePlacementInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=qGetStudentInfo.doublePlace);
+					vActions = vActions & "Previous Student: #qGetDoublePlacementInfo.firstName# #qGetDoublePlacementInfo.familyLastName# ###qGetDoublePlacementInfo.studentID# <br /> #CHR(13)#";
+					
+					if ( ARGUMENTS.placementAction EQ 'setDoublePlacement' AND LEN(ARGUMENTS.doublePlaceReason) ) {
+						vActions = vActions & "Message: #ARGUMENTS.doublePlaceReason# <br /> #CHR(13)#";
+					} else if ( LEN(ARGUMENTS.doublePlaceReason) ) {
+						vActions = vActions & "Reason: #ARGUMENTS.doublePlaceReason# <br /> #CHR(13)#";
+					}
+					
+				}
+			
+			}
+			
+			// Check if there is an extra reason/comment
+			if ( LEN(ARGUMENTS.reason) ) {
+				vActions = vActions & "Comment: #ARGUMENTS.reason# <br /> #CHR(13)#";
+			}
+			
+			// Add User Information
+			vActions = vActions & "Updated by: #qGetEnteredBy.firstName# #qGetEnteredBy.lastName# (###qGetEnteredBy.userID#) - #vUpdatedBy# <br /> #CHR(13)#";
+			
+			// Add paragraph tag to set this update
+			vActions = "<p>#vActions#</p>";
+		</cfscript>       
+        
+        <!--- School Updated | Reset Fields on the Student Table --->
+		<cfif VAL(hasSchoolIDChanged)>
+        
+            <cfquery 
+                datasource="#APPLICATION.DSN#">
+					UPDATE
+                    	php_students_in_program
+                    SET
+						<!--- School Docs --->
+                        school_acceptance = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+	            	WHERE
+    					studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+			</cfquery>
+        
+        </cfif>
+        
+        
+		<!--- Insert History Information --->
+        <cfif vQueryType EQ 'insert'>        
+            
+            <!--- Host Family Updated | Reset Fields on the Student Table --->
+            <cfquery 
+                datasource="#APPLICATION.DSN#">
+					UPDATE
+                    	php_students_in_program
+                    SET
+                        programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.programID)#">,
+                        dateApproved = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        datePlaced = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        datePISEmailed = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+						<!--- Placement Notes --->
+                        placementNotes = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">,
+                        <!--- Paperwork Received --->
+                        doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_photos_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_school_profile_rec = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+	            	WHERE
+    					assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.assignedID)#">
+			</cfquery>
+            
+            <cfscript>
+				// Set Old Records to Inactive
+				setHostHistoryInactive(studentID=ARGUMENTS.studentID);	
+			</cfscript>
+            
+            <cfquery 
+                datasource="#APPLICATION.DSN#"
+                result="newRecord">
+                    INSERT INTO 
+                        smg_hosthistory	
+                    (
+                        studentID,
+                        assignedID, 
+                        hostID,  
+                        hasHostIDChanged,
+                        changePlacementExplanation,                   
+                        schoolID,
+                        hasSchoolIDChanged, 
+                        placeRepID, 
+                        hasPlaceRepIDChanged,
+                        areaRepID,
+                        hasAreaRepIDChanged,
+                        doublePlacementID,
+                        hasDoublePlacementIDChanged,
+                        changedBy,
+                        isWelcomeFamily,
+                        isRelocation,
+                        datePlaced,
+                        dateOfChange, 
+                        reason,
+                        isActive,
+                        dateCreated
+                    )
+                    VALUES
+                    (
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.assignedID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(hasHostIDChanged)#">, 
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.changePlacementExplanation#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.schoolID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(hasSchoolIDChanged)#">,   
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.placeRepID)#">, 
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(hasPlaceRepIDChanged)#">, 
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.areaRepID)#">, 
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(hasAreaRepIDChanged)#">, 
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(hasDoublePlacementIDChanged)#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.changedBy)#">, 
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isWelcomeFamily)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isRelocation)#">, 
+                    	<cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#vActions#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="1">,
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                    )
+            </cfquery>
+            
+        	<cfscript>
+				// Set History ID
+				vHostHistoryID = newRecord.GENERATED_KEY;
+				
+				// Insert Placement Log History
+				
+				// Insert Host ID Track
+				if ( VAL(ARGUMENTS.hostID) ) {
+	
+					insertPlacementTracking(
+						historyID=vHostHistoryID,
+						studentID=ARGUMENTS.studentID,
+						fieldName='hostID',
+						fieldID=ARGUMENTS.hostID
+					);
+				
+				}
+				
+				// Insert School ID Track
+				if ( VAL(ARGUMENTS.schoolID) ) {
+	
+					insertPlacementTracking(
+						historyID=vHostHistoryID,
+						studentID=ARGUMENTS.studentID,
+						fieldName='schoolID',
+						fieldID=ARGUMENTS.schoolID
+					);
+				
+				}
+				
+				// Insert Place Rep ID Track
+				if ( VAL(ARGUMENTS.placeRepID) ) {
+	
+					insertPlacementTracking(
+						historyID=vHostHistoryID,
+						studentID=ARGUMENTS.studentID,
+						fieldName='placeRepID',
+						fieldID=ARGUMENTS.placeRepID
+					);
+				
+				}
+				
+				// Insert Area Rep ID Track
+				if ( VAL(ARGUMENTS.areaRepID) ) {
+	
+					insertPlacementTracking(
+						historyID=vHostHistoryID,
+						studentID=ARGUMENTS.studentID,
+						fieldName='areaRepID',
+						fieldID=ARGUMENTS.areaRepID
+					);
+				
+				}
+								
+				// Insert Double Placement Track
+				if ( VAL(ARGUMENTS.doublePlace) ) {
+	
+					insertPlacementTracking(
+						historyID=vHostHistoryID,
+						studentID=ARGUMENTS.studentID,
+						fieldName='doublePlacementID',
+						fieldID=ARGUMENTS.doublePlace
+					);
+				
+				}
+            </cfscript>
+            
+        </cfif>
+        
+		<cfscript>
+			if ( NOT VAL(vHostHistoryID) ) {
+				// Get Current History
+				vHostHistoryID = getPlacementHistory(studentID=ARGUMENTS.studentID, assignedID=ARGUMENTS.assignedID).historyID;
+			}
+				
+			if ( LEN(vQueryType) ) {
+				
+				// Insert Actions Into Separate Table
+				APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
+					applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,
+					foreignTable='smg_hostHistory',
+					foreignID=vHostHistoryID,
+					enteredByID=VAL(ARGUMENTS.changedBy),
+					actions=vActions
+				);			
+		
+			}
+			
+			// Insert Placement Log History
+			
+			// Insert Host ID Track
+			if ( VAL(hasHostIDChanged) AND VAL(ARGUMENTS.hostID) ) {
+
+				insertPlacementTracking(
+					historyID=vHostHistoryID,
+					studentID=ARGUMENTS.studentID,
+					fieldName='hostID',
+					fieldID=ARGUMENTS.hostID
+				);
+			
+			}
+			
+			// Insert School ID Track
+			if ( VAL(hasSchoolIDChanged) AND VAL(ARGUMENTS.schoolID) ) {
+
+				insertPlacementTracking(
+					historyID=vHostHistoryID,
+					studentID=ARGUMENTS.studentID,
+					fieldName='schoolID',
+					fieldID=ARGUMENTS.schoolID
+				);
+			
+			}
+			
+			// Insert Place Rep ID Track
+			if ( VAL(hasPlaceRepIDChanged) AND VAL(ARGUMENTS.placeRepID) ) {
+
+				insertPlacementTracking(
+					historyID=vHostHistoryID,
+					studentID=ARGUMENTS.studentID,
+					fieldName='placeRepID',
+					fieldID=ARGUMENTS.placeRepID
+				);
+			
+			}
+			
+			// Insert Area Rep ID Track
+			if ( VAL(hasAreaRepIDChanged) AND VAL(ARGUMENTS.areaRepID) ) {
+
+				insertPlacementTracking(
+					historyID=vHostHistoryID,
+					studentID=ARGUMENTS.studentID,
+					fieldName='areaRepID',
+					fieldID=ARGUMENTS.areaRepID
+				);
+			
+			}
+			
+			// Insert Double Placement Track
+			if ( VAL(hasDoublePlacementIDChanged) AND VAL(ARGUMENTS.doublePlace) ) {
+
+				insertPlacementTracking(
+					historyID=vHostHistoryID,
+					studentID=ARGUMENTS.studentID,
+					fieldName='doublePlacementID',
+					fieldID=ARGUMENTS.doublePlace
+				);
+			
+			}
+		</cfscript> 
+        
+        <!--- Update History --->
+        <cfif vQueryType EQ 'update' AND ARGUMENTS.placementAction NEQ 'setDoublePlacement'>
+
+            <cfquery 
+                datasource="#APPLICATION.DSN#">
+                    UPDATE
+                        smg_hosthistory	
+                    SET
+						<cfif VAL(hasSchoolIDChanged)>
+                        	hasSchoolIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="#hasSchoolIDChanged#">,                
+                        </cfif>
+                        
+                        <cfif VAL(hasPlaceRepIDChanged)>
+                        	hasPlaceRepIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="#hasPlaceRepIDChanged#">,
+                        </cfif>
+                        
+                        <cfif VAL(hasAreaRepIDChanged)>
+                        	hasAreaRepIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="#hasAreaRepIDChanged#">,
+                        </cfif>
+						
+                        <cfif VAL(hasDoublePlacementIDChanged)>
+                        	hasDoublePlacementIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="#hasDoublePlacementIDChanged#">,
+                       	</cfif> 
+
+						<cfif NOT IsDate(qGetStudentInfo.datePlaced)>
+                            dateplaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                        </cfif>
+                        
+                        schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.schoolID)#">,  
+                        placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.placeRepID)#">,
+                        areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.areaRepID)#">,
+                        doublePlacementID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">
+                    WHERE
+                        historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vHostHistoryID)#">
+            </cfquery>
+        
+		</cfif>
+        
 	</cffunction>
 
 
 	<!--- INSERT FLIGHT --->
-	<cffunction name="insertFlightInfo" access="public" returntype="void" output="false" hint="Inserts Flight Information">
-    	<cfargument name="studentID" hint="studentID is required">
-        <cfargument name="companyID" default="0" hint="Company student is currently assigned to">
-        <cfargument name="programID" default="0" hint="Program student is currently assigned to">
-        <cfargument name="enteredByID" default="0" hint="ID of user entering the flight information">
-        <cfargument name="batchID" default="0" hint="BatchID used for XML files">
-        <cfargument name="flightNumber" default="" hint="flightNumber is not required">
-        <cfargument name="depCity" default="" hint="depCity is not required">
-        <cfargument name="depAirCode" default="" hint="depAirCode is not required">
-        <cfargument name="depDate" default="" hint="Departure is not required">
-        <cfargument name="depTime" default="" hint="depTime is not required">
-        <cfargument name="arrivalCity" default="" hint="arrivalCity is not required">
-        <cfargument name="arrivalAirCode" default="" hint="arrivalAirCode is not required">
-        <cfargument name="arrivalTime" default="" hint="arrivalTime is not required">
-        <cfargument name="overNight" default="0" hint="overNight is not required">
-        <cfargument name="flightType" hint="Arrival/Departure is required">
+	<cffunction name="insertPlacementTracking" access="public" returntype="void" output="false" hint="Inserts Placement Tracking to the log">
+    	<cfargument name="historyID" hint="historyID is required">
+        <cfargument name="studentID" hint="studentID is required">
+        <cfargument name="fieldName" default="0" hint="fieldName is not required">
+        <cfargument name="fieldID" default="0" hint="fieldID is not required">
 		
-        <cfscript>
-			var isCompleted = 1;
-			
-			// Check if Flight Info is Complete, these fields are required to get a complete flight information
-			if ( NOT IsDate(ARGUMENTS.depDate) OR NOT LEN(ARGUMENTS.depCity) OR NOT LEN(ARGUMENTS.arrivalCity) OR NOT LEN(ARGUMENTS.flightNumber) OR NOT LEN(ARGUMENTS.arrivalTime)	) {
-				isCompleted = 0;
-			}
-		</cfscript>
-        
         <cfquery 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 INSERT INTO 
-                    smg_flight_info
+                    smg_hostHistoryTracking
                 (
-                    studentID, 
-                    companyID,
-                    programID,
-                    enteredByID,
-                    batchID,
-                    flight_number,                 
-                    dep_city, 
-                    dep_aircode, 
-                    dep_date, 
-                    dep_time, 
-                    arrival_city, 
-                    arrival_aircode, 
-                    arrival_time,
-                    overnight, 
-                    flight_type,
-                    isCompleted,
+                    historyID,
+                    studentID,
+                    fieldName,
+                    fieldID,
                     dateCreated
                 )
                 VALUES 
                 (
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.enteredByID#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.batchID#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightNumber#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.depCity#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.depAirCode#">,
-                    <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.depDate#" null="#NOT IsDate(ARGUMENTS.depDate)#">,
-                    <cfqueryparam cfsqltype="cf_sql_time" value="#ARGUMENTS.depTime#" null="#NOT IsDate(ARGUMENTS.depTime)#">, 
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrivalCity#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrivalAirCode#">,
-                    <cfqueryparam cfsqltype="cf_sql_time" value="#ARGUMENTS.arrivalTime#" null="#NOT IsDate(ARGUMENTS.arrivalTime)#">, 
-                    <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.overNight)#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightType#">,
-                    <cfqueryparam cfsqltype="cf_sql_bit" value="#isCompleted#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.historyID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fieldName#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.fieldID)#">,
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                 ) 
         </cfquery>
@@ -547,582 +1465,251 @@
 	</cffunction>
 
 	
-    <!--- UPDATE FLIGHT INFORMATION --->
-	<cffunction name="updateFlightInfo" access="public" returntype="void" output="false" hint="Updates Flight Information">
-    	<cfargument name="flightID" hint="flightID is required">
+    <!--- Set Old Host History Records as Inactive --->
+	<cffunction name="setHostHistoryInactive" access="public" returntype="void" output="false" hint="Set Old Host History Records as Inactive">
     	<cfargument name="studentID" hint="studentID is required">
-        <cfargument name="companyID" default="0" hint="Company student is currently assigned to">
-        <cfargument name="programID" default="0" hint="Program student is currently assigned to">
-        <cfargument name="enteredByID" default="0" hint="ID of user entering the flight information">
-        <cfargument name="flightNumber" default="" hint="flightNumber is not required">
-        <cfargument name="depCity" default="" hint="depCity is not required">
-        <cfargument name="depAirCode" default="" hint="depAirCode is not required">
-        <cfargument name="depDate" default="" hint="Departure is not required">
-        <cfargument name="depTime" default="" hint="depTime is not required">
-        <cfargument name="arrivalCity" default="" hint="arrivalCity is not required">
-        <cfargument name="arrivalAirCode" default="" hint="arrivalAirCode is not required">
-        <cfargument name="arrivalTime" default="" hint="arrivalTime is not required">
-        <cfargument name="overNight" default="0" hint="overNight is not required">
 
-        <cfscript>
-			var isCompleted = 1;
-			
-			// Check if Flight Info is Complete, these fields are required to get a complete flight information
-			if ( NOT IsDate(ARGUMENTS.depDate) OR NOT LEN(ARGUMENTS.depCity) OR NOT LEN(ARGUMENTS.arrivalCity) OR NOT LEN(ARGUMENTS.flightNumber) OR NOT LEN(ARGUMENTS.arrivalTime)	) {
-				isCompleted = 0;
-			}
-		</cfscript>
+            <cfquery 
+                datasource="#APPLICATION.DSN#">
+                	UPDATE
+                    	smg_hostHistory
+                    SET
+                    	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                    WHERE
+                    	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+			</cfquery>                    
+    </cffunction>
+    
 
+	<!--- Get Placement History --->
+	<cffunction name="getPlacementHistory" access="public" returntype="query" output="false" hint="Returns placement history">
+    	<cfargument name="studentID" hint="studentID is required">
+        <cfargument name="assignedID" default="" hint="assignedID is not required">
+        
         <cfquery 
-			datasource="#APPLICATION.dsn#">
+        	name="qGetPlacementHistory" 
+            datasource="#APPLICATION.DSN#">
+                SELECT 
+                    h.historyID,
+                    h.studentID,
+                    h.hostID,
+                    h.hasHostIDChanged,
+                    h.schoolID,
+                    h.hasSchoolIDChanged,
+                    h.placeRepID,
+                    h.hasPlaceRepIDChanged,
+                    h.areaRepID,
+                    h.hasAreaRepIDChanged,
+                    h.doublePlacementID,
+                    h.hasDoublePlacementIDChanged,
+                    h.changedBy,
+                    h.isWelcomeFamily,
+                    h.isRelocation,
+                    h.original_place,
+                    h.reason,
+                    h.actions,
+                    h.datePlaced,
+                    h.dateOfChange,
+                    h.dateCreated,
+                    h.dateUpdated,
+                    <!--- Host Family --->
+                    host.familyLastName,
+                    <!--- School --->
+                    school.schoolName,
+                    <!--- Place Rep --->
+                    place.firstName AS placeFirstName, 
+                    place.lastName AS placeLastName,
+                    <!--- Area Rep --->
+                    area.firstName AS areaFirstName, 
+                    area.lastName AS areaLastName,
+                    <!--- Double Placement --->
+                    DP.firstName AS doublePlacementFirstName,
+                    DP.familyLastName AS doublePlacementLastName,
+                    <!--- User --->
+                    user.firstName AS changedByFirstName, 
+                    user.lastName AS changedByLastName
+                FROM 
+                    smg_hosthistory h
+                LEFT JOIN 
+                    smg_hosts host ON h.hostid = host.hostID
+                LEFT JOIN 
+                    php_schools school ON h.schoolID = school.schoolID
+                LEFT JOIN 
+                    smg_users place ON h.placeRepID = place.userID
+                LEFT JOIN 
+                    smg_users area ON h.areaRepID = area.userID
+                LEFT JOIN
+                	smg_students DP ON h.doublePlacementID = DP.studentID   
+                LEFT JOIN 
+                    smg_users user ON h.changedby = user.userID
+                WHERE 
+                    h.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+                
+                <cfif LEN(ARGUMENTS.assignedID)>
+					AND
+                    	h.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.assignedID)#">
+                </cfif>
+                
+                ORDER BY 
+                    h.dateCreated DESC, 
+                    h.historyid DESC
+        </cfquery>
+                
+        <cfreturn qGetPlacementHistory>
+    </cffunction>
+
+
+	<!--- Get Placement History --->
+	<cffunction name="getHostHistoryByID" access="public" returntype="query" output="false" hint="Returns placement history">
+    	<cfargument name="studentID" hint="studentID is required">
+        <cfargument name="historyID" hint="historyID is required">
+        
+        <cfquery 
+        	name="qGetHostHistoryByID" 
+            datasource="#APPLICATION.DSN#">
+                SELECT 
+                    historyID,
+                    companyID,
+                    studentID,
+                    hostID,
+                    hasHostIDChanged,
+                    schoolID,
+                    hasSchoolIDChanged,
+                    placeRepID,
+                    hasPlaceRepIDChanged,
+                    areaRepID,
+                    hasAreaRepIDChanged,
+                    secondVisitRepID,
+                    hasSecondVisitRepIDChanged,
+                    doublePlacementID,
+                    hasDoublePlacementIDChanged,
+                    changedBy,
+                    isWelcomeFamily,
+                    isRelocation,
+                    original_place,
+                    reason,
+                    changePlacementExplanation,
+                    datePlaced,
+                    datePISEmailed,
+                    dateSetHostPermanent,
+                    <!--- Placement Paperwork --->
+                    doc_letter_rec_date,
+                    doc_rules_rec_date,
+                    doc_photos_rec_date,
+                    doc_school_profile_rec,
+                    doc_conf_host_rec,
+                    doc_ref_form_1,
+                    doc_ref_form_2,
+                    actions,
+                    dateOfChange,
+                    dateCreated,
+                    dateUpdated
+                FROM 
+                    smg_hosthistory
+                WHERE 
+                    historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.historyID)#">
+                AND
+                	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+        </cfquery>
+                
+        <cfreturn qGetHostHistoryByID>
+    </cffunction>
+    
+
+	<!--- Placement Paperwork --->
+	<cffunction name="updatePlacementPaperwork" access="public" returntype="void" output="false" hint="Update Placement Paperwork">
+        <cfargument name="studentID" default="0" hint="studentID is not required">
+        <cfargument name="historyID" default="0" hint="historyID is not required">
+        <!--- Placement Paperwork --->
+        <cfargument name="doc_letter_rec_date" default="" hint="doc_letter_rec_date is not required">
+        <cfargument name="doc_rules_rec_date" default="" hint="doc_rules_rec_date is not required">
+        <cfargument name="doc_photos_rec_date" default="" hint="doc_photos_rec_date is not required">
+        <cfargument name="doc_school_profile_rec" default="" hint="doc_school_profile_rec is not required">
+        <cfargument name="doc_conf_host_rec" default="" hint="doc_conf_host_rec is not required">
+        <cfargument name="doc_ref_form_1" default="" hint="doc_ref_form_1 is not required">
+        <cfargument name="doc_ref_form_2" default="" hint="doc_ref_form_2 is not required">
+        		
+        <cfquery 
+			datasource="#APPLICATION.DSN#">
                 UPDATE
-                    smg_flight_info
+	                php_students_in_program
                 SET 
-                    companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
-                    programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">,
-                    enteredByID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.enteredByID#">,
-                    flight_number = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightNumber#">,                 
-                    dep_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.depCity#">, 
-                    dep_aircode = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.depAirCode#">, 
-                    dep_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.depDate#" null="#NOT IsDate(ARGUMENTS.depDate)#">,
-                    dep_time = <cfqueryparam cfsqltype="cf_sql_time" value="#ARGUMENTS.depTime#" null="#NOT IsDate(ARGUMENTS.depTime)#">, 
-                    arrival_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrivalCity#">, 
-                    arrival_aircode = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrivalAirCode#">, 
-                    arrival_time = <cfqueryparam cfsqltype="cf_sql_time" value="#ARGUMENTS.arrivalTime#" null="#NOT IsDate(ARGUMENTS.arrivalTime)#">, 
-                    overnight = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.overNight)#">,
-                    isCompleted = <cfqueryparam cfsqltype="cf_sql_bit" value="#isCompleted#">
+                    <!--- Placement Paperwork --->
+                    doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_letter_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_letter_rec_date)#">,
+                    doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_rules_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_rules_rec_date)#">,
+                    doc_photos_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_photos_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_photos_rec_date)#">,
+                    doc_school_profile_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_profile_rec#" null="#NOT IsDate(ARGUMENTS.doc_school_profile_rec)#">,
+                    doc_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_conf_host_rec#" null="#NOT IsDate(ARGUMENTS.doc_conf_host_rec)#">,
+                    doc_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_form_1#" null="#NOT IsDate(ARGUMENTS.doc_ref_form_1)#">,
+                    doc_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_form_2#" null="#NOT IsDate(ARGUMENTS.doc_ref_form_2)#">
                 WHERE 
-                    flightID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.flightID#">
-                AND	
-                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">           
-                LIMIT 1
-        </cfquery>
-
-	</cffunction>
-
-
-	<!--- DELETE FLIGHT INFORMATION --->
-	<cffunction name="deleteFlightInformation" access="public" returntype="void" output="false" hint="Deletes Flight Information">
-    	<cfargument name="flightID" hint="flightID is required">
-        <cfargument name="studentID" hint="studentID is required">
-        <cfargument name="programID" hint="programID is required">
-        <cfargument name="enteredByID" default="0" hint="ID of user entering the flight information">
-        <cfargument name="sendEmail" default="1" hint="Set to 0 to not send email notification">
+                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">                    	
+		</cfquery>
 		
-        <cfquery 
-			datasource="#APPLICATION.dsn#">
-                UPDATE
-                    smg_flight_info
-                SET
-                    enteredByID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.enteredByID#">,
-                    isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                WHERE 
-                    flightID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.flightID#">
-                AND	
-                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">           
-                LIMIT 1
-        </cfquery>
-
         <cfscript>
-			// Send out email notification
-			if ( ARGUMENTS.sendEmail ) {
-				emailFlightInformation(
-					studentID=ARGUMENTS.studentID,
-					programID=ARGUMENTS.programID,
-					flightID=ARGUMENTS.flightID
-				);
-			}
+			// Update Placement History
+			updatePlacementPaperworkHistory(
+				studentID = ARGUMENTS.studentID,
+				historyID = ARGUMENTS.historyID,
+				// Placement Paperwork
+				doc_letter_rec_date = ARGUMENTS.doc_letter_rec_date,
+				doc_rules_rec_date = ARGUMENTS.doc_rules_rec_date,
+				doc_photos_rec_date = ARGUMENTS.doc_photos_rec_date,
+				doc_school_profile_rec = ARGUMENTS.doc_school_profile_rec,
+				doc_conf_host_rec = ARGUMENTS.doc_conf_host_rec,
+				doc_ref_form_1 = ARGUMENTS.doc_ref_form_1,
+				doc_ref_form_2 = ARGUMENTS.doc_ref_form_2
+			);
 		</cfscript>
         
 	</cffunction>
-    
 
-	<!--- DELETE COMPLETE FLIGHT INFORMATION --->
-	<cffunction name="deleteCompleteFlightInformation" access="public" returntype="void" output="false" hint="Deletes Flight Information">
-        <cfargument name="studentID" hint="studentID is required">
-        <cfargument name="flightType" hint="Arrival/Departure is required">
-        <cfargument name="enteredByID" default="0" hint="ID of user entering the flight information">
-		
+
+	<cffunction name="updatePlacementPaperworkHistory" access="public" returntype="void" output="false" hint="Update Placement Paperwork">
+        <cfargument name="studentID" default="0" hint="studentID is not required">
+        <cfargument name="historyID" default="0" hint="historyID is not required">
+        <!--- Placement Paperwork --->
+        <cfargument name="doc_letter_rec_date" default="" hint="doc_letter_rec_date is not required">
+        <cfargument name="doc_rules_rec_date" default="" hint="doc_rules_rec_date is not required">
+        <cfargument name="doc_photos_rec_date" default="" hint="doc_photos_rec_date is not required">
+        <cfargument name="doc_school_profile_rec" default="" hint="doc_school_profile_rec is not required">
+        <cfargument name="doc_conf_host_rec" default="" hint="doc_conf_host_rec is not required">
+        <cfargument name="doc_ref_form_1" default="" hint="doc_ref_form_1 is not required">
+        <cfargument name="doc_ref_form_2" default="" hint="doc_ref_form_2 is not required">
+        
+        <cfscript>
+			// Get Current Placement Information
+			qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID);
+		</cfscript>
+        
+        <!--- Update Host History Documents --->
         <cfquery 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 UPDATE
-                    smg_flight_info
-                SET
-                    enteredByID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.enteredByID#">,
-                    isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+	                smg_hosthistory
+                SET 
+					datePlaced = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetStudentInfo.datePlaced#" null="#NOT IsDate(qGetStudentInfo.datePlaced)#">,
+                    datePISEmailed = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetStudentInfo.datePISEmailed#" null="#NOT IsDate(qGetStudentInfo.datePISEmailed)#">,
+                    <!--- Placement Paperwork --->
+                    doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_letter_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_letter_rec_date)#">,
+                    doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_rules_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_rules_rec_date)#">,
+                    doc_photos_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_photos_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_photos_rec_date)#">,
+                    doc_school_profile_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_profile_rec#" null="#NOT IsDate(ARGUMENTS.doc_school_profile_rec)#">,
+                    doc_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_conf_host_rec#" null="#NOT IsDate(ARGUMENTS.doc_conf_host_rec)#">,
+                    doc_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_form_1#" null="#NOT IsDate(ARGUMENTS.doc_ref_form_1)#">,
+                    doc_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_form_2#" null="#NOT IsDate(ARGUMENTS.doc_ref_form_2)#">
                 WHERE 
-                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">  
-                AND	
-                    flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.flightType#">            	         
-        </cfquery>
-
+                    historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.historyID)#"> 
+                AND
+                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">                    	
+		</cfquery>
+        
 	</cffunction>
 
-	
-	<!--- printFlightInformation --->
-	<cffunction name="printFlightInformation" access="public" returntype="string" output="false" hint="Returns a formatted flight information">
-    	<cfargument name="studentID" default="" hint="studentID is NOT required">
-        <cfargument name="uniqueID" default="" hint="uniqueID is NOT required">
-        <cfargument name="programID" hint="programID is required">
-        <cfargument name="flightID" default="0" hint="flightID is not required, pass flightID of a leg that has been deleted">
-        <cfargument name="sendEmailTo" default="" hint="school | currentUser">
-       
-   		<!--- Import CustomTag --->
-		<cfimport taglib="../customTags/gui/" prefix="gui" />	
-
-		<cfscript>
-			var flightInfoReport = '';
-        	
-			if ( LEN(ARGUMENTS.uniqueID) ) {
-				qGetStudentFullInformation = getStudentFullInformationByID(uniqueID=ARGUMENTS.uniqueID, programID=ARGUMENTS.programID);
-			} else {
-				qGetStudentFullInformation = getStudentFullInformationByID(studentID=ARGUMENTS.studentID, programID=ARGUMENTS.programID);
-			}
-			
-			// Get School Information
-			qGetSchoolInfo = APPLICATION.CFC.SCHOOL.getSchools(schoolID=qGetStudentFullInformation.schoolID);
-			
-			// Get School Dates
-			qGetSchoolDates = APPLICATION.CFC.SCHOOL.getSchoolDates(schoolID=qGetStudentFullInformation.schoolID, programID=qGetStudentFullInformation.programID);
-			
-            // Get Current User
-            qGetCurrentUser = APPLICATION.CFC.USER.getUsers(userID=CLIENT.userID);
-            			
-            // Get Specific Flight Information
-            qGetDeletedFlightInfo = getFlightInformationByFlightID(flightID=VAL(ARGUMENTS.flightID));
-            
-            // Get Arrival
-            qGetArrival = getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), programID=VAL(qGetStudentFullInformation.programID), flightType="arrival");
-    
-            // Get Departure
-            qGetDeparture = getFlightInformation(studentID=VAL(qGetStudentFullInformation.studentID), programID=VAL(qGetStudentFullInformation.programID), flightType="departure");
-			
-			// DELETE OR COMMENT THIS
-			// flightEmailTo = 'marcus@iseusa.com';
-        </cfscript>
-        
-            <cfoutput>
-                	
-				<!--- Flight Report --->
-                <cfsavecontent variable="flightInfoReport">
-                	
-                    <!--- Include Header --->
-                    <gui:pageHeader
-                        headerType="pdf"
-                    />
-                
-                    <!--- Student Information --->
-                    <fieldset style="margin: 5px 0px 10px 0px; padding: 7px; border: ##DDD 1px solid; font-size:13px;">
-                        
-                        <legend style="color: ##333; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">
-                        	Flight Information
-                        </legend>
-						
-                        <p style="color: ##333;">
-                            We are pleased to give you the flight information for the student below. 
-                        </p>
-
-						<table style="width: 100%; margin-bottom:5px; padding:0px; font-size:13px; line-height:13px;">	
-                        	<tr>
-                            	<td width="150px;" style="font-weight:bold; text-align:right; vertical-align:top;">Student:</td>
-                                <td>#qGetStudentFullInformation.firstName# #qGetStudentFullInformation.familyLastName# (###qGetStudentFullInformation.studentID#)</td>
-                            </tr>
-							
-                            <!--- 05/19/2011 - Luke requested to be removed --->
-                            <!---
-                        	<tr>
-                            	<td style="font-weight:bold; text-align:right; vertical-align:top;">International Representative:</td>
-                                <td>#qGetStudentFullInformation.intlRepBusinessName# (###qGetStudentFullInformation.intlRepUserID#)</td>
-                            </tr>
-                            --->
-                            
-                        	<tr>
-                            	<td style="font-weight:bold; text-align:right; vertical-align:top;">Program:</td>
-                                <td>#qGetStudentFullInformation.programName#</td>
-                            </tr>
-
-                        	<tr>
-                            	<td style="font-weight:bold; text-align:right; vertical-align:top;">Area Representative:</td>
-                                <td>
-                                    #qGetStudentFullInformation.areaRepFirstName# #qGetStudentFullInformation.areaRepLastName# (###qGetStudentFullInformation.areaRepUserID#)
-                                    - Email: <a href="mailto:#qGetStudentFullInformation.areaRepEmail#">#qGetStudentFullInformation.areaRepEmail#</a> 
-                                    <cfif LEN(qGetStudentFullInformation.areaRepPhone)>
-                                        - Phone: #qGetStudentFullInformation.areaRepPhone#
-                                    </cfif>                                    
-                                </td>
-                            </tr>
-
-                        	<tr>
-                            	<td style="font-weight:bold; text-align:right; vertical-align:top;">School:</td>
-                                <td>#qGetSchoolInfo.schoolName# (###qGetSchoolInfo.schoolID#)</td>
-                            </tr>
-
-                            <tr>
-                                <td style="font-weight:bold; text-align:right; vertical-align:top;">Arrival/Departure Airport::</td>
-                                <td>
-                                    <cfif LEN(qGetSchoolInfo.airport_city)>
-                                    	#qGetSchoolInfo.airport_city# 
-									<cfelse> 
-                                    	n/a 
-									</cfif>
-                                    
-                                    - Airport Code: 
-                                    <cfif LEN(qGetSchoolInfo.major_air_code)>
-                                    	#qGetSchoolInfo.major_air_code# 
-									<cfelse> 
-                                    	n/a 
-									</cfif>
-                                </td>
-                            </tr>
-                        
-							<!--- Updated By --->
-                            <cfif ARGUMENTS.sendEmailTo NEQ 'school'>
-                                <tr>
-                                    <td style="font-weight:bold; text-align:right; vertical-align:top;">Sent By:</td>
-                                    <td>
-                                        #qGetCurrentUser.firstName# #qGetCurrentUser.lastName# (###qGetCurrentUser.userID#) 
-                                        <cfif LEN(qGetCurrentUser.businessname)> - #qGetCurrentUser.businessname# </cfif>
-                                    </td>
-                                </tr>
-							</cfif>
-							
-                            <!--- Today's Date --->
-                        	<tr>
-                            	<td style="font-weight:bold; text-align:right; vertical-align:top;">Today's Date:</td>
-                                <td>#DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')# EST</td>
-                            </tr>
-                                                        
-						</table>                            
-                                            
-                    </fieldset>
-
-
-					<!--- Notes --->                
-                    <fieldset style="margin: 5px 0px 10px 0px; padding: 7px; border: ##DDD 1px solid; font-size:13px;">
-                        
-                        <legend style="color: ##333; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">NOTES ON THIS FLIGHT INFORMATION</legend>
-
-                        <p style="color: ##333;">
-                            <cfif LEN(qGetStudentFullInformation.flight_info_notes)> #qGetStudentFullInformation.flight_info_notes# <cfelse> n/a </cfif>
-                        </p>
-                        
-                    </fieldset>
-
-
-                    <!--- Arrival Information --->
-                    <fieldset style="margin: 5px 0px 10px 0px; padding: 7px; border: ##DDD 1px solid; font-size:13px;">
-                        
-                        <legend style="color: ##333; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">ARRIVAL TO HOST FAMILY INFORMATION</legend>
-
-                        <!--- School Start Date --->
-                        <p style="color: ##333;">
-                            School Start Date: #qGetSchoolDates.startDate#
-                        </p>
-
-                        <cfif qGetArrival.recordCount>
-                                
-                            <table cellspacing="1" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px; color: ##333; font-size:13px;">	
-                                <tr style="color: ##fff; font-weight: bold; text-align:center; background-color: ##0069aa;">
-                                    <td style="padding:4px 0px 4px 0px;">Date</td>
-                                    <td style="padding:4px 0px 4px 0px;">Depart <br /> City</td>
-                                    <td style="padding:4px 0px 4px 0px;">Depart <br /> Airport Code</td>
-                                    <td style="padding:4px 0px 4px 0px;">Arrive <br /> City</td>
-                                    <td style="padding:4px 0px 4px 0px;">Arrive <br /> Airport Code</td>
-                                    <td style="padding:4px 0px 4px 0px;">Flight <br /> Number</td>
-                                    <td style="padding:4px 0px 4px 0px;">Depart <br /> Time</td>
-                                    <td style="padding:4px 0px 4px 0px;">Arrive <br /> Time</td>
-                                    <td style="padding:4px 0px 4px 0px;">Overnight <br /> Flight</td>
-                                </tr>                                
-            
-                                <cfloop query="qGetArrival">
-                                    <tr style="text-align:center; <cfif qGetArrival.currentRow MOD 2>background-color: ##EEEEEE;</cfif> ">
-                                        <td style="padding:4px 0px 4px 0px;">#DateFormat(qGetArrival.dep_date, 'mm/dd/yyyy')#</td>
-    
-                                        <td style="padding:4px 0px 4px 0px;">#qGetArrival.dep_city#</td>
-                                        <td style="padding:4px 0px 4px 0px;">#qGetArrival.dep_airCode#</td>
-                                        <td style="padding:4px 0px 4px 0px;">#qGetArrival.arrival_city#</td>
-                                        <td style="padding:4px 0px 4px 0px;">#qGetArrival.arrival_airCode#</td>
-                                        <td style="padding:4px 0px 4px 0px;">#qGetArrival.flight_number#</td>
-                                        <td style="padding:4px 0px 4px 0px;">#TimeFormat(qGetArrival.dep_time, 'hh:mm tt')#</td>
-                                        <td style="padding:4px 0px 4px 0px;">#TimeFormat(qGetArrival.arrival_time, 'hh:mm tt')#</td>
-                                        <td style="padding:4px 0px 4px 0px;">#YesNoFormat(VAL(qGetArrival.overnight))#</td>
-                                    </tr>    
-                                    
-									<cfif VAL(qGetArrival.overnight)>
-                                    	<tr style="text-align:center; <cfif qGetArrival.currentRow MOD 2>background-color: ##EEEEEE;</cfif> ">
-                                    		<td colspan="9">
-                                            	Please note arrival time is the next day due to an overnight flight.
-                                            </td>
-                                        </tr>
-                                    </cfif>
-                                                         
-                                </cfloop>    						
-                            
-                            </table>
-                            
-                        <cfelse>
-                            
-                            <table cellspacing="0" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px; font-size:13px;">	
-                                <tr style="color: ##fff; font-weight: bold; background-color: ##0069aa;">
-                                    <td align="center" style="padding:4px 0px 4px 0px;">No Arrival information at this moment</td>
-                                </tr>                                
-                            </table>
-                            
-                        </cfif>
-                
-                    </fieldset>
-                	
-                    
-                    <!--- Departure Information --->
-                    <fieldset style="margin: 5px 0px 10px 0px; padding: 7px; border: ##DDD 1px solid; font-size:13px;">
-                        
-                        <legend style="color: ##333; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">DEPARTURE FROM USA INFORMATION</legend>
-
-                        <!--- School End Date --->
-                        <p style="color: ##333;">
-                            School End Date: #qGetSchoolDates.endDate#
-                        </p>
-                
-                        <cfif qGetDeparture.recordCount>
-                                
-                            <table cellspacing="1" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px; font-size:13px;">	
-                                <tr style="color: ##fff; font-weight: bold; text-align:center; background-color: ##0069aa;">
-                                    <td style="padding:4px 0px 4px 0px;">Date</td>
-                                    <td style="padding:4px 0px 4px 0px;">Depart <br /> City</td>
-                                    <td style="padding:4px 0px 4px 0px;">Depart <br /> Airport Code</td>
-                                    <td style="padding:4px 0px 4px 0px;">Arrive <br /> City</td>
-                                    <td style="padding:4px 0px 4px 0px;">Arrive <br /> Airport Code</td>
-                                    <td style="padding:4px 0px 4px 0px;">Flight <br /> Number</td>
-                                    <td style="padding:4px 0px 4px 0px;">Depart <br /> Time</td>
-                                    <td style="padding:4px 0px 4px 0px;">Arrive <br /> Time</td>
-                                    <td style="padding:4px 0px 4px 0px;">Overnight <br /> Flight</td>
-                                </tr>                                
-            
-                                <cfloop query="qGetDeparture">
-                                    <tr style="text-align:center; <cfif qGetDeparture.currentRow MOD 2>background-color: ##EEEEEE;</cfif> ">
-                                        <td style="padding:4px 0px 4px 0px;">#DateFormat(qGetDeparture.dep_date, 'mm/dd/yyyy')#</td>
-                                        <td style="padding:4px 0px 4px 0px;">#qGetDeparture.dep_city#</td>
-                                        <td style="padding:4px 0px 4px 0px;">#qGetDeparture.dep_airCode#</td>
-                                        <td style="padding:4px 0px 4px 0px;">#qGetDeparture.arrival_city#</td>
-                                        <td style="padding:4px 0px 4px 0px;">#qGetDeparture.arrival_airCode#</td>
-                                        <td style="padding:4px 0px 4px 0px;">#qGetDeparture.flight_number#</td>
-                                        <td style="padding:4px 0px 4px 0px;">#TimeFormat(qGetDeparture.dep_time, 'hh:mm tt')#</td>
-                                        <td style="padding:4px 0px 4px 0px;">#TimeFormat(qGetDeparture.arrival_time, 'hh:mm tt')#</td>
-                                        <td style="padding:4px 0px 4px 0px;">#YesNoFormat(VAL(qGetDeparture.overnight))#</td>
-                                    </tr>      
-
-									<cfif VAL(qGetDeparture.overnight)>
-                                    	<tr style="text-align:center; <cfif qGetDeparture.currentRow MOD 2>background-color: ##EEEEEE;</cfif> ">
-                                    		<td colspan="9">
-                                            	Please note arrival time is the next day due to an overnight flight.
-                                            </td>
-                                        </tr>
-                                    </cfif>
-
-                                </cfloop>    						
-                            
-                            </table>
-                            
-                        <cfelse>
-                            
-                            <table cellspacing="0" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px; font-size:13px;">	
-                                <tr style="color: ##fff; font-weight: bold; background-color: ##0069aa;">
-                                    <td align="center" style="padding:4px 0px 4px 0px;">No Departure information at this moment</td>
-                                </tr>                                
-                            </table>
-                            
-                        </cfif>
-                
-                    </fieldset>
-                
-                </cfsavecontent>           
-
-            </cfoutput>
-                
-			<cfscript>
-                // Return Flight Info				
-                return flightInfoReport;
-            </cfscript>
-    </cffunction>
-    
-    
-    <!--- EMAIL FLIGHT INFORMATION --->
-	<cffunction name="emailFlightInformation" access="public" returntype="void" output="false" hint="Sends out flight notification when information is added/edited or deleted">
-    	<cfargument name="studentID" hint="studentID is required">
-        <cfargument name="programID" hint="programID is required">
-        <cfargument name="flightID" default="0" hint="flightID is not required, pass flightID of a leg that has been deleted">
-        <cfargument name="sendEmailTo" default="" hint="school | currentUser">
-       
-   		<!--- Import CustomTag --->
-		<cfimport taglib="../customTags/gui/" prefix="gui" />	
-
-		<cfscript>
-            var flightEmailTo = '';
-			var flightEmailCC = '';
-            var flightEmailBody = '';
-			var flightInfoReport = '';
-        	
-			// Get Student Info
-			qGetStudentFullInformation = getStudentFullInformationByID(studentID=ARGUMENTS.studentID, programID=ARGUMENTS.programID);
-					
-			// Get School Information
-			qGetSchoolInfo = APPLICATION.CFC.SCHOOL.getSchools(schoolID=qGetStudentFullInformation.schoolID);
-			
-            // Get Current User
-            qGetCurrentUser = APPLICATION.CFC.USER.getUsers(userID=CLIENT.userID);
-            			
-			// Get Formatted Flight Information
-			flightInfoReport = printFlightInformation(
-				studentID=ARGUMENTS.studentID,
-				programID=ARGUMENTS.programID,
-				flightID=ARGUMENTS.flightID,
-				sendEmailTo=ARGUMENTS.sendEmailTo
-			);
-			
-			// Path to save temp PDF files
-			pdfPath = APPLICATION.PATH.temp & '##' & qGetStudentFullInformation.studentID & '-' & qGetStudentFullInformation.firstName & qGetStudentFullInformation.familyLastName & '-FlightInformation.pdf';
-			// Remove Empty Spaces
-			pdfPath = ReplaceNoCase(pdfPath, " ", "", "ALL");
-
-			// Default Flight Information
-			flightInfoLink = '#APPLICATION.PATH.PHP.phpusa#/student/index.cfm?action=flightInformation&uniqueID=#qGetStudentFullInformation.uniqueID#&programID=#qGetStudentFullInformation.programID#';			
-			
-			// Link to Student Profile
-			flightInfoLink = '#APPLICATION.PATH.PHP.phpusa#/index.cfm?curdoc=student/student_info&unqid=#qGetStudentFullInformation.uniqueID#';
-            
-			if ( ARGUMENTS.sendEmailTo EQ 'currentUser' AND IsValid("email", qGetCurrentUser.email) ) {
-
-				// Email Current User
-				flightEmailTo = qGetCurrentUser.email;
-
-			} else if ( APPLICATION.IsServerLocal ) {
-				
-				// Local Server - Always email support
-                flightEmailTo = APPLICATION.EMAIL.support;
-			
-			} else if ( ARGUMENTS.sendEmailTo EQ 'school' AND IsValid("email", qGetSchoolInfo.email) AND IsValid("email", qGetCurrentUser.email) ) {
-				
-				// Email School | send a copy to the current user
-				flightEmailTo = qGetSchoolInfo.email;
-				flightEmailCC = qGetCurrentUser.email;
-				
-			} else if ( ARGUMENTS.sendEmailTo EQ 'school' AND IsValid("email", qGetSchoolInfo.email) ) {
-				
-				// Email School | do not send a copy
-				flightEmailTo = qGetSchoolInfo.email;
-
-			} else {
-				
-				// Not a valid email, use support
-                flightEmailTo = APPLICATION.EMAIL.programManager;
-            
-			}
-			
-			// DELETE OR COMMENT THIS
-			// flightEmailTo = 'marcus@iseusa.com';
-        </cfscript>
-        
-		<cfoutput>
-                          
-            <!--- Email Body --->
-            <cfsavecontent variable="flightEmailBody">
-                
-                <!--- Student Information --->
-                <fieldset style="margin: 5px 0px 10px 0px; padding: 7px; border: ##DDD 1px solid; font-size:13px;">
-                    
-                    <legend style="color: ##333; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">
-                        Flight Information
-                    </legend>
-
-                    <p style="color: ##333;">
-                        Please find flight information attached for #qGetStudentFullInformation.firstName# #qGetStudentFullInformation.familyLastName# (###qGetStudentFullInformation.studentID#). 
-                    </p>
-
-                    <p style="color: ##333;">
-                        This information can also be found on EXITS by clicking <a href="#flightInfoLink#">here</a> then click on "Flight Information" on the right menu.
-                    </p>
-                    
-                    <!--- Flight Leg Deleted --->
-                    <cfif qGetDeletedFlightInfo.recordCount>
-                        
-                        <p style="color: ##333;">
-                        
-                            <cfif qGetDeletedFlightInfo.flight_type EQ 'arrival'>
-                                <p><strong>Arrival information has been deleted</strong></p>
-                            </cfif>
-                
-                            <cfif qGetDeletedFlightInfo.flight_type EQ 'departure'>
-                                <p><strong>Departure information has been deleted</strong></p>
-                            </cfif>
-                
-                            <p>
-                                The flight leg from <strong>#qGetDeletedFlightInfo.dep_aircode#</strong> to <strong>#qGetDeletedFlightInfo.arrival_aircode#</strong> 
-                                on <strong>#DateFormat(qGetDeletedFlightInfo.dep_date, 'mm/dd/yyyy')#</strong> has been deleted. Please see an updated flight information attached.
-                            </p>
-                        
-                        </p>
-                        
-                    </cfif>
-
-                    <cfif APPLICATION.IsServerLocal>
-
-                        <p style="color: ##333; padding-bottom:5px; font-weight:bold;">
-                            PS: Development Server
-                        </p>
-                    
-                    </cfif>
-                    
-                </fieldset>
-
-            </cfsavecontent>
-                            
-            <!--- Flight Information - PDF Format --->
-            <cfdocument name="pdfFlightInfo" format="pdf" localUrl="no" backgroundvisible="yes" margintop="0.2" marginright="0.2" marginbottom="0.2" marginleft="0.2">
-                #flightInfoReport#
-            </cfdocument>
-        
-        </cfoutput>
-        
-        <!--- Try To Email a PDF File, if unsuccessful adds the report to the email body --->
-        <cftry>
-                
-            <!--- Create a PDF document in the temp folder --->
-            <cffile 
-                action="write"
-                file="#pdfPath#"
-                output="#pdfFlightInfo#"
-                nameconflict="overwrite">
-            
-            <cfinvoke component="internal.extensions.components.email" method="send_mail">
-                <cfinvokeargument name="email_to" value="#flightEmailTo#">
-                <cfinvokeargument name="email_cc" value="#flightEmailCC#">
-                <cfinvokeargument name="email_subject" value="Flight Information for #qGetStudentFullInformation.firstname# #qGetStudentFullInformation.familylastname# (###qGetStudentFullInformation.studentID#)">
-                <cfinvokeargument name="email_message" value="#flightEmailBody#">
-                <cfinvokeargument name="email_from" value="#APPLICATION.EMAIL.programManager#">
-                <cfinvokeargument name="email_file" value="#pdfPath#">
-            </cfinvoke>       
-        
-            <cfcatch type="any">
-                    
-                <!--- Send Out Email - NO PDF --->
-                <cfinvoke component="internal.extensions.components.email" method="send_mail">
-                    <cfinvokeargument name="email_to" value="#flightEmailTo#">
-                    <cfinvokeargument name="email_cc" value="#flightEmailCC#">
-                    <cfinvokeargument name="email_subject" value="Flight Information for #qGetStudentFullInformation.firstname# #qGetStudentFullInformation.familylastname# (###qGetStudentFullInformation.studentID#)">
-                    <cfinvokeargument name="email_message" value="#flightInfoReport#">
-                    <cfinvokeargument name="email_from" value="#APPLICATION.EMAIL.programManager#">
-                </cfinvoke>       
-            
-            </cfcatch>
-        
-        </cftry>
-            
-    </cffunction>
-    
 
 	<!--- ------------------------------------------------------------------------- ----
 		
-		END OF FLIGHT INFORMATION
+		End of Placement Management
 	
 	----- ------------------------------------------------------------------------- --->
 

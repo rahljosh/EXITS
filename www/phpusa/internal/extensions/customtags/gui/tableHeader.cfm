@@ -51,7 +51,7 @@
 		/>
 
 	<cfparam 
-		name="ATTRIBUTES.imagePath"
+		name="ATTRIBUTES.filePath"
 		type="string"
         default=""
 		/>
@@ -69,13 +69,13 @@
 	<!--- Header of Table --->
     <table width="#ATTRIBUTES.width#" align="center" cellpadding="0" cellspacing="0" style="margin-top:15px;">
         <tr valign="middle" height="24">
-            <td width="13" height="24" background="#ATTRIBUTES.imagePath#pics/header_leftcap.gif">&nbsp;</td>
-            <td width="26" background="#ATTRIBUTES.imagePath#pics/header_background.gif"><img src="#ATTRIBUTES.imagePath#pics/#ATTRIBUTES.imageName#"></td>
-            <td background="#ATTRIBUTES.imagePath#pics/header_background.gif"><h2>#ATTRIBUTES.tableTitle#</h2></td>
+            <td width="13" height="24" background="#ATTRIBUTES.filePath#pics/header_leftcap.gif">&nbsp;</td>
+            <td width="26" background="#ATTRIBUTES.filePath#pics/header_background.gif"><img src="#ATTRIBUTES.filePath#pics/#ATTRIBUTES.imageName#"></td>
+            <td background="#ATTRIBUTES.filePath#pics/header_background.gif"><h2>#ATTRIBUTES.tableTitle#</h2></td>
             <cfif LEN(ATTRIBUTES.tableRightTitle)>
-                <td align="right" background="#ATTRIBUTES.imagePath#pics/header_background.gif">#ATTRIBUTES.tableRightTitle#</td>
+                <td align="right" background="#ATTRIBUTES.filePath#pics/header_background.gif">#ATTRIBUTES.tableRightTitle#</td>
             </cfif>
-            <td width="17" background="#ATTRIBUTES.imagePath#pics/header_rightcap.gif">&nbsp;</td>
+            <td width="17" background="#ATTRIBUTES.filePath#pics/header_rightcap.gif">&nbsp;</td>
         </tr>
     </table>
 

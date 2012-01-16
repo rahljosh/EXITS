@@ -147,38 +147,42 @@
         <cfargument name="comments" default="n/a" hint="comments is not required">
         <cfargument name="dateCreated" default="#now()#" hint="dateCreated is not required">
         <cfargument name="dateUpdated" default="#now()#" hint="dateCreated is not required">
-
-        <cfquery 
-        	datasource="MySQL">
-                INSERT
-                    applicationHistory
-                 (
-                    applicationID,
-                    foreignTable,
-                    foreignID,
-                    enteredByID,
-                    actions,
-                    comments,
-                    dateCreated,
-                    dateUpdated
-                 )           
-                VALUES
-                (
-					<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationID#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.foreignID#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.enteredByID#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.actions#">,
-                    <cfif LEN(ARGUMENTS.comments)>
-	                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.comments#">,
-					<cfelse>
-	                    <cfqueryparam cfsqltype="cf_sql_varchar" value="n/a">,
-					</cfif>				
-                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#ARGUMENTS.dateCreated#">,
-                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#ARGUMENTS.dateUpdated#">
-                )        
-        </cfquery> 
-
+		
+        <cfif VAL(ARGUMENTS.foreignID)>
+        
+            <cfquery 
+                datasource="MySQL">
+                    INSERT
+                        applicationHistory
+                     (
+                        applicationID,
+                        foreignTable,
+                        foreignID,
+                        enteredByID,
+                        actions,
+                        comments,
+                        dateCreated,
+                        dateUpdated
+                     )           
+                    VALUES
+                    (
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationID#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.foreignID#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.enteredByID#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.actions#">,
+                        <cfif LEN(ARGUMENTS.comments)>
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.comments#">,
+                        <cfelse>
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="n/a">,
+                        </cfif>				
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#ARGUMENTS.dateCreated#">,
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#ARGUMENTS.dateUpdated#">
+                    )        
+            </cfquery> 
+		
+        </cfif>
+        
 	</cffunction>
 
 

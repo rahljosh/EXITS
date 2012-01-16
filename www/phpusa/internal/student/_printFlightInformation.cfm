@@ -16,7 +16,7 @@
 
 	<cfscript>
 		// Get Formatted Flight Information
-		flightInfoReport = APPLICATION.CFC.STUDENT.printFlightInformation(
+		flightInfoReport = APPLICATION.CFC.FLIGHTINFORMATION.printFlightInformation(
 			uniqueID=URL.uniqueID,
 			programID=URL.programID																		 
 		);

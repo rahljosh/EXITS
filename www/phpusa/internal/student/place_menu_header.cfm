@@ -63,7 +63,7 @@
 </cfif>
 
 <!--- PLACEMENT NOTES --->
-<cfif placement_notes EQ ''>
+<cfif placementNotes EQ ''>
 	<cfset notes_image = 'notes_1'>
 <cfelse>
 	<cfset notes_image = 'notes_3'>

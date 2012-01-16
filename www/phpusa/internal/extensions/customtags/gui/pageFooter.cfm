@@ -37,7 +37,7 @@
 		/>
 
 	<cfparam 
-		name="ATTRIBUTES.imagePath"
+		name="ATTRIBUTES.filePath"
 		type="string"
         default=""
 		/>
@@ -71,20 +71,20 @@
                 
                 <table width="#ATTRIBUTES.width#" align="center" bgcolor="##FF7E0D" cellpadding="0" cellspacing="0">
                     <tr>
-                        <td height="11" align="center"><img height="11" src="#ATTRIBUTES.imagePath#images/spacer.gif" width="1"></td>
+                        <td height="11" align="center"><img height="11" src="#ATTRIBUTES.filePath#images/spacer.gif" width="1"></td>
                     </tr>
                 </table>
                 
                 <table width="#ATTRIBUTES.width#" align="center" cellspacing="0" cellpadding="0"> 
                     <tr>
-                        <td height="12" align="right" background="#ATTRIBUTES.imagePath#images/botton_02.gif" >
-                            <img src="#ATTRIBUTES.imagePath#images/botton_01.gif" width="11" height="12">
+                        <td height="12" align="right" background="#ATTRIBUTES.filePath#images/botton_02.gif" >
+                            <img src="#ATTRIBUTES.filePath#images/botton_01.gif" width="11" height="12">
                         </td>
-                        <td width="99%" background="#ATTRIBUTES.imagePath#images/botton_02.gif" height="12" align="center">
+                        <td width="99%" background="#ATTRIBUTES.filePath#images/botton_02.gif" height="12" align="center">
                             <font color="##FFFFFF" size="-2">&copy; #Year(now())# DMD Private High School Program  : : Powered by A<font color="##FF7E0D">X</font>IS</font>
                         </td>
-                        <td height="12" align="left" background="#ATTRIBUTES.imagePath#images/botton_02.gif" >
-                            <img src="#ATTRIBUTES.imagePath#images/botton_03.gif" width="11" height="12">
+                        <td height="12" align="left" background="#ATTRIBUTES.filePath#images/botton_02.gif" >
+                            <img src="#ATTRIBUTES.filePath#images/botton_03.gif" width="11" height="12">
                         </td>
                     </tr>
                 </table>

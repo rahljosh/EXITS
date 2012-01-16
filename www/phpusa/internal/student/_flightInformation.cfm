@@ -56,7 +56,7 @@
 		// Delete Flight Information
         if ( VAL(URL.flightID) AND VAL(qGetStudentInfo.studentID) ) {
 
-			APPLICATION.CFC.STUDENT.deleteFlightInformation(
+			APPLICATION.CFC.FLIGHTINFORMATION.deleteFlightInformation(
 				flightID=URL.flightID,
 				studentID=qGetStudentInfo.studentID,
 				programID=VAL(FORM.programID),
@@ -75,7 +75,7 @@
 		
 		<cfscript>
             // Update Flight Notes
-            APPLICATION.CFC.STUDENT.updateFlightNotes(studentID=qGetStudentInfo.studentID, flightNotes=FORM.flightNotes);
+            APPLICATION.CFC.FLIGHTINFORMATION.updateFlightNotes(studentID=qGetStudentInfo.studentID, flightNotes=FORM.flightNotes);
         </cfscript>
 
         <!-------------------------------------
@@ -99,7 +99,7 @@
             <cfscript>
                 if ( LEN(FORM["incomingNewDepartureDate" & i]) ) {
                     
-                    APPLICATION.CFC.STUDENT.insertFlightInfo(
+                    APPLICATION.CFC.FLIGHTINFORMATION.insertFlightInfo(
                         studentID=qGetStudentInfo.studentID,
 						companyID=qGetStudentInfo.companyID,
 						programID=VAL(FORM.programID),
@@ -137,7 +137,7 @@
             <cfparam name="FORM.incomingOvernight#i#" default="0">
             
             <cfscript>
-                APPLICATION.CFC.STUDENT.updateFlightInfo(
+                APPLICATION.CFC.FLIGHTINFORMATION.updateFlightInfo(
                     flightID=FORM["incomingflightID" & i],
 					studentID=qGetStudentInfo.studentID,
 					companyID=qGetStudentInfo.companyID,
@@ -183,7 +183,7 @@
             <cfscript>
                 if ( LEN(FORM["outgoingNewDepartureDate" & i]) ) {
                     
-                    APPLICATION.CFC.STUDENT.insertFlightInfo(
+                    APPLICATION.CFC.FLIGHTINFORMATION.insertFlightInfo(
                         studentID=qGetStudentInfo.studentID,
 						companyID=qGetStudentInfo.companyID,
 						programID=VAL(FORM.programID),
@@ -221,7 +221,7 @@
             <cfparam name="FORM.outgoingOvernight#i#" default="0">
             
             <cfscript>
-                APPLICATION.CFC.STUDENT.updateFlightInfo(
+                APPLICATION.CFC.FLIGHTINFORMATION.updateFlightInfo(
                     flightID=FORM["outgoingflightID" & i],
 					studentID=qGetStudentInfo.studentID,
 					companyID=qGetStudentInfo.companyID,
@@ -247,7 +247,7 @@
         <cfscript>
 			// Send out email notification if flight information was entered by an International Representative / Branch
 			if ( ListFind("8,11,13", CLIENT.userType) ) {	 
-				APPLICATION.CFC.STUDENT.emailFlightInformation(studentID=qGetStudentInfo.studentID, programID=VAL(FORM.programID));
+				APPLICATION.CFC.FLIGHTINFORMATION.emailFlightInformation(studentID=qGetStudentInfo.studentID, programID=VAL(FORM.programID));
 			}
 			
 			// Set Page Message
@@ -259,7 +259,7 @@
     
         <cfscript>
 			// Send out email notification to the regional manager
-			APPLICATION.CFC.STUDENT.emailFlightInformation(studentID=qGetStudentInfo.studentID, programID=VAL(FORM.programID), sendEmailTo='school');
+			APPLICATION.CFC.FLIGHTINFORMATION.emailFlightInformation(studentID=qGetStudentInfo.studentID, programID=VAL(FORM.programID), sendEmailTo='school');
 			
 			// Set Page Message
 			SESSION.pageMessages.Add("Flight Information emailed to the Regional Manager");
@@ -269,7 +269,7 @@
 
         <cfscript>
 			// Send out email notification to the current user
-			APPLICATION.CFC.STUDENT.emailFlightInformation(studentID=qGetStudentInfo.studentID, programID=VAL(FORM.programID), sendEmailTo='currentUser');
+			APPLICATION.CFC.FLIGHTINFORMATION.emailFlightInformation(studentID=qGetStudentInfo.studentID, programID=VAL(FORM.programID), sendEmailTo='currentUser');
 
 			// Set Page Message
 			SESSION.pageMessages.Add("Flight Information emailed to you");
@@ -280,10 +280,10 @@
 
     <cfscript>
 		// Get Arrival for this program
-		qGetArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), programID=VAL(FORM.programID), flightType="arrival");
+		qGetArrival = APPLICATION.CFC.FLIGHTINFORMATION.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), programID=VAL(FORM.programID), flightType="arrival");
 
 		// Get Departure for this program
-		qGetDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), programID=VAL(FORM.programID), flightType="departure");
+		qGetDeparture = APPLICATION.CFC.FLIGHTINFORMATION.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), programID=VAL(FORM.programID), flightType="departure");
 	</cfscript>
 
 </cfsilent>
@@ -294,7 +294,7 @@
     <gui:pageHeader
         headerType="applicationNoHeader"
         width="98%"
-        imagePath="../"
+        filePath="../"
     />	
 
 		<script type="text/javascript" language="javascript">
@@ -358,7 +358,7 @@
             tableTitle="Flight Information"
             tableRightTitle="#qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)"            
 			imageName="students.gif"
-            imagePath="../"
+            filePath="../"
         />    
         
 		<!--- Page Messages --->
@@ -641,14 +641,14 @@
         <!--- Table Footer --->
         <gui:tableFooter 
   	        width="98%"
-			imagePath="../"
+			filePath="../"
         />
 
 	<!--- Page Footer --->
     <gui:pageFooter
         footerType="application"
         width="98%"
-        imagePath="../"
+        filePath="../"
     />
 
 </cfoutput>

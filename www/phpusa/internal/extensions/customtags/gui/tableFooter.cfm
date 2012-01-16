@@ -30,13 +30,13 @@
 		/>
 
 	<cfparam 
-		name="ATTRIBUTES.imagePath"
+		name="ATTRIBUTES.filePath"
 		type="string"
         default=""
 		/>
 
 	<cfparam 
-		name="ATTRIBUTES.imagePath"
+		name="ATTRIBUTES.filePath"
 		type="string"
         default=""
 		/>
@@ -54,9 +54,9 @@
 <!--- Footer of Table --->
 <table width="#ATTRIBUTES.width#" align="center" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:10px;">
 	<tr valign="bottom">
-		<td width="9" valign="top" height=12><img src="#ATTRIBUTES.imagePath#pics/footer_leftcap.gif"></td>
-		<td width="100%" background="#ATTRIBUTES.imagePath#pics/header_background_footer.gif"></td>
-		<td width="9" valign="top"><img src="#ATTRIBUTES.imagePath#pics/footer_rightcap.gif"></td>
+		<td width="9" valign="top" height=12><img src="#ATTRIBUTES.filePath#pics/footer_leftcap.gif"></td>
+		<td width="100%" background="#ATTRIBUTES.filePath#pics/header_background_footer.gif"></td>
+		<td width="9" valign="top"><img src="#ATTRIBUTES.filePath#pics/footer_rightcap.gif"></td>
 	</tr>
 </table>
 

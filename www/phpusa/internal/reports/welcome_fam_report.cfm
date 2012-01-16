@@ -97,7 +97,7 @@
             AND 
                 stu_prog.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetPrograms.programid#">
             AND 
-                stu_prog.is_welcome_family = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                stu_prog.isWelcomeFamily = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
             ORDER BY 
                 familylastname
         </cfquery>	

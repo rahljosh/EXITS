@@ -374,7 +374,7 @@
             <gui:pageHeader
                 headerType="applicationNoHeader"
                  width="98%"
-                imagePath="../"
+                filePath="../"
             />	
 
             <cfif SESSION.pageMessages.length()>
@@ -406,7 +406,7 @@
             <gui:pageFooter
                 footerType="application"
                  width="98%"
-                imagePath="../"
+                filePath="../"
             />
             
             <script language="javascript">
@@ -423,7 +423,7 @@
             <gui:pageHeader
                 headerType="applicationNoHeader"
                  width="98%"
-                imagePath="../"
+                filePath="../"
             />	
 
             <cfif SESSION.formErrors.length()>
@@ -455,7 +455,7 @@
             <gui:pageFooter
                 footerType="application"
                  width="98%"
-                imagePath="../"
+                filePath="../"
             />
   
         </cfdefaultcase>
