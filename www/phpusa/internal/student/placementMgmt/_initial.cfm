@@ -222,34 +222,6 @@
 			
 			}
 		
-		// SET FAMILY AS PERMANENT
-		} else if ( FORM.subAction EQ 'setFamilyAsPermanent' ) {
-
-			// Data Validation
-			if ( NOT IsDate(FORM.dateSetHostPermanent) ) {
-				SESSION.formErrors.Add("You must enter what date did this host family become permanent");
-			}			
-
-			// Check if there are no errors
-			if ( NOT SESSION.formErrors.length() ) {				
-
-				// Set Family As Permanent - Insert into history
-				APPLICATION.CFC.STUDENT.setFamilyAsPermanent(
-					studentID = FORM.studentID,
-					assignedID = FORM.assignedID,
-					changedBy = CLIENT.userID,								 
-					userType = CLIENT.userType,
-					dateSetHostPermanent=FORM.dateSetHostPermanent
-				 );
-	
-				// Set Page Message
-				SESSION.pageMessages.Add("Host Family has been set as permanent.");
-				
-				// Reload page
-				location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");		
-		
-			}
-
 		// UNPLACE STUDENT
 		} else if ( FORM.subAction EQ 'unplace' ) {
 			
@@ -368,11 +340,6 @@
 		
 			displayHiddenForm('unplaceStudentForm');
 			
-		// Display only if setting family as permanent
-		<cfelseif FORM.subAction EQ 'setFamilyAsPermanent'>
-
-			displayHiddenForm('setAsPermanentForm');
-
 		</cfif>
 			
 		// Always show the double placement if student is not assigned and not submitting a rejection form
@@ -615,26 +582,6 @@
 
                 </form>  
                 
-                <!--- Set Family as Permanent --->
-                <form name="setAsPermanentForm" id="setAsPermanentForm" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="displayNone"  style="margin-top:10px; margin-bottom:10px;">
-                    <input type="hidden" name="subAction" id="subAction" value="setFamilyAsPermanent" />
-                    <input type="hidden" name="studentID" id="studentID" value="#FORM.studentID#" />
-
-                    <table width="680px" border="0" cellpadding="4" cellspacing="0" class="" align="center">                            				
-                        <tr class="reportCenterTitle"> 
-                            <th>SET FAMILY AS PERMANENT</th>
-                        </tr>
-                        <tr>
-                            <td class="placementMgmtInfo" align="center">
-                                <label class="reportTitleLeftClean" for="dateSetHostPermanent">What date did this family become permanent?</label>
-                                <input type="text" name="dateSetHostPermanent" id="dateSetHostPermanent" class="datePicker" value="#DateFormat(FORM.dateSetHostPermanent, 'mm/dd/yyyy')#">
-                                <input type="image" name="submit" src="../../pics/save.gif" alt="Set Family As Permanent" style="display:block;" />    
-                            </td>
-                        </tr>
-                    </table>
-
-                </form> 
-                   
             </td>
         </tr>    
     </table>                                                
