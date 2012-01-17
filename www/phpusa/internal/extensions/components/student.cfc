@@ -637,6 +637,9 @@
                     <!--- Placement Notes --->
                     placementNotes = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">,
 					<!--- Paperwork Received --->
+                    school_acceptance = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    hf_placement = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    hf_application = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     doc_photos_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
@@ -684,61 +687,6 @@
 
     </cffunction>
 
-
-    <!--- Set Host Family as Permanent --->
-	<cffunction name="setFamilyAsPermanent" access="public" returntype="void" output="false" hint="Sets a host family as permanent">
-        <cfargument name="studentID" hint="studentID is required">
-        <cfargument name="assignedID" hint="assignedID is required">
-        <cfargument name="changedBy" hint="changedBy is required">
-        <cfargument name="userType" hint="userType is required">
-        <cfargument name="reason" default="" hint="reason is not required">
-        <cfargument name="dateSetHostPermanent" default="" hint="dateSetHostPermanent is not required">
-        
-        <cfscript>
-			// Get Student Info
-			var qGetStudentInfo = getStudentByID(assignedID=ARGUMENTS.assignedID);
-			
-			vHostHistoryID = getPlacementHistory(studentID=ARGUMENTS.studentID, assignedID=ARGUMENTS.assignedID).historyID;			
-		</cfscript>
-        
-        <cfquery 
-			datasource="#APPLICATION.DSN#">
-                UPDATE
-                	php_students_in_program
-				SET
-                    isWelcomeFamily = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
-                    <!--- Used to track last approval --->
-                    dateApproved = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-				WHERE
-                	assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.assignedID)#">
-		</cfquery>
-        
-        <!--- Update Host History - Insert Permanent Date --->
-        <cfquery 
-            datasource="#APPLICATION.DSN#">
-                UPDATE
-                    smg_hosthistory	
-                SET
-                    dateSetHostPermanent = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateSetHostPermanent#">
-                WHERE
-                    historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vHostHistoryID)#">
-        </cfquery>
-        
-		<cfscript>
-			// Insert New History - It tracks placement statuses only, placement updates are tracked on smg_hostHistory
-			insertPlacementActionHistory(
-				studentID=ARGUMENTS.studentID,
-				assignedID=ARGUMENTS.assignedID,
-				changedBy=ARGUMENTS.changedBy,
-				userType=ARGUMENTS.userType,
-				reason=ARGUMENTS.reason,
-				placementAction='setFamilyAsPermanent',
-				dateSetHostPermanent=ARGUMENTS.dateSetHostPermanent
-			);
-        </cfscript>
-        
-	</cffunction>
-
 	
     <!--- Insert Placement Action History --->
 	<cffunction name="insertPlacementActionHistory" access="public" returntype="void" output="false" hint="Actions: Approve/Reject/Resubmit/unplaceStudent/setPermanent, it does not require any update to the history record">
@@ -747,7 +695,7 @@
         <cfargument name="changedBy" hint="changedBy is required">
         <cfargument name="userType" hint="userType is required">
         <cfargument name="reason" default="" hint="Field is used for rejection/resubmit comments">
-        <cfargument name="placementAction" default="" hint="Approve/Reject/Resubmit/unplaceStudent/setFamilyAsPermanent">
+        <cfargument name="placementAction" default="" hint="Approve/Reject/Resubmit/unplaceStudent">
         <cfargument name="dateSetHostPermanent" default="" hint="dateSetHostPermanent is not required">
 	
     	<cfscript>
@@ -808,15 +756,6 @@
 					vActions = "<strong>Student Set to Unplaced</strong> <br /> #CHR(13)#";			
 					break; 
 				
-				// SET FAMILY AS PERMANENT
-				case 'setFamilyAsPermanent':
-					if ( isDate(ARGUMENTS.dateSetHostPermanent ) ) {
-						vActions = "<strong>Host Family Set as Permanent as of #DateFormat(ARGUMENTS.dateSetHostPermanent,'mm/dd/yyyy')# </strong> <br /> #CHR(13)#";
-					} else {
-						vActions = "<strong>Host Family Set as Permanent</strong> <br /> #CHR(13)#";
-					}						
-					break; 
-
 			} //end switch
 			
 			// Reason
@@ -1621,6 +1560,11 @@
         <cfargument name="studentID" default="0" hint="studentID is not required">
         <cfargument name="historyID" default="0" hint="historyID is not required">
         <!--- Placement Paperwork --->
+        <cfargument name="school_acceptance" default="" hint="school_acceptance is not required">
+        <cfargument name="sevis_fee_paid" default="" hint="sevis_fee_paid is not required">
+        <cfargument name="i20received" default="" hint="i20received is not required">
+        <cfargument name="hf_placement" default="" hint="hf_placement is not required">
+        <cfargument name="hf_application" default="" hint="hf_application is not required">
         <cfargument name="doc_letter_rec_date" default="" hint="doc_letter_rec_date is not required">
         <cfargument name="doc_rules_rec_date" default="" hint="doc_rules_rec_date is not required">
         <cfargument name="doc_photos_rec_date" default="" hint="doc_photos_rec_date is not required">
@@ -1635,6 +1579,11 @@
 	                php_students_in_program
                 SET 
                     <!--- Placement Paperwork --->
+                    school_acceptance = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.school_acceptance#" null="#NOT IsDate(ARGUMENTS.school_acceptance)#">,
+                    sevis_fee_paid = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.sevis_fee_paid#" null="#NOT IsDate(ARGUMENTS.sevis_fee_paid)#">,
+                    i20received = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.i20received#" null="#NOT IsDate(ARGUMENTS.i20received)#">,
+                    hf_placement = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.hf_placement#" null="#NOT IsDate(ARGUMENTS.hf_placement)#">,
+                    hf_application = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.hf_application#" null="#NOT IsDate(ARGUMENTS.hf_application)#">,
                     doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_letter_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_letter_rec_date)#">,
                     doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_rules_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_rules_rec_date)#">,
                     doc_photos_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_photos_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_photos_rec_date)#">,
