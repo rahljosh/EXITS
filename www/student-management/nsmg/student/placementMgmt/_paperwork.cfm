@@ -174,24 +174,53 @@
 			// Single Placement Paperwork
 			if ( vTotalFamilyMembers EQ 1 AND qGetProgramInfo.seasonid GT 7 ) {
 	
-				if ( isDate(FORM.doc_single_ref_check1)  AND FORM.doc_single_ref_check1 GT qGetStudentInfo.datePlaced ) {
+				// 
+				if ( isDate(FORM.doc_single_ref_check1) AND FORM.doc_single_ref_check1 GT qGetStudentInfo.datePlaced ) {
 					SESSION.formErrors.Add("Date of Single Placement Reference Check 1 is out of compliance");
 				}
-		
+				
+				//
 				if ( isDate(FORM.doc_single_ref_check2) AND FORM.doc_single_ref_check2 GT qGetStudentInfo.datePlaced ) {
 					SESSION.formErrors.Add("Date of Single Placement Reference Check 2 is out of compliance");
 				}
 	
 			}
 			
+			// Confidential Host Family Visit Form
 			if ( isDate(FORM.doc_date_of_visit) AND FORM.doc_date_of_visit GT qGetStudentInfo.datePlaced ) {
 				SESSION.formErrors.Add("Confidential Host Family Date of Visit is out of compliance");
 			}
+			
+			// 2nd Confidential Host Family Visit Form ( Welcome Family - 30 days / Permanent Family 60 days )
+			if ( isDate(qGetSecondVisitReport.dateOfVisit) ) {
 	
-			if ( isDate(qGetSecondVisitReport.dateOfVisit) AND qGetSecondVisitReport.dateOfVisit GT qGetStudentInfo.datePlaced ) {
-				SESSION.formErrors.Add("2nd Confidential Host Family Date of Visit is out of compliance");
+				vComplianceWindow = '';
+				vDateStartWindowCompliance = '';
+				vDateEndWindowCompliance = '';
+
+				if ( VAL(qGetPlacementHistory.isWelcomeFamily) ) {
+					vComplianceWindow = 30;
+				} else {
+					vComplianceWindow = 60;
+				}
+	
+				if ( VAL(qGetPlacementHistory.isRelocation) ) {
+					vDateStartWindowCompliance = qGetStudentInfo.datePlaced;
+				} else {
+					vDateStartWindowCompliance = qGetArrival.dep_date;
+				}
+				
+				if ( isDate(vDateStartWindowCompliance) ) {
+					vDateEndWindowCompliance = DateAdd('d', vComplianceWindow, vDateStartWindowCompliance);
+					
+					if ( qGetSecondVisitReport.dateOfVisit GT vDateEndWindowCompliance ) {
+						SESSION.formErrors.Add("2nd Confidential Host Family Date of Visit is out of compliance");
+					}
+					
+				}
+				
 			}
-	
+			
 		}
 	</cfscript>
             

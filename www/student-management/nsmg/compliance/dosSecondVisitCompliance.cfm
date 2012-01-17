@@ -168,8 +168,6 @@
                     smg_hosts h ON h.hostID = ht.hostID
                 WHERE 
                     s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">        
-                AND
-                    s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
         
 				<!--- Query to Get Welcome Family Expired Reports --->   
                 
@@ -255,8 +253,6 @@
                     smg_hosts h ON h.hostID = ht.hostID
                 WHERE 
                     s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">   
-                AND
-                    s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
                 <!--- Do not include records with an approved date --->
                 AND
                     s.studentID NOT IN (
@@ -340,7 +336,7 @@
                     vRemainingDays = '';
                     
 					// Calculate remaining days
-					if ( isDate(qGetResults.dateOfVisit) ) {
+					if ( isDate(qGetResults.dateOfVisit) AND isDate(qGetResults.dateEndWindowCompliance)  ) {
                         vRemainingDays = DateDiff('d', qGetResults.dateOfVisit, qGetResults.dateEndWindowCompliance);
 					} else if ( isDate(qGetResults.dateEndWindowCompliance) ) {
                         vRemainingDays = DateDiff('d', now(), qGetResults.dateEndWindowCompliance);

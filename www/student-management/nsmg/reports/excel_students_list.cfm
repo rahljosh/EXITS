@@ -38,9 +38,9 @@
 	FROM 
     	smg_students s 
 	INNER JOIN 
-    	smg_programs p		ON 	s.programid = p.programid
+    	smg_programs p ON s.programid = p.programid
 	INNER JOIN 
-    	smg_hosts h 	ON 	s.hostid = h.hostid
+    	smg_hosts h ON 	s.hostid = h.hostid
 	INNER JOIN 
     	smg_companies c ON s.companyid = c.companyid
 	INNER JOIN 	
@@ -63,10 +63,10 @@
         
 	<cfif CLIENT.companyID EQ 5>
         AND
-            companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+            s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
     <cfelse>
         AND
-            companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
     </cfif>
     
 	<cfif VAL(FORM.regionid)>
