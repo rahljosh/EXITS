@@ -43,7 +43,7 @@
 	<cfset url.studentid = form.studentid>
 </cfif>
 
-<CFMAIL TO="support@student-management.com" FROM="support@student-management.com" SUBJECT="Online App - Upload Error on page #CGI.CF_TEMPLATE_PATH#?#cgi.query_string#"> 
+<CFMAIL TO="errors@student-management.com" FROM="errors@student-management.com" SUBJECT="Online App - Upload Error on page #CGI.CF_TEMPLATE_PATH#?#cgi.query_string#"> 
 	There was an error on #CGI.CF_TEMPLATE_PATH#?#cgi.query_string#.
 	On  #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')#
 	<cfif IsDefined('CFCATCH.Type')>Type: #CFCATCH.Type#</cfif>
