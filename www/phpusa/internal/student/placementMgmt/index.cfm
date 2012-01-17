@@ -309,7 +309,7 @@
                         </cfif>
 
                         <div style="float:right; padding-right:5px; width:170px;">
-                            <a href="#CGI.SCRIPT_NAME#?uniqueID=#FORM.uniqueID#&action=paperwork">[ View Paperwork ]</a>
+                            <a href="#CGI.SCRIPT_NAME#?uniqueID=#FORM.uniqueID#&assignedID=#FORM.assignedID#&action=paperwork">[ View Paperwork ]</a>
                         </div>
                     </th>
                 </tr>

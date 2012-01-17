@@ -28,11 +28,11 @@
 				placementNotes = FORM.placementNotes
 			);
 			
-		  	// Set Page Message
-		  	SESSION.pageMessages.Add("Form successfully submitted.");
-		  
-		  	// Reload page
-		  	location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");		
+			// Set Page Message
+			SESSION.pageMessages.Add("Form successfully submitted.");
+			
+			// Reload page
+			location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");		
 		
 		// FORM NOT SUBMITTED
 		} else {
@@ -42,12 +42,6 @@
 			FORM.placementNotes = qGetStudentInfo.placementNotes;
 
 		}
-		
-		
-		
-				  	// Set Page Message
-		  	SESSION.pageMessages.Add("Form successfully submitted.");
-
 	</cfscript>
             
 </cfsilent>

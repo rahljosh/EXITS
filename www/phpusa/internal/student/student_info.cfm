@@ -308,11 +308,13 @@
                         <a href="javascript: win=window.open('forms/received_progress_reports.cfm?stuid=#CLIENT.studentid#', 'Reports', 'height=450, width=610, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A>  
                         ---->
                         <a href="student/placementMgmt/index.cfm?uniqueID=#get_student_unqid.uniqueid#&assignedID=#get_student_unqid.assignedID#" class="jQueryModal">Placement Management</a>
-
+						
+                        <!---
                         <cfif ListFind("1,2,3,4", CLIENT.userType)>
                             <a href="" onClick="javascript: win=window.open('student/place_menu.cfm?unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#', 'Settings', 'height=400, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Old Placement Management</a> 
 						</cfif>
-
+						--->
+                        
                         <a href="" onClick="javascript: win=window.open('student/evaluations.cfm?unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#', 'Settings', 'height=320, width=650, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Evaluations / Grades</a> 
                         <a href="" onClick="javascript: win=window.open('forms/received_progress_reports.cfm?unqid=#get_student_unqid.uniqueid#', 'Reports', 'height=450, width=610, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A>  
                         <a href="" onClick="javascript: win=window.open('http://www.student-management.com/nsmg/virtualfolder/list_vfolder.cfm?unqid=#get_student_unqid.uniqueid#', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Virtual Folder</a>						
