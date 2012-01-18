@@ -74,7 +74,7 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
 				<!--- Host Header --->
                <table width=800 align="Center">
                     <tr>
-                        <td colspan=3><img src="../pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
+                        <td colspan=3><img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
                     </tr>
                     <tr>
                     	<td>
@@ -97,7 +97,7 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
 				<!--- Student Information #qGetStudentInfo.countryresident# --->
                 <table  align="center" border="0" cellpadding="4" cellspacing="0" width="800">
                     <tr>           
-                        <td colspan=5 align="center"><img src="../pics/hostAppBanners/HPpdf_04.jpg"/></Td>
+                        <td colspan=5 align="center"><img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/HPpdf_04.jpg"/></Td>
                     </tr>
                     <tr>
                         <td valign="top">
@@ -189,7 +189,7 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
                         <!--- Kids Header --->
                     <table  align="center" border="0" cellpadding="4" cellspacing="0" width="800">
                         <tr>           
-                            <td colspan=5 align="center"><img src="../pics/hostAppBanners/HPpdf_06.jpg" /></Td>
+                            <td colspan=5 align="center"><img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/HPpdf_06.jpg" /></Td>
                         </tr>
                         <tr>
                             <td valign="top">
@@ -234,8 +234,8 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
                        <!----Dietary and smoking---->
                        <table  align="left" border="0" cellpadding="4" cellspacing="0" width="100%">
                        	<Tr>
-                      		 <td align="center"><img src="../pics/hostAppBanners/dietary_38.jpg"></td>
-                            	<td align="center"><img src="../pics/hostAppBanners/HPpdf_10.jpg"></Td>
+                      		 <td align="center"><img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/dietary_38.jpg"></td>
+                            	<td align="center"><img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/HPpdf_10.jpg"></Td>
                        </Tr>
                         <tr>
                         	
@@ -304,7 +304,7 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
                     <Tr>
                     	
                        <Td>
-                     <img src="../pics/hostAppBanners/HPpdf_12.jpg" />
+                     <img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/HPpdf_12.jpg" />
                         <Td>
                     </Tr>
                     <Tr>
@@ -330,7 +330,7 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
                        <!----INterests---->     
                              <table  align="center" border="0" cellpadding="4" cellspacing="0" width="800">
                         <tr>           
-                            <td colspan=5 align="center"><img src="../pics/hostAppBanners/HPpdf_08.jpg" /></Td>
+                            <td colspan=5 align="center"><img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/HPpdf_08.jpg" /></Td>
                         </tr>
                         <tr>
                             <td valign="top">
@@ -388,7 +388,7 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
             <td>
    				 <table width=800>
                     <tr>
-                        <td colspan=3 ><img src="../pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
+                        <td colspan=3 ><img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
                     </tr>
                     <tr>
                     
@@ -401,7 +401,7 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
 			<!--- Letter --->
                 <table  align="center" border="0" cellpadding="4" cellspacing="0" width="800">
                     <tr>           
-                        <td colspan=5 align="center"><img src="../pics/hostAppBanners/HPpdf_15.jpg"/></Td>
+                        <td colspan=5 align="center"><img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/HPpdf_15.jpg"/></Td>
                     </tr>
                     <tr>
                     	<td><span class="title">Your personal description is THE most important part of this application. Along with photos of your family and your home, this description will be your
@@ -436,7 +436,7 @@ son or daughter and their parents, such as personalities, background, lifestyle 
             <td>
    				 <table width=800>
                     <tr>
-                        <td colspan=3 align="Center"><img src="../pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
+                        <td colspan=3 align="Center"><img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
                     </tr>
                     <tr>
                     
@@ -449,7 +449,7 @@ son or daughter and their parents, such as personalities, background, lifestyle 
                 <!--- Letter --->
                 <table  align="center" border="0" cellpadding="4" cellspacing="0" width="800">
                     <tr>           
-                        <td colspan=5 align="center"><img src="../pics/hostAppBanners/HPpdf_20.jpg"/></Td>
+                        <td colspan=5 align="center"><img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/HPpdf_20.jpg"/></Td>
                     </tr>
                     <tr>
                     	<td>
@@ -514,7 +514,7 @@ son or daughter and their parents, such as personalities, background, lifestyle 
             <td>
    				 <table width=800>
                     <tr>
-                        <td colspan=3><img src="../pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
+                        <td colspan=3><img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
                     </tr>
                     <tr>
                     
@@ -527,7 +527,7 @@ son or daughter and their parents, such as personalities, background, lifestyle 
 			<!--- Religious Prefs --->
                 <table  align="center" border="0" cellpadding="4" cellspacing="0" width="800">
                     <tr>           
-                        <td colspan=2 align="center"><img src="../pics/hostAppBanners/HPpdf_23.jpg"/></Td>
+                        <td colspan=2 align="center"><img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/HPpdf_23.jpg"/></Td>
                     </tr>
                    
                           <tr>
@@ -584,7 +584,7 @@ regarding the hosting of an exchange student with a particular athletic ability?
                       </table>        
                        <table  align="center" border="0" cellpadding="4" cellspacing="0" width="800">
                   		  <tr>           
-                       		<td colspan=2 align="center"><img src="../pics/hostAppBanners/HPpdf_21.jpg"/></Td>
+                       		<td colspan=2 align="center"><img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/HPpdf_21.jpg"/></Td>
                   		  </tr>
                      	<Tr>
                         	<Td>
@@ -611,7 +611,7 @@ regarding the hosting of an exchange student with a particular athletic ability?
                                        <br>
 <table  align="center" border="0" cellpadding="4" cellspacing="0" width="800">
                     <tr>           
-                        <td colspan=2 align="center"><img src="../pics/hostAppBanners/Religion_43.jpg"/></Td>
+                        <td colspan=2 align="center"><img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/Religion_43.jpg"/></Td>
                     </tr>
                     <tr>
                     	<Td valign="top" width=450>
@@ -678,7 +678,7 @@ if they are different from your own?</span></td><td>#capFirst1(qGetHostFamily.ch
             <td>
    				 <table width=800>
                     <tr>
-                        <td colspan=3><img src="../pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
+                        <td colspan=3><img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
                     </tr>
                     <tr>
                     
@@ -691,7 +691,7 @@ if they are different from your own?</span></td><td>#capFirst1(qGetHostFamily.ch
 			<!--- Religious Prefs --->
                 <table  align="center" border="0" cellpadding="4" cellspacing="0" width="800">
                     <tr>           
-                        <td colspan=6 align="center"><img src="../pics/hostAppBanners/HPpdf_27.jpg"/></Td>
+                        <td colspan=6 align="center"><img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/HPpdf_27.jpg"/></Td>
                     </tr>
                     <tr>
                         <Td><span class="title">Community</span></Td>

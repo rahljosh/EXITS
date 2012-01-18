@@ -51,7 +51,7 @@
         from smg_host_pic_cat
         where catID = #cat#
         </cfquery>
-    	<Td><img src="http://ise.exitsapplication.com/nsmg/uploadedfiles/hostAlbum/thumbs/#filename#" width = 250><br />
+    	<Td><img src="http://ise.exitsapplication.com/nsmg/uploadedfiles/hostAlbum/#filename#" width = 250><br />
             <span class="title">Catagory:</span> #catDesc.cat_name#<br />
             <span class="title">Description:</span>#description#
 		</Td>

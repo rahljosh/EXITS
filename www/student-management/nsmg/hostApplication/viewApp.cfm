@@ -49,7 +49,7 @@ from smg_hosts where hostid = #url.hostid#
             <!--- Create PDF File - Include Profile and Letters --->
             <cfdocument name="HostApp" format="pdf">
 	            <!--- Include Application Template --->
-                <cfinclude template="appForPdf.cfm">
+                <cfinclude template="appForPDF.cfm">
             </cfdocument>
             
             <!--- Save PDF File --->
