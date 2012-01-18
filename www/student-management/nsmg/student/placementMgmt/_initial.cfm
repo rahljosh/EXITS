@@ -1080,10 +1080,10 @@
 
                             <!--- Welcome Family --->
                             <span>Is this a Welcome Family? <em>*</em></span>
-                            <input type="radio" value="0" name="isWelcomeFamily" id="isWelcomeFamily0" <cfif FORM.isWelcomeFamily EQ 0> checked="checked" </cfif> >
+                            <input type="radio" name="isWelcomeFamily" id="isWelcomeFamily0" value="0" <cfif FORM.isWelcomeFamily EQ 0> checked="checked" </cfif> >
                             <label for="isWelcomeFamily0">No</label>
                             &nbsp;
-                            <input type="radio" value="1" name="isWelcomeFamily" id="isWelcomeFamily1" <cfif FORM.isWelcomeFamily EQ 1> checked="checked" </cfif> >
+                            <input type="radio" name="isWelcomeFamily" id="isWelcomeFamily1" value="1" <cfif FORM.isWelcomeFamily EQ 1> checked="checked" </cfif> >
                             <label for="isWelcomeFamily1">Yes</label>
                         	
                             <!--- Display only if it's an update --->
@@ -1091,10 +1091,10 @@
                             
 								<!--- Relocation - Display only if student has arrived --->
                                 <span>Is this a Relocation? <em>*</em></span>
-                                <input type="radio" value="0" name="isRelocation" id="isRelocation0" checked="checked" #vDisableRelocation# <cfif FORM.isRelocation EQ 0> checked="checked" </cfif> >
+                                <input type="radio" name="isRelocation" id="isRelocation0" value="0" #vDisableRelocation# <cfif FORM.isRelocation EQ 0> checked="checked" </cfif> >
                                 <label for="isRelocation0">No</label>                            
                                 &nbsp;                            
-                                <input type="radio" value="1" name="isRelocation" id="isRelocation1" #vDisableRelocation# <cfif FORM.isRelocation EQ 1> checked="checked" </cfif> >
+                                <input type="radio" name="isRelocation" id="isRelocation1" value="1" #vDisableRelocation# <cfif FORM.isRelocation EQ 1> checked="checked" </cfif> >
                                 <label for="isRelocation1">Yes</label>
                         
 								<!--- Reason --->
