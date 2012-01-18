@@ -68,7 +68,7 @@
 		
 		if ( isDate(qGetArrival.dep_date) AND qGetArrival.dep_date LT now() ) {
 			vHasStudentArrived = 1;
-			vDisableRelocation = 'disabled="disabled"';
+			vDisableRelocation = 'readonly="readonly"';
 			FORM.isRelocation = 1;
 		} 
 		
