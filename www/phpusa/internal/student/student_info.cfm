@@ -32,7 +32,7 @@
 		<cfset edit = form.edit> 
 	</cfif>
 
-    <cfdirectory directory="#APPLICATION.PATH.onlineApp.picture#" name="stupicture" filter="#studentid#.*">
+    <cfdirectory directory="#APPLICATION.PATH.onlineApp.picture#" name="dStudentPicture" filter="#get_student_unqid.studentID#.*">
     
     <!----International Rep---->
     <cfquery name="int_Agent" datasource="mysql">
@@ -227,8 +227,8 @@
                 <td width="135">
                     <table width="100%" cellpadding="2">
                         <tr><td width="135" valign="top">
-                            <cfif stupicture.recordcount>
-                                <img src="http://www.student-management.com/nsmg/uploadedfiles/web-students/#stupicture.name#" width="135" height="200">
+                            <cfif dStudentPicture.recordcount>
+                                <img src="https://ise.exitsapplication.com/nsmg/uploadedfiles/web-students/#dStudentPicture.name#" width="135" height="200">
                             <cfelse>
                                 <img src="pics/no_stupicture.jpg" width="135">
                             </cfif>

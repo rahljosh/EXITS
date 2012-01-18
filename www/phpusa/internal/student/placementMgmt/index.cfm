@@ -61,16 +61,6 @@
 		vCurrentUsersAssigned = ListAppend(vCurrentUsersAssigned, qGetStudentInfo.areaRepID);
 		vCurrentUsersAssigned = ListAppend(vCurrentUsersAssigned, qGetStudentInfo.placeRepID);
 		
-		// Check if Student has arrived
-		vHasStudentArrived = 0;
-		vDisableRelocation = '';
-		
-		if ( isDate(qGetArrival.dep_date) AND qGetArrival.dep_date LT now() ) {
-			vHasStudentArrived = 1;
-			vDisableRelocation = 'disabled="disabled"';
-			FORM.isRelocation = 1;
-		} 
-		
 		// Get Program Information
 		qGetProgramInfo = APPLICATION.CFC.PROGRAM.getPrograms(programID=qGetStudentInfo.programID);
 
