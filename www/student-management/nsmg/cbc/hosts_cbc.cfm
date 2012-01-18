@@ -1,3 +1,5 @@
+<cfdump var="#form#">
+
 <!--- ------------------------------------------------------------------------- ----
 	
 	File:		hosts_cbc.cfm
@@ -361,7 +363,7 @@
                 SESSION.pageMessages.Add("Form successfully submitted.");
 			}
 			
-			Location(CGI.SCRIPT_NAME & "?" & CGI.QUERY_STRING, "no");
+			// Location(CGI.SCRIPT_NAME & "?" & CGI.QUERY_STRING, "no");
 		</cfscript>
         
     </cfif> <!--- VAL(FORM.submitted) --->
