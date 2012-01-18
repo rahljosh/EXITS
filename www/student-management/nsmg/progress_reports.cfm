@@ -637,7 +637,17 @@ But in the output below we use the report fields where a report has been submitt
                             <Cfelse>
                                 <Cfset PreviousReportApproved = 1>
                             </Cfif>
-                        
+                        <Cfelseif client.pr_rmonth eq 1>
+                      
+                            <Cfif #datePart('m', '#arrivalDate#')# eq 1>
+                           		<Cfset inCountry = 0>
+                            <Cfelse>
+                                <Cfset PreviousReportApproved = 1>
+                            </Cfif>
+                        <cfelseif client.pr_rmonth eq 2>
+                        	<Cfif #datePart('m', '#arrivalDate#')# eq 1>
+                           		<Cfset PreviousReportApproved = 1>
+                            </Cfif>
 					   <Cfelseif client.pr_rmonth eq 6>
 							<Cfif #datePart('m', '#departureDate#')# lt #datePart('m', '#repReqDate#')#>
                            		<Cfset inCountry = 0>
