@@ -214,7 +214,7 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
                                     </tr>
                                 </cfloop>
                             </table>
-                         
+                            <br><br />
                        <!----Dietary and smoking---->
                        <table  align="left" border="0" cellpadding="4" cellspacing="0" width="100%">
                        	<Tr>
@@ -305,9 +305,12 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
                               		<tr>
 
                                </table> 
+                          </td>
+                      </tr>
+                  </table>
                      
-                     
-                                 
+                     <table>
+                        
                          <br /><br />
                        <!----INterests---->     
                              <table  align="center" border="0" cellpadding="4" cellspacing="0" width="800">
