@@ -21,9 +21,10 @@
     <cfparam name="FORM.hostIDSuggest" default="" />
     <cfparam name="FORM.hostID" default="0" />
     <cfparam name="FORM.changePlacementExplanation" default="" />
+    <cfparam name="FORM.dateSetHostPermanent" default="#DateFormat(now(), 'mm/dd/yyyy')#" />
     <cfparam name="FORM.isWelcomeFamily" default="" />
     <cfparam name="FORM.isRelocation" default="" />
-    <cfparam name="FORM.dateSetHostPermanent" default="#DateFormat(now(), 'mm/dd/yyyy')#" />
+    <cfparam name="FORM.dateRelocated" default="" />
     <!--- School --->
     <cfparam name="FORM.schoolID" default="0" />  
     <cfparam name="FORM.schoolIDReason" default="" />
@@ -40,6 +41,15 @@
     <cfparam name="FORM.reason" default="" /> 
 
     <cfscript>
+		// Check if Student has arrived
+		vHasStudentArrived = 0;
+		vDisableRelocation = '';
+		
+		if ( isDate(qGetArrival.dep_date) AND qGetArrival.dep_date LT now() ) {
+			vHasStudentArrived = 1;
+			vDisableRelocation = 'readonly="readonly"';
+		} 
+		
 		// Get Training Options
 		qGetRelocationReason = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(applicationID=1,fieldKey='changePlacementReason');
 
@@ -60,7 +70,11 @@
 
 				if ( NOT LEN(FORM.isRelocation) ) {
 					SESSION.formErrors.Add("You must answer whether is a relocation or not");
-				}			
+				}	
+				
+				if ( VAL(FORM.isRelocation) AND NOT isDate(FORM.dateRelocated) ) {
+					SESSION.formErrors.Add("You must enter a relocation date");
+				}
 			
 				if ( NOT LEN(FORM.changePlacementExplanation) ) {
 					SESSION.formErrors.Add("You must indidcate why you are changing the host family");
@@ -133,6 +147,7 @@
 					hostID = FORM.hostID,
 					isWelcomeFamily = FORM.isWelcomeFamily,
 					isRelocation = FORM.isRelocation,
+					dateRelocated = FORM.dateRelocated,
 					changePlacementExplanation = FORM.changePlacementExplanation,
 					schoolID = FORM.schoolID,
 					schoolIDReason = FORM.schoolIDReason,
@@ -250,6 +265,34 @@
 
 			}
 
+		// SET FAMILY AS PERMANENT
+		} else if ( FORM.subAction EQ 'setFamilyAsPermanent' ) {
+
+			// Data Validation
+			if ( NOT IsDate(FORM.dateSetHostPermanent) ) {
+				SESSION.formErrors.Add("You must enter what date did this host family become permanent");
+			}			
+
+			// Check if there are no errors
+			if ( NOT SESSION.formErrors.length() ) {				
+
+				// Set Family As Permanent - Insert into history
+				APPLICATION.CFC.STUDENT.setFamilyAsPermanent(
+					studentID = FORM.studentID,	
+					assignedID = FORM.assignedID,
+					changedBy = CLIENT.userID,								 
+					userType = CLIENT.userType,
+					dateSetHostPermanent=FORM.dateSetHostPermanent
+				 );
+	
+				// Set Page Message
+				SESSION.pageMessages.Add("Host Family has been set as permanent.");
+				
+				// Reload page
+				location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");		
+		
+			}
+
 		// FORM NOT SUBMITTED
 		} else {
 			
@@ -266,6 +309,11 @@
 			// Set subAction to placementInformation if any information is missing
 			if ( vPlacementStatus EQ 'Incomplete' ) {
 				FORM.subAction = 'placementInformation';	
+			}
+			
+			// Set Relocation Value
+			if ( VAL(vHasStudentArrived) ) {
+				FORM.isRelocation = 1;
 			}
 			
 		}
@@ -317,7 +365,8 @@
 			// Display Only if entering placement information
 			if ( $("#hostID").val() == 0 || $("#validationErrors").val() != 0 ) {
 				vDisplaySaveButton = 1;
-				$("#divHostID").slideDown();			
+				$("#divHostID").slideDown();
+				displayRelocationDate();
 			}
 			
 			if ( $("#schoolID").val() == 0 || $("#validationErrors").val() != 0 ) {
@@ -334,12 +383,17 @@
 				vDisplaySaveButton = 1;
 				$("#divAreaRepID").slideDown();
 			}
-			
+
 		// Display only if unplacing a student
 		<cfelseif FORM.subAction EQ 'unplace'>
 		
 			displayHiddenForm('unplaceStudentForm');
 			
+		// Display only if setting family as permanent
+		<cfelseif FORM.subAction EQ 'setFamilyAsPermanent'>
+
+			displayHiddenForm('setAsPermanentForm');
+
 		</cfif>
 			
 		// Always show the double placement if student is not assigned and not submitting a rejection form
@@ -355,7 +409,8 @@
 				vDisplaySaveButton = 1;
 				// Hide Information
 				$("#divHostIDInfo").slideUp();
-				$("#divHostID").slideDown();			
+				$("#divHostID").slideDown();
+				displayRelocationDate();
 			}
 		
 		</cfif>
@@ -475,15 +530,11 @@
 	var displayApprovalButton = function(divID) { 
 	
 		if( $("#" + divID).css("display") == "none" ) {
-			
 			// Fade In
 			$("#" + divID).fadeIn("slow");
-			
 		} else {
-			
 			// Fade Out
 			$("#" + divID).fadeOut("slow");
-			
 		}
 		
 	}	
@@ -513,6 +564,20 @@
 		});	
 		
 	}
+	
+	// Display Relocation Date Form
+	var displayRelocationDate = function() {
+		
+		// Check if relocation is checked 		
+		if ( $("#isRelocation1").attr('checked') ) {
+			// Fade In
+			$("#divRelocationDate").fadeIn("slow");
+		} else {
+			// Fade Out
+			$("#divRelocationDate").fadeOut("slow");
+		}
+		
+	}	
 </script>
 
 <cfoutput>
@@ -582,6 +647,26 @@
 
                 </form>  
                 
+                <!--- Set Family as Permanent --->
+                <form name="setAsPermanentForm" id="setAsPermanentForm" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="displayNone"  style="margin-top:10px; margin-bottom:10px;">
+                    <input type="hidden" name="subAction" id="subAction" value="setFamilyAsPermanent" />
+                    <input type="hidden" name="studentID" id="studentID" value="#FORM.studentID#" />
+
+                    <table width="680px" border="0" cellpadding="4" cellspacing="0" class="" align="center">                            				
+                        <tr class="reportCenterTitle"> 
+                            <th>SET FAMILY AS PERMANENT</th>
+                        </tr>
+                        <tr>
+                            <td class="placementMgmtInfo" align="center">
+                                <label class="reportTitleLeftClean" for="dateSetHostPermanent">What date did this family become permanent?</label>
+                                <input type="text" name="dateSetHostPermanent" id="dateSetHostPermanent" class="datePicker" value="#DateFormat(FORM.dateSetHostPermanent, 'mm/dd/yyyy')#">
+                                <input type="image" name="submit" src="../../pics/save.gif" alt="Set Family As Permanent" style="display:block;" />    
+                            </td>
+                        </tr>
+                    </table>
+
+                </form> 
+                
             </td>
         </tr>    
     </table>                                                
@@ -630,7 +715,7 @@
                             [ 
                             <a href="../../index.cfm?curdoc=host_fam_info&hostid=#qGetStudentInfo.hostID#" target="_blank">More Information</a>  
                             |
-                            <a href="javascript:displayUpdateField('divHostID','hostID');">Update</a> 							
+                            <a href="javascript:displayUpdateField('divHostID','hostID'); displayRelocationDate();">Update</a> 							
                             
 							<cfif qGetStudentInfo.isWelcomeFamily EQ 1 AND ListFind("1,2,3,4,5", CLIENT.userType)>
                                 |
@@ -721,10 +806,10 @@
 
                             <!--- Welcome Family --->
                             <span>Is this a Welcome Family? <em>*</em></span>
-                            <input type="radio" value="0" name="isWelcomeFamily" id="isWelcomeFamily0" <cfif FORM.isWelcomeFamily EQ 0> checked="checked" </cfif> >
+                            <input type="radio" name="isWelcomeFamily" id="isWelcomeFamily0" value="0" <cfif FORM.isWelcomeFamily EQ 0> checked="checked" </cfif> >
                             <label for="isWelcomeFamily0">No</label>
                             &nbsp;
-                            <input type="radio" value="1" name="isWelcomeFamily" id="isWelcomeFamily1" <cfif FORM.isWelcomeFamily EQ 1> checked="checked" </cfif> >
+                            <input type="radio" name="isWelcomeFamily" id="isWelcomeFamily1" value="1" <cfif FORM.isWelcomeFamily EQ 1> checked="checked" </cfif> >
                             <label for="isWelcomeFamily1">Yes</label>
                         	
                             <!--- Display only if it's an update --->
@@ -732,11 +817,17 @@
                             
 								<!--- Relocation - Display only if student has arrived --->
                                 <span>Is this a Relocation? <em>*</em></span>
-                                <input type="radio" value="0" name="isRelocation" id="isRelocation0" checked="checked" #vDisableRelocation# <cfif FORM.isRelocation EQ 0> checked="checked" </cfif> >
+                                <input type="radio" name="isRelocation" id="isRelocation0" value="0" onclick="displayRelocationDate();" #vDisableRelocation# <cfif FORM.isRelocation EQ 0> checked="checked" </cfif> >
                                 <label for="isRelocation0">No</label>                            
                                 &nbsp;                            
-                                <input type="radio" value="1" name="isRelocation" id="isRelocation1" #vDisableRelocation# <cfif FORM.isRelocation EQ 1> checked="checked" </cfif> >
+                                <input type="radio" name="isRelocation" id="isRelocation1" value="1" onclick="displayRelocationDate();" #vDisableRelocation# <cfif FORM.isRelocation EQ 1> checked="checked" </cfif> > 
                                 <label for="isRelocation1">Yes</label>
+                                
+                                <!--- Relocation Date --->
+                                <div id="divRelocationDate" class="displayNone">
+                                    <span>Relocation Date <em>*</em></span>  
+                                    <input type="text" name="dateRelocated" id="dateRelocated" class="datePicker" value="#DateFormat(FORM.dateRelocated, 'mm/dd/yyyy')#">
+                                </div>
                                 
 								<!--- Explain --->
                                 <span>Please indicate why you are changing the host family <em>*</em></span>                             

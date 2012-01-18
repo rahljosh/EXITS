@@ -374,6 +374,7 @@
         <cfargument name="hostID" hint="hostID is required">
         <cfargument name="isWelcomeFamily" default="0" hint="isWelcomeFamily is not required">
         <cfargument name="isRelocation" default="0" hint="isRelocation is not required">
+        <cfargument name="dateRelocated" default="" hint="Date Relocated is not required">
         <cfargument name="changePlacementExplanation" default="" hint="changePlacementExplanation is not required">
         <cfargument name="schoolID" hint="schoolID is required">   
         <cfargument name="schoolIDReason" default="" hint="schoolIDReason is not required">     
@@ -397,6 +398,9 @@
 				studentID = ARGUMENTS.studentID,
 				assignedID = ARGUMENTS.assignedID,
 				hostID = ARGUMENTS.hostID,
+				isWelcomeFamily = ARGUMENTS.isWelcomeFamily,
+				isRelocation = ARGUMENTS.isRelocation,
+				dateRelocated = ARGUMENTS.dateRelocated,				
 				changePlacementExplanation = ARGUMENTS.changePlacementExplanation,
 				schoolID = ARGUMENTS.schoolID,
 				schoolIDReason = ARGUMENTS.schoolIDReason,
@@ -406,8 +410,6 @@
 				areaRepIDReason = ARGUMENTS.areaRepIDReason,
 				doublePlace = ARGUMENTS.doublePlace,
 				doublePlaceReason = ARGUMENTS.doublePlaceReason,
-				isWelcomeFamily = ARGUMENTS.isWelcomeFamily,
-				isRelocation = ARGUMENTS.isRelocation,
 				changedBy = ARGUMENTS.changedBy,
 				userType = ARGUMENTS.userType,
 				placementStatus = ARGUMENTS.placementStatus
@@ -687,6 +689,59 @@
 
     </cffunction>
 
+
+    <!--- Set Host Family as Permanent --->
+	<cffunction name="setFamilyAsPermanent" access="public" returntype="void" output="false" hint="Sets a host family as permanent">
+        <cfargument name="studentID" hint="studentID is required">
+        <cfargument name="assignedID" hint="assignedID is required">
+        <cfargument name="changedBy" hint="changedBy is required">
+        <cfargument name="userType" hint="userType is required">
+        <cfargument name="reason" default="" hint="reason is not required">
+        <cfargument name="dateSetHostPermanent" default="" hint="dateSetHostPermanent is not required">
+        
+        <cfscript>
+			// Get Student Info
+			var qGetStudentInfo = getStudentByID(assignedID=ARGUMENTS.assignedID);
+			
+			var vHostHistoryID = getPlacementHistory(studentID=ARGUMENTS.studentID, assignedID=ARGUMENTS.assignedID).historyID;
+		</cfscript>
+        
+        <cfquery 
+			datasource="#APPLICATION.DSN#">
+                UPDATE
+                	php_students_in_program
+				SET
+                    isWelcomeFamily = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+				WHERE
+                	assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.assignedID)#">
+		</cfquery>
+        
+        <!--- Update Host History - Insert Permanent Date --->
+        <cfquery 
+            datasource="#APPLICATION.DSN#">
+                UPDATE
+                    smg_hosthistory	
+                SET
+                    dateSetHostPermanent = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateSetHostPermanent#">
+                WHERE
+                    historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vHostHistoryID)#">
+        </cfquery>
+        
+		<cfscript>
+			// Insert New History - It tracks placement statuses only, placement updates are tracked on smg_hostHistory
+			insertPlacementActionHistory(
+				studentID=ARGUMENTS.studentID,
+				assignedID=ARGUMENTS.assignedID,
+				changedBy=ARGUMENTS.changedBy,
+				userType=ARGUMENTS.userType,
+				reason=ARGUMENTS.reason,
+				placementAction='setFamilyAsPermanent',
+				dateSetHostPermanent=ARGUMENTS.dateSetHostPermanent
+			);
+        </cfscript>
+        
+	</cffunction>
+
 	
     <!--- Insert Placement Action History --->
 	<cffunction name="insertPlacementActionHistory" access="public" returntype="void" output="false" hint="Actions: Approve/Reject/Resubmit/unplaceStudent/setPermanent, it does not require any update to the history record">
@@ -753,7 +808,17 @@
 					
 				// UNPLACE STUDENT
 				case 'unplaceStudent':
-					vActions = "<strong>Student Set to Unplaced</strong> <br /> #CHR(13)#";			
+					vActions = "
+					<strong>Student Set to Unplaced</strong> <br /> #CHR(13)#";			
+					break; 
+					
+				// SET FAMILY AS PERMANENT
+				case 'setFamilyAsPermanent':
+					if ( isDate(ARGUMENTS.dateSetHostPermanent ) ) {
+						vActions = "<strong>Host Family Set as Permanent as of #DateFormat(ARGUMENTS.dateSetHostPermanent,'mm/dd/yyyy')# </strong> <br /> #CHR(13)#";
+					} else {
+						vActions = "<strong>Host Family Set as Permanent</strong> <br /> #CHR(13)#";
+					}						
 					break; 
 				
 			} //end switch
@@ -798,6 +863,7 @@
         <cfargument name="changePlacementExplanation" default="" hint="changePlacementExplanation is not required">
         <cfargument name="isWelcomeFamily" default="0" hint="isWelcomeFamily is not required">
         <cfargument name="isRelocation" default="0" hint="isRelocation is not required">
+        <cfargument name="dateRelocated" default="" hint="Date Relocated is not required">
         <cfargument name="schoolID" default="0" hint="schoolID is not required">        
         <cfargument name="schoolIDReason" default="" hint="schoolIDReason is not required">     
         <cfargument name="placeRepID" default="0" hint="placeRepID is not required">
@@ -903,7 +969,8 @@
 					}
 	
 					if ( VAL(ARGUMENTS.isRelocation) ) {
-						vActions = vActions & "<strong>This is a relocation</strong> <br /> #CHR(13)#";
+						
+						vActions = vActions & "<strong>This is a relocation</strong> - Student relocated on #DateFormat(ARGUMENTS.dateRelocated, 'mm/dd/yyyy')# <br /> #CHR(13)#";
 					}
 
 					if ( LEN(ARGUMENTS.changePlacementExplanation) ) {
@@ -1149,6 +1216,7 @@
                         changedBy,
                         isWelcomeFamily,
                         isRelocation,
+                        dateRelocated,
                         datePlaced,
                         dateOfChange, 
                         reason,
@@ -1173,6 +1241,7 @@
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.changedBy)#">, 
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isWelcomeFamily)#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isRelocation)#">, 
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateRelocated#" null="#NOT IsDate(ARGUMENTS.dateRelocated)#">,
                     	<cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#vActions#">,
