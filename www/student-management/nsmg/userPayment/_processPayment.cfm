@@ -5,7 +5,9 @@
 	Date:		April 20, 2011
 	Desc:		Process Payment
 	
-	Update:		08/23/2011 - Adding second visit representative
+	Update:		01/19/2012 - Linking 2nd visit payments to a report
+				
+				08/23/2011 - Adding second visit representative
 				
 				06/17/2011 - Blocking departure payments for ayp 5 month students	
 		
@@ -340,7 +342,10 @@
         <cfif VAL(FORM.secondVisitStudentIDList)>
         
             <cfloop list="#FORM.secondVisitStudentIDList#" index="studentID">
-            		
+            	
+                <!--- Param Variables --->
+                <cfparam name="FORM.#studentID#secondVisitreportID" default="0">
+                	
                 <!--- Block Payment if report is not selected --->
                 <cfif LEN(Evaluate("FORM." & studentID & "secondVisitPaymentTypeID")) AND VAL(Evaluate('FORM.' & studentID & 'secondVisitreportID'))>
                 	
