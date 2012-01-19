@@ -28,7 +28,7 @@
 		p.programname, p.seasonid, p.type,
 		u.businessname,
 		stu_prog.schoolid, stu_prog.datecreated, stu_prog.dateplaced, stu_prog.school_acceptance, stu_prog.hf_placement, 
-		stu_prog.hf_application, stu_prog.transfer_type, stu_prog.return_student,
+		stu_prog.hf_application, stu_prog.transfer_type,
 		sc.schoolname,
 		sc_dates.year_begins, sc_dates.semester_ends, sc_dates.semester_begins, sc_dates.year_ends 
 	FROM smg_students s
