@@ -193,6 +193,8 @@
         	smg_sevis_history
         WHERE 
         	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
+        AND
+        	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         ORDER BY 
         	historyid DESC 
     </cfquery>
@@ -894,7 +896,7 @@
 				<tr>
 					<td>&nbsp;</td>
 					<td>
-                    	Fee Status: &nbsp; 
+                    	Fee: &nbsp; 
 						<cfif LEN(sevis_fee_paid_date)>
                         	Paid  on #DateFormat(sevis_fee_paid_date, 'mm/dd/yyyy')#
 						<cfelseif qGetIntlRep.accepts_sevis_fee NEQ 1>
@@ -906,7 +908,7 @@
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
-					<td>Sevis Status: &nbsp; <cfif qSevisStatus.recordcount> Active since #DateFormat(qSevisStatus.datecreated, 'mm/dd/yyyy')# <cfelseif sevis_batchid NEQ 0> Initial <cfelse> n/a </cfif></td>
+					<td>Status: &nbsp; <cfif qSevisStatus.recordcount> Active since #DateFormat(qSevisStatus.datecreated, 'mm/dd/yyyy')# <cfelseif sevis_batchid NEQ 0> Initial <cfelse> n/a </cfif></td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>

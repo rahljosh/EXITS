@@ -178,6 +178,8 @@ Sorry, there were no students to populate the XML file at this time.
                 	smg_sevis_history  
                 WHERE 
                 	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.studentid#">
+                AND
+                    isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                 ORDER BY 
                 	historyid DESC
             </cfquery>
