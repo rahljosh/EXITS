@@ -27,7 +27,7 @@
 	<cffunction name="getApplicationLookUp" access="public" returntype="query" output="false" hint="Returns a list from ApplicationLookUp Table. This table was created to store values used throughout the system">
     	<cfargument name="applicationID" hint="applicationID is required">
     	<cfargument name="fieldKey" hint="fieldKey is required. This is what defines a group of data">
-        <cfargument name="fieldID" default="0" hint="fieldID is not required">
+        <cfargument name="fieldID" default="" hint="fieldID is not required">
     	<cfargument name="isActive" default="1" hint="isActive is not required">
         <cfargument name="sortBy" type="string" default="fieldID" hint="sortBy is not required">
 
@@ -52,9 +52,9 @@
                 AND 
                     fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fieldKey#">
 
-				<cfif VAL(ARGUMENTS.fieldID)>
+				<cfif LEN(ARGUMENTS.fieldID)>
 	                AND 
-                        fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.fieldID#">
+                        fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.fieldID)#">
                 </cfif>                        
 				
                 ORDER BY

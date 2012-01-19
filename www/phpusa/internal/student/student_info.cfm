@@ -21,6 +21,11 @@
         <cfabort>
     </cfif>
     
+    <cfscript>
+		// Get Training Options
+		qGetReturnOptions = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(applicationID=2,fieldKey='PHPReturnOptions');
+	</cfscript>
+    
     <!--- Get Student Info by UniqueID --->
     <cfinclude template="../querys/get_student_unqid.cfm">
     
@@ -267,10 +272,10 @@
                                         <td align="right">Ret/Ext/Trans:</td>
                                         <td>
                                             <select name="return_student" <cfif edit EQ 'no'>disabled</cfif>>
-                                            <option value=0 <cfif return_student eq 0>selected</cfif>>n/a</option>
-                                            <option value=1 <cfif return_student eq 1>selected</cfif>>Returning</option>
-                                            <option value=2 <cfif return_student eq 2>selected</cfif>>Extending</option>
-                                            <option value=3 <cfif return_student eq 3>selected</cfif>>Transfer</option>
+                                                <option value="0" <cfif return_student eq 0>selected</cfif>>n/a</option>
+                                                <cfloop query="qGetReturnOptions">
+                                                	<option value="#qGetReturnOptions.fieldID#" <cfif get_student_unqid.return_student EQ qGetReturnOptions.fieldID>selected</cfif>>#qGetReturnOptions.name#</option>
+                                                </cfloop>
                                             </select>
                                         </td>
                                     </tr>	

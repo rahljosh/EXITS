@@ -21,7 +21,7 @@
             smg_programs.programname,
             stu_prog.programid, 
             stu_prog.assignedid, 
-            stu_prog.return_student
+            IFNULL(alp.name, 'n/a') AS PHPReturnOption
         FROM 
         	smg_students s
         INNER JOIN 
@@ -34,9 +34,14 @@
         	smg_users u on u.userid = s.intrep 
         LEFT JOIN 
         	php_schools sc ON sc.schoolid = stu_prog.schoolid
-        
+        LEFT OUTER JOIN
+        	applicationLookUp alp ON alp.fieldID = stu_prog.return_student
+            	 AND
+                 	fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="PHPReturnOptions">
+		
 		<cfif client.usertype eq 7>
-        LEFT JOIN php_school_contacts on php_school_contacts.schoolid = stu_prog.schoolid
+        LEFT JOIN 
+        	php_school_contacts on php_school_contacts.schoolid = stu_prog.schoolid
         </cfif>
         
         WHERE 
@@ -127,6 +132,7 @@
 	</Tr>
 <cfelse>
 <cfloop query="qGetStudentList">
+
 	<tr bgcolor="###iif(qGetStudentList.currentrow MOD 2 ,DE("e9ecf1") ,DE("FFFFFF") )#">
 		<td><cfif client.usertype GTE 5><a href="?curdoc=student/student_profile&unqid=#uniqueid#&assignedid=#assignedid#"><cfelse><a href="?curdoc=student/student_info&unqid=#uniqueid#&assignedid=#assignedid#"></cfif>#studentid#</td>
 		<td><cfif client.usertype GTE 5><a href="?curdoc=student/student_profile&unqid=#uniqueid#&assignedid=#assignedid#"><cfelse><a href="?curdoc=student/student_info&unqid=#uniqueid#&assignedid=#assignedid#"></cfif>#firstname#</td>
@@ -135,7 +141,7 @@
 		<td>#countryname#</td>
 		<td>#programname#</td>
 		<td><cfif client.usertype LTE 4><a href="?curdoc=forms/view_school&sc=#schoolid#" target="_blank">#schoolname#</a><cfelse>#schoolname#</cfif></td>
-		<td><cfif return_student eq 1>Return<cfelseif return_student eq 2>Ext<cfelseif return_student eq 3>Trans<cfelse>No</cfif></td>
+		<td>#qGetStudentList.PHPReturnOption#</td>
 		<cfif client.usertype lte 4><td><a href="?curdoc=users/user_info&userid=#userid#" target="_blank">#businessname#</a></td></cfif>
 	</tr>
 </cfloop>

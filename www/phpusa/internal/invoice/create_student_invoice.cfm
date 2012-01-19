@@ -5,7 +5,7 @@
     <cfparam name="studentID" type="numeric" default="0">
     <cfparam name="assignedID" type="numeric" default="0">
 
-    <cfquery name="get_student" datasource="MySql">
+    <cfquery name="qGetStudentInfo" datasource="MySql">
         SELECT 
         	s.studentID, s.firstname, s.familylastname, s.intrep,
             u.businessname, u.accepts_sevis_fee, u.php_insurance_typeid, u.php_contact_email, 
@@ -14,7 +14,8 @@
             php.assignedID, php.programid, php.active, php.return_student,
             php_schools.schoolname, php_schools.nonref_deposit, php_schools.tuition_semester, 
             php_schools.tuition_year, php_schools.boarding_school,	php.programid, 
-            programtype.programtypeid, programtype.programtype
+            programtype.programtypeid, programtype.programtype,
+            IFNULL(alp.name, 'n/a') AS PHPReturnOption
         FROM 
         	php_students_in_program php
         INNER JOIN 
@@ -29,12 +30,15 @@
         	smg_program_type programtype ON programtype.programtypeid = p.type
         LEFT JOIN 
         	smg_insurance_type insu ON insu.insutypeid = u.php_insurance_typeid
+        LEFT OUTER JOIN
+        	applicationLookUp alp ON alp.fieldID = php.return_student
+            	 AND
+                 	fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="PHPReturnOptions">            
         WHERE 
         	php.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentID#">
         AND 
         	php.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#assignedID#">
     </cfquery>
-    
        
     <!--- CHECK IF STUDENT IS ASSIGNED TO MORE THAN ON PROGRAM --->
     <cfquery name="get_programs_assigned" datasource="MySql">
@@ -47,7 +51,7 @@
         LEFT JOIN 
         	egom_charges ON (php_stu.studentID = egom_charges.studentID AND php_stu.programid = egom_charges.programid)
         WHERE 
-        	php_stu.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student.studentID#">
+        	php_stu.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#">
         GROUP BY 
         	php_stu.assignedID
         ORDER BY 
@@ -74,24 +78,24 @@
     <cfset extend_fee = 500.00>
     
     <!--- SCHOOL TUITION --->
-    <cfif get_student.programtypeid EQ 1 OR get_student.programtypeid EQ 2>
-        <cfset school_tuition = get_student.tuition_year>
+    <cfif qGetStudentInfo.programtypeid EQ 1 OR qGetStudentInfo.programtypeid EQ 2>
+        <cfset school_tuition = qGetStudentInfo.tuition_year>
     <!--- EXTENDING STUDENTS  = YEAR PRICE - SEMESTER + 500.00 fee --->
-    <cfelseif get_student.return_student EQ 2 AND (get_student.programtypeid EQ 3 OR get_student.programtypeid EQ 4)>
-        <cfset school_tuition = NumberFormat((get_student.tuition_year - get_student.tuition_semester) + extend_fee, "0.00")>
-    <cfelseif get_student.programtypeid EQ 3 OR get_student.programtypeid EQ 4>
-        <cfset school_tuition = get_student.tuition_semester>
+    <cfelseif qGetStudentInfo.return_student EQ 2 AND (qGetStudentInfo.programtypeid EQ 3 OR qGetStudentInfo.programtypeid EQ 4)>
+        <cfset school_tuition = NumberFormat((qGetStudentInfo.tuition_year - qGetStudentInfo.tuition_semester) + extend_fee, "0.00")>
+    <cfelseif qGetStudentInfo.programtypeid EQ 3 OR qGetStudentInfo.programtypeid EQ 4>
+        <cfset school_tuition = qGetStudentInfo.tuition_semester>
     <cfelse>
         <cfset school_tuition = ''>
     </cfif>
     
     <!--- INSURANCE CHARGE --->
-    <cfif get_student.programtypeid EQ 1>
-        <cfset setInsuranceCharge = get_student.ayp10>
-    <cfelseif get_student.programtypeid EQ 2>
-        <cfset setInsuranceCharge = get_student.ayp12>
-    <cfelseif get_student.programtypeid EQ 3 OR get_student.programtypeid EQ 4>
-        <cfset setInsuranceCharge = get_student.ayp5>
+    <cfif qGetStudentInfo.programtypeid EQ 1>
+        <cfset setInsuranceCharge = qGetStudentInfo.ayp10>
+    <cfelseif qGetStudentInfo.programtypeid EQ 2>
+        <cfset setInsuranceCharge = qGetStudentInfo.ayp12>
+    <cfelseif qGetStudentInfo.programtypeid EQ 3 OR qGetStudentInfo.programtypeid EQ 4>
+        <cfset setInsuranceCharge = qGetStudentInfo.ayp5>
     <cfelse>
         <cfset setInsuranceCharge = ''>
     </cfif>
@@ -123,7 +127,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 
 <br /><br />
 
-<cfoutput query="get_student">
+<cfoutput query="qGetStudentInfo">
 
 <cfif get_programs_assigned.recordcount GT 1>
     <table width="95%" class="box" bgcolor="##ffffff" align="center" cellpadding="3" cellspacing="0">
@@ -136,7 +140,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
                         This student is assigned to more than one program. Currently showing 
                         <select name="jumpMenu" id="jumpMenu" onChange="MM_jumpMenu('parent',this,0)">
                         <cfloop query="get_programs_assigned">
-                            <option value="?curdoc=invoice/create_student_invoice&studentID=#studentID#&assignedID=#assignedID#" <cfif get_student.programid EQ programid>selected</cfif>>#programname#</option>
+                            <option value="?curdoc=invoice/create_student_invoice&studentID=#studentID#&assignedID=#assignedID#" <cfif qGetStudentInfo.programid EQ programid>selected</cfif>>#programname#</option>
                         </cfloop>
                         </select> program.
                     </td></tr>
@@ -211,13 +215,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 										<cfelseif boarding_school EQ 3>n/a
 									</cfif>
 								</td>
-								<td>
-									<cfif return_student EQ 0>n/a
-										<cfelseif return_student EQ 1>Returning
-										<cfelseif return_student EQ 2>Extending
-										<cfelseif return_student EQ 3>Transfer
-									</cfif>
-								</td>
+								<td>#qGetStudentInfo.PHPReturnOption#</td>
 							</tr>
 						</table><br />							
 						<table border="0" cellpadding="3" cellspacing="0" width="100%">
@@ -296,7 +294,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 							</cfif>	
 							
 							<!--- CANCELATION FEE --->
-							<cfif get_student.active EQ 0>
+							<cfif qGetStudentInfo.active EQ 0>
 								<cfquery name="cancelation_charges" datasource="MySql">
 									SELECT invoiceid, amount, date, description
 									FROM egom_charges
@@ -420,7 +418,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 								<tr>
 									<td>#DateFormat(date, 'mm/dd/yy')#</td>
 									<td><a href="javascript:OpenInvoice('invoice/view_invoice.cfm?i=#uniqueid#')">Invoice ###invoiceid#</a> &nbsp; 
-										<a href="javascript:OpenInvoice('invoice/view_invoice_email.cfm?i=#uniqueid#');" onClick="return confirm ('Invoice ###invoiceid# will be sent to #get_student.businessname# at #get_student.php_contact_email#. Click OK to continue.');"><img src="pics/email.gif" border="0" alt="Email Invoice ###invoiceid# to #get_student.businessname#."></a>
+										<a href="javascript:OpenInvoice('invoice/view_invoice_email.cfm?i=#uniqueid#');" onClick="return confirm ('Invoice ###invoiceid# will be sent to #qGetStudentInfo.businessname# at #qGetStudentInfo.php_contact_email#. Click OK to continue.');"><img src="pics/email.gif" border="0" alt="Email Invoice ###invoiceid# to #qGetStudentInfo.businessname#."></a>
 									</td>
 									<td><cfif canceled EQ 1><font color="##FF0000">#description#</font><cfelse>#description#</cfif></td>
 									<td><!---<cfif canceled EQ 1><span class="strike"></cfif>--->#LSCurrencyFormat(amount, 'local')#</td>
@@ -454,7 +452,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 								<tr>
 									<td>#DateFormat(date, 'mm/dd/yy')#</td>
 									<td><a href="javascript:OpenInvoice('invoice/view_invoice.cfm?i=#uniqueid#')">Invoice ###invoiceid#</a> &nbsp; 
-										<a href="javascript:OpenInvoice('invoice/view_invoice_email.cfm?i=#uniqueid#');" onClick="return confirm ('Invoice ###invoiceid# will be sent to #get_student.businessname# at #get_student.php_contact_email#. Click OK to continue.');"><img src="pics/email.gif" border="0" alt="Email Invoice ###invoiceid# to #get_student.businessname#."></a>
+										<a href="javascript:OpenInvoice('invoice/view_invoice_email.cfm?i=#uniqueid#');" onClick="return confirm ('Invoice ###invoiceid# will be sent to #qGetStudentInfo.businessname# at #qGetStudentInfo.php_contact_email#. Click OK to continue.');"><img src="pics/email.gif" border="0" alt="Email Invoice ###invoiceid# to #qGetStudentInfo.businessname#."></a>
 									</td>
 									<td><cfif canceled EQ 1><font color="##FF0000">Canceled &nbsp; </font></cfif>#description#</td>
 									<td><cfif canceled EQ 1><span class="strike"></cfif>#LSCurrencyFormat(amount, 'local')#</td>

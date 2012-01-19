@@ -28,7 +28,7 @@
 		smg_programs.programname,
 		u.businessname,
 		stu_prog.datecreated, stu_prog.dateplaced, stu_prog.school_acceptance, stu_prog.hf_placement, 
-		stu_prog.hf_application, stu_prog.transfer_type, stu_prog.return_student
+		stu_prog.hf_application, stu_prog.transfer_type
 	FROM smg_students s
 	INNER JOIN php_students_in_program stu_prog ON stu_prog.studentid = s.studentid
 	LEFT JOIN smg_programs ON smg_programs.programid = stu_prog.programid 
