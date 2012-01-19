@@ -12,7 +12,7 @@
 <Cfparam name="inCountry" default= 1>
 <Cfparam name="PreviousReportApproved" default="0">
 
-<Cfif client.usertype lte 4 and form.reportType eq 2>
+<Cfif (client.usertype lte 4 and form.reportType eq 2) or client.usertype eq 15>
 	<cflocation url="index.cfm?curdoc=secondVisitReports" addtoken="no">
 </Cfif>
 <SCRIPT>
@@ -65,13 +65,14 @@ function OpenLetter(url) {
     <cfabort>
     </cfif>
 </cfif>
-
+<!----
 <Cfif isDefined('form.reportType')>
 	<cfif form.reportType neq client.ReportType>
     	<Cfset resetMonth = 1>
 	</cfif>
 	<cfset client.reportType = #form.reportType#>
 </Cfif>
+---->
 <Cfif client.usertype EQ 15>
 	<cfset client.reportType = 2>
 	<Cfset enableReports = 'No'>
@@ -88,7 +89,7 @@ function OpenLetter(url) {
 <!----If a month is passed in from the form, use it for the month if its works with the current report type---->
 
 <Cfif #form.rmonth# neq 0 AND resetMonth eq 0>
-	<Cfset client.pr_rmonth = #form.rmonth#>
+	
       <Cfloop from="#DateRange.startDate#" to="#DateRange.endDate#" index=i step="#CreateTimeSpan(31,0,0,0)#">
                 <Cfif client.pr_rmonth eq "#DatePart('m', '#i#')#">
                     <Cfset client.pr_rmonth = '#DatePart('m', '#i#')#'>
@@ -256,9 +257,9 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
 		<cfset client.pr_regionid = form.regionid>
     </cfif>
     <cfset client.pr_cancelled = form.cancelled>
-    <!----
+
 	<cfset client.pr_rmonth = form.rmonth> 
-	---->
+
 	
 </cfif>
 
@@ -370,6 +371,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
     	<Cfif client.reportType eq 1>
             <td>
                 Phase<br />
+               <Cfoutput>#client.pr_rmonth#</Cfoutput>
                 <select name="rmonth">
                   <option value="0"></option>
                   
@@ -637,17 +639,7 @@ But in the output below we use the report fields where a report has been submitt
                             <Cfelse>
                                 <Cfset PreviousReportApproved = 1>
                             </Cfif>
-                        <Cfelseif client.pr_rmonth eq 1>
-                      
-                            <Cfif #datePart('m', '#arrivalDate#')# eq 1>
-                           		<Cfset inCountry = 0>
-                            <Cfelse>
-                                <Cfset PreviousReportApproved = 1>
-                            </Cfif>
-                        <cfelseif client.pr_rmonth eq 2>
-                        	<Cfif #datePart('m', '#arrivalDate#')# eq 1>
-                           		<Cfset PreviousReportApproved = 1>
-                            </Cfif>
+                        
 					   <Cfelseif client.pr_rmonth eq 6>
 							<Cfif #datePart('m', '#departureDate#')# lt #datePart('m', '#repReqDate#')#>
                            		<Cfset inCountry = 0>
