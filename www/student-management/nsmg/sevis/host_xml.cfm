@@ -66,7 +66,7 @@
         
     <!--- Get only the last record. Student could relocate to a previous host family --->
     AND 
-    	h.hostid NOT IN (SELECT hostid FROM smg_sevis_history WHERE studentid = s.studentID AND historyID = (SELECT max(historyID) FROM smg_sevis_history WHERE studentid = s.studentID) )
+    	h.hostid NOT IN (SELECT hostid FROM smg_sevis_history WHERE studentid = s.studentID AND historyID = (SELECT max(historyID) FROM smg_sevis_history WHERE studentid = s.studentID AND isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> ) )
     AND 
         s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
 
@@ -170,6 +170,8 @@ Sorry, there were no students to populate the XML file at this time.
                 	smg_sevis_history  
                 WHERE 
                 	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.studentid#">
+				AND 
+                	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">                    
                 ORDER BY 
                 	historyid DESC
             </cfquery>
