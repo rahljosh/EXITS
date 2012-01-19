@@ -108,6 +108,7 @@
             s.studentID, 
             s.firstName, 
             s.familyLastName, 
+            s.hostID,
             p.programID,
             p.type
         FROM 
@@ -151,6 +152,7 @@
             studentID, 
             firstName, 
             familyLastName, 
+            hostID,
             programID,
             type
         FROM 
@@ -255,8 +257,9 @@
                             smg_rep_payments
                         (
                             agentid, 
-                            studentID, 
+                            studentID,
                             programID, 
+                            hostID,
                             paymenttype, 
                             date, 
                             transtype, 
@@ -269,7 +272,9 @@
                         (
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">, 
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#studentID#">, 
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'superProgramID')#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'superProgramID')#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'superHostID')#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostID#">,  
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'superPaymentTypeID')#">, 
                             <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vTimeStamp#">, 
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="supervision">, 
@@ -300,6 +305,7 @@
                             agentid, 
                             studentID, 
                             programID, 
+                            hostID,
                             paymenttype, 
                             date, 
                             transtype, 
@@ -312,7 +318,8 @@
                         (
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">, 
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#studentID#">, 
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'placeProgramID')#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'placeProgramID')#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'placeHostID')#">,
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'placePaymentTypeID')#">, 
                             <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vTimeStamp#">, 
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="placement">, 
@@ -334,7 +341,8 @@
         
             <cfloop list="#FORM.secondVisitStudentIDList#" index="studentID">
             		
-                <cfif LEN(Evaluate("FORM." & studentID & "secondVisitPaymentTypeID"))>
+                <!--- Block Payment if report is not selected --->
+                <cfif LEN(Evaluate("FORM." & studentID & "secondVisitPaymentTypeID")) AND VAL(Evaluate('FORM.' & studentID & 'secondVisitreportID'))>
                 	
                     <cfquery datasource="MySQL" result="newRecord">
                         INSERT INTO 
@@ -342,7 +350,9 @@
                         (
                             agentid, 
                             studentID, 
-                            programID, 
+                            programID,
+                            hostID, 
+                            reportID,
                             paymenttype, 
                             date, 
                             transtype, 
@@ -355,7 +365,9 @@
                         (
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">, 
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#studentID#">, 
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'secondVisitProgramID')#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'secondVisitProgramID')#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'secondVisitHostID')#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'secondVisitreportID')#">, 
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'secondVisitPaymentTypeID')#">, 
                             <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vTimeStamp#">, 
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="secondVisit">, 
@@ -522,10 +534,10 @@
                 </tr>
                 <tr style="background-color:##E2EFC7; font-weight:bold;">
                     <td width="10%">ID</td>
-                    <td width="20%">Student</td>
+                    <td width="15%">Student</td>
                     <td width="15%">Type</td>
                     <td width="10%">Amount</td>
-                    <td width="45%">Comment</td>
+                    <td width="50%">Comment</td>
 				</tr>
 
                 <cfloop query="qGetSupervisedStudentList">
@@ -583,6 +595,8 @@
                     
                     <tr bgcolor="###iif(qGetSupervisedStudentList.currentRow MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
                         <input type="hidden" name="#qGetSupervisedStudentList.studentID#superProgramID" value="#qGetSupervisedStudentList.programID#">
+                        <input type="hidden" name="#qGetSupervisedStudentList.studentID#superHostID" value="#qGetSupervisedStudentList.superHostID#">
+                        <input type="hidden" name="#qGetSupervisedStudentList.studentID#superPaymentTypeID" value="#qGetsupervisedPaymentType.id#">
                         <Td valign="top">
                             <a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentID=#qGetSupervisedStudentList.studentID#', 700, 500);" class="nav_bar">
                                 #qGetSupervisedStudentList.studentID#
@@ -596,11 +610,7 @@
                         
                         <cfif vAllowSuperPayment>
                         
-                            <td valign="top">
-                                <select name="#qGetSupervisedStudentList.studentID#superPaymentTypeID" class="xLargeField">
-                                    <option value="#qGetsupervisedPaymentType.id#">#qGetsupervisedPaymentType.type#</option>
-                                </select>
-                            </td>
+                            <td valign="top">#qGetsupervisedPaymentType.type#</td>
                             <td valign="top">
                             	<cfinput type="text" name="#qGetSupervisedStudentList.studentID#superAmount" value="#vPlaceAmoutToBePaid#" class="smallField" required="yes" message="Oops! You forgot to enter the amount for student #qGetSupervisedStudentList.studentID#.">
                             </td>
@@ -665,10 +675,10 @@
                 </tr>
                 <tr style="background-color:##E2EFC7; font-weight:bold;">
                     <td width="10%">ID</td>
-                    <td width="20%">Student</td>
+                    <td width="15%">Student</td>
                     <td width="15%">Type</td>
                     <td width="10%">Amount</td>
-                    <td width="45%">Comment</td>
+                    <td width="50%">Comment</td>
 				</tr>
 
                 <cfloop query="qGetPlacedStudentList">
@@ -748,6 +758,8 @@
                     
                     <tr bgcolor="###iif(qGetPlacedStudentList.currentRow MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
                         <input type="hidden" name="#qGetPlacedStudentList.studentID#placeProgramID" value="#qGetPlacedStudentList.programID#">
+                        <input type="hidden" name="#qGetPlacedStudentList.studentID#placehostID" value="#qGetPlacedStudentList.hostID#">
+                        <input type="hidden" name="#qGetPlacedStudentList.studentID#placePaymentTypeID" value="#qGetPlacementPaymentType.id#">
                         <Td valign="top">
                             <a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentID=#qGetPlacedStudentList.studentID#', 700, 500);" class="nav_bar">
                                 #qGetPlacedStudentList.studentID#
@@ -761,11 +773,7 @@
                         
                         <cfif vAllowPlacePayment>
                         
-                            <td valign="top">
-                                <select name="#qGetPlacedStudentList.studentID#placePaymentTypeID" class="xLargeField">
-                                    <option value="#qGetPlacementPaymentType.id#">#qGetPlacementPaymentType.type#</option>
-                                </select>
-                            </td>
+                            <td valign="top">#qGetPlacementPaymentType.type#</td>
                             <td valign="top">
                                 <cfinput type="text" name="#qGetPlacedStudentList.studentID#placeAmount" class="smallField" value="#vPlaceAmoutToBePaid#" required="yes" message="Oops! You forgot to enter the amount for student #qGetPlacedStudentList.studentID#.">
                             </td>
@@ -827,7 +835,7 @@
             <!--- SECOND VISIT --->
             <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;">
                 <tr>
-                    <td colspan="4" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">
+                    <td colspan="5" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">
                     	Second Visit Students 
                         &nbsp; - &nbsp; 
                         Payment Type: <cfif LEN(qGetSecondVisitPaymentType.type)>#qGetSecondVisitPaymentType.type#<cfelse>n/a</cfif>
@@ -838,14 +846,16 @@
                 </tr>
                 <tr style="background-color:##E2EFC7; font-weight:bold;">
                     <td width="10%">ID</td>
-                    <td width="20%">Student</td>
+                    <td width="15%">Student</td>
                     <td width="15%">Type</td>
+                    <td width="15%">2<sup>nd</sup> Visit Report</td>
                     <td width="10%">Amount</td>
-                    <td width="45%">Comment</td>
+                    <td width="35%">Comment</td>
 				</tr>
 
                 <cfloop query="qGetSecondVisitStudentList">
-
+					
+                    <!--- Get Approved Reports --->
                     <cfquery name="qGetSecondVisitReports" datasource="MySQL">
                         SELECT                                 
                             pr.pr_ID,
@@ -853,54 +863,64 @@
                             pr.fk_student,
                             pr.pr_ny_approved_date,
                             pr.fk_secondVisitRep,
-                            pr.fk_host,
                             u.userID,
                             u.firstName,
-                            u.lastName                                                      
+                            u.lastName,
+                            h.hostID,
+                            h.familyLastName                                                      
                         FROM 
                             progress_reports pr
                         INNER JOIN
                         	smg_users u ON u.userID = pr.fk_secondVisitRep
+                           		AND
+                                	u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRepInfo.userID#">
+                        LEFT OUTER JOIN
+                        	smg_hosts h ON h.hostID = pr.fk_host
                         WHERE 
                             pr.fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetSecondVisitStudentList.studentID#">
                         AND	
                         	pr.fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="2"> 
+                        AND
+                        	pr.pr_ny_approved_date IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+						
+						<!--- Not Split Payment | Get Only Unpaid Reports --->
+						<cfif NOT VAL(FORM.isSplitPayment)>
+                            AND
+                                pr.pr_ID NOT IN ( 
+                                    SELECT
+                                        reportID
+                                    FROM
+                                        smg_rep_payments
+                                    WHERE
+                                        studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetSecondVisitStudentList.studentID#"> 
+                                )
+						</cfif>
+                                                
                     </cfquery>
-                     
-                    <cfquery name="qGetCurrentUserSecondVisitReport" dbtype="query">
-                        SELECT                                 
-                            *                                                      
-                        FROM 
-                            qGetSecondVisitReports
-                        WHERE 
-                        	fk_secondVisitRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRepInfo.userID#">
-                    </cfquery>
-
-                    <cfquery name="qGetOtherSecondVisitReport" dbtype="query">
-                        SELECT                                 
-                            *                                                      
-                        FROM 
-                            qGetSecondVisitReports
-                        WHERE 
-                        	fk_secondVisitRep != <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRepInfo.userID#">
-                    </cfquery>
-					
+                                        
                     <cfquery name="qCheckSecondVisitCharges" datasource="MySQL">
                         SELECT                                 
                             rep.paymenttype,
                             rep.date,
                             rep.amount,
+                            rep.reportID,
                             spt.type,
                             p.programName,
                             u.firstName, 
-                            u.lastname
+                            u.lastname,
+                            h.hostID,
+                            h.familyLastName                                                      
                         FROM 
                             smg_rep_payments rep
                         INNER JOIN 
                             smg_payment_types spt ON rep.paymenttype = spt.id
-                        LEFT JOIN 
+                        LEFT OUTER JOIN
+                        	progress_reports pr ON pr.pr_ID = rep.reportID
+                        LEFT OUTER JOIN
+                        	smg_hosts h ON h.hostID = pr.fk_host
+                        LEFT OUTER JOIN 
                             smg_programs p ON rep.programID = p.programID
-                        LEFT JOIN 
+                        LEFT OUTER JOIN 
                             smg_users u ON rep.agentid = u.userid
                         WHERE 
                             rep.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetSecondVisitStudentList.studentID#"> 
@@ -917,22 +937,19 @@
 						if ( VAL(FORM.isSplitPayment) ) {
 							// Split Payment - Allow
 							vAllowSecondVisitPayment = 1;
-						} else if ( NOT VAL(qCheckSecondVisitCharges.recordcount) ) {
+							// Split Payments - No Default value
+							vSecondVisitAmoutToBePaid = ''; // vSecondVisitAmoutToBePaid = VAL(qGetSecondVisitPaymentType.amount) / 2;	
+						} else if ( VAL(qGetSecondVisitReports.recordcount) ) {
 							// Charge not paid - Allow
 							vAllowSecondVisitPayment = 1;
-						}
-
-						// Split Payments - No Default value
-						if ( FORM.isSplitPayment ) {
-							vSecondVisitAmoutToBePaid = '';
-							// vSecondVisitAmoutToBePaid = VAL(qGetSecondVisitPaymentType.amount) / 2;	
-						} else { 
 							vSecondVisitAmoutToBePaid = qGetSecondVisitPaymentType.amount;
 						}
 					</cfscript>
                     
                     <tr bgcolor="###iif(qGetSecondVisitStudentList.currentRow MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
                         <input type="hidden" name="#qGetSecondVisitStudentList.studentID#SecondVisitProgramID" value="#qGetSecondVisitStudentList.programID#">
+                        <input type="hidden" name="#qGetSecondVisitStudentList.studentID#SecondVisithostID" value="#qGetSecondVisitStudentList.hostID#">
+                        <input type="hidden" name="#qGetSecondVisitStudentList.studentID#SecondVisitPaymentTypeID" value="#qGetSecondVisitPaymentType.id#">
                         <Td valign="top">
                             <a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentID=#qGetSecondVisitStudentList.studentID#', 700, 500);" class="nav_bar">
                                 #qGetSecondVisitStudentList.studentID#
@@ -946,9 +963,12 @@
                         
                         <cfif vAllowSecondVisitPayment>
                         
+                            <td valign="top">#qGetSecondVisitPaymentType.type#</td>
                             <td valign="top">
-                                <select name="#qGetSecondVisitStudentList.studentID#SecondVisitPaymentTypeID" class="xLargeField">
-                                    <option value="#qGetSecondVisitPaymentType.id#">#qGetSecondVisitPaymentType.type#</option>
+                                <select name="#qGetSecondVisitStudentList.studentID#SecondVisitReportID" class="xxLargeField">
+                                    <cfloop query="qGetSecondVisitReports">
+                                        <option value="#qGetSecondVisitReports.pr_ID#">Host: #qGetSecondVisitReports.familyLastName# (###qGetSecondVisitReports.hostID#) | Approved on #DateFormat(qGetSecondVisitReports.pr_ny_approved_date, 'mm/yy/yyyy')#</option>
+                                    </cfloop>
                                 </select>
                             </td>
                             <td valign="top">
@@ -957,39 +977,11 @@
                             <td valign="top" style="color:##F00">
                                 <input type="text" name="#qGetSecondVisitStudentList.studentID#SecondVisitComment" class="xLargeField">
 								
-								<!--- Display report history --->
-                                <cfif NOT VAL(qGetCurrentUserSecondVisitReport.recordCount)>
-                                	<p>
-                                    	*** A second visit report submitted by #qGetRepInfo.firstName# #qGetRepInfo.lastName# could not be found on EXITS ***
-                                    </p>
-                                    
-                                    <cfif VAL(qGetOtherSecondVisitReport.recordCount)>
-                                    
-                                    	<p>Report(s) submitted by other users</p>
-                                    
-                                        <cfloop query="qGetOtherSecondVisitReport">
-                                            <p>
-												- #qGetOtherSecondVisitReport.firstName# #qGetOtherSecondVisitReport.lastName# (###qGetOtherSecondVisitReport.userID#)                                               
-												and approved on #DateFormat(qGetOtherSecondVisitReport.pr_ny_approved_date, 'mm/dd/yyyy')# 
-                                            </p>
-                                        </cfloop>
-									
-                                    </cfif>
-                                                                        
-                                <cfelseif NOT IsDate(qGetCurrentUserSecondVisitReport.pr_ny_approved_date)>
-                                	<p>
-                                    	*** A second visit report was found but it has not been approved by headquarters ***
-                                    </p>
-                                <cfelseif IsDate(qGetCurrentUserSecondVisitReport.pr_ny_approved_date)>
-                                	<p style="color:##006; font-weight:bold;">
-                                    	*** Report received and approved by headquarters on #DateFormat(qGetCurrentUserSecondVisitReport.pr_ny_approved_date, 'mm/dd/yyyy')#  ***
-                                    </p>
-                                </cfif>
-								
                                 <!--- Display Previous Payment Information --->
                                 <cfloop query="qCheckSecondVisitCharges">
                                     <p>
                                         #qCheckSecondVisitCharges.type# paid on #DateFormat(qCheckSecondVisitCharges.date, 'mm/dd/yyyy')# <br />
+                                        - Host: #qCheckSecondVisitCharges.familyLastName# (###qCheckSecondVisitCharges.hostID#) <br />
                                         - Program #qCheckSecondVisitCharges.programName# <br />
                                         - Rep: #qCheckSecondVisitCharges.firstName# #qCheckSecondVisitCharges.lastname# <br />
                                         - Total Paid: #DollarFormat(qCheckSecondVisitCharges.amount)#
@@ -1005,6 +997,7 @@
                                 n/a
                             </td>
                             <td valign="top">n/a</td>
+                            <td valign="top">n/a</td>
                             <td valign="top" style="color:##F00">
                                 <cfif FORM.secondVisitPaymentType EQ 12 AND ListFind(vAYP5ProgramType, qGetSecondVisitStudentList.type)>
                                     AYP 5 month programs are not eligible for #qGetsupervisedPaymentType.type# payment.
@@ -1012,6 +1005,7 @@
                                     <cfloop query="qCheckSecondVisitCharges">
                                         <p>
                                             #qCheckSecondVisitCharges.type# paid on #DateFormat(qCheckSecondVisitCharges.date, 'mm/dd/yyyy')# <br />
+                                            - Host: #qCheckSecondVisitCharges.familyLastName# (###qCheckSecondVisitCharges.hostID#) <br />
                                             - Program #qCheckSecondVisitCharges.programName# <br />
                                             - Rep: #qCheckSecondVisitCharges.firstName# #qCheckSecondVisitCharges.lastname# <br />
                                             - Total Paid: #DollarFormat(qCheckSecondVisitCharges.amount)#
