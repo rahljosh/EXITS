@@ -116,7 +116,7 @@
 			
 			vPlacementStatus = 'Unplaced';
 		
-		} else if ( VAL(qGetStudentInfo.schoolID) AND VAL(qGetStudentInfo.areaRepID) AND VAL(qGetStudentInfo.placeRepID) ) {
+		} else if ( VAL(qGetStudentInfo.schoolID) AND VAL(qGetStudentInfo.hostID) AND VAL(qGetStudentInfo.areaRepID) AND VAL(qGetStudentInfo.placeRepID) ) {
 
 			vPlacementStatus = 'Complete';
 			
