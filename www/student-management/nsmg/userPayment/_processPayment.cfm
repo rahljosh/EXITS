@@ -128,6 +128,7 @@
             studentID, 
             firstName, 
             familyLastName, 
+            hostID,
             programID,
             type
         FROM 
@@ -140,7 +141,8 @@
         SELECT 
             studentID, 
             firstName, 
-            familyLastName, 
+            familyLastName,
+            hostID, 
             programID,
             type
         FROM 
@@ -251,6 +253,13 @@
         <cfif VAL(FORM.supervisedStudentIDList)>
         
             <cfloop list="#FORM.supervisedStudentIDList#" index="studentID">
+
+                <!--- Param Variables --->
+                <cfparam name="FORM.#studentID#superProgramID" default="0">
+                <cfparam name="FORM.#studentID#superHostID" default="0">
+                <cfparam name="FORM.#studentID#superPaymentTypeID" default="0">
+                <cfparam name="FORM.#studentID#superAmount" default="">
+                <cfparam name="FORM.#studentID#superComment" default="">
                 
                 <cfif LEN(Evaluate("FORM." & studentID & "superPaymentTypeID"))>
                 
@@ -297,6 +306,13 @@
         <cfif VAL(FORM.placedStudentIDList)>
         
             <cfloop list="#FORM.placedStudentIDList#" index="studentID">
+
+                <!--- Param Variables --->
+                <cfparam name="FORM.#studentID#placeProgramID" default="0">
+                <cfparam name="FORM.#studentID#placeHostID" default="0">
+                <cfparam name="FORM.#studentID#placePaymentTypeID" default="0">
+                <cfparam name="FORM.#studentID#placeAmount" default="">
+                <cfparam name="FORM.#studentID#placeComment" default="">
             
                 <cfif LEN(Evaluate("FORM." & studentID & "placePaymentTypeID"))>
                 
@@ -344,7 +360,12 @@
             <cfloop list="#FORM.secondVisitStudentIDList#" index="studentID">
             	
                 <!--- Param Variables --->
+                <cfparam name="FORM.#studentID#secondVisitProgramID" default="0">
+                <cfparam name="FORM.#studentID#secondVisitHostID" default="0">
                 <cfparam name="FORM.#studentID#secondVisitreportID" default="0">
+                <cfparam name="FORM.#studentID#secondVisitPaymentTypeID" default="0">
+                <cfparam name="FORM.#studentID#secondVisitAmount" default="">
+                <cfparam name="FORM.#studentID#secondVisitComment" default="">
                 	
                 <!--- Block Payment if report is not selected --->
                 <cfif LEN(Evaluate("FORM." & studentID & "secondVisitPaymentTypeID")) AND VAL(Evaluate('FORM.' & studentID & 'secondVisitreportID'))>
@@ -600,7 +621,7 @@
                     
                     <tr bgcolor="###iif(qGetSupervisedStudentList.currentRow MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
                         <input type="hidden" name="#qGetSupervisedStudentList.studentID#superProgramID" value="#qGetSupervisedStudentList.programID#">
-                        <input type="hidden" name="#qGetSupervisedStudentList.studentID#superHostID" value="#qGetSupervisedStudentList.superHostID#">
+                        <input type="hidden" name="#qGetSupervisedStudentList.studentID#superHostID" value="#qGetSupervisedStudentList.hostID#">
                         <input type="hidden" name="#qGetSupervisedStudentList.studentID#superPaymentTypeID" value="#qGetsupervisedPaymentType.id#">
                         <Td valign="top">
                             <a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentID=#qGetSupervisedStudentList.studentID#', 700, 500);" class="nav_bar">
