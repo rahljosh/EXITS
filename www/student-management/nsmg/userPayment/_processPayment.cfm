@@ -285,7 +285,6 @@
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#studentID#">, 
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'superProgramID')#">,
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'superHostID')#">,
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostID#">,  
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'superPaymentTypeID')#">, 
                             <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vTimeStamp#">, 
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="supervision">, 
