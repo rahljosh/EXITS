@@ -317,9 +317,9 @@
 					 and ListFind("1,2,3,4,5,10,12", CLIENT.companyid)) >
                 <cfset tripcount = 7 - placed_students.Count>
                 <cfif placed_students.Count LT 7>
-                    You're only #tripcount# placements away from a trip to <A href="uploadedFiles/Incentive_trip/incentiveTrip.pdf" target="_blank">#incentive_trip.trip_place#!</A>
+                    You're only #tripcount# placements away from a trip to <A href="uploadedFiles/Incentive_trip/incentiveTrip_#client.companyid#.pdf" target="_blank">#incentive_trip.trip_place#!</A>
                 <cfelse>
-                    You've earned a trip to <A href="uploadedFiles/Incentive_trip/incentiveTrip.pdf" target="_blank">#incentive_trip.trip_place#!!!</A> 
+                    You've earned a trip to <A href="uploadedFiles/Incentive_trip/incentiveTrip_#client.companyid#.pdf" target="_blank">#incentive_trip.trip_place#!!!</A> 
                 </cfif>
               </cfif>
             </td>
@@ -494,8 +494,11 @@
                         <cfif client.companyid neq 14>
                         	<a href="index.cfm?curdoc=forms/yearly_agreement">Please complete your annual area representative agreement and paperwork!<br /></a>
                         </cfif>
+                        <cfif client.usertype eq 15>
+                        <a href="index.cfm?curdoc=secondVisitReports">Online Reports</a><br>
+                        <cfelse>
                         <a href="index.cfm?curdoc=progress_reports">Online Reports</a><br>
-                        
+                        </cfif>
                         
                         <cfif (CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12 or client.companyID eq 10) and client.usertype lte 7>
                         	<a href="index.cfm?curdoc=project_help">H.E.L.P. Community Service Hours</a><br>
