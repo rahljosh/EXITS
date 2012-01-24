@@ -1,6 +1,5 @@
-
-
 <cfparam name="URL.userid" default="">
+
 <cfif URL.userid EQ "">
 	<cfset new = true>
 <cfelse>
@@ -9,125 +8,173 @@
         <cfabort>
 	</cfif>
 	<cfset new = false>
-	<!--- CHECK RIGHTS --->
-	<cfinclude template="../check_rights.cfm">
 </cfif>
 
-	<cfset field_list = 'firstname,middlename,lastname,occupation,businessname,address,address2,city,state,zip,country,drivers_license,dob,sex,phone,phone_ext,work_phone,work_ext,cell_phone,fax,email,email2,skype_id,username,changepass,invoice_access,bypass_checklist,date_contract_received,date_2nd_visit_contract_received,active,datecancelled,datecreated,usebilling,billing_company,billing_contact,billing_address,billing_address2,billing_city,billing_country,billing_zip,billing_phone,billing_fax,billing_email,comments'>
+<!--- CHECK RIGHTS --->
+<cfinclude template="../check_rights.cfm">
 
-	<!--- checkboxes, radio buttons aren't defined if not checked. --->
-    <cfparam name="FORM.submitted" default="0">
-    <cfparam name="FORM.SSN" default="">
-    <cfparam name="FORM.sex" default="">
-    <cfparam name="FORM.changepass" default="1">
-    <cfparam name="FORM.bypass_checklist" default="0">
-    <cfparam name="FORM.invoice_access" default="0">
-    <cfparam name="FORM.active" default="0">
-    <cfparam name="FORM.usebilling" default="0">
-	<!--- these fields aren't always displayed. --->
-    <cfparam name="FORM.comments" default="">
-    <!--- default to USA for non-international users. --->
-    <cfparam name="FORM.country" default="USA">
-    <cfparam name="FORM.date_2nd_visit_contract_received" default="">
+<cfset field_list = 'firstname,middlename,lastname,occupation,businessname,address,address2,city,state,zip,country,drivers_license,dob,sex,phone,phone_ext,work_phone,work_ext,cell_phone,fax,email,email2,skype_id,username,changepass,invoice_access,bypass_checklist,date_contract_received,date_2nd_visit_contract_received,active,datecancelled,datecreated,usebilling,billing_company,billing_contact,billing_address,billing_address2,billing_city,billing_country,billing_zip,billing_phone,billing_fax,billing_email,comments'>
 
-	<cfscript>
-        // Get Current User Information
-        qGetUserInfo = APPLICATION.CFC.USER.getUserByID(userID=VAL(URL.userID));
+<!--- checkboxes, radio buttons aren't defined if not checked. --->
+<cfparam name="FORM.submitted" default="0">
+<cfparam name="FORM.SSN" default="">
+<cfparam name="FORM.sex" default="">
+<cfparam name="FORM.changepass" default="1">
+<cfparam name="FORM.bypass_checklist" default="0">
+<cfparam name="FORM.invoice_access" default="0">
+<cfparam name="FORM.active" default="0">
+<cfparam name="FORM.usebilling" default="0">
+<!--- these fields aren't always displayed. --->
+<cfparam name="FORM.comments" default="">
+<!--- default to USA for non-international users. --->
+<cfparam name="FORM.country" default="USA">
+<cfparam name="FORM.date_2nd_visit_contract_received" default="">
+
+<cfscript>
+	// Get Current User Information
+	qGetUserInfo = APPLICATION.CFC.USER.getUserByID(userID=VAL(URL.userID));
+	
+	// Get Current User Information
+	qGetUserComplianceInfo = APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID);
+
+	// Set Display SSN
+	vDisplaySSN = 0;
+
+	// This will set if SSN needs to be updated
+	vUpdateSSN = 0;
+
+	// allow SSN Field - If null or user has access.
+	if ( NOT LEN(qGetUserInfo.SSN) OR qGetUserComplianceInfo.compliance EQ 1 ) {
+		vDisplaySSN = 1;
 		
-    	
+		if ( NOT VAL(FORM.submitted) ) {
+			// Display SSN
+			FORM.SSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetUserInfo.SSN, displayType='user');	
+		}
 		
-        // Get Current User Information
-        qGetUserComplianceInfo = APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID);
-    
-        // Set Display SSN
-        vDisplaySSN = 0;
-    
-        // This will set if SSN needs to be updated
-        vUpdateSSN = 0;
-    
-        // allow SSN Field - If null or user has access.
-        if ( NOT LEN(qGetUserInfo.SSN) OR qGetUserComplianceInfo.compliance EQ 1 ) {
-            vDisplaySSN = 1;
-			
-			if ( NOT VAL(FORM.submitted) ) {
-				
-				// Display SSN
-				FORM.SSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetUserInfo.SSN, displayType='user');	
-				
-			}
-			
-        }
-    </cfscript>
+	}
+</cfscript>
 
 <!--- Process Form Submission --->
 <cfif VAL(FORM.submitted)>
 
-	<!----Send email if address has changed---->
-  <cfif URL.userid is not ''>
-		<cfif (FORM.address neq FORM.prev_address or FORM.address2 neq FORM.prev_address2 or 
-                FORM.city neq FORM.prev_city or FORM.state neq FORM.prev_state or FORM.zip neq FORM.prev_zip)>
-            
-             <cfoutput>
-             
-              <cfquery name="regional_Advisor_emails" datasource="#application.dsn#">
-              	select uar.regionid
-                from user_access_rights uar
-                where userid = #URL.userid#
-              </cfquery>
-               <cfset advisor_emails = ''>
-               <cfloop query="regional_advisor_emails">
-               <cfquery name="get_email" datasource="#application.dsn#">
-               		select smg_users.email
-                    from smg_users
-                    left join user_access_rights on user_access_rights.userid = smg_users.userid
-                    where user_access_rights.regionid = #regionid# and user_access_rights.usertype = 5 AND active = 1
-               </cfquery>
-				   <cfif IsValid("email",get_email.email)>
-                        <cfset advisor_emails = ListAppend(advisor_emails, '#get_email.email#')>
-                   </cfif>
-               </cfloop>
-             </cfoutput>
-           <cfsavecontent variable="email_message">
-           <cfoutput>
-           NOTICE OF ADDRESS CHANGE<Br />
-           <strong>#FORM.firstname# #FORM.lastname# (#URL.userid#)</strong> has made a change to their address.<Br />
-           <br />
-           NEW ADDRESSS<br />
-           #FORM.address#<br />
-          <cfif FORM.address2 is not ''>#FORM.address2#<br /></cfif>
-           #FORM.city# #FORM.state# #FORM.zip#<br /><br />
-           
-           PREVIOUS ADDRESS<br />
-           #FORM.prev_address#<br />
-          <cfif FORM.prev_address2 is not ''> #FORM.prev_address2#<br /></cfif>
-           #FORM.prev_city# #FORM.state# #FORM.prev_zip#<br /><br />
-           This is the only notification of this change that you will recieve.  Please update any records that do NOT pull information from EXITS.  <br /><br />
-           The following were notified:<br />
-           <cfif client.companyid eq 10>
-           stacy@case-usa.org
-           <cfelse>
-           thea@iseusa.com,#client.programmanager_email#,#advisor_emails#
-           </cfif>     
-				</cfoutput>
-           </cfsavecontent>
+	<!------------------------------------------------------
+		ADDRESS CHANGE - SEND EMAIL NOTIFICATION 
+	------------------------------------------------------->
+	<cfif qGetUserInfo.recordCount 
+		AND 
+			(
+			 	FORM.address NEQ qGetUserInfo.address 
+			OR 
+				FORM.address2 NEQ qGetUserInfo.address2 
+			OR 
+				FORM.city NEQ qGetUserInfo.city 
+			OR 
+				FORM.state NEQ qGetUserInfo.state 
+			OR 
+				FORM.zip NEQ qGetUserInfo.zip 
+		)>
+        
+        <cfscript>
+			// Used to notify all regional managers responsible for this user
+			vRMEmailList = '';
 			
-			<!--- send email --->
-            <cfinvoke component="nsmg.cfc.email" method="send_mail">
-				<Cfif client.companyid eq 10>
-                      <cfinvokeargument name="email_to" value="stacy@case-usa.org">
-                <Cfelse>
-                      <cfinvokeargument name="email_to" value="thea@iseusa.com,#client.programmanager_email#,#advisor_emails#">          
-                </Cfif>				
-				<!----
-				<cfinvokeargument name="email_to" value="josh@pokytrails.com">
-				---->
-                <cfinvokeargument name="email_subject" value="Notice of Address Change">
-                <cfinvokeargument name="email_message" value="#email_message#">
-                <cfinvokeargument name="email_from" value="#client.support_email#">
-            </cfinvoke>
+			// Stores headquarters email
+			vEmailToList = '';
+		</cfscript>
+        
+        <cfquery name="qGetRegionalManagerEmail" datasource="#application.dsn#">
+            SELECT 
+                u.firstName,
+                u.lastName,
+                u.email
+            FROM 
+                smg_users u
+            LEFT OUTER JOIN
+                user_access_rights uar on uar.userid = u.userid
+            WHERE 
+                uar.regionid IN ( 
+                                  SELECT 
+                                      regionID 
+                                  FROM 
+                                      user_access_rights 
+                                  WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#"> ) 
+            AND
+                uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="5"> 
+            AND 
+                u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        </cfquery>
+        
+        <cfloop query="qGetRegionalManagerEmail">
+        
+			<cfif IsValid("email",qGetRegionalManagerEmail.email)>
+                <cfset vRMEmailList = ListAppend(vRMEmailList, qGetRegionalManagerEmail.email)>
+            </cfif>
+		
+        </cfloop>
+                
+		<cfswitch expression="#CLIENT.companyID#">
+        
+        	<cfcase value="1,2,3,4,5,12,13,14">
+            	<cfset vEmailToList = 'thea@iseusa.com,#CLIENT.programmanager_email#,#vRMEmailList#'>
+            </cfcase>
+			
+        	<cfcase value="6">
+            	<cfset vEmailToList = 'luke@phpusa.com'>
+            </cfcase>
+
+        	<cfcase value="7">
+            	<cfset vEmailToList = 'sergei@iseusa.com'>
+            </cfcase>
+
+        	<cfcase value="8">
+            	<cfset vEmailToList = 'anca@csb-usa.com'>
+            </cfcase>
             
-       </cfif>
-        </cfif>
+        	<cfcase value="10">
+            	<cfset vEmailToList = 'stacy@case-usa.org'>
+            </cfcase>
+            
+		</cfswitch>        
+
+        <cfsavecontent variable="vEmailMessage">
+			<cfoutput>
+           		<p>NOTICE OF ADDRESS CHANGE</p>
+                
+	            <p><strong>#FORM.firstname# #FORM.lastname# (###qGetUserInfo.userid#)</strong> has made a change to their address.</p>
+                
+				<p><strong>NEW ADDRESSS</strong></p>
+           		#FORM.address#<br />
+          		<cfif LEN(FORM.address2)>#FORM.address2#<br /></cfif>
+           		#FORM.city# #FORM.state# #FORM.zip#<br /><br />
+           
+           		<p><strong>PREVIOUS ADDRESS</strong></p>
+	            #qGetUserInfo.address#<br />
+          		<cfif LEN(qGetUserInfo.address2)> #qGetUserInfo.address2#<br /></cfif>
+           		#qGetUserInfo.city# #qGetUserInfo.state# #qGetUserInfo.zip#<br /><br />
+           
+           		<p>This is the only notification of this change that you will receive.</p>
+                
+                <p>Please update any records that do NOT pull information from EXITS.</p>
+           		
+                <p>The following were notified:<p>
+           
+		   		#vEmailToList#
+			</cfoutput>
+		</cfsavecontent>
+			
+		<!--- send email --->
+        <cfinvoke component="nsmg.cfc.email" method="send_mail">
+            <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
+            <cfinvokeargument name="email_to" value="#vEmailToList#">
+            <cfinvokeargument name="email_subject" value="Notice of Address Change">
+            <cfinvokeargument name="email_message" value="#vEmailMessage#">            
+        </cfinvoke>
+            
+	</cfif>
+	<!------------------------------------------------------
+		END OF ADDRESS CHANGE - SEND EMAIL NOTIFICATION 
+	------------------------------------------------------->
 
 	<cfif isDefined("FORM.username")>
         <cfquery name="check_username" datasource="#application.dsn#">
@@ -342,8 +389,8 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_email#" null="#yesNoFormat(trim(FORM.billing_email) EQ '')#">,
                     </cfif>
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.comments#" null="#yesNoFormat(trim(FORM.comments) EQ '')#">
-                   , #client.userid#,
-                   <cfif listFind("1,2,3,4", CLIENT.userType)>#client.userid#<cfelse>0</cfif>,
+                   , #CLIENT.userid#,
+                   <cfif listFind("1,2,3,4", CLIENT.userType)>#CLIENT.userid#<cfelse>0</cfif>,
                     <cfif listFind("1,2,3,4", CLIENT.userType)>#now()#<cfelse>null</cfif>
                    
                     )  
@@ -356,7 +403,7 @@
             <cfif FORM.usertype eq 8>
             <cfoutput>
             <cfsavecontent variable="email_message">
-            This email is to notify you that a new agent profile has been created by #client.name#. This email is a reminder for the following:<br /><br />
+            This email is to notify you that a new agent profile has been created by #CLIENT.name#. This email is a reminder for the following:<br /><br />
             <strong>Ellen</strong> - Please send out a contract to that Agent<br />
             <strong>Marcel</strong> - Please make sure you have a price, insurance, and SEVIS option.<br />
             <strong>Brian</strong> - Make sure this agent has been issued an allocation<br /><br />
@@ -368,7 +415,7 @@
                 <cfinvokeargument name="email_to" value="ellen@iseusa.com,marcel@iseusa.com,bhause@iseusa.com">
                 <cfinvokeargument name="email_subject" value="New Agent Profile">
                 <cfinvokeargument name="email_message" value="#email_message#">
-                <cfinvokeargument name="email_from" value="#client.emailfrom#">
+                <cfinvokeargument name="email_from" value="#CLIENT.emailfrom#">
             </cfinvoke>
             </cfif>
             <!--- add company & regional access record only for usertype 8. --->
@@ -386,22 +433,24 @@
             <cfif FORM.usertype NEQ 8 AND NOT ListFind("5,6", CLIENT.userType)> <!--- Do Not Send Email / Account Needs to be activated --->
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
                     <cfinvokeargument name="email_to" value="#FORM.email#">
-					<cfinvokeargument name="email_replyto" value="#client.email#">
+					<cfinvokeargument name="email_replyto" value="#CLIENT.email#">
                     <cfinvokeargument name="email_subject" value="New Account Created / Login Information">
                     <cfinvokeargument name="include_content" value="send_login">
                     <cfinvokeargument name="userid" value="#get_id.userid#">
                 </cfinvoke>
             </cfif>
+            
 			<!--- send email for initial paperwork --->
             <cfif FORM.usertype EQ 7> <!--- Do Not Send Email / Account Needs to be activated --->
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
                     <cfinvokeargument name="email_to" value="#FORM.email#">
-					<cfinvokeargument name="email_replyto" value="#client.email#">
+					<cfinvokeargument name="email_replyto" value="#CLIENT.email#">
                     <cfinvokeargument name="email_subject" value="Account Created - more info needed">
                     <cfinvokeargument name="include_content" value="newUserMoreInfo">
                     <cfinvokeargument name="userid" value="#get_id.userid#">
                 </cfinvoke>
             </cfif>
+            
             <!--- company & regional access record was added above for usertype 8, so go to user info page. --->
             <cfif FORM.usertype EQ 8>
             	<cflocation url="index.cfm?curdoc=user_info&userid=#get_id.userid#" addtoken="No">
@@ -449,7 +498,7 @@
 					changepass = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.changepass#">,
 					bypass_checklist = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.bypass_checklist#">,
                 </cfif>
-				<cfif client.usertype EQ 1>
+				<cfif CLIENT.usertype EQ 1>
 					invoice_access = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.invoice_access#">,
                 </cfif>
 				<cfif listFind("1,2,3,4", CLIENT.userType)>
@@ -595,10 +644,7 @@ function CopyEmail() {
 }
 </script>
 
-<!--- this table is so the form is not 100% width. --->
-<table align="center">
-  <tr>
-    <td>
+<cfoutput>
 
 <!----Header Format Table---->
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
@@ -612,9 +658,8 @@ function CopyEmail() {
 
 <cfform action="index.cfm?curdoc=forms/user_form&userid=#URL.userid#" method="post" name="my_form" onSubmit="return checkForm();">
 <input type="hidden" name="submitted" value="1">
-<cfinput type="hidden" name="usertype" value="#FORM.usertype#">
-<!--- this gets set to 1 by the javascript lookup function on success. --->
-<cfinput type="hidden" name="lookup_success" value="#FORM.lookup_success#">
+<input type="hidden" name="usertype" value="#FORM.usertype#">
+<input type="hidden" name="lookup_success" value="#FORM.lookup_success#"> <!--- this gets set to 1 by the javascript lookup function on success. --->
 
 <table width="100%" border=0 cellpadding=4 cellspacing=0 class="section">
 	<tr><td>
@@ -660,23 +705,23 @@ function CopyEmail() {
 
             <tr>
             	<td align="right">Address: <span class="redtext">*</span></td>
-                <td><cfinput type="text" name="address" value="#FORM.address#" size="40" maxlength="150" required="yes" validate="noblanks" message="Please enter the Address."> <input type="hidden"  name="prev_address" value="#FORM.address#" /></td>
+                <td><cfinput type="text" name="address" value="#FORM.address#" size="40" maxlength="150" required="yes" validate="noblanks" message="Please enter the Address."></td>
             </tr>
             <tr>
             	<td align="right"></td>
-                <td><cfinput type="text" name="address2" value="#FORM.address2#" size="40" maxlength="150"><input type="hidden"  name="prev_address2" value="#FORM.address2#" /></td>
+                <td><cfinput type="text" name="address2" value="#FORM.address2#" size="40" maxlength="150"></td>
             </tr>
             <tr>
             	<td align="right">City: <span class="redtext">*</span></td>
-                <td><cfinput type="text" name="city" value="#FORM.city#" size="20" maxlength="150" required="yes" validate="noblanks" message="Please enter the City."><input type="hidden"  name="prev_city" value="#FORM.city#" /></td>
+                <td><cfinput type="text" name="city" value="#FORM.city#" size="20" maxlength="150" required="yes" validate="noblanks" message="Please enter the City."></td>
             </tr>
             <tr>
                 <td align="right">State:</td>
-                <td><cfinput type="text" name="state" value="#FORM.state#" size="20" maxlength="20"><input type="hidden"  name="prev_state" value="#FORM.state#" /></td>
+                <td><cfinput type="text" name="state" value="#FORM.state#" size="20" maxlength="20"></td>
             </tr>
             <tr>
             	<td align="right">Postal Code (Zip):</td>
-                <td><cfinput type="text" name="zip" value="#FORM.zip#" size="10" maxlength="10"><input type="hidden"  name="prev_zip" value="#FORM.zip#" /></td>
+                <td><cfinput type="text" name="zip" value="#FORM.zip#" size="10" maxlength="10"></td>
             </tr>
             <tr>
                 <td align="right">Country: <span class="redtext">*</span></td>
@@ -725,17 +770,17 @@ function CopyEmail() {
                 <tr>
                     <td align="right">Address: <span class="redtext">*</span></td>
                     <td>
-                    	<cfinput type="text" name="address" value="#FORM.address#" size="40" maxlength="150" required="yes" validate="noblanks" message="Please enter the Address."><cfinput type="hidden"  name="prev_address" value="#FORM.address#" />
+                    	<cfinput type="text" name="address" value="#FORM.address#" size="40" maxlength="150" required="yes" validate="noblanks" message="Please enter the Address.">
 			            <font size="1">NO PO BOXES</font>
                     </td>
                 </tr>
                 <tr>
                     <td align="right"></td>
-                    <td><cfinput type="text" name="address2" value="#FORM.address2#" size="40" maxlength="150"><cfinput type="hidden"  name="prev_address2" value="#FORM.address2#" /></td>
+                    <td><cfinput type="text" name="address2" value="#FORM.address2#" size="40" maxlength="150"></td>
                 </tr>
                 <tr>
                     <td align="right">City: <span class="redtext">*</span></td>
-                    <td><cfinput type="text" name="city" value="#FORM.city#" size="20" maxlength="150" required="yes" validate="noblanks" message="Please enter the City."><cfinput type="hidden"  name="prev_city" value="#FORM.city#" /></td>
+                    <td><cfinput type="text" name="city" value="#FORM.city#" size="20" maxlength="150" required="yes" validate="noblanks" message="Please enter the City."></td>
                 </tr>
                 <tr>
                     <td align="right">State: <span class="redtext">*</span></td>
@@ -748,12 +793,11 @@ function CopyEmail() {
                         <cfselect NAME="state" query="get_states" value="state" display="statename" selected="#FORM.state#" queryPosition="below">
                             <option></option>
                         </cfselect>
-                        <cfinput type="hidden"  name="prev_state" value="#FORM.state#" />
                     </td>
                 </tr>
                 <tr>
                     <td align="right">Zip: <span class="redtext">*</span></td>
-                    <td><cfinput type="text" name="zip" value="#FORM.zip#" size="10" maxlength="10" required="yes" validate="zipcode" message="Please enter a valid Zip."><cfinput type="hidden"  name="prev_zip" value="#FORM.zip#" /></td>
+                    <td><cfinput type="text" name="zip" value="#FORM.zip#" size="10" maxlength="10" required="yes" validate="zipcode" message="Please enter a valid Zip."></td>
                 </tr>
 				<!--- address lookup - simple version. --->
                 <cfif application.address_lookup EQ 1>
@@ -763,7 +807,7 @@ function CopyEmail() {
                             Enter Address, City, State, and Zip and click "Lookup".<br />
                             Verify the address displayed below, and make any corrections on the form if necessary.<br />
                             Address line 2 will not be included below.<br />
-                            If you have trouble submitting an address, <a href="mailto:<cfoutput>#application.support_email#</cfoutput>?subject=Address Lookup">send it to us</a>.<br />
+                            If you have trouble submitting an address, <a href="mailto:#application.support_email#?subject=Address Lookup">send it to us</a>.<br />
                             <input type="button" value="Lookup" onClick="showLocation();" /><br />
                             <textarea name="lookup_address" readonly="readonly" rows="2" cols="30">Lookup address will be displayed here.</textarea>
                         </font></td>
@@ -821,7 +865,7 @@ function CopyEmail() {
                     		<cfinput type="text" name="phone" value="#FORM.phone#" size="20" maxlength="25">
                     	<cfelse>
 							<cfinput type="text" name="phone" value="#FORM.phone#" size="14" maxlength="14" mask="(999) 999-9999"> <!--- validate="telephone" message="Please enter a valid Home Phone." --->
-							<cfoutput>#FORM.phone#</cfoutput>
+							#FORM.phone#
                         </cfif>
                         &nbsp; Ext. <cfinput type="text" name="phone_ext" value="#FORM.phone_ext#" size="5" maxlength="11">
                     </td>
@@ -834,7 +878,7 @@ function CopyEmail() {
                             <cfinput type="text" name="work_phone" value="#FORM.work_phone#" size="20" maxlength="25">
                     	<cfelse>
 							<cfinput type="text" name="work_phone" value="#FORM.work_phone#" size="14" maxlength="14" mask="(999) 999-9999"> <!--- validate="telephone" message="Please enter a valid Work Phone." --->
-							<cfoutput>#FORM.work_phone#</cfoutput>
+							#FORM.work_phone#
                         </cfif>
                     	&nbsp; Ext. <cfinput type="text" name="work_ext" value="#FORM.work_ext#" size="5" maxlength="11">
                     </td>
@@ -847,7 +891,7 @@ function CopyEmail() {
                             <cfinput type="text" name="cell_phone" value="#FORM.cell_phone#" size="20" maxlength="25">
                     	<cfelse>
 							<cfinput type="text" name="cell_phone" value="#FORM.cell_phone#" size="14" maxlength="14" mask="(999) 999-9999"> <!--- validate="telephone" message="Please enter a valid Cell Phone." --->
-							<cfoutput>#FORM.cell_phone#</cfoutput>
+							#FORM.cell_phone#
                         </cfif>
                     </td>
 				</tr>
@@ -859,7 +903,7 @@ function CopyEmail() {
                             <cfinput type="text" name="fax" value="#FORM.fax#" size="20" maxlength="20">
                     	<cfelse>
 							<cfinput type="text" name="fax" value="#FORM.fax#" size="14" maxlength="14" mask="(999) 999-9999"> <!--- validate="telephone" message="Please enter a valid Fax." ---> 
-							<cfoutput>#FORM.fax#</cfoutput>
+							#FORM.fax#
                         </cfif>
                     </td>
 				</tr>
@@ -891,7 +935,7 @@ function CopyEmail() {
                 	<td colspan=2 bgcolor="CCCCCC"><u>Login Information</u></td>
                 </tr>
                 
-				<cfif new or listFind("1,2,3,4", CLIENT.userType) or client.usertype lt FORM.usertype or client.userid eq URL.userid>
+				<cfif new or listFind("1,2,3,4", CLIENT.userType) or CLIENT.usertype lt FORM.usertype or CLIENT.userid eq URL.userid>
                     <tr>
                         <td align="right">Username: <span class="redtext">*</span></td>
                         <td>
@@ -918,7 +962,7 @@ function CopyEmail() {
                     <tr><td colspan=2><cfinput type="checkbox" name="changepass" value="1" checked="#yesNoFormat(FORM.changepass EQ 1)#"> Force user to change password on next login.</td></tr>
                     <tr><td colspan=2><cfinput type="checkbox" name="bypass_checklist" value="1" checked="#yesNoFormat(FORM.bypass_checklist EQ 1)#"> This agents students apps do not need to pass the checklist when processed.</td></tr>
                 </cfif>
-				<cfif client.usertype EQ 1>
+				<cfif CLIENT.usertype EQ 1>
                     <tr><td colspan=2><cfinput type="checkbox" name="invoice_access" value="1" checked="#yesNoFormat(FORM.invoice_access EQ 1)#"> User has invoice access.</td></tr>
                 </cfif>
 				<tr>
@@ -930,8 +974,8 @@ function CopyEmail() {
               <tr>
                 <td align="right">User Entered:</td>
                 <td>
-					<cfoutput>#DateFormat(FORM.datecreated, 'mm/dd/yyyy')#</cfoutput>
-                    <cfinput type="hidden" name="datecreated" value="#FORM.datecreated#">
+					#DateFormat(FORM.datecreated, 'mm/dd/yyyy')#
+                    <input type="hidden" name="datecreated" value="#FORM.datecreated#">
                 </td>
               </tr>
              
@@ -941,8 +985,8 @@ function CopyEmail() {
                     <cfif listFind("1,2,3,4", CLIENT.userType)>
                         <cfinput type="text" name="date_contract_received" value="#dateFormat(FORM.date_contract_received,'mm/dd/yyyy')#" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid Contract Received."> mm/dd/yyyy
                     <cfelse>
-                        <cfoutput>#dateFormat(FORM.date_contract_received, 'mm/dd/yyyy')#</cfoutput>
-	                    <cfinput type="hidden" name="date_contract_received" value="#FORM.date_contract_received#">
+                        #dateFormat(FORM.date_contract_received, 'mm/dd/yyyy')#
+	                    <input type="hidden" name="date_contract_received" value="#FORM.date_contract_received#">
                     </cfif>
                 </td>
               </tr>
@@ -954,8 +998,8 @@ function CopyEmail() {
                     <cfif listFind("1,2,3,4", CLIENT.userType)>
                         <cfinput type="text" name="date_2nd_visit_contract_received" value="#dateFormat(FORM.date_2nd_visit_contract_received,'mm/dd/yyyy')#" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid 2nd Visit Contract Received."> mm/dd/yyyy
                     <cfelse>
-                        <cfoutput>#dateFormat(FORM.date_2nd_visit_contract_received, 'mm/dd/yyyy')#</cfoutput>
-	                    <cfinput type="hidden" name="date_2nd_visit_contract_received" value="#FORM.date_2nd_visit_contract_received#">
+                        #dateFormat(FORM.date_2nd_visit_contract_received, 'mm/dd/yyyy')#
+	                    <input type="hidden" name="date_2nd_visit_contract_received" value="#FORM.date_2nd_visit_contract_received#">
                     </cfif>
                 </td>
               </tr>
@@ -967,8 +1011,8 @@ function CopyEmail() {
                     <cfif listFind("1,2,3,4", CLIENT.userType)>
                         <cfinput type="checkbox" name="active" value="1" checked="#yesNoFormat(FORM.active EQ 1)#">
                     <cfelse>
-                        <cfoutput>#yesNoFormat(FORM.active)#</cfoutput>
-	                    <cfinput type="hidden" name="active" value="#FORM.active#">
+                        #yesNoFormat(FORM.active)#
+	                    <input type="hidden" name="active" value="#FORM.active#">
                     </cfif>
                 </td>
               </tr> 
@@ -978,8 +1022,8 @@ function CopyEmail() {
                     <cfif listFind("1,2,3,4", CLIENT.userType)>
                         <cfinput type="text" name="datecancelled" value="#dateFormat(FORM.datecancelled,'mm/dd/yyyy')#" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid Date Cancelled."> mm/dd/yyyy
                     <cfelse>
-						<cfoutput>#dateFormat(FORM.datecancelled, 'mm/dd/yyyy')#</cfoutput>
-                        <cfinput type="hidden" name="datecancelled" value="#FORM.datecancelled#">
+						#dateFormat(FORM.datecancelled, 'mm/dd/yyyy')#
+                        <input type="hidden" name="datecancelled" value="#FORM.datecancelled#">
                     </cfif>
                 </td>
               </tr>
@@ -1048,7 +1092,7 @@ function CopyEmail() {
 
 </cfif>
 
-<cfif listFind("1,2,3,4", CLIENT.userType) or client.usertype lt FORM.usertype>
+<cfif listFind("1,2,3,4", CLIENT.userType) or CLIENT.usertype lt FORM.usertype>
 
     <br>
     <table width=100%>
@@ -1076,7 +1120,4 @@ function CopyEmail() {
 
 <cfinclude template="../table_footer.cfm">
 
-    </td>
-  </tr>
-</table>
-<!--- this table is so the form is not 100% width. --->
+</cfoutput>
