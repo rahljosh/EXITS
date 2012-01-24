@@ -18,14 +18,15 @@
 	// Set a short name for the APPLICATION.INVOICE
 	AppInvoice = APPLICATION.INVOICE;
 
-	AppInvoice.companyName = 'KCK International Inc.';
-	AppInvoice.bankName = 'Suffolk County National Bank';
-	AppInvoice.bankAddress = '228 East Main Street';
-	AppInvoice.bankCity = 'Port Jefferson';
+	AppInvoice.companyName = 'KCK, Inc.';
+	AppInvoice.bankName = 'Chase Bank';
+	AppInvoice.bankAddress = '595 Sunrise Highway';
+	AppInvoice.bankCity = 'West Babylon';
 	AppInvoice.bankState = 'NY';
-	AppInvoice.bankZip = '11777';
-	AppInvoice.bankRouting = '021405464';
-	AppInvoice.bankAccount = '1110039771';
+	AppInvoice.bankZip = '11704';
+	AppInvoice.bankSwift = 'CHASUS33';
+	AppInvoice.bankRouting = '021000021';
+	AppInvoice.bankAccount = '951162106';
 	
 	
 	/***** Create APPLICATION.EMAIL structure *****/
