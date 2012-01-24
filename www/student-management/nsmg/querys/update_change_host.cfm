@@ -61,14 +61,13 @@
 	INSERT INTO smg_hosthistory	
 		(
         	hostid, studentid, reason, dateofchange, arearepid, placerepid, schoolid, changedby, isRelocation, isWelcomeFamily,
-			date_pis_received, doc_full_host_app_date, doc_letter_rec_date, doc_rules_rec_date,
+			doc_full_host_app_date, doc_letter_rec_date, doc_rules_rec_date,
 			doc_photos_rec_date, doc_school_accept_date, doc_school_sign_date, doc_class_schedule, doc_school_profile_rec, 
 			doc_conf_host_rec, doc_date_of_visit, doc_ref_form_1, doc_ref_check1, doc_ref_form_2, doc_ref_check2, doc_host_orientation        
         )
 	VALUES ('#get_student_info.hostid#', '#get_student_info.studentid#', '#form.reason#', #CreateODBCDateTime(now())#, 
 		'#get_student_info.arearepid#', '#get_student_info.placerepid#', '#get_student_info.schoolid#', 
-	    '#CLIENT.userid#', '#form.isRelocation#', '#form.isWelcomeFamily#',
-		<cfif date_pis_received EQ ''>NULL<cfelse>#CreateODBCDateTime(date_pis_received)#</cfif>,		
+	    '#CLIENT.userid#', '#form.isRelocation#', '#form.isWelcomeFamily#',				
         <cfif doc_full_host_app_date EQ ''>NULL<cfelse>#CreateODBCDate(doc_full_host_app_date)#</cfif>,
         <cfif doc_letter_rec_date EQ ''>NULL<cfelse>#CreateODBCDate(doc_letter_rec_date)#</cfif>,
         <cfif doc_rules_rec_date EQ ''>NULL<cfelse>#CreateODBCDate(doc_rules_rec_date)#</cfif>,
@@ -109,7 +108,6 @@
 			arearepid = '0',
 			placerepid = '0',
 			dateplaced = NULL,
-			date_pis_received = NULL,
 			isWelcomeFamily = '0',
 			<!--- SCHOOL SECTION --->
 			doc_school_accept_date = NULL,
@@ -119,7 +117,6 @@
 		<cfelse> 
 			hostid = '#form.available_families#',
 			dateplaced = #CreateODBCDateTime(now())#,
-			date_pis_received = #CreateODBCDateTime(now())#,
 			isWelcomeFamily = '#form.isWelcomeFamily#',
 		</cfif>
 		date_host_fam_approved = #CreateODBCDateTime(now())#,

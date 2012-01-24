@@ -29,7 +29,6 @@
 		UPDATE smg_students
 			SET hostid = #form.available_families#,
 				dateplaced = #CreateODBCDateTime(now())#,
-				date_pis_received = #CreateODBCDateTime(now())#,
 				isWelcomeFamily = '#form.isWelcomeFamily#'
 		WHERE studentid = '#client.studentid#'
 		LIMIT 1

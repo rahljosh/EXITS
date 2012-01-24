@@ -174,7 +174,6 @@
             s.areaRepID,
             s.placeRepID,
             hist.datePlaced,
-            hist.date_pis_received, 
             hist.doc_full_host_app_date,
             hist.doc_letter_rec_date, 
             hist.doc_rules_rec_date, 
@@ -453,10 +452,7 @@
                                         missingDocumentsList = ListAppend(missingDocumentsList, "2nd Ref Check (Single) &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                     }
                                 }
-                                // Placement Information Sheet
-                                if ( NOT LEN(qGetStudentsByRep.date_pis_received) ) {
-                                    missingDocumentsList = ListAppend(missingDocumentsList, "Placement Information Sheet &nbsp; &nbsp;", " &nbsp; &nbsp;");
-                                }
+								
                                 // Host Application Received
                                 if ( NOT LEN(qGetStudentsByRep.doc_full_host_app_date) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "Host Family &nbsp; &nbsp;", " &nbsp; &nbsp;");

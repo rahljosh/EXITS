@@ -71,16 +71,6 @@
 	<tr><td colspan="4" align="center"><span class="get_Attention">Placement Paperwork History Updated</span></td></tr>
 	</cfif>
 	<tr><td colspan="5">Host Family: <u>#get_host_family.familylastname# &nbsp; (#get_host_family.hostid#)</u></td></tr>
-	<tr> <!-- 0 - PLACEMENT INFORMATION SHEET --->
-		<td width="5%"><Cfif date_pis_received EQ ''>
-				<input type="checkbox" name="check_pis" OnClick="CheckDates('check_pis','date_pis_received');" <cfif client.usertype GT 5>disabled</cfif>>
-			<cfelse>
-				<input type="checkbox" name="check_pis" OnClick="CheckDates('check_pis','date_pis_received');" checked <cfif client.usertype GT 5>disabled</cfif>>		
-			</cfif>
-		</td>
-		<td width="60%">Placement Information Sheet</td>
-		<td align="left" width="35%">Date: &nbsp;<input type="text" name="date_pis_received" size=9 value="#DateFormat(date_pis_received, 'mm/dd/yyyy')#"></td>
-	</tr>
 	<tr> <!-- 1 - Host Application Received --->
 		<td><Cfif #doc_full_host_app_date# EQ ''>
 				<input type="checkbox" name="check_app" OnClick="CheckDates('check_app','doc_full_host_app_date');" <cfif client.usertype GT 5>disabled</cfif>>

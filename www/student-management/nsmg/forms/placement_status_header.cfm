@@ -109,7 +109,7 @@ where programid = #get_student_info.programid#
 
 <Cfif client.totalfam neq 1 and season.seasonid lte 7>
 
-		<cfif date_pis_received NEQ '' AND doc_full_host_app_date NEQ '' AND doc_letter_rec_date NEQ ''
+		<cfif doc_full_host_app_date NEQ '' AND doc_letter_rec_date NEQ ''
             AND doc_rules_rec_date NEQ '' AND doc_photos_rec_date NEQ '' AND doc_school_accept_date NEQ ''
             AND doc_school_profile_rec NEQ '' AND doc_conf_host_rec NEQ '' AND doc_ref_form_1 NEQ '' 
             AND doc_ref_form_2 NEQ '' AND get_host.fathercbc_form NEQ '' AND get_host.mothercbc_form NEQ '' 
@@ -129,7 +129,7 @@ where programid = #get_student_info.programid#
         
 <Cfelse>
 		<!----Add in the extra paper work for a single person placement---->
-		<cfif date_pis_received NEQ '' AND doc_full_host_app_date NEQ '' AND doc_letter_rec_date NEQ ''
+		<cfif doc_full_host_app_date NEQ '' AND doc_letter_rec_date NEQ ''
             AND doc_rules_rec_date NEQ '' AND doc_photos_rec_date NEQ '' AND doc_school_accept_date NEQ ''
             AND doc_school_profile_rec NEQ '' AND doc_conf_host_rec NEQ '' AND doc_ref_form_1 NEQ '' 
             AND doc_ref_form_2 NEQ '' AND get_host.fathercbc_form NEQ '' AND get_host.mothercbc_form NEQ '' AND 

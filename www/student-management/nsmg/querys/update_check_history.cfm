@@ -1,7 +1,7 @@
 <cftransaction action="begin" isolation="SERIALIZABLE">
 <cfquery name="update_check_list" datasource="MySQL">
 UPDATE smg_hostHistory
-	SET date_pis_received = <cfif #form.date_pis_received# EQ ''>NULL<cfelse>#CreateODBCDate(form.date_pis_received)#</cfif>,
+	SET 
 		doc_full_host_app_date = <cfif #form.doc_full_host_app_date# EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_full_host_app_date)#</cfif>,
 		doc_letter_rec_date = <cfif #form.doc_letter_rec_date# EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_letter_rec_date)#</cfif>,
 		doc_rules_rec_date = <cfif #form.doc_rules_rec_date# EQ ''>NULL<cfelse>#CreateODBCDate(form.doc_rules_rec_date)#</cfif>,

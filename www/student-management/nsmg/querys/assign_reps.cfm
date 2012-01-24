@@ -37,7 +37,6 @@ update smg_students
 	</Cfif>
 	dateplaced = #now()#,
 	host_fam_approved = #pis_report_Status#,
-	date_pis_received = #now()#,
 	schoolid = #school_info.schoolid#
 where studentid = #form.student#
 </cfquery>
@@ -68,7 +67,6 @@ update smg_students
 	</Cfif>
 	dateplaced = #now()#,
 	host_fam_approved = #pis_report_status#,
-	date_pis_received = #now()#,
 	schoolid = #school_info.schoolid#
 where studentid = #form.doubleplacement#
 </cfquery>

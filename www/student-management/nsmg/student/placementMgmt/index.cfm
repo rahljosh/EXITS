@@ -247,9 +247,7 @@
             }
 
 			// Check for Placement Paperwork
-			if ( 
-					isDate(qGetStudentInfo.date_pis_received) 
-				AND 
+			if ( 				
 					isDate(qGetStudentInfo.doc_full_host_app_date) 
 				AND 
 					isDate(qGetStudentInfo.doc_letter_rec_date)

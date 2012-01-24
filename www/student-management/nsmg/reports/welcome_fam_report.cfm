@@ -90,7 +90,7 @@
 	</table>
 
 	<Cfquery name="get_students_region" datasource="MySQL">
-		select studentid, countryresident, firstname, familylastname, sex, programid, placerepid, date_pis_received, placement_notes, hostid
+		select studentid, countryresident, firstname, familylastname, sex, programid, placerepid, datePlaced, placement_notes, hostid
 		from smg_students
 		where active = '1' 
 			AND regionassigned = '#current_region#' 
@@ -115,7 +115,7 @@
 			<tr bgcolor="#iif(get_students_region.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
 				<td>#studentid#</td>
 				<td>#firstname# #familylastname#</td>
-				<td>#DateFormat(date_pis_received, 'mm/dd/yyyy')#</td>
+				<td>#DateFormat(datePlaced, 'mm/dd/yyyy')#</td>
 				<td align="left">#placement_notes#</td>		
 			</tr>
 			<!---
