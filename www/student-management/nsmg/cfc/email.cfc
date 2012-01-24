@@ -54,7 +54,8 @@
 				
 				emailIntendedTo = emailIntendedTo & "<p>Email To: #ARGUMENTS.email_to#</p>";
 				
-				ARGUMENTS.email_to = CLIENT.email;
+				// ARGUMENTS.email_to = CLIENT.email;
+				ARGUMENTS.email_to = 'support@iseusa.com';
 				
 				if ( LEN(ARGUMENTS.email_cc) ) {
 					emailIntendedTo = emailIntendedTo & "<p>Email CC: #ARGUMENTS.email_cc#</p>";
@@ -69,7 +70,6 @@
 				
 			}
 		</cfscript>
-
 
 		<!--- Create Email Body --->
         <cfsavecontent variable="template_file">
