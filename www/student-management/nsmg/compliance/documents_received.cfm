@@ -159,7 +159,7 @@
 
 		<Cfquery name="get_students_region" datasource="MySQL">
 			select studentid, countryresident, firstname, familylastname, sex, programid, placerepid,
-			date_pis_received, doc_full_host_app_date, doc_letter_rec_date, doc_rules_rec_date, doc_photos_rec_date, doc_school_accept_date, doc_school_profile_rec,
+			datePlaced, doc_full_host_app_date, doc_letter_rec_date, doc_rules_rec_date, doc_photos_rec_date, doc_school_accept_date, doc_school_profile_rec,
 			doc_conf_host_rec, doc_date_of_visit, doc_ref_form_1, doc_ref_form_2, stu_arrival_orientation, host_arrival_orientation
 			from smg_students
 			where active = '1' AND regionassigned = '#current_region#' AND companyid = '#client.companyid#' 
@@ -206,7 +206,7 @@
 					<tr bgcolor="#iif(get_students_region.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
 						<td>#studentid#</td>
 						<td>#firstname# #familylastname#</td>
-						<td>#DateFormat(date_pis_received, 'mm/dd/yyyy')#</td>
+						<td>#DateFormat(datePlaced, 'mm/dd/yyyy')#</td>
 						<td align="left"><i><font size="-2">
 							<cfif doc_full_host_app_date GTE #CreateODBCDate(form.date1)# AND doc_full_host_app_date LTE #CreateODBCDate(form.date2)#>Host Family &nbsp; #DateFormat(doc_full_host_app_date,'mm/dd/yyyy')# &nbsp;</cfif>
 							<cfif doc_letter_rec_date GTE #CreateODBCDate(form.date1)# AND doc_letter_rec_date LTE #CreateODBCDate(form.date2)#> -  &nbsp; HF Letter &nbsp; #DateFormat(doc_letter_rec_date,'mm/dd/yyyy')# &nbsp;</cfif>

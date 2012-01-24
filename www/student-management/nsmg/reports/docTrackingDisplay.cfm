@@ -63,7 +63,7 @@
                         <tr bgcolor="###iif(qGetStudentsByRep.currentrow MOD 2 ,DE("EDEDED") ,DE("FFFFFF") )#">
                             <td>#qGetStudentsByRep.studentID#</td>
                             <td>#qGetStudentsByRep.firstname# #qGetStudentsByRep.familylastname#</td>
-                            <td>#DateFormat(qGetStudentsByRep.date_pis_received, 'mm/dd/yyyy')#</td>
+                            <td>#DateFormat(qGetStudentsByRep.datePlaced, 'mm/dd/yyyy')#</td>
                             <td align="left">
                                 <i>
                                     <font size="-2">

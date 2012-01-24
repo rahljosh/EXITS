@@ -132,7 +132,7 @@
 
 		<Cfquery name="get_students_region" datasource="MySQL">
 			select studentid, countryresident, firstname, smg_students.familylastname, sex, programid, placerepid,
-				date_pis_received, dblplace_doc_stu, dblplace_doc_fam, dblplace_doc_host, dblplace_doc_school, dblplace_doc_dpt,
+				datePlaced, dblplace_doc_stu, dblplace_doc_fam, dblplace_doc_host, dblplace_doc_school, dblplace_doc_dpt,
 				h.familylastname as hostname, h.hostid
 			from smg_students
 			LEFT JOIN smg_hosts h ON h.hostid = smg_students.hostid
@@ -171,7 +171,7 @@
 						<td>#studentid#</td>
 						<td>#firstname# #familylastname#</td>
 						<td>#hostname# (###hostid#)</td>
-						<td>#DateFormat(date_pis_received, 'mm/dd/yyyy')#</td>
+						<td>#DateFormat(datePlaced, 'mm/dd/yyyy')#</td>
 						<td align="left"><i><font size="-2">
 							<cfif dblplace_doc_stu is ''>Student &nbsp; &nbsp; &nbsp;</cfif>
 							<cfif dblplace_doc_fam is ''>Natural Family &nbsp; &nbsp; &nbsp;</cfif>

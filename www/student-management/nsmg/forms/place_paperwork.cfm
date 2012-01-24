@@ -210,16 +210,6 @@
 		<td align="left">Date: &nbsp;<input type="text" name="doc_single_ref_check2" class="datePicker" size="9" value="#DateFormat(doc_single_ref_check2, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>		
     </Cfif>    
-	<tr> <!-- 0 - PLACEMENT INFORMATION SHEET --->
-		<td width="5%"><Cfif #get_student_info.date_pis_received# EQ ''>
-				<input type="checkbox" name="check_pis" OnClick="CheckDates('check_pis', 'date_pis_received');" <cfif edit is 'no'>disabled</cfif>>
-			<cfelse>
-				<input type="checkbox" name="check_pis" OnClick="CheckDates('check_pis', 'date_pis_received');" checked <cfif edit is 'no'>disabled</cfif>>		
-			</cfif>
-		</td>
-		<td width="55%">Placement Information Sheet</td>
-		<td align="left" width="40%">Date: &nbsp;<input type="text" name="date_pis_received" class="datePicker" size="9" value="#DateFormat(date_pis_received, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
-	</tr>
 	<tr> <!-- 1 - Host Application Received --->
 		<td><Cfif #get_student_info.doc_full_host_app_date# EQ ''>
 				<input type="checkbox" name="check_app" OnClick="CheckDates('check_app', 'doc_full_host_app_date');" <cfif edit is 'no'>disabled</cfif>>
@@ -518,7 +508,7 @@
 	<tr><td colspan="5" align="center"><font color="a8a8a8">P A P E R W O R K &nbsp; L O G </font><br><br></td></tr>
 	<cfoutput query="placement_history">
 		<!--- If Paperwork is complete --->
-		<cfif placement_history.date_pis_received is not '' and placement_history.doc_full_host_app_date is not '' and placement_history.doc_letter_rec_date is not ''
+		<cfif placement_history.doc_full_host_app_date is not '' and placement_history.doc_letter_rec_date is not ''
 		and placement_history.doc_rules_rec_date is not '' and placement_history.doc_photos_rec_date is not '' and placement_history.doc_school_accept_date is not ''
 		and placement_history.doc_school_profile_rec is not '' and placement_history.doc_conf_host_rec is not '' and placement_history.doc_ref_form_1 is not ''
 		and placement_history.doc_ref_form_2 is not ''>

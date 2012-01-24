@@ -24,7 +24,6 @@
     <cfparam name="FORM.doc_single_ref_form_2" default="">
     <cfparam name="FORM.doc_single_ref_check2" default="">
     <!--- Placement Paperwork --->
-    <cfparam name="FORM.date_pis_received" default="">
     <cfparam name="FORM.doc_full_host_app_date" default="">
     <cfparam name="FORM.doc_letter_rec_date" default="">
     <cfparam name="FORM.doc_rules_rec_date" default="">
@@ -76,7 +75,6 @@
 				doc_single_ref_form_2 = FORM.doc_single_ref_form_2,
 				doc_single_ref_check2 = FORM.doc_single_ref_check2,
 				// Placement Paperwork
-				date_pis_received = FORM.date_pis_received,
 				doc_full_host_app_date = FORM.doc_full_host_app_date,
 				doc_letter_rec_date = FORM.doc_letter_rec_date,
 				doc_rules_rec_date = FORM.doc_rules_rec_date,
@@ -133,7 +131,6 @@
 			FORM.doc_single_ref_form_2 = qGetStudentInfo.doc_single_ref_form_2;
 			FORM.doc_single_ref_check2 = qGetStudentInfo.doc_single_ref_check2;
 			// Placement Paperwork
-			FORM.date_pis_received = qGetStudentInfo.date_pis_received;
 			FORM.doc_full_host_app_date = qGetStudentInfo.doc_full_host_app_date;
 			FORM.doc_letter_rec_date = qGetStudentInfo.doc_letter_rec_date;
 			FORM.doc_rules_rec_date = qGetStudentInfo.doc_rules_rec_date;
@@ -407,19 +404,7 @@
                         <td><label>PIS Emailed to International Representative</label></td>
                         <td><input type="text" name="datePISEmailed" id="datePISEmailed" class="datePicker" value="#DateFormat(qGetStudentInfo.datePISEmailed, 'mm/dd/yyyy')#" disabled="disabled"></td>
                     </tr>
-                
-                    <!--- Placement Information Sheet --->
-                    <tr>
-                        <td class="paperworkLeftColumn">
-                            <input type="checkbox" name="check_date_pis_received" id="check_date_pis_received" class="editPage displayNone" onclick="setTodayDate(this.id, 'date_pis_received');" <cfif isDate(FORM.date_pis_received)>checked</cfif> >
-						</td>
-                        <td><label for="check_date_pis_received">Placement Information Sheet</label></td>
-                        <td>
-                            <span class="readOnly displayNone">#DateFormat(FORM.date_pis_received, 'mm/dd/yyyy')#</span>
-                            <input type="text" name="date_pis_received" id="date_pis_received" class="datePicker editPage displayNone" value="#DateFormat(FORM.date_pis_received, 'mm/dd/yyyy')#">
-                        </td>
-                    </tr>
-                    
+                                    
                     <!--- Host Family Application Received --->
                     <tr> 
                         <td class="paperworkLeftColumn">

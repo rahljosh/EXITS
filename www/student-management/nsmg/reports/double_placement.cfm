@@ -91,7 +91,7 @@ WHERE 	(<cfloop list=#form.programid# index='prog'>
 	</table><br>
 
 	<Cfquery name="get_students_region" datasource="MySQL">
-		select studentid, countryresident, firstname, familylastname, sex, programid, placerepid, date_pis_received,
+		select studentid, countryresident, firstname, familylastname, sex, programid, placerepid, datePlaced,
 		dblplace_doc_stu, dblplace_doc_fam, dblplace_doc_host, dblplace_doc_school, dblplace_doc_dpt
 		from smg_students
 		where active = '1' AND regionassigned = '#current_region#' 
@@ -115,7 +115,7 @@ WHERE 	(<cfloop list=#form.programid# index='prog'>
 			<tr bgcolor="#iif(get_students_region.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
 				<td>#studentid#</td>
 				<td>#firstname# #familylastname#</td>
-				<td>#DateFormat(date_pis_received, 'mm/dd/yyyy')#</td>
+				<td>#DateFormat(datePlaced, 'mm/dd/yyyy')#</td>
 				<td align="left"><i><font size="-2">
 						<cfif dblplace_doc_stu is ''>Student &nbsp; &nbsp; &nbsp;</cfif>
 						<cfif dblplace_doc_fam is ''>Natural Family &nbsp; &nbsp; &nbsp;</cfif>

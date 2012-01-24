@@ -626,7 +626,6 @@
                     doc_single_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     doc_single_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
 					<!--- Paperwork Received --->
-                    date_pis_received = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     doc_full_host_app_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
@@ -1431,7 +1430,6 @@
                         doc_single_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                         doc_single_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                         <!--- Paperwork Received --->
-                        date_pis_received = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                         doc_full_host_app_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                         doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                         doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
@@ -1896,7 +1894,6 @@
                     doc_single_ref_form_2,
 					doc_single_ref_check2,
                     <!--- Placement Paperwork --->
-                    date_pis_received,
                     doc_full_host_app_date,
                     doc_letter_rec_date,
                     doc_rules_rec_date,
@@ -1946,7 +1943,6 @@
         <cfargument name="doc_single_ref_form_2" default="" hint="doc_single_ref_form_2 is not required">
         <cfargument name="doc_single_ref_check2" default="" hint="doc_single_ref_check2 is not required">
         <!--- Placement Paperwork --->
-        <cfargument name="date_pis_received" default="" hint="date_pis_received is not required">
         <cfargument name="doc_full_host_app_date" default="" hint="doc_full_host_app_date is not required">
         <cfargument name="doc_letter_rec_date" default="" hint="doc_letter_rec_date is not required">
         <cfargument name="doc_rules_rec_date" default="" hint="doc_rules_rec_date is not required">
@@ -1981,7 +1977,6 @@
                     doc_single_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_form_2#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_form_2)#">,
                     doc_single_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_check2#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_check2)#">,
                     <!--- Placement Paperwork --->
-                    date_pis_received = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date_pis_received#" null="#NOT IsDate(ARGUMENTS.date_pis_received)#">,
                     doc_full_host_app_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_full_host_app_date#" null="#NOT IsDate(ARGUMENTS.doc_full_host_app_date)#">,
                     doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_letter_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_letter_rec_date)#">,
                     doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_rules_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_rules_rec_date)#">,
@@ -2019,7 +2014,6 @@
 				doc_single_ref_form_2 = ARGUMENTS.doc_single_ref_form_2,
 				doc_single_ref_check2 = ARGUMENTS.doc_single_ref_check2,
 				// Placement Paperwork
-				date_pis_received = ARGUMENTS.date_pis_received,
 				doc_full_host_app_date = ARGUMENTS.doc_full_host_app_date,
 				doc_letter_rec_date = ARGUMENTS.doc_letter_rec_date,
 				doc_rules_rec_date = ARGUMENTS.doc_rules_rec_date,
@@ -2057,7 +2051,6 @@
         <cfargument name="doc_single_ref_form_2" default="" hint="doc_single_ref_form_2 is not required">
         <cfargument name="doc_single_ref_check2" default="" hint="doc_single_ref_check2 is not required">
         <!--- Placement Paperwork --->
-        <cfargument name="date_pis_received" default="" hint="date_pis_received is not required">
         <cfargument name="doc_full_host_app_date" default="" hint="doc_full_host_app_date is not required">
         <cfargument name="doc_letter_rec_date" default="" hint="doc_letter_rec_date is not required">
         <cfargument name="doc_rules_rec_date" default="" hint="doc_rules_rec_date is not required">
@@ -2100,7 +2093,6 @@
                     doc_single_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_form_2#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_form_2)#">,
                     doc_single_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_check2#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_check2)#">,
                     <!--- Placement Paperwork --->
-                    date_pis_received = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date_pis_received#" null="#NOT IsDate(ARGUMENTS.date_pis_received)#">,
                     doc_full_host_app_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_full_host_app_date#" null="#NOT IsDate(ARGUMENTS.doc_full_host_app_date)#">,
                     doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_letter_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_letter_rec_date)#">,
                     doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_rules_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_rules_rec_date)#">,
@@ -2141,7 +2133,6 @@
                 SELECT 
                     studentID,
                     hostID,
-                    date_pis_received,
                     doc_full_host_app_date,
                     doc_letter_rec_date,
                     doc_rules_rec_date,
@@ -2255,11 +2246,6 @@
 				totalFamilyMembers = totalFamilyMembers + qGetChildrenAtHome.recordCount;
 				
 				// Check PaperWork
-
-				// Placement Information Sheet
-				if ( NOT LEN(qCheckPlacementPaperwork.date_pis_received) OR qCheckPlacementPaperwork.date_pis_received GT setDeadline ) {
-					returnMessage = returnMessage & 'Placement Information Sheet has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.date_pis_received, 'mm/dd/yyyy')#. <br />'; 	
-				}
 
 				// Host Application Received
 				if ( NOT LEN(qCheckPlacementPaperwork.doc_full_host_app_date) OR qCheckPlacementPaperwork.doc_full_host_app_date GT setDeadline ) {
