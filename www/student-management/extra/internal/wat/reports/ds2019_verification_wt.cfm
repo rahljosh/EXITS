@@ -10,20 +10,10 @@
     <cfparam name="FORM.email_self" default="0">
 
 	<cfinclude template="../querys/get_company_short.cfm">
-
-    <cfquery name="qGetIntRepList" datasource="MySql">
-        SELECT 
-            userid, 
-            businessname
-        FROM 
-            smg_users
-        WHERE 
-            usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8">            
-        ORDER BY 
-            businessname
-    </cfquery>
-
+	
     <cfscript>
+		qGetIntRepList = APPLICATION.CFC.USER.getIntlRepAssignedToCandidate();
+	
 		// Get Program List
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
 	</cfscript>
