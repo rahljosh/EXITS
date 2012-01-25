@@ -5,7 +5,7 @@
 	Date:		October 07, 2009
 	Desc:		Gets a list with uninsured students, set them as insured.
 
-	Updated: 	
+	Updated: 	01/25/2012 - Set up start date to be 30 days before program start date
 
 ----- ------------------------------------------------------------------------- --->
 
@@ -18,13 +18,14 @@
     <!--- get student info --->
     <cfquery name="qGetCandidates" datasource="MySQL">
         SELECT 
-            c.candidateid, 
+            c.candidateID, 
             c.firstname, 
             c.lastname, 
             c.sex, 
             c.dob, 
             c.arrivaldate, 
             c.startdate, 
+            DATE_ADD(c.startDate, INTERVAL -30 DAY) AS newStartDate,
             c.enddate,
             u.businessname, 
             u.extra_insurance_typeid,
@@ -47,6 +48,8 @@
             c.insurance_date IS NULL        
 		AND 
 			c.verification_received IS NOT NULL	
+        AND 
+            c.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
         <!---
 		AND
             arrivaldate IS NOT NULL		
@@ -55,13 +58,6 @@
         AND 
             u.extra_insurance_typeid = '#form.extra_insurance_typeid#' 	
         --->
-        AND 
-            ( 
-                <cfloop list="#form.programid#" index="prog">
-                    c.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#prog#">
-                    <cfif NOT LIstLast(form.programid) EQ prog> OR </cfif>
-                </cfloop> 
-            )  
         ORDER BY 
             c.lastname, 
             c.firstname
@@ -124,14 +120,19 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
         </tr>
         
         <cfloop query="qGetCandidates">
-      
+      		
             <tr>
-                <td>#qGetCandidates.lastname#</td>
+                <td>
+                    <cfif NOT LEN(policycode)>
+                    	<span style="color:##F00;">--- MISSING POLICY ---</span>
+                    </cfif>
+                	#qGetCandidates.lastname#
+                </td>
                 <td>#qGetCandidates.FirstName#</td>
                 <td>#DateFormat(qGetCandidates.dob, 'dd/mmm/yyyy')#</td>
                 <td>
-                    <cfif IsDate(qGetCandidates.startdate)>
-                        #DateFormat(qGetCandidates.startdate, 'dd/mmm/yyyy')#
+                    <cfif IsDate(qGetCandidates.newStartDate)>
+                        #DateFormat(qGetCandidates.newStartDate, 'dd/mmm/yyyy')#
                     <cfelse>
                         Missing
                     </cfif>
@@ -145,30 +146,30 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                 </td>
                 <td>&nbsp;</td>
 				<td>
-                  	<cfif IsDate(qGetCandidates.startdate) AND IsDate(qGetCandidates.enddate)>
-                    	#DateDiff("d", qGetCandidates.startdate, qGetCandidates.enddate)#
+                  	<cfif IsDate(qGetCandidates.newStartDate) AND IsDate(qGetCandidates.enddate)>
+                    	#DateDiff("d", qGetCandidates.newStartDate, qGetCandidates.enddate)#
                     </cfif>             
                 </td>                                
             </tr>
             
-            <cfif LEN(policycode) AND IsDate(startdate) AND IsDate(enddate)>
+            <cfif LEN(qGetCandidates.policycode) AND isDate(qGetCandidates.newStartDate) AND IsDate(qGetCandidates.enddate)>
 
-                <cfquery name="update_candidate" datasource="MySql">
+                <cfquery datasource="MySql">
                     UPDATE 
                         extra_candidates 
                     SET 
                         insurance_date = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">
                     WHERE 
-                        candidateid = <cfqueryparam cfsqltype="cf_sql_integer" value="#candidateid#">
+                        candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidates.candidateID#">
                     LIMIT 1
                 </cfquery>
               
                 <!--- CREATE HISTORY FILE  --->
-                <cfquery name="insert_history" datasource="MySql">
+                <cfquery datasource="MySql">
                     INSERT INTO 
                         extra_insurance_history 
                     (
-                        candidateid, 
+                        candidateID, 
                         firstname, 
                         lastname, 
                         sex, 
@@ -184,16 +185,16 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                     )
                     VALUES
                         (
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#candidateid#">,
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#firstname#">,
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#lastname#">,
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#sex#">,                            
-                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(dob)#">, 
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#countrycode#">, 
-                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(startdate)#">, 
-                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(enddate)#">, 
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#orgcode#">, 
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#policycode#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidates.candidateID#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidates.firstname#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidates.lastname#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidates.sex#">,                            
+                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(qGetCandidates.dob)#">, 
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidates.countrycode#">, 
+                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(qGetCandidates.newStartDate)#">, 
+                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(qGetCandidates.enddate)#">, 
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidates.orgcode#">, 
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidates.policycode#">, 
                             <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">, 
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="new">, 
                             <cfqueryparam cfsqltype="cf_sql_integer" value="1">
