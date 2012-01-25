@@ -636,12 +636,39 @@
             <cfif IsDefined('CLIENT.usertype') AND CLIENT.usertype EQ 10 AND (smg_students.master_accountid EQ 10115 OR smg_students.intrep EQ 10115 OR smg_students.intrep EQ 8318)>
                 <tr><td><font color="0000FF">This page is not required or will be completed by <b><i>#smg_students.businessname#.</i></b></font><br></td></tr> 
             <cfelse>
+            	<cfparam name="checkRegionFull.recordount" default="0">
                 <cfloop query="page20">
+                
+                   
+                
                     <cfset get_field = page20.table_located &"."& page20.field_name>
+                  <cfif Evaluate(get_field) GT 0>
+                 <cfquery name="checkRegionFull" datasource="#application.dsn#">
+                        select fk_regionID
+                        from regionStateClosure sc
+                        where fk_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.programid#">
+                        <Cfif client.companyid lte 5 or client.companyid eq 12>
+                        and sc.fk_companyid = 1
+                        <Cfelse>
+                        and sc.fk_companyid = #client.companyid#
+                        </Cfif>
+                        and fk_regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.app_region_guarantee#">
+                        </cfquery>
+                  </cfif>
                     <cfif NOT LEN(Evaluate(get_field)) AND required EQ 1>
+                     
                         <tr><td><font color="FF0000">#field_label#</font><br></td></tr> 
                         <cfset countRed = countRed + 1>
+                    <cfelseif Evaluate(get_field) GT 0 AND checkRegionFull.recordcount GT 0>
+                    <!----REgion is no longer available---->
+                    
+                     <tr><td><font color="FF0000">The region you requsted is no longer available.  Please choose another region.</font><br></td></tr> 
+                        <cfset countRed = countRed + 1>
+                    
                     <cfelseif Evaluate(get_field) GT 0 AND check_20_upload.recordcount EQ 0>
+                      <!----Get Regions that have been canceled for students Program---->
+                  
+                    
                         <tr><td><font color="FF0000">This page has not been uploaded. You must print, sign, scan and upload this page.</font><br></td></tr>
                         <cfset countRed = countRed + 1> 
                     <cfelseif (Evaluate(get_field) EQ 0) OR (Evaluate(get_field) GT 0 AND check_20_upload.recordcount NEQ 0)>
@@ -685,6 +712,83 @@
                 <tr><td><font color="0000FF">State Preference is not available if you have selected a Region Preference.  </font><br></td></tr>
                 
                 <cfelseif smg_student_app_state_requested.recordcount GT 0 AND smg_student_app_state_requested.state1 GT 0>
+                <!----Check if Region is still open and accepting posistions---->
+                  <cfset closedList = ''>
+                  
+                  
+                  
+                 
+                        <!---check state 1---->
+                        <Cfquery name="statesClosedCheck1" datasource="#application.dsn#">
+                        select sc.fk_stateID, s.statename
+                        from regionStateClosure sc 
+                        LEFT join smg_states s on s.id = sc.fk_stateID
+                        where  sc.fk_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.programid#">
+                        <cfif client.companyid lte 5 OR client.companyid eq 12>
+                        and fk_companyid = 1
+                        <cfelse>
+                        and fk_companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+                        </cfif>
+                        and fk_stateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_student_app_state_requested.state1#">
+                        
+                        </Cfquery>
+                        <Cfif val(statesClosedCheck1.recordcount)>
+                        	<cfset closedList = #ListAppend(closedList, statesClosedCheck1.statename)#>
+                        </Cfif>
+                        <!---check state 2---->
+                        <Cfquery name="statesClosedCheck2" datasource="#application.dsn#">
+                        select sc.fk_stateID, s.statename
+                        from regionStateClosure sc 
+                        LEFT join smg_states s on s.id = sc.fk_stateID
+                        where  sc.fk_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.programid#">
+                        <cfif client.companyid lte 5 OR client.companyid eq 12>
+                        and fk_companyid = 1
+                        <cfelse>
+                        and fk_companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+                        </cfif>
+                        and fk_stateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_student_app_state_requested.state2#">
+                        
+                        </Cfquery>
+                        <Cfif val(statesClosedCheck2.recordcount)>
+                        	<cfset closedList = #ListAppend(closedList, statesClosedCheck2.statename)#>
+                        </Cfif>
+                         <!---check state3---->
+                        <Cfquery name="statesClosedCheck3" datasource="#application.dsn#">
+                        select sc.fk_stateID, s.statename
+                        from regionStateClosure sc 
+                        LEFT join smg_states s on s.id = sc.fk_stateID
+                        where  sc.fk_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.programid#">
+                        <cfif client.companyid lte 5 OR client.companyid eq 12>
+                        and fk_companyid = 1
+                        <cfelse>
+                        and fk_companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+                        </cfif>
+                        and fk_stateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_student_app_state_requested.state3#">
+                        
+                        </Cfquery>
+                        <Cfif val(statesClosedCheck3.recordcount)>
+                        	<cfset closedList = #ListAppend(closedList, statesClosedCheck3.statename)#>
+                        </Cfif>
+                    
+                        
+                    
+                         
+                    
+                    
+                    
+                   
+					<!----Display the States that are no longer available---->
+                    <cfif len(closedList)>
+                     <tr><td>
+                   <font color="FF0000"> You requested the following states, but they are no longer available.  Please choose a different state.</font><br>
+                    <cfloop list="#closedList#" index="x">
+                    	<strong>#x#</strong><br>
+                         <cfset countRed = countRed + 1>
+                    </cfloop>
+                    </cfif>
+                    </td></tr>
+                    
+                
                     <cfif check_21_upload.recordcount EQ 0>
                             <tr><td><font color="FF0000">This page has not been uploaded. You must print, sign, scan and upload this page.</font><br></td></tr>
                             <cfset countRed = countRed + 1>
