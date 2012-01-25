@@ -555,9 +555,7 @@
                                 <tr>
                                     <td class="label">Region: <span class="redtext">*</span></td>
                                     <td>
-                                        <cfselect name="regionid" query="qGetRegions" value="regionid" display="region" selected="#FORM.regionid#" queryPosition="below" disabled="#FORM.region_disabled#">
-                                            <option value=""></option>
-                                        </cfselect>   
+                                        <cfselect name="regionid" query="qGetRegions" value="regionid" display="region" selected="#FORM.regionid#" queryPosition="below" disabled="#FORM.region_disabled#"></cfselect>   
                                              
                                         <cfif LEN(FORM.region_disabled)>
                                             <input type="hidden" name="regionid" value="#FORM.regionid#">
