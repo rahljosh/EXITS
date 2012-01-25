@@ -8,10 +8,9 @@
         <cfabort>
 	</cfif>
 	<cfset new = false>
+	<!--- CHECK RIGHTS --->
+    <cfinclude template="../check_rights.cfm">
 </cfif>
-
-<!--- CHECK RIGHTS --->
-<cfinclude template="../check_rights.cfm">
 
 <cfset field_list = 'firstname,middlename,lastname,occupation,businessname,address,address2,city,state,zip,country,drivers_license,dob,sex,phone,phone_ext,work_phone,work_ext,cell_phone,fax,email,email2,skype_id,username,changepass,invoice_access,bypass_checklist,date_contract_received,date_2nd_visit_contract_received,active,datecancelled,datecreated,usebilling,billing_company,billing_contact,billing_address,billing_address2,billing_city,billing_country,billing_zip,billing_phone,billing_fax,billing_email,comments'>
 
