@@ -23,7 +23,8 @@
 		
 		// Set currentDate
 		currentDate = now();
-
+		
+		vAllowedDivisionChangeList = "8731,8743,12313,12431,16718,12389";  // Bill, Bob, Brian Hause, Gary, Tal and Merri	
 		// Get Student Information 
 		qGetStudentInfo = AppCFC.STUDENT.getStudentByID(studentID=studentID); 
 
@@ -357,8 +358,10 @@
 						</table>
 					</td>
 					<td width="450" valign="top">
-						<table width="100%" cellpadding="2">
-							<tr><td align="center" colspan="2"><h1>#firstname# #middlename# #familylastname# (###studentID#)</h1></td></tr>
+						
+                        <table width="100%" cellpadding="2">
+							
+                            <tr><td align="center" colspan="2"><h1>#firstname# #middlename# #familylastname# (###studentID#)</h1></td></tr>
 							<tr>
                             	<td align="center" colspan="2">
                             		<font size=-1><span class="edit_link">
@@ -376,8 +379,10 @@
                                     </span></font>
                                 </td>
                             </tr>
-			 				<tr><td align="center" colspan="2"><cfif dob EQ ''>n/a<cfelse>#dateformat (dob, 'mm/dd/yyyy')# - #datediff('yyyy',dob,now())# year old #sex# </cfif></td></tr> 
-							<tr><td width="80">Intl. Rep. : </td>
+			 				
+                            <tr><td align="center" colspan="2"><cfif dob EQ ''>n/a<cfelse>#dateformat (dob, 'mm/dd/yyyy')# - #datediff('yyyy',dob,now())# year old #sex# </cfif></td></tr> 
+							
+                            <tr><td>Intl. Rep. : </td>
 								<td><select name="intrep" <cfif FORM.edit EQ 'no'>disabled</cfif> >
                                         <option value="0" selected></option>		
                                         <cfloop query="qIntRepsList">
@@ -388,26 +393,27 @@
 									</select>
 								</td>
 							</tr>
-							<tr>
+							
+                            <tr>
 								<td colspan="2">
-									<table width="225" cellpadding="2" align="left">
-										<tr><td width="80">Date of Entry : </td><td>#DateFormat(dateapplication, 'mm/dd/yyyy')# </td></tr>
+									<table width="100%" cellpadding="2">
+										<tr><td>Date of Entry : </td><td>#DateFormat(dateapplication, 'mm/dd/yyyy')# </td></tr>
 										<tr><td><cfif randid EQ 0>Entered by : <cfelse>Approved by : </cfif> </td><td><cfif qEnteredBy.recordcount NEQ 0>#qEnteredBy.firstname# #qEnteredBy.lastname# (###qEnteredBy.userid#)<cfelse>n/a</cfif></td></tr>										
 										
-										<cfif CLIENT.usertype EQ 1 OR ListFind("8731,11245,8743,12313,1077,12431,11273", CLIENT.userid)> <!--- Pat, Bill, Bob, Brian Hause, Diana, Gary and Margarita --->
-                                        <tr>
-											<td>Division:</td><td>
-											<cfif FORM.edit EQ 'no'>
-                                            	#qAssignedCompany.team_id# 
-                                            <cfelse>
-                                                <select name="team_id">
-                                                <cfloop query="qAvailableTeams">
-                                                <option value="#companyid#" <cfif CLIENT.companyid eq companyid>selected</cfif>>#team_id#</option>
-                                                </cfloop>
-                                                </select>
-                                                <br />*You will need to re-assign regions after updating.
-											</cfif>
-										</tr>
+										<cfif CLIENT.usertype EQ 1 OR ListFind(vAllowedDivisionChangeList, CLIENT.userid)>
+                                            <tr>
+                                                <td>Division:</td><td>
+                                                <cfif FORM.edit EQ 'no'>
+                                                    #qAssignedCompany.team_id# 
+                                                <cfelse>
+                                                    <select name="team_id">
+                                                    <cfloop query="qAvailableTeams">
+                                                    <option value="#companyid#" <cfif CLIENT.companyid eq companyid>selected</cfif>>#team_id#</option>
+                                                    </cfloop>
+                                                    </select>
+                                                    <br />*You will need to re-assign regions after updating.
+                                                </cfif>
+                                            </tr>
                                         </cfif>
                                         
 										<tr><cfif canceldate EQ ''>
