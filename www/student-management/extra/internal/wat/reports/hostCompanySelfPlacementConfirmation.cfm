@@ -315,11 +315,11 @@
                 
                 <p>
                     Please review the below and <font color="##FF0000">reply with complete answers</font> within <font color="##FF0000">5 (five) business days</font> of receiving this note.
-                    
                     <ol>
                         <li>Please confirm whether the job offer was <strong>signed personally</strong> by <strong>#qGetResults.personJobOfferName#</strong>.</li>
                         <li>Please confirm the <strong>employment availability</strong> for the above participant(s) and the <strong>start and end date</strong>.</li>
-                        <li>Please confirm the <strong>job title</strong> and the <strong>number of guaranteed hours</strong> for the above participant(s).</li>
+                        <li>Please confirm the <strong>job title</strong>.</li>
+                        <li>Please confirm the <strong>number of guaranteed hours of work per week</strong> for the above participant(s). The guaranteed hours of work per week <strong>must be minimum 32 hours</strong>.</li>
                         <li>
                             Please confirm that<strong> you have read and will observe the employer's responsibilities</strong> (page ##2 of the job offer form), 
                             as set by the U.S. Department of State as a core program rule.

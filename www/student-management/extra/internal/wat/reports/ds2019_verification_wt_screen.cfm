@@ -22,6 +22,20 @@
         	programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.program)#">
     </cfquery>
 
+	<!-----Intl. Rep.----->
+    <cfquery name="qGetIntlAgent" datasource="MySQL">
+        SELECT 
+        	userID,
+            companyID, 
+            businessname, 
+            fax, 
+            email
+        FROM 
+        	smg_users
+        WHERE
+        	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.intRep)#">
+    </cfquery>
+
     <cfquery name="qGetCandidates" datasource="MySQL">
         SELECT	 
         	c.candidateID, 
@@ -38,6 +52,7 @@
             c.startdate, 
             c.ds2019,
 			c.hostcompanyid,
+            c.wat_placement,
             birth.countryname as countrybirth,
           	resident.countryname as countryresident,
             citizen.countryname as countrycitizen
@@ -54,38 +69,42 @@
         AND 
         	c.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="1">
         AND 
-        	c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(client.companyID)#">
+        	c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">
         AND 
-        	c.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.program)#">
+        	c.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.program)#">        
         AND 
         	c.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.intRep)#">
-        AND 
+		AND 
             c.ds2019 = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
 		AND
 			c.hostcompanyid != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
 		AND
 			c.wat_doc_job_offer_applicant = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 		AND
-			c.wat_doc_job_offer_employer = <cfqueryparam cfsqltype="cf_sql_bit" value="1">            
+			c.wat_doc_job_offer_employer = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+        AND	
+        	(
+            	c.wat_placement IN ( <cfqueryparam cfsqltype="cf_sql_varchar" value="Walk-In,CSB-Placement" list="yes"> )
+			OR	
+            	c.candidateID IN ( 
+                					SELECT                 
+                						c.candidateID
+                                    FROM
+                                    	extra_candidates c
+                                    INNER JOIN
+                                    	extra_candidate_place_company ecpc ON ecpc.candidateID = c.candidateID
+                                        AND
+                                            ecpc.selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="approved">
+                                    WHERE
+                                    	c.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="Self-Placement"> 
+                                 )
+                                    	
+            )
         ORDER BY 
         	c.lastName, 
             c.firstName
     </cfquery>
-
-	<!-----Intl. Rep.----->
-    <cfquery name="qGetIntlAgent" datasource="MySQL">
-        SELECT 
-        	userID,
-            companyID, 
-            businessname, 
-            fax, 
-            email
-        FROM 
-        	smg_users
-        WHERE
-        	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.intRep)#">
-    </cfquery>
-
+	
 	<cfscript>
 		if ( qGetProgram.extra_sponsor EQ 'INTO' ) {
 			// Set Sponsor
@@ -110,11 +129,6 @@
 
 <cfoutput>
 
-<!---
-<cfdump var="#form#">
-<cfdump var="#qgetcandidates#">
---->
-
 <!-----Display Reports---->
 <cfif LEN(FORM.print)>
 	
@@ -124,7 +138,7 @@
         
         <cfif isDefined('FORM.email_self')> 
 
-            <cfset toLine = ListAppend(toLine, client.email)>
+            <cfset toLine = ListAppend(toLine, CLIENT.email)>
         </cfif>
     
         <cfif LEN(toLine)>
@@ -265,7 +279,7 @@
         <cfif LEN(toLine)>
             #toLine# 123456
     
-            <cfmail to="josh@pokytrails.com" from="#client.email#" Subject="DS-2019 Verification Report" type="html" server="exitgroup.org" username="outgoing@exitgroup.org" password="p%15gz">
+            <cfmail to="josh@pokytrails.com" from="#CLIENT.email#" Subject="DS-2019 Verification Report" type="html" server="exitgroup.org" username="outgoing@exitgroup.org" password="p%15gz">
                 
                 <!--- Include Report --->			  
                 #verificationReport#
