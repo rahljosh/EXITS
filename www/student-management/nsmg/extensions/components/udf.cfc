@@ -546,7 +546,10 @@
         </cfif> 
         
     	<cfif CLIENT.usertype eq 15>
-        	<cfset checkAgreement.ar_cbc_auth_form = 'Not Required for Usertype'>
+        	<cfset checkAgreement.prevExperience = 'Not Required for Usertype'>
+            <cfset checkAgreement.ref1 = 'Not Required for Usertype'>
+            <cfset checkAgreement.ref2 = 'Not Required for Usertype'>
+            <cfset checkAgreement.numberRef = '6'>
         </cfif>
         
 		<cfif checkAgreement.ar_cbc_auth_form NEQ '' AND checkAgreement.ar_agreement NEQ '' AND checkAgreement.ar_ref_quest1 NEQ '' AND checkAgreement.ar_ref_quest2 NEQ '' AND checkReferences.recordcount EQ 4 AND previousExperience EQ 1>
