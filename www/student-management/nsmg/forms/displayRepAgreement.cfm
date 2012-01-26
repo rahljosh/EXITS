@@ -106,7 +106,7 @@ where userid = #client.userid#
     	<cfset sigMatch = 1>
     </Cfif>
 	<cfscript>
-	// Father is Required
+			// Father is Required
             if (not len(trim(FORM.signature)) )  {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please sign your name");
@@ -124,7 +124,8 @@ where userid = #client.userid#
 	<!--- Check if there are no errors --->
     <cfif NOT SESSION.formErrors.length()>
     
-			<cfif DirectoryExists('C:/websites/student-management/nsmg/uploadedfiles/users/#client.userid#/')>
+		<cfif DirectoryExists('C:/websites/student-management/nsmg/uploadedfiles/users/#client.userid#/')>
+        
         <cfelse>
             <cfdirectory action = "create" directory = "C:/websites/student-management/nsmg/uploadedfiles/users/#client.userid#/" >
         </cfif>
@@ -133,7 +134,12 @@ where userid = #client.userid#
                     form.pdf is used to not display the logo which isn't working on the PDF. --->
                     <cfset form.report_mode = 'print'>
                     <cfset form.pdf = 1>
-                    <cfinclude template="AreaRepAgreement.cfm">
+                    <Cfif client.usertype neq 15>
+                    	<cfinclude template="AreaRepAgreement.cfm">
+                    <cfelse>
+                    	<cfinclude template="2ndVisitRepAgreement.cfm">
+                    </Cfif>
+                    
                     <br /><Br />
                     <Cfoutput>
                     Electronically Signed<Br />
@@ -212,12 +218,16 @@ and userid = #client.userid#
             width="98%"
             />
 <br />
-<p>It's time to re-sign the Area Representative Agreement.  Please read carefully and then sign below indicationg you agree to the terms and conditions.</p>
+<p>It's time to re-sign the <cfif client.usertype eq 15>Second Visit</cfif> Area Representative Agreement.  Please read carefully and then sign below indicationg you agree to the terms and conditions.</p>
 <p>Once signed, a PDF version will be available under your profile that is available for printing if you would like a hard copy.</p>
 
 <div class="scroll">
          
-                		<cfinclude template="AreaRepAgreement.cfm">
+                	<Cfif client.usertype neq 15>
+                    	<cfinclude template="AreaRepAgreement.cfm">
+                    <cfelse>
+                    	<cfinclude template="2ndVisitRepAgreement.cfm">
+                    </Cfif>
 	
            
            </div>

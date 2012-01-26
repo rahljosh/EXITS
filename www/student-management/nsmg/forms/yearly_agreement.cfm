@@ -7,11 +7,15 @@
     and seasonid = #season#
     </cfquery>
     <!----Check Refrences---->
+    <Cfif client.usertype eq 15>
+    <Cfset checkReferences.recordcount = 6>
+    <cfelse>
     <Cfquery name="checkReferences" datasource="#application.dsn#">
     select *
     from smg_user_references
     where referencefor = #client.userid#
     </cfquery>
+    </Cfif>
     <!----Check Employmenthistory---->
     <Cfquery name="employHistory" datasource="#application.dsn#">
     select *
@@ -44,15 +48,18 @@
 	padding-left: 20px;
 }
 </style>
-    <cfif client.usertype eq 15>
-    	<cfset checkAgreement.ar_cbc_auth_form = 'Not Required for Usertype'>
-    </cfif>
+    
+   
      <Cfif employHistory.recordcount gte 1 AND (prevExperience.prevOrgAffiliation eq 0 OR (prevExperience.prevOrgAffiliation eq 1 and prevExperience.prevAffiliationName is not ''))>
      	<Cfset previousExperience = 1>
      <cfelse>
      	<Cfset previousExperience = 0>
      </Cfif> 
-     
+     <cfif client.usertype eq 15>
+    	<cfset employHistory.recordcount = 6>
+        <Cfset previousExperience = 1>
+        <Cfset checkReferences.recordcount = 6>
+    </cfif>
      <Cfif checkAgreement.ar_cbc_auth_form is not '' AND checkAgreement.ar_agreement is not '' AND checkReferences.recordcount gte 4 and previousExperience eq 1 >
      <cfif (checkActive.active eq 1 and checkActive.accountCreationVerified gte 1)>
        <cfset temp = DeleteClientVariable("agreement_needed")> 
@@ -94,7 +101,7 @@
           </cfif> 
         </td>
     </tr>    
-    <cfif client.usertype neq 15>
+    
     <Tr>
 	  	<Td><h2>CBC Authorization</h2></Td>
         <td align="center">
@@ -105,7 +112,8 @@
           </cfif>
         </td>
     </tr>  
-    </cfif>
+    <cfif client.usertype neq 15>
+   
     <Tr>
 	  	<Td><h2>Employment History</h2></Td>
         <td align="center">
@@ -125,6 +133,7 @@
             </cfif>
          </td>
     </Tr>
+     </cfif>
 </table>
 </div>
 </div>
