@@ -70,7 +70,12 @@ function CheckCompany() {
 <cfquery name="get_company" datasource="MySQL">
 	SELECT companyid, companyname
 	FROM smg_companies
-	WHERE companyid <= '6'
+	WHERE 
+    <cfif client.companyid neq 10>
+    companyid <= '6'
+    <Cfelse>
+    companyid = '10'
+    </cfif>
 </cfquery>
 
 <cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#client.studentid#.*">
