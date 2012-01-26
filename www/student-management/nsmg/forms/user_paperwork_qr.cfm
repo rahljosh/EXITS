@@ -18,11 +18,12 @@
 		<cfquery name="update_paperwork" datasource="MySQL">
 			UPDATE smg_users_paperwork 
 			SET ar_info_sheet = <cfif form["ar_info_sheet_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_info_sheet_" & x])#</cfif>,
-				ar_ref_quest1 = <cfif form["ar_ref_quest1_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_ref_quest1_" & x])#</cfif>,
+				 <cfif form.submittedUserType NEQ 15>
+                ar_ref_quest1 = <cfif form["ar_ref_quest1_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_ref_quest1_" & x])#</cfif>,
 				ar_ref_quest2 = <cfif form["ar_ref_quest2_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_ref_quest2_" & x])#</cfif>,
-                <cfif form.submittedUserType NEQ 15>
+               </cfif>
 				ar_cbc_auth_form = <cfif form["ar_cbc_auth_form_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_cbc_auth_form_" & x])#</cfif>,
-                </cfif>
+                
                 ar_agreement = <cfif form["ar_agreement_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_agreement_" & x])#</cfif>,
 				ar_training = <cfif form["ar_training_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_training_" & x])#</cfif>,
                 secondVisit = <cfif form["ar_secondVisit_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_secondVisit_" & x])#</cfif>
@@ -41,12 +42,13 @@
                 userid, 
                 seasonid, 
                 ar_info_sheet, 
+               <cfif form.submittedUserType NEQ 15>
                 ar_ref_quest1, 
                 ar_ref_quest2, 
-                <cfif form.submittedUserType NEQ 15>
-                ar_cbc_auth_form, 
                 </cfif>
-                ar_agreement, 
+
+                ar_cbc_auth_form, 
+                                ar_agreement, 
                
                 ar_training,
                 secondVisit)
@@ -55,11 +57,12 @@
                 '#form.userid#',
                 '#form.seasonid#',
 				<cfif form.ar_info_sheet EQ ''>NULL<cfelse>#CreateODBCDate(form.ar_info_sheet)#</cfif>,
+                <cfif form.submittedUserType NEQ 15>
 				<cfif form.ar_ref_quest1 EQ ''>NULL<cfelse>#CreateODBCDate(form.ar_ref_quest1)#</cfif>,
 				<cfif form.ar_ref_quest2 EQ ''>NULL<cfelse>#CreateODBCDate(form.ar_ref_quest2)#</cfif>,
-                <cfif form.submittedUserType NEQ 15>
-					<cfif form.ar_cbc_auth_form EQ ''>NULL<cfelse>#CreateODBCDate(form.ar_cbc_auth_form)#</cfif>,
                 </cfif>
+					<cfif form.ar_cbc_auth_form EQ ''>NULL<cfelse>#CreateODBCDate(form.ar_cbc_auth_form)#</cfif>,
+                
                 <cfif form.ar_agreement EQ ''>NULL<cfelse>#CreateODBCDate(form.ar_agreement)#</cfif>,
 				<cfif form.ar_training EQ ''>NULL<cfelse>#CreateODBCDate(form.ar_training)#</cfif>,
                 <cfif form.ar_secondVisit EQ ''>NULL<cfelse>#CreateODBCDate(form.ar_secondVisit)#</cfif>)
