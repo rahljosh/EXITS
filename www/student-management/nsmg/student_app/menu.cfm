@@ -183,9 +183,9 @@ body {
 			<td align="center" class="ddmx"><a class="item2" href="?curdoc=section4/page20#print#&id=4&p=20" onClick="return CheckLink();">Page [20] &nbsp; Regional Choice </a></td>
 		</cfif>	
 		<cfif url.p EQ '21'>
-			<td align="center" class="selected"><a class="item2" href="?curdoc=section4/page21#print#&id=4&p=21" onClick="return CheckLink();"><div class="selectedlink">Page [21] &nbsp; <cfif CLIENT.companyID NEQ 14>State Choice<Cfelse>City Choice</cfif> </div></a></td>
+			<td align="center" class="selected"><a class="item2" href="?curdoc=section4/page21#print#&id=4&p=21" onClick="return CheckLink();"><div class="selectedlink">Page [21] &nbsp; <cfif CLIENT.companyID NEQ 14>State Choice<Cfelse>District Choice</cfif> </div></a></td>
 		<cfelse>
-			<td align="center" class="ddmx"><a class="item2" href="?curdoc=section4/page21#print#&id=4&p=21" onClick="return CheckLink();">Page [21] &nbsp; <cfif CLIENT.companyID NEQ 14>State Choice<Cfelse>City Choice</cfif> </a></td>
+			<td align="center" class="ddmx"><a class="item2" href="?curdoc=section4/page21#print#&id=4&p=21" onClick="return CheckLink();">Page [21] &nbsp; <cfif CLIENT.companyID NEQ 14>State Choice<Cfelse>District Choice</cfif> </a></td>
 		</cfif>	
 		<cfif url.p EQ '22'>
 			<td align="center" class="selected"><a class="item2" href="?curdoc=section4/page22&id=4&p=22" onClick="return CheckLink();"><div class="selectedlink">Page [22] &nbsp; Supplements </div></a></td>

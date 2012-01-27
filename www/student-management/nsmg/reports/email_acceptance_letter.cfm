@@ -69,7 +69,7 @@
 	<!--- Display only for ESI --->
     <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ESI, CLIENT.companyID)>
 
-        <cfquery name="qESIAreaChoice" datasource="MySQL">
+        <cfquery name="qESIDistrictChoice" datasource="MySQL">
             SELECT 
                 opt1.name as option1,
                 opt2.name as option2,
@@ -79,19 +79,19 @@
             LEFT OUTER JOIN
                 applicationLookup opt1 ON opt1.fieldID = appo.option1 
                     AND 
-                        opt1.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIAreaChoice">
+                        opt1.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIDistrictChoice">
             LEFT OUTER JOIN
                 applicationLookup opt2 ON opt2.fieldID = appo.option2 
                     AND 
-                        opt2.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIAreaChoice">
+                        opt2.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIDistrictChoice">
             LEFT OUTER JOIN
                 applicationLookup opt3 ON opt3.fieldID = appo.option3 
                     AND 
-                        opt3.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIAreaChoice">
+                        opt3.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIDistrictChoice">
             WHERE 
                 appo.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentid#">
             AND
-                appo.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIAreaChoice">
+                appo.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIDistrictChoice">
         </cfquery>
 
    	</cfif>     
@@ -199,9 +199,9 @@
             <!--- Display only for ESI --->
             <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ESI, CLIENT.companyID)>
                 <td valign="top">
-                    <p>1st Choice: #qESIAreaChoice.option1#</p>	
-                    <p>2nd Choice: #qESIAreaChoice.option2#</p>	
-                    <p>3rd Choice: #qESIAreaChoice.option3#</p>	
+                    <p>1st Choice: #qESIDistrictChoice.option1#</p>	
+                    <p>2nd Choice: #qESIDistrictChoice.option2#</p>	
+                    <p>3rd Choice: #qESIDistrictChoice.option3#</p>	
                 </td>
             </cfif>
         </tr>    

@@ -124,7 +124,7 @@
         WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value='#client.studentid#'>
     </cfquery>
     
-    <cfquery name="qESIAreaChoice" datasource="MySql">
+    <cfquery name="qESIDistrictChoice" datasource="MySql">
         SELECT 
             option1,
             option2,
@@ -134,7 +134,7 @@
         WHERE 
             studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentID#">
         AND
-            fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIAreaChoice">
+            fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIDistrictChoice">
     </cfquery>
     
     <cfquery name="qGetPages" datasource="MySql">
@@ -682,7 +682,7 @@
     <tr><td>&nbsp;</td></tr>
 
 	<!--- PAGE 21 --->
-	<tr><td><a href="index.cfm?curdoc=section4/page21&id=4&p=21"><h3>Page [21] - <cfif CLIENT.companyID NEQ 14>State <cfelse>Area </cfif> Choice </h3></a></td></tr>
+	<tr><td><a href="index.cfm?curdoc=section4/page21&id=4&p=21"><h3>Page [21] - <cfif CLIENT.companyID NEQ 14>State <cfelse>District </cfif> Choice </h3></a></td></tr>
 
     <!--- Do not display for Canada Application --->
     <cfif ListFind("14,15,16", smg_students.app_indicated_program)> 
@@ -691,11 +691,11 @@
 	<cfelseif CLIENT.companyID EQ 14>
 		
 		<!--- Exchange Service International Application --->
-		<cfif qESIAreaChoice.recordCount AND VAL(qESIAreaChoice.option1) AND VAL(qESIAreaChoice.option2) AND VAL(qESIAreaChoice.option3)>
+		<cfif qESIDistrictChoice.recordCount AND VAL(qESIDistrictChoice.option1) AND VAL(qESIDistrictChoice.option2) AND VAL(qESIDistrictChoice.option3)>
         	<tr><td><font color="0000FF">Complete</font><br></td></tr>
         <cfelse>
 			<cfset countRed = countRed + 1>
-            <tr><td><font color="FF0000">Please choose 3 areas</font><br></td></tr>
+            <tr><td><font color="FF0000">Please choose 3 districts</font><br></td></tr>
         </cfif>	
         
     <cfelse>
@@ -785,8 +785,8 @@
                     	<strong>#x#</strong><br>
                          <cfset countRed = countRed + 1>
                     </cfloop>
-                    </cfif>
-                    </td></tr>
+                    </td></tr></cfif>
+                    
                     
                 
                     <cfif check_21_upload.recordcount EQ 0>
