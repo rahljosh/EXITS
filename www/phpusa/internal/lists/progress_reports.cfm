@@ -428,31 +428,28 @@
 													vIsPreviousReportApproved = 1;	
 												}
                                             </cfscript>
-                                            
-                                            <cfif VAL(vPreviousReportMonth)>
                                                 
-                                                <!--- Check if previous report has been submitted --->
-                                                <Cfquery name="qGetPreviousReport" datasource="#APPLICATION.DSN#">
-                                                    SELECT 
-                                                        pr_ny_approved_date 
-                                                    FROM 
-                                                    	progress_reports
-                                                    WHERE 
-                                                    	fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
-                                                    AND 
-                                                    	fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.studentid#">
-                                                    AND 
-                                                    	pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#vPreviousReportMonth#">
-                                                </cfquery>
-                                            
-                                            	<cfscript>
-													// There is an approved previous report - allow entering a new one
-													if ( isDate(qGetPreviousReport.pr_ny_approved_date) ) {
-														vIsPreviousReportApproved = 1;	
-													}
-												</cfscript>
+											<!--- Check if previous report has been submitted --->
+                                            <Cfquery name="qGetPreviousReport" datasource="#APPLICATION.DSN#">
+                                                SELECT 
+                                                    pr_ny_approved_date 
+                                                FROM 
+                                                    progress_reports
+                                                WHERE 
+                                                    fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
+                                                AND 
+                                                    fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.studentid#">
+                                                AND 
+                                                    pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vPreviousReportMonth)#">
+                                            </cfquery>
+                                        
+                                            <cfscript>
+                                                // There is an approved previous report - allow entering a new one
+                                                if ( isDate(qGetPreviousReport.pr_ny_approved_date) ) {
+                                                    vIsPreviousReportApproved = 1;	
+                                                }
+                                            </cfscript>
                                                     
-                                            </cfif>
                                         	<td>
 												<!--- to add a progress report, user must be the supervising rep, and the program has a report for this phase. --->
                                                 <cfif arearepid EQ CLIENT.userid and evaluate(dbfield) AND VAL(vIsPreviousReportApproved)>
@@ -461,11 +458,11 @@
                                                         <input type="hidden" name="month_of_report" value="#CLIENT.reportMonth#">
                                                         <input name="Submit" type="image" src="pics/new.gif" alt="Add New Report" border="0">
                                                     </form>
-                                                <cfelseif NOT VAL(qGetPreviousReport.recordCount)>
+                                                <cfelseif VAL(vPreviousReportMonth) AND NOT VAL(qGetPreviousReport.recordCount)>
 													<span style="color:##F00">
                                                     	Previous report is MISSING. You must submit #MonthAsString(vPreviousReportMonth)# report prior to #MonthAsString(CLIENT.reportMonth)# report.
                                                     </span>
-												<cfelseif NOT VAL(vIsPreviousReportApproved)>
+												<cfelseif VAL(vPreviousReportMonth) AND NOT VAL(vIsPreviousReportApproved)>
 													Waiting on #MonthAsString(vPreviousReportMonth)# report approval. Once previous report is approved you will be able to create #MonthAsString(CLIENT.reportMonth)# report.				                                                    
                                                 <cfelse>
                                                     N/A
