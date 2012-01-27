@@ -22,7 +22,7 @@
             WHERE 
                 studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
             AND
-                fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIAreaChoice">
+                fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIDistrictChoice">
         </cfquery>
      	
 		<!--- Exchange Service International Application --->
@@ -53,7 +53,7 @@
                 VALUES 
                     (
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIAreaChoice">, 
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIDistrictChoice">, 
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.option1#">, 
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.option2#">, 
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.option3#">,

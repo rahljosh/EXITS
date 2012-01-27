@@ -144,7 +144,7 @@ and sc.fk_companyid = #client.companyid#
     	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
 </cfquery>
 
-<cfquery name="qESIAreaChoice" datasource="MySQL">
+<cfquery name="qESIDistrictChoice" datasource="MySQL">
 	SELECT 
     	option1, 
         option2, 
@@ -154,14 +154,14 @@ and sc.fk_companyid = #client.companyid#
 	WHERE 
     	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
     AND
-    	fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIAreaChoice">
+    	fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIDistrictChoice">
 </cfquery>
 
 <cfscript>
-	// Get List of Canada Areas
-	qGetESIAreaChoice = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(
+	// Get List of Canada Districts
+	qGetESIDistrictChoice = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(
 		applicationID=APPLICATION.CONSTANTS.type.publicHighSchool,
-		fieldKey='ESIAreaChoice'
+		fieldKey='ESIDistrictChoice'
 	);
 </cfscript>
 
@@ -170,7 +170,7 @@ and sc.fk_companyid = #client.companyid#
 	<tr height="33">
 		<td width="8" class="tableside"><img src="pics/p_topleft.gif" width="8"></td>
 		<td width="26" class="tablecenter"><img src="../pics/students.gif"></td>
-		<td class="tablecenter"><h2>Page [21] - <cfif CLIENT.companyID NEQ 14>State<cfelse>Area</cfif> Choice </h2></td>
+		<td class="tablecenter"><h2>Page [21] - <cfif CLIENT.companyID NEQ 14>State<cfelse>District</cfif> Choice </h2></td>
 		<!--- Do not display for Canada Application --->
         <cfif NOT ListFind("14,15,16", get_student_info.app_indicated_program)> 
 	        <td align="right" class="tablecenter"><a href="" onClick="javascript: win=window.open('section4/page21print.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;"><img src="pics/printhispage.gif" border="0" alt="Click here to print this page"></img></A>&nbsp; &nbsp;</td>
@@ -384,8 +384,8 @@ and sc.fk_companyid = #client.companyid#
                                 <td>1st Choice:</td>
                                 <td><select name="option1" onClick="DataChanged();">
                                         <option value="0"></option>
-                                        <cfloop query="qGetESIAreaChoice">
-                                        	<option value="#qGetESIAreaChoice.fieldID#" <cfif qESIAreaChoice.option1 EQ qGetESIAreaChoice.fieldID>selected</cfif>>#qGetESIAreaChoice.name#</option>
+                                        <cfloop query="qGetESIDistrictChoice">
+                                        	<option value="#qGetESIDistrictChoice.fieldID#" <cfif qESIDistrictChoice.option1 EQ qGetESIDistrictChoice.fieldID>selected</cfif>>#qGetESIDistrictChoice.name#</option>
                                         </cfloop>
                                     </select>
                                 </td>
@@ -394,8 +394,8 @@ and sc.fk_companyid = #client.companyid#
                                 <td>2nd Choice:</td>
                                 <td><select name="option2" onClick="DataChanged();">
                                         <option value="0"></option>
-                                        <cfloop query="qGetESIAreaChoice">
-                                        	<option value="#qGetESIAreaChoice.fieldID#" <cfif qESIAreaChoice.option2 EQ qGetESIAreaChoice.fieldID>selected</cfif>>#qGetESIAreaChoice.name#</option>
+                                        <cfloop query="qGetESIDistrictChoice">
+                                        	<option value="#qGetESIDistrictChoice.fieldID#" <cfif qESIDistrictChoice.option2 EQ qGetESIDistrictChoice.fieldID>selected</cfif>>#qGetESIDistrictChoice.name#</option>
                                         </cfloop>
                                     </select>
                                 </td>
@@ -404,13 +404,12 @@ and sc.fk_companyid = #client.companyid#
                                 <td>3rd Choice:</td>
                                 <td><select name="option3" onClick="DataChanged();">
                                         <option value="0"></option>
-                                        <cfloop query="qGetESIAreaChoice">
-                                        	<option value="#qGetESIAreaChoice.fieldID#" <cfif qESIAreaChoice.option3 EQ qGetESIAreaChoice.fieldID>selected</cfif>>#qGetESIAreaChoice.name#</option>
+                                        <cfloop query="qGetESIDistrictChoice">
+                                        	<option value="#qGetESIDistrictChoice.fieldID#" <cfif qESIDistrictChoice.option3 EQ qGetESIDistrictChoice.fieldID>selected</cfif>>#qGetESIDistrictChoice.name#</option>
                                         </cfloop>
                                     </select>
                                 </td>
                             </tr> 
-                            <tr><td colspan="2">* Areas with an asterisk represent districts in the Boston area</td></tr>                       							
                         </table>
                         
                     </cfif>
