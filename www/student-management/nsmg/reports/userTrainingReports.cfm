@@ -5,7 +5,10 @@
 	Date:		March 22, 2011
 	Desc:		Training Reports
 
-	Updated:	05/31/2011 - Adding advisor access
+	Updated:	01/31/2012 - Emailing users after they have been exported to excel
+				list (DOS TEST)
+				
+				05/31/2011 - Adding advisor access
 				
 ----- ------------------------------------------------------------------------- --->
 
@@ -14,12 +17,13 @@
 	
     <!--- Param FORM Variable --->
     <cfparam name="FORM.action" default="">
-    <cfparam name="FORM.exportOption" default="">
+    <cfparam name="FORM.exportOption" default="hired">
     <cfparam name="FORM.regionID" default="">
     <cfparam name="FORM.programID" default="">
     <cfparam name="FORM.trainingID" default="">
-    <cfparam name="FORM.dateCreatedFrom" default="">
-    <cfparam name="FORM.dateCreatedTo" default="">
+    <cfparam name="FORM.emailUsers" default="0">
+    <cfparam name="FORM.dateCreatedFrom" default="#DateFormat(now(), 'mm/dd/yyyy')#">
+    <cfparam name="FORM.dateCreatedTo" default="#DateFormat(now(), 'mm/dd/yyyy')#">
     <cfparam name="FORM.excelFile" default="">
 
 	<!--- Import CustomTag --->
@@ -71,13 +75,13 @@
 				
 				// Hired From
 				if ( NOT LEN(FORM.dateCreatedFrom) OR NOT IsDate(FORM.dateCreatedFrom) ) {
-					SESSION.formErrors.Add("Please enter a hired from date");
+					SESSION.formErrors.Add("Please enter from date");
 					FORM.dateCreatedFrom = '';
 				}
 				
 				// Hired To
 				if ( NOT LEN(FORM.dateCreatedTo) OR NOT IsDate(FORM.dateCreatedTo) ) {
-					SESSION.formErrors.Add("Please enter a hired to date");
+					SESSION.formErrors.Add("Please enter to date");
 					FORM.dateCreatedTo = '';
 				}
 
@@ -105,8 +109,54 @@
 			}
 
 		}
+		
+		// Settings for DOS Email
+		if ( CLIENT.companyID EQ 10 ) {
+			vEmailFrom = 'jana@case-usa.org (Jana De Fillipps)';
+		} else {
+			vEmailFrom = 'megan@iseusa.com (Megan Perlleshi)';
+		}
+		
+		vEmailSubject = '#CLIENT.companyShort# - Department of State Certification Test';
     </cfscript>
-
+	
+    <cfsavecontent variable="vEmailTemplate">
+    
+        <cfoutput>
+        
+            <p>Welcome to #CLIENT.companyShort#!</p>
+            
+            <p>As you are already aware, all Area Representatives are required to take the Department of State Certification Test.</p>
+             
+            <p>
+                An account has been created for you so that you may access this test. <br />
+            </p>
+                        
+            <p>
+                The link for the test is: <a href="https://doslocalcoordinatortraining.traincaster.com">https://doslocalcoordinatortraining.traincaster.com</a>
+            </p>
+            
+            <p>Please look for an email notice from <a href="mailto:no_reply@traincaster.com">no_reply@traincaster.com</a> with your login information.</p>
+            
+            <p>If the email is not in your inbox, <strong>please check your spam or junk mailbox.</strong></p>
+            
+            <p style="text-decoration:underline;">Please be aware that this is part of your mandatory training. You are required to pass this test within 30 days.</p>
+            
+           	<p>Thank you,</p>
+           
+            <p>
+                <cfif CLIENT.companyID EQ 10>
+                    Jana De Fillipps <br />
+                <cfelse>
+                    Megan Perlleshi <br />
+                </cfif>
+                #CLIENT.companyName#
+            </p>
+            
+		</cfoutput>
+        
+    </cfsavecontent>
+    
 </cfsilent>
 
 <!DOCTYPE html PUBLIC "-//W3C//Dtd XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/Dtd/xhtml1-transitional.dtd">
@@ -364,14 +414,13 @@
 			<cfscript>
                 // Get Results
                 qGetResults = APPLICATION.CFC.USER.exportDOSUserList(
-									regionID=FORM.regionID,
-									companyID=CLIENT.companyID,
-									exportOption=FORM.exportOption,
-									dateCreatedFrom=FORM.dateCreatedFrom,
-									dateCreatedTo=FORM.dateCreatedTo
-								);
+								regionID=FORM.regionID,
+								exportOption=FORM.exportOption,
+								dateCreatedFrom=FORM.dateCreatedFrom,
+								dateCreatedTo=FORM.dateCreatedTo
+							);
             </cfscript>
-			
+            
    			<!--- set content type --->
             <cfcontent type="application/msexcel">
             
@@ -388,7 +437,7 @@
                     <td bgcolor="#FFFFE6"><strong>Email Address</strong></td>
                     <td bgcolor="#FFFFE6"><strong>Person ID</strong></td>
                     <td bgcolor="#FFFFE6"><strong>Comments</strong></td>
-                    <td bgcolor="#FFFFE6"><strong>Date Created</strong></td>
+                    <td bgcolor="#FFFFE6"><strong>Date Fully Enabled</strong></td>
                     <cfif FORM.exportOption EQ 'inactivated'>
                         <td bgcolor="#FFFFE6"><strong>Date Cancelled</strong></td>
                     <cfelseif FORM.exportOption EQ 'lastLoggedIn'>
@@ -409,13 +458,25 @@
                         <td>#qGetResults.email#</td>
                         <td>#qGetResults.userID#</td>
                         <td>#qGetResults.regionName#</td>
-                        <td>#DateFormat(qGetResults.dateCreated, 'mm/dd/yyyy')#</td>
+                        <td>#DateFormat(qGetResults.dateAccountVerified, 'mm/dd/yyyy')#</td>
 						<cfif FORM.exportOption EQ 'inactivated'>
                             <td>#DateFormat(qGetResults.dateCancelled, 'mm/dd/yyyy')#</td>
                         <cfelseif FORM.exportOption EQ 'lastLoggedIn'>
                             <td>#DateFormat(qGetResults.lastLogin, 'mm/dd/yyyy')#</td>
                         </cfif>  
                     </tr>
+                    
+                    <cfif VAL(FORM.emailUsers) AND FORM.exportOption EQ 'hired' AND IsValid("email", qGetResults.email)>
+                    
+                        <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                        	<cfinvokeargument name="email_from" value="#vEmailFrom#">
+                            <cfinvokeargument name="email_to" value="#qGetResults.email#"> <!--- marcus@iseusa.com ---->
+                            <cfinvokeargument name="email_subject" value="#vEmailSubject#">
+                            <cfinvokeargument name="email_message" value="#vEmailTemplate#">
+                        </cfinvoke>
+                    
+                    </cfif>
+                    
                 </cfoutput>
             </table>
 
@@ -463,12 +524,12 @@
                                             <tr align="left">
                                                 <td valign="top" align="right"><label for="regionID">Region:</label></td>
                                                 <td>
-                                                    <select name="regionID" id="regionID" multiple="multiple" size="6">
+                                                    <select name="regionID" id="regionID" multiple="multiple" size="8" class="largeField">
                                                         <cfif ListFind("1,2,3,4", CLIENT.userType)>
                                                             <option value="0">All</option>
                                                         </cfif>
                                                         <cfloop query="qGetRegions">
-                                                            <option value="#regionID#">#regionName#</option>
+                                                            <option value="#qGetRegions.regionID#"><cfif CLIENT.companyID EQ 5>#qGetRegions.companyShort# - </cfif> #qGetRegions.regionName#</option>
                                                         </cfloop>
                                                     </select>
                                                 </td>		
@@ -487,9 +548,9 @@
                                             <tr>
                                                 <td align="right" valign="top"><label for="programID">Program:</label></td>
                                                 <td>
-                                                    <select name="programID" id="programID" multiple size="6">
+                                                    <select name="programID" id="programID" multiple size="8" class="xLargeField">
                                                         <cfloop query="qGetProgramList">
-                                                            <option value="#qGetProgramList.programID#">#programName#</option>
+                                                            <option value="#qGetProgramList.programID#" <cfif ListFind(FORM.programID, qGetProgramList.programID)> selected="selected" </cfif> >#programName#</option>
                                                         </cfloop>
                                                     </select>
                                                     <font size="-2"><br />Get users that placed or are supervising students</font>
@@ -509,12 +570,12 @@
                                             <tr align="left">
                                                 <td valign="top" align="right"><label for="regionID">Region:</label></td>
                                                 <td>
-                                                    <select name="regionID" multiple="multiple" size="6">
+                                                    <select name="regionID" multiple="multiple" size="8" class="largeField">
                                                         <cfif ListFind("1,2,3,4", CLIENT.userType)>
                                                             <option value="0">All</option>
                                                         </cfif>
                                                         <cfloop query="qGetRegions">
-                                                            <option value="#regionID#">#regionName#</option>
+                                                            <option value="#qGetRegions.regionID#"><cfif CLIENT.companyID EQ 5>#qGetRegions.companyShort# - </cfif> #qGetRegions.regionName#</option>
                                                         </cfloop>
                                                     </select>
                                                 </td>		
@@ -556,12 +617,9 @@
                                                 <tr align="left">
                                                     <td valign="top" align="right"><label for="regionID">Region:</label></td>
                                                     <td>
-                                                        <select name="regionID" id="regionID" multiple="multiple" size="6">
-                                                            <cfif ListFind("1,2,3,4", CLIENT.userType)>
-                                                                <option value="0">All</option>
-                                                            </cfif>
+                                                        <select name="regionID" id="regionID" multiple="multiple" size="8" class="largeField">
                                                             <cfloop query="qGetRegions">
-                                                                <option value="#regionID#">#regionName#</option>
+                                                            	<option value="#qGetRegions.regionID#"><cfif CLIENT.companyID EQ 5>#qGetRegions.companyShort# - </cfif> #qGetRegions.regionName#</option>
                                                             </cfloop>
                                                         </select>
                                                     </td>		
@@ -570,24 +628,27 @@
                                                     <td valign="top" align="right"><label for="reportOption">Export Option:</label></td>
                                                     <td>
                                                         <select name="exportOption" id="exportOption">
-                                                        	<option value="hired">Hired Users</option>
-                                                            <option value="inactivated">Inactivated Users</option>
-                                                            <option value="lastLoggedIn">Last Logged In Date</option>
+                                                        	<option value="hired" <cfif FORM.exportOption EQ 'hired'> selected="selected" </cfif> >Fully Enabled Users</option>
+                                                            <option value="inactivated" <cfif FORM.exportOption EQ 'inactivated'> selected="selected" </cfif> >Inactive Users</option>
+                                                            <option value="lastLoggedIn" <cfif FORM.exportOption EQ 'lastLoggedIn'> selected="selected" </cfif> >Last Logged In Date</option>
                                                         </select>
                                                         <font size="-2"><br />
-                                                            Hired - Gets active hired users within the period below <br />
+                                                            Fully Enabled - Gets users within the period below <br />
                                                             Inactived - Gets inactivated/canceled users within the period below <br />
                                                             Last Logged In Date - Get active users their last logged in date is within the period below
                                                         </font>
                                                     </td>		
                                                 </tr>
-                                                
                                                 <tr>
-                                                    <td align="right"><label for="dateCreatedFrom">From:</label></td>
+                                                    <td align="right"><input type="checkbox" name="emailUsers" id="emailUsers" value="1" <cfif VAL(FORM.emailUsers)> checked="checked" </cfif> /></td>
+                                                    <td><label for="emailUsers">Send out Department of State Certification Test Email</label></td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="right"><label for="dateCreatedFrom">Date From:</label></td>
                                                     <td><input type="text" name="dateCreatedFrom" id="dateCreatedFrom" value="#FORM.dateCreatedFrom#" class="datePicker" maxlength="10" /></td>
                                                 </tr>
                                                 <tr>
-                                                    <td align="right"><label for="dateCreatedTo">To:</label></td>
+                                                    <td align="right"><label for="dateCreatedTo">Date To:</label></td>
                                                     <td><input type="text" name="dateCreatedTo" id="dateCreatedTo"  value="#FORM.dateCreatedTo#" class="datePicker" maxlength="10" /></td>
                                                 </tr>
                                                 <tr>

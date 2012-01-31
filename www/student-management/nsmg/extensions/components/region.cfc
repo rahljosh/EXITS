@@ -169,7 +169,10 @@
                     	r.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                     AND    
                         r.subofregion = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-                    <cfif VAL(ARGUMENTS.companyID) NEQ 5>
+                    <cfif ARGUMENTS.companyID EQ 5>
+                        AND 
+                        	c.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+                    <cfelse>
                         AND 
                         	c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
                     </cfif>
@@ -198,13 +201,7 @@
                     AND 
                     	uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
                     AND 
-                    	(
-                        	uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="5"> 
-                        OR 
-                        	uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="6">
-                        OR 
-                        	uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="7">
-                        )
+                        uar.usertype IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )
                     ORDER BY 
                     	default_region DESC, 
                         regionname
