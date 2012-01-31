@@ -71,7 +71,7 @@
 
 </cfsilent>
 
-
+<cfoutput>
 <cfswitch expression="#URL.status#">
 
 	<cfcase value="1">
@@ -99,27 +99,27 @@
     </cfcase>
 
 	<cfcase value="7">
-    	<h2>These applications have been approved by <cfif CLIENT.usertype EQ 8>you<cfelse>the international rep</cfif> and are waiting for SMG.</h2>
+    	<h2>These applications have been approved by <cfif CLIENT.usertype EQ 8>you<cfelse>the international rep</cfif> and are waiting for #client.companyshort#.</h2>
     </cfcase>
 
 	<cfcase value="8">
-    	<h2>These applications have been approved by <cfif CLIENT.usertype EQ 8>you<cfelse>the international rep</cfif> and are waiting for the SMG approval.</h2>
+    	<h2>These applications have been approved by <cfif CLIENT.usertype EQ 8>you<cfelse>the international rep</cfif> and are waiting for the #client.companyshort# approval.</h2>
     </cfcase>
 
 	<cfcase value="9">
-    	<h2>These applications have been rejected by SMG.</h2>
+    	<h2>These applications have been rejected by #client.companyshort#.</h2>
     </cfcase>
 
 	<cfcase value="10">
-    	<h2>These applications are on hold by SMG.</h2>	
+    	<h2>These applications are on hold by #client.companyshort#.</h2>	
     </cfcase>
 
 	<cfcase value="11">
-    	<h2>These applications have been approved by SMG.</h2>	
+    	<h2>These applications have been approved by #client.companyshort#.</h2>	
     </cfcase>
 
 </cfswitch>
-
+</cfoutput>
 <br>
 
 <cfoutput>
