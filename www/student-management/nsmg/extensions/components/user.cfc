@@ -926,11 +926,10 @@
 
 	<cffunction name="exportDOSUserList" access="public" returntype="query" output="false" hint="Gets a list of users that needs to be registered for the DOS">
     	<cfargument name="regionID" default="" hint="List of region IDs">
-        <cfargument name="companyID" default="0" hint="companyID">
         <cfargument name="exportOption" default="" hint="hired | inactivated | lastLoggedIn Users">
         <cfargument name="dateCreatedFrom" default="" hint="dateCreatedFrom is not required">
         <cfargument name="dateCreatedTo" default="" hint="dateCreatedTo is not required">
-              
+             
         <cfquery 
 			name="qExportDOSUserList" 
 			datasource="#APPLICATION.dsn#">
@@ -940,6 +939,7 @@
                     u.lastName,
                     u.email,
                     u.dateCreated,
+                    u.dateAccountVerified,
                     u.lastLogin,
                     u.dateCancelled,
                     r.regionID,
@@ -948,12 +948,8 @@
                     smg_users u
                 INNER JOIN 
                     user_access_rights uar ON uar.userID = u.userID 
-                        AND
-                        	uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
-						<cfif LEN(ARGUMENTS.regionID) AND ARGUMENTS.regionID NEQ 0>
-                            AND 
-                                uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#" list="yes"> )
-						</cfif>                                
+                    AND 
+                        uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#" list="yes"> )
                 INNER JOIN
                     smg_regions r ON r.regionID = uar.regionID
                     	AND
@@ -966,7 +962,7 @@
                 	AND	
 	                    u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">      
                 	AND
-                    	u.dateCreated 
+                    	u.dateAccountVerified 
                    	BETWEEN 
                     	<cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateCreatedFrom#">
                     AND 
@@ -995,6 +991,7 @@
                     	<cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateCreatedTo#">
                         
 				</cfif>
+                
                 ORDER BY 
                     r.regionName,
                     u.lastName,
