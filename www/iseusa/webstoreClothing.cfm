@@ -128,7 +128,7 @@ a:active {
 														<INPUT TYPE="HIDDEN" NAME="Price" VALUE="22.00">
 														<INPUT TYPE="HIDDEN" NAME="Ship" VALUE="">
 														<INPUT TYPE="HIDDEN" NAME="Multi" VALUE="Y"><br />
-														<select name=Size2 class="style1">
+														<select name=Size class="style1">
 														  <option value="Size: XSmall $22.00 each" selected>XSmall $22.00 </option>
 														  <option value="Size: Small $22.00 each" selected>Small $22.00 </option>
 														  <option value="Size: Medium $22.00 each">Medium $22.00 </option>
