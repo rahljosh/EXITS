@@ -278,7 +278,9 @@
                     	u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                     AND 
                     	uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
-                    
+                    AND
+                    	u.dateAccountVerified IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                        
                     <cfif VAL(is2ndVisitIncluded)>
                         AND 
                             uar.usertype IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7,15" list="yes"> )
@@ -311,6 +313,8 @@
                     	user_access_rights uar ON uar.userid = u.userid
                     WHERE 
                     	u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                    AND
+                    	u.dateAccountVerified IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
                     
 					<cfif ListLen(ARGUMENTS.regionID) EQ 1>
                         AND 
