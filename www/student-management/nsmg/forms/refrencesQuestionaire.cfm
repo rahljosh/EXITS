@@ -121,6 +121,13 @@ where active = 1
             select max(id) as reportID
             from areaRepQuestionaireTracking
             </cfquery>
+            <Cfif client.usertype lte 5>
+            	<cfquery datasource="#application.dsn#">
+                update smg_user_references
+                set approved = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
+                where refID = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.ref#">
+                </Cfquery>
+            </Cfif>
             <cfloop query="questions">
                 <cfquery datasource="#application.dsn#">
                 insert into areaRepQuestionaireAnswers (fk_reportID, fk_questionID, answer)
