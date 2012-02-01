@@ -477,7 +477,59 @@
 
 	</cffunction>
 
+	
+	<cffunction name="calculateAddressDistance" access="public" returntype="string">
+    	<cfargument name="origin" type="string" required="yes" hint="origin is required" />
+        <cfargument name="destination" type="string" required="yes" hint="destination is required" />
 
+        <cfscript>
+			// Replace blank space with a +
+			ARGUMENTS.origin = ReplaceNoCase(ARGUMENTS.origin, " ", "+", "ALL");
+			ARGUMENTS.destination = ReplaceNoCase(ARGUMENTS.destination, " ", "+", "ALL");
+		</cfscript>
+
+        <!--- 
+			Geolocation
+			<cfhttp url="https://maps.google.com/maps/geo?q=#ARGUMENTS.origin#&output=xml&oe=utf8\&sensor=false&key=#APPLICATION.KEY.googleMapsAPI#" delimiter="," resolveurl="yes" />
+		--->
+
+		<!--- Driving Directions --->        
+        <cfhttp url="http://maps.googleapis.com/maps/api/directions/xml?origin=#ARGUMENTS.origin#&destination=#ARGUMENTS.destination#&sensor=false" delimiter="," resolveurl="yes" />
+        
+        <cfscript>
+			// Parse XML we received back to a variable
+			vResponseXML = XmlParse(cfhttp.filecontent);		
+			
+			// var vMeterValue = 0.000621371192;
+			// meters --> vResponseXML.DirectionsResponse.route.leg.distance.value
+			// miles --> vResponseXML.DirectionsResponse.route.leg.distance.text
+			
+			try {
+				
+				arrSearch = rematch("[\d]+",vResponseXML.DirectionsResponse.route.leg.distance.text);
+				return arrSearch[4];
+				
+				// return ReplaceNoCase(vResponseXML.DirectionsResponse.route.leg.distance.text, " mi", "", "ALL");
+				
+			} catch( any error ) {
+				
+				try {
+				
+					return vResponseXML.DirectionsResponse.status;
+				
+				} catch( any error ) {
+					
+					return 'Error';
+					// return 0;
+				
+				}
+					
+			}
+		</cfscript>
+        
+    </cffunction>
+    
+    
 	<!---Check if paperwork is complete for a specific user for a specific season to be allowed access---->
 	<cffunction name="paperworkCompleted" access="public" returntype="query">
     	<cfargument name="season" type="numeric" required="yes" default=9 hint="This should be what ever season you want to check on." />
@@ -668,4 +720,5 @@
         </cfscript>	
         
     </cffunction>
+    
 </cfcomponent>
