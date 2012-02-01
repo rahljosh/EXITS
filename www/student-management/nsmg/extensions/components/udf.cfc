@@ -497,33 +497,42 @@
         <cfhttp url="http://maps.googleapis.com/maps/api/directions/xml?origin=#ARGUMENTS.origin#&destination=#ARGUMENTS.destination#&sensor=false" delimiter="," resolveurl="yes" />
         
         <cfscript>
-			// Parse XML we received back to a variable
-			vResponseXML = XmlParse(cfhttp.filecontent);		
-			
 			// var vMeterValue = 0.000621371192;
 			// meters --> vResponseXML.DirectionsResponse.route.leg.distance.value
 			// miles --> vResponseXML.DirectionsResponse.route.leg.distance.text
-			
+
 			try {
 				
-				arrSearch = rematch("[\d]+",vResponseXML.DirectionsResponse.route.leg.distance.text);
-				return arrSearch[4];
-				
-				// return ReplaceNoCase(vResponseXML.DirectionsResponse.route.leg.distance.text, " mi", "", "ALL");
-				
-			} catch( any error ) {
+				// Parse XML we received back to a variable
+				vResponseXML = XmlParse(cfhttp.filecontent);		
 				
 				try {
-				
-					return vResponseXML.DirectionsResponse.status;
-				
+					
+					arrSearch = rematch("[\d]+",vResponseXML.DirectionsResponse.route.leg.distance.text);
+					return arrSearch[4];
+					
+					// return ReplaceNoCase(vResponseXML.DirectionsResponse.route.leg.distance.text, " mi", "", "ALL");
+					
 				} catch( any error ) {
 					
-					return 'Error';
-					// return 0;
-				
-				}
+					try {
 					
+						return vResponseXML.DirectionsResponse.status;
+					
+					} catch( any error ) {
+						
+						return 'Error';
+						// return 0;
+					
+					}
+						
+				}
+			
+			} catch( any error ) {
+
+				return 'Error';
+				// return 0;
+
 			}
 		</cfscript>
         
