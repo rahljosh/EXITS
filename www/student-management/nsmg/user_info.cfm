@@ -34,6 +34,10 @@
 		  
     	//Check if paperwork is complete for season
 		CheckPaperwork = APPLICATION.CFC.udf.paperworkCompleted(userid=URL.userid,season=9);
+		
+         //Check if paperwork is complete for season
+			get_paperwork = APPLICATION.CFC.udf.allpaperworkCompleted(userid=url.userid,seasonid=9);
+		
 	</cfscript>
 
 	<!----Rep Info---->
@@ -61,7 +65,8 @@
         WHERE 
         	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
     </cfquery>
-    
+
+    <!----
     <cfquery name="get_paperwork" datasource="#application.dsn#">
         SELECT 
         	p.paperworkid, 
@@ -90,7 +95,7 @@
         ORDER BY 
         	p.seasonid DESC
     </cfquery>
-    
+    ---->
     <cfquery name="qreferences" datasource="MySQL">
     select *
     from smg_user_references
@@ -171,7 +176,7 @@
                 <cfinvokeargument name="email_to" value="#get_user.email#">
                 <cfinvokeargument name="email_replyto" value="#CLIENT.email#">
                 <cfinvokeargument name="email_subject" value="Login Information">
-                <cfif get_user.accountCreationVerified eq 1>
+                <cfif get_user.accountCreationVerified eq 1>I have
                 	<cfinvokeargument name="include_content" value="resend_login">
                 <cfelse>
                 	<cfinvokeargument name="include_content" value="newUserMoreInfo">
@@ -441,7 +446,7 @@
                         <strong>User Entered:</strong>&nbsp;&nbsp; #DateFormat(datecreated, 'mm/dd/yyyy')#<br>
                         <strong>Last Changed:</strong>&nbsp;&nbsp; #DateFormat(lastchange, 'mm/dd/yyyy')# #timeFormat(lastchange)#<br>
                         <strong>Status:</strong>&nbsp;&nbsp; <cfif active EQ 1>Active<cfelse>Inactive</cfif><br>
-                        <strong>Login Fully Enabled:</strong>&nbsp;&nbsp; <Cfif accountCreationVerified is '' or  accountCreationVerified eq 0> No<Cfelse>Yes</Cfif><Br />
+                        <strong>Login Fully Enabled:</strong>&nbsp;&nbsp; <Cfif accountCreationVerified is '' or  accountCreationVerified eq 0><a href="index.cfm?curdoc=forms/user_paperwork&userid=#url.userid#"> No</a><Cfelse>Yes</Cfif><Br />
                         
                         <cfif CLIENT.userType EQ 1>
                             <strong>Username:</strong>&nbsp;&nbsp;#username#<br>
@@ -655,11 +660,9 @@
                         <td width="26" background="pics/header_background.gif"><img src="pics/usa.gif"></td>
                         <td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Company & Regional Access</h2></td>
                         <cfif CLIENT.usertype LTE 5>
-                        	<Cfif region_company_access.recordcount eq 1 and region_company_access.usertype eq 15>
-                            	<td background="pics/header_background.gif" align="right"><a href="index.cfm?curdoc=forms/convertToRep&userid=#rep_info.userid#">Convert to Rep</a></td>
-                        	 <cfelse>
+                        	
                            	 	<td background="pics/header_background.gif" align="right"><a href="index.cfm?curdoc=forms/access_rights_form&userid=#rep_info.userid#">Add</a></td>
-                         	</Cfif>
+                         	
                          </cfif>
                         <td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
                     </tr>
@@ -1186,12 +1189,13 @@
                         </td>
                     </tr>
                     
-                    <tr><td>CBC Verified</td>
-                        <td><input type="checkbox" name="ar_cbc_auth_processed" disabled="disabled" <cfif currentSeasonCBC.recordcount NEQ 0>checked="checked"</cfif>> 
+                    <tr>
+                        <td>CBC Approved</td>
+                        <td><input type="checkbox" name="ar_cbc_auth_processed" disabled="disabled" <cfif get_paperwork.ar_cbcAuthReview NEQ ''>checked="checked"</cfif>> 
                            Date:
 						   
                            <Cfif currentSeasonCBC.recordcount neq 0>
-                             #DateFormat(currentSeasonCBC.date_processed, 'mm/dd/yyyy')#</a>			
+                             #DateFormat(get_paperwork.ar_cbcAuthReview, 'mm/dd/yyyy')#</a>			
                            </Cfif>
                         </td>
                     </tr>
