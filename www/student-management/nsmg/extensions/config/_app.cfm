@@ -88,6 +88,10 @@
 	}
 
 
+	/***** Create APPLICATION.KEY structure *****/
+	APPLICATION.KEY = StructNew();		
+	
+
 	/***** Create APPLICATION.PATH structure *****/
 	APPLICATION.PATH = StructNew();		
 	
@@ -95,9 +99,9 @@
 	AppPath = APPLICATION.PATH;
 
 
-	/***** Set Settings based on Live or Dev Servers *****/
+	/***** Set Settings based on Production or Dev Servers *****/
 	
-	// Check if this is Dev or Live 
+	// Check if this is Dev or Production 
 	if ( APPLICATION.isServerLocal ) {
 		// DEVELOPMENT Server Settings	
 
@@ -105,6 +109,8 @@
 		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());	'
 		// Base Path eg. C:\websites\smg\nsmg\
 		APPLICATION.PATH.base = 'C:/websites/www/student-management/nsmg/';
+		
+		APPLICATION.KEY.googleMapsAPI = 'ABQIAAAAiT0TfDoNFmmMRtOgGZNu_RQ7SAcFHxXg_-mJGkd4r8IEQsqs-RTA-mZLUkFOvNCYFwvV4y4wGdOOyg'; // URL: http://smg.local
 
 	} else {
 		// PRODUCTION Server Settings
@@ -113,6 +119,8 @@
 		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());	'
 		// Base Path eg. C:\websites\smg\nsmg\
 		APPLICATION.PATH.base = 'C:/websites/student-management/nsmg/';
+
+		APPLICATION.KEY.googleMapsAPI = 'ABQIAAAAiT0TfDoNFmmMRtOgGZNu_RRLNEIHL1-VAyvTpFfu6UHsH4aa6RS5HJTmI0cZToeRuO_UU4JcIi2qaw'; // URL: http://exitsapplication.com
 
 	}
 
