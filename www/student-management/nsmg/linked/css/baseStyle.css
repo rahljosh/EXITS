@@ -283,6 +283,13 @@
 	background-color:#3b5998; 
 }
 
+.blueThemeReportTable .attention {
+	color:#000;
+	font-weight:bold;
+	border-bottom:1px solid #FFFFFF;
+	background-color:#FF6; 
+}
+
 .blueThemeReportTable .alert {
 	color:#FFFFFF;
 	font-weight:bold;

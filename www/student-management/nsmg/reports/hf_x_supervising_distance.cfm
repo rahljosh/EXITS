@@ -185,10 +185,10 @@
 
 	<table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
 		<tr>
-			<th class="left" width="25%">Host Family</th>
-			<th class="left" width="25%">Supervising Representative</th>
-			<th class="left" width="25%">Student</th>
-			<th width="10%">Point to Point Distance</th>
+			<th class="left" width="22%">Host Family</th>
+			<th class="left" width="22%">Supervising Representative</th>
+			<th class="left" width="26%">Student</th>
+			<th width="15%">Point to Point Distance</th>
 			<th width="15%">Google Driving Distance</th>
 		</tr>      
 
@@ -236,14 +236,22 @@
 					vUpdateTable = 1;
 					
 				}
+				
+				vSetColorCode = '';
+				
+				if ( VAL(vGoogleDistance) GT 120 ) {
+					vSetColorCode = 'alert';	
+				} else if ( VAL(vGoogleDistance) GTE 100 ) {
+					vSetColorCode = 'attention';	
+				}
 			</cfscript>
 			                            
             <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
-                <td>#qGetResults.hostlastname# (###qGetResults.hostid#) &nbsp; - &nbsp Zip Code: #Left(qGetResults.hostzip, 5)#</td>
-                <td>#qGetResults.supervisingFirstName# #qGetResults.supervisingLastName# (###qGetResults.userID#) &nbsp; - &nbsp Zip Code: #Left(qGetResults.supervisingZip, 5)#</td>
+                <td>#qGetResults.hostlastname# (###qGetResults.hostid#)</td>
+                <td>#qGetResults.supervisingFirstName# #qGetResults.supervisingLastName# (###qGetResults.userID#)</td>
                 <td>#qGetResults.firstname# #qGetResults.familylastname# (###qGetResults.studentID#)</td>
                 <td class="center"><cfif vDistance NEQ 'Incorrect parameters'>#Left(vDistance, 6)#<cfelse>#vDistance#</cfif> mi</td>
-                <td class="center <cfif VAL(vGoogleDistance) GT 75>alert</cfif>">#vGoogleDistance# mi</td>
+                <td class="center #vSetColorCode#">#vGoogleDistance# mi</td>
             </tr>
             
             <cfif VAL(vUpdateTable) AND VAL(vGoogleDistance)>
