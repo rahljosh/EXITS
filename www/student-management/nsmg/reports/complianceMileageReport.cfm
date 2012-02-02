@@ -1,9 +1,9 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		_report.cfm
+	File:		complianceMileageReport.cfm
 	Author:		Marcus Melo
-	Date:		November 22, 2011
-	Desc:		ISEUSA.com Host Family Leads Reports
+	Date:		February 01, 2012
+	Desc:		Host Family - Supervising Representative Distance
 
 	Updated:	
 				
@@ -21,6 +21,7 @@
 		// Param FORM Variables
 		param name="FORM.programID" default=0;	
 		param name="FORM.regionID" default=0;
+		param name="FORM.displayOutOfCompliance" default=0;
 	</cfscript>	
 
 	<!--- Get Program --->
@@ -54,17 +55,18 @@
             u.firstname AS supervisingFirstName, 
             u.lastname AS supervisingLastName, 
             CONCAT(u.address, ', ', u.city, ', ', u.state, ', ', u.zip) AS supervisingAddress,
-            u.zip AS supervisingZip
+            u.zip AS supervisingZip,
+            c.companyShort
 		FROM 
         	smg_students s
 		INNER JOIN 
         	smg_hosts h ON s.hostid = h.hostid
 		INNER JOIN
         	smg_regions r ON r.regionID = s.regionAssigned
-          	<cfif VAL(FORM.regionID)>
-            	AND
-                	r.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionid#">  
-            </cfif>
+            AND
+                r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionid#" list="yes"> )
+        INNER JOIN
+        	smg_companies c ON c.companyID = r.company
         LEFT JOIN 
         	smg_users u ON s.arearepid = u.userid
 		INNER JOIN
@@ -75,12 +77,21 @@
                 	sh.hostID = h.hostID
                 AND
                 	sh.areaRepID = u.userID
+				<cfif VAL(displayOutOfCompliance)>
+                AND
+                	(
+                    	hfSupervisingDistance >= <cfqueryparam cfsqltype="cf_sql_integer" value="100">
+                     OR
+                    	hfSupervisingDistance = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                    )
+                </cfif>                    
 		WHERE 
         	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
         AND 
             s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
         ORDER BY	
-        	r.regionName,
+        	c.companyShort,
+            r.regionName,
             supervisingLastName,
             s.familyLastName
 	</cfquery> 
@@ -139,7 +150,7 @@
 	headerType="applicationNoHeader"
 />	
 
-<cfif NOT VAL(FORM.programid)>
+<cfif NOT VAL(FORM.programid) OR NOT VAL(FORM.regionID)>
 	<table width="100%" cellpadding="4" cellspacing="0" align="center" frame="box">
 		<tr><td align="center">
 				<h1>Sorry, It was not possible to proccess you request at this time due the program information was not found.<br>
@@ -154,7 +165,7 @@
 <!--- Run Report --->
 <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
 	<tr>
-		<th>Host Family x Supervising Representative Distance</th>            
+		<th>Compliance Mileage Report</th>            
 	</tr>
 	<tr>
 		<td class="center">
@@ -162,12 +173,6 @@
 			<cfoutput query="qGetProgram">#qGetProgram.programname# &nbsp; (###qGetProgram.programID#)<br /></cfoutput>             
 		</td>
 	</tr>  
-	<tr>
-		<td class="center">* Incorrect parameters mean either zip code is invalid or latitude/longitude coordinates are null or invalid.</td>
-	</tr>
-	<tr>
-		<td class="center">* Manual look up <a href="http://www.zip-codes.com/distance_calculator.asp" target="_blank">distance between zip codes</a></td>
-	</tr>
 </table>
 
 <cfoutput query="qGetResults" group="regionID">
@@ -179,17 +184,23 @@
 	
 	<table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
 		<tr>
-			<th class="left">- #qGetResults.regionName# Region</th>
+			<th class="left">
+            	- 
+				<cfif CLIENT.companyID EQ 5>
+                	#qGetResults.companyShort# - 
+                </cfif>
+            	#qGetResults.regionName# Region
+            </th>
 		</tr>      
 	</table>   
 
 	<table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
 		<tr>
-			<th class="left" width="22%">Host Family</th>
-			<th class="left" width="22%">Supervising Representative</th>
 			<th class="left" width="26%">Student</th>
-			<th width="15%">Point to Point Distance</th>
-			<th width="15%">Google Driving Distance</th>
+            <th class="left" width="22%">Supervising Representative</th>		            
+            <th class="left" width="22%">Host Family</th>				
+			<th class="center" width="15%">Point to Point Distance</th>
+			<th class="center" width="15%">Google Driving Distance</th>
 		</tr>      
 
 		<cfoutput>
@@ -225,7 +236,7 @@
 				vUpdateTable = 0;
 				
 				// Check if we have recorded distance in the database from google driving directions
-				if ( LEN(qGetResults.hfSupervisingDistance) ) {
+				if ( VAL(qGetResults.hfSupervisingDistance) ) {
 
 					vGoogleDistance = qGetResults.hfSupervisingDistance;
 
@@ -247,14 +258,14 @@
 			</cfscript>
 			                            
             <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
-                <td>#qGetResults.hostlastname# (###qGetResults.hostid#)</td>
-                <td>#qGetResults.supervisingFirstName# #qGetResults.supervisingLastName# (###qGetResults.userID#)</td>
                 <td>#qGetResults.firstname# #qGetResults.familylastname# (###qGetResults.studentID#)</td>
-                <td class="center"><cfif vDistance NEQ 'Incorrect parameters'>#Left(vDistance, 6)#<cfelse>#vDistance#</cfif> mi</td>
+                <td>#qGetResults.supervisingFirstName# #qGetResults.supervisingLastName# (###qGetResults.userID#)</td>     
+                <td>#qGetResults.hostlastname# (###qGetResults.hostid#)</td>                           
+                <td class="center"><cfif vDistance NEQ 'Incorrect parameters'>#Left(vDistance, 4)#<cfelse>#vDistance#</cfif> mi</td>
                 <td class="center #vSetColorCode#">#vGoogleDistance# mi</td>
             </tr>
             
-            <cfif VAL(vUpdateTable) AND VAL(vGoogleDistance)>
+            <cfif VAL(vUpdateTable) AND IsNumeric(vGoogleDistance)>
             	
                 <cfquery datasource="#APPLICATION.DSN#">
                 	UPDATE
