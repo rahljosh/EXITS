@@ -460,7 +460,9 @@
                                                     
                                         	<td>
 												<!--- to add a progress report, user must be the supervising rep, and the program has a report for this phase. --->
-                                                <cfif arearepid EQ CLIENT.userid AND EVALUATE(dbfield) AND VAL(vIsPreviousReportApproved)>
+												<cfif VAL(qGetPreviousReport.recordCount) AND VAL(vPreviousReportMonth) AND NOT VAL(vIsPreviousReportApproved)>
+													Waiting on #MonthAsString(vPreviousReportMonth)# report approval. Once previous report is approved you will be able to create #MonthAsString(CLIENT.reportMonth)# report.				                                                    
+												<cfelseif arearepid EQ CLIENT.userid AND EVALUATE(dbfield)> <!--- AND VAL(vIsPreviousReportApproved) --->
                                                     <form action="index.cfm?curdoc=forms/pr_add" method="post">
                                                         <input type="hidden" name="assignedid" value="#assignedid#">
                                                         <input type="hidden" name="month_of_report" value="#CLIENT.reportMonth#">
@@ -472,8 +474,6 @@
                                                     	Previous report is MISSING. You must submit #MonthAsString(vPreviousReportMonth)# report prior to #MonthAsString(CLIENT.reportMonth)# report.
                                                     </span>
 												--->
-												<cfelseif VAL(vPreviousReportMonth) AND NOT VAL(vIsPreviousReportApproved)>
-													Waiting on #MonthAsString(vPreviousReportMonth)# report approval. Once previous report is approved you will be able to create #MonthAsString(CLIENT.reportMonth)# report.				                                                    
                                                 <cfelse>
                                                     N/A
                                                 </cfif>
