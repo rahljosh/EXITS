@@ -458,19 +458,19 @@ smg_charges
 								<cfoutput query="getHostState">
 								
 									<cfswitch expression="#getHostState.statePlaced#">
-									   <cfcase value="ME,VT,NH,MA,RI,CT,NJ,DE,MD,NY,PA,OH,WV,VA,KY">
+									   <cfcase value="ME,VT,NH,MA,RI,CT,NJ,DE,MD,NY,PA,OH,WV,VA,KY,MI,IN,NC">
 											<cfset regionPlaced = 'East'>
 										</cfcase>
-										<cfcase value="OK,TX,AR,LA,TN,MS,AL,GA,SC,NC">
+										<cfcase value="OK,TX,AR,LA,TN,MS,AL,GA,SC,FL">
 											<cfset regionPlaced = 'South'>
 										</cfcase>
-										<cfcase value="MN,WI,IA,NE,KS,MO,IL,IN,MI">
+										<cfcase value="MN,WI,IA,NE,KS,MO,IL,ND,SD">
 											<cfset regionPlaced = 'Central'>
 										</cfcase>
-										<cfcase value="MT,ND,ID,WY,SD,CO,NM">
+										<!--- <cfcase value="MT,ID,WY,CO,NM">
 											<cfset regionPlaced = 'Rocky Mountain'>
-										</cfcase>
-										<cfcase value="WA,OR,NV,UT,AZ">
+										</cfcase> --->
+										<cfcase value="WA,OR,NV,UT,AZ,MT,ID,WY,CO,NM,CA">
 											<cfset regionPlaced = 'West'>
 										</cfcase>
 										<cfdefaultcase>
