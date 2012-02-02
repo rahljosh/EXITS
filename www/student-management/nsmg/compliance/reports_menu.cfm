@@ -49,7 +49,7 @@
                 <table cellpadding="6" cellspacing="0" align="center" width="95%">
                     <tr>
                         <td width="50%" valign="top">
-                            <cfform action="compliance/documents_received.cfm" name="doc_received" method="POST" target="blank">
+                            <cfform action="compliance/documents_received.cfm" name="doc_received" method="post" target="blank">
                             <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Placement Documents Received per Period</th></tr>
                                 <tr>
@@ -80,7 +80,7 @@
                             </cfform>
                         </td>
                         <td width="50%" valign="top">
-                            <cfform action="compliance/placement_paperwork.cfm" name="doc_received" method="POST" target="blank">
+                            <cfform action="compliance/placement_paperwork.cfm" name="doc_received" method="post" target="blank">
                             <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Placement Paperwork</th></tr>
                                 <tr>
@@ -110,7 +110,7 @@
                 <table cellpadding="6" cellspacing="0" align="center" width="95%">
                     <tr>
                         <td width="50%" valign="top">
-                            <cfform action="compliance/rp_arrival_x_cbc.cfm" name="doc_received" method="POST" target="blank">
+                            <cfform action="compliance/rp_arrival_x_cbc.cfm" name="doc_received" method="post" target="blank">
                             <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Student Arrival Date x CBC Date (No Relocations)</th></tr>
                                 <tr>
@@ -133,7 +133,7 @@
                             </cfform>
                         </td>
                         <td width="50%" valign="top">
-                            <cfform action="compliance/rp_placement_x_cbc_relocated.cfm" name="doc_received" method="POST" target="blank">
+                            <cfform action="compliance/rp_placement_x_cbc_relocated.cfm" name="doc_received" method="post" target="blank">
                             <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Placement Approval x CBC Date (Students Relocated Only)</th></tr>
                                 <tr>
@@ -163,7 +163,7 @@
                 <table cellpadding="6" cellspacing="0" align="center" width="95%">
                     <tr>
                         <td width="50%" valign="top">
-                            <cfform action="compliance/school_acceptance.cfm" name="doc_received" method="POST" target="blank">
+                            <cfform action="compliance/school_acceptance.cfm" name="doc_received" method="post" target="blank">
                             <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Flight Arrival x School Acceptance Dates</th></tr>
                                 <tr>
@@ -186,7 +186,7 @@
                             </cfform>
                         </td>
                         <td width="50%" valign="top">
-                            <cfform action="compliance/arrival_school_acceptance_check.cfm" name="doc_received" method="POST" target="blank">
+                            <cfform action="compliance/arrival_school_acceptance_check.cfm" name="doc_received" method="post" target="blank">
                             <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Students with Arrival Information and Missing School Acceptance (Place Management)</th></tr>
                                 <tr>
@@ -207,7 +207,7 @@
                 <table cellpadding="6" cellspacing="0" align="center" width="95%">
                     <tr>
                         <td width="50%" valign="top">
-                            <cfform action="compliance/missing_place_docs.cfm" name="doc_received" method="POST" target="blank">
+                            <cfform action="compliance/missing_place_docs.cfm" name="doc_received" method="post" target="blank">
                             <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Missing Compliance Placement Documents</th></tr>
                                 <tr>
@@ -221,7 +221,7 @@
                             </cfform>
                         </td>
                         <td width="50%" valign="top">
-                            <cfform action="compliance/missing_supervision_docs.cfm" name="doc_received" method="POST" target="blank">
+                            <cfform action="compliance/missing_supervision_docs.cfm" name="doc_received" method="post" target="blank">
                             <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Missing Compliance Supervision Documents</th></tr>
                                 <tr>
@@ -242,7 +242,7 @@
                 <table cellpadding="6" cellspacing="0" align="center" width="95%">
                     <tr>
                         <td width="50%" valign="top">
-                            <cfform action="compliance/missing_double_docs.cfm" name="doc_received" method="POST" target="blank">
+                            <cfform action="compliance/missing_double_docs.cfm" name="doc_received" method="post" target="blank">
                             <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Missing Compliance Double Placement Documents</th></tr>
                                 <tr>
@@ -256,7 +256,7 @@
                             </cfform>
                         </td>
                         <td width="50%" valign="top">
-                            <cfform action="compliance/missing_area_rep_paperwork.cfm" name="area_rep" method="POST" target="blank">
+                            <cfform action="compliance/missing_area_rep_paperwork.cfm" name="area_rep" method="post" target="blank">
                             <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Missing Area Representative Paperwork</th></tr>
                                 <tr>
@@ -295,7 +295,7 @@
                 <table cellpadding="6" cellspacing="0" align="center" width="95%">
                     <tr>
                         <td width="50%" valign="top">
-                            <form name="secondVisit" action="index.cfm?curdoc=compliance/dosSecondVisitCompliance" method="POST">
+                            <form name="secondVisit" action="compliance/dosSecondVisitCompliance.cfm" method="post" target="_blank">
                                 <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                     <tr><th colspan="2" bgcolor="##e2efc7">2<sup>nd</sup> Visit Representative Compliance By Region</th></tr>
                                     <tr>
@@ -334,7 +334,7 @@
                             </form>
                         </td>
                         <td width="50%" valign="top">
-                            <form name="secondVisitStatistics" action="index.cfm?curdoc=compliance/dosSecondVisitStatistics" method="POST">
+                            <form name="secondVisitStatistics" action="compliance/dosSecondVisitStatistics.cfm" method="post" target="_blank">
                                 <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                     <tr><th colspan="2" bgcolor="##e2efc7">2<sup>nd</sup> Visit Representative Statistics By Region</th></tr>
                                     <tr>

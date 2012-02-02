@@ -318,6 +318,11 @@
 
 </cfsilent>    
 
+<!--- Page Header --->
+<gui:pageHeader
+	headerType="applicationNoHeader"
+/>	
+
 <!--- Output in Excel --->
 <cfif FORM.reportType EQ 'excel'>
 	
@@ -330,10 +335,9 @@
 </cfif>
 
 <!--- Run Report --->
-
 <cfoutput>
 
-    <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTableHeader" <cfif FORM.reportType EQ 'excel'> border="1" </cfif> >
+    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif FORM.reportType EQ 'excel'> border="1" </cfif> >
         <tr>
             <th>2<sup>nd</sup> Visit Representative Compliance By Region</th>
         </tr>
@@ -360,29 +364,26 @@
         
         <cfif qGetResultsByRegion.recordCount>
                     
-            <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTableHeader" <cfif FORM.reportType EQ 'excel'> border="1" </cfif> >
+            <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif FORM.reportType EQ 'excel'> border="1" </cfif> >
                 <tr>
-                    <th class="left">
+                    <th class="left" colspan="10">
                     	<cfif CLIENT.companyID EQ 5>
                         	- #qGetRegions.companyShort#
                         </cfif>
                     	- #qGetRegions.regionName# Region &nbsp; - &nbsp; Total of #qGetResultsByRegion.recordCount# report(s)
                     </th>
                 </tr>      
-            </table>   
-        
-            <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif FORM.reportType EQ 'excel'> border="1" </cfif> >
                 <tr>
-                    <th class="left" width="15%">Student</th>
-                    <th class="left" width="12%">Program</th>
-                    <th class="left" width="14%">Host Family</th>
-                    <th class="center" width="8%">Date Placed</th>
-                    <th class="center" width="8%">Date of Arrival</th>
-                    <th class="center" width="8%">Date of Relocation</th>
-                    <th class="center" width="16%">Window of Compliance</th>
-                    <th class="center" width="8%">Due Date</th>
-                    <th class="center" width="8%">Date Of Visit</th>
-                    <th class="center" width="8%">Days Remaining</th>
+                    <td class="subTitleLeft" width="15%">Student</td>
+                    <td class="subTitleLeft" width="12%">Program</td>
+                    <td class="subTitleLeft" width="14%">Host Family</td>
+                    <td class="subTitleCenter" width="8%">Date Placed</td>
+                    <td class="subTitleCenter" width="8%">Date of Arrival</td>
+                    <td class="subTitleCenter" width="8%">Date of Relocation</td>
+                    <td class="subTitleCenter" width="16%">Window of Compliance</td>
+                    <td class="subTitleCenter" width="8%">Due Date</td>
+                    <td class="subTitleCenter" width="8%">Date Of Visit</td>
+                    <td class="subTitleCenter" width="8%">Days Remaining</td>
                 </tr>      
             
                 <cfloop query="qGetResultsByRegion">
@@ -453,3 +454,6 @@
     </cfloop>    
 
 </cfoutput>
+
+<!--- Page Header --->
+<gui:pageFooter />

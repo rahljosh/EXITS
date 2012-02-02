@@ -155,7 +155,7 @@
 	
     <cfoutput>
     
-        <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTableHeader">
+        <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
             <tr>
                 <th>Bonus Report</th>
             </tr>
@@ -176,7 +176,7 @@
 			vRowCount = 1;
 		</cfscript>
         
-        <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+        <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
             <tr>
                 <th class="left" colspan="3">Region: #qGetResults.regionName#</th>
             </tr>
@@ -219,7 +219,7 @@
     
     <cfoutput>
     
-        <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+        <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
             <tr class="on">
                 <td width="75%" class="summaryRight">Total Bonuses:</td>
                 <td width="25%" class="summaryLeft">#DollarFormat(vTotalBonus)#</td>

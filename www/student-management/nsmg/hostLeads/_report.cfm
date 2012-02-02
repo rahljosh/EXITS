@@ -193,7 +193,7 @@
 <!--- Run Report --->
 <cfelse>
 
-	<table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTableHeader">
+	<table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
 		<tr>
 			<th>Host Lead Follow Up Report</th>
 		</tr>
@@ -206,7 +206,7 @@
 
     <cfloop query="qGetHostLeadsReport">
 
-        <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+        <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
             <tr>
                 <th class="left" width="20%">Family Name</th>
                 <th class="left" width="5%">State</th>
@@ -245,7 +245,7 @@
             <tr>
                 <td colspan="9">
                     
-                    <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                         <tr>
                             <td class="subTitleLeft" width="25%">Date</td>
                             <td class="subTitleLeft" width="25%">Actions</td>

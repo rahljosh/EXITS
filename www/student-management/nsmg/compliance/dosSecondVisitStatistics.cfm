@@ -256,6 +256,11 @@
     
 </cfsilent>    
 
+<!--- Page Header --->
+<gui:pageHeader
+	headerType="applicationNoHeader"
+/>	
+
 <!--- Output in Excel --->
 <cfif FORM.reportType EQ 'excel'>
 	
@@ -267,9 +272,10 @@
 
 </cfif>
 
+<!--- Run Report --->
 <cfoutput>
 
-    <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTableHeader" <cfif FORM.reportType EQ 'excel'> border="1" </cfif> >
+    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif FORM.reportType EQ 'excel'> border="1" </cfif> >
         <tr>
             <th>2<sup>nd</sup> Visit Representative Statistics By Region</th>
         </tr>
@@ -283,7 +289,7 @@
         </tr>
     </table>
     
-    <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif FORM.reportType EQ 'excel'> border="1" </cfif> >
+    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif FORM.reportType EQ 'excel'> border="1" </cfif> >
         <tr>
             <th class="left" width="20%">Region</th>
             <th class="center" width="10%">Total Students</th>
@@ -293,7 +299,7 @@
             <th class="center" width="10%">Total Late</th>
             <th class="center" width="10%">Total Missing</th>
             <th class="center" width="10%">Total Non-Compliant</th>
-            <th class="center" width="10%">Non-Compliant %</th>
+            <th class="center" width="10%">Non-Compliant %</th>			
         </tr>      
 	
         <cfloop query="qGetRegions">
@@ -383,3 +389,6 @@
 	</table>
 
 </cfoutput>
+
+<!--- Page Header --->
+<gui:pageFooter />	
