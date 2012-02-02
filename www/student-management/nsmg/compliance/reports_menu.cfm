@@ -48,15 +48,15 @@
 				<!--- Row 1 - 2 boxes --->
                 <table cellpadding="6" cellspacing="0" align="center" width="95%">
                     <tr>
-                        <td width="50%" align="left" valign="top">
+                        <td width="50%" valign="top">
                             <cfform action="compliance/documents_received.cfm" name="doc_received" method="POST" target="blank">
-                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
+                            <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Placement Documents Received per Period</th></tr>
-                                <tr align="left">
+                                <tr>
                                     <td>Program :</td>
                                     <td><cfselect name="programID" query="qGetPrograms" value="programID" display="programName" multiple="yes" size="5" required="yes" message="You must select at least one program."></cfselect></td>
                                 </tr>
-                                <tr align="left">
+                                <tr>
                                     <td>Region :</td>
                                     <td>
                                         <cfselect name="regionID" size="1">
@@ -81,13 +81,13 @@
                         </td>
                         <td width="50%" align="right" valign="top">
                             <cfform action="compliance/placement_paperwork.cfm" name="doc_received" method="POST" target="blank">
-                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
+                            <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Placement Paperwork</th></tr>
-                                <tr align="left">
+                                <tr>
                                     <td>Program :</td>
                                     <td><cfselect name="programID" query="qGetPrograms" value="programID" display="programName" multiple size="5" required="yes" message="You must select at least one program."></cfselect></td>
                                 </tr>
-                                <tr align="left">
+                                <tr>
                                     <td>Region :</td>
                                     <td>
                                         <cfselect name="regionID" size="1">
@@ -109,15 +109,15 @@
                 <!--- Row 2 - 2 boxes --->
                 <table cellpadding="6" cellspacing="0" align="center" width="95%">
                     <tr>
-                        <td width="50%" align="left" valign="top">
+                        <td width="50%" valign="top">
                             <cfform action="compliance/rp_arrival_x_cbc.cfm" name="doc_received" method="POST" target="blank">
-                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
+                            <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Student Arrival Date x CBC Date (No Relocations)</th></tr>
-                                <tr align="left">
+                                <tr>
                                     <td>Program :</td>
                                     <td><cfselect name="programID" query="qGetPrograms" value="programID" display="programName" multiple size="5" required="yes" message="You must select at least one program."></cfselect></td>
                                 </tr>
-                                <tr align="left">
+                                <tr>
                                     <td>Region :</td>
                                     <td>
                                         <cfselect name="regionID" size="1">
@@ -134,13 +134,13 @@
                         </td>
                         <td width="50%" align="right" valign="top">
                             <cfform action="compliance/rp_placement_x_cbc_relocated.cfm" name="doc_received" method="POST" target="blank">
-                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
+                            <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Placement Approval x CBC Date (Students Relocated Only)</th></tr>
-                                <tr align="left">
+                                <tr>
                                     <td>Program :</td>
                                     <td><cfselect name="programID" query="qGetPrograms" value="programID" display="programName" multiple size="5" required="yes" message="You must select at least one program."></cfselect></td>
                                 </tr>
-                                <tr align="left">
+                                <tr>
                                     <td>Region :</td>
                                     <td>
                                         <cfselect name="regionID" size="1">
@@ -162,15 +162,15 @@
                 <!--- Row 3 - 2 boxes --->
                 <table cellpadding="6" cellspacing="0" align="center" width="95%">
                     <tr>
-                        <td width="50%" align="left" valign="top">
+                        <td width="50%" valign="top">
                             <cfform action="compliance/school_acceptance.cfm" name="doc_received" method="POST" target="blank">
-                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
+                            <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Flight Arrival x School Acceptance Dates</th></tr>
-                                <tr align="left">
+                                <tr>
                                     <td>Program :</td>
                                     <td><cfselect name="programID" query="qGetPrograms" value="programID" display="programName" multiple size="5" required="yes" message="You must select at least one program."></cfselect></td>
                                 </tr>
-                                <tr align="left">
+                                <tr>
                                     <td>Region :</td>
                                     <td>
                                         <cfselect name="regionID" size="1">
@@ -187,9 +187,9 @@
                         </td>
                         <td width="50%" align="right" valign="top">
                             <cfform action="compliance/arrival_school_acceptance_check.cfm" name="doc_received" method="POST" target="blank">
-                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
+                            <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Students with Arrival Information and Missing School Acceptance (Place Management)</th></tr>
-                                <tr align="left">
+                                <tr>
                                     <td>Program :</td>
                                     <td><cfselect name="programID" query="qGetPrograms" value="programID" display="programName" multiple size="5" required="yes" message="You must select at least one program."></cfselect></td>
                                 </tr>
@@ -206,11 +206,11 @@
                 <!--- Row 4 - 2 boxes --->
                 <table cellpadding="6" cellspacing="0" align="center" width="95%">
                     <tr>
-                        <td width="50%" align="left" valign="top">
+                        <td width="50%" valign="top">
                             <cfform action="compliance/missing_place_docs.cfm" name="doc_received" method="POST" target="blank">
-                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
+                            <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Missing Compliance Placement Documents</th></tr>
-                                <tr align="left">
+                                <tr>
                                     <td>Program :</td>
                                     <td><cfselect name="programID" query="qGetPrograms" value="programID" display="programName" multiple size="5" required="yes" message="You must select at least one program."></cfselect></td>
                                 </tr>
@@ -222,9 +222,9 @@
                         </td>
                         <td width="50%" align="right" valign="top">
                             <cfform action="compliance/missing_supervision_docs.cfm" name="doc_received" method="POST" target="blank">
-                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
+                            <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Missing Compliance Supervision Documents</th></tr>
-                                <tr align="left">
+                                <tr>
                                     <td>Program :</td>
                                     <td><cfselect name="programID" query="qGetPrograms" value="programID" display="programName" multiple size="5" required="yes" message="You must select at least one program."></cfselect></td>
                                 </tr>
@@ -241,11 +241,11 @@
                 <!--- Row 5 - 2 boxes --->
                 <table cellpadding="6" cellspacing="0" align="center" width="95%">
                     <tr>
-                        <td width="50%" align="left" valign="top">
+                        <td width="50%" valign="top">
                             <cfform action="compliance/missing_double_docs.cfm" name="doc_received" method="POST" target="blank">
-                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
+                            <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Missing Compliance Double Placement Documents</th></tr>
-                                <tr align="left">
+                                <tr>
                                     <td>Program :</td>
                                     <td><cfselect name="programID" query="qGetPrograms" value="programID" display="programName" multiple size="5" required="yes" message="You must select at least one program."></cfselect></td>
                                 </tr>
@@ -257,16 +257,16 @@
                         </td>
                         <td width="50%" align="right" valign="top">
                             <cfform action="compliance/missing_area_rep_paperwork.cfm" name="area_rep" method="POST" target="blank">
-                            <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
+                            <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Missing Area Representative Paperwork</th></tr>
-                                <tr align="left">
+                                <tr>
                                     <td>Season :</td>
                                     <td><cfselect name="seasonid" query="get_seasons" display="season" value="seasonid" queryPosition="below">			
                                         <option value="0">Contract AYP</option>
                                         </cfselect>
                                     </td>
                                 </tr>
-                                <tr align="left">
+                                <tr>
                                     <td>Region :</td>
                                     <td>
                                         <cfselect name="regionID" size="1">
@@ -275,7 +275,7 @@
                                         </cfselect>
                                     </td>		
                                 </tr>
-                                <tr align="left">
+                                <tr>
                                     <td>Status :</td>
                                     <td><cfselect name="status">
                                             <option value="All">All</option>
@@ -294,11 +294,11 @@
 				<!--- Row 6 - 2 boxes --->
                 <table cellpadding="6" cellspacing="0" align="center" width="95%">
                     <tr>
-                        <td width="50%" align="left" valign="top">
-                            <form name="secondVisit" action="index.cfm?curdoc=compliance/dosSecondVisitCompliance" method="POST" target="blank">
-                                <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
+                        <td width="50%" valign="top">
+                            <form name="secondVisit" action="index.cfm?curdoc=compliance/dosSecondVisitCompliance" method="POST">
+                                <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                     <tr><th colspan="2" bgcolor="##e2efc7">2<sup>nd</sup> Visit Representative Compliance By Region</th></tr>
-                                    <tr align="left">
+                                    <tr>
                                         <td valign="top">Program :</td>
                                         <td>
                                             <select name="programID" multiple="yes" size="5" class="xLargeField">
@@ -308,11 +308,22 @@
                                             </select>
                                         </td>
                                     </tr>
-                                    <tr align="left">
+                                    <tr>
                                         <td valign="top">Region :</td>
                                         <td>
                                             <select name="regionID" multiple size="5" class="xLargeField">
-                                                <cfloop query="qGetRegions"><option value="#qGetRegions.regionID#">#qGetRegions.regionname#</option></cfloop>
+                                                <cfloop query="qGetRegions">
+                                                	<option value="#qGetRegions.regionID#"><cfif CLIENT.companyID EQ 5>#qGetRegions.companyShort# - </cfif>#qGetRegions.regionname#</option>
+                                                </cfloop>
+                                            </select>
+                                        </td>		
+                                    </tr>
+                                    <tr>
+                                        <td valign="top">Report Type :</td>
+                                        <td>
+                                            <select name="reportType" class="xLargeField">
+                                                <option value="onScreen">On Screen</option>
+                                                <option value="Excel">Excel Spreadsheet</option>
                                             </select>
                                         </td>		
                                     </tr>
@@ -323,10 +334,10 @@
                             </form>
                         </td>
                         <td width="50%" align="right" valign="top">
-                            <form name="secondVisitStatistics" action="index.cfm?curdoc=compliance/dosSecondVisitStatistics" method="POST" target="blank">
-                                <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="100%">
+                            <form name="secondVisitStatistics" action="index.cfm?curdoc=compliance/dosSecondVisitStatistics" method="POST">
+                                <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                     <tr><th colspan="2" bgcolor="##e2efc7">2<sup>nd</sup> Visit Representative Statistics By Region</th></tr>
-                                    <tr align="left">
+                                    <tr>
                                         <td valign="top">Program :</td>
                                         <td>
                                             <select name="programID" multiple="yes" size="5" class="xLargeField">
@@ -336,11 +347,22 @@
                                             </select>
                                         </td>
                                     </tr>
-                                    <tr align="left">
+                                    <tr>
                                         <td valign="top">Region :</td>
                                         <td>
                                             <select name="regionID" multiple size="5" class="xLargeField">
-                                                <cfloop query="qGetRegions"><option value="#qGetRegions.regionID#">#qGetRegions.regionname#</option></cfloop>
+                                                <cfloop query="qGetRegions">
+                                                	<option value="#qGetRegions.regionID#"><cfif CLIENT.companyID EQ 5>#qGetRegions.companyShort# - </cfif>#qGetRegions.regionname#</option>
+                                                </cfloop>
+                                            </select>
+                                        </td>		
+                                    </tr>
+                                    <tr>
+                                        <td valign="top">Report Type :</td>
+                                        <td>
+                                            <select name="reportType" class="xLargeField">
+                                                <option value="onScreen">On Screen</option>
+                                                <option value="Excel">Excel Spreadsheet</option>
                                             </select>
                                         </td>		
                                     </tr>

@@ -22,23 +22,11 @@
 		param name="FORM.programID" default=0;	
 		param name="FORM.regionID" default=0;
 		param name="FORM.displayOutOfCompliance" default=0;
+		
+		// Get Programs
+		qGetPrograms = APPLICATION.CFC.PROGRAM.getPrograms(programIDList=FORM.programID);
 	</cfscript>	
-
-	<!--- Get Program --->
-    <cfquery name="qGetProgram" datasource="#APPLICATION.DSN#">
-        SELECT	
-            *
-        FROM 	
-            smg_programs 
-        LEFT JOIN 
-            smg_program_type ON type = programtypeid
-        WHERE 
-            programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
-    </cfquery>
     
-    <!-----Company Information----->
-    <cfinclude template="../querys/get_company_short.cfm">
-
 	<cfquery name="qGetResults" datasource="#APPLICATION.DSN#">
 		SELECT 
         	s.studentID, 
@@ -167,12 +155,14 @@
 	<tr>
 		<th>Compliance Mileage Report</th>            
 	</tr>
-	<tr>
-		<td class="center">
-			Program(s) Included in this Report: <br />
-			<cfoutput query="qGetProgram">#qGetProgram.programname# &nbsp; (###qGetProgram.programID#)<br /></cfoutput>             
-		</td>
-	</tr>  
+    <tr>
+        <td class="center">
+            Program(s) included in this report: <br />
+            <cfoutput query="qGetPrograms">
+                #qGetPrograms.programName# <br />
+            </cfoutput>
+        </td>
+    </tr>
 </table>
 
 <cfoutput query="qGetResults" group="regionID">
