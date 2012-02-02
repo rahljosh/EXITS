@@ -7,7 +7,9 @@
 
 	Updated:
 			
-	Rules: 		Permanent Family 
+	Rules: 		Adding filter to display records due within 14 days	
+		
+				Permanent Family 
 					- 2nd Visit Report within 60 days
 				Temporary Family 
 					- 2nd Visit Report within 30 days
@@ -25,6 +27,14 @@
 		// Param FORM Variables
 		param name="FORM.programID" default=0;	
 		param name="FORM.regionID" default=0;
+		param name="FORM.isDueSoon" default=0;
+		param name="FORM.reportType" default="onScreen";
+		
+		// Get Programs
+		qGetPrograms = APPLICATION.CFC.PROGRAM.getPrograms(programIDList=FORM.programID);
+		
+		// Get Regions
+		qGetRegions = APPLICATION.CFC.REGION.getRegions(regionIDList=FORM.regionID);
 	</cfscript>	
     
 	<!--- Get Reports --->
@@ -34,9 +44,12 @@
             studentID,
             familyLastName,
             studentName,
+            active,
+            cancelDate,
             <!--- Host History --->
             isWelcomeFamily,
             isRelocation,
+            datePlaced,
             complianceWindow,
             dateRelocated,
             dateArrived,
@@ -85,6 +98,8 @@
                 SELECT
                     s.studentID,
                     s.familyLastName,
+                    s.active,
+                    s.cancelDate,
                     CAST(CONCAT(s.firstName, ' ', s.familyLastName,  ' ##', s.studentID) AS CHAR) AS studentName,
                     ht.isWelcomeFamily, 
                     ht.isRelocation, 
@@ -166,11 +181,8 @@
                         r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> )
                 INNER JOIN
                     smg_hosts h ON h.hostID = ht.hostID
-                WHERE 
-                    s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">        
         
 				<!--- Query to Get Welcome Family Expired Reports --->   
-                
                 
                 UNION 
    				
@@ -178,6 +190,8 @@
                 SELECT
                     s.studentID,
                     s.familyLastName,
+                    s.active,
+                    s.cancelDate,
                     CAST(CONCAT(s.firstName, ' ', s.familyLastName,  ' ##', s.studentID) AS CHAR) AS studentName,
                     ht.isWelcomeFamily, 
                     ht.isRelocation, 
@@ -252,9 +266,8 @@
                 INNER JOIN
                     smg_hosts h ON h.hostID = ht.hostID
                 WHERE 
-                    s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">   
-                <!--- Do not include records with an approved date --->
-                AND
+                     
+					<!--- Do not include records with an approved date --->
                     s.studentID NOT IN (
                         SELECT
                             pr.fk_student
@@ -271,94 +284,172 @@
             ) AS t
 
         WHERE
-        	<!--- Do not include records that are set as not required / hidden --->
-            studentID NOT IN ( 
-                SELECT 
-                    shr.fk_student 
-                FROM 
-                    smg_hide_reports shr 
-                WHERE 
-                    shr.fk_host = hostID 
-            ) 
-        
+        	<!--- Only Approved Placement has a datePlaced --->
+            datePlaced IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+			
+			<!--- Do not include records that are set as not required / hidden --->
+            AND
+            	studentID NOT IN ( 
+                    SELECT 
+                        shr.fk_student 
+                    FROM 
+                        smg_hide_reports shr 
+                    WHERE 
+                        shr.fk_host = hostID 
+            	) 
+            
+            <!--- Include Active and students that canceled after arrival date --->
+			AND
+            	(
+					active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">               	 
+                 OR
+                    cancelDate >= dateArrived                  
+                )
+                
         GROUP BY
             studentID,
             hostID
             
         ORDER BY
             regionName,
+            familyLastName,
             studentID
     </cfquery>
 
 </cfsilent>    
 
+<!--- Output in Excel --->
+<cfif FORM.reportType EQ 'excel'>
+	
+	<!--- set content type --->
+	<cfcontent type="application/msexcel">
+	
+	<!--- suggest default name for XLS file --->
+	<cfheader name="Content-Disposition" value="attachment; filename=DOS-Second-Visit-Compliance.xls"> 
+
+</cfif>
+
 <!--- Run Report --->
 
-<table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-    <tr>
-        <th>2<sup>nd</sup> Visit Representative Compliance By Region</th>
-    </tr>
-</table>
+<cfoutput>
 
-<cfoutput query="qGetResults" group="regionID">
-	
-    <cfscript>
-		// Set Current Row used to display light blue color on the table
-		vCurrentRow = 0;
-    </cfscript>
-    
-    <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+    <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif FORM.reportType EQ 'excel'> border="1" </cfif> >
         <tr>
-            <th class="left">- #qGetResults.regionName# Region</th>
-        </tr>      
-    </table>   
-
-    <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+            <th>2<sup>nd</sup> Visit Representative Compliance By Region</th>
+        </tr>
         <tr>
-            <th class="left" width="20%">Student</th>
-            <th class="left" width="14%">Program</th>
-            <th class="left" width="15%">Host Family</th>
-            <th class="center" width="8%">Date of Arrival</th>
-            <th class="center" width="8%">Date of Relocation</th>
-            <th class="center" width="16%">Window of Compliance</th>
-            <th class="center" width="8%">Due Date</th>
-            <th class="center" width="8%">Date Of Visit</th>
-            <th class="center" width="8%">Days Remaining</th>
-        </tr>      
-    
-        <cfoutput>
-   			
-            <!--- Display records out of compliance or students placed in welcome family missing following report --->
-            <cfif NOT IsDate(qGetResults.dateOfVisit) OR qGetResults.dateOfVisit GT qGetResults.dateEndWindowCompliance>
-            
-				<cfscript>
-					vCurrentRow++;
-                    vRemainingDays = '';
-                    
-					// Calculate remaining days
-					if ( isDate(qGetResults.dateOfVisit) AND isDate(qGetResults.dateEndWindowCompliance)  ) {
-                        vRemainingDays = DateDiff('d', qGetResults.dateOfVisit, qGetResults.dateEndWindowCompliance);
-					} else if ( isDate(qGetResults.dateEndWindowCompliance) ) {
-                        vRemainingDays = DateDiff('d', now(), qGetResults.dateEndWindowCompliance);
-                    }
-                </cfscript>		
-                                
-                <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
-                    <td>#qGetResults.studentName#</td>
-                    <td>#qGetResults.programName#</td>
-                    <td>#qGetResults.hostFamilyName# <span style="font-size:9px">(<cfif VAL(qGetResults.isWelcomeFamily)>Welcome<cfelse>Permanent</cfif>)</span></td>
-                    <td class="center">#DateFormat(qGetResults.dateArrived, 'mm/dd/yy')#</td>
-                    <td class="center">#DateFormat(qGetResults.dateRelocated, 'mm/dd/yy')#</td>
-                    <td class="center">#DateFormat(qGetResults.dateStartWindowCompliance, 'mm/dd/yy')# - #DateFormat(qGetResults.dateEndWindowCompliance, 'mm/dd/yy')#</td>
-                    <td class="center">#DateFormat(qGetResults.dateEndWindowCompliance, 'mm/dd/yy')#</td>
-                    <td class="center">#DateFormat(qGetResults.dateOfVisit, 'mm/dd/yy')#</td>
-                    <td class="center <cfif VAL(vRemainingDays) LT 0>alert</cfif>">#vRemainingDays#</td>
-                </tr>
-            
-            </cfif>
-            
-        </cfoutput>
-    
+            <td class="center">
+                Program(s) included in this report: <br />
+                <cfloop query="qGetPrograms">
+                    #qGetPrograms.programName# <br />
+                </cfloop>
+            </td>
+        </tr>
     </table>
+    
+    <cfloop query="qGetRegions">
+        
+        <cfquery name="qGetResultsByRegion" dbtype="query">
+            SELECT
+                *        		
+            FROM            
+                qGetResults
+            WHERE
+                regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegions.regionID#">
+        </cfquery>
+        
+        <cfif qGetResultsByRegion.recordCount>
+                    
+            <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif FORM.reportType EQ 'excel'> border="1" </cfif> >
+                <tr>
+                    <th class="left">
+                    	<cfif CLIENT.companyID EQ 5>
+                        	- #qGetRegions.companyShort#
+                        </cfif>
+                    	- #qGetRegions.regionName# Region &nbsp; - &nbsp; Total of #qGetResultsByRegion.recordCount# report(s)
+                    </th>
+                </tr>      
+            </table>   
+        
+            <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif FORM.reportType EQ 'excel'> border="1" </cfif> >
+                <tr>
+                    <th class="left" width="15%">Student</th>
+                    <th class="left" width="12%">Program</th>
+                    <th class="left" width="14%">Host Family</th>
+                    <th class="center" width="8%">Date Placed</th>
+                    <th class="center" width="8%">Date of Arrival</th>
+                    <th class="center" width="8%">Date of Relocation</th>
+                    <th class="center" width="16%">Window of Compliance</th>
+                    <th class="center" width="8%">Due Date</th>
+                    <th class="center" width="8%">Date Of Visit</th>
+                    <th class="center" width="8%">Days Remaining</th>
+                </tr>      
+            
+                <cfloop query="qGetResultsByRegion">
+                    
+                    <!--- Display records out of compliance or students placed in welcome family missing following report --->
+                    <cfif NOT IsDate(qGetResultsByRegion.dateOfVisit) OR qGetResultsByRegion.dateOfVisit GT qGetResultsByRegion.dateEndWindowCompliance>
+                    
+                        <cfscript>
+                            vRemainingDays = '';
+                            vSetColorCode = '';
+                            vSetRelocationColorCode = '';
+                            
+                            // Calculate remaining days
+                            if ( isDate(qGetResultsByRegion.dateOfVisit) AND isDate(qGetResultsByRegion.dateEndWindowCompliance)  ) {
+                                vRemainingDays = DateDiff('d', qGetResultsByRegion.dateOfVisit, qGetResultsByRegion.dateEndWindowCompliance);
+                            } else if ( isDate(qGetResultsByRegion.dateEndWindowCompliance) ) {
+                                vRemainingDays = DateDiff('d', now(), qGetResultsByRegion.dateEndWindowCompliance);
+                            }
+                            
+                            // Set up Remaining Days Alert
+                            if ( IsNumeric(vRemainingDays) AND vRemainingDays LTE 0 ) {
+                                vSetColorCode = 'alert';
+                            } else if ( IsNumeric(vRemainingDays) AND vRemainingDays LTE 14 ) {
+                                vSetColorCode = 'attention';
+                            }
+                            
+                            // Set up Relocation Date Prior to Arrival Date alert
+                            if ( isDate(qGetResultsByRegion.dateArrived) AND isDate(qGetResultsByRegion.dateRelocated) AND qGetResultsByRegion.dateArrived GT qGetResultsByRegion.dateRelocated ) {
+                                vSetRelocationColorCode = 'attention';
+                            }
+                        </cfscript>		
+                        
+                        <tr class="#iif(qGetResultsByRegion.currentRow MOD 2 ,DE("off") ,DE("on") )#">
+                            <td>
+                                #qGetResultsByRegion.studentName#
+                                <cfif VAL(qGetResultsByRegion.active)>
+                                    <span class="note">(Active)</span>
+                                <cfelseif isDate(cancelDate)>
+                                    <span class="noteAlert">(Cancelled)</span>
+                                </cfif>
+                            </td>
+                            <td>#qGetResultsByRegion.programName#</td>
+                            <td>
+                                #qGetResultsByRegion.hostFamilyName# 
+                                <cfif VAL(qGetResultsByRegion.isWelcomeFamily)>
+                                    <span class="note">(Welcome)</span>
+                                <cfelse>
+                                    <span class="note">(Permanent)</span>
+                                </cfif>
+                            </td>
+                            <td class="center">#DateFormat(qGetResultsByRegion.datePlaced, 'mm/dd/yy')#</td>
+                            <td class="center">#DateFormat(qGetResultsByRegion.dateArrived, 'mm/dd/yy')#</td>
+                            <td class="center #vSetRelocationColorCode#">#DateFormat(qGetResultsByRegion.dateRelocated, 'mm/dd/yy')#</td>
+                            <td class="center">#DateFormat(qGetResultsByRegion.dateStartWindowCompliance, 'mm/dd/yy')# - #DateFormat(qGetResultsByRegion.dateEndWindowCompliance, 'mm/dd/yy')#</td>
+                            <td class="center">#DateFormat(qGetResultsByRegion.dateEndWindowCompliance, 'mm/dd/yy')#</td>
+                            <td class="center">#DateFormat(qGetResultsByRegion.dateOfVisit, 'mm/dd/yy')#</td>
+                            <td class="center #vSetColorCode#">#vRemainingDays#</td>
+                        </tr>
+                    
+                    </cfif>
+                    
+                </cfloop>
+            
+            </table>
+    
+        </cfif>
+    
+    </cfloop>    
 
 </cfoutput>

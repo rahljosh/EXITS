@@ -25,7 +25,8 @@
 
 	
 	<cffunction name="getRegions" access="public" returntype="query" output="false" hint="Gets a list of regions, if regionID is passed gets a region by ID">
-    	<cfargument name="regionID" default="0" hint="regionID is not required">        
+    	<cfargument name="regionID" default="0" hint="regionID is not required">   
+        <cfargument name="regionIDList" default="" hint="List of region IDs">     
         <cfargument name="companyID" default="0" hint="companyID is not required">
         <cfargument name="includeGuaranteed" default="0" hint="Set to 1 to include region preference">
         <cfargument name="isActive" default="1" hint="isActive is not required.">
@@ -43,7 +44,8 @@
                     r.masterRegion,
                     r.regional_guarantee,
                     c.team_id,
-                    c.companyName
+                    c.companyName,
+                    c.companyShort
                 FROM 
                     smg_regions r
                 LEFT OUTER JOIN
@@ -58,8 +60,13 @@
                 
 				<cfif VAL(ARGUMENTS.regionID)>
                 	AND
-                    	r.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
-                </cfif>    
+                    	r.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.regionIDList)>
+                	AND
+                    	r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionIDList#" list="yes"> )
+                </cfif>
 				
 				<cfif VAL(ARGUMENTS.companyID)>
                 	AND

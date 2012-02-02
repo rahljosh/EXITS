@@ -257,6 +257,15 @@
 	margin-top:10px;
 }
 
+.blueThemeReportTable .note {
+	font-size:9px;
+}
+
+.blueThemeReportTable .noteAlert {
+	color:#F00;
+	font-size:9px;	
+}
+
 .blueThemeReportTable th {
 	padding:5px;
 	color:#FFFFFF;
