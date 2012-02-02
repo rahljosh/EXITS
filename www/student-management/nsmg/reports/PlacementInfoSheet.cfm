@@ -290,8 +290,8 @@
     
 
 
-	<!----Only allow Josh-1, Brian-12313, Marcus - 510, Bill - 8731, Bob - 8743, Gary -12431 to change the dates---->
-    <cfif IsDate(qGetStudentInfo.datePlaced) AND listFind("1,12313,510,8731,8743,12431", CLIENT.userID)>		
+	<!----Only allow Josh-1, Brian-12313, Marcus - 510, Bill - 8731, Bob - 8743, Gary -12431, Tal - 16718 to change the dates---->
+    <cfif IsDate(qGetStudentInfo.datePlaced) AND listFind("1,12313,510,8731,8743,12431,16718", CLIENT.userID)>		
 
         <form name="PlacementInfoSheet.cfm" method="post">
             <input type="hidden" name="submitted" value="1" />
@@ -708,11 +708,7 @@
         </tr>
     </table>
     
-    <div align="center">
-        <img src="https://ise.exitsapplication.com/nsmg/pics/share.jpg" height="20"> Sharing a Room &nbsp;&middot;&nbsp; 
-        <img src="https://ise.exitsapplication.com/nsmg/pics/Airport-icon.png" height="16"> Airport Information &nbsp;&middot;&nbsp;
-        <img src="https://ise.exitsapplication.com/nsmg/pics/Wikipedia-Globe-icon.png" height="16"> Wikipedia Information 
-    </div>
+
 
 </cfsavecontent>
 
