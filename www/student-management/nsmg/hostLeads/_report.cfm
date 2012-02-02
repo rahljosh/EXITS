@@ -193,7 +193,7 @@
 <!--- Run Report --->
 <cfelse>
 
-	<table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+	<table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTableHeader">
 		<tr>
 			<th>Host Lead Follow Up Report</th>
 		</tr>

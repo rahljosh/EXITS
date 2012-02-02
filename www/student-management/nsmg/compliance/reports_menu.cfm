@@ -79,7 +79,7 @@
                             </table>
                             </cfform>
                         </td>
-                        <td width="50%" align="right" valign="top">
+                        <td width="50%" valign="top">
                             <cfform action="compliance/placement_paperwork.cfm" name="doc_received" method="POST" target="blank">
                             <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Placement Paperwork</th></tr>
@@ -132,7 +132,7 @@
                             </table>
                             </cfform>
                         </td>
-                        <td width="50%" align="right" valign="top">
+                        <td width="50%" valign="top">
                             <cfform action="compliance/rp_placement_x_cbc_relocated.cfm" name="doc_received" method="POST" target="blank">
                             <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Placement Approval x CBC Date (Students Relocated Only)</th></tr>
@@ -185,7 +185,7 @@
                             </table>
                             </cfform>
                         </td>
-                        <td width="50%" align="right" valign="top">
+                        <td width="50%" valign="top">
                             <cfform action="compliance/arrival_school_acceptance_check.cfm" name="doc_received" method="POST" target="blank">
                             <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Students with Arrival Information and Missing School Acceptance (Place Management)</th></tr>
@@ -220,7 +220,7 @@
                             </table>
                             </cfform>
                         </td>
-                        <td width="50%" align="right" valign="top">
+                        <td width="50%" valign="top">
                             <cfform action="compliance/missing_supervision_docs.cfm" name="doc_received" method="POST" target="blank">
                             <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Missing Compliance Supervision Documents</th></tr>
@@ -255,7 +255,7 @@
                             </table>
                             </cfform>
                         </td>
-                        <td width="50%" align="right" valign="top">
+                        <td width="50%" valign="top">
                             <cfform action="compliance/missing_area_rep_paperwork.cfm" name="area_rep" method="POST" target="blank">
                             <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Missing Area Representative Paperwork</th></tr>
@@ -333,7 +333,7 @@
                                 </table>
                             </form>
                         </td>
-                        <td width="50%" align="right" valign="top">
+                        <td width="50%" valign="top">
                             <form name="secondVisitStatistics" action="index.cfm?curdoc=compliance/dosSecondVisitStatistics" method="POST">
                                 <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                     <tr><th colspan="2" bgcolor="##e2efc7">2<sup>nd</sup> Visit Representative Statistics By Region</th></tr>
