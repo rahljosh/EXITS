@@ -5,7 +5,13 @@
 	Date:		January 27, 2012
 	Desc:		
 
-	Updated:  	
+	Updated:  
+	
+	Program Type	Reports
+	1st Semester	September / December
+	2nd Semester	February / April / June
+	10 Month		September / December / February / April / June
+	12 Month		September / December / February / April / June												
 	
 ----- ------------------------------------------------------------------------- --->
 
@@ -306,7 +312,7 @@
                         	pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.reportMonth#">
                     </cfquery>
                     
-                    <table width="100%" cellspacing="0">
+                    <table width="100%" cellspacing="2" cellpadding="2" border="0">
 						<cfoutput query="qGetResults" group="facilitatorID">
 							
 							<cfif currentRow NEQ 1>
@@ -327,18 +333,18 @@
                             
                             <cfoutput group="arearepid">
                                 <tr>
-                                    <th colspan="9" align="left" bgcolor="CCCCCC">&nbsp;#rep_firstname# #rep_lastname# (#arearepid#)</th>
+                                    <th colspan="9" align="left" bgcolor="##CCCCCC">&nbsp;#rep_firstname# #rep_lastname# (#arearepid#)</th>
                                 </tr>                               
-                                <tr align="left">
-                                    <th width="15">&nbsp;</th>
-                                    <th>Student</th>
-                                    <th>Program</th>
-                                    <th>Submitted</th>
-                                    <th>Action</th>
-                                    <th>SR Approved</th>
-                                    <th>SSR Approved</th>
-                                    <th>NY Approved</th>
-                                    <th>Rejected</th>
+                                <tr style="font-weight:bold;">
+                                    <td width="15">&nbsp;</td>
+                                    <td>Student</td>
+                                    <td>Program</td>
+                                    <td>Submitted</td>
+                                    <td>Action</td>
+                                    <td align="center">SR Approved</td>
+                                    <td align="center">SSR Approved</td>
+                                    <td align="center">NY Approved</td>
+                                    <td align="center">Rejected</td>
                                 </tr>
                                 
                             	<cfset vCurrentRow = 0>
@@ -441,6 +447,8 @@
                                                     fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.studentid#">
                                                 AND 
                                                     pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vPreviousReportMonth)#">
+                                            	AND
+                                                	fk_sr_user = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.arearepid#">
                                             </cfquery>
                                         
                                             <cfscript>
@@ -452,16 +460,18 @@
                                                     
                                         	<td>
 												<!--- to add a progress report, user must be the supervising rep, and the program has a report for this phase. --->
-                                                <cfif arearepid EQ CLIENT.userid and evaluate(dbfield) AND VAL(vIsPreviousReportApproved)>
+                                                <cfif arearepid EQ CLIENT.userid AND EVALUATE(dbfield) AND VAL(vIsPreviousReportApproved)>
                                                     <form action="index.cfm?curdoc=forms/pr_add" method="post">
                                                         <input type="hidden" name="assignedid" value="#assignedid#">
                                                         <input type="hidden" name="month_of_report" value="#CLIENT.reportMonth#">
                                                         <input name="Submit" type="image" src="pics/new.gif" alt="Add New Report" border="0">
                                                     </form>
-                                                <cfelseif VAL(vPreviousReportMonth) AND NOT VAL(qGetPreviousReport.recordCount)>
+                                                <!---
+												<cfelseif VAL(vPreviousReportMonth) AND NOT VAL(qGetPreviousReport.recordCount)>
 													<span style="color:##F00">
                                                     	Previous report is MISSING. You must submit #MonthAsString(vPreviousReportMonth)# report prior to #MonthAsString(CLIENT.reportMonth)# report.
                                                     </span>
+												--->
 												<cfelseif VAL(vPreviousReportMonth) AND NOT VAL(vIsPreviousReportApproved)>
 													Waiting on #MonthAsString(vPreviousReportMonth)# report approval. Once previous report is approved you will be able to create #MonthAsString(CLIENT.reportMonth)# report.				                                                    
                                                 <cfelse>
@@ -471,16 +481,16 @@
                                             
                                         </cfif>
                                         
-                                        <td>#dateFormat(qGetStudentReport.pr_sr_approved_date, 'mm/dd/yyyy')#</td>
-                                        <td>
+                                        <td align="center">#dateFormat(qGetStudentReport.pr_sr_approved_date, 'mm/dd/yyyy')#</td>
+                                        <td align="center">
 											<cfif facilitatorID EQ ''>
                                                 N/A
                                             <cfelse>
                                                 #dateFormat(qGetStudentReport.pr_ssr_approved_date, 'mm/dd/yyyy')#
                                             </cfif>
                                         </td>
-                                        <td>#dateFormat(qGetStudentReport.pr_ny_approved_date, 'mm/dd/yyyy')#</td>
-                                        <td>#dateFormat(qGetStudentReport.pr_rejected_date, 'mm/dd/yyyy')#</td>
+                                        <td align="center">#dateFormat(qGetStudentReport.pr_ny_approved_date, 'mm/dd/yyyy')#</td>
+                                        <td align="center">#dateFormat(qGetStudentReport.pr_rejected_date, 'mm/dd/yyyy')#</td>
                                     </tr>
                             	</cfoutput> <!--- Students --->
                                 
