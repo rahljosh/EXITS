@@ -1,7 +1,7 @@
 <!--- PS: Any changes made here should be also be made in the bulk progress report printing file --->
 
 <cfparam name="form.pr_action" default="">
-
+<Cfset form.pr_rmonth = #client.pr_rmonth#>
 
 <cfswitch expression="#form.pr_action#">
 <!--- delete contact date. --->

@@ -2,7 +2,6 @@
 <cfparam name="client.pr_cancelled" default="0">
 <cfparam name="client.reportType" default="1">
 <cfparam name="form.reportType" default="1">
-<Cfparam name="form.rmonth" default="#DatePart('m', '#now()#')#">
 <Cfparam name="client.pr_rmonth" default="#DatePart('m', '#now()#')#">
 <Cfparam name="resetMonth" default="0">
 <cfparam name="startDate" default="">
@@ -11,10 +10,14 @@
 <cfparam name="repDUeDate" default="">
 <Cfparam name="inCountry" default= 1>
 <Cfparam name="PreviousReportApproved" default="0">
+<Cfif isDefined('form.rmonth')>
+	<cfset client.pr_rmonth = #form.rmonth#>
+</Cfif>
 
 <Cfif form.reportType eq 2>
 	<cflocation url="index.cfm?curdoc=secondVisitReports" addtoken="no">
 </Cfif>
+
 <SCRIPT>
 <!--
 // opens letters in a defined format
@@ -87,8 +90,8 @@ function OpenLetter(url) {
 
 <!----If a month is passed in from the form, use it for the month if its works with the current report type---->
 
-<Cfif #form.rmonth# neq 0 AND resetMonth eq 0>
-	<Cfset client.pr_rmonth = #form.rmonth#>
+<Cfif #client.pr_rmonth# neq 0 AND resetMonth eq 0>
+	
       <Cfloop from="#DateRange.startDate#" to="#DateRange.endDate#" index=i step="#CreateTimeSpan(31,0,0,0)#">
                 <Cfif client.pr_rmonth eq "#DatePart('m', '#i#')#">
                     <Cfset client.pr_rmonth = '#DatePart('m', '#i#')#'>
@@ -570,6 +573,7 @@ But in the output below we use the report fields where a report has been submitt
                     FROM smg_flight_info
                     WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
                     AND flight_type = 'arrival'
+                     AND isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                     </cfquery>
                     <!----If no arrival info is on file, we set to August 1, the earliest to make sure---->
 					<Cfif arrivalInfo.recordcount eq 0 or arrivalInfo.dep_date eq ''>
@@ -583,6 +587,7 @@ But in the output below we use the report fields where a report has been submitt
                     FROM smg_flight_info
                     WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
                     AND flight_type = 'departure'
+                     AND isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                     </cfquery>
                     <!----If no departure info is on file, we set to July 1, the latest to make sure---->
                     <Cfif arrivalInfo.recordcount eq 0  or departureInfo.dep_date eq ''>
@@ -649,7 +654,7 @@ But in the output below we use the report fields where a report has been submitt
                     </cfif>
 					 
                     <cfset inCountryArrival = '#datePart('m', arrivalDate)#/01/#datePart('yyyy', arrivalDate)#'>
-                    <cfset incountryDeparture  = '#datePart('m', departureDate)#/01/#datePart('yyyy', departureDate)#'>
+                    <cfset incountryDeparture  = '#datePart('m', departureDate)#/30/#datePart('yyyy', departureDate)#'>
                     <cfset reportDate = '#reportMonth#/01/#reportyear#'>
                      
                      <cfif '#datePart('m', arrivalDate)#' eq '#datePart('m', reportDate)#'>
