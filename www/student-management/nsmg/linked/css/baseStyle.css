@@ -252,20 +252,29 @@
 	REPORTS
 ********************************************/
 
-.blueThemeReportTable {
+.blueThemeReportTableHeader {
 	border:1px solid #3b5998;
 	margin-top:10px;
 }
 
+.blueThemeReportTable {
+	border:1px solid #3b5998;
+	margin-top:3px;
+	margin-bottom:15px;
+}
+
+.blueThemeReportTableHeader .note, 
 .blueThemeReportTable .note {
 	font-size:9px;
 }
 
+.blueThemeReportTableHeader .noteAlert,
 .blueThemeReportTable .noteAlert {
 	color:#F00;
 	font-size:9px;	
 }
 
+.blueThemeReportTableHeader th,
 .blueThemeReportTable th {
 	padding:5px;
 	color:#FFFFFF;
@@ -274,6 +283,7 @@
 	text-transform:uppercase;
 }
 
+.blueThemeReportTableHeader th.left,
 .blueThemeReportTable th.left {
 	padding:5px;
 	color:#FFFFFF;
@@ -283,6 +293,7 @@
 	background-color:#3b5998; 
 }
 
+.blueThemeReportTableHeader th.center,
 .blueThemeReportTable th.center {
 	padding:5px;
 	color:#FFFFFF;
@@ -292,6 +303,7 @@
 	background-color:#3b5998; 
 }
 
+.blueThemeReportTableHeader .attention,
 .blueThemeReportTable .attention {
 	color:#000;
 	font-weight:bold;
@@ -299,6 +311,7 @@
 	background-color:#FF6; 
 }
 
+.blueThemeReportTableHeader .alert
 .blueThemeReportTable .alert {
 	color:#FFFFFF;
 	font-weight:bold;
@@ -306,6 +319,7 @@
 	background-color:#F00; 
 }
 
+.blueThemeReportTableHeader td.subTitleLeft,
 .blueThemeReportTable td.subTitleLeft {
 	color:#3b5998;
 	font-weight:bold;
@@ -313,6 +327,7 @@
 	border-bottom:1px solid #EDEFF4;
 }
 
+.blueThemeReportTableHeader td.subTitleCenter,
 .blueThemeReportTable td.subTitleCenter {
 	color:#3b5998;
 	font-weight:bold;
@@ -320,6 +335,7 @@
 	border-bottom:1px solid #EDEFF4;
 }
 
+.blueThemeReportTableHeader td.subTitleRight,
 .blueThemeReportTable td.subTitleRight {
 	color:#3b5998;
 	font-weight:bold;
@@ -327,18 +343,21 @@
 	border-bottom:1px solid #EDEFF4;
 }
 
+.blueThemeReportTableHeader td.summaryLeft,
 .blueThemeReportTable td.summaryLeft {
 	color:#000;
 	font-weight:bold;
 	border-bottom:#3b5998;
 }
 
+.blueThemeReportTableHeader td.summaryCenter,
 .blueThemeReportTable td.summaryCenter {
 	color:#000;
 	font-weight:bold;
 	text-align:center;
 }
 
+.blueThemeReportTableHeader td.summaryRight,
 .blueThemeReportTable td.summaryRight {
 	color:#000;
 	font-weight:bold;
@@ -346,14 +365,17 @@
 	padding-right:5px;
 }
 
+.blueThemeReportTableHeader tr.on,
 .blueThemeReportTable tr.on {
 	background-color:#EDEFF4;
 }
 
+.blueThemeReportTableHeader tr.off,
 .blueThemeReportTable tr.off {
 	background-color:#FFFFFF;
 }
 
+.blueThemeReportTableHeader td.center,
 .blueThemeReportTable td.center {
 	text-align:center;
 }

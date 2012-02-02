@@ -151,7 +151,7 @@
 </cfif>
 
 <!--- Run Report --->
-<table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+<table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTableHeader">
 	<tr>
 		<th>Compliance Mileage Report</th>            
 	</tr>
@@ -172,7 +172,7 @@
 		vCurrentRow = 0;
 	</cfscript>
 	
-	<table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+	<table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTableHeader">
 		<tr>
 			<th class="left">
             	- 
@@ -276,7 +276,6 @@
 			
 	</table>		
 	
-    <br />
 </cfoutput>
 
 

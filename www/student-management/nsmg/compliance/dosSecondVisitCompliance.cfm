@@ -333,7 +333,7 @@
 
 <cfoutput>
 
-    <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif FORM.reportType EQ 'excel'> border="1" </cfif> >
+    <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTableHeader" <cfif FORM.reportType EQ 'excel'> border="1" </cfif> >
         <tr>
             <th>2<sup>nd</sup> Visit Representative Compliance By Region</th>
         </tr>
@@ -360,7 +360,7 @@
         
         <cfif qGetResultsByRegion.recordCount>
                     
-            <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif FORM.reportType EQ 'excel'> border="1" </cfif> >
+            <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTableHeader" <cfif FORM.reportType EQ 'excel'> border="1" </cfif> >
                 <tr>
                     <th class="left">
                     	<cfif CLIENT.companyID EQ 5>
@@ -447,7 +447,7 @@
                 </cfloop>
             
             </table>
-    
+    		
         </cfif>
     
     </cfloop>    

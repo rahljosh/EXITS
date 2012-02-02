@@ -155,7 +155,7 @@
 	
     <cfoutput>
     
-        <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+        <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTableHeader">
             <tr>
                 <th>Bonus Report</th>
             </tr>

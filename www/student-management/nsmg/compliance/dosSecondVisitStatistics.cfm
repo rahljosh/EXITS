@@ -269,7 +269,7 @@
 
 <cfoutput>
 
-    <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif FORM.reportType EQ 'excel'> border="1" </cfif> >
+    <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTableHeader" <cfif FORM.reportType EQ 'excel'> border="1" </cfif> >
         <tr>
             <th>2<sup>nd</sup> Visit Representative Statistics By Region</th>
         </tr>
