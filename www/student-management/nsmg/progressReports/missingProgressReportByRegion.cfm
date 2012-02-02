@@ -165,7 +165,7 @@
         <!--- Run Report --->
         <cfelse>
         	
-            <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTableHeader">
+            <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                 <tr>
                     <th>Missing Progress Reports</th>
                 </tr>
@@ -228,7 +228,7 @@
             
                 <cfif qGetStudentList.recordcount>
                     
-                    <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                         <tr>
                             <th class="left" colspan="4">Region: #qGetSelectedRegion.regionname#</th>
                         </tr>
@@ -310,7 +310,7 @@
                 
             </cfloop>
         
-            <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">            
+            <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">            
                 <th colspan="2">Reports Per Program</th>
                 <tr class="off">
                     <td width="50%">

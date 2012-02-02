@@ -151,7 +151,7 @@
 </cfif>
 
 <!--- Run Report --->
-<table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTableHeader">
+<table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
 	<tr>
 		<th>Compliance Mileage Report</th>            
 	</tr>
@@ -171,26 +171,22 @@
 		// Set Current Row used to display light blue color on the table
 		vCurrentRow = 0;
 	</cfscript>
-	
-	<table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTableHeader">
+
+	<table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
 		<tr>
-			<th class="left">
-            	- 
+			<th class="left" colspan="5">
 				<cfif CLIENT.companyID EQ 5>
-                	#qGetResults.companyShort# - 
+                	- #qGetResults.companyShort# 
                 </cfif>
-            	#qGetResults.regionName# Region
+            	- #qGetResults.regionName# Region
             </th>
 		</tr>      
-	</table>   
-
-	<table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
 		<tr>
-			<th class="left" width="26%">Student</th>
-            <th class="left" width="22%">Supervising Representative</th>		            
-            <th class="left" width="22%">Host Family</th>				
-			<th class="center" width="15%">Point to Point Distance</th>
-			<th class="center" width="15%">Google Driving Distance</th>
+			<td class="subTitleLeft" width="26%">Student</td>
+            <td class="subTitleLeft" width="22%">Supervising Representative</td>		            
+            <td class="subTitleLeft" width="22%">Host Family</td>				
+			<td class="subTitleCenter" width="15%">Point to Point Distance</td>
+			<td class="subTitleCenter" width="15%">Google Driving Distance</td>
 		</tr>      
 
 		<cfoutput>
@@ -278,6 +274,8 @@
 	
 </cfoutput>
 
+<!--- Page Header --->
+<gui:pageFooter />	
 
 <!--- UPDATE MISSING LATITUDE AND LONGITUDE --->
 
