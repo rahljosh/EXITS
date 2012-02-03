@@ -1727,7 +1727,7 @@
 	</cffunction>
 
 
-	<!--- INSERT FLIGHT --->
+	<!--- Insert Placement Tracking --->
 	<cffunction name="insertPlacementTracking" access="public" returntype="void" output="false" hint="Inserts Placement Tracking to the log">
     	<cfargument name="historyID" hint="historyID is required">
         <cfargument name="studentID" hint="studentID is required">
@@ -1771,6 +1771,29 @@
                     WHERE
                     	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
 			</cfquery>                    
+    </cffunction>
+
+
+    <!--- Update Host / Supervising Distance --->
+	<cffunction name="updateHostSupervisingDistance" access="public" returntype="void" output="false" hint="Update Host / Supervising Distance">
+    	<cfargument name="distanceInMiles" hint="distanceInMiles is required">
+        <cfargument name="studentID" hint="studentID is required">
+        <cfargument name="hostID" hint="hostID is required">
+        <cfargument name="areaRepID" hint="areaRepID is required">
+
+            <cfquery 
+            	datasource="#APPLICATION.DSN#">
+                    UPDATE
+                        smg_hostHistory
+                    SET
+                        hfSupervisingDistance = <cfqueryparam cfsqltype="cf_sql_float" value="#ARGUMENTS.distanceInMiles#">
+                    WHERE
+                        studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">				                
+                    AND
+                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">				                
+                    AND
+                        areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.areaRepID#">	
+            </cfquery>
     </cffunction>
     
 
