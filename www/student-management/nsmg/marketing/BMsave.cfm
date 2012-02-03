@@ -24,7 +24,7 @@ body {
 	background-color: #FFF;
 	text-align: center;
 }
-p, h3{
+h3{
 	color: #000;
 	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
 	font-size: 75px;
@@ -35,16 +35,16 @@ p, h3{
 p{
 	color: #000;
 	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-	font-size: 55px;
-	line-height: 100px;
+	font-size: 75px;
+	line-height: 110px;
 	background-color: #FFF;
 	text-align: center;
 }
 h3, h5{
 	color: #000;
 	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-	font-size: 75px;
-	line-height: 110px;
+	font-size: 60px;
+	line-height: 100px;
 	background-color: #FFF;
 	text-align: center;
 }
@@ -121,30 +121,78 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 <div class="container">
   <table width="450" height="650" border="1" cellpadding="0" cellspacing="0">
     <tr>
-      <td width="150"><img src="images/print/BookmarkLG_03.png" width="830" height="763" /><br /><img src="images/print/BookmarkLG_05.png" width="836" height="309" /><p>Enrich your life <br />
+      <td width="150"><img src="images/print/BookmarkLG_03.png" width="830" height="763" /><br />
+      <cfif ListFind("10", CLIENT.companyid) >
+     	 <img src="images/print/10_BookmarkLG_05.png" width="836" height="309" />
+      <cfelse>
+          <img src="images/print/1_BookmarkLG_05.png" width="836" height="309" />
+      </cfif>
+      <p>Enrich your life <br />
         Hosting International <br />
         High School Students. Participants enjoy and <br />
-        learn from the experience <br />
-        by bringing the world <br />
+        learn from the experience by <br />
+        bringing the world <br />
         to your back door!</p><h3>#repInfo.firstname# #repInfo.lastname#<br />#repInfo.phone#</h3><br /><h5>#repInfo.email#</h5>
-      <img src="images/print/BookmarkLG_07.png" width="836" height="144" /><br />
-      <img src="images/print/BookmarkLG_08.png" width="830" height="576" /></td>
-      <td width="150"><img src="images/print/BookmarkLG_03.png" width="830" height="763" /><br /><img src="images/print/BookmarkLG_05.png" width="836" height="309" /><p>Enrich your life <br />
+      	<cfif ListFind("10", CLIENT.companyid) >
+     	 <img src="images/print/10_BookmarkLG_07.png" width="836" height="144" />
+        <cfelse>
+      	<img src="images/print/1_BookmarkLG_07.png" width="836" height="144" />
+      	</cfif>
+         <br />
+         <cfif ListFind("10", CLIENT.companyid) >
+     	   <img src="images/print/10_BookmarkLG_08.png" width="830" height="576" />
+         <cfelse>
+         	<img src="images/print/1_BookmarkLG_08.png" width="830" height="576" />
+         </cfif>
+      </td>
+           <td width="150"><img src="images/print/BookmarkLG_03.png" width="830" height="763" /><br />
+      <cfif ListFind("10", CLIENT.companyid) >
+     	 <img src="images/print/10_BookmarkLG_05.png" width="836" height="309" />
+      <cfelse>
+          <img src="images/print/1_BookmarkLG_05.png" width="836" height="309" /></cfif>
+      <cfif ListFind("10", CLIENT.companyid) >
+      </cfif>
+      <p>Enrich your life <br />
         Hosting International <br />
         High School Students. Participants enjoy and <br />
-        learn from the experience <br />
-        by bringing the world <br />
+        learn from the experience by <br />
+        bringing the world <br />
         to your back door!</p><h3>#repInfo.firstname# #repInfo.lastname#<br />#repInfo.phone#</h3><br /><h5>#repInfo.email#</h5>
-      <img src="images/print/BookmarkLG_07.png" width="836" height="144" /><br />
-      <img src="images/print/BookmarkLG_08.png" width="830" height="576" /></td>
-      <td width="150"><img src="images/print/BookmarkLG_03.png" width="830" height="763" /><br /><img src="images/print/BookmarkLG_05.png" width="836" height="309" /><p>Enrich your life <br />
+      	<cfif ListFind("10", CLIENT.companyid) >
+     	 <img src="images/print/10_BookmarkLG_07.png" width="836" height="144" />
+        <cfelse>
+      	<img src="images/print/1_BookmarkLG_07.png" width="836" height="144" />
+      	</cfif>
+         <br />
+         <cfif ListFind("10", CLIENT.companyid) >
+     	   <img src="images/print/10_BookmarkLG_08.png" width="830" height="576" />
+         <cfelse>
+         	<img src="images/print/1_BookmarkLG_08.png" width="830" height="576" />
+         </cfif>
+      </td>
+      <td width="150"><img src="images/print/BookmarkLG_03.png" width="830" height="763" /><br />
+      <cfif ListFind("10", CLIENT.companyid) >
+     	 <img src="images/print/10_BookmarkLG_05.png" width="836" height="309" />
+      <cfelse>
+          <img src="images/print/1_BookmarkLG_05.png" width="836" height="309" /></cfif>
+      <cfif ListFind("10", CLIENT.companyid) >
+      </cfif>
+      <p>Enrich your life <br />
         Hosting International <br />
         High School Students. Participants enjoy and <br />
-        learn from the experience <br />
-        by bringing the world <br />
+        learn from the experience by <br />
+        bringing the world <br />
         to your back door!</p><h3>#repInfo.firstname# #repInfo.lastname#<br />#repInfo.phone#</h3><br /><h5>#repInfo.email#</h5>
-      <img src="images/print/BookmarkLG_07.png" width="836" height="144" /><br />
-      <img src="images/print/BookmarkLG_08.png" width="830" height="576" /></td>
+       	<cfif ListFind("10", CLIENT.companyid) >
+     	 <img src="images/print/10_BookmarkLG_07.png" width="836" height="144" />
+        <cfelse>
+         <img src="images/print/1_BookmarkLG_07.png" width="836" height="144" /> 
+        </cfif><br />
+     <cfif ListFind("10", CLIENT.companyid) >
+     	   <img src="images/print/10_BookmarkLG_08.png" width="830" height="576" />
+         <cfelse>
+         	<img src="images/print/1_BookmarkLG_08.png" width="830" height="576" />
+         </cfif></td>
     </tr>
   </table>
 <!-- end .container --></div>
