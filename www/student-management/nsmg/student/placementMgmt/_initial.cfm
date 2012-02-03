@@ -787,7 +787,6 @@
         />
 
     <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center" style="padding:10px 0px 10px 0px;">      
-    
         <cfswitch expression="#vPlacementStatus#">
             
             <cfcase value="Rejected">
@@ -954,6 +953,27 @@
             
         </cfswitch>
 
+		<!--- Display Distance in Miles --->
+        <cfif listFind("1,2,3,4", CLIENT.userType) AND qGetPlacementHistory.hfSupervisingDistance GTE 100>
+            
+			<cfscript>
+				vSetColorCode = '';
+				
+				if ( VAL(qGetPlacementHistory.hfSupervisingDistance) GT 120 ) {
+					vSetColorCode = 'class="alert"';	
+				} else if ( VAL(qGetPlacementHistory.hfSupervisingDistance) GTE 100 ) {
+					vSetColorCode = 'class="attention"';	
+				}
+			</cfscript>
+            
+            <tr>
+                <td align="center" style="padding:10px 0px 10px 0px; color:##3b5998;">
+                    <p>Supervising Representative is <span #vSetColorCode#> #qGetPlacementHistory.hfSupervisingDistance# mi </span> away from Host Family</p>
+                </td>
+            </tr> 
+                                   
+    	</cfif>
+        
         <tr>
             <td align="center">
                 

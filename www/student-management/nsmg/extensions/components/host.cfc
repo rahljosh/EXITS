@@ -203,6 +203,25 @@
 	</cffunction>
 
 
+	<cffunction name="getCompleteHostAddress" access="public" returntype="query" output="false" hint="Returns complete host family address">
+    	<cfargument name="hostID" default="" hint="HostID is required">
+        
+        <cfquery 
+			name="qGetCompleteHostAddress" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+                	hostID,
+                    CONCAT(address, ', ', city, ', ', state, ', ', zip) AS completeAddress
+                FROM 
+                    smg_hosts
+                WHERE
+                    hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+		</cfquery>
+		   
+		<cfreturn qGetCompleteHostAddress>
+	</cffunction>
+
+
 	<!--- Start of Auto Suggest --->
     <cffunction name="lookupHostFamily" access="remote" returntype="string" output="false" hint="Remote function to get host families">
         <cfargument name="search" type="string" default="" hint="Search is not required">
