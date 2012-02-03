@@ -117,36 +117,11 @@
     
 </cfsilent>    
 
-<style type="text/css">
-	<!--
-	.thin-border-bottom { 
-		border-bottom: 1px solid #000000; }
-		.thin-border-top { 
-		border-top: 1px solid #000000; }
-	.thin-border{ border: 1px solid #000000;}
-	-->
-</style>
-
 <cfoutput>
 
 <!-----Display Reports---->
 <cfif LEN(FORM.print)>
 	
-		<cfif isDefined('FORM.email_intRep')> 
-            <cfset toLine = ListAppend(toLine, qGetIntlAgent.email)>
-        </cfif>
-        
-        <cfif isDefined('FORM.email_self')> 
-
-            <cfset toLine = ListAppend(toLine, CLIENT.email)>
-        </cfif>
-    
-        <cfif LEN(toLine)>
-            <div align="center">
-                <font color="##FF9900">This report was emailed to: #toLine#</font>
-            </div>
-        </cfif>
-        
         <!--- Store report in a variable --->
         <cfsavecontent variable="verificationReport">
         
@@ -188,50 +163,59 @@
             </table>
         
             <div id="pagecell_reports">
-                <img src="../../pics/black_pixel.gif" width="100%" height="2">
         
-                <div align="center" class="style1">
+                <div align="center" class="style1" style="border-top:2px solid ##000000; border-bottom:2px solid ##000000; padding:10px 0px 10px 0px;">
                     <font size="+3"> DS 2019 Verification Report</font>
                 </div>
         
-                <img src="../../pics/black_pixel.gif" width="100%" height="2">
-        
                 <span class="style1"><br></span>
                 <span class="style1"><br></span>
         
-                <table width=100% frame=below cellpadding=7 cellspacing="0" class="thin-border-bottom" >
-                    <tr class="thin-border-bottom" >
-                        <td width=3% valign="top" class="style1"><strong>ID</strong></td>
-                        <td width=14% valign="top" class="style1"><strong>Last Name</strong></td>
-                        <td width=14% valign="top" class="style1"><strong>First Name</strong></td>
-                        <td width=14% valign="top" class="style1"><strong>Middle Name</strong></td>
-                        <td width=6% valign="top" class="style1"><strong>Sex</strong></td>
-                        <td width=9% valign="top" class="style1"><strong>Date of Birth</strong></td>
-                        <td width=10% valign="top" class="style1"><strong>City of Birth</strong></td>
-                        <td width=10% valign="top" class="style1"><strong>Country of Birth</strong></td>
-                        <td width=10% valign="top" class="style1"><strong>Country of Citizenship</strong></td>
-                        <td width=12% valign="top" class="style1"><strong>Country of Residence</strong></td>
-                        <td width=10% valign="top" class="style1"><strong>Start Date </strong></td>
-                        <td width=10% valign="top" class="style1"><strong>End Date </strong></td>
-                    </tr>        
+                <table width=100% cellpadding=7 cellspacing="0">
+                    <tr>
+                        <td width=3% valign="top" style="border-bottom:1px solid ##000;"><strong>ID</strong></td>                        
+                        <td width=14% valign="top" style="border-bottom:1px solid ##000;"><strong>Last Name</strong></td>
+                        <td width=14% valign="top" style="border-bottom:1px solid ##000;"><strong>First Name</strong></td>
+                        <td width=14% valign="top" style="border-bottom:1px solid ##000;"><strong>Middle Name</strong></td>
+                        <td width=6% valign="top" style="border-bottom:1px solid ##000;"><strong>Sex</strong></td>
+                        <td width=9% valign="top" style="border-bottom:1px solid ##000;"><strong>Date of Birth</strong></td>
+                        <td width=10% valign="top" style="border-bottom:1px solid ##000;"><strong>City of Birth</strong></td>
+                        <td width=10% valign="top" style="border-bottom:1px solid ##000;"><strong>Country of Birth</strong></td>
+                        <td width=10% valign="top" style="border-bottom:1px solid ##000;"><strong>Country of Citizenship</strong></td>
+                        <td width=12% valign="top" style="border-bottom:1px solid ##000;"><strong>Country of Residence</strong></td>
+                        <td width=10% valign="top" style="border-bottom:1px solid ##000;"><strong>Start Date </strong></td>
+                        <td width=10% valign="top" style="border-bottom:1px solid ##000;"><strong>End Date </strong></td>
+                    </tr>      
                     <cfloop query="qGetCandidates">
+						<cfscript>
+							// Get Placement Information
+							qCandidatePlaceCompany = APPLICATION.CFC.CANDIDATE.getCandidatePlacementInformation(candidateID=qGetCandidates.candidateID);
+                        </cfscript>
                         <tr bgcolor="#iif(qGetCandidates.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
-                            <td class="style1" valign="top">#qGetCandidates.candidateID#</td>
-                            <td class="style1" valign="top">#qGetCandidates.lastname#</td>
-                            <td class="style1" valign="top">#qGetCandidates.firstname#</td>
-                            <td class="style1" valign="top">#qGetCandidates.middlename#</td>
-                            <td class="style1" valign="top">#qGetCandidates.sex#</td>
-                            <td class="style1" valign="top">#DateFormat(qGetCandidates.dob, 'mm/dd/yyyy')#</td>
-                            <td class="style1" valign="top">#qGetCandidates.birth_city#</td>
-                            <td class="style1" valign="top">#qGetCandidates.countrybirth#</td>
-                            <td class="style1" valign="top">#qGetCandidates.countrycitizen#</td>
-                            <td class="style1" valign="top" >#qGetCandidates.countryresident#</td>
-                            <td class="style1" valign="top">#DateFormat(qGetCandidates.startdate, 'mm/dd/yyyy')#</td>
-                            <td class="style1" valign="top">#DateFormat(qGetCandidates.enddate, 'mm/dd/yyyy')#</td>				
+                            <td width=3% valign="top">###qGetCandidates.candidateID#</td>
+                            <td width=14% valign="top">#qGetCandidates.lastname#</td>
+                            <td width=14% valign="top">#qGetCandidates.firstname#</td>
+                            <td width=14% valign="top">#qGetCandidates.middlename#</td>
+                            <td width=6% valign="top">#qGetCandidates.sex#</td>
+                            <td width=9% valign="top">#DateFormat(qGetCandidates.dob, 'mm/dd/yyyy')#</td>
+                            <td width=10% valign="top">#qGetCandidates.birth_city#</td>
+                            <td width=10% valign="top">#qGetCandidates.countrybirth#</td>
+                            <td width=10% valign="top">#qGetCandidates.countrycitizen#</td>
+                            <td width=12% valign="top">#qGetCandidates.countryresident#</td>
+                            <td width=10% valign="top">#DateFormat(qGetCandidates.startdate, 'mm/dd/yyyy')#</td>
+                            <td width=10% valign="top">#DateFormat(qGetCandidates.enddate, 'mm/dd/yyyy')#</td>				
+                        </tr>
+                        <tr bgcolor="#iif(qGetCandidates.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
+                            <td style="border-bottom:1px solid ##000;">&nbsp;</td>
+                        	<td valign="top" colspan="11" style="border-bottom:1px solid ##000;">
+                            	<strong>Host Company:</strong> #qCandidatePlaceCompany.hostCompanyName#; 
+                                <strong style="padding-left:15px;">Job Title:</strong> #qCandidatePlaceCompany.jobTitle#; 
+                               	<strong style="padding-left:15px;">Placement Type:</strong> #qGetCandidates.wat_placement#;
+                            </td>
                         </tr>
                     </cfloop>
-                </table>
-    
+    			</table>
+                <br />
                 <table width="98%" cellpadding="2" cellspacing="0">
                     <tr>
                         <td valign="top" class="style1">
@@ -275,18 +259,37 @@
         
         <!--- Display Report --->
         #verificationReport#
+
+		<cfif isDefined('FORM.email_intRep')> 
+            <cfset toLine = ListAppend(toLine, qGetIntlAgent.email)>
+        </cfif>
+        
+        <cfif isDefined('FORM.email_self')> 
+            <cfset toLine = ListAppend(toLine, CLIENT.email)>
+        </cfif>
     
         <cfif LEN(toLine)>
-            #toLine# 123456
-    
-            <cfmail to="josh@pokytrails.com" from="#CLIENT.email#" Subject="DS-2019 Verification Report" type="html" server="exitgroup.org" username="outgoing@exitgroup.org" password="p%15gz">
-                
-                <!--- Include Report --->			  
-                #verificationReport#
-                
-            </cfmail>
-    
+            <div align="center">
+                <font color="##FF9900">This report was emailed to: #toLine#</font>
+            </div>
         </cfif>
+        
+		<cfscript>
+            // Email Intl. Representative
+            if ( LEN(toLine) ) {
+                
+                // Send out Missing Documents Email
+                
+                APPLICATION.CFC.EMAIL.sendEmail(
+                    emailTo=toLine, // 'marcus@iseusa.com' | toLine
+                    emailMessage=verificationReport & "<br />",
+					emailSubject='DS-2019 Verification Report',
+                    companyID=CLIENT.companyID,
+                    footerType='emailRegular'
+                );	
+            
+            }
+        </cfscript>
 
 <cfelse> <!--- LEN(FORM.print) --->
 	
