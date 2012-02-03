@@ -90,6 +90,25 @@
 	</cffunction>
 
 
+	<cffunction name="getCompleteUserAddress" access="public" returntype="query" output="false" hint="Returns complete user address">
+    	<cfargument name="userID" default="" hint="userID is required">
+        
+        <cfquery 
+			name="qGetCompleteUserAddress" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+                	userID,
+                    CONCAT(address, ', ', city, ', ', state, ', ', zip) AS completeAddress
+                FROM 
+                    smg_users
+                WHERE
+                    userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+		</cfquery>
+		   
+		<cfreturn qGetCompleteUserAddress>
+	</cffunction>
+
+
 	<cffunction name="getUserStateListByRegionID" access="public" returntype="string" output="false" hint="Returns a list of user states assigned to a region">
     	<cfargument name="regionID" type="numeric" hint="regionID is required">
 

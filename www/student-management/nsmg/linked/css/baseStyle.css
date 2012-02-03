@@ -243,6 +243,24 @@
 	padding-right:10px;
 }
 
+.attention {
+	color:#000;
+	font-weight:bold;
+	padding:5px;
+	margin:0px 3px 0px 3px;
+	border-bottom:1px solid #FFFFFF;
+	background-color:#FF6; 
+}
+
+.alert {
+	color:#FFFFFF;
+	font-weight:bold;
+	padding:5px;
+	margin:0px 3px 0px 3px;
+	border-bottom:1px solid #FFFFFF;
+	background-color:#F00; 
+}
+
 /********************************************
 	END OF PLACEMENT MANAGEMENT
 ********************************************/
