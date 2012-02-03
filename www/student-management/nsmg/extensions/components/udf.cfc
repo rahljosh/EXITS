@@ -540,7 +540,7 @@
     </cffunction>
     
     
-		<!---Check if paperwork is complete for a specific user for a specific season to be allowed access---->
+	<!---Check if paperwork is complete for a specific user for a specific season to be allowed access---->
 	<cffunction name="paperworkCompleted" access="public" returntype="query">
     	<cfargument name="season" type="numeric" required="yes" default=9 hint="This should be what ever season you want to check on." />
         <cfargument name="userid" type="numeric" required="yes" default="" hint="Pass in user id you want to check on">
@@ -600,7 +600,22 @@
             WHERE 
                 userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
         </cfquery>
+        <!----Check AR Training Sign off Form---->
         
+        <!----Check AR Information Sheet---->
+        
+        <!----Check CBC Approved----->
+        
+        
+        <cfquery name="prevExperience" datasource="#APPLICATION.DSN#">
+            SELECT 
+                prevOrgAffiliation, 
+                prevAffiliationName
+            FROM 
+                smg_users
+            WHERE 
+                userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
+        </cfquery>
 		<cfif employHistory.recordcount GTE 1 AND (prevExperience.prevOrgAffiliation EQ 0 OR (prevExperience.prevOrgAffiliation EQ 1 AND prevExperience.prevAffiliationName NEQ '') )>
 	        <cfset previousExperience = 1>
         <cfelse>
@@ -686,11 +701,11 @@
      
 		<cfscript>
 			// This is the query that is returned
-			qAllPaperWork = QueryNew("paperworkid,userid,seasonid,ar_info_sheet,ar_ref_quest1,ar_ref_quest2,ar_cbcAuthReview,ar_cbc_auth_form,ar_agreement,ar_training,secondVisit,agreeSig,cbcSig, season");
+			qAllPaperWork = QueryNew("paperworkid,userid,seasonid,ar_info_sheet,ar_ref_quest1,ar_ref_quest2,ar_cbcAuthReview,ar_cbc_auth_form,ar_agreement,ar_training,secondVisit,agreeSig,cbcSig, season, secondVisitRepOK, areaRepOK");
         </cfscript>
      
 		<cfloop query="checkAgreement">
-
+        	
 			<!----check CBC has been approved---->
             <cfquery name="cbcCheck" datasource="#APPLICATION.DSN#">
                 SELECT 
@@ -703,7 +718,33 @@
                 AND 
                 	seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#checkAgreement.seasonid#">
             </cfquery>
-	 	
+	 	<!----check to see if this account is active for second visit reps: agreement, cbcauthrization and approval, info sheet need to be on file.---->
+            	<Cfif checkAgreement.ar_info_sheet is not '' 
+					AND checkAgreement.ar_cbc_auth_form is not '' 
+					AND cbcCheck.date_approved is not ''
+					AND checkAgreement.ar_agreement is not ''
+					AND checkAgreement.cbcSig is not ''
+					AND checkAgreement.agreeSig is not ''>
+                	<Cfset secondVisitRepOk = 1>
+                <cfelse>
+                	<cfset secondVisitRepOk = 0>
+                </Cfif>
+			<!----check to see if this account is active for area reps: agreement, cbcauthrization and approval, info sheet need to be on file, 2 references check and AR training completed.---->
+            	<Cfif checkAgreement.ar_info_sheet is not '' 
+					AND checkAgreement.ar_cbc_auth_form is not '' 
+					AND cbcCheck.date_approved is not ''
+					AND checkAgreement.ar_agreement is not ''
+					AND checkAgreement.cbcSig is not ''
+					AND checkAgreement.agreeSig is not ''
+					AND checkAgreement.ar_ref_quest1 is not ''
+					AND checkAgreement.ar_ref_quest2 is not ''
+					AND checkAgreement.ar_training is not ''>
+                   <Cfset areaRepOk = 1>
+                <cfelse>
+                	<cfset areaRepOk = 0>
+                </Cfif>
+        
+        
 			<cfscript>
                  // Insert blank first row
                 QueryAddRow(qAllPaperWork);
@@ -721,8 +762,11 @@
                 QuerySetCell(qAllPaperWork, "agreeSig", checkAgreement.agreeSig);
                 QuerySetCell(qAllPaperWork, "cbcSig", checkAgreement.cbcSig);
                 QuerySetCell(qAllPaperWork, "season", checkAgreement.season);
+				QuerySetCell(qAllPaperWork, "secondVisitRepOK", checkAgreement.season);
+				QuerySetCell(qAllPaperWork, "areaRepOk", checkAgreement.season);
             </cfscript>	
-            	
+            
+					
 		</cfloop>   
          	
 		<cfscript>
