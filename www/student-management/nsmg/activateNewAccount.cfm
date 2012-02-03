@@ -44,4 +44,3 @@ where userid = #url.userid#
                 <cfinvokeargument name="email_from" value="#companyshort#-support@exitsapplication.com">
             </cfinvoke>
     <!----End of Email---->
-<cflocation url="index.cfm">
