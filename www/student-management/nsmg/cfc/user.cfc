@@ -289,13 +289,26 @@
             
             <Cfscript>
                 //Check if paperwork is complete for season
-				qPaperWork = APPLICATION.CFC.udf.paperworkCompleted(userid=url.userid,season=9);
+				qAllPaperWorkCompleted = APPLICATION.CFC.udf.allpaperworkCompleted(userid=url.userid,season=9);
 			</cfscript>
+            <!----Check files for office users---->
             
-			<cfif  qPaperWork.complete eq 0>
-            	<!--- this is checked in APPLICATION.cfm and redirected if set. --->
-                <cfset CLIENT.agreement_needed= 1>
+            
+            <!---Check files for user office users----->
+            
+            
+            <cfif client.usertype eq 15>
+            	<cfif qAllPaperWorkCompleted.secondVisitRepOK neq 1>
+               		<cfset CLIENT.agreement_needed= 1>
+               </cfif>
+            <cfelse>
+            	<cfif qAllPaperWorkCompleted.areaRepOk neq 1>
+               		<cfset CLIENT.agreement_needed= 1>
+               </cfif>
+            
             </cfif>
+            
+		
           
          
 		</cfif>

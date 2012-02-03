@@ -539,7 +539,7 @@
     </cffunction>
     
     
-	<!---Check if paperwork is complete for a specific user for a specific season to be allowed access---->
+		<!---Check if paperwork is complete for a specific user for a specific season to be allowed access---->
 	<cffunction name="paperworkCompleted" access="public" returntype="query">
     	<cfargument name="season" type="numeric" required="yes" default=9 hint="This should be what ever season you want to check on." />
         <cfargument name="userid" type="numeric" required="yes" default="" hint="Pass in user id you want to check on">
