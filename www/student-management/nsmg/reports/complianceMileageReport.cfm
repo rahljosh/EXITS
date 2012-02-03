@@ -221,7 +221,7 @@
 				
 				vUpdateTable = 0;
 				
-				// Check if we have recorded distance in the database from google driving directions
+				// Check if we have recorded distance in the database from Google driving directions
 				if ( VAL(qGetResults.hfSupervisingDistance) ) {
 
 					vGoogleDistance = qGetResults.hfSupervisingDistance;
@@ -251,22 +251,19 @@
                 <td class="center #vSetColorCode#">#vGoogleDistance# mi</td>
             </tr>
             
-            <cfif VAL(vUpdateTable) AND IsNumeric(vGoogleDistance)>
-            	
-                <cfquery datasource="#APPLICATION.DSN#">
-                	UPDATE
-                    	smg_hostHistory
-                    SET
-                    	hfSupervisingDistance = <cfqueryparam cfsqltype="cf_sql_varchar" value="#vGoogleDistance#">
-					WHERE
-                    	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.studentID#">				                
-                    AND
-                    	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.hostID#">				                
-                    AND
-                    	areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.userID#">	
-				</cfquery>
-                                       			                
-            </cfif>
+            <cfscript>
+				// Update Distance in the database
+				if ( VAL(vUpdateTable) AND IsNumeric(vGoogleDistance) ) {
+				
+					APPLICATION.CFC.STUDENT.updateHostSupervisingDistance(
+						distanceInMiles=vGoogleDistance,												  
+						studentID=qGetResults.studentID,												  
+						hostID=qGetResults.hostID,
+						areaRepID=qGetResults.userID
+					);
+					
+				}
+			</cfscript>
             
 		</cfoutput>
 			

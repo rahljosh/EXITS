@@ -184,7 +184,8 @@
 		   
 	</cffunction>
 
-
+	
+    <!--- Display Social Security Number --->
 	<cffunction name="displaySSN" access="public" returntype="string" output="false" hint="Decrypts a variable">
     	<cfargument name="varString" hint="String">
         <cfargument name="isMaskedSSN" default="1" hint="Set to 1 to return SSN in ***-**-9999 format">
@@ -497,9 +498,10 @@
         <cfhttp url="http://maps.googleapis.com/maps/api/directions/xml?origin=#ARGUMENTS.origin#&destination=#ARGUMENTS.destination#&sensor=false" delimiter="," resolveurl="yes" />
         
         <cfscript>
-			// var vMeterValue = 0.000621371192;
-			// meters --> vResponseXML.DirectionsResponse.route.leg.distance.value
-			// miles --> vResponseXML.DirectionsResponse.route.leg.distance.text
+			var vMeterValue = 0.000621371192;
+			var vDistanceInMiles = '';
+			// meters --> vResponseXML.DirectionsResponse.route.leg.distance.value.XmlText
+			// miles --> vResponseXML.DirectionsResponse.route.leg.distance.text.XmlText
 
 			try {
 				
@@ -508,10 +510,9 @@
 				
 				try {
 					
-					arrSearch = rematch("[\d]+",vResponseXML.DirectionsResponse.route.leg.distance.text);
-					return arrSearch[4];
+					vDistanceInMiles = ReplaceNoCase(vResponseXML.DirectionsResponse.route.leg.distance.text.XmlText, " mi", "", "ALL");
 					
-					// return ReplaceNoCase(vResponseXML.DirectionsResponse.route.leg.distance.text, " mi", "", "ALL");
+					return vDistanceInMiles;
 					
 				} catch( any error ) {
 					
