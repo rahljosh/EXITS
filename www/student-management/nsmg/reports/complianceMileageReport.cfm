@@ -32,7 +32,7 @@
         	s.studentID, 
             s.firstname, 
             s.familylastname,
-            sh.hfSupervisingDistance,
+            ht.hfSupervisingDistance,
 			h.hostid, 
             h.familylastname AS hostlastname,
             CONCAT(h.address, ', ', h.city, ', ', h.state, ', ', h.zip) AS hostAddress,
@@ -58,13 +58,15 @@
         LEFT JOIN 
         	smg_users u ON s.arearepid = u.userid
 		INNER JOIN
-        	smg_hostHistory sh ON sh.studentID = s.studentID
+        	smg_hostHistory ht ON ht.studentID = s.studentID
                 AND 
-                	sh.isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">            	
+                	ht.isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">            	
 				AND
-                	sh.hostID = h.hostID
+                	ht.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">    
                 AND
-                	sh.areaRepID = u.userID
+                	ht.hostID = h.hostID
+                AND
+                	ht.areaRepID = u.userID
 				<cfif VAL(displayOutOfCompliance)>
                 AND
                 	(

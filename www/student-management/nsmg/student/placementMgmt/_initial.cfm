@@ -1091,11 +1091,17 @@
                             
 								<!--- Relocation - Display only if student has arrived --->
                                 <span>Is this a Relocation? <em>*</em></span>
-                                <input type="radio" name="isRelocation" id="isRelocation0" value="0" #vDisableRelocation# <cfif FORM.isRelocation EQ 0> checked="checked" </cfif> >
-                                <label for="isRelocation0">No</label>                            
-                                &nbsp;                            
-                                <input type="radio" name="isRelocation" id="isRelocation1" value="1" #vDisableRelocation# <cfif FORM.isRelocation EQ 1> checked="checked" </cfif> >
-                                <label for="isRelocation1">Yes</label>
+                                
+                                <cfif VAL(vLockIsRelocationField)>
+                                	<input type="hidden" name="isRelocation" id="isRelocation" value="#VAL(FORM.isRelocation)#" />
+                                    <label for="isRelocation">#YesNoFormat(VAL(FORM.isRelocation))#</label>  
+                                <cfelse>
+                                    <input type="radio" name="isRelocation" id="isRelocation0" value="0" <cfif NOT VAL(FORM.isRelocation)> checked="checked" </cfif> >
+                                    <label for="isRelocation0">No</label>                            
+                                    &nbsp;                            
+                                    <input type="radio" name="isRelocation" id="isRelocation1" value="1" <cfif FORM.isRelocation EQ 1> checked="checked" </cfif> >
+                                    <label for="isRelocation1">Yes</label>
+                                </cfif>
                         
 								<!--- Reason --->
                                 <span>Please indicate why you are changing the host family: <em>*</em></span> 

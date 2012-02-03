@@ -936,6 +936,7 @@
                 UPDATE
                     smg_hosthistory	
                 SET
+                	isWelcomeFamily = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
                     dateSetHostPermanent = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateSetHostPermanent#">
                 WHERE
                     historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vHostHistoryID)#">
@@ -1867,6 +1868,8 @@
                     smg_users user ON h.changedby = user.userID
                 WHERE 
                     h.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+                AND
+                	h.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                 ORDER BY 
                     h.dateCreated DESC, 
                     h.historyid DESC
