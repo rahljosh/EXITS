@@ -161,6 +161,8 @@
                     smg_students s
                 INNER JOIN
                     smg_hostHistory ht ON ht.studentID = s.studentID
+                        AND
+                            ht.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">    
                 INNER JOIN
                     progress_reports pr ON pr.fk_student = s.studentID            
                     AND
@@ -253,6 +255,8 @@
                     smg_students s
                 INNER JOIN
                     smg_hostHistory ht ON ht.studentID = s.studentID
+                        AND
+                            ht.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">    
                         AND
                             ht.hostID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                 INNER JOIN	

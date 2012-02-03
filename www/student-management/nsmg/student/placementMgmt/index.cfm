@@ -63,14 +63,25 @@
 		qGetArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=qGetStudentInfo.studentID, flightType='arrival', flightLegOption='lastLeg');
 		
 		// Check if Student has arrived
+		vLockIsRelocationField = 0;
 		vHasStudentArrived = 0;
-		vDisableRelocation = '';
 		
-		if ( isDate(qGetArrival.dep_date) AND qGetArrival.dep_date LT now() ) {
-			vHasStudentArrived = 1;
-			vDisableRelocation = 'readonly="readonly"';
-			FORM.isRelocation = 1;
-		} 
+		if ( isDate(qGetArrival.dep_date) ) {
+		
+			vDateDifference = DateCompare(qGetArrival.dep_date, now(), "d");
+
+			if ( vDateDifference GTE 0 ) {
+				// Student Has Arrived - Set Relocation to YES
+				vHasStudentArrived = 1;
+				vLockIsRelocationField = 1;
+				FORM.isRelocation = 1;
+			} else {
+				// Student Has Not Arrived - Set Relocation to NO
+				vLockIsRelocationField = 1;
+				FORM.isRelocation = 0;			
+			}
+			
+		}
 		
 		// Get Program Information
 		qGetProgramInfo = APPLICATION.CFC.PROGRAM.getPrograms(programID=qGetStudentInfo.programID);
