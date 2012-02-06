@@ -357,7 +357,7 @@
 				SESSION.formErrors.Add("You must enter a reason for rejecting this placement");
 			}	
 
-			if ( LEN(FORM.reason) AND LEN(FORM.reason) LT 10 ) { 
+			if ( LEN(FORM.reason) AND LEN(FORM.reason) LT 5 ) { 
 				// Get all the missing items in a list
 				SESSION.formErrors.Add("Please provide details for rejecting this placement");
 			}	
@@ -954,7 +954,7 @@
         </cfswitch>
 
 		<!--- Display Distance in Miles --->
-        <cfif listFind("1,2,3,4", CLIENT.userType) AND qGetPlacementHistory.hfSupervisingDistance GTE 100>
+        <cfif listFind("1,2,3,4", CLIENT.userType) AND vPlacementStatus NEQ 'unplaced' AND qGetPlacementHistory.hfSupervisingDistance GTE 100>
             
 			<cfscript>
 				vSetColorCode = '';
@@ -1362,7 +1362,11 @@
                             
                                 #qGetAreaRepInfo.firstName# #qGetAreaRepInfo.lastName# (###qGetAreaRepInfo.userID#) <br />
                                 #qGetAreaRepInfo.city#, #qGetAreaRepInfo.state# #qGetAreaRepInfo.zip#
-        
+								<cfif VAL(qGetPlacementHistory.hfSupervisingDistance)>
+                                	 <br />
+                                	Distance to Host Family: #qGetPlacementHistory.hfSupervisingDistance# miles
+                                </cfif>
+
                             </cfif>
 						
                         </div>
