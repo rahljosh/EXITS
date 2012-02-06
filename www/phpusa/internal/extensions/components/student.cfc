@@ -722,6 +722,7 @@
                 UPDATE
                     smg_hosthistory	
                 SET
+                    isWelcomeFamily = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
                     dateSetHostPermanent = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateSetHostPermanent#">
                 WHERE
                     historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vHostHistoryID)#">
@@ -1485,6 +1486,8 @@
                     	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                     WHERE
                     	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+                    AND	
+                    	assignedID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
 			</cfquery>                    
     </cffunction>
     
