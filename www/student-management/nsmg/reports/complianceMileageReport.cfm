@@ -32,6 +32,9 @@
         	s.studentID, 
             s.firstname, 
             s.familylastname,
+            s.active,
+            s.cancelDate,
+            ht.historyID,
             ht.hfSupervisingDistance,
 			h.hostid, 
             h.familylastname AS hostlastname,
@@ -67,6 +70,12 @@
                 	ht.hostID = h.hostID
                 AND
                 	ht.areaRepID = u.userID
+				<!---
+                AND
+                	ht.schoolID = s.schoolID
+                AND
+                	ht.placeRepID = s.placeRepID
+				--->
 				<cfif VAL(displayOutOfCompliance)>
                 AND
                 	(
@@ -76,8 +85,6 @@
                     )
                 </cfif>                    
 		WHERE 
-        	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
-        AND 
             s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
         ORDER BY	
         	c.companyShort,
@@ -246,9 +253,22 @@
 			</cfscript>
 			                            
             <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
-                <td>#qGetResults.firstname# #qGetResults.familylastname# (###qGetResults.studentID#)</td>
-                <td>#qGetResults.supervisingFirstName# #qGetResults.supervisingLastName# (###qGetResults.userID#)</td>     
-                <td>#qGetResults.hostlastname# (###qGetResults.hostid#)</td>                           
+                <td>
+                	#qGetResults.firstname# #qGetResults.familylastname# (###qGetResults.studentID#)
+					<cfif VAL(qGetResults.active)>
+                        <span class="note">(Active)</span>
+                    <cfelseif isDate(qGetResults.cancelDate)>
+                        <span class="noteAlert">(Cancelled)</span>
+                    </cfif>
+                </td>
+                <td>
+                	#qGetResults.supervisingFirstName# #qGetResults.supervisingLastName# (###qGetResults.userID#)
+                	<span class="note">#qGetResults.supervisingAddress#</span>
+                </td>     
+                <td>
+                	#qGetResults.hostlastname# (###qGetResults.hostid#)
+                	<span class="note">#qGetResults.hostAddress#</span>
+                </td>                           
                 <td class="center"><cfif vDistance NEQ 'Incorrect parameters'>#Left(vDistance, 4)#<cfelse>#vDistance#</cfif> mi</td>
                 <td class="center #vSetColorCode#">#vGoogleDistance# mi</td>
             </tr>
@@ -258,10 +278,8 @@
 				if ( VAL(vUpdateTable) AND IsNumeric(vGoogleDistance) ) {
 				
 					APPLICATION.CFC.STUDENT.updateHostSupervisingDistance(
-						distanceInMiles=vGoogleDistance,												  
-						studentID=qGetResults.studentID,												  
-						hostID=qGetResults.hostID,
-						areaRepID=qGetResults.userID
+						historyID=qGetResults.historyID	,
+						distanceInMiles=vGoogleDistance												  																	  
 					);
 					
 				}

@@ -495,11 +495,15 @@
 		--->
 
 		<!--- Driving Directions --->        
-        <cfhttp url="http://maps.googleapis.com/maps/api/directions/xml?origin=#ARGUMENTS.origin#&destination=#ARGUMENTS.destination#&sensor=false" delimiter="," resolveurl="yes" />
+        <cfhttp url="http://maps.googleapis.com/maps/api/directions/xml?sensor=false&origin=#ARGUMENTS.origin#&destination=#ARGUMENTS.destination#" delimiter="," resolveurl="yes" />
         
         <cfscript>
-			var vMeterValue = 0.000621371192;
-			var vDistanceInMiles = '';
+			//var vMeterValue = 0.000621371192;
+			var vFootValue = 0.000189393939;
+			var vReturnValue = '';
+			var vGetDistanceFeet = '';
+			var vGetDistanceMiles = '';
+			var vCeilingDecimalValue = '';
 			// meters --> vResponseXML.DirectionsResponse.route.leg.distance.value.XmlText
 			// miles --> vResponseXML.DirectionsResponse.route.leg.distance.text.XmlText
 
@@ -510,9 +514,31 @@
 				
 				try {
 					
-					vDistanceInMiles = ReplaceNoCase(vResponseXML.DirectionsResponse.route.leg.distance.text.XmlText, " mi", "", "ALL");
+					// Results could be in ft or mi format
+					vReturnValue = vResponseXML.DirectionsResponse.route.leg.distance.text.XmlText;
 					
-					return vDistanceInMiles;
+					if ( Right(vReturnValue, 2) EQ 'ft' ) {
+						
+						// Feet Value Returned
+						vGetDistanceFeet = ReplaceNoCase(vReturnValue, " ft", "", "ALL");	
+						
+						// Set Up Default Values
+						if ( vGetDistanceFeet LTE 1000 ) {
+							
+							vGetDistanceMiles = 0.1;
+														
+						} else {
+							
+							vGetDistanceMiles = DecimalFormat(ReplaceNoCase(vReturnValue, " ft", "", "ALL") * vFootValue);	
+							
+						}
+						
+					} else {
+						// Miles Value Returned
+						vGetDistanceMiles = ReplaceNoCase(vReturnValue, " mi", "", "ALL");
+					}
+					
+					return vGetDistanceMiles;
 					
 				} catch( any error ) {
 					

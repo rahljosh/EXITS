@@ -425,7 +425,7 @@
                                 #qGetResultsByRegion.studentName#
                                 <cfif VAL(qGetResultsByRegion.active)>
                                     <span class="note">(Active)</span>
-                                <cfelseif isDate(cancelDate)>
+                                <cfelseif isDate(qGetResultsByRegion.cancelDate)>
                                     <span class="noteAlert">(Cancelled)</span>
                                 </cfif>
                             </td>

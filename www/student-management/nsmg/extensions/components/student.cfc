@@ -1796,6 +1796,8 @@
                     isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                 WHERE
                     studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+                AND	
+                    assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         </cfquery>                    
     </cffunction>
 
@@ -1803,9 +1805,6 @@
     <!--- Update Host / Supervising Distance --->
 	<cffunction name="updateHostSupervisingDistance" access="public" returntype="void" output="false" hint="Update Host / Supervising Distance">
         <cfargument name="historyID" default="0" hint="historyID is not required">
-        <cfargument name="studentID" default="0" hint="studentID is not required">
-        <cfargument name="hostID" default="0" hint="hostID is not required">
-        <cfargument name="areaRepID" default="0" hint="areaRepID is not required">
         <cfargument name="distanceInMiles" hint="distanceInMiles is required">
 			
         <cfquery 
@@ -1815,17 +1814,7 @@
                 SET
                     hfSupervisingDistance = <cfqueryparam cfsqltype="cf_sql_float" value="#ARGUMENTS.distanceInMiles#">
                 WHERE
-                
-                <cfif VAL(ARGUMENTS.historyID)>
-                    historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.historyID#">	
-                <cfelse>
-                        studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">				                
-                    AND
-                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">				                
-                    AND
-                        areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.areaRepID)#">	
-                </cfif>
-                
+                    historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.historyID)#">	
         </cfquery>
 		
     </cffunction>
