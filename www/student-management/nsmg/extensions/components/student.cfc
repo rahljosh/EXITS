@@ -1686,7 +1686,7 @@
 			}
 			
 			// Update Mileage if Host Family or Supervising Representative is updated
-			if ( VAL(hasHostIDChanged) OR VAL(hasAreaRepIDChanged) ) {
+			if ( ARGUMENTS.placementStatus EQ 'Unplaced' OR VAL(hasHostIDChanged) OR VAL(hasAreaRepIDChanged) ) {
 			
 				// Get Host Family Address
 				vHostAddress = APPLICATION.CFC.HOST.getCompleteHostAddress(hostID=ARGUMENTS.hostID).completeAddress;
@@ -1863,7 +1863,8 @@
                     h.actions,
                     h.datePlaced,
                     h.datePlacedEnded,
-                    h.dateOfChange,
+                    h.isActive,
+                    h.dateOfChange,                    
                     h.dateCreated,
                     h.dateUpdated,
                     <!--- Host Family --->
