@@ -22,7 +22,7 @@
 	SELECT inv.invoiceid, inv.intrepid, inv.date,
 		s.firstname, s.familylastname,
 		e.chargetypeid, e.studentid, e.programid, e.amount, e.description, e.date, e.full_paid,
-		u.userid, u.businessname, u.firstname as int_firstname, u.lastname as int_lastname, u.address, u.address2, u.city, u.zip, u.phone, u.fax, u.php_contact_email,
+		u.userid, u.businessname, u.firstname as int_firstname, u.lastname as int_lastname, u.address, u.address2, u.city, u.zip, u.phone, u.fax, u.php_contact_email, u.email,
 		smg_countrylist.countryname, 
 		billcountry.countryname as billcountryname
 	FROM egom_invoice inv
@@ -66,12 +66,12 @@ ORDER BY
 
 <cfoutput>
 
-<cfif invoice_info.php_contact_email EQ ''>
+<cfif invoice_info.email EQ ''>
 		<table width="95%" class="box" bgcolor="##ffffff" align="center" cellpadding="3" cellspacing="0">
 			<tr><td>&nbsp;</td></tr>
 			<tr><th bgcolor="##C2D1EF">Invoice Error</th></tr>
 			<tr><td>&nbsp;</td></tr>
-			<tr><th>There is no email on file for for #invoice_info.businessname#. Invoice by Email can not be sent.</th></tr>
+			<tr><th>There is no email on file for #invoice_info.businessname#. Invoice by Email can not be sent.</th></tr>
 			<tr><td>&nbsp;</td></tr>
 			<tr bgcolor="##C2D1EF"><th><a href="javascript:window.close()"><img src="../pics/close.gif" border="0" /></a></th></tr>
 			<tr><td>&nbsp;</td></tr>
@@ -90,7 +90,7 @@ ORDER BY
 	<cfabort>
 </cfif>
 
-<cfmail from="#AppEmail.finance#" to="#invoice_info.php_contact_email#" bcc="#get_sender.email#" subject='PHP Invoice ###invoice_info.invoiceid# for #invoice_info.businessname#' type="html" failto="support@student-management.com">
+<cfmail from="#AppEmail.finance#" to="#invoice_info.email#" bcc="#get_sender.email#" subject='PHP Invoice ###invoice_info.invoiceid# for #invoice_info.businessname#' type="html" failto="support@student-management.com">
 <style type="text/css">
 /*<![CDATA[*/
 	body {
@@ -155,7 +155,7 @@ table.nav_bar {  background-color: ##ffffff; border: 1px solid ##000000; }
 			#invoice_info.address#<br />
 			<cfif invoice_info.address2 NEQ ''>#invoice_info.address2#<br /></cfif>
 			#invoice_info.city# <cfif invoice_info.billcountryname NEQ ''>#invoice_info.billcountryname#<cfelse>#invoice_info.countryname#</cfif> #invoice_info.zip#<br />
-			E: <a href="mailto:#invoice_info.php_contact_email#">#invoice_info.php_contact_email#</a> <br />
+			E: <a href="mailto:#invoice_info.email#">#invoice_info.email#</a> <br />
 			P: #invoice_info.phone#<br />
 			F: #invoice_info.fax#<br />
 		</td>
@@ -288,7 +288,7 @@ table.nav_bar {  background-color: ##ffffff; border: 1px solid ##000000; }
 	<tr><td>&nbsp;</td></tr>
 	<tr><th bgcolor="##C2D1EF">Invoice ###invoice_info.invoiceid# Email Confirmation</th></tr>
 	<tr><td>&nbsp;</td></tr>
-	<tr><th>This invoice was sent to #invoice_info.businessname# at #invoice_info.php_contact_email#.</th></tr>
+	<tr><th>This invoice was sent to #invoice_info.businessname# at #invoice_info.email#.</th></tr>
 	<tr><td>&nbsp;</td></tr>
 	<tr bgcolor="##C2D1EF"><th><a href="javascript:window.close()"><img src="../pics/close.gif" border="0" /></a></th></tr>
 	<tr><td>&nbsp;</td></tr>
@@ -299,7 +299,7 @@ table.nav_bar {  background-color: ##ffffff; border: 1px solid ##000000; }
 	INSERT INTO egom_invoice_sent_history 
 		(invoiceid, userid, date, sent_to)
 	VALUES
-		('#invoice_info.invoiceid#', '#client.userid#', #CreateODBCDateTime(now())#, '#invoice_info.php_contact_email#')
+		('#invoice_info.invoiceid#', '#client.userid#', #CreateODBCDateTime(now())#, '#invoice_info.email#')
 </cfquery>
 
 </cfoutput>

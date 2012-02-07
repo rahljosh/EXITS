@@ -48,7 +48,7 @@ table.nav_bar {  background-color: #ffffff; border: 1px solid #000000; }
 	SELECT inv.invoiceid, inv.intrepid,
 		s.firstname, s.familylastname,
 		e.chargetypeid, e.studentid, e.programid, e.amount, e.description, e.date, e.full_paid,
-		u.userid, u.businessname, u.firstname as int_firstname, u.lastname as int_lastname, u.address, u.address2, u.city, u.zip, u.phone, u.fax, u.php_contact_email,
+		u.userid, u.businessname, u.firstname as int_firstname, u.lastname as int_lastname, u.address, u.address2, u.city, u.zip, u.phone, u.fax, u.php_contact_email, u.email,
 		smg_countrylist.countryname, billcountry.countryname as billcountryname
 	FROM egom_invoice inv
 	LEFT JOIN smg_users u on u.userid = inv.intrepid
@@ -129,7 +129,7 @@ ORDER BY
 			#invoice_info.address#<br />
 			<cfif invoice_info.address2 NEQ ''>#invoice_info.address2#<br /></cfif>
 			#invoice_info.city# <cfif invoice_info.billcountryname NEQ ''>#invoice_info.billcountryname#<cfelse>#invoice_info.countryname#</cfif> #invoice_info.zip#<br />
-			E: <a href="mailto:#invoice_info.php_contact_email#">#invoice_info.php_contact_email#</a> <br />
+			E: <a href="mailto:#invoice_info.email#">#invoice_info.email#</a> <br />
 			P: #invoice_info.phone#<br />
 			F: #invoice_info.fax#<br />
 		</td>
