@@ -6,6 +6,7 @@ set active = 1,
 where userid = #url.userid#
 	
 </cfquery>
+<!----
 <Cfquery name="userEmail" datasource="#application.dsn#">
 select email, whocreated, firstname, lastname
 from smg_users
@@ -15,7 +16,7 @@ where userid = #url.userid#
 		//Check if paperwork is complete for season
 		qGetRegionalManager = APPLICATION.CFC.user.getRegionalManager(regionID=client.regionid);
  </cfscript>
- 
+
    <cfinvoke component="nsmg.cfc.email" method="send_mail">
                     <cfinvokeargument name="email_to" value="#userEmail.email#">
 					<cfinvokeargument name="email_cc" value="#qGetRegionalManager.email#">  
@@ -43,4 +44,7 @@ where userid = #url.userid#
                
                 <cfinvokeargument name="email_from" value="#companyshort#-support@exitsapplication.com">
             </cfinvoke>
+</cfif>
+---->
     <!----End of Email---->
+	<cflocation url="index.cfm?curdoc=user_info&userid=#url.userid#">
