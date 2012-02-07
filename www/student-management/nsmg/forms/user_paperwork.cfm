@@ -424,7 +424,7 @@ function CheckDates(ckname, frname) {
             
 		</td>
        <!----For new accounts, display instructions---->
-        <Cfif get_rep.accountCreationVerified eq 0>
+        <Cfif get_rep.accountCreationVerified eq 0 or get_rep.accountCreationVerified is '' >
         <td valign="top" align=left>
            <table >
            	<tr>
@@ -468,11 +468,21 @@ function CheckDates(ckname, frname) {
                <cfif cbcCheck eq 1 or get_paperwork.ar_info_sheet is '' or get_paperwork.ar_ref_quest1 is '' OR get_paperwork.ar_ref_quest2 is '' or  get_paperwork.ar_cbc_auth_form is ''  or get_paperwork.ar_cbcAuthReview is ''>
                <img src="pics/activateNot.png" width="130" height="25" />
                <Cfelse>
-               <A href="?curdoc=activateNewAccount&userid=#url.userid#"><img src="pics/activateActive.png" width="130" height="25" border="0" /></A>
-               </cfif><Br /><Br />
+               <cfinclude template="activateNewAccount.cfm">
+               <cfquery name="checkActivated" datasource="#application.dsn#">
+               	select accountCreationVerified
+                from smg_users
+                where userid = #url.userid#
+               </cfquery>
+				   <cfif checkActivated.accountCreationVerified eq 1>
+                   		This account is now active
+                   <cfelse>
+                   		<A href="?curdoc=activateNewAccount&userid=#url.userid#"><img src="pics/activateActive.png" width="130" height="25" border="0" /></A>
+                   </cfif><Br /><Br />
                <cfif cbcCheck eq 1>
                 Just a reminder that no CBC has been run <br /><br />
             </cfif>
+          </cfif>
         <em>When this account is activated, the user will receive the<br />
          welcome email.  The Regional Manager will also receive<Br /> 
          an email letting them know the account is active. </em>
