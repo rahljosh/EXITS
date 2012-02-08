@@ -269,6 +269,13 @@
         	WHERE 
             	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qAuthenticateUser.userID#">
         </cfquery>
+
+		<cfscript>
+			// Set DOS Form Name to I-20
+        	if ( CLIENT.companyID EQ 14 ) {
+				CLIENT.DSFormName = "I-20";
+			}
+		</cfscript>
         
         <!--- this is used only in APPLICATION.cfm to logout after 24 hours. --->
         <cfset CLIENT.thislogin = dateFormat(now(), 'mm/dd/yyyy')>
