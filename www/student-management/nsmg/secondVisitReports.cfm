@@ -1,34 +1,35 @@
-<Cfif isDefined('form.hideReport')>
+<Cfif isDefined('FORM.hideReport')>
 	
     <Cfquery datasource="#application.dsn#">
     INSERT INTO smg_hide_reports (fk_student, fk_host, fk_secondVisitRep, fk_userid, dateChanged)
-    					VALUES (#form.fk_student#, #form.fk_host#, #form.fk_secondVisitRep#, #client.userid#, #now()#)
+    					VALUES (#FORM.fk_student#, #FORM.fk_host#, #FORM.fk_secondVisitRep#, #client.userid#, #now()#)
     </Cfquery>
 	
 </Cfif>
-<Cfif isDefined('form.unHideReport')>
+
+<Cfif isDefined('FORM.unHideReport')>
 	
     <Cfquery datasource="#application.dsn#">
-    delete from smg_hide_reports where id = #form.unHideReport#
+    delete from smg_hide_reports where id = #FORM.unHideReport#
 
     </Cfquery>
 	
 </Cfif>
-<cfparam name="form.pr_action" default="">
+<cfparam name="FORM.pr_action" default="">
 
-<cfswitch expression="#form.pr_action#">
+<cfswitch expression="#FORM.pr_action#">
 	<cfcase value="delete_report">
     <cfquery datasource="#application.dsn#">
         DELETE FROM progress_report_dates
-        WHERE fk_progress_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.pr_id#">
+        WHERE fk_progress_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
     </cfquery>
     <cfquery datasource="#application.dsn#">
         DELETE FROM x_pr_questions
-        WHERE fk_progress_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.pr_id#">
+        WHERE fk_progress_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
     </cfquery>
     <cfquery datasource="#application.dsn#">
         DELETE FROM progress_reports
-        WHERE pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.pr_id#">
+        WHERE pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
     </cfquery>
     <cflocation url="index.cfm?curdoc=secondVisitReports" addtoken="no">
     </cfcase>
@@ -37,9 +38,14 @@
 <cfparam name="client.pr_regionid" default="#client.regionid#">
 <cfparam name="client.pr_cancelled" default="0">
 <cfparam name="client.reportType" default="2">
-<cfparam name="form.reportType" default="2">
-<Cfparam name="form.rmonth" default="#DatePart('m', '#now()#')#">
 <Cfparam name="client.pr_rmonth" default="#DatePart('m', '#now()#')#">
+
+<cfparam name="FORM.submitted" default="0">
+<cfparam name="FORM.reportType" default="2">
+<cfparam name="FORM.regionID" default="0">
+<Cfparam name="FORM.rmonth" default="#DatePart('m', '#now()#')#">
+<cfparam name="FORM.cancelled" default="0">
+
 <Cfparam name="resetMonth" default="0">
 <cfparam name="startDate" default="">
 <cfparam name="resetMonth" default="0">
@@ -47,12 +53,36 @@
 <cfparam name="repDUeDate" default="">
 <Cfparam name="inCountry" default= 1>
 <Cfparam name="PreviousReportApproved" default="0">
-<cfparam name="form.selectedProgram" default="">
+<cfparam name="FORM.selectedProgram" default="">
 
-<Cfset client.selectedProgram = #form.selectedProgram#>
-<Cfif form.reportType eq 1>
+<cfscript>
+	// This page will always display second visit reports
+	// CLIENT.reportType = 2;
+	
+	// save the submitted values
+	if ( VAL(FORM.submitted) ) {
+	
+		// Set CLIENT Variable
+		CLIENT.pr_regionID = FORM.regionID;
+		CLIENT.pr_cancelled = FORM.cancelled;
+		CLIENT.selectedProgram = FORM.selectedProgram;
+	
+	} else {
+		
+		// Set CLIENT Default Values 	
+		CLIENT.pr_regionID = CLIENT.regionID;
+		CLIENT.pr_cancelled = 0;
+		CLIENT.selectedProgram = '';
+	
+	}
+</cfscript>
+
+<Cfset client.selectedProgram = FORM.selectedProgram>
+
+<Cfif FORM.reportType eq 1>
 	<cflocation url="index.cfm?curdoc=progress_reports" addtoken="no">
 </Cfif>
+
 <SCRIPT>
 <!--
 // opens letters in a defined format
@@ -109,11 +139,11 @@ function OpenLetter(url) {
     </cfif>
 </cfif>
 
-<Cfif isDefined('form.reportType')>
-	<cfif form.reportType neq client.ReportType>
+<Cfif isDefined('FORM.reportType')>
+	<cfif FORM.reportType neq client.ReportType>
     	<Cfset resetMonth = 1>
 	</cfif>
-	<cfset client.reportType = #form.reportType#>
+	<cfset client.reportType = #FORM.reportType#>
 </Cfif>
 <Cfif client.usertype EQ 15>
 	<cfset client.reportType = 2>
@@ -130,8 +160,8 @@ function OpenLetter(url) {
 
 <!----If a month is passed in from the form, use it for the month if its works with the current report type---->
 
-<Cfif #form.rmonth# neq 0 AND resetMonth eq 0>
-	<Cfset client.pr_rmonth = #form.rmonth#>
+<Cfif #FORM.rmonth# neq 0 AND resetMonth eq 0>
+	<Cfset client.pr_rmonth = #FORM.rmonth#>
 
       <Cfloop from="#DateRange.startDate#" to="#DateRange.endDate#" index=i step="#CreateTimeSpan(31,0,0,0)#">
                 <Cfif client.pr_rmonth eq "#DatePart('m', '#i#')#">
@@ -185,64 +215,13 @@ where isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
 and esi = 14
 </cfif>
 </cfquery>
+
 <!----get Menu options for seleted report---->
 <cfquery name="reportOptions" dbtype="query">
 select *
 from reportTypes
 where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.reportType#">
 </cfquery>
-
-<!--- save the submitted values. --->
-<cfif isDefined("form.submitted")>
-	<cfif isDefined("form.regionid")>
-		<cfset client.pr_regionid = form.regionid>
-    </cfif>
-    <cfset client.pr_cancelled = form.cancelled>
-    <!----
-	<cfset client.pr_rmonth = form.rmonth> 
-	---->
-	
-</cfif>
-
-<!--- set the corresponding database field used in the output. --->
-<cfswitch expression="#client.pr_rmonth#">
-<cfcase value="9">
-	<cfset dbfield = 'sept_report'>
-</cfcase>
-<cfcase value="10">
-	<cfset dbfield = 'oct_report'>
-</cfcase>
-<cfcase value="11">
-	<cfset dbfield = 'nov_report'>
-</cfcase>
-<cfcase value="12">
-	<cfset dbfield = 'dec_report'>
-</cfcase>
-<cfcase value="1">
-	<cfset dbfield = 'jan_report'>
-</cfcase>
-<cfcase value="2">
-	<cfset dbfield = 'feb_report'>
-</cfcase>
-<cfcase value="3">
-	<cfset dbfield = 'march_report'>
-</cfcase>
-<cfcase value="4">
-	<cfset dbfield = 'april_report'>
-</cfcase>
-<cfcase value="5">
-	<cfset dbfield = 'may_report'>
-</cfcase>
-<cfcase value="6">
-	<cfset dbfield = 'june_report'>
-</cfcase>
-<cfcase value="7">
-	<cfset dbfield = 'july_report'>
-</cfcase>
-<cfcase value="8">
-	<cfset dbfield = 'aug_report'>
-</cfcase>
-</cfswitch>
 
 <style type="text/css">
 <!--
@@ -798,10 +777,10 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                             <cfelse>         
                                  <Cfloop query="indReports">      
                                  <cfif indReports.currentrow gt 1>
-                                 	<td colspan=3><td>#getprevhosts.familylastname# (#getprevhosts.hostid#)</td>
+                                 	<tr  ><td colspan=3><td>#getprevhosts.familylastname# (#getprevhosts.hostid#)</td>
                                  </cfif>    
                                     <cfif getResults.secondvisitrepid neq indReports.fk_secondvisitrep>
-                                 	<td colspan=2>
+                                 	<tr  ><td colspan=2>
                                     <cfelse>
                               		<td>
                                     
@@ -844,7 +823,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                                        </tr>
                                    <Cfelse>
                                         <cfif getResults.secondvisitrepid eq fk_secondvisitrep>
-                                            <td>
+                                            <tr  ><td>
                                              <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#pr_id#"><img src="pics/buttons/greyedView.png" border=0 /></a>
                                             </td>
                                        </cfif>

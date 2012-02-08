@@ -15,17 +15,18 @@
     <cfimport taglib="extensions/customTags/gui/" prefix="gui" />	
 	
     <!--- Param CLIENT Variables --->
-    <cfparam name="CLIENT.pr_regionid" default="#CLIENT.regionid#">
+    <cfparam name="CLIENT.pr_regionID" default="#CLIENT.regionID#">
     <cfparam name="CLIENT.pr_cancelled" default="0">
     <cfparam name="CLIENT.reportType" default="1">
-    <cfparam name="CLIENT.pr_rmonth" default="#DatePart('m', '#now()#')#">
+    <cfparam name="CLIENT.pr_rmonth" default="#Month(now())#">
 
     <!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.reportType" default="1">
     <cfparam name="FORM.rmonth" default="">
     <cfparam name="FORM.reportType" default="1">
-
+    <cfparam name="FORM.cancelled" default="0">
+    
     <!--- Param LOCAL Variables --->
     <cfparam name="startDate" default="">
     
@@ -45,24 +46,19 @@
 		// save the submitted values
         if ( VAL(FORM.submitted) ) {
         
-            // Set Client Variable
-            if ( VAL(FORM.rmonth) ) {
-                CLIENT.pr_rmonth = FORM.rmonth;
-            }
-    
-            // Set Client Variable
-            if ( VAL(FORM.reportType) ) {
-                CLIENT.reportType = FORM.reportType;
-            }
-        
-            // Set Client Variable
-            if ( VAL(FORM.regionID) ) {
-                CLIENT.pr_regionid = FORM.regionID;
-            }
-			
+            // Set CLIENT Variable
+            CLIENT.pr_rmonth = FORM.rmonth;
+			CLIENT.pr_regionID = FORM.regionID;
 			CLIENT.pr_cancelled = FORM.cancelled;		
         
-        }
+        } else {
+			
+			// Set CLIENT Default Values 	
+			CLIENT.pr_rmonth = Month(now());
+			CLIENT.pr_regionID = CLIENT.regionID;
+			CLIENT.pr_cancelled = 0;
+		
+		}
 	</cfscript>
 
 	<!--- Second Visit Report --->
@@ -183,7 +179,7 @@
 	var checkSelectedReport = function() { 
 	
 		if ( $("#reportType").val() == 2 ) {			
-			window.location.replace('index.cfm?curdoc=secondVisitReports');			
+			window.location.replace('index.cfm?curdoc=secondVisitReports&setVariables');			
 		}		
 	
 	}
@@ -243,7 +239,7 @@
                 <cfif ListFind("1,2,3,4", CLIENT.usertype)>
                     <td>
                         Region<br />
-                        <cfselect name="regionid" query="qGetRegionList" value="regionID" display="regionName" selected="#CLIENT.pr_regionid#" />
+                        <cfselect name="regionID" query="qGetRegionList" value="regionID" display="regionName" selected="#CLIENT.pr_regionID#" />
                     </td>
                 </cfif>
             
@@ -315,7 +311,7 @@
         smg_users rep ON s.arearepid = rep.userid
     INNER JOIN user_access_rights ON s.arearepid = user_access_rights.userid
         AND 
-            s.regionassigned = user_access_rights.regionid
+            s.regionassigned = user_access_rights.regionID
     LEFT JOIN 
     	smg_users advisor ON user_access_rights.advisorID = advisor.userid
     INNER JOIN 
@@ -325,10 +321,10 @@
     WHERE 
     	
     <cfif CLIENT.usertype LTE 4>
-    	s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.pr_regionid#">
-    <!--- don't use CLIENT.pr_regionid because if they change access level this is not reset. --->
+    	s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.pr_regionID#">
+    <!--- don't use CLIENT.pr_regionID because if they change access level this is not reset. --->
     <cfelse>
-    	s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionid#">
+    	s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
     </cfif>
     
     <cfif CLIENT.pr_cancelled EQ 0>
