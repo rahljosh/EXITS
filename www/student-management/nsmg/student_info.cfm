@@ -882,7 +882,7 @@
 				<tr bgcolor="##EAE8E8"><td colspan="3"><span class="get_attention"><b>:: </b></span>#CLIENT.DSFormName# Form <cfif CLIENT.usertype LTE '4'>&nbsp; &nbsp; [ <font size="-3"><a href="javascript:OpenHistory('sevis/student_history.cfm?unqid=#uniqueid#');">History</a> ]</font></cfif> </td></tr>				
 				<tr>		
 					<td><Cfif verification_received EQ ''><input type="checkbox" name="verification_box" value="0" onClick="PopulateDS2019Box()" <cfif FORM.edit EQ 'no'>disabled</cfif>> <cfelse> <input type="checkbox" name="verification_box" value="1" onClick="PopulateDS2019Box()" checked <cfif FORM.edit EQ 'no'>disabled</cfif>> </cfif>
-					<td>DS 2019 Verification Received &nbsp; &nbsp; Date: &nbsp;<input type="text" name="verification_form" size=8 value="#DateFormat(verification_received, 'mm/dd/yyyy')#" <cfif FORM.edit EQ 'no'>readonly</cfif>></td>
+					<td>#CLIENT.DSFormName# Verification Received &nbsp; &nbsp; Date: &nbsp;<input type="text" name="verification_form" size=8 value="#DateFormat(verification_received, 'mm/dd/yyyy')#" <cfif FORM.edit EQ 'no'>readonly</cfif>></td>
 				</tr>
 				<tr>
 					<td width="10">&nbsp;</td>
@@ -896,7 +896,7 @@
 					</td>
 				</tr>
 				<tr><td>&nbsp;</td>	
-					<td>DS2019 no.: &nbsp;<input type="text" name="ds2019_no" size=12 value="#ds2019_no#" maxlength="12" <cfif FORM.edit EQ 'no'>readonly</cfif>> &nbsp; 
+					<td>#CLIENT.DSFormName# no.: &nbsp;<input type="text" name="ds2019_no" size=12 value="#ds2019_no#" maxlength="12" <cfif FORM.edit EQ 'no'>readonly</cfif>> &nbsp; 
 						Batch ID: #sevis_batchid#</td>
 				</tr>
 				<tr>

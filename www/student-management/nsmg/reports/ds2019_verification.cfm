@@ -88,11 +88,12 @@
 </cfoutput>
 </table>
 
+<cfoutput>
 <div id="pagecell_reports">
 <hr width=80% color="000000">
 <div align="center"><h3>#CLIENT.DSFormName# Verification Report</h3></div>
 
-<cfoutput>
+
 <div align="center"><h4>Total of #get_student.recordcount# student(s).</h4></b></div>
 <div align="center"><h4><b>Program:</b> #program_name.programname#</h4></b></div>
 </cfoutput>
