@@ -67,8 +67,9 @@
 		vHasStudentArrived = 0;
 		
 		if ( isDate(qGetArrival.dep_date) ) {
-		
-			vDateDifference = DateCompare(qGetArrival.dep_date, now(), "d");
+			
+			// Returns -1, if date1 is earlier than date2 | Returns 0, if date1 is equal to date2 | Returns 1, if date1 is later than date2
+			vDateDifference = DateCompare(now(), qGetArrival.dep_date, "d"); 
 
 			if ( vDateDifference GTE 0 ) {
 				// Student Has Arrived - Set Relocation to YES

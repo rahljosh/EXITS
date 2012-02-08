@@ -1122,7 +1122,7 @@
                                     <input type="radio" name="isRelocation" id="isRelocation1" value="1" <cfif FORM.isRelocation EQ 1> checked="checked" </cfif> >
                                     <label for="isRelocation1">Yes</label>
                                 </cfif>
-                        
+                                
 								<!--- Reason --->
                                 <span>Please indicate why you are changing the host family: <em>*</em></span> 
                                 <select name="changePlacementReasonID" id="changePlacementReasonID" class="xxLargeField" onchange="displayChangePlacementReason();">
