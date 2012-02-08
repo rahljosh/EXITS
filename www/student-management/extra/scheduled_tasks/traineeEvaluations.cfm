@@ -301,7 +301,7 @@
 					emailReplyTo=vEmailFrom,
 					emailSubject=qGetMidterm.firstName[i] & ' ' & qGetMidterm.lastName[i] & " Trainee Midterm Evaluation",
 					emailMessage=vMidTermEvaluation,
-					emailFilePath=APPLICATION.PATH.TRAINEE.PDFDOCS & "ISE_Midterm Evaluation.pdf",
+					emailFilePath=APPLICATION.PATH.TRAINEE.PDFDOCS & "ISE_Midterm_Evaluation.pdf",
 					emailPriority=1,
 					footerType="emailNoInfo",
 					companyID=7
