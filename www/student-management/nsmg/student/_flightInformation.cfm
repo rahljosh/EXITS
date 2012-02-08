@@ -436,21 +436,6 @@
                     document.flightInformation.insu_dp_end_date.value = ""
                 }
             }
-            
-            function checkDate(theField){
-                var eDate = new Date(theField.value);
-                var nowDate  = new Date();
-                nowDate.setHours(0,0,0);
-                var mDate = new Date();
-                mDate.setMonth(mDate.getMonth()+24);
-                if (eDate > mDate || eDate < nowDate){
-                  alert("This date is prior to todays date: "+eDate);
-                  return false;
-                } else{
-                 
-                  return true;
-                }
-            }
             // -->
         </script>
 
@@ -596,7 +581,7 @@
                                 <cfloop from="1" to="4" index="i"> 
                                     <tr bgcolor="##DDF0DD" align="center" class="trNewPreAYPArrival <cfif qGetPreAypArrival.recordCount> displayNone </cfif>">
                                         <td>&nbsp;</td>
-                                        <td><input type="text" name="incomingNewPreAYPDepartureDate#i#" class="datePicker" maxlength="10" onChange="return checkDate(this)"></td>
+                                        <td><input type="text" name="incomingNewPreAYPDepartureDate#i#" class="datePicker" maxlength="10"></td>
                                         <td><input type="text" name="incomingNewPreAYPDepartureCity#i#" class="fieldSize100" maxlength="40"></td>
                                         <td><input type="text" name="incomingNewPreAYPDepartureAirCode#i#" class="fieldSize40" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                         <td><input type="text" name="incomingNewPreAYPArrivalCity#i#" class="fieldSize100" maxlength="40"></td>
@@ -696,7 +681,7 @@
                             <cfloop from="1" to="4" index="i"> 
                                 <tr bgcolor="##D5DCE5" align="center" class="trNewAYPArrival <cfif qGetArrival.recordCount> displayNone </cfif>">
                                     <td>&nbsp;</td>
-                                    <td><input type="text" name="incomingNewDepartureDate#i#" class="datePicker" maxlength="10" onChange="return checkDate(this)"></td>
+                                    <td><input type="text" name="incomingNewDepartureDate#i#" class="datePicker" maxlength="10"></td>
                                     <td><input type="text" name="incomingNewDepartureCity#i#" class="fieldSize100" maxlength="40"></td>
                                     <td><input type="text" name="incomingNewDepartureAirCode#i#" class="fieldSize40" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                     <td><input type="text" name="incomingNewArrivalCity#i#" class="fieldSize100" maxlength="40"></td>
