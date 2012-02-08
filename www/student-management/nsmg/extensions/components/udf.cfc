@@ -40,6 +40,12 @@
 				vAdmissionsEmail = 'jana@case-usa.org';
 				vAdmissionsEmailLink = '<a href="mailto:jana@case-usa.org">jana@case-usa.org</a>';			
 				vAdmissionsInfo = 'Jana De Fillipps at <a href="mailto:jana@case-usa.org">jana@case-usa.org</a>';
+			} else if ( CLIENT.companyID EQ 14 ) {
+				// ESI
+				vAdmissionsName = 'Stacy Brewer';
+				vAdmissionsEmail = 'info@exchange-serivce.org';
+				vAdmissionsEmailLink = '<a href="mailto:info@exchange-serivce.org">info@exchange-serivce.org</a>';			
+				vAdmissionsInfo = 'Stacy Brewer at <a href="mailto:info@exchange-serivce.org">info@exchange-serivce.org</a>';
 			} else {
 				// ISE
 				vAdmissionsName = 'Brian Hause';
