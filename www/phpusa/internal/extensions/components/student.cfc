@@ -1559,7 +1559,10 @@
                 <cfif LEN(ARGUMENTS.assignedID)>
 					AND
                     	h.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.assignedID)#">
-                </cfif>
+                <cfelse>
+					AND
+                    	h.assignedID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+				</cfif>
                 
                 ORDER BY 
                     h.dateCreated DESC, 
