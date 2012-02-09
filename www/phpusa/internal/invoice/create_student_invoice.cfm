@@ -452,7 +452,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 								<tr>
 									<td>#DateFormat(date, 'mm/dd/yy')#</td>
 									<td><a href="javascript:OpenInvoice('invoice/view_invoice.cfm?i=#uniqueid#')">Invoice ###invoiceid#</a> &nbsp; 
-										<a href="javascript:OpenInvoice('invoice/view_invoice_email.cfm?i=#uniqueid#');" onClick="return confirm ('Invoice ###invoiceid# will be sent to #qGetStudentInfo.businessname# at #qGetStudentInfo.mail#. Click OK to continue.');"><img src="pics/email.gif" border="0" alt="Email Invoice ###invoiceid# to #qGetStudentInfo.businessname#."></a>
+										<a href="javascript:OpenInvoice('invoice/view_invoice_email.cfm?i=#uniqueid#');" onClick="return confirm ('Invoice ###invoiceid# will be sent to #qGetStudentInfo.businessname# at #qGetStudentInfo.email#. Click OK to continue.');"><img src="pics/email.gif" border="0" alt="Email Invoice ###invoiceid# to #qGetStudentInfo.businessname#."></a>
 									</td>
 									<td><cfif canceled EQ 1><font color="##FF0000">Canceled &nbsp; </font></cfif>#description#</td>
 									<td><cfif canceled EQ 1><span class="strike"></cfif>#LSCurrencyFormat(amount, 'local')#</td>
