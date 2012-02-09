@@ -22,6 +22,7 @@
 
     <!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
+    <cfparam name="FORM.regionID" default="0">
     <cfparam name="FORM.reportType" default="1">
     <cfparam name="FORM.rmonth" default="">
     <cfparam name="FORM.reportType" default="1">
@@ -29,7 +30,6 @@
     
     <!--- Param LOCAL Variables --->
     <cfparam name="startDate" default="">
-    
     <cfparam name="endDate" default="">
     <cfparam name="repDueDate" default="">
     <cfparam name="vPreviousReportMonth" default="">
@@ -48,9 +48,12 @@
         
             // Set CLIENT Variable
             CLIENT.pr_rmonth = FORM.rmonth;
-			CLIENT.pr_regionID = FORM.regionID;
 			CLIENT.pr_cancelled = FORM.cancelled;		
-        
+
+			if ( VAL(FORM.regionID) ) {
+				CLIENT.pr_regionID = FORM.regionID;
+			}
+
         } else {
 			
 			// Set CLIENT Default Values 	
@@ -169,14 +172,14 @@
         width="100%"
     />    
 
-    <cfform action="index.cfm?curdoc=progress_reports" method="post">
+    <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
         <input name="submitted" type="hidden" value="1">
         <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
             <tr>
                 <td><input name="send" type="submit" value="Submit" /></td>
                 <td>
                     Reports Available<br />
-                    <select name="reportType" id="reportType" onchange="checkSelectedReport();">
+                    <select name="reportType" id="reportType" onchange="checkSelectedReport();" class="largeField">
                     	<cfloop query="qGetReportTypes">
                         	<option value="#qGetReportTypes.reportTypeID#" <cfif qGetReportTypes.reportTypeID EQ CLIENT.reportType> selected="selected" </cfif>>#qGetReportTypes.description#</option>
                         </cfloop>
@@ -186,13 +189,13 @@
                 <cfif ListFind("1,2,3,4", CLIENT.usertype)>
                     <td>
                         Region<br />
-                        <cfselect name="regionID" query="qGetRegionList" value="regionID" display="regionName" selected="#CLIENT.pr_regionID#" />
+                        <cfselect name="regionID" query="qGetRegionList" value="regionID" display="regionName" selected="#CLIENT.pr_regionID#" class="largeField" />
                     </td>
                 </cfif>
             
                 <td>
                     Phase<br />
-                    <select name="rmonth">
+                    <select name="rmonth" class="mediumField">
                         <option value="0"></option>
                         <cfloop list="8,9,10,11,12,1,2,3,4,5,6,7" index="reportMonth">
                             <option value="#reportMonth#" <cfif CLIENT.pr_rmonth EQ reportMonth> selected="selected" </cfif> >#Left(MonthAsString(reportMonth), 3)# Report</option>
@@ -201,14 +204,14 @@
                 </td>
                 <td>
                     Status<br />
-                    <select name="cancelled">
+                    <select name="cancelled" class="mediumField">
                         <option value="0" <cfif CLIENT.pr_cancelled EQ 0>selected</cfif>>Active</option>
                         <option value="1" <cfif CLIENT.pr_cancelled EQ 1>selected</cfif>>Cancelled</option>
                     </select>            
                 </td>
             </tr>
             <tr>
-                <td colspan="5" align="center" style="border:1px solid ##ccc">
+                <td colspan="5" align="center" style="border-top:1px solid ##ccc">
                     The <strong>#DateFormat('#endDate#', 'mmmm')#</strong> report is for contact durring the month of <strong>#DateFormat('#startDate#', 'mmmm')#</strong> 
                     and due on <strong>#DateFormat('#repDueDate#','mmm. d, yyyy')#</strong>. 
                 </td>
@@ -365,7 +368,7 @@
         	fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.reportType#">
     </cfquery>
 	
-    <table width="100%" class="section">
+    <table border="0" cellpadding="3" cellspacing="0" class="section" width="100%">
         <cfoutput query="qGetResults" group="advisorID">
       
             <cfif currentRow NEQ 1>
@@ -405,15 +408,7 @@
                 
                 <!--- Loop Through Query to Display Students --->
                 <cfoutput>
-                	
-                    <cfscript>
-						// Set Up Previous Report Month
-						
-						// 12 Month and 2nd Semester Programs - January is the first report
-						
-						// 10 Month and 1st Semester Programs - August is the first report
-					</cfscript>
-                    
+
                     <cfquery name="qGetCurrentReport" dbtype="query">
                         SELECT 
                         	*
@@ -442,6 +437,15 @@
                     </cfquery>
                     
                     <cfscript>
+						/**********************************
+							Set Up Previous Report Month
+							ID		Program Type	
+							1,5		10 Month
+							2,24	12 Month
+							3,25	1st Semester
+							4,26	2nd Semester
+						**********************************/
+					
 						// Current Row
 						vMyCurrentRow++;
 						
@@ -468,7 +472,13 @@
 						 
 						// Arrival and Departure dates are set to the first day of arrival month and last day of departure month so calculation includes the month of arrival not just after day.
                     	vInCountryArrival = '#Month(vSetArrivalDate)#/01/#Year(vSetArrivalDate)#';
-                    	vInCountryDeparture  = '#Month(vSetDepartureDate)#/30/#Year(vSetDepartureDate)#';
+                    	
+						if ( Month(vSetDepartureDate) EQ 2 ) {
+							// Account for February
+							vInCountryDeparture  = '#Month(vSetDepartureDate)#/28/#Year(vSetDepartureDate)#';
+						} else {
+							vInCountryDeparture  = '#Month(vSetDepartureDate)#/30/#Year(vSetDepartureDate)#';
+						}
 					</cfscript>
                     
                     <!--- Set report date correctly - use year from program start and end date ---->
@@ -478,7 +488,7 @@
                     	<cfcase value="8,9,10,11,12">
 							
                             <!--- These reports should use the same Year as the program start date --->
-                            <cfset reportDate = '#CLIENT.pr_rmonth - 1#/01/#Year(qGetResults.startDate)#'>	
+                            <cfset vReportDate = '#CLIENT.pr_rmonth - 1#/01/#Year(qGetResults.startDate)#'>	
                             
                         </cfcase>
 
@@ -486,7 +496,7 @@
                     	<cfcase value="1">
 
                             <!--- This should have the same Year as the program start date --->
-                            <cfset reportDate = '12/01/#Year(qGetResults.startDate)#'>	
+                            <cfset vReportDate = '12/01/#Year(qGetResults.startDate)#'>	
                         
                         </cfcase>
 
@@ -494,14 +504,14 @@
                     	<cfcase value="2">
 							
 							<!--- This should have the same Year as the program end date for 5, 10 and 12 month programs to work --->
-                            <cfset reportDate = '#CLIENT.pr_rmonth - 1#/01/#Year(qGetResults.endDate)#'>	
+                            <cfset vReportDate = '#CLIENT.pr_rmonth - 1#/01/#Year(qGetResults.endDate)#'>	
                             
                         </cfcase>
 
                     	<cfdefaultcase>
 							
                             <!--- These reports should use the same Year as the program end date --->
-                            <cfset reportDate = '#CLIENT.pr_rmonth - 1#/01/#Year(qGetResults.endDate)#'>	
+                            <cfset vReportDate = '#CLIENT.pr_rmonth - 1#/01/#Year(qGetResults.endDate)#'>	
                             
                         </cfdefaultcase>
                         
@@ -509,11 +519,16 @@
                     
 					<cfscript>
 						// Determin if student is IN or OUT of the country
-						if ( reportDate GTE vInCountryArrival AND reportDate LTE vInCountryDeparture ) {
+						if ( vReportDate GTE vInCountryArrival AND vReportDate LTE vInCountryDeparture ) {
 							vIsStudentInCountry = 1;
 						} else { 
 							vIsStudentInCountry = 0;
 						}
+						
+						// Approve previous report if arrival month is the same as report date / first report
+						if ( Month(vInCountryArrival) EQ Month(vReportDate) ) {
+                        	vIsPreviousReportApproved = 1;
+                        }
 					</cfscript>
 					
                    	<tr bgcolor="#iif(vMyCurrentRow MOD 2 ,DE("eeeeee") ,DE("white") )#">
@@ -579,7 +594,7 @@
                             	<!--- to add a progress report, user must be the supervising rep, and the program has a report for this phase. --->
 								<cfif NOT VAL(vIsStudentInCountry)>
                                 
-                                    Not in Country - No Report Required 
+                                    Not in Country - No Report Required
                                     
                                 <cfelseif (areaRepID EQ CLIENT.userid and vIsPreviousReportApproved eq 1)>
                             
@@ -606,11 +621,11 @@
 							<!---
 							<cfif CLIENT.userType EQ 1>
 								<br />
-								vInCountryArrival --> #vInCountryArrival# <br />
+								vInCountryArrival --> #DateFormat(vInCountryArrival, 'mm/dd/yyyy')# <br />
 
-								vInCountryDeparture --> #vInCountryDeparture# <br />
+								vInCountryDeparture --> #DateFormat(vInCountryDeparture, 'mm/dd/yyyy')# <br />
 
-								reportDate -> #reportDate# <br />	
+								vReportDate -> #DateFormat(vReportDate, 'mm/dd/yyyy')# <br />	
 		
 								vIsStudentInCountry --> #YesNoFormat(VAL(vIsStudentInCountry))# <br />
 							</cfif>

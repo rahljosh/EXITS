@@ -77,8 +77,6 @@
 	}
 </cfscript>
 
-<Cfset client.selectedProgram = FORM.selectedProgram>
-
 <Cfif FORM.reportType eq 1>
 	<cflocation url="index.cfm?curdoc=progress_reports" addtoken="no">
 </Cfif>
