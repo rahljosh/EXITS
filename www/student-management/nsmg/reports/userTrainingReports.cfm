@@ -471,6 +471,8 @@
                         <cfinvoke component="nsmg.cfc.email" method="send_mail">
                         	<cfinvokeargument name="email_from" value="#vEmailFrom#">
                             <cfinvokeargument name="email_to" value="#qGetResults.email#"> <!--- marcus@iseusa.com ---->
+                            <cfinvokeargument name="email_bcc" value="#CLIENT.email#">
+                            <cfinvokeargument name="email_replyto" value="#CLIENT.email#">
                             <cfinvokeargument name="email_subject" value="#vEmailSubject#">
                             <cfinvokeargument name="email_message" value="#vEmailTemplate#">
                         </cfinvoke>
@@ -537,7 +539,7 @@
                                             <tr>
                                                 <td align="right"><label for="trainingID">Training:</label></td>
                                                 <td>
-                                                    <select name="trainingID" id="trainingID" onchange="displayTrainingScore(this.value);">
+                                                    <select name="trainingID" id="trainingID" onChange="displayTrainingScore(this.value);">
                                                         <option value="">All</option>
                                                         <cfloop query="qGetTrainingOptions">
                                                             <option value="#qGetTrainingOptions.fieldID#">#qGetTrainingOptions.name#</option>
@@ -583,7 +585,7 @@
                                             <tr>
                                                 <td align="right"><label for="trainingID">Training:</label></td>
                                                 <td>
-                                                    <select name="trainingID" id="trainingID" onchange="displayTrainingScore(this.value);">
+                                                    <select name="trainingID" id="trainingID" onChange="displayTrainingScore(this.value);">
                                                         <option value="0">Select a training</option>
                                                         <cfloop query="qGetTrainingOptions">
                                                             <option value="#qGetTrainingOptions.fieldID#">#qGetTrainingOptions.name#</option>
