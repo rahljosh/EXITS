@@ -54,13 +54,6 @@
 				CLIENT.pr_regionID = FORM.regionID;
 			}
 
-        } else {
-			
-			// Set CLIENT Default Values 	
-			CLIENT.pr_rmonth = Month(now());
-			CLIENT.pr_regionID = CLIENT.regionID;
-			CLIENT.pr_cancelled = 0;
-		
 		}
 	</cfscript>
 
@@ -530,7 +523,14 @@
                         	vIsPreviousReportApproved = 1;
                         }
 					</cfscript>
-					
+
+					<!--- Do we need this? --->
+                    <!---
+					<cfif CLIENT.pr_rmonth EQ 10>
+						<cfset vIsPreviousReportApproved = 1>
+					</cfif>
+					--->
+                
                    	<tr bgcolor="#iif(vMyCurrentRow MOD 2 ,DE("eeeeee") ,DE("white") )#">
                         <td>&nbsp;</td>
                         <td>
@@ -584,13 +584,6 @@
 							<!--- add report link --->
                             <cfelse>
                             	
-                                <!--- Do we need this? --->
-                                <!---
-								<cfif CLIENT.pr_rmonth EQ 10>
-									<cfset vIsPreviousReportApproved = 1>
-								</cfif>
-								--->
-                            
                             	<!--- to add a progress report, user must be the supervising rep, and the program has a report for this phase. --->
 								<cfif NOT VAL(vIsStudentInCountry)>
                                 
