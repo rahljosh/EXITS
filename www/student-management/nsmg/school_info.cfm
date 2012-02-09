@@ -134,29 +134,103 @@
 <cfif client.usertype LTE 4>
 
     <cfquery name="hosting_students" datasource="#application.dsn#">
-        SELECT s.firstname, s.familylastname, s.studentid, s.sex, s.countryresident, s.schoolid, s.programid, s.active,
-			u.businessname, c.companyshort, country.countryname, p.programname
-        FROM smg_students s INNER JOIN smg_users u ON s.intrep = u.userid
-        INNER JOIN smg_companies c ON c.companyid = s.companyid
-        LEFT JOIN smg_programs p ON p.programid = s.programid
-        LEFT JOIN smg_countrylist country ON s.countryresident = country.countryid
-        WHERE s.schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_school.schoolid#">
-        <!--- AND s.companyid = '#client.companyid#' --->		
-        ORDER BY c.companyshort, p.programname, s.firstname
+        SELECT
+        	s.firstname, 
+            s.familylastname, 
+            s.studentid, 
+            s.sex, 
+            s.countryresident, 
+            s.schoolid, 
+            s.programid, 
+            s.active,
+			u.businessname, 
+            c.companyshort, 
+            country.countryname, 
+            p.programname
+        FROM 
+        	smg_students s 
+        INNER JOIN 
+        	smg_users u 
+        ON 
+        	s.intrep = u.userid
+        INNER JOIN 
+        	smg_companies c 
+        ON
+        	c.companyid = s.companyid
+        LEFT JOIN 
+        	smg_programs p 
+        ON 
+        	p.programid = s.programid
+        LEFT JOIN 
+        	smg_countrylist country 
+        ON 
+        	s.countryresident = country.countryid
+        WHERE 
+        	s.schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_school.schoolid#">
+		<cfif CLIENT.companyID EQ 10>
+            AND
+                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        <cfelse>
+            AND
+                s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+        </cfif>
+        ORDER BY 
+        	c.companyshort, 
+            p.programname, 
+            s.firstname
     </cfquery>
     
     <cfquery name="hosted_students" datasource="#application.dsn#">
-        SELECT s.firstname, s.familylastname, s.studentid, s.sex, s.countryresident, s.programid, s.active,
-			u.businessname, c.companyshort, country.countryname, p.programname, hist.reason
-        FROM smg_students s INNER JOIN smg_users u ON s.intrep = u.userid
-        INNER JOIN smg_companies c ON c.companyid = s.companyid
-        INNER JOIN smg_hosthistory hist ON hist.studentid = s.studentid
-        LEFT JOIN smg_programs p ON p.programid = s.programid
-        LEFT JOIN smg_countrylist country ON s.countryresident = country.countryid
-        WHERE hist.schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_school.schoolid#">
-        AND hist.reason != 'Original Placement'
-        <!--- AND s.companyid = '#client.companyid#' --->		
-        ORDER BY c.companyshort, p.programname, s.firstname
+        SELECT 
+        	s.firstname, 
+        	s.familylastname, 
+        	s.studentid, 
+        	s.sex, 
+        	s.countryresident, 
+        	s.programid, 
+        	s.active,
+			u.businessname, 
+        	c.companyshort, 
+        	country.countryname, 
+        	p.programname, 
+        	hist.reason
+        FROM 
+        	smg_students s 
+        INNER JOIN 
+        	smg_users u 
+        ON 
+        	s.intrep = u.userid
+        INNER JOIN 
+        	smg_companies c 
+        ON 
+        	c.companyid = s.companyid
+        INNER JOIN 
+        	smg_hosthistory hist 
+        ON 
+        	hist.studentid = s.studentid
+        LEFT JOIN 
+        	smg_programs p 
+        ON 
+       		p.programid = s.programid
+        LEFT JOIN 
+        	smg_countrylist country 
+        ON 
+        	s.countryresident = country.countryid
+        WHERE 
+        	hist.schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_school.schoolid#">
+        AND 
+        	hist.reason != 'Original Placement'
+		<cfif CLIENT.companyID EQ 10>
+            AND
+                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        <cfelse>
+            AND
+                s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+        </cfif>	
+        ORDER BY 
+        	c.companyshort, 
+        	p.programname, 
+        	s.firstname
     </cfquery>
 
 	<style type="text/css">
