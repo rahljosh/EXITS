@@ -118,59 +118,6 @@
        		reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.reportType#">
     </cfquery>
     
-	<!--- set the corresponding database field used in the output. --->
-    <cfswitch expression="#CLIENT.pr_rmonth#">
-    
-        <cfcase value="1">
-            <cfset dbfield = 'jan_report'>
-        </cfcase>
-        
-        <cfcase value="2">
-            <cfset dbfield = 'feb_report'>
-        </cfcase>
-        
-        <cfcase value="3">
-            <cfset dbfield = 'march_report'>
-        </cfcase>
-        
-        <cfcase value="4">
-            <cfset dbfield = 'april_report'>
-        </cfcase>
-        
-        <cfcase value="5">
-            <cfset dbfield = 'may_report'>
-        </cfcase>
-        
-        <cfcase value="6">
-            <cfset dbfield = 'june_report'>
-        </cfcase>
-        
-        <cfcase value="7">
-            <cfset dbfield = 'july_report'>
-        </cfcase>
-        
-        <cfcase value="8">
-            <cfset dbfield = 'aug_report'>
-        </cfcase>
-
-        <cfcase value="9">
-            <cfset dbfield = 'sept_report'>
-        </cfcase>
-        
-        <cfcase value="10">
-            <cfset dbfield = 'oct_report'>
-        </cfcase>
-        
-        <cfcase value="11">
-            <cfset dbfield = 'nov_report'>
-        </cfcase>
-        
-        <cfcase value="12">
-            <cfset dbfield = 'dec_report'>
-        </cfcase>
-        
-    </cfswitch>
-
 </cfsilent>
 
 <script>
@@ -243,18 +190,15 @@
                     </td>
                 </cfif>
             
-                <cfif qGetReportOptions.showPhase EQ 1>
-                    <td>
-                        Phase<br />
-                        <select name="rmonth">
-                            <option value="0"></option>
-                            <cfloop list="8,9,10,11,12,1,2,3,4,5,6,7" index="reportMonth">
-                                <option value="#reportMonth#" <cfif CLIENT.pr_rmonth EQ reportMonth> selected="selected" </cfif> >#Left(MonthAsString(reportMonth), 3)# Report</option>
-                            </cfloop>
-                        </select>                        
-                    </td>
-                </cfif>
-                
+                <td>
+                    Phase<br />
+                    <select name="rmonth">
+                        <option value="0"></option>
+                        <cfloop list="8,9,10,11,12,1,2,3,4,5,6,7" index="reportMonth">
+                            <option value="#reportMonth#" <cfif CLIENT.pr_rmonth EQ reportMonth> selected="selected" </cfif> >#Left(MonthAsString(reportMonth), 3)# Report</option>
+                        </cfloop>
+                    </select>                        
+                </td>
                 <td>
                     Status<br />
                     <select name="cancelled">
@@ -281,10 +225,48 @@
 --->
 <cfquery name="qGetResults" datasource="#APPLICATION.DSN#">
     SELECT 
-    	s.studentid, 
-        s.uniqueid, 
-        s.firstname, 
-        s.familylastname, 
+    	s.studentID, 
+        s.uniqueID, 
+        s.firstName, 
+        s.familyLastName, 
+        <!--- Arrival Date --->
+        (
+            SELECT 
+                dep_date 
+            FROM 
+                smg_flight_info 
+            WHERE 
+                studentID = s.studentID 
+            AND 
+                flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival"> 
+            AND
+                programID = s.programID
+            AND 
+                isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+            ORDER BY 
+                dep_date ASC,
+                dep_time ASC
+            LIMIT 1                            
+        ) AS dateArrived, 
+        <!--- Departure Date --->
+        (
+            SELECT 
+                dep_date 
+            FROM 
+                smg_flight_info 
+            WHERE 
+                studentID = s.studentID 
+            AND 
+                flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure"> 
+            AND
+                programID = s.programID
+            AND 
+                isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+            ORDER BY 
+                dep_date ASC,
+                dep_time ASC
+            LIMIT 1                            
+        ) AS dateDepartured, 
         <!--- Program --->
 		p.programID,
         p.programName,
@@ -293,11 +275,11 @@
         p.type as programType,
         <!--- Area Rep --->
         s.arearepid, 
-        rep.firstname as rep_firstname, 
+        rep.firstName as rep_firstName, 
         rep.lastname as rep_lastname,
         <!--- alias advisor.userid here instead of using user_access_rights.advisorID because the later can be 0 and we want null, and the 0 might be phased out later. --->
         advisor.userid AS advisorID, 
-        advisor.firstname as advisor_firstname, 
+        advisor.firstName as advisor_firstName, 
         advisor.lastname as advisor_lastname, 
         spt.aug_report, 
         spt.oct_report, 
@@ -320,14 +302,14 @@
     	smg_program_type spt ON p.type = spt.programtypeid
     WHERE 
     	
-    <cfif CLIENT.usertype LTE 4>
+    <cfif ListFind("1,2,3,4", CLIENT.usertype)>
     	s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.pr_regionID#">
-    <!--- don't use CLIENT.pr_regionID because if they change access level this is not reset. --->
     <cfelse>
+    	<!--- don't use CLIENT.pr_regionID because if they change access level this is not reset. --->
     	s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
     </cfif>
     
-    <cfif CLIENT.pr_cancelled EQ 0>
+    <cfif NOT VAL(CLIENT.pr_cancelled)>
         AND 
         	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
     <cfelse>
@@ -358,13 +340,13 @@
     <!--- include the advisorID and arearepid because we're grouping by those in the output, just in case two have the same first and last name. --->
     ORDER BY 
     	advisor_lastname, 
-        advisor_firstname, 
+        advisor_firstName, 
         user_access_rights.advisorID, 
         rep_lastname, 
-        rep_firstname, 
+        rep_firstName, 
         s.arearepid, 
-        s.familylastname, 
-        s.firstname
+        s.familyLastName, 
+        s.firstName
 </cfquery>
 
 <cfif VAL(qGetResults.recordCount)>
@@ -376,7 +358,7 @@
         FROM 
         	progress_reports
         WHERE 
-        	fk_student IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#valueList(qGetResults.studentid)#" list="yes"> )
+        	fk_student IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#valueList(qGetResults.studentID)#" list="yes"> )
         AND 
             pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.pr_rmonth#">
         AND 
@@ -388,7 +370,7 @@
       
             <cfif currentRow NEQ 1>
                 <tr>
-                    <td colspan="9" height="25">&nbsp;</td>
+                    <td colspan="9" height="20">&nbsp;</td>
                 </tr>
             </cfif>
             
@@ -397,7 +379,7 @@
                     <cfif NOT LEN(advisorID)>
                         Reports Directly to Regional Director
                     <cfelse>
-                        #qGetResults.advisor_firstname# #qGetResults.advisor_lastname# (###qGetResults.advisorID#)
+                        #qGetResults.advisor_firstName# #qGetResults.advisor_lastname# (###qGetResults.advisorID#)
                   </cfif>
                 </td>
             </tr>
@@ -405,7 +387,7 @@
             <!--- Group by AreaRepID --->
 			<cfoutput group="areaRepID">
                 <tr>
-                    <td colspan="9" class="rep">#qGetResults.rep_firstname# #qGetResults.rep_lastname# (###qGetResults.arearepid#)</td>
+                    <td colspan="9" class="rep">#qGetResults.rep_firstName# #qGetResults.rep_lastname# (###qGetResults.arearepid#)</td>
                 <tr>
                 <tr style="font-weight:bold;">
                     <td width="10">&nbsp;</td>
@@ -423,14 +405,22 @@
                 
                 <!--- Loop Through Query to Display Students --->
                 <cfoutput>
-                
+                	
+                    <cfscript>
+						// Set Up Previous Report Month
+						
+						// 12 Month and 2nd Semester Programs - January is the first report
+						
+						// 10 Month and 1st Semester Programs - August is the first report
+					</cfscript>
+                    
                     <cfquery name="qGetCurrentReport" dbtype="query">
                         SELECT 
                         	*
                         FROM 
                         	qGetAllReports
                         WHERE 
-                        	fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.studentid#">
+                        	fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.studentID#">
                         AND 
                         	fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.reportType#">
                     </cfquery>
@@ -446,7 +436,7 @@
                         AND 
                         	fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.reportType#">
                         AND 
-                        	fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.studentid#">
+                        	fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.studentID#">
                         AND 
                         	pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vPreviousReportMonth)#">
                     </cfquery>
@@ -462,22 +452,16 @@
 							vIsPreviousReportApproved = 0;
 						}
 					
-                        // Get Arrival to Host Family Flight Information - will help to decide if report is needed or not
-                        qGetArrivalToHostFamily = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=qGetResults.studentID,flightType="arrival", programID=qGetResults.programID, flightLegOption="firstLeg");
-                    	
-						// Get Departure Information - will help to decide if report is needed or not
-						qGetDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetResults.studentID), programID=qGetResults.programID, flightType="departure");
-                    
                     	// If no arrival info is on file, we set to program start date
-						if ( IsDate(qGetArrivalToHostFamily.dep_date) ) {
-							vSetArrivalDate = qGetArrivalToHostFamily.dep_Date;
+						if ( IsDate(qGetResults.dateArrived) ) {
+							vSetArrivalDate = qGetResults.dateArrived;
 						} else {
 							vSetArrivalDate = qGetResults.startDate; // qGetSeasonDateRange.startDate; (eg: 08-01-2011)
 						}
 
 						// If no departure info is on file, we set to the program end date
-						if ( IsDate(qGetDeparture.dep_date) ) {
-							vSetDepartureDate = qGetDeparture.dep_date;
+						if ( IsDate(qGetResults.dateDepartured) ) {
+							vSetDepartureDate = qGetResults.dateDepartured;
 						} else {
 							vSetDepartureDate = qGetResults.endDate; // qGetSeasonDateRange.endDate; (eg: 06-30-2012)
 						}
@@ -498,7 +482,7 @@
                             
                         </cfcase>
 
-                        <!--- January (return December) --->
+                        <!--- January (return December dates) --->
                     	<cfcase value="1">
 
                             <!--- This should have the same Year as the program start date --->
@@ -506,21 +490,11 @@
                         
                         </cfcase>
 
-                        <!--- February (return January - work out issue with 12 month program) --->
+                        <!--- February (return January dates - work out issue with 12 month program) --->
                     	<cfcase value="2">
 							
-                            <!--- 12 Month Program - February report date should be 01/01/(year + 1)--->
-                            <cfif qGetResults.programType EQ 2>
-                             
-								<!--- This should have the same Year as the program start date --->
-                                <cfset reportDate = '#CLIENT.pr_rmonth - 1#/01/#Year(qGetResults.startDate)+1#'>	
-                                
-                            <cfelse>
-                            
-								<!--- This should have the same Year as the program start date --->
-                                <cfset reportDate = '#CLIENT.pr_rmonth - 1#/01/#Year(qGetResults.startDate)#'>	
-                                
-                            </cfif>
+							<!--- This should have the same Year as the program end date for 5, 10 and 12 month programs to work --->
+                            <cfset reportDate = '#CLIENT.pr_rmonth - 1#/01/#Year(qGetResults.endDate)#'>	
                             
                         </cfcase>
 
@@ -548,9 +522,9 @@
                         	<!--- put in red if user is the supervising rep for this student.  don't do for usertype 7 because they see only those students. --->
                             <a href="javascript:OpenLetter('reports/PlacementInfoSheet.cfm?uniqueID=#qGetResults.uniqueID#');">
 								<cfif arearepid EQ CLIENT.userid and CLIENT.usertype NEQ 7>
-                                    <font color="##FF0000"><strong>#qGetResults.firstname# #qGetResults.familylastname# (###qGetResults.studentid#)</strong></font>
+                                    <font color="##FF0000"><strong>#qGetResults.firstName# #qGetResults.familyLastName# (###qGetResults.studentID#)</strong></font>
                                 <cfelse>
-                                    #qGetResults.firstname# #qGetResults.familylastname# (###qGetResults.studentID#)
+                                    #qGetResults.firstName# #qGetResults.familyLastName# (###qGetResults.studentID#)
                                 </cfif>
                             </a>
                             
@@ -597,9 +571,9 @@
                             	
                                 <!--- Do we need this? --->
                                 <!---
-                                <cfif CLIENT.pr_rmonth EQ 10>
-                                    <cfset vIsPreviousReportApproved = 1>
-                                </cfif>
+								<cfif CLIENT.pr_rmonth EQ 10>
+									<cfset vIsPreviousReportApproved = 1>
+								</cfif>
 								--->
                             
                             	<!--- to add a progress report, user must be the supervising rep, and the program has a report for this phase. --->
@@ -610,7 +584,7 @@
                                 <cfelseif (areaRepID EQ CLIENT.userid and vIsPreviousReportApproved eq 1)>
                             
                                     <form action="index.cfm?curdoc=forms/pr_add" method="post">
-                                        <input type="hidden" name="studentid" value="#studentid#">
+                                        <input type="hidden" name="studentID" value="#studentID#">
                                         <input type="hidden" name="type_of_report" value="#CLIENT.reportType#">
                                         <input type="hidden" name="month_of_report" value="#CLIENT.pr_rmonth#">
                                         <input name="Submit" type="image" src="pics/new.gif" alt="Add New Report" border="0">
@@ -628,30 +602,36 @@
                                     
 							</cfif>
                           	
-                            <!--- Not In Country Issue
+                            <!--- Not In Country Issue | Troubleshooting --->
+							<!---
 							<cfif CLIENT.userType EQ 1>
-                                <br />
-                                vInCountryArrival --> #vInCountryArrival# <br />
-                                
-                                vInCountryDeparture --> #vInCountryDeparture# <br />
-                                
-                                reportDate -> #reportDate# <br />	
-                                
-                                vIsStudentInCountry --> #vIsStudentInCountry# <br />
-                            </cfif>
+								<br />
+								vInCountryArrival --> #vInCountryArrival# <br />
+
+								vInCountryDeparture --> #vInCountryDeparture# <br />
+
+								reportDate -> #reportDate# <br />	
+		
+								vIsStudentInCountry --> #YesNoFormat(VAL(vIsStudentInCountry))# <br />
+							</cfif>
 							--->
                             
                         </td>
                         <td align="center">#dateFormat(qGetCurrentReport.pr_sr_approved_date, 'mm/dd/yyyy')#</td>
                         <td align="center">
 							<cfif NOT VAL(qGetResults.advisorID)>
-                               N/A
+								N/A
                             <cfelse>
 								#dateFormat(qGetCurrentReport.pr_ra_approved_date, 'mm/dd/yyyy')#
                             </cfif>
                         </td>
                         <td align="center">#dateFormat(qGetCurrentReport.pr_rd_approved_date, 'mm/dd/yyyy')#</td>
-                        <td align="center">#dateFormat(qGetCurrentReport.pr_ny_approved_date, 'mm/dd/yyyy')#</td>
+                        <td align="center">
+                        	<cfif listFind("1,2,3,4", CLIENT.userType) AND isDate(qGetCurrentReport.pr_rd_approved_date) AND NOT isDate(qGetCurrentReport.pr_ny_approved_date)>
+                            	<a href="javascript:document.theForm_#qGetCurrentReport.pr_id#.submit();">[ Click here to Approve ]</a>
+                            <cfelse>
+		                        #dateFormat(qGetCurrentReport.pr_ny_approved_date, 'mm/dd/yyyy')#</td>
+                            </cfif>
                         <td align="center">#dateFormat(qGetCurrentReport.pr_rejected_date, 'mm/dd/yyyy')#</td>
                     </tr>
                 </cfoutput> <!--- list students --->
