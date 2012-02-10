@@ -301,6 +301,15 @@
 	background-color:#3b5998; 
 }
 
+.blueThemeReportTable th.right {
+	padding:5px;
+	color:#FFFFFF;
+	text-align:right;
+	font-weight:bold;
+	text-transform:none;
+	background-color:#3b5998; 
+}
+
 .blueThemeReportTable th.center {
 	padding:5px;
 	color:#FFFFFF;

@@ -449,11 +449,26 @@
                 <tr class="reportCenterTitle"> 
                     <th>
                     	<cfif vPlacementStatus EQ 'unplaced'>
-                        	PLACEMENT HISTORY - #DateFormat(qGetPlacementHistory.datePlaced, 'mm/dd/yyyy')#
+                        	PLACEMENT HISTORY
                         <cfelse>
-                        	#APPLICATION.CFC.UDF.convertToOrdinal(qGetPlacementHistory.recordCount)# PLACEMENT - #DateFormat(qGetPlacementHistory.datePlaced, 'mm/dd/yyyy')# (CURRENT)
+                        	#APPLICATION.CFC.UDF.convertToOrdinal(qGetPlacementHistory.recordCount)# PLACEMENT ( CURRENT )
                         </cfif>
-
+                        
+                        &nbsp; -  &nbsp;
+                         
+                        Period: From 
+                        <cfif isDate(qGetPlacementHistory.dateRelocated)>
+                            #DateFormat(qGetPlacementHistory.dateRelocated, 'mm/dd/yyyy')#
+                        <cfelse>
+                            #DateFormat(qGetPlacementHistory.datePlaced, 'mm/dd/yyyy')#
+                        </cfif>
+                        
+                        <cfif isDate(qGetPlacementHistory.datePlacedEnded)>
+                            to #DateFormat(qGetPlacementHistory.datePlacedEnded, 'mm/dd/yyyy')#
+                        <cfelse>
+                            to present 
+                        </cfif>
+                        
                         <div style="float:right; padding-right:5px; width:170px;">
                             <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&action=paperwork">[ View Paperwork ]</a>
                         </div>
@@ -556,9 +571,27 @@
                         <tr class="reportCenterTitle"> 
                             <th align="center">
                             	<cfif qGetPlacementHistory.currentRow EQ qGetPlacementHistory.recordCount>
-                                	ORIGINAL PLACEMENT - #DateFormat(qGetPlacementHistory.datePlaced, 'mm/dd/yyyy')#
+                                	ORIGINAL PLACEMENT
                                 <cfelse>
-                                	#APPLICATION.CFC.UDF.convertToOrdinal(vCardinalCount)# PLACEMENT - #DateFormat(qGetPlacementHistory.datePlaced, 'mm/dd/yyyy')#
+                                	#APPLICATION.CFC.UDF.convertToOrdinal(vCardinalCount)# PLACEMENT
+                                </cfif>
+								
+                                &nbsp; -  &nbsp;
+                                
+                                <cfif isDate(qGetPlacementHistory.datePlacedEnded)>
+                                 
+                                    Period: From 
+                                    <cfif isDate(qGetPlacementHistory.dateRelocated)>
+                                        #DateFormat(qGetPlacementHistory.dateRelocated, 'mm/dd/yyyy')#
+                                    <cfelse>
+                                        #DateFormat(qGetPlacementHistory.datePlaced, 'mm/dd/yyyy')#
+                                    </cfif>
+                                    to #DateFormat(qGetPlacementHistory.datePlacedEnded, 'mm/dd/yyyy')#
+								
+                                <cfelse>
+                                
+                                	#DateFormat(qGetPlacementHistory.datePlaced, 'mm/dd/yyyy')#
+                                
                                 </cfif>
                                 
                                 <div style="float:right; padding-right:5px; width:170px;">
