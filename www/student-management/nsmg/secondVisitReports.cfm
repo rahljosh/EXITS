@@ -2,7 +2,7 @@
 	
     <Cfquery datasource="#application.dsn#">
     INSERT INTO smg_hide_reports (fk_student, fk_host, fk_secondVisitRep, fk_userid, dateChanged)
-    					VALUES (#FORM.fk_student#, #FORM.fk_host#, #FORM.fk_secondVisitRep#, #client.userid#, #now()#)
+    					VALUES (#FORM.fk_student#, #FORM.fk_host#, #FORM.fk_secondVisitRep#, #CLIENT.userid#, #now()#)
     </Cfquery>
 	
 </Cfif>
@@ -35,10 +35,11 @@
     </cfcase>
 </cfswitch>
 
-<cfparam name="client.pr_regionid" default="#client.regionid#">
-<cfparam name="client.pr_cancelled" default="0">
-<cfparam name="client.reportType" default="2">
-<Cfparam name="client.pr_rmonth" default="#DatePart('m', '#now()#')#">
+<cfparam name="CLIENT.pr_regionid" default="#CLIENT.regionid#">
+<cfparam name="CLIENT.pr_cancelled" default="0">
+<cfparam name="CLIENT.reportType" default="2">
+<Cfparam name="CLIENT.pr_rmonth" default="#DatePart('m', '#now()#')#">
+<cfparam name="CLIENT.selectedProgram" default="0">
 
 <cfparam name="FORM.submitted" default="0">
 <cfparam name="FORM.reportType" default="2">
@@ -56,9 +57,6 @@
 <cfparam name="FORM.selectedProgram" default="">
 
 <cfscript>
-	// This page will always display second visit reports
-	// CLIENT.reportType = 2;
-	
 	// save the submitted values
 	if ( VAL(FORM.submitted) ) {
 	
@@ -67,7 +65,7 @@
 		CLIENT.pr_cancelled = FORM.cancelled;
 		CLIENT.selectedProgram = FORM.selectedProgram;
 	
-	} else {
+	} else if ( CLIENT.reportType EQ 1 ) {
 		
 		// Set CLIENT Default Values 	
 		CLIENT.pr_regionID = CLIENT.regionID;
@@ -75,6 +73,9 @@
 		CLIENT.selectedProgram = '';
 	
 	}
+	
+	// This page will always display second visit report
+	CLIENT.reportType = 2;
 </cfscript>
 
 <Cfif FORM.reportType eq 1>
@@ -129,8 +130,8 @@ function OpenLetter(url) {
 <cfset year=#DateFormat(now(), 'yyyy')#><title>Second Visit Reports</title>
 
 
-<cfif not client.usertype LTE 7>
-	<cfif client.usertype EQ 15>
+<cfif not CLIENT.usertype LTE 7>
+	<cfif CLIENT.usertype EQ 15>
     <cfelse>
 	You do not have access to this page.
     <cfabort>
@@ -138,13 +139,13 @@ function OpenLetter(url) {
 </cfif>
 
 <Cfif isDefined('FORM.reportType')>
-	<cfif FORM.reportType neq client.ReportType>
+	<cfif FORM.reportType neq CLIENT.ReportType>
     	<Cfset resetMonth = 1>
 	</cfif>
-	<cfset client.reportType = #FORM.reportType#>
+	<cfset CLIENT.reportType = #FORM.reportType#>
 </Cfif>
-<Cfif client.usertype EQ 15>
-	<cfset client.reportType = 2>
+<Cfif CLIENT.usertype EQ 15>
+	<cfset CLIENT.reportType = 2>
 	<Cfset enableReports = 'No'>
 <cfelse>
 	<cfset enableReports = 'Yes'>
@@ -159,11 +160,11 @@ function OpenLetter(url) {
 <!----If a month is passed in from the form, use it for the month if its works with the current report type---->
 
 <Cfif #FORM.rmonth# neq 0 AND resetMonth eq 0>
-	<Cfset client.pr_rmonth = #FORM.rmonth#>
+	<Cfset CLIENT.pr_rmonth = #FORM.rmonth#>
 
       <Cfloop from="#DateRange.startDate#" to="#DateRange.endDate#" index=i step="#CreateTimeSpan(31,0,0,0)#">
-                <Cfif client.pr_rmonth eq "#DatePart('m', '#i#')#">
-                    <Cfset client.pr_rmonth = '#DatePart('m', '#i#')#'>
+                <Cfif CLIENT.pr_rmonth eq "#DatePart('m', '#i#')#">
+                    <Cfset CLIENT.pr_rmonth = '#DatePart('m', '#i#')#'>
                     <Cfset startDate = '#DateAdd("d", "-7", "#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01")#"'>
                     <Cfset endDate = '#DateAdd("d", "21", "#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01")#"'>
                     <cfset prevRepMonth = "#DatePart('m','#startDate#')#">
@@ -177,22 +178,22 @@ function OpenLetter(url) {
 <Cfelse>
 
     <!---
-    <cfif NOT isDefined('client.pr_rmonth') or client.pr_rmonth eq 0>
+    <cfif NOT isDefined('CLIENT.pr_rmonth') or CLIENT.pr_rmonth eq 0>
         ---->
  
 
         
         
-		<cfif client.reportType eq 1>
+		<cfif CLIENT.reportType eq 1>
         
-         <Cfif client.userid eq 16316>
+         <Cfif CLIENT.userid eq 16316>
          <Cfoutput>
          Output #DateRange.startDate# #DateRange.endDate#
          </Cfoutput>
          </Cfif>
             <Cfloop from="#DateRange.startDate#" to="#DateRange.endDate#" index=i step="#CreateTimeSpan(31,0,0,0)#">
-                <Cfif client.pr_rmonth eq "#DatePart('m', '#i#')#">
-                    <Cfset client.pr_rmonth = '#DatePart('m', '#i#')#'>
+                <Cfif CLIENT.pr_rmonth eq "#DatePart('m', '#i#')#">
+                    <Cfset CLIENT.pr_rmonth = '#DatePart('m', '#i#')#'>
                     <Cfset startDate = '#DateAdd("d", "-7", "#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01")#"'>
                     <Cfset endDate = '#DateAdd("d", "21", "#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01")#"'>
                     <cfset prevRepMonth = "#DatePart('m','#startDate#')#">
@@ -209,7 +210,7 @@ function OpenLetter(url) {
 select *
 from reportTrackingType
 where isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-<cfif client.companyid eq 14>
+<cfif CLIENT.companyid eq 14>
 and esi = 14
 </cfif>
 </cfquery>
@@ -218,7 +219,7 @@ and esi = 14
 <cfquery name="reportOptions" dbtype="query">
 select *
 from reportTypes
-where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.reportType#">
+where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.reportType#">
 </cfquery>
 
 <style type="text/css">
@@ -263,14 +264,14 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
         <td><input name="send" type="submit" value="Submit" /></td>
     
         <td>Reports Available<br />
-        <Cfif client.usertype NEQ 15>
+        <Cfif CLIENT.usertype NEQ 15>
               	 <cfselect 
                   name="reportType" 
                   id="reportType" multiple="no"
                   query="reportTypes"
                   value="reportTypeID"
                   display="Description"
-                  selected="#client.reportType#"/>
+                  selected="#CLIENT.reportType#"/>
        	<Cfelse>
     	Second Host Family Visit    
         </Cfif>
@@ -282,7 +283,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
               <cfoutput>
  				<select name="selectedProgram" size="5" multiple="multiple">
                	   <cfloop query="qGetPrograms">
-                    	<option value="#programID#" <Cfif ListFind(#client.selectedprogram#,#programID#)> selected </cfif> >#programName#</option>
+                    	<option value="#programID#" <Cfif ListFind(#CLIENT.selectedprogram#,#programID#)> selected </cfif> >#programName#</option>
                     </cfloop>
 				</select>
     		</cfoutput> 	
@@ -290,18 +291,18 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
       		
       </td>
     
-	<cfif client.usertype LTE 4>
+	<cfif CLIENT.usertype LTE 4>
        <td>
 			<!--- GET ALL REGIONS --->
             <cfquery name="list_regions" datasource="#application.dsn#">
                 SELECT regionid, regionname
                 FROM smg_regions
-                WHERE company = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+                WHERE company = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
                 AND subofregion = 0
                 ORDER BY regionname
             </cfquery>
             Region<br />
-			<cfselect NAME="regionid" query="list_regions" value="regionid" display="regionname" selected="#client.pr_regionid#" />
+			<cfselect NAME="regionid" query="list_regions" value="regionid" display="regionname" selected="#CLIENT.pr_regionid#" />
         </td>
 	</cfif>
     
@@ -309,14 +310,14 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
         <td>
             Status<br />
 			<select name="cancelled">
-				<option value="0" <cfif client.pr_cancelled EQ 0>selected</cfif>>Active</option>
-				<option value="1" <cfif client.pr_cancelled EQ 1>selected</cfif>>Cancelled</option>
+				<option value="0" <cfif CLIENT.pr_cancelled EQ 0>selected</cfif>>Active</option>
+				<option value="1" <cfif CLIENT.pr_cancelled EQ 1>selected</cfif>>Cancelled</option>
 			</select>            
         </td>
     </tr>
     <tr>
     	<Td colspan=5 align="Center">
-		<cfif client.reportType neq 2>
+		<cfif CLIENT.reportType neq 2>
 			<cfoutput>The #DateFormat('#endDate#', 'mmmm')# report is for contact durring the month of #DateFormat('#startDate#', 'mmmm')# and <Br />
 			due on  #DateFormat('#repDueDate#','mmm. d, yyyy')#. </cfoutput>
         </cfif>
@@ -343,38 +344,38 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
     LEFT JOIN smg_users advisor ON user_access_rights.advisorid = advisor.userid
     INNER JOIN smg_programs ON smg_students.programid = smg_programs.programid
     WHERE smg_students.regionassigned =
-    <cfif client.usertype LTE 4>
-    	<cfqueryparam cfsqltype="cf_sql_integer" value="#client.pr_regionid#">
-    <!--- don't use client.pr_regionid because if they change access level this is not reset. --->
+    <cfif CLIENT.usertype LTE 4>
+    	<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.pr_regionid#">
+    <!--- don't use CLIENT.pr_regionid because if they change access level this is not reset. --->
     <cfelse>
-    	<cfqueryparam cfsqltype="cf_sql_integer" value="#client.regionid#">
+    	<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionid#">
     </cfif>
-    <cfif client.pr_cancelled eq 0>
+    <cfif CLIENT.pr_cancelled eq 0>
         AND smg_students.active = 1
     <cfelse>
         AND smg_students.canceldate >= '#datelimit#'
     </cfif>
-    <Cfif client.selectedProgram gt 0>
+    <Cfif CLIENT.selectedProgram gt 0>
     	AND
-      	 smg_students.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#client.selectedprogram#" list="yes"> )
+      	 smg_students.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.selectedprogram#" list="yes"> )
     	
        
     </Cfif>
 
     <!--- regional advisor sees only their reps or their students. --->
     
-		<cfif client.usertype EQ 6>
+		<cfif CLIENT.usertype EQ 6>
             AND (
-                user_access_rights.advisorid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-                OR smg_students.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-                OR smg_students.secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+                user_access_rights.advisorid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+                OR smg_students.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+                OR smg_students.secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
                
             )
         <!--- supervising reps sees only their students. --->
-        <cfelseif client.usertype EQ 7>
-        	AND smg_students.secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-    	<cfelseif client.usertype eq 15>
-        	AND smg_students.secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+        <cfelseif CLIENT.usertype EQ 7>
+        	AND smg_students.secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+    	<cfelseif CLIENT.usertype eq 15>
+        	AND smg_students.secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
         </cfif>
 	
     <!--- include the advisorid and arearepid because we're grouping by those in the output, just in case two have the same first and last name. --->
@@ -509,7 +510,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                         <td>
                         	<!--- put in red if user is the supervising rep for this student.  don't do for usertype 7 because they see only those students. --->
                             <a href="javascript:OpenLetter('reports/PlacementInfoSheet.cfm?uniqueID=#getResults.uniqueID#');">
-							<cfif getResults.arearepid EQ client.userid and client.usertype NEQ 7>
+							<cfif getResults.arearepid EQ CLIENT.userid and CLIENT.usertype NEQ 7>
                         		<font color="FF0000"><strong>#getResults.firstname# #getResults.familylastname# (#getResults.studentid#)</strong></font>
                             <cfelse>
                         		#getResults.firstname# #getResults.familylastname# (#getResults.studentid#)
@@ -526,16 +527,16 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                         <td valign="center">
 
                         <cfif get_report.recordCount>
-                            	<!--- access is limited to: client.usertype LTE 4, second vist rep, supervising rep, regional advisor, regional director, and facilitator. --->
-								<cfif client.usertype LTE 4 or listFind("#get_report.fk_secondVisitRep#,#get_report.fk_sr_user#,#get_report.fk_ra_user#,#get_report.fk_rd_user#,#get_report.fk_ny_user#, #get_report.fk_secondVisitRep#", client.userid)>
+                            	<!--- access is limited to: CLIENT.usertype LTE 4, second vist rep, supervising rep, regional advisor, regional director, and facilitator. --->
+								<cfif CLIENT.usertype LTE 4 or listFind("#get_report.fk_secondVisitRep#,#get_report.fk_sr_user#,#get_report.fk_ra_user#,#get_report.fk_rd_user#,#get_report.fk_ny_user#, #get_report.fk_secondVisitRep#", CLIENT.userid)>
 									<!--- restrict view of report until the supervising rep approves it. --->
                                     <!----check the type of report, use appropriate person to view---->
 								
                                         <cfset submittingRep = '#secondVisitRepID#'>
                                     
-                                    <cfif get_report.pr_sr_approved_date EQ '' and submittingRep NEQ client.userid>
+                                    <cfif get_report.pr_sr_approved_date EQ '' and submittingRep NEQ CLIENT.userid>
                                         <!----allow office to view so can delete if needed---->
-                                        <Cfif listfind('1,12313,13799,510,12431,16652,12389', client.userid)>
+                                        <Cfif listfind('1,12313,13799,510,12431,16652,12389', CLIENT.userid)>
                                        
                                             <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#get_report.pr_id#">
                                            
@@ -554,22 +555,22 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                         <cfelse>
                         	
                             <!----check the type of report, use appropriate person to view---->
-                            <cfif client.reportType EQ 2>
+                            <cfif CLIENT.reportType EQ 2>
                             	<cfset submittingRep = '#getResults.secondVisitRepID#'>
                             <cfelse>
                             	<Cfset submittingRep = '#getResults.arearepid#'>
                             </cfif>
-                            <Cfif client.pr_rmonth eq 10>
+                            <Cfif CLIENT.pr_rmonth eq 10>
                         		<Cfset PreviousReportApproved = 1>
                             </Cfif>
                             	<!--- to add a progress report, user must be the supervising rep, and the program has a report for this phase. --->
                           			<Cfif inCountry eq 0>
                                     Not in Country - No Report Required
-									<cfelseif (#submittingRep# EQ client.userid and PreviousReportApproved eq 1) OR client.reportType EQ 2  >
+									<cfelseif (#submittingRep# EQ CLIENT.userid and PreviousReportApproved eq 1) OR CLIENT.reportType EQ 2  >
                                     	<Cfif checkBlock.recordcount gt 0>
                                            <form action="index.cfm?curdoc=secondVisitReports" method="post">
                                                 <input type="hidden" name="unHideReport" value="#checkBlock.id#" />
-                                                <input type="hidden" name="selectedProgram" value="#client.selectedProgram#" />
+                                                <input type="hidden" name="selectedProgram" value="#CLIENT.selectedProgram#" />
                                                 <input name="Submit" type="image" src="pics/plus.png" height="20" alt="Add New Report" border=0>
                                             </form>
                                         <cfelse>
@@ -579,30 +580,30 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                                                    
                                                 <form action="index.cfm?curdoc=forms/pr_add" method="post">
                                                 <input type="hidden" name="studentid" value="#getResults.studentid#">
-                                                <input type="hidden" name="type_of_report" value="#client.reportType#">
-                                                <input type="hidden" name="month_of_report" value="#client.pr_rmonth#">
+                                                <input type="hidden" name="type_of_report" value="#CLIENT.reportType#">
+                                                <input type="hidden" name="month_of_report" value="#CLIENT.pr_rmonth#">
                                                 <input type="hidden" name="fk_host" value="#hostid#">
                                                 <input name="Submit" type="image" src="pics/buttons/greenNew.png" alt="Add New Report" height="20"  border=0>
                                                </form>
                                                     </Td>
                                                     <td>
-                                                   <cfif client.userid eq 8731 or 
-												   		 client.userid eq 1 or 
-														 client.userid eq 510 or
-														 client.userid eq 12431 or 
-														 client.userid eq 12313 or
-														 client.userid eq 12389 or
-														 client.userid eq 16652 or
-														 client.userid eq 8743 or
-														 client.userid eq 11364 or
-														 client.userid eq 13799
+                                                   <cfif CLIENT.userid eq 8731 or 
+												   		 CLIENT.userid eq 1 or 
+														 CLIENT.userid eq 510 or
+														 CLIENT.userid eq 12431 or 
+														 CLIENT.userid eq 12313 or
+														 CLIENT.userid eq 12389 or
+														 CLIENT.userid eq 16652 or
+														 CLIENT.userid eq 8743 or
+														 CLIENT.userid eq 11364 or
+														 CLIENT.userid eq 13799
 														 >
                                                      <form action="index.cfm?curdoc=secondVisitReports" method="post">
                                                         <input type="hidden" name="hideReport" />
                                                         <input type="hidden" name="fk_student" value="#studentid#">
                                                         <input type="hidden" name="fk_host" value="#hostid#">
                                                         <input type="hidden" name="fk_secondVisitRep" value="#secondVisitRepID#">
-                                                        <input type="hidden" name="selectedProgram" value="#client.selectedProgram#" />
+                                                        <input type="hidden" name="selectedProgram" value="#CLIENT.selectedProgram#" />
                                                         <input name="Submit" type="image" src="pics/smallDelete.png" height="20" alt="Add New Report" border=0>
                                                     </form>
                                                     </cfif>
@@ -712,20 +713,20 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                                         <em>#checkBlock2.firstname# #checkBlock2.lastname# determined that this report was not required
                                          on #dateFormat(checkBlock2.dateChanged, 'mm/dd/yyyy')#</em> 									</td>
                                                     <td>
-                                        <cfif client.userid eq 8731 or 
-												   		 client.userid eq 1 or 
-														 client.userid eq 510 or
-														 client.userid eq 12431 or 
-														 client.userid eq 12313 or
-														 client.userid eq 12389 or
-														 client.userid eq 16652 or
-														 client.userid eq 8743 or
-														 client.userid eq 11364 or
-														 client.userid eq 13799
+                                        <cfif CLIENT.userid eq 8731 or 
+												   		 CLIENT.userid eq 1 or 
+														 CLIENT.userid eq 510 or
+														 CLIENT.userid eq 12431 or 
+														 CLIENT.userid eq 12313 or
+														 CLIENT.userid eq 12389 or
+														 CLIENT.userid eq 16652 or
+														 CLIENT.userid eq 8743 or
+														 CLIENT.userid eq 11364 or
+														 CLIENT.userid eq 13799
 														 >
                                         <form action="index.cfm?curdoc=secondVisitReports" method="post">
                                                 <input type="hidden" name="unHideReport" value="#checkBlock2.id#" />
-                                                <input type="hidden" name="selectedProgram" value="#client.selectedProgram#" />
+                                                <input type="hidden" name="selectedProgram" value="#CLIENT.selectedProgram#" />
                                                 <input name="Submit" type="image" src="pics/plus.png" height="20" alt="Add New Report" border=0>
                                             </form>
                                         </cfif>
@@ -748,20 +749,20 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                                  
                                     <input type="hidden" name="studentid" value="#studentid#">
                                     <input type="hidden" name="type_of_report" value="2">
-                                    <input type="hidden" name="month_of_report" value="#client.pr_rmonth#">
+                                    <input type="hidden" name="month_of_report" value="#CLIENT.pr_rmonth#">
                                     <input type="hidden" name="fk_host" value="#hostid#" />
                                     <input type="hidden" name="fk_secondVisitRep" value="#getResults.secondVisitRepID#">
                                     <input name="Submit" type="image" src="pics/buttons/greenNew.png" alt="Add New Report" border=0>
                                 </form>
                                         </TD>
                                         <Td>
-                                        <Cfif client.usertype lte 4>
+                                        <Cfif CLIENT.usertype lte 4>
                                 <form action="index.cfm?curdoc=secondVisitReports" method="post">
                                     <input type="hidden" name="hideReport" />
                                     <input type="hidden" name="fk_student" value="#studentid#">
                                     <input type="hidden" name="fk_host" value="#hostid#">
                                     <input type="hidden" name="fk_secondVisitRep" value="#getResults.secondVisitRepID#">
-                                    <input type="hidden" name="selectedProgram" value="#client.selectedProgram#" />
+                                    <input type="hidden" name="selectedProgram" value="#CLIENT.selectedProgram#" />
                                     <input name="Submit" type="image" src="pics/smallDelete.png" height="20" alt="Add New Report" border=0>
                                 </form>
                                 </Cfif>
@@ -787,9 +788,9 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
 									
 									
                                     <cfif getResults.secondvisitrepid neq fk_secondvisitrep>
-                                     <Cfif client.usertype lte 4><a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#indReports.pr_id#"></Cfif>
+                                     <Cfif CLIENT.usertype lte 4><a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#indReports.pr_id#"></Cfif>
                                      <font size=-1><em> #svFirst# #svLast# (#fk_secondvisitrep#)
-                                      <Cfif client.usertype lte 4>
+                                      <Cfif CLIENT.usertype lte 4>
                                      </a>
                                      </Cfif></em></font>
                                     <Cfelse>
@@ -806,10 +807,10 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                                         <em>#checkBlock2.firstname# #checkBlock2.lastname# determined that this report was not required
                                          on #dateFormat(checkBlock2.dateChanged, 'mm/dd/yyyy')#</em> 									</td>
                                                     <td>
-                                        <cfif client.usertype lte 4>
+                                        <cfif CLIENT.usertype lte 4>
                                         <form action="index.cfm?curdoc=secondVisitReports" method="post">
                                                 <input type="hidden" name="unHideReport" value="#checkBlock.id#" />
-                                                <input type="hidden" name="selectedProgram" value="#client.selectedProgram#" />
+                                                <input type="hidden" name="selectedProgram" value="#CLIENT.selectedProgram#" />
                                                 <input name="Submit" type="image" src="pics/plus.png" height="20" alt="Add New Report" border=0>
                                             </form>
                                         </cfif>
@@ -920,8 +921,8 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                       LEFT JOIN smg_students s on s.studentid = hh.studentid 
                       WHERE hh.secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#secondVisitRepID#">
                       AND (s.hostid NOT IN (#subSetOfHosts#) AND s.hostid NOT IN (#prevHostsWithReport#))
-                      <cfif client.selectedProgram neq 0>
-                      	AND s.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.selectedProgram#">
+                      <cfif CLIENT.selectedProgram neq 0>
+                      	AND s.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.selectedProgram#">
                       </cfif>
                       </cfquery>    
                 
@@ -979,10 +980,10 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                                 	<td>
                         <em>#checkBlock.firstname# #checkBlock.lastname# determined that this report was not required on #dateFormat(checkBlock.dateChanged, 'mm/dd/yyyy')#</em> 									</td>
                         			<td>
-						<cfif client.usertype lte 4>
+						<cfif CLIENT.usertype lte 4>
                         <form action="index.cfm?curdoc=secondVisitReports2" method="post">
                             	<input type="hidden" name="unHideReport" value="#checkBlock.id#" />
-                            	<input type="hidden" name="selectedProgram" value="#client.selectedProgram#" />
+                            	<input type="hidden" name="selectedProgram" value="#CLIENT.selectedProgram#" />
                                 <input name="Submit" type="image" src="pics/plus.png" height="20" alt="Add New Report" border=0>
                             </form>
                         </cfif>
@@ -1001,7 +1002,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                              
                                 <input type="hidden" name="studentid" value="#studentid#">
                                 <input type="hidden" name="type_of_report" value="2">
-                                <input type="hidden" name="month_of_report" value="#client.pr_rmonth#">
+                                <input type="hidden" name="month_of_report" value="#CLIENT.pr_rmonth#">
                                 <input type="hidden" name="fk_host" value="#checkWelcomeFamily.hostid#" />
                                 <input type="hidden" name="fk_secondVisitRep" value="#getResults.secondVisitRepID#">
                                 <input name="Submit" type="image" src="pics/new.gif" alt="Add New Report" border=0>
@@ -1013,7 +1014,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                             	<input type="hidden" name="fk_student" value="#studentid#">
                                 <input type="hidden" name="fk_host" value="#checkWelcomeFamily.hostid#">
                                 <input type="hidden" name="fk_secondVisitRep" value="#getResults.secondVisitRepID#">
-                                <input type="hidden" name="selectedProgram" value="#client.selectedProgram#" />
+                                <input type="hidden" name="selectedProgram" value="#CLIENT.selectedProgram#" />
                                 <input name="Submit" type="image" src="pics/smallDelete.png" height="20" alt="Add New Report" border=0>
                             </form>
                             		</Td>
@@ -1144,7 +1145,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                                  
                                     <input type="hidden" name="studentid" value="#previousKids.studentid#">
                                     <input type="hidden" name="type_of_report" value="2">
-                                    <input type="hidden" name="month_of_report" value="#client.pr_rmonth#">
+                                    <input type="hidden" name="month_of_report" value="#CLIENT.pr_rmonth#">
                                     <input type="hidden" name="fk_host" value="" />
                                     <input type="hidden" name="fk_secondVisitRep" value="#getResults.secondVisitRepID#">
                                     <input name="Submit" type="image" src="pics/buttons/greenNew.png" alt="Add New Report" border=0>
@@ -1207,17 +1208,17 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                         <td><cfif previousKids.pr_sr_approved_date is ''>No<cfelse>Yes</cfif></td>
                         <td>
                         <cfif previousKids.recordCount>
-                            	<!--- access is limited to: client.usertype LTE 4, second vist rep, supervising rep, regional advisor, regional director, and facilitator. --->
-								<cfif client.usertype LTE 4 or listFind("#get_report.fk_secondVisitRep#,#get_report.fk_sr_user#,#get_report.fk_ra_user#,#get_report.fk_rd_user#,#get_report.fk_ny_user#, #get_report.fk_secondVisitRep#", client.userid)>
+                            	<!--- access is limited to: CLIENT.usertype LTE 4, second vist rep, supervising rep, regional advisor, regional director, and facilitator. --->
+								<cfif CLIENT.usertype LTE 4 or listFind("#get_report.fk_secondVisitRep#,#get_report.fk_sr_user#,#get_report.fk_ra_user#,#get_report.fk_rd_user#,#get_report.fk_ny_user#, #get_report.fk_secondVisitRep#", CLIENT.userid)>
 									<!--- restrict view of report until the supervising rep approves it. --->
                                     <!----check the type of report, use appropriate person to view---->
 								
                                         <cfset submittingRep = '#previousKids.fk_secondVisitRep#'>
                                         
                                     
-                                    <cfif pr_sr_approved_date EQ '' and submittingRep NEQ client.userid>
+                                    <cfif pr_sr_approved_date EQ '' and submittingRep NEQ CLIENT.userid>
                                         <!----allow office to view so can delete if needed---->
-                                        <Cfif listfind('1,12313,13799,510', client.userid)>
+                                        <Cfif listfind('1,12313,13799,510', CLIENT.userid)>
                                             <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#pr_id#">
                                         </cfif>	
                                         Pending</a>
@@ -1236,19 +1237,19 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                             
                             	<cfset submittingRep = '#secondVisitRepID#'>
                             
-                            <Cfif client.pr_rmonth eq 10>
+                            <Cfif CLIENT.pr_rmonth eq 10>
                         		<Cfset PreviousReportApproved = 1>
                             </Cfif>
                             	<!--- to add a progress report, user must be the supervising rep, and the program has a report for this phase. --->
                           			<Cfif inCountry eq 0>
                                     Not in Country - No Report Required
-									<cfelseif (#submittingRep# EQ client.userid and PreviousReportApproved eq 1) OR client.reportType EQ 2  >
+									<cfelseif (#submittingRep# EQ CLIENT.userid and PreviousReportApproved eq 1) OR CLIENT.reportType EQ 2  >
 
                                 
                                         <form action="index.cfm?curdoc=forms/pr_add" method="post">
                                         <input type="hidden" name="studentid" value="#studentid#">
                                         <input type="hidden" name="type_of_report" value="2">
-                                        <input type="hidden" name="month_of_report" value="#client.pr_rmonth#">
+                                        <input type="hidden" name="month_of_report" value="#CLIENT.pr_rmonth#">
                                         <input name="Submit" type="image" src="pics/new.gif" alt="Add New Report" border=0>
                                         </form>
                                     <cfelseif PreviousReportApproved eq 0>
@@ -1318,7 +1319,7 @@ where reportTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.rep
                 </table>
             </td>
 		<!--- don't do for usertype 7 because they see only students they're supervising. 
-        <cfif client.usertype NEQ 7>
+        <cfif CLIENT.usertype NEQ 7>
             <td><font color="FF0000"><strong>Students that you're supervising</strong></font></td>
         </cfif>
 		--->
