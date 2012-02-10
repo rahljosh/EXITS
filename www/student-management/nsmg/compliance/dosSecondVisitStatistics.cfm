@@ -85,7 +85,7 @@
                             WHEN 
                                 ht.isRelocation = 1 
                             THEN 
-                                ht.datePlaced
+                                ht.dateRelocated
                             <!--- Not a relocation - Arrival Date --->
                             WHEN 
                                 ht.isRelocation = 0 
@@ -166,7 +166,7 @@
                             WHEN 
                                 ht.isRelocation = 1 
                             THEN 
-                                ht.datePlaced
+                                ht.dateRelocated
                             <!--- Not a relocation - Arrival Date --->
                             WHEN 
                                 ht.isRelocation = 0 

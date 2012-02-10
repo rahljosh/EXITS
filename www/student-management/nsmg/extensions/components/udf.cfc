@@ -498,8 +498,9 @@
         <!--- 
 			Geolocation
 			<cfhttp url="https://maps.google.com/maps/geo?q=#ARGUMENTS.origin#&output=xml&oe=utf8\&sensor=false&key=#APPLICATION.KEY.googleMapsAPI#" delimiter="," resolveurl="yes" />
+			alternatives=true to get multiple routes and find the shortest one | multiples <routes>
 		--->
-
+		
 		<!--- Driving Directions --->        
         <cfhttp url="http://maps.googleapis.com/maps/api/directions/xml?sensor=false&origin=#ARGUMENTS.origin#&destination=#ARGUMENTS.destination#" delimiter="," resolveurl="yes" />
         
@@ -632,6 +633,7 @@
             WHERE 
                 userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
         </cfquery>
+        
         <!----Check AR Training Sign off Form---->
         
         <!----Check AR Information Sheet---->
@@ -648,6 +650,7 @@
             WHERE 
                 userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
         </cfquery>
+        
 		<cfif employHistory.recordcount GTE 1 AND (prevExperience.prevOrgAffiliation EQ 0 OR (prevExperience.prevOrgAffiliation EQ 1 AND prevExperience.prevAffiliationName NEQ '') )>
 	        <cfset previousExperience = 1>
         <cfelse>
@@ -750,32 +753,33 @@
                 AND 
                 	seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#checkAgreement.seasonid#">
             </cfquery>
-	 	<!----check to see if this account is active for second visit reps: agreement, cbcauthrization and approval, info sheet need to be on file.---->
-            	<Cfif checkAgreement.ar_info_sheet is not '' 
-					AND checkAgreement.ar_cbc_auth_form is not '' 
-					AND cbcCheck.date_approved is not ''
-					AND checkAgreement.ar_agreement is not ''
-					AND checkAgreement.cbcSig is not ''
-					AND checkAgreement.agreeSig is not ''>
-                	<Cfset secondVisitRepOk = 1>
-                <cfelse>
-                	<cfset secondVisitRepOk = 0>
-                </Cfif>
-			<!----check to see if this account is active for area reps: agreement, cbcauthrization and approval, info sheet need to be on file, 2 references check and AR training completed.---->
-            	<Cfif checkAgreement.ar_info_sheet is not '' 
-					AND checkAgreement.ar_cbc_auth_form is not '' 
-					AND cbcCheck.date_approved is not ''
-					AND checkAgreement.ar_agreement is not ''
-					AND checkAgreement.cbcSig is not ''
-					AND checkAgreement.agreeSig is not ''
-					AND checkAgreement.ar_ref_quest1 is not ''
-					AND checkAgreement.ar_ref_quest2 is not ''
-					AND checkAgreement.ar_training is not ''>
-                   <Cfset areaRepOk = 1>
-                <cfelse>
-                	<cfset areaRepOk = 0>
-                </Cfif>
+	 	
+			<!----check to see if this account is active for second visit reps: agreement, cbcauthrization and approval, info sheet need to be on file.---->
+            <cfif checkAgreement.ar_info_sheet is not '' 
+                AND checkAgreement.ar_cbc_auth_form is not '' 
+                AND cbcCheck.date_approved is not ''
+                AND checkAgreement.ar_agreement is not ''
+                AND checkAgreement.cbcSig is not ''
+                AND checkAgreement.agreeSig is not ''>
+                <cfset secondVisitRepOk = 1>
+            <cfelse>
+                <cfset secondVisitRepOk = 0>
+            </cfif>
         
+            <!----check to see if this account is active for area reps: agreement, cbcauthrization and approval, info sheet need to be on file, 2 references check and AR training completed.---->
+            <cfif checkAgreement.ar_info_sheet is not '' 
+                AND checkAgreement.ar_cbc_auth_form is not '' 
+                AND cbcCheck.date_approved is not ''
+                AND checkAgreement.ar_agreement is not ''
+                AND checkAgreement.cbcSig is not ''
+                AND checkAgreement.agreeSig is not ''
+                AND checkAgreement.ar_ref_quest1 is not ''
+                AND checkAgreement.ar_ref_quest2 is not ''
+                AND checkAgreement.ar_training is not ''>
+               <cfset areaRepOk = 1>
+            <cfelse>
+                <cfset areaRepOk = 0>
+            </cfif>
         
 			<cfscript>
                  // Insert blank first row
@@ -797,7 +801,6 @@
 				QuerySetCell(qAllPaperWork, "secondVisitRepOK", checkAgreement.season);
 				QuerySetCell(qAllPaperWork, "areaRepOk", checkAgreement.season);
             </cfscript>	
-            
 					
 		</cfloop>   
          	

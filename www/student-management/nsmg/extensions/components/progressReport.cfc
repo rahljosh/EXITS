@@ -291,6 +291,37 @@
 		<cfreturn qGetSecondHostFamilyVisitReport>
 	</cffunction>
 
+
+	<cffunction name="setSecondVisitReportAsNotNeeded" access="public" returntype="void" output="false" hint="Set second visit report as not needed (hidden)">
+    	<cfargument name="fk_student" hint="fk_student is required">
+        <cfargument name="fk_host" hint="fk_host is not required">
+        <cfargument name="fk_secondVisitRep" hint="fk_host is not required">
+        <cfargument name="fk_userID" default="5" hint="fk_userID is not required - Default to EXITS System (userID 5)">
+        
+        <cfquery 
+			datasource="#APPLICATION.dsn#">
+				INSERT INTO
+                	smg_hide_reports
+                (
+                	fk_student,
+	                fk_host,
+                	fk_secondVisitRep,
+                    fk_userID,
+                    dateChanged
+                )
+                VALUES
+                (
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.fk_student)#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.fk_host)#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.fk_secondVisitRep)#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.fk_userID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                )
+		</cfquery>
+        
+	</cffunction>
+
+
 	<!--- ------------------------------------------------------------------------- ----
 		
 		End of Second Visit Report

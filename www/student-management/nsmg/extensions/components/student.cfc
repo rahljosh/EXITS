@@ -1852,6 +1852,7 @@
                     h.actions,
                     h.datePlaced,
                     h.datePlacedEnded,
+                    h.dateRelocated,
                     h.isActive,
                     h.dateOfChange,                    
                     h.dateCreated,
@@ -1895,6 +1896,9 @@
                     h.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
                 AND
                 	h.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                <!--- Do not display change of school/ and reps --->
+                AND
+                	h.hostID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                 ORDER BY 
                     h.dateCreated DESC, 
                     h.historyid DESC
@@ -1938,6 +1942,7 @@
                     changePlacementExplanation,
                     datePlaced,
                     datePlacedEnded,
+                    dateRelocated,
                     datePISEmailed,
                     dateSetHostPermanent,
                     <!--- Single Person Placement Paperwork --->

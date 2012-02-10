@@ -1,6 +1,6 @@
 <cfsetting requesttimeout="9999">
 
-<cfquery name="qGetPlacedStudents" datasource="mySQL">
+<cfquery name="qGetPlacedStudents" datasource="#APPLICATION.DSN#">
     SELECT 
         s.studentID, 
         s.companyID,
@@ -17,6 +17,8 @@
     	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
     AND
     	s.hostID != <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+    AND
+    	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12" list="yes"> )
     ORDER BY
     	s.companyID,
         s.studentID
@@ -28,13 +30,16 @@
     
     <cfloop query="qGetPlacedStudents">
     
-        <cfquery name="qSearchHistory" datasource="mySQL">
+        <cfquery name="qSearchHistory" datasource="#APPLICATION.DSN#">
             SELECT
                 *
             FROM
                 smg_hostHistory
             WHERE
                 studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetPlacedStudents.studentID#">
+            <!--- Do Not Include PHP --->
+            AND
+            	assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
             AND
                 hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetPlacedStudents.hostID#">
             AND
@@ -64,7 +69,7 @@
 <!---
 
 <!--- Insert History Tracking --->
-<cfquery name="qGetNewRecords" datasource="mySQL">
+<cfquery name="qGetNewRecords" datasource="#APPLICATION.DSN#">
     SELECT 
         ah.actions,
         sh.historyID, 
@@ -99,7 +104,7 @@
     <!--- HostID --->
     <cfif VAL(qGetNewRecords.hostID)>
     	
-        <cfquery name="qSearchRecord" datasource="mySQL">
+        <cfquery name="qSearchRecord" datasource="#APPLICATION.DSN#">
             SELECT 
                 ID
             FROM 
@@ -116,7 +121,7 @@
         
         <cfif NOT VAL(qSearchRecord.recordCount)>
 
-            <cfquery datasource="mySQL">
+            <cfquery datasource="#APPLICATION.DSN#">
                 INSERT
                     smg_hostHistoryTracking
                 (
@@ -144,7 +149,7 @@
     <!--- schoolID --->
     <cfif VAL(qGetNewRecords.schoolID)>
     	
-        <cfquery name="qSearchRecord" datasource="mySQL">
+        <cfquery name="qSearchRecord" datasource="#APPLICATION.DSN#">
             SELECT 
                 ID
             FROM 
@@ -161,7 +166,7 @@
         
         <cfif NOT VAL(qSearchRecord.recordCount)>
 
-            <cfquery datasource="mySQL">
+            <cfquery datasource="#APPLICATION.DSN#">
                 INSERT
                     smg_hostHistoryTracking
                 (
@@ -189,7 +194,7 @@
     <!--- placeRepID --->
     <cfif VAL(qGetNewRecords.placeRepID)>
     	
-        <cfquery name="qSearchRecord" datasource="mySQL">
+        <cfquery name="qSearchRecord" datasource="#APPLICATION.DSN#">
             SELECT 
                 ID
             FROM 
@@ -206,7 +211,7 @@
         
         <cfif NOT VAL(qSearchRecord.recordCount)>
 
-            <cfquery datasource="mySQL">
+            <cfquery datasource="#APPLICATION.DSN#">
                 INSERT
                     smg_hostHistoryTracking
                 (
@@ -234,7 +239,7 @@
     <!--- areaRepID --->
     <cfif VAL(qGetNewRecords.areaRepID)>
     	
-        <cfquery name="qSearchRecord" datasource="mySQL">
+        <cfquery name="qSearchRecord" datasource="#APPLICATION.DSN#">
             SELECT 
                 ID
             FROM 
@@ -251,7 +256,7 @@
         
         <cfif NOT VAL(qSearchRecord.recordCount)>
 
-            <cfquery datasource="mySQL">
+            <cfquery datasource="#APPLICATION.DSN#">
                 INSERT
                     smg_hostHistoryTracking
                 (
@@ -279,7 +284,7 @@
     <!--- secondVisitRepID --->
     <cfif VAL(qGetNewRecords.secondVisitRepID)>
     	
-        <cfquery name="qSearchRecord" datasource="mySQL">
+        <cfquery name="qSearchRecord" datasource="#APPLICATION.DSN#">
             SELECT 
                 ID
             FROM 
@@ -296,7 +301,7 @@
         
         <cfif NOT VAL(qSearchRecord.recordCount)>
 
-            <cfquery datasource="mySQL">
+            <cfquery datasource="#APPLICATION.DSN#">
                 INSERT
                     smg_hostHistoryTracking
                 (
@@ -324,7 +329,7 @@
     <!--- doublePlacementID --->
     <cfif VAL(qGetNewRecords.doublePlacementID)>
     	
-        <cfquery name="qSearchRecord" datasource="mySQL">
+        <cfquery name="qSearchRecord" datasource="#APPLICATION.DSN#">
             SELECT 
                 ID
             FROM 
@@ -341,7 +346,7 @@
         
         <cfif NOT VAL(qSearchRecord.recordCount)>
 
-            <cfquery datasource="mySQL">
+            <cfquery datasource="#APPLICATION.DSN#">
                 INSERT
                     smg_hostHistoryTracking
                 (
