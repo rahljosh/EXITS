@@ -37,9 +37,6 @@
     <cfparam name="vIsPreviousReportApproved" default="0">
 
 	<cfscript>
-		// This page will always display progress reports
-		CLIENT.reportType = 1;
-		
 		// Get Regions
 		qGetRegionList = APPCFC.region.getUserRegions(companyID=CLIENT.companyID, userID=CLIENT.userID, usertype=CLIENT.usertype);
 
@@ -54,7 +51,17 @@
 				CLIENT.pr_regionID = FORM.regionID;
 			}
 
+		} else if ( CLIENT.reportType EQ 2 ) {
+
+            // Set CLIENT Variable
+            CLIENT.pr_rmonth = Month(now());
+			CLIENT.pr_cancelled = 0;		
+			CLIENT.pr_regionID = CLIENT.regionID;
+
 		}
+		
+		// This page will always display progress reports
+		CLIENT.reportType = 1;
 	</cfscript>
 
 	<!--- Second Visit Report --->

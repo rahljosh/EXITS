@@ -916,7 +916,7 @@
 	</cfif>
     
     <div align="center">
-	    <a href="index.cfm?curdoc=secondVisitReport">Back to Reports</a>
+	    <a href="index.cfm?curdoc=secondVisitReports">Back to Reports</a>
     </div>
 
 </cfoutput>
