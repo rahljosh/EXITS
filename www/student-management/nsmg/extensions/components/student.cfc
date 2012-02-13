@@ -652,6 +652,9 @@
     	</cfquery>
 
 		<cfscript>
+			// Set Date Placed Ended
+			setDatePlacedEnded(studentID=ARGUMENTS.studentID,datePlacedEnded=DateFormat(now(), 'mm/dd/yyyy'));
+		
 			// Insert History - It tracks placement statuses only, placement updates are tracked on smg_hostHistory
 			insertPlacementActionHistory(
 				studentID=ARGUMENTS.studentID,
