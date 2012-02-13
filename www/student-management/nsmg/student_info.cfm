@@ -851,7 +851,7 @@
 				<tr bgcolor="##EAE8E8"><td colspan="3"><span class="get_attention"><b>:: </b></span>Cancelation</td></tr>
 				<tr>
 					<td width="10"><Cfif NOT LEN(cancelDate)> <input type="checkbox" name="student_cancel" value="0" OnClick="PopulateCancelBox()" <cfif FORM.edit EQ 'no'>disabled</cfif>> <cfelse> <input type="checkbox" name="student_cancel" value="1" OnClick="PopulateCancelBox();" checked <cfif FORM.edit EQ 'no'>disabled</cfif> > </cfif></td>
-					<td colspan="2">Student Cancelled  &nbsp; &nbsp; &nbsp; &nbsp; Date: &nbsp; <input type="text" name="date_canceled" size=8 value="#DateFormat(canceldate, 'mm/dd/yyyy')#" <cfif FORM.edit EQ 'no'>readonly</cfif>></td>
+					<td colspan="2">Student Cancelled  &nbsp; &nbsp; &nbsp; &nbsp; Date: &nbsp; <input type="text" name="date_canceled" class="datePicker" value="#DateFormat(canceldate, 'mm/dd/yyyy')#" <cfif FORM.edit EQ 'no'>readonly</cfif>></td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>

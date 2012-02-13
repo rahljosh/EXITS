@@ -140,46 +140,7 @@
 
 <!--- REGION HISTORY --->
 <cfif qStudentInfo.regionassigned NEQ FORM.region>
-	<cfquery name="region_history" datasource="MySql">
-		INSERT INTO 
-        	smg_regionhistory
-		(
-            studentID, 
-            regionid, 
-            rguarenteeid,	
-            stateguaranteeid, 
-            fee_waived, 
-            reason, 
-            changedby,  
-            date
-        )
-		VALUES
-			(
-            	<cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentID#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.region#">,
-				<cfif FORM.regionGuar EQ 'no'>
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
-                <cfelse>
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.rguarantee#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.state_guarantee#">,
-                    <cfif VAL(FORM.jan_App)> 
-                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.jan_app#">,
-                    <cfelse>
-                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.jan_app#">,
-                    </cfif>
-                </cfif>
-				<cfif VAL(qStudentInfo.regionassigned)>
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.region_reason#">,
-                <cfelse>
-                	<cfqueryparam cfsqltype="cf_sql_varchar" value="Student was unassigned">,
-                </cfif>
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">,
-                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDateTime(now())#">
-			)
-	</cfquery>
-	
+
 	<cfquery name="update_dateassigned" datasource="MySql">
 		UPDATE 
         	smg_students
@@ -189,6 +150,7 @@
         	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentID#">
 		LIMIT 1
 	</cfquery>
+
 </cfif>
 
 <!--- PROGRAM UPDATED --->
@@ -310,36 +272,8 @@
 
 <!---  CANCELLING A STUDENT --->
 <cfif IsDefined('FORM.student_cancel')>
-
-	<cfif VAL(qStudentInfo.hostid) AND NOT LEN(qStudentInfo.canceldate)>
-		<cfquery name="hostchangereason" datasource="MySql">		
-			INSERT INTO 
-            	smg_hosthistory	
-            (
-            	hostid, 
-                studentID, 
-                schoolid, 
-                dateofchange, 
-                arearepid, 
-                placerepid, 
-                changedby, 
-                reason
-            )
-			VALUES
-            (
-				<cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.hostid#">, 
-				<cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentID#">,                 
-				<cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.schoolid#">,                 
-                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDateTime(now())#">,              
-				<cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.arearepid#">,                 
-				<cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.placerepid#">,                 
-				<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="Student Canceled Program for the following reason: #FORM.cancelreason#">
-            )
-		</cfquery>
-	</cfif> 
 	
-    <cfquery name="cancel_student" datasource="MySql">
+    <cfquery datasource="MySql">
 		UPDATE 
         	smg_students
 		SET 
@@ -355,6 +289,9 @@
 	<cfif NOT LEN(qStudentInfo.canceldate)>
 	
 		<cfscript>
+			// Update datePlacedEnded on smg_hostHistory
+			APPLICATION.CFC.STUDENT.setDatePlacedEnded(studentID=qStudentInfo.studentID, datePlacedEnded=FORM.date_canceled);
+		
             // Get Intl. Rep. Info
             qGetIntlRep = APPCFC.USER.getUserByID(userID=qStudentInfo.intRep);
     

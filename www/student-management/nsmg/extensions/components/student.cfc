@@ -1798,7 +1798,41 @@
                     studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
                 AND	
                     assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-        </cfquery>                    
+        </cfquery> 
+                           
+    </cffunction>
+
+
+    <!--- Set Date placed ended --->
+	<cffunction name="setDatePlacedEnded" access="public" returntype="void" output="false" hint="Set date placed ended for canceled students">
+    	<cfargument name="historyID" default="0" hint="historyID is not required">
+        <cfargument name="studentID" default="0" hint="studentID is not required">
+        <cfargument name="datePlacedEnded" hint="datePlacedEnded is required">
+		
+        <cfscript>
+			var vHistoryID = ARGUMENTS.historyID;
+			
+			if ( NOT VAL(ARGUMENTS.historyID) ) {
+				
+				vHistoryID = getPlacementHistory(studentID=VAL(ARGUMENTS.studentID)).historyID;
+				
+			}	
+		</cfscript>
+        
+        <cfif VAL(vHistoryID) AND isDate(ARGUMENTS.datePlacedEnded)>
+        
+            <cfquery 
+                datasource="#APPLICATION.DSN#">
+                    UPDATE
+                        smg_hostHistory
+                    SET
+                        datePlacedEnded = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.datePlacedEnded#">
+                    WHERE
+                        historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#vHistoryID#">
+            </cfquery> 
+        
+        </cfif>
+                           
     </cffunction>
 
 
