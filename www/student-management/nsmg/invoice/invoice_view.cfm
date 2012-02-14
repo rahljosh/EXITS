@@ -256,7 +256,7 @@
     <table align="center">
         <tr>
             <td>
-                <!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD IS GOOD AT ALL TIMES --->
+                <!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD BE GOOD AT ALL TIMES --->
                 <cfif qGetInvoiceInfo.type EQ 'trainee program'>
                     
                     <img src="http#linkSSL#://ise.exitsapplication.com/nsmg/pics/logos/csb_banner.gif"/>
@@ -266,7 +266,7 @@
                     <cfswitch expression="#qGetInvoiceInfo.setCompanyID#">
                         
                         <!--- Extra --->
-                        <cfcase value="7,8">
+                        <cfcase value="8">
                             <img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_banner.jpg" width="640" height="114" align="center"/>
                         </cfcase>
                         
@@ -327,7 +327,7 @@
 		<tr>
             <td valign="top" class="thin-border-left-bottom-right">
 
-				<!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD IS GOOD AT ALL TIMES --->
+				<!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD BE GOOD AT ALL TIMES --->
                 <cfif qGetInvoiceInfo.type EQ 'trainee program'>
                 	
                     <!--- EXTRA - Trainee --->  
@@ -346,7 +346,7 @@
                     <cfswitch expression="#qGetInvoiceInfo.setCompanyID#">
 
 						<!--- EXTRA - Trainee --->                
-                        <cfcase value="7">
+                        <!--- <cfcase value="7">
                             <span class="style1">                    	
                                 Please note our new bank information <br /><br />                    
                                 KCK Inc. <br />
@@ -356,7 +356,7 @@
                                 ABA/Routing: 021405464<br />
                                 Account: 1110039771<br />
                             </span>                                 
-                        </cfcase>
+                        </cfcase> --->
 
                         <!--- Extra - WAT --->
                         <cfcase value="8">
@@ -628,7 +628,7 @@
     <table width="100%" cellspacing="0" cellpadding="2" border="0">	
         <tr>
             <td valign="top" rowspan="#qGetInvoicePayments.recordCount+4#" width="470"> 
-				<cfif qGetInvoiceInfo.type IS 'trainee program' OR qGetInvoiceInfo.companyid EQ 7  OR qGetInvoiceInfo.companyid EQ 8>
+				<cfif qGetInvoiceInfo.type IS 'trainee program' OR qGetInvoiceInfo.companyid EQ 8>
 					
 					<!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD IS GOOD AT ALL TIMES --->
                     <img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_logo_small.jpg" height="100"/>
@@ -638,8 +638,13 @@
                     <cfswitch expression="#qGetInvoiceInfo.setCompanyID#">
                     
                         <!--- Extra --->
-                        <cfcase value="7,8,9,11,22,23">
+                        <cfcase value="8,9,11,22,23">
                             <img src="http#linkSSL#://ise.exitsapplication.com/nsmg/pics/logos/csb_logo_small.jpg" height="100"/>
+                        </cfcase>
+                        
+                        <!--- Extra Trainee: ISE logo --->
+                        <cfcase value="7">
+                            <img src="http#linkSSL#://ise.exitsapplication.com/nsmg/pics/logos/1.gif" height="100"/>
                         </cfcase>
                         
                         <!--- ESI --->
