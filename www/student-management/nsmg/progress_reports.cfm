@@ -38,7 +38,7 @@
 
 	<cfscript>
 		// Get Regions
-		qGetRegionList = APPCFC.region.getUserRegions(companyID=CLIENT.companyID, userID=CLIENT.userID, usertype=CLIENT.usertype);
+		qGetRegionList = APPLICATION.CFC.REGION.getUserRegions(companyID=CLIENT.companyID, userID=CLIENT.userID, usertype=CLIENT.usertype);
 
 		// save the submitted values
         if ( VAL(FORM.submitted) ) {
@@ -53,7 +53,7 @@
 
 		} else if ( CLIENT.reportType EQ 2 ) {
 
-            // Set CLIENT Variable
+            // Reset CLIENT Variable
             CLIENT.pr_rmonth = Month(now());
 			CLIENT.pr_cancelled = 0;		
 			CLIENT.pr_regionID = CLIENT.regionID;
@@ -123,13 +123,16 @@
     
 </cfsilent>
 
-<script>
+<script language="javascript">
 	<!--
 	// If second visit report is selected, load the 2nd visit page
 	var checkSelectedReport = function() { 
 	
-		if ( $("#reportType").val() == 2 ) {			
-			window.location.replace('index.cfm?curdoc=secondVisitReports&setVariables');			
+		if ( $("#reportType").val() == 2 ) {	
+			// Disable submit button
+			$("#submit").attr("disabled", "disabled");
+			// Go to second visit page
+			window.location.replace('index.cfm?curdoc=secondVisitReports');			
 		}		
 	
 	}
@@ -176,7 +179,7 @@
         <input name="submitted" type="hidden" value="1">
         <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
             <tr>
-                <td><input name="send" type="submit" value="Submit" /></td>
+                <td><input name="submit" id="submit" type="submit" value="Submit" /></td>
                 <td>
                     Reports Available<br />
                     <select name="reportType" id="reportType" onchange="checkSelectedReport();" class="largeField">
@@ -327,7 +330,6 @@
         p.fieldviewable = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
 
     <!--- regional advisor sees only their reps or their students. --->
-    
 	<cfif CLIENT.usertype EQ 6>
         AND (
             	user_access_rights.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
@@ -682,11 +684,13 @@
     </table>
            
 <cfelse>
+
     <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
         <tr>
-            <td>No progress reports matched your criteria.</td>
+            <td align="center">No progress reports matched your criteria.</td>
         </tr>
     </table>
+    
 </cfif>
 
 <!--- Table Footer --->
