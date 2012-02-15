@@ -233,9 +233,9 @@
                 
             </Tr>
             <tr>
-                <td><input name="submit" id="submit" type="submit" value="Submit" /></td>
+                <td valign="top"><input name="submit" id="submit" type="submit" value="Submit" /></td>
             
-                <td>Reports Available<br />
+                <td valign="top">Reports Available<br />
                 <Cfif CLIENT.usertype NEQ 15>
                          <cfselect 
                           name="reportType" 
@@ -251,7 +251,7 @@
                 </Cfif>
                 </td>
                
-                <td>
+                <td valign="top">
                 Programs <br />
                         <select name="selectedProgram" size="5" multiple="multiple" class="xLargeField">
                            <cfloop query="qGetPrograms">
@@ -261,7 +261,7 @@
               </td>
             
             <cfif CLIENT.usertype LTE 4>
-               <td>
+               <td valign="top">
                     <!--- GET ALL REGIONS --->
                     <cfquery name="list_regions" datasource="#APPLICATION.DSN#">
                         SELECT regionid, regionname
@@ -274,7 +274,7 @@
                     <cfselect NAME="regionid" query="list_regions" value="regionid" display="regionname" selected="#CLIENT.pr_regionid#" class="largeField" />
                 </td>
             </cfif>
-                <td>
+                <td valign="top">
                     Status<br />
                     <select name="cancelled" class="mediumField">
                         <option value="0" <cfif CLIENT.pr_cancelled EQ 0>selected</cfif>>Active</option>
