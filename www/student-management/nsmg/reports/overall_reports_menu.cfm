@@ -64,7 +64,7 @@
                     <tr>
                         <td class="reportFieldTitle">Program:</td>
                         <td>
-                            <select name="programID" multiple size="6">
+                            <select name="programID" multiple size="6" class="xLargeField">
                                 <cfloop query="get_program">
                                     <option value="#programID#">#programname#</option>
                                 </cfloop>
@@ -74,7 +74,7 @@
                     <tr>
                         <td class="reportFieldTitle">Region:</td>
                         <td>
-                            <select name="regionid">
+                            <select name="regionID" class="largeField">
                                 <option value="0">All Regions</option>
                                 <cfloop query="get_regions">
                                     <option value="#regionid#">#regionname#</option>
@@ -83,39 +83,51 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="reportFieldTitle">Status:</td>
+                        <td class="reportFieldTitle">Placement Status:</td>
                         <td>
-                            <select name="status">
-                                <option value="0">All</option>
-                                <option value="1">Placed</option>
-                                <option value="2">Unplaced</option>
+                            <select name="placementStatus" class="largeField">
+                                <option value="all">All</option>
+                                <option value="placed">Placed</option>
+                                <option value="unplaced">Unplaced</option>
                             </select>               
                         </td>
                     </tr>
                     <tr>
-                        <td class="reportFieldTitle">Continent:</td>
+                        <td class="reportFieldTitle">Student Status:</td>
                         <td>
-                            <select name="continent">
-                                <option value="0">All</option>
-                                <option value="Asia">Asia</option>
-                                <option value="Europe">Europe</option>
-                                <option value="South America">South America</option>
-                            </select>               
-                        </td>
-                    </tr>
+                        	<select name="studentStatus" class="largeField">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive (Completed Program)</option>
+                                <option value="canceled">Canceled</option>					
+                                <option value="all">All</option>
+	                        </select>
+						</td>
+                    </tr>					
                     <tr>
                         <td class="reportFieldTitle">Pre-AYP:</td>
                         <td>
-                            <select name="preayp">
+                            <select name="preAypCamp" class="largeField">
                                 <option value='none'>None</option>
-                                <option value="english">English Camp</option><option value="orientation">Orientation Camp</option><option value="all">Both Camps</option>
-                            </select>               
+                                <option value='all'>All</option>
+                                <cfloop query="qAYPEnglishCamps">
+                                    <option value="#qAYPEnglishCamps.campid#">#qAYPEnglishCamps.name#</option>
+                                </cfloop>
+                            </select>
                         </td>
                     </tr>	
                     <tr>
-                        <td align="right"><input type="checkbox" name="usa"></input></td>
-                        <td>American Citizen Students (Birth, Resident or Citizenship Countries)</td>
-                    </tr>								
+                        <td align="right" valign="top">Report Type :</td>
+                        <td>
+                            <select name="reportType" class="largeField">
+                                <option value="onScreen">On Screen</option>
+                                <option value="Excel">Excel Spreadsheet</option>
+                            </select>
+                        </td>		
+                    </tr>
+                    <tr>
+                        <td align="right"><input type="checkbox" name="usCitizens" id="usCitizens" value="1"></input></td>
+                        <td><label for="usCitizens">American Citizen Students (Birth, Resident or Citizenship Countries)</label></td>
+                    </tr>	
                     <tr><td colspan="2" class="reportTitle"><input type="image" src="pics/view.gif" align="center" border="0"></td></tr>
                 </table>
             </form>
@@ -130,7 +142,7 @@
                     <tr>
                         <td class="reportFieldTitle">Program:</td>
                         <td>
-                            <select name="programID" multiple size="6">
+                            <select name="programID" multiple size="6" class="xLargeField">
                                 <cfloop query="get_program">
                                     <option value="#programID#">#programname#</option>
                                 </cfloop>
@@ -140,7 +152,7 @@
                     <tr>
                         <td class="reportFieldTitle">Intl. Rep:</td>
                         <td>
-                        	<select name="intrep">
+                        	<select name="intrep" class="xLargeField">
 		                        <option value="0">All Intl. Reps</option>
         		                <cfloop query="get_intl_rep">
                                 	<option value="#intrep#">#businessname#</option>
@@ -149,9 +161,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="reportFieldTitle">Status:</td>
+                        <td class="reportFieldTitle">Placement Status:</td>
                         <td>
-                        	<select name="status">
+                        	<select name="status" class="largeField">
                                 <option value="0">All</option>
                                 <option value="1">Placed</option>
                                 <option value="2">Unplaced</option>
@@ -159,11 +171,11 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="reportFieldTitle">Active:</td>
+                        <td class="reportFieldTitle">Student Status:</td>
                         <td>
-                        	<select name="active">
+                        	<select name="active" class="largeField">
                                 <option value="1">Active</option>
-                                <option value="0">Inactive</option>
+                                <option value="0">Inactive (Completed program)</option>
                                 <option value="2">Canceled</option>					
                                 <option value="3">All</option>
 	                        </select>
@@ -172,7 +184,7 @@
                     <tr>
                         <td class="reportFieldTitle">Pre-AYP:</td>
                         <td>
-                            <select name="preayp">
+                            <select name="preayp" class="largeField">
                                 <option value='None'>None</option>
                                 <option value='All'>All</option>
                                 <cfloop query="qAYPEnglishCamps">
@@ -182,11 +194,11 @@
                         </td>
                     </tr>	
                     <tr>
-                        <td class="reportFieldTitle">Report Format:</td>
+                        <td class="reportFieldTitle">Report Type:</td>
                         <td>
-                            <select name="reportFormat">
-                                <option value='Screen'>Screen</option>
-                                <option value='Excel'>Excel</option>
+                            <select name="reportFormat" class="largeField">
+                                <option value='Screen'>On Screen</option>
+                                <option value='Excel'>Excel Spreadsheet</option>
                             </select>
                             * Only Available for Pre-AYP report
                         </td>
