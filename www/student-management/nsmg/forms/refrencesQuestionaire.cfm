@@ -127,13 +127,79 @@ where active = 1
                 set approved = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
                 where refID = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.ref#">
                 </Cfquery>
+                <!---check if References in paperwork have been udpated.  If they havn't approve them---->
+                		<Cfscript>
+							//Check if paperwork is complete for season
+							get_paperwork = APPLICATION.CFC.udf.allpaperworkCompleted(userid=url.rep);
+						</cfscript>
+                 
+			
+				 <cfif get_paperwork.ar_ref_quest1 is ''>
+                     <cfquery name="updatePaperwork" datasource="#application.dsn#">
+                     update smg_users_paperwork 
+                        set ar_ref_quest1 = <cfqueryparam cfsqltype="CF_SQL_DATE" value="#now()#">
+                     where userid = #url.rep#
+                         </cfquery>
+                 <cfelseif get_paperwork.ar_ref_quest2 is ''>
+                     <cfquery name="updatePaperwork" datasource="#application.dsn#">
+                     update smg_users_paperwork 
+                        set ar_ref_quest2 = <cfqueryparam cfsqltype="CF_SQL_DATE" value="#now()#">
+                     where userid = #url.rep#
+                         </cfquery>
+                 </cfif>
+              <!----Check if this account should be reviewed more then likely this will not happen here, but depending on the order of people submitting things, we have to check.---->
+			<Cfscript>
+                    //Check if paperwork is complete for season
+                    get_paperwork = APPLICATION.CFC.udf.allpaperworkCompleted(userid=client.userid);
+					//Get User Info
+                    qGetUserInfo = APPLICATION.CFC.user.getUserByID(userid=client.userid);
+         </cfscript>
+         
+		 <cfif val(get_paperwork.reviewAcct)>
+         
+                 <cfquery name="progManager" datasource="#application.dsn#">
+                  select pm_email
+                  from smg_companies
+                  where companyid = #client.companyid#
+                  </cfquery>
+                 <cfsavecontent variable="programEmailMessage">
+                    <cfoutput>				
+                    The references and all other paperwork appear to be in order for  #qGetUserInfo.firstname# #qGetUserInfo.lastname# (#qGetUserInfo.userID#).  A manual review is now required to actiavte the account.  Please review all paper work and submit the CBC for processing. If everything looks good, approval of the CBC will activate this account.  
+                    
+                   <Br><Br>
+                    
+                   <a href="#client.exits_url#/nsmg/index.cfm?curdoc=user_info&userid=#client.userid#">View #qGetUserInfo.firstname#<cfif Right(#qGetUserInfo.firstname#, 1) is 's'>'<cfelse>'s</cfif> account.</a>
+                    </cfoutput>
+                    </cfsavecontent>
+                        <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                            
+                            **********This emai is sent to the Program Manager*******************<Br>
+                        *****************#progManager.pm_email#<br>**********************
+                            <cfinvokeargument name="email_to" value="josh@pokytrails.com">      
+                            <!----
+                           
+                            <cfinvokeargument name="email_to" value="#progManager.pm_email#"> 
+							 ---->
+                              
+                            <cfinvokeargument name="email_from" value="""#client.companyshort# Support"" <#client.emailfrom#>">
+                            <cfinvokeargument name="email_subject" value="CBC Authorization for #client.name#">
+                            <cfinvokeargument name="email_message" value="#programEmailMessage#">
+                          
+                        </cfinvoke>	 
+             
+                 </cfif>
+                 
+                
+                 
             </Cfif>
+            
             <cfloop query="questions">
                 <cfquery datasource="#application.dsn#">
                 insert into areaRepQuestionaireAnswers (fk_reportID, fk_questionID, answer)
                                     values(#reportid.reportid#, #id#, <Cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('form.' & id)#"> )
                 </cfquery>
             </cfloop>
+            
             <body onload="opener.location.reload()">
            
             <SCRIPT LANGUAGE="JavaScript"><!--
@@ -144,7 +210,10 @@ where active = 1
             <div align="center">
             
             <h1>Succesfully Submited.</h1>
+            <cfif val(get_paperwork.arearepok)>This account is ready for a manual review.  Emails have been sent to the program manager to initiate the reveiw process and activate the account.</cfif><br /><br />
             <em>this window should close shortly</em>
+            <br /><br />
+           
             </div>
             <cfabort>
      </cfif>      
@@ -195,7 +264,7 @@ where refid = #url.ref#
        
         <label>Date of Interview</label><br />
          <cfinput type="text" name="dateInterview" size="10" value="#form.dateInterview#" mask="99/99/9999"  />mm/dd/yyyy
-        </p>
+        <br /><br />
         <cfloop query="questions">
         <p>
          <label>#questions.currentrow#. #qtext#</label><br />
