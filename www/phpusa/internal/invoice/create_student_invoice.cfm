@@ -8,7 +8,7 @@
     <cfquery name="qGetStudentInfo" datasource="MySql">
         SELECT 
         	s.studentID, s.firstname, s.familylastname, s.intrep,
-            u.businessname, u.accepts_sevis_fee, u.php_insurance_typeid, u.php_contact_email, u.email,
+            u.businessname, u.accepts_sevis_fee, u.php_insurance_typeid, u.php_contact_email, u.email, u.php_billing_email,
             insu.type, insu.ayp5, insu.ayp10, insu.ayp12,
             p.programname,
             php.assignedID, php.programid, php.active, php.return_student,
@@ -418,7 +418,7 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 								<tr>
 									<td>#DateFormat(date, 'mm/dd/yy')#</td>
 									<td><a href="javascript:OpenInvoice('invoice/view_invoice.cfm?i=#uniqueid#')">Invoice ###invoiceid#</a> &nbsp; 
-										<a href="javascript:OpenInvoice('invoice/view_invoice_email.cfm?i=#uniqueid#');" onClick="return confirm ('Invoice ###invoiceid# will be sent to #qGetStudentInfo.businessname# at #qGetStudentInfo.email#. Click OK to continue.');"><img src="pics/email.gif" border="0" alt="Email Invoice ###invoiceid# to #qGetStudentInfo.businessname#."></a>
+										<a href="javascript:OpenInvoice('invoice/view_invoice_email.cfm?i=#uniqueid#');" onClick="return confirm ('Invoice ###invoiceid# will be sent to #qGetStudentInfo.businessname# at #qGetStudentInfo.php_billing_email#. Click OK to continue.');"><img src="pics/email.gif" border="0" alt="Email Invoice ###invoiceid# to #qGetStudentInfo.businessname#."></a>
 									</td>
 									<td><cfif canceled EQ 1><font color="##FF0000">#description#</font><cfelse>#description#</cfif></td>
 									<td><!---<cfif canceled EQ 1><span class="strike"></cfif>--->#LSCurrencyFormat(amount, 'local')#</td>
