@@ -100,7 +100,8 @@
 		<cfif IsDefined('form.php_contact_name')>
 			php_contact_name = '#form.php_contact_name#',
 			php_contact_phone = '#form.php_contact_phone#',
-			php_contact_email = '#form.php_contact_email#',			
+			php_contact_email = '#form.php_contact_email#',
+            php_billing_email = '#form.php_billing_email#',			
 		</cfif>
 		
 		<cfif isDefined('form.billing_company')>

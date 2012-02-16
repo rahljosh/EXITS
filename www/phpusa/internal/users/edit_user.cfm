@@ -32,7 +32,7 @@
 		u.billing_company, u.billing_contact, u.billing_address, 
 		u.php_contact_name, u.php_contact_phone, u.php_contact_email,
 		u.billing_address2, u.billing_city, u.active, u.billing_country, u.billing_zip, u.billing_phone, u.billing_fax, 
-		u.billing_email
+		u.billing_email, php_billing_email
 	FROM smg_users u
 	LEFT JOIN smg_countrylist ON smg_countrylist.countryid = u.country  
 	LEFT JOIN smg_states ON smg_states.id = u.state  
@@ -223,6 +223,13 @@
 											<TD align="center"></TD>
 											<TD><span id="lblTitle" class="normalLabel">Email Address:</span></TD>
 											<TD id="input"><input name="php_contact_email" type="text" maxlength="100" value="#userinfo.php_contact_email#"></TD>
+											<TD height="1"><IMG height=1 src="spacer.gif" width=20></TD>
+										</TR>
+										<!----Billing Email---->
+										<TR vAlign="top" height="30">
+											<TD align="center"></TD>
+											<TD><span id="lblTitle" class="normalLabel">Billing Email Address:</span></TD>
+											<TD id="input"><input name="php_billing_email" type="text" maxlength="100" value="#userinfo.php_billing_email#"></TD>
 											<TD height="1"><IMG height=1 src="spacer.gif" width=20></TD>
 										</TR>
 									</table>
