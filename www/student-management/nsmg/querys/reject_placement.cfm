@@ -43,4 +43,4 @@ Technical issues should be directed to support@student-management.com, include t
 
 	<cfcookie name="review_host"  value=1 expires="now">
 	<cfcookie name="review_student"  value=1 expires="now">
-<cflocation url="../index.cfm?curdoc=pending_hosts">
+<cflocation url="../index.cfm?curdoc=pendingPlacementList">

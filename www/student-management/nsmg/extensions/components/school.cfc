@@ -136,6 +136,37 @@
 	</cffunction>
 
 
+	<cffunction name="getSchoolAndDatesInfo" access="public" returntype="query" output="false" hint="Returns school and date information for a season">
+    	<cfargument name="schoolID" hint="schoolID is required">
+        <cfargument name="seasonID" hint="seasonID is required">
+              
+        <cfquery 
+			name="qGetSchoolAndDatesInfo" 
+			datasource="#APPLICATION.dsn#">
+                SELECT 
+                    sc.schoolID,
+                    sc.schoolname, 
+                    sc.city,
+                    sc.state,
+                    sc.zip, 
+                    sd.year_begins, 
+                    sd.semester_begins, 
+                    sd.semester_ends, 
+                    sd.year_ends
+                FROM 
+                    smg_schools sc
+                LEFT OUTER JOIN 
+                    smg_school_dates sd on sd.schoolID = sc.schoolID
+                    AND 
+                        sd.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+                WHERE 
+                    sc.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.schoolID)#">
+		</cfquery>
+		        		   
+		<cfreturn qGetSchoolAndDatesInfo>
+	</cffunction>
+
+
 	<cffunction name="getSchoolDates" access="public" returntype="query" output="false" hint="Returns school dates">
     	<cfargument name="schoolID" hint="schoolID is required">
         <cfargument name="programID" hint="programID is required to get the correct dates according to the season">

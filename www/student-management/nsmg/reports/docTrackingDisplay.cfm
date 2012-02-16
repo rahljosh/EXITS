@@ -67,26 +67,27 @@
                             <td align="left">
                                 <i>
                                     <font size="-2">
-                                        <cfif NOT LEN(qGetStudentsByRep.doc_full_host_app_date)>Host Family &nbsp; &nbsp;</cfif>
-                                        <cfif NOT LEN(qGetStudentsByRep.doc_letter_rec_date)>HF Letter &nbsp; &nbsp;</cfif>
-                                        <cfif NOT LEN(qGetStudentsByRep.doc_rules_rec_date)>HF Rules &nbsp; &nbsp;</cfif>
-                                        <cfif NOT LEN(qGetStudentsByRep.doc_photos_rec_date)>HF Photos &nbsp; &nbsp;</cfif>
-                                        <cfif NOT LEN(qGetStudentsByRep.doc_school_accept_date)>School Acceptance &nbsp; &nbsp;</cfif>
-                                        <cfif NOT LEN(qGetStudentsByRep.doc_school_profile_rec)>School & Community Profile &nbsp; &nbsp;</cfif>
-                                        <cfif NOT LEN(qGetStudentsByRep.doc_conf_host_rec)>Visit Form &nbsp; &nbsp;</cfif>
-                                        <cfif NOT LEN(qGetStudentsByRep.doc_date_of_visit)>Date of Visit &nbsp; &nbsp; </cfif>
-                                        <cfif NOT LEN(qGetStudentsByRep.doc_ref_form_1)>Ref. 1 &nbsp; &nbsp;</cfif>
-                                        <cfif NOT LEN(qGetStudentsByRep.doc_ref_form_2)>Ref. 2 &nbsp; &nbsp;</cfif>
-                                        <cfif NOT LEN(qGetStudentsByRep.stu_arrival_orientation)>Student Orientation &nbsp; &nbsp;</cfif>
-                                        <cfif NOT LEN(qGetStudentsByRep.host_arrival_orientation)>HF Orientation &nbsp; &nbsp;</cfif>
-                                        <cfif NOT LEN(qGetStudentsByRep.doc_class_schedule)>Class Schedule &nbsp; &nbsp;</cfif>
+                                        <cfif NOT isDate(qGetStudentsByRep.doc_full_host_app_date)>Host Family &nbsp; &nbsp;</cfif>
+                                        <cfif NOT isDate(qGetStudentsByRep.doc_letter_rec_date)>HF Letter &nbsp; &nbsp;</cfif>
+                                        <cfif NOT isDate(qGetStudentsByRep.doc_rules_rec_date)>HF Rules &nbsp; &nbsp;</cfif>
+										<cfif NOT isDate(qGetStudentsByRep.doc_rules_sign_date)>HF Rules Date Signed &nbsp; &nbsp;</cfif>
+										<cfif NOT isDate(qGetStudentsByRep.doc_photos_rec_date)>HF Photos &nbsp; &nbsp;</cfif>
+                                        <cfif NOT isDate(qGetStudentsByRep.doc_school_accept_date)>School Acceptance &nbsp; &nbsp;</cfif>
+                                        <cfif NOT isDate(qGetStudentsByRep.doc_school_profile_rec)>School & Community Profile &nbsp; &nbsp;</cfif>
+                                        <cfif NOT isDate(qGetStudentsByRep.doc_conf_host_rec)>Visit Form &nbsp; &nbsp;</cfif>
+                                        <cfif NOT isDate(qGetStudentsByRep.doc_date_of_visit)>Date of Visit &nbsp; &nbsp; </cfif>
+                                        <cfif NOT isDate(qGetStudentsByRep.doc_ref_form_1)>Ref. 1 &nbsp; &nbsp;</cfif>
+                                        <cfif NOT isDate(qGetStudentsByRep.doc_ref_form_2)>Ref. 2 &nbsp; &nbsp;</cfif>
+                                        <cfif NOT isDate(qGetStudentsByRep.stu_arrival_orientation)>Student Orientation &nbsp; &nbsp;</cfif>
+                                        <cfif NOT isDate(qGetStudentsByRep.host_arrival_orientation)>HF Orientation &nbsp; &nbsp;</cfif>
+                                        <cfif NOT isDate(qGetStudentsByRep.doc_class_schedule)>Class Schedule &nbsp; &nbsp;</cfif>
                                         <cfif seasonid gt 8>
-											<cfif NOT LEN(qGetStudentsByRep.doc_income_ver_date)>Income Verification &nbsp; &nbsp;</cfif>
-                                            <cfif NOT LEN(qGetStudentsByRep.doc_conf_host_rec2)> 2nd Conf. Host Visit &nbsp; &nbsp;</cfif>
+											<cfif NOT isDate(qGetStudentsByRep.doc_income_ver_date)>Income Verification &nbsp; &nbsp;</cfif>
+                                            <cfif NOT isDate(qGetStudentsByRep.doc_conf_host_rec2)> 2nd Conf. Host Visit &nbsp; &nbsp;</cfif>
                                         </cfif>
                                         <cfif client.totalfam eq 1>
-											<cfif NOT LEN(qGetStudentsByRep.doc_single_ref_check1)>Ref Check (Single) &nbsp; &nbsp;</cfif>
-                                            <cfif NOT LEN(qGetStudentsByRep.doc_single_ref_check2)>2nd Ref Check (Single) &nbsp; &nbsp;</cfif>
+											<cfif NOT isDate(qGetStudentsByRep.doc_single_ref_check1)>Ref Check (Single) &nbsp; &nbsp;</cfif>
+                                            <cfif NOT isDate(qGetStudentsByRep.doc_single_ref_check2)>2nd Ref Check (Single) &nbsp; &nbsp;</cfif>
                                         </cfif>
                                     </font>
                                 </i>

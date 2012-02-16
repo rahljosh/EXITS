@@ -176,7 +176,8 @@
             hist.datePlaced,
             hist.doc_full_host_app_date,
             hist.doc_letter_rec_date, 
-            hist.doc_rules_rec_date, 
+            hist.doc_rules_rec_date,
+            hist.doc_rules_sign_date, 
             hist.doc_photos_rec_date, 
             hist.doc_school_accept_date, 
             hist.doc_school_profile_rec,
@@ -249,6 +250,8 @@
                 hist.doc_letter_rec_date IS NULL 
             OR 
                 hist.doc_rules_rec_date IS NULL 
+            OR
+            	hist.doc_rules_sign_date IS NULL
             OR
                 hist.doc_photos_rec_date IS NULL 
             OR 
@@ -439,84 +442,88 @@
 							
                                 // Required for Single Parents 
                                 if ( qGetStudentsByRep.seasonID GTE 8 AND totalFamilyMembers EQ 1 ) { // 
-                                     if ( NOT LEN(qGetStudentsByRep.doc_single_place_auth) ) {
+                                     if ( NOT isDate(qGetStudentsByRep.doc_single_place_auth) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "Single Person Placement Verification &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 									
 									// Date of S.P. Reference Check 1
-                                    if ( NOT LEN(qGetStudentsByRep.doc_single_ref_check1) ) {
+                                    if ( NOT isDate(qGetStudentsByRep.doc_single_ref_check1) ) {
                                         missingDocumentsList = ListAppend(missingDocumentsList, "Ref Check (Single) &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                     }
                                     // Date of S.P. Reference Check 2
-                                    if ( NOT LEN(qGetStudentsByRep.doc_single_ref_check2) ) {
+                                    if ( NOT isDate(qGetStudentsByRep.doc_single_ref_check2) ) {
                                         missingDocumentsList = ListAppend(missingDocumentsList, "2nd Ref Check (Single) &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                     }
                                 }
 								
                                 // Host Application Received
-                                if ( NOT LEN(qGetStudentsByRep.doc_full_host_app_date) ) {
+                                if ( NOT isDate(qGetStudentsByRep.doc_full_host_app_date) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "Host Family &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
                                 // Host Family Letter Received
-                                if ( NOT LEN(qGetStudentsByRep.doc_letter_rec_date) ) {
+                                if ( NOT isDate(qGetStudentsByRep.doc_letter_rec_date) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "HF Letter &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
                                 // Host Family Rules Form
-                                if ( NOT LEN(qGetStudentsByRep.doc_rules_rec_date) ) {
+                                if ( NOT isDate(qGetStudentsByRep.doc_rules_rec_date) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "HF Rules &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
+                                // Host Family Rules Date Signed
+                                if ( NOT isDate(qGetStudentsByRep.doc_rules_sign_date) ) {
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "HF Rules Date Signed &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
                                 // Host Family Photos
-                                if ( NOT LEN(qGetStudentsByRep.doc_photos_rec_date) ) {
+                                if ( NOT isDate(qGetStudentsByRep.doc_photos_rec_date) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "HF Photos &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
                                 // School & Community Profile Form
-                                if ( NOT LEN(qGetStudentsByRep.doc_school_profile_rec) ) {
+                                if ( NOT isDate(qGetStudentsByRep.doc_school_profile_rec) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "School & Community Profile &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
                                 // Confidential Host Family Visit Form
-                                if ( NOT LEN(qGetStudentsByRep.doc_conf_host_rec) ) {
+                                if ( NOT isDate(qGetStudentsByRep.doc_conf_host_rec) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "Visit Form &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
                                 // Confidential Host Family Visit Form - Date of Visit
-                                if ( NOT LEN(qGetStudentsByRep.doc_date_of_visit) ) {
+                                if ( NOT isDate(qGetStudentsByRep.doc_date_of_visit) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "Date of Visit &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
                                 // Reference Form 1
-                                if ( NOT LEN(qGetStudentsByRep.doc_ref_form_1) ) {
+                                if ( NOT isDate(qGetStudentsByRep.doc_ref_form_1) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "Ref. 1 &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
                                 // Reference Form 2
-                                if ( NOT LEN(qGetStudentsByRep.doc_ref_form_2) ) {
+                                if ( NOT isDate(qGetStudentsByRep.doc_ref_form_2) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "Ref. 2 &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
                                 // School Acceptance Form
-                                if ( NOT LEN(qGetStudentsByRep.doc_school_accept_date) ) {
+                                if ( NOT isDate(qGetStudentsByRep.doc_school_accept_date) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "School Acceptance &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }								
                                 
                                 // Required starting Aug 11
                                 if ( qGetStudentsByRep.seasonID GTE 8 ) {
                                     // Income Verification Form
-                                    if ( NOT LEN(qGetStudentsByRep.doc_income_ver_date) ) {
+                                    if ( NOT isDate(qGetStudentsByRep.doc_income_ver_date) ) {
                                         missingDocumentsList = ListAppend(missingDocumentsList, "Income Verification &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                     }
                                     // 2nd Confidential Host Family Visit Form
-                                    if ( NOT LEN(qGetStudentsByRep.pr_ny_approved_date) ) { 
+                                    if ( NOT isDate(qGetStudentsByRep.pr_ny_approved_date) ) { 
                                         missingDocumentsList = ListAppend(missingDocumentsList, "2nd Conf. Host Visit &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                     }
                                     
                                 }  
                                 
                                 // Student Orientation
-                                if ( NOT LEN(qGetStudentsByRep.stu_arrival_orientation) ) {
+                                if ( NOT isDate(qGetStudentsByRep.stu_arrival_orientation) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "Student Orientation &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
                                 // HF Orientation
-                                if ( NOT LEN(qGetStudentsByRep.host_arrival_orientation) ) {
+                                if ( NOT isDate(qGetStudentsByRep.host_arrival_orientation) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "HF Orientation &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
                                 // Class Schedule
-                                if ( NOT LEN(qGetStudentsByRep.doc_class_schedule) ) {
+                                if ( NOT isDate(qGetStudentsByRep.doc_class_schedule) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "Class Schedule &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
                             </cfscript>

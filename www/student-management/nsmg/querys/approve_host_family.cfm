@@ -25,5 +25,5 @@ where studentid = #cookie.review_student#
 	<cfcookie name="review_student"  value=0 expires="now">
 	
 	
-<cflocation url="../index.cfm?curdoc=pending_hosts">
+<cflocation url="../index.cfm?curdoc=pendingPlacementList">
 
