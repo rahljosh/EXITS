@@ -231,7 +231,8 @@
                     </ul>
                 </li>
                 
-                <li><a href="index.cfm?curdoc=pdf_docs/index">#qGetCompany.companyShort_noColor# Docs</a></li>
+                <li><a href="index.cfm?curdoc=pdf_docs/index">#qGetCompany.companyShort_noColor# Docsfsgsdfgsd</a></li>
+
                 
                 <!--- Not Student View --->
                 <cfif CLIENT.usertype NEQ 9>
@@ -329,7 +330,10 @@
                     </li>              
                 </cfif>
                 
-                <li><a href="index.cfm?curdoc=pdf_docs/index">#qGetCompany.companyShort_noColor# Docs</a></li>
+                <!--- Link does not apply to ESI --->
+                <cfif CLIENT.companyID NEQ 14>
+                	<li><a href="index.cfm?curdoc=pdf_docs/index">#qGetCompany.companyShort_noColor# Docs</a></li>
+                </cfif>
                 
                 <li><a href="index.cfm?curdoc=reports/index">Reports</a></li>
                 
