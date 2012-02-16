@@ -231,7 +231,7 @@
                     </ul>
                 </li>
                 
-                <li><a href="index.cfm?curdoc=pdf_docs/index">#qGetCompany.companyShort_noColor# Docsfsgsdfgsd</a></li>
+                <li><a href="index.cfm?curdoc=pdf_docs/index">#qGetCompany.companyShort_noColor# Docs</a></li>
 
                 
                 <!--- Not Student View --->
