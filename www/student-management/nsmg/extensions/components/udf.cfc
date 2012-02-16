@@ -437,14 +437,13 @@
             <cfset arrPassword = ArrayNew( 1 ) />
          
 			<!---
-            Rules that are followed
-             
-            - must be exactly 8 characters in length
-            - must have at least 1 number
-            - must have at least 1 uppercase letter
-            - must have at least 1 lower case letter
-            - must have at least 1 non-alphanumeric char.
-            --->
+			Rules that are followed
+			- must be exactly 8 characters in length
+			- must have at least 1 number
+			- must have at least 1 uppercase letter
+			- must have at least 1 lower case letter
+			- must have at least 1 non-alphanumeric char.
+			--->
          
             <!--- Select the random number FROM our number set. --->
             <cfset arrPassword[ 1 ] = Mid( strNumbers, RandRange( 1, Len( strNumbers ) ), 1 ) />
@@ -466,16 +465,16 @@
             </cfloop>
          
 			<!---
-            Jumble up the password. 
-            --->
+			Jumble up the password. 
+			--->
             <cfset CreateObject( "java", "java.util.Collections" ).Shuffle( arrPassword ) />
          
 			<!---
-            We now have a randomly shuffled array. Now, we just need
-            to join all the characters into a single string. We can
-            do this by converting the array to a list and then just
-            providing no delimiters (empty string delimiter).
-            --->
+			We now have a randomly shuffled array. Now, we just need
+			to join all the characters into a single string. We can
+			do this by converting the array to a list and then just
+			providing no delimiters (empty string delimiter).
+			--->
 		<cfscript>
             strPassword = ArrayToList(arrPassword,"");
             
@@ -590,15 +589,13 @@
 		--->
 		
 		<!--- Driving Directions --->        
-        <cfhttp url="http://maps.googleapis.com/maps/api/directions/xml?sensor=false&origin=#ARGUMENTS.origin#&destination=#ARGUMENTS.destination#" delimiter="," resolveurl="yes" />
+        <cfhttp url="http://maps.googleapis.com/maps/api/directions/xml?sensor=false&alternatives=true&origin=#ARGUMENTS.origin#&destination=#ARGUMENTS.destination#" delimiter="," resolveurl="yes" />
         
         <cfscript>
 			//var vMeterValue = 0.000621371192;
 			var vFootValue = 0.000189393939;
-			var vReturnValue = '';
-			var vGetDistanceFeet = '';
-			var vGetDistanceMiles = '';
-			var vCeilingDecimalValue = '';
+			var vReturnValue = '';			
+			var vGetShortestDistance = '';
 			// meters --> vResponseXML.DirectionsResponse.route.leg.distance.value.XmlText
 			// miles --> vResponseXML.DirectionsResponse.route.leg.distance.text.XmlText
 
@@ -606,34 +603,43 @@
 				
 				// Parse XML we received back to a variable
 				vResponseXML = XmlParse(cfhttp.filecontent);		
-				
+
 				try {
 					
 					// Results could be in ft or mi format
 					vReturnValue = vResponseXML.DirectionsResponse.route.leg.distance.text.XmlText;
 					
-					if ( Right(vReturnValue, 2) EQ 'ft' ) {
+					// Loop through routes to get the shortest distance
+					for ( i=1; i LTE ArrayLen(vResponseXML.DirectionsResponse.route); i=i+1 ) {
 						
-						// Feet Value Returned
-						vGetDistanceFeet = ReplaceNoCase(vReturnValue, " ft", "", "ALL");	
+						// Distance from route [i]
+						vReturnValue = vResponseXML.DirectionsResponse.route[i].leg.distance.text.XmlText;
 						
-						// Set Up Default Values
-						if ( vGetDistanceFeet LTE 1000 ) {
+						if ( Right(vReturnValue, 2) EQ 'ft' ) {
 							
-							vGetDistanceMiles = 0.1;
-														
+							// Feet Value Returned
+							vReturnValue = ReplaceNoCase(vReturnValue, " ft", "", "ALL");	
+							
+							// Set Up Default Values
+							if ( vReturnValue LTE 1000 ) {
+								vReturnValue = 0.1;
+							} else {
+								vReturnValue = DecimalFormat(ReplaceNoCase(vReturnValue, " ft", "", "ALL") * vFootValue);	
+							}
+							
 						} else {
-							
-							vGetDistanceMiles = DecimalFormat(ReplaceNoCase(vReturnValue, " ft", "", "ALL") * vFootValue);	
-							
+							// Miles Value Returned
+							vReturnValue = ReplaceNoCase(vReturnValue, " mi", "", "ALL");
 						}
 						
-					} else {
-						// Miles Value Returned
-						vGetDistanceMiles = ReplaceNoCase(vReturnValue, " mi", "", "ALL");
+						// Check if is the shortest distance
+						if ( NOT LEN(vGetShortestDistance) OR vReturnValue LT vGetShortestDistance ) {
+							vGetShortestDistance = vReturnValue;
+						}
+	
 					}
-					
-					return vGetDistanceMiles;
+	
+					return vGetShortestDistance;
 					
 				} catch( any error ) {
 					
