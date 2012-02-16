@@ -165,7 +165,8 @@ function getStyleObject(objectId) {
 							<b>PHP Contact</b><br />
 							#php_contact_name#<br />
 							P: #php_contact_phone#<br />
-							E: #php_contact_email#<br />																									
+							E: #php_contact_email#<br />
+                            Billing Email: #php_billing_email#<br />																									
 							</div>
 							<div id="2" STYLE="display:none">
 							#billing_company#<br>
