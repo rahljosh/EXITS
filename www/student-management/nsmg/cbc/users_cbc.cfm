@@ -237,7 +237,17 @@
 			</cfscript>
             					
         </cfloop>
-		
+		<cfif isDefined('url.return')>
+        <cfscript>
+			// Check if there are no errors 
+			if ( NOT SESSION.formErrors.length() ) {
+                // Set Page Message
+                SESSION.pageMessages.Add("Form successfully submitted.");
+			}
+			
+			Location("index.cfm?curdoc=forms/user_paperwork&userid=#url.userID#", "no");
+		</cfscript>
+        <cfelse>
         <cfscript>
 			// Check if there are no errors 
 			if ( NOT SESSION.formErrors.length() ) {
@@ -247,11 +257,14 @@
 			
 			Location(CGI.SCRIPT_NAME & "?" & CGI.QUERY_STRING, "no");
 		</cfscript>
-
+      	</cfif>
 	</cfif> <!--- End of FORM.submitted --->
     
 </cfsilent>
 
+
+	
+      
 <cfoutput>
 <head>
 	<SCRIPT LANGUAGE="JavaScript">
@@ -391,7 +404,7 @@
                         
                         
 						Date: <input type="text" name="date_approved#currentrow#" message="Please input a valid date."  <cfif date_approved is ''>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif> value="#DateFormat(date_approved, 'mm/dd/yyyy')#" size="8" maxlength="10" >	
-                       
+                       <Cfif date_approved is ''><em><font size=-2>click in box for date</font></em></Cfif>
                         </td>
                         
                     </tr>
