@@ -1675,7 +1675,7 @@
     </cffunction>
     
     
-	<cffunction name="checkHostFamilyCompliance" access="public" returntype="string" output="false" hint="Check if a host family is in compliance">
+	<cffunction name="checkHostFamilyCompliance" access="public" returntype="string" output="false" hint="Check if a host family CBC and school acceptance is in compliance">
         <cfargument name="hostID" type="numeric" hint="hostID is required">
         <cfargument name="studentID" type="numeric" default="0" hint="studentID is not required">
  

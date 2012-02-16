@@ -196,11 +196,14 @@
                     SELECT 
                     	uar.regionID, 
                         uar.usertype,
-                        r.regionname                        
+                        r.regionname,
+                        u.usertype AS userAccessLevel                        
                     FROM 
                     	user_access_rights uar
                     INNER JOIN 
                     	smg_regions r ON r.regionID = uar.regionID
+                    INNER JOIN 
+                        smg_usertype u ON  u.userTypeID = uar.userType
                     WHERE 
                     	r.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">                        
                     AND    

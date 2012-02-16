@@ -242,7 +242,7 @@
                                     <cfif CLIENT.usertype LT qGetStudentInfo.host_fam_Approved>
                                         <tr>
                                             <td align="center" colspan="3">
-                                                <a href="javascript:openPopUp('../reports/PlacementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#&approve', 900, 600);"><img src="../pics/previewpis.gif" border="0"></a><br />
+                                                <a href="javascript:openPopUp('../reports/placementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#&approve', 900, 600);"><img src="../pics/previewpis.gif" border="0"></a><br />
                                             </td>
                                         </tr>
                                         <tr>
@@ -253,7 +253,7 @@
                                     <cfelse>
                                         <tr>
                                             <td align="center" colspan="3">
-                                                <a href="javascript:openPopUp('../reports/PlacementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#', 900, 600);"><img src="../pics/previewpis.gif" border="0"></a>
+                                                <a href="javascript:openPopUp('../reports/placementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#', 900, 600);"><img src="../pics/previewpis.gif" border="0"></a>
                                                 <br /><br />
                                             </td>
                                         </tr>
@@ -312,7 +312,7 @@
                                 <cfelseif listFind("1,2,3,4", qGetStudentInfo.host_fam_approved)>
                                     <tr>
                                         <td align="center" colspan="3">
-                                            <a href="" onClick="javascript: win=window.open('../reports/PlacementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueid#&approve', 'Settings', 'height=450, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="../pics/previewpis.gif" border="0"></a>
+                                            <a href="" onClick="javascript: win=window.open('../reports/placementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueid#&approve', 'Settings', 'height=450, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="../pics/previewpis.gif" border="0"></a>
                                             <br /><br />
                                         </td>
                                     </tr>

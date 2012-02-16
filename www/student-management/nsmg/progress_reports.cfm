@@ -544,7 +544,7 @@
                         <td>&nbsp;</td>
                         <td>
                         	<!--- put in red if user is the supervising rep for this student.  don't do for usertype 7 because they see only those students. --->
-                            <a href="javascript:OpenLetter('reports/PlacementInfoSheet.cfm?uniqueID=#qGetResults.uniqueID#');">
+                            <a href="javascript:OpenLetter('reports/placementInfoSheet.cfm?uniqueID=#qGetResults.uniqueID#');">
 								<cfif arearepid EQ CLIENT.userid and CLIENT.usertype NEQ 7>
                                     <font color="##FF0000"><strong>#qGetResults.firstName# #qGetResults.familyLastName# (###qGetResults.studentID#)</strong></font>
                                 <cfelse>

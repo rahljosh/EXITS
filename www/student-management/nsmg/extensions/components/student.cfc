@@ -1857,6 +1857,66 @@
     </cffunction>
     
 
+    <!--- Update Date PIS Emailed --->
+	<cffunction name="updateDatePISEmailed" access="public" returntype="void" output="false" hint="Update Date PIS Emailed">
+        <cfargument name="studentID" hint="studentID is not required">
+			
+        <cfquery datasource="#APPLICATION.DSN#">
+            UPDATE
+                smg_students
+            SET
+                datePISEmailed = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+            WHERE
+                studentID = <cfqueryparam cfsqltype="integer" value="#VAL(ARGUMENTS.studentID)#">                 	
+        </cfquery>
+        
+        <cfquery datasource="#APPLICATION.DSN#">
+            UPDATE
+                smg_hostHistory
+            SET
+                datePISEmailed = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+            WHERE
+                studentID = <cfqueryparam cfsqltype="integer" value="#VAL(ARGUMENTS.studentID)#">      
+            AND
+                assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
+            AND	
+                isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">           	
+        </cfquery>
+
+    </cffunction>
+    
+    
+    <!--- Update Date Placed --->
+	<cffunction name="updateDatePlaced" access="public" returntype="void" output="false" hint="Update Date Placed">
+        <cfargument name="studentID" hint="studentID is not required">
+        <cfargument name="datePlaced" hint="studentID is not required">
+    
+        <cfquery datasource="#APPLICATION.DSN#">
+        	UPDATE 
+				smg_students
+        	SET
+				datePlaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.datePlaced)#">
+        	WHERE
+				studentID = <cfqueryparam cfsqltype="integer" value="#ARGUMENTS.studentID#">
+        </cfquery>
+        
+        <cfquery datasource="#APPLICATION.DSN#">
+        	UPDATE 
+				smg_hostHistory
+        	SET
+				datePlaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.datePlaced)#">
+        	WHERE
+				studentID = <cfqueryparam cfsqltype="integer" value="#ARGUMENTS.studentID#">
+            AND
+            	assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+            AND
+            	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+            LIMIT 1
+        </cfquery>
+	
+	</cffunction>
+
+
 	<!--- Get Placement History --->
 	<cffunction name="getPlacementHistory" access="public" returntype="query" output="false" hint="Returns placement history">
     	<cfargument name="studentID" hint="studentID is required">
