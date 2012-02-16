@@ -195,7 +195,7 @@
             <td class="subTitleLeft" width="22%">Supervising Representative</td>		            
             <td class="subTitleLeft" width="22%">Host Family</td>				
 			<td class="subTitleCenter" width="15%">Point to Point Distance</td>
-			<td class="subTitleCenter" width="15%">Google Driving Distance</td>
+			<td class="subTitleCenter" width="15%">Google Shortest Driving Distance</td>
 		</tr>      
 
 		<cfoutput>
