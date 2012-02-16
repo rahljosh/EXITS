@@ -46,10 +46,13 @@
     <cfscript>
 		// Check if Host Family is in compliance
 		vHostInCompliance = APPLICATION.CFC.CBC.checkHostFamilyCompliance(hostID=qGetStudentInfo.hostID, studentID=qGetStudentInfo.studentID);
-
+		
 		// Get Training Options
 		qGetRelocationReason = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(applicationID=1,fieldKey='changePlacementReason');
-
+		
+		// Get School Information
+		qGetSchoolInfo = APPLICATION.CFC.SCHOOL.getSchoolAndDatesInfo(schoolID=qGetStudentInfo.schoolID, seasonID=qGetProgramInfo.seasonID);
+		
 		// FORM Submitted - Update Info
 		if ( listLen(FORM.subAction) GT 1 ) {
 			
@@ -439,28 +442,6 @@
 		FORM.validationErrors = SESSION.formErrors.length();
 	</cfscript>
     
-    <!--- Get School Info --->
-    <cfquery name="qGetSchoolInfo" datasource="#APPLICATION.DSN#">
-        SELECT 
-        	sc.schoolID,
-            sc.schoolname, 
-            sc.city,
-            sc.state,
-            sc.zip, 
-            sd.year_begins, 
-            sd.semester_begins, 
-            sd.semester_ends, 
-            sd.year_ends
-        FROM 
-        	smg_schools sc
-        LEFT JOIN 
-        	smg_school_dates sd on sd.schoolID = sc.schoolID
-            AND 
-                sd.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetProgramInfo.seasonID)#">
-        WHERE 
-        	sc.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.schoolID)#">
-    </cfquery>
-
 </cfsilent>
 
 <script language="javascript">

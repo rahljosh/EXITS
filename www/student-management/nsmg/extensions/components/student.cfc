@@ -336,7 +336,28 @@
         <cfscript>	
 			// Get Student Info
 			var qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID);
-			
+			var hasPlacementChanged = 0;
+
+			// Check if info has been updated
+			if (
+					ARGUMENTS.hostID NEQ qGetStudentInfo.hostID
+				OR
+					ARGUMENTS.schoolID NEQ qGetStudentInfo.schoolID
+				OR
+					ARGUMENTS.placeRepID NEQ qGetStudentInfo.placeRepID
+				OR
+					ARGUMENTS.areaRepID NEQ qGetStudentInfo.areaRepID
+				OR
+					ARGUMENTS.secondVisitRepID NEQ qGetStudentInfo.secondVisitRepID
+				OR
+					ARGUMENTS.doublePlace NEQ qGetStudentInfo.doublePlace
+				OR
+					ARGUMENTS.isWelcomeFamily NEQ qGetStudentInfo.isWelcomeFamily
+				) {
+					// Data has changed - Update student table
+					hasPlacementChanged = 1;
+			}
+
 			// Insert-Update Placement History
 			insertPlacementHistory(
 				studentID = ARGUMENTS.studentID,					   
@@ -361,50 +382,47 @@
 			);
 		</cfscript>
 		
-        <cfquery 
-			datasource="#APPLICATION.DSN#">
-                UPDATE
-                	smg_students
-				SET
-                    hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">,
-                    schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.schoolID)#">,
-                    placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.placeRepID)#">,
-                    areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.areaRepID)#">,
-                    secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.secondVisitRepID)#">,
-                    doublePlace = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">,
-                    isWelcomeFamily = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isWelcomeFamily)#">,
-					
-					<!--- Area Representative | Reset status to 7 --->
-                    <cfif ARGUMENTS.userType EQ 7>
-                        host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="7">,
-                    
-					<!--- Regional Advisor | If current status > usertype, set status back for approval --->
-					<cfelseif ARGUMENTS.userType EQ 6 AND listFind("1,2,3,4,5", qGetStudentInfo.host_fam_approved)>
-                        host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="6">,
-					
-					<!--- Regional Manager | If current status > usertype, set status back for approval --->
-					<cfelseif ARGUMENTS.userType EQ 5 AND listFind("1,2,3,4", qGetStudentInfo.host_fam_approved)>
-                        host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="5">,
-					
-					<!--- Office | Reset status if changing hostID or SchoolID --->
-                    <cfelseif 
-						ListFind("1,2,3,4", ARGUMENTS.userType) <!--- Office User --->
-					AND
-						(
-						 	qGetStudentInfo.hostID NEQ ARGUMENTS.hostID <!--- HF Changed --->
-						OR	
-							qGetStudentInfo.schoolID NEQ ARGUMENTS.schoolID <!--- School Changed --->
-						)
-					>
-                        host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="5">,
-                    
-					</cfif>
-                    
-                    <!--- Used to track last approval --->
-                    date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-				WHERE
-                	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
-		</cfquery>
+        <!--- Update Student Table --->
+        <cfif VAL(hasPlacementChanged)>
+        
+            <cfquery 
+                datasource="#APPLICATION.DSN#">
+                    UPDATE
+                        smg_students
+                    SET
+                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">,
+                        schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.schoolID)#">,
+                        placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.placeRepID)#">,
+                        areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.areaRepID)#">,
+                        secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.secondVisitRepID)#">,
+                        doublePlace = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">,
+                        isWelcomeFamily = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isWelcomeFamily)#">,
+                        
+                        <!--- Automatically Approve Placement for the Field  --->
+                        <cfif ListFind("5,6,7", ARGUMENTS.userType)>
+                            host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userType#">,
+                        
+                        <!--- Office | Reset status if changing hostID or SchoolID --->
+                        <cfelseif 
+                            ListFind("1,2,3,4", ARGUMENTS.userType) <!--- Office User --->
+                        AND
+                            (
+                                qGetStudentInfo.hostID NEQ ARGUMENTS.hostID <!--- HF Changed --->
+                            OR	
+                                qGetStudentInfo.schoolID NEQ ARGUMENTS.schoolID <!--- School Changed --->
+                            )
+                        >
+                            host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="5">,
+                        
+                        </cfif>
+                        
+                        <!--- Used to track last approval --->
+                        date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                    WHERE
+                        studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+            </cfquery>
+        
+        </cfif>
         
         <cfscript>
 			/*******************************************************************************
@@ -629,6 +647,7 @@
                     doc_full_host_app_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    doc_rules_sign_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     doc_photos_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     doc_school_profile_rec = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     doc_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
@@ -1109,7 +1128,7 @@
 			var hasAreaRepIDChanged = 0;
 			var hasSecondVisitRepIDChanged = 0;
 			var hasDoublePlacementIDChanged = 0;
-
+			
 			// Set to 1 to add an extra line on the history
 			var vAddExtraLine = 0;
 			
@@ -1146,7 +1165,7 @@
 			if ( ARGUMENTS.placementStatus EQ 'Unplaced' ) {
 				
 				vQueryType = 'insert';
-				vActions = vActions & "<strong>New Placement Information - Pending HQ Approval</strong> <br /> #CHR(13)#";
+				vActions = vActions & "<strong>New Placement Information - Pending Approval</strong> <br /> #CHR(13)#";
 				
 				// Welcome Family Information
 				if ( VAL(ARGUMENTS.isWelcomeFamily) ) {
@@ -1163,7 +1182,7 @@
 					hasHostIDChanged = 1;
 					
 					// Start building record
-					vActions = vActions & "<strong>New Placement Information - Pending HQ Approval</strong> <br /> #CHR(13)#";
+					vActions = vActions & "<strong>New Placement Information - Pending Approval</strong> <br /> #CHR(13)#";
 					
 					// Add Message if info has been updated
 					if ( VAL(qGetStudentInfo.hostID) ) {
@@ -1204,7 +1223,7 @@
 					
 					// Add Message if info has been updated
 					if ( VAL(qGetStudentInfo.schoolID) ) {
-						vActions = vActions & "<strong>School Updated - Pending HQ Approval</strong> <br /> #CHR(13)#";
+						vActions = vActions & "<strong>School Updated - Pending Approval</strong> <br /> #CHR(13)#";
 						// Previous School for reference
 						qGetSchoolInfo = APPLICATION.CFC.SCHOOL.getSchools(schoolID=qGetStudentInfo.schoolID);
 						vActions = vActions & "Previous School: #qGetSchoolInfo.schoolName# ###qGetSchoolInfo.schoolID# <br /> #CHR(13)#";
@@ -1411,7 +1430,6 @@
         
         </cfif>
         
-        
 		<!--- Insert History Information --->
         <cfif vQueryType EQ 'insert'>        
             
@@ -1437,6 +1455,7 @@
                         doc_full_host_app_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                         doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                         doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                        doc_rules_sign_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                         doc_photos_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                         doc_school_profile_rec = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                         doc_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
@@ -2052,6 +2071,7 @@
                     doc_full_host_app_date,
                     doc_letter_rec_date,
                     doc_rules_rec_date,
+                    doc_rules_sign_date,
                     doc_photos_rec_date,
                     doc_school_profile_rec,
                     doc_conf_host_rec,
@@ -2101,6 +2121,7 @@
         <cfargument name="doc_full_host_app_date" default="" hint="doc_full_host_app_date is not required">
         <cfargument name="doc_letter_rec_date" default="" hint="doc_letter_rec_date is not required">
         <cfargument name="doc_rules_rec_date" default="" hint="doc_rules_rec_date is not required">
+        <cfargument name="doc_rules_sign_date" default="" hint="doc_rules_sign_date is not required">
         <cfargument name="doc_photos_rec_date" default="" hint="doc_photos_rec_date is not required">
         <cfargument name="doc_school_profile_rec" default="" hint="doc_school_profile_rec is not required">
         <cfargument name="doc_conf_host_rec" default="" hint="doc_conf_host_rec is not required">
@@ -2135,6 +2156,7 @@
                     doc_full_host_app_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_full_host_app_date#" null="#NOT IsDate(ARGUMENTS.doc_full_host_app_date)#">,
                     doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_letter_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_letter_rec_date)#">,
                     doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_rules_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_rules_rec_date)#">,
+                    doc_rules_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_rules_sign_date#" null="#NOT IsDate(ARGUMENTS.doc_rules_sign_date)#">,
                     doc_photos_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_photos_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_photos_rec_date)#">,
                     doc_school_profile_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_profile_rec#" null="#NOT IsDate(ARGUMENTS.doc_school_profile_rec)#">,
                     doc_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_conf_host_rec#" null="#NOT IsDate(ARGUMENTS.doc_conf_host_rec)#">,
@@ -2172,6 +2194,7 @@
 				doc_full_host_app_date = ARGUMENTS.doc_full_host_app_date,
 				doc_letter_rec_date = ARGUMENTS.doc_letter_rec_date,
 				doc_rules_rec_date = ARGUMENTS.doc_rules_rec_date,
+				doc_rules_sign_date = ARGUMENTS.doc_rules_sign_date,
 				doc_photos_rec_date = ARGUMENTS.doc_photos_rec_date,
 				doc_school_profile_rec = ARGUMENTS.doc_school_profile_rec,
 				doc_conf_host_rec = ARGUMENTS.doc_conf_host_rec,
@@ -2209,6 +2232,7 @@
         <cfargument name="doc_full_host_app_date" default="" hint="doc_full_host_app_date is not required">
         <cfargument name="doc_letter_rec_date" default="" hint="doc_letter_rec_date is not required">
         <cfargument name="doc_rules_rec_date" default="" hint="doc_rules_rec_date is not required">
+        <cfargument name="doc_rules_sign_date" default="" hint="doc_rules_sign_date is not required">
         <cfargument name="doc_photos_rec_date" default="" hint="doc_photos_rec_date is not required">
         <cfargument name="doc_school_profile_rec" default="" hint="doc_school_profile_rec is not required">
         <cfargument name="doc_conf_host_rec" default="" hint="doc_conf_host_rec is not required">
@@ -2251,6 +2275,7 @@
                     doc_full_host_app_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_full_host_app_date#" null="#NOT IsDate(ARGUMENTS.doc_full_host_app_date)#">,
                     doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_letter_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_letter_rec_date)#">,
                     doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_rules_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_rules_rec_date)#">,
+                    doc_rules_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_rules_sign_date#" null="#NOT IsDate(ARGUMENTS.doc_rules_sign_date)#">,
                     doc_photos_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_photos_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_photos_rec_date)#">,
                     doc_school_profile_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_profile_rec#" null="#NOT IsDate(ARGUMENTS.doc_school_profile_rec)#">,
                     doc_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_conf_host_rec#" null="#NOT IsDate(ARGUMENTS.doc_conf_host_rec)#">,
@@ -2291,6 +2316,7 @@
                     doc_full_host_app_date,
                     doc_letter_rec_date,
                     doc_rules_rec_date,
+                    doc_rules_sign_date,
                     doc_photos_rec_date,
                     doc_school_profile_rec,
                     doc_conf_host_rec,

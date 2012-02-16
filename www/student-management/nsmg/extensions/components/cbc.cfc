@@ -93,6 +93,7 @@
                         h.date_authorized, 
                         h.date_sent, 
                         h.date_received,
+                        h.date_expired,
                         h.xml_received, 
                         h.requestID, 
                         h.isNoSSN,
@@ -126,7 +127,7 @@
                     </cfif>
                     
                     ORDER BY 
-                        h.seasonID
+                        h.seasonID DESC
             </cfquery>    
 
 		<cfreturn qGetCBCHostByID>
@@ -287,6 +288,7 @@
                     cbc.date_authorized, 
                     cbc.date_sent, 
                     cbc.date_received,
+                    cbc.date_expired,
                     h.familylastName,
                     h.fatherlastName, 
                     h.fatherfirstName, 
@@ -382,6 +384,7 @@
                     cbc.date_authorized, 
                     cbc.date_sent, 
                     cbc.date_received,
+                    cbc.date_expired,
                 	child.childID, 
                     child.name, 
                     child.middlename, 
@@ -457,8 +460,9 @@
             UPDATE 
             	smg_hosts_cbc  
             SET 
-            	date_sent = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">,
-                date_received = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">,
+            	date_sent = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                date_received = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                date_expired = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#DateAdd('yyyy', 1, now())#">,
                 requestID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.reportID#">,
                 xml_received = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.xmlReceived#">
             WHERE 
@@ -507,6 +511,7 @@
                         u.date_authorized,
                         u.date_sent,
                         u.date_received,
+                        u.date_expired,
                         u.date_approved,
                         u.xml_received,
                         u.notes,
@@ -682,6 +687,7 @@
                     cbc.date_authorized, 
                     cbc.date_sent, 
                     cbc.date_received,
+                    cbc.date_expired,
                     u.firstName, 
                     u.lastName, 
                     u.middlename, 
@@ -765,6 +771,7 @@
                     cbc.date_authorized, 
                     cbc.date_sent, 
                     cbc.date_received,
+                    cbc.date_expired,
                     u.firstName, 
                     u.lastName, 
                     u.middlename, 
@@ -827,8 +834,9 @@
             UPDATE 
             	smg_users_cbc  
             SET 
-                date_sent = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">,
-                date_received = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">,
+                date_sent = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                date_received = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                date_expired = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#DateAdd('yyyy', 1, now())#">,
                 requestID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.reportID#">,
                 xml_received = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.xmlReceived#">
             WHERE 
@@ -1624,6 +1632,7 @@
                 cbc.requestid,
                 cbc.date_sent, 
                 cbc.date_received,
+                cbc.date_expired,
                 DATE_ADD(cbc.date_sent, INTERVAL 11 MONTH) AS expiration_date
             FROM 
             	smg_users u
@@ -1658,7 +1667,7 @@
                     (
                         (
                         	u.ssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.ssn#"> 
-                        AND 
+                        AND checkHostFamilyCompliance
                         	u.ssn != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
                          ) 
                     OR 
@@ -1688,6 +1697,7 @@
 			qGetHost = APPLICATION.CFC.HOST.getHosts(hostID=ARGUMENTS.hostID);
 
 			// Cross Data - Get CBC submitted under USER
+			/*
 			qGetMotherCBCUnderUser = hostCBCsubmittedUnderUser(
 				firstName=qGetHost.motherFirstName,
 				lastName=qGetHost.motherLastName,
@@ -1700,19 +1710,20 @@
 				lastName=qGetHost.fatherLastName,
 				dob=qGetHost.fatherDOB,
 				ssn=qGetHost.fatherSSN);
+			*/
 			
 			// Get Eligible Family Member CBC
 			qGetEligibleMembers = getEligibleHostMember(hostID=ARGUMENTS.hostID, studentID=ARGUMENTS.studentID);
 			
 			// Check if CBCs are missing
 			qGetCBCMother = getCBCHostByID(hostID=ARGUMENTS.hostID,cbcType='mother');
-			if ( LEN(qGetHost.motherFirstName) AND LEN(qGetHost.motherLastName) AND NOT VAL(qGetCBCMother.recordCount) AND NOT VAL(qGetMotherCBCUnderUser.recordCount) ) {
+			if ( LEN(qGetHost.motherFirstName) AND LEN(qGetHost.motherLastName) AND NOT VAL(qGetCBCMother.recordCount) ) { //  AND NOT VAL(qGetMotherCBCUnderUser.recordCount)
 				// Store Missing CBC Message
 				vMissingMessage = vMissingMessage & "<p>Missing CBC for host mother</p>";
 			}
 			
 			qGetCBCFather = getCBCHostByID(hostID=ARGUMENTS.hostID,cbcType='father');
-			if ( LEN(qGetHost.fatherFirstName) AND LEN(qGetHost.fatherLastName) AND NOT VAL(qGetCBCFather.recordCount) AND NOT VAL(qGetFatherCBCUnderUser.recordCount) ) {
+			if ( LEN(qGetHost.fatherFirstName) AND LEN(qGetHost.fatherLastName) AND NOT VAL(qGetCBCFather.recordCount) ) { //  AND NOT VAL(qGetFatherCBCUnderUser.recordCount)
 				// Store Missing CBC Message
 				vMissingMessage = vMissingMessage & "<p>Missing CBC for host father</p>";
 			}
@@ -1776,7 +1787,6 @@
 		<cfreturn returnMessage>        
 	</cffunction>    
     <!--- End of CBC In Compliance --->
-
 
 	
     <!--- CBC Re-Run Functions --->

@@ -504,7 +504,7 @@
                         	<a href="index.cfm?curdoc=project_help">H.E.L.P. Community Service Hours</a><br>
                         </cfif>
                         <cfif client.usertype lte 7>
-                        <a href="index.cfm?curdoc=pending_hosts">View Pending Placements</a><br />
+                        <a href="index.cfm?curdoc=pendingPlacementList">View Pending Placements</a><br />
                         </cfif>
                         <cfif CLIENT.userType LTE 4 and (CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12 or client.companyid eq 10)>
                         	<a href="index.cfm?curdoc=calendar/index">WebEx Calendar</a> <br />

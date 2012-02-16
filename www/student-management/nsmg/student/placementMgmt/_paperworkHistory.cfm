@@ -27,6 +27,7 @@
     <cfparam name="FORM.doc_full_host_app_date" default="">
     <cfparam name="FORM.doc_letter_rec_date" default="">
     <cfparam name="FORM.doc_rules_rec_date" default="">
+    <cfparam name="FORM.doc_rules_sign_date" default="">
     <cfparam name="FORM.doc_photos_rec_date" default="">
     <cfparam name="FORM.doc_school_profile_rec" default="">
     <cfparam name="FORM.doc_conf_host_rec" default="">
@@ -106,6 +107,7 @@
 				doc_full_host_app_date = FORM.doc_full_host_app_date,
 				doc_letter_rec_date = FORM.doc_letter_rec_date,
 				doc_rules_rec_date = FORM.doc_rules_rec_date,
+				doc_rules_sign_date = FORM.doc_rules_sign_date,
 				doc_photos_rec_date = FORM.doc_photos_rec_date,
 				doc_school_profile_rec = FORM.doc_school_profile_rec,
 				doc_conf_host_rec = FORM.doc_conf_host_rec,
@@ -163,6 +165,7 @@
 			FORM.doc_full_host_app_date = qGetHostHistory.doc_full_host_app_date;
 			FORM.doc_letter_rec_date = qGetHostHistory.doc_letter_rec_date;
 			FORM.doc_rules_rec_date = qGetHostHistory.doc_rules_rec_date;
+			FORM.doc_rules_sign_date = qGetHostHistory.doc_rules_sign_date;
 			FORM.doc_photos_rec_date = qGetHostHistory.doc_photos_rec_date;
 			FORM.doc_school_profile_rec = qGetHostHistory.doc_school_profile_rec;
 			FORM.doc_conf_host_rec = qGetHostHistory.doc_conf_host_rec;
@@ -494,6 +497,16 @@
                 <td>
                     <span class="readOnly displayNone">#DateFormat(FORM.doc_rules_rec_date, 'mm/dd/yyyy')#</span>
                     <input type="text" name="doc_rules_rec_date" id="doc_rules_rec_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_rules_rec_date, 'mm/dd/yyyy')#">
+                </td>
+            </tr>
+
+			<!--- Date Signed --->
+            <tr> 
+                <td>&nbsp;</td>
+                <td><label for="doc_rules_sign_date">Date Signed</label></td>
+                <td>
+                    <span class="readOnly displayNone">#DateFormat(FORM.doc_rules_sign_date, 'mm/dd/yyyy')#</span>
+                    <input type="text" name="doc_rules_sign_date" id="doc_rules_sign_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_rules_sign_date, 'mm/dd/yyyy')#">
                 </td>
             </tr>
 
