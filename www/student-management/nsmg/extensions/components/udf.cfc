@@ -783,11 +783,11 @@
     </cffunction>
     
     
-    <!---Get paperwork  for a specific user for all  seasons on record ---->
+  <!---Get paperwork  for a specific user for all  seasons on record ---->
 	<cffunction name="allpaperworkCompleted" access="public" returntype="query">
         <cfargument name="userid" type="numeric" required="yes" default="" hint="Pass in user id you want to check on">
         <cfargument name="seasonid" type="numeric" required="no" default="0" hint="if you want just of a specific season not passed in returns all seasons">
-       
+        
     	<!----Check Agreement---->
         <cfquery name="checkAgreement" datasource="#APPLICATION.DSN#">
 			SELECT 
@@ -829,7 +829,7 @@
      
 		<cfscript>
 			// This is the query that is returned
-			qAllPaperWork = QueryNew("paperworkid,userid,seasonid,ar_info_sheet,ar_ref_quest1,ar_ref_quest2,ar_cbcAuthReview,ar_cbc_auth_form,ar_agreement,ar_training,secondVisit,agreeSig,cbcSig, season, secondVisitRepOK, areaRepOK");
+			qAllPaperWork = QueryNew("paperworkid,userid,seasonid,ar_info_sheet,ar_ref_quest1,ar_ref_quest2,ar_cbcAuthReview,ar_cbc_auth_form,ar_agreement,ar_training,secondVisit,agreeSig,cbcSig, season, secondVisitRepOK, areaRepOK, reviewAcct, secondRepReviewAcct");
         </cfscript>
      
 		<cfloop query="checkAgreement">
@@ -867,13 +867,37 @@
                 AND checkAgreement.cbcSig is not ''
                 AND checkAgreement.agreeSig is not ''
                 AND checkAgreement.ar_ref_quest1 is not ''
-                AND checkAgreement.ar_ref_quest2 is not ''
-                AND checkAgreement.ar_training is not ''>
+                AND checkAgreement.ar_ref_quest2 is not ''>
                <cfset areaRepOk = 1>
             <cfelse>
                 <cfset areaRepOk = 0>
             </cfif>
-        
+        	<!--- set if area rep account needs to be reviewed---->
+             <cfif checkAgreement.ar_info_sheet is not '' 
+                AND checkAgreement.ar_cbc_auth_form is not '' 
+                AND cbcCheck.date_approved is  ''
+                AND checkAgreement.ar_agreement is not ''
+                AND checkAgreement.cbcSig is not ''
+                AND checkAgreement.agreeSig is not ''
+                AND checkAgreement.ar_ref_quest1 is not ''
+                AND checkAgreement.ar_ref_quest2 is not ''>
+               <cfset reviewAcct = 1>
+            <cfelse>
+                <cfset reviewAcct = 0>
+            </cfif>
+            
+            <!----set if second visit rep needs to be reviewed---->
+            <cfif checkAgreement.ar_info_sheet is not '' 
+                AND checkAgreement.ar_cbc_auth_form is not '' 
+                AND cbcCheck.date_approved is ''
+                AND checkAgreement.ar_agreement is not ''
+                AND checkAgreement.cbcSig is not ''
+                AND checkAgreement.agreeSig is not ''>
+                <cfset secondRepReviewAcct = 1>
+            <cfelse>
+                <cfset secondRepReviewAcct = 0>
+            </cfif>
+            
 			<cfscript>
                  // Insert blank first row
                 QueryAddRow(qAllPaperWork);
@@ -891,8 +915,10 @@
                 QuerySetCell(qAllPaperWork, "agreeSig", checkAgreement.agreeSig);
                 QuerySetCell(qAllPaperWork, "cbcSig", checkAgreement.cbcSig);
                 QuerySetCell(qAllPaperWork, "season", checkAgreement.season);
-				QuerySetCell(qAllPaperWork, "secondVisitRepOK", checkAgreement.season);
-				QuerySetCell(qAllPaperWork, "areaRepOk", checkAgreement.season);
+				QuerySetCell(qAllPaperWork, "secondVisitRepOK", secondVisitRepOk);
+				QuerySetCell(qAllPaperWork, "areaRepOk", areaRepOk);
+				QuerySetCell(qAllPaperWork, "reviewAcct", reviewAcct);
+				QuerySetCell(qAllPaperWork, "secondRepReviewAcct", reviewAcct);
             </cfscript>	
 					
 		</cfloop>   
