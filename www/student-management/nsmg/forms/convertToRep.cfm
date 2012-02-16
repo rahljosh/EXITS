@@ -15,6 +15,7 @@ where userid = #url.userid#
 <Cfquery datasource="#application.dsn#">
 update smg_users
 set trainingDeadlineDate = #now()#,
+	accountCreationVerified = 0,
     active = 0
 where userid = #url.userid#
 </cfquery>

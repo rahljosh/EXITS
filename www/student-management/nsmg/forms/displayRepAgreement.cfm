@@ -186,6 +186,54 @@ where userid = #client.userid#
                         <Cfqueryparam cfsqltype="cf_sql_integer" value="#season#">,<Cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">, <Cfqueryparam cfsqltype="cf_sql_varchar" value="#form.signature#">)
                 </cfquery>
             </cfif>
+            
+            <!----Check if this account should be reviewed more then likely this will not happen here, but depending on the order of people submitting things, we have to check.---->
+			<Cfscript>
+                    //Check if paperwork is complete for season
+                    get_paperwork = APPLICATION.CFC.udf.allpaperworkCompleted(userid=client.userid);
+					//Get User Info
+                    qGetUserInfo = APPLICATION.CFC.user.getUserByID(userid=client.userid);
+         </cfscript>
+         
+		 <cfif val(get_paperwork.reviewAcct)>
+         
+                 <cfquery name="progManager" datasource="#application.dsn#">
+                  select pm_email
+                  from smg_companies
+                  where companyid = #client.companyid#
+                  </cfquery>
+                 <cfsavecontent variable="programEmailMessage">
+                    <cfoutput>				
+                    The references and all other paperwork appear to be in order for  #qGetUserInfo.firstname# #qGetUserInfo.lastname# (#qGetUserInfo.userID#).  A manual review is now required to actiavte the account.  Please review all paper work and submit the CBC for processing. If everything looks good, approval of the CBC will activate this account.  
+                    
+                   <Br><Br>
+                    
+                   <a href="#client.exits_url#/nsmg/index.cfm?curdoc=user_info&userid=#client.userid#">View #qGetUserInfo.firstname#<cfif Right(#qGetUserInfo.firstname#, 1) is 's'>'<cfelse>'s</cfif> account.</a>
+                    </cfoutput>
+                    </cfsavecontent>
+                    
+                    <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                            
+                            **********This emai is sent to the Program Manager*******************<Br>
+                        *****************#progManager.pm_email#<br>**********************
+                            <cfinvokeargument name="email_to" value="josh@pokytrails.com">      
+                            <!----
+                           
+                            <cfinvokeargument name="email_to" value="#progManager.pm_email#"> 
+							 ---->
+                              
+                            <cfinvokeargument name="email_from" value="""#client.companyshort# Support"" <#client.emailfrom#>">
+                            <cfinvokeargument name="email_subject" value="CBC Authorization for #client.name#">
+                            <cfinvokeargument name="email_message" value="#programEmailMessage#">
+                          
+                        </cfinvoke>
+             </cfif>
+            
+            
+            
+            
+            
+            
             <!----Clost window if signature is fine---->
             <SCRIPT LANGUAGE="JavaScript"><!--
 			setTimeout('self.close()',2000);

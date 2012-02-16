@@ -227,7 +227,7 @@
                     vUpdateFatherSSN = 1;
                 } else if ( NOT LEN(FORM.fatherSSN) ) {
                     // Update - Erase SSN
-                    vUpdateFatherSSN = 1;
+                    vUpdateFatherSSN = 0;
                 }
                 
                 // Mother SSN - Will update if it's blank or there is a new number
@@ -238,7 +238,7 @@
                     vUpdateMotherSSN = 1;
                 } else if ( NOT LEN(FORM.motherSSN) ) {
                     // Update - Erase SSN
-                    vUpdateMotherSSN = 1;
+                    vUpdateMotherSSN = 0;
                 }
            
                 // set the birth year field from the birth date field
