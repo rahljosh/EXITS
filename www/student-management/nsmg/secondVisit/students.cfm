@@ -104,7 +104,7 @@ function OpenLetter(url) {
                         <cfif client.usertype EQ 9>
                         	<a href="index.cfm?curdoc=forms/secondHomeVisitReport&uniqueid=#uniqueid#">#studentid#</a>
                         <cfelseif client.usertype eq 15>
-                        	<a href="javascript:OpenLetter('reports/PlacementInfoSheet.cfm?uniqueID=#uniqueid#');">#studentid#</a>
+                        	<a href="javascript:OpenLetter('reports/placementInfoSheet.cfm?uniqueID=#uniqueid#');">#studentid#</a>
                         <cfelse>
                         	<a href="index.cfm?curdoc=forms/secondHomeVisitReport&studentid=#studentid#">#studentid#</a>
                         </cfif>

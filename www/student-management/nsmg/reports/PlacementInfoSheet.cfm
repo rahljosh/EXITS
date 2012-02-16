@@ -1,6 +1,6 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		PlacementInfoSheet.cfm
+	File:		placementInfoSheet.cfm
 	Author:		Josh Rahl
 	Date:		April 4th, 2011
 	Desc:		Web Version of Placement Info Sheet
@@ -21,6 +21,7 @@
     <cfparam name="profileType" default="">
     <cfparam name="URL.studentID" default="0">
     <cfparam name="URL.print" default="">
+    <cfparam name="URL.closeModal" default="0">
 
     <!--- Param FORM Variables --->    
     <cfparam name="FORM.submitted" default="0">
@@ -86,30 +87,15 @@
 
 	<!--- Update Date Placed | Update on both tables students and smg_hostHistory --->
     <cfif IsDate(FORM.NewDatePlaced)>
-    
-        <cfquery datasource="#APPLICATION.DSN#">
-        	UPDATE 
-				smg_students
-        	SET
-				datePlaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(FORM.newDatePlaced)#">
-        	WHERE
-				uniqueID = <cfqueryparam cfsqltype="integer" value="#URL.uniqueID#">
-        </cfquery>
-        
-        <cfquery datasource="#APPLICATION.DSN#">
-        	UPDATE 
-				smg_hostHistory
-        	SET
-				datePlaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(FORM.newDatePlaced)#">
-        	WHERE
-				studentID = <cfqueryparam cfsqltype="integer" value="#qGetStudentInfo.studentID#">
-            AND
-            	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-            LIMIT 1
-        </cfquery>
-        
-        <cflocation url="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" addtoken="no">
-        
+    	
+        <cfscript>
+			// Update Date Placed
+			APPLICATION.CFC.STUDENT.updateDatePlaced(studentID=qGetStudentInfo.studentID, datePlaced=FORM.newDatePlaced);
+			
+			// Reload page
+			location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");		
+		</cfscript>
+
     </cfif>
             
     <cfquery name="qGetSchool_dates" datasource="#APPLICATION.DSN#">
@@ -226,7 +212,7 @@
 			<table width="800" border="0" cellpadding="2" cellspacing="2" class="section"  align="Center" bgcolor="##D6F9D5">
 				<tr>
 					<td width=50%>PRINTED: #DateFormat(now(), 'mmm. d, yyyy')# at #TimeFormat(now(), 'HH:mm')# by #CLIENT.name#</td>
-					<td align="right"><a href="PlacementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#&showemail"><img src="../pics/email.gif" border="0" alt=" Email "></a></td>
+					<td align="right"><a href="placementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#&showemail"><img src="../pics/email.gif" border="0" alt=" Email "></a></td>
 				</tr>
 			</table>
 		---->
@@ -237,7 +223,7 @@
 <!--- Save Email Option as Link --->
 <cfsavecontent variable="emailLink">
 
-    <form name="PlacementInfoSheet.cfm" method="post">
+    <form name="placementInfoSheet.cfm?closeModal=#URL.closeModal#" method="post">
         <input type="hidden" name="submitted" value="1" />
         <input type="hidden" name="uniqueID" value="#qGetStudentInfo.uniqueID#" />
         <input type="hidden" name="profileType" value="email" />
@@ -264,7 +250,7 @@
                     &nbsp; &nbsp; &nbsp;
                     <input type="image" value="close window" src="../pics/close.gif" alt=" Close this Screen " onClick="javascript:window.close()">
                     &nbsp; &nbsp; &nbsp;
-                    <a href="PlacementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#&print=1"><img src="../pics/print.png"  border="0" alt=" Print "></a>
+                    <a href="placementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#&print=1"><img src="../pics/print.png"  border="0" alt=" Print "></a>
                 </td>
             </tr>
             <tr>
@@ -289,11 +275,10 @@
     </form>
     
 
-
 	<!----Only allow Josh-1, Brian-12313, Marcus - 510, Bill - 8731, Bob - 8743, Gary -12431, Tal - 16718 to change the dates---->
     <cfif IsDate(qGetStudentInfo.datePlaced) AND listFind("1,12313,510,8731,8743,12431,16718", CLIENT.userID)>		
 
-        <form name="PlacementInfoSheet.cfm" method="post">
+        <form name="placementInfoSheet.cfm" method="post">
             <input type="hidden" name="submitted" value="1" />
             <input type="hidden" name="uniqueID" value="#qGetStudentInfo.uniqueID#" />
             <table width="810px" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" style="margin-bottom:10px;">
@@ -315,7 +300,6 @@
 	    </form>
 
     </cfif>
-
       
 </cfsavecontent>
 
@@ -733,16 +717,21 @@
         	
             <!--- Set Date Emailed --->
             <cfif NOT isDate(qGetStudentInfo.datePISEmailed)>
-            
-                <cfquery datasource="#APPLICATION.DSN#">
-                    UPDATE
-                        smg_students
-                    SET
-						datePISEmailed = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-                    WHERE
-                        studentID = <cfqueryparam cfsqltype="integer" value="#qGetStudentInfo.studentID#">                 	
-                </cfquery>
-            
+            	
+                <cfscript>
+					// Update Date PIS Emailed
+					APPLICATION.CFC.STUDENT.updateDatePISEmailed(studentID=qGetStudentInfo.studentID);
+				</cfscript>
+                
+                <cfif VAL(URL.closeModal)>
+
+					<script language="javascript">
+                        // Close Window After 1.5 Seconds
+                        setTimeout(function() { parent.$.fn.colorbox.close(); }, 500);
+                    </script>
+                
+                </cfif>
+                
             </cfif>
             
             <cfsavecontent variable="PlacementInfo">

@@ -934,7 +934,7 @@
 				<cfif CLIENT.usertype LTE '4'>
 				<tr>
 					<td>: : <a href="javascript:OpenLetter('reports/acceptance_letter.cfm');">Acceptance</a></td>
-					<td>: : <a href="javascript:OpenLetter('reports/PlacementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#');">Placement</a></td>
+					<td>: : <a href="javascript:OpenLetter('reports/placementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#');">Placement</a></td>
 				</tr>
 				<tr>
 					<td width="50%">: : <a href="javascript:OpenLetter('reports/host_welcome_letter.cfm');">Family Welcome</a></td>
@@ -979,7 +979,7 @@
 			<!--- FIELD USERS --->
 			<cfif CLIENT.usertype GTE '5' AND CLIENT.usertype LTE '7'>
 				<tr>
-					<td width="50%">: : <a href="javascript:OpenLetter('reports/PlacementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#&profileType=web');">Placement</a></td>
+					<td width="50%">: : <a href="javascript:OpenLetter('reports/placementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#&profileType=web');">Placement</a></td>
 					<td width="50%">: :<a href="student/index.cfm?action=printFlightInformation&uniqueID=#qGetStudentInfo.uniqueID#&programID=#qGetStudentInfo.programID#">Flight Information</a></td>
 				</tr>
 				<tr>

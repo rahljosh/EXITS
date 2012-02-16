@@ -47,6 +47,7 @@
             active,
             cancelDate,
             <!--- Host History --->
+            historyID,
             secondVisitRepID,
             isWelcomeFamily,
             isRelocation,
@@ -62,7 +63,7 @@
                         isActive = 0 
                     THEN 
                         DATEDIFF(datePlacedEnded, datePlaced)
-                    <!--- Placement Not Active | dateStartWindowCompliance ( relocated or arrival ) --->
+                    <!--- Placement Active | dateStartWindowCompliance ( relocated or arrival ) --->
                     WHEN 	
                         isActive = 1  
                     THEN 
@@ -76,7 +77,7 @@
                         isActive = 0 
                     THEN 
                         datePlaced
-                    <!--- Placement Not Active | dateStartWindowCompliance ( relocated or arrival ) --->
+                    <!--- Placement Active | dateStartWindowCompliance ( relocated or arrival ) --->
                     WHEN 	
                         isActive = 1  
                     THEN 
@@ -107,6 +108,7 @@
                     s.active,
                     s.cancelDate,
                     CAST(CONCAT(s.firstName, ' ', s.familyLastName,  ' ##', s.studentID) AS CHAR) AS studentName,
+                    ht.historyID,
                     ht.isActive,
                     ht.secondVisitRepID,
                     ht.isWelcomeFamily, 
@@ -215,6 +217,7 @@
                     s.active,
                     s.cancelDate,
                     CAST(CONCAT(s.firstName, ' ', s.familyLastName,  ' ##', s.studentID) AS CHAR) AS studentName,
+                    ht.historyID,
                     ht.isActive,
                     ht.secondVisitRepID,
                     ht.isWelcomeFamily, 
@@ -343,10 +346,16 @@
                  OR
                     cancelDate >= dateArrived                  
                 )
-                
+        
         GROUP BY
             studentID,
             hostID
+		
+        <!--- Only display present records or records with a days diff > 0  --->
+        HAVING
+        	totalAssignedPeriod IS NULL
+        OR
+        	totalAssignedPeriod > 0
             
         ORDER BY
             regionName,
@@ -412,7 +421,7 @@
                     
             <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif FORM.reportType EQ 'excel'> border="1" </cfif> >
                 <tr>
-                    <th class="left" colspan="8">
+                    <th class="left" colspan="7">
                     	<cfif CLIENT.companyID EQ 5>
                         	- #qGetRegions.companyShort#
                         </cfif>
@@ -422,7 +431,7 @@
                         
                         #qGetResultsByRegion.facilitatorName# 
                     </th>
-                    <th class="right" colspan="3">
+                    <th class="right" colspan="4">
                     	Total of #qGetResultsByRegion.recordCount# non-compliant report(s)
                     </th>
                 </tr>      
@@ -469,10 +478,11 @@
 						vSetAsNotNeeded = 0;
 						
                         // Set Report as Not Needed - EXITS System --> userID = 5
-                        if ( isNumeric(qGetResultsByRegion.totalAssignedPeriod) AND qGetResultsByRegion.totalAssignedPeriod LT qGetResultsByRegion.complianceWindow ) {
+                        if ( isNumeric(qGetResultsByRegion.totalAssignedPeriod) AND qGetResultsByRegion.totalAssignedPeriod LT qGetResultsByRegion.complianceWindow AND NOT isDate(qGetResultsByRegion.dateOfVisit) ) {
                             vSetAsNotNeeded = 1;
 							/*
 							APPLICATION.CFC.progressReport.setSecondVisitReportAsNotNeeded(
+								historyID = qGetResultsByRegion.historyID,
 								fk_student = qGetResultsByRegion.studentID,
 								fk_host = qGetResultsByRegion.hostID,
 								fk_secondVisitRep = qGetResultsByRegion.secondVisitRepID
@@ -513,10 +523,12 @@
                                     present
                                 </cfif>
                                 
-                                <cfif VAL(vSetAsNotNeeded)>
-                                    <div class="attention">Report set as NOT needed</div>
-                                </cfif>
-                            
+                                <!---
+								<cfif VAL(vSetAsNotNeeded)>
+									<div class="attention">Report set as NOT needed</div>
+								</cfif>
+								--->
+                                
                             </cfif>
                         </td>
                         <td class="center">#DateFormat(qGetResultsByRegion.dateStartWindowCompliance, 'mm/dd/yy')# - #DateFormat(qGetResultsByRegion.dateEndWindowCompliance, 'mm/dd/yy')#</td>

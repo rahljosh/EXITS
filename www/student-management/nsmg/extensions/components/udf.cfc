@@ -484,6 +484,94 @@
 
 	</cffunction>
 
+
+	<cffunction name="buildSortURL" access="public" returntype="string" hint="Builds sorting URL">
+        <cfargument name="columnName" hint="columnName is required">
+        <cfargument name="sortBy" hint="sortBy is required">
+        <cfargument name="sortOrder" hint="sortOrder is required">
+        
+        <cfscript>
+			// rebuilt QueryString and remove sortBy and sortOrder
+			var	vNewQueryString = CGI.QUERY_STRING;
+
+			// make sure we have a valid sortOrder value
+			if ( NOT ListFind("ASC,DESC", ARGUMENTS.sortOrder) ) {
+				ARGUMENTS.sortOrder = "ASC";				  
+			}
+			
+			// Clean Up sortBy URL
+			if ( ListContainsNoCase(vNewQueryString, "sortBy", "&") ) {
+				vNewQueryString = ListDeleteAt(vNewQueryString, ListContainsNoCase(vNewQueryString, "sortBy", "&"), "&");
+			}
+			
+			// Clean Up sortORder URL
+			if ( ListContainsNoCase(vNewQueryString, "sortOrder", "&") ) {
+				vNewQueryString = ListDeleteAt(vNewQueryString, ListContainsNoCase(vNewQueryString, "sortOrder", "&"), "&");
+			}
+		
+			// New sortOrder value
+			var vSortOrderVal = '&sortOrder=ASC';
+		
+			if (ARGUMENTS.columnName EQ ARGUMENTS.sortBy AND ARGUMENTS.sortOrder EQ 'ASC') {
+				vSortOrderVal = "&sortOrder=DESC";	
+			} 
+			
+			// Build URL
+			return CGI.SCRIPT_NAME & "?" & vNewQueryString & "&sortBy=" & ARGUMENTS.columnName & vSortOrderVal;
+		</cfscript>
+    	
+    </cffunction>
+
+
+	<cffunction name="calculateTimePassed" access="public" hint="Returns time passed in a day and hours format. eg: 60 d 22 h" returntype="string">
+    	<cfargument name="dateStarted" hint="dateStarted is required">
+        <cfargument name="dateEnded" hint="dateEnded is required">
+        <cfargument name="onlyBusinessDays" default="0" hint="Set to 1 to calculate only business day">
+        
+		<cfscript>
+			var vDaysPassed = 0;
+			var vHoursPassed = 0;
+			var vTimePassed = 'n/a';
+			
+			
+			if ( isDate(ARGUMENTS.dateStarted) AND isDate(ARGUMENTS.dateEnded) ) {
+				
+				
+				if ( NOT VAL(onlyBusinessDays) ) {
+				
+					// Calculates the number of days between 2 dates.
+					vDaysPassed = Abs(DateDiff("d", ARGUMENTS.dateEnded, ARGUMENTS.dateStarted));
+				
+				} else {
+					
+					// Calculates the number of business days between 2 dates.
+					while ( ARGUMENTS.dateStarted LTE ARGUMENTS.dateEnded ) {
+						if ( dayOfWeek(ARGUMENTS.dateStarted) GTE 2 AND dayOfWeek(ARGUMENTS.dateStarted) LTE 6) {
+							vDaysPassed = incrementValue(vDaysPassed);
+						}
+						ARGUMENTS.dateStarted = dateAdd("d",1,ARGUMENTS.dateStarted);
+					}
+				
+				}
+					
+				if ( datepart('h', now()) LT 12 OR vDaysPassed EQ 1 ) {
+					h = 'h';								
+				} else {
+					h = 'H';
+				}
+				
+				// Get Hours
+				vHoursPassed = TimeFormat(ARGUMENTS.dateEnded-ARGUMENTS.dateStarted, h);
+			
+				vTimePassed = vDaysPassed & "d " & vHoursPassed &  "h";
+
+			}
+			
+			return vTimePassed; 
+        </cfscript>
+    	
+    </cffunction>
+
 	
 	<cffunction name="calculateAddressDistance" access="public" returntype="string">
     	<cfargument name="origin" type="string" required="yes" hint="origin is required" />
@@ -639,7 +727,6 @@
         <!----Check AR Information Sheet---->
         
         <!----Check CBC Approved----->
-        
         
         <cfquery name="prevExperience" datasource="#APPLICATION.DSN#">
             SELECT 

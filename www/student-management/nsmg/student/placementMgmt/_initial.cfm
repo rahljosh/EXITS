@@ -861,7 +861,7 @@
                 <cfif CLIENT.usertype LT qGetStudentInfo.host_fam_Approved>
                     <tr>
                         <td align="center">
-                            <a href="javascript:openPopUp('../../reports/PlacementInfoSheet.cfm?uniqueID=#FORM.uniqueID#&approve', 900, 600);"><img src="../../pics/previewpis.gif" border="0"></a><br />
+                            <a href="javascript:openPopUp('../../reports/placementInfoSheet.cfm?uniqueID=#FORM.uniqueID#&approve', 900, 600);"><img src="../../pics/previewpis.gif" border="0"></a><br />
                         </td>
                     </tr>
                     <tr>
@@ -872,7 +872,7 @@
                 <cfelse>
                     <tr>
                         <td align="center">
-                            <a href="javascript:openPopUp('../../reports/PlacementInfoSheet.cfm?uniqueID=#FORM.uniqueID#', 900, 600);"><img src="../../pics/previewpis.gif" border="0"></a>
+                            <a href="javascript:openPopUp('../../reports/placementInfoSheet.cfm?uniqueID=#FORM.uniqueID#', 900, 600);"><img src="../../pics/previewpis.gif" border="0"></a>
                         </td>
                     </tr>
                 </cfif>
@@ -932,7 +932,7 @@
             <cfcase value="Approved">
                 <tr>
                     <td align="center">
-                        <a href="" onClick="javascript: win=window.open('../../reports/PlacementInfoSheet.cfm?uniqueID=#FORM.uniqueid#&approve', 'Settings', 'height=450, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">
+                        <a href="" onClick="javascript: win=window.open('../../reports/placementInfoSheet.cfm?uniqueID=#FORM.uniqueid#&approve', 'Settings', 'height=450, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">
                             <img src="../../pics/previewpis.gif" border="0">
                         </a>
                         <br />
