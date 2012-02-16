@@ -36,7 +36,7 @@
 		CheckPaperwork = APPLICATION.CFC.udf.paperworkCompleted(userid=URL.userid,season=9);
 		
          //Check if paperwork is complete for season
-			get_paperwork = APPLICATION.CFC.udf.allpaperworkCompleted(userid=url.userid,seasonid=9);
+		get_paperwork = APPLICATION.CFC.udf.allpaperworkCompleted(userid=url.userid,seasonid=9);
 		
 	</cfscript>
 
@@ -251,14 +251,25 @@
 </cfsilent>
 
 <style type="text/css">
-<!--
+
 .smlink         		{font-size: 11px;}
 .section        		{border-top: 1px solid #c6c6c6;; border-right: 2px solid #c6c6c6;border-left: 2px solid #c6c6c6;border-bottom: 0px; background: #ffffff;}
 .sectionFoot    		{border-bottom: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;font-size:2px;}
 .sectionBottomDivider 	{border-bottom: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;}
 .sectionTopDivider 		{border-top: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;}
 .sectionSubHead			{font-size:11px;font-weight:bold;}
--->
+
+.alert{
+	width:auto;
+	height:55px;
+	border:#666;
+	background-color:#FF9797;
+	text-align:center;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	vertical-align:center;
+
+}
 </style>
 
 <script type="text/javascript" language="javascript">
@@ -277,6 +288,7 @@
 		}
 	}	
 	
+	
 	// Display Score if DOS Certification is selected
 	function displayTrainingScore() {
 		selectedTraining = $("#trainingID").val();
@@ -286,6 +298,23 @@
 			$("#trainingScore").slideUp("slow");	
 		}
 	}	
+	// Display References
+	function displayReferenceForm() {
+		if($("#referenceForm").css("display") == "none"){
+			$("#referenceForm").slideDown("slow");
+		} else {
+			$("#referenceForm").slideUp("slow");	
+		}
+	}	
+	// Display Experience
+	function displayExperienceForm() {
+		if($("#ExperienceForm").css("display") == "none"){
+			$("#ExperienceForm").slideDown("slow");
+		} else {
+			$("#ExperienceForm").slideUp("slow");	
+		}
+	}		
+	displayExperienceForm
 </script>
 
 <!--- user has no access records - force entry of one. --->
@@ -299,6 +328,17 @@
     <cfelse>
 		<cflocation url="index.cfm?curdoc=forms/access_rights_form&userid=#rep_info.userid#&force=1" addtoken="no">
     </cfif>
+</cfif>
+<cfif get_paperwork.reviewAcct eq 1>
+<div class="alert">
+<h1>Account Review Required - Account appears ready for manual reveiw. </h1>
+<em>Please review references and run CBC.  When everything looks fine, approve the CBC through Paperwork menu to activate account.</em> </div>
+<br />
+<cfelseif get_paperwork.areaRepOK eq 0 or get_paperwork.arearepOk is ''>
+<div class="alert">
+<h1>Account Not Active </h1>
+<em>Please review items missing in the paperwork section.</em> </div>
+<br />
 </cfif>
 
 <cfoutput query="rep_info">
@@ -1405,28 +1445,37 @@
                 </table>
             
             </td>
-            <td width="50%" valign="top">&nbsp;
+            <td width="50%" valign="top">
                 <!--- References ---->    
                  <table width="100%" cellpadding="0" cellspacing="0" border="0" height="24">
                     <tr valign="middle" height="24">
                         <td height="24" width="13" background="pics/header_leftcap.gif">&nbsp;</td>
                         <td width="26" background="pics/header_background.gif"><img src="pics/notes.gif"></td>
                         <td background="pics/header_background.gif"><h2>References</h2></td>
+                        <td background="pics/header_background.gif" width="140" align="right"></td>
                         <td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
                     </tr>
                 </table>
                 <table width="100%" cellpadding=10 cellspacing="0" border="0" class="section">
-                   <tr><td><b>Season: #get_paperwork.season#</td></tr>
+                   <tr><td align="Center" colspan=4<cfif get_paperwork.ar_ref_quest1 is '' or get_paperwork.ar_ref_quest2 is ''> bgcolor="##FF0000"</cfif> ><a href="javascript:displayReferenceForm();"><cfif get_paperwork.ar_ref_quest1 is '' or get_paperwork.ar_ref_quest2 is ''><font color="##ffffff"></cfif>View / Hide References</font></a><br /></td></tr>
+                   <td><td align="center">
+                   
+                   
+                    <div id="referenceForm"  style="display:none;"  >
+                    <table width=100%>
+                    <tr><td><b>Season: #get_paperwork.season#</td></tr>
                     <tr>
                         <td valign="top">
-                            <table width=100%>
-                            	<Tr>
-                                	<Td>Name</Td><Td>Phone</Td>                                
-                                    <td>
+                            <table width=100% cellspacing=0 cellpadding="4">
+                            	<Tr bgcolor="##CCCCCC">
+                                <Td>Name</Td>
+                                <Td align="center">Phone</Td>                                
+                                <td align="center">Status</td>
+                                <td align="center">
 										<Cfif client.usertype lte 5 and client.userid neq userid>
 										Report</cfif>
                                     </td>
-                                    <td>Status</td>
+                                    
                                 </Tr>
 							
                             <Cfif qreferences.recordcount EQ 0>   	
@@ -1442,8 +1491,20 @@
                              
                              </Cfquery>
                              <tr <Cfif qreferences.currentrow mod 2>bgcolor=##ffffe5</cfif>>
-                               	<Td>#firstname# #lastname#</Td><td>#phone#</td>
-                                <Td>
+                               	<Td><strong>#firstname# #lastname#</strong> - <em>#relationship# (#howlong#)</em></Td>
+                                <td align="Center">#phone#</td>
+                                <Td align="Center">
+                                <Cfif qreferences.approved eq 0>
+                                Waiting
+                                <Cfelseif qreferences.approved eq 1>
+                                Pending
+                                <Cfelseif qreferences.approved eq 2>
+                                Approved
+                                <Cfelseif qreferences.approved eq 3>
+                                Rejected
+                                </Cfif>
+                                </Td>
+                                <Td align="Center">
                                 
                                 <Cfif client.usertype lte 6 and client.userid neq userid>
 									<Cfif checkRefReport.recordcount eq 0 and client.usertype lte 6 >
@@ -1455,20 +1516,10 @@
                                
                                 </cfif>
                                 </Td> 
-                                <Td>
-                                <Cfif qreferences.approved eq 0>
-                                Waiting
-                                <Cfelseif qreferences.approved eq 1>
-                                Pending
-                                <Cfelseif qreferences.approved eq 2>
-                                Approved
-                                <Cfelseif qreferences.approved eq 3>
-                                Rejected
-                                </Cfif>
-                                </Td>
+                              
                              </tr>
                              <Tr <Cfif qreferences.currentrow mod 2>bgcolor=##ffffe5</cfif>>
-                             	<td colspan=2>#address# #address2# #city# #state#, #zip#</td><Td colspan=2>#relationship# (#howlong#)</Td>
+                             	<td colspan=2>#address# #address2# #city# #state#, #zip#</td><Td colspan=2></Td>
                              </Tr>
                              </Cfloop>
                              </Cfif>
@@ -1477,6 +1528,11 @@
                         </td>
                     </tr>
                 </table>
+                </div>
+                <!---_Table around References area---->
+                </td>
+                </tr>
+                </table>
                 <table width="100%" cellpadding="0" cellspacing="0" border="0">
                     <tr valign="bottom">
                         <td width="9" valign="top" height="12"><img src="pics/footer_leftcap.gif" ></td>
@@ -1484,6 +1540,79 @@
                         <td width="9" valign="top"><img src="pics/footer_rightcap.gif"></td>
                     </tr>
                 </table>
+                <br /><br />
+                <Cfif client.usertype lte 4>
+                <cfquery name="qEmploymentHistory" datasource="MySQL">
+                select *
+                from smg_users_employment_history
+                where fk_userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.userid#">
+                order by current
+                </cfquery>
+                 <!--- Experience ---->    
+                 <table width="100%" cellpadding="0" cellspacing="0" border="0" height="24">
+                    <tr valign="middle" height="24">
+                        <td height="24" width="13" background="pics/header_leftcap.gif">&nbsp;</td>
+                        <td width="26" background="pics/header_background.gif"><img src="pics/notes.gif"></td>
+                        <td background="pics/header_background.gif"><h2>Experience</h2></td>
+                        <td background="pics/header_background.gif" width="140" align="right"></td>
+                        <td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
+                    </tr>
+                </table>
+                <table width="100%" cellpadding=10 cellspacing="0" border="0" class="section">
+                   <tr><td align="Center"><a href="javascript:displayExperienceForm();">View / Hide Experience</a><br />
+                   
+                   
+                    <div id="ExperienceForm"  style="display:none;"  >
+                     
+                      <table width=100% cellspacing=0 cellpadding=2 class="border">
+                           <Tr>
+                           	 	<td colspan=7>
+                                <b>Prior Exchange Experience:</b><br />
+                                <Cfif prevOrgAffiliation eq 0>
+                                None
+                                <cfelseif prevOrgAffiliation eq 1> 
+                                 #prevAffiliationName#<br />
+                                 <cfif #prevAffiliationProblem# is not ''><em><font color="##CCCCCC">Problems:</font></em> #prevAffiliationProblem#</cfif>
+                                 <cfelse>
+                                 Question not Answered.
+                                 </Cfif>
+                                 <br /><br />
+                                </td>
+                           </Tr>
+                            <Th></Th><Th>Employer</Th><Th>Address</Th><th>City</th><Th>State</Th><th>Zip</th><th>Phone</th>
+                            </Tr>
+                           <Cfif qEmploymentHistory.recordcount eq 0>
+                            <tr>
+                                <td colspan=7>No employers are on file for #firstname#.</td>
+                            </tr>
+                            <cfelse>
+                            <Cfloop query="qEmploymentHistory">
+                            <tr <Cfif currentrow mod 2> bgcolor="##deeaf3"</cfif>>
+                                <Td><cfif current eq 1>&radic;</cfif></Td>
+                                <Td valign="middle">#employer#</Td>
+                                <td valign="middle">#address# #address2#</td>
+                                <Td valign="middle">#city#</Td>
+                                <td valign="middle">#state#</td>
+                                <td valign="middle">#zip#</td>
+                                <td valign="middle">#phone#</td>
+                               
+                            </tr>
+                            </Cfloop>
+                            </cfif>
+                           </table>
+                </div>
+                <!---_Table around Experience area---->
+                </td>
+                </tr>
+                </table>
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr valign="bottom">
+                        <td width="9" valign="top" height="12"><img src="pics/footer_leftcap.gif" ></td>
+                        <td width="100%" background="pics/header_background_footer.gif"></td>
+                        <td width="9" valign="top"><img src="pics/footer_rightcap.gif"></td>
+                    </tr>
+                </table>
+                </cfif>
             </td>
         </tr>
     </Table>        
