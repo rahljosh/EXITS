@@ -6,7 +6,7 @@ set active = 1,
 where userid = #url.userid#
 	
 </cfquery>
-<!----
+
 <Cfquery name="userEmail" datasource="#application.dsn#">
 select email, whocreated, firstname, lastname
 from smg_users
@@ -44,7 +44,7 @@ where userid = #url.userid#
                
                 <cfinvokeargument name="email_from" value="#companyshort#-support@exitsapplication.com">
             </cfinvoke>
-</cfif>
----->
+
+
     <!----End of Email---->
-	<cflocation url="index.cfm?curdoc=user_info&userid=#url.userid#">
+	
