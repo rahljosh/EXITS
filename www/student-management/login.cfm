@@ -1,6 +1,8 @@
 <!--- Kill Extra Output --->
 <cfsilent>
-
+	<cfloop list="#GetClientVariablesList()#" index="ThisVarName">
+		<cfset temp = DeleteClientVariable(ThisVarName)>
+	</cfloop>
 	<cfscript>
 		// redirect to SSL
 		if ( NOT APPLICATION.isServerLocal AND CGI.SERVER_PORT EQ 80 ) {
