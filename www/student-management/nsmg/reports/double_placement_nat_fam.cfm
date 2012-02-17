@@ -53,7 +53,7 @@
 <tr>
 	<td width="20" class="style1" valign="top">1.</td>
 	<td width="300" class="style1" valign="top">#UCASE(RTRIM(get_student_info.firstname))# #UCASE(RTRIM(get_student_info.familylastname))# <br>
-		#CLIENT.DSFormName# no.: &nbsp; #get_student_info.ds2019_no# <br>
+		DS2019 no.: &nbsp; #get_student_info.ds2019_no# <br>
 		Program Start Date: &nbsp; #DateFormat(get_student_info.startdate, 'mm/dd/yyyy')#</td>
 	<td width="80" class="style1" valign="top"><p>FROM</p>
 	  <p>GENDER</p>
@@ -68,7 +68,7 @@
 	<cfelse>
 	<td class="style1" valign="top">2.</td>
 	<td width="300" class="style1" valign="top">#UCASE(RTRIM(double_placement.firstname))# #UCASE(RTRIM(double_placement.familylastname))# <br>
-		#CLIENT.DSFormName# no.: &nbsp; #double_placement.ds2019_no# <br>
+		DS2019 no.: &nbsp; #double_placement.ds2019_no# <br>
 		Program Start Date: &nbsp; #DateFormat(double_placement.startdate, 'mm/dd/yyyy')#</td>
 		
 		 <td width="80" class="style1" valign="top"><p>FROM</p>
@@ -84,8 +84,8 @@
 
 <table width=650 border=0 align="center" bgcolor="FFFFFF">
 <tr><td class="style1"><div align="justify">
-	<cfif client.companyid NEQ 14><p>As you may know, the Department of State requires that the student, the natural family and the international representative 
-	agree in writing to any double placements.</p></cfif>
+	<p>As you may know, the Department of State requires that the student, the natural family and the international representative 
+	agree in writing to any double placements.</p>
 	<p>Please sign on the lines below and return to #companyshort.companyshort_nocolor# so that we may finalize the placement.</p>
 	<p>Thank you.</p>
 	</div>
@@ -98,7 +98,7 @@
 <tr>
 	<td class="style1" width="160" align="right">Student:</td>
 	<td class="style1" width="260">___________________________________________<br><font size="-1">signature</font> </td>
-	<td class="style1" width="190">____/____/____<br>date (mm/dd/yy)</td>
+	<td class="style1" width="190"><cfoutput><u>#dateFormat(now(), 'mmm. dd, yyyy')#</u><br>date </cfoutput></td>
 </tr>
 <tr>
 	<td class="style1" align="right">Print Name:</td>
@@ -108,7 +108,7 @@
 <tr>
 	<td class="style1" align="right">Parent:</td>
 	<td class="style1">___________________________________________<br><font size="-1">signature</font> </td>
-	<td class="style1">____/____/____<br>date (mm/dd/yy)</td>
+	<td class="style1"><cfoutput><u>#dateFormat(now(), 'mmm. dd, yyyy')#</u><br>date</cfoutput></td>
 </tr>
 <tr>
 	<td class="style1" align="right">Print Name:</td>
@@ -118,7 +118,7 @@
 <tr>
 	<td class="style1" align="right">Intl. Representative:</td>
 	<td class="style1">___________________________________________<br><font size="-1">signature</font> </td>
-	<td class="style1">____/____/____<br>date (mm/dd/yy) </td>
+	<td class="style1"><cfoutput><u>#dateFormat(now(), 'mmm. dd, yyyy')#</u><br>date</cfoutput></td>
 </tr>
 <tr>
 	<td class="style1" align="right">Print Name:</td>

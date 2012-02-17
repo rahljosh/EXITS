@@ -46,29 +46,29 @@ during his/her exchange year. <cfif client.companyid NEQ 14>I/we understand this
 	</Tr>
  	<tr>
     	<td class="signatureLine" valign="bottom"><br /><Br /><br /><br /><br />____________________________________</td><td>&nbsp;</td>
-        <td class="signatureLine" valign="bottom">____________________________________</td>
+        <td class="signatureLine" valign="bottom"><u><font size=+2>#dateFormat(now(), 'mmm. dd, yyyy')#</font></u></td>
     </tr>
     <tr>
-    	<td>#studentfaminfo.firstname# #studentfaminfo.familylastname#</td><td></td><td>Date - MM/DD/YYYY</td>
+    	<td>#studentfaminfo.firstname# #studentfaminfo.familylastname#</td><td></td><td>Date</td>
         </tr>
  
     <cfif studentFamInfo.fathersname is not ''>
     <tr>
     	<td class="signatureLine" valign="bottom"><br /><Br /><br /><br /><br />____________________________________</td><td>&nbsp;</td>
-        <td class="signatureLine" valign="bottom">____________________________________</td>
+        <td class="signatureLine" valign="bottom"><u><font size=+2>#dateFormat(now(), 'mmm. dd, yyyy')#</font></u></td>
     </tr>
     <tr>
-    	<td>#studentFamInfo.fathersname# <Cfif studentFamInfo.mothersname is not ''>OR <br /></Cfif> #studentFamInfo.mothersname# </td><td></td><td>Date - MM/DD/YYYY</td>
+    	<td>#studentFamInfo.fathersname# <Cfif studentFamInfo.mothersname is not ''>OR <br /></Cfif> #studentFamInfo.mothersname# </td><td></td><td>Date/td>
     </tr>
     </cfif>
 
     
     <tr>
     	<td class="signatureLine" valign="bottom"><br /><Br /><br /><br /><br />____________________________________</td><td>&nbsp;</td>
-        <td class="signatureLine" valign="bottom">____________________________________</td>
+        <td class="signatureLine" valign="bottom"><u><font size=+2>#dateFormat(now(), 'mmm. dd, yyyy')#</font></u></td>
     </tr>
     <tr>
-    	<td>#client.companyshort# Signature  </td><td></td><td>Date - MM/DD/YYYY</td>
+    	<td>#client.companyshort# Signature  </td><td></td><td>Date</td>
     </tr>
     <tr>		
         <Td colspan=3><br /><br /><div align="center"></div>
