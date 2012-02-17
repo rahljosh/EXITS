@@ -21,6 +21,8 @@ function CheckDates(ckname, frname) {
 
 <body>
 
+
+
 <cfif NOT IsDefined('url.userid')>
 	<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
 		<tr valign=middle height=24>
@@ -165,7 +167,8 @@ function CheckDates(ckname, frname) {
 				<tr height="34" bgcolor="##EEEEEE"><td ><font color="red">*</font><b>CBC Authorization Form</b></td></tr>
                 <tr height="34"><td ><font color="red">*</font><b>CBC Approved</b></td></tr>
 				<tr height="34" bgcolor="##EEEEEE"><td><font color="red">*</font><b>AR Agreement</b></td></tr>
-				<tr height="34"><td><font color="red">*</font><b>AR Training Sign-off Form</b></td></tr>
+				<tr height="34">
+				  <td><b>AR Training Sign-off Form</b></td></tr>
                 <tr height="34" bgcolor="##EEEEEE"><td><b>2nd Visit User Info Sheet</b></td></tr>
 			</table>
 		</td>
@@ -185,44 +188,49 @@ function CheckDates(ckname, frname) {
 					</tr>
 					<tr  height="34" <Cfif get_rep.accountCreationVerified eq 0 and get_paperwork.recordcount eq 0> bgcolor="##FFCBC4" </cfif>><td>
                     <cfinput type="checkbox" name="ar_info_sheet_check" OnClick="CheckDates('ar_info_sheet_check', 'ar_info_sheet');">
-							Date: 
+							<cfif region_company_access.usertypeid eq 15> 
+                            	Not Required
+                            <cfelse> 
+                            
+                            Date: 
                             
                             	<cfinput type="text" name="ar_info_sheet" value="" size="8" maxlength="10" validate="date">	
-                         
+                         	</cfif>
                             		
 						</td>
 					</tr>
 					<tr  height="34"  bgcolor="##EEEEEE" <Cfif get_rep.accountCreationVerified eq 0 and get_paperwork.recordcount eq 0> bgcolor="##FFCBC4" </cfif>><td><cfinput type="checkbox" name="ar_ref_quest1_check" OnClick="CheckDates('ar_ref_quest1_check', 'ar_ref_quest1');"> 
-							Date: 
+							
                             <cfif region_company_access.usertypeid eq 15> 
                             	Not Required
                             <cfelse> 
+                            Date: 
                             <cfinput type="text" name="ar_ref_quest1" value="" size="8" maxlength="10" validate="date">	
                             </cfif> 				
 						</td>
 					</tr>
 					<tr  height="34"  <Cfif get_rep.accountCreationVerified eq 0 and get_paperwork.recordcount eq 0> bgcolor="##FFCBC4" </cfif>><td><cfinput type="checkbox" name="ar_ref_quest2_check" OnClick="CheckDates('ar_ref_quest2_check', 'ar_ref_quest2')"> 
-							Date: 
+							 
                             <cfif region_company_access.usertypeid eq 15> 
                             	Not Required
                             <cfelse> 
+                            Date:
                             <cfinput type="text" name="ar_ref_quest2" value="" size="8" maxlength="10" validate="date">						
 							</cfif>
                         </td>
 					</tr> 
-					<tr  height="34" bgcolor="##EEEEEE"  <Cfif get_rep.accountCreationVerified eq 0 and get_paperwork.recordcount eq 0 > bgcolor="##FFCBC4" </cfif>><td>
+					<tr  height="34" bgcolor="##EEEEEE"  <Cfif get_rep.accountCreationVerified eq  0 and get_paperwork.recordcount eq 0 > bgcolor="##FFCBC4" </cfif>><td>
                   
 							
                                 <cfinput type="checkbox" name="ar_cbc_auth_form_check" OnClick="CheckDates('ar_cbc_auth_form_check', 'ar_cbc_auth_form');"> 
                             
                             Date: 
-							
-                            	<cfinput type="text" name="ar_cbc_auth_form" value="" size="8" maxlength="10" validate="date">
+								 <cfinput type="text" name="ar_cbc_auth_form" value="" size="8" maxlength="10" validate="date">
                             
                     					
 						</td>
 					</tr>
-                    <tr  height="34"  <Cfif get_rep.accountCreationVerified eq 0 and get_paperwork.recordcount eq 0 > bgcolor="##FFCBC4" </cfif>><td>
+                    <tr  height="34"  <Cfif get_rep.accountCreationVerified eq 0  and get_paperwork.recordcount eq 0 > bgcolor="##FFCBC4" </cfif>><td>
                     
                           
 						<cfinput type="checkbox" name="ar_cbcAuthReview_check" OnClick="CheckDates('ar_cbcAuthReview_check', 'ar_cbcAuthReview');" disabled> 
@@ -236,8 +244,12 @@ function CheckDates(ckname, frname) {
 						</td>
 					</tr>
 					<tr  height="34"><td><cfinput type="checkbox" name="ar_training_check" OnClick="CheckDates('ar_training_check', 'ar_training');"> 
-							Date: <cfinput type="text" name="ar_training" value="" size="8" maxlength="10" validate="date">
-						</td>
+							<cfif region_company_access.usertypeid eq 15> 
+                            	Not Required
+                            <cfelse> 
+                            Date: <cfinput type="text" name="ar_training" value="" size="8" maxlength="10" validate="date">
+							</cfif>
+                        </td>
 					</tr>	
                     <tr  height="34"  bgcolor="##EEEEEE"><td><cfinput type="checkbox" name="ar_secondVisit_check" OnClick="CheckDates('ar_secondVisit_check', 'ar_secondVisit');"> 
 							Date: <cfinput type="text" name="ar_secondVisit" value="" size="8" maxlength="10" validate="date">
@@ -259,8 +271,21 @@ function CheckDates(ckname, frname) {
 						<cfif ar_info_sheet EQ ''>
 							<cfinput type="checkbox" name="ar_info_sheet_check_#currentrow#" OnClick="CheckDates('ar_info_sheet_check_#currentrow#', 'ar_info_sheet_#currentrow#');">
 						<cfelse>
-							<cfinput type="checkbox" name="ar_info_sheet_check_#currentrow#" OnClick="CheckDates('ar_info_sheet_check_#currentrow#', 'ar_info_sheet_#currentrow#');" checked="yes">				</cfif>	
-								Date: <cfinput type="text" name="ar_info_sheet_#currentrow#" value="#DateFormat(ar_info_sheet, 'mm/dd/yyyy')#" size="8" maxlength="10" validate="date">					
+                        
+                        	
+							<cfinput type="checkbox" disabled name="ar_info_sheet_check_#currentrow#" OnClick="CheckDates('ar_info_sheet_check_#currentrow#', 'ar_info_sheet_#currentrow#');" checked="yes">				</cfif>	
+                            
+                              <cfif region_company_access.usertypeid eq 15> 
+                            	Not Required
+                            <cfelse> 
+                            	<cfif ar_info_sheet is not ''>Date: 
+                                     <a href="javascript:openPopUp('uploadedfiles/users/#get_rep.userid#/Season#seasonid#cbcAuthorization.pdf', 640, 800);">
+                                        #DateFormat(ar_info_sheet, 'mm/dd/yyyy')#
+                                      </a>
+                                      
+                                <cfelse>
+									Date: <cfinput type="text" name="ar_info_sheet_#currentrow#" value="#DateFormat(ar_info_sheet, 'mm/dd/yyyy')#" size="8" maxlength="10" validate="date">							</cfif>
+                             </cfif>
 							</td>
 						</tr>
 						<tr  height="34"  bgcolor="##EEEEEE"<Cfif get_rep.accountCreationVerified eq 0 and ar_ref_quest1 is ''> bgcolor="##FFCBC4" </cfif>><td><cfif ar_ref_quest1 EQ ''>
@@ -268,10 +293,11 @@ function CheckDates(ckname, frname) {
 								<cfelse>
 									<cfinput type="checkbox" name="ar_ref_quest1_check_#currentrow#" OnClick="CheckDates('ar_ref_quest1_check_#currentrow#', 'ar_ref_quest1_#currentrow#');" checked="yes">
 								</cfif>
-								Date: 
+								
                                 <cfif region_company_access.usertypeid eq 15> 
                             	Not Required
                             <cfelse> 
+                            Date: 
                                 <cfinput type="text" name="ar_ref_quest1_#currentrow#" value="#DateFormat(ar_ref_quest1, 'mm/dd/yyyy')#" size="8" maxlength="10" validate="date">						
 							</cfif>
                             </td>
@@ -281,10 +307,11 @@ function CheckDates(ckname, frname) {
 								<cfelse>	
 									<cfinput type="checkbox" name="ar_ref_quest2_check_#currentrow#" OnClick="CheckDates('ar_ref_quest2_check_#currentrow#', 'ar_ref_quest2_#currentrow#')" checked="yes"> 
 								</cfif>
-								Date: 
+								
                                 <cfif region_company_access.usertypeid eq 15> 
                             	Not Required
                             <cfelse> 
+                            Date: 
                                 <cfinput type="text" name="ar_ref_quest2_#currentrow#" value="#DateFormat(ar_ref_quest2, 'mm/dd/yyyy')#" size="8" maxlength="10" validate="date">						
 							</cfif>
                             </td>
@@ -299,19 +326,19 @@ function CheckDates(ckname, frname) {
                                     <Cfelse>
                                     <cfinput type="checkbox" name="ar_cbc_auth_form_check_#currentrow#" OnClick="CheckDates('ar_cbc_auth_form_check_#currentrow#', 'ar_cbc_auth_form_#currentrow#');" checked="yes" disabled="true">
                                     </cfif>
-								
+					</cfif>	
 								Date:
                                 <cfif cbcSig is not ''>
 									<Cfif user_compliance.compliance EQ 1 OR client.userid eq userid or client.usertype eq 1>
                                      <a href="javascript:openPopUp('uploadedfiles/users/#get_rep.userid#/Season#seasonid#cbcAuthorization.pdf', 640, 800);">
-                                    </cfif> 
+                                    </cfif>
+                                     
                                  #DateFormat(ar_agreement, 'mm/dd/yyyy')#
                                  <input type="hidden" name="ar_cbc_auth_form_#currentrow#" value="#DateFormat(ar_cbc_auth_form, 'mm/dd/yyyy')#" />
                                  </a>
                                 <cfelse>
                                 	 <cfinput type="text" name="ar_cbc_auth_form_#currentrow#" value="#DateFormat(ar_cbc_auth_form, 'mm/dd/yyyy')#" size="8" maxlength="10" validate="date">						</cfif>
-                               </cfif>
-							</td>
+                           </td>
 						</tr>
                          <tr  height="34" <Cfif get_rep.accountCreationVerified eq 0 and ar_cbcAuthReview is '' > bgcolor="##FFCBC4" </cfif>><td>
                           
@@ -322,7 +349,7 @@ function CheckDates(ckname, frname) {
                              <cfinput type="checkbox" name="ar_cbcAuthReview_check_#currentrow#" OnClick="CheckDates('ar_cbcAuthReview_check_#currentrow#', 'ar_cbcAuthReview_#currentrow#');" checked="yes" disabled> 
                             
                          </cfif>
-							Date: <cfif ar_cbcAuthReview is ''><a href="index.cfm?curdoc=cbc/users_cbc&userid=#url.userid#">Required</a><cfelse>#DateFormat(ar_cbcAuthReview, 'mm/dd/yyyy')#</cfif>		
+							Date: <cfif ar_cbcAuthReview is ''><a href="index.cfm?curdoc=cbc/users_cbc&userid=#url.userid#&return=paperwork">Required</a><cfelse>#DateFormat(ar_cbcAuthReview, 'mm/dd/yyyy')#</cfif>		
                             		
 						</td>
 					</tr>
@@ -352,8 +379,12 @@ function CheckDates(ckname, frname) {
 								<cfelse>
 									<cfinput type="checkbox" name="ar_training_check_#currentrow#" OnClick="CheckDates('ar_training_check_#currentrow#', 'ar_training_#currentrow#');" checked="yes"> 
 								</cfif>
+                                  <cfif region_company_access.usertypeid eq 15> 
+                            	Not Required
+                            <cfelse>
 								Date: <cfinput type="text" name="ar_training_#currentrow#" value="#DateFormat(ar_training, 'mm/dd/yyyy')#" size="8" maxlength="10" validate="date">
-							</td>
+							</cfif>
+                            </td>
 						</tr>
                         <tr  height="34"  bgcolor="##EEEEEE"><td><cfif secondVisit EQ ''>
 									<cfinput type="checkbox" name="ar_secondVisit_check_#currentrow#" OnClick="CheckDates('ar_secondVisit_check_#currentrow#', 'ar_secondVisit_#currentrow#');"> 
@@ -415,8 +446,13 @@ function CheckDates(ckname, frname) {
 							</td>
 						</tr>
                         <tr  height="32"  bgcolor="##EEEEEE"><td><input type="checkbox" name="ar_secondVisit_check_#currentrow#" disabled="disabled" <cfif ar_secondVisit NEQ ''>checked="checked"</cfif>> 
-								Date: <input name="ar_secondVisit_#currentrow#" value="#DateFormat(secondVisit, 'mm/dd/yyyy')#" size="8" disabled="disabled" />
-							</td>
+								
+                           <cfif region_company_access.usertypeid eq 15> 
+                            	Not Required
+                            <cfelse>
+                               Date:  <input name="ar_secondVisit_#currentrow#" value="#DateFormat(secondVisit, 'mm/dd/yyyy')#" size="8" disabled="disabled" />
+							</cfif>
+                            </td>
 						</tr>
 					</table>				
 				</cfif>	
@@ -426,7 +462,7 @@ function CheckDates(ckname, frname) {
        <!----For new accounts, display instructions---->
         <Cfif get_rep.accountCreationVerified eq 0 or get_rep.accountCreationVerified is '' >
         <td valign="top" align=left>
-           <table >
+           <table  width=300>
            	<tr>
                	<Td><strong>This appears to be a new account waiting to be activated.</strong><Br /><br />
                 <cfset cbcCheck = 0>
@@ -452,10 +488,11 @@ function CheckDates(ckname, frname) {
                <cfif region_company_access.usertypeid eq 15>
                	<cfset get_paperwork.ar_ref_quest1 = 'n/a'>
                	<cfset get_paperwork.ar_ref_quest2 = 'n/a'>
+                <cfset get_paperwork.ar_info_sheet = 'n/a'>
                </cfif>
-                <cfif cbcCheck eq 1 or get_paperwork.ar_info_sheet is '' or get_paperwork.ar_ref_quest1 is '' OR get_paperwork.ar_ref_quest2 is '' or  get_paperwork.ar_cbc_auth_form is '' or get_paperwork.ar_cbcAuthReview is ''>
-                Along with the items highlited on left (if any), the CBC needs to be run<br /> before activating this account.
-                You are not able to activate an account<br /> until all items have been completed. 
+                <cfif cbcCheck eq 1 or get_paperwork.ar_info_sheet is '' or get_paperwork.ar_ref_quest1 is '' OR get_paperwork.ar_ref_quest2 is '' or  get_paperwork.ar_cbc_auth_form is '' or get_paperwork.ar_cbcAuthReview is '' or get_paperwork.ar_agreement is ''>
+                Along with the items highlited on left (if any), the CBC needs to be run before activating this account.
+              This account will not be fully activate until all items have been completed. 
                 <cfelse>
                 <h3>Excellent!!</h3><br />  It looks like this account is ready to be activated, place your pointer<br />
                  over the "button below and click it... that's all there is to it.
@@ -465,17 +502,17 @@ function CheckDates(ckname, frname) {
                 
                 
                
-               <cfif cbcCheck eq 1 or get_paperwork.ar_info_sheet is '' or get_paperwork.ar_ref_quest1 is '' OR get_paperwork.ar_ref_quest2 is '' or  get_paperwork.ar_cbc_auth_form is ''  or get_paperwork.ar_cbcAuthReview is ''>
+               <cfif get_paperwork.arearepok eq 0>
                <img src="pics/activateNot.png" width="130" height="25" />
                <Cfelse>
-               <cfinclude template="activateNewAccount.cfm">
+               <cfinclude template="../activateNewAccount.cfm">
                <cfquery name="checkActivated" datasource="#application.dsn#">
                	select accountCreationVerified
                 from smg_users
                 where userid = #url.userid#
                </cfquery>
-				   <cfif checkActivated.accountCreationVerified eq 1>
-                   		This account is now active
+				   <cfif val(checkActivated.accountCreationVerified)>
+                   		<h3>This account is now active.  No further action is required.  The account has been set to active and appropriate emails sent.</h3>
                    <cfelse>
                    		<A href="?curdoc=activateNewAccount&userid=#url.userid#"><img src="pics/activateActive.png" width="130" height="25" border="0" /></A>
                    </cfif><Br /><Br />
@@ -483,8 +520,9 @@ function CheckDates(ckname, frname) {
                 Just a reminder that no CBC has been run <br /><br />
             </cfif>
           </cfif>
-        <em>When this account is activated, the user will receive the<br />
-         welcome email.  The Regional Manager will also receive<Br /> 
+          <br />
+        <em>When this account is activated, the user will receive a
+         welcome email.  The Regional Manager will also receive
          an email letting them know the account is active. </em>
                 </Td>
            </tr>
