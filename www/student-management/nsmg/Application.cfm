@@ -96,7 +96,7 @@
         <cfelseif isDefined("CLIENT.change_password")>
         
             <!--- allow user only on change password page. --->
-            <cfif NOT (isDefined("URL.curdoc") AND URL.curdoc EQ 'forms/change_password')>
+            <cfif NOT (isDefined("URL.curdoc") AND  URL.curdoc EQ 'forms/change_password' OR  listFindNoCase("logout", URL.curdoc))>
                 <cflocation url="/nsmg/index.cfm?curdoc=forms/change_password" addtoken="no"><br />
             </cfif>
         
