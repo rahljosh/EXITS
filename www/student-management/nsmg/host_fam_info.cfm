@@ -115,8 +115,7 @@
     
 	<!--- CROSS DATA - check if was submitted under a user --->
     <cfquery name="qCheckCBCMother" datasource="#application.dsn#">
-        SELECT DISTINCT u.userid, u.ssn, firstname, lastname, cbc.cbcid, cbc.requestid, date_authorized, date_sent, date_received,
-            smg_seasons.season,cbc.batchid
+        SELECT DISTINCT u.userid, u.ssn, firstname, lastname, cbc.cbcid, cbc.requestid, date_authorized, date_sent, date_expired, smg_seasons.season,cbc.batchid
         FROM smg_users u
         INNER JOIN smg_users_cbc cbc ON cbc.userid = u.userid
         LEFT JOIN smg_seasons ON smg_seasons.seasonid = cbc.seasonid
@@ -126,7 +125,7 @@
     </cfquery>
     
     <cfquery name="qCheckCBCFather" datasource="#application.dsn#">
-        SELECT DISTINCT u.userid, u.ssn, u.firstname, u.lastname, cbc.cbcid, cbc.requestid, date_authorized, date_sent, date_received, batchid,
+        SELECT DISTINCT u.userid, u.ssn, u.firstname, u.lastname, cbc.cbcid, cbc.requestid, date_authorized, date_sent, date_expired, batchid,
             smg_seasons.season
         FROM smg_users u
         INNER JOIN smg_users_cbc cbc ON cbc.userid = u.userid
@@ -424,8 +423,8 @@ div.scroll2 {
 			<tr bgcolor="e2efc7">
 				<td valign="top"><b>Name</b></td>
 				<td align="center" valign="top"><b>Season</b></td>		
-				<td align="center" valign="top"><b>Date Sent</b> <br><font size="-2">mm/dd/yyyy</font></td>		
-	 			<td align="center" valign="top"><b>Date Received</b> <br><font size="-2">mm/dd/yyyy</font></td>		
+				<td align="center" valign="top"><b>Date Submitted</b> <br><font size="-2">mm/dd/yyyy</font></td>
+                <td align="center" valign="top"><b>Expiration Date</b> <br><font size="-2">mm/dd/yyyy</font></td>		
 				<td align="center" valign="top"><b>Request ID</b></td>
                 <cfif client.usertype lte 4 and client.companyid eq 10><td align="center" valign="top"><b>Delete</b></td></cfif>
 			</tr>				
@@ -437,8 +436,8 @@ div.scroll2 {
 				<tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
 					<td style="padding-left:20px;">#family_info.motherfirstname# #family_info.motherlastname#</td>
 					<td align="center">#season#</td>
-					<td align="center"><cfif NOT LEN(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-					<td align="center"><cfif NOT LEN(date_received)>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
+					<td align="center"><cfif isDate(date_sent)>#DateFormat(date_sent, 'mm/dd/yyyy')#<cfelse>processing</cfif></td>
+                    <td align="center"><cfif isDate(date_expired)>#DateFormat(date_expired, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
 					<td align="center">
 						<cfif NOT LEN(requestid)>
                         	processing
@@ -462,8 +461,8 @@ div.scroll2 {
 				<tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
 					<td>&nbsp;</td>
 					<td align="center">#season#</td>
-					<td align="center"><cfif NOT LEN(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-					<td align="center"><cfif NOT LEN(date_received)>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>		
+					<td align="center"><cfif isDate(date_sent)>#DateFormat(date_sent, 'mm/dd/yyyy')#<cfelse>processing</cfif></td>
+                    <td align="center"><cfif isDate(date_expired)>#DateFormat(date_expired, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
 					<td align="center">
 						<cfif NOT LEN(requestid)>
                         	processing
@@ -482,8 +481,8 @@ div.scroll2 {
 				<tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
 					<td style="padding-left:20px;">#family_info.fatherfirstname# #family_info.fatherlastname#</td>
 					<td align="center">#season#</td>
-					<td align="center"><cfif NOT LEN(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-					<td align="center"><cfif NOT LEN(date_received)>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>		
+					<td align="center"><cfif isDate(date_sent)>#DateFormat(date_sent, 'mm/dd/yyyy')#<cfelse>processing</cfif></td>
+                    <td align="center"><cfif isDate(date_expired)>#DateFormat(date_expired, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
 					<td align="center">
 						<cfif NOT LEN(requestid)>
                         	processing
@@ -508,8 +507,8 @@ div.scroll2 {
 				<tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
 					<td>&nbsp;</td>
 					<td align="center">#season#</td>
-					<td align="center"><cfif NOT LEN(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-					<td align="center"><cfif NOT LEN(date_received)>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>							
+					<td align="center"><cfif isDate(date_sent)>#DateFormat(date_sent, 'mm/dd/yyyy')#<cfelse>processing</cfif></td>
+                    <td align="center"><cfif isDate(date_expired)>#DateFormat(date_expired, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
 					<td align="center">
 						<cfif NOT LEN(requestid)>
                         	processing
@@ -538,8 +537,8 @@ div.scroll2 {
                 <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
                     <td style="padding-left:20px;">#qGetMemberDetail.name# #qGetMemberDetail.lastName#</td>
                     <td align="center">#season#</td>
-                    <td align="center"><cfif NOT LEN(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-                    <td align="center"><cfif NOT LEN(date_received)>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>		
+                    <td align="center"><cfif isDate(date_sent)>#DateFormat(date_sent, 'mm/dd/yyyy')#<cfelse>processing</cfif></td>
+                    <td align="center"><cfif isDate(date_expired)>#DateFormat(date_expired, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
                     <td align="center">
 						<cfif NOT LEN(requestid)>
                         	processing

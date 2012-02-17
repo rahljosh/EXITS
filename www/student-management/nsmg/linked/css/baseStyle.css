@@ -252,6 +252,24 @@
 	background-color:#FF6; 
 }
 
+.attentionGreen {
+	color:#000;
+	font-weight:bold;
+	padding:5px;
+	margin:0px 3px 0px 3px;
+	border-bottom:1px solid #FFFFFF;
+	background-color:#A0E1A1; 
+}
+
+.rejected {
+	color:#000;
+	font-weight:bold;
+	padding:5px;
+	margin:0px 3px 0px 3px;
+	border-bottom:1px solid #FFFFFF;
+	background-color:#FB8822; 
+}
+
 .alert {
 	color:#FFFFFF;
 	font-weight:bold;

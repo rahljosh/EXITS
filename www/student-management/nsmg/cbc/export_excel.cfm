@@ -4,7 +4,7 @@
 </cfif>
 
 <cfquery name="get_searches" datasource="MySql">
-	SELECT DISTINCT cbc.cbcfamid, cbc.hostid, cbc.cbc_type, cbc.date_authorized, cbc.date_sent, cbc.date_received,
+	SELECT DISTINCT cbc.cbcfamid, cbc.hostid, cbc.cbc_type, cbc.date_authorized, cbc.date_sent,
 		h.familylastname, h.fatherlastname, h.fatherfirstname, h.fathermiddlename, fatherdob, fatherssn,
 		h.motherlastname, h.motherfirstname, h.mothermiddlename, motherdob, motherssn, h.state
 	FROM smg_hosts_cbc cbc

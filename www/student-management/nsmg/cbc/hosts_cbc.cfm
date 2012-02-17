@@ -440,8 +440,8 @@
                     <td class="columnHeader">Company</td>
                     <td class="columnHeader">Season</td>		
                     <td class="columnHeader">Authorization Received <br><font size="-2">mm/dd/yyyy</font></td>		
-                    <td class="columnHeader">CBC Sent <br><font size="-2">mm/dd/yyyy</font></td>		
-                    <td class="columnHeader">CBC Received <br><font size="-2">mm/dd/yyyy</font></td>
+                    <td class="columnHeader">CBC Submitted <br><font size="-2">mm/dd/yyyy</font></td>
+                    <td class="columnHeader">Expiration Date <br><font size="-2">mm/dd/yyyy</font></td>		
                     <td class="columnHeader">Request ID</td>
                     <td class="columnHeader">Submit with no SSN</td>
                 </tr>
@@ -450,8 +450,8 @@
                         <td>#qGetCBCMother.companyshort#</td>
                         <td>#qGetCBCMother.season#</td>
                         <td>#DateFormat(qGetCBCMother.date_authorized, 'mm/dd/yyyy')#</td>
-                        <td><cfif NOT LEN(qGetCBCMother.date_sent)>in process<cfelse>#DateFormat(qGetCBCMother.date_sent, 'mm/dd/yyyy')#</cfif></td>
-                        <td><cfif NOT LEN(qGetCBCMother.date_received)>in process<cfelse>#DateFormat(qGetCBCMother.date_received, 'mm/dd/yyyy')#</cfif></td>
+                        <td><cfif isDate(qGetCBCMother.date_sent)>#DateFormat(qGetCBCMother.date_sent, 'mm/dd/yyyy')#<cfelse>in process</cfif></td>
+                        <td><cfif isDate(qGetCBCMother.date_expired)>#DateFormat(qGetCBCMother.date_expired, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
                         <td><a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCMother.hostID#&CBCFamID=#qGetCBCMother.CBCFamID#&file=batch_#qGetCBCMother.batchid#_host_mother_#qGetCBCMother.hostid#_rec.xml" target="_blank">#qGetCBCMother.requestID#</a></td>
                         <td>
                             <cfif LEN(qGetCBCMother.date_sent)>
@@ -497,8 +497,8 @@
                     <td class="columnHeader">Company</td>
                     <td class="columnHeader">Season</td>		
                     <td class="columnHeader">Authorization Received <br><font size="-2">mm/dd/yyyy</font></td>		
-                    <td class="columnHeader">CBC Sent <br><font size="-2">mm/dd/yyyy</font></td>		
-                    <td class="columnHeader">CBC Received <br><font size="-2">mm/dd/yyyy</font></td>
+                    <td class="columnHeader">CBC Submitted <br><font size="-2">mm/dd/yyyy</font></td>	
+                    <td class="columnHeader">Expiration Date <br><font size="-2">mm/dd/yyyy</font></td>		
                     <td class="columnHeader">Request ID</td>
                     <td class="columnHeader">Submit with no SSN</td>
                 </tr>
@@ -507,8 +507,8 @@
                         <td>#qGetCBCFather.companyshort#</td>
                         <td>#qGetCBCFather.season#</td>
                         <td>#DateFormat(qGetCBCFather.date_authorized, 'mm/dd/yyyy')#</td>
-                        <td><cfif NOT LEN(qGetCBCFather.date_sent)>in process<cfelse>#DateFormat(qGetCBCFather.date_sent, 'mm/dd/yyyy')#</cfif></td>
-                        <td><cfif NOT LEN(qGetCBCFather.date_received)>in process<cfelse>#DateFormat(qGetCBCFather.date_received, 'mm/dd/yyyy')#</cfif></td>
+                        <td><cfif isDate(qGetCBCFather.date_sent)>#DateFormat(qGetCBCFather.date_sent, 'mm/dd/yyyy')#<cfelse>processing</cfif></td>
+                        <td><cfif isDate(qGetCBCFather.date_expired)>#DateFormat(qGetCBCFather.date_expired, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
                         <td><a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCFather.hostID#&CBCFamID=#qGetCBCFather.CBCFamID#&file=batch_#qGetCBCFather.batchid#_host_mother_#qGetCBCFather.hostid#_rec.xml" target="_blank">#qGetCBCFather.requestID#</a></td>
                         <td>
                             <cfif LEN(qGetCBCFather.date_sent)>
@@ -581,8 +581,8 @@
                         <td class="columnHeader">Company</td>
                         <td class="columnHeader">Season</td>		
                         <td class="columnHeader">Authorization Received <br><font size="-2">mm/dd/yyyy</font></td>		
-                        <td class="columnHeader">CBC Sent <br><font size="-2">mm/dd/yyyy</font></td>		
-                        <td class="columnHeader">CBC Received <br><font size="-2">mm/dd/yyyy</font></td>
+                        <td class="columnHeader">CBC Submitted <br><font size="-2">mm/dd/yyyy</font></td>
+                        <td class="columnHeader">Expiration Date <br><font size="-2">mm/dd/yyyy</font></td>		
                         <td class="columnHeader">Request ID</td>
                         <td class="columnHeader">Submit with no SSN</td>
                     </tr>
@@ -594,8 +594,8 @@
                             <td>#qGetCBCMember.companyshort#</td>
                             <td>#qGetCBCMember.season#</td>
                             <td>#DateFormat(qGetCBCMember.date_authorized, 'mm/dd/yyyy')#</td>
-                            <td><cfif NOT LEN(qGetCBCMember.date_sent)>in process<cfelse>#DateFormat(qGetCBCMember.date_sent, 'mm/dd/yyyy')#</cfif></td>
-                            <td><cfif NOT LEN(qGetCBCMember.date_received)>in process<cfelse>#DateFormat(qGetCBCMember.date_received, 'mm/dd/yyyy')#</cfif></td>
+                            <td><cfif isDate(qGetCBCMember.date_sent)>#DateFormat(qGetCBCMember.date_sent, 'mm/dd/yyyy')#<cfelse>processing</cfif></td>
+                            <td><cfif isDate(qGetCBCMember.date_expired)>#DateFormat(qGetCBCMember.date_expired, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
                             <td><a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCMember.hostID#&CBCFamID=#qGetCBCMember.CBCFamID#&file=batch_#qGetCBCMember.batchid#_host_mother_#qGetCBCMember.hostid#_rec.xml" target="_blank">#qGetCBCMember.requestID#</a></td>
                             <td>
                                 <cfif LEN(qGetCBCMember.date_sent)>
