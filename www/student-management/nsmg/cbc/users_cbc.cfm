@@ -351,9 +351,9 @@
         <input type="hidden" name="userCount" value="#qGetCBCUser.recordcount#">
     
         <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
-            <tr><td colspan="6">&nbsp;</td></tr>
+            <tr><td colspan="7">&nbsp;</td></tr>
             <tr>
-            	<th colspan="6" bgcolor="##e2efc7">#qGetUser.firstname# #qGetUser.lastname# (###qGetUser.userID#)</th>
+            	<th colspan="7" bgcolor="##e2efc7">#qGetUser.firstname# #qGetUser.lastname# (###qGetUser.userID#)</th>
             	<th bgcolor="##e2efc7" colspan=2><a href="cbc/userInfo.cfm?userID=#qGetUser.userID#" class="jQueryModal">Edit User Info</a></th>
                 
             </tr>
@@ -361,8 +361,8 @@
                 <td valign="top">Company</td>
                 <td valign="top">Season</td>		
                 <td valign="top">Autdorization Received <br><font size="-2">mm/dd/yyyy</font></td>		
-                <td valign="top">CBC Sent <br><font size="-2">mm/dd/yyyy</font></td>		
-                <td valign="top">CBC Received <br><font size="-2">mm/dd/yyyy</font></td>
+                <td valign="top">CBC Sent <br><font size="-2">mm/dd/yyyy</font></td>
+                <td valign="top">Expiration Date<br><font size="-2">mm/dd/yyyy</font></td>		
                 <td valign="top">Request ID</td>
                 <td valign="top">Flag CBC</td>
                 <td valign="top">CBC Approved</td>
@@ -396,8 +396,8 @@
                                 <input type="hidden" name="date_authorized#currentrow#" value="#DateFormat(date_authorized, 'mm/dd/yyyy')#">
                             </cfif>
                         </td>
-                        <td><cfif NOT LEN(date_sent)>in process<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-                        <td><cfif NOT LEN(date_received)>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
+                        <td><cfif isDate(date_sent)>#DateFormat(date_sent, 'mm/dd/yyyy')#<cfelse>processing</cfif></td>
+                        <td><cfif isDate(date_expired)>#DateFormat(date_expired, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
                         <td><a href="cbc/view_user_cbc.cfm?userID=#qGetCBCUser.userID#&cbcID=#qGetCBCUser.cbcID#&file=batch_#qGetCBCUser.batchID#_user_#qGetCBCUser.userID#_rec.xml" target="_blank">#requestid#</a></td>
                         <td><input type="checkbox" name="flagCBC_#currentrow#" <cfif VAL(flagCBC)>checked="checked"</cfif>></td>
                         <td> 
@@ -414,13 +414,13 @@
             <!--- User New --->
             <cfif VAL(qGetUserSeason.recordcount)>
                 <cfif NOT LEN(qGetUser.dob)>
-                    <tr><td colspan="6">Date of birth cannot be blank. Please check the DOB before you continue.</td></tr>
+                    <tr><td colspan="7">Date of birth cannot be blank. Please check the DOB before you continue.</td></tr>
                     <input type="hidden" name="seasonID" value="0">
                 <cfelse>
                     
                     <!--- SSN Warning --->
                     <cfif NOT LEN(qGetUser.ssn)>
-                        <tr><td colspan="6"><font color="##FF0000">SSN is currently blank. Please check the SSN before you continue.</font></td></tr>
+                        <tr><td colspan="7"><font color="##FF0000">SSN is currently blank. Please check the SSN before you continue.</font></td></tr>
                     </cfif>            
                 
                     <tr>
@@ -449,17 +449,17 @@
             <cfelse>
                 <input type="hidden" name="seasonID" value="0">
             </cfif>
-            <tr><td colspan="6">&nbsp; <br><br></td></tr>
+            <tr><td colspan="7">&nbsp; <br><br></td></tr>
         
             <!--- OTHER FAMILY MEMBERS --->
             <tr>
-            	<th colspan="6" bgcolor="##e2efc7">Other Family Members 18 years old and older</th>
+            	<th colspan="7" bgcolor="##e2efc7">Other Family Members 18 years old and older</th>
                 <th bgcolor="##e2efc7"><a href="cbc/userMemberInfo.cfm?userID=#qGetUser.userID#" class="jQueryModal">Edit Member(s) Info</a></th>
             </tr>
-            <tr><td colspan="6">&nbsp;</td></tr>
+            <tr><td colspan="7">&nbsp;</td></tr>
             <cfif NOT VAL(qGetUserMembers.recordcount)>
-                <tr><td colspan="6">There are no eligible family members.</td></tr>
-                <tr><td colspan="6">&nbsp;</td></tr>
+                <tr><td colspan="7">There are no eligible family members.</td></tr>
+                <tr><td colspan="7">&nbsp;</td></tr>
             <cfelse>	
                 <cfloop query="qGetUserMembers">
                     
@@ -479,13 +479,13 @@
        
                     <input type="hidden" name="#familyID#count" value="#qGetCBCMember.recordcount#">
                     
-                    <tr><th colspan="6" bgcolor="##e2efc7">#qGetUserMembers.firstname# #qGetUserMembers.lastname#</th><th bgcolor="##e2efc7"></th></tr>
+                    <tr><th colspan="7" bgcolor="##e2efc7">#qGetUserMembers.firstname# #qGetUserMembers.lastname#</th><th bgcolor="##e2efc7"></th></tr>
                     <tr style="font-weight:bold;">
                         <td valign="top"><b>Company</b></td>
                         <td valign="top"><b>Season</b></td>		
                         <td valign="top"><b>Authorization Received</b> <br><font size="-2">mm/dd/yyyy</font></td>		
-                        <td valign="top"><b>CBC Sent</b> <br><font size="-2">mm/dd/yyyy</font></td>		
-                        <td valign="top"><b>CBC Received</b> <br><font size="-2">mm/dd/yyyy</font></td>
+                        <td valign="top"><b>CBC Submitted</b> <br><font size="-2">mm/dd/yyyy</font></td>
+                        <td valign="top"><b>Expiration Date</b> <br><font size="-2">mm/dd/yyyy</font></td>		
                         <td valign="top"><b>Request ID</b></td>
                         <th valign="top">Flag CBC</th>
                     </tr>
@@ -496,7 +496,7 @@
                         <cfloop query="qGetCBCMember">
                             <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
                                 <td>
-                                    <cfif NOT LEN(date_sent)>
+                                    <cfif NOT isDate(date_sent)>
                                         <cfselect name="#familyID#companyID#currentrow#" required="yes" message="You must select a company">
                                             <cfloop query="qGetCompanies">
                                             <option value="#companyID#" <cfif qGetCompanies.companyID EQ qGetCBCMember.companyID>selected</cfif>>#companyshort#</option>
@@ -509,15 +509,15 @@
                                 </td>
                                 <td><b>#season#</b> <input type="hidden" name="#familyID#cbcid#currentrow#" value="#cbcid#"></td>
                                 <td>
-                                    <cfif NOT LEN(date_sent)>
+                                    <cfif NOT isDate(date_sent)>
                                         <cfinput type="Text" name="#familyID#date_authorized#currentrow#" value="#DateFormat(date_authorized, 'mm/dd/yyyy')#" class="datePicker" validate="date" maxlength="10">
                                     <cfelse>
                                         #DateFormat(date_authorized, 'mm/dd/yyyy')#
                                         <input type="hidden" name="#familyID#date_authorized#currentrow#" value="#DateFormat(date_authorized, 'mm/dd/yyyy')#">
                                     </cfif>
                                 </td>
-                                <td><cfif NOT LEN(date_sent)>in process<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-                                <td><cfif NOT LEN(date_received)>in process<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>
+                                <td><cfif isDate(date_sent)>#DateFormat(date_sent, 'mm/dd/yyyy')#<cfelse>processing</cfif></td>
+                                <td><cfif isDate(date_expired)>#DateFormat(date_expired, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
                                 <td><a href="cbc/view_user_cbc.cfm?userID=#qGetCBCMember.userID#&cbcID=#qGetCBCMember.cbcID#&file=batch_#qGetCBCMember.batchID#_user_#qGetCBCMember.userID#_rec.xml" target="_blank">#requestid#</a></td>
                                 <td><input type="checkbox" name="#familyID#flagCBC#currentrow#" <cfif VAL(flagCBC)>checked="checked"</cfif>></td>
                             </tr>
@@ -553,7 +553,7 @@
                     <cfelse>
                         <input type="hidden" name="#familyID#seasonID" value="0">
                     </cfif>
-                <tr><td colspan="6">&nbsp; <br><br></td></tr>			
+                <tr><td colspan="7">&nbsp; <br><br></td></tr>			
                 </cfloop>
             </cfif>
         </table>

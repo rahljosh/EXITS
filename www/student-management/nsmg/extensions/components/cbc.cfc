@@ -80,6 +80,16 @@
         <cfargument name="familyMemberID" default="0" hint="Family Member ID is not required">
         <cfargument name="cbcType" default="" hint="cbcType is required (mother, father or member)">
         <cfargument name="cbcfamID" default="0" hint="CBCFamID is not required">
+        <cfargument name="sortBy" type="string" default="seasonID" hint="sortBy is not required">
+        <cfargument name="sortOrder" type="string" default="ASC" hint="sortOrder is not required">
+        <cfargument name="getOneRecord" type="numeric" default="0" hint="getOneRecord is not required">
+
+			<cfscript>
+				// Make sure we have a valid sortOrder value
+                if ( NOT ListFind("ASC,DESC", ARGUMENTS.sortOrder ) ) {
+                    ARGUMENTS.sortOrder = 'DESC';			  
+                }
+            </cfscript>
 
             <cfquery 
             	name="qGetCBCHostByID" 
@@ -88,11 +98,10 @@
                         h.cbcfamID, 
                         h.hostID, 
                         h.familyID,
-                        h.batchID,  <!--- phase out --->
+                        h.batchID,  <!--- phase out | storing cbc in the database --->
                         h.cbc_type,
                         h.date_authorized, 
                         h.date_sent, 
-                        h.date_received,
                         h.date_expired,
                         h.xml_received, 
                         h.requestID, 
@@ -127,7 +136,27 @@
                     </cfif>
                     
                     ORDER BY 
-                        h.seasonID DESC
+                            
+                    <cfswitch expression="#ARGUMENTS.sortBy#">
+                        
+                        <cfcase value="seasonID">                    
+                            h.seasonID #ARGUMENTS.sortOrder#
+                        </cfcase>
+                    
+                        <cfcase value="date_sent">
+                            h.date_sent #ARGUMENTS.sortOrder#
+                        </cfcase>
+        
+                        <cfdefaultcase>
+                            h.seasonID #ARGUMENTS.sortOrder#
+                        </cfdefaultcase>
+        
+                    </cfswitch> 
+                    
+                    <cfif VAL(ARGUMENTS.getOneRecord)>
+                    	LIMIT 1
+                    </cfif>
+                                        
             </cfquery>    
 
 		<cfreturn qGetCBCHostByID>
@@ -287,7 +316,6 @@
                     cbc.isNoSSN,
                     cbc.date_authorized, 
                     cbc.date_sent, 
-                    cbc.date_received,
                     cbc.date_expired,
                     h.familylastName,
                     h.fatherlastName, 
@@ -383,7 +411,6 @@
                     cbc.isNoSSN,
                     cbc.date_authorized, 
                     cbc.date_sent, 
-                    cbc.date_received,
                     cbc.date_expired,
                 	child.childID, 
                     child.name, 
@@ -461,8 +488,7 @@
             	smg_hosts_cbc  
             SET 
             	date_sent = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
-                date_received = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
-                date_expired = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#DateAdd('yyyy', 1, now())#">,
+                date_expired = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#DateAdd('yyyy', 1, now())#">, <!--- Expires in 1 Year --->
                 requestID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.reportID#">,
                 xml_received = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.xmlReceived#">
             WHERE 
@@ -510,7 +536,6 @@
                         u.requestID,
                         u.date_authorized,
                         u.date_sent,
-                        u.date_received,
                         u.date_expired,
                         u.date_approved,
                         u.xml_received,
@@ -686,7 +711,6 @@
                     cbc.companyID,
                     cbc.date_authorized, 
                     cbc.date_sent, 
-                    cbc.date_received,
                     cbc.date_expired,
                     u.firstName, 
                     u.lastName, 
@@ -770,7 +794,6 @@
                     cbc.companyID,
                     cbc.date_authorized, 
                     cbc.date_sent, 
-                    cbc.date_received,
                     cbc.date_expired,
                     u.firstName, 
                     u.lastName, 
@@ -835,8 +858,7 @@
             	smg_users_cbc  
             SET 
                 date_sent = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
-                date_received = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
-                date_expired = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#DateAdd('yyyy', 1, now())#">,
+                date_expired = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#DateAdd('yyyy', 1, now())#">, <!--- Expires in 1 Year --->
                 requestID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.reportID#">,
                 xml_received = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.xmlReceived#">
             WHERE 
@@ -1631,9 +1653,7 @@
                 u.lastName, 
                 cbc.requestid,
                 cbc.date_sent, 
-                cbc.date_received,
-                cbc.date_expired,
-                DATE_ADD(cbc.date_sent, INTERVAL 11 MONTH) AS expiration_date
+                cbc.date_expired
             FROM 
             	smg_users u
             INNER JOIN 
@@ -1689,13 +1709,16 @@
         <cfargument name="studentID" type="numeric" default="0" hint="studentID is not required">
  
 		<cfscript>
-			var returnMessage = '';
+			var returnMessage = '';			
 			var vMissingMessage = '';
 			var vExpiredMessage = '';
 			
+			// Get School Acceptance Date - Placements can only be approved with a valid CBC and school acceptance
+			var vSchoolAcceptanceDate = APPLICATION.CFC.STUDENT.getHostHistoryByID(studentID=ARGUMENTS.studentID, getActiveRecord=1).doc_school_accept_date;
+
 			// Gets Host Family Information
 			qGetHost = APPLICATION.CFC.HOST.getHosts(hostID=ARGUMENTS.hostID);
-
+			
 			// Cross Data - Get CBC submitted under USER
 			/*
 			qGetMotherCBCUnderUser = hostCBCsubmittedUnderUser(
@@ -1712,22 +1735,30 @@
 				ssn=qGetHost.fatherSSN);
 			*/
 			
-			// Get Eligible Family Member CBC
-			qGetEligibleMembers = getEligibleHostMember(hostID=ARGUMENTS.hostID, studentID=ARGUMENTS.studentID);
-			
 			// Check if CBCs are missing
-			qGetCBCMother = getCBCHostByID(hostID=ARGUMENTS.hostID,cbcType='mother');
+			qGetCBCMother = getCBCHostByID(hostID=ARGUMENTS.hostID,cbcType='mother', sortBy="date_sent", sortOrder="DESC", getOneRecord=1);
+			
 			if ( LEN(qGetHost.motherFirstName) AND LEN(qGetHost.motherLastName) AND NOT VAL(qGetCBCMother.recordCount) ) { //  AND NOT VAL(qGetMotherCBCUnderUser.recordCount)
 				// Store Missing CBC Message
-				vMissingMessage = vMissingMessage & "<p>Missing CBC for host mother</p>";
+				vMissingMessage = vMissingMessage & "<p>Missing CBC for host mother</p>";				
+			} else if ( LEN(qGetHost.motherFirstName) AND LEN(qGetHost.motherLastName) AND isDate(qGetCBCMother.date_expired) AND qGetCBCMother.date_expired LTE now() ) {
+				// Check if CBC is expired   
+				vExpiredMessage = vExpiredMessage & "<p>Host Mother - Expired on: #DateFormat(qGetCBCMother.date_expired, 'mm/dd/yyyy')#</p>";
 			}
 			
-			qGetCBCFather = getCBCHostByID(hostID=ARGUMENTS.hostID,cbcType='father');
+			qGetCBCFather = getCBCHostByID(hostID=ARGUMENTS.hostID,cbcType='father', sortBy="date_sent", sortOrder="DESC", getOneRecord=1);
+			
 			if ( LEN(qGetHost.fatherFirstName) AND LEN(qGetHost.fatherLastName) AND NOT VAL(qGetCBCFather.recordCount) ) { //  AND NOT VAL(qGetFatherCBCUnderUser.recordCount)
 				// Store Missing CBC Message
 				vMissingMessage = vMissingMessage & "<p>Missing CBC for host father</p>";
+			} else if ( LEN(qGetHost.fatherFirstName) AND LEN(qGetHost.fatherLastName) AND isDate(qGetCBCFather.date_expired) AND qGetCBCFather.date_expired LTE now() ) {
+				// Check if CBC is expired   
+				vExpiredMessage = vExpiredMessage & "<p>Host Father - Expired on: #DateFormat(qGetCBCFather.date_expired, 'mm/dd/yyyy')#</p>";				
 			}
 
+			// Get Eligible Family Member CBC
+			qGetEligibleMembers = getEligibleHostMember(hostID=ARGUMENTS.hostID, studentID=ARGUMENTS.studentID);
+			
 			// Loop through eligible member query
             For ( i=1; i LTE qGetEligibleMembers.recordCount; i=i+1 ) {
 
@@ -1735,31 +1766,21 @@
 				qGetCBCMember = getCBCHostByID(
 					hostID=ARGUMENTS.hostID,
 					familyMemberID=qGetEligibleMembers.childID[i],
-					cbcType='member'
+					cbcType='member',
+					sortBy="date_sent", 
+					sortOrder="DESC",
+					getOneRecord=1
 				);		
 				
 				if ( NOT VAL(qGetCBCMember.recordCount) ) {
 					// Store Missing CBC Message
 					vMissingMessage = vMissingMessage & "<p>Missing CBC for host member #qGetEligibleMembers.name[i]# #qGetEligibleMembers.lastName[i]#</p>";
+				} else if ( isDate(qGetCBCMember.date_expired) AND qGetCBCMember.date_expired LTE now() ) {
+					// Check if CBC is expired   
+					vExpiredMessage = vExpiredMessage & "<p>Host Member - Expired on: #DateFormat(qGetCBCMember.date_expired, 'mm/dd/yyyy')#</p>";
 				}
 				
             }
-			
-            // Check if CBCs are expired    
-            qGetExpiredCBCMother = getExpiredHostCBC(cbcType='mother', hostID=ARGUMENTS.hostID, studentID=VAL(ARGUMENTS.studentID));
-            if ( qGetExpiredCBCMother.recordCount ) {            
-				vMissingMessage = vMissingMessage & "<p>Host Mother - Expired on: #DateFormat(qGetExpiredCBCMother.expiration_date, 'mm/dd/yyyy')#</p>";
-			} 
-			
-			qGetExpiredCBCFather = getExpiredHostCBC(cbcType='father', hostID=ARGUMENTS.hostID, studentID=VAL(ARGUMENTS.studentID));
-            if ( qGetExpiredCBCFather.recordCount ) {
-				vMissingMessage = vMissingMessage & "<p>Host Father - Expired on: #DateFormat(qGetExpiredCBCFather.expiration_date, 'mm/dd/yyyy')#</p>";
-			}
-			
-            qGetExpiredCBCMember = getExpiredHostCBC(cbcType='member', hostID=ARGUMENTS.hostID, studentID=VAL(ARGUMENTS.studentID));
-            if ( qGetExpiredCBCMember.recordCount ) {
-				vMissingMessage = vMissingMessage & "<p>Host Member - Expired on: #DateFormat(qGetExpiredCBCMember.expiration_date, 'mm/dd/yyyy')#</p>";
-			}
         </cfscript>
 
 		<cfif LEN(vMissingMessage) OR LEN(vExpiredMessage)>
@@ -1769,13 +1790,17 @@
                 
                     <div style="color:##F00">
                     
-                        <p>You can only approve a placement when CBCs are in compliance. Please see below:</p>
+                        <p>You can only approve a placement when CBCs and School Acceptance are compliant. Please see below:</p>
                         
                         <!--- Display Missing CBC --->
                         #vMissingMessage#
                         
                         <!--- Display Expired CBC --->
                         #vExpiredMessage#
+
+                        <cfif NOT IsDate(vSchoolAcceptanceDate)>
+                            <p>Missing School Acceptance Form</p>
+                        </cfif>
                         
                     </div>
                     
@@ -2048,7 +2073,7 @@
                     cbc.date_authorized,
                     cbc.date_sent,
                     DATE_ADD(cbc.date_sent, INTERVAL 11 MONTH) AS renewal_date,
-					DATE_ADD(cbc.date_sent, INTERVAL 1 Year) AS expiration_date,
+					cbc.date_expired,
                     cbc.seasonID AS seasonID,
                     h.familylastname,
                     p.programName,
@@ -2172,9 +2197,9 @@
                 HAVING
                 	renewal_date <= CURRENT_DATE 
 				AND                
-                    expiration_date <= p.endDate
+                    date_expired <= p.endDate
                 AND	
-					expiration_date <= studentDepartureDate 
+					date_expired <= studentDepartureDate 
                 
                 ORDER BY 
                     p.endDate DESC,

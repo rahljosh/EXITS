@@ -120,7 +120,7 @@
 				<!--- CROSS DATA --->
 				<!--- check if was submitted under a user --->
 				<cfquery name="check_father" datasource="MySql">
-					SELECT DISTINCT u.userid, u.ssn, u.firstname, u.lastname, cbc.cbcid, cbc.date_authorized, cbc.date_received
+					SELECT DISTINCT u.userid, u.ssn, u.firstname, u.lastname, cbc.cbcid, cbc.date_authorized
 					FROM smg_users u
 					INNER JOIN smg_users_cbc cbc ON cbc.userid = u.userid
 					WHERE u.ssn != ''
@@ -128,7 +128,7 @@
 						AND (u.ssn = '#get_hosts.fatherssn#' OR (u.firstname = '#get_hosts.fatherfirstname#' AND u.lastname = '#get_hosts.familylastname#'))
 				</cfquery>
 				<cfquery name="check_mother" datasource="MySql">
-					SELECT DISTINCT u.userid, u.ssn, firstname, lastname, cbc.cbcid, cbc.date_authorized, cbc.date_received
+					SELECT DISTINCT u.userid, u.ssn, firstname, lastname, cbc.cbcid, cbc.date_authorized
 					FROM smg_users u
 					INNER JOIN smg_users_cbc cbc ON cbc.userid = u.userid
 					WHERE u.ssn != ''

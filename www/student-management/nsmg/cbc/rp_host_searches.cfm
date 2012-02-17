@@ -13,7 +13,7 @@
 <cfinclude template="../querys/get_company_short.cfm">
 
 <cfquery name="get_cbc_hosts" datasource="MySql">
-	SELECT DISTINCT cbc.cbcfamid, cbc.hostid, cbc.familyid, cbc.cbc_type, cbc.date_authorized, cbc.date_sent, cbc.date_received, cbc.requestid,
+	SELECT DISTINCT cbc.cbcfamid, cbc.hostid, cbc.familyid, cbc.cbc_type, cbc.date_authorized, cbc.date_sent, cbc.requestid,
 		h.familylastname, h.fatherfirstname, h.fatherlastname, h.motherfirstname, h.motherlastname,
 		kids.name, kids.lastname
 	FROM smg_hosts_cbc cbc

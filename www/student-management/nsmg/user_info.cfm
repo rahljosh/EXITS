@@ -66,36 +66,6 @@
         	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
     </cfquery>
 
-    <!----
-    <cfquery name="get_paperwork" datasource="#application.dsn#">
-        SELECT 
-        	p.paperworkid, 
-            p.userid, 
-            p.seasonid, 
-            p.ar_info_sheet,
-            p.ar_ref_quest1, 
-            p.ar_ref_quest2, 
-            p.ar_cbc_auth_form,
-            p.ar_agreement, 
-            p.ar_training, 
-            p.secondVisit,
-            p.cbcSig,
-            p.agreeSig,
-            s.season
-        FROM 
-        	smg_users_paperwork p
-        LEFT JOIN 
-        	smg_seasons s ON s.seasonid = p.seasonid
-        WHERE 
-        	p.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userid#">
-        <cfif CLIENT.companyid eq 10>
-        	AND
-            	p.fk_companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="10">
-        </cfif>
-        ORDER BY 
-        	p.seasonid DESC
-    </cfquery>
-    ---->
     <cfquery name="qreferences" datasource="MySQL">
     select *
     from smg_user_references
@@ -1158,46 +1128,34 @@
                 </table>
                 <!----CBC---->
                 <cfquery name="get_cbc_user" datasource="#application.dsn#">
-                    SELECT cbcid, userid, date_authorized , date_sent, date_received, requestid, smg_users_cbc.seasonid, flagcbc, smg_seasons.season, batchid
+                    SELECT cbcid, userid, date_authorized , date_sent, date_expired, requestid, smg_users_cbc.seasonid, flagcbc, smg_seasons.season, batchid
                     FROM smg_users_cbc
                     LEFT JOIN smg_seasons ON smg_seasons.seasonid = smg_users_cbc.seasonid
-                    <!---
-                    <cfif CLIENT.companyid neq 5>
-                    LEFT JOIN 
-                        user_access_rights on user_access_rights.userid = smg_users_cbc.userid = user_access_rights.userid 
-                    </cfif>
-                    --->
                     WHERE smg_users_cbc.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userid#"> 
-                    <!---
-                    <cfif CLIENT.companyid neq 5>
-                    and user_access_rights.companyid = #CLIENT.companyid#
-                    </cfif>
-                    --->
                     AND familyid = '0'
-                    
                     <cfif CLIENT.companyid eq 10>
                         AND smg_users_cbc.companyid = 10
                     </cfif>
-                    
                     ORDER BY smg_seasons.season
                 </cfquery>
                             
                 <cfquery name="check_hosts" datasource="#application.dsn#">
-                    SELECT DISTINCT h.hostid, familylastname, h.fatherssn, h.motherssn, date_sent, date_received, smg_seasons.season, requestid, cbc.batchid
+                    SELECT DISTINCT h.hostid, familylastname, h.fatherssn, h.motherssn, date_sent, date_expired, smg_seasons.season, requestid, cbc.batchid
                     FROM smg_hosts h
                     INNER JOIN smg_hosts_cbc cbc ON h.hostid = cbc.hostid
                     LEFT JOIN smg_seasons ON smg_seasons.seasonid = cbc.seasonid
                     
                     WHERE cbc.cbc_type = 'father' AND ((h.fatherssn = '#rep_info.ssn#' AND h.fatherssn != '') OR (h.fatherfirstname = '#rep_info.firstname#' AND h.fatherlastname = '#rep_info.lastname#' <cfif rep_info.dob NEQ ''>AND h.fatherdob = '#DateFormat(rep_info.dob,'yyyy/mm/dd')#'</cfif>))
                     OR cbc.cbc_type = 'mother' AND ((h.motherssn = '#rep_info.ssn#' AND h.motherssn != '') OR (h.motherfirstname = '#rep_info.firstname#' AND h.motherlastname = '#rep_info.lastname#' <cfif rep_info.dob NEQ ''>AND h.motherdob = '#DateFormat(rep_info.dob,'yyyy/mm/dd')#'</cfif>))
-                    
                 </cfquery>
+                
                 <Cfquery name="currentSeasonCBC" dbtype="query">
-                select date_received
+                select date_sent
                 from get_cbc_user
                 where seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(get_paperwork.seasonid)#"> 
                 and userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.userid#"> 
                 </Cfquery>
+                
                 <table width="100%" cellpadding=2 cellspacing="0" border="0" class="section">
                     <tr style="line-height:20px;"><td><b>Season: #get_paperwork.season#</td></tr>
                 <Cfif region_company_access.recordcount eq 1 and region_company_access.usertype neq 15>
@@ -1288,8 +1246,8 @@
                 <table width="100%" cellpadding="4" cellspacing="0" border="0" class="section">
                     <tr>
                         <td align="center" valign="top"><b>Season</b></td>		
-                        <td align="center" valign="top"><b>Date Sent</b> <br><font size="-2">mm/dd/yyyy</font></td>		
-                        <td align="center" valign="top"><b>Date Received</b> <br><font size="-2">mm/dd/yyyy</font></td>		
+                        <td align="center" valign="top"><b>Date Submitted</b> <br><font size="-2">mm/dd/yyyy</font></td>
+                        <td align="center" valign="top"><b>Expiration Date</b> <br><font size="-2">mm/dd/yyyy</font></td>		
                         <td align="center" valign="top"><b>Request ID</b></td>
                         <cfif client.usertype lte 4 and client.companyid eq 10><td align="center" valign="top"><strong>Delete</strong></td></cfif>
                     </tr>				
@@ -1299,8 +1257,8 @@
                         <cfloop query="get_cbc_user">
                         <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
                             <td align="center" style="line-height:20px;"><b>#season#</b></td>
-                            <td align="center" style="line-height:20px;"><cfif NOT LEN(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-                            <td align="center" style="line-height:20px;"><cfif NOT LEN(date_received)>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>		
+                            <td align="center" style="line-height:20px;"><cfif NOT isDate(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
+                            <td align="center" style="line-height:20px;"><cfif NOT isDate(date_expired)>processing<cfelse>#DateFormat(date_expired, 'mm/dd/yyyy')#</cfif></td>
                             <td align="center" style="line-height:20px;"><cfif NOT LEN(requestID)>processing<cfelseif flagcbc EQ 1>On Hold Contact Compliance<cfelse><cfif CLIENT.usertype lte 4><a href="cbc/view_user_cbc.cfm?userID=#get_cbc_user.userID#&cbcID=#get_cbc_user.cbcID#&file=batch_#get_cbc_user.batchid#_user_#get_cbc_user.userid#_rec.xml" target="_blank">#requestid#</a></cfif></cfif></td>
                             <cfif client.usertype lte 4 and client.companyid eq 10><td align="center" valign="top"><a href="delete_cbc.cfm?type=user&id=#requestid#&userid=#url.userid#"><img src="pics/deletex.gif" border=0/></td></cfif>
                         </tr>
@@ -1310,8 +1268,8 @@
                         <tr><td colspan="3">CBC Submitted for Host Family (###hostid#).</td></tr>
                         <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
                             <td align="center" style="line-height:20px;"><b>#season#</b></td>
-                            <td align="center" style="line-height:20px;"><cfif NOT LEN(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-                            <td align="center" style="line-height:20px;"><cfif NOT LEN(date_received)>processing<cfelse>#DateFormat(date_received, 'mm/dd/yyyy')#</cfif></td>							
+                            <td align="center" style="line-height:20px;"><cfif NOT isDate(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
+                            <td align="center" style="line-height:20px;"><cfif NOT isDate(date_expired)>processing<cfelse>#DateFormat(date_expired, 'mm/dd/yyyy')#</cfif></td>
                             <td align="center" style="line-height:20px;"><cfif NOT LEN(requestID)>processing<cfelse><cfif CLIENT.usertype lte 4>#requestid#</cfif></cfif></td>
                             <cfif client.usertype lte 4 and client.companyid eq 10><td align="center" valign="top"><a href="delete_cbc.cfm?type=user&id=#requestid#&userid=#url.userid#"><img src="pics/deletex.gif" border=0/></td></cfif>
                         </tr>

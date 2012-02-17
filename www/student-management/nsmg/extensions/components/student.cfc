@@ -2015,6 +2015,7 @@
                 <!--- Do not display change of school/ and reps --->
                 AND
                 	h.hostID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                
                 ORDER BY 
                     h.dateCreated DESC, 
                     h.historyid DESC
@@ -2026,8 +2027,9 @@
 
 	<!--- Get Placement History --->
 	<cffunction name="getHostHistoryByID" access="public" returntype="query" output="false" hint="Returns placement history">
-    	<cfargument name="studentID" hint="studentID is required">
-        <cfargument name="historyID" hint="historyID is required">
+    	<cfargument name="studentID" default="" hint="studentID is required">
+        <cfargument name="historyID" default="" hint="historyID is required">
+        <cfargument name="getActiveRecord" default="0" hint="getActiveRecord is not required">
         
         <cfquery 
         	name="qGetHostHistoryByID" 
@@ -2098,9 +2100,23 @@
                 FROM 
                     smg_hosthistory
                 WHERE 
-                    historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.historyID)#">
-                AND
-                	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+                	1 = 1
+                    
+                <cfif LEN(ARGUMENTS.historyID)>
+                	AND                    
+                    	historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.historyID)#">
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.studentID)>
+                    AND
+                        studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+                </cfif>
+                    
+                <cfif VAL(ARGUMENTS.getActiveRecord)>
+                	AND
+                    	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                </cfif>
+                
         </cfquery>
                 
         <cfreturn qGetHostHistoryByID>
@@ -2429,52 +2445,52 @@
 				// Check PaperWork
 
 				// Host Application Received
-				if ( NOT LEN(qCheckPlacementPaperwork.doc_full_host_app_date) OR qCheckPlacementPaperwork.doc_full_host_app_date GT setDeadline ) {
+				if ( NOT isDate(qCheckPlacementPaperwork.doc_full_host_app_date) OR qCheckPlacementPaperwork.doc_full_host_app_date GT setDeadline ) {
 					returnMessage = returnMessage & 'Host Application has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_full_host_app_date, 'mm/dd/yyyy')#. <br />'; 	
 				}
 
 				// Host Family Letter Received
-				if ( NOT LEN(qCheckPlacementPaperwork.doc_letter_rec_date) OR qCheckPlacementPaperwork.doc_letter_rec_date GT setDeadline ) {
+				if ( NOT isDate(qCheckPlacementPaperwork.doc_letter_rec_date) OR qCheckPlacementPaperwork.doc_letter_rec_date GT setDeadline ) {
 					returnMessage = returnMessage & 'Host Family Letter has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_letter_rec_date, 'mm/dd/yyyy')#. <br />'; 	
 				}
 
 				// Host Family Rules Form
-				if ( NOT LEN(qCheckPlacementPaperwork.doc_rules_rec_date) OR qCheckPlacementPaperwork.doc_rules_rec_date GT setDeadline ) {
+				if ( NOT isDate(qCheckPlacementPaperwork.doc_rules_rec_date) OR qCheckPlacementPaperwork.doc_rules_rec_date GT setDeadline ) {
 					returnMessage = returnMessage & 'Host Family Rules Form has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_rules_rec_date, 'mm/dd/yyyy')#. <br />'; 	
 				}
 
 				// Host Family Photos
-				if ( NOT LEN(qCheckPlacementPaperwork.doc_photos_rec_date) OR qCheckPlacementPaperwork.doc_photos_rec_date GT setDeadline ) {
+				if ( NOT isDate(qCheckPlacementPaperwork.doc_photos_rec_date) OR qCheckPlacementPaperwork.doc_photos_rec_date GT setDeadline ) {
 					returnMessage = returnMessage & 'Host Family Photos has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_photos_rec_date, 'mm/dd/yyyy')#. <br />'; 	
 				}
 
 				// School & Community Profile Form
-				if ( NOT LEN(qCheckPlacementPaperwork.doc_school_profile_rec) OR qCheckPlacementPaperwork.doc_school_profile_rec GT setDeadline ) {
+				if ( NOT isDate(qCheckPlacementPaperwork.doc_school_profile_rec) OR qCheckPlacementPaperwork.doc_school_profile_rec GT setDeadline ) {
 					returnMessage = returnMessage & 'School & Community Profile Form has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_school_profile_rec, 'mm/dd/yyyy')#. <br />'; 	
 				}
 
 				// Confidential Host Family Visit Form
-				if ( NOT LEN(qCheckPlacementPaperwork.doc_conf_host_rec) OR qCheckPlacementPaperwork.doc_conf_host_rec GT setDeadline ) {
+				if ( NOT isDate(qCheckPlacementPaperwork.doc_conf_host_rec) OR qCheckPlacementPaperwork.doc_conf_host_rec GT setDeadline ) {
 					returnMessage = returnMessage & 'Confidential Host Family Visit Form has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_conf_host_rec, 'mm/dd/yyyy')#. <br />'; 	
 				}
 
 				// Reference Form 1
-				if ( NOT LEN(qCheckPlacementPaperwork.doc_ref_form_1) OR qCheckPlacementPaperwork.doc_ref_form_1 GT setDeadline ) {
+				if ( NOT isDate(qCheckPlacementPaperwork.doc_ref_form_1) OR qCheckPlacementPaperwork.doc_ref_form_1 GT setDeadline ) {
 					returnMessage = returnMessage & 'Reference Form 1 has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_ref_form_1, 'mm/dd/yyyy')#. <br />'; 	
 				}
 				
 				// Reference Form 2
-				if ( NOT LEN(qCheckPlacementPaperwork.doc_ref_form_2) OR qCheckPlacementPaperwork.doc_ref_form_2 GT setDeadline ) {
+				if ( NOT isDate(qCheckPlacementPaperwork.doc_ref_form_2) OR qCheckPlacementPaperwork.doc_ref_form_2 GT setDeadline ) {
 					returnMessage = returnMessage & 'Reference Form 2 has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_ref_form_2, 'mm/dd/yyyy')#. <br />'; 	
 				}
 				
 				// Income Verification Form
-				if ( NOT LEN(qCheckPlacementPaperwork.doc_income_ver_date) OR qCheckPlacementPaperwork.doc_income_ver_date GT setDeadline ) {
+				if ( NOT isDate(qCheckPlacementPaperwork.doc_income_ver_date) OR qCheckPlacementPaperwork.doc_income_ver_date GT setDeadline ) {
 					returnMessage = returnMessage & 'Income Verification Form has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_income_ver_date, 'mm/dd/yyyy')#. <br />'; 	
 				}
 				
 				// School Acceptance Form
-				if ( NOT LEN(qCheckPlacementPaperwork.doc_school_accept_date) OR qCheckPlacementPaperwork.doc_school_accept_date GT setDeadline ) {
+				if ( NOT isDate(qCheckPlacementPaperwork.doc_school_accept_date) OR qCheckPlacementPaperwork.doc_school_accept_date GT setDeadline ) {
 					returnMessage = returnMessage & 'School Acceptance Form has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_school_accept_date, 'mm/dd/yyyy')#. <br />'; 	
 				}
 				
@@ -2501,17 +2517,17 @@
 				if ( totalFamilyMembers EQ 1 ) {
 
 					// Single Person Placement Verification
-					if ( NOT LEN(qCheckPlacementPaperwork.doc_single_place_auth) OR qCheckPlacementPaperwork.doc_single_place_auth GT setDeadline ) {
+					if ( NOT isDate(qCheckPlacementPaperwork.doc_single_place_auth) OR qCheckPlacementPaperwork.doc_single_place_auth GT setDeadline ) {
 						returnMessage = returnMessage & 'Single Person Placement Verification has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_single_place_auth, 'mm/dd/yyyy')#. <br />'; 	
 					}
 
 					// Single Person Placement Reference 1
-					if ( NOT LEN(qCheckPlacementPaperwork.doc_single_ref_form_1) OR qCheckPlacementPaperwork.doc_single_ref_form_1 GT setDeadline ) {
+					if ( NOT isDate(qCheckPlacementPaperwork.doc_single_ref_form_1) OR qCheckPlacementPaperwork.doc_single_ref_form_1 GT setDeadline ) {
 						returnMessage = returnMessage & 'Single Person Placement Reference 1 has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_single_ref_form_1, 'mm/dd/yyyy')#. <br />'; 	
 					}
 
 					// Single Person Placement Reference 2
-					if ( NOT LEN(qCheckPlacementPaperwork.doc_single_ref_form_2) OR qCheckPlacementPaperwork.doc_single_ref_form_2 GT setDeadline ) {
+					if ( NOT isDate(qCheckPlacementPaperwork.doc_single_ref_form_2) OR qCheckPlacementPaperwork.doc_single_ref_form_2 GT setDeadline ) {
 						returnMessage = returnMessage & 'Single Person Placement Reference 2 has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_single_ref_form_2, 'mm/dd/yyyy')#. <br />'; 	
 					}
 					
