@@ -101,7 +101,7 @@
         
         <!--- Email Errors --->
         <cfmail 
-            from="#APPLICATION.EMAIL.support#"
+            from="support@case-usa.org" <!--- #APPLICATION.EMAIL.support# --->
             to="#APPLICATION.EMAIL.cbcCaseNotifications#" 
             subject="Scheduled CBC #userType# Issues"
             type="html">
