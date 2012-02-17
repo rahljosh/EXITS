@@ -1072,15 +1072,17 @@
                                 <td><strong>Relationship</strong></td>
                                 <td><strong>CBC</strong></td>
                             </tr>
-                            <Cfif family_members.recordcount eq 0>
+                            <cfif family_members.recordcount eq 0>
                                 <tr><td colspan="4">No other household residents on file for this user.</td></tr>
-                            <cfelse>
-                                <cfloop query="family_members">
+                            </cfif>
+                            
+                            <cfloop query="family_members">
                                 <tr>
                                     <td>#firstname# #lastname#</td>
-                                    <td>#DateDiff('yyyy', dob, now() )# yrs.</td>
+                                    <td><cfif isDate(dob)>#DateDiff('yyyy', dob, now() )# yrs.<cfelse>n/a</cfif></td>
                                     <Td>#relationship#</Td>
-                                    <Td><cfif #DateDiff('yyyy', dob, now() )# LTE 17>
+                                    <Td>
+                                        <cfif isDate(dob) AND DateDiff('yyyy', dob, now() ) LTE 17>
                                             N/A
                                         <cfelse>
                                             <cfif auth_received eq 0>
@@ -1092,8 +1094,7 @@
                                         </cfif>
                                     </Td>
                                 </tr>
-                                </cfloop>	
-                            </cfif>
+                            </cfloop>	
                         </table>
                     </td>
                 </tr>
