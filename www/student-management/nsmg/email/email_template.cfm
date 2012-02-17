@@ -33,6 +33,33 @@
         
         <p>#client.companyshort# Technical Support</p>
     </cfcase>
+    <!--- Send/resend login info:  used when called by: forms/user_form.cfm, user_info.cfm --->
+    <cfcase value="accountActive">
+        <cfquery name="get_user" datasource="#application.dsn#">
+            SELECT smg_users.*, smg_companies.companyname
+            FROM smg_users LEFT JOIN smg_companies ON smg_users.defaultcompany = smg_companies.companyid
+            WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#userid#">
+        </cfquery>
+    
+        
+    
+        <p>Your account is now active! </p>
+        
+        <p>Login ID / Username: #get_user.username#<br />
+    Password: #get_user.password#</p>
+        
+        
+        <p>You can login immediately by visiting:  <a href="#CLIENT.exits_url#">#CLIENT.exits_url#</a>  and log in with the information above.</p> 
+        
+        <p>If you have any questions or problems with logging in please contact <a href="mailto:#client.support_email#">#client.support_email#</a> or by replying to this email.</p>
+        
+        <p>If you have questions regarding your account access levels, please contact your Regional Advisor or Regional Director.</p> 
+        
+        <br />
+        <p>Sincerely-</p>
+        
+        <p>#client.companyshort# Technical Support</p>
+    </cfcase>
     
     <!----Send information that user needs to supply more information before they will be allowed to login.  CBC, refernce, employment history---->
     <cfcase value="newUserMoreInfo">
