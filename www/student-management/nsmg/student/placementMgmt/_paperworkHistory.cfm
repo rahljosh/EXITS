@@ -63,9 +63,6 @@
 		// Get Second Host Family Visit
 		qGetHistorySecondVisitReport = APPLICATION.CFC.PROGRESSREPORT.getSecondHostFamilyVisitReport(studentID=qGetStudentInfo.studentID, hostID=qGetHostHistory.hostID);
 
-		// Get Eligible Host Family Members
-		qGetEligibleCBCFamilyHistoryMembers = APPLICATION.CFC.CBC.getEligibleHostMember(hostID=qGetHostHistory.hostID,studentID=qGetStudentInfo.studentID);
-
 		// Get Host Kids at Home
 		qGetHostHistoryKidsAtHome = APPLICATION.CFC.HOST.getHostMemberByID(hostID=qGetHostHistory.hostID,liveAtHome='yes');
 
@@ -82,6 +79,15 @@
 		
 		vTotalHistoryFamilyMembers = vTotalHistoryFamilyMembers + VAL(qGetHostHistoryKidsAtHome.recordCount);
 		// End of Calculate total of family members
+		
+		// Get Host Mother CBC
+		qGetCBCHistoryMother = APPLICATION.CFC.CBC.getCBCHostByID(hostID=qGetHostHistory.hostID, cbcType='mother', sortBy="date_sent", sortOrder="DESC", getOneRecord=1);
+
+		// Get Host Father CBC
+		qGetCBCHistoryFather = APPLICATION.CFC.CBC.getCBCHostByID(hostID=qGetHostHistory.hostID, cbcType='father', sortBy="date_sent", sortOrder="DESC", getOneRecord=1);
+
+		// Get Eligible Host Family Members
+		qGetEligibleCBCFamilyHistoryMembers = APPLICATION.CFC.CBC.getEligibleHostMember(hostID=qGetHostHistory.hostID,studentID=qGetStudentInfo.studentID);
 	</cfscript>
     
     <!--- Param CBC Member --->
@@ -676,46 +682,50 @@
             </tr>				
         </table>
         
+		<!--- CBC Forms --->
         <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center"> 
-            <!--- CBC Forms --->
             <tr bgcolor="##edeff4">
                 <td class="reportTitleLeftClean" width="15%">&nbsp;</td>
-                <td class="reportTitleLeftClean" width="55%">CBC Forms</td>
+                <td class="reportTitleLeftClean" width="55%">CBC Authorization Forms</td>
                 <td class="reportTitleLeftClean" width="30%">Date</td>
             </tr>
         </table>
         
         <table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center"> 
             <!--- Host Father --->
-            <tr> 
-                <td width="15%" class="paperworkLeftColumn">
-                    <input type="checkbox" name="check_fathercbc_form" id="check_fathercbc_form" class="editPage displayNone" onclick="setTodayDate(this.id, 'fathercbc_form');" <cfif isDate(FORM.fathercbc_form)>checked</cfif> >
-                </td>
-                <td width="55%"><label for="check_fathercbc_form">Host Father</label></td>
-                <td width="30%">
-                    <span class="readOnly displayNone">#DateFormat(FORM.fathercbc_form, 'mm/dd/yyyy')#</span>
-                    <input type="text" name="fathercbc_form" id="fathercbc_form" class="datePicker editPage displayNone" value="#DateFormat(FORM.fathercbc_form, 'mm/dd/yyyy')#">
-                </td>
-            </tr>
+            <cfif LEN(qGetHostHistoryInfo.fatherFirstName)>						
+                <tr> 
+                    <td width="15%" class="paperworkLeftColumn">
+                        <input type="checkbox" name="check_fathercbc_form" id="check_fathercbc_form" class="editPage displayNone" onclick="setTodayDate(this.id, 'fathercbc_form');" <cfif isDate(FORM.fathercbc_form)>checked</cfif> >
+                    </td>
+                    <td width="55%"><label for="check_fathercbc_form">Host Father</label></td>
+                    <td width="30%">
+                        <span class="readOnly displayNone">#DateFormat(FORM.fathercbc_form, 'mm/dd/yyyy')#</span>
+                        <input type="text" name="fathercbc_form" id="fathercbc_form" class="datePicker editPage displayNone" value="#DateFormat(FORM.fathercbc_form, 'mm/dd/yyyy')#">
+                    </td>
+                </tr>
+            </cfif>
             
             <!--- Host Mother --->
-            <tr> 
-                <td class="paperworkLeftColumn">
-                    <input type="checkbox" name="check_mothercbc_form" id="check_mothercbc_form" class="editPage displayNone" onclick="setTodayDate(this.id, 'mothercbc_form');" <cfif isDate(FORM.mothercbc_form)>checked</cfif> >
-                </td>
-                <td><label for="check_mothercbc_form">Host Mother</label></td>
-                <td>
-                    <span class="readOnly displayNone">#DateFormat(FORM.mothercbc_form, 'mm/dd/yyyy')#</span>
-                    <input type="text" name="mothercbc_form" id="mothercbc_form" class="datePicker editPage displayNone" value="#DateFormat(FORM.mothercbc_form, 'mm/dd/yyyy')#">
-                </td>
-            </tr>
+            <cfif LEN(qGetHostHistoryInfo.motherFirstName)>
+                <tr> 
+                    <td width="15%" class="paperworkLeftColumn">
+                        <input type="checkbox" name="check_mothercbc_form" id="check_mothercbc_form" class="editPage displayNone" onclick="setTodayDate(this.id, 'mothercbc_form');" <cfif isDate(FORM.mothercbc_form)>checked</cfif> >
+                    </td>
+                    <td width="55%"><label for="check_mothercbc_form">Host Mother</label></td>
+                    <td width="30%">
+                        <span class="readOnly displayNone">#DateFormat(FORM.mothercbc_form, 'mm/dd/yyyy')#</span>
+                        <input type="text" name="mothercbc_form" id="mothercbc_form" class="datePicker editPage displayNone" value="#DateFormat(FORM.mothercbc_form, 'mm/dd/yyyy')#">
+                    </td>
+                </tr>
+            </cfif>
         </table>
-        
+
+        <!--- CBC Forms Host Members 18+ --->
         <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center">                    
-            <!--- Host Members --->
             <tr bgcolor="##edeff4">
                 <td class="reportTitleLeftClean" width="15%">&nbsp;</td>
-                <td class="reportTitleLeftClean" width="55%">CBC Host Members 18+</td>
+                <td class="reportTitleLeftClean" width="55%">CBC Authorization Forms - Host Members 18+</td>
                 <td class="reportTitleLeftClean" width="30%">Date</td>
             </tr>
         </table>
@@ -739,14 +749,72 @@
             </cfif>
        </table>
        
-       <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center"> 
+        <!--- CBC - Most Recent Reports --->
+        <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center"> 
             <tr bgcolor="##edeff4">
+                <td class="reportTitleLeftClean" width="15%">&nbsp;</td>
+                <td class="reportTitleLeftClean" width="55%">CBC - Most Recent Reports</td>
+                <td class="reportTitleLeftClean" width="30%">Date</td>
+            </tr>
+        </table>
+        
+        <table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center"> 
+            <!--- Host Father --->
+            <cfif VAL(qGetCBCHistoryFather.recordCount)>
+                <tr> 
+                    <td width="15%" class="paperworkLeftColumn">&nbsp;</td>
+                    <td width="55%"><label for="">Host Father</label></td>
+                    <td width="30%">
+                        <span class="readOnly displayNone">#DateFormat(qGetCBCHistoryFather.date_sent, 'mm/dd/yyyy')# to #DateFormat(qGetCBCHistoryFather.date_expired, 'mm/dd/yyyy')#</span>
+                        <input type="text" name="fatherCBC" id="fatherCBC" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCHistoryFather.date_sent, 'mm/dd/yyyy')#" disabled="disabled">
+                        to
+                        <input type="text" name="fatherCBC" id="fatherCBC" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCHistoryFather.date_expired, 'mm/dd/yyyy')#" disabled="disabled">
+                    </td>
+                </tr>
+            </cfif>
+                                    
+            <!--- Host Mother --->
+            <cfif VAL(qGetCBCHistoryMother.recordCount)>
+                <tr> 
+                    <td width="15%" class="paperworkLeftColumn">&nbsp;</td>
+                    <td width="55%"><label for="motherCBC">Host Mother</label></td>
+                    <td width="30%">
+                        <span class="readOnly displayNone">#DateFormat(qGetCBCHistoryMother.date_sent, 'mm/dd/yyyy')# to #DateFormat(qGetCBCHistoryMother.date_expired, 'mm/dd/yyyy')#</span>
+                        <input type="text" name="motherCBC" id="motherCBC" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCHistoryMother.date_sent, 'mm/dd/yyyy')#" disabled="disabled">
+                        to
+                        <input type="text" name="motherCBC" id="motherCBC" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCHistoryMother.date_expired, 'mm/dd/yyyy')#" disabled="disabled">
+                    </td>
+                </tr>
+            </cfif>
+            
+            <!--- Host Members --->
+            <cfloop query="qGetEligibleCBCFamilyHistoryMembers">
+                <cfscript>
+                    // Get CBC Member
+                    qGetCBCMember = APPLICATION.CFC.CBC.getCBCHostByID(hostID=qGetHostHistory.hostID, familyMemberID=qGetEligibleCBCFamilyHistoryMembers.childID, cbcType='member', sortBy="date_sent", sortOrder="DESC", getOneRecord=1);
+                </cfscript>
+                <tr> 
+                    <td width="15%" class="paperworkLeftColumn">&nbsp;</td>
+                    <td width="55%"><label for="memberCBC#qGetEligibleCBCFamilyHistoryMembers.currentRow#">#qGetEligibleCBCFamilyHistoryMembers.name# #qGetEligibleCBCFamilyHistoryMembers.lastname# - #qGetEligibleCBCFamilyHistoryMembers.age# years old</label></td>
+                    <td width="30%">
+                        <span class="readOnly displayNone">#DateFormat(qGetCBCMember.date_sent, 'mm/dd/yyyy')# to #DateFormat(qGetCBCMember.date_expired, 'mm/dd/yyyy')#</span>
+                        <input type="text" name="memberCBC#qGetEligibleCBCFamilyHistoryMembers.currentRow#" id="memberCBC#qGetEligibleCBCFamilyHistoryMembers.currentRow#" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCMember.date_sent, 'mm/dd/yyyy')#" disabled="disabled">
+                        to
+                        <input type="text" name="memberCBC#qGetEligibleCBCFamilyHistoryMembers.currentRow#" id="memberCBC#qGetEligibleCBCFamilyHistoryMembers.currentRow#" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCMember.date_expired, 'mm/dd/yyyy')#" disabled="disabled">
+                    </td>
+                </tr>
+            </cfloop>
+                
+        </table>   
+
+		<table width="90%" cellpadding="2" cellspacing="0" class="section" align="center"> 
+			<tr bgcolor="##edeff4">
                 <td class="reportTitleLeftClean" width="15%">&nbsp;</td>
                 <td class="reportTitleLeftClean" width="85%">Student Application</td>
             </tr>
-       </table>
+       	</table>
        
-      <table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center">  	
+      	<table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center">  	
             <!--- Copy to School ---->
             <tr>
                 <td width="15%" class="paperworkLeftColumn">
@@ -762,9 +830,9 @@
                 <td class="reportTitleLeftClean" width="55%">Arrival Orientation</td>
                 <td class="reportTitleLeftClean" width="30%">Date</td>
             </tr>
-       </table>
+       	</table>
        
-       <table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center">                    
+       	<table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center">                    
             <!--- Student Orientation --->
             <tr> 
                 <td width="15%" class="paperworkLeftColumn">

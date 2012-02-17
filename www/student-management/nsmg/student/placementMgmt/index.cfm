@@ -266,6 +266,8 @@
 				AND 
 					isDate(qGetStudentInfo.doc_rules_rec_date) 
 				AND 
+					isDate(qGetStudentInfo.doc_rules_sign_date) 
+				AND 
 					isDate(qGetStudentInfo.doc_photos_rec_date) 
 				AND 
 					isDate(qGetStudentInfo.doc_school_accept_date)

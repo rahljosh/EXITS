@@ -630,14 +630,14 @@
                 <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center"> 
                     <tr bgcolor="##edeff4">
                         <td class="reportTitleLeftClean" width="15%">&nbsp;</td>
-                        <td class="reportTitleLeftClean" width="55%">CBC Forms</td>
+                        <td class="reportTitleLeftClean" width="55%">CBC Authorization Forms</td>
                         <td class="reportTitleLeftClean" width="30%">Date</td>
                     </tr>
     			</table>
                 
                 <table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center"> 
-                    <cfif LEN(qGetHostInfo.fatherFirstName)>
-						<!--- Host Father --->
+                    <!--- Host Father --->
+					<cfif LEN(qGetHostInfo.fatherFirstName)>						
                         <tr> 
                             <td width="15%" class="paperworkLeftColumn">
                                 <input type="checkbox" name="check_fathercbc_form" id="check_fathercbc_form" class="editPage displayNone" onclick="setTodayDate(this.id, 'fathercbc_form');" <cfif isDate(FORM.fathercbc_form)>checked</cfif> >
@@ -653,23 +653,23 @@
                     <!--- Host Mother --->
                     <cfif LEN(qGetHostInfo.motherFirstName)>
 						<tr> 
-							<td class="paperworkLeftColumn">
+							<td width="15%" class="paperworkLeftColumn">
 								<input type="checkbox" name="check_mothercbc_form" id="check_mothercbc_form" class="editPage displayNone" onclick="setTodayDate(this.id, 'mothercbc_form');" <cfif isDate(FORM.mothercbc_form)>checked</cfif> >
 							</td>
-							<td><label for="check_mothercbc_form">Host Mother</label></td>
-							<td>
+							<td width="55%"><label for="check_mothercbc_form">Host Mother</label></td>
+							<td width="30%">
 								<span class="readOnly displayNone">#DateFormat(FORM.mothercbc_form, 'mm/dd/yyyy')#</span>
 								<input type="text" name="mothercbc_form" id="mothercbc_form" class="datePicker editPage displayNone" value="#DateFormat(FORM.mothercbc_form, 'mm/dd/yyyy')#">
 							</td>
 						</tr>
                     </cfif>
 				</table>
-                
+
                 <!--- CBC Forms Host Members 18+ --->
                 <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center">                    
                     <tr bgcolor="##edeff4">
                         <td class="reportTitleLeftClean" width="15%">&nbsp;</td>
-                        <td class="reportTitleLeftClean" width="55%">CBC Forms Host Members 18+</td>
+                        <td class="reportTitleLeftClean" width="55%">CBC Authorization Forms - Host Members 18+</td>
                         <td class="reportTitleLeftClean" width="30%">Date</td>
                     </tr>
                 </table>
@@ -692,12 +692,12 @@
                         <tr><td colspan="3" align="center">No eligible host family members found.</td></tr>
                     </cfif>
                </table>
-
-                <!--- CBC Reports (most recent) --->
+               
+                <!--- CBC - Most Recent Reports --->
                 <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center"> 
                     <tr bgcolor="##edeff4">
                         <td class="reportTitleLeftClean" width="15%">&nbsp;</td>
-                        <td class="reportTitleLeftClean" width="55%">CBC Reports (most recent)</td>
+                        <td class="reportTitleLeftClean" width="55%">CBC - Most Recent Reports</td>
                         <td class="reportTitleLeftClean" width="30%">Date</td>
                     </tr>
     			</table>
@@ -709,7 +709,7 @@
                             <td width="15%" class="paperworkLeftColumn">&nbsp;</td>
                             <td width="55%"><label for="">Host Father</label></td>
                             <td width="30%">
-                                <span class="readOnly displayNone">#DateFormat(qGetCBCFather.date_sent, 'mm/dd/yyyy')#</span>
+                                <span class="readOnly displayNone">#DateFormat(qGetCBCFather.date_sent, 'mm/dd/yyyy')# to #DateFormat(qGetCBCFather.date_expired, 'mm/dd/yyyy')#</span>
                                 <input type="text" name="fatherCBC" id="fatherCBC" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCFather.date_sent, 'mm/dd/yyyy')#" disabled="disabled">
                                 to
                                 <input type="text" name="fatherCBC" id="fatherCBC" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCFather.date_expired, 'mm/dd/yyyy')#" disabled="disabled">
@@ -720,10 +720,10 @@
                     <!--- Host Mother --->
                     <cfif VAL(qGetCBCMother.recordCount)>
                         <tr> 
-                            <td class="paperworkLeftColumn">&nbsp;</td>
-                            <td><label for="motherCBC">Host Mother</label></td>
-                            <td>
-                                <span class="readOnly displayNone">#DateFormat(qGetCBCMother.date_sent, 'mm/dd/yyyy')#</span>
+                            <td width="15%" class="paperworkLeftColumn">&nbsp;</td>
+                            <td width="55%"><label for="motherCBC">Host Mother</label></td>
+                            <td width="30%">
+                                <span class="readOnly displayNone">#DateFormat(qGetCBCMother.date_sent, 'mm/dd/yyyy')# to #DateFormat(qGetCBCMother.date_expired, 'mm/dd/yyyy')#</span>
                                 <input type="text" name="motherCBC" id="motherCBC" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCMother.date_sent, 'mm/dd/yyyy')#" disabled="disabled">
                                 to
                                 <input type="text" name="motherCBC" id="motherCBC" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCMother.date_expired, 'mm/dd/yyyy')#" disabled="disabled">
@@ -731,39 +731,34 @@
                         </tr>
                     </cfif>
                     
-                    <!--- Host Members Add Later --->
-                    <!---
-					<cfloop query="">
-						<cfscript>
-						
-						</cfscript>
-					</cfloop>
-					--->
-				</table>   
-                             
-                <table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center">
+                    <!--- Host Members --->
                     <cfloop query="qGetEligibleCBCFamilyMembers">
+                        <cfscript>
+                            // Get CBC Member
+                            qGetCBCMember = APPLICATION.CFC.CBC.getCBCHostByID(hostID=qGetStudentInfo.hostID, familyMemberID=qGetEligibleCBCFamilyMembers.childID, cbcType='member', sortBy="date_sent", sortOrder="DESC", getOneRecord=1);
+                        </cfscript>
                         <tr> 
-                            <td width="15%" class="paperworkLeftColumn">
-                                <input type="checkbox" name="member#qGetEligibleCBCFamilyMembers.currentRow#check" id="member#qGetEligibleCBCFamilyMembers.currentRow#check" class="editPage displayNone" onclick="setTodayDate(this.id, 'cbc_form_received#qGetEligibleCBCFamilyMembers.childID#');" <cfif isDate(FORM['cbc_form_received' & qGetEligibleCBCFamilyMembers.childID])>checked</cfif> >
-                            </td>
-                            <td width="55%"><label for="member#qGetEligibleCBCFamilyMembers.currentRow#check">#qGetEligibleCBCFamilyMembers.name# #qGetEligibleCBCFamilyMembers.lastname# - #qGetEligibleCBCFamilyMembers.age# years old</label></td>
+                            <td width="15%" class="paperworkLeftColumn">&nbsp;</td>
+                            <td width="55%"><label for="memberCBC#qGetEligibleCBCFamilyMembers.currentRow#">#qGetEligibleCBCFamilyMembers.name# #qGetEligibleCBCFamilyMembers.lastname# - #qGetEligibleCBCFamilyMembers.age# years old</label></td>
                             <td width="30%">
-                                <span class="readOnly displayNone">#DateFormat(qGetEligibleCBCFamilyMembers.cbc_form_received, 'mm/dd/yyyy')#</span>
-                                <input type="text" name="cbc_form_received#qGetEligibleCBCFamilyMembers.childID#" id="cbc_form_received#qGetEligibleCBCFamilyMembers.childID#" class="datePicker editPage displayNone" value="#DateFormat(FORM['cbc_form_received' & qGetEligibleCBCFamilyMembers.childID], 'mm/dd/yyyy')#">
+                                <span class="readOnly displayNone">#DateFormat(qGetCBCMember.date_sent, 'mm/dd/yyyy')# to #DateFormat(qGetCBCMember.date_expired, 'mm/dd/yyyy')#</span>
+                                <input type="text" name="memberCBC#qGetEligibleCBCFamilyMembers.currentRow#" id="memberCBC#qGetEligibleCBCFamilyMembers.currentRow#" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCMember.date_sent, 'mm/dd/yyyy')#" disabled="disabled">
+                                to
+                                <input type="text" name="memberCBC#qGetEligibleCBCFamilyMembers.currentRow#" id="memberCBC#qGetEligibleCBCFamilyMembers.currentRow#" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCMember.date_expired, 'mm/dd/yyyy')#" disabled="disabled">
                             </td>
                         </tr>
                     </cfloop>
-               </table>
-               
-               <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center"> 
+                        
+				</table>   
+
+				<table width="90%" cellpadding="2" cellspacing="0" class="section" align="center"> 
                     <tr bgcolor="##edeff4">
                         <td class="reportTitleLeftClean" width="15%">&nbsp;</td>
                         <td class="reportTitleLeftClean" width="85%">Student Application</td>
                     </tr>
-               </table>
+               	</table>
                
-              <table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center">  	
+              	<table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center">  	
                     <!--- Copy to School ---->
                     <tr>
                     	<td width="15%" class="paperworkLeftColumn">
@@ -779,9 +774,9 @@
                         <td class="reportTitleLeftClean" width="55%">Arrival Orientation</td>
                         <td class="reportTitleLeftClean" width="30%">Date</td>
                     </tr>
-               </table>
+               	</table>
                
-               <table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center">                    
+               	<table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center">                    
                     <!--- Student Orientation --->
                     <tr> 
                         <td width="15%" class="paperworkLeftColumn">
