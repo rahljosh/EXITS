@@ -105,7 +105,7 @@
             <cfif VAL(isUpcomingProgram)>
             
                 <cfmail 
-                    from="#APPLICATION.EMAIL.support#"
+                    from="support@case-usa.org" <!--- #APPLICATION.EMAIL.support# --->
                     to="#APPLICATION.EMAIL.cbcCaseNotifications#"
                     subject="Scheduled CBC Host #userType# Issues"
                     type="html">
