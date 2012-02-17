@@ -685,8 +685,7 @@ INNER JOIN smg_users su ON ss.intrep = su.userid
 WHERE ss.active =1
 AND sp.seasonid =#form.seasonId#
 AND sp.hold !=1
-AND	(ss.companyid < 5
-	OR ss.companyid = 10 OR ss.companyid = 12)
+AND ss.companyid IN (1,2,3,4,10,12)
 ORDER BY businessname, endMonth, datediffer
 </cfquery>
 
