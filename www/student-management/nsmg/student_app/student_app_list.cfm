@@ -64,7 +64,7 @@
         SELECT  
         	s.studentid, 
             s.familylastname, 
-            s.uniqueid, 
+            s.uniqueID, 
             s.firstname, 
             s.email, 
             s.phone, 
@@ -357,6 +357,7 @@
                                 <td><a href="#setURL('firstName')#" title="Sort by First Name"><strong>First Name</strong></a></td>
                                 <td><a href="#setURL('sex')#" title="Sort by Gender"><strong>Gender</strong></a></td>
                                 <td><a href="#setURL('email')#" title="Sorty by Email"><strong>Email</strong></a></td>
+                                <td><a href="#setURL('programApplied')#" title="Sort by Program"><strong>Program Applied</strong></a></td>
                                 <td><strong>Login Info</strong></td>
                                 <td><a href="#setURL('phone')#" title="Sort By Phone"><strong>Phone</strong></a></td>
                                 <td><a href="#setURL('app_sent_student')#" title="Sort by App Sent"><strong>App Sent</strong></a></td>
@@ -380,24 +381,25 @@
                                 </cfquery>
                                 
                                 <tr bgcolor="#iif(qStudents.currentrow MOD 2 ,DE("ffffe6") ,DE("e2efc7") )#">
-                                    <td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#studentid#</a></td>
-                                    <td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#familylastname#</a></td>
-                                    <td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#firstname#</a></td>
-                                    <td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#sex#</a></td>
-                                    <td>#email#</td>
-                                    <td><a href="javascript:LoginInfo('student_app/login_information.cfm?unqid=#uniqueid#&status=#URL.status#');">View Login</a></td>
-                                    <td>#phone#</td>
-                                    <td>#DateFormat(app_sent_student, 'mm/dd/yyyy')#</td>
+                                    <td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#qStudents.uniqueID#&id=0');">#qStudents.studentid#</a></td>
+                                    <td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#qStudents.uniqueID#&id=0');">#qStudents.familylastname#</a></td>
+                                    <td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#qStudents.uniqueID#&id=0');">#qStudents.firstname#</a></td>
+                                    <td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#qStudents.uniqueID#&id=0');">#qStudents.sex#</a></td>
+                                    <td><a href="mailto:#qStudents.email#">#qStudents.email#</a></td>
+                                    <td>#qStudents.programApplied# - #qStudents.programname#</td>
+                                    <td><a href="javascript:LoginInfo('student_app/login_information.cfm?unqid=#qStudents.uniqueID#&status=#URL.status#');">View Login</a></td>
+                                    <td>#qStudents.phone#</td>
+                                    <td>#DateFormat(qStudents.app_sent_student, 'mm/dd/yyyy')#</td>
                                     
                                     <cfif CLIENT.usertype EQ 8>
                                         <td>
                                             <!--- EF CENTRAL OFFICE --->
                                             <cfif LEN(URL.ef)> 
-                                                #businessname#
+                                                #qStudents.businessname#
                                             <cfelseif branchid EQ 0>
                                                 Main Office
                                             <cfelse>
-                                                #branchname#
+                                                #qStudents.branchname#
                                             </cfif> 
                                         </td>
                                     </cfif>		
@@ -424,7 +426,9 @@
 			<td><a href="#setURL('firstName')#" title="Sort by First Name"><strong>First Name</strong></a></td>
 			<td><a href="#setURL('sex')#" title="Sort by Gender"><strong>Gender</strong></a></td>
 			<td><a href="#setURL('email')#" title="Sorty by Email"><strong>Email</strong></a></td>
-			<td><strong>Login Info</strong></td>
+            <td><a href="#setURL('programApplied')#" title="Sort by Program"><strong>Program Applied</strong></a></td>
+            
+            <td><strong>Login Info</strong></td>
             
 			<cfif CLIENT.usertype GTE 5>
 				<td><a href="#setURL('phone')#" title="Sort By Phone"><strong>Phone</strong></a></td>
@@ -438,7 +442,6 @@
 			
 			<cfif CLIENT.usertype LTE 4>
 				<td><a href="#setURL('businessName')#" title="Sort by Business Name"><strong>Intl. Rep.</strong></a></td>
-				<td><a href="#setURL('programApplied')#" title="Sort by Program"><strong>Program Applied</strong></a></td>
 			</cfif>
             
             <cfif URL.status LT 10>
@@ -480,38 +483,38 @@
             <tr bgcolor="#iif(qStudents.currentrow MOD 2 ,DE("ffffe6") ,DE("e2efc7") )#">
         </cfif>
         
-            <td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#studentid#</a></td>
-            <td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#familylastname#</a></td>
-            <td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#firstname#</a></td>
-            <td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#sex#</a></td>
-            <td>#email#</td>
-            <td><a href="javascript:LoginInfo('student_app/login_information.cfm?unqid=#uniqueid#&status=#URL.status#');">View Login</a></td>
+            <td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#qStudents.uniqueID#&id=0');">#qStudents.studentid#</a></td>
+            <td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#qStudents.uniqueID#&id=0');">#qStudents.familylastname#</a></td>
+            <td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#qStudents.uniqueID#&id=0');">#qStudents.firstname#</a></td>
+            <td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#qStudents.uniqueID#&id=0');">#qStudents.sex#</a></td>
+            <td>#qStudents.email#</td>
+            <td>#qStudents.programApplied# - #qStudents.programname#</td>            
+            <td><a href="javascript:LoginInfo('student_app/login_information.cfm?unqid=#qStudents.uniqueID#&status=#URL.status#');">View Login</a></td>
             
             <cfif CLIENT.usertype GTE 5>
-                <td>#phone#</td>
+                <td>#qStudents.phone#</td>
             </cfif>
             
-            <td>#DateFormat(app_sent_student, 'mm/dd/yyyy')#</td>
+            <td>#DateFormat(qStudents.app_sent_student, 'mm/dd/yyyy')#</td>
             
             <cfif CLIENT.usertype EQ 8>
                 <td>
                     <cfif LEN(URL.ef)> <!--- EF CENTRAL OFFICE --->
-                        #businessname#
+                        #qStudents.businessname#
                     <cfelseif branchid EQ 0>
                         Main Office
                     <cfelse>
-                        #branchname#
+                        #qStudents.branchname#
                     </cfif> 
                 </td>
             </cfif>		
             
             <cfif CLIENT.usertype LTE 4>
-                <td>#businessname#</td>
-                <td>#programApplied# - #programname#</td>
+                <td>#qStudents.businessname#</td>
             </cfif>		
             
             <cfif URL.status LT 10>
-                <td>#DateFormat(lastchanged, 'mm/dd/yyyy')# @ #TimeFormat(lastchanged, 'h:mm:ss tt')#</td>
+                <td>#DateFormat(qStudents.lastchanged, 'mm/dd/yyyy')# @ #TimeFormat(qStudents.lastchanged, 'h:mm:ss tt')#</td>
             </cfif>
             
             <cfif URL.status LTE 5 OR URL.status EQ 6 OR URL.status EQ 9> <!--- inactivate application --->
@@ -525,8 +528,8 @@
             </cfif>
             
             <cfif (URL.status EQ 7 OR URL.status EQ 10 OR URL.status EQ 11) AND CLIENT.usertype LTE 4>
-                <td>#companyshort#</td>
-                <td><a href="javascript:OpenApp('student_app/cover_page.cfm?unqid=#uniqueid#');">Cover Page</a></td>
+                <td>#qStudents.companyshort#</td>
+                <td><a href="javascript:OpenApp('student_app/cover_page.cfm?unqid=#uniqueID#');">Cover Page</a></td>
             </cfif> 
         </tr>
     
@@ -561,12 +564,12 @@
 			<td><a href="#setURL('firstName')#" title="Sort by First Name"><strong>First Name</strong></a></td>
 			<td><a href="#setURL('sex')#" title="Sort by Gender"><strong>Gender</strong></a></td>
 			<td><a href="#setURL('email')#" title="Sorty by Email"><strong>Email</strong></a></td>
+            <td><a href="#setURL('programApplied')#" title="Sort by Program"><strong>Program Applied</strong></a></td>
             <td><strong>Login Info</strong></td>
             <td><strong>Future</strong></td>
 			<td><a href="#setURL('app_sent_student')#" title="App Submitted"><strong>App Received</strong></a></td>
             <td><strong>Prev. Denied</strong></td>
 			<td><a href="#setURL('businessName')#" title="Sort by Business Name"><strong>Intl. Rep.</strong></a></td>
-            <td><a href="#setURL('programApplied')#" title="Sort by Program"><strong>Program Applied</strong></a></td>
 			<td><strong>Cover Page</strong></td>
 			<td><strong>Confirm Receipt</strong></td>
 		</tr>
@@ -578,19 +581,19 @@
         where studentid = #studentid# and status = 9
         </cfquery>
 			<tr bgcolor="#iif(qStudents.currentrow MOD 2 ,DE("FFFFFF") ,DE("e2efc7") )#">
-				<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#studentid#</a></td>
-				<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#familylastname#</a></td>
-				<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#firstname#</a></td>
-				<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#sex#</a></td>
+				<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueID#&id=0');">#studentid#</a></td>
+				<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueID#&id=0');">#familylastname#</a></td>
+				<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueID#&id=0');">#firstname#</a></td>
+				<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueID#&id=0');">#sex#</a></td>
 				<td>#email#</td>
-				<td><a href="javascript:LoginInfo('student_app/login_information.cfm?unqid=#uniqueid#&status=#URL.status#');">View Login</a></td>
+                <td>#programApplied# - #programname#</td>
+				<td><a href="javascript:LoginInfo('student_app/login_information.cfm?unqid=#uniqueID#&status=#URL.status#');">View Login</a></td>
                 <td><a href="student_app/change_future.cfm?studentid=#studentid#&status=#URL.status#" >Change</a></td>
 				<td>#DateFormat(app_sent_student, 'mm/dd/yyyy')#</td>
                 <td><cfif qCheckPrevDenied.recordcount eq 0>N/A<cfelse>#DateFormat(qcheckPrevDenied.date, 'mm/dd/yyyy')#</cfif></td>
 				<td>#businessname#</td>
-                <td>#programApplied# - #programname#</td>
-				<td><a href="javascript:OpenApp('student_app/cover_page.cfm?unqid=#uniqueid#');">Page</a></td>
-				<td><a href="javascript:AppReceived('student_app/querys/qr_app_received.cfm?unqid=#uniqueid#&status=#URL.status#');" onClick="return areYouSure(this);">Check</a></td>
+				<td><a href="javascript:OpenApp('student_app/cover_page.cfm?unqid=#uniqueID#');">Page</a></td>
+				<td><a href="javascript:AppReceived('student_app/querys/qr_app_received.cfm?unqid=#uniqueID#&status=#URL.status#');" onClick="return areYouSure(this);">Check</a></td>
 			</tr>
             <cfif qCheckPrevDenied.recordcount neq 0>
             <tr bgcolor="#iif(qStudents.currentrow MOD 2 ,DE("FFFFFF") ,DE("e2efc7") )#">
@@ -619,27 +622,27 @@
 			<td><a href="#setURL('firstName')#" title="Sort by First Name"><strong>First Name</strong></a></td>
 			<td><a href="#setURL('sex')#" title="Sort by Gender"><strong>Gender</strong></a></td>
 			<td><a href="#setURL('email')#" title="Sorty by Email"><strong>Email</strong></a></td>
+            <td><a href="#setURL('programApplied')#" title="Sort by Program"><strong>Program Applied</strong></a></td>
 			<td><strong>Login Info</strong></td>
             <td><strong>Future</strong></td>
-			<td><a href="#setURL('app_sent_student')#" title="App Submitted"><strong>App Submitted</strong></td>
+			<td><a href="#setURL('app_sent_student')#" title="App Submitted"><strong>App Submitted</strong></a></td>
 			<td><a href="#setURL('businessName')#" title="Sort by Business Name"><strong>Intl. Rep.</strong></a></td>
-            <td><a href="#setURL('programApplied')#" title="Sort by Program"><strong>Program Applied</strong></a></td>
 			<td><strong>Cover Page</strong></td>
 		</tr>
         
 		<cfloop query="qStudents">
 			<tr bgcolor="#iif(qStudents.currentrow MOD 2 ,DE("ffffe6") ,DE("e2efc7") )#">
-				<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#studentid#</a></td>
-				<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#familylastname#</a></td>
-				<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#firstname#</a></td>
-				<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueid#&id=0');">#sex#</a></td>
+				<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueID#&id=0');">#studentid#</a></td>
+				<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueID#&id=0');">#familylastname#</a></td>
+				<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueID#&id=0');">#firstname#</a></td>
+				<td><a href="javascript:OpenApp('student_app/index.cfm?curdoc=initial_welcome&unqid=#uniqueID#&id=0');">#sex#</a></td>
 				<td>#email#</td>
-				<td><a href="javascript:LoginInfo('student_app/login_information.cfm?unqid=#uniqueid#&status=#URL.status#');">View Login</a></td>
+                <td>#programApplied# - #programname#</td>
+				<td><a href="javascript:LoginInfo('student_app/login_information.cfm?unqid=#uniqueID#&status=#URL.status#');">View Login</a></td>
                 <td><a href="student_app/change_future.cfm?studentid=#studentid#&status=#URL.status#" >Change</a></td>
 				<td>#DateFormat(app_sent_student, 'mm/dd/yyyy')#</td>
 				<td>#businessname#</td>
-				<td>#programApplied# - #programname#</td>
-				<td><a href="javascript:OpenApp('student_app/cover_page.cfm?unqid=#uniqueid#');">Page</a></td>
+				<td><a href="javascript:OpenApp('student_app/cover_page.cfm?unqid=#uniqueID#');">Page</a></td>
 			</tr>
 		</cfloop>
         
