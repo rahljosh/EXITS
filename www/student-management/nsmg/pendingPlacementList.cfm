@@ -1,4 +1,272 @@
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		pending_hosts.cfm
+	Author:		Marcus Melo
+	Date:		February 13, 2012
+	Desc:		Pending Host Families
+
+	Updated:  	
+
+----- ------------------------------------------------------------------------- --->
+
+<cfsilent>
+
+	<!--- Import CustomTag --->
+    <cfimport taglib="extensions/customTags/gui/" prefix="gui" />	
+    
+    <!--- Param URL variables --->
+    <cfparam name="URL.sortBy" default="">
+    <cfparam name="URL.sortOrder" default="ASC">
+
+    <!--- Param FORM Variables --->
+    <cfparam name="FORM.regionID" default="#CLIENT.regionID#">
+    <cfparam name="FORM.userType" default="#CLIENT.userType#">
+	
+    <cfscript>
+		// Get Regions
+		qGetRegionList = APPLICATION.CFC.REGION.getUserRegions(companyID=CLIENT.companyID, userID=CLIENT.userID, usertype=FORM.userType);
+	
+        // make sure we have a valid sortOrder value
+		if ( NOT ListFind("ASC,DESC", URL.sortOrder) ) {
+			URL.sortOrder = "ASC";				  
+		}
+			
+		vSetClassNotification = '';
+	</cfscript>
+
+    <!--- Field Viewing --->
+    <cfif NOT listFind("1,2,3,4", FORM.userType)>
+        
+		<!--- Get Usertype From Selected Region --->
+        <cfquery name="qGetUserTypeByRegion" datasource="#APPLICATION.DSN#"> 
+            SELECT 
+                uar.regionID, 
+                uar.usertype, 
+                u.usertype AS user_access
+            FROM 
+                user_access_rights uar
+            INNER JOIN 
+                smg_usertype u ON  u.usertypeid = uar.usertype
+            WHERE 
+                userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+            AND 
+                companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">	
+            AND 
+                uar.usertype != <cfqueryparam cfsqltype="cf_sql_integer" value="9">
+            AND 
+                uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#">
+        </cfquery>  
+        
+        <cfscript>
+			// Set new access level based on region choice
+			FORM.userType = qGetUserTypeByRegion.userType;
+			
+			// User Does Not Have Access - Set default values
+			if ( NOT VAL(qGetUserTypeByRegion.recordCount) ) {
+				FORM.userType = CLIENT.userType;
+				FORM.regionID = CLIENT.regionID;
+			}
+		</cfscript>
+        
+    </cfif>
+    
+	<cfquery name="qGetPendingHosts" datasource="#APPLICATION.DSN#">
+		SELECT 
+            s.studentid, 
+            s.uniqueID,
+            s.hostid, 
+            s.firstname AS studentFirstName, 
+            s.familylastname AS studentLastName, 
+            s.regionAssigned, 
+            s.placeRepID,
+            s.dateplaced,
+        	s.host_fam_approved,
+            DATEDIFF(CURRENT_DATE(), s.date_host_fam_approved) AS timeOnPending, 
+            s.date_host_fam_approved, 
+			sh.datePISEmailed,
+            sh.doc_school_accept_date,
+            h.familylastname AS hostFamilyLastName, 
+            h.fatherFirstName, 
+            h.fatherLastName, 
+            h.motherLastName, 
+            h.motherFirstName, 
+            h.city, 
+            h.state,  
+			p.programname,
+            c.companyShort,
+            r.regionName,
+            advisor.userID AS advisorID,            
+            ( 
+            	SELECT
+                	ah.actions
+                FROM
+                	applicationHistory ah
+				WHERE
+                	ah.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="smg_hostHistory">
+                AND
+                	ah.foreignID = sh.historyID
+                ORDER BY
+                	ah.dateCreated DESC
+                LIMIT 1
+			) AS placementAction                                	
+		FROM 
+        	smg_students s
+		INNER JOIN 
+        	smg_hosts h ON s.hostid = h.hostid
+		INNER JOIN 
+        	smg_programs p ON p.programid = s.programid
+		INNER JOIN 
+        	smg_hostHistory sh ON sh.studentID = s.studentID
+            AND
+            	sh.isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+		INNER JOIN
+        	smg_companies c ON c.companyID = s.companyID            
+		INNER JOIN
+        	smg_regions r ON r.regionID = s.regionAssigned
+        INNER JOIN user_access_rights uar ON s.placeRepID = uar.userid
+            AND 
+                s.regionassigned = uar.regionID
+        LEFT JOIN 
+            smg_users advisor ON uar.advisorID = advisor.userid
+        WHERE 
+        	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        AND 
+        	s.host_fam_approved > <cfqueryparam cfsqltype="cf_sql_integer" value="4">	
+           		
+		<cfif CLIENT.companyID EQ 5>
+            AND
+                s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+		<cfelse>        	
+            AND
+                s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        </cfif>
+        
+        <cfswitch expression="#FORM.userType#">
+        	
+            <!--- Filter Out Placements Waiting on AR --->
+            <cfcase value="1,2,3">
+            	<!---
+                AND
+                	s.host_fam_approved != <cfqueryparam cfsqltype="cf_sql_integer" value="10">
+				--->
+            </cfcase>
+            
+            <!--- Filter by Facilitator ---> 
+        	<cfcase value="4">
+                AND
+                    r.regionFacilitator = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+            	<!--- 
+                AND
+                	s.host_fam_approved != <cfqueryparam cfsqltype="cf_sql_integer" value="10">
+				--->
+            </cfcase>
+        	
+            <!--- Filter by Regional Manager --->
+        	<cfcase value="5">
+                AND 
+                    s.regionAssigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#">
+            </cfcase>
+        
+        	<!--- Filter by Regional Advisor --->
+        	<cfcase value="6">
+            	AND
+                	s.placeRepID IN (
+                        SELECT DISTINCT 
+                        	userID 
+                        FROM 
+                        	user_access_rights
+                        WHERE
+                        	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                        OR
+                        	( 
+                                advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#"> 
+                            AND 
+                                companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+                       		)
+                    )
+            </cfcase>
+        
+        	<!--- Filter by Area Representative --->
+        	<cfcase value="7">
+                AND 
+                    (
+                        s.arearepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                    OR
+                        s.placerepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                    )
+            </cfcase>
+        
+        </cfswitch>
+		
+        ORDER BY
+        
+        <cfswitch expression="#URL.sortBy#">
+            
+            <cfcase value="studentID">                    
+                s.studentID #URL.sortOrder#,
+                studentLastName
+            </cfcase>
+        
+            <cfcase value="studentLastName">
+                studentLastName #URL.sortOrder#
+            </cfcase>
+
+            <cfcase value="studentFirstName">
+                studentFirstName #URL.sortOrder#,
+                studentLastName
+            </cfcase>
+
+            <cfcase value="regionName">
+                r.regionName #URL.sortOrder#,
+                studentLastName
+            </cfcase>
+
+            <cfcase value="programName">
+                p.programName #URL.sortOrder#,
+                studentLastName
+            </cfcase>
+
+            <cfcase value="hostFamilyLastName">
+                hostFamilyLastName #URL.sortOrder#,
+                studentLastName
+            </cfcase>
+
+            <cfcase value="placementAction">
+                placementAction #URL.sortOrder#,
+                studentLastName
+            </cfcase>
+
+            <cfcase value="datePISEmailed">
+                sh.datePISEmailed #URL.sortOrder#,
+                studentLastName
+            </cfcase>
+
+            <cfcase value="actions">
+                s.host_fam_approved #URL.sortOrder#,
+                p.programName ASC,
+                studentLastName
+            </cfcase>
+
+            <cfcase value="timeOnPending">
+                timeOnPending #URL.sortOrder#,
+                studentLastName
+            </cfcase>
+			
+            <!--- Default by program | if field default by approval level --->
+            <cfdefaultcase>
+                s.host_fam_approved,
+                p.programName ASC,
+                studentLastName
+            </cfdefaultcase>
+
+        </cfswitch>  
+	</cfquery>
+    
+</cfsilent>   
+
 <script language="javascript">	
+	<!-- Begin
+
     // Document Ready!
     $(document).ready(function() {
 
@@ -14,327 +282,229 @@
 
 	});
 	
-	<!-- Begin
-		function formHandler(form){
-			var URL = document.form.sele_region.options[document.form.sele_region.selectedIndex].value;
-			window.location.href = URL;
-		}
+	// Submit Form
+	var submitForm = function() { 
+		$("#selectRegionForm").submit();
+	}
 	// End -->
 </script> 	
 
+<cfoutput>
 
-<div class="application_section_header">Pending Placements</div>
+	<!--- Table Header --->
+    <gui:tableHeader
+        imageName="current_items.gif"
+        tableTitle="Pending Placements"
+        width="100%"
+    />    
 
-<!--- Office --->
-<cfif client.usertype LTE 4>
+	<!--- Field Viewing - REGIONS DROP DOWN LIST --->
+    <cfif NOT listFind("1,2,3,4", FORM.userType) AND qGetRegionList.recordcount GT 1>
+          <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">        
+              <tr>
+                  <td>                      
+                      <form name="selectRegionForm" id="selectRegionForm" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
+                          You have access to multiple regions filter by Region: &nbsp; 
+                          <select name="regionID" id="regionID" onChange="submitForm();" class="xLargeField">
+                              <cfloop query="qGetRegionList">
+                                  <option value="#qGetRegionList.regionID#" <cfif FORM.regionID EQ qGetRegionList.regionID>selected</cfif>>#qGetRegionList.regionname# - #qGetRegionList.userAccessLevel#</option>
+                              </cfloop>
+                          </select>
+                      </form>	
+                  </td>
+              </tr>
+          </table>            
+    </cfif> 
+    
+    <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
+    	<tr>
+        	<td>
+				<cfif FORM.userType EQ 7>
+                    <p>
+                        The following list shows the placements that you have submitted and the status of that placement.  
+                        If the report is marked Rejected, you can click on piece of the Host Information to see 
+                        why it was rejected and then make the necessary changes or remove the placement.
+                    </p>
+                <cfelse>
+                    <p>
+                        The following list shows the placements that you have submitted and the status of those placements.  
+                        If the report is marked Rejected, you can click on the Host Information column to see 
+                        why it was rejected. From there you can make the necessary changes or remove the placement.
+                    </p>   	
+                </cfif>
+			</td>
+		</tr>
+	</table>                                
 
-	<cfquery name="pending_hosts" datasource="MySQL">
-		SELECT 
-            s.studentid, 
-            s.uniqueID,
-            s.hostid, 
-            s.firstname, 
-            s.familylastname as student_lastname, 
-            s.regionassigned, 
-            s.dateplaced,
-        	s.host_fam_approved,
-            s.date_host_fam_approved, 
-			h.familylastname, 
-            h.fatherfirstname, 
-            h.fatherlastname, 
-            h.motherlastname, 
-            h.motherfirstname, 
-            h.city, 
-            h.state,  
-			p.programname,
-            c.companyShort,
-            r.regionName
-		FROM 
-        	smg_students s
-		INNER JOIN 
-        	smg_hosts h ON s.hostid = h.hostid
-		INNER JOIN 
-        	smg_programs p ON p.programid = s.programid
-		LEFT OUTER JOIN
-        	smg_companies c ON c.companyID = s.companyID            
-		LEFT OUTER JOIN
-        	smg_regions r ON r.regionID = s.regionAssigned
-        WHERE 
-        	s.active = '1'		
-        AND 
-        	s.host_fam_approved > 4			
-		<cfif CLIENT.companyID EQ 5>
-            AND
-                s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
-        <cfelse>
-            AND
-                s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-        </cfif>
-		ORDER BY 
-        	host_fam_approved
-	</cfquery>
+    <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
+        <tr>
+            <td class="sectionHeader" colspan="5" align="center" bgcolor="##afcee3">
+                <strong>S T U D E N T &nbsp;&nbsp;&nbsp; I N F O</strong>
+            </td>
+            <td class="sectionHeader" colspan="5" align="center" bgcolor="##ede3d0">
+                <strong>P L A C E M E N T &nbsp;&nbsp;&nbsp; I N F O</strong>
+            </td>
+        </tr>
+        <tr style="font-weight:bold;">
+            <td class="sectionHeader"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='studentID',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Student ID">Student ID</a></td>
+            <td class="sectionHeader"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='studentLastName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Last Name">Last Name</a></td>
+            <td class="sectionHeader"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='studentFirstName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By First Name">First Name</a></td>
+            <td class="sectionHeader"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='regionName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Region">Region</a></td>
+            <td class="sectionHeader"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='programName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Program">Program</a></td>
+            <td class="sectionHeader"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='hostFamilyLastName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Host Family">Host Family</a></td>
+            <td class="sectionHeader" width="30%"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='placementAction',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Reason">Reason</a></td>
+            <td class="sectionHeader"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='datePISEmailed',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Date PIS Emailed">Date PIS Emailed</a></td>
+	        <td class="sectionHeader">Actions</td>
+            <td class="sectionHeader" align="center"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='timeOnPending',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Time on pending..">Time on Pending</a></td>
+        </tr>
+        
+        <cfloop query="qGetPendingHosts">
+        
+			<cfscript>
+	           	// Reset Class Notification
+				vSetClassNotification = '';
+			</cfscript>        
+        
+            <tr bgcolor="#iif(qGetPendingHosts.currentRow MOD 2 ,DE("eeeeee") ,DE("white") )#">
+                <td class="sectionHeader" ><a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">#qGetPendingHosts.studentid#</a></td>
+                <td class="sectionHeader"><a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">#qGetPendingHosts.studentLastName#</a></td>
+                <td class="sectionHeader"><a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">#qGetPendingHosts.studentFirstName#</a></td>
+                <td class="sectionHeader">
+                    <cfif CLIENT.companyID EQ 5>
+                        #qGetPendingHosts.companyShort# - 
+                    </cfif>
+                    #qGetPendingHosts.regionname#
+                </td>
+                <td class="sectionHeader">#qGetPendingHosts.programname#</td>
+                <td class="sectionHeader">
+                    <a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">
+                        #APPLICATION.CFC.HOST.displayHostFamilyName(
+                            hostID=qGetPendingHosts.hostID,
+                            fatherFirstName=qGetPendingHosts.fatherFirstName,
+                            fatherLastName=qGetPendingHosts.fatherLastName,
+                            motherFirstName=qGetPendingHosts.motherFirstName,
+                            motherLastName=qGetPendingHosts.motherLastName,
+                            familyLastName=qGetPendingHosts.hostFamilyLastName
 
-<cfelse>
+                        )#
+                    </a>            
+                </td>
+                <td class="sectionHeader">#qGetPendingHosts.placementAction#</td>
+                <td class="sectionHeader">
+                
+                    <!--- Only check paperwork for placements pending HQ approval --->
+                    <cfif qGetPendingHosts.host_fam_approved EQ 5>
+                    
+                        <cfscript>
+                            // Check if we have CBC and School Acceptance in order to allow PIS to be emailed out
+                            vDisplayEmailLink = 0;
 
-	<!--- List All Field Regions --->
-	<cfquery name="list_regions" datasource="MySql"> 
-		SELECT 
-        	uar.regionid, 
-            uar.usertype,
-            smg_regions.regionname
-		FROM 
-        	user_access_rights uar
-		INNER JOIN 
-        	smg_regions ON smg_regions.regionid = uar.regionid
-		WHERE 
-        	userid = '#client.userid#' 
-        AND 
-        	uar.companyid = '#client.companyid#'
-        AND 
-        	uar.usertype != '9'
-		ORDER BY 
-        	default_region DESC, regionname
-	</cfquery>
-		
-	<cfif NOT IsDefined('url.regionid')><cfset url.regionid = list_regions.regionid></cfif>
+                            // Check if Host Family is in compliance
+                            vHostInCompliance = APPLICATION.CFC.CBC.checkHostFamilyCompliance(hostID=qGetPendingHosts.hostID, studentID=qGetPendingHosts.studentID);
+                            
+                            if ( NOT LEN(vHostInCompliance) AND IsDate(qGetPendingHosts.doc_school_accept_date) ) {
+                                vDisplayEmailLink = 1;
+                            }
+                        </cfscript>
+                        
+                        <cfif NOT isDate(qGetPendingHosts.datePISEmailed) AND VAL(vDisplayEmailLink)>
+                            <a href="reports/placementInfoSheet.cfm?uniqueID=#qGetPendingHosts.uniqueID#&closeModal=1" class="jQueryModalPL">[Click to Email]</a>
+                        <cfelseif NOT VAL(vDisplayEmailLink)>
+                            waiting on CBC <br /> and/or school acceptance
+                            <cfset vSetClassNotification = "attention">
+                        <cfelseif isDate(qGetPendingHosts.datePISEmailed)>
+                            #DateFormat(qGetPendingHosts.datePISEmailed, 'mm/dd/yyyy')#
+                            <cfset vSetClassNotification = "attentionGreen">
+                        </cfif>
+                    
+                    <cfelse>
+                        n/a
+                    </cfif>
+                </td>
+                <td class="sectionHeader">
+                	
+                    <cfswitch expression="#qGetPendingHosts.host_fam_approved#">
+						
+						<!--- Pending HQ Approval --->
+                        <cfcase value="5">
+                        	
+                            <cfif listFind("1,2,3,4", FORM.userType)>
+                            	<a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">[Click to Approve]</a>
+                           	<cfelse>
+                           		Pending HQ Approval
+                            </cfif>
+                            
+                        </cfcase>                    
+
+						<!--- Pending Regional Manager Approval --->
+                        <cfcase value="6">
+                            
+                            <cfif FORM.userType EQ 5>
+                            	<a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">[Click to Approve]</a>
+                           	<cfelse>
+                           		Pending RM Approval
+                            </cfif>
+                            
+                        </cfcase>                    
+                    	
+                        <!--- Pending Regional Advisor Approval --->
+                        <cfcase value="7">
+                        	
+                            <cfif CLIENT.userID EQ qGetPendingHosts.advisorID>
+                            	<a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">[Click to Approve]</a>
+                           	<cfelseif VAL(qGetPendingHosts.advisorID)>
+								Pending RA Approval
+							<cfelse>
+                           		Pending RM Approval
+                            </cfif>
+                            
+                        </cfcase>                    
+                    
+                    	<!--- Pending Area Representative Approval --->
+                        <cfcase value="10">
+                        	
+                            <cfif CLIENT.userID EQ qGetPendingHosts.placeRepID>
+                            	<a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">[Click to Approve]</a>
+                           	<cfelse>
+                           		Pending AR Approval
+                            </cfif>
+                            
+                        </cfcase>                    
+						
+                        <!--- Rejected --->
+                        <cfcase value="99">
+                        	Rejected
+                            <cfset vSetClassNotification = "rejected">
+                        </cfcase>                    
+
+                    </cfswitch>
+                </td>
+                <td class="sectionHeader #vSetClassNotification#" align="center">	
+                    #APPLICATION.CFC.UDF.calculateTimePassed(dateStarted=qGetPendingHosts.date_host_fam_approved, dateEnded=now())#    
+                </td>
+            </tr>
+        </cfloop>
+        
+    </table>
+
+	<!--- Table Footer --->
+    <gui:tableFooter 
+        width="100%"
+    />
 	
-	<!--- Get Usertype From Selected Region --->
-	<cfquery name="get_user_region" datasource="MySql"> 
-		SELECT uar.regionid, uar.usertype, u.usertype as user_access
-		FROM user_access_rights uar
-		INNER JOIN smg_usertype u ON  u.usertypeid = uar.usertype
-		WHERE userid = '#client.userid#'
-			AND companyid = '#client.companyid#'	
-			<cfif IsDefined('url.regionid')>AND uar.regionid = <cfqueryparam value="#url.regionid#" cfsqltype="cf_sql_integer"></cfif>
-			AND uar.usertype != '9'
-	</cfquery>  
-	
-	<cfset client.usertype = #get_user_region.usertype#>
+    <p style="margin-top:10px;">*you can override anyone below you in the approval process. You can not approve past your level.</p>
 
-	<!--- REGIONS DROP DOWN LIST --->
-	<cfif list_regions.recordcount GT 1>
-		<cfoutput>
-		<form name="form">
-			You have access to multiple regions filter by region: &nbsp; 
-			<select name="sele_region" onChange="javascript:formHandler()">
-			<cfloop query="list_regions">
-				<option value="?curdoc=pending_hosts&regionid=#regionid#" <cfif url.regionid is #regionid#>selected</cfif>>#regionname#</option>
-			</cfloop>
-			</select>
-			&nbsp; &nbsp; Access Level : &nbsp; #get_user_region.user_access#<br>
-		</form>	
-		</cfoutput>
-	</cfif> 
-	
-	<cfquery name="pending_hosts" datasource="MySQL">
-		SELECT 
-            s.studentid,
-            s.uniqueID, 
-            s.hostid, 
-            s.host_fam_approved, 
-            s.date_host_fam_approved, 
-            s.firstname, 
-            s.familylastname as student_lastname, 
-            s.regionassigned, 
-            s.dateplaced,
-			h.familylastname, 
-            h.fatherfirstname, 
-            h.fatherlastname, 
-            h.motherlastname, 
-            h.motherfirstname, 
-            h.city, 
-            h.state,  
-			p.programname,
-            c.companyShort,
-            r.regionName
-		FROM 
-        	smg_students s
-		INNER JOIN 
-        	smg_hosts h ON s.hostid = h.hostid
-		INNER JOIN 
-        	smg_programs p ON p.programid = s.programid
-		LEFT OUTER JOIN
-        	smg_companies c ON c.companyID = s.companyID 
-		LEFT OUTER JOIN
-        	smg_regions r ON r.regionID = s.regionAssigned
-		WHERE 
-        	s.active = '1'
-        AND 
-        	s.host_fam_approved > 4
-        <!--- Managers --->
-        <cfif client.usertype EQ 5>
-            AND 
-            	(s.regionassigned = '#get_user_region.regionid#') 
-        <!--- Advisor --->
-        <cfelseif client.usertype EQ 6>
-            <cfquery name="get_reps" datasource="mysql">
-                SELECT DISTINCT userid 
-                FROM user_access_rights
-                WHERE advisorid = '#client.userid#' 
-                    AND companyid = '#client.companyid#'
-                    OR userid = '#client.userid#'
-            </cfquery>
-            <cfif get_reps.recordcount>
-            AND 
-            	(s.arearepid = 
-                <cfloop query="get_reps">
-                #userid# <cfif get_reps.currentrow EQ #get_reps.recordcount#><cfelse> or s.arearepid = </cfif>
-                </cfloop>)
-            </cfif>
-        <!--- Area Rep --->
-        <cfelseif client.usertype EQ 7>
-            AND 
-            	(s.arearepid = '#client.userid#' or s.placerepid = '#client.userid#')
-        </cfif>
-		ORDER BY 
-        	host_fam_approved
-	</cfquery>
+    <table align="center" cellpadding="4" cellspacing="0" class="nav_bar">
+        <th bgcolor="##CC0000" ><font color="##FFFFFF">Key</font></th>
+        <tr class="attention">
+            <td align="Center">Waiting for CBC and/or School Acceptance Form</td>
+        </tr>
+        <tr class="attentionGreen">
+            <td align="Center">Waiting for Host Family Application</td>
+        </tr>
+            <tr class="rejected">
+            <td align="Center">Rejected</td>
+        </tr>
+    </table>
 
-</cfif>
-
-<br>
-<cfif client.usertype EQ 7>
-	The following list shows the placements that you have submitted and the status of that placement.  If the report is marked Rejected, you can click on piece of the Host Information to see 
-	why it was rejected and then make the neccesary changes or remove the placement.
-<cfelse>
-	The following students have been tentatively placed with this hosts indicated.  Please review the host information by clicking on any host information.  To approve, please visit the student's page or click on the link below and go to Placement Management, you will have the option to Approve or Reject the Placement.
-</cfif>
-<br><br>
-
-
-<style type="text/css">
-<!--
-div.scroll {
-	height: 325px;
-	width: 600px;
-	overflow: auto;
-}
--->
-</style>
-
-<table border=0 cellpadding=4 cellspacing=0 width=100%>
-	<tr>
-		<td colspan=5 align="center" bgcolor="#afcee3"><strong>S T U D E N T &nbsp;&nbsp;&nbsp; I N F O</strong></td><td colspan=6 align="center" bgcolor="#ede3d0"><strong>H O S T &nbsp;&nbsp;&nbsp; I N F O</strong></td>
-	</tr>
-	<tr>
-        <td>Student ID</td>
-		<td>Last Name</td>
-		<td>First Name</td>
-		<td>Region</td>
-		<td>Program</td>
-		<td>Host ID</td>
-		<td>Last Name(s)</td>
-		<td>First Name(s)</td>
-        <td>Last Approval</td>
-        <td>Rejected in..</td>
-    </tr>
-
-<cfoutput query="pending_hosts">
-
-    <cfquery name="kidsAtHome" datasource="mysql">
-        SELECT 
-        	count(childid) AS kidcount
-        FROM 
-        	smg_host_children
-        WHERE 
-        	liveathome = 'yes'
-        AND 
-            hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#hostid#">
-        AND
-            isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">    
-    </cfquery>
-    
-	<!----check for single placement---->
-	<cfset father=0>
-    <cfset mother=0>
-    
-    <cfif pending_hosts.fatherfirstname is not ''>
-        <cfset father = 1>
-    </cfif>
-    
-    <cfif pending_hosts.motherfirstname is not ''>
-        <cfset mother = 1>
-    </cfif>
-    
-    <cfset totalfam = mother + father + kidsAtHome.kidcount>
-
-    <cfif totalfam gt 1 AND IsDate(date_host_fam_approved)>
-    	<cfset DisplayEndDate = #DateAdd('d', 4, date_host_fam_approved)#>
-        <cfset singleFam = 0>
-   	<cfelseif IsDate(date_host_fam_approved)>
-    	<cfset DisplayEndDate = #DateAdd('d', 14, date_host_fam_approved)#>
-    </cfif>
-
-    <tr bgcolor="<cfif host_fam_Approved EQ '7'>FCC8C8<cfelseif host_fam_Approved is '6'>FDFF6D<cfelseif host_fam_approved is '5'>A0E1A1<cfelseif host_fam_approved is '99'>FB8822</cfif>">
-        <td>#studentid#</td>
-        <td>#student_lastname#</td>
-        <td>#firstname#</td>
-        <td>
-            <cfif CLIENT.companyID EQ 5>
-                #companyShort# - 
-            </cfif>
-            #regionname#
-        </td>
-        <td>#programname#</td>
-        <td><a href="student/placementMgmt/index.cfm?uniqueID=#uniqueID#" class="jQueryModalPL">#hostid#</a></td>
-        <td>
-        	<a href="student/placementMgmt/index.cfm?uniqueID=#uniqueID#" class="jQueryModalPL">
-				<cfif fatherlastname is motherlastname> 
-                	#fatherlastname#
-				<cfelseif fatherlastname is''>
-                	#motherlastname# 
-				<cfelseif motherlastname is ''>
-                	#fatherlastname#
-				<cfelse>
-                	#fatherlastname# #motherlastname#
-				</cfif>
-            </a>
-		</td>
-        <td>
-        	<a href="student/placementMgmt/index.cfm?uniqueID=#uniqueID#" class="jQueryModalPL">
-            	#fatherfirstname# 
-				<cfif LEN(fatherfirstname) AND LEN(motherfirstname)>
-                	&
-				</cfif> 
-                #motherfirstname#
-            </a>
-        </td>
-        <td>#DateFormat(date_host_fam_approved,'mm/dd/yyyy')#</td>
-        <td>
-            <cfif host_fam_approved eq 99>
-                <!----If rejected, show how long its been rejected.---->
-                <cfset dtFrom = ParseDateTime(DisplayEndDate) />
-                <cfset dtTo = Now() />
-                <cfset dtDiff = (dtTo - dtFrom) />
-                 #DateFormat( dtDiff, "d" )# d #TimeFormat( dtDiff, "h" )# h 
-            <cfelse>
-                <cf_timer dateEnd="#DisplayEndDate#">
-            </cfif>
-        </td>
-    </tr>
-    <tr>
-        <td></td>
-    </tr>
 </cfoutput>
-</table>
-
-<br>
-<table align="Center" cellpadding =4 cellspacing =0 class="nav_bar">
-<th bgcolor="CC0000" ><font color="white">Key</font></th>
-	<tr>
-		<td>Waiting for approval from...</td>
-	</tr>
-	<tr bgcolor="#FCC8C8">
-		<td align="Center">Regional Advisor</td>
-	</tr>
-	<tr bgcolor="FDFF6D">
-		<td align="Center">Regional Director / Manager</td>
-	</tr>
-	<tr bgcolor="A0E1A1">
-		<td align="Center">Facilitator</td>
-	</tr>
-		<tr bgcolor="FB8822">
-		<td align="Center">Rejected</td>
-	</tr>
-</table>
-*you can over-ride anyone below you in the approval process.  You can not approve past your level.	
