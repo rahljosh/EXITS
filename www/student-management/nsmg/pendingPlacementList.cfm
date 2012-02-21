@@ -407,7 +407,7 @@
                             }
                         </cfscript>
                         
-                        <cfif NOT isDate(qGetPendingHosts.datePISEmailed) AND VAL(vDisplayEmailLink)>
+                        <cfif NOT isDate(qGetPendingHosts.datePISEmailed) AND VAL(vDisplayEmailLink) AND ListFind("1,2,3,4", CLIENT.userType)>
                             <a href="reports/placementInfoSheet.cfm?uniqueID=#qGetPendingHosts.uniqueID#&closeModal=1" class="jQueryModalPL">[Click to Email]</a>
                         <cfelseif NOT VAL(vDisplayEmailLink)>
                             waiting on CBC <br /> and/or school acceptance
