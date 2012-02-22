@@ -124,8 +124,12 @@
                 </cfif>                
                 <td class="style5">
                     <a href="onlineApplication/index.cfm?action=displayLogin&uniqueID=#qGetCandidates.uniqueID#" class="style4 popUpDisplayLogin">[View Login]</a>
-                    &nbsp;
-                    <a href="index.cfm?curdoc=onlineApplication/index&action=#URL.action#&statusID=#URL.statusID#&uniqueID=#qGetCandidates.uniqueID#" onclick="return confirmReceived();" class="style4">[Delete]</a>
+					
+                    <!--- Do not allow Agents to [delete] applications once submitted --->                    
+                    <cfif qGetCandidates.applicationStatusID LT 7 OR ( ListFind("7,8,9,10,11", qGetCandidates.applicationStatusID) AND ListFind("1,2,3,4", CLIENT.userType) )> 
+                        &nbsp;
+                        <a href="index.cfm?curdoc=onlineApplication/index&action=#URL.action#&statusID=#URL.statusID#&uniqueID=#qGetCandidates.uniqueID#" onclick="return confirmReceived();" class="style4">[Delete]</a>
+                	</cfif>
                 </td>
             </tr>
         </cfloop>
