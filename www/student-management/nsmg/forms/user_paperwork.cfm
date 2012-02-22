@@ -460,7 +460,7 @@ function CheckDates(ckname, frname) {
             
 		</td>
        <!----For new accounts, display instructions---->
-        <Cfif get_rep.accountCreationVerified eq 0 or get_rep.accountCreationVerified is '' >
+        <Cfif not val(get_rep.accountCreationVerified)>
         <td valign="top" align=left>
            <table  width=300>
            	<tr>

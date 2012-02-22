@@ -28,7 +28,7 @@ where userid = #url.userid#
  select email 
  from smg_users where userid = #userEmail.whocreated#
   </Cfquery>               
-
+<cfif created.email is not ''>
 <Cfoutput>
 <cfsavecontent variable="email_message">
  Just a quick note to let you know that the account for #userEmail.firstname# #userEmail.lastname# has been approved and is active. 
@@ -47,4 +47,4 @@ where userid = #url.userid#
 
 
     <!----End of Email---->
-	
+</cfif>
