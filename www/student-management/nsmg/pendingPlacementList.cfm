@@ -362,7 +362,8 @@
         
 			<cfscript>
 	           	// Reset Class Notification
-				vSetClassNotification = '';
+				// vSetClassNotification = '';
+				vSetClassNotification = "attention";
 			</cfscript>        
         
             <tr bgcolor="#iif(qGetPendingHosts.currentRow MOD 2 ,DE("eeeeee") ,DE("white") )#">
@@ -393,7 +394,7 @@
                 <td class="sectionHeader">
                 
                     <!--- Only check paperwork for placements pending HQ approval --->
-                    <cfif qGetPendingHosts.host_fam_approved EQ 5>
+                    <cfif qGetPendingHosts.host_fam_approved EQ 5 OR ListFind("1,2,3,4", CLIENT.usertype)>
                     
                         <cfscript>
                             // Check if we have CBC and School Acceptance in order to allow PIS to be emailed out
@@ -411,11 +412,10 @@
                             <a href="reports/placementInfoSheet.cfm?uniqueID=#qGetPendingHosts.uniqueID#&closeModal=1" class="jQueryModalPL">[Click to Email]</a>
                         <cfelseif NOT VAL(vDisplayEmailLink)>
                             waiting on CBC <br /> and/or school acceptance
-                            <cfset vSetClassNotification = "attention">
                         <cfelseif isDate(qGetPendingHosts.datePISEmailed)>
                             #DateFormat(qGetPendingHosts.datePISEmailed, 'mm/dd/yyyy')#
                             <cfset vSetClassNotification = "attentionGreen">
-                        </cfif>
+						</cfif>
                     
                     <cfelse>
                         n/a
@@ -431,42 +431,54 @@
                             <cfif listFind("1,2,3,4", FORM.userType)>
                             	<a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">[Click to Approve]</a>
                            	<cfelse>
-                           		Pending HQ Approval
+                           		(Pending HQ Approval)
                             </cfif>
                             
                         </cfcase>                    
 
 						<!--- Pending Regional Manager Approval --->
                         <cfcase value="6">
+
+                            <cfif listFind("1,2,3,4", FORM.userType)>
+                            	<a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL" style="display:block;">[Click to Approve]</a>
+                           	</cfif>
                             
                             <cfif FORM.userType EQ 5>
                             	<a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">[Click to Approve]</a>
                            	<cfelse>
-                           		Pending RM Approval
+                           		(Pending RM Approval)
                             </cfif>
                             
                         </cfcase>                    
                     	
                         <!--- Pending Regional Advisor Approval --->
                         <cfcase value="7">
-                        	
+
+                            <cfif listFind("1,2,3,4,5", FORM.userType)>
+                            	<a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL" style="display:block;">[Click to Approve]</a>
+                           	</cfif>
+                            
                             <cfif CLIENT.userID EQ qGetPendingHosts.advisorID>
                             	<a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">[Click to Approve]</a>
                            	<cfelseif VAL(qGetPendingHosts.advisorID)>
-								Pending RA Approval
+								(Pending RA Approval)
 							<cfelse>
-                           		Pending RM Approval
+                           		(Pending RM Approval)
                             </cfif>
                             
                         </cfcase>                    
                     
                     	<!--- Pending Area Representative Approval --->
                         <cfcase value="10">
+
+                            <cfif listFind("1,2,3,4,5,6", FORM.userType)>
+                            	<a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL" style="display:block;">[Click to Approve]</a>
+                           	</cfif>
                         	
                             <cfif CLIENT.userID EQ qGetPendingHosts.placeRepID>
                             	<a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">[Click to Approve]</a>
                            	<cfelse>
-                           		Pending AR Approval
+                           		(Pending AR Approval)
                             </cfif>
                             
                         </cfcase>                    
