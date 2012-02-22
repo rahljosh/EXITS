@@ -705,19 +705,23 @@
                     <div class="loginTop"></div>
                     
                     <div class="loginMid">
+
     
                         <!--- Login --->
-                        <form name="loginForm" id="loginForm" method="post" action="http://#cgi.SERVER_NAME##cgi.SCRIPT_NAME#" class="#loginFormClass#">
+                        <cfform name="loginForm" id="loginForm" method="post" action="http://#cgi.SERVER_NAME##cgi.SCRIPT_NAME#" class="#loginFormClass#">
                             <input type="hidden" name="type" value="login" />
                           
-                            <h3>Login</h3>
+                            <h2 style="margin-top:0px;">LOGIN</h2>
                     
-                            <p><em>If you have already submited your contact information,<br />
-                            please use the login information you received to login and <br />
-                            and view incoming students.</em></p>
-                            <div class="HFormpicR"><a href="javascript:displayForgotPass();" class="HFform_wtext"><img src="images/hostFamily/HFformPic_09.png" width="100" border="0" /></a><br/><a href="javascript:displayForgotPass();" class="HFform_wtext"> Forgot Password? </a></div>
-                            
-                            <!--- Display Errors --->
+                            <p>
+                            	<em>
+                                    If you have already submited your contact information,<br />
+                                    please use the login information you received to login and <br />
+                                    and view incoming students.
+                            	</em>
+                            </p>
+
+							<!--- Display Errors --->
                             <cfif FORM.type EQ 'login' AND VAL(ArrayLen(pageMsg.Errors))>
                                 <p class="errorMessage">
                                     
@@ -729,23 +733,30 @@
                                 
                                 </p>
                             </cfif>	
-                            
+
                             <label for="loginEmail" class="HFform_wtext">Email Address <span class="requiredField">*</span> </label> 
-                            <input type="text" name="loginEmail" id="loginEmail" value="#FORM.loginEmail#" maxlength="50" class="largeInput" />          							
+                            <cfinput type="text" name="loginEmail" id="loginEmail" value="#FORM.loginEmail#" maxlength="50" class="largeInput" required="yes" message="Please enter an email address." />          							
     
                             <label for="loginPassword" class="HFform_wtext">Password <span class="requiredField">*</span> </label>                                   
-                            <input type="password" name="loginPassword" id="loginPassword" maxlength="50" class="largeInput" />                                    
-                            
+                            <cfinput type="password" name="loginPassword" id="loginPassword" maxlength="50" class="largeInput" required="yes" message="Please enter a password." />                                    
+
                             <span class="requiredFieldNote">* Required Fields</span>
                             
                             <input type="image" src="images/hostFamily/HFform_login.png" />
-                                
-                        </form>
+                            
+                           <div class="HFormpicR" style="float:right; width:100px;">
+                                <!--- Image was pushing forms away from Ipad screen
+									<img src="images/hostFamily/HFformPic_09.png" width="100" border="0" align="right" />
+								 --->
+                                <a href="javascript:displayForgotPass();" class="HFform_wtext" style="display:block; font-weight:bold;"> Forgot Password? </a>
+                            </div>
+
+                        </cfform>
     
     
                         <!--- Forgot Password Form --->
-                        <form name="forgotPassForm" id="forgotPassForm" method="post" action="http://#cgi.SERVER_NAME##cgi.SCRIPT_NAME#" class="#forgotPassClass#">
-                        <input type="hidden" name="type" value="forgotPassword" />
+                        <cfform name="forgotPassForm" id="forgotPassForm" method="post" action="http://#cgi.SERVER_NAME##cgi.SCRIPT_NAME#" class="#forgotPassClass#">
+                        	<input type="hidden" name="type" value="forgotPassword" />
                             
                             <h3> Retrieve Password </h3>
     
@@ -773,7 +784,7 @@
                             </cfif>	
                             
                             <label for="forgotEmail" class="HFform_wtext">Email Address <span class="requiredField">*</span> </label> 
-                            <input type="text" name="forgotEmail" id="forgotEmail" value="#FORM.forgotEmail#" maxlength="100" class="largeInput" />          							
+                            <cfinput type="text" name="forgotEmail" id="forgotEmail" value="#FORM.forgotEmail#" maxlength="100" class="largeInput" required="yes" message="Please enter an email address." />          							
                             
                             <span class="requiredFieldNote">* Required Field</span>
                             
@@ -781,7 +792,7 @@
                             
                             <a href="javascript:displayForgotPass();" class="HFform_wtext"> Back to Login </a>
                             
-                        </form>
+                        </cfform>
                         
                     </div><!--end loginMid-->
         
