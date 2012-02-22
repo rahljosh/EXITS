@@ -963,10 +963,10 @@
 				<div class="printField"><cfif LEN(FORM.wat_participation_info)>#FORM.wat_participation_info#</cfif> &nbsp;</div>
         	<cfelse>
             	<textarea name="wat_participation_info" id="wat_participation_info" class="mediumTextArea">#FORM.wat_participation_info#</textarea>
+                <p class="note">(if applicable - E.g.: 2010 - CSB)</p>
             </cfif>            
         </div>
-        <p class="note">(if applicable - E.g.: 2010 - CSB)</p>
-
+        
         <!--- Social Security Number --->
         <div class="field">
             <label for="ssnAreaNumber">Social Security Number </label> 

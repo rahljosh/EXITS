@@ -170,10 +170,18 @@
 
                         <!--- Check if file exists --->
                         <cfif APPLICATION.CFC.DOCUMENT.checkFileExists(filePath=qGetPDFDocumentList.filePath)>
-                        
-							<!--- Merge Files --->
-                            <cfpdfparam source="#qGetPDFDocumentList.filePath#"> 
-
+                        	
+                            <cftry>
+                            
+								<!--- Merge Files --->
+                                <cfpdfparam source="#qGetPDFDocumentList.filePath#"> 
+    						
+                                <cfcatch type="any">
+                                	<!--- Error | Do Nothing so next file can be added --->
+                                </cfcatch>
+                            
+                            </cftry>
+                            
 						</cfif>
                         
                     </cfloop>
@@ -195,6 +203,7 @@
                         
                         <!--- Merge Files --->
                         <cfpdfparam source="#qGetOtherDocumentList.filePath#"> 
+                        
                     </cfloop>
             </cfpdf>
 

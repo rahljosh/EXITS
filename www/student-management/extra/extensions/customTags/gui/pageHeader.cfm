@@ -288,8 +288,9 @@
                 <body>
                     <cfif ATTRIBUTES.includeTopBar>
                         <div class="topBar">
-                                
+                        
                             <div class="topLeft">
+                            	<div class="printLogo"></div>
                                 #csbHeader#                     
                             </div>
                             
