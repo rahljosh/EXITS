@@ -1,11 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Allergy Information</title>
-</head>
-
-
 <cftry>
 
 <!--- relocate users if they try to access the edit page without permission --->
@@ -17,10 +9,7 @@
 	OR (client.usertype EQ '8' AND (get_latest_status.status GTE '6' AND get_latest_status.status NEQ '9')) <!--- INTL. AGENT ---->
 	OR (client.usertype LTE '4' AND get_latest_status.status GTE '7') <!--- OFFICE USERS --->
 	OR (client.usertype GTE '5' AND client.usertype LTE '7' OR client.usertype EQ '9')> <!--- FIELD --->
-	
 </cfif>
-
-
 
 <cfinclude template="../querys/get_student_info.cfm">
 
@@ -29,10 +18,6 @@
 	FROM smg_student_app_health 
 	WHERE studentid = '#get_student_info.studentid#'
 </cfquery>
-
-
-
-
 
 <body>
 
@@ -88,29 +73,66 @@ Please make sure you answer all questions.  One wrong answer could hold your app
    </tr>
    <tr>
    		<Td colspan=5>Can you live in a home with a dog, which lives indoors? 
-         <cfif get_health.allergy_dog_indoors eq 1><strong>Yes</strong><cfelse><strong>No</strong></cfif> 
+			<cfif get_health.allergy_dog_indoors eq 1>
+         		<strong>Yes</strong>
+			<cfelseif get_health.allergy_dog_indoors eq 0>
+    	     	<strong>No</strong>
+        	<cfelse>
+         		<strong>N/A</strong>
+			</cfif> 
         
-        <br> 
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;How about outdoors? 
-       <cfif get_health.allergy_dog_outdoors eq 1><strong>Yes</strong><cfelse><strong>No</strong></cfif>
+        	<br> 
+        	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;How about outdoors? 
+			<cfif get_health.allergy_dog_outdoors eq 1>
+            	<strong>Yes</strong>
+			<cfelseif get_health.allergy_dog_outdoors eq 0>
+            	<strong>No</strong>
+			<cfelse>
+         		<strong>N/A</strong>
+			</cfif>
    		 </Td>
        </tr>
-   <tr>
-    		<Td colspan=5>Can you live in a home with a cat, which lives indoors? 
-            <cfif get_health.allergy_cat_indoors eq 1><strong>Yes</strong><cfelse><strong>No</strong></cfif><br>
+	<tr>
+    	<Td colspan=5>Can you live in a home with a cat, which lives indoors? 
+        	<cfif get_health.allergy_cat_indoors eq 1>
+            	<strong>Yes</strong>
+			<cfelseif get_health.allergy_cat_indoors eq 0>
+            	<strong>No</strong>
+			<cfelse>
+         		<strong>N/A</strong>
+			</cfif>
+            
+            <br>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;How about outdoors? 
-           <cfif get_health.allergy_cat_outdoors eq 1><strong>Yes</strong><cfelse><strong>No</strong></cfif>
+           	<cfif get_health.allergy_cat_outdoors eq 1>
+            	<strong>Yes</strong>
+			<cfelseif get_health.allergy_cat_outdoors eq 0>
+            	<strong>No</strong>
+			<cfelse>
+         		<strong>N/A</strong>
+			</cfif>
    		 </Td>
         </tr>
    <tr>  
          <Td colspan=5>Can you live in a home with animals if the animal is not permitted in your bedroom?
-         <cfif get_health.allergy_animal_not_bedroom eq 1><strong>Yes</strong> <cfelse><strong>No</strong></cfif>
-     
+         	<cfif get_health.allergy_animal_not_bedroom eq 1>
+            	<strong>Yes</strong> 
+			<cfelseif get_health.allergy_animal_not_bedroom eq 0>
+            	<strong>No</strong>
+			<cfelse>
+         		<strong>N/A</strong>
+			</cfif>
    		 </Td>
        </tr>
    <tr>   
          <Td colspan=5>If placed in a home with animals, can medication control your symptoms?
-         <cfif get_health.allergy_animal_med_control eq 1><strong>Yes</strong> <cfelse><strong>No</strong></cfif>
+         	<cfif get_health.allergy_animal_med_control eq 1>
+            	<strong>Yes</strong> 
+			<cfelseif get_health.allergy_animal_med_control eq 0>
+            	<strong>No</strong>
+			<cfelse>
+         		<strong>N/A</strong>
+			</cfif>
    		 </Td>
   </Table>
   <br>
@@ -135,7 +157,13 @@ Please make sure you answer all questions.  One wrong answer could hold your app
 	</Tr>
     <tr>
    		<Td colspan=5>Can your symptoms be controlled with medication? 
-       <cfif get_health.allergy_living_conditions_symptoms eq 1><strong>Yes</strong> <cfelse><strong>No</strong> </cfif>
+       		<cfif get_health.allergy_living_conditions_symptoms eq 1>
+            	<strong>Yes</strong>
+			<cfelseif get_health.allergy_living_conditions_symptoms eq 0>
+            	<strong>No</strong>
+			<cfelse>
+         		<strong>N/A</strong>
+			</cfif>
 	  </Td>
   </tr>
    
@@ -156,7 +184,13 @@ Please make sure you answer all questions.  One wrong answer could hold your app
   </tr>
     <tr>
    		<Td colspan=5>Can you prepare your own foor to accommodate your allergy? 
-        <cfif get_health.allergy_prep_food eq 1><strong>Yes</strong><cfelse> <strong>No</strong></cfif>
+        	<cfif get_health.allergy_prep_food eq 1>
+            	<strong>Yes</strong>
+			<cfelseif get_health.allergy_prep_food eq 0>
+            	<strong>No</strong>
+			<cfelse>
+         		<strong>N/A</strong>
+			</cfif>
 	  </Td>
   </tr>
    
@@ -195,13 +229,11 @@ Please make sure you answer all questions.  One wrong answer could hold your app
 
 </cfoutput>
 
-
 <!--- FOOTER OF TABLE --->
 <cfinclude template="../footer_table.cfm">
 
 <cfcatch type="any">
 	<cfinclude template="../error_message.cfm">
 </cfcatch>
+
 </cftry>
-</body>
-</html>
