@@ -964,11 +964,12 @@
                     from smg_students
                     where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#previousKids.studentid#">                    
                     </Cfquery>
+                    
                     <tr  bgcolor="#iif(previousKids.currentRow MOD 2 ,DE("eeeeee") ,DE("white") )#" >
                     	<Td></Td>
                         <Td>#missingKid.firstname# #missingkid.familylastname# (#previousKids.studentid#)</Td>
                         <td></td>
-                        <td>Host Fam</td>
+                        <td>#reportInfo.hostLast#</td>
                         <td>No</td>
                         <td>  <form action="index.cfm?curdoc=forms/pr_add" method="post">
                                  
