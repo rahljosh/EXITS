@@ -675,7 +675,7 @@
         <cfargument name="companyID" required="yes" hint="companyID is required">
         <cfargument name="flagCBC" default="0" hint="flagCBC is required. Values 0 or 1">
         <cfargument name="dateAuthorized" required="yes" hint="Date of Authorization">
-        <cfargument name="dateApproved" required="yes" hint="Date of approval, either null or date approved">
+        <cfargument name="dateApproved" default="" required="no" hint="Date of approval, either null or date approved">
  
 
             <cfquery 
