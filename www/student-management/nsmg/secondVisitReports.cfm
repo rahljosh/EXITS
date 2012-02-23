@@ -267,7 +267,8 @@
                         SELECT regionid, regionname
                         FROM smg_regions
                         WHERE company = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
-                        AND subofregion = 0
+                        AND subofregion = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                        AND active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                         ORDER BY regionname
                     </cfquery>
                     Region<br />
@@ -769,7 +770,7 @@
                                  	<tr  ><td colspan=3><td>#getprevhosts.familylastname# (#getprevhosts.hostid#)</td>
                                  </cfif>    
                                     <cfif qGetResults.secondvisitrepid neq indReports.fk_secondvisitrep>
-                                 	<td colspan=2>
+                                 	<tr  ><td colspan=2>
                                     <cfelse>
                               		<td>
                                     
@@ -812,7 +813,7 @@
                                        </tr>
                                    <Cfelse>
                                         <cfif qGetResults.secondvisitrepid eq fk_secondvisitrep>
-                                            <td>
+                                            <tr  ><td>
                                              <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#pr_id#"><img src="pics/buttons/greyedView.png" border=0 /></a>
                                             </td>
                                        </cfif>
