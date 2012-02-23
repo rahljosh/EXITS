@@ -328,6 +328,14 @@
                                         </td>		
                                     </tr>
                                     <tr>
+                                        <td align="right">
+                                            <input type="checkbox" name="isDueSoon" id="isDueSoon" value="1" />
+                                        </td>
+                                        <td>
+                                            <label for="isDueSoon">Display only records due within 14 days</label>
+                                        </td>
+                                    </tr>                                             
+                                    <tr>
                                         <td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td>
                                     </tr>
                                 </table>

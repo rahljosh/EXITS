@@ -98,7 +98,21 @@
             hostID,
             hostFamilyName,
             <!--- Facilitator --->
-            facilitatorName
+            facilitatorName,
+            (
+                CASE 
+                    <!--- Days Remaining --->
+                    WHEN 
+                        dateofVisit IS NOT NULL 
+                    THEN 
+                        DATEDIFF( DATE_ADD(dateStartWindowCompliance, INTERVAL complianceWindow DAY), dateofVisit )
+                    <!--- Days Remaining --->
+                    WHEN 	
+                        dateofVisit IS NULL 
+                    THEN 
+                        DATEDIFF( DATE_ADD(dateStartWindowCompliance, INTERVAL complianceWindow DAY), CURRENT_DATE )
+                END
+            ) AS remainingDays
         FROM
             (		
                 <!--- Query to Get Approved Reports --->
@@ -140,9 +154,13 @@
                         AND 
                             flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival"> 
                         AND
-                            programID = s.programID
+                        	assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                         AND 
                             isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                        <!--- 
+						AND
+							programID = s.programID
+						--->
                         ORDER BY 
                             dep_date ASC,
                             dep_time ASC
@@ -159,9 +177,13 @@
                             AND 
                                 flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival"> 
                             AND
-                                programID = s.programID
-                            AND 
+                                assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+							AND 
                                 isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                       	 	<!--- 
+							AND
+								programID = s.programID
+							--->
                             ORDER BY 
                                 dep_date ASC,
                                 dep_time ASC
@@ -249,9 +271,13 @@
                         AND 
                             flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival"> 
                         AND
-                            programID = s.programID
-                        AND 
+                        	assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+						AND 
                             isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                        <!--- 
+						AND
+							programID = s.programID
+						--->
                         ORDER BY 
                             dep_date ASC,
                             dep_time ASC
@@ -268,9 +294,13 @@
                             AND 
                                 flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival"> 
                             AND
-                                programID = s.programID
-                            AND 
+                                assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+							AND 
                                 isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+	                        <!--- 
+							AND
+								programID = s.programID
+							--->
                             ORDER BY 
                                 dep_date ASC,
                                 dep_time ASC
@@ -346,20 +376,33 @@
                  OR
                     cancelDate >= dateArrived                  
                 )
-        
+        	            
         GROUP BY
             studentID,
             hostID
 		
         <!--- Only display present records or records with a days diff > 0  --->
         HAVING
+        
+        (
         	totalAssignedPeriod IS NULL
         OR
         	totalAssignedPeriod > 0
+		)
+        
+		<cfif VAL(FORM.isDueSoon)>
+            AND
+            	(
+                    remainingDays <= <cfqueryparam cfsqltype="cf_sql_integer" value="14">
+                OR
+                    remainingDays IS NULL
+            	)       
+        </cfif>
             
         ORDER BY
             regionName,
             familyLastName,
+            studentID,
             dateCreated DESC,
             studentID
     </cfquery>
@@ -452,21 +495,13 @@
                 <cfloop query="qGetResultsByRegion">
                     
 					<cfscript>
-                        vRemainingDays = '';
                         vSetColorCode = '';
                         vSetRelocationColorCode = '';
                         
-                        // Calculate remaining days
-                        if ( isDate(qGetResultsByRegion.dateOfVisit) AND isDate(qGetResultsByRegion.dateEndWindowCompliance)  ) {
-                            vRemainingDays = DateDiff('d', qGetResultsByRegion.dateOfVisit, qGetResultsByRegion.dateEndWindowCompliance);
-                        } else if ( isDate(qGetResultsByRegion.dateEndWindowCompliance) ) {
-                            vRemainingDays = DateDiff('d', now(), qGetResultsByRegion.dateEndWindowCompliance);
-                        }
-                        
                         // Set up Remaining Days Alert
-                        if ( IsNumeric(vRemainingDays) AND vRemainingDays LTE 0 ) {
+                        if ( IsNumeric(qGetResultsByRegion.remainingDays) AND qGetResultsByRegion.remainingDays LTE 0 ) {
                             vSetColorCode = 'alert';
-                        } else if ( IsNumeric(vRemainingDays) AND vRemainingDays LTE 14 ) {
+                        } else if ( IsNumeric(qGetResultsByRegion.remainingDays) AND qGetResultsByRegion.remainingDays LTE 14 ) {
                             vSetColorCode = 'attention';
                         }
                         
@@ -523,18 +558,16 @@
                                     present
                                 </cfif>
                                 
-                                <!---
 								<cfif VAL(vSetAsNotNeeded)>
-									<div class="attention">Report set as NOT needed</div>
+									<div class="attention">Report NOT required</div> <!--- Report set as NOT needed --->
 								</cfif>
-								--->
                                 
                             </cfif>
                         </td>
                         <td class="center">#DateFormat(qGetResultsByRegion.dateStartWindowCompliance, 'mm/dd/yy')# - #DateFormat(qGetResultsByRegion.dateEndWindowCompliance, 'mm/dd/yy')#</td>
                         <td class="center">#DateFormat(qGetResultsByRegion.dateEndWindowCompliance, 'mm/dd/yy')#</td>
                         <td class="center">#DateFormat(qGetResultsByRegion.dateOfVisit, 'mm/dd/yy')#</td>
-                        <td class="center #vSetColorCode#">#vRemainingDays#</td>
+                        <td class="center #vSetColorCode#">#qGetResultsByRegion.remainingDays#</td>
                     </tr>
                     
                 </cfloop>
