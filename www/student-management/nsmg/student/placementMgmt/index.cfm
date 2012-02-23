@@ -504,32 +504,44 @@
                 <tr bgcolor="##FFFFFF">
                     <td width="15%" <cfif qGetPlacementHistory.hasHostIDChanged> class="placementMgmtChanged" </cfif> >
                         <cfif VAL(qGetPlacementHistory.hostID)>
-                            #qGetPlacementHistory.familyLastName# (###qGetPlacementHistory.hostID#)
+                            <a href="../../index.cfm?curdoc=host_fam_info&hostid=#qGetPlacementHistory.hostID#" target="_blank" title="More Information">
+                            	#qGetPlacementHistory.familyLastName# (###qGetPlacementHistory.hostID#)
+                            </a>
                         </cfif>
                     </td>
                     <td width="17%" <cfif qGetPlacementHistory.hasSchoolIDChanged> class="placementMgmtChanged" </cfif> >
 						<cfif VAL(qGetPlacementHistory.schoolID)>                            
-                            #qGetPlacementHistory.schoolName# (###qGetPlacementHistory.schoolID#)
+                            <a href="../../index.cfm?curdoc=school_info&schoolID=#qGetPlacementHistory.schoolID#" target="_blank" title="More Information">
+                            	#qGetPlacementHistory.schoolName# (###qGetPlacementHistory.schoolID#)
+                            </a>
                         </cfif>
                     </td>
                     <td width="17%" <cfif qGetPlacementHistory.hasPlaceRepIDChanged> class="placementMgmtChanged" </cfif> >
                         <cfif VAL(qGetPlacementHistory.placeRepID)>
-                            #qGetPlacementHistory.placeFirstName# #qGetPlacementHistory.placeLastName# (###qGetPlacementHistory.placeRepID#)
+                            <a href="../../index.cfm?curdoc=user_info&userID=#qGetPlacementHistory.placeRepID#" target="_blank" title="More Information">
+                            	#qGetPlacementHistory.placeFirstName# #qGetPlacementHistory.placeLastName# (###qGetPlacementHistory.placeRepID#)
+                            </a>
                         </cfif>
                     </td>
                     <td width="17%" <cfif qGetPlacementHistory.hasAreaRepIDChanged> class="placementMgmtChanged" </cfif> >
                         <cfif VAL(qGetPlacementHistory.areaRepID)>
-                            #qGetPlacementHistory.areaFirstName# #qGetPlacementHistory.areaLastName# (###qGetPlacementHistory.areaRepID#)
+                            <a href="../../index.cfm?curdoc=user_info&userID=#qGetPlacementHistory.areaRepID#" target="_blank" title="More Information">
+	                            #qGetPlacementHistory.areaFirstName# #qGetPlacementHistory.areaLastName# (###qGetPlacementHistory.areaRepID#)
+    						</a>
                         </cfif>
                     </td>
                     <td width="17%" <cfif qGetPlacementHistory.hasSecondVisitRepIDChanged> class="placementMgmtChanged" </cfif> >
                         <cfif VAL(qGetPlacementHistory.secondVisitRepID)>
-                            #qGetPlacementHistory.secondRepFirstName# #qGetPlacementHistory.secondRepLastName# (###qGetPlacementHistory.secondVisitRepID#)
+                            <a href="../../index.cfm?curdoc=user_info&userID=#qGetPlacementHistory.secondVisitRepID#" target="_blank" title="More Information">
+                            	#qGetPlacementHistory.secondRepFirstName# #qGetPlacementHistory.secondRepLastName# (###qGetPlacementHistory.secondVisitRepID#)
+                            </a>
                         </cfif>
                     </td>
                     <td width="17%" <cfif qGetPlacementHistory.hasDoublePlacementIDChanged> class="placementMgmtChanged" </cfif> >
 						<cfif VAL(qGetPlacementHistory.doublePlacementID)>
-                            #qGetPlacementHistory.doublePlacementFirstName# #qGetPlacementHistory.doublePlacementLastName# (###qGetPlacementHistory.doublePlacementID#)
+                        	<a href="../../index.cfm?curdoc=student_info&studentID=#qGetPlacementHistory.doublePlacementID#" target="_blank" title="More Information">
+                            	#qGetPlacementHistory.doublePlacementFirstName# #qGetPlacementHistory.doublePlacementLastName# (###qGetPlacementHistory.doublePlacementID#)
+                            </a>
                         </cfif>
                     </td>
                 </tr>
@@ -633,32 +645,44 @@
                         <tr bgcolor="###iif(qGetPlacementHistory.currentrow MOD 2 ,DE("edeff4") ,DE("FFFFFF") )#">
                             <td width="15%" <cfif qGetPlacementHistory.hasHostIDChanged> class="placementMgmtChanged" </cfif> >
                                 <cfif VAL(qGetPlacementHistory.hostID)>
-                                    #qGetPlacementHistory.familyLastName# (###qGetPlacementHistory.hostID#)
+                                	<a href="../../index.cfm?curdoc=host_fam_info&hostid=#qGetPlacementHistory.hostID#" target="_blank" title="More Information">
+                                        #qGetPlacementHistory.familyLastName# (###qGetPlacementHistory.hostID#)
+                                    </a>
                                 </cfif>
                             </td>
                             <td width="17%" <cfif qGetPlacementHistory.hasSchoolIDChanged> class="placementMgmtChanged" </cfif> >
                                 <cfif VAL(qGetPlacementHistory.schoolID)>                            
-                                    #qGetPlacementHistory.schoolName# (###qGetPlacementHistory.schoolID#)
+                                    <a href="../../index.cfm?curdoc=school_info&schoolID=#qGetPlacementHistory.schoolID#" target="_blank" title="More Information">
+                                        #qGetPlacementHistory.schoolName# (###qGetPlacementHistory.schoolID#)
+                                    </a>
                                 </cfif>
                             </td>
                             <td width="17%" <cfif qGetPlacementHistory.hasPlaceRepIDChanged> class="placementMgmtChanged" </cfif> >
                                 <cfif VAL(qGetPlacementHistory.placeRepID)>
-                                    #qGetPlacementHistory.placeFirstName# #qGetPlacementHistory.placeLastName# (###qGetPlacementHistory.placeRepID#)
+                                    <a href="../../index.cfm?curdoc=user_info&userID=#qGetPlacementHistory.placeRepID#" target="_blank" title="More Information">
+                                    	#qGetPlacementHistory.placeFirstName# #qGetPlacementHistory.placeLastName# (###qGetPlacementHistory.placeRepID#)
+                                    </a>    
                                 </cfif>
                             </td>
                             <td width="17%" <cfif qGetPlacementHistory.hasAreaRepIDChanged> class="placementMgmtChanged" </cfif> >
                                 <cfif VAL(qGetPlacementHistory.areaRepID)>
-                                    #qGetPlacementHistory.areaFirstName# #qGetPlacementHistory.areaLastName# (###qGetPlacementHistory.areaRepID#)
+                                    <a href="../../index.cfm?curdoc=user_info&userID=#qGetPlacementHistory.areaRepID#" target="_blank" title="More Information">
+	                                    #qGetPlacementHistory.areaFirstName# #qGetPlacementHistory.areaLastName# (###qGetPlacementHistory.areaRepID#)
+    								</a>
                                 </cfif>
                             </td>
                             <td width="17%" <cfif qGetPlacementHistory.hasSecondVisitRepIDChanged> class="placementMgmtChanged" </cfif> >
                                 <cfif VAL(qGetPlacementHistory.secondVisitRepID)>
-                                    #qGetPlacementHistory.secondRepFirstName# #qGetPlacementHistory.secondRepLastName# (###qGetPlacementHistory.secondVisitRepID#)
-                                </cfif>
+                                	<a href="../../index.cfm?curdoc=user_info&userID=#qGetPlacementHistory.secondVisitRepID#" target="_blank" title="More Information">    
+                                    	#qGetPlacementHistory.secondRepFirstName# #qGetPlacementHistory.secondRepLastName# (###qGetPlacementHistory.secondVisitRepID#)
+                                	</a>
+								</cfif>
                             </td>
                             <td width="17%" <cfif qGetPlacementHistory.hasDoublePlacementIDChanged> class="placementMgmtChanged" </cfif> >
                                 <cfif VAL(qGetPlacementHistory.doublePlacementID)>
-                                    #qGetPlacementHistory.doublePlacementFirstName# #qGetPlacementHistory.doublePlacementLastName# (###qGetPlacementHistory.doublePlacementID#)
+                                	<a href="../../index.cfm?curdoc=student_info&studentID=#qGetPlacementHistory.doublePlacementID#" target="_blank" title="More Information">
+                                    	#qGetPlacementHistory.doublePlacementFirstName# #qGetPlacementHistory.doublePlacementLastName# (###qGetPlacementHistory.doublePlacementID#)
+                                    </a>
                                 </cfif>
                             </td>
                         </tr>
