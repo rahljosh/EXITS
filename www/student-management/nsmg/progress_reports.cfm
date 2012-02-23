@@ -567,7 +567,7 @@
                                     <cfif qGetCurrentReport.pr_sr_approved_date EQ '' AND areaRepID NEQ CLIENT.userid>
                                     
 										<!----allow office to view so can delete if needed---->
-                                        <cfif listfind('1,12313,13799,510', CLIENT.userid)>
+                                        <cfif listfind('1,12313,13799,510,12389', CLIENT.userid)>
                                             <form action="index.cfm?curdoc=progress_report_info" method="post" name="theForm_#qGetCurrentReport.pr_id#" id="theForm_#qGetCurrentReport.pr_id#">
                                             	<input type="hidden" name="pr_id" value="#qGetCurrentReport.pr_id#">
                                             </form>
