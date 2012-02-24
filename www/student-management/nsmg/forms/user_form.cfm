@@ -268,7 +268,7 @@
                 vUpdateSSN = 1;
             } else if ( NOT LEN(FORM.SSN) ) {
                 // Update - Erase SSN
-                vUpdateSSN = 1;
+                vUpdateSSN = 0;
             }
         </cfscript>
         
@@ -355,6 +355,7 @@
                     <cfif VAL(vUpdateSSN)>
                     	<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.SSN#">,
                     </cfif>
+					 
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#" null="#yesNoFormat(trim(FORM.phone) EQ '')#">,
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone_ext#" null="#yesNoFormat(trim(FORM.phone_ext) EQ '')#">,
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.work_phone#" null="#yesNoFormat(trim(FORM.work_phone) EQ '')#">,
