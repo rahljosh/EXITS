@@ -88,15 +88,15 @@
               <table cellpadding="2" cellspacing="2" style="margin:10px;">
                   <tr>
                       <td width="90">1st Choice:</td>
-                      <td width="130" align="left"><br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
+                      <td width="450" align="left"><br><img src="#path#pics/line.gif" width="445" height="1" border="0" align="absmiddle"></td>
                   </tr>
                   <tr>                        
                       <td width="90">2nd Choice:</td>
-                      <td width="130" align="left"><br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
+                      <td width="450" align="left"><br><img src="#path#pics/line.gif" width="445" height="1" border="0" align="absmiddle"></td>
                   </tr>
                   <tr>                        
                       <td width="90">3rd Choice:</td>
-                      <td width="130" align="left"><br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
+                      <td width="450" align="left"><br><img src="#path#pics/line.gif" width="445" height="1" border="0" align="absmiddle"></td>
                   </tr>                        							
               </table>
 

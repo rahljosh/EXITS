@@ -161,7 +161,8 @@ and sc.fk_companyid = #client.companyid#
 	// Get List of Canada Districts
 	qGetESIDistrictChoice = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(
 		applicationID=APPLICATION.CONSTANTS.type.publicHighSchool,
-		fieldKey='ESIDistrictChoice'
+		fieldKey='ESIDistrictChoice',
+		sortBy='sortOrder'
 	);
 </cfscript>
 
@@ -385,7 +386,7 @@ and sc.fk_companyid = #client.companyid#
                                 <td><select name="option1" onClick="DataChanged();">
                                         <option value="0"></option>
                                         <cfloop query="qGetESIDistrictChoice">
-                                        	<option value="#qGetESIDistrictChoice.fieldID#" <cfif qESIDistrictChoice.option1 EQ qGetESIDistrictChoice.fieldID>selected</cfif>>#qGetESIDistrictChoice.name#</option>
+                                        	<option value="#qGetESIDistrictChoice.fieldID#" <cfif qESIDistrictChoice.option1 EQ qGetESIDistrictChoice.fieldID>selected</cfif>>#qGetESIDistrictChoice.sortOrder# - #qGetESIDistrictChoice.name#</option>
                                         </cfloop>
                                     </select>
                                 </td>
@@ -395,7 +396,7 @@ and sc.fk_companyid = #client.companyid#
                                 <td><select name="option2" onClick="DataChanged();">
                                         <option value="0"></option>
                                         <cfloop query="qGetESIDistrictChoice">
-                                        	<option value="#qGetESIDistrictChoice.fieldID#" <cfif qESIDistrictChoice.option2 EQ qGetESIDistrictChoice.fieldID>selected</cfif>>#qGetESIDistrictChoice.name#</option>
+                                        	<option value="#qGetESIDistrictChoice.fieldID#" <cfif qESIDistrictChoice.option2 EQ qGetESIDistrictChoice.fieldID>selected</cfif>>#qGetESIDistrictChoice.sortOrder# - #qGetESIDistrictChoice.name#</option>
                                         </cfloop>
                                     </select>
                                 </td>
@@ -405,7 +406,7 @@ and sc.fk_companyid = #client.companyid#
                                 <td><select name="option3" onClick="DataChanged();">
                                         <option value="0"></option>
                                         <cfloop query="qGetESIDistrictChoice">
-                                        	<option value="#qGetESIDistrictChoice.fieldID#" <cfif qESIDistrictChoice.option3 EQ qGetESIDistrictChoice.fieldID>selected</cfif>>#qGetESIDistrictChoice.name#</option>
+                                        	<option value="#qGetESIDistrictChoice.fieldID#" <cfif qESIDistrictChoice.option3 EQ qGetESIDistrictChoice.fieldID>selected</cfif>>#qGetESIDistrictChoice.sortOrder# - #qGetESIDistrictChoice.name#</option>
                                         </cfloop>
                                     </select>
                                 </td>
