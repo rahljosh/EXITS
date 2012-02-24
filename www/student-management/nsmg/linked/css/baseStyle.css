@@ -689,3 +689,104 @@ input.projectHelpHours {
 /********************************************
 	 END OF PROJECT HELP
 ********************************************/
+
+/********************************************
+	 WELCOME SLIDESHOW AND NEWS BOX
+********************************************/
+ .rdholder {
+
+  height:auto;
+  width:auto;
+  margin-bottom:25px;
+
+ } 
+
+
+ .rdholder .rdbox {
+	border-left:1px solid #c6c6c6;
+	border-right:1px solid #c6c6c6;
+	padding:10px 15px;
+	margin:0;
+	display: block;
+	min-height: 137px;
+ } 
+
+ .rdtop {
+	width:auto;
+	height:30px;
+	border: 1px solid #c6c6c6;
+	/* -webkit for Safari and Google Chrome */
+
+  -webkit-border-top-left-radius:12px;
+	-webkit-border-top-right-radius:12px;
+	/* -moz for Firefox, Flock and SeaMonkey  */
+
+  -moz-border-radius-topright:12px;
+	-moz-border-radius-topleft:12px;
+	background-color: #FFF;
+	color: #006699;
+ } 
+
+ .rdtop .rdtitle {
+	margin:0;
+	line-height:30px;
+	font-family:Arial, Geneva, sans-serif;
+	font-size:20px;
+	padding-top: 5px;
+	padding-right: 10px;
+	padding-bottom: 0px;
+	padding-left: 10px;
+	color: #006699;
+ }
+
+ .rdbottom {
+
+  width:auto;
+  height:10px;
+  border-bottom: 1px solid #c6c6c6;
+  border-left:1px solid #c6c6c6;
+  border-right:1px solid #c6c6c6;
+   /* -webkit for Safari and Google Chrome */
+
+  -webkit-border-bottom-left-radius:12px;
+  -webkit-border-bottom-right-radius:12px;
+
+
+ /* -moz for Firefox, Flock and SeaMonkey  */
+
+  -moz-border-radius-bottomright:12px;
+  -moz-border-radius-bottomleft:12px; 
+ 
+ }
+.rdPic {
+	padding: 3px;
+	border: thin solid #CCC;
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-style: italic;
+	 -moz-box-shadow: 3px 3px 4px #999; /* Firefox */
+ -webkit-box-shadow: 3px 3px 4px #999; /* Safari/Chrome */
+ box-shadow: 3px 3px 4px #999; /* Opera and other CSS3 supporting browsers */
+ -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#999999')";/* IE 8 */
+ : progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#999999');/* IE 5.5 - 7 */  
+}
+.new_weeks {
+		font-size: 10px;
+	}
+.sticky {
+	background-image: url(pics/sticky.png);
+	background-repeat: no-repeat;
+	height: 50px;
+	width: 64px;
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 22px;
+	font-weight: bold;
+	color: #FFF;
+	vertical-align: middle;
+	padding-top: 2px;
+	padding-right: 2px;
+}
+
+
+/********************************************
+	 END OF WELCOME AND NEWS BOX
+********************************************/
