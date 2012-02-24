@@ -190,6 +190,7 @@ function CheckDates(ckname, frname) {
                     <cfinput type="checkbox" name="ar_info_sheet_check" OnClick="CheckDates('ar_info_sheet_check', 'ar_info_sheet');">
 							<cfif region_company_access.usertypeid eq 15> 
                             	Not Required
+                                <input type="hidden" name="ar_info_sheet" value="" size="8" maxlength="10" >	
                             <cfelse> 
                             
                             Date: 
@@ -272,16 +273,25 @@ function CheckDates(ckname, frname) {
 							<cfinput type="checkbox" name="ar_info_sheet_check_#currentrow#" OnClick="CheckDates('ar_info_sheet_check_#currentrow#', 'ar_info_sheet_#currentrow#');">
 						<cfelse>
                         
-                        	
-							<cfinput type="checkbox" disabled name="ar_info_sheet_check_#currentrow#" OnClick="CheckDates('ar_info_sheet_check_#currentrow#', 'ar_info_sheet_#currentrow#');" checked="yes">				</cfif>	
+                        	<cfif fileExists('c:\websites\student-management\nsmg\uploadedfiles\users\#get_rep.userid#\Season#seasonid#cbcAuthorization.pdf')>
+							<cfinput type="checkbox" name="ar_info_sheet_check_#currentrow#" checked disabled OnClick="CheckDates('ar_info_sheet_check_#currentrow#', 'ar_info_sheet_#currentrow#');">
+                            <cfelse>
+                            <cfinput type="checkbox" name="ar_info_sheet_check_#currentrow#"  checked  OnClick="CheckDates('ar_info_sheet_check_#currentrow#', 'ar_info_sheet_#currentrow#');">
+                            </cfif>				</cfif>	
                             
                               <cfif region_company_access.usertypeid eq 15> 
                             	Not Required
+                               <input type="hidden" name="ar_info_sheet_#currentrow#" value="">
                             <cfelse> 
                             	<cfif ar_info_sheet is not ''>Date: 
-                                     <a href="javascript:openPopUp('uploadedfiles/users/#get_rep.userid#/Season#seasonid#cbcAuthorization.pdf', 640, 800);">
-                                        #DateFormat(ar_info_sheet, 'mm/dd/yyyy')#
-                                      </a>
+									<cfif fileExists('c:\websites\student-management\nsmg\uploadedfiles\users\#get_rep.userid#\Season#seasonid#cbcAuthorization.pdf')>
+                                         <a href="javascript:openPopUp('uploadedfiles/users/#get_rep.userid#/Season#seasonid#cbcAuthorization.pdf', 640, 800);">
+                                          #DateFormat(ar_info_sheet, 'mm/dd/yyyy')#</a>
+                                          <input type="hidden" name="ar_info_sheet_#currentrow#" value="#DateFormat(ar_info_sheet, 'mm/dd/yyyy')#" />
+                                     </cfif>
+                                     
+                                      
+                                      
                                       
                                 <cfelse>
 									Date: <cfinput type="text" name="ar_info_sheet_#currentrow#" value="#DateFormat(ar_info_sheet, 'mm/dd/yyyy')#" size="8" maxlength="10" validate="date">							</cfif>
