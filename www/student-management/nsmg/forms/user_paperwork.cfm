@@ -461,10 +461,15 @@ function CheckDates(ckname, frname) {
 		</td>
        <!----For new accounts, display instructions---->
         <Cfif not val(get_rep.accountCreationVerified)>
+        
+
         <td valign="top" align=left>
            <table  width=300>
            	<tr>
-               	<Td><strong>This appears to be a new account waiting to be activated.</strong><Br /><br />
+               	<Td>
+                
+                
+                <strong>This appears to be a new account waiting to be activated.</strong><Br /><br />
                 <cfset cbcCheck = 0>
                 <Cfquery name="qCheckCBCRun" datasource="#application.dsn#">
                 select *
@@ -490,6 +495,8 @@ function CheckDates(ckname, frname) {
                	<cfset get_paperwork.ar_ref_quest2 = 'n/a'>
                 <cfset get_paperwork.ar_info_sheet = 'n/a'>
                </cfif>
+               
+               
                 <cfif cbcCheck eq 1 or get_paperwork.ar_info_sheet is '' or get_paperwork.ar_ref_quest1 is '' OR get_paperwork.ar_ref_quest2 is '' or  get_paperwork.ar_cbc_auth_form is '' or get_paperwork.ar_cbcAuthReview is '' or get_paperwork.ar_agreement is ''>
                 Along with the items highlited on left (if any), the CBC needs to be run before activating this account.
               This account will not be fully activate until all items have been completed. 
@@ -497,20 +504,20 @@ function CheckDates(ckname, frname) {
                 <h3>Excellent!!</h3><br />  It looks like this account is ready to be activated, place your pointer<br />
                  over the "button below and click it... that's all there is to it.
                 </cfif>
+                
                 <Br /><Br />
                
-                
-                
-               
-               <cfif get_paperwork.arearepok eq 0>
+                            
+               <cfif not val(get_paperwork.arearepok)>
                <img src="pics/activateNot.png" width="130" height="25" />
                <Cfelse>
-               <cfinclude template="../activateNewAccount.cfm">
+              <!---- <cfinclude template="../activateNewAccount.cfm">---->
                <cfquery name="checkActivated" datasource="#application.dsn#">
                	select accountCreationVerified
                 from smg_users
                 where userid = #url.userid#
                </cfquery>
+               #val(checkActivated.accountCreationVerified)#
 				   <cfif val(checkActivated.accountCreationVerified)>
                    		<h3>This account is now active.  No further action is required.  The account has been set to active and appropriate emails sent.</h3>
                    <cfelse>
@@ -519,6 +526,7 @@ function CheckDates(ckname, frname) {
                <cfif cbcCheck eq 1>
                 Just a reminder that no CBC has been run <br /><br />
             </cfif>
+          
           </cfif>
           <br />
         <em>When this account is activated, the user will receive a
