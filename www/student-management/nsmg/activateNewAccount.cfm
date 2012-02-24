@@ -19,7 +19,7 @@ where userid = #url.userid#
 
    <cfinvoke component="nsmg.cfc.email" method="send_mail">
                     <cfinvokeargument name="email_to" value="#userEmail.email#">
-					<cfinvokeargument name="email_cc" value="#qGetRegionalManager.email#">  
+					
                     <cfinvokeargument name="email_subject" value="New Account Created / Login Information">
                     <cfinvokeargument name="include_content" value="accountActive">
                     <cfinvokeargument name="userid" value="#url.userid#">
