@@ -392,7 +392,7 @@
     
     	</td>
         <Td valign="top">
-        <cfif client.companyid lte 5>
+        
       	 <cfinclude template="slideshow/index.cfm">
     	 <cfif (ListFind("5,6,7,9", CLIENT.userType)
 					 and ListFind("1,2,3,4,5,10,12", CLIENT.companyid)) >
@@ -415,8 +415,8 @@
              </Tr>
          </table>
     </cfif>
-        </cfif>
-        
+      
+      <!----  
      <cfif client.companyid eq 10>
         		  <!----Special Announcements---->
     <table width=100% cellpadding=0 cellspacing=0 border="0" height=24>
@@ -445,6 +445,7 @@
         <!----footer of table---->
     <cfinclude template="table_footer.cfm">
     </cfif>
+	---->
         </Td>
      </tr>
   </table>
