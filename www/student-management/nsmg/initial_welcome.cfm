@@ -325,24 +325,20 @@
             </td>
         </tr>
     </table>
-     <table>
+     <table class="news">
     	<Tr>
-        	<Td width=80%>
-    <!----News & Announcements---->
-    <table width=100% cellpadding=0 cellspacing=0 border="0" height=24>
-        <tr height=24>
-            <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
-            <td width=26 background="pics/header_background.gif"><img src="pics/news.gif"></td>
-            <td background="pics/header_background.gif"><h2>Activities Relating to Today</h2></td>
-            <td background="pics/header_background.gif" width=16></td>
-            <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
-        </tr>
-    </table>
+        	<Td width=80% valign="top">
+            
+             <div class="rdholder"> 
+				<div class="rdtop"> 
+                <span class="rdtitle">News & Announcements</span> 
+            </div> <!-- end top --> 
+             <div class="rdbox">
    
-    <table width=100% cellpadding="4" cellspacing=0 border="0" class="section">
+       <table width=100% cellpadding="4" cellspacing=0 border="0">
         <tr>
            <td  valign="top" width="100%"><br>
-                <img src="pics/tower_100.jpg" width=71 height=100 align="left">
+                <img src="pics/newsIcon.png" width=100 height=100 align="left">
                 <cfif client.usertype neq 15>
                            
                 <!---<img src="#CLIENT.exits_url#/nsmg/pics/clover.gif" width="75" align="left" >--->
@@ -365,7 +361,7 @@
                			 Announcement for 2nd Visit Rep will go here when received.
                 </cfif>
           </td>
-          <td align="right" valign="top" rowspan=2>
+          <td align="right" valign="top" rowspan=2 class="rdPic">
                 <!--- Intl. Rep Pictures --->
                <cfif (ListFind("5,6,7,9", CLIENT.userType)
 					 and ListFind("1,2,3,4,5,10,12", CLIENT.companyid)) >  
@@ -382,8 +378,8 @@
                     	</a>                    
                     <cfelse>
                         <img src="uploadedfiles/welcome_pics/#smg_pics.pictureid#.jpg" border="0"><br>
-                        <em>#smg_pics.title#</em><br>
-                        <img src="pics/view_details.gif" border="0">                    
+                        <em>#smg_pics.title#</em>
+                                           
                     </cfif>
                 </cfif>	
                </cfif>
@@ -391,38 +387,44 @@
         </tr>
     </table>
     
+
+    
     <!----footer of table---->
-    <cfinclude template="table_footer.cfm">
+    
+    </div>
+     <div class="rdbottom"></div> <!---- end bottom --> 
+    
+     </div>
+       
+    
+    
     	</td>
-        <Td>
+        <Td valign="top">
         <cfif client.companyid lte 5>
-        		  <!----Special Announcements---->
-    <table width=100% cellpadding=0 cellspacing=0 border="0" height=24>
-        <tr height=24>
-            <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
-            <td width=26 background="pics/header_background.gif"><img src="pics/news.gif"></td>
-            <td background="pics/header_background.gif"><h2>Bonuses!</h2></td>
-            <td background="pics/header_background.gif" width=16></td>
-            <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
-        </tr>
-    </table>
-        <table width=100% cellpadding="4" cellspacing=0 border="0" class="section">
-        <tr>
-           <td  valign="top" width="100%">
-           <img src="pics/Bonuses.png" height=200 />
-           </td>
-           <td align="center">
+      	 <cfinclude template="slideshow/index.cfm">
+    	 <cfif (ListFind("5,6,7,9", CLIENT.userType)
+					 and ListFind("1,2,3,4,5,10,12", CLIENT.companyid)) >
+                     <cfset tripcount = 7 - placed_students.Count>
+         <table border=0>
+        	<Tr>
+             <cfif placed_students.Count LT 7>
+            	<Td class="sticky" align="center">
+             
+                #tripcount#
+                </Td>
+                <td>
+                 placements away from a trip to <A href="uploadedFiles/Incentive_trip/incentiveTrip_#client.companyid#.pdf" target="_blank">#incentive_trip.trip_place#!</A>
+               
+                <cfelse>
+                 <td colspan=2>   You've earned a trip to <A href="uploadedFiles/Incentive_trip/incentiveTrip_#client.companyid#.pdf" target="_blank">#incentive_trip.trip_place#!!!</A> 
+                </td></cfif>
            
                         
-           <h2><a href="uploadedfiles/pdf_docs/ISE/promotion/Pre-Ayp%20Bonus%202012.pdf" target="_blank">Pre-AYP Bonuses!</a></h2>
-           <br />
-           <h2><a href="uploadedfiles/pdf_docs/ISE/promotion/Early_Placement_Bonus_2012.pdf" target="_blank">Early Placement</a></h2>
-           </td>
-           </tr>
+             </Tr>
          </table>
-        <!----footer of table---->
-    <cfinclude template="table_footer.cfm">
     </cfif>
+        </cfif>
+        
      <cfif client.companyid eq 10>
         		  <!----Special Announcements---->
     <table width=100% cellpadding=0 cellspacing=0 border="0" height=24>
