@@ -41,6 +41,7 @@
                     fieldKey,
                     fieldID,
                     name,
+                    sortOrder,
                     isActive,
                     dateCreated,
                     dateUpdated
@@ -83,7 +84,11 @@
                     <cfcase value="name">
                         name
                     </cfcase>
-    
+
+                    <cfcase value="sortOrder">
+                        sortOrder
+                    </cfcase>
+
                     <cfdefaultcase>
                         fieldKey
                     </cfdefaultcase>

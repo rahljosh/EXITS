@@ -47,9 +47,9 @@
 
 <cfquery name="qESIDistrictChoice" datasource="MySQL">
 	SELECT 
-    	opt1.name as option1,
-        opt2.name as option2,
-        opt3.name as option3
+    	CAST(CONCAT(opt1.sortOrder, ' - ', opt1.name) AS CHAR) AS option1,
+        CAST(CONCAT(opt2.sortOrder, ' - ', opt2.name) AS CHAR) AS option2,
+        CAST(CONCAT(opt3.sortOrder, ' - ', opt3.name) AS CHAR) AS option3
 	FROM 
     	smg_student_app_options appo
     LEFT OUTER JOIN
@@ -202,15 +202,15 @@
                     <table cellpadding="2" cellspacing="2" style="margin:10px;">
                         <tr>
                             <td width="90">1st Choice:</td>
-                            <td width="130" align="left">#qESIDistrictChoice.option1#<br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
+                            <td width="450" align="left">#qESIDistrictChoice.option1#<br><img src="#path#pics/line.gif" width="445" height="1" border="0" align="absmiddle"></td>
                         </tr>
                         <tr>                        
                             <td width="90">2nd Choice:</td>
-                            <td width="130" align="left">#qESIDistrictChoice.option2#<br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
+                            <td width="450" align="left">#qESIDistrictChoice.option2#<br><img src="#path#pics/line.gif" width="445" height="1" border="0" align="absmiddle"></td>
                         </tr>
                         <tr>                        
                             <td width="90">3rd Choice:</td>
-                            <td width="130" align="left">#qESIDistrictChoice.option3#<br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
+                            <td width="450" align="left">#qESIDistrictChoice.option3#<br><img src="#path#pics/line.gif" width="445" height="1" border="0" align="absmiddle"></td>
                         </tr>                        							
                     </table>
     
