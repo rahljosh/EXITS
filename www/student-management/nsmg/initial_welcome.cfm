@@ -311,17 +311,9 @@
 
     <table width=100%>
         <tr>
-            <td>Your last visit was on #DateFormat(CLIENT.lastlogin, 'mmm d, yyyy')# MST</td>
+            <td></td>
             <td align="right">
-             <cfif (ListFind("5,6,7,9", CLIENT.userType)
-					 and ListFind("1,2,3,4,5,10,12", CLIENT.companyid)) >
-                <cfset tripcount = 7 - placed_students.Count>
-                <cfif placed_students.Count LT 7>
-                    You're only #tripcount# placements away from a trip to <A href="uploadedFiles/Incentive_trip/incentiveTrip_#client.companyid#.pdf" target="_blank">#incentive_trip.trip_place#!</A>
-                <cfelse>
-                    You've earned a trip to <A href="uploadedFiles/Incentive_trip/incentiveTrip_#client.companyid#.pdf" target="_blank">#incentive_trip.trip_place#!!!</A> 
-                </cfif>
-              </cfif>
+            Your last visit was on #DateFormat(CLIENT.lastlogin, 'mmm d, yyyy')# MST
             </td>
         </tr>
     </table>
@@ -392,7 +384,7 @@
     <!----footer of table---->
     
     </div>
-     <div class="rdbottom"></div> <!---- end bottom --> 
+     <div class="rdbottom"></div> <!-- end bottom --> 
     
      </div>
        
@@ -514,7 +506,8 @@
                        <cfif client.companyid lte 5>
                        2012 Placing Season Bonuses!<BR />
                         <a href="uploadedfiles/pdf_docs/ISE/promotion/Pre-Ayp%20Bonus%202012.pdf" target="_blank">Pre-AYP</a> :: 
-                        <a href="uploadedfiles/pdf_docs/ISE/promotion/Early%20Placement%20Bonus%202012.pdf" target="_blank">Early Placement</a>
+                        <a href="uploadedfiles/pdf_docs/ISE/promotion/Early%20Placement%20Bonus%202012.pdf" target="_blank">Early Placement</a> :: 
+                        <a href="slideshow/pdfs/CASE/CEOBonus.pdf" target="_blank">CEO Placement Bonus</a>
                    		</cfif>
                         
                     </td>
