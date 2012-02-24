@@ -19,7 +19,7 @@
 			UPDATE smg_users_paperwork 
 			SET 
 				 <cfif form.submittedUserType NEQ 15>
-               <!----  ar_info_sheet = <cfif form["ar_info_sheet_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_info_sheet_" & x])#</cfif>,---->
+                ar_info_sheet = <cfif form["ar_info_sheet_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_info_sheet_" & x])#</cfif>,
                 ar_ref_quest1 = <cfif form["ar_ref_quest1_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_ref_quest1_" & x])#</cfif>,
 				ar_ref_quest2 = <cfif form["ar_ref_quest2_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_ref_quest2_" & x])#</cfif>,
                 ar_training = <cfif form["ar_training_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_training_" & x])#</cfif>,
@@ -44,7 +44,7 @@
                 seasonid, 
                
                <cfif form.submittedUserType NEQ 15>
-               <!---- ar_info_sheet, ---->
+               ar_info_sheet,
                 ar_ref_quest1, 
                 ar_ref_quest2,
                 ar_training, 
@@ -59,7 +59,7 @@
                 '#form.seasonid#',
 				
                 <cfif form.submittedUserType NEQ 15>
-                    <!---- <cfif form.ar_info_sheet EQ ''>NULL<cfelse>#CreateODBCDate(form.ar_info_sheet)#</cfif>,---->
+                     <cfif form.ar_info_sheet EQ ''>NULL<cfelse>#CreateODBCDate(form.ar_info_sheet)#</cfif>,
 					<cfif form.ar_ref_quest1 EQ ''>NULL<cfelse>#CreateODBCDate(form.ar_ref_quest1)#</cfif>,
                     <cfif form.ar_ref_quest2 EQ ''>NULL<cfelse>#CreateODBCDate(form.ar_ref_quest2)#</cfif>,
                     <cfif form.ar_training EQ ''>NULL<cfelse>#CreateODBCDate(form.ar_training)#</cfif>,
