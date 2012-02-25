@@ -164,7 +164,7 @@ TO="#emails#" failto="#get_current_user.email#" REPLYTO="""#companyshort.company
 <tr>
 	<td class="style1" width="160" align="right">Student:</td>
 	<td class="style1" width="260">___________________________________________<br><font size="-1">signature</font></td>
-	<td class="style1" width="190">____/____/____<br>date (mm/dd/yy)</td>
+	<td class="style1" width="190"><cfoutput><u>#dateFormat(now(), 'mmm. dd, yyyy')#</u><br>date </cfoutput></td>
 </tr>
 <tr>
 	<td class="style1" align="right">Print Name:</td>
@@ -174,7 +174,7 @@ TO="#emails#" failto="#get_current_user.email#" REPLYTO="""#companyshort.company
 <tr>
 	<td class="style1" align="right">Parent:</td>
 	<td class="style1">___________________________________________<br><font size="-1">signature</font> </td>
-	<td class="style1">____/____/____<br>date (mm/dd/yy)</td>
+	<td class="style1"><cfoutput><u>#dateFormat(now(), 'mmm. dd, yyyy')#</u><br>date </cfoutput></td>
 </tr>
 <tr>
 	<td class="style1" align="right">Print Name:</td>
@@ -184,7 +184,7 @@ TO="#emails#" failto="#get_current_user.email#" REPLYTO="""#companyshort.company
 <tr>
 	<td class="style1" align="right">Intl. Representative:</td>
 	<td class="style1">___________________________________________<br><font size="-1">signature</font> </td>
-	<td class="style1">____/____/____<br>date (mm/dd/yy) </td>
+	<td class="style1"><cfoutput><u>#dateFormat(now(), 'mmm. dd, yyyy')#</u><br>date </cfoutput><br>date (mm/dd/yy) </td>
 </tr>
 <tr>
 	<td class="style1" align="right">Print Name:</td>
