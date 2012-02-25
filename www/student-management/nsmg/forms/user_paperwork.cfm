@@ -517,27 +517,49 @@ function CheckDates(ckname, frname) {
                 
                 <Br /><Br />
                
-                            
+           <cfif region_company_access.usertypeid neq 15>                
                <cfif not val(get_paperwork.arearepok)>
                <img src="pics/activateNot.png" width="130" height="25" />
                <Cfelse>
-              <!---- <cfinclude template="../activateNewAccount.cfm">---->
-               <cfquery name="checkActivated" datasource="#application.dsn#">
-               	select accountCreationVerified
-                from smg_users
-                where userid = #url.userid#
-               </cfquery>
-               #val(checkActivated.accountCreationVerified)#
-				   <cfif val(checkActivated.accountCreationVerified)>
-                   		<h3>This account is now active.  No further action is required.  The account has been set to active and appropriate emails sent.</h3>
-                   <cfelse>
-                   		<A href="?curdoc=activateNewAccount&userid=#url.userid#"><img src="pics/activateActive.png" width="130" height="25" border="0" /></A>
-                   </cfif><Br /><Br />
-               <cfif cbcCheck eq 1>
-                Just a reminder that no CBC has been run <br /><br />
-            </cfif>
+				  <cfinclude template="../activateNewAccount.cfm">
+                   <cfquery name="checkActivated" datasource="#application.dsn#">
+                    select accountCreationVerified
+                    from smg_users
+                    where userid = #url.userid#
+                   </cfquery>
+                  
+                       <cfif val(checkActivated.accountCreationVerified)>
+                            <h3>This account is now active.  No further action is required.  The account has been set to active and appropriate emails sent.</h3>
+                       <cfelse>
+                            <A href="?curdoc=activateNewAccount&userid=#url.userid#"><img src="pics/activateActive.png" width="130" height="25" border="0" /></A>
+                       </cfif><Br /><Br />
+                   <cfif cbcCheck eq 1>
+                    Just a reminder that no CBC has been run <br /><br />
+                    </cfif>
           
-          </cfif>
+          		</cfif>
+            <cfelse>
+            <cfif not val(get_paperwork.SECONDVISITREPOK)>
+               <img src="pics/activateNot.png" width="130" height="25" />
+               <Cfelse>
+				  <cfinclude template="../activateNewAccount.cfm">
+                   <cfquery name="checkActivated" datasource="#application.dsn#">
+                    select accountCreationVerified
+                    from smg_users
+                    where userid = #url.userid#
+                   </cfquery>
+                  
+                       <cfif val(checkActivated.accountCreationVerified)>
+                            <h3>This account is now active.  No further action is required.  The account has been set to active and appropriate emails sent.</h3>
+                       <cfelse>
+                            <A href="?curdoc=activateNewAccount&userid=#url.userid#"><img src="pics/activateActive.png" width="130" height="25" border="0" /></A>
+                       </cfif><Br /><Br />
+                   <cfif cbcCheck eq 1>
+                    Just a reminder that no CBC has been run <br /><br />
+                    </cfif>
+          
+          		</cfif>
+            </cfif>
           <br />
         <em>When this account is activated, the user will receive a
          welcome email.  The Regional Manager will also receive
