@@ -150,9 +150,9 @@ where active = 1
               <!----Check if this account should be reviewed more then likely this will not happen here, but depending on the order of people submitting things, we have to check.---->
 			<Cfscript>
                     //Check if paperwork is complete for season
-                    get_paperwork = APPLICATION.CFC.udf.allpaperworkCompleted(userid=client.userid);
+                    get_paperwork = APPLICATION.CFC.udf.allpaperworkCompleted(userid=url.rep);
 					//Get User Info
-                    qGetUserInfo = APPLICATION.CFC.user.getUserByID(userid=client.userid);
+                    qGetUserInfo = APPLICATION.CFC.user.getUserByID(userid=url.rep );
          </cfscript>
          
 		 <cfif val(get_paperwork.reviewAcct)>
@@ -172,17 +172,17 @@ where active = 1
                     </cfoutput>
                     </cfsavecontent>
                         <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                            
+                            <!----
                             **********This emai is sent to the Program Manager*******************<Br>
                         *****************#progManager.pm_email#<br>**********************
                             <cfinvokeargument name="email_to" value="josh@pokytrails.com">      
-                            <!----
-                           
+                            
+                           ---->
                             <cfinvokeargument name="email_to" value="#progManager.pm_email#"> 
-							 ---->
+							
                               
                             <cfinvokeargument name="email_from" value="""#client.companyshort# Support"" <#client.emailfrom#>">
-                            <cfinvokeargument name="email_subject" value="CBC Authorization for #client.name#">
+                            <cfinvokeargument name="email_subject" value="CBC Authorization for #qGetUserInfo.firstname# #qGetUserInfo.lastname#">
                             <cfinvokeargument name="email_message" value="#programEmailMessage#">
                           
                         </cfinvoke>	 
