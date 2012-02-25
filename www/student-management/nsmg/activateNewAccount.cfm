@@ -3,7 +3,7 @@ update smg_users
 set active = 1,
 	accountCreationVerified = #client.userid#,
     DateAccountVerified = #CreateODBCDate(now())#
-where userid = #url.userid#
+where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.userid#">
 	
 </cfquery>
 
@@ -12,14 +12,21 @@ select email, whocreated, firstname, lastname
 from smg_users
 where userid = #url.userid#
 </Cfquery>
+<Cfquery name="defaultRegion" datasource="#application.dsn#">
+select regionid 
+from user_access_rights
+where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.userid#">
+and default_access	= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+and companyid = #client.companyid#  
+</Cfquery>
  <Cfscript>
 		//Check if paperwork is complete for season
-		qGetRegionalManager = APPLICATION.CFC.user.getRegionalManager(regionID=client.regionid);
+		qGetRegionalManager = APPLICATION.CFC.user.getRegionalManager(regionID=defaultRegion.regionid);
  </cfscript>
 
    <cfinvoke component="nsmg.cfc.email" method="send_mail">
                     <cfinvokeargument name="email_to" value="#userEmail.email#">
-					
+					<cfinvokeargument name="email_cc" value="#qGetRegionalManager.email#">
                     <cfinvokeargument name="email_subject" value="New Account Created / Login Information">
                     <cfinvokeargument name="include_content" value="accountActive">
                     <cfinvokeargument name="userid" value="#url.userid#">
