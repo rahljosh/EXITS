@@ -1381,26 +1381,6 @@
 			vActions = "<p>#vActions#</p>";
 		</cfscript>       
         
-        <!--- School Updated | Reset Fields on the Student Table --->
-        <cfif VAL(hasSchoolIDChanged)>
-        
-            <cfquery 
-                datasource="#APPLICATION.DSN#">
-					UPDATE
-                    	smg_students
-                    SET
-						<!--- Arrival Date Compliance --->
-                        doc_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        doc_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        <!--- Student Application --->
-                        copy_app_school = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">,
-                        doc_class_schedule = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
-	            	WHERE
-    					studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
-			</cfquery>
-        
-        </cfif>
-        
 		<!--- Insert History Information --->
         <cfif vQueryType EQ 'insert'>        
             
