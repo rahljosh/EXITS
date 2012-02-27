@@ -478,11 +478,6 @@
                 <a href="student/placementMgmt/index.cfm?uniqueID=#qGetStudentInfo.uniqueID#" class="jQueryModalPL">Placement Management</a>
                 <a href="student/placementMgmt/index.cfm?uniqueID=#qGetStudentInfo.uniqueID#&action=paperwork" class="jQueryModalPL">Placement Paperwork</a>
                 
-				<!--- Keep Old Accessible for Program Managers (Brian, Bill, Bob and Gary) --->
-                <cfif CLIENT.userType EQ 1 OR ListFind("12313,8731,8743,12431 " , CLIENT.userID)>
-    				<a href="javascript:openPopUp('forms/place_menu.cfm?studentID=#qGetStudentInfo.studentID#', 800, 600);">Old Placement Management</a>
-	            </cfif>    
-                
 				<!--- OFFICE USERS ONLY --->
 				<cfif listFind("1,2,3,4", CLIENT.userType)> 
 					<!---- <a href="" onClick="javascript: win=window.open('insurance/insurance_management.cfm?studentID=#qGetStudentInfo.studentID#', 'Settings', 'height=400, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Insurance Management</a> ---->	
