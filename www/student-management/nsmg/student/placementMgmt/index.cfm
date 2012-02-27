@@ -341,11 +341,20 @@
 			}
 			
 			// Check Orientations if Paperwork is complete
-			if ( vPaperworkImage EQ 'paperwork_4' AND NOT isDate(qGetPlacementHistory.stu_arrival_orientation) AND NOT isDate(qGetPlacementHistory.host_arrival_orientation) ) {
+			if ( vPaperworkImage EQ 'paperwork_4' 
+					AND 
+					( 
+					 	NOT isDate(qGetPlacementHistory.stu_arrival_orientation) 
+					OR 
+						NOT isDate(qGetPlacementHistory.host_arrival_orientation) 
+					OR
+						NOT isDate(qGetPlacementHistory.doc_class_schedule)
+					) 
+				) {
 				  // Paperwork docs are complete but orientations are missing
 				  vPaperworkImage = 'paperwork_3';
 			}
-		
+			
         }
 	</cfscript>
 
