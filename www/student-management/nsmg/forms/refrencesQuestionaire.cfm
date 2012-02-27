@@ -168,7 +168,7 @@ where active = 1
                     
                    <Br><Br>
                     
-                   <a href="#client.exits_url#/nsmg/index.cfm?curdoc=user_info&userid=#client.userid#">View #qGetUserInfo.firstname#<cfif Right(#qGetUserInfo.firstname#, 1) is 's'>'<cfelse>'s</cfif> account.</a>
+                   <a href="#client.exits_url#/nsmg/index.cfm?curdoc=user_info&userid=#url.rep#">View #qGetUserInfo.firstname#<cfif Right(#qGetUserInfo.firstname#, 1) is 's'>'<cfelse>'s</cfif> account.</a>
                     </cfoutput>
                     </cfsavecontent>
                         <cfinvoke component="nsmg.cfc.email" method="send_mail">
