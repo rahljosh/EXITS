@@ -262,14 +262,14 @@ td {
                     </cfsavecontent>
                     
                    <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                            
+                          <!----  
                             **********This emai is sent to the Program Manager*******************<Br>
                         *****************#progManager.pm_email#<br>**********************
                             <cfinvokeargument name="email_to" value="josh@pokytrails.com">      
-                            <!----
+                            ---->
                            
                             <cfinvokeargument name="email_to" value="#progManager.pm_email#"> 
-							 ---->
+							 
                               
                             <cfinvokeargument name="email_from" value="""#client.companyshort# Support"" <#client.emailfrom#>">
                             <cfinvokeargument name="email_subject" value="CBC Authorization for #client.name#">
@@ -464,7 +464,7 @@ where referencefor = #client.userid#
             </select>
         </td>
         <td class="zip">Zip<span class="redtext">*</span> </td>
-        <td><input type="text" name="zip" value="#form.zip#" size="5" maxlength="5"></td>
+        <td><input type="text" name="zip" value="#form.zip#" size="5" ></td>
     </tr>
 	  <tr >
         <td >Phone <span class="redtext">*</span></td>
