@@ -286,9 +286,10 @@ function CheckDates(ckname, frname) {
                             	<cfif ar_info_sheet is not ''>Date: 
 									<cfif fileExists('c:\websites\student-management\nsmg\uploadedfiles\users\#get_rep.userid#\Season#seasonid#cbcAuthorization.pdf')>
                                          <a href="javascript:openPopUp('uploadedfiles/users/#get_rep.userid#/Season#seasonid#cbcAuthorization.pdf', 640, 800);">
+                                       </cfif>
                                           #DateFormat(ar_info_sheet, 'mm/dd/yyyy')#</a>
                                           <input type="hidden" name="ar_info_sheet_#currentrow#" value="#DateFormat(ar_info_sheet, 'mm/dd/yyyy')#" />
-                                     </cfif>
+                                  
                                      
                                       
                                       
