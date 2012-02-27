@@ -37,16 +37,20 @@
         s.familylastname, 
         s.sex, 
         s.programid, 
-        s.placerepid,
-        s.dateplaced, 
-        s.hostid, 
-        s.doc_school_accept_date,
+        sh.placerepid,
+        sh.dateplaced, 
+        sh.hostid, 
+        sh.doc_school_accept_date,
         u.firstname as repfirstname, 
         u.lastname as replastname, 
         u.userid,
         fi.dep_date
     FROM 
         smg_students s
+    INNER JOIN
+    	smg_hostHistory sh ON sh.studentID = s.studentID
+        	AND
+            	sh.isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
     LEFT JOIN 
         smg_users U on u.userid = s.placerepid
     INNER JOIN 
@@ -60,7 +64,7 @@
     AND             
         s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
 	AND	
-    	s.doc_school_accept_date IS NULL    
+    	sh.doc_school_accept_date IS NULL    
     GROUP BY 
         s.studentid
     ORDER BY 

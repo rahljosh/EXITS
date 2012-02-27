@@ -861,16 +861,19 @@
                     // Get CBC Member
                     qGetCBCMember = APPLICATION.CFC.CBC.getCBCHostByID(hostID=qGetHostHistory.hostID, familyMemberID=qGetEligibleCBCFamilyHistoryMembers.childID, cbcType='member', sortBy="date_sent", sortOrder="DESC", getOneRecord=1);
                 </cfscript>
-                <tr> 
-                    <td width="15%" class="paperworkLeftColumn">&nbsp;</td>
-                    <td width="55%"><label for="memberCBC#qGetEligibleCBCFamilyHistoryMembers.currentRow#">#qGetEligibleCBCFamilyHistoryMembers.name# #qGetEligibleCBCFamilyHistoryMembers.lastname# - #qGetEligibleCBCFamilyHistoryMembers.age# years old</label></td>
-                    <td width="30%">
-                        <span class="readOnly displayNone">#DateFormat(qGetCBCMember.date_sent, 'mm/dd/yyyy')# to #DateFormat(qGetCBCMember.date_expired, 'mm/dd/yyyy')#</span>
-                        <input type="text" name="memberCBC#qGetEligibleCBCFamilyHistoryMembers.currentRow#" id="memberCBC#qGetEligibleCBCFamilyHistoryMembers.currentRow#" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCMember.date_sent, 'mm/dd/yyyy')#" disabled="disabled">
-                        to
-                        <input type="text" name="memberCBC#qGetEligibleCBCFamilyHistoryMembers.currentRow#" id="memberCBC#qGetEligibleCBCFamilyHistoryMembers.currentRow#" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCMember.date_expired, 'mm/dd/yyyy')#" disabled="disabled">
-                    </td>
-                </tr>
+                
+                <cfif qGetCBCMember.recordCount>
+                    <tr> 
+                        <td width="15%" class="paperworkLeftColumn">&nbsp;</td>
+                        <td width="55%"><label for="memberCBC#qGetEligibleCBCFamilyHistoryMembers.currentRow#">#qGetEligibleCBCFamilyHistoryMembers.name# #qGetEligibleCBCFamilyHistoryMembers.lastname# - #qGetEligibleCBCFamilyHistoryMembers.age# years old</label></td>
+                        <td width="30%">
+                            <span class="readOnly displayNone">#DateFormat(qGetCBCMember.date_sent, 'mm/dd/yyyy')# to #DateFormat(qGetCBCMember.date_expired, 'mm/dd/yyyy')#</span>
+                            <input type="text" name="memberCBC#qGetEligibleCBCFamilyHistoryMembers.currentRow#" id="memberCBC#qGetEligibleCBCFamilyHistoryMembers.currentRow#" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCMember.date_sent, 'mm/dd/yyyy')#" disabled="disabled">
+                            to
+                            <input type="text" name="memberCBC#qGetEligibleCBCFamilyHistoryMembers.currentRow#" id="memberCBC#qGetEligibleCBCFamilyHistoryMembers.currentRow#" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCMember.date_expired, 'mm/dd/yyyy')#" disabled="disabled">
+                        </td>
+                    </tr>
+				</cfif>
             </cfloop>
                 
         </table>   
