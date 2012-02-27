@@ -138,12 +138,13 @@ order by ARQ.id
                 </CFquery>
             </Cfif>
                 <!----Check if this account should be reviewed more then likely this will not happen here, but depending on the order of people submitting things, we have to check.---->
-			<Cfscript>
+	<Cfscript>
                     //Check if paperwork is complete for season
-                    get_paperwork = APPLICATION.CFC.udf.allpaperworkCompleted(userid=client.userid);
+                    get_paperwork = APPLICATION.CFC.udf.allpaperworkCompleted(userid=url.rep);
 					//Get User Info
-                    qGetUserInfo = APPLICATION.CFC.user.getUserByID(userid=client.userid);
+                    qGetUserInfo = APPLICATION.CFC.user.getUserByID(userid=url.rep );
          </cfscript>
+         
          
 		 <cfif val(get_paperwork.reviewAcct)>
          
@@ -158,7 +159,7 @@ order by ARQ.id
                     
                    <Br><Br>
                     
-                   <a href="#client.exits_url#/nsmg/index.cfm?curdoc=user_info&userid=#client.userid#">View #qGetUserInfo.firstname#<cfif Right(#qGetUserInfo.firstname#, 1) is 's'>'<cfelse>'s</cfif> account.</a>
+                   <a href="#client.exits_url#/nsmg/index.cfm?curdoc=user_info&userid=#url.rep#">View #qGetUserInfo.firstname#<cfif Right(#qGetUserInfo.firstname#, 1) is 's'>'<cfelse>'s</cfif> account.</a>
                     </cfoutput>
                     </cfsavecontent>
                         <cfinvoke component="nsmg.cfc.email" method="send_mail">
