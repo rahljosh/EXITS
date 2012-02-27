@@ -636,36 +636,7 @@
                     datePlaced = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     datePISEmailed = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                     <!--- Placement Notes --->
-                    placement_notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="">,
-					<!--- Single Placement Paperwork --->
-                    doc_single_place_auth = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    doc_single_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    doc_single_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,	
-                    doc_single_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    doc_single_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-					<!--- Paperwork Received --->
-                    doc_full_host_app_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    doc_rules_sign_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    doc_photos_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    doc_school_profile_rec = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    doc_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    doc_date_of_visit = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    doc_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    doc_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    doc_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    doc_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    doc_income_ver_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    <!--- Arrival Date Compliance --->
-                    doc_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    doc_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    <!--- Student Application --->
-                    copy_app_school = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">,
-                	<!--- Arrival Orientation --->
-                    <!--- stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" null="yes">, | should never reset --->
-                    host_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    doc_class_schedule = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                    placement_notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
                 WHERE 
                 	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
     	</cfquery>
@@ -1444,30 +1415,7 @@
                         datePlaced = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                         datePISEmailed = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
 						<!--- Placement Notes --->
-                        placement_notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="">,
-                        <!--- Single Placement Paperwork --->
-                        doc_single_place_auth = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        doc_single_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        doc_single_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,	
-                        doc_single_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        doc_single_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        <!--- Paperwork Received --->
-                        doc_full_host_app_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        doc_rules_sign_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        doc_photos_rec_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        doc_school_profile_rec = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        doc_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        doc_date_of_visit = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        doc_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        doc_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        doc_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        doc_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        doc_income_ver_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                        <!--- Arrival Orientation --->
-                        <!--- stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" null="yes">, | should never reset --->
-                        host_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                        placement_notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
 	            	WHERE
     					studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
 			</cfquery>
@@ -1965,14 +1913,52 @@
                     h.original_place,
                     h.hfSupervisingDistance,
                     h.reason,
-                    h.actions,
+                    h.changePlacementReasonID,
+                    h.changePlacementExplanation,
                     h.datePlaced,
                     h.datePlacedEnded,
                     h.dateRelocated,
-                    h.isActive,
-                    h.dateOfChange,                    
+                    h.datePISEmailed,
+                    h.dateSetHostPermanent,
+                    <!--- Single Person Placement Paperwork --->
+                    h.doc_single_place_auth,
+					h.doc_single_ref_form_1,
+                    h.doc_single_ref_check1,
+                    h.doc_single_ref_form_2,
+					h.doc_single_ref_check2,
+                    <!--- Placement Paperwork --->
+                    h.doc_full_host_app_date,
+                    h.doc_letter_rec_date,
+                    h.doc_rules_rec_date,
+                    h.doc_rules_sign_date,
+                    h.doc_photos_rec_date,
+                    h.doc_bedroom_photo,
+                    h.doc_bathroom_photo,
+                    h.doc_kitchen_photo,
+                    h.doc_living_room_photo,
+                    h.doc_outside_photo,
+                    h.doc_school_profile_rec,
+                    h.doc_conf_host_rec,
+                    h.doc_date_of_visit,
+                    h.doc_ref_form_1,
+                    h.doc_ref_check1,
+                    h.doc_ref_form_2,
+                    h.doc_ref_check2,
+                    h.doc_host_orientation,
+                    h.doc_income_ver_date,
+                    <!--- Arrival Compliance --->
+                    h.doc_school_accept_date,
+                    h.doc_school_sign_date,
+                    <!--- Student Application --->
+                    h.copy_app_school,
+                    <!--- Arrival Orientation --->
+                    h.stu_arrival_orientation,
+                    h.host_arrival_orientation,
+                    h.doc_class_schedule,
+                    h.actions,
+                    h.dateOfChange,
                     h.dateCreated,
-                    h.dateUpdated,
+                    h.dateUpdated,                
                     <!--- Host Family --->
                     host.familyLastName,
                     <!--- School --->
@@ -2075,6 +2061,11 @@
                     doc_rules_rec_date,
                     doc_rules_sign_date,
                     doc_photos_rec_date,
+                    doc_bedroom_photo,
+                    doc_bathroom_photo,
+                    doc_kitchen_photo,
+                    doc_living_room_photo,
+                    doc_outside_photo,
                     doc_school_profile_rec,
                     doc_conf_host_rec,
                     doc_date_of_visit,
@@ -2124,117 +2115,6 @@
     
 
 	<!--- Placement Paperwork --->
-	<cffunction name="updatePlacementPaperwork" access="public" returntype="void" output="false" hint="Update Placement Paperwork">
-        <cfargument name="studentID" default="0" hint="studentID is not required">
-        <cfargument name="historyID" default="0" hint="historyID is not required">
-		<!--- Single Person Placement --->
-        <cfargument name="doc_single_place_auth" default="" hint="doc_single_place_auth is not required">
-        <cfargument name="doc_single_ref_form_1" default="" hint="doc_single_ref_form_1 is not required">
-        <cfargument name="doc_single_ref_check1" default="" hint="doc_single_ref_check1 is not required">
-        <cfargument name="doc_single_ref_form_2" default="" hint="doc_single_ref_form_2 is not required">
-        <cfargument name="doc_single_ref_check2" default="" hint="doc_single_ref_check2 is not required">
-        <!--- Placement Paperwork --->
-        <cfargument name="doc_full_host_app_date" default="" hint="doc_full_host_app_date is not required">
-        <cfargument name="doc_letter_rec_date" default="" hint="doc_letter_rec_date is not required">
-        <cfargument name="doc_rules_rec_date" default="" hint="doc_rules_rec_date is not required">
-        <cfargument name="doc_rules_sign_date" default="" hint="doc_rules_sign_date is not required">
-        <cfargument name="doc_photos_rec_date" default="" hint="doc_photos_rec_date is not required">
-        <cfargument name="doc_school_profile_rec" default="" hint="doc_school_profile_rec is not required">
-        <cfargument name="doc_conf_host_rec" default="" hint="doc_conf_host_rec is not required">
-        <cfargument name="doc_date_of_visit" default="" hint="doc_date_of_visit is not required">
-        <cfargument name="doc_ref_form_1" default="" hint="doc_ref_form_1 is not required">
-        <cfargument name="doc_ref_check1" default="" hint="doc_ref_check1 is not required">
-        <cfargument name="doc_ref_form_2" default="" hint="doc_ref_form_2 is not required">
-        <cfargument name="doc_ref_check2" default="" hint="doc_ref_check2 is not required">
-        <cfargument name="doc_income_ver_date" default="" hint="doc_income_ver_date is not required">
-        <!--- Arrival Compliance --->
-        <cfargument name="doc_school_accept_date" default="" hint="doc_school_accept_date is not required">
-        <cfargument name="doc_school_sign_date" default="" hint="doc_school_sign_date is not required">
-        <!--- Student Application --->
-        <cfargument name="copy_app_school" default="" hint="copy_app_school is not required">
-        <!--- Arrival Orientation --->
-        <cfargument name="stu_arrival_orientation" default="" hint="stu_arrival_orientation is not required">
-        <cfargument name="host_arrival_orientation" default="" hint="host_arrival_orientation is not required">
-        <cfargument name="doc_class_schedule" default="" hint="doc_class_schedule is not required">    
-        		
-        <cfquery 
-			datasource="#APPLICATION.DSN#">
-                UPDATE
-	                smg_students
-                SET 
-                    <!--- Single Person Placement Paperwork --->
-                    doc_single_place_auth = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_place_auth#" null="#NOT IsDate(ARGUMENTS.doc_single_place_auth)#">,
-                    doc_single_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_form_1#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_form_1)#">,
-                    doc_single_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_check1#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_check1)#">,
-                    doc_single_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_form_2#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_form_2)#">,
-                    doc_single_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_check2#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_check2)#">,
-                    <!--- Placement Paperwork --->
-                    doc_full_host_app_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_full_host_app_date#" null="#NOT IsDate(ARGUMENTS.doc_full_host_app_date)#">,
-                    doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_letter_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_letter_rec_date)#">,
-                    doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_rules_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_rules_rec_date)#">,
-                    doc_rules_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_rules_sign_date#" null="#NOT IsDate(ARGUMENTS.doc_rules_sign_date)#">,
-                    doc_photos_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_photos_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_photos_rec_date)#">,
-                    doc_school_profile_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_profile_rec#" null="#NOT IsDate(ARGUMENTS.doc_school_profile_rec)#">,
-                    doc_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_conf_host_rec#" null="#NOT IsDate(ARGUMENTS.doc_conf_host_rec)#">,
-                    doc_date_of_visit = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_date_of_visit#" null="#NOT IsDate(ARGUMENTS.doc_date_of_visit)#">,
-                    doc_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_form_1#" null="#NOT IsDate(ARGUMENTS.doc_ref_form_1)#">,
-                    doc_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_check1#" null="#NOT IsDate(ARGUMENTS.doc_ref_check1)#">,
-                    doc_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_form_2#" null="#NOT IsDate(ARGUMENTS.doc_ref_form_2)#">,
-                    doc_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_check2#" null="#NOT IsDate(ARGUMENTS.doc_ref_check2)#">,
-                    doc_income_ver_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_income_ver_date#" null="#NOT IsDate(ARGUMENTS.doc_income_ver_date)#">,
-                    <!--- Arrival Compliance --->
-                    doc_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_accept_date#" null="#NOT IsDate(ARGUMENTS.doc_school_accept_date)#">,
-                    doc_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_sign_date#" null="#NOT IsDate(ARGUMENTS.doc_school_sign_date)#">,
-					<!--- Student Application --->
-                    copy_app_school = <cfqueryparam cfsqltype="cf_sql_varchar" value="#YesNoFormat(VAL(ARGUMENTS.copy_app_school))#">,
-					<!--- Arrival Orientation --->
-                    stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.stu_arrival_orientation#" null="#NOT IsDate(ARGUMENTS.stu_arrival_orientation)#">,
-                    host_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.host_arrival_orientation#" null="#NOT IsDate(ARGUMENTS.host_arrival_orientation)#">,
-                    doc_class_schedule = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_class_schedule#" null="#NOT IsDate(ARGUMENTS.doc_class_schedule)#">
-                WHERE 
-                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">                    	
-		</cfquery>
-		
-        <cfscript>
-			// Update Placement History
-			updatePlacementPaperworkHistory(
-				studentID = ARGUMENTS.studentID,
-				historyID = ARGUMENTS.historyID,
-				// Single Person Placement Paperwork
-				doc_single_place_auth = ARGUMENTS.doc_single_place_auth,
-				doc_single_ref_form_1 = ARGUMENTS.doc_single_ref_form_1,
-				doc_single_ref_check1 = ARGUMENTS.doc_single_ref_check1,
-				doc_single_ref_form_2 = ARGUMENTS.doc_single_ref_form_2,
-				doc_single_ref_check2 = ARGUMENTS.doc_single_ref_check2,
-				// Placement Paperwork
-				doc_full_host_app_date = ARGUMENTS.doc_full_host_app_date,
-				doc_letter_rec_date = ARGUMENTS.doc_letter_rec_date,
-				doc_rules_rec_date = ARGUMENTS.doc_rules_rec_date,
-				doc_rules_sign_date = ARGUMENTS.doc_rules_sign_date,
-				doc_photos_rec_date = ARGUMENTS.doc_photos_rec_date,
-				doc_school_profile_rec = ARGUMENTS.doc_school_profile_rec,
-				doc_conf_host_rec = ARGUMENTS.doc_conf_host_rec,
-				doc_date_of_visit = ARGUMENTS.doc_date_of_visit,
-				doc_ref_form_1 = ARGUMENTS.doc_ref_form_1,
-				doc_ref_check1 = ARGUMENTS.doc_ref_check1,
-				doc_ref_form_2 = ARGUMENTS.doc_ref_form_2,
-				doc_ref_check2 = ARGUMENTS.doc_ref_check2,
-				doc_income_ver_date = ARGUMENTS.doc_income_ver_date,
-				// Arrival Compliance
-				doc_school_accept_date = ARGUMENTS.doc_school_accept_date,
-				doc_school_sign_date = ARGUMENTS.doc_school_sign_date,
-				// Original Student
-				copy_app_school = ARGUMENTS.copy_app_school,
-				// Arrival Orientation
-				stu_arrival_orientation = ARGUMENTS.stu_arrival_orientation,
-				host_arrival_orientation = ARGUMENTS.host_arrival_orientation,
-				doc_class_schedule = ARGUMENTS.doc_class_schedule
-			);
-		</cfscript>
-        
-	</cffunction>
-
-
 	<cffunction name="updatePlacementPaperworkHistory" access="public" returntype="void" output="false" hint="Update Placement Paperwork">
         <cfargument name="studentID" default="0" hint="studentID is not required">
         <cfargument name="historyID" default="0" hint="historyID is not required">
@@ -2250,6 +2130,11 @@
         <cfargument name="doc_rules_rec_date" default="" hint="doc_rules_rec_date is not required">
         <cfargument name="doc_rules_sign_date" default="" hint="doc_rules_sign_date is not required">
         <cfargument name="doc_photos_rec_date" default="" hint="doc_photos_rec_date is not required">
+        <cfargument name="doc_bedroom_photo" default="" hint="doc_bedroom_photo is not required">
+        <cfargument name="doc_bathroom_photo" default="" hint="doc_bathroom_photo is not required">
+        <cfargument name="doc_kitchen_photo" default="" hint="doc_kitchen_photo is not required">
+        <cfargument name="doc_living_room_photo" default="" hint="doc_living_room_photo is not required">
+        <cfargument name="doc_outside_photo" default="" hint="doc_outside_photo is not required">
         <cfargument name="doc_school_profile_rec" default="" hint="doc_school_profile_rec is not required">
         <cfargument name="doc_conf_host_rec" default="" hint="doc_conf_host_rec is not required">
         <cfargument name="doc_date_of_visit" default="" hint="doc_date_of_visit is not required">
@@ -2268,19 +2153,12 @@
         <cfargument name="host_arrival_orientation" default="" hint="host_arrival_orientation is not required">
         <cfargument name="doc_class_schedule" default="" hint="doc_class_schedule is not required">    
         
-        <cfscript>
-			// Get Current Placement Information
-			qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID);
-		</cfscript>
-        
         <!--- Update Host History Documents --->
         <cfquery 
 			datasource="#APPLICATION.DSN#">
                 UPDATE
 	                smg_hosthistory
                 SET 
-					datePlaced = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetStudentInfo.datePlaced#" null="#NOT IsDate(qGetStudentInfo.datePlaced)#">,
-                    datePISEmailed = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetStudentInfo.datePISEmailed#" null="#NOT IsDate(qGetStudentInfo.datePISEmailed)#">,
 					<!--- Single Person Placement Paperwork --->
                     doc_single_place_auth = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_place_auth#" null="#NOT IsDate(ARGUMENTS.doc_single_place_auth)#">,
                     doc_single_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_form_1#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_form_1)#">,
@@ -2293,6 +2171,11 @@
                     doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_rules_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_rules_rec_date)#">,
                     doc_rules_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_rules_sign_date#" null="#NOT IsDate(ARGUMENTS.doc_rules_sign_date)#">,
                     doc_photos_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_photos_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_photos_rec_date)#">,
+                    doc_bedroom_photo = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_bedroom_photo#" null="#NOT IsDate(ARGUMENTS.doc_bedroom_photo)#">,
+                    doc_bathroom_photo = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_bathroom_photo#" null="#NOT IsDate(ARGUMENTS.doc_bathroom_photo)#">,
+                    doc_kitchen_photo = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_kitchen_photo#" null="#NOT IsDate(ARGUMENTS.doc_kitchen_photo)#">,
+                    doc_living_room_photo = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_living_room_photo#" null="#NOT IsDate(ARGUMENTS.doc_living_room_photo)#">,
+                    doc_outside_photo = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_outside_photo#" null="#NOT IsDate(ARGUMENTS.doc_outside_photo)#">,
                     doc_school_profile_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_profile_rec#" null="#NOT IsDate(ARGUMENTS.doc_school_profile_rec)#">,
                     doc_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_conf_host_rec#" null="#NOT IsDate(ARGUMENTS.doc_conf_host_rec)#">,
                     doc_date_of_visit = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_date_of_visit#" null="#NOT IsDate(ARGUMENTS.doc_date_of_visit)#">,
@@ -2328,32 +2211,43 @@
 			datasource="#APPLICATION.DSN#">
                 SELECT 
                     studentID,
-                    hostID,
-                    doc_full_host_app_date,
-                    doc_letter_rec_date,
-                    doc_rules_rec_date,
-                    doc_rules_sign_date,
-                    doc_photos_rec_date,
-                    doc_school_profile_rec,
-                    doc_conf_host_rec,
-                    doc_date_of_visit,
-                    doc_ref_form_1,
-                    doc_ref_check1,
-                    doc_ref_form_2,
-                    doc_ref_check2,
-                    doc_income_ver_date,
-                    doc_school_accept_date,
-                    doc_school_sign_date,
+                    sh.hostID,
+                    sh.doc_full_host_app_date,
+                    sh.doc_letter_rec_date,
+                    sh.doc_rules_rec_date,
+                    sh.doc_rules_sign_date,
+                    sh.doc_photos_rec_date,
+                    sh.doc_bedroom_photo,
+                    sh.doc_bathroom_photo,
+                    sh.doc_kitchen_photo,
+                    sh.doc_living_room_photo,
+                    sh.doc_outside_photo,
+                    sh.doc_school_profile_rec,
+                    sh.doc_conf_host_rec,
+                    sh.doc_date_of_visit,
+                    sh.doc_ref_form_1,
+                    sh.doc_ref_check1,
+                    sh.doc_ref_form_2,
+                    sh.doc_ref_check2,
+                    sh.doc_income_ver_date,
+                    sh.doc_school_accept_date,
+                    sh.doc_school_sign_date,
                     <!--- Single Person Placement Paperwork --->
-                    doc_single_place_auth,
-                    doc_single_ref_form_1,
-                    doc_single_ref_check1,
-                    doc_single_ref_form_2,
-                    doc_single_ref_check2
+                    sh.doc_single_place_auth,
+                    sh.doc_single_ref_form_1,
+                    sh.doc_single_ref_check1,
+                    sh.doc_single_ref_form_2,
+                    sh.doc_single_ref_check2
                 FROM 
-                	smg_students
+                	smg_students s
+                INNER JOIN
+                	smg_hostHistory sh ON sh.studentID = s.studentID
+                AND
+                	sh.isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                AND
+                	sh.hostID != <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                 WHERE 
-                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">                    	
+                    s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">                    	
 		</cfquery>
         
         <!---
@@ -2461,7 +2355,32 @@
 
 				// Host Family Photos
 				if ( NOT isDate(qCheckPlacementPaperwork.doc_photos_rec_date) OR qCheckPlacementPaperwork.doc_photos_rec_date GT setDeadline ) {
-					returnMessage = returnMessage & 'Host Family Photos has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_photos_rec_date, 'mm/dd/yyyy')#. <br />'; 	
+					returnMessage = returnMessage & 'Host Family Photo has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_photos_rec_date, 'mm/dd/yyyy')#. <br />'; 	
+				}
+
+				// Host Family - Student Bedroom Photo
+				if ( NOT isDate(qCheckPlacementPaperwork.doc_bedroom_photo) OR qCheckPlacementPaperwork.doc_bedroom_photo GT setDeadline ) {
+					returnMessage = returnMessage & 'Host Family - Student Bedroom Photo has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_bedroom_photo, 'mm/dd/yyyy')#. <br />'; 	
+				}
+
+				// Host Family - Student Bathroom Photo
+				if ( NOT isDate(qCheckPlacementPaperwork.doc_bathroom_photo) OR qCheckPlacementPaperwork.doc_bathroom_photo GT setDeadline ) {
+					returnMessage = returnMessage & 'Host Family - Student Bathroom Photo has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_bathroom_photo, 'mm/dd/yyyy')#. <br />'; 	
+				}
+
+				// Host Family Kitchen Photo
+				if ( NOT isDate(qCheckPlacementPaperwork.doc_kitchen_photo) OR qCheckPlacementPaperwork.doc_kitchen_photo GT setDeadline ) {
+					returnMessage = returnMessage & 'Host Family Kitchen Photo has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_kitchen_photo, 'mm/dd/yyyy')#. <br />'; 	
+				}
+
+				// Host Family Living Room Photo
+				if ( NOT isDate(qCheckPlacementPaperwork.doc_living_room_photo) OR qCheckPlacementPaperwork.doc_living_room_photo GT setDeadline ) {
+					returnMessage = returnMessage & 'Host Family Living Room Photo has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_living_room_photo, 'mm/dd/yyyy')#. <br />'; 	
+				}
+
+				// Host Family Outside Photo
+				if ( NOT isDate(qCheckPlacementPaperwork.doc_outside_photo) OR qCheckPlacementPaperwork.doc_outside_photo GT setDeadline ) {
+					returnMessage = returnMessage & 'Host Family Outside Photo has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_outside_photo, 'mm/dd/yyyy')#. <br />'; 	
 				}
 
 				// School & Community Profile Form

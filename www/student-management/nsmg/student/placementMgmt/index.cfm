@@ -239,14 +239,24 @@
 		}
 		// End of Placement Notes
 
+		// Get Eligible CBC Host Kids
+		qGetEligibleCBCHostMembers = APPLICATION.CFC.CBC.getEligibleHostMember(hostID=qGetStudentInfo.hostID, studentID=qGetPlacementHistory.studentID);
+
 		// Paperwork
-        if ( VAL(qGetStudentInfo.hostid) ) {
+        if ( VAL(qGetStudentInfo.hostID) ) {
 			
+			vParentsMissingAuthorization = 0;
+			
+			if ( LEN(qGetHostInfo.fatherFirstName) AND NOT isDate(qGetHostInfo.fathercbc_form) ) {
+				vParentsMissingAuthorization = 1;
+			}
+			
+			if ( LEN(qGetHostInfo.motherFirstName) AND NOT isDate(qGetHostInfo.mothercbc_form) ) {
+				vParentsMissingAuthorization = 1;
+			}
+
 			// Check for Host Kids missing CBC Authorizations
 			vHostMemberMissingCBCAuthorization = 0;
-
-			// Get Eligible CBC Host Kids
-			qGetEligibleCBCHostMembers = APPLICATION.CFC.CBC.getEligibleHostMember(hostID=qGetStudentInfo.hostID);
 			
 			// Loop through eligible member query
             For ( i=1; i LTE qGetEligibleCBCHostMembers.recordCount; i=i+1 ) {
@@ -257,36 +267,34 @@
 				}
 				
             }
-
+			
 			// Check for Placement Paperwork
 			if ( 				
-					isDate(qGetStudentInfo.doc_full_host_app_date) 
+					isDate(qGetPlacementHistory.doc_full_host_app_date) 
 				AND 
-					isDate(qGetStudentInfo.doc_letter_rec_date)
+					isDate(qGetPlacementHistory.doc_letter_rec_date)
 				AND 
-					isDate(qGetStudentInfo.doc_rules_rec_date) 
+					isDate(qGetPlacementHistory.doc_rules_rec_date) 
 				AND 
-					isDate(qGetStudentInfo.doc_rules_sign_date) 
+					isDate(qGetPlacementHistory.doc_rules_sign_date) 
 				AND 
-					isDate(qGetStudentInfo.doc_photos_rec_date) 
+					isDate(qGetPlacementHistory.doc_photos_rec_date) 
 				AND 
-					isDate(qGetStudentInfo.doc_school_accept_date)
+					isDate(qGetPlacementHistory.doc_school_accept_date)
 				AND 
-					isDate(qGetStudentInfo.doc_school_profile_rec) 
+					isDate(qGetPlacementHistory.doc_school_profile_rec) 
 				AND 
-					isDate(qGetStudentInfo.doc_conf_host_rec) 
+					isDate(qGetPlacementHistory.doc_conf_host_rec) 
 				AND 
-					isDate(qGetStudentInfo.doc_ref_form_1) 
+					isDate(qGetPlacementHistory.doc_ref_form_1) 
 				AND 
-					isDate(qGetStudentInfo.doc_ref_form_2) 
+					isDate(qGetPlacementHistory.doc_ref_form_2) 
 				AND 
-					isDate(qGetHostInfo.fathercbc_form) 
-				AND 
-					isDate(qGetHostInfo.mothercbc_form) 
+					NOT VAL(vParentsMissingAuthorization)
 				AND 
 					NOT VAL(vHostMemberMissingCBCAuthorization)
 				) {
-				
+							
 					// Paperwork Complete
 					vPaperworkImage = 'paperwork_4';
 			
@@ -297,25 +305,43 @@
 				
 			}
 			
+			// Host Family Application Photos - Check only starting August 12/13
+			if ( 
+					qGetProgramInfo.seasonID GTE 9 
+				AND
+				(
+						NOT isDate(qGetPlacementHistory.doc_bedroom_photo) 
+					OR 
+						NOT isDate(qGetPlacementHistory.doc_bathroom_photo) 
+					OR 
+						NOT isDate(qGetPlacementHistory.doc_kitchen_photo) 
+					OR 
+						NOT isDate(qGetPlacementHistory.doc_living_room_photo) 
+					OR 
+						NOT isDate(qGetPlacementHistory.doc_outside_photo) 
+				)
+			) {
+					// Paperwork Incomplete
+					vPaperworkImage = 'paperwork_2';
+			}
+			// End of Host Family Application Photos - Check only starting August 12/13
 			
 			// Single Person Placement - Check for Extra Paperwork
 			if ( 
 					vTotalFamilyMembers EQ 1 
 				AND 
-					qGetProgramInfo.seasonID GT 8 
-				AND 
-					isDate(qGetStudentInfo.doc_single_ref_form_1) 
-				AND 
-					isDate(qGetStudentInfo.doc_single_ref_form_2) 
+					(
+					 	NOT isDate(qGetPlacementHistory.doc_single_ref_form_1) 
+					OR 
+						NOT isDate(qGetPlacementHistory.doc_single_ref_form_2) 
+					)
 				) {
-
-					// Paperwork Complete
-					vPaperworkImage = 'paperwork_4';
-
+					// Paperwork Incomplete
+					vPaperworkImage = 'paperwork_2';
 			}
 			
 			// Check Orientations if Paperwork is complete
-			if ( vPaperworkImage EQ 'paperwork_4' AND NOT isDate(qGetStudentInfo.stu_arrival_orientation) AND NOT isDate(qGetStudentInfo.host_arrival_orientation) ) {
+			if ( vPaperworkImage EQ 'paperwork_4' AND NOT isDate(qGetPlacementHistory.stu_arrival_orientation) AND NOT isDate(qGetPlacementHistory.host_arrival_orientation) ) {
 				  // Paperwork docs are complete but orientations are missing
 				  vPaperworkImage = 'paperwork_3';
 			}

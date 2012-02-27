@@ -29,6 +29,11 @@
     <cfparam name="FORM.doc_rules_rec_date" default="">
     <cfparam name="FORM.doc_rules_sign_date" default="">
     <cfparam name="FORM.doc_photos_rec_date" default="">
+    <cfparam name="FORM.doc_bedroom_photo" default="">
+    <cfparam name="FORM.doc_bathroom_photo" default="">
+    <cfparam name="FORM.doc_kitchen_photo" default="">
+    <cfparam name="FORM.doc_living_room_photo" default="">
+    <cfparam name="FORM.doc_outside_photo" default="">
     <cfparam name="FORM.doc_school_profile_rec" default="">
     <cfparam name="FORM.doc_conf_host_rec" default="">
     <cfparam name="FORM.doc_date_of_visit" default="">
@@ -53,18 +58,15 @@
     
     <cfscript>
 		// Get Host Mother CBC
-		qGetCBCMother = APPLICATION.CFC.CBC.getCBCHostByID(hostID=qGetStudentInfo.hostID, cbcType='mother', sortBy="date_sent", sortOrder="DESC", getOneRecord=1);
+		qGetCBCMother = APPLICATION.CFC.CBC.getCBCHostByID(hostID=qGetPlacementHistory.hostID, cbcType='mother', sortBy="date_sent", sortOrder="DESC", getOneRecord=1);
 
 		// Get Host Father CBC
-		qGetCBCFather = APPLICATION.CFC.CBC.getCBCHostByID(hostID=qGetStudentInfo.hostID, cbcType='father', sortBy="date_sent", sortOrder="DESC", getOneRecord=1);
-
-		// Get Eligible Host Family Members
-		qGetEligibleCBCFamilyMembers = APPLICATION.CFC.CBC.getEligibleHostMember(hostID=qGetStudentInfo.hostID,studentID=qGetStudentInfo.studentID);
+		qGetCBCFather = APPLICATION.CFC.CBC.getCBCHostByID(hostID=qGetPlacementHistory.hostID, cbcType='father', sortBy="date_sent", sortOrder="DESC", getOneRecord=1);
 	</cfscript>
     
     <!--- Param CBC Member --->
-    <cfloop query="qGetEligibleCBCFamilyMembers">
-    	<cfparam name="FORM.cbc_form_received#qGetEligibleCBCFamilyMembers.childID#" default="">
+    <cfloop query="qGetEligibleCBCHostMembers">
+    	<cfparam name="FORM.cbc_form_received#qGetEligibleCBCHostMembers.childID#" default="">
     </cfloop>
     
     <cfscript>
@@ -72,7 +74,7 @@
 		if ( VAL(FORM.submitted) ) {
 			
 			// Update fields on the student table
-			APPLICATION.CFC.STUDENT.updatePlacementPaperwork(
+			APPLICATION.CFC.STUDENT.updatePlacementPaperworkHistory(
 				studentID = FORM.studentID,
 				historyID = qGetPlacementHistory.historyID,
 				// Single Person Placement Paperwork
@@ -87,6 +89,11 @@
 				doc_rules_rec_date = FORM.doc_rules_rec_date,
 				doc_rules_sign_date = FORM.doc_rules_sign_date,
 				doc_photos_rec_date = FORM.doc_photos_rec_date,
+				doc_bedroom_photo = FORM.doc_bedroom_photo,
+				doc_bathroom_photo = FORM.doc_bathroom_photo,
+				doc_kitchen_photo = FORM.doc_kitchen_photo,
+				doc_living_room_photo = FORM.doc_living_room_photo,
+				doc_outside_photo = FORM.doc_outside_photo,
 				doc_school_profile_rec = FORM.doc_school_profile_rec,
 				doc_conf_host_rec = FORM.doc_conf_host_rec,
 				doc_date_of_visit = FORM.doc_date_of_visit,
@@ -108,7 +115,7 @@
 			
 			// Update Host Family CBC
 			APPLICATION.CFC.HOST.updateHostPlacementPaperwork(
-				hostID = qGetStudentInfo.hostID,
+				hostID = qGetPlacementHistory.hostID,
 				fathercbc_form = FORM.fathercbc_form,
 				mothercbc_form = FORM.mothercbc_form	
 			);			
@@ -116,7 +123,7 @@
 			// Update Host Member CBC
 			for (i=1;i LTE ListLen(FORM.childIDList); i=i+1) {
 				APPLICATION.CFC.HOST.updateMemberPlacementPaperwork(
-					hostID = qGetStudentInfo.hostID,
+					hostID = qGetPlacementHistory.hostID,
 					childID = ListGetAt(FORM.childIDList, i),
 					cbc_form_received = FORM["cbc_form_received" & ListGetAt(FORM.childIDList, i)]
 				);			
@@ -131,69 +138,74 @@
 		// FORM NOT SUBMITTED
 		} else {
 			
-			FORM.studentID = qGetStudentInfo.studentID;
+			FORM.studentID = qGetPlacementHistory.studentID;
 			// Single Person Placement Paperwork
-			FORM.doc_single_place_auth = qGetStudentInfo.doc_single_place_auth;
-			FORM.doc_single_ref_form_1 = qGetStudentInfo.doc_single_ref_form_1;
-			FORM.doc_single_ref_check1 = qGetStudentInfo.doc_single_ref_check1;
-			FORM.doc_single_ref_form_2 = qGetStudentInfo.doc_single_ref_form_2;
-			FORM.doc_single_ref_check2 = qGetStudentInfo.doc_single_ref_check2;
+			FORM.doc_single_place_auth = qGetPlacementHistory.doc_single_place_auth;
+			FORM.doc_single_ref_form_1 = qGetPlacementHistory.doc_single_ref_form_1;
+			FORM.doc_single_ref_check1 = qGetPlacementHistory.doc_single_ref_check1;
+			FORM.doc_single_ref_form_2 = qGetPlacementHistory.doc_single_ref_form_2;
+			FORM.doc_single_ref_check2 = qGetPlacementHistory.doc_single_ref_check2;
 			// Placement Paperwork
-			FORM.doc_full_host_app_date = qGetStudentInfo.doc_full_host_app_date;
-			FORM.doc_letter_rec_date = qGetStudentInfo.doc_letter_rec_date;
-			FORM.doc_rules_rec_date = qGetStudentInfo.doc_rules_rec_date;
-			FORM.doc_rules_sign_date = qGetStudentInfo.doc_rules_sign_date;
-			FORM.doc_photos_rec_date = qGetStudentInfo.doc_photos_rec_date;
-			FORM.doc_school_profile_rec = qGetStudentInfo.doc_school_profile_rec;
-			FORM.doc_conf_host_rec = qGetStudentInfo.doc_conf_host_rec;
-			FORM.doc_date_of_visit = qGetStudentInfo.doc_date_of_visit;
-			FORM.doc_ref_form_1 = qGetStudentInfo.doc_ref_form_1;
-			FORM.doc_ref_check1 = qGetStudentInfo.doc_ref_check1;
-			FORM.doc_ref_form_2 = qGetStudentInfo.doc_ref_form_2;
-			FORM.doc_ref_check2 = qGetStudentInfo.doc_ref_check2;
-			FORM.doc_income_ver_date = qGetStudentInfo.doc_income_ver_date;
+			FORM.doc_full_host_app_date = qGetPlacementHistory.doc_full_host_app_date;
+			FORM.doc_letter_rec_date = qGetPlacementHistory.doc_letter_rec_date;
+			FORM.doc_rules_rec_date = qGetPlacementHistory.doc_rules_rec_date;
+			FORM.doc_rules_sign_date = qGetPlacementHistory.doc_rules_sign_date;
+			FORM.doc_photos_rec_date = qGetPlacementHistory.doc_photos_rec_date;
+			FORM.doc_bedroom_photo = qGetPlacementHistory.doc_bedroom_photo;
+			FORM.doc_bathroom_photo = qGetPlacementHistory.doc_bathroom_photo;
+			FORM.doc_kitchen_photo = qGetPlacementHistory.doc_kitchen_photo;
+			FORM.doc_living_room_photo = qGetPlacementHistory.doc_living_room_photo;
+			FORM.doc_outside_photo = qGetPlacementHistory.doc_outside_photo;
+			FORM.doc_school_profile_rec = qGetPlacementHistory.doc_school_profile_rec;
+			FORM.doc_conf_host_rec = qGetPlacementHistory.doc_conf_host_rec;
+			FORM.doc_date_of_visit = qGetPlacementHistory.doc_date_of_visit;
+			FORM.doc_ref_form_1 = qGetPlacementHistory.doc_ref_form_1;
+			FORM.doc_ref_check1 = qGetPlacementHistory.doc_ref_check1;
+			FORM.doc_ref_form_2 = qGetPlacementHistory.doc_ref_form_2;
+			FORM.doc_ref_check2 = qGetPlacementHistory.doc_ref_check2;
+			FORM.doc_income_ver_date = qGetPlacementHistory.doc_income_ver_date;
 			// Arrival Compliance
-			FORM.doc_school_accept_date = qGetStudentInfo.doc_school_accept_date;
-			FORM.doc_school_sign_date = qGetStudentInfo.doc_school_sign_date;
+			FORM.doc_school_accept_date = qGetPlacementHistory.doc_school_accept_date;
+			FORM.doc_school_sign_date = qGetPlacementHistory.doc_school_sign_date;
 			// CBC Forms - Host Family Table
 			FORM.fathercbc_form = qGetHostInfo.fathercbc_form;
 			FORM.mothercbc_form = qGetHostInfo.mothercbc_form;
 			// CBC Host Members 
-			FORM.childIDList = ValueList(qGetEligibleCBCFamilyMembers.childID);
-			for ( i=1; i LTE qGetEligibleCBCFamilyMembers.recordCount; i=i+1 ) {
-				FORM["cbc_form_received" & qGetEligibleCBCFamilyMembers.childID[i]] = qGetEligibleCBCFamilyMembers.cbc_form_received[i];
+			FORM.childIDList = ValueList(qGetEligibleCBCHostMembers.childID);
+			for ( i=1; i LTE qGetEligibleCBCHostMembers.recordCount; i=i+1 ) {
+				FORM["cbc_form_received" & qGetEligibleCBCHostMembers.childID[i]] = qGetEligibleCBCHostMembers.cbc_form_received[i];
 			}
 			// Original Student
-			FORM.copy_app_school = qGetStudentInfo.copy_app_school;
+			FORM.copy_app_school = qGetPlacementHistory.copy_app_school;
 			// Arrival Orientation
-			FORM.stu_arrival_orientation = qGetStudentInfo.stu_arrival_orientation;
-			FORM.host_arrival_orientation = qGetStudentInfo.host_arrival_orientation;
-			FORM.doc_class_schedule = qGetStudentInfo.doc_class_schedule;
+			FORM.stu_arrival_orientation = qGetPlacementHistory.stu_arrival_orientation;
+			FORM.host_arrival_orientation = qGetPlacementHistory.host_arrival_orientation;
+			FORM.doc_class_schedule = qGetPlacementHistory.doc_class_schedule;
 		}
 		
 		/***************************************
 			Set Compliance Notifications
 		***************************************/
 		
-		if ( isDate(qGetStudentInfo.datePlaced) ) {
+		if ( isDate(qGetPlacementHistory.datePlaced) ) {
 		
 			// Single Placement Paperwork
 			if ( vTotalFamilyMembers EQ 1 AND qGetProgramInfo.seasonid GT 7 ) {
 	
 				// 
-				if ( isDate(FORM.doc_single_ref_check1) AND FORM.doc_single_ref_check1 GT qGetStudentInfo.datePlaced ) {
+				if ( isDate(FORM.doc_single_ref_check1) AND FORM.doc_single_ref_check1 GT qGetPlacementHistory.datePlaced ) {
 					SESSION.formErrors.Add("Date of Single Placement Reference Check 1 is out of compliance");
 				}
 				
 				//
-				if ( isDate(FORM.doc_single_ref_check2) AND FORM.doc_single_ref_check2 GT qGetStudentInfo.datePlaced ) {
+				if ( isDate(FORM.doc_single_ref_check2) AND FORM.doc_single_ref_check2 GT qGetPlacementHistory.datePlaced ) {
 					SESSION.formErrors.Add("Date of Single Placement Reference Check 2 is out of compliance");
 				}
 	
 			}
 			
 			// Confidential Host Family Visit Form
-			if ( isDate(FORM.doc_date_of_visit) AND FORM.doc_date_of_visit GT qGetStudentInfo.datePlaced ) {
+			if ( isDate(FORM.doc_date_of_visit) AND FORM.doc_date_of_visit GT qGetPlacementHistory.datePlaced ) {
 				SESSION.formErrors.Add("Confidential Host Family Date of Visit is out of compliance");
 			}
 			
@@ -211,7 +223,7 @@
 				}
 	
 				if ( VAL(qGetPlacementHistory.isRelocation) ) {
-					vDateStartWindowCompliance = qGetStudentInfo.datePlaced;
+					vDateStartWindowCompliance = qGetPlacementHistory.datePlaced;
 				} else {
 					vDateStartWindowCompliance = qGetArrival.dep_date;
 				}
@@ -402,16 +414,16 @@
 
                     <!--- PIS Approved --->
                     <tr> 
-                        <td width="15%" class="paperworkLeftColumn"><input type="checkbox" name="datePlacedCheckBox" id="datePlaced" class="editPage" <cfif isDate(qGetStudentInfo.datePlaced)>checked</cfif> disabled="disabled"></td>
+                        <td width="15%" class="paperworkLeftColumn"><input type="checkbox" name="datePlacedCheckBox" id="datePlaced" class="editPage" <cfif isDate(qGetPlacementHistory.datePlaced)>checked</cfif> disabled="disabled"></td>
                         <td width="55%"><label>Date Placed ( Headquarters Approval Date )</label></td>
-                        <td width="30%"><input type="text" name="datePlaced" id="datePlaced" class="datePicker" value="#DateFormat(qGetStudentInfo.datePlaced, 'mm/dd/yyyy')#" disabled="disabled"></td>
+                        <td width="30%"><input type="text" name="datePlaced" id="datePlaced" class="datePicker" value="#DateFormat(qGetPlacementHistory.datePlaced, 'mm/dd/yyyy')#" disabled="disabled"></td>
                     </tr>
 
                     <!--- PIS Sent to Intl. Representative --->
                     <tr> 
-                        <td class="paperworkLeftColumn"><input type="checkbox" name="datePISEmailedCheckBox" id="datePISEmailed" class="editPage" <cfif isDate(qGetStudentInfo.datePISEmailed)>checked</cfif> disabled="disabled"></td>
+                        <td class="paperworkLeftColumn"><input type="checkbox" name="datePISEmailedCheckBox" id="datePISEmailed" class="editPage" <cfif isDate(qGetPlacementHistory.datePISEmailed)>checked</cfif> disabled="disabled"></td>
                         <td><label>PIS Emailed to International Representative</label></td>
-                        <td><input type="text" name="datePISEmailed" id="datePISEmailed" class="datePicker" value="#DateFormat(qGetStudentInfo.datePISEmailed, 'mm/dd/yyyy')#" disabled="disabled"></td>
+                        <td><input type="text" name="datePISEmailed" id="datePISEmailed" class="datePicker" value="#DateFormat(qGetPlacementHistory.datePISEmailed, 'mm/dd/yyyy')#" disabled="disabled"></td>
                     </tr>
                                     
                     <!--- Host Family Application Received --->
@@ -460,18 +472,78 @@
                         </td>
                     </tr>
 
-                    <!--- Host Family Photos --->
+                    <!--- Family Photo --->
                     <tr> 
                         <td class="paperworkLeftColumn">
                             <input type="checkbox" name="check_doc_photos_rec_date" id="check_doc_photos_rec_date" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_photos_rec_date');" <cfif isDate(FORM.doc_photos_rec_date)>checked</cfif> >
 						</td>
-                        <td><label for="check_doc_photos_rec_date">Host Family Photos</label></td>
+                        <td><label for="check_doc_photos_rec_date">Family Photo</label></td>
                         <td>
                             <span class="readOnly displayNone">#DateFormat(FORM.doc_photos_rec_date, 'mm/dd/yyyy')#</span>
                             <input type="text" name="doc_photos_rec_date" id="doc_photos_rec_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_photos_rec_date, 'mm/dd/yyyy')#">
                         </td>
                     </tr>
                     
+                    <!--- Student Bedroom Photo --->
+                    <tr> 
+                        <td class="paperworkLeftColumn">
+                            <input type="checkbox" name="check_doc_bedroom_photo" id="check_doc_bedroom_photo" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_bedroom_photo');" <cfif isDate(FORM.doc_bedroom_photo)>checked</cfif> >
+						</td>
+                        <td><label for="check_doc_bedroom_photo">Student Bedroom Photo</label></td>
+                        <td>
+                            <span class="readOnly displayNone">#DateFormat(FORM.doc_bedroom_photo, 'mm/dd/yyyy')#</span>
+                            <input type="text" name="doc_bedroom_photo" id="doc_bedroom_photo" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_bedroom_photo, 'mm/dd/yyyy')#">
+                        </td>
+                    </tr>
+                    
+                    <!--- Student Bathroom Photo --->
+                    <tr> 
+                        <td class="paperworkLeftColumn">
+                            <input type="checkbox" name="check_doc_bathroom_photo" id="check_doc_bathroom_photo" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_bathroom_photo');" <cfif isDate(FORM.doc_bathroom_photo)>checked</cfif> >
+						</td>
+                        <td><label for="check_doc_bathroom_photo">Student Bathroom Photo</label></td>
+                        <td>
+                            <span class="readOnly displayNone">#DateFormat(FORM.doc_bathroom_photo, 'mm/dd/yyyy')#</span>
+                            <input type="text" name="doc_bathroom_photo" id="doc_bathroom_photo" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_bathroom_photo, 'mm/dd/yyyy')#">
+                        </td>
+                    </tr>
+                    
+                    <!--- Kitchen Photo --->
+                    <tr> 
+                        <td class="paperworkLeftColumn">
+                            <input type="checkbox" name="check_doc_kitchen_photo" id="check_doc_kitchen_photo" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_kitchen_photo');" <cfif isDate(FORM.doc_kitchen_photo)>checked</cfif> >
+						</td>
+                        <td><label for="check_doc_kitchen_photo">Kitchen Photo</label></td>
+                        <td>
+                            <span class="readOnly displayNone">#DateFormat(FORM.doc_kitchen_photo, 'mm/dd/yyyy')#</span>
+                            <input type="text" name="doc_kitchen_photo" id="doc_kitchen_photo" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_kitchen_photo, 'mm/dd/yyyy')#">
+                        </td>
+                    </tr>
+
+                    <!--- Living Room Photo --->
+                    <tr> 
+                        <td class="paperworkLeftColumn">
+                            <input type="checkbox" name="check_doc_living_room_photo" id="check_doc_living_room_photo" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_living_room_photo');" <cfif isDate(FORM.doc_living_room_photo)>checked</cfif> >
+						</td>
+                        <td><label for="check_doc_living_room_photo">Living Room Photo</label></td>
+                        <td>
+                            <span class="readOnly displayNone">#DateFormat(FORM.doc_living_room_photo, 'mm/dd/yyyy')#</span>
+                            <input type="text" name="doc_living_room_photo" id="doc_living_room_photo" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_living_room_photo, 'mm/dd/yyyy')#">
+                        </td>
+                    </tr>
+
+                    <!--- Outside Photo --->
+                    <tr> 
+                        <td class="paperworkLeftColumn">
+                            <input type="checkbox" name="check_doc_outside_photo" id="check_doc_outside_photo" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_outside_photo');" <cfif isDate(FORM.doc_outside_photo)>checked</cfif> >
+						</td>
+                        <td><label for="check_doc_outside_photo">Outside Photo</label></td>
+                        <td>
+                            <span class="readOnly displayNone">#DateFormat(FORM.doc_outside_photo, 'mm/dd/yyyy')#</span>
+                            <input type="text" name="doc_outside_photo" id="doc_outside_photo" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_outside_photo, 'mm/dd/yyyy')#">
+                        </td>
+                    </tr>
+
                     <!--- School & Community Profile Form --->
                     <tr> 
                         <td class="paperworkLeftColumn">
@@ -675,20 +747,20 @@
                 </table>
 				
                 <table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center">
-                    <cfloop query="qGetEligibleCBCFamilyMembers">
+                    <cfloop query="qGetEligibleCBCHostMembers">
                         <tr> 
                             <td width="15%" class="paperworkLeftColumn">
-                                <input type="checkbox" name="member#qGetEligibleCBCFamilyMembers.currentRow#check" id="member#qGetEligibleCBCFamilyMembers.currentRow#check" class="editPage displayNone" onclick="setTodayDate(this.id, 'cbc_form_received#qGetEligibleCBCFamilyMembers.childID#');" <cfif isDate(FORM['cbc_form_received' & qGetEligibleCBCFamilyMembers.childID])>checked</cfif> >
+                                <input type="checkbox" name="member#qGetEligibleCBCHostMembers.currentRow#check" id="member#qGetEligibleCBCHostMembers.currentRow#check" class="editPage displayNone" onclick="setTodayDate(this.id, 'cbc_form_received#qGetEligibleCBCHostMembers.childID#');" <cfif isDate(FORM['cbc_form_received' & qGetEligibleCBCHostMembers.childID])>checked</cfif> >
                             </td>
-                            <td width="55%"><label for="member#qGetEligibleCBCFamilyMembers.currentRow#check">#qGetEligibleCBCFamilyMembers.name# #qGetEligibleCBCFamilyMembers.lastname# - #qGetEligibleCBCFamilyMembers.age# years old</label></td>
+                            <td width="55%"><label for="member#qGetEligibleCBCHostMembers.currentRow#check">#qGetEligibleCBCHostMembers.name# #qGetEligibleCBCHostMembers.lastname# - #qGetEligibleCBCHostMembers.age# years old</label></td>
                             <td width="30%">
-                                <span class="readOnly displayNone">#DateFormat(qGetEligibleCBCFamilyMembers.cbc_form_received, 'mm/dd/yyyy')#</span>
-                                <input type="text" name="cbc_form_received#qGetEligibleCBCFamilyMembers.childID#" id="cbc_form_received#qGetEligibleCBCFamilyMembers.childID#" class="datePicker editPage displayNone" value="#DateFormat(FORM['cbc_form_received' & qGetEligibleCBCFamilyMembers.childID], 'mm/dd/yyyy')#">
+                                <span class="readOnly displayNone">#DateFormat(qGetEligibleCBCHostMembers.cbc_form_received, 'mm/dd/yyyy')#</span>
+                                <input type="text" name="cbc_form_received#qGetEligibleCBCHostMembers.childID#" id="cbc_form_received#qGetEligibleCBCHostMembers.childID#" class="datePicker editPage displayNone" value="#DateFormat(FORM['cbc_form_received' & qGetEligibleCBCHostMembers.childID], 'mm/dd/yyyy')#">
                             </td>
                         </tr>
                     </cfloop>
                     
-					<cfif NOT VAL(qGetEligibleCBCFamilyMembers.recordcount)>
+					<cfif NOT VAL(qGetEligibleCBCHostMembers.recordcount)>
                         <tr><td colspan="3" align="center">No eligible host family members found.</td></tr>
                     </cfif>
                </table>
@@ -732,19 +804,19 @@
                     </cfif>
                     
                     <!--- Host Members --->
-                    <cfloop query="qGetEligibleCBCFamilyMembers">
+                    <cfloop query="qGetEligibleCBCHostMembers">
                         <cfscript>
                             // Get CBC Member
-                            qGetCBCMember = APPLICATION.CFC.CBC.getCBCHostByID(hostID=qGetStudentInfo.hostID, familyMemberID=qGetEligibleCBCFamilyMembers.childID, cbcType='member', sortBy="date_sent", sortOrder="DESC", getOneRecord=1);
+                            qGetCBCMember = APPLICATION.CFC.CBC.getCBCHostByID(hostID=qGetPlacementHistory.hostID, familyMemberID=qGetEligibleCBCHostMembers.childID, cbcType='member', sortBy="date_sent", sortOrder="DESC", getOneRecord=1);
                         </cfscript>
                         <tr> 
                             <td width="15%" class="paperworkLeftColumn">&nbsp;</td>
-                            <td width="55%"><label for="memberCBC#qGetEligibleCBCFamilyMembers.currentRow#">#qGetEligibleCBCFamilyMembers.name# #qGetEligibleCBCFamilyMembers.lastname# - #qGetEligibleCBCFamilyMembers.age# years old</label></td>
+                            <td width="55%"><label for="memberCBC#qGetEligibleCBCHostMembers.currentRow#">#qGetEligibleCBCHostMembers.name# #qGetEligibleCBCHostMembers.lastname# - #qGetEligibleCBCHostMembers.age# years old</label></td>
                             <td width="30%">
                                 <span class="readOnly displayNone">#DateFormat(qGetCBCMember.date_sent, 'mm/dd/yyyy')# to #DateFormat(qGetCBCMember.date_expired, 'mm/dd/yyyy')#</span>
-                                <input type="text" name="memberCBC#qGetEligibleCBCFamilyMembers.currentRow#" id="memberCBC#qGetEligibleCBCFamilyMembers.currentRow#" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCMember.date_sent, 'mm/dd/yyyy')#" disabled="disabled">
+                                <input type="text" name="memberCBC#qGetEligibleCBCHostMembers.currentRow#" id="memberCBC#qGetEligibleCBCHostMembers.currentRow#" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCMember.date_sent, 'mm/dd/yyyy')#" disabled="disabled">
                                 to
-                                <input type="text" name="memberCBC#qGetEligibleCBCFamilyMembers.currentRow#" id="memberCBC#qGetEligibleCBCFamilyMembers.currentRow#" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCMember.date_expired, 'mm/dd/yyyy')#" disabled="disabled">
+                                <input type="text" name="memberCBC#qGetEligibleCBCHostMembers.currentRow#" id="memberCBC#qGetEligibleCBCHostMembers.currentRow#" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCMember.date_expired, 'mm/dd/yyyy')#" disabled="disabled">
                             </td>
                         </tr>
                     </cfloop>

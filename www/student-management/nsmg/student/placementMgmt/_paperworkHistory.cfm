@@ -29,6 +29,11 @@
     <cfparam name="FORM.doc_rules_rec_date" default="">
     <cfparam name="FORM.doc_rules_sign_date" default="">
     <cfparam name="FORM.doc_photos_rec_date" default="">
+    <cfparam name="FORM.doc_bedroom_photo" default="">
+    <cfparam name="FORM.doc_bathroom_photo" default="">
+    <cfparam name="FORM.doc_kitchen_photo" default="">
+    <cfparam name="FORM.doc_living_room_photo" default="">
+    <cfparam name="FORM.doc_outside_photo" default="">
     <cfparam name="FORM.doc_school_profile_rec" default="">
     <cfparam name="FORM.doc_conf_host_rec" default="">
     <cfparam name="FORM.doc_date_of_visit" default="">
@@ -115,6 +120,11 @@
 				doc_rules_rec_date = FORM.doc_rules_rec_date,
 				doc_rules_sign_date = FORM.doc_rules_sign_date,
 				doc_photos_rec_date = FORM.doc_photos_rec_date,
+				doc_bedroom_photo = FORM.doc_bedroom_photo,
+				doc_bathroom_photo = FORM.doc_bathroom_photo,
+				doc_kitchen_photo = FORM.doc_kitchen_photo,
+				doc_living_room_photo = FORM.doc_living_room_photo,
+				doc_outside_photo = FORM.doc_outside_photo,
 				doc_school_profile_rec = FORM.doc_school_profile_rec,
 				doc_conf_host_rec = FORM.doc_conf_host_rec,
 				doc_date_of_visit = FORM.doc_date_of_visit,				
@@ -173,6 +183,11 @@
 			FORM.doc_rules_rec_date = qGetHostHistory.doc_rules_rec_date;
 			FORM.doc_rules_sign_date = qGetHostHistory.doc_rules_sign_date;
 			FORM.doc_photos_rec_date = qGetHostHistory.doc_photos_rec_date;
+			FORM.doc_bedroom_photo = qGetHostHistory.doc_bedroom_photo;
+			FORM.doc_bathroom_photo = qGetHostHistory.doc_bathroom_photo;
+			FORM.doc_kitchen_photo = qGetHostHistory.doc_kitchen_photo;
+			FORM.doc_living_room_photo = qGetHostHistory.doc_living_room_photo;
+			FORM.doc_outside_photo = qGetHostHistory.doc_outside_photo;
 			FORM.doc_school_profile_rec = qGetHostHistory.doc_school_profile_rec;
 			FORM.doc_conf_host_rec = qGetHostHistory.doc_conf_host_rec;
 			FORM.doc_date_of_visit = qGetHostHistory.doc_date_of_visit;
@@ -516,15 +531,63 @@
                 </td>
             </tr>
 
-            <!--- Host Family Photos --->
+			<!--- Family Photo --->
             <tr> 
                 <td class="paperworkLeftColumn">
                     <input type="checkbox" name="check_doc_photos_rec_date" id="check_doc_photos_rec_date" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_photos_rec_date');" <cfif isDate(FORM.doc_photos_rec_date)>checked</cfif> >
                 </td>
-                <td><label for="check_doc_photos_rec_date">Host Family Photos</label></td>
+                <td><label for="check_doc_photos_rec_date">Family Photo</label></td>
                 <td>
                     <span class="readOnly displayNone">#DateFormat(FORM.doc_photos_rec_date, 'mm/dd/yyyy')#</span>
                     <input type="text" name="doc_photos_rec_date" id="doc_photos_rec_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_photos_rec_date, 'mm/dd/yyyy')#">
+                </td>
+            </tr>
+            
+            <!--- Student Bedroom Photo --->
+            <tr> 
+                <td class="paperworkLeftColumn">
+                    <input type="checkbox" name="check_doc_bedroom_photo" id="check_doc_bedroom_photo" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_bedroom_photo');" <cfif isDate(FORM.doc_bedroom_photo)>checked</cfif> >
+                </td>
+                <td><label for="check_doc_bedroom_photo">Student Bedroom Photo</label></td>
+                <td>
+                    <span class="readOnly displayNone">#DateFormat(FORM.doc_bedroom_photo, 'mm/dd/yyyy')#</span>
+                    <input type="text" name="doc_bedroom_photo" id="doc_bedroom_photo" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_bedroom_photo, 'mm/dd/yyyy')#">
+                </td>
+            </tr>
+            
+            <!--- Student Bathroom Photo --->
+            <tr> 
+                <td class="paperworkLeftColumn">
+                    <input type="checkbox" name="check_doc_bathroom_photo" id="check_doc_bathroom_photo" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_bathroom_photo');" <cfif isDate(FORM.doc_bathroom_photo)>checked</cfif> >
+                </td>
+                <td><label for="check_doc_bathroom_photo">Student Bathroom Photo</label></td>
+                <td>
+                    <span class="readOnly displayNone">#DateFormat(FORM.doc_bathroom_photo, 'mm/dd/yyyy')#</span>
+                    <input type="text" name="doc_bathroom_photo" id="doc_bathroom_photo" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_bathroom_photo, 'mm/dd/yyyy')#">
+                </td>
+            </tr>
+            
+            <!--- Kitchen Photo --->
+            <tr> 
+                <td class="paperworkLeftColumn">
+                    <input type="checkbox" name="check_doc_kitchen_photo" id="check_doc_kitchen_photo" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_kitchen_photo');" <cfif isDate(FORM.doc_kitchen_photo)>checked</cfif> >
+                </td>
+                <td><label for="check_doc_kitchen_photo">Kitchen Photo</label></td>
+                <td>
+                    <span class="readOnly displayNone">#DateFormat(FORM.doc_kitchen_photo, 'mm/dd/yyyy')#</span>
+                    <input type="text" name="doc_kitchen_photo" id="doc_kitchen_photo" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_kitchen_photo, 'mm/dd/yyyy')#">
+                </td>
+            </tr>
+            
+            <!--- Living Room Photo --->
+            <tr> 
+                <td class="paperworkLeftColumn">
+                    <input type="checkbox" name="check_doc_living_room_photo" id="check_doc_living_room_photo" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_living_room_photo');" <cfif isDate(FORM.doc_living_room_photo)>checked</cfif> >
+                </td>
+                <td><label for="check_doc_living_room_photo">Living Room Photo</label></td>
+                <td>
+                    <span class="readOnly displayNone">#DateFormat(FORM.doc_living_room_photo, 'mm/dd/yyyy')#</span>
+                    <input type="text" name="doc_living_room_photo" id="doc_living_room_photo" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_living_room_photo, 'mm/dd/yyyy')#">
                 </td>
             </tr>
             
