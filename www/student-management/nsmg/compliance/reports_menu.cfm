@@ -17,7 +17,7 @@
 	
     <cfscript>
 		// Get Programs
-		qGetPrograms = APPLICATION.CFC.program.getPrograms(isActive=1);
+		qGetProgramList = APPLICATION.CFC.program.getPrograms(isActive=1);
 	
 		// Get User Regions
 		qGetRegions = APPLICATION.CFC.REGION.getUserRegions(
@@ -54,7 +54,7 @@
                                 <tr><th colspan="2" bgcolor="##e2efc7">Placement Documents Received per Period</th></tr>
                                 <tr>
                                     <td>Program :</td>
-                                    <td><cfselect name="programID" query="qGetPrograms" value="programID" display="programName" multiple="yes" size="5" required="yes" message="You must select at least one program."></cfselect></td>
+                                    <td><cfselect name="programID" query="qGetProgramList" value="programID" display="programName" multiple="yes" size="6" required="yes" message="You must select at least one program."></cfselect></td>
                                 </tr>
                                 <tr>
                                     <td>Region :</td>
@@ -85,7 +85,7 @@
                                 <tr><th colspan="2" bgcolor="##e2efc7">Student Arrival Date x CBC Date (No Relocations)</th></tr>
                                 <tr>
                                     <td>Program :</td>
-                                    <td><cfselect name="programID" query="qGetPrograms" value="programID" display="programName" multiple size="5" required="yes" message="You must select at least one program."></cfselect></td>
+                                    <td><cfselect name="programID" query="qGetProgramList" value="programID" display="programName" multiple size="6" required="yes" message="You must select at least one program."></cfselect></td>
                                 </tr>
                                 <tr>
                                     <td>Region :</td>
@@ -148,7 +148,7 @@
                                 <tr><th colspan="2" bgcolor="##e2efc7">Placement Approval x CBC Date (Students Relocated Only)</th></tr>
                                 <tr>
                                     <td>Program :</td>
-                                    <td><cfselect name="programID" query="qGetPrograms" value="programID" display="programName" multiple size="5" required="yes" message="You must select at least one program."></cfselect></td>
+                                    <td><cfselect name="programID" query="qGetProgramList" value="programID" display="programName" multiple size="6" required="yes" message="You must select at least one program."></cfselect></td>
                                 </tr>
                                 <tr>
                                     <td>Region :</td>
@@ -178,7 +178,7 @@
                                 <tr><th colspan="2" bgcolor="##e2efc7">Students with Arrival Information and Missing School Acceptance (Place Management)</th></tr>
                                 <tr>
                                     <td>Program :</td>
-                                    <td><cfselect name="programID" query="qGetPrograms" value="programID" display="programName" multiple size="5" required="yes" message="You must select at least one program."></cfselect></td>
+                                    <td><cfselect name="programID" query="qGetProgramList" value="programID" display="programName" multiple size="6" required="yes" message="You must select at least one program."></cfselect></td>
                                 </tr>
                                 <tr>
                                     <td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td>
@@ -190,8 +190,55 @@
                         </td>
                     </tr>
                 </table><br />
+
 				
 				<!--- Row 4 - 2 boxes --->
+                <table cellpadding="6" cellspacing="0" align="center" width="95%">
+                    <tr>
+                        <td width="50%" valign="top">
+                            <form action="compliance/missingSinglePlacementPaperworkByIntlRep.cfm" method="POST" target="_blank">
+                                <table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
+                                    <tr><th colspan="3" bgcolor="##e2efc7">Missing Single Placement Paperwork by International Representative</th></tr>
+                                    <tr align="left">
+                                        <td width="20%" valign="top">Program :</td>
+                                        <td>
+                                            <select name="programID" size="6" multiple>
+                                                <cfloop query="qGetProgramList">
+                                                    <option value="#programID#">#programname#</option>
+                                                </cfloop>
+                                            </select>		
+                                        </td>
+                                    </tr>
+                                    <tr align="left">
+                                        <td valign="top">Region :</td>
+                                        <td>
+                                            <select name="regionID" size="6" multiple> 
+                                                <cfloop query="qGetRegions">
+                                                    <option value="#qGetRegions.regionid#" <cfif qGetRegions.recordcount eq 1>selected</cfif>>#qGetRegions.regionname#</option>
+                                                </cfloop> 
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top">Report Type :</td>
+                                        <td>
+                                            <select name="reportType" class="xLargeField">
+                                                <option value="onScreen">On Screen</option>
+                                                <option value="Excel">Excel Spreadsheet</option>
+                                            </select>
+                                        </td>		
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </td>
+                        <td width="50%" valign="top">&nbsp;</td>
+                    </tr>
+                </table><br />
+				
+				<!--- Row 5 - 2 boxes --->
                 <table cellpadding="6" cellspacing="0" align="center" width="95%">
                     <tr>
                         <td width="50%" valign="top">
@@ -201,9 +248,9 @@
                                     <tr>
                                         <td valign="top">Program :</td>
                                         <td>
-                                            <select name="programID" multiple="yes" size="5" class="xLargeField">
-                                                <cfloop query="qGetPrograms">
-                                                    <option value="#qGetPrograms.programID#">#qGetPrograms.programName#</option>
+                                            <select name="programID" multiple="yes" size="6" class="xLargeField">
+                                                <cfloop query="qGetProgramList">
+                                                    <option value="#qGetProgramList.programID#">#qGetProgramList.programName#</option>
                                                 </cfloop>
                                             </select>
                                         </td>
@@ -211,7 +258,7 @@
                                     <tr>
                                         <td valign="top">Region :</td>
                                         <td>
-                                            <select name="regionID" multiple size="5" class="xLargeField">
+                                            <select name="regionID" multiple size="6" class="xLargeField">
                                                 <cfloop query="qGetRegions">
                                                 	<option value="#qGetRegions.regionID#"><cfif CLIENT.companyID EQ 5>#qGetRegions.companyShort# - </cfif>#qGetRegions.regionname#</option>
                                                 </cfloop>
@@ -248,9 +295,9 @@
                                     <tr>
                                         <td valign="top">Program :</td>
                                         <td>
-                                            <select name="programID" multiple="yes" size="5" class="xLargeField">
-                                                <cfloop query="qGetPrograms">
-                                                    <option value="#qGetPrograms.programID#">#qGetPrograms.programName#</option>
+                                            <select name="programID" multiple="yes" size="6" class="xLargeField">
+                                                <cfloop query="qGetProgramList">
+                                                    <option value="#qGetProgramList.programID#">#qGetProgramList.programName#</option>
                                                 </cfloop>
                                             </select>
                                         </td>
@@ -258,7 +305,7 @@
                                     <tr>
                                         <td valign="top">Region :</td>
                                         <td>
-                                            <select name="regionID" multiple size="5" class="xLargeField">
+                                            <select name="regionID" multiple size="6" class="xLargeField">
                                                 <cfloop query="qGetRegions">
                                                 	<option value="#qGetRegions.regionID#"><cfif CLIENT.companyID EQ 5>#qGetRegions.companyShort# - </cfif>#qGetRegions.regionname#</option>
                                                 </cfloop>
