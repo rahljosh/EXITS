@@ -864,8 +864,6 @@
                 AND checkAgreement.ar_cbc_auth_form is not '' 
                 AND cbcCheck.date_approved is not ''
                 AND checkAgreement.ar_agreement is not ''
-                AND checkAgreement.cbcSig is not ''
-                AND checkAgreement.agreeSig is not ''
                 AND checkAgreement.ar_ref_quest1 is not ''
                 AND checkAgreement.ar_ref_quest2 is not ''>
                <cfset areaRepOk = 1>
@@ -877,8 +875,6 @@
                 AND checkAgreement.ar_cbc_auth_form is not '' 
                 AND cbcCheck.date_approved is  ''
                 AND checkAgreement.ar_agreement is not ''
-                AND checkAgreement.cbcSig is not ''
-                AND checkAgreement.agreeSig is not ''
                 AND checkAgreement.ar_ref_quest1 is not ''
                 AND checkAgreement.ar_ref_quest2 is not ''>
                <cfset reviewAcct = 1>
