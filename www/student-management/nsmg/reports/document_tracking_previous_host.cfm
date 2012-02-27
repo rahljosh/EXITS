@@ -173,31 +173,33 @@
             s.programID, 
             s.areaRepID,
             s.placeRepID,
-            hist.datePlaced,
-            hist.doc_full_host_app_date,
-            hist.doc_letter_rec_date, 
-            hist.doc_rules_rec_date,
-            hist.doc_rules_sign_date, 
-            hist.doc_photos_rec_date, 
-            hist.doc_school_accept_date, 
-            hist.doc_school_profile_rec,
-            hist.doc_conf_host_rec, 
-            hist.doc_date_of_visit, 
-            hist.doc_ref_form_1, 
-            hist.doc_ref_form_2, 
-            hist.doc_single_place_auth,
-            hist.stu_arrival_orientation, 
-            hist.host_arrival_orientation, 
-            hist.doc_class_schedule,
-            <!--- Added 02/02/2011 --->
-            <!--- Required starting Aug 11 --->
-            hist.doc_income_ver_date,
-            <!--- Required for Single Parents in effect now --->
-            hist.doc_single_ref_check1,
-            hist.doc_single_ref_check2,
-            <!--- hist.doc_conf_host_rec2, Progress Report --->
+            sh.datePlaced,
+            sh.doc_full_host_app_date,
+            sh.doc_letter_rec_date, 
+            sh.doc_rules_rec_date,
+            sh.doc_rules_sign_date, 
+            sh.doc_photos_rec_date,
+			<!--- Added 02/27/2012 - Required for August 12 Students --->
+            sh.doc_bedroom_photo,
+            sh.doc_bathroom_photo,
+            sh.doc_kitchen_photo,
+            sh.doc_living_room_photo,
+            sh.doc_outside_photo,
+            <!--- End of Added 02/27/2012 - Required for August 12 Students --->
+            sh.doc_school_accept_date, 
+            sh.doc_school_profile_rec,
+            sh.doc_conf_host_rec, 
+            sh.doc_date_of_visit, 
+            sh.doc_ref_form_1, 
+            sh.doc_ref_form_2, 
+            sh.doc_single_place_auth,
+            sh.stu_arrival_orientation, 
+            sh.host_arrival_orientation, 
+            sh.doc_class_schedule,
+            sh.doc_income_ver_date,
+            sh.doc_single_ref_check1,
+            sh.doc_single_ref_check2,
             secondVisitReport.pr_ny_approved_date,
-            <!--- End of Added 02/02/2011 --->
             p.seasonID,
             u.userID,
             u.email as repEmail,
@@ -209,20 +211,22 @@
         FROM 
             smg_students s
         INNER JOIN
-        	smg_hosthistory hist ON hist.studentID = s.studentID
-            	AND 
-                	hist.hostID != s.hostID
+        	smg_hosthistory sh ON sh.studentID = s.studentID
+            	AND
+                	sh.isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                AND
+                	sh.hostID != s.hostID
         INNER JOIN
             smg_programs p on p.programid = s.programid
         INNER JOIN
-            smg_hosts h ON h.hostID = hist.hostID
+            smg_hosts h ON h.hostID = sh.hostID
         LEFT OUTER JOIN 
             smg_users u ON s.#tableField# = u.userID
         <!--- Second Visit Report - Check the report itself and not the fields on placement paperwork --->
         LEFT OUTER JOIN 
             progress_reports secondVisitReport ON secondVisitReport.fk_student = s.studentID
                 AND
-                	secondVisitReport.fk_host = hist.hostID
+                	secondVisitReport.fk_host = sh.hostID
                 AND
                     secondVisitReport.fk_reporttype = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
                 AND
@@ -237,44 +241,53 @@
         AND 
             s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> ) 
         <!--- From / To Dates --->
-        <cfif LEN(FORM.dateFrom) AND LEN(FORM.dateTo)> 
+        <cfif isDate(FORM.dateFrom) AND isDate(FORM.dateTo)> 
         	AND
-            	hist.datePlaced >= <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(FORM.dateFrom)#">
+            	sh.datePlaced >= <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(FORM.dateFrom)#">
         	AND
-            	hist.datePlaced <= <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(FORM.dateTo)#">
+            	sh.datePlaced <= <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(FORM.dateTo)#">
         </cfif>       
         AND 
             (
-                hist.doc_full_host_app_date IS NULL 
+                sh.doc_full_host_app_date IS NULL 
             OR 
-                hist.doc_letter_rec_date IS NULL 
+                sh.doc_letter_rec_date IS NULL 
             OR 
-                hist.doc_rules_rec_date IS NULL 
+                sh.doc_rules_rec_date IS NULL 
             OR
-            	hist.doc_rules_sign_date IS NULL
+            	sh.doc_rules_sign_date IS NULL
             OR
-                hist.doc_photos_rec_date IS NULL 
+                sh.doc_photos_rec_date IS NULL 
             OR 
-                hist.doc_school_accept_date IS NULL 
+                sh.doc_school_accept_date IS NULL 
             OR 
-                hist.doc_school_profile_rec IS NULL 
+                sh.doc_school_profile_rec IS NULL 
             OR
-                hist.doc_conf_host_rec IS NULL 
+                sh.doc_conf_host_rec IS NULL 
             OR 
-                hist.doc_date_of_visit IS NULL 
+                sh.doc_date_of_visit IS NULL 
             OR 
-                hist.doc_ref_form_1 IS NULL 
+                sh.doc_ref_form_1 IS NULL 
             OR 
-                hist.doc_ref_form_2 IS NULL
+                sh.doc_ref_form_2 IS NULL
             OR 
-                hist.stu_arrival_orientation IS NULL 
+                sh.stu_arrival_orientation IS NULL 
             OR 
-                hist.host_arrival_orientation IS NULL 
+                sh.host_arrival_orientation IS NULL 
             OR 
-                hist.doc_class_schedule IS NULL
+                sh.doc_class_schedule IS NULL
+			OR
+                sh.doc_income_ver_date IS NULL
+            OR
+                sh.doc_single_ref_check1 IS NULL
+            OR
+                sh.doc_single_ref_check2 IS NULL            
+            <!---  Second Visit Report - Check the report itself - OR s.doc_conf_host_rec2 IS NULL --->
+            OR
+                secondVisitReport.pr_ny_approved_date IS NULL 
             )
       
-        <!--- Added 02/02/2011 / Required starting Aug 11 --->                                                               
+        <!--- Added 02/27/2012 / Required starting Aug 12 --->                                                               
         OR
         	(
                     s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
@@ -287,32 +300,31 @@
                 AND 
                     s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> ) 
                 AND
-                    p.seasonID >= <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+                    p.seasonID >= <cfqueryparam cfsqltype="cf_sql_integer" value="9">
 				<!--- From / To Dates --->
-                <cfif LEN(FORM.dateFrom) AND LEN(FORM.dateTo)> 
+                <cfif isDate(FORM.dateFrom) AND isDate(FORM.dateTo)> 
                     AND
-                        hist.datePlaced >= <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(FORM.dateFrom)#">
+                        sh.datePlaced >= <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(FORM.dateFrom)#">
                     AND
-                        hist.datePlaced <= <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(FORM.dateTo)#">
+                        sh.datePlaced <= <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(FORM.dateTo)#">
                 </cfif>       
                 AND 
                     (                   	
-                        hist.doc_income_ver_date IS NULL
+                        sh.doc_bedroom_photo IS NULL   
                     OR
-                        hist.doc_single_ref_check1 IS NULL
+                        sh.doc_bathroom_photo IS NULL   
                     OR
-                        hist.doc_single_ref_check2 IS NULL            
-                    <!--- 
-                        Second Visit Report - Check the report itself - OR hist.doc_conf_host_rec2 IS NULL
-                    --->
+                        sh.doc_kitchen_photo IS NULL   
                     OR
-                        secondVisitReport.pr_ny_approved_date IS NULL 
+                        sh.doc_living_room_photo IS NULL   
+                    OR
+                        sh.doc_outside_photo IS NULL   
                     )                        
         	)
         ORDER BY            
             repName,
             s.firstName,
-            hist.datePlaced DESC
+            sh.datePlaced DESC
     </cfquery> 
 
     <cfquery name="qGetRepsInRegion" dbtype="query">
@@ -442,86 +454,129 @@
 							
                                 // Required for Single Parents 
                                 if ( qGetStudentsByRep.seasonID GTE 8 AND totalFamilyMembers EQ 1 ) { // 
-                                     if ( NOT isDate(qGetStudentsByRep.doc_single_place_auth) ) {
-                                    missingDocumentsList = ListAppend(missingDocumentsList, "Single Person Placement Verification &nbsp; &nbsp;", " &nbsp; &nbsp;");
-                                }
+                                    
+									// Single Person Placement Verification
+									if ( NOT isDate(qGetStudentsByRep.doc_single_place_auth) ) {
+                                    	missingDocumentsList = ListAppend(missingDocumentsList, "Single Person Placement Verification &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                	}
 									
 									// Date of S.P. Reference Check 1
                                     if ( NOT isDate(qGetStudentsByRep.doc_single_ref_check1) ) {
                                         missingDocumentsList = ListAppend(missingDocumentsList, "Ref Check (Single) &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                     }
+									
                                     // Date of S.P. Reference Check 2
                                     if ( NOT isDate(qGetStudentsByRep.doc_single_ref_check2) ) {
                                         missingDocumentsList = ListAppend(missingDocumentsList, "2nd Ref Check (Single) &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                     }
+									
                                 }
 								
                                 // Host Application Received
                                 if ( NOT isDate(qGetStudentsByRep.doc_full_host_app_date) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "Host Family &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
+								
                                 // Host Family Letter Received
                                 if ( NOT isDate(qGetStudentsByRep.doc_letter_rec_date) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "HF Letter &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
+								
                                 // Host Family Rules Form
                                 if ( NOT isDate(qGetStudentsByRep.doc_rules_rec_date) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "HF Rules &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
+								
                                 // Host Family Rules Date Signed
                                 if ( NOT isDate(qGetStudentsByRep.doc_rules_sign_date) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "HF Rules Date Signed &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
+								
                                 // Host Family Photos
                                 if ( NOT isDate(qGetStudentsByRep.doc_photos_rec_date) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "HF Photos &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
+								
+                                // Required starting Aug 12
+                                if ( qGetStudentsByRep.seasonID GTE 9 ) {
+                                    
+									// Student Bedroom Photo
+									if ( NOT isDate(qGetStudentsByRep.doc_bedroom_photo) ) {
+										missingDocumentsList = ListAppend(missingDocumentsList, "Student Bedroom Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+									}
+
+									// Student Bathroom Photo
+									if ( NOT isDate(qGetStudentsByRep.doc_bathroom_photo) ) {
+										missingDocumentsList = ListAppend(missingDocumentsList, "Student Bathroom Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+									}
+
+									// Kitchen Photo
+									if ( NOT isDate(qGetStudentsByRep.doc_kitchen_photo) ) {
+										missingDocumentsList = ListAppend(missingDocumentsList, "Kitchen Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+									}
+
+									// Living Room Photo
+									if ( NOT isDate(qGetStudentsByRep.doc_living_room_photo) ) {
+										missingDocumentsList = ListAppend(missingDocumentsList, "Living Room Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+									}
+									
+									// Outside Photo
+									if ( NOT isDate(qGetStudentsByRep.doc_outside_photo) ) {
+										missingDocumentsList = ListAppend(missingDocumentsList, "Outside Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+									}
+
+                                }  								
+								
                                 // School & Community Profile Form
                                 if ( NOT isDate(qGetStudentsByRep.doc_school_profile_rec) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "School & Community Profile &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
+								
                                 // Confidential Host Family Visit Form
                                 if ( NOT isDate(qGetStudentsByRep.doc_conf_host_rec) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "Visit Form &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
+								
                                 // Confidential Host Family Visit Form - Date of Visit
                                 if ( NOT isDate(qGetStudentsByRep.doc_date_of_visit) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "Date of Visit &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
+								
                                 // Reference Form 1
                                 if ( NOT isDate(qGetStudentsByRep.doc_ref_form_1) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "Ref. 1 &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
+								
                                 // Reference Form 2
                                 if ( NOT isDate(qGetStudentsByRep.doc_ref_form_2) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "Ref. 2 &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
+								
                                 // School Acceptance Form
                                 if ( NOT isDate(qGetStudentsByRep.doc_school_accept_date) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "School Acceptance &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }								
-                                
-                                // Required starting Aug 11
-                                if ( qGetStudentsByRep.seasonID GTE 8 ) {
-                                    // Income Verification Form
-                                    if ( NOT isDate(qGetStudentsByRep.doc_income_ver_date) ) {
-                                        missingDocumentsList = ListAppend(missingDocumentsList, "Income Verification &nbsp; &nbsp;", " &nbsp; &nbsp;");
-                                    }
-                                    // 2nd Confidential Host Family Visit Form
-                                    if ( NOT isDate(qGetStudentsByRep.pr_ny_approved_date) ) { 
-                                        missingDocumentsList = ListAppend(missingDocumentsList, "2nd Conf. Host Visit &nbsp; &nbsp;", " &nbsp; &nbsp;");
-                                    }
-                                    
-                                }  
+							
+								// Income Verification Form
+								if ( NOT isDate(qGetStudentsByRep.doc_income_ver_date) ) {
+									missingDocumentsList = ListAppend(missingDocumentsList, "Income Verification &nbsp; &nbsp;", " &nbsp; &nbsp;");
+								}
+								
+								// 2nd Confidential Host Family Visit Form
+								if ( NOT isDate(qGetStudentsByRep.pr_ny_approved_date) ) { 
+									missingDocumentsList = ListAppend(missingDocumentsList, "2nd Conf. Host Visit &nbsp; &nbsp;", " &nbsp; &nbsp;");
+								}
                                 
                                 // Student Orientation
                                 if ( NOT isDate(qGetStudentsByRep.stu_arrival_orientation) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "Student Orientation &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
+								
                                 // HF Orientation
                                 if ( NOT isDate(qGetStudentsByRep.host_arrival_orientation) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "HF Orientation &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
+								
                                 // Class Schedule
                                 if ( NOT isDate(qGetStudentsByRep.doc_class_schedule) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "Class Schedule &nbsp; &nbsp;", " &nbsp; &nbsp;");

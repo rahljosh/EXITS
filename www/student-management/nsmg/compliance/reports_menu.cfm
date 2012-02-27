@@ -80,9 +80,9 @@
                             </cfform>
                         </td>
                         <td width="50%" valign="top">
-                            <cfform action="compliance/placement_paperwork.cfm" name="doc_received" method="post" target="blank">
+                            <cfform action="compliance/rp_arrival_x_cbc.cfm" name="doc_received" method="post" target="blank">
                             <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
-                                <tr><th colspan="2" bgcolor="##e2efc7">Placement Paperwork</th></tr>
+                                <tr><th colspan="2" bgcolor="##e2efc7">Student Arrival Date x CBC Date (No Relocations)</th></tr>
                                 <tr>
                                     <td>Program :</td>
                                     <td><cfselect name="programID" query="qGetPrograms" value="programID" display="programName" multiple size="5" required="yes" message="You must select at least one program."></cfselect></td>
@@ -109,152 +109,6 @@
                 <!--- Row 2 - 2 boxes --->
                 <table cellpadding="6" cellspacing="0" align="center" width="95%">
                     <tr>
-                        <td width="50%" valign="top">
-                            <cfform action="compliance/rp_arrival_x_cbc.cfm" name="doc_received" method="post" target="blank">
-                            <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
-                                <tr><th colspan="2" bgcolor="##e2efc7">Student Arrival Date x CBC Date (No Relocations)</th></tr>
-                                <tr>
-                                    <td>Program :</td>
-                                    <td><cfselect name="programID" query="qGetPrograms" value="programID" display="programName" multiple size="5" required="yes" message="You must select at least one program."></cfselect></td>
-                                </tr>
-                                <tr>
-                                    <td>Region :</td>
-                                    <td>
-                                        <cfselect name="regionID" size="1">
-                                            <option value="0">All Regions</option>
-                                            <cfloop query="qGetRegions"><option value="#qGetRegions.regionID#">#qGetRegions.regionname#</option></cfloop>
-                                        </cfselect>
-                                    </td>		
-                                </tr>
-                                <tr>
-                                    <td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td>
-                                </tr>
-                            </table>
-                            </cfform>
-                        </td>
-                        <td width="50%" valign="top">
-                            <cfform action="compliance/rp_placement_x_cbc_relocated.cfm" name="doc_received" method="post" target="blank">
-                            <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
-                                <tr><th colspan="2" bgcolor="##e2efc7">Placement Approval x CBC Date (Students Relocated Only)</th></tr>
-                                <tr>
-                                    <td>Program :</td>
-                                    <td><cfselect name="programID" query="qGetPrograms" value="programID" display="programName" multiple size="5" required="yes" message="You must select at least one program."></cfselect></td>
-                                </tr>
-                                <tr>
-                                    <td>Region :</td>
-                                    <td>
-                                        <cfselect name="regionID" size="1">
-                                            <option value="0">All Regions</option>
-                                            <cfloop query="qGetRegions"><option value="#qGetRegions.regionID#">#qGetRegions.regionname#</option></cfloop>
-                                        </cfselect>
-                                    </td>		
-                                </tr>
-                                <tr>
-                                    <td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td>
-                                </tr>
-                            </table>
-                            </cfform>	
-                        </td>
-                    </tr>
-                </table><br />
-        
-        
-                <!--- Row 3 - 2 boxes --->
-                <table cellpadding="6" cellspacing="0" align="center" width="95%">
-                    <tr>
-                        <td width="50%" valign="top">
-                            <cfform action="compliance/school_acceptance.cfm" name="doc_received" method="post" target="blank">
-                            <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
-                                <tr><th colspan="2" bgcolor="##e2efc7">Flight Arrival x School Acceptance Dates</th></tr>
-                                <tr>
-                                    <td>Program :</td>
-                                    <td><cfselect name="programID" query="qGetPrograms" value="programID" display="programName" multiple size="5" required="yes" message="You must select at least one program."></cfselect></td>
-                                </tr>
-                                <tr>
-                                    <td>Region :</td>
-                                    <td>
-                                        <cfselect name="regionID" size="1">
-                                            <option value="0">All Regions</option>
-                                            <cfloop query="qGetRegions"><option value="#qGetRegions.regionID#">#qGetRegions.regionname#</option></cfloop>
-                                        </cfselect>
-                                    </td>		
-                                </tr>
-                                <tr>
-                                    <td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td>
-                                </tr>
-                            </table>
-                            </cfform>
-                        </td>
-                        <td width="50%" valign="top">
-                            <cfform action="compliance/arrival_school_acceptance_check.cfm" name="doc_received" method="post" target="blank">
-                            <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
-                                <tr><th colspan="2" bgcolor="##e2efc7">Students with Arrival Information and Missing School Acceptance (Place Management)</th></tr>
-                                <tr>
-                                    <td>Program :</td>
-                                    <td><cfselect name="programID" query="qGetPrograms" value="programID" display="programName" multiple size="5" required="yes" message="You must select at least one program."></cfselect></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td>
-                                </tr>
-                            </table>
-                            </cfform>			
-                        </td>
-                    </tr>
-                </table><br />
-        
-        
-                <!--- Row 4 - 2 boxes --->
-                <table cellpadding="6" cellspacing="0" align="center" width="95%">
-                    <tr>
-                        <td width="50%" valign="top">
-                            <cfform action="compliance/missing_place_docs.cfm" name="doc_received" method="post" target="blank">
-                            <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
-                                <tr><th colspan="2" bgcolor="##e2efc7">Missing Compliance Placement Documents</th></tr>
-                                <tr>
-                                    <td>Program :</td>
-                                    <td><cfselect name="programID" query="qGetPrograms" value="programID" display="programName" multiple size="5" required="yes" message="You must select at least one program."></cfselect></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td>
-                                </tr>
-                            </table>
-                            </cfform>
-                        </td>
-                        <td width="50%" valign="top">
-                            <cfform action="compliance/missing_supervision_docs.cfm" name="doc_received" method="post" target="blank">
-                            <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
-                                <tr><th colspan="2" bgcolor="##e2efc7">Missing Compliance Supervision Documents</th></tr>
-                                <tr>
-                                    <td>Program :</td>
-                                    <td><cfselect name="programID" query="qGetPrograms" value="programID" display="programName" multiple size="5" required="yes" message="You must select at least one program."></cfselect></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td>
-                                </tr>
-                            </table>
-                            </cfform>
-                        </td>
-                    </tr>
-                </table><br />
-        
-        
-                <!--- Row 5 - 2 boxes --->
-                <table cellpadding="6" cellspacing="0" align="center" width="95%">
-                    <tr>
-                        <td width="50%" valign="top">
-                            <cfform action="compliance/missing_double_docs.cfm" name="doc_received" method="post" target="blank">
-                            <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
-                                <tr><th colspan="2" bgcolor="##e2efc7">Missing Compliance Double Placement Documents</th></tr>
-                                <tr>
-                                    <td>Program :</td>
-                                    <td><cfselect name="programID" query="qGetPrograms" value="programID" display="programName" multiple size="5" required="yes" message="You must select at least one program."></cfselect></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td>
-                                </tr>
-                            </table>
-                            </cfform>
-                        </td>
                         <td width="50%" valign="top">
                             <cfform action="compliance/missing_area_rep_paperwork.cfm" name="area_rep" method="post" target="blank">
                             <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
@@ -288,10 +142,56 @@
                             </table>
                             </cfform>
                         </td>
+                        <td width="50%" valign="top">
+                            <cfform action="compliance/rp_placement_x_cbc_relocated.cfm" name="doc_received" method="post" target="blank">
+                            <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
+                                <tr><th colspan="2" bgcolor="##e2efc7">Placement Approval x CBC Date (Students Relocated Only)</th></tr>
+                                <tr>
+                                    <td>Program :</td>
+                                    <td><cfselect name="programID" query="qGetPrograms" value="programID" display="programName" multiple size="5" required="yes" message="You must select at least one program."></cfselect></td>
+                                </tr>
+                                <tr>
+                                    <td>Region :</td>
+                                    <td>
+                                        <cfselect name="regionID" size="1">
+                                            <option value="0">All Regions</option>
+                                            <cfloop query="qGetRegions"><option value="#qGetRegions.regionID#">#qGetRegions.regionname#</option></cfloop>
+                                        </cfselect>
+                                    </td>		
+                                </tr>
+                                <tr>
+                                    <td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td>
+                                </tr>
+                            </table>
+                            </cfform>	
+                        </td>
+                    </tr>
+                </table><br />
+        
+                
+                <!--- Row 3 - 2 boxes --->
+                <table cellpadding="6" cellspacing="0" align="center" width="95%">
+                    <tr>
+                        <td width="50%" valign="top">
+                            <cfform action="compliance/arrival_school_acceptance_check.cfm" name="doc_received" method="post" target="blank">
+                            <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
+                                <tr><th colspan="2" bgcolor="##e2efc7">Students with Arrival Information and Missing School Acceptance (Place Management)</th></tr>
+                                <tr>
+                                    <td>Program :</td>
+                                    <td><cfselect name="programID" query="qGetPrograms" value="programID" display="programName" multiple size="5" required="yes" message="You must select at least one program."></cfselect></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td>
+                                </tr>
+                            </table>
+                            </cfform>			
+                        </td>
+                        <td width="50%" valign="top">
+                        </td>
                     </tr>
                 </table><br />
 				
-				<!--- Row 6 - 2 boxes --->
+				<!--- Row 4 - 2 boxes --->
                 <table cellpadding="6" cellspacing="0" align="center" width="95%">
                     <tr>
                         <td width="50%" valign="top">
