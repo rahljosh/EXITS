@@ -118,21 +118,21 @@
                     LEFT OUTER JOIN 
                         smg_companies c ON c.companyID = h.companyID
                     WHERE 
-                        h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#"> 
+                        h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#"> 
 
                     <cfif VAL(ARGUMENTS.cbcfamID)>
-                    AND
-                        h.cbcfamID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.cbcfamID#">                                	
+                        AND
+                            h.cbcfamID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.cbcfamID#">                                	
                     </cfif>
 	                    
                     <cfif LEN(ARGUMENTS.cbcType)>
-                    AND 
-                        h.cbc_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcType#">
+                        AND 
+                            h.cbc_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcType#">
                     </cfif>
                     
                     <cfif VAL(ARGUMENTS.familyMemberID)>
-                    AND 
-                        h.familyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.familyMemberID#">
+                        AND 
+                            h.familyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.familyMemberID#">
                     </cfif>
                     
                     ORDER BY 
