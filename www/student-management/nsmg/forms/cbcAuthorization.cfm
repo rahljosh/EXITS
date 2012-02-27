@@ -258,19 +258,19 @@ body {
                     
                    <Br><Br>
                     
-                   <a href="#client.exits_url#/nsmg/index.cfm?curdoc=user_info&userid=#client.userid#">View #qGetUserInfo.firstname#<cfif Right(#qGetUserInfo.firstname#, 1) is 's'>'<cfelse>'s</cfif> account.</a>
+                   <a href="#client.exits_url#/nsmg/index.cfm?curdoc=user_info&userid=#qGetUserInfo.userid#">View #qGetUserInfo.firstname#<cfif Right(#qGetUserInfo.firstname#, 1) is 's'>'<cfelse>'s</cfif> account.</a>
                     </cfoutput>
                     </cfsavecontent>
                     
                         <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                            
+                        <!----    
                             **********This emai is sent to the Program Manager*******************<Br>
                         *****************#progManager.pm_email#<br>**********************
                             <cfinvokeargument name="email_to" value="josh@pokytrails.com">      
-                            <!----
+                             ---->
                            
                             <cfinvokeargument name="email_to" value="#progManager.pm_email#"> 
-							 ---->
+							
                               
                             <cfinvokeargument name="email_from" value="""#client.companyshort# Support"" <#client.emailfrom#>">
                             <cfinvokeargument name="email_subject" value="CBC Authorization for #client.name#">
@@ -403,7 +403,7 @@ General Information Services, Inc. within the two-year period preceding my reque
 <hr width=50% align="center" />
 <table width=100%>
 	<tr>
-    	<Td>Date of Birth</Td><td>   <input type="text" value="#DateFormat(form.dob, 'mm/dd/yyyy')#" size=12 name="dob" /></td>
+    	<Td>Date of Birth</Td><td>   <cfinput type="text" value="#DateFormat(form.dob, 'mm/dd/yyyy')#" size=12 name="dob" mask="99/99/9999"/></td>
     </tr>
     <tr>
     	<Td>Social Security Number</Td><Td><input type ="Text" value="#form.ssn# " size=20 name="ssn"/></Td>
