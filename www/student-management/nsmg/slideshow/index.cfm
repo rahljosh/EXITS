@@ -149,16 +149,16 @@ $(".paging a").click(function() {
     <div class="window">
         <div class="image_reel">
             <a href="slideshow/pdfs/CASE/PreAypBonus.pdf" rel="1" target="_new"> <img src="slideshow/images/CASE/slide_1.jpg" alt="" /></a>
-            <a href="slideshow/pdfs/CASE/Early_Placement_Bonus_2012.pdf" rel="2" target="_new"><img src="slideshow/images/CASE/slide_2.jpg" alt="" /></a>
-            <a href="slideshow/pdfs/CASE/IncentiveTripBarcellona.pdf" rel="3" target="_new"><img src="slideshow/images/CASE/slide_3.jpg" alt="" /></a>
-            <a href="slideshow/pdfs/CASE/CEOBonus.pdf" rel="4" target="_new"> <img src="slideshow/images/CASE/slide_4.jpg" alt="" /></a>
+            <a href="slideshow/pdfs/CASE/IncentiveTripBarcellona.pdf" rel="2" target="_new"><img src="slideshow/images/CASE/slide_2.jpg" alt="" /></a>
+            <a href="slideshow/pdfs/CASE/Early_Placement_Bonus_2012.pdf" rel="3" target="_new"><img src="slideshow/images/CASE/slide_3.jpg" alt="" /></a>
+            <a href="slideshow/pdfs/CASE/IncentiveTripBarcellona.pdf" rel="4" target="_new"> <img src="slideshow/images/CASE/slide_4.jpg" alt="" /></a>
         </div>
     </div>
     <div class="paging">
          <a href="slideshow/pdfs/CASE/PreAypBonus.pdf" rel="3">1</a>
-        <a href="slideshow/pdfs/CASE/Early_Placement_Bonus_2012.pdf" rel="2">2</a>
-        <a href="slideshow/pdfs/CASE/PreAypBonus.pdf" rel="3">3</a>
-        <a href="slideshow/pdfs/CASE/CEOBonus.pdf" rel="4">4</a>
+        <a href="slideshow/pdfs/CASE/IncentiveTripBarcellona.pdf" rel="2">2</a>
+        <a href="slideshow/pdfs/CASE/Early_Placement_Bonus_2012.pdf" rel="3">3</a>
+        <a href="slideshow/pdfs/CASE/IncentiveTripBarcellona.pdf" rel="4">4</a>
     </div>
 </div>
 
