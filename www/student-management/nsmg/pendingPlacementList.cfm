@@ -11,6 +11,8 @@
 
 <cfsilent>
 
+	<cfsetting requesttimeout="9999">
+
 	<!--- Import CustomTag --->
     <cfimport taglib="extensions/customTags/gui/" prefix="gui" />	
     
