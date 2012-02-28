@@ -2190,7 +2190,7 @@
 			name="qCheckPlacementPaperwork" 
 			datasource="#APPLICATION.DSN#">
                 SELECT 
-                    studentID,
+                    s.studentID,
                     sh.hostID,
                     sh.doc_full_host_app_date,
                     sh.doc_letter_rec_date,
