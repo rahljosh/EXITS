@@ -275,8 +275,8 @@
     </form>
     
 
-	<!----Only allow Josh-1, Brian-12313, Marcus - 510, Bill - 8731, Bob - 8743, Gary -12431, Tal - 16718 to change the dates---->
-    <cfif IsDate(qGetStudentInfo.datePlaced) AND listFind("1,12313,510,8731,8743,12431,16718", CLIENT.userID)>		
+	<!----Only allow Josh-1, Brian-12313, Marcus-510, Bill-8731, Bob-8743, Gary-12431, Tal-16718, Merri-12389 to change the dates---->
+    <cfif IsDate(qGetStudentInfo.datePlaced) AND listFind("1,12313,510,8731,8743,12431,16718,12389", CLIENT.userID)>		
 
         <form name="placementInfoSheet.cfm" method="post">
             <input type="hidden" name="submitted" value="1" />
