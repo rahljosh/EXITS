@@ -261,14 +261,14 @@
 		<!--- encrypt the SSN. --->
 		<cfscript>
 			// SSN - Will update if it's blank or there is a new number
-            if ( isValid("social_security_number", Trim(FORM.SSN)) ) {
+            if ( VAL(vDisplaySSN) AND isValid("social_security_number", Trim(FORM.SSN)) ) {
                 // Encrypt Social
                 FORM.SSN = APPLICATION.CFC.UDF.encryptVariable(FORM.SSN);
                 // Update
                 vUpdateSSN = 1;
-            } else if ( NOT LEN(FORM.SSN) ) {
+            } else if ( VAL(vDisplaySSN) AND NOT LEN(FORM.SSN) ) {
                 // Update - Erase SSN
-                vUpdateSSN = 0;
+                vUpdateSSN = 1;
             }
         </cfscript>
         
@@ -355,7 +355,6 @@
                     <cfif VAL(vUpdateSSN)>
                     	<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.SSN#">,
                     </cfif>
-					 
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#" null="#yesNoFormat(trim(FORM.phone) EQ '')#">,
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone_ext#" null="#yesNoFormat(trim(FORM.phone_ext) EQ '')#">,
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.work_phone#" null="#yesNoFormat(trim(FORM.work_phone) EQ '')#">,
