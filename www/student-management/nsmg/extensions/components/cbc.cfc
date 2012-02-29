@@ -100,9 +100,11 @@
                         h.familyID,
                         h.batchID,  <!--- phase out | storing cbc in the database --->
                         h.cbc_type,
+                        h.notes,
                         h.date_authorized, 
                         h.date_sent, 
                         h.date_expired,
+                        h.date_approved,
                         h.xml_received, 
                         h.requestID, 
                         h.isNoSSN,
@@ -281,7 +283,8 @@
 		<cfargument name="cbcFamID" required="yes" hint="cbcFamID is required">
         <cfargument name="isNoSSN" default="" hint="isNoSSN is not required. Values 0 or 1">
 		<cfargument name="flagCBC" default="0" hint="flagCBC is not required. Values 0 or 1">
-        
+        <cfargument name="notes" default="" hint="any notes on the CBC">
+        <cfargument name="date_approved" default="" hint="date the cbc was approved">
             <cfquery 
             	name="qUpdateHostOptions" 
                 datasource="#APPLICATION.dsn#">
@@ -289,7 +292,9 @@
                         smg_hosts_cbc
                     SET 
                         isNoSSN = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.isNoSSN#">,
-                        flagcbc = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.flagCBC#">
+                        flagcbc = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.flagCBC#">,
+                        notes  = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#">,
+                        date_approved = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date_approved#">
                     WHERE 
                         cbcFamID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcFamID#">
             </cfquery>	
@@ -676,7 +681,7 @@
         <cfargument name="flagCBC" default="0" hint="flagCBC is required. Values 0 or 1">
         <cfargument name="dateAuthorized" required="yes" hint="Date of Authorization">
         <cfargument name="dateApproved" default="" required="no" hint="Date of approval, either null or date approved">
- 
+ 		 <cfargument name="notes" default="" required="no" hint="notes on CBC for office to view">
 
             <cfquery 
             	datasource="#APPLICATION.dsn#">
@@ -686,6 +691,7 @@
                     	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
                         flagcbc = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.flagCBC#">,
                         date_approved =  <cfif LEN(ARGUMENTS.dateApproved)><cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(ARGUMENTS.dateApproved)#"><cfelse>NULL</cfif>,
+                        notes = <cfif LEN(ARGUMENTS.notes)><cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#"><cfelse>NULL</cfif>,
                         date_authorized = <cfif LEN(ARGUMENTS.dateAuthorized)><cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.dateAuthorized)#"><cfelse>NULL</cfif>
                     WHERE 
                     	cbcid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.cbcID#">

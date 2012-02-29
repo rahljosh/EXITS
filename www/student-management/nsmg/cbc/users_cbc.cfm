@@ -95,6 +95,7 @@
 					companyID=FORM["companyID" & i],
 					flagCBC=flagValue,
 					dateAuthorized=FORM["date_authorized" & i],
+					notes = FORM["notes" & i],
 					dateApproved = FORM["date_approved" & i]
 				);
 				
@@ -139,6 +140,7 @@
                         cbcID=FORM[ID & "cbcID" & x],
                         companyID=FORM[ID & "companyID" & x],
                         flagCBC=flagValue,
+						notes=FORM[ID & "notes" & x],
                         dateAuthorized=FORM[ID & "date_authorized" & x]
                     );
                     
@@ -365,7 +367,8 @@
                 <td valign="top">Expiration Date<br><font size="-2">mm/dd/yyyy</font></td>		
                 <td valign="top">Request ID</td>
                 <td valign="top">Flag CBC</td>
-                <td valign="top">CBC Approved</td>
+                <td valign="top">Date Approved<br><font size="-2">mm/dd/yyyy</font></td>
+                <td valign="top">Notes</td>
             </tr>
             <!--- User UPDATE --->
             <cfif VAL(qGetCBCUser.recordcount)>
@@ -403,10 +406,10 @@
                         <td> 
                         
                         
-						Date: <input type="text" name="date_approved#currentrow#" message="Please input a valid date."  <cfif date_approved is ''>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif> value="#DateFormat(date_approved, 'mm/dd/yyyy')#" size="8" maxlength="10" >	
-                       <Cfif date_approved is ''><em><font size=-2>click in box for date</font></em></Cfif>
+						<input type="text" name="date_approved#currentrow#" message="Please input a valid date."  <cfif date_approved is ''>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif> value="#DateFormat(date_approved, 'mm/dd/yyyy')#" size="8" maxlength="10" >	
+                       <Cfif date_approved is ''><br /><em><font size=-2>click in box for date</font></em></Cfif>
                         </td>
-                        
+                        <td><textarea rows="3" cols=15 name="notes#currentrow#">#notes#</textarea></td>
                     </tr>
                 </cfloop>
             </cfif>
