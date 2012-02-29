@@ -425,7 +425,8 @@ div.scroll2 {
 				<td align="center" valign="top"><b>Season</b></td>		
 				<td align="center" valign="top"><b>Date Submitted</b> <br><font size="-2">mm/dd/yyyy</font></td>
                 <td align="center" valign="top"><b>Expiration Date</b> <br><font size="-2">mm/dd/yyyy</font></td>		
-				<td align="center" valign="top"><b>Request ID</b></td>
+				<td align="center" valign="top"><b>View</b></td>
+                 <cfif client.usertype lte 4> <td align="left" valign="top"><b>Notes</b></td></cfif>
                 <cfif client.usertype lte 4 and client.companyid eq 10><td align="center" valign="top"><b>Delete</b></td></cfif>
 			</tr>				
 			<cfif qGetCBCMother.recordcount EQ '0' AND qCheckCBCMother.recordcount EQ '0' AND qGetCBCFather.recordcount EQ '0' AND qCheckCBCFather.recordcount EQ '0'>
@@ -442,7 +443,8 @@ div.scroll2 {
 						<cfif NOT LEN(requestid)>
                         	processing
 						<cfelseif flagcbc EQ 1 AND client.usertype LTE 4>
-                        	On Hold Contact Compliance
+                        	
+                        		<a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCMother.hostID#&CBCFamID=#qGetCBCMother.CBCFamID#&file=batch_#qGetCBCMother.batchid#_host_mother_#qGetCBCMother.hostID#_rec.xml" target="_blank">On Hold Contact Your PM</a>
                         <cfelse>
 							<cfif client.usertype lte 4>
                         		<a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCMother.hostID#&CBCFamID=#qGetCBCMother.CBCFamID#&file=batch_#qGetCBCMother.batchid#_host_mother_#qGetCBCMother.hostID#_rec.xml" target="_blank">#requestid#</a>
@@ -451,6 +453,7 @@ div.scroll2 {
                           </cfif>
                         </cfif>
                 	</td>
+                    <cfif client.usertype lte 4><td align="left" valign="top"><cfif isDefined('notes')>#notes#</cfif></td></cfif>
 					<cfif client.usertype lte 4 and client.companyid eq 10>
                     	<td align="center" valign="top"><a href="delete_cbc.cfm?type=host&id=#requestid#&userid=#url.hostid#"><img src="pics/deletex.gif" border=0/></a></td>
                     </cfif>
@@ -474,6 +477,7 @@ div.scroll2 {
                                 #requestid#
                           </cfif>
                        </td>
+                   <cfif client.usertype lte 4><td align="left" valign="top"><cfif isDefined('notes')>#notes#</cfif></td></cfif>
                        <cfif client.usertype lte 4 and client.companyid eq 10>
                             <td align="center" valign="top"><a href="delete_cbc.cfm?type=host&id=#requestid#&userid=#url.hostid#"><img src="pics/deletex.gif" border=0/></a></td>
                        </cfif>
@@ -491,7 +495,8 @@ div.scroll2 {
 						<cfif NOT LEN(requestid)>
                         	processing
 						<cfelseif flagcbc EQ 1 AND client.usertype LTE 4>
-                        	On Hold Contact Compliance
+                        	
+                            <a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCMother.hostID#&CBCFamID=#qGetCBCMother.CBCFamID#&file=batch_#qGetCBCMother.batchid#_host_mother_#qGetCBCMother.hostID#_rec.xml" target="_blank">On Hold Contact Your PM</a>
                         <cfelse>		
 							<cfif client.usertype lte 4>
                         		<a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCFather.hostID#&CBCFamID=#CBCFamID#&file=batch_#qGetCBCFather.batchid#_host_father_#qGetCBCFather.hostID#_rec.xml" target="_blank">#requestid#</a>
@@ -500,6 +505,7 @@ div.scroll2 {
                           </cfif>
 						</cfif>
 					</td>
+                    <cfif client.usertype lte 4><td align="left" valign="top"><cfif isDefined('notes')>#notes#</cfif></td></cfif>
                     <cfif client.usertype lte 4 and client.companyid eq 10>
                     	<td align="center" valign="top"><a href="delete_cbc.cfm?type=host&id=#requestid#&userid=#url.hostid#"><img src="pics/deletex.gif" border=0/></td>
                     </cfif>
@@ -523,6 +529,7 @@ div.scroll2 {
                                 #requestid#
                           </cfif>
                         </td>
+                    <cfif client.usertype lte 4><td align="left" valign="top"><cfif isDefined('notes')>#notes#</cfif></td></cfif>
                         <cfif client.usertype lte 4 and client.companyid eq 10>
                             <td align="center" valign="top"><a href="delete_cbc.cfm?type=host&id=#requestid#&userid=#url.hostid#"><img src="pics/deletex.gif" border=0/></td>
                         </cfif>
@@ -553,6 +560,7 @@ div.scroll2 {
                         	<cfif client.usertype lte 4><a href="cbc/view_host_cbc.cfm?hostID=#qGetHostMembers.hostID#&CBCFamID=#qGetHostMembers.CBCFamID#&file=batch_#qGetHostMembers.batchid#_hostm_#qGetMemberDetail.name#_#qGetHostMembers.hostID#_rec.xml" target="_blank">#requestid#</a></cfif>
 	                    </cfif>
                     </td>
+                    <cfif client.usertype lte 4><td align="left" valign="top"><cfif isDefined('notes')>#notes#</cfif></td></cfif>
                     <cfif client.usertype lte 4 and client.companyid eq 10><td align="center" valign="top"><a href="delete_cbc.cfm?type=host&id=#requestid#&userid=#url.hostid#"><img src="pics/deletex.gif" border=0/></td></cfif>
                 </tr>
                 </cfloop>
