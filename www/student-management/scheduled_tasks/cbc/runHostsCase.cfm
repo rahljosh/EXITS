@@ -103,7 +103,7 @@
 
 			<!--- Email Errors | Email only once --->
             <cfif VAL(isUpcomingProgram)>
-            
+            	
                 <cfmail 
                     from="support@case-usa.org" <!--- #APPLICATION.EMAIL.support# --->
                     to="#APPLICATION.EMAIL.cbcCaseNotifications#"
@@ -122,13 +122,13 @@
                             </tr>
                         </table>   
                 </cfmail>
-        	
+                
 			</cfif>
             
         </cfif>	
         
         <!--- Filter Query - Get only records that do not have any problems --->
-        <cfquery name="qGetCBCHost" dbtype="query">
+        <cfquery name="qGetCBCHostNoErrors" dbtype="query">
             SELECT 
                 *
             FROM	
@@ -138,22 +138,22 @@
         </cfquery>
     
         <!--- Check if there are records --->    
-        <cfif qGetCBCHost.recordcount>
+        <cfif qGetCBCHostNoErrors.recordcount>
                    
-            <cfloop query="qGetCBCHost"> 
+            <cfloop query="qGetCBCHostNoErrors"> 
             
 				<cfscript>
                     // Process Batch
                     CBCStatus = APPLICATION.CFC.CBC.processBatch(
-                        companyID=VAL(qGetCBCHost.companyID),
-                        companyShort=qGetCBCHost.companyShort,
+                        companyID=VAL(qGetCBCHostNoErrors.companyID),
+                        companyShort=qGetCBCHostNoErrors.companyShort,
                         userType=userType,
-                        hostID=qGetCBCHost.hostID,
-                        cbcID=qGetCBCHost.CBCFamID,
+                        hostID=qGetCBCHostNoErrors.hostID,
+                        cbcID=qGetCBCHostNoErrors.CBCFamID,
                         // XML variables
-                        username=qGetCBCHost.gis_username,
-                        password=qGetCBCHost.gis_password,
-                        account=qGetCBCHost.gis_account,
+                        username=qGetCBCHostNoErrors.gis_username,
+                        password=qGetCBCHostNoErrors.gis_password,
+                        account=qGetCBCHostNoErrors.gis_account,
                         SSN=Evaluate(usertype & 'ssn'),
                         lastName=Evaluate(usertype & 'lastname'),
                         firstName=Evaluate(usertype & 'firstname'),
@@ -167,7 +167,7 @@
             
                 <!--- SUBMIT XML --->
                 <tr><td>Connecting to #CBCStatus.BGCDirectURL#...</td></tr>
-                <tr><td>Submitting CBC for #qGetCBCHost.companyshort# HF #userType# - #Evaluate(userType & "firstname")# #Evaluate(userType & "lastname")# (###qGetCBCHost.hostid#)</td></tr>
+                <tr><td>Submitting CBC for #qGetCBCHostNoErrors.companyshort# HF #userType# - #Evaluate(userType & "firstname")# #Evaluate(userType & "lastname")# (###qGetCBCHostNoErrors.hostid#)</td></tr>
                 <tr>
                     <td>
                         <strong>Status: </strong> #CBCStatus.message#
@@ -182,8 +182,8 @@
         </cfif> <!--- Check if there are records ---> 
     
     <!--- 
-        HOST MEMBERS 
-    --->  
+		HOST MEMBERS 
+	--->  
     <cfelse>
     
         <cfscript>
@@ -268,13 +268,13 @@
                             </tr>
                         </table>   
                 </cfmail>
-			
+                
             </cfif>
             
         </cfif>	
     
         <!--- Filter Query - Get only records that do not have any problems --->
-        <cfquery name="qGetCBCMember" dbtype="query">
+        <cfquery name="qGetCBCMemberNoErrors" dbtype="query">
             SELECT 
                 *
             FROM	
@@ -284,36 +284,36 @@
         </cfquery>
     
         <!--- Check if there are records --->    
-        <cfif qGetCBCMember.recordcount>
+        <cfif qGetCBCMemberNoErrors.recordcount>
         
-            <cfloop query="qGetCBCMember"> 
+            <cfloop query="qGetCBCMemberNoErrors"> 
     
                 <cfscript>
                     // Process Batch
                     CBCStatus = APPLICATION.CFC.CBC.processBatch(
-                        companyID=VAL(qGetCBCHost.companyID),
-                        companyShort=qGetCBCHost.companyShort,
+                        companyID=VAL(qGetCBCMemberNoErrors.companyID),
+                        companyShort=qGetCBCMemberNoErrors.companyShort,
                         userType=userType,
-                        hostID=qGetCBCMember.hostID,
-                        cbcID=qGetCBCMember.CBCFamID,
+                        hostID=qGetCBCMemberNoErrors.hostID,
+                        cbcID=qGetCBCMemberNoErrors.CBCFamID,
                         // XML variables
-                        username=qGetCBCHost.gis_username,
-                        password=qGetCBCHost.gis_password,
-                        account=qGetCBCHost.gis_account,
-                        SSN=qGetCBCMember.ssn,
-                        lastName=qGetCBCMember.lastName,
-                        firstName=qGetCBCMember.name,
-                        middleName=Left(qGetCBCMember.middleName,1),
-                        DOBYear=DateFormat(qGetCBCMember.birthdate, 'yyyy'),
-                        DOBMonth=DateFormat(qGetCBCMember.birthdate, 'mm'),
-                        DOBDay=DateFormat(qGetCBCMember.birthdate, 'dd'),
+                        username=qGetCBCMemberNoErrors.gis_username,
+                        password=qGetCBCMemberNoErrors.gis_password,
+                        account=qGetCBCMemberNoErrors.gis_account,
+                        SSN=qGetCBCMemberNoErrors.ssn,
+                        lastName=qGetCBCMemberNoErrors.lastName,
+                        firstName=qGetCBCMemberNoErrors.name,
+                        middleName=Left(qGetCBCMemberNoErrors.middleName,1),
+                        DOBYear=DateFormat(qGetCBCMemberNoErrors.birthdate, 'yyyy'),
+                        DOBMonth=DateFormat(qGetCBCMemberNoErrors.birthdate, 'mm'),
+                        DOBDay=DateFormat(qGetCBCMemberNoErrors.birthdate, 'dd'),
                         isReRun=1
                     );	
                 </cfscript>
         
                 <!--- SUBMIT XML --->
                 <tr><td>Connecting to #CBCStatus.BGCDirectURL#...</td></tr>
-                <tr><td>Submitting CBC for #qGetCBCHost.companyshort# Host #userType# - #qGetCBCMember.name# #qGetCBCMember.lastName# (###qGetCBCMember.hostid#)</td></tr>
+                <tr><td>Submitting CBC for #qGetCBCMemberNoErrors.companyshort# Host #userType# - #qGetCBCMemberNoErrors.name# #qGetCBCMemberNoErrors.lastName# (###qGetCBCMemberNoErrors.hostid#)</td></tr>
                 <tr>
                     <td>
                         <b>Status: #CBCStatus.message#</b>
