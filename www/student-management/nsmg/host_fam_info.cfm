@@ -17,21 +17,22 @@
     
 	<cfscript>
         // Get Host Mother CBC
-        qGetCBCMother = APPCFC.CBC.getCBCHostByID(
+        qGetCBCMother = APPLICATION.CFC.CBC.getCBCHostByID(
             hostID=hostID, 
             cbcType='mother'
         );
         
         // Gets Host Father CBC
-        qGetCBCFather = APPCFC.CBC.getCBCHostByID(
+        qGetCBCFather = APPLICATION.CFC.CBC.getCBCHostByID(
             hostID=hostID, 
             cbcType='father'
         );
         
         // Get Family Member CBC
-        qGetHostMembers = APPCFC.CBC.getCBCHostByID(
+        qGetHostMembers = APPLICATION.CFC.CBC.getCBCHostByID(
             hostID=hostID,
-            cbcType='member'
+            cbcType='member',
+			sortBy='familyID'
         );
     </cfscript>
 

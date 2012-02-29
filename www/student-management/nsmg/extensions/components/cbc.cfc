@@ -144,7 +144,12 @@
                         <cfcase value="seasonID">                    
                             h.seasonID #ARGUMENTS.sortOrder#
                         </cfcase>
-                    
+
+                        <cfcase value="familyID">                    
+                            h.familyID #ARGUMENTS.sortOrder#,
+                            h.seasonID #ARGUMENTS.sortOrder#
+                        </cfcase>
+
                         <cfcase value="date_sent">
                             h.date_sent #ARGUMENTS.sortOrder#
                         </cfcase>
@@ -2142,7 +2147,7 @@
                         	AND
                             	shc.childID = cbc.familyID 
                 			AND
-                            	shc.liveAtHome = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                            	shc.liveAtHome = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
                             AND	
                             	shc.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                 </cfif>
@@ -2157,6 +2162,8 @@
                             smg_hosts_cbc getMaxDate
                         WHERE                                                
                             getMaxDate.hostID = cbc.hostID
+                        AND
+                        	getMaxDate.familyID = cbc.familyID                            
                         AND	
                             getMaxDate.cbc_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcType#">                                                                                                      
                     )  
@@ -2168,9 +2175,12 @@
                         FROM 
                         	smg_hosts_cbc 
                         WHERE 
+                        	familyID = cbc.familyID 
+                        AND                        
                         	date_sent IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">  
                         AND
                             cbc_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcType#">
+                              
                     )   
                 
                 <cfif VAL(ARGUMENTS.hostID)>
