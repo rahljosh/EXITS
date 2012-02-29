@@ -53,10 +53,10 @@
     <Cfif isDefined('FORM.unHideReport')>
         
         <Cfquery datasource="#APPLICATION.DSN#">
-            delete 
-                from 
-            smg_hide_reports w
-                here id = #FORM.unHideReport#
+            DELETE FROM 
+            	smg_hide_reports
+            WHERE
+            	id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.unHideReport#">
         </Cfquery>
         
     </cfif>
