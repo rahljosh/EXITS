@@ -137,13 +137,22 @@ with elevated privileges. Now, open the host file from the File menu, edit and s
 Location: Windows\System32\Drivers\Hosts
 
 127.0.0.1       localhost
+::1             localhost
 
 127.0.0.1       case.local
 
 127.0.0.1       csb.local
 
+127.0.0.1	fbcbabylon.local
+
 127.0.0.1       extra.local
+
+127.0.0.1       granbyprep.local
 
 127.0.0.1       ise.local
 
+127.0.0.1       php.local
+
 127.0.0.1       smg.local
+
+127.0.0.1       trips.local

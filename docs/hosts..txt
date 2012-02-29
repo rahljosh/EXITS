@@ -16,12 +16,15 @@
 #      102.54.94.97     rhino.acme.com          # source server
 #       38.25.63.10     x.acme.com              # x client host
 
+
 127.0.0.1       localhost
 ::1             localhost
 
 127.0.0.1       case.local
 
 127.0.0.1       csb.local
+
+127.0.0.1	fbcbabylon.local
 
 127.0.0.1       extra.local
 
@@ -32,4 +35,6 @@
 127.0.0.1       php.local
 
 127.0.0.1       smg.local
+
+127.0.0.1       trips.local
 
