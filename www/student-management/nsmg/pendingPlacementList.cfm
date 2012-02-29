@@ -401,22 +401,28 @@
                         <cfscript>
                             // Check if we have CBC and School Acceptance in order to allow PIS to be emailed out
                             vDisplayEmailLink = 0;
-
-                            // Check if Host Family is in compliance
-                            vHostInCompliance = APPLICATION.CFC.CBC.checkHostFamilyCompliance(hostID=qGetPendingHosts.hostID, studentID=qGetPendingHosts.studentID);
-                            
-                            if ( NOT LEN(vHostInCompliance) AND IsDate(qGetPendingHosts.doc_school_accept_date) ) {
-                                vDisplayEmailLink = 1;
-                            }
+							
+							if ( CLIENT.userID NEQ 1956 ) {
+							
+								// Check if Host Family is in compliance
+								vHostInCompliance = APPLICATION.CFC.CBC.checkHostFamilyCompliance(hostID=qGetPendingHosts.hostID, studentID=qGetPendingHosts.studentID);
+								
+								if ( NOT LEN(vHostInCompliance) AND IsDate(qGetPendingHosts.doc_school_accept_date) ) {
+									vDisplayEmailLink = 1;
+								}
+							
+							}
                         </cfscript>
                         
                         <cfif NOT isDate(qGetPendingHosts.datePISEmailed) AND VAL(vDisplayEmailLink) AND ListFind("1,2,3,4", CLIENT.userType)>
                             <a href="reports/placementInfoSheet.cfm?uniqueID=#qGetPendingHosts.uniqueID#&closeModal=1" class="jQueryModalPL">[Click to Email]</a>
-                        <cfelseif NOT VAL(vDisplayEmailLink)>
+                        <cfelseif NOT VAL(vDisplayEmailLink) AND CLIENT.userID NEQ 1956>
                             waiting on CBC <br /> and/or school acceptance
                         <cfelseif isDate(qGetPendingHosts.datePISEmailed)>
                             #DateFormat(qGetPendingHosts.datePISEmailed, 'mm/dd/yyyy')#
                             <cfset vSetClassNotification = "attentionGreen">
+						<cfelse>
+                        	n/a
 						</cfif>
                     
                     <cfelse>
