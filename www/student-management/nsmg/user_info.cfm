@@ -1131,7 +1131,7 @@
                 </table>
                 <!----CBC---->
                 <cfquery name="get_cbc_user" datasource="#application.dsn#">
-                    SELECT cbcid, userid, date_authorized , date_sent, date_expired, requestid, smg_users_cbc.seasonid, flagcbc, smg_seasons.season, batchid
+                    SELECT cbcid, userid, date_authorized , date_sent, notes, date_expired, requestid, smg_users_cbc.seasonid, flagcbc, smg_seasons.season, batchid
                     FROM smg_users_cbc
                     LEFT JOIN smg_seasons ON smg_seasons.seasonid = smg_users_cbc.seasonid
                     WHERE smg_users_cbc.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userid#"> 
@@ -1251,7 +1251,8 @@
                         <td align="center" valign="top"><b>Season</b></td>		
                         <td align="center" valign="top"><b>Date Submitted</b> <br><font size="-2">mm/dd/yyyy</font></td>
                         <td align="center" valign="top"><b>Expiration Date</b> <br><font size="-2">mm/dd/yyyy</font></td>		
-                        <td align="center" valign="top"><b>Request ID</b></td>
+                        <td align="center" valign="top"><b>View</b></td>
+                        <td align="left" valign="top"><b>Notes</b></td>
                         <cfif client.usertype lte 4 and client.companyid eq 10><td align="center" valign="top"><strong>Delete</strong></td></cfif>
                     </tr>				
                     <cfif get_cbc_user.recordcount EQ '0'>
@@ -1262,7 +1263,8 @@
                             <td align="center" style="line-height:20px;"><b>#season#</b></td>
                             <td align="center" style="line-height:20px;"><cfif NOT isDate(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
                             <td align="center" style="line-height:20px;"><cfif NOT isDate(date_expired)>processing<cfelse>#DateFormat(date_expired, 'mm/dd/yyyy')#</cfif></td>
-                            <td align="center" style="line-height:20px;"><cfif NOT LEN(requestID)>processing<cfelseif flagcbc EQ 1>On Hold Contact Compliance<cfelse><cfif CLIENT.usertype lte 4><a href="cbc/view_user_cbc.cfm?userID=#get_cbc_user.userID#&cbcID=#get_cbc_user.cbcID#&file=batch_#get_cbc_user.batchid#_user_#get_cbc_user.userid#_rec.xml" target="_blank">#requestid#</a></cfif></cfif></td>
+                            <td align="center" style="line-height:20px;"><cfif NOT LEN(requestID)>processing<cfelseif flagcbc EQ 1>On Hold Contact Compliance<cfelse><cfif CLIENT.usertype lte 4><a href="cbc/view_user_cbc.cfm?userID=#get_cbc_user.userID#&cbcID=#get_cbc_user.cbcID#&file=batch_#get_cbc_user.batchid#_user_#get_cbc_user.userid#_rec.xml" target="_blank"><!----#requestid#---->View </a></cfif></cfif></td>
+                            <cfif client.usertype lte 4><td>#notes#</td></cfif>
                             <cfif client.usertype lte 4 and client.companyid eq 10><td align="center" valign="top"><a href="delete_cbc.cfm?type=user&id=#requestid#&userid=#url.userid#"><img src="pics/deletex.gif" border=0/></td></cfif>
                         </tr>
                         </cfloop>
