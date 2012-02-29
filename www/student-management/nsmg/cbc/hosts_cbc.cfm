@@ -12,6 +12,8 @@
 
 ----- ------------------------------------------------------------------------- --->
 
+
+  
 <!--- Kill extra output --->
 <cfsilent>
 
@@ -153,13 +155,17 @@
             
             <!--- Param Form Variables --->
             <cfparam name="FORM.#cbcID#motherIsNoSSN" default="0">
-            
+            <cfparam name="FORM.#cbcID#notesmother" default="0">
+            <cfparam name="FORM.#cbcID#date_Approvedmother" default="0">
+            <cfparam name="FORM.#cbcID#motherflagCBC" default="0">
             <cfscript>
 				// update Host Mother CBC Flag & SSN options
 				APPCFC.CBC.updateHostOptions(
 					cbcfamID=cbcID,
 					isNoSSN=FORM[cbcID & "motherIsNoSSN"],
-					flagCBC=0
+					notes=FORM[cbcID & "notesmother"],
+					date_approved=FORM[cbcID & "date_Approvedmother"],
+					flagCBC=FORM[cbcID & "motherflagCBC"]
 				);			
 			</cfscript>
 
@@ -170,13 +176,17 @@
         
             <!--- Param Form Variables --->
             <cfparam name="FORM.#cbcID#fatherIsNoSSN" default="0">
-            
+            <cfparam name="FORM.#cbcID#notesfather" default="0">
+            <cfparam name="FORM.#cbcID#date_Approvedfather" default="0">
+            <cfparam name="FORM.#cbcID#fatherflagCBC" default="0">
             <cfscript>
 				// update Host Father CBC Flag & SSN options
 				APPCFC.CBC.updateHostOptions(
 					cbcfamID=cbcID,
 					isNoSSN=FORM[cbcID & "fatherIsNoSSN"],
-					flagCBC=0
+					notes=FORM[cbcID & "notesfather"],
+					date_approved=FORM[cbcID & "date_Approvedfather"],
+					flagCBC=FORM[cbcID & "fatherflagCBC"]
 				);			
 			</cfscript>
 
@@ -188,13 +198,17 @@
             <!--- Param Form Variables --->
             <cfparam name="FORM.#cbcID#memberCBCFamID" default="0">
             <cfparam name="FORM.#cbcID#memberIsNoSSN" default="0">
-
+			<cfparam name="FORM.#cbcID#notesmember" default="0">
+            <cfparam name="FORM.#cbcID#date_Approvedmember" default="0">
+            <cfparam name="FORM.#cbcID#memberflagCBC" default="0">
             <cfscript>
 				// update Host Member CBC Flag & SSN options
 				APPCFC.CBC.updateHostOptions(
 					cbcfamID=FORM[cbcID & "memberCBCFamID"],					
 					isNoSSN=FORM[cbcID & "memberIsNoSSN"],
-					flagCBC=0
+					notes=FORM[cbcID & "notesmember"],
+					date_approved=FORM[cbcID & "date_Approvedmember"],
+					flagCBC=FORM[cbcID & "memberflagCBC"]
 				);			
 			</cfscript>
 			
@@ -365,9 +379,26 @@
 		</cfscript>
         
     </cfif> <!--- VAL(FORM.submitted) --->
-    
+
 </cfsilent>
 
+<script type="text/javascript">
+		function zp(n){
+		return n<10?("0"+n):n;
+		}
+		function insertDate(t,format){
+		var now=new Date();
+		var DD=zp(now.getDate());
+		var MM=zp(now.getMonth()+1);
+		var YYYY=now.getFullYear();
+		var YY=zp(now.getFullYear()%100);
+		format=format.replace(/DD/,DD);
+		format=format.replace(/MM/,MM);
+		format=format.replace(/YYYY/,YYYY);
+		format=format.replace(/YY/,YY);
+		t.value=format;
+		}
+		</script>
 <style>
 	.columnHeader {
 		font-weight:bold;
@@ -417,7 +448,7 @@
         messageType="tableSection"
         width="100%"
         />
-    
+
     <cfform action="?curdoc=cbc/hosts_cbc&hostID=#hostID#" method="post">
         <input type="hidden" name="submitted" value="1">
         <input type="hidden" name="hostID" value="#hostID#">
@@ -428,14 +459,14 @@
     
         <table border="0" cellpadding="4" cellspacing="2" width="100%" class="section">
             <tr>
-                <th colspan="6" bgcolor="##e2efc7">H O S T &nbsp; P A R E N T S</th>
+                <th colspan="9" bgcolor="##e2efc7">H O S T &nbsp; P A R E N T S</th>
                 <th bgcolor="##e2efc7"><a href="cbc/hostParentsInfo.cfm?hostID=#qGetHost.hostID#" class="jQueryModal">Edit Host Parents Info</a></th>
             </tr>
-            <tr><td colspan="7">&nbsp;</td></tr>
+            <tr><td colspan="9">&nbsp;</td></tr>
             
             <!--- HOST MOTHER --->
             <cfif LEN(qGetHost.motherfirstname) AND LEN(qGetHost.motherlastname)>
-                <tr><td colspan="7" bgcolor="##e2efc7"><b>Host Mother - #qGetHost.motherfirstname# #qGetHost.motherlastname#</b></td></tr>
+                <tr><td colspan="10" bgcolor="##e2efc7"><b>Host Mother - #qGetHost.motherfirstname# #qGetHost.motherlastname#</b></td></tr>
                 <tr>
                     <td class="columnHeader">Company</td>
                     <td class="columnHeader">Season</td>		
@@ -443,7 +474,10 @@
                     <td class="columnHeader">CBC Submitted <br><font size="-2">mm/dd/yyyy</font></td>
                     <td class="columnHeader">Expiration Date <br><font size="-2">mm/dd/yyyy</font></td>		
                     <td class="columnHeader">Request ID</td>
-                    <td class="columnHeader">Submit with no SSN</td>
+                    <td class="columnHeader">Flag</td>
+                    <td class="columnHeader">Submit with<br> no SSN</td>
+                    <td class="columnHeader">Notes</td>
+                    <td class="columnHeader">Approved</td>
                 </tr>
                 <cfloop query="qGetCBCMother">
                     <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
@@ -453,12 +487,18 @@
                         <td><cfif isDate(qGetCBCMother.date_sent)>#DateFormat(qGetCBCMother.date_sent, 'mm/dd/yyyy')#<cfelse>in process</cfif></td>
                         <td><cfif isDate(qGetCBCMother.date_expired)>#DateFormat(qGetCBCMother.date_expired, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
                         <td><a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCMother.hostID#&CBCFamID=#qGetCBCMother.CBCFamID#&file=batch_#qGetCBCMother.batchid#_host_mother_#qGetCBCMother.hostid#_rec.xml" target="_blank">#qGetCBCMother.requestID#</a></td>
+                        <td><input type="checkbox" name="#cbcfamID#MotherflagCBC" value="1" <cfif VAL(flagCBC)>checked="checked"</cfif>></td>
                         <td>
                             <cfif LEN(qGetCBCMother.date_sent)>
                                 #YesNoFormat(qGetCBCMother.isNoSSN)#
                             <cfelse>
                                 <input type="checkbox" name="#cbcfamID#motherIsNoSSN" value="1" <cfif VAL(qGetCBCMother.isNoSSN)>checked="checked"</cfif>>
                             </cfif>
+                        </td>
+                         <td><textarea rows="3" cols=15 name="#cbcfamID#notesmother"><cfif isDefined('notes')>#notes#</cfif></textarea></td>
+                          <td> 
+                        <input type="text" name="#cbcfamID#date_approvedMother" message="Please input a valid date."  <cfif date_approved is ''>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif> value="#DateFormat(date_approved, 'mm/dd/yyyy')#" size="8" maxlength="10" >	
+                       <Cfif date_approved is ''><br /><em><font size=-2>click in box for date</font></em></Cfif>
                         </td>
                     </tr>
                 </cfloop>
@@ -483,7 +523,10 @@
                         <td>n/a</td>
                         <td>n/a</td>
                         <td>n/a</td>
+                        <td>n/a</td>
                         <td><input type="checkbox" name="motherIsNoSSN" value="1"></td>
+                        <td align="left" valign="top"></td>
+                        <td></td>
                     </tr>
                     <tr><td colspan="4"><font size="-2" color="000099">* Season must be selected.</font></td></tr>
                 </cfif>
@@ -492,7 +535,7 @@
             
             <!--- HOST FATHER --->
             <cfif LEN(qGetHost.fatherfirstname) AND LEN(qGetHost.fatherlastname)>
-                <tr><td colspan="7" bgcolor="##e2efc7"><b>Host Father - #qGetHost.fatherfirstname# #qGetHost.fatherlastname#</b></td></tr>
+                <tr><td colspan="10" bgcolor="##e2efc7"><b>Host Father - #qGetHost.fatherfirstname# #qGetHost.fatherlastname#</b></td></tr>
                 <tr>
                     <td class="columnHeader">Company</td>
                     <td class="columnHeader">Season</td>		
@@ -500,7 +543,10 @@
                     <td class="columnHeader">CBC Submitted <br><font size="-2">mm/dd/yyyy</font></td>	
                     <td class="columnHeader">Expiration Date <br><font size="-2">mm/dd/yyyy</font></td>		
                     <td class="columnHeader">Request ID</td>
-                    <td class="columnHeader">Submit with no SSN</td>
+                    <td class="columnHeader">Flag</td>
+                    <td class="columnHeader">Submit with<br> no SSN</td>
+                    <td class="columnHeader">Notes</td>
+                    <td class="columnHeader">Approved</td>
                 </tr>
                 <cfloop query="qGetCBCFather">
                     <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
@@ -510,12 +556,18 @@
                         <td><cfif isDate(qGetCBCFather.date_sent)>#DateFormat(qGetCBCFather.date_sent, 'mm/dd/yyyy')#<cfelse>processing</cfif></td>
                         <td><cfif isDate(qGetCBCFather.date_expired)>#DateFormat(qGetCBCFather.date_expired, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
                         <td><a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCFather.hostID#&CBCFamID=#qGetCBCFather.CBCFamID#&file=batch_#qGetCBCFather.batchid#_host_mother_#qGetCBCFather.hostid#_rec.xml" target="_blank">#qGetCBCFather.requestID#</a></td>
+                        <td><input type="checkbox" name="#cbcfamID#fatherflagCBC" value="1" <cfif VAL(flagCBC)>checked="checked"</cfif>></td>
                         <td>
                             <cfif LEN(qGetCBCFather.date_sent)>
                                 #YesNoFormat(qGetCBCFather.isNoSSN)#
                             <cfelse>
                                 <input type="checkbox" name="#cbcfamID#fatherIsNoSSN" value="1" <cfif VAL(qGetCBCFather.isNoSSN)>checked="checked"</cfif>>
                             </cfif>
+                        </td>
+                         <td><textarea rows="3" cols=15 name="#cbcfamID#notesfather"><cfif isDefined('notes')>#notes#</cfif></textarea></td>
+                          <td> 
+                        <input type="text" name="#cbcfamID#date_approvedFather" message="Please input a valid date."  <cfif date_approved is ''>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif> value="#DateFormat(date_approved, 'mm/dd/yyyy')#" size="8" maxlength="10" >	
+                       <Cfif date_approved is ''><br /><em><font size=-2>click in box for date</font></em></Cfif>
                         </td>
                     </tr>
                 </cfloop>
@@ -540,7 +592,10 @@
                         <td>n/a</td>
                         <td>n/a</td>
                         <td>n/a</td>
+                        <td>n/a</td>
                         <td><input type="checkbox" name="fatherIsNoSSN" value="1"></td>
+                         <td align="left" valign="top"></td>
+                         <td></td>
                     </tr>
                     <tr><td colspan="4"><font size="-2" color="000099">* Season must be selected.</font></td></tr>
                 </cfif>
@@ -549,7 +604,7 @@
             
             <!--- OTHER FAMILY MEMBERS ---> 	
             <tr>
-                <th colspan="6" bgcolor="##e2efc7">O T H E R &nbsp; F A M I L Y &nbsp; M E M B E R S &nbsp; O V E R &nbsp; 17 &nbsp; Y E A R S &nbsp; O L D &nbsp; (Living at Home)</th>
+                <th colspan="9" bgcolor="##e2efc7">O T H E R &nbsp; F A M I L Y &nbsp; M E M B E R S &nbsp; O V E R &nbsp; 17 &nbsp; Y E A R S &nbsp; O L D &nbsp; (Living at Home)</th>
                 <th bgcolor="##e2efc7"><a href="cbc/hostMemberInfo.cfm?hostID=#qGetHost.hostID#" class="jQueryModal">Edit Family Members Info</a></th>
             </tr>
             <tr><td colspan="7">&nbsp;</td></tr>
@@ -576,7 +631,7 @@
                     
                     <cfinput type="hidden" name="#familyID#count" value="#qGetCBCMember.recordcount#">
        
-                    <tr><td colspan="7" bgcolor="##e2efc7"><b>#name# #lastname#</b></td></tr>
+                    <tr><td colspan="10" bgcolor="##e2efc7"><b>#name# #lastname#</b></td></tr>
                     <tr>
                         <td class="columnHeader">Company</td>
                         <td class="columnHeader">Season</td>		
@@ -584,7 +639,10 @@
                         <td class="columnHeader">CBC Submitted <br><font size="-2">mm/dd/yyyy</font></td>
                         <td class="columnHeader">Expiration Date <br><font size="-2">mm/dd/yyyy</font></td>		
                         <td class="columnHeader">Request ID</td>
-                        <td class="columnHeader">Submit with no SSN</td>
+                       <td class="columnHeader">Flag</td>
+                        <td class="columnHeader">Submit with<br> no SSN</td>
+                        <td class="columnHeader">Notes</td>
+                        <td class="columnHeader">Approved</td>
                     </tr>
                     
                     <input type="hidden" name="#familyID#memberCBCFamID" value="#qGetCBCMember.cbcFamID#">
@@ -597,6 +655,7 @@
                             <td><cfif isDate(qGetCBCMember.date_sent)>#DateFormat(qGetCBCMember.date_sent, 'mm/dd/yyyy')#<cfelse>processing</cfif></td>
                             <td><cfif isDate(qGetCBCMember.date_expired)>#DateFormat(qGetCBCMember.date_expired, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
                             <td><a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCMember.hostID#&CBCFamID=#qGetCBCMember.CBCFamID#&file=batch_#qGetCBCMember.batchid#_host_mother_#qGetCBCMember.hostid#_rec.xml" target="_blank">#qGetCBCMember.requestID#</a></td>
+                            <td><input type="checkbox" name="#familyID#memberflagCBC" value="1" <cfif VAL(flagCBC)>checked="checked"</cfif>></td>
                             <td>
                                 <cfif LEN(qGetCBCMember.date_sent)>
                                     #YesNoFormat(qGetCBCMember.isNoSSN)#
@@ -604,6 +663,11 @@
                                     <input type="checkbox" name="#familyID#memberIsNoSSN" value="1" <cfif VAL(qGetCBCMember.isNoSSN)>checked="checked"</cfif>>
                                 </cfif>
                             </td>
+                             <td><textarea rows="3" cols=15 name="#familyID#notesmember"><cfif isDefined('notes')>#notes#</cfif></textarea></td>
+                             <td> 
+                        <input type="text" name="#familyID#date_approvedMember" message="Please input a valid date."  <cfif date_approved is ''>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif> value="#DateFormat(date_approved, 'mm/dd/yyyy')#" size="8" maxlength="10" >	
+                       <Cfif date_approved is ''><br /><em><font size=-2>click in box for date</font></em></Cfif>
+                        </td>
                         </tr>
                     </cfloop>
     
@@ -629,7 +693,9 @@
                             <td>n/a</td>
                             <td>n/a</td>
                             <td>n/a</td>
+                            <td>n/a</td>
                             <td><input type="checkbox" name="#familyID#IsNoSSN" value="1"></td>
+                            <td align="left" valign="top"></td>
                         </tr>
                         <tr><td colspan="4"><font size="-2" color="##000099">* Season must be selected.</font></td></tr>
                     </cfif>
