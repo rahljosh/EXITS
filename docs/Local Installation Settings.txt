@@ -32,40 +32,31 @@ Apache httpd.conf file
 
 Location: C:\Program Files\Apache Software Foundation\Apache2.2\conf\httpd.conf
 
+<Directory />
+    Options FollowSymLinks
+    AllowOverride None
+    Order deny,allow
+    Deny from all
+</Directory>
+
 
 # This should be changed to whatever you set DocumentRoot to.
 #
 <Directory "C:\Websites">
-    #<Directory "C:/Program Files/Apache Software Foundation/Apache2.2/htdocs">
-    #
-    # Possible values for the Options directive are "None", "All",
-    # or any combination of:
-    #   Indexes Includes FollowSymLinks SymLinksifOwnerMatch ExecCGI MultiViews
-    #
-    # Note that "MultiViews" must be named *explicitly* --- "Options All"
-    # doesn't give it to you.
-    #
-    # The Options directive is both complicated and important.  Please see
-    # http://httpd.apache.org/docs/2.2/mod/core.html#options
-    # for more information.
-    #
-    Options Indexes FollowSymLinks
+    #Options Indexes FollowSymLinks
+    Options Indexes Includes MultiViews FollowSymLinks
 
-    #
     # AllowOverride controls what directives may be placed in .htaccess files.
     # It can be "All", "None", or any combination of the keywords:
     #   Options FileInfo AuthConfig Limit
     #
     AllowOverride None
 
-    #
     # Controls who can get stuff from this server.
     #
     Order allow,deny
     Allow from all
-
 </Directory>
-
 
 # Added to let the browser access these folder - Marcus Melo
 <Directory "C:\Program Files\Apache Software Foundation\Apache2.2\htdocs">
