@@ -21,7 +21,6 @@
 		smg_states.state as us_state
 	FROM php_schools
 	LEFT JOIN smg_states ON smg_states.id = php_schools.state
-	LEFT JOIN php_school_tuition ON php_school_tuition.schoolid = php_schools.schoolid
 	<cfif boarding neq 2>
 		WHERE boarding_school = #boarding#
 	</cfif>

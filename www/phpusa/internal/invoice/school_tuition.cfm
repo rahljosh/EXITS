@@ -64,19 +64,6 @@
 
 </cfform>
 
-
-<!--- <cfloop query="get_school_list">
-	
-	<cfquery name="insert" datasource="MySql">
-		INSERT php_school_tuition
-			(schoolid, programtypeid, tuition)
-		VALUES (#schoolid#, ,#tuition_semester#)
-
-	
-	</cfquery>
-
-</cfloop>
- --->
 </cfoutput>
 </body>
 </html>
