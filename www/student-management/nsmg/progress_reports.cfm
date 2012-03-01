@@ -496,9 +496,9 @@
 
                         <!--- January (return December dates) --->
                     	<cfcase value="1">
-
-                            <!--- This should have the same Year as the program start date --->
-                            <cfset vReportDate = '12/01/#Year(qGetResults.startDate)#'>	
+						
+                            <!--- This should have the same Year as the previous year program start date for Jan reports only.--->
+                            <cfset vReportDate = '12/01/#Year(qGetResults.startDate - 1)#'>	
                         
                         </cfcase>
 
@@ -531,6 +531,7 @@
 						if ( Month(vInCountryArrival) EQ Month(vReportDate) ) {
                         	vIsPreviousReportApproved = 1;
                         }
+						
 					</cfscript>
 
 					<!--- Do we need this? --->
@@ -549,7 +550,7 @@
                                     <font color="##FF0000"><strong>#qGetResults.firstName# #qGetResults.familyLastName# (###qGetResults.studentID#)</strong></font>
                                 <cfelse>
                                     #qGetResults.firstName# #qGetResults.familyLastName# (###qGetResults.studentID#)
-                                </cfif>
+                            </cfif>
                             </a>
                             
                             <span style="font-size:0.8em;">- #qGetResults.programName#</span>
@@ -595,8 +596,8 @@
                             	
                             	<!--- to add a progress report, user must be the supervising rep, and the program has a report for this phase. --->
 								<cfif NOT VAL(vIsStudentInCountry)>
-                                
-                                    Not in Country - No Report Required
+                               
+                                   Not in Country - No Report Required
                                     
                                 <cfelseif (areaRepID EQ CLIENT.userid and vIsPreviousReportApproved eq 1)>
                             
@@ -640,7 +641,7 @@
 								N/A
                             <cfelse>
 								#dateFormat(qGetCurrentReport.pr_ra_approved_date, 'mm/dd/yyyy')#
-                            </cfif>
+                          </cfif>
                         </td>
                         <td align="center">#dateFormat(qGetCurrentReport.pr_rd_approved_date, 'mm/dd/yyyy')#</td>
                         <td align="center">
