@@ -56,7 +56,9 @@
         	uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
 	</cfquery>
 	<cfset ad_users = ValueList(get_users_under_adv.userid, ',')>
-	<cfset ad_users = ListAppend(ad_users, #client.userid#)>
+    <CFIF client.usertype neq 6>
+		<cfset ad_users = ListAppend(ad_users, #client.userid#)>
+    </CFIF>
 </cfif> <!--- advisors --->
 
 <!--- get total students in program --->
