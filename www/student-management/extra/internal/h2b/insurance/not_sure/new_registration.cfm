@@ -77,26 +77,6 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
 				<td>#DateFormat(insurance_startdate, 'dd/mmm/yyyy')#</td>
 				<td>#DateFormat(insurance_enddate, 'dd/mmm/yyyy')#</td>
 			</tr>
- 	<!--- update only if there is insurance information --->
-	<!----
-	<cfif insurance_startdate NEQ '' AND insurance_enddate NEQ ''>
-		<cfquery name="update_students" datasource="MySql">
-			UPDATE smg_students 
-			SET insurance = #CreateODBCDate(now())# 
-			WHERE studentid = #get_students.studentid#
-		</cfquery>
-		<!--- CREATE HISTORY FILE --->
-		<cfquery name="insert_history" datasource="MySql">
-			INSERT INTO smg_insurance
-				(studentid, firstname, lastname, sex, dob, country_code, new_date, end_date, org_code, policy_code, sent_to_caremed, 
-				transtype, excel_spreadsheet)
-			VALUES
-				('#studentid#', '#firstname#', '#familylastname#', '#sex#', #CreateODBCDate(dob)#, '#countrycode#',
-				#CreateODBCDate(insurance_startdate)#, #CreateODBCDate(insurance_enddate)#, '#orgcode#', '#policycode#',
-				#CreateODBCDate(now())#, 'new', '1');	
-		</cfquery>
-	</cfif>
-	---->
 	</cfloop>
 	</table>
 </cfoutput> 
