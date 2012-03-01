@@ -13,13 +13,11 @@ where active = 1 and companyid < 6
 	<Cfquery name="get_student_info" datasource="MySQL">
 		SELECT distinct MAX(i.insuranceid), s.familylastname, s.firstname, s.studentid, s.hostid, s.flight_info_notes, s.cancelinsurancedate,
 				s.insurance, c.companyshort, u.insurance_typeid , u.businessname,
-				p.insurance_startdate, p.insurance_enddate, p.programid, p.programname,
-				i.new_date, i.end_date, i.sent_to_caremed, i.transtype
+				p.insurance_startdate, p.insurance_enddate, p.programid, p.programname
 		FROM smg_students s
-		OUTTER JOIN smg_users u ON u.userid = s.intrep
-		OUTTER JOIN smg_programs p ON p.programid = s.programid
-		OUTTER JOIN smg_insurance i ON i.studentid = s.studentid
-		OUTTER JOIN smg_companies c ON c.companyid = s.companyid
+		OUTER JOIN smg_users u ON u.userid = s.intrep
+		OUTER JOIN smg_programs p ON p.programid = s.programid
+		OUTER JOIN smg_companies c ON c.companyid = s.companyid
 		WHERE s.studentid =  #active_students.studentid#
 		Group By i.end_date
 			</Cfquery>

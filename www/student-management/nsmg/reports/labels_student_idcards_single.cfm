@@ -336,12 +336,6 @@
                               
                               where smg_students.studentid = #studentid#
                               </cfquery>
-                              <cfquery name="insuranceDetails" datasource="#application.dsn#">
-                              select policy_code
-                              from smg_insurance
-                              where studentid = #studentID# 
-                              </cfquery>
-                              
                             <table cellpadding="2" cellspacing="2" border="0">
                              	<tr>
                                     <td><span class="title">Company</span></td><td>Global Secutive</td>

@@ -82,15 +82,7 @@
 				<td>#programname#</td>
 				<td>#companyShort#</td>
                 <td>#sevis_batchid#</td>
-				<td>
-					<cfquery name="insured" datasource="MySql">
-						SELECT studentid
-						FROM smg_insurance
-						WHERE studentid = '#studentid#'
-							AND transtype = 'new'			
-					</cfquery>				
-					<cfif insured.recordcount EQ 0 AND insurance EQ ''>NO<cfelse>#DateFormat(insurance, 'mm/dd/yyyy')#</cfif>
-				</td>
+				<td>n/a</td>
 			</tr>
 		</cfloop>
 </table>
