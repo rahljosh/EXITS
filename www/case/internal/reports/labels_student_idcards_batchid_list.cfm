@@ -64,15 +64,7 @@
 				<td>#firstname# #familylastname# (###studentid#)</td>
 				<td>#programname#</td>
 				<td>#sevis_batchid#</td>
-				<td>
-					<cfquery name="insured" datasource="caseusa">
-						SELECT studentid
-						FROM smg_insurance
-						WHERE studentid = '#studentid#'
-							AND transtype = 'new'			
-					</cfquery>				
-					<cfif insured.recordcount EQ 0 AND insurance EQ ''>NO<cfelse>#DateFormat(insurance, 'mm/dd/yyyy')#</cfif>
-				</td>
+				<td>n/a</td>
 			</tr>
 		</cfloop>
 </table>

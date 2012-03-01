@@ -41,20 +41,6 @@ where studentid = 4928
 							AND flight_type = 'departure'
 						ORDER BY dep_date DESC 
 					</cfquery>
-					
-					<cfquery name="get_type" datasource="caseusa">
-						SELECT max(policy_code) as policy_code, end_date
-						FROM smg_insurance
-						WHERE studentid = #studentid#
-						group by policy_code
-					</cfquery>
-					<cfif get_type.policy_code is ''>
-						<cfset get_type.policy_code = 0>
-					</cfif>
-										
-							
-					
-					
 	<tr>
 		<td>#companyshort#</td><td>#businessname#</td><td>#studentid#</td><td> #firstname# </td><td>#familylastname# </td><td>#programname#</td>
 		<td><cfif year_ends is ''>
