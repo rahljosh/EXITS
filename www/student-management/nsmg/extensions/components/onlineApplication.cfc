@@ -245,15 +245,7 @@
                                 </p> 
                             </td>
                         </tr>
-                        <tr>
-                            <td align="center" style="font-size:-1px; color:##CCCCCC;">
-                                <p>
-                                    Please add support@student-management.com to your whitelist to ensure it isn't marked as spam. SMG will
-                                    not sell your address or use it for unsolicited emails.  This email was sent on behalf of Student Management Group from an International Agent, listed above.  
-                                    If you received this email as an unsolicited contact about SMG or SMG subsidiaries, please contact support@student-management.com  
-                                </p>
-                            </td>
-                        </tr>
+                        
                     </table>                                    
 				</cfoutput>                    
             </cfsavecontent>
