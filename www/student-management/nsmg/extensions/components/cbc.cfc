@@ -1698,7 +1698,7 @@
                     (
                         (
                         	u.ssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.ssn#"> 
-                        AND checkHostFamilyCompliance
+                        AND 
                         	u.ssn != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
                          ) 
                     OR 
