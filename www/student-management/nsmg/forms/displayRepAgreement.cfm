@@ -213,14 +213,14 @@ where userid = #client.userid#
                     </cfsavecontent>
                     
                     <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                            
+                             <!----
                             **********This emai is sent to the Program Manager*******************<Br>
                         *****************#progManager.pm_email#<br>**********************
                             <cfinvokeargument name="email_to" value="josh@pokytrails.com">      
-                            <!----
+                           ---->
                            
                             <cfinvokeargument name="email_to" value="#progManager.pm_email#"> 
-							 ---->
+							 
                               
                             <cfinvokeargument name="email_from" value="""#client.companyshort# Support"" <#client.emailfrom#>">
                             <cfinvokeargument name="email_subject" value="CBC Authorization for #client.name#">

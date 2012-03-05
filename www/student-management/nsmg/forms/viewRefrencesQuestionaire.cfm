@@ -70,6 +70,7 @@
 	}
 </style>
 </head>
+<!----
 <Cfif isDefined('form.submit')>
     <Cfquery name="Answeredquestions" datasource="#application.dsn#">
     select *
@@ -91,6 +92,7 @@
 	 </cfloop>
 
 </Cfif>
+---->
 <Cfset season = 9>
 <Cfquery name="questionTracking" datasource="#application.dsn#">
 select *
@@ -137,7 +139,7 @@ order by ARQ.id
                 and seasonid = #season#
                 </CFquery>
             </Cfif>
-                <!----Check if this account should be reviewed more then likely this will not happen here, but depending on the order of people submitting things, we have to check.---->
+                <!----Check if this account should be reviewed more then likely this will not happen here, but depending on the order of people submitting things, we have to check.-
 	<Cfscript>
                     //Check if paperwork is complete for season
                     get_paperwork = APPLICATION.CFC.udf.allpaperworkCompleted(userid=url.rep);
@@ -179,7 +181,9 @@ order by ARQ.id
                         </cfinvoke>	 
                         
                         </cfif>
+						 --->
      </CFIF>
+	
      <SCRIPT LANGUAGE="JavaScript"><!--
 			setTimeout('self.close()',2000);
 			//--></SCRIPT>
