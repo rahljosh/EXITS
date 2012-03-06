@@ -110,6 +110,7 @@
             s.studentID, 
             s.firstName, 
             s.familyLastName, 
+            s.intRep,
             s.hostID,
             p.programID,
             p.type
@@ -142,6 +143,7 @@
             studentID, 
             firstName, 
             familyLastName,
+            intRep,
             hostID, 
             programID,
             type
@@ -261,7 +263,7 @@
                 <cfparam name="FORM.#studentID#superAmount" default="">
                 <cfparam name="FORM.#studentID#superComment" default="">
                 
-                <cfif LEN(Evaluate("FORM." & studentID & "superPaymentTypeID"))>
+                <cfif LEN(Evaluate("FORM." & studentID & "superPaymentTypeID")) AND VAL(Evaluate('FORM.' & studentID & 'superAmount'))>
                 
                     <cfquery datasource="MySQL" result="newRecord">
                         INSERT INTO 
@@ -313,7 +315,7 @@
                 <cfparam name="FORM.#studentID#placeAmount" default="">
                 <cfparam name="FORM.#studentID#placeComment" default="">
             
-                <cfif LEN(Evaluate("FORM." & studentID & "placePaymentTypeID"))>
+                <cfif LEN(Evaluate("FORM." & studentID & "placePaymentTypeID")) AND VAL(Evaluate('FORM.' & studentID & 'placeAmount'))>
                 
                     <cfquery datasource="MySQL" result="newRecord">
                         INSERT INTO 
@@ -759,7 +761,7 @@
 						vCheckPlacementPaperwork = APPLICATION.CFC.STUDENT.checkPlacementPaperwork(studentID=qGetPlacedStudentList.studentID, paymentTypeID=qGetPlacementPaymentType.id);
 					
 						// Check if payment is allowed
-						vAllowPlacePayment = 0;
+						vAllowPlacePayment = 0;						
 						
 						if ( FORM.placedPaymentType EQ 12 AND ListFind(vAYP5ProgramType, qGetPlacedStudentList.type) ) {
 							// Departure Payment Type - AYP 5 Month Not Allowed
@@ -778,6 +780,12 @@
 							// vPlaceAmoutToBePaid = VAL(qGetPlacementPaymentType.amount) / 2;	
 						} else { 
 							vPlaceAmoutToBePaid = qGetPlacementPaymentType.amount;
+						}
+						
+						// FLS China - Pre AYP Type
+						if ( FORM.placedPaymentType EQ 24 AND qGetPlacedStudentList.intRep NEQ 11878 ) {
+							// Do Not Allow
+							vAllowPlacePayment = 0;
 						}
 					</cfscript>
                     
@@ -834,8 +842,10 @@
                             <td valign="top">n/a</td>
                             <td valign="top" style="color:##F00">
                                 <cfif FORM.placedPaymentType EQ 12 AND ListFind(vAYP5ProgramType, qGetPlacedStudentList.type)>
-                                    AYP 5 month programs are not eligible for #qGetsupervisedPaymentType.type# payment.
-                                <cfelse>
+                                    AYP 5 month programs are not eligible for #qGetsupervisedPaymentType.type# payment.                                
+                                <cfelseif FORM.placedPaymentType EQ 24 AND qGetPlacedStudentList.intRep NEQ 11878>                                    
+                                    Not Eligible - not a FLS China student.
+								<cfelse>
                                     <cfloop query="qCheckPlacedCharges">
                                         <p>
                                             #qCheckPlacedCharges.type# paid on #DateFormat(qCheckPlacedCharges.date, 'mm/dd/yyyy')# <br />
