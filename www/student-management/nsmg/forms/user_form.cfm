@@ -407,7 +407,7 @@
                         	<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">,
 						<cfelse>
                         	<cfqueryparam cfsqltype="cf_sql_integer" value="0">,
-						</cfif>,
+						</cfif>
                         
                         <cfif listFind("1,2,3,4", CLIENT.userType)>
                         	<cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
