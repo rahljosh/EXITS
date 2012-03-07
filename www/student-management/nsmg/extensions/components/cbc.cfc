@@ -749,7 +749,7 @@
                 AND 
                     cbc.familyID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                 AND 
-                    uar.usertype <= <cfqueryparam cfsqltype="cf_sql_integer" value="7">
+                    uar.usertype IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,6,7,15" list="yes"> )
 
                 <!--- Check if we are running ISE's CBC --->
                 <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
