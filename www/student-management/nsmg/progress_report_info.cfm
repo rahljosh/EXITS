@@ -267,16 +267,14 @@ function OpenLetter(url) {
 </cfif>
 <!--- certain things are required for approval. --->
 <cfset approve_error_msg = ''>
-<cfif allow_approve>
-<!----
-<Cfdump var="#get_PreviousDates#">
-<Cfdump var="#get_dates#">
----->	
+
+	
 	<!--- contact dates: at least one In Person contact for both Host Family and Student or both. --->
     <cfset hostFamilyOK = 0>
     <cfset studentOK = 0>
-    <cfset prevhostFamilyOK = 0>
-    <cfset prevhostStduentOK = 0>
+    <cfset prevhostFamilyOK = 1>
+    <cfset prevStudentOK = 1>
+    <!----
     <cfloop query="get_Previousdates">
         <!--- type = In Person --->
         <cfif fk_prdate_type EQ 1>
@@ -293,40 +291,45 @@ function OpenLetter(url) {
             </cfif>
         </cfif>
     </cfloop>
+	---->
     <!----If there are no current contact dates, throw error---->
+    
     <cfif get_dates.recordcount eq 0>
-    <Cfset hostFamilyOK = 0>
-    <cfset studentOK = 0>
-    <cfset allow_approve = 0>
-    <cfset approve_error_msg = listAppend(approve_error_msg, 'currentDate')>
+		<Cfset hostFamilyOK = 0>
+        <cfset studentOK = 0>
+        <cfset allow_approve = 0>
+        <cfset approve_error_msg = listAppend(approve_error_msg, 'currentDate')>
     <cfelse>
         <cfloop query="get_dates">
-            <!--- type = In Person --->
-            <cfif fk_prdate_type EQ 1>
-                <!--- Host Family --->
+            	<!--- Host Family --->
                 <cfif fk_prdate_contact EQ 1>
                     <cfset hostFamilyOK = 1>
-                    <cfset approve_error_msg = listAppend(approve_error_msg, 'noStudentContact')>
                 <!--- Student --->
                 <cfelseif fk_prdate_contact EQ 2>
                     <cfset studentOK = 1>
-                    <cfset approve_error_msg = listAppend(approve_error_msg, 'noHostContact')>
                 <!--- Host Family & Student --->
                 <cfelseif fk_prdate_contact EQ 3>
                     <cfset hostFamilyOK = 1>
                     <cfset studentOK = 1>
-                    
                 </cfif>
-            </cfif>
         </cfloop>
+        
+        <Cfif hostFamilyOK eq 0>
+        	<cfset approve_error_msg = listAppend(approve_error_msg, 'noHostContact')>
+            <cfset allow_approve = 0>
+        </Cfif>
+        <Cfif studentOK eq 0>
+        	<cfset approve_error_msg = listAppend(approve_error_msg, 'noStudentContact')>
+            <cfset allow_approve = 0>
+        </Cfif>
     </cfif>
-    <!---Check in Person over previous two months---->
+    <!---Check in Person over previous two months
 
     <cfif not (prevhostFamilyOK and prevstudentOK)>
         <cfset allow_approve = 0>
         <cfset approve_error_msg = 'date'>
     </cfif>
-     
+     ---->
 	<!--- questions: all questions must be answered. --->
     <cfset questionsOK = 1>
     <cfloop query="get_questions">
@@ -341,7 +344,7 @@ function OpenLetter(url) {
         <cfset approve_error_msg = listAppend(approve_error_msg, 'question')>
     </cfif>
      
-</cfif>
+
 
 <cfoutput>
 
@@ -721,7 +724,7 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
           </tr>
           <cfif allow_save>
           <tr>
-          <td align="right" colspan=4><a href="javascript:check#get_questions.currentrow#()" id="checkLink#get_questions.currentrow#">Check Spelling & Grammer</a></td>
+          <td align="right" colspan=4><a href="javascript:check#get_questions.currentrow#()" id="checkLink#get_questions.currentrow#">Check Spelling & Grammar</a></td>
           </tr>
           </cfif>
 		  <cfif currentRow NEQ RecordCount>
