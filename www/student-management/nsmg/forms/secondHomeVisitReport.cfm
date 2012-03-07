@@ -1,4 +1,4 @@
-<cfsilent>
+
 
 	<!--- Import CustomTag Used for Page Messages and Form Errors--->
     <cfimport taglib="../extensions/customtags/gui/" prefix="gui" /> 
@@ -40,14 +40,14 @@
         <cfset FORM.pr_id = URL.reportID>
     </cfif>
     
-    <cfif LEN(FORM.pr_action)>
+  
     
         <!----Edit Report---->
         <Cfif pr_action EQ 'edit_report'>
             <cfset FORM.performEdit = 1>
         </Cfif>
-        <
-        <!--- approve report 
+        
+        <!--- approve report   
         <cfif pr_action is 'approve'>
         
             <cfquery name="get_report" datasource="#application.dsn#">
@@ -88,8 +88,8 @@
             <cflocation url="index.cfm?curdoc=secondVisitReports">
        
         </cfif>
-        ---->
-    </cfif> 
+      ---->
+  
 	
 	<!----Save Report---->
     
@@ -129,9 +129,9 @@
 	
 	<!--- LEN(FORM.pr_action) --->
     
-    <Cfquery name="secondVisitAnswers" datasource="#application.dsn#">
+    <Cfquery name="secondvisitanswers" datasource="#application.dsn#">
         select *
-        from secondVisitAnswers
+        from secondvisitanswers
         where fk_reportID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
     </cfquery>
     
@@ -147,11 +147,7 @@
         WHERE pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
     </cfquery>
     
-    <cfquery name="secondVisitAnswers" datasource="#application.dsn#">
-        SELECT *
-        FROM secondVisitAnswers
-        WHERE fk_reportID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
-    </cfquery>
+ 
     
     <cfquery name="get_second_rep" datasource="#application.dsn#">
         SELECT userid, firstname, lastname
@@ -206,15 +202,58 @@
         FROM smg_users
         WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_intrep_user#">
     </cfquery>
-	
+    <cfscript>
+                 // Set FORM Values   
+                FORM.neighborhoodAppearance = secondVisitAnswers.neighborhoodAppearance;
+                FORM.avoid = secondVisitAnswers.avoid;
+                FORM.homeAppearance = secondVisitAnswers.homeAppearance;
+                FORM.typeOfHome = secondVisitAnswers.typeOfHome;
+                FORM.numberBedRooms = secondVisitAnswers.numberBedRooms;
+                FORM.numberBathRooms = secondVisitAnswers.numberBathRooms;
+                FORM.livingRoom = secondVisitAnswers.livingRoom;
+                FORM.diningRoom = secondVisitAnswers.diningRoom;
+                FORM.kitchen = secondVisitAnswers.kitchen;
+                FORM.homeDetailsOther = secondVisitAnswers.homeDetailsOther;
+                FORM.ownBed = secondVisitAnswers.ownBed;
+                FORM.bathRoom = secondVisitAnswers.bathRoom;
+                FORM.outdoorsFromBedroom = secondVisitAnswers.outdoorsFromBedroom;
+                FORM.storageSpace = secondVisitAnswers.storageSpace;
+                FORM.studySpace = secondVisitAnswers.studySpace;
+                FORM.privacy = secondVisitAnswers.privacy;
+                FORM.pets = secondVisitAnswers.pets;
+                FORM.other = secondVisitAnswers.other;
+                FORM.dateOfVisit = secondVisitAnswers.dateOfVisit;
+             </cfscript>
 	<cfset approve_error_msg = ''>
     
+  
 	<!--- FORM Submitted --->
 	<cfif pr_action is 'approve'>
-	
-		<!--- certain things are required for approval. --->
-        <cfset approve_error_msg = ''>
-
+  
+		  <cfscript>
+                 // Set FORM Values   
+                FORM.neighborhoodAppearance = secondVisitAnswers.neighborhoodAppearance;
+                FORM.avoid = secondVisitAnswers.avoid;
+                FORM.homeAppearance = secondVisitAnswers.homeAppearance;
+                FORM.typeOfHome = secondVisitAnswers.typeOfHome;
+                FORM.numberBedRooms = secondVisitAnswers.numberBedRooms;
+                FORM.numberBathRooms = secondVisitAnswers.numberBathRooms;
+                FORM.livingRoom = secondVisitAnswers.livingRoom;
+                FORM.diningRoom = secondVisitAnswers.diningRoom;
+                FORM.kitchen = secondVisitAnswers.kitchen;
+                FORM.homeDetailsOther = secondVisitAnswers.homeDetailsOther;
+                FORM.ownBed = secondVisitAnswers.ownBed;
+                FORM.bathRoom = secondVisitAnswers.bathRoom;
+                FORM.outdoorsFromBedroom = secondVisitAnswers.outdoorsFromBedroom;
+                FORM.storageSpace = secondVisitAnswers.storageSpace;
+                FORM.studySpace = secondVisitAnswers.studySpace;
+                FORM.privacy = secondVisitAnswers.privacy;
+                FORM.pets = secondVisitAnswers.pets;
+                FORM.other = secondVisitAnswers.other;
+                FORM.dateOfVisit = secondVisitAnswers.dateOfVisit;
+             </cfscript>
+             should be assigned
+  
 		<cfscript>
             // Data Validation
             // Neighborhood Appearance
@@ -288,11 +327,8 @@
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please indicate if #FORM.studentName# has access to #FORM.studentSex# own bathroom.");
             }
-            // Home detials
-            if ( NOT LEN(TRIM(FORM.bathRoom)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate if #FORM.studentName# has access to #FORM.studentSex# own bathroom.");
-            }
+           
+           
             
             // Home detials
             if ( NOT LEN(TRIM(FORM.storageSpace)) ) {
@@ -317,47 +353,53 @@
                 SESSION.formErrors.Add("Please indicate how many and what kind of pets are in the home.");
             }
         </cfscript>
-        <cfdump var="#form#">
-    	<cfabort>
-		<!--- used to display the pending message for the supervising rep. --->
-        <cfset pending_msg = 0>
+
 
 		<!--- Check if there are no errors --->
         <cfif NOT SESSION.formErrors.length()>
                 
-			<!--- No Erros --->				
-            <!----check to allow for editing---->
-            <!--- users are allowed access until they approve the report.  Also, if a higher level has already approved then they are not allowed access. --->
-            <!--- second visit rep --->
-            
-            <!--- Update Record --->
-            <cfquery datasource="mysql">
-                UPDATE 
-                    secondVisitAnswers 
-                SET
-                	dateOfVisit = <cfqueryparam cfsqltype="CF_SQL_DATE" value="#FORM.dateOfVisit#">,
-                    neighborhoodAppearance= <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.neighborhoodAppearance#">,
-                    avoid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.avoid#">,
-                    homeAppearance = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homeAppearance#">,
-                    typeOfHome = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.typeOfHome#">,
-                    numberBedRooms = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.numberBedRooms#">,
-                    numberBathRooms = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.numberBathRooms#">,
-                    livingRoom = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.livingRoom#">,
-                    diningRoom = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.diningRoom#">,
-                    kitchen = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.kitchen#">,
-                    homeDetailsOther = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homeDetailsOther#">,
-                    ownBed = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ownBed#">,
-                    bathRoom =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.bathRoom#">,
-                    outdoorsFromBedroom = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.outdoorsFromBedroom#">,
-                    storageSpace = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.storageSpace#">,
-                    studySpace = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.studySpace#">,
-                    privacy = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.privacy#">,
-                    pets = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pets#">,
-                    other =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.other#">
-                WHERE 
-                    fk_reportID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">                  
+		
+           
+           <cfquery name="get_report" datasource="#application.dsn#">
+                SELECT *
+                FROM progress_reports
+                WHERE pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
             </cfquery>
             
+            <cfset approve_field = ''>
+            
+            <!--- in case the user has multiple approval levels, check them in order and just do the first one. --->
+            <!--- supervising rep --->
+            <cfif CLIENT.userid EQ get_report.fk_sr_user and get_report.pr_sr_approved_date EQ ''>
+                <cfset approve_field = 'pr_sr_approved_date'>
+            <!--- regional advisor --->
+            <cfelseif CLIENT.userid EQ get_report.fk_ra_user and get_report.pr_ra_approved_date EQ ''>
+                <cfset approve_field = 'pr_ra_approved_date'>
+            <!--- regional director --->
+            <cfelseif CLIENT.userid EQ get_report.fk_rd_user and get_report.pr_rd_approved_date EQ ''>
+                <cfset approve_field = 'pr_rd_approved_date'>
+            <!--- facilitator OR any office user --->
+            <cfelseif get_report.pr_ny_approved_date EQ '' AND (CLIENT.userid EQ get_report.fk_ny_user OR CLIENT.userType LTE 4)>
+                <cfset approve_field = 'pr_ny_approved_date'>
+            </cfif>
+            
+            <cfif approve_field NEQ ''>
+                <cfquery datasource="#application.dsn#">
+                    UPDATE 
+                    	progress_reports 
+                    SET
+                    	#approve_field# = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
+                    	pr_rejected_date = NULL
+                    WHERE 
+                    	pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
+                </cfquery>
+            </cfif>
+            <!--- Successfully Updated - Go to Next Page --->
+           <cflocation url="index.cfm?curdoc=secondVisitReports" addtoken="No">
+           
+           
+           <!----
+           
             <!---Auto approve the Submitting rep so REgional Manager can approve.---->
             <cfquery datasource="#application.dsn#">
                 update 
@@ -367,11 +409,11 @@
                where 
                 pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
             </cfquery>
+            ---->
+           
             
-            <!--- Successfully Updated - Go to Next Page --->
-            <cflocation url="index.cfm?curdoc=secondHomeVisitReport" addtoken="No">
         
-		</cfif> 
+		
         <!--- NOT SESSION.formErrors.length() --->
         
 	<!--- FORM NOT SUBMITTED --->
@@ -401,7 +443,7 @@
          </cfscript>
          
     </cfif>  
-
+</cfif>
 	<cfscript>
 		// Get Student By UniqueID
 		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=reportDates.fk_student);
@@ -416,7 +458,7 @@
 		
 	</cfscript>
     
-</cfsilent>  
+
 
 <script language="javascript">	
     // Document Ready!
@@ -561,7 +603,7 @@
 	<Cfset show_save = 1>
 </cfif>
 <!----toggle Edit/save function---->
-<cfif form.pr_action is 'save'>
+<cfif form.pr_action is 'save' or form.pr_action is 'print'>
 	<cfset allow_save = 0>
 
 </cfif>
@@ -569,6 +611,7 @@
 	<cfset allow_save =1>
     
 </cfif>  
+
 <div id="stylized" class="myform">
    <Cfoutput>
    
@@ -892,6 +935,8 @@
         </table>
     </cfif>
     <br />
+    <!----if printing don't show buttons---->
+    <cfif form.pr_action is not 'print'>
  <table border=0 cellpadding=4 cellspacing=0 width=100% >
         <tr>
             <td align="center">
@@ -997,9 +1042,9 @@
               <td width="30">&nbsp;</td>
               <td>
                 <!--- print --->
-                <form action="progress_report_info.cfm" method="post" target="_blank">
+                <form action="forms/secondHomeVisitReport.cfm?p" method="post" target="_blank">
                 <input type="hidden" name="pr_id" value="#form.pr_id#">
-                <input type="hidden" name="report_mode" value="print">
+                <input type="hidden" name="pr_action" value="print">
                 <input name="Submit" type="image" src="pics/buttons/Print50x50.png" alt="Print Report" border=0>
                 </form>
                 <!---<A href="progress_report_info.cfm?pr_id=#form.pr_id#&report_mode=print" title="Print Report" target="_blank"><img src="pics/printer.gif" border=0 align="absmiddle"> Print</A>--->
@@ -1018,6 +1063,7 @@
         </cfif>
         </tr>
       </table>
+
       <br /><br />
       <Cfoutput>
       <a href="index.cfm?curdoc=secondVisitReports&lastReport=#qGetStudentInfo.studentid####qGetStudentInfo.studentid#">Back to Second Visit Reports</a>
@@ -1025,5 +1071,6 @@
             </td>
         </tr>
     </table>
+    </cfif>
 
 </cfoutput>
