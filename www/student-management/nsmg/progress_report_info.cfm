@@ -2,7 +2,7 @@
 
 <cfparam name="form.pr_action" default="">
 <cfparam name="client.pr_rmonth" default="">
-
+<cfset questionList = ''>
 <Cfset form.pr_rmonth = #client.pr_rmonth#>
 
 <cfswitch expression="#form.pr_action#">
@@ -11,10 +11,25 @@
     <cfquery datasource="#application.dsn#">
         DELETE FROM progress_report_dates
         WHERE prdate_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.prdate_id#">
-    </cfquery>
+    </cfquery> 
 </cfcase>
+<!----Save Report---->
+<cfcase value="save">
+<cfoutput>
+    <cfloop list = '#form.FinalQuestionList#' index='i'>
+   
+        <cfquery datasource="#application.dsn#">
+            UPDATE x_pr_questions SET
+            x_pr_question_response = <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.x_pr_question_response' & '#i#')#" >
+            WHERE x_pr_question_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
+        </cfquery>
+    </cfloop>
+</cfoutput>
+</cfcase>
+
 <!--- approve report --->
 <cfcase value="approve">
+
     <cfquery name="get_report" datasource="#application.dsn#">
         SELECT *
         FROM progress_reports
@@ -70,7 +85,19 @@ function OpenLetter(url) {
 	if (window.focus) {newwindow.focus()}
 }
 //-->
+
 </script>
+<!----SpellCheck info---->
+ <!-- 1. include jQuery ... naturally none of this works without jQuery -->
+ <script src="http://code.jquery.com/jquery-1.4.2.js"></script>
+ <!-- 2. load the atd.textarea.js -- this script makes it easy to attach AtD to a textarea -->
+ <script src="spellCheck/scripts/jquery.atd.textarea.js"></script>
+ <!-- 3. this script is a hack that allows cross-domain AJAX -->
+ <script src="spellCheck/scripts/csshttprequest.js"></script>
+<!-- 4. this CSS file contains the style information for highlighted errors -->
+ <link rel="stylesheet" type="text/css" media="screen" href="spellCheck/css/atd.css" />
+
+ 
 
 <!--- view or print --->
 <cfparam name="form.report_mode" default="view">
@@ -183,6 +210,8 @@ function OpenLetter(url) {
 <cfset allow_approve = 0>
 <cfset allow_reject = 0>
 <cfset allow_delete = 0>
+<cfset allow_save = 0>
+<cfset show_save = 0>
 
 <!--- used to display the pending message for the supervising rep. --->
 <cfset pending_msg = 0>
@@ -192,77 +221,108 @@ function OpenLetter(url) {
 <cfif CLIENT.userid EQ get_report.fk_sr_user and get_report.pr_sr_approved_date EQ '' and get_report.pr_ra_approved_date EQ '' and get_report.pr_rd_approved_date EQ '' and get_report.pr_ny_approved_date EQ ''>
 	<cfset allow_edit = 1>
     <cfset allow_approve = 1>
-	<cfset allow_reject = 1>
+	<cfset allow_reject = 0>
 	<cfset allow_delete = 1>
 	<cfset pending_msg = 1>
+    <cfset allow_save = 1>
+	<Cfset show_save = 1>
+    
 <!--- regional advisor --->
 <cfelseif CLIENT.userid EQ get_report.fk_ra_user and get_report.pr_ra_approved_date EQ '' and get_report.pr_rd_approved_date EQ '' and get_report.pr_ny_approved_date EQ ''>
 	<cfset allow_edit = 1>
     <cfset allow_approve = 1>
 	<cfset allow_reject = 1>
 	<cfset allow_delete = 1>
+    <cfset allow_save = 1>
+	<Cfset show_save = 1>
 <!--- regional director --->
 <cfelseif CLIENT.userid EQ get_report.fk_rd_user and get_report.pr_rd_approved_date EQ '' and get_report.pr_ny_approved_date EQ ''>
 	<cfset allow_edit = 1>
     <cfset allow_approve = 1>
 	<cfset allow_reject = 1>
 	<cfset allow_delete = 1>
+    <cfset allow_save = 1>
+	<Cfset show_save = 1>
 <!--- facilitator --->
 <cfelseif CLIENT.userid EQ get_report.fk_ny_user and get_report.pr_ny_approved_date EQ ''>
 	<cfset allow_edit = 1>
     <cfset allow_approve = 1>
 	<cfset allow_reject = 1>
 	<cfset allow_delete = 1>
+    <cfset allow_save = 1>
+	<Cfset show_save = 1>
 <!--- Program Manager - Office User - Gary request - 10/01/2010 - Managers should be able to approve progress reports --->
 <cfelseif CLIENT.userType LTE 4 AND NOT LEN(get_report.pr_ny_approved_date)>
     <cfset allow_edit = 1>
 	<cfset allow_approve = 1>
 	<cfset allow_reject = 1>
     <cfset allow_delete = 1>
+    <cfset allow_save = 1>
+	<Cfset show_save = 1>
 </cfif>
+<!----toggle Edit/save function---->
+<cfif form.pr_action is 'save'>
+	<cfset allow_save = 0>
 
+</cfif>
 <!--- certain things are required for approval. --->
 <cfset approve_error_msg = ''>
 <cfif allow_approve>
-
+<!----
+<Cfdump var="#get_PreviousDates#">
+<Cfdump var="#get_dates#">
+---->	
 	<!--- contact dates: at least one In Person contact for both Host Family and Student or both. --->
     <cfset hostFamilyOK = 0>
     <cfset studentOK = 0>
+    <cfset prevhostFamilyOK = 0>
+    <cfset prevhostStduentOK = 0>
     <cfloop query="get_Previousdates">
         <!--- type = In Person --->
         <cfif fk_prdate_type EQ 1>
             <!--- Host Family --->
             <cfif fk_prdate_contact EQ 1>
-                <cfset hostFamilyOK = 1>
+                <cfset prevhostFamilyOK = 1>
             <!--- Student --->
             <cfelseif fk_prdate_contact EQ 2>
-                <cfset studentOK = 1>
+                <cfset prevstudentOK = 1>
             <!--- Host Family & Student --->
             <cfelseif fk_prdate_contact EQ 3>
-                <cfset hostFamilyOK = 1>
-                <cfset studentOK = 1>
+                <cfset prevhostFamilyOK = 1>
+                <cfset prevstudentOK = 1>
             </cfif>
         </cfif>
     </cfloop>
-    <cfloop query="get_dates">
-        <!--- type = In Person --->
-        <cfif fk_prdate_type EQ 1>
-            <!--- Host Family --->
-            <cfif fk_prdate_contact EQ 1>
-                <cfset hostFamilyOK = 1>
-            <!--- Student --->
-            <cfelseif fk_prdate_contact EQ 2>
-                <cfset studentOK = 1>
-            <!--- Host Family & Student --->
-            <cfelseif fk_prdate_contact EQ 3>
-                <cfset hostFamilyOK = 1>
-                <cfset studentOK = 1>
+    <!----If there are no current contact dates, throw error---->
+    <cfif get_dates.recordcount eq 0>
+    <Cfset hostFamilyOK = 0>
+    <cfset studentOK = 0>
+    <cfset allow_approve = 0>
+    <cfset approve_error_msg = listAppend(approve_error_msg, 'currentDate')>
+    <cfelse>
+        <cfloop query="get_dates">
+            <!--- type = In Person --->
+            <cfif fk_prdate_type EQ 1>
+                <!--- Host Family --->
+                <cfif fk_prdate_contact EQ 1>
+                    <cfset hostFamilyOK = 1>
+                    <cfset approve_error_msg = listAppend(approve_error_msg, 'noStudentContact')>
+                <!--- Student --->
+                <cfelseif fk_prdate_contact EQ 2>
+                    <cfset studentOK = 1>
+                    <cfset approve_error_msg = listAppend(approve_error_msg, 'noHostContact')>
+                <!--- Host Family & Student --->
+                <cfelseif fk_prdate_contact EQ 3>
+                    <cfset hostFamilyOK = 1>
+                    <cfset studentOK = 1>
+                    
+                </cfif>
             </cfif>
-        </cfif>
-    </cfloop>
+        </cfloop>
+    </cfif>
     <!---Check in Person over previous two months---->
 
-    <cfif not (hostFamilyOK and studentOK)>
+    <cfif not (prevhostFamilyOK and prevstudentOK)>
         <cfset allow_approve = 0>
         <cfset approve_error_msg = 'date'>
     </cfif>
@@ -297,7 +357,9 @@ function OpenLetter(url) {
         <tr height=24>
             <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
             <td width=26 background="pics/header_background.gif"><img src="pics/current_items.gif"></td>
-            <td background="pics/header_background.gif"><h2> Report</h2></td>     
+            <td background="pics/header_background.gif"><h2> Report</h2></td> 
+            <td background="pics/header_background.gif" align="right"><a href="index.cfm?curdoc=progress_reports&lastReport=#get_student.studentid####get_student.studentid#">Back to Progress Reports</a>
+      
             <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
         </tr>
     </table>
@@ -546,7 +608,7 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
 		        <!--- add contact date. --->
                 <form action="index.cfm?curdoc=forms/pr_date_form" method="post">
                 <input type="hidden" name="pr_id" value="#form.pr_id#">
-                <input name="Submit" type="image" src="pics/new.gif" alt="Add Contact Date" border=0>
+                <input name="Submit" type="image" src="pics/buttons/new23x23.png" alt="Add Contact Date" border=0>
                 </form>
             </td>
 		</cfif>
@@ -576,6 +638,7 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
                 <th>Comments</th>
             </tr>
         <cfloop query="get_dates">
+        
           <tr bgcolor="#iif(currentRow MOD 2 ,DE("ffffe6") ,DE("white") )#">
 			<cfif allow_edit and form.report_mode EQ 'view'>
                 <td>
@@ -584,14 +647,14 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
                     <input type="hidden" name="pr_action" value="delete_date">
                     <input type="hidden" name="prdate_id" value="#prdate_id#">
                     <input type="hidden" name="pr_id" value="#form.pr_id#">
-                    <input name="Submit" type="image" src="pics/deletex.gif" alt="Delete Contact Date" border=0>
+                    <input name="Submit" type="image" src="pics/buttons/trash23x23.png" alt="Delete Contact Date" border=0>
                     </form>
                 </td>
                 <td>
                 	<!--- edit contact date. --->
                     <form action="index.cfm?curdoc=forms/pr_date_form" method="post">
                     <input type="hidden" name="prdate_id" value="#prdate_id#">
-                    <input name="Submit" type="image" src="pics/edit.png" alt="Edit Contact Date" border=0>
+                    <input name="Submit" type="image" src="pics/buttons/pencilBlue23x29.png" alt="Edit Contact Date" border=0>
                     </form>
                 </td>
 			</cfif>
@@ -611,37 +674,63 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
 
 <br />
 
-<table cellpadding="2" cellspacing="0">
+<table cellpadding="2" width=80% cellspacing="0">
   <tr>
     <th bgcolor="cccccc" colspan="2">Questions</th>
   </tr>
   <tr align="center">
     <td colspan="2">
-
+<form action="index.cfm?curdoc=progress_report_info" method="post" onSubmit="return confirm('Your report is being saved.  If ready to submit to the next level, click on Approve.')">
         <table cellpadding="2">
+        
         <cfloop query="get_questions">
+        <cfset questionList = #ListAppend(questionList, #x_pr_question_id#)#>
           <tr>
             <td>
             	<cfif allow_edit and form.report_mode EQ 'view'>
-			        <!--- edit question. --->
+			        <!--- edit question.
                     <form action="index.cfm?curdoc=forms/pr_question_form" method="post">
                     <input type="hidden" name="x_pr_question_id" value="#x_pr_question_id#">
                     <input name="Submit" type="image" src="pics/edit.png" alt="Edit Question" border=0>
                     </form>
+					 --->
                 </cfif>
             </td>
             <th align="left">#get_questions.text#</th>
+            
           </tr>
           <tr>
             <td></td>
-            <td>#replaceList(x_pr_question_response, '#chr(13)##chr(10)#,#chr(13)#,#chr(10)#', '<br>,<br>,<br>')#</td>
+            <td colspan=2>
+           
+            <cfif allow_save>
+            <Cfset funcName = 'function check#get_questions.currentrow#()'>
+			<script>
+			function check#get_questions.currentrow#()
+			 {
+				AtD.checkTextAreaCrossAJAX('textInput#get_questions.currentrow#', 'checkLink#get_questions.currentrow#', 'Edit Text');
+				
+			 }
+			 </script>
+            
+            <textarea cols=100 rows=5 name="x_pr_question_response#x_pr_question_id#" id="textInput#get_questions.currentrow#" class="input">#replaceList(x_pr_question_response, '#chr(13)##chr(10)#,#chr(13)#,#chr(10)#', '<br>,<br>,<br>')#</textarea>
+            <cfelse>
+            #replaceList(x_pr_question_response, '#chr(13)##chr(10)#,#chr(13)#,#chr(10)#', '<br>,<br>,<br>')#
+            </cfif>
+            </td>
           </tr>
-          <cfif currentRow NEQ RecordCount>
+          <cfif allow_save>
+          <tr>
+          <td align="right" colspan=4><a href="javascript:check#get_questions.currentrow#()" id="checkLink#get_questions.currentrow#">Check Spelling & Grammer</a></td>
+          </tr>
+          </cfif>
+		  <cfif currentRow NEQ RecordCount>
               <tr>
                 <td colspan="2" height="25"><hr align="center" noshade="noshade" size="1" width="85%" /></td>
               </tr>
           </cfif>
         </cfloop>
+        <input type="hidden" name="finalQuestionList" value="#questionList#" />
         </table>
 
     </td>
@@ -664,14 +753,30 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
                 <td><font color="FF0000">
                    	Approval is not allowed until the following missing information is entered:
                     <ul>
-                	<!--- contact dates error message. --->
+                    <!--- contact dates error message. --->
 					<cfif listFind(approve_error_msg, 'date')>
                         <p><li>Contact Dates: at least one In Person contact for both Host Family and Student must be entered in a two month period.</li></p>
+                    </cfif>
+                	<!--- contact dates error message. --->
+					<cfif listFind(approve_error_msg, 'currentDate')>
+                        <p><li>Contact Dates: at least once contact with both the student & host in current month required.</li></p>
+                    </cfif>
+                    <!--- contact dates error message. --->
+					<cfif listFind(approve_error_msg, 'noHostContact')>
+                        <p><li>Contact Dates: there is no current contact with the host family listed for the current report.</li></p>
+                    </cfif>
+                    <!--- contact dates error message. --->
+					<cfif listFind(approve_error_msg, 'noStudentContact')>
+                        <p><li>Contact Dates: there is no contact with the student listed for the current report.</li></p>
                     </cfif>
                 	<!--- questions error message. --->
 					<cfif listFind(approve_error_msg, 'question')>
                         <p><li>Questions: all questions must be answered.</li></p>
                     </cfif>
+                    
+                    
+                    
+                   
                     </ul>
                 </font></td>
             </tr>
@@ -694,62 +799,112 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
     
         <table border=0 align="center">
         <tr>
+        
+         <td>
+        	<cfif show_save>
+				<!--- save --->
+                <cfif allow_save>
+                    
+                    <input type="hidden" name="pr_action" value="save">
+                    <input type="hidden" name="pr_id" value="#form.pr_id#">
+                    <input name="Submit" type="image" src="pics/buttons/save50x58.png" alt="Approve Report" border=0>
+                    
+                <cfelse>
+                    <img src="pics/buttons/save50x58BW.png" alt="Save Report" border=0>
+                </cfif>
+            <cfelse>
+            		<img src="pics/buttons/save50x58BW.png" alt="Save Report" border=0>
+            </cfif>
+            </form>
+          </td>
+          <td width=10></td>
+          <td>
+          <cfif show_save>
+          	<!--- edit --->
+            <cfif not allow_save>
+                <form action="index.cfm?curdoc=progress_report_info" method="post" >
+                <input type="hidden" name="pr_action" value="edit">
+                <input type="hidden" name="pr_id" value="#form.pr_id#">
+                <input name="Submit" type="image" src="pics/buttons/edit50x50.png" alt="Approve Report" border=0>
+                
+            <cfelse>
+            	<img src="pics/buttons/edit50x50bw.png" alt="Edit Report" border=0>
+            </cfif>
+            </form>
+            <cfelse>
+            		<img src="pics/buttons/edit50x50bw.png" alt="Edit Report" border=0>
+            </cfif>
+          </td>
+          
+          
+          <td width=30>&nbsp;&nbsp;&nbsp;&nbsp;</td>
           <td>
           	<!--- approve --->
+            
+           <cfif not allow_save>
             <cfif allow_approve>
                 <form action="index.cfm?curdoc=progress_report_info" method="post" onclick="return confirm('Are you sure you want to approve this report?  You will no longer be able to edit this report after approval.')">
                 <input type="hidden" name="pr_action" value="approve">
                 <input type="hidden" name="pr_id" value="#form.pr_id#">
-                <input name="Submit" type="image" src="pics/approve.gif" alt="Approve Report" border=0>
+                <input name="Submit" type="image" src="pics/buttons/approve50x50.png" alt="Approve Report" border=0>
                 </form>
             <cfelse>
-            	<img src="pics/no_approve.jpg" alt="Approve Report" border=0>
+            	<img src="pics/buttons/approvebw50.png" alt="Approve Report" border=0>
             </cfif>
+           <cfelse>
+           		<img src="pics/buttons/approvebw50.png" alt="Approve Report" border=0>
+           </cfif>
           </td>
-          <td width="15">&nbsp;</td>
+          <td >&nbsp;&nbsp;</td>
           <td>
           	<!--- reject --->
-            <cfif allow_reject>
-                <form action="index.cfm?curdoc=forms/pr_reject" method="post">
-                <input type="hidden" name="pr_id" value="#form.pr_id#">
-                <input name="Submit" type="image" src="pics/reject.gif" alt="Reject Report" border=0>
-                </form>
-            <cfelse>
-            	<img src="pics/no_reject.jpg" alt="Reject" border=0>
+            <cfif not allow_save>
+				<cfif allow_reject>
+                    <form action="index.cfm?curdoc=forms/pr_reject" method="post">
+                    <input type="hidden" name="pr_id" value="#form.pr_id#">
+                    <input name="Submit" type="image" src="pics/buttons/reject50x50.png" alt="Reject Report" border=0>
+                    </form>
+                <cfelse>
+                    <img src="pics/buttons/reject50x50bw.png" alt="Reject" border=0>
+                </cfif>
+          	<cfelse>
+            	<img src="pics/buttons/reject50x50bw.png" alt="Reject" border=0>    
             </cfif>
+            
           </td>
-          <td width="15">&nbsp;</td>
-          <td>
+         <td>&nbsp;&nbsp;</td>
+         <td>
           	<!--- delete --->
             <cfif allow_delete>
                 <form action="index.cfm?curdoc=progress_report_info" method="post" onclick="return confirm('Are you sure you want to delete this report?')">
                 <input type="hidden" name="pr_action" value="delete_report">
                 <input type="hidden" name="pr_id" value="#form.pr_id#">
-                <input name="Submit" type="image" src="pics/delete.gif" alt="Delete Report" border=0>
+                <input name="Submit" type="image" src="pics/buttons/deleteFolder50x55.png" alt="Delete Report" border=0>
                 </form>
             <cfelse>
-            	<img src="pics/no_delete.jpg" alt="Delete Report"  border=0>
+            	<img src="pics/buttons/deleteFolder50x55bw.png" alt="Delete Report"  border=0>
             </cfif>
           </td>
+          
 		<!--- disable print and email for rejected reports. --->
         <cfif get_report.pr_rejected_date EQ ''>
-              <td width="15">&nbsp;</td>
+              <td width="30">&nbsp;</td>
               <td>
                 <!--- print --->
                 <form action="progress_report_info.cfm" method="post" target="_blank">
                 <input type="hidden" name="pr_id" value="#form.pr_id#">
                 <input type="hidden" name="report_mode" value="print">
-                <input name="Submit" type="image" src="pics/printer.gif" alt="Print Report" border=0>
+                <input name="Submit" type="image" src="pics/buttons/Print50x50.png" alt="Print Report" border=0>
                 </form>
                 <!---<A href="progress_report_info.cfm?pr_id=#form.pr_id#&report_mode=print" title="Print Report" target="_blank"><img src="pics/printer.gif" border=0 align="absmiddle"> Print</A>--->
               </td>
             <cfif CLIENT.usertype LTE 4>
-                <td width="15">&nbsp;</td>
+                
                 <td>
                     <!--- email --->
                     <form action="index.cfm?curdoc=forms/pr_email" method="post">
                     <input type="hidden" name="pr_id" value="#form.pr_id#">
-                    <input name="Submit" type="image" src="pics/email.gif" alt="Email Report" border=0>
+                    <input name="Submit" type="image" src="pics/buttons/email50x50.png" alt="Email Report" border=0>
                     </form>
                     <!---<a href="javascript:OpenLetter('../nsmg/reports/email_progress_report.cfm?number=#form.pr_id#');" title="Email Progress Report"><img src="pics/email.gif" border="0" align="absmiddle"> Email</a>--->
                 </td>
@@ -757,8 +912,8 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
         </cfif>
         </tr>
       </table>
-      
-      <a href="index.cfm?curdoc=progress_reports">Back to Progress Reports</a>
+      <br /><br />
+      <a href="index.cfm?curdoc=progress_reports&lastReport=#get_student.studentid####get_student.studentid#">Back to Progress Reports</a>
                 
             </td>
         </tr>

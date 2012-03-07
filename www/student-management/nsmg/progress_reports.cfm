@@ -35,6 +35,9 @@
     <cfparam name="vPreviousReportMonth" default="">
     <cfparam name="vIsStudentInCountry" default="1">
     <cfparam name="vIsPreviousReportApproved" default="0">
+    
+    <!--- Param URL Variables --->
+    <cfparam name="url.lastreport" default="">
 
 	<cfscript>
 		// Get Regions
@@ -162,6 +165,18 @@
 		font-weight: bold;
 		background-color: #CCCCCC;
 	}
+	
+	.rowStrike {
+	background-color: #dadff1;
+	
+	}	
+	
+	.cellStrike{
+	background-image: url(pics/lastView.png);
+	background-repeat: no-repeat;
+	background-position: center center;	
+	}
+	
 	-->
 </style>
 
@@ -177,7 +192,7 @@
 
     <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
         <input name="submitted" type="hidden" value="1">
-        <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
+        <table cellpadding="4" cellspacing="0" class="section" width="100%">
             <tr>
                 <td><input name="submit" id="submit" type="submit" value="Submit" /></td>
                 <td>
@@ -541,9 +556,18 @@
 					</cfif>
 					--->
                 
-                   	<tr bgcolor="#iif(vMyCurrentRow MOD 2 ,DE("eeeeee") ,DE("white") )#">
-                        <td>&nbsp;</td>
+                   	<tr bgcolor="#iif(vMyCurrentRow MOD 2 ,DE("eeeeee") ,DE("white") )#" <cfif url.lastReport eq #qGetResults.studentID#> class="rowStrike"</cfif> >
+                    
                         <td>
+                        <!----indicate last viewed report---->
+						   <Cfif url.lastReport eq #qGetResults.studentID#>
+                           &##10004;
+                           <cfelse>
+                           &nbsp;
+                           </Cfif>
+                       </td>
+                        <td>
+                        	<a name=#qGetResults.studentID#>
                         	<!--- put in red if user is the supervising rep for this student.  don't do for usertype 7 because they see only those students. --->
                             <a href="javascript:OpenLetter('reports/placementInfoSheet.cfm?uniqueID=#qGetResults.uniqueID#');">
 								<cfif arearepid EQ CLIENT.userid and CLIENT.usertype NEQ 7>
@@ -556,7 +580,7 @@
                             <span style="font-size:0.8em;">- #qGetResults.programName#</span>
                         </td>
                         <td>#yesNoFormat(qGetCurrentReport.recordCount)#</td>
-                        <td>
+                        <td <cfif url.lastReport eq #qGetResults.studentID#> class="cellStrike"</cfif>>
 
 							<cfif qGetCurrentReport.recordCount>
                             
@@ -585,6 +609,7 @@
                                         
                                         <a href="javascript:document.theForm_#qGetCurrentReport.pr_id#.submit();">View</a>
                                         
+                                        
                                 	</cfif>
                                     
                                 <cfelse>
@@ -605,7 +630,7 @@
                                         <input type="hidden" name="studentID" value="#studentID#">
                                         <input type="hidden" name="type_of_report" value="#CLIENT.reportType#">
                                         <input type="hidden" name="month_of_report" value="#CLIENT.pr_rmonth#">
-                                        <input name="Submit" type="image" src="pics/new.gif" alt="Add New Report" border="0">
+                                        <input name="Submit" type="image" src="pics/buttons/greenNew.png" alt="Add New Report" border="0">
                                     </form>
                                     
                                 <cfelseif NOT VAL(vIsPreviousReportApproved)>

@@ -46,8 +46,8 @@
         <Cfif pr_action EQ 'edit_report'>
             <cfset FORM.performEdit = 1>
         </Cfif>
-        
-        <!--- approve report --->
+        <
+        <!--- approve report 
         <cfif pr_action is 'approve'>
         
             <cfquery name="get_report" datasource="#application.dsn#">
@@ -88,8 +88,46 @@
             <cflocation url="index.cfm?curdoc=secondVisitReports">
        
         </cfif>
+        ---->
+    </cfif> 
+	
+	<!----Save Report---->
+    
+        <cfif pr_action is 'save'>
+       
+        <cfquery datasource="mysql">
+                UPDATE 
+                    secondVisitAnswers 
+                SET
+                	dateOfVisit = <cfqueryparam cfsqltype="CF_SQL_DATE" value="#FORM.dateOfVisit#">,
+                    neighborhoodAppearance= <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.neighborhoodAppearance#">,
+                    avoid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.avoid#">,
+                    homeAppearance = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homeAppearance#">,
+                    typeOfHome = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.typeOfHome#">,
+                    numberBedRooms = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(FORM.numberBedRooms)#">,
+                    numberBathRooms = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(FORM.numberBathRooms)#">,
+                    livingRoom = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.livingRoom#">,
+                    diningRoom = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.diningRoom#">,
+                    kitchen = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.kitchen#">,
+                    homeDetailsOther = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homeDetailsOther#">,
+                    ownBed = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ownBed#">,
+                    bathRoom =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.bathRoom#">,
+                    outdoorsFromBedroom = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.outdoorsFromBedroom#">,
+                    storageSpace = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.storageSpace#">,
+                    studySpace = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.studySpace#">,
+                    privacy = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.privacy#">,
+                    pets = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pets#">,
+                    other =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.other#">
+                WHERE 
+                    fk_reportID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">                  
+            </cfquery>
+ 
         
-    </cfif> <!--- LEN(FORM.pr_action) --->
+    	</cfif>
+	
+	
+	
+	<!--- LEN(FORM.pr_action) --->
     
     <Cfquery name="secondVisitAnswers" datasource="#application.dsn#">
         select *
@@ -172,8 +210,8 @@
 	<cfset approve_error_msg = ''>
     
 	<!--- FORM Submitted --->
-	<Cfif VAL(FORM.submitted)>
-
+	<cfif pr_action is 'approve'>
+	
 		<!--- certain things are required for approval. --->
         <cfset approve_error_msg = ''>
 
@@ -279,7 +317,8 @@
                 SESSION.formErrors.Add("Please indicate how many and what kind of pets are in the home.");
             }
         </cfscript>
-    
+        <cfdump var="#form#">
+    	<cfabort>
 		<!--- used to display the pending message for the supervising rep. --->
         <cfset pending_msg = 0>
 
@@ -466,47 +505,73 @@
 
     <Cfset NumberList = '0,1,2,3,4,5,6,7,8,9,10'>
  
- 	<cfif CLIENT.userid EQ get_report.fk_secondVisitRep and get_report.pr_ra_approved_date EQ '' and get_report.pr_rd_approved_date EQ '' and get_report.pr_ny_approved_date EQ ''>
-		<cfset allow_edit = 1>
-        <cfset allow_approve = 1>
-        <cfset allow_reject = 0>
-        <cfset allow_delete = 1>
-        <cfset pending_msg = 1>
-	<!--- supervising rep --->
-    <cfelseif CLIENT.userid EQ get_report.fk_sr_user and get_report.pr_sr_approved_date EQ '' and get_report.pr_ra_approved_date EQ '' and get_report.pr_rd_approved_date EQ '' and get_report.pr_ny_approved_date EQ ''>
-        <cfset allow_edit = 1>
-        <cfset allow_approve = 1>
-        <cfset allow_reject = 1>
-        <cfset allow_delete = 1>
-        <cfset pending_msg = 1>
-    <!--- regional advisor --->
-    <cfelseif CLIENT.userid EQ get_report.fk_ra_user and get_report.pr_ra_approved_date EQ '' and get_report.pr_rd_approved_date EQ '' and get_report.pr_ny_approved_date EQ ''>
-        <cfset allow_edit = 1>
-        <cfset allow_approve = 1>
-        <cfset allow_reject = 1>
-        <cfset allow_delete = 1>
-    <!--- regional director --->
-    <cfelseif CLIENT.userid EQ get_report.fk_rd_user and get_report.pr_rd_approved_date EQ '' and get_report.pr_ny_approved_date EQ ''>
-        <cfset allow_edit = 1>
-        <cfset allow_approve = 1>
-        <cfset allow_reject = 1>
-        <cfset allow_delete = 1>
-    <!--- facilitator --->
-    <cfelseif CLIENT.userid EQ get_report.fk_ny_user and get_report.pr_ny_approved_date EQ ''>
-        <cfset allow_edit = 1>
-        <cfset allow_approve = 1>
-        <cfset allow_reject = 1>
-        <cfset allow_delete = 1>
-    <!--- Program Manager - Office User - Gary request - 10/01/2010 - Managers should be able to approve progress reports --->
-    <cfelseif CLIENT.userType LTE 4 AND NOT LEN(get_report.pr_ny_approved_date)>
-        <cfset allow_edit = 1>
-        <cfset allow_approve = 1>
-        <cfset allow_reject = 1>
-        <cfset allow_delete = 1>
-    </cfif>
-        
+<!--- set the edit/approve/reject/delete access. --->
+<cfset allow_edit = 0>
+<cfset allow_approve = 0>
+<cfset allow_reject = 0>
+<cfset allow_delete = 0>
+<cfset allow_save = 0>
+<cfset show_save = 0>
+
+<!--- used to display the pending message for the supervising rep. --->
+<cfset pending_msg = 0>
+
+<!--- users are allowed access until they approve the report.  Also, if a higher level has already approved then they are not allowed access. --->
+<!--- supervising rep --->
+<cfif CLIENT.userid EQ get_report.fk_sr_user and get_report.pr_sr_approved_date EQ '' and get_report.pr_ra_approved_date EQ '' and get_report.pr_rd_approved_date EQ '' and get_report.pr_ny_approved_date EQ ''>
+	<cfset allow_edit = 1>
+    <cfset allow_approve = 1>
+	<cfset allow_reject = 0>
+	<cfset allow_delete = 1>
+	<cfset pending_msg = 1>
+    <cfset allow_save = 1>
+	<Cfset show_save = 1>
+    
+<!--- regional advisor --->
+<cfelseif CLIENT.userid EQ get_report.fk_ra_user and get_report.pr_ra_approved_date EQ '' and get_report.pr_rd_approved_date EQ '' and get_report.pr_ny_approved_date EQ ''>
+	<cfset allow_edit = 1>
+    <cfset allow_approve = 1>
+	<cfset allow_reject = 1>
+	<cfset allow_delete = 1>
+    <cfset allow_save = 1>
+	<Cfset show_save = 1>
+<!--- regional director --->
+<cfelseif CLIENT.userid EQ get_report.fk_rd_user and get_report.pr_rd_approved_date EQ '' and get_report.pr_ny_approved_date EQ ''>
+	<cfset allow_edit = 1>
+    <cfset allow_approve = 1>
+	<cfset allow_reject = 1>
+	<cfset allow_delete = 1>
+    <cfset allow_save = 1>
+	<Cfset show_save = 1>
+<!--- facilitator --->
+<cfelseif CLIENT.userid EQ get_report.fk_ny_user and get_report.pr_ny_approved_date EQ ''>
+	<cfset allow_edit = 1>
+    <cfset allow_approve = 1>
+	<cfset allow_reject = 1>
+	<cfset allow_delete = 1>
+    <cfset allow_save = 1>
+	<Cfset show_save = 1>
+<!--- Program Manager - Office User - Gary request - 10/01/2010 - Managers should be able to approve progress reports --->
+<cfelseif CLIENT.userType LTE 4 AND NOT LEN(get_report.pr_ny_approved_date)>
+    <cfset allow_edit = 1>
+	<cfset allow_approve = 1>
+	<cfset allow_reject = 1>
+    <cfset allow_delete = 1>
+    <cfset allow_save = 1>
+	<Cfset show_save = 1>
+</cfif>
+<!----toggle Edit/save function---->
+<cfif form.pr_action is 'save'>
+	<cfset allow_save = 0>
+
+</cfif>
+<cfif SESSION.formErrors.length()>
+	<cfset allow_save =1>
+    
+</cfif>  
 <div id="stylized" class="myform">
    <Cfoutput>
+   
     <div align="right">
     	<a href="student/index.cfm?action=flightInformation&uniqueID=#qGetStudentInfo.uniqueID#&programID=#qGetStudentInfo.programID#" class="jQueryModal">Flight Information</a>
     </div>
@@ -514,9 +579,10 @@
     <form method="post" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#">
         <input type="hidden" name="studentName" value="#qGetStudentInfo.firstname#" />
         <input type="hidden" name="studentSex" value=<cfif qGetStudentInfo.firstname is 'male'>"his"<cfelse>"her"</cfif> >
-        <input type="hidden" name="pr_id" value="#FORM.pr_id#"/>
+        
+        <!----<input type="hidden" name="pr_id" value="#FORM.pr_id#"/>
         <input type="hidden" name="pr_action" value="#FORM.pr_action#">
-        <input type="hidden" name="submitted" value=1 />
+        <input type="hidden" name="submitted" value=1 />---->
 
 	<cfif allow_approve and get_report.pr_rejected_date NEQ ''>
             <table border=0 cellpadding=4 cellspacing=0 align="Center">
@@ -564,7 +630,7 @@
            Date of Visit
             <span class="small">Date you visited the home</span>
         </label>
-        <Cfif VAL(FORM.performEdit)>
+        <Cfif allow_save>
             <input type="text" name="dateOfVisit" value="#DateFormat(FORM.dateofvisit, 'mm/dd/yyyy')#" class="datePicker">
         <cfelse>
             #DateFormat(FORM.dateofvisit, 'mm/dd/yyyy')#
@@ -575,7 +641,7 @@
             <span class="small">General look and feel</span>
         </label>
         
-		<Cfif VAL(FORM.performEdit)>
+		<Cfif allow_save>
             <input type="radio" name="neighborhoodAppearance" id="name" value='Excellent' <cfif FORM.neighborhoodAppearance is 'Excellent'>checked</cfif> /> 
                 <span class="inputLabel">Excellent</span>
             <input type="radio" name="neighborhoodAppearance" id="name" value='Average' <cfif FORM.neighborhoodAppearance is 'Average'>checked</cfif> /> 
@@ -593,7 +659,7 @@
             <span class="small">Is home in or near an area to be avoided.</span>
         </label>
         
-		<Cfif VAL(FORM.performEdit)>
+		<Cfif allow_save>
             <input type="radio" value='Yes' name="avoid" <cfif FORM.avoid is 'Yes'>checked</cfif>/> <span class="inputLabel">Yes</span> 
             <input type="radio" value='No' name="avoid" <cfif FORM.avoid eq 'no'>checked</cfif> /> <span class="inputLabel">No</span>
         <cfelse>
@@ -606,7 +672,7 @@
         	Home Appearance
             <span class="small">Cleanliness, Maintenance</span>
         </label>
-        <Cfif VAL(FORM.performEdit)>
+        <Cfif allow_save>
             <input type="radio" name="homeAppearance" id="name" value='Excellent' <cfif FORM.homeAppearance is 'Excellent'>checked</cfif> /> <span class="inputLabel">Excellent</span>
             <input type="radio" name="homeAppearance" id="name" value='Average' <cfif FORM.homeAppearance is 'Average'>checked</cfif>/> <span class="inputLabel">Average</span> 
             <input type="radio" name="homeAppearance" id="name" value='Poor' <cfif FORM.homeAppearance is 'Poor'>checked</cfif>/> <span class="inputLabel">Poor</span>
@@ -620,7 +686,7 @@
         	Type of Home
 	        <span class="small">&nbsp;</span>
         </label>
-        <Cfif VAL(FORM.performEdit)>
+        <Cfif allow_save>
             <input type="radio" name="typeOfHome" id="name" value='Single Family' <cfif FORM.typeOfHome is 'Single Family'>checked</cfif> />
                <span class="inputLabel">Single Family</span>
             <input type="radio" name="typeOfHome" id="name" value='Condominium' <cfif FORM.typeOfHome is 'Condominium'>checked</cfif> /> 
@@ -642,7 +708,7 @@
         	<span class="small">Short Descriptions<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /></span>
         </label>
         <span class="inputLabel">Bedrooms&nbsp;&nbsp;&nbsp;&nbsp;</span>
-        <Cfif VAL(FORM.performEdit)>
+        <Cfif allow_save>
             <select name="numberBedRooms">
                 <option value=''></option>
               <cfloop list='#numberlist#' index=i>
@@ -656,7 +722,7 @@
          <br />
          
         <span class="inputLabel">Bathrooms&nbsp;&nbsp;&nbsp;</span>     
-        <Cfif VAL(FORM.performEdit)>
+        <Cfif allow_save>
              <select name="numberBathRooms">
                 <option value=''></option>
               <cfloop list='#numberlist#' index=i>
@@ -669,7 +735,7 @@
          <br />
         
          <span class="inputLabel">Living Room&nbsp;</span>
-         <Cfif VAL(FORM.performEdit)>
+         <Cfif allow_save>
             <input type="text" name="livingRoom" id="name" size=25 value="#FORM.livingRoom#"/>
          <cfelse>
             #FORM.livingRoom#
@@ -677,7 +743,7 @@
         <br />
         
          <span class="inputLabel">Dining Room</span>
-          <Cfif VAL(FORM.performEdit)>
+          <Cfif allow_save>
             <input type="text" name="diningRoom" id="name" size=25 value="#FORM.diningRoom#"/>
          <cfelse>
             #FORM.diningRoom#
@@ -685,7 +751,7 @@
          <br />
          
          <span class="inputLabel">Kitchen&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-         <Cfif VAL(FORM.performEdit)>
+         <Cfif allow_save>
             <input type="text" name="kitchen" id="name" size=25  value="#FORM.kitchen#"/>
          <cfelse>
             #FORM.kitchen#
@@ -693,7 +759,7 @@
          <br />
          
          <span class="inputLabel">Other&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-         <Cfif VAL(FORM.performEdit)>
+         <Cfif allow_save>
             <textarea name="homeDetailsOther" cols=20 rows=3>#FORM.homeDetailsOther#</textarea>
           <cfelse>
             #FORM.homeDetailsOther#
@@ -710,7 +776,7 @@
             own permanet bed? 
             <span class="small">Bed may not be a futon or inflatable</span>
           </label>
-          <Cfif VAL(FORM.performEdit)>
+          <Cfif allow_save>
             <input type="text" name="ownBed" size = 30 value="#FORM.ownBed#"/>
             <cfelse>
             #FORM.ownBed#
@@ -720,7 +786,7 @@
             <span class="small"></span>
           </label>
           
-          <Cfif VAL(FORM.performEdit)>	
+          <Cfif allow_save>	
             <input type="text" name="bathRoom" size = 30 value="#FORM.bathRoom#"/>
             <cfelse>
             #FORM.bathRoom#
@@ -735,7 +801,7 @@
             <span class="small">i.e. a door or window</span>
           </label>
           <br />
-          <Cfif VAL(FORM.performEdit)>	
+          <Cfif allow_save>	
             <input type="text" name="outdoorsFromBedroom" size = 30 value="#FORM.outdoorsFromBedroom#"/>
             <cfelse>
             #FORM.outdoorsFromBedroom#
@@ -744,7 +810,7 @@
           <label>Does #qGetStudentInfo.firstname# have adequate storage space? 
             <span class="small"></span>
           </label>
-          <Cfif VAL(FORM.performEdit)>	
+          <Cfif allow_save>	
             <input type="text" name="storageSpace" size = 30 value="#FORM.storageSpace#"/>
             <cfelse>
             #FORM.storageSpace#
@@ -753,7 +819,7 @@
           <label>Does #qGetStudentInfo.firstname# have privacy? 
             <span class="small">i.e. a door on their room</span>
           </label>
-          <Cfif VAL(FORM.performEdit)>	
+          <Cfif allow_save>	
             <input type="text" name="privacy" size = 30 value="#FORM.privacy#"/>
             <cfelse>
             #FORM.privacy#
@@ -762,7 +828,7 @@
           <label>Does #qGetStudentInfo.firstname# have adequate study space? 
             <span class="small"></span>
           </label>
-          <Cfif VAL(FORM.performEdit)>	
+          <Cfif allow_save>	
             <input type="text" name="studySpace" size = 30 value="#FORM.studySpace#"/>
             <cfelse>
             #FORM.studySpace#
@@ -771,7 +837,7 @@
           <label>Are there pets present in the home? 
             <span class="small">How many & what kind</span>
           </label>
-          <Cfif VAL(FORM.performEdit)>	
+          <Cfif allow_save>	
             <input type="text" name="pets"  value="#FORM.pets#" size = 30/>
             <cfelse>
             #FORM.pets#
@@ -780,7 +846,7 @@
           <label>Other Comments 
             <span class="small"></span>
           </label>
-          <Cfif VAL(FORM.performEdit)>	
+          <Cfif allow_save>	
             <textarea name="other" cols="40" rows=5>#FORM.other#</textarea>
             <cfelse>
             #FORM.other#
@@ -788,14 +854,15 @@
           
           <br /><Br /><br />
         </p>
-        
+        <!----
         <div align="right" >
-        <cfif VAL(FORM.performEdit)  >
+        <Cfif allow_save>
             <button type="submit">Verify & Submit Information</button>
         </cfif>
         </div>
+	
         </form>
-
+		---->
     </div>
     
 	<!--- approve error messages. --->
@@ -824,99 +891,139 @@
             </tr>
         </table>
     </cfif>
-<Cfif FORM.performEdit neq 1>	
-    <cfif not isDefined('URL.p')>
+    <br />
+ <table border=0 cellpadding=4 cellspacing=0 width=100% >
+        <tr>
+            <td align="center">
+    
         <table border=0 align="center">
         <tr>
+        
          <td>
-          	<!--- edit --->
-            <cfif allow_edit or client.usertype eq 1 or client.userid eq 12431>
-                <form action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
-                    <input type="hidden" name="pr_action" value="edit_report">
-                    <input type="hidden" name="pr_id" value="#FORM.pr_id#">
-                    <input name="Submit" type="image" src="pics/edit.gif" alt="Edit Report" border=0>
-                </form>
+        	<cfif show_save>
+				<!--- save --->
+                <cfif allow_save>
+                    
+                    <input type="hidden" name="pr_action" value="save">
+                    <input type="hidden" name="pr_id" value="#form.pr_id#">
+                    <input name="Submit" type="image" src="pics/buttons/save50x58.png" alt="Approve Report" border=0>
+                    
+                <cfelse>
+                    <img src="pics/buttons/save50x58BW.png" alt="Save Report" border=0>
+                </cfif>
             <cfelse>
-            	<img src="pics/no_edit.jpg" alt="Delete Report"  border=0>
+            		<img src="pics/buttons/save50x58BW.png" alt="Save Report" border=0>
+            </cfif>
+            </form>
+          </td>
+          <td width=10></td>
+          <td>
+          <cfif show_save>
+          	<!--- edit --->
+            <cfif not allow_save>
+                <form action="index.cfm?curdoc=forms/secondHomeVisitReport" method="post" >
+                <input type="hidden" name="pr_action" value="edit">
+                <input type="hidden" name="pr_id" value="#form.pr_id#">
+                <input name="Submit" type="image" src="pics/buttons/edit50x50.png" alt="Approve Report" border=0>
+                
+            <cfelse>
+            	<img src="pics/buttons/edit50x50bw.png" alt="Edit Report" border=0>
+            </cfif>
+            </form>
+            <cfelse>
+            		<img src="pics/buttons/edit50x50bw.png" alt="Edit Report" border=0>
             </cfif>
           </td>
-         <cfif client.usertype lte 6>
-           <td width="15">&nbsp;</td>
+          
+          
+          <td width=30>&nbsp;&nbsp;&nbsp;&nbsp;</td>
           <td>
           	<!--- approve --->
+           <cfif not allow_save>
             <cfif allow_approve>
-                <form action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" onclick="return confirm('Are you sure you want to approve this report?  You will no longer be able to edit this report after approval.')">
-                    <input type="hidden" name="pr_action" value="approve">
-                    <input type="hidden" name="pr_id" value="#FORM.pr_id#">
-                    <input name="Submit" type="image" src="pics/approve.gif" alt="Approve Report" border=0>
+                <form action="index.cfm?curdoc=forms/secondHomeVisitReport" method="post" onclick="return confirm('Are you sure you want to approve this report?  You will no longer be able to edit this report after approval.')">
+                <input type="hidden" name="pr_action" value="approve">
+                <input type="hidden" name="studentname" value="#qGetStudentInfo.firstname#">
+                <cfif #qGetStudentInfo.sex# is 'male'>
+              		<input type="hidden" name="studentsex" value="his">
+              	<cfelse>
+                	<input type="hidden" name="studentsex" value="her">
+            	</cfif> 
+                
+                <input type="hidden" name="pr_id" value="#form.pr_id#">
+                <input name="Submit" type="image" src="pics/buttons/approve50x50.png" alt="Approve Report" border=0>
                 </form>
             <cfelse>
-            	<img src="pics/no_approve.jpg" alt="Approve Report" border=0>
+            	<img src="pics/buttons/approvebw50.png" alt="Approve Report" border=0>
             </cfif>
+           <cfelse>
+           		<img src="pics/buttons/approvebw50.png" alt="Approve Report" border=0>
+           </cfif>
           </td>
-         
-          <td width="15">&nbsp;</td>
+          <td >&nbsp;&nbsp;</td>
           <td>
           	<!--- reject --->
-            <cfif allow_reject>
-                <form action="index.cfm?curdoc=forms/pr_reject" method="post">
-                    <input type="hidden" name="pr_id" value="#FORM.pr_id#">
-                    <input name="Submit" type="image" src="pics/reject.gif" alt="Reject Report" border=0>
-                </form>
-            <cfelse>
-            	<img src="pics/no_reject.jpg" alt="Reject" border=0>
+            <cfif not allow_save>
+				<cfif allow_reject>
+                    <form action="index.cfm?curdoc=forms/pr_reject" method="post">
+                    
+                    <input type="hidden" name="pr_id" value="#form.pr_id#">
+                    <input name="Submit" type="image" src="pics/buttons/reject50x50.png" alt="Reject Report" border=0>
+                    </form>
+                <cfelse>
+                    <img src="pics/buttons/reject50x50bw.png" alt="Reject" border=0>
+                </cfif>
+          	<cfelse>
+            	<img src="pics/buttons/reject50x50bw.png" alt="Reject" border=0>    
             </cfif>
+            
           </td>
-          </cfif>
-          <td width="15">&nbsp;</td>
-          <td>
+         <td>&nbsp;&nbsp;</td>
+         <td>
           	<!--- delete --->
             <cfif allow_delete>
                 <form action="index.cfm?curdoc=secondVisitReports" method="post" onclick="return confirm('Are you sure you want to delete this report?')">
-                    <input type="hidden" name="pr_action" value="delete_report">
-                    <input type="hidden" name="pr_id" value="#FORM.pr_id#">
-                    <input name="Submit" type="image" src="pics/delete.gif" alt="Delete Report" border=0>
+                <input type="hidden" name="pr_action" value="delete_report">
+                <input type="hidden" name="pr_id" value="#form.pr_id#">
+                <input name="Submit" type="image" src="pics/buttons/deleteFolder50x55.png" alt="Delete Report" border=0>
                 </form>
             <cfelse>
-            	<img src="pics/no_delete.jpg" alt="Delete Report"  border=0>
+            	<img src="pics/buttons/deleteFolder50x55bw.png" alt="Delete Report"  border=0>
             </cfif>
           </td>
-
+          
 		<!--- disable print and email for rejected reports. --->
         <cfif get_report.pr_rejected_date EQ ''>
-              <td width="15">&nbsp;</td>
+              <td width="30">&nbsp;</td>
               <td>
                 <!--- print --->
-                <form action="forms/secondHomeVisitReport.cfm?p" method="post" target="_blank">
-                    <input type="hidden" name="pr_id" value="#FORM.pr_id#">
-                    <input type="hidden" name="report_mode" value="print">
-                    <input name="Submit" type="image" src="pics/printer.gif" alt="Print Report" border=0>
+                <form action="progress_report_info.cfm" method="post" target="_blank">
+                <input type="hidden" name="pr_id" value="#form.pr_id#">
+                <input type="hidden" name="report_mode" value="print">
+                <input name="Submit" type="image" src="pics/buttons/Print50x50.png" alt="Print Report" border=0>
                 </form>
-                <!---<A href="progress_report_info.cfm?pr_id=#FORM.pr_id#&report_mode=print" title="Print Report" target="_blank"><img src="pics/printer.gif" border=0 align="absmiddle"> Print</A>--->
+                <!---<A href="progress_report_info.cfm?pr_id=#form.pr_id#&report_mode=print" title="Print Report" target="_blank"><img src="pics/printer.gif" border=0 align="absmiddle"> Print</A>--->
               </td>
-			  <!----
             <cfif CLIENT.usertype LTE 4>
-                <td width="15">&nbsp;</td>
+                
                 <td>
                     <!--- email --->
                     <form action="index.cfm?curdoc=forms/pr_email" method="post">
-                    <input type="hidden" name="pr_id" value="#FORM.pr_id#">
-                    <input name="Submit" type="image" src="pics/email.gif" alt="Email Report" border=0>
+                    <input type="hidden" name="pr_id" value="#form.pr_id#">
+                    <input name="Submit" type="image" src="pics/buttons/email50x50.png" alt="Email Report" border=0>
                     </form>
-                    <!---<a href="javascript:OpenLetter('../nsmg/reports/email_progress_report.cfm?number=#FORM.pr_id#');" title="Email Progress Report"><img src="pics/email.gif" border="0" align="absmiddle"> Email</a>--->
+                    <!---<a href="javascript:OpenLetter('../nsmg/reports/email_progress_report.cfm?number=#form.pr_id#');" title="Email Progress Report"><img src="pics/email.gif" border="0" align="absmiddle"> Email</a>--->
                 </td>
             </cfif>
-			---->
         </cfif>
-		
         </tr>
       </table>
-      </cfif>	
-    
-	</cfif>
-    
-    <div align="center">
-	    <a href="index.cfm?curdoc=secondVisitReports">Back to Reports</a>
-    </div>
+      <br /><br />
+      <Cfoutput>
+      <a href="index.cfm?curdoc=secondVisitReports&lastReport=#qGetStudentInfo.studentid####qGetStudentInfo.studentid#">Back to Second Visit Reports</a>
+      </Cfoutput>          
+            </td>
+        </tr>
+    </table>
 
 </cfoutput>
