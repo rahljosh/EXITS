@@ -88,7 +88,7 @@
 ---->
 <cfoutput>
 
-<table width="100%"  bgcolor="##FFFFFF" cellpadding=0 cellspacing=0 border=0 background="pics/#client.companyid#_header.png">
+<table width="100%" bgcolor="##FFFFFF" cellpadding=0 cellspacing=0 border=0 <cfif APPLICATION.isServerLocal> background="pics/development.jpg" <cfelse> background="pics/#client.companyid#_header.png" </cfif> >
 	<tr>
 		<td valign="top">
             <table>
