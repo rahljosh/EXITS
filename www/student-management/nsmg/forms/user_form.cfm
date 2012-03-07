@@ -12,7 +12,7 @@
     <cfinclude template="../check_rights.cfm">
 </cfif>
 
-<cfset field_list = 'firstname,middlename,lastname,occupation,businessname,address,address2,city,state,zip,country,drivers_license,dob,sex,phone,phone_ext,work_phone,work_ext,cell_phone,fax,email,email2,skype_id,username,changepass,invoice_access,bypass_checklist,date_contract_received,date_2nd_visit_contract_received,active,datecancelled,datecreated,usebilling,billing_company,billing_contact,billing_address,billing_address2,billing_city,billing_country,billing_zip,billing_phone,billing_fax,billing_email,comments'>
+<cfset field_list = 'firstname,middlename,lastname,occupation,businessname,address,address2,city,state,zip,country,drivers_license,dob,sex,phone,phone_ext,work_phone,work_ext,cell_phone,fax,email,email2,skype_id,username,changepass,invoice_access,bypass_checklist,date_contract_received,date_2nd_visit_contract_received,active,dateCancelled,datecreated,usebilling,billing_company,billing_contact,billing_address,billing_address2,billing_city,billing_country,billing_zip,billing_phone,billing_fax,billing_email,comments'>
 
 <!--- checkboxes, radio buttons aren't defined if not checked. --->
 <cfparam name="FORM.submitted" default="0">
@@ -252,7 +252,7 @@
 		<cfset errorMsg = "Please enter a valid Contract Received.">
 	<cfelseif trim(FORM.date_2nd_visit_contract_received) NEQ '' and not isValid("date", trim(FORM.date_2nd_visit_contract_received))>
 		<cfset errorMsg = "Please enter a valid 2nd Visit Contract Received.">
-	<cfelseif trim(FORM.datecancelled) NEQ '' and not isValid("date", trim(FORM.datecancelled))>
+	<cfelseif trim(FORM.dateCancelled) NEQ '' and not isValid("date", trim(FORM.dateCancelled))>
 		<cfset errorMsg = "Please enter a valid Date Cancelled.">
 	<cfelseif isDefined("FORM.billing_email") and trim(FORM.billing_email) NEQ '' and not isValid("email", trim(FORM.billing_email))>
 		<cfset errorMsg = "Please enter a valid Billing Info Email.">
@@ -296,10 +296,12 @@
                     	drivers_license, 
                         dob, 
                         sex, 
+                        
                         <!--- SSN --->
                     	<cfif VAL(vUpdateSSN)>
                             ssn,
 						</cfif>
+                        
                         phone, 
                         phone_ext, 
                         work_phone, 
@@ -317,7 +319,8 @@
                         date_contract_received,
                         date_2nd_visit_contract_received,
                         active, 
-                        datecancelled,
+                        dateCancelled,
+                        
 						<cfif FORM.usertype EQ 8>
 							usertype, 
                             usebilling, 
@@ -332,100 +335,135 @@
                             billing_fax, 
                             billing_email,
                         </cfif>
-                        comments, whocreated, accountCreationVerified, dateAccountVerified)
-                    VALUES (
-                    <cfqueryparam cfsqltype="cf_sql_idstamp" value="#createuuid()#">,
-                    <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
-                    <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.firstname#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.middlename#" null="#yesNoFormat(trim(FORM.middlename) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.lastname#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.occupation#" null="#yesNoFormat(trim(FORM.occupation) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.businessname#" null="#yesNoFormat(trim(FORM.businessname) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#" null="#yesNoFormat(trim(FORM.address) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address2#" null="#yesNoFormat(trim(FORM.address2) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#" null="#yesNoFormat(trim(FORM.city) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.state#" null="#yesNoFormat(trim(FORM.state) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#" null="#yesNoFormat(trim(FORM.zip) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.country#" null="#yesNoFormat(trim(FORM.country) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.drivers_license#" null="#yesNoFormat(trim(FORM.drivers_license) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dob#" null="#yesNoFormat(trim(FORM.dob) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sex#" null="#yesNoFormat(trim(FORM.sex) EQ '')#">,
-					<!--- SSN --->
-                    <cfif VAL(vUpdateSSN)>
-                    	<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.SSN#">,
-                    </cfif>
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#" null="#yesNoFormat(trim(FORM.phone) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone_ext#" null="#yesNoFormat(trim(FORM.phone_ext) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.work_phone#" null="#yesNoFormat(trim(FORM.work_phone) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.work_ext#" null="#yesNoFormat(trim(FORM.work_ext) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cell_phone#" null="#yesNoFormat(trim(FORM.cell_phone) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fax#" null="#yesNoFormat(trim(FORM.fax) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email2#" null="#yesNoFormat(trim(FORM.email2) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.skype_id#" null="#yesNoFormat(trim(FORM.skype_id) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.username#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.password#">,
-                    <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.changepass#">,
-                    <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.bypass_checklist#">,
-                    <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.invoice_access#">,
-                    <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.date_contract_received#" null="#yesNoFormat(trim(FORM.date_contract_received) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.date_2nd_visit_contract_received#" null="#yesNoFormat(trim(FORM.date_2nd_visit_contract_received) EQ '')#">,
-                    <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.active#">,
-                    <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.datecancelled#" null="#yesNoFormat(trim(FORM.datecancelled) EQ '')#">,
-                    <cfif FORM.usertype EQ 8>
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.usertype#">,
-                        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.usebilling#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_company#" null="#yesNoFormat(trim(FORM.billing_company) EQ '')#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_contact#" null="#yesNoFormat(trim(FORM.billing_contact) EQ '')#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_address#" null="#yesNoFormat(trim(FORM.billing_address) EQ '')#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_address2#" null="#yesNoFormat(trim(FORM.billing_address2) EQ '')#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_city#" null="#yesNoFormat(trim(FORM.billing_city) EQ '')#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_country#" null="#yesNoFormat(trim(FORM.billing_country) EQ '')#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_zip#" null="#yesNoFormat(trim(FORM.billing_zip) EQ '')#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_phone#" null="#yesNoFormat(trim(FORM.billing_phone) EQ '')#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_fax#" null="#yesNoFormat(trim(FORM.billing_fax) EQ '')#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_email#" null="#yesNoFormat(trim(FORM.billing_email) EQ '')#">,
-                    </cfif>
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.comments#" null="#yesNoFormat(trim(FORM.comments) EQ '')#">
-                   , #CLIENT.userid#,
-                   <cfif listFind("1,2,3,4", CLIENT.userType)>#CLIENT.userid#<cfelse>0</cfif>,
-                    <cfif listFind("1,2,3,4", CLIENT.userType)>#now()#<cfelse>null</cfif>
-                   
+                        
+                        comments, 
+                        whocreated, 
+                        accountCreationVerified, 
+                        dateAccountVerified
+                    )
+                    VALUES 
+                    (
+                        <cfqueryparam cfsqltype="cf_sql_idstamp" value="#createuuid()#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.firstname#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.middlename#" null="#yesNoFormat(trim(FORM.middlename) EQ '')#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.lastname#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.occupation#" null="#yesNoFormat(trim(FORM.occupation) EQ '')#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.businessname#" null="#yesNoFormat(trim(FORM.businessname) EQ '')#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#" null="#yesNoFormat(trim(FORM.address) EQ '')#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address2#" null="#yesNoFormat(trim(FORM.address2) EQ '')#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#" null="#yesNoFormat(trim(FORM.city) EQ '')#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.state#" null="#yesNoFormat(trim(FORM.state) EQ '')#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#" null="#yesNoFormat(trim(FORM.zip) EQ '')#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.country#" null="#yesNoFormat(trim(FORM.country) EQ '')#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.drivers_license#" null="#yesNoFormat(trim(FORM.drivers_license) EQ '')#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dob#" null="#yesNoFormat(trim(FORM.dob) EQ '')#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sex#" null="#yesNoFormat(trim(FORM.sex) EQ '')#">,
+                        
+						<!--- SSN --->
+                        <cfif VAL(vUpdateSSN)>
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.SSN#">,
+                        </cfif>
+                        
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#" null="#yesNoFormat(trim(FORM.phone) EQ '')#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone_ext#" null="#yesNoFormat(trim(FORM.phone_ext) EQ '')#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.work_phone#" null="#yesNoFormat(trim(FORM.work_phone) EQ '')#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.work_ext#" null="#yesNoFormat(trim(FORM.work_ext) EQ '')#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cell_phone#" null="#yesNoFormat(trim(FORM.cell_phone) EQ '')#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fax#" null="#yesNoFormat(trim(FORM.fax) EQ '')#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email2#" null="#yesNoFormat(trim(FORM.email2) EQ '')#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.skype_id#" null="#yesNoFormat(trim(FORM.skype_id) EQ '')#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.username#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.password#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.changepass#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.bypass_checklist#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.invoice_access#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.date_contract_received#" null="#yesNoFormat(trim(FORM.date_contract_received) EQ '')#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.date_2nd_visit_contract_received#" null="#yesNoFormat(trim(FORM.date_2nd_visit_contract_received) EQ '')#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.active#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dateCancelled#" null="#yesNoFormat(trim(FORM.dateCancelled) EQ '')#">,
+                        
+						<cfif FORM.usertype EQ 8>
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.usertype#">,
+                            <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.usebilling#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_company#" null="#yesNoFormat(trim(FORM.billing_company) EQ '')#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_contact#" null="#yesNoFormat(trim(FORM.billing_contact) EQ '')#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_address#" null="#yesNoFormat(trim(FORM.billing_address) EQ '')#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_address2#" null="#yesNoFormat(trim(FORM.billing_address2) EQ '')#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_city#" null="#yesNoFormat(trim(FORM.billing_city) EQ '')#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_country#" null="#yesNoFormat(trim(FORM.billing_country) EQ '')#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_zip#" null="#yesNoFormat(trim(FORM.billing_zip) EQ '')#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_phone#" null="#yesNoFormat(trim(FORM.billing_phone) EQ '')#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_fax#" null="#yesNoFormat(trim(FORM.billing_fax) EQ '')#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_email#" null="#yesNoFormat(trim(FORM.billing_email) EQ '')#">,
+                        </cfif>
+                        
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.comments#" null="#yesNoFormat(trim(FORM.comments) EQ '')#">, 
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">,
+                        
+                       	<cfif listFind("1,2,3,4", CLIENT.userType)>
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">,
+						<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+						</cfif>,
+                        
+                        <cfif listFind("1,2,3,4", CLIENT.userType)>
+                        	<cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+						<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">
+						</cfif>                       
                     )  
                 </cfquery>
+                
                 <cfquery name="get_id" datasource="#application.dsn#">
-                    SELECT MAX(userid) AS userid
-                    FROM smg_users 
+                    SELECT 
+                    	MAX(userid) AS userid
+                    FROM 
+                    	smg_users 
                 </cfquery>
+                
             </cflock>
+            
             <cfif FORM.usertype eq 8>
-            <cfoutput>
-            <cfsavecontent variable="email_message">
-            This email is to notify you that a new agent profile has been created by #CLIENT.name#. This email is a reminder for the following:<br /><br />
-            <strong>Ellen</strong> - Please send out a contract to that Agent<br />
-            <strong>Marcel</strong> - Please make sure you have a price, insurance, and SEVIS option.<br />
-            <strong>Brian</strong> - Make sure this agent has been issued an allocation<br /><br />
-            Agent Info: <a href="#exits_url#/nsmg/index.cfm?curdoc=user_info&userid=">#FORM.businessname#</a>
-            </cfsavecontent>
-			</cfoutput>
-			<!--- send email --->
-            <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                <cfinvokeargument name="email_to" value="ellen@iseusa.com,marcel@iseusa.com,bhause@iseusa.com">
-                <cfinvokeargument name="email_subject" value="New Agent Profile">
-                <cfinvokeargument name="email_message" value="#email_message#">
-                <cfinvokeargument name="email_from" value="#CLIENT.emailfrom#">
-            </cfinvoke>
-            </cfif>
-            <!--- add company & regional access record only for usertype 8. --->
-            <cfif FORM.usertype EQ 8>
+
+				<!--- add company & regional access record only for usertype 8. --->
                 <cfquery datasource="#application.dsn#">
-                    INSERT INTO user_access_rights (userid, companyid, usertype, default_access)
-                    VALUES (
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#get_id.userid#">,
-                    5, 8, 1
+                    INSERT INTO 
+                    	user_access_rights 
+                    (
+                    	userid, 
+                        companyid, 
+                        usertype, 
+                        default_access
+                    )
+                    VALUES 
+                    (
+                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#get_id.userid#">,
+                    	<cfqueryparam cfsqltype="cf_sql_integer" value="5">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="8">, 
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                     )  
                 </cfquery>
+                
+				<cfoutput>
+                    <cfsavecontent variable="email_message">
+                        This email is to notify you that a new agent profile has been created by #CLIENT.name#. This email is a reminder for the following:<br /><br />
+                        <strong>Ellen</strong> - Please send out a contract to that Agent<br />
+                        <strong>Marcel</strong> - Please make sure you have a price, insurance, and SEVIS option.<br />
+                        <strong>Brian</strong> - Make sure this agent has been issued an allocation<br /><br />
+                        Agent Info: <a href="#exits_url#/nsmg/index.cfm?curdoc=user_info&userid=">#FORM.businessname#</a>
+                    </cfsavecontent>
+                </cfoutput>
+			
+				<!--- send email --->
+                <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                    <cfinvokeargument name="email_to" value="ellen@iseusa.com,marcel@iseusa.com,bhause@iseusa.com">
+                    <cfinvokeargument name="email_subject" value="New Agent Profile">
+                    <cfinvokeargument name="email_message" value="#email_message#">
+                    <cfinvokeargument name="email_from" value="#CLIENT.emailfrom#">
+                </cfinvoke>
             </cfif>
             
 			<!--- send email --->
@@ -461,70 +499,93 @@
             
 		<!--- edit --->
 		<cfelse>
-        
+        	
+            <cfscript>
+				// Check if we are inactivating an user, if Yes set date // VAL(qGetUserInfo.active) AND 
+				if ( NOT VAL(FORM.active) AND NOT isDate(FORM.dateCancelled) ) {
+					FORM.dateCancelled = now();
+				} else if ( VAL(FORM.active) AND isDate(FORM.dateCancelled) ) {
+					FORM.dateCancelled = "";					
+				}
+			</cfscript>
+            
 			<cfquery datasource="#application.dsn#">
-				UPDATE smg_users SET
-                lastchange = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
-                firstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.firstname#">,
-                middlename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.middlename#" null="#yesNoFormat(trim(FORM.middlename) EQ '')#">,
-                lastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.lastname#">,
-                occupation = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.occupation#" null="#yesNoFormat(trim(FORM.occupation) EQ '')#">,
-                businessname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.businessname#" null="#yesNoFormat(trim(FORM.businessname) EQ '')#">,
-                address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#" null="#yesNoFormat(trim(FORM.address) EQ '')#">,
-                address2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address2#" null="#yesNoFormat(trim(FORM.address2) EQ '')#">,
-                city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#" null="#yesNoFormat(trim(FORM.city) EQ '')#">,
-                state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.state#" null="#yesNoFormat(trim(FORM.state) EQ '')#">,
-                zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#" null="#yesNoFormat(trim(FORM.zip) EQ '')#">,
-                drivers_license = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.drivers_license#" null="#yesNoFormat(trim(FORM.drivers_license) EQ '')#">,
-                dob = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dob#" null="#yesNoFormat(trim(FORM.dob) EQ '')#">,
-                sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sex#" null="#yesNoFormat(trim(FORM.sex) EQ '')#">,
-				<!--- SSN --->
-                <cfif VAL(vUpdateSSN)>
-                    SSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.SSN#">,
-                </cfif>
-                phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#" null="#yesNoFormat(trim(FORM.phone) EQ '')#">,
-                phone_ext = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone_ext#" null="#yesNoFormat(trim(FORM.phone_ext) EQ '')#">,
-                work_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.work_phone#" null="#yesNoFormat(trim(FORM.work_phone) EQ '')#">,
-                work_ext = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.work_ext#" null="#yesNoFormat(trim(FORM.work_ext) EQ '')#">,
-                cell_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cell_phone#" null="#yesNoFormat(trim(FORM.cell_phone) EQ '')#">,
-                fax = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fax#" null="#yesNoFormat(trim(FORM.fax) EQ '')#">,
-                email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
-                email2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email2#" null="#yesNoFormat(trim(FORM.email2) EQ '')#">,
-                <cfif isDefined("FORM.username")>
-                	username = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.username#">,
-                </cfif>
-				<cfif listFind("1,2,3,4", CLIENT.userType)>
-					changepass = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.changepass#">,
-					bypass_checklist = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.bypass_checklist#">,
-                </cfif>
-				<cfif CLIENT.usertype EQ 1>
-					invoice_access = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.invoice_access#">,
-                </cfif>
-				<cfif listFind("1,2,3,4", CLIENT.userType)>
-					date_contract_received = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.date_contract_received#" null="#yesNoFormat(trim(FORM.date_contract_received) EQ '')#">,
-					active = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.active#">,
-                    datecancelled = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.datecancelled#" null="#yesNoFormat(trim(FORM.datecancelled) EQ '')#">,
-                </cfif>
-				<cfif FORM.usertype EQ 8>
-                    country = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.country#" null="#yesNoFormat(trim(FORM.country) EQ '')#">,
-					usebilling = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.usebilling#">,
-	                billing_company = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_company#" null="#yesNoFormat(trim(FORM.billing_company) EQ '')#">,
-	                billing_contact = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_contact#" null="#yesNoFormat(trim(FORM.billing_contact) EQ '')#">,
-	                billing_address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_address#" null="#yesNoFormat(trim(FORM.billing_address) EQ '')#">,
-	                billing_address2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_address2#" null="#yesNoFormat(trim(FORM.billing_address2) EQ '')#">,
-	                billing_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_city#" null="#yesNoFormat(trim(FORM.billing_city) EQ '')#">,
-	                billing_country = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_country#" null="#yesNoFormat(trim(FORM.billing_country) EQ '')#">,
-	                billing_zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_zip#" null="#yesNoFormat(trim(FORM.billing_zip) EQ '')#">,
-	                billing_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_phone#" null="#yesNoFormat(trim(FORM.billing_phone) EQ '')#">,
-	                billing_fax = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_fax#" null="#yesNoFormat(trim(FORM.billing_fax) EQ '')#">,
-	                billing_email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_email#" null="#yesNoFormat(trim(FORM.billing_email) EQ '')#">,
-                </cfif>
-                <cfif isDefined("FORM.comments")>
-                    comments = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.comments#" null="#yesNoFormat(trim(FORM.comments) EQ '')#">,
-                </cfif>
-                skype_id = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.skype_id#" null="#yesNoFormat(trim(FORM.skype_id) EQ '')#">
-				WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
+				UPDATE 
+                	smg_users 
+                SET
+                    lastchange = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                    firstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.firstname#">,
+                    middlename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.middlename#" null="#yesNoFormat(trim(FORM.middlename) EQ '')#">,
+                    lastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.lastname#">,
+                    occupation = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.occupation#" null="#yesNoFormat(trim(FORM.occupation) EQ '')#">,
+                    businessname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.businessname#" null="#yesNoFormat(trim(FORM.businessname) EQ '')#">,
+                    address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#" null="#yesNoFormat(trim(FORM.address) EQ '')#">,
+                    address2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address2#" null="#yesNoFormat(trim(FORM.address2) EQ '')#">,
+                    city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#" null="#yesNoFormat(trim(FORM.city) EQ '')#">,
+                    state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.state#" null="#yesNoFormat(trim(FORM.state) EQ '')#">,
+                    zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#" null="#yesNoFormat(trim(FORM.zip) EQ '')#">,
+                    drivers_license = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.drivers_license#" null="#yesNoFormat(trim(FORM.drivers_license) EQ '')#">,
+                    dob = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dob#" null="#yesNoFormat(trim(FORM.dob) EQ '')#">,
+                    sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sex#" null="#yesNoFormat(trim(FORM.sex) EQ '')#">,
+                    
+					<!--- SSN --->
+                    <cfif VAL(vUpdateSSN)>
+                        SSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.SSN#">,
+                    </cfif>
+                    
+                    phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#" null="#yesNoFormat(trim(FORM.phone) EQ '')#">,
+                    phone_ext = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone_ext#" null="#yesNoFormat(trim(FORM.phone_ext) EQ '')#">,
+                    work_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.work_phone#" null="#yesNoFormat(trim(FORM.work_phone) EQ '')#">,
+                    work_ext = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.work_ext#" null="#yesNoFormat(trim(FORM.work_ext) EQ '')#">,
+                    cell_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cell_phone#" null="#yesNoFormat(trim(FORM.cell_phone) EQ '')#">,
+                    fax = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fax#" null="#yesNoFormat(trim(FORM.fax) EQ '')#">,
+                    email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
+                    email2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email2#" null="#yesNoFormat(trim(FORM.email2) EQ '')#">,
+                    
+					<cfif isDefined("FORM.username")>
+                        username = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.username#">,
+                    </cfif>
+                    
+                    <cfif listFind("1,2,3,4", CLIENT.userType)>
+                        changepass = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.changepass#">,
+                        bypass_checklist = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.bypass_checklist#">,
+                    </cfif>
+                    
+                    <cfif CLIENT.usertype EQ 1>
+                        invoice_access = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.invoice_access#">,
+                    </cfif>
+                    
+                    <cfif listFind("1,2,3,4", CLIENT.userType)>
+                        date_contract_received = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.date_contract_received#" null="#NOT isDate(FORM.date_contract_received)#">,
+                        active = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.active#">,
+                        dateCancelled = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dateCancelled#" null="#NOT isDate(FORM.dateCancelled)#">,
+                    </cfif>
+                    
+                    <cfif FORM.usertype EQ 8>
+                        country = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.country#" null="#yesNoFormat(trim(FORM.country) EQ '')#">,
+                        usebilling = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.usebilling#">,
+                        billing_company = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_company#" null="#yesNoFormat(trim(FORM.billing_company) EQ '')#">,
+                        billing_contact = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_contact#" null="#yesNoFormat(trim(FORM.billing_contact) EQ '')#">,
+                        billing_address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_address#" null="#yesNoFormat(trim(FORM.billing_address) EQ '')#">,
+                        billing_address2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_address2#" null="#yesNoFormat(trim(FORM.billing_address2) EQ '')#">,
+                        billing_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_city#" null="#yesNoFormat(trim(FORM.billing_city) EQ '')#">,
+                        billing_country = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_country#" null="#yesNoFormat(trim(FORM.billing_country) EQ '')#">,
+                        billing_zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_zip#" null="#yesNoFormat(trim(FORM.billing_zip) EQ '')#">,
+                        billing_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_phone#" null="#yesNoFormat(trim(FORM.billing_phone) EQ '')#">,
+                        billing_fax = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_fax#" null="#yesNoFormat(trim(FORM.billing_fax) EQ '')#">,
+                        billing_email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_email#" null="#yesNoFormat(trim(FORM.billing_email) EQ '')#">,
+                    </cfif>
+                    
+                    <cfif isDefined("FORM.comments")>
+                        comments = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.comments#" null="#yesNoFormat(trim(FORM.comments) EQ '')#">,
+                    </cfif>
+                    
+                    skype_id = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.skype_id#" null="#yesNoFormat(trim(FORM.skype_id) EQ '')#">
+                    
+                    WHERE 
+                    	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
 			</cfquery>
+            
             <cflocation url="index.cfm?curdoc=user_info&userid=#URL.userid#" addtoken="No">
             
 		</cfif>
@@ -982,7 +1043,7 @@ function CopyEmail() {
                 <td align="right">Contract Received:</td>
                 <td>
                     <cfif listFind("1,2,3,4", CLIENT.userType)>
-                        <cfinput type="text" name="date_contract_received" value="#dateFormat(FORM.date_contract_received,'mm/dd/yyyy')#" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid Contract Received."> mm/dd/yyyy
+                        <cfinput type="text" name="date_contract_received" value="#dateFormat(FORM.date_contract_received,'mm/dd/yyyy')#" class="datePicker" maxlength="10" validate="date" message="Please enter a valid Contract Received."> mm/dd/yyyy
                     <cfelse>
                         #dateFormat(FORM.date_contract_received, 'mm/dd/yyyy')#
 	                    <input type="hidden" name="date_contract_received" value="#FORM.date_contract_received#">
@@ -1019,10 +1080,10 @@ function CopyEmail() {
                 <td align="right">Date Cancelled:</td>
                 <td>
                     <cfif listFind("1,2,3,4", CLIENT.userType)>
-                        <cfinput type="text" name="datecancelled" value="#dateFormat(FORM.datecancelled,'mm/dd/yyyy')#" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid Date Cancelled."> mm/dd/yyyy
+                        <cfinput type="text" name="dateCancelled" value="#dateFormat(FORM.dateCancelled,'mm/dd/yyyy')#" maxlength="10" class="datePicker" validate="date" message="Please enter a valid Date Cancelled."> mm/dd/yyyy
                     <cfelse>
-						#dateFormat(FORM.datecancelled, 'mm/dd/yyyy')#
-                        <input type="hidden" name="datecancelled" value="#FORM.datecancelled#">
+						#dateFormat(FORM.dateCancelled, 'mm/dd/yyyy')#
+                        <input type="hidden" name="dateCancelled" value="#FORM.dateCancelled#">
                     </cfif>
                 </td>
               </tr>

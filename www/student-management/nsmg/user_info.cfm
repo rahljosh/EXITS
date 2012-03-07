@@ -41,7 +41,7 @@
 	</cfscript>
 
 	<!----Rep Info---->
-    <cfquery name="rep_info" datasource="#application.dsn#">
+    <cfquery name="rep_info" datasource="#APPLICATION.DSN#">
         SELECT 
         	smg_users.*, 
             smg_countrylist.countryname, 
@@ -56,7 +56,8 @@
         	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
     </cfquery>
     
-    <cfquery name="user_compliance" datasource="#application.dsn#">
+    <!--- Check if logged in user has access to compliance --->
+    <cfquery name="user_compliance" datasource="#APPLICATION.DSN#">
         SELECT 
         	userid, 
             compliance
@@ -67,9 +68,12 @@
     </cfquery>
 
     <cfquery name="qreferences" datasource="MySQL">
-    select *
-    from smg_user_references
-    where referencefor = #userid#
+        SELECT 
+        	*
+        FROM
+        	smg_user_references
+        WHERE
+        	referencefor = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
     </cfquery>	
 
     <!--- get the access level of the user viewed.
@@ -77,14 +81,13 @@
     <cfinvoke component="nsmg.cfc.user" method="get_access_level" returnvariable="uar_usertype">
         <cfinvokeargument name="userid" value="#rep_info.userid#">
     </cfinvoke>
-
     
     <cfswitch expression="#action#">
     
 		<!--- delete access level. --->
         <cfcase value="delete_uar">
             
-            <cfquery datasource="#application.dsn#">
+            <cfquery datasource="#APPLICATION.DSN#">
                 DELETE FROM 
                 	user_access_rights
                 WHERE 
@@ -97,7 +100,7 @@
         <cfcase value="set_default_uar">
             
 			<!--- set all others to no first --->
-            <cfquery name="get_all_access" datasource="#application.dsn#">
+            <cfquery name="get_all_access" datasource="#APPLICATION.DSN#">
                 SELECT 
                 	user_access_rights.id
                 FROM 
@@ -110,7 +113,7 @@
                 	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
             </cfquery>
             
-            <cfquery datasource="#application.dsn#">
+            <cfquery datasource="#APPLICATION.DSN#">
                 UPDATE 
                 	user_access_rights
                 SET 
@@ -120,11 +123,11 @@
             </cfquery>
             
 			<!--- set the selected to yes --->
-            <cfquery datasource="#application.dsn#">
+            <cfquery datasource="#APPLICATION.DSN#">
                 UPDATE 
                 	user_access_rights
                 SET 
-                	default_access = 1
+                	default_access = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                 WHERE 
                 	id = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.id#">
             </cfquery>
@@ -133,7 +136,7 @@
 		<!--- resend login info --->
         <cfcase value="resend_login">
             
-            <cfquery name="get_user" datasource="#application.dsn#">
+            <cfquery name="get_user" datasource="#APPLICATION.DSN#">
                 SELECT 
                 	email, accountCreationVerified
                 FROM 
@@ -146,7 +149,7 @@
                 <cfinvokeargument name="email_to" value="#get_user.email#">
                 <cfinvokeargument name="email_replyto" value="#CLIENT.email#">
                 <cfinvokeargument name="email_subject" value="Login Information">
-                <cfif get_user.accountCreationVerified eq 1>I have
+                <cfif get_user.accountCreationVerified eq 1>
                 	<cfinvokeargument name="include_content" value="resend_login">
                 <cfelse>
                 	<cfinvokeargument name="include_content" value="newUserMoreInfo">
@@ -159,7 +162,7 @@
 		<!--- verify information. --->
         <cfcase value="verify_info">
             
-            <cfquery datasource="#application.dsn#">
+            <cfquery datasource="#APPLICATION.DSN#">
                 UPDATE 
                 	smg_users
                 SET 
@@ -614,7 +617,7 @@
                     <tr>
                         <td style="line-height:20px;" valign="top">
                             <!--- HIDE STATEMENT FOR OFFICE USERS AND LITZ AND ECSE AGENTS --->
-                            <cfquery name="invoice_check" datasource="#application.dsn#">
+                            <cfquery name="invoice_check" datasource="#APPLICATION.DSN#">
                                 select invoice_access 
                                 from smg_users
                                 where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
@@ -641,7 +644,7 @@
 <!--- NON-INTERNATIONAL REPRESENTATIVE --->
 <cfelse>
  <!----Regional Information---->
-                            <cfquery name="region_company_access" datasource="#application.dsn#">
+                            <cfquery name="region_company_access" datasource="#APPLICATION.DSN#">
                                 SELECT uar.id, uar.regionid, uar.usertype, uar.changedate, uar.default_access, r.regionname, c.companyshort, c.companyID, ut.usertype AS usertypename,
                                     adv.userid AS advisorid, adv.firstname, adv.lastname
                                 FROM user_access_rights uar
@@ -760,7 +763,7 @@
     
                                             <cfif usertype EQ 4>
                                             
-                                                <cfquery name="check_facilitator_assignment" datasource="#application.dsn#">
+                                                <cfquery name="check_facilitator_assignment" datasource="#APPLICATION.DSN#">
                                                     select user_access_rights.userid, user_access_rights.usertype, smg_users.firstname, smg_users.lastname
                                                     from user_access_rights 
                                                     INNER JOIN smg_users on user_access_rights.userid = smg_users.userid
@@ -779,7 +782,7 @@
                                                 
                                             <cfelseif usertype EQ 5>
                                             
-                                                <cfquery name="check_manager_assignment" datasource="#application.dsn#">
+                                                <cfquery name="check_manager_assignment" datasource="#APPLICATION.DSN#">
                                                     SELECT user_access_rights.userid, user_access_rights.usertype, smg_users.firstname, smg_users.lastname
                                                     FROM user_access_rights 
                                                     INNER JOIN smg_users ON user_access_rights.userid = smg_users.userid
@@ -830,7 +833,7 @@
                         <td style="line-height:20px;" valign="top">
                        
                             <!----Query for placed students---->
-                            <cfquery name="get_placed_students" datasource="#application.dsn#">
+                            <cfquery name="get_placed_students" datasource="#APPLICATION.DSN#">
                                 SELECT smg_students.studentid, smg_students.familylastname, smg_students.firstname, smg_students.placerepid,
                                     smg_students.sex, smg_countrylist.countryname, smg_students.countryresident, smg_students.city, smg_students.branchid as branch,
                                     smg_users.firstname as intl_firstname, smg_users.lastname as intl_lastname, smg_users.businessname as intl_businessname,
@@ -845,7 +848,7 @@
 								AND smg_students.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.globalCompanyList#" list="yes">)
                             </cfquery>
                             <!----Query for supervised students---->
-                            <cfquery name="get_supervised_students" datasource="#application.dsn#">
+                            <cfquery name="get_supervised_students" datasource="#APPLICATION.DSN#">
                                 SELECT smg_students.studentid, smg_students.familylastname, smg_students.firstname, smg_students.placerepid,
                                     smg_students.sex, smg_countrylist.countryname, smg_students.countryresident, smg_students.city, smg_students.branchid as branch,
                                     smg_users.firstname as intl_firstname, smg_users.lastname as intl_lastname, smg_users.businessname as intl_businessname,
@@ -862,7 +865,7 @@
                                 
                             </cfquery>	
                              <!----Query for 2nd visit students---->
-                            <cfquery name="get_2ndvisit_students" datasource="#application.dsn#">
+                            <cfquery name="get_2ndvisit_students" datasource="#APPLICATION.DSN#">
                                 SELECT smg_students.studentid, smg_students.familylastname, smg_students.firstname, smg_students.placerepid,
                                     smg_students.sex, smg_countrylist.countryname, smg_students.countryresident, smg_students.city, smg_students.branchid as branch,
                                     smg_users.firstname as intl_firstname, smg_users.lastname as intl_lastname, smg_users.businessname as intl_businessname,
@@ -990,7 +993,7 @@
                 <table width="100%" cellpadding=10 cellspacing="0" border="0" class="section">
                     <tr>
                         <td style="line-height:20px;" valign="top">
-                            <Cfquery name="super_payments" datasource="#application.dsn#">
+                            <Cfquery name="super_payments" datasource="#APPLICATION.DSN#">
                                 select sum(amount) as amount
                                 from smg_rep_payments
                                 where agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userid#">
@@ -998,7 +1001,7 @@
                                AND companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.globalCompanyList#" list="yes">)
                                
                             </Cfquery>
-                            <Cfquery name="place_payments" datasource="#application.dsn#">
+                            <Cfquery name="place_payments" datasource="#APPLICATION.DSN#">
                                 select sum(amount) as amount
                                 from smg_rep_payments
                                 where agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userid#">
@@ -1060,7 +1063,7 @@
                 <table width="100%" cellpadding=10 cellspacing="0" border="0" class="section">
                     <tr>
                         <td style="line-height:20px;" valign="top">
-                        <Cfquery name="family_members" datasource="#application.dsn#">
+                        <Cfquery name="family_members" datasource="#APPLICATION.DSN#">
                             select firstname, lastname, dob, relationship, no_members, auth_received, auth_received_type
                             from smg_user_family
                             where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userid#">
@@ -1130,7 +1133,7 @@
                     </tr>
                 </table>
                 <!----CBC---->
-                <cfquery name="get_cbc_user" datasource="#application.dsn#">
+                <cfquery name="get_cbc_user" datasource="#APPLICATION.DSN#">
                     SELECT cbcid, userid, date_authorized , date_sent, notes, date_expired, requestid, smg_users_cbc.seasonid, flagcbc, smg_seasons.season, batchid
                     FROM smg_users_cbc
                     LEFT JOIN smg_seasons ON smg_seasons.seasonid = smg_users_cbc.seasonid
@@ -1142,7 +1145,7 @@
                     ORDER BY smg_seasons.season
                 </cfquery>
                             
-                <cfquery name="check_hosts" datasource="#application.dsn#">
+                <cfquery name="check_hosts" datasource="#APPLICATION.DSN#">
                     SELECT DISTINCT h.hostid, familylastname, h.fatherssn, h.motherssn, date_sent, date_expired, smg_seasons.season, requestid, cbc.batchid
                     FROM smg_hosts h
                     INNER JOIN smg_hosts_cbc cbc ON h.hostid = cbc.hostid
@@ -1447,7 +1450,7 @@
                              </tr>
                              <cfelse>
                              <Cfloop query="qreferences">
-                             <Cfquery name="checkRefReport" datasource="#application.dsn#">
+                             <Cfquery name="checkRefReport" datasource="#APPLICATION.DSN#">
                              select *
                              from areaRepQuestionaireTracking
                              where fk_ReferencesID = #refid# 
