@@ -301,6 +301,7 @@ where studentid = #qGetStudentInfo.studentID#
                 </td>
             </Tr>
         </table>
+   <cfif client.usertype lte 4 or client.usertype eq 8>
 		<!--- UPLOADING FILES --->
         <form method="post" action="qr_upload_file.cfm" name="Upload" enctype="multipart/form-data" onSubmit="return ProcessForm()">
         	<input type="hidden" name="unqID" value="#qGetStudentInfo.uniqueid#">	
@@ -333,7 +334,7 @@ where studentid = #qGetStudentInfo.studentID#
             </table>
             
 		</form>            
-
+	</cfif>
         <table width="98%" border="0" cellpadding="4" cellspacing="0" class="section" align="center" style="padding-bottom:15px;">
             <tr><td align="center"><input type="image" value="close window" src="../pics/close.gif" onClick="javascript:window.close()"></td></tr>
         </table>
