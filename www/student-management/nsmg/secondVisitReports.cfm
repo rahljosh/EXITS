@@ -24,7 +24,7 @@
     <!--- Param FORM Variables --->
     <cfparam name="FORM.pr_action" default="">
     <cfparam name="FORM.submitted" default="0">
-    <cfparam name="FORM.selectedProgram" default="">
+    <cfparam name="FORM.selectedProgram" default="0">
     <cfparam name="FORM.reportType" default="2">
     <cfparam name="FORM.regionID" default="0">
     <Cfparam name="FORM.rmonth" default="#DatePart('m', '#now()#')#">
@@ -37,6 +37,11 @@
     <cfparam name="repDUeDate" default="">
     <Cfparam name="inCountry" default= 1>
     <Cfparam name="PreviousReportApproved" default="0">
+    
+    <cfscript>
+		// Users allowed to add/hide reports
+		vAllowedUsers = "8731,1,510,12431,12313,12389,16652,8743,11364,13799";
+	</cfscript>
     
 	<cfif isDefined('FORM.hideReport')>
         
@@ -307,13 +312,36 @@
         s.hostid,
     	s.date_host_fam_approved, 
         s.arearepid, 
+        s.cancelDate,
         s.secondVisitRepID, 
         rep.firstname as rep_firstname, 
         rep.lastname as rep_lastname,
         <!--- alias advisor.userid here instead of using user_access_rights.advisorid because the later can be 0 and we want null, and the 0 might be phased out later. --->
         advisor.userid AS advisorid, 
         advisor.firstname as advisor_firstname, 
-        advisor.lastname as advisor_lastname
+        advisor.lastname as advisor_lastname,
+        (
+            SELECT 
+                dep_date 
+            FROM 
+                smg_flight_info 
+            WHERE 
+                studentID = s.studentID 
+            AND 
+                flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival"> 
+            AND
+                assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+            AND 
+                isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+            <!--- 
+            AND
+                programID = s.programID
+            --->
+            ORDER BY 
+                dep_date ASC,
+                dep_time ASC
+            LIMIT 1                            
+        ) AS dateArrived
     FROM 
     	smg_students s
     INNER JOIN 
@@ -327,25 +355,23 @@
     INNER JOIN 
     	smg_programs ON s.programid = smg_programs.programid
     WHERE 
-    
+    	s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.selectedprogram#" list="yes"> )
+        
     <cfif ListFind("1,2,3,4", CLIENT.usertype)>
-    	s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.pr_regionID#">
+    	AND
+        	s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.pr_regionID#">
     <cfelse>
     	<!--- don't use CLIENT.pr_regionID because if they change access level this is not reset. --->
-    	s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
+    	AND
+        	s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
     </cfif>
-    
-	<cfif CLIENT.pr_cancelled eq 0>
-        AND 
-        	s.active = 1
-    <cfelse>
-        AND 
-        	s.canceldate >= '#datelimit#'
-    </cfif>
-    
-    AND
-		s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.selectedprogram#" list="yes"> )
 
+    <!--- Active Students --->
+	<cfif CLIENT.pr_cancelled EQ 0>
+        AND 
+        	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+    </cfif>
+    
     <!--- regional advisor sees only their reps or their students. --->
     <cfif CLIENT.usertype EQ 6>
         AND (
@@ -364,6 +390,12 @@
         	s.secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
     </cfif>
 	
+    <!--- Get cancelations after arrival --->
+    <cfif VAL(CLIENT.pr_cancelled)>
+        HAVING
+        	cancelDate >= dateArrived
+    </cfif>	
+    
     <!--- include the advisorid and arearepid because we're grouping by those in the output, just in case two have the same first and last name. --->
     ORDER BY 
     	advisor_lastname,
@@ -578,25 +610,15 @@
                                                </form>
                                                     </Td>
                                                     <td>
-                                                   <cfif CLIENT.userid eq 8731 or 
-												   		 CLIENT.userid eq 1 or 
-														 CLIENT.userid eq 510 or
-														 CLIENT.userid eq 12431 or 
-														 CLIENT.userid eq 12313 or
-														 CLIENT.userid eq 12389 or
-														 CLIENT.userid eq 16652 or
-														 CLIENT.userid eq 8743 or
-														 CLIENT.userid eq 11364 or
-														 CLIENT.userid eq 13799
-														 >
-                                                     <form action="index.cfm?curdoc=secondVisitReports" method="post">
-                                                        <input type="hidden" name="hideReport" />
-                                                        <input type="hidden" name="fk_student" value="#studentid#">
-                                                        <input type="hidden" name="fk_host" value="#hostid#">
-                                                        <input type="hidden" name="fk_secondVisitRep" value="#secondVisitRepID#">
-                                                        <input type="hidden" name="selectedProgram" value="#CLIENT.selectedProgram#" />
-                                                        <input name="Submit" type="image" src="pics/smallDelete.png" height="20" alt="Add New Report" border=0>
-                                                    </form>
+                                                   	<cfif listFind(vAllowedUsers, CLIENT.userID)>
+	                                                    <form action="index.cfm?curdoc=secondVisitReports" method="post">
+                                                            <input type="hidden" name="hideReport" />
+                                                            <input type="hidden" name="fk_student" value="#studentid#">
+                                                            <input type="hidden" name="fk_host" value="#hostid#">
+                                                            <input type="hidden" name="fk_secondVisitRep" value="#secondVisitRepID#">
+                                                            <input type="hidden" name="selectedProgram" value="#CLIENT.selectedProgram#" />
+                                                            <input name="Submit" type="image" src="pics/smallDelete.png" height="20" alt="Add New Report" border=0>
+                                                    	</form>
                                                     </cfif>
                                                     </td>
                                                   </Tr>
@@ -704,17 +726,7 @@
                                         <em>#checkBlock2.firstname# #checkBlock2.lastname# determined that this report was not required
                                          on #dateFormat(checkBlock2.dateChanged, 'mm/dd/yyyy')#</em> 									</td>
                                                     <td>
-                                        <cfif CLIENT.userid eq 8731 or 
-												   		 CLIENT.userid eq 1 or 
-														 CLIENT.userid eq 510 or
-														 CLIENT.userid eq 12431 or 
-														 CLIENT.userid eq 12313 or
-														 CLIENT.userid eq 12389 or
-														 CLIENT.userid eq 16652 or
-														 CLIENT.userid eq 8743 or
-														 CLIENT.userid eq 11364 or
-														 CLIENT.userid eq 13799
-														 >
+                                        <cfif listFind(vAllowedUsers, CLIENT.userID)>
                                         <form action="index.cfm?curdoc=secondVisitReports" method="post">
                                                 <input type="hidden" name="unHideReport" value="#checkBlock2.id#" />
                                                 <input type="hidden" name="selectedProgram" value="#CLIENT.selectedProgram#" />
