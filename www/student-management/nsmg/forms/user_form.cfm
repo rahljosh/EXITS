@@ -403,11 +403,9 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.comments#" null="#yesNoFormat(trim(FORM.comments) EQ '')#">, 
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">,
                         
-                       	<cfif listFind("1,2,3,4", CLIENT.userType)>
-                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">,
-						<cfelse>
-                        	<cfqueryparam cfsqltype="cf_sql_integer" value="0">,
-						</cfif>
+                       	
+                       	<cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+						
                         
                         <cfif listFind("1,2,3,4", CLIENT.userType)>
                         	<cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
