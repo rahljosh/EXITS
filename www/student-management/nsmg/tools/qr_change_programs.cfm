@@ -7,50 +7,49 @@
 
 <body>
 
-<cfif form.programfee is 0.00>
+<cfif FORM.programfee is 0.00>
 	Base program fee can not be 0.00, please click back and update the fee.
 	<cfabort>
 </cfif>
-<cfdump var="#form#">
-<cftransaction action="begin" isolation="SERIALIZABLE">
+
 <Cfquery name="update_programs" datasource="MySQL">
 	update smg_programs
-	set programname = '#form.programname#',
-		type = #form.programtype#,
-		startdate = #CreateODBCDate(form.startdate)#,
-		enddate = #CreateODBCDate(form.enddate)#,
-        applicationDeadline = #CreateODBCDate(form.applicationDeadline)#,
-        fk_smg_student_app_programID = '#form.studentAppType#',
-		insurance_startdate = <cfif form.insurance_startdate is not ''>#CreateODBCDate(form.insurance_startdate)#<cfelse>null</cfif>,
-		insurance_enddate = <cfif form.insurance_enddate is not ''>#CreateODBCDate(form.insurance_enddate)#<cfelse>null</cfif>,
-		preayp_date = <cfif form.preayp_date is not ''>#CreateODBCDate(form.preayp_date)#<cfelse>null</cfif>,
-		programfee = '#form.programfee#',
-		insurance_w_deduct = '#form.insurance_w_deduct#',
-		seasonid = '#form.seasonid#',
-		sevis_startdate = <cfif form.sevis_startdate is not ''>#CreateODBCDate(form.sevis_startdate)#<cfelse>null</cfif>,
-		sevis_enddate = <cfif form.sevis_enddate is not ''>#CreateODBCDate(form.sevis_enddate)#<cfelse>null</cfif>,
-		progress_reports_active = #form.progress_reports_active#,
-		tripid = '#form.smg_trip#',
-		smgseasonid = '#form.smgseasonid#',
+	set programname = '#FORM.programname#',
+		type = #FORM.programtype#,
+		startdate = #CreateODBCDate(FORM.startdate)#,
+		enddate = #CreateODBCDate(FORM.enddate)#,
+        applicationDeadline = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#FORM.applicationDeadline#" null="#NOT isDate(FORM.applicationDeadline)#">,
+        fk_smg_student_app_programID = '#FORM.studentAppType#',
+		insurance_startdate = <cfif FORM.insurance_startdate is not ''>#CreateODBCDate(FORM.insurance_startdate)#<cfelse>null</cfif>,
+		insurance_enddate = <cfif FORM.insurance_enddate is not ''>#CreateODBCDate(FORM.insurance_enddate)#<cfelse>null</cfif>,
+		preayp_date = <cfif FORM.preayp_date is not ''>#CreateODBCDate(FORM.preayp_date)#<cfelse>null</cfif>,
+		programfee = '#FORM.programfee#',
+		insurance_w_deduct = '#FORM.insurance_w_deduct#',
+		seasonid = '#FORM.seasonid#',
+		sevis_startdate = <cfif FORM.sevis_startdate is not ''>#CreateODBCDate(FORM.sevis_startdate)#<cfelse>null</cfif>,
+		sevis_enddate = <cfif FORM.sevis_enddate is not ''>#CreateODBCDate(FORM.sevis_enddate)#<cfelse>null</cfif>,
+		progress_reports_active = #FORM.progress_reports_active#,
+		tripid = '#FORM.smg_trip#',
+		smgseasonid = '#FORM.smgseasonid#',
 		fieldviewable = #fieldviewable#,
-		<cfif isDefined('form.blank')> blank = 1, <cfelse> blank = 0, </cfif>
-		<cfif isDefined('form.hold')> hold = 1, <cfelse> hold = 0, </cfif>
-		<cfif isDefined('form.ins_batch')> insurance_batch = 1, <cfelse> insurance_batch = 0, </cfif>
-		insurance_wo_deduct = '#form.insurance_wo_deduct#'
-	where programid = #form.programid#
+		<cfif isDefined('FORM.blank')> blank = 1, <cfelse> blank = 0, </cfif>
+		<cfif isDefined('FORM.hold')> hold = 1, <cfelse> hold = 0, </cfif>
+		<cfif isDefined('FORM.ins_batch')> insurance_batch = 1, <cfelse> insurance_batch = 0, </cfif>
+		insurance_wo_deduct = '#FORM.insurance_wo_deduct#'
+	where programid = #FORM.programid#
 	LIMIT 1
 </Cfquery>
-</cftransaction>
-<cfif isdefined('form.change_status')>
-	<cfif form.student_status neq 9>
+
+<cfif isdefined('FORM.change_status')>
+	<cfif FORM.student_status neq 9>
     	<cfquery name="update_student_status" datasource="mysql">
         update smg_students
-        set active = #form.student_status#
-        where programid = #form.programid#
+        set active = #FORM.student_status#
+        where programid = #FORM.programid#
         </cfquery>
     </cfif>
 </cfif>  
-<cflocation url="index.cfm?curdoc=tools/change_programs&progid=#form.programid#" addtoken="no">
+<cflocation url="index.cfm?curdoc=tools/change_programs&progid=#FORM.programid#" addtoken="no">
 
 </body>
 </html>
