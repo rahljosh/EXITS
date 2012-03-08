@@ -169,8 +169,14 @@
 		<tr><th align="center" colspan=2 bgcolor="e2efc7">Program Options</th></tr>
 		<tr>
 					<tr>
-			<td align="right">Region / State Status:</td>
-			<td><a href="tools/regionStatus.cfm?programid=#url.progid#&seasonid=#current_season#&label=#current_season_label#&program=#get_program.programname#" class="jQueryModal">Region Status</a>  |  <a href="tools/stateStatus.cfm?programid=#url.progid#&seasonid=#current_season#&label=#current_season_label#&program=#get_program.programname#" class="jQueryModal">State Status</a></td>
+			<td align="right"><Cfif client.companyid eq 14>District<cfelse>Region / State</Cfif> Status:</td>
+			<td>
+            <Cfif client.companyid eq 14>
+            <a href="tools/districtStatus.cfm?programid=#url.progid#&seasonid=#current_season#&label=#current_season_label#&program=#get_program.programname#" class="jQueryModal">District Status</a>
+            <Cfelse>
+            <a href="tools/regionStatus.cfm?programid=#url.progid#&seasonid=#current_season#&label=#current_season_label#&program=#get_program.programname#" class="jQueryModal">Region Status</a>  |  <a href="tools/stateStatus.cfm?programid=#url.progid#&seasonid=#current_season#&label=#current_season_label#&program=#get_program.programname#" class="jQueryModal">State Status</a>
+            </Cfif>
+            </td>
 		</tr>
 
     	<tr>
