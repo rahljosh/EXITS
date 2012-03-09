@@ -40,7 +40,13 @@
         <cfset CLIENT.emailFrom = 'support@iseusa.com'>
         <cfset CLIENT.site_url = 'ise.exitsapplication.com'>
     </cfif>
-    
+
+    <cfif APPLICATION.isServerLocal>
+		<cfset CLIENT.EXITS_URL = 'http://ise.exitsapplication.com'>
+	<cfelse>
+		<cfset CLIENT.EXITS_URL = 'https://' & CGI.HTTP_HOST>
+    </cfif>
+
     <!--- Process Form Submission - login --->
     <cfif isDefined("FORM.login_submitted")>
     
@@ -90,13 +96,13 @@
                     <cfoutput query="qCheckUsername">				
                         <p>
                         	#qCheckUsername.firstname# #qCheckUsername.lastname#, a login information retrieval request was made from 
-                        	the <a href="http://#CGI.http_host#">http://#CGI.http_host#</a> website. <br>
-           		            Your login information is:<br />
+                        	the <a href="#CLIENT.EXITS_URL#">#CLIENT.EXITS_URL#</a> website. <br /><br />
+           		            Your login information is: <br /><br />
                             Username: #qCheckUsername.username#<br />
                             Password: #qCheckUsername.password#
                         </p>
                         
-                        <p>To login please visit: <a href="#CLIENT.site_url#">#CLIENT.site_url#</a></p>
+                        <p>To login please visit: <a href="#CLIENT.EXITS_URL#">#CLIENT.EXITS_URL#</a> </p>
                     </cfoutput>
                 </cfsavecontent>
                 
@@ -143,7 +149,7 @@
                     <cfoutput query="qCheckStudentAccount">				
                         <p>
                         	#qCheckStudentAccount.firstname# #qCheckStudentAccount.familyLastName#, a login information retrieval request was made from 
-                        	the <a href="http://#CGI.http_host#">http://#CGI.http_host#</a> website. <br>
+                        	the <a href="#CLIENT.EXITS_URL#">#CLIENT.EXITS_URL#</a> website. <br>
            		            Your login information is:<br />
                             Username: #qCheckStudentAccount.email#<br />
                             Password: #qCheckStudentAccount.password#
