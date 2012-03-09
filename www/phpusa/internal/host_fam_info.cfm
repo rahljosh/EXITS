@@ -211,8 +211,8 @@ div.scroll2 {
 				<tr><td colspan="4" bgcolor="C2D1EF"><u>Current Students</u></td></tr>
 				<cfloop query="hosting_students">
 					<tr bgcolor="C2D1EF">
-                    	<td width="10%"><A href="?curdoc=student/student_info&unqid=#hosted_students.uniqueid#&assignedid=#hosted_students.assignedid#" target="_blank">#studentid#</A></td>
-						<td width="50%"><A href="?curdoc=student/student_info&unqid=#hosted_students.uniqueid#&assignedid=#hosted_students.assignedid#" target="_blank"">#firstname# #familylastname#</td>
+                    	<td width="10%"><A href="?curdoc=student/student_info&unqid=#hosting_students.uniqueid#&assignedid=#hosting_students.assignedid#" target="_blank">#studentid#</A></td>
+						<td width="50%"><A href="?curdoc=student/student_info&unqid=#hosting_students.uniqueid#&assignedid=#hosting_students.assignedid#" target="_blank">#firstname# #familylastname#</A></td>
 						<td width="20%">#countryname#</td>
 						<td width="20%">#programname#</td></tr>
 				</cfloop>
@@ -223,7 +223,7 @@ div.scroll2 {
 				<tr><td colspan="4"><u>Students Hosted</u></td></tr>
 				<cfloop query="hosted_students">
 					<tr><td width="10%"><A href="?curdoc=student/student_info&unqid=#hosted_students.uniqueid#&assignedid=#hosted_students.assignedid#" target="_blank">#studentid#</A></td>
-						<td width="50%"><A href="?curdoc=student/student_info&unqid=#hosted_students.uniqueid#&assignedid=#hosted_students.assignedid#" target="_blank">#firstname# #familylastname#</td>
+						<td width="50%"><A href="?curdoc=student/student_info&unqid=#hosted_students.uniqueid#&assignedid=#hosted_students.assignedid#" target="_blank">#firstname# #familylastname#</A></td>
                         <td width="20%">#countryname#</td>
 						<td width="20%">#programname#</td></tr>
 				</cfloop>

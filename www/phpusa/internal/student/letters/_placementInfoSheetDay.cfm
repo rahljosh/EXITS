@@ -104,7 +104,28 @@
 			
 		}
 	</cfscript>
-	
+    
+	<cfquery name="qActiveStudents" datasource="mysql">
+        SELECT 
+        	s.studentid, 
+            s.familylastname, 
+            s.firstname, 
+            s.sex, 
+            s.DOB
+        FROM 
+        	smg_students s
+        INNER JOIN 
+        	php_students_in_program php ON php.studentid = s.studentid
+     	       AND 	
+     	           php.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+        WHERE 
+        	php.hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.hostID#">
+        AND
+            s.studentid != <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#">
+        ORDER BY 
+        	s.familylastname
+	</cfquery>
+    
 </cfsilent>
 
 <cfoutput>
@@ -318,6 +339,15 @@
                                             <td align="center">#qGetHostChildren.sex#</td>
                                             <td align="center">#qGetHostChildren.liveathome#</td>
                                             <td align="center">#qGetHostChildren.membertype#</td>
+                                        </tr>
+                                    </cfloop>
+                                    <cfloop query="qActiveStudents">
+                                    	<tr>
+                                            <td>#qActiveStudents.firstname#</td>
+                                            <td align="center">#DateDiff('yyyy', qActiveStudents.DOB, now())#</td>
+                                            <td align="center">#qActiveStudents.sex#</td>
+                                            <td align="center">yes</td>
+                                            <td align="center">Exchange Student</td>
                                         </tr>
                                     </cfloop>
                                 </table>
