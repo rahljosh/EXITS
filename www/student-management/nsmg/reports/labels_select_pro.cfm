@@ -15,12 +15,20 @@
 	<!--- Import CustomTag --->
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 
-    <cfinclude template="../querys/get_active_programs.cfm">
-    
+    <cfscript>
+		// Get Programs
+		qGetProgramList = APPLICATION.CFC.program.getPrograms(isActive=1);
+	
+		// Get User Regions
+		qGetRegionList = APPLICATION.CFC.REGION.getUserRegions(
+			companyID=CLIENT.companyID,
+			userID=CLIENT.userID,
+			userType=CLIENT.userType
+		);
+	</cfscript>
+
     <!--- INTERNATIONAL REPS WITH KIDS ASSIGNED TO THE COMPANY--->
     <cfinclude template="../querys/get_intl_rep.cfm">
-    
-    <cfinclude template="../querys/get_regions.cfm">
     
     <cfinclude template="../querys/get_countries.cfm">
     
@@ -171,7 +179,7 @@
                             <tr><th colspan="3" bgcolor="##e2efc7">Students ID Cards per Entered Date</th></tr>
                             <tr>
                                 <td>Program:</td>
-                                <td><cfselect name="programID" query="get_program" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
+                                <td><cfselect name="programID" query="qGetProgramList" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
                             </tr>
                             <tr align="left">
                                 <td>Intl. Rep:</td>
@@ -211,7 +219,7 @@
                             <tr><th colspan="2" bgcolor="##e2efc7">Students ID Cards per Program/ID<th></tr>
                             <tr>
                                 <td>Program:</td>
-                                <td><cfselect name="programID" query="get_program" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
+                                <td><cfselect name="programID" query="qGetProgramList" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
                             </tr>
 
                             <tr align="left">
@@ -308,7 +316,7 @@
                             <tr><th colspan="2" bgcolor="##e2efc7">Insurance Cards per ID</th></tr>
                             <tr>
                                 <td>Program:</td>
-                                <td><cfselect name="programID" query="get_program" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
+                                <td><cfselect name="programID" query="qGetProgramList" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
                             </tr>
                             <tr align="left">
                                 <td>Intl. Rep:</td>
@@ -369,7 +377,7 @@
                             <tr><th colspan="2" bgcolor="##e2efc7">Students ID Cards per Placement Date</th></tr>
                             <tr>
                             	<td>Program:</td>
-                                <td><cfselect name="programID" query="get_program" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
+                                <td><cfselect name="programID" query="qGetProgramList" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
                             </tr>				
                             <tr align="left">
                                 <td>Intl. Rep:</td>
@@ -408,7 +416,7 @@
                             <tr><th colspan="3" bgcolor="##e2efc7">Labels per Placement Date</th></tr>
                             <tr>
                             	<td>Program:</td>
-                                <td><cfselect name="programID" query="get_program" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
+                                <td><cfselect name="programID" query="qGetProgramList" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
                             </tr>				
                             <tr align="left">
                                 <td>Intl. Rep:</td>
@@ -456,7 +464,7 @@
                             <tr><th colspan="3" bgcolor="##e2efc7">Students Accepted per Period</th></tr>
                             <tr>
                                 <td>Program:</td>
-                                <td><cfselect name="programID" query="get_program" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
+                                <td><cfselect name="programID" query="qGetProgramList" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
                             </tr>
                             <tr>
                             	<td>Acceptance From: </td>
@@ -530,11 +538,17 @@
                             <tr><th colspan="3" bgcolor="##e2efc7">Host Family Welcome Letters</th></tr>
                             <tr>
                                 <td>Program:</td>
-                                <td><cfselect name="programID" query="get_program" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
+                                <td><cfselect name="programID" query="qGetProgramList" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
                             </tr>
                             <tr>
                             	<td>Region:</td>
-                                <td><cfselect name="regionID" query="get_regions" value="regionID" display="regionname" multiple="yes" size="8" queryPosition="below"></cfselect></td>
+                                <td>
+                                	<select name="regionID" multiple="multiple" size="8">
+                                    	<cfloop query="qGetRegionList">
+                                        	<option value="#qGetRegionList.regionID#"><cfif CLIENT.companyID EQ 5>#qGetRegionList.companyShort# - </cfif>#qGetRegionList.regionName#</option>
+                                        </cfloop>
+                                    </select>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Insurance Type:</td>
@@ -566,11 +580,17 @@
                             <tr><th colspan="2" bgcolor="##e2efc7">Host Family Labels</th></tr>
                             <tr>
                                 <td>Program:</td>
-                                <td><cfselect name="programID" query="get_program" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
+                                <td><cfselect name="programID" query="qGetProgramList" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
                             </tr>
                             <tr>
                             	<td>Region:</td>
-                                <td><cfselect name="regionID" query="get_regions" value="regionID" display="regionname" multiple="yes" size="8" queryPosition="below"></cfselect></td>
+                                <td>
+                                	<select name="regionID" multiple="multiple" size="8">
+                                    	<cfloop query="qGetRegionList">
+                                        	<option value="#qGetRegionList.regionID#"><cfif CLIENT.companyID EQ 5>#qGetRegionList.companyShort# - </cfif>#qGetRegionList.regionName#</option>
+                                        </cfloop>
+                                    </select>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Insurance Type:</td>
@@ -604,7 +624,7 @@
                             <tr><th colspan="3" bgcolor="##e2efc7">School Welcome Letters</th></tr>
                             <tr>
                                 <td>Program:</td>
-                                <td><cfselect name="programID" query="get_program" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
+                                <td><cfselect name="programID" query="qGetProgramList" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
                             </tr>
                             <tr>
                                 <td>Date Placed:</td>
@@ -615,9 +635,15 @@
                                     <input type="text" name="date2" class="datePicker" maxlength="10">                                                                                                                                   
                                 </td>
                             </tr>
-                               <tr>
+                            <tr>
                             	<td>Region:</td>
-                                <td><cfselect name="regionID" query="get_regions" value="regionID" display="regionname" multiple="yes" size="8" queryPosition="below"></cfselect></td>
+                                <td>
+                                	<select name="regionID" multiple="multiple" size="8">
+                                    	<cfloop query="qGetRegionList">
+                                        	<option value="#qGetRegionList.regionID#"><cfif CLIENT.companyID EQ 5>#qGetRegionList.companyShort# - </cfif>#qGetRegionList.regionName#</option>
+                                        </cfloop>
+                                    </select>
+                                </td>
                             </tr>
                             <tr><td colspan="2"><font size="-2" color="000066">* Date Placed (Leave blank for all)</font></td></tr>
                             <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/preview.gif" align="center" border="0"></td></tr>
@@ -634,7 +660,7 @@
                             <tr><th colspan="3" bgcolor="##e2efc7">School Labels</th></tr>
                             <tr>
                                 <td>Program:</td>
-                                <td><cfselect name="programID" query="get_program" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
+                                <td><cfselect name="programID" query="qGetProgramList" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
                             </tr>
                             <tr>
                                 <td>Date Placed:</td>
@@ -645,9 +671,15 @@
                                     <input type="text" name="date2" class="datePicker" maxlength="10">                                                                                                                                   
                                 </td>
                             </tr>
-                                 <tr>
+                            <tr>
                             	<td>Region:</td>
-                                <td><cfselect name="regionID" query="get_regions" value="regionID" display="regionname" multiple="yes" size="8" queryPosition="below"></cfselect></td>
+                                <td>
+                                	<select name="regionID" multiple="multiple" size="8">
+                                    	<cfloop query="qGetRegionList">
+                                        	<option value="#qGetRegionList.regionID#"><cfif CLIENT.companyID EQ 5>#qGetRegionList.companyShort# - </cfif>#qGetRegionList.regionName#</option>
+                                        </cfloop>
+                                    </select>
+                                </td>
                             </tr>
                             <tr><td colspan="2"><font size="-2" color="000066">* Date Placed (Leave blank for all)</font></td></tr>
                             <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/preview.gif" align="center" border="0"></td></tr>
@@ -671,7 +703,7 @@
                             <tr><th colspan="3" bgcolor="##e2efc7">Students per period <br> <font size="-2">(Students in the USA - Approved placements only)</font></th></tr>
                             <tr>
                                 <td>Program:</td>
-                                <td><cfselect name="programID" query="get_program" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
+                                <td><cfselect name="programID" query="qGetProgramList" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
                             </tr>
                             <tr>
                             	<td>Country:</td>
@@ -732,11 +764,17 @@
                             <tr><th colspan="3" bgcolor="##e2efc7">Students in Care of Host Family per Region <br> <font size="-2">(Approved placements only)</font></th></tr>
                             <tr>
                                 <td>Program:</td>
-                                <td><cfselect name="programID" query="get_program" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
+                                <td><cfselect name="programID" query="qGetProgramList" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
                             </tr>
                             <tr>
                             	<td>Region:</td>
-                                <td><cfselect name="regionid" query="get_regions" value="regionid" display="regionname" multiple="yes" size="8"></cfselect></td>
+                                <td>
+                                	<select name="regionID" multiple="multiple" size="8">
+                                    	<cfloop query="qGetRegionList">
+                                        	<option value="#qGetRegionList.regionID#"><cfif CLIENT.companyID EQ 5>#qGetRegionList.companyShort# - </cfif>#qGetRegionList.regionName#</option>
+                                        </cfloop>
+                                    </select>
+                                </td>
                             </tr>
                             <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/preview.gif" align="center" border="0"></td></tr>
                         </table>
@@ -755,7 +793,13 @@
                             <tr><th colspan="3" bgcolor="##e2efc7">Representatives per Region</th></tr>
                             <tr>
                             	<td>Region:</td>
-                                <td><cfselect name="regionID" query="get_regions" value="regionID" display="regionname" queryPosition="below"></cfselect></td>
+                                <td>
+                                	<select name="regionID" multiple="multiple" size="8">
+                                    	<cfloop query="qGetRegionList">
+                                        	<option value="#qGetRegionList.regionID#"><cfif CLIENT.companyID EQ 5>#qGetRegionList.companyShort# - </cfif>#qGetRegionList.regionName#</option>
+                                        </cfloop>
+                                    </select>
+                                </td>
                             </tr>
                             <tr><td colspan="3"><input type="checkbox" name="inactive">Include Inactive Reps.</input></td></tr>
                             <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/preview.gif" align="center" border="0"></td></tr>
