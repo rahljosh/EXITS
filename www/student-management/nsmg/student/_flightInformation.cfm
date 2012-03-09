@@ -5,7 +5,8 @@
 	Date:		January 12, 2010
 	Desc:		Inserts/Updates Students flight information
 
-	Updated:  	04/27/2011 - Combining flight information files (form/intrep)
+	Updated:  	03/09/2012 - Added date input
+				04/27/2011 - Combining flight information files (form/intrep)
 				04/26/2011 - Added pre-ayp arrival section / Jquery Modal
 				01/14/2010 - Reorganized - Marcus Melo
 				01/14/2010 - Added datePicker - Marcus Melo
@@ -32,6 +33,7 @@
     <cfparam name="FORM.preAYPArrivalCount" default="0">
     <cfparam name="FORM.arrivalCount" default="0">
     <cfparam name="FORM.departureCount" default="0">
+    <cfparam name="FORM.dateCreated" default="">
 	
     <cfscript>
 		// Check if there is a valid URL variable
@@ -106,6 +108,7 @@
             <cfparam name="FORM.incomingNewPreAYPArrivalAirCode#i#" default="">
             <cfparam name="FORM.incomingNewPreAYPArrivalTime#i#" default="">
             <cfparam name="FORM.incomingNewPreAYPOvernight#i#" default="0">
+            <cfparam name="FORM.incomingNewPreAYPDateCreated#i#" default="">
             
             <cfscript>
                 if ( LEN(FORM["incomingNewPreAYPDepartureDate" & i]) ) {
@@ -527,7 +530,7 @@
                     <cfif VAL(qGetStudentInfo.AYPEnglish) OR VAL(qGetStudentInfo.AYPOrientation)>
                         
                         <table align="center" width="99%" bordercolor="##C0C0C0" valign="top" cellpadding="3" cellspacing="1" style="border:1px solid ##CCC">
-                            <th colspan="11" bgcolor="##A0D69A"> P R E - A Y P &nbsp;&nbsp; A R R I V A L &nbsp; &nbsp; I N F O R M A T I O N </th>
+                            <th colspan="12" bgcolor="##A0D69A"> P R E - A Y P &nbsp;&nbsp; A R R I V A L &nbsp; &nbsp; I N F O R M A T I O N </th>
                             <tr bgcolor="##A0D69A">
 								<!--- Delete Option --->    
                                 <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType)>                            
@@ -542,6 +545,7 @@
                                 <th>Depart Time <br /> (12:00 AM)</th>
                                 <th>Arrive Time <br /> (12:00 AM)</th>
                                 <th>Overnight <br /> Flight</th>
+                                <th>Date Input</th>
                                 <th><font size="-2">Status</font></th>
                             </tr>
 							
@@ -565,6 +569,7 @@
                                     <td><input type="text" name="incomingPreAYPDepartureTime#qGetPreAypArrival.currentrow#" class="fieldSize70 timePicker" maxlength="8" value="#TimeFormat(dep_time, 'hh:mm tt')#"></td>
                                     <td><input type="text" name="incomingPreAYPArrivalTime#qGetPreAypArrival.currentrow#" class="fieldSize70 timePicker" maxlength="8" value="#TimeFormat(arrival_time, 'h:mm tt')#"></td>
                                     <td align="center"><input type="checkbox" name="incomingPreAYPOvernight#qGetPreAypArrival.currentrow#" value="1" <cfif VAL(qGetPreAypArrival.overnight)> checked="checked" </cfif> ></td>
+                                    <td>#DateFormat(qGetPreAypArrival.dateCreated, 'mm/dd/yyyy')#</td> 
                                     <td align="center">
                                         <cfif LEN(qGetPreAypArrival.flight_number)>
                                             <a href="http://dps1.travelocity.com/dparflifo.ctl?aln_name=#left(qGetPreAypArrival.flight_number,2)#&flt_num=#RemoveChars(qGetPreAypArrival.flight_number,1,2)#" target="blank"><img src="../pics/arrow.gif" border="0"></img></a>
@@ -590,19 +595,20 @@
                                         <td><input type="text" name="incomingNewPreAYPDepartureTime#i#" class="fieldSize70 timePicker" class="timePicker" maxlength="8"></td>
                                         <td><input type="text" name="incomingNewPreAYPArrivalTime#i#" class="fieldSize70 timePicker" maxlength="8"></td>
                                         <td align="center"><input type="checkbox" name="incomingNewPreAYPOvernight#i#" value="1"></td>
+                                        <td>&nbsp;</td> 
                                         <td align="center">&nbsp;</td>
                                     </tr>
                                 </cfloop>
 								
                                 <cfif qGetPreAypArrival.recordCount>
-	                                <tr bgcolor="##DDF0DD"><td colspan="11" align="center"><a href="javascript:displayClass('trNewPreAYPArrival');">Click here to add more legs</a></td></tr>
+	                                <tr bgcolor="##DDF0DD"><td colspan="12" align="center"><a href="javascript:displayClass('trNewPreAYPArrival');">Click here to add more legs</a></td></tr>
                                 </cfif>
                                 
                             </cfif>
                             
                             <cfif qGetPreAypArrival.recordCount>
                                 <tr bgcolor="##DDF0DD">
-                                    <td colspan="11" align="center"><font size=-1>*Flight tracking information by Travelocity, not all flights will be available. #CLIENT.companyShort# is not responsible for information on or gathered from travelocity.com.</font></td>
+                                    <td colspan="12" align="center"><font size=-1>*Flight tracking information by Travelocity, not all flights will be available. #CLIENT.companyShort# is not responsible for information on or gathered from travelocity.com.</font></td>
                                 </tr>
                             </cfif>
                                           
@@ -614,17 +620,17 @@
                     
                     <!--- A R R I V A L    I N F O R M A T I O N --->
                     <table align="center" width="99%" bordercolor="##C0C0C0" valign="top" cellpadding="3" cellspacing="1" style="border:1px solid ##CCC">
-                        <th colspan="11" bgcolor="##ACB9CD"> A R R I V A L &nbsp;&nbsp; T O &nbsp; &nbsp; H O S T &nbsp; &nbsp; F A M I L Y &nbsp; &nbsp; I N F O R M A T I O N </th>
+                        <th colspan="12" bgcolor="##ACB9CD"> A R R I V A L &nbsp;&nbsp; T O &nbsp; &nbsp; H O S T &nbsp; &nbsp; F A M I L Y &nbsp; &nbsp; I N F O R M A T I O N </th>
 
                         <tr bgcolor="##ACB9CD">
-                            <td colspan="11">
+                            <td colspan="12">
                                 Arrival/Departure Airport: <cfif LEN(qGetStudentInfo.airport_city)>#qGetStudentInfo.airport_city# <cfelse> n/a </cfif>
                                 - Airport Code: <cfif LEN(qGetStudentInfo.major_air_code)>#qGetStudentInfo.major_air_code# <cfelse> n/a </cfif>
                             </td>
                         </tr> 
                         
                         <tr bgcolor="##ACB9CD">
-                            <td colspan="11">
+                            <td colspan="12">
                                 School Start Date: <cfif LEN(qGetSchoolDates.startDate)>#qGetSchoolDates.startDate# <cfelse> n/a </cfif>
                             </td>
                         </tr> 
@@ -643,6 +649,7 @@
                             <th>Depart Time <br /> (12:00 AM)</th>
                             <th>Arrive Time <br /> (12:00 AM)</th>
                             <th>Overnight <br /> Flight</th>
+                            <th>Date Input</th>
                             <th><font size="-2">Status</font></th>
                         </tr>
                         
@@ -665,6 +672,7 @@
                                 <td><input type="text" name="incomingDepartureTime#qGetArrival.currentrow#" class="fieldSize70 timePicker" maxlength="8" value="#TimeFormat(dep_time, 'hh:mm tt')#"></td>
                                 <td><input type="text" name="incomingArrivalTime#qGetArrival.currentrow#" class="fieldSize70 timePicker" maxlength="8" value="#TimeFormat(arrival_time, 'h:mm tt')#"></td>
                                 <td align="center"><input type="checkbox" name="incomingOvernight#qGetArrival.currentrow#" value="1" <cfif VAL(qGetArrival.overnight)> checked="checked" </cfif> ></td>
+                                <td> #DateFormat(qGetArrival.dateCreated, 'mm/dd/yyyy')#</td> 
                                 <td align="center">
                                     <cfif LEN(qGetArrival.flight_number)>
                                         <a href="http://dps1.travelocity.com/dparflifo.ctl?aln_name=#left(qGetArrival.flight_number,2)#&flt_num=#RemoveChars(qGetArrival.flight_number,1,2)#" target="blank"><img src="../pics/arrow.gif" border="0"></img></a>
@@ -690,19 +698,20 @@
                                     <td><input type="text" name="incomingNewDepartureTime#i#" class="fieldSize70 timePicker" maxlength="8"></td>
                                     <td><input type="text" name="incomingNewArrivalTime#i#" class="fieldSize70 timePicker" maxlength="8"></td>
                                     <td align="center"><input type="checkbox" name="incomingNewOvernight#i#" value="1"></td>
+                                    <td>&nbsp;</td> 
                                     <td align="center">&nbsp;</td>
                                 </tr>
                             </cfloop>
 
 							<cfif qGetArrival.recordCount>
-                                <tr bgcolor="##D5DCE5"><td colspan="11" align="center"><a href="javascript:displayClass('trNewAYPArrival');">Click here to add more legs</a></td></tr>
+                                <tr bgcolor="##D5DCE5"><td colspan="12" align="center"><a href="javascript:displayClass('trNewAYPArrival');">Click here to add more legs</a></td></tr>
                             </cfif>
                             
                         </cfif>
                         
                         <cfif qGetArrival.recordCount>
                             <tr bgcolor="##D5DCE5">
-                                <td colspan="11" align="center"><font size=-1>*Flight tracking information by Travelocity, not all flights will be available. #CLIENT.companyShort# is not responsible for information on or gathered from travelocity.com.</font></td>
+                                <td colspan="12" align="center"><font size=-1>*Flight tracking information by Travelocity, not all flights will be available. #CLIENT.companyShort# is not responsible for information on or gathered from travelocity.com.</font></td>
                             </tr>
                         </cfif>
                         
@@ -722,10 +731,10 @@
                 
                     <!--- D E P A R T U R E      I N F O R M A T I O N    --->
                     <table align="center" width="99%" bordercolor="##C0C0C0" valign="top" cellpadding="3" cellspacing="1" style="border:1px solid ##CCC">
-                        <th colspan="11" bgcolor="##FDCEAC">D E P A R T U R E &nbsp;&nbsp; F R O M &nbsp; &nbsp; U S A  &nbsp; &nbsp; I N F O R M A T I O N</th>
+                        <th colspan="12" bgcolor="##FDCEAC">D E P A R T U R E &nbsp;&nbsp; F R O M &nbsp; &nbsp; U S A  &nbsp; &nbsp; I N F O R M A T I O N</th>
 
                         <tr bgcolor="##FDCEAC">
-                            <td colspan="11">
+                            <td colspan="12">
                                 School End Date: <cfif LEN(qGetSchoolDates.endDate)>#qGetSchoolDates.endDate# <cfelse> n/a </cfif>
                             </td>
                         </tr> 
@@ -744,6 +753,7 @@
                             <th>Depart Time <br /> (12:00 AM)</th>
                             <th>Arrive Time <br /> (12:00 AM)</th>
                             <th>Overnight <br /> Flight</th>
+                            <th>Date Input</th>
                             <th><font size="-2">Status</font></th>
                         </tr>
 
@@ -767,6 +777,7 @@
                                 <td><input type="text" name="outgoingDepartureTime#qGetDeparture.currentrow#" class="fieldSize70 timePicker" maxlength="8" value="#TimeFormat(dep_time, 'hh:mm tt')#"></td>
                                 <td><input type="text" name="outgoingArrivalTime#qGetDeparture.currentrow#" class="fieldSize70 timePicker" maxlength="8" value="#TimeFormat(arrival_time, 'h:mm tt')#"></td>
                                 <td align="center"><input type="checkbox" name="outgoingOvernight#qGetDeparture.currentrow#" value="1" <cfif VAL(qGetDeparture.overnight)> checked="checked" </cfif> ></td>
+                                <td>#DateFormat(qGetDeparture.dateCreated, 'mm/dd/yyyy')#</td> 
                                 <td align="center">
                                     <cfif LEN(qGetDeparture.flight_number)>
                                         <a href="http://dps1.travelocity.com/dparflifo.ctl?aln_name=#left(qGetDeparture.flight_number,2)#&flt_num=#RemoveChars(qGetDeparture.flight_number,1,2)#" target="blank"><img src="../pics/arrow.gif" border="0"></img></a>
@@ -792,19 +803,20 @@
                                     <td><input type="text" name="outgoingNewDepartureTime#i#" class="fieldSize70 timePicker" maxlength="8"></td>
                                     <td><input type="text" name="outgoingNewArrivalTime#i#" class="fieldSize70 timePicker" maxlength="8"></td>
                                     <td align="center"><input type="checkbox" name="outgoingNewOvernight#i#" value="1"></td>
+                                    <td>&nbsp;</td> 
                                     <td>&nbsp;</td>
                                 </tr>
                             </cfloop>
                         
 							<cfif qGetDeparture.recordCount>
-                                <tr bgcolor="##FEE6D3"><td colspan="11" align="center"><a href="javascript:displayClass('trNewAYPDeparture');">Click here to add more legs</a></td></tr>
+                                <tr bgcolor="##FEE6D3"><td colspan="12" align="center"><a href="javascript:displayClass('trNewAYPDeparture');">Click here to add more legs</a></td></tr>
                             </cfif>
                             
                         </cfif>
                         
                         <cfif qGetDeparture.recordCount>
                             <tr bgcolor="##FEE6D3">
-                                <td colspan="11" align="center"><font size=-1>*Flight tracking information by Travelocity, not all flights will be available. #CLIENT.companyShort# is not responsible for information on or gathered from travelocity.com.</font></td>
+                                <td colspan="12" align="center"><font size=-1>*Flight tracking information by Travelocity, not all flights will be available. #CLIENT.companyShort# is not responsible for information on or gathered from travelocity.com.</font></td>
                             </tr>
                         </cfif>
                        
