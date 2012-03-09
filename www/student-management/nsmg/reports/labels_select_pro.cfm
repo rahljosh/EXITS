@@ -506,12 +506,8 @@
                         </table>
                         </cfform>
                         
-                    </td>
-                </tr>
-
-                <tr align="center">
-                    <td width="50%" valign="top">
-                       
+                        <br /><br />
+                        
                         <cfform action="reports/labels_intRep.cfm" method="post">
                         <Table class="nav_bar" cellpadding="6" cellspacing="0" width="90%">
                             <tr><th colspan="3" bgcolor="##e2efc7">International Representatives</th></tr>
@@ -529,10 +525,8 @@
                         </cfform>
                         
                     </td>
-                    <td width="50%" valign="top">
-                   		<!----Empty Cell---->
-                    </td>
                 </tr>
+
             </table>
           
             <br><br>
