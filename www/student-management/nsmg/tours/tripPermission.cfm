@@ -5,7 +5,10 @@
 	Date:		September 26, 2011
 	Desc:		Trip Permission Form
 	
-	Updates:	
+	Notes:		If you change this file please make sure you change 
+				trips\_tripPermission.cfm				
+		
+	Updates:	03/09/2012 - Regional Manager Signature Added
 	
 ----- ------------------------------------------------------------------------- --->
 
@@ -56,7 +59,7 @@
             u.phone as areaRep_phone,
             school.schoolname
         FROM 
-            smg_students s         
+            smg_students s     
         LEFT OUTER JOIN 
             smg_hosts h on h.hostid = s.hostid
         LEFT OUTER JOIN
@@ -66,7 +69,25 @@
         WHERE 
             s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#"> 
     </cfquery>
-
+    
+	<cfquery name="qGetRegionalManager" datasource="#APPLICATION.dsn#">
+        SELECT 
+            u.firstName,
+            u.lastName,
+            u.phone,
+            u.phone
+        FROM 
+            smg_users u
+        INNER JOIN 
+            user_access_rights uar ON u.userid = uar.userid                  
+        WHERE 
+            u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        AND 
+            uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
+        AND 
+            uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentFullInformation.regionAssigned#">
+	</cfquery>
+    
 </cfsilent>
 
 <style type="text/css">
@@ -270,10 +291,10 @@
     
     <table width="800" align="center" border="0" cellpadding="4" cellspacing="0">
         <tr>           
-            <td colspan="2" align="center"><img src="https://ise.exitsapplication.com/nsmg/pics/signatures.jpg" /></td>
+            <td align="center"><img src="https://ise.exitsapplication.com/nsmg/pics/signatures.jpg" /></td>
         </tr>
         <tr>
-            <td colspan="2">
+            <td>
                 I have read and understand all the Terms and Conditions either on website or attached form.  
                 All parties acknowledge that while on tour, <!---#SESSION.COMPANY.shortName#---> and MPD Tour America, Inc. 
                 or its representatives may take any action deemed necessary to protect student safety and well being, 
@@ -281,21 +302,23 @@
             </td>
         </tr>
         <tr>
-            <td valign="top" width="50%">
+            <td valign="top">
                 
                 <br />
                 
                 <!---Signatures Boxes---->
                 <table width="100%">
                     <tr>
-                        <td width="244" class="signatureLine" valign="bottom">_______________________________</td>
+                        <td width="450" class="signatureLine" valign="bottom">_______________________________</td>
                         <td width="3">&nbsp;</td>
-                        <td width="497" class="signatureLine" valign="bottom">_______________________________</td>
+                        <td width="450" class="signatureLine" valign="bottom">_______________________________</td>
                         <td width="3">&nbsp;</td>
-                        <td width="497" class="signatureLine" valign="bottom">_______________________________</td>
+                        <td width="450" class="signatureLine" valign="bottom">_______________________________</td>
                     </tr>
                     <tr>
-                        <td valign="top">#qGetStudentFullInformation.firstname# #qGetStudentFullInformation.familylastname#</td>
+                        <td valign="top">
+                        	#qGetStudentFullInformation.firstname# #qGetStudentFullInformation.familylastname#
+                        </td>
                         <td>&nbsp;</td>
                         <td valign="top">
                             #qGetStudentFullInformation.fatherfirstname# #qGetStudentFullInformation.fatherlastname# 
@@ -303,9 +326,9 @@
                             #qGetStudentFullInformation.motherfirstname# #qGetStudentFullInformation.motherlastname#
                         </td>
                         <td>&nbsp;</td>
-                        <td>
-                            #qGetStudentFullInformation.areaRep_first# #qGetStudentFullInformation.areaRep_last# <Br />
-                            <font size=-1><em>Area Representative - #qGetStudentFullInformation.areaRep_phone#</em></font>
+                        <td valign="top">
+                           <cfif NOT LEN(qGetStudentFullInformation.schoolname)>School<cfelse>#qGetStudentFullInformation.schoolname#</cfif> Representative<br />
+                           <font size="-2"><em>Students may not miss school without school permission and must make up any missed work. Print name and position.</em></font>
                         </td>
                     </tr>
                     <tr>
@@ -316,18 +339,20 @@
                         <td>&nbsp;</td>
                     </tr>
                     <tr>                    
-                        <td>
-                            <cfif NOT LEN(qGetStudentFullInformation.schoolname)>School<cfelse>#qGetStudentFullInformation.schoolname#</cfif> Representative<br />
-                            <font size=-2><em>Students may not miss school without school permission and must make up any missed work.
+                        <td valign="top">
+                        	#qGetRegionalManager.firstName# #qGetRegionalManager.lastName# <Br />
+                            <font size="-2"><em>Regional Manager - #qGetRegionalManager.phone#</em></font>
                         </td> 
+                        <td>&nbsp;</td> 
+						<td valign="top">
+                        	#qGetStudentFullInformation.areaRep_first# #qGetStudentFullInformation.areaRep_last# <Br />
+                            <font size="-2"><em>Area Representative - #qGetStudentFullInformation.areaRep_phone#</em></font>
+                        </td>
                         <td>&nbsp;</td>
-                        <td valign="top">Printed Name & Position</td> 
-						<td>&nbsp;</td>
                         <td>&nbsp;</td>                                     
                     </tr>
-                </table>
+                </table>     
             </td>
         </tr>
     </table>            
-	
 </cfoutput>
