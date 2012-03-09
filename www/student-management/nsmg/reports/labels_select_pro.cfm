@@ -467,6 +467,16 @@
                                 <td><cfselect name="programID" query="qGetProgramList" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
                             </tr>
                             <tr>
+                            	<td>Region:</td>
+                                <td>
+                                	<select name="regionID" multiple="multiple" size="8">
+                                    	<cfloop query="qGetRegionList">
+                                        	<option value="#qGetRegionList.regionID#"><cfif CLIENT.companyID EQ 5>#qGetRegionList.companyShort# - </cfif>#qGetRegionList.regionName#</option>
+                                        </cfloop>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
                             	<td>Acceptance From: </td>
                                 <td><input type="text" name="date1" class="datePicker" maxlength="10"> mm/dd/yyyy</td>
                             </tr>
