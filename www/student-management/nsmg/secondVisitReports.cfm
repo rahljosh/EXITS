@@ -473,14 +473,14 @@
 				<!----Figure out how long they have been placed with this host family and host family info---->
                 <Cfquery name="hostHistory" datasource="#APPLICATION.DSN#">
                 SELECT original_place,  isWelcomeFamily, isRelocation, datePlaced
-                FROM smg_hosthistory
-                LEFT JOIN smg_hosts h on h.hostid = smg_hosthistory.hostid
+                FROM smg_hostHistory
+                LEFT JOIN smg_hosts h on h.hostid = smg_hostHistory.hostid
                 WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
                 AND smg_hostHistory.hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(qGetResults.hostid)#">
                 </cfquery> 
                 <cfquery name="checkHostHistoryOriginal" datasource="#APPLICATION.DSN#">
                 select hostid
-                from smg_hosthistory
+                from smg_hostHistory
                 where original_place = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
                 and studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
                 </cfquery>
@@ -782,7 +782,7 @@
                                  	<tr  ><td colspan=3><td>#getprevhosts.familylastname# (#getprevhosts.hostid#)</td>
                                  </cfif>    
                                     <cfif qGetResults.secondvisitrepid neq indReports.fk_secondvisitrep>
-                                 	<tr  ><td colspan=2>
+                                 	<td colspan=2>
                                     <cfelse>
                               		<td>
                                     
@@ -792,7 +792,7 @@
 									
                                     <cfif qGetResults.secondvisitrepid neq fk_secondvisitrep>
                                      <Cfif CLIENT.usertype lte 4><a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#indReports.pr_id#"></Cfif>
-                                     <font size=-1><em> #svFirst# #svLast# (#fk_secondvisitrep#)
+                                     <font size=-1><em> #svFirst# #svLast# (#fk_secondvisitrep#) 
                                       <Cfif CLIENT.usertype lte 4>
                                      </a>
                                      </Cfif></em></font>
@@ -825,7 +825,7 @@
                                        </tr>
                                    <Cfelse>
                                         <cfif qGetResults.secondvisitrepid eq fk_secondvisitrep>
-                                            <tr  ><td>
+                                            <td>
                                              <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#pr_id#"><img src="pics/buttons/greyedView.png" border=0 /></a>
                                             </td>
                                        </cfif>
@@ -922,7 +922,7 @@
              <!----Kids from old Placement Management---->
 			 <Cfquery name="previousKids" datasource="#APPLICATION.DSN#">
                       SELECT hh.studentid
-                        FROM smg_hosthistory hh
+                        FROM smg_hostHistory hh
                         WHERE hh.secondVIsitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.secondvisitrepid#">
                         AND  hh.studentid not in
                              (SELECT studentid
@@ -942,7 +942,7 @@
                             fieldName = 'secondVisitRepID'
                         AND sht.studentid NOT IN 
                           (SELECT hh.studentid
-                           FROM smg_hosthistory hh
+                           FROM smg_hostHistory hh
                            WHERE hh.secondVIsitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.secondvisitrepid#">) 
           
 			  </cfquery>
