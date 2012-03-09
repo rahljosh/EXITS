@@ -62,21 +62,38 @@
 						Get names, addresses from our database
 						--->
 			<cfquery name="get_students" datasource="MySql"> 
-				SELECT 	s.studentid, s.familylastname, s.firstname, s.city, s.zip, s.dateapplication, s.active,
-						p.programname, p.programid, 
-						u.businessname, u.userid,
-						r.regionid, r.regionname,
-						c.companyshort, c.companyid
-				FROM smg_students s
-				INNER JOIN smg_programs p ON s.programid = p.programid 
-				INNER JOIN smg_users u ON s.intrep = u.userid
-				INNER JOIN smg_companies c ON s.companyid = c.companyid
-				LEFT JOIN smg_regions r ON s.regionassigned = r.regionid
-						WHERE s.companyid = #client.companyid# 
-						AND (s.dateapplication between #CreateODBCDateTime(form.date1)# and #CreateODBCDateTime(DateAdd('d', 1, form.date2))#) 
-						AND s.active = '1'
-						<cfif form.programid is 0><cfelse>AND s.programid = '#form.programid#'</cfif>
-				ORDER BY s.familylastname, s.firstname
+				SELECT 	
+                	s.studentid, s.familylastname, s.firstname, s.city, s.zip, s.dateapplication, s.active,
+					p.programname, p.programid, 
+					u.businessname, u.userid,
+					r.regionid, r.regionname,
+					c.companyshort, c.companyid
+				FROM 
+                	smg_students s
+				INNER JOIN 
+                	smg_programs p ON s.programid = p.programid 
+				INNER JOIN 
+                	smg_users u ON s.intrep = u.userid
+				INNER JOIN 
+                	smg_companies c ON s.companyid = c.companyid
+				LEFT JOIN 
+                	smg_regions r ON s.regionassigned = r.regionid
+						WHERE
+
+							<cfif CLIENT.companyID EQ 5>
+                                    s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+                            <cfelse>
+                                    s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#"> 
+                            </cfif>
+						AND 
+                        	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
+                        AND 
+                            (s.dateapplication between #CreateODBCDateTime(form.date1)# and #CreateODBCDateTime(DateAdd('d', 1, form.date2))#) 
+                        AND
+                        	s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
+				ORDER BY 
+                	s.familylastname, 
+                    s.firstname
 			</cfquery>
 						
 			<!---
