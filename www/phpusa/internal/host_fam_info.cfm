@@ -26,23 +26,30 @@ function areYouSure() {
 
 <!----- Students being Hosted----->
 <cfquery name="hosting_students" datasource="mysql">
-	SELECT s.studentid, s.familylastname, s.firstname, p.programname, c.countryname
+	SELECT s.studentid, s.familylastname, s.firstname, p.programname, c.countryname, php.assignedid, s.uniqueid
 	FROM smg_students s
 	INNER JOIN php_students_in_program php ON php.studentid = s.studentid
-	LEFT JOIN smg_programs p ON s.programid = p.programid
+    	AND 	
+        	php.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+	INNER JOIN smg_programs p ON php.programid = p.programid
 	LEFT JOIN smg_countrylist c ON s.countryresident = c.countryid
-	WHERE php.hostid = '#family_info.hostid#'
+	WHERE php.hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#family_info.hostid#">
 	ORDER BY s.familylastname
 </cfquery>
 
 <!--- Students previous hosted --->
 <cfquery name="hosted_students" datasource="mysql">
-	SELECT DISTINCT h.studentid, s.familylastname, s.firstname, p.programname, c.countryname
+	SELECT DISTINCT h.studentid, s.familylastname, s.firstname, p.programname, c.countryname, php.assignedid, s.uniqueid
 	FROM smg_students s
 	INNER JOIN smg_hosthistory h ON s.studentid = h.studentid
-	INNER JOIN smg_programs p ON s.programid = p.programid
+    INNER JOIN php_students_in_program php ON php.studentid = s.studentid
+    	AND 	
+        	php.active = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+	INNER JOIN smg_programs p ON php.programid = p.programid
 	LEFT JOIN smg_countrylist c ON s.countryresident = c.countryid
-	WHERE h.hostid = '#family_info.hostid#'
+	WHERE h.hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#family_info.hostid#">
+    	AND
+        	h.isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 	ORDER BY familylastname
 </cfquery>
 
@@ -203,20 +210,21 @@ div.scroll2 {
 			<cfelse>			
 				<tr><td colspan="4" bgcolor="C2D1EF"><u>Current Students</u></td></tr>
 				<cfloop query="hosting_students">
-					<tr bgcolor="C2D1EF"><td width="10%"><A href="?curdoc=student_info&studentid=#studentid#">#studentid#</A></td>
-						<td width="50%"><A href="?curdoc=student_info&studentid=#studentid#">#firstname# #familylastname#</td>
+					<tr bgcolor="C2D1EF">
+                    	<td width="10%"><A href="?curdoc=student/student_info&unqid=#hosted_students.uniqueid#&assignedid=#hosted_students.assignedid#" target="_blank">#studentid#</A></td>
+						<td width="50%"><A href="?curdoc=student/student_info&unqid=#hosted_students.uniqueid#&assignedid=#hosted_students.assignedid#" target="_blank"">#firstname# #familylastname#</td>
 						<td width="20%">#countryname#</td>
 						<td width="20%">#programname#</td></tr>
 				</cfloop>
-			</cfif>	
+			</cfif>
 			<cfif hosted_students.recordcount is '0'>
 				<tr><td colspan="4" align="center">no previous students were assigned to this host family</td></tr>
 			<cfelse>			
 				<tr><td colspan="4"><u>Students Hosted</u></td></tr>
 				<cfloop query="hosted_students">
-					<tr><td width="10%"><A href="?curdoc=student_info&studentid=#studentid#">#studentid#</A></td>
-						<td width="50%"><A href="?curdoc=student_info&studentid=#studentid#">#firstname# #familylastname#</td>
-						<td width="20%">#countryname#</td>
+					<tr><td width="10%"><A href="?curdoc=student/student_info&unqid=#hosted_students.uniqueid#&assignedid=#hosted_students.assignedid#" target="_blank">#studentid#</A></td>
+						<td width="50%"><A href="?curdoc=student/student_info&unqid=#hosted_students.uniqueid#&assignedid=#hosted_students.assignedid#" target="_blank">#firstname# #familylastname#</td>
+                        <td width="20%">#countryname#</td>
 						<td width="20%">#programname#</td></tr>
 				</cfloop>
 			</cfif>
