@@ -49,19 +49,15 @@
 		<div class="Section1">
 	
 	
-			<!---
-						Start a table for our labels
-						--->
+			<!---Start a table for our labels--->
 			<table 
 				border="0" 
 				cellspacing="0" 
 				cellpadding="0">
 		
 
-			<!---
-						Get names, addresses from our database
-						--->
-			<cfquery name="get_students" datasource="MySql"> 
+			<!---Get names, addresses from our database--->
+			<cfquery name="qGetStudents" datasource="MySql"> 
 				SELECT 	
                 	s.studentid, s.familylastname, s.firstname, s.city, s.zip, s.dateapplication, s.active,
 					p.programname, p.programid, 
@@ -91,10 +87,14 @@
                             (s.dateapplication between #CreateODBCDateTime(form.date1)# and #CreateODBCDateTime(DateAdd('d', 1, form.date2))#) 
                         AND
                         	s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
-				ORDER BY 
+                        AND 
+                        	r.regionid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes">)
+                ORDER BY 
                 	s.familylastname, 
                     s.firstname
 			</cfquery>
+            
+            <cf
 						
 			<!---
 						The table consists has five columns,
@@ -104,7 +104,7 @@
 						maintain a column counter.
 						--->
 			<cfset col=1>
-			<cfoutput query="get_students">
+			<cfoutput query="qGetStudents">
 				
 				
 				<!---
