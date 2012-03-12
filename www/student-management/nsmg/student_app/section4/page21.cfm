@@ -87,6 +87,8 @@ function NextPage() {
 <Cfset doc = 'page21'>
 
 <cfinclude template="../querys/get_student_info.cfm">
+<cfif client.companyid eq 14>
+</cfif>
 <cfset closedList = ''>
 <!---- International Rep - EF ACCOUNTS ---->
 <cfquery name="int_agent" datasource="MySQL">
@@ -165,6 +167,18 @@ and sc.fk_companyid = #client.companyid#
 		sortBy='sortOrder'
 	);
 </cfscript>
+
+<Cfquery name="districtClosed" datasource="#application.dsn#">
+select sc.fk_districtID
+from regionStateClosure sc 
+where  sc.fk_programid = #get_student_info.programID#
+and fk_companyid = #client.companyid#
+</cfquery>
+
+<cfset disClosedList = ''>
+<Cfloop query="districtClosed">
+	<cfset disClosedList = #ListAppend(disClosedList, fk_districtID)#>
+</Cfloop>
 
 <!--- HEADER OF TABLE --->
 <table width="100%" cellpadding="0" cellspacing="0">
@@ -377,16 +391,21 @@ and sc.fk_companyid = #client.companyid#
                         
                     <cfelse>
                         <!--- Exchange Service International Application --->
-                        
+                      <Cfif get_Student_info.programid eq 0>
+                      <h2><align="Center">You have not selected a program to apply for.  The program is required to see what districts are available.   Please to go to Page 1 of your application, select a program from the drop down, save the page and return to this page to select your district.</align></h2>
+                      <cfelse>
                         <img src="pics/ESI-Map.gif" width="650" height="369" align="middle"><br>
-                        
+                       
                         <table cellpadding="2" cellspacing="2" style="margin:10px;">
                             <tr>
                                 <td>1st Choice:</td>
                                 <td><select name="option1" onClick="DataChanged();">
                                         <option value="0"></option>
                                         <cfloop query="qGetESIDistrictChoice">
+                                        	<cfif not ListFind(disClosedList, id)>
+                                        
                                         	<option value="#qGetESIDistrictChoice.fieldID#" <cfif qESIDistrictChoice.option1 EQ qGetESIDistrictChoice.fieldID>selected</cfif>>#qGetESIDistrictChoice.sortOrder# - #qGetESIDistrictChoice.name#</option>
+                                            </cfif>
                                         </cfloop>
                                     </select>
                                 </td>
@@ -396,7 +415,9 @@ and sc.fk_companyid = #client.companyid#
                                 <td><select name="option2" onClick="DataChanged();">
                                         <option value="0"></option>
                                         <cfloop query="qGetESIDistrictChoice">
+                                        <cfif not ListFind(disClosedList, id)>
                                         	<option value="#qGetESIDistrictChoice.fieldID#" <cfif qESIDistrictChoice.option2 EQ qGetESIDistrictChoice.fieldID>selected</cfif>>#qGetESIDistrictChoice.sortOrder# - #qGetESIDistrictChoice.name#</option>
+                                        </cfif>
                                         </cfloop>
                                     </select>
                                 </td>
@@ -406,13 +427,15 @@ and sc.fk_companyid = #client.companyid#
                                 <td><select name="option3" onClick="DataChanged();">
                                         <option value="0"></option>
                                         <cfloop query="qGetESIDistrictChoice">
+                                        	<cfif not ListFind(disClosedList, id)>
                                         	<option value="#qGetESIDistrictChoice.fieldID#" <cfif qESIDistrictChoice.option3 EQ qGetESIDistrictChoice.fieldID>selected</cfif>>#qGetESIDistrictChoice.sortOrder# - #qGetESIDistrictChoice.name#</option>
+                                            </cfif>
                                         </cfloop>
                                     </select>
                                 </td>
                             </tr> 
                         </table>
-                        
+                        </Cfif>
                     </cfif>
                     
                 </td>
