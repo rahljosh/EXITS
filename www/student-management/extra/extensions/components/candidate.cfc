@@ -648,6 +648,7 @@
                     c.sex,
                     c.email,
                     c.password,
+                    c.wat_placement,
                     u.businessName,
                     branch.businessName as branchName,
                     ast.dateCreated
