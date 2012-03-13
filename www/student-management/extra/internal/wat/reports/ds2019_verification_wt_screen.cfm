@@ -94,7 +94,7 @@
                                     INNER JOIN
                                     	extra_candidate_place_company ecpc ON ecpc.candidateID = c.candidateID
                                         AND
-                                            ecpc.selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="approved">
+                                            ecpc.selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="Confirmed">
                                     WHERE
                                     	c.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="Self-Placement"> 
                                  )
