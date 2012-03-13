@@ -43,10 +43,10 @@
 		
 		if ( ListFind("1,2,3,4", VAL(CLIENT.usertype)) ) {
 			// Get List
-			qGetCandidates = APPLICATION.CFC.candidate.getApplicationListbyStatusID(applicationStatusID=URL.statusID);
+			qGetCandidates = APPLICATION.CFC.CANDIDATE.getApplicationListbyStatusID(applicationStatusID=URL.statusID);
 		} else { 
 			// Get List
-			qGetCandidates = APPLICATION.CFC.candidate.getApplicationListbyStatusID(
+			qGetCandidates = APPLICATION.CFC.CANDIDATE.getApplicationListbyStatusID(
 				applicationStatusID=URL.statusID,
 				intRep=CLIENT.userID
 			);
@@ -84,17 +84,18 @@
     <table width="95%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
         <tr bgcolor="##4F8EA4">
             <td width="5%" class="style2" align="left">ID</td>
-            <td width="13%" class="style2" align="left">Last Name</td>
+            <td width="12%" class="style2" align="left">Last Name</td>
             <th width="12" class="style2" align="left">First Name</th>
             <th width="5%" class="style2" align="left">Gender</th>
-            <th width="20%" class="style2" align="left">Email</th>
-            <th width="10%" class="style2" align="left">Submitted</th>		
+            <th width="16%" class="style2" align="left">Email</th>
+            <th width="10%" class="style2" align="left">Submitted</th>	
             <cfif ListFind("1,2,3,4", VAL(CLIENT.userType))>
-            	<th width="20%" class="style2" align="left">Intl. Rep.</th>
+            	<th width="18%" class="style2" align="left">Intl. Rep.</th>
             <cfelse>
-            	<th width="20%" class="style2" align="left">Created By</th>
+            	<th width="18%" class="style2" align="left">Created By</th>
 			</cfif>  
-            <th width="15%" class="style2" align="left">Actions</th>              
+            <th width="10%" class="style2" align="left">Program Option</th>		
+            <th width="12%" class="style2" align="left">Actions</th>              
         </tr>
         
 		<cfif NOT qGetCandidates.recordCount>
@@ -122,6 +123,7 @@
                         </cfif>
                     </td>
                 </cfif>                
+                <td class="style5">#qGetCandidates.wat_placement#</td>
                 <td class="style5">
                     <a href="onlineApplication/index.cfm?action=displayLogin&uniqueID=#qGetCandidates.uniqueID#" class="style4 popUpDisplayLogin">[View Login]</a>
 					
