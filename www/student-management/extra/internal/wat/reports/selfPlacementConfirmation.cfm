@@ -250,9 +250,9 @@
         <td valign="middle" align="right" class="style1"><b>Job Offer Status:</b></td>
         <td> 
             <select name="selfJobOfferStatus" class="style1">
-                <option value="" <cfif FORM.selfJobOfferStatus EQ 2> selected="selected" </cfif> >All</option>
+                <option value="" <cfif NOT LEN(FORM.selfJobOfferStatus)> selected="selected" </cfif> >All</option>
                 <option value="Pending" <cfif FORM.selfJobOfferStatus EQ 'Pending'> selected="selected" </cfif> >Pending</option>
-                <option value="Approved" <cfif FORM.selfJobOfferStatus EQ 'Approved'> selected="selected" </cfif> >Approved</option>
+                <option value="Confirmed" <cfif FORM.selfJobOfferStatus EQ 'Confirmed'> selected="selected" </cfif> >Confirmed</option>
                 <option value="Rejected" <cfif FORM.selfJobOfferStatus EQ 'Rejected'> selected="selected" </cfif> >Rejected</option>
             </select>
         </td>

@@ -1126,7 +1126,7 @@
                                                 <select name="selfJobOfferStatus" id="selfJobOfferStatus" class="style1 editPage selfPlacementField mediumField"> 
                                                 	<option value="" <cfif qCandidatePlaceCompany.selfJobOfferStatus EQ ''>selected</cfif> ></option>
                                                     <option value="Pending" <cfif qCandidatePlaceCompany.selfJobOfferStatus EQ 'Pending'>selected</cfif> >Pending</option>
-                                                    <option value="Approved" <cfif qCandidatePlaceCompany.selfJobOfferStatus EQ 'Approved'>selected</cfif> >Approved</option>
+                                                    <option value="Confirmed" <cfif qCandidatePlaceCompany.selfJobOfferStatus EQ 'Confirmed'>selected</cfif> >Confirmed</option>
                                                     <option value="Rejected" <cfif qCandidatePlaceCompany.selfJobOfferStatus EQ 'Rejected'>selected</cfif> >Rejected</option>
                                                 </select>
                                             </td>
