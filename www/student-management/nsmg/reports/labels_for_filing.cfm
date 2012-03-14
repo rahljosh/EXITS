@@ -105,50 +105,69 @@
 						--->
 			<cfset col=1>
 			<cfoutput query="qGetStudents">
-				
-				
-				<!---
-							If this is the first column, 
-							then start a new row
-							--->
-				<cfif col EQ "1">
-					<tr>
-				</cfif>
-				
-				<!---
-							Output the label
-							--->
-				<td class="label">
-					<p>#familylastname#, #Firstname# (#studentid#)</p>
-					<p>#programname#</p>
-					<p>#businessname# / #regionname#</p>
-				</td>
-				
-				
-				<!---
-							If this is column 1 or 2, then
-							output a spacer cell and 
-							increment the column number.
-							--->
-				<cfif col LTE 2>
-
-					<td class="spacer">
-					<p>&nbsp;</p>
-					</td>
-
-					<cfset col=col+1>
-	
-	
-				<!---
-							If it's column 3, then end the
-							row and reset the column number.
-							--->
-				<cfelse>
-
-					</tr>
-					<cfset col=1>
-					
-				</cfif>
+			
+				<!---If this is the first column, then start a new row, print out two labels with a spacer, and
+					set the column number to 3--->
+                <cfif col EQ "1">
+                	<tr>
+                    	<td class="label">
+							<p>#familylastname#, #Firstname# (#studentid#)</p>
+							<p>#programname#</p>
+							<p>#businessname# / #regionname#</p>
+						</td>
+                        <td class="spacer">
+							<p>&nbsp;</p>
+						</td>
+                        <td class="label">
+							<p>#familylastname#, #Firstname# (#studentid#)</p>
+							<p>#programname#</p>
+							<p>#businessname# / #regionname#</p>
+						</td>
+                        <td class="spacer">
+							<p>&nbsp;</p>
+						</td>
+                	<cfset col=3>
+                    
+                <!---If this is the second column, then print out two labels with a spacer, end the current row, and
+					set the column number to 1--->
+            	<cfelseif col EQ "2">
+                		<td class="label">
+							<p>#familylastname#, #Firstname# (#studentid#)</p>
+							<p>#programname#</p>
+							<p>#businessname# / #regionname#</p>
+						</td>
+                        <td class="spacer">
+							<p>&nbsp;</p>
+						</td>
+                        <td class="label">
+							<p>#familylastname#, #Firstname# (#studentid#)</p>
+							<p>#programname#</p>
+							<p>#businessname# / #regionname#</p>
+						</td>
+             		</tr>
+                    <cfset col=1>
+                    
+                 <!---If this is the third column, then print out one label on the current row, start a new row, print 
+					out another label with a spacer after it, and set the column number to 2.--->   
+               	<cfelseif col EQ "3">
+           				<td class="label">
+							<p>#familylastname#, #Firstname# (#studentid#)</p>
+							<p>#programname#</p>
+							<p>#businessname# / #regionname#</p>
+						</td>
+             		</tr>
+                    <tr>
+                        <td class="label">
+							<p>#familylastname#, #Firstname# (#studentid#)</p>
+							<p>#programname#</p>
+							<p>#businessname# / #regionname#</p>
+						</td>
+                        <td class="spacer">
+							<p>&nbsp;</p>
+						</td>
+                    <cfset col=2>
+                    
+             	</cfif>
 
 			</cfoutput>
 
