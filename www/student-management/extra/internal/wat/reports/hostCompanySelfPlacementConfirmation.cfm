@@ -23,6 +23,9 @@
     <cfparam name="FORM.submitted" default="0">
 
     <cfscript>
+		// Setting to 1 will remove links on the report
+		vSendEmail = 0;
+		
 		// Get Program List
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
 	</cfscript>
@@ -250,7 +253,14 @@
 		</cfoutput>
         		
         <cfoutput query="qGetResults" group="hostCompanyName">
-                
+            
+            <cfscript>
+				if ( VAL(FORM.emailHostCompany) AND IsValid("email", qGetResults.hostCompanyEmail) ) {
+					// Send Email
+					vSendEmail = 1;
+				}
+			</cfscript>
+
             <cfsavecontent variable="reportHostCompanyContent">
                 <table width="99%" cellpadding="4" cellspacing=0 align="center">
                     <tr>
@@ -286,9 +296,13 @@
                         </cfscript>
                         <tr <cfif vRowCount MOD 2>bgcolor="##E4E4E4"</cfif>>                    
                             <td class="style1">
-                                <a href="?curdoc=candidate/candidate_info&uniqueid=#qGetResults.uniqueID#" target="_blank" class="style4">
-                                    #qGetResults.firstname# #qGetResults.lastname# (###qGetResults.candidateID#)
-                                </a>
+                                <cfif VAL(vSendEmail)>
+                                	#qGetResults.firstname# #qGetResults.lastname# (###qGetResults.candidateID#)
+                                <cfelse>
+                                    <a href="?curdoc=candidate/candidate_info&uniqueid=#qGetResults.uniqueID#" target="_blank" class="style4">
+										#qGetResults.firstname# #qGetResults.lastname# (###qGetResults.candidateID#)                                     
+                                    </a>
+								</cfif>                                    
                             </td>
                             <td class="style1">#qGetResults.sex#</td>
                             <td class="style1">#qGetResults.countryName#</td>
@@ -305,16 +319,26 @@
             <!--- Display Report Content --->
             <p>#reportHostCompanyContent#</p>
             
-            <cfif VAL(FORM.emailHostCompany) AND IsValid("email", qGetResults.hostCompanyEmail)>
+            <cfif VAL(vSendEmail)>
                 <p style="margin-left:15px; font-weight:bold; color:##006">*** Email sent to #qGetResults.hostCompanyEmail# on #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')# ***</p>
             <cfelseif VAL(FORM.emailHostCompany)>
                 <p style="margin-left:15px; font-weight:bold; color:##F00">*** Email address missing or not valid ***</p>
 			</cfif>
             
             <cfsavecontent variable="emailTemplate">
-                <p>Dear #qGetResults.hostCompanySupervisor#,</p>
+				<style type="text/css">
+                <!--
+				.style1 {
+                    font-family: Verdana, Arial, Helvetica, sans-serif;
+                    font-size: 10px;
+                    padding:2px;
+                }
+                -->
+                </style>
+            
+                <p class="style1">Dear #qGetResults.hostCompanySupervisor#,</p>
                 
-                <p>
+                <p class="style1">
                     We are writing you from CSB International, Inc., designated by the U.S. Department of State as a sponsor for the Summer Work Travel Program. 
                     Please accept this email as a formal inquire in regards to the job offer provided by <strong>#qGetResults.hostCompanyName#</strong> for the below participant(s), 
                     who has/have applied for our program, under the self-placement option. The job vetting process is crucial for the safety of our program participants 
@@ -324,7 +348,7 @@
                 <!--- Display Report Content --->
                 #reportHostCompanyContent#
                 
-                <p>
+                <p class="style1">
                     Please review the below and <font color="##FF0000">reply with complete answers</font> within <font color="##FF0000">5 (five) business days</font> of receiving this note.
                     <ol>
                         <li>Please confirm whether the job offer was <strong>signed personally</strong> by <strong>#qGetResults.personJobOfferName#</strong>.</li>
@@ -338,16 +362,16 @@
                     </ol>
                 </p>
                 
-                <p>
+                <p class="style1">
                 	Thank you for your support for the exchange programs and we are here to assist you with any further question you may have. 
                 </p>
                 
-                <p>
+                <p class="style1">
                 	<span style="color:##FF0000; text-decoration:underline; font-weight:bold;">Important note:</span>
                     If the job offer is cancelled or revoked due to any circumstances/ conditions, please notify CSB and the participant immediately.
                 </p>
                 
-                <p>
+                <p class="style1">
                 	Thank you.                
                 </p>
             </cfsavecontent>
@@ -408,12 +432,12 @@
                     .style1 {
                         font-family: Verdana, Arial, Helvetica, sans-serif;
                         font-size: 10px;
-                        padding:2;
+                        padding:2px;
                     }
                     .style2 {
                         font-family: Verdana, Arial, Helvetica, sans-serif;
                         font-size: 10px;
-                        padding:2;
+                        padding:2px;
                     }
                     .title1 {
                         font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -441,12 +465,12 @@
                     .style1 {
                         font-family: Verdana, Arial, Helvetica, sans-serif;
                         font-size: 10px;
-                        padding:2;
+                        padding:2px;
                     }
                     .style2 {
                         font-family: Verdana, Arial, Helvetica, sans-serif;
                         font-size: 8px;
-                        padding:2;
+                        padding:2px;
                     }
                     .title1 {
                         font-family: Verdana, Arial, Helvetica, sans-serif;
