@@ -907,6 +907,8 @@
                 ecpc.selfConfirmationMethod,
                 ecpc.selfJobOfferStatus,
                 ecpc.selfConfirmationDate,
+                ecpc.selfEmailConfirmationDate,
+                ecpc.selfPhoneConfirmationDate,
                 ecpc.selfFindJobOffer,
                 ecpc.selfConfirmationNotes,
                 ecpc.reason_host,
