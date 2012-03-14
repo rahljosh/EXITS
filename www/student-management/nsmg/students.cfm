@@ -51,12 +51,17 @@
     <cfparam name="stateid" default="">
     <cfparam name="programID" default="">
     <cfparam name="privateschool" default="">
+    <cfparam name="placementStatus" default="">
     
     <cfscript>
 		// Get Private Schools Prices
 		qPrivateSchools = APPCFC.SCHOOL.getPrivateSchools();
 		
-		
+		// Set placed = yes if selecting approved/pending status
+		if ( ListFindNoCase("Approved,Pending", placementStatus) ) {
+			placed = 1;
+		}
+
 		// Advanced Search Link
 		vAdvancedSearchLink = '<a href="index.cfm?curdoc=students&adv_search=1">Advanced Search</a>';
 		if ( VAL(adv_search) ) {
@@ -373,6 +378,14 @@
                                     Text in the Narrative<br />
                                     <input type="text" name="interests_other" value="#interests_other#" size="10" maxlength="50">
                                 </td>
+                                <td>
+                                	Placement Status<br />
+                                    <select name="placementStatus">
+                                        <option value="">All</option>
+                                        <option <cfif placementStatus EQ 'Pending'>selected</cfif>>Pending</option>
+                                        <option <cfif placementStatus EQ 'Approved'>selected</cfif>>Approved</option>
+                                    </select>
+                                </td>
                             </tr>
                             <tr>
                                 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
@@ -464,6 +477,7 @@
             s.hostid, 
             s.scholarship, 
             s.privateschool,
+            s.host_fam_approved,
             smg_regions.regionname, 
             smg_g.regionname as r_guarantee, 
             smg_states.state, 
@@ -541,10 +555,10 @@
             
 			<cfif placed EQ 1>
                 AND 
-                	s.hostid <> 0
+                	s.hostid != <cfqueryparam cfsqltype="cf_sql_bit" value="0">
             <cfelseif placed EQ 0>
                 AND 
-                	s.hostid = 0
+                	s.hostid = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
             </cfif>
             
         <!--- FIELD --->
@@ -600,7 +614,8 @@
         <cfif VAL(adv_search)>
         
 			<cfif trim(familylastname) NEQ ''>
-                AND s.familylastname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(familylastname)#%">
+                AND
+                	s.familylastname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(familylastname)#%">
             </cfif>
             
             <cfif trim(firstname) NEQ ''>
@@ -663,6 +678,14 @@
                 	s.interests_other LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(interests_other)#%">
             </cfif>
             
+            <cfif placementStatus EQ 'Approved'>
+            	AND
+                	s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4" list="yes"> )   
+            <cfelseif placementStatus EQ 'Pending'>
+            	AND
+                	s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )              
+            </cfif>
+            
 			<cfif countryid NEQ ''>
                 AND 
                 	s.countryresident = <cfqueryparam cfsqltype="cf_sql_integer" value="#countryid#">
@@ -702,7 +725,7 @@
 		</cfif>
 		<cfset urlVariables = "submitted=1&adv_search=#adv_search#&regionid=#regionid#&keyword=#urlEncodedFormat(keyword)#&placed=#placed#&cancelled=#cancelled#&active=#active#&orderby=#orderby#&recordsToShow=#recordsToShow#">
 		<cfif adv_search>
-        	<cfset urlVariables = "#urlVariables#&familylastname=#urlEncodedFormat(familylastname)#&firstname=#urlEncodedFormat(firstname)#&preayp=#preayp#&direct=#direct#&age=#age#&sex=#sex#&grade=#grade#&graduate=#graduate#&religionid=#religionid#&interestid=#interestid#&sports=#sports#&interests_other=#urlEncodedFormat(interests_other)#&countryid=#countryid#&intrep=#intrep#&stateid=#stateid#&programID=#programID#">
+        	<cfset urlVariables = "#urlVariables#&familylastname=#urlEncodedFormat(familylastname)#&firstname=#urlEncodedFormat(firstname)#&preayp=#preayp#&direct=#direct#&age=#age#&sex=#sex#&grade=#grade#&graduate=#graduate#&religionid=#religionid#&interestid=#interestid#&sports=#sports#&interests_other=#urlEncodedFormat(interests_other)#&placementStatus=#placementStatus#&countryid=#countryid#&intrep=#intrep#&stateid=#stateid#&programID=#programID#">
         </cfif>
     
         <cfoutput>
