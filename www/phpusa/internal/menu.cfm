@@ -50,6 +50,7 @@
                 <ul>
                     <li><a href="index.cfm?curdoc=reports/flightMenu">Flight Reports</a></li>
                     <li><a href="index.cfm?curdoc=reports/menu_id_cards">ID Cards & Labels and Bulk Letters</a></li>
+                    <li><a href="index.cfm?curdoc=reports/constantContactMenu">Constant Contact</a></li>
                 </ul>
             </li>
             
