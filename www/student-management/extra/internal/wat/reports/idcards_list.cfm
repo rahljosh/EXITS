@@ -3,6 +3,46 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <title>ID Cards List</title>
+
+<style type="text/css">
+
+td.one
+{
+border-left:solid thin;
+border-bottom:solid thin;
+border-top: solid thin;
+padding:6px;
+font-size:14px;
+}
+
+td.two
+{
+border-left:solid thin;
+border-right:solid thin;
+border-bottom:solid thin;
+border-top: solid thin;
+padding:6px;
+font-size:14px;
+}
+
+td.three
+{
+border-left:solid thin;
+border-bottom:solid thin;
+padding:6px;
+font-size:14px;
+}
+
+td.four
+{
+border-left:solid thin;
+border-right:solid thin;
+border-bottom:solid thin;
+padding:6px;
+font-size:14px;
+}
+</style>
+
 </head>
 
 <body>
@@ -24,6 +64,7 @@
         c.cancel_date, 
         c.startdate, 
         c.enddate,
+        c.ds2019,
 		u.businessname,
 		p.programname, 
         p.programid
@@ -62,33 +103,47 @@
 
 <cfoutput>						
 						
-<table align="center" width="700" border="1" cellspacing="2" cellpadding="0" frame="box">	
+<table align="center" width="700" style="border:solid thin" cellspacing="2" cellpadding="0">	
 	<tr>
 		<td>		
 			<table align="center" width="100%" border="0" cellspacing="2" cellpadding="0">	
-				<tr><th>#get_company.companyname# &nbsp; - &nbsp; ID Cards List</th></tr>
-				<tr><td>Program #get_candidates.programname# &nbsp; - &nbsp; Total of #get_candidates.recordcount# candidate(s)</td></tr>
-				<tr><td>DS Verification Received on #DateFormat(verification_received, 'mm/dd/yyyy')#</td></tr>
+				<tr>
+                	<td style="font-size:14px; padding-bottom:10px" align="center">
+                    	<b>#get_company.companyname# &nbsp; - &nbsp; ID Cards List</b>
+                    </td>
+                </tr>
+				<tr>
+                	<td style="font-size:14px; padding-bottom:5px" align="center">
+                    	Program #get_candidates.programname# &nbsp; - &nbsp; Total of #get_candidates.recordcount# candidate(s)
+                    </td>
+                </tr>
+				<tr>
+                	<td style="font-size:14px; padding-bottom:5px" align="center">
+                		DS Verification Received on #DateFormat(verification_received, 'mm/dd/yyyy')#
+                	</td>
+                </tr>
 			</table>
 		</td>
 	</tr>
 </table><br />
 
-<table align="center" width="700" border="0" cellspacing="2" cellpadding="0" frame="below">	
+<table align="center" cellpadding="0" cellspacing="0">	
 	<tr>
-		<td><b>Intl. Rep.</b></td>
-		<td><b>Student</b></td>
-		<th>Start Date</th>
-		<th>End Date</th>
-		<th>Duration</th>
+		<td class="one"><b>Intl. Rep.</b></td>
+		<td class="one"><b>Student</b></td>
+        <td class="one" align="center"><b>DS 2019</b></td>
+		<td class="one"><b>Start Date</b></td>
+		<td class="one"><b>End Date</b></td>
+		<td class="two"><b>Duration</b></td>
 	</tr>
 	<cfloop query="get_candidates">
 		<tr bgcolor="#iif(currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
-			<td>#businessname#</td>
-			<td>#Firstname# #lastname# (###candidateid#)</td>
-			<td align="center">#DateFormat(startdate, 'mm/dd/yyyy')#</td>
-			<td align="center">#DateFormat(enddate, 'mm/dd/yyyy')#</td>
-			<td align="center">#Ceiling(DateDiff('d',startdate, enddate) / 7)# weeks</td>
+			<td class="three" align="center">#businessname#</td>
+			<td class="three">#Firstname# #lastname# (###candidateid#)</td>
+            <td class="three" align="center">#ds2019#</td>
+			<td class="three" align="center">#DateFormat(startdate, 'mm/dd/yyyy')#</td>
+			<td class="three" align="center">#DateFormat(enddate, 'mm/dd/yyyy')#</td>
+			<td class="four" align="center">#Ceiling(DateDiff('d',startdate, enddate) / 7)# weeks</td>
 		</tr>
 	</cfloop>
 </table>
