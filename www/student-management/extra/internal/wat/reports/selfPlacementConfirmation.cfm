@@ -5,7 +5,8 @@
 	Date:		December 15, 2010
 	Desc:		Self Placement Information Report
 
-	Updated: 	03/14/2012 - Added Email and Phone Confirmation
+	Updated: 	03/14/2012 - Added Email and Phone Confirmation 
+							 Hiding contact date and method for pending list
 
 ----- ------------------------------------------------------------------------- --->
 
@@ -336,14 +337,18 @@
                         <th align="left" class="#tableTitleClass#">Placement Information</th>
                         <th align="left" class="#tableTitleClass#">Job Title</th>
                         <th align="left" class="#tableTitleClass#">Job Offer Status</th>
-                        <th align="left" class="#tableTitleClass#">Contact Date</th>
+                        <cfif FORM.selfJobOfferStatus NEQ 'pending'>
+                        	<th align="left" class="#tableTitleClass#">Contact Date</th>
+                        </cfif>
                         <th align="left" class="#tableTitleClass#">Contact Name</th>
-                        <th align="left" class="#tableTitleClass#">Contact Method</th>
-                        <th align="left" class="#tableTitleClass#">Email Confirmation</th>
-                        <th align="left" class="#tableTitleClass#">Phone Confirmation</th>
                         <th align="left" class="#tableTitleClass#">Authentication</th>
                         <th align="left" class="#tableTitleClass#">EIN</th>
                         <th align="left" class="#tableTitleClass#">Workmen's Compensation</th>
+                        <cfif FORM.selfJobOfferStatus NEQ 'pending'>
+                        	<th align="left" class="#tableTitleClass#">Contact Method</th>
+                        </cfif>
+                        <th align="left" class="#tableTitleClass#">Email Confirmation</th>
+                        <th align="left" class="#tableTitleClass#">Phone Confirmation</th>
                         <th align="left" class="#tableTitleClass#">Notes</th>
                     </tr>
                     <cfif ListFind("2,3", FORM.printOption)>
@@ -365,12 +370,11 @@
                                 <a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qTotalPerAgent.hostCompanyID#" target="_blank" class="style4">#qTotalPerAgent.name#</a>
                             </td>
                             <td class="style1">#qTotalPerAgent.jobTitle#</td>
-                            <td class="style1">#qTotalPerAgent.selfJobOfferStatus#</td>
-                            <td class="style1">#DateFormat(qTotalPerAgent.selfConfirmationDate, 'mm/dd/yyyy')#</td>
+                            <td class="style1">#qTotalPerAgent.selfJobOfferStatus#</td>                            
+                            <cfif FORM.selfJobOfferStatus NEQ 'pending'>
+	                            <td class="style1">#DateFormat(qTotalPerAgent.selfConfirmationDate, 'mm/dd/yyyy')#</td>
+                            </cfif>
                             <td class="style1">#qTotalPerAgent.selfConfirmationName#</td>
-                            <td class="style1">#qTotalPerAgent.selfConfirmationMethod#</td>
-                            <td class="style1">#DateFormat(qTotalPerAgent.selfEmailConfirmationDate, 'mm/dd/yyyy')#</td>
-                            <td class="style1">#DateFormat(qTotalPerAgent.selfPhoneConfirmationDate, 'mm/dd/yyyy')#</td>
                             <td class="style1">#qTotalPerAgent.authenticationType#</td>
                             <td class="style1">#qTotalPerAgent.EIN#</td>
                             <td class="style1">
@@ -380,6 +384,11 @@
                                 	N/A
 								</cfif>                                            
 							</td>
+                            <cfif FORM.selfJobOfferStatus NEQ 'pending'>
+	                            <td class="style1">#qTotalPerAgent.selfConfirmationMethod#</td>
+                            </cfif>
+                            <td class="style1">#DateFormat(qTotalPerAgent.selfEmailConfirmationDate, 'mm/dd/yyyy')#</td>
+                            <td class="style1">#DateFormat(qTotalPerAgent.selfPhoneConfirmationDate, 'mm/dd/yyyy')#</td>
                             <td class="style1">#qTotalPerAgent.selfConfirmationNotes#</td>
                         </tr>
                     </cfloop>        

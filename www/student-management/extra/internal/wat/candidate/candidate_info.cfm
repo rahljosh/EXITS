@@ -84,6 +84,14 @@
 		for ( i=1; i LTE qGetAnswersSection3.recordCount; i=i+1 ) {
 			FORM[qGetAnswersSection3.fieldKey[i]] = qGetAnswersSection3.answer[i];
 		}
+		
+		// Self Placement - Display New Fields 
+		vDisplayNewSelfPlacement = 1;
+		
+		// Hide Self Placement fields for confirmed/rejected placements
+		if ( ListFindNoCase("confirmed,rejected", qCandidatePlaceCompany.selfJobOfferStatus) AND isDate(qCandidatePlaceCompany.selfConfirmationDate) ) {
+			vDisplayNewSelfPlacement = 0;
+		}
 	</cfscript>
 		
     <cfinclude template="../querys/fieldstudy.cfm">
@@ -1141,8 +1149,8 @@
 										<!--- Office View Only --->
                                         <cfif ListFind("1,2,3,4", CLIENT.userType)>
                                         	
-                                            <!--- Show this format for self placement previous approved --->
-                                            <cfif isDate(qCandidatePlaceCompany.selfConfirmationDate)>
+                                            <!--- Show Old Self Placement Field --->
+                                            <cfif NOT VAL(vDisplayNewSelfPlacement)>
                                                 <tr class="hiddenField selfPlacementInfo">
                                                     <td class="style1" align="right"><strong>Date:</strong></td>
                                                     <td class="style1" colspan="3">
@@ -1151,7 +1159,7 @@
                                                         <font size="1">(mm/dd/yyyy)</font>
                                                     </td>
                                                 </tr>
-                                            <!--- Hide this field for new self placements --->
+                                            <!--- Do Not Show Old Self Placement Field --->
                                             <cfelse>
                                             	<input type="hidden" name="selfConfirmationDate" id="selfConfirmationDate" value="#DateFormat(qCandidatePlaceCompany.selfConfirmationDate, 'mm/dd/yyyy')#">
                                             </cfif>
@@ -1164,8 +1172,8 @@
                                                 </td>
                                             </tr>
                                             
-                                            <!--- Show this format for self placement previous approved --->
-                                            <cfif isDate(qCandidatePlaceCompany.selfConfirmationDate)>
+                                            <!--- Show Old Self Placement Field --->
+                                            <cfif NOT VAL(vDisplayNewSelfPlacement)>
                                                 <tr class="hiddenField selfPlacementInfo">
                                                     <td class="style1" align="right"><strong>Method:</strong></td>
                                                     <td class="style1">
@@ -1178,7 +1186,7 @@
                                                         </select>
                                                     </td>
                                                 </tr>
-                                            <!--- Hide this field for new self placements --->
+                                            <!--- Do Not Show Old Self Placement Field --->
                                             <cfelse>
                                             	<input type="hidden" name="selfConfirmationMethod" id="selfConfirmationMethod" value="#qCandidatePlaceCompany.selfConfirmationMethod#">
                                             </cfif>
@@ -1223,8 +1231,8 @@
                                                 </td>
                                             </tr>
                                             
-                                            <!--- Show this format for new self placement --->
-                                            <cfif NOT isDate(qCandidatePlaceCompany.selfConfirmationDate)>
+                                            <!--- Show New Self Placement Field --->
+                                            <cfif VAL(vDisplayNewSelfPlacement)>
                                                 <tr class="hiddenField selfPlacementInfo">
                                                     <td class="style1" align="right"><strong>Email Confirmation:</strong></td>
                                                     <td class="style1" colspan="3">
@@ -1241,7 +1249,7 @@
                                                         <font size="1">(mm/dd/yyyy)</font>
                                                     </td>
                                                 </tr>
-                                            <!--- Hide these for field for new self placements --->                                            
+                                            <!--- Do Not Show New Self Placement Field --->                                            
 											<cfelse>
                                             	<input type="hidden" name="selfEmailConfirmationDate" id="selfEmailConfirmationDate" value="#DateFormat(qCandidatePlaceCompany.selfEmailConfirmationDate, 'mm/dd/yyyy')#">
                                             	<input type="hidden" name="selfPhoneConfirmationDate" id="selfPhoneConfirmationDate" value="#DateFormat(qCandidatePlaceCompany.selfPhoneConfirmationDate, 'mm/dd/yyyy')#">
