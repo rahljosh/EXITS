@@ -1,3 +1,14 @@
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		hostCompanySelfPlacementConfirmation.cfm
+	Author:		Marcus Melo
+	Date:		July 29, 2011
+	Desc:		Host Company Self Placement Information Report
+
+	Updated: 	03/14/2012 - Added Email and Phone Confirmation
+
+----- ------------------------------------------------------------------------- --->
+
 <!--- Kill Extra Output --->
 <cfsilent>
 	

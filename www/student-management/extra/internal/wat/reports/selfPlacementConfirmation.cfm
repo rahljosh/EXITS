@@ -1,3 +1,14 @@
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		selfPlacementConfirmation.cfm
+	Author:		Marcus Melo
+	Date:		December 15, 2010
+	Desc:		Self Placement Information Report
+
+	Updated: 	03/14/2012 - Added Email and Phone Confirmation
+
+----- ------------------------------------------------------------------------- --->
+
 <!--- Kill Extra Output --->
 <cfsilent>
 	
@@ -89,6 +100,8 @@
                 ecpc.selfJobOfferStatus,
                 ecpc.selfConfirmationName,
                 ecpc.selfConfirmationDate,
+                ecpc.selfEmailConfirmationDate,
+                ecpc.selfPhoneConfirmationDate,
                 ecpc.selfConfirmationMethod,  
                 ecpc.selfConfirmationNotes,
                 ej.title AS jobTitle,          
@@ -326,6 +339,8 @@
                         <th align="left" class="#tableTitleClass#">Contact Date</th>
                         <th align="left" class="#tableTitleClass#">Contact Name</th>
                         <th align="left" class="#tableTitleClass#">Contact Method</th>
+                        <th align="left" class="#tableTitleClass#">Email Confirmation</th>
+                        <th align="left" class="#tableTitleClass#">Phone Confirmation</th>
                         <th align="left" class="#tableTitleClass#">Authentication</th>
                         <th align="left" class="#tableTitleClass#">EIN</th>
                         <th align="left" class="#tableTitleClass#">Workmen's Compensation</th>
@@ -354,6 +369,8 @@
                             <td class="style1">#DateFormat(qTotalPerAgent.selfConfirmationDate, 'mm/dd/yyyy')#</td>
                             <td class="style1">#qTotalPerAgent.selfConfirmationName#</td>
                             <td class="style1">#qTotalPerAgent.selfConfirmationMethod#</td>
+                            <td class="style1">#DateFormat(qTotalPerAgent.selfEmailConfirmationDate, 'mm/dd/yyyy')#</td>
+                            <td class="style1">#DateFormat(qTotalPerAgent.selfPhoneConfirmationDate, 'mm/dd/yyyy')#</td>
                             <td class="style1">#qTotalPerAgent.authenticationType#</td>
                             <td class="style1">#qTotalPerAgent.EIN#</td>
                             <td class="style1">

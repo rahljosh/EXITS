@@ -20,7 +20,10 @@
 <cfparam name="FORM.jobID" default="0">
 <cfparam name="FORM.selfJobOfferStatus" default="Pending">
 <cfparam name="FORM.selfConfirmationName" default="">
+<cfparam name="FORM.selfConfirmationDate" default="">
 <cfparam name="FORM.selfConfirmationMethod" default="">
+<cfparam name="FORM.selfEmailConfirmationDate" default="">
+<cfparam name="FORM.selfPhoneConfirmationDate" default="">
 <!--- Program Information --->
 <cfparam name="FORM.wat_participation" default="">
 <cfparam name="FORM.wat_participation_info" default="">
@@ -224,6 +227,8 @@
                 selfConfirmationMethod,
                 selfJobOfferStatus,
                 selfConfirmationDate,
+                selfEmailConfirmationDate,
+                selfPhoneConfirmationDate,
                 selfFindJobOffer,
                 selfConfirmationNotes,
                 isTransfer,
@@ -246,6 +251,8 @@
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationMethod#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfJobOfferStatus#">,
                 <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfConfirmationDate#" null="#NOT IsDate(FORM.selfConfirmationDate)#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfEmailConfirmationDate#" null="#NOT IsDate(FORM.selfEmailConfirmationDate)#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfPhoneConfirmationDate#" null="#NOT IsDate(FORM.selfPhoneConfirmationDate)#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfFindJobOffer#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationNotes#">,
                 <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransfer)#">,
@@ -271,6 +278,8 @@
                 selfConfirmationMethod = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationMethod#">,
                 selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfJobOfferStatus#">,
                 selfConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfConfirmationDate#" null="#NOT IsDate(FORM.selfConfirmationDate)#">,
+                selfEmailConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfEmailConfirmationDate#" null="#NOT IsDate(FORM.selfEmailConfirmationDate)#">,
+                selfPhoneConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfPhoneConfirmationDate#" null="#NOT IsDate(FORM.selfPhoneConfirmationDate)#">,
                 selfFindJobOffer = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfFindJobOffer#">,     
                 selfConfirmationNotes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationNotes#">,                
 				isTransfer = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransfer)#">, 
