@@ -303,7 +303,7 @@ and fk_companyid = #client.companyid#
                                     
                                
                                  
-                                <cfif get_student_info.app_current_status lte 7>
+                                <cfif get_student_info.app_current_status lte 9>
                                  Available:
                                 <cfselect name="state1" onClick="DataChanged();">
                                         <option value="0"></option>
@@ -333,7 +333,7 @@ and fk_companyid = #client.companyid#
                                  </cfif>   
                                   <br>
                                  
-                                <cfif get_student_info.app_current_status lte 7>
+                                <cfif get_student_info.app_current_status lte 9>
                                 Available:
                                 <cfselect name="state2" onClick="DataChanged();">
                                         <option value="0"></option>
@@ -366,7 +366,7 @@ and fk_companyid = #client.companyid#
                                     	
                                  
                                 <br>
-                                 <cfif get_student_info.app_current_status lte 7>
+                                 <cfif get_student_info.app_current_status lte 9>
                                  Available:
                                  <cfselect name="state3" onClick="DataChanged();">
                                         <option value="0"></option>
