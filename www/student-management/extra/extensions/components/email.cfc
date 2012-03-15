@@ -462,6 +462,7 @@
         <cfargument name="userID" type="numeric" default="0" hint="user ID in case we are emailing a user">    
         <cfargument name="footerType" type="string" default="email" hint="email / emailRegular">
         <cfargument name="businessName" type="string" default="" hint="Intl. Rep. Business Name">
+        <cfargument name="displayEmailLogoHeader" type="numeric" default="1" hint="Set to 1 to include logo header">
 		
 		<!--- Import CustomTag --->
 		<cfimport taglib="../../extensions/customTags/gui/" prefix="gui" />	
@@ -507,7 +508,6 @@
 					
 				}
 				
-				
 			} else {
 
 				// Stores Emails Sent at sentEmail@csb-usa.com
@@ -537,6 +537,7 @@
             <gui:pageHeader
                 headerType="email"
                 companyID="#ARGUMENTS.companyID#"
+                displayEmailLogoHeader="#ARGUMENTS.displayEmailLogoHeader#"
             />
 
 				<!--- Email Template --->
@@ -565,11 +566,12 @@
                     </div>
                 </cfif>
 
+			<!--- Page Footer --->
             <gui:pageFooter
                 footerType="#ARGUMENTS.footerType#"
                 companyID="#ARGUMENTS.companyID#"
             />
-            
+                  
         </cfmail>
         	
 	</cffunction>

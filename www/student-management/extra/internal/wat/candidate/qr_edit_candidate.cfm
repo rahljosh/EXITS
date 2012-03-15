@@ -46,15 +46,15 @@
 <cfparam name="FORM.englishAssessmentDate" default="">
 <cfparam name="FORM.englishAssessmentComment" default="">
 
-<cfquery name="qGetCandidateInfo" datasource="mysql">
+<cfquery name="qGetCandidateInfo" datasource="#APPLICATION.DSN.Source#">
     SELECT 
     	candidateID, 
-        programid, 
+        programID, 
         hostCompanyID
     FROM 
     	extra_candidates
     WHERE 
-    	uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#url.uniqueid#">
+    	uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#URL.uniqueid#">
 </cfquery>
 	
 <cfscript>
@@ -122,16 +122,16 @@
 
     
 <!---- PROGRAM HISTORY ---->
-<cfif qGetCandidateInfo.programid NEQ FORM.programid>
+<cfif qGetCandidateInfo.programID NEQ FORM.programID>
 	
-    <cfquery datasource="mysql">
+    <cfquery datasource="#APPLICATION.DSN.Source#">
 		INSERT INTO 
         	extra_program_history
 		(
         	candidateID, 
             reason, 
             date, 
-            programid, 
+            programID, 
             userid 
 		)
 		VALUES 
@@ -139,7 +139,7 @@
             <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.candidateID#">, 
             <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.reason#">, 
             <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">, 
-            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#">, 
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">, 
             <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
         )
 	</cfquery>
@@ -147,13 +147,13 @@
 </cfif>
 
 
-<!---- HOST COMPANY HISTORY ---->
+<!---- HOST COMPANY INFORMATION ---->
 <cfif VAL(FORM.hostcompanyID)>
 	
 	<!--- Update EIN on Host Company Table --->
     <cfif LEN(FORM.EIN)>
     
-        <cfquery datasource="mysql">
+        <cfquery datasource="#APPLICATION.DSN.Source#">
             UPDATE 
                 extra_hostCompany
             SET 
@@ -167,7 +167,7 @@
 	<!--- Update authenticationType on Host Company Table --->
     <cfif LEN(FORM.authenticationType)>
     
-        <cfquery datasource="mysql">
+        <cfquery datasource="#APPLICATION.DSN.Source#">
             UPDATE 
                 extra_hostCompany
             SET 
@@ -181,7 +181,7 @@
 	<!--- Update workmensCompensation on Host Company Table --->
     <cfif LEN(FORM.workmensCompensation)>
     
-        <cfquery datasource="mysql">
+        <cfquery datasource="#APPLICATION.DSN.Source#">
             UPDATE 
                 extra_hostCompany
             SET 
@@ -191,12 +191,37 @@
         </cfquery> 
 
 	</cfif>
+    	
+    <!--- Update other records assigned to same host company and program --->
+    <cfif IsDate(FORM.selfPhoneConfirmationDate)>
+    
+        <cfquery datasource="#APPLICATION.DSN.Source#">
+            UPDATE 
+                extra_candidate_place_company
+            SET 
+                selfPhoneConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfPhoneConfirmationDate#">
+            WHERE 
+            	hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">
+           	AND     
+                status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+            AND
+            	candidateID IN (
+                	SELECT
+                    	candidateID
+                    FROM
+                    	extra_candidates
+                    WHERE
+                    	programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
+                )
+        </cfquery>
+    
+    </cfif>
 
 	<!--- New Host Company --->
     <cfif qGetCandidateInfo.hostCompanyID NEQ FORM.hostcompanyID>
         
         <!--- Set old records to inactive --->
-        <cfquery datasource="mysql">
+        <cfquery datasource="#APPLICATION.DSN.Source#">
             UPDATE
                 extra_candidate_place_company
             SET
@@ -211,7 +236,7 @@
 		</cfscript>
         
 		<!--- New Host Company Information --->
-        <cfquery datasource="mysql">
+        <cfquery datasource="#APPLICATION.DSN.Source#">
             INSERT INTO 
                 extra_candidate_place_company
             (
@@ -266,7 +291,7 @@
     <cfelse>
         
         <!--- Update Current Host Company Information --->
-        <cfquery  datasource="mysql">
+        <cfquery datasource="#APPLICATION.DSN.Source#">
             UPDATE 
                 extra_candidate_place_company
             SET 
@@ -292,12 +317,12 @@
         </cfquery>
 	
     </cfif>
-
+    
 <!--- Not a valid Host Company Assigned --->
 <cfelseif VAL(qGetCurrentPlacement.candcompid)>
 	
 	<!--- Set as Unplaced / Set old records to inactive --->
-    <cfquery datasource="mysql">
+    <cfquery datasource="#APPLICATION.DSN.Source#">
         UPDATE
             extra_candidate_place_company
         SET
@@ -309,7 +334,7 @@
 </cfif>
 <!--- END OF HOST COMPANY HISTORY --->
 
-<cfquery datasource="mysql">
+<cfquery datasource="#APPLICATION.DSN.Source#">
     UPDATE 
     	extra_candidates
     SET 
@@ -336,7 +361,7 @@
         emergency_name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergency_name#">,
         emergency_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergency_phone#">, 
         passport_number = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.passport_number#">,
-        programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#">,         
+        programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">,         
         <cfif VAL(vUpdateSSN)>
             ssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.SSN#">, 
         </cfif>        
