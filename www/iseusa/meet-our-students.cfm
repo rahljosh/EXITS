@@ -821,7 +821,7 @@
                             /* <![CDATA[ */
                             var google_conversion_id = 1068621920;
                             var google_conversion_language = "en";
-                            var google_conversion_format = "1";
+                            var google_conversion_format = "3";
                             var google_conversion_color = "ffffff";
                             var google_conversion_label = "epVpCNS10AEQ4MDH_QM";
                             var google_conversion_value = 0;
