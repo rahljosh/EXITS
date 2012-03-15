@@ -706,6 +706,18 @@
                     
                     <div class="loginMid">
 
+						<!--- Display Errors --->
+                        <cfif FORM.type EQ 'login' AND VAL(ArrayLen(pageMsg.Errors))>
+                            <p class="errorMessage">
+                                
+                                <span>Please review the following item(s):</span>
+                            
+                                <cfloop from="1" to="#ArrayLen(pageMsg.Errors)#" index="i">
+                                   &nbsp; &bull; #pageMsg.Errors[i]# <br />        	
+                                </cfloop>
+                            
+                            </p>
+                        </cfif>	
     
                         <!--- Login --->
                         <cfform name="loginForm" id="loginForm" method="post" action="http://#cgi.SERVER_NAME##cgi.SCRIPT_NAME#" class="#loginFormClass#">
@@ -721,36 +733,23 @@
                             	</em>
                             </p>
 
-							<!--- Display Errors --->
-                            <cfif FORM.type EQ 'login' AND VAL(ArrayLen(pageMsg.Errors))>
-                                <p class="errorMessage">
-                                    
-                                    <span>Please review the following item(s):</span>
-                                
-                                    <cfloop from="1" to="#ArrayLen(pageMsg.Errors)#" index="i">
-                                       &nbsp; &bull; #pageMsg.Errors[i]# <br />        	
-                                    </cfloop>
-                                
-                                </p>
-                            </cfif>	
+                            <div class="HFormpicR" style="float:right; width:100px;">
+                                <a href="javascript:displayForgotPass();" class="HFform_wtext"> Forgot Password? </a>
+                            </div>
 
+
+                            
                             <label for="loginEmail" class="HFform_wtext">Email Address <span class="requiredField">*</span> </label> 
                             <cfinput type="text" name="loginEmail" id="loginEmail" value="#FORM.loginEmail#" maxlength="50" class="largeInput" required="yes" message="Please enter an email address." />          							
     
                             <label for="loginPassword" class="HFform_wtext">Password <span class="requiredField">*</span> </label>                                   
                             <cfinput type="password" name="loginPassword" id="loginPassword" maxlength="50" class="largeInput" required="yes" message="Please enter a password." />                                    
 
+                            
                             <span class="requiredFieldNote">* Required Fields</span>
                             
                             <input type="image" src="images/hostFamily/HFform_login.png" />
-                            
-                           <div class="HFormpicR" style="float:right; width:100px;">
-                                <!--- Image was pushing forms away from Ipad screen
-									<img src="images/hostFamily/HFformPic_09.png" width="100" border="0" align="right" />
-								 --->
-                                <a href="javascript:displayForgotPass();" class="HFform_wtext" style="display:block; font-weight:bold;"> Forgot Password? </a>
-                            </div>
-
+                                
                         </cfform>
     
     
@@ -822,6 +821,29 @@
                                 </p>
             
                             </div>
+                        
+							<!--- Google Code for Meet Our Students Conversion Page --->
+                            <!--- <cfif CLIENT.isAdWords> --->
+                            <!-- Google Code for Meet Our Students Conversion Page -->
+                            <script type="text/javascript">
+                            /* <![CDATA[ */
+                            var google_conversion_id = 1068621920;
+                            var google_conversion_language = "en";
+                            var google_conversion_format = "1";
+                            var google_conversion_color = "ffffff";
+                            var google_conversion_label = "epVpCNS10AEQ4MDH_QM";
+                            var google_conversion_value = 0;
+                            /* ]]> */
+                            </script>
+                            <script type="text/javascript" src="http://www.googleadservices.com/pagead/conversion.js">
+                            </script>
+                            <noscript>
+                            <div style="display:inline;">
+                            <img height="1" width="1" style="border-style:none;" alt="" src="http://www.googleadservices.com/pagead/conversion/1068621920/?label=epVpCNS10AEQ4MDH_QM&amp;guid=ON&amp;script=0"/>
+                            </div>
+                            </noscript>
+                            <!--- </cfif> --->
+                            <!--- End of Google Code for Meet Our Students Conversion Page --->
                         
                         <cfelse>
                         <!--- Registration Form --->	
@@ -897,7 +919,7 @@
                                 <div style="clear:both;">&nbsp;</div>
                                 
                                 <!--- Captcha --->
-                                <cfimage action="captcha" width="215" height="75" text="#FORM.strCaptcha#" difficulty="medium"  fontsize="28">
+                                <cfimage action="captcha" width="215" height="75" text="#FORM.strCaptcha#" difficulty="low" fontsize="28">
                                 
                                 <div style="clear:both;">&nbsp;</div>
                                 
