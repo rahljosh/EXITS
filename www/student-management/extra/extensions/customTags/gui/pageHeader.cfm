@@ -44,6 +44,12 @@
         default="0"
 		/>
 
+	<cfparam 
+		name="ATTRIBUTES.displayEmailLogoHeader"
+		type="integer"
+        default="1"
+		/>
+
 	<cfscript>
 		// Get what company candidate/user is logged in
 		if ( StructKeyExists(SESSION.CANDIDATE, "companyID") AND VAL(SESSION.CANDIDATE.companyID) ) {
@@ -310,19 +316,21 @@
                 <body>
 
                 <!--- Start of Div Wrapper --->
-                <table cellpadding="2" cellspacing="2" style="width:100%; border-bottom:10px solid ##FF7E0D; height:70px;">
-                    <tr>
-                        <td width="70px" align="center">
-                            <a href="#APPLICATION.SITE.URL.main#" title="#APPLICATION.CSB.name#">
-                                <img src="#APPLICATION.SITE.URL.main#/internal/pics/extra-logo.jpg" border="0" />
-                            </a>
-                        </td>
-                        <td style="font-family: segoe ui, Arial, sans-serif; font-weight:bold; width:100%; padding-left:10px;" valign="top">
-                            #csbEmailHeader#
-                        </td>
-                    </tr>
-                </table>                                                                    
-            	
+                <cfif VAL(ATTRIBUTES.displayEmailLogoHeader)>
+                    <table cellpadding="2" cellspacing="2" style="width:100%; border-bottom:10px solid ##FF7E0D; height:70px;">
+                      <tr>
+                          <td width="70px" align="center">
+                              <a href="#APPLICATION.SITE.URL.main#" title="#APPLICATION.CSB.name#">
+                                  <img src="#APPLICATION.SITE.URL.main#/internal/pics/extra-logo.jpg" border="0" />
+                              </a>
+                          </td>
+                          <td style="font-family: segoe ui, Arial, sans-serif; font-weight:bold; width:100%; padding-left:10px;" valign="top">
+                              #csbEmailHeader#
+                          </td>
+                      </tr>
+                    </table>                                                                    
+            	</cfif>
+                
 				<!--- Application Body --->
                 <div style="width:95%; margin:0px; padding:20px; background-color: ##FFF; border: ##EEE 1px solid; min-height:150px;">
             </cfcase>

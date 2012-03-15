@@ -333,6 +333,11 @@
                     font-size: 10px;
                     padding:2px;
                 }
+				table td, th {
+                    font-family: Verdana, Arial, Helvetica, sans-serif;
+                    font-size: 10px;
+                    padding:2px;
+				}
                 -->
                 </style>
             
@@ -350,7 +355,7 @@
                 
                 <p class="style1">
                     Please review the below and <font color="##FF0000">reply with complete answers</font> within <font color="##FF0000">5 (five) business days</font> of receiving this note.
-                    <ol>
+                    <ol class="style1">
                         <li>Please confirm whether the job offer was <strong>signed personally</strong> by <strong>#qGetResults.personJobOfferName#</strong>.</li>
                         <li>Please confirm the <strong>employment availability</strong> for the above participant(s) and the <strong>start and end date</strong>.</li>
                         <li>Please confirm the <strong>job title</strong>.</li>
@@ -388,7 +393,8 @@
                         emailSubject='SWT/CSB - Summer Job Confirmation',
 						emailMessage=emailTemplate,
                         companyID=CLIENT.companyID,
-                        footerType='emailRegular'
+                        footerType='emailRegular',
+						displayEmailLogoHeader=0
                     );	
 
 				}
