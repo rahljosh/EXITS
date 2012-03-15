@@ -1,15 +1,14 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		meet-our-students.cfm
+	File:		meet-our-students-ad.cfm
 	Author:		Marcus Melo
 	Date:		April 30, 2010
 	Desc:		Meet our students page
 	
-	Updates:	04/01/2011 - Removing direct access, host family must check their 
-				email address to get the login information.
-				Emaling Bob/Budge after first login
-
-	Notes:		Changes to this page must be copied to meet-our-students-ad.cfm
+	Updates:	Copy of meet-our-students.cfm page used for AdWords Campaign
+				The only difference is this page sets CLIENT.isAdWords = 1;
+				
+	Notes:		Changes to this page must be copied to meet-our-students.cfm				
 
 ----- ------------------------------------------------------------------------- --->
 
@@ -43,6 +42,11 @@
 
 	<!--- Allow Access for US Users --->
 	<cfparam name="allowAccess" default="1">
+
+    <cfscript>
+		// Set Adwords Campaign
+		CLIENT.isAdWords = 1;	
+	</cfscript>
 
     <cffunction name="makeRandomString" returnType="string" output="false">
         
