@@ -6,7 +6,7 @@ function areYouSure() {
    } else { 
         return false; 
    } 
-} 
+}
 </script>
 
 <cfoutput>
@@ -26,7 +26,7 @@ function areYouSure() {
 <table width="90%" border=1 align="center" cellpadding=8 cellspacing=8 bordercolor="##C7CFDC" bgcolor="##FFFFFF" class="section">
 	<tr><td width="80%" class="box">
 		<table border=0 cellpadding=4 cellspacing=0 align="left">
-			<Tr><td class="label">Family Name:</td><td colspan=3> <input type="text" name="familyname" size="20"  onBlur="javascript:lastname(this.form);" value="#familylastname#"></td></tr>
+			<tr><td class="label">Family Name:</td><td colspan=3> <input type="text" name="familyname" size="20"  onBlur="javascript:lastname(this.form);" value="#familylastname#"></td></tr>
 			<tr><td class="label">Address:</td><td colspan=3> <cfinput type="text" name="address" size="20" value="#address#"></td></tr>
 			<tr><td class="label">Mailing Address:</td><td  colspan=3> <cfinput type="text" name="address2" size="20" value="#address2#"></td></tr>
 			<tr><td class="label">City: </td><td  colspan=3><cfinput type="text" name="city" size="20" value="#city#"></td></tr>
