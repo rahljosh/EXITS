@@ -43,7 +43,74 @@
 
 	<!--- UPDATE SCHOOL INFORMATION --->	
 	<cfelse>  
-		<cftransaction action="begin" isolation="SERIALIZABLE">	
+		<cftransaction action="begin" isolation="SERIALIZABLE">
+        
+        <cfquery name="qGetSchoolInfo" datasource="mysql">
+			SELECT *
+			FROM php_schools
+			WHERE schoolid = <cfqueryparam value="#FORM.school#" cfsqltype="cf_sql_integer">
+		</cfquery>
+    
+		<!--------------------------------------------------------------
+		       SCHOOL INFORMATION CHANGE - SEND EMAIL NOTIFICATION
+			   PS: Changes made here should also be made on view_school
+		--------------------------------------------------------------->
+
+		<cfif qGetSchoolInfo.recordCount
+    		AND
+        		(
+            		FORM.address NEQ qGetSchoolInfo.address
+				OR
+					FORM.address2 NEQ qGetSchoolInfo.address2
+				OR
+					FORM.city NEQ qGetSchoolInfo.city
+				OR
+					FORM.state NEQ qGetSchoolInfo.state
+				OR
+					FORM.zip NEQ qGetSchoolInfo.zip
+            )>    
+            
+      	<cfsavecontent variable="vEmailMessage">
+          	<cfoutput>
+                <p>NOTICE OF SCHOOL INFORMATION CHANGE</p>
+                
+                <p>#CLIENT.firstname# #CLIENT.lastname# (###CLIENT.userid#) made a change to a school.</p>
+                
+                <p>School: <strong>#FORM.schoolname# (###FORM.school#)</strong>
+                
+                <p><strong>NEW SCHOOL ADDRESS</strong></p>
+                #FORM.address#<br />
+                <cfif LEN(FORM.address2)>#FORM.address2#<br /></cfif>
+                #FORM.city# #FORM.state# #FORM.zip#<br /><br />
+                
+                <p><strong>PREVIOUS SCHOOL ADDRESS</strong></p>
+                #qGetSchoolInfo.address#<br />
+                <cfif LEN(qGetSchoolInfo.address2)> #qGetSchoolInfo.address2#<br /></cfif>
+                #qGetSchoolInfo.city# #qGetSchoolInfo.state# #qGetSchoolInfo.zip#<br /><br />
+           
+                <p>This is the only notification of this change that you will receive.</p>
+                
+                <p>Please update any records that do NOT pull information from EXITS.</p>
+                
+                <p>The following were notified:</p>
+           
+                #APPLICATION.EMAIL.schoolNotification#
+          	</cfoutput>
+      	</cfsavecontent>
+          
+      	<!--- send email --->
+      	<cfinvoke component="internal.extensions.components.email" method="send_mail">
+          	<cfinvokeargument name="email_to" value="#APPLICATION.EMAIL.schoolNotification#">
+          	<cfinvokeargument name="email_subject" value="Notice of School Information Change">
+          	<cfinvokeargument name="email_message" value="#vEmailMessage#">            
+      	</cfinvoke>
+          
+  </cfif>
+  <!------------------------------------------------------
+      END OF ADDRESS CHANGE - SEND EMAIL NOTIFICATION
+	  PS: Changes made here should also be made on view_school 
+  ------------------------------------------------------->
+        	
 			<cfquery name="update_school" datasource="mysql">
 				UPDATE php_schools
 				SET 	schoolname = '#form.schoolname#',
