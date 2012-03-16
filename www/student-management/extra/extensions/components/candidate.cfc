@@ -361,7 +361,8 @@
                     extra_candidates
                 WHERE
                     email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.email#">
-
+				AND
+                	status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                 <cfif VAL(ARGUMENTS.candidateID)>
                     AND
                         candidateID != <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
@@ -399,7 +400,7 @@
                 WHERE
                     email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.email#">
 				AND	
-                	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                	status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                 <cfif VAL(ARGUMENTS.candidateID)>
                     AND
                         candidateID != <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
