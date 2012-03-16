@@ -34,8 +34,10 @@
 				had_rubella = <cfif #StudentXMLFile.applications.application[i].page9.illness.type[ill].flag.xmltext# is 'yes'>1<cfelse>0</cfif>,
 			<cfelseif StudentXMLFile.applications.application[i].page9.illness.type[ill].description.xmltext EQ 'Scarlett Fever'>
 				had_rubella = <cfif #StudentXMLFile.applications.application[i].page9.illness.type[ill].flag.xmltext# is 'yes'>1<cfelse>0</cfif>,
+            
 			<cfelseif StudentXMLFile.applications.application[i].page9.illness.type[ill].description.xmltext EQ 'Parasites'>
-				had_sexually_disease = <cfif #StudentXMLFile.applications.application[i].page9.illness.type[ill].flag.xmltext# is 'yes'>1<cfelse>0</cfif>,
+				had_sexually_disease = <cfif #StudentXMLFile.applications.application[i].page9.illness.type[ill].flag.xmltext# is 'yes'>0<cfelse>0</cfif>,
+		 	
 			</cfif>
 		</cfloop>
 		
