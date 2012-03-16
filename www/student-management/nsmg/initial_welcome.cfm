@@ -393,10 +393,11 @@
     	</td>
         <Td valign="top">
         
-      	 <cfinclude template="slideshow/index.cfm">
+      	 
     	 <cfif (ListFind("5,6,7,9", CLIENT.userType)
 					 and ListFind("1,2,3,4,5,10,12", CLIENT.companyid)) >
                      <cfset tripcount = 7 - placed_students.Count>
+                     <cfinclude template="slideshow/index.cfm">
          <table border=0>
         	<Tr>
              <cfif placed_students.Count LT 7>
@@ -416,7 +417,7 @@
          </table>
     </cfif>
       
-      <!----  
+      <!----
      <cfif client.companyid eq 10>
         		  <!----Special Announcements---->
     <table width=100% cellpadding=0 cellspacing=0 border="0" height=24>
@@ -507,8 +508,8 @@
                        <cfif client.companyid lte 5>
                        2012 Placing Season Bonuses!<BR />
                         <a href="uploadedfiles/pdf_docs/ISE/promotion/Pre-Ayp%20Bonus%202012.pdf" target="_blank">Pre-AYP</a> :: 
-                        <a href="uploadedfiles/pdf_docs/ISE/promotion/Early%20Placement%20Bonus%202012.pdf" target="_blank">Early Placement</a> 
-                        <cfif client.companyid lte 5>:: <a href="slideshow/pdfs/CASE/CEOBonus.pdf" target="_blank">CEO Placement Bonus</a></cfif>
+                        <a href="uploadedfiles/pdf_docs/ISE/promotion/Early%20Placement%20Bonus%202012.pdf" target="_blank">Early Placement</a> :: 
+                        <a href="slideshow/pdfs/CASE/CEOBonus.pdf" target="_blank">CEO Placement Bonus</a>
                    		</cfif>
                         
                     </td>
@@ -623,7 +624,7 @@
                                 </cfif>
                                 </td><Td>
 								
-								<cfif CheckPaperwork.complete eq 0>Not Active, <CFif client.usertype eq 4><a href="?curdoc=forms/user_paperwork&userid=#userid#"></cfif>Verification Needed</a><cfelse>Account Active</cfif></Td>
+								<cfif not val(accountCreationVerified)>Not Active, <CFif client.usertype eq 4><a href="?curdoc=forms/user_paperwork&userid=#userid#"></cfif>Verification Needed</a><cfelse>Account Active</cfif></Td>
                                 </Tr>
                             </cfloop>
                             </table>
