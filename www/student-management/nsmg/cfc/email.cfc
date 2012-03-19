@@ -54,8 +54,12 @@
 				
 				emailIntendedTo = emailIntendedTo & "<p>Email To: #ARGUMENTS.email_to#</p>";
 				
-				// ARGUMENTS.email_to = CLIENT.email;
-				ARGUMENTS.email_to = 'support@iseusa.com';
+				// IT / Office
+				if ( ListFind("1,2,3", CLIENT.userType) ) {
+					ARGUMENTS.email_to = CLIENT.email;	  
+				} else {
+					ARGUMENTS.email_to = 'support@iseusa.com';
+				}
 				
 				if ( LEN(ARGUMENTS.email_cc) ) {
 					emailIntendedTo = emailIntendedTo & "<p>Email CC: #ARGUMENTS.email_cc#</p>";
@@ -74,7 +78,7 @@
 		<!--- Create Email Body --->
         <cfsavecontent variable="template_file">
           	<cfoutput>
-            
+
 				<!--- Email Header --->
                 <cfif VAL(ARGUMENTS.includeTemplate)>
                     <cfinclude template="../email/email_top.cfm">
@@ -88,7 +92,7 @@
                 <!--- Display Email Recipients when sending from development environment --->
                 <cfif APPLICATION.isServerLocal>
                     <div style="color:##F00; display:block; margin:10px 0px 10px 0px;">
-                    	******************************* DEVELOPMENT SITE *******************************
+                    	****************************************** DEVELOPMENT SITE ******************************************
                     </div>
                     
                     <p>
@@ -101,7 +105,7 @@
                     #emailIntendedTo#
                     
                     <div style="color:##F00; display:block; margin:10px 0px 10px 0px;">
-                    	******************************* DEVELOPMENT SITE *******************************
+                    	****************************************** DEVELOPMENT SITE ******************************************
                     </div>
                 </cfif>
                 
@@ -116,9 +120,8 @@
 			</cfoutput>
         </cfsavecontent>
             
-                
 		<cfmail to="#ARGUMENTS.email_to#" from="#ARGUMENTS.email_from#" replyto="#ARGUMENTS.email_replyto#" cc="#ARGUMENTS.email_cc#" bcc="#ARGUMENTS.email_bcc#" subject="#ARGUMENTS.email_subject#" type="html">
-
+			
             <!--- Attach File --->
 			<cfif LEN(ARGUMENTS.email_file)>
 				<cfmailparam disposition="attachment" file="#ARGUMENTS.email_file#">                
