@@ -465,8 +465,8 @@ END) AS testCompId --->
 								<td>:: <a class=nav_bar href="" onClick="javascript: win=window.open('invoice/create_refund_receipt.cfm?userid=#url.userid#', 'Refund', 'height=395, width=622, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Create Refund Receipt</a></td>
 							</tr>
 							<tr>
-								<td>:: <a href="?curdoc=invoice/date_range&userid=#url.userid#">Monthly Statement</a></td><td>::<cfif client.userid is 1967><cfelse> <a href="?curdoc=forms/program_discount&userid=#url.userid#"></cfif>Fee Maint.</a></td>
-								<td>:: <a href="" onClick="javaScript:win=window.open('invoice/m_test.cfm?id=1453', 'Charges', 'height=500, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">marcel</a><br /></td>
+								<td>:: <a href="?curdoc=invoice/date_range&userid=#url.userid#">Monthly Statement</a></td><td>::<cfif client.userid is 1967><cfelse> <a href="?curdoc=forms/program_discount&userid=#url.userid#"></cfif>Fee Maintenance</a></td>
+								<td>&nbsp;</td>
 						  </tr>
 							
 						</Table>
