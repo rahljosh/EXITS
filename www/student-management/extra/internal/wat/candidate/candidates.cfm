@@ -5,10 +5,11 @@
 
 	<!--- Param URL Variable --->
 	<cfparam name="URL.status" default="1">
-	<cfparam name="URL.order" default="lastName">
+	<cfparam name="URL.sortBy" default="lastName">
+    <cfparam name="URL.sortOrder" default="ASC">
 	<cfparam name="URL.isProgramUnassigned" default="0">
 	<cfparam name="URL.isCompanyUnassigned" default="0">
-    
+        
     <!--- Get Candidates --->   
     <cfquery name="qCandidates" datasource="MySql">
         SELECT 
@@ -72,47 +73,47 @@
                                         	candidateID
 									)
         </cfif>
-            
+           
         ORDER BY 
-        	<cfswitch expression="#URL.order#">
+        	<cfswitch expression="#URL.sortBy#">
             
             	<cfcase value="candidateID">
-                	ec.candidateID
+                	ec.candidateID #URL.sortOrder#
                 </cfcase>
                 
                 <cfcase value="lastName">
-                	ec.lastName,
-                    ec.firstName
+                	ec.lastName #URL.sortOrder#,
+                    ec.firstName #URL.sortOrder#
                 </cfcase>
 
                 <cfcase value="firstName">
-                	ec.firstName,
-                    ec.lastName                   
+                	ec.firstName #URL.sortOrder#,
+                    ec.lastName #URL.sortOrder#                   
                 </cfcase>
 
                 <cfcase value="sex">
-                	ec.sex,
-                    ec.lastName
+                	ec.sex #URL.sortOrder#,
+                    ec.lastName #URL.sortOrder#
                 </cfcase>
 
                 <cfcase value="countryName">
-                	c.countryName,
-                    ec.lastName
+                	c.countryName #URL.sortOrder#,
+                    ec.lastName #URL.sortOrder#
                 </cfcase>
 
                 <cfcase value="programName">
-                	p.programName,
-                    ec.lastName
+                	p.programName #URL.sortOrder#,
+                    ec.lastName #URL.sortOrder#
                 </cfcase>
 
                 <cfcase value="businessName">
-                	u.businessName,
-                    ec.lastName
+                	u.businessName #URL.sortOrder#,
+                    ec.lastName #URL.sortOrder#
                 </cfcase>
 
                 <cfdefaultcase>
-                	ec.lastName,
-                    ec.firstName
+                	ec.lastName #URL.sortOrder#,
+                    ec.firstName #URL.sortOrder#
                 </cfdefaultcase>
 
 			</cfswitch>                	
@@ -174,13 +175,13 @@
         
 		<table border=0 cellpadding=4 cellspacing=0 class="section" align="center" width=95%>
 			<tr bgcolor="##4F8EA4" >
-				<th width="5%" align="left"><a href="?curdoc=candidate/candidates&order=candidateID&status=#URL.status#" class="style2">ID</a></th>
-				<th width="15%" align="left"><a href="?curdoc=candidate/candidates&order=lastName&status=#URL.status#" class="style2">Last Name</a></th>
-				<th width="12%" align="left"><a href="?curdoc=candidate/candidates&order=firstName&status=#URL.status#" class="style2">First Name</a></th>
-				<th width="10%" align="left"><a href="?curdoc=candidate/candidates&order=sex&status=#URL.status#" class="style2">Sex</a></th>
-				<th width="13%" align="left"><a href="?curdoc=candidate/candidates&order=countryName&status=#URL.status#" class="style2">Country</a></th>
-				<th width="20%" align="left"><a href="?curdoc=candidate/candidates&order=programName&status=#URL.status#" class="style2">Program</a></th>		
-				<th width="25%" bgcolor="##4F8EA4"><a href="?curdoc=candidate/candidates&order=businessName&status=#URL.status#" class="style2">Intl. Rep.</a></th>
+				<th width="5%" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='candidateID',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">ID</a></th>
+				<th width="15%" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='lastName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Last Name</a></th>
+				<th width="12%" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='firstName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">First Name</a></th>
+				<th width="10%" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='sex',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Sex</a></th>
+				<th width="13%" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='country',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Country</a></th>
+				<th width="20%" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='program',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Program</a></th>		
+				<th width="25%" bgcolor="##4F8EA4"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='intrep',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Intl. Rep.</a></th>
 			</tr>
             <cfloop query="qCandidates">
                 <tr bgcolor="###iif(qCandidates.currentrow MOD 2 ,DE("E9ECF1") ,DE("FFFFFF") )#">

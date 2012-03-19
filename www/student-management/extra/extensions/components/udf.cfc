@@ -44,7 +44,6 @@
 		</cfscript>
 	</cffunction>
 
-
 	<!--- Create Folder if it does not exist --->
 	<cffunction name="createFolder" access="public" returntype="void" output="no" hint="Check if folder exits, if it does not, it creates it">
         <cfargument name="fullPath" type="string" required="yes" hint="Full Path is required" />
@@ -70,6 +69,44 @@
         </cftry>
         
 	</cffunction>
+
+
+	<cffunction name="buildSortURL" access="public" returntype="string" hint="Builds sorting URL">
+        <cfargument name="columnName" hint="columnName is required">
+        <cfargument name="sortBy" hint="sortBy is required">
+        <cfargument name="sortOrder" hint="sortOrder is required">
+        
+        <cfscript>
+			// rebuilt QueryString and remove sortBy and sortOrder
+			var	vNewQueryString = CGI.QUERY_STRING;
+
+			// make sure we have a valid sortOrder value
+			if ( NOT ListFind("ASC,DESC", ARGUMENTS.sortOrder) ) {
+				ARGUMENTS.sortOrder = "ASC";				  
+			}
+			
+			// Clean Up sortBy URL
+			if ( ListContainsNoCase(vNewQueryString, "sortBy", "&") ) {
+				vNewQueryString = ListDeleteAt(vNewQueryString, ListContainsNoCase(vNewQueryString, "sortBy", "&"), "&");
+			}
+			
+			// Clean Up sortORder URL
+			if ( ListContainsNoCase(vNewQueryString, "sortOrder", "&") ) {
+				vNewQueryString = ListDeleteAt(vNewQueryString, ListContainsNoCase(vNewQueryString, "sortOrder", "&"), "&");
+			}
+		
+			// New sortOrder value
+			var vSortOrderVal = '&sortOrder=ASC';
+		
+			if (ARGUMENTS.columnName EQ ARGUMENTS.sortBy AND ARGUMENTS.sortOrder EQ 'ASC') {
+				vSortOrderVal = "&sortOrder=DESC";	
+			} 
+			
+			// Build URL
+			return CGI.SCRIPT_NAME & "?" & vNewQueryString & "&sortBy=" & ARGUMENTS.columnName & vSortOrderVal;
+		</cfscript>
+    	
+    </cffunction>
 
 
 	<!--- Encrypt Variable --->
