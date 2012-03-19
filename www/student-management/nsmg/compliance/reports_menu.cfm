@@ -168,11 +168,12 @@
                     </tr>
                 </table><br />
         
-                
-                <!--- Row 3 - 2 boxes --->
+				
+				<!--- Row 3 - 2 boxes --->
                 <table cellpadding="6" cellspacing="0" align="center" width="95%">
                     <tr>
                         <td width="50%" valign="top">
+                        
                             <cfform action="compliance/arrival_school_acceptance_check.cfm" name="doc_received" method="post" target="blank">
                             <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Students with Arrival Information and Missing School Acceptance (Place Management)</th></tr>
@@ -185,20 +186,13 @@
                                 </tr>
                             </table>
                             </cfform>			
+                        
                         </td>
                         <td width="50%" valign="top">
-                        </td>
-                    </tr>
-                </table><br />
 
-				
-				<!--- Row 4 - 2 boxes --->
-                <table cellpadding="6" cellspacing="0" align="center" width="95%">
-                    <tr>
-                        <td width="50%" valign="top">
-                            <form action="compliance/missingSinglePlacementPaperworkByIntlRep.cfm" method="POST" target="_blank">
+                            <form action="compliance/singlePlacementPaperworkByIntlRep.cfm" method="POST" target="_blank">
                                 <table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
-                                    <tr><th colspan="3" bgcolor="##e2efc7">Missing Single Placement Paperwork by International Representative</th></tr>
+                                    <tr><th colspan="3" bgcolor="##e2efc7">Single Placement Paperwork by International Representative</th></tr>
                                     <tr align="left">
                                         <td width="20%" valign="top">Program :</td>
                                         <td>
@@ -212,32 +206,184 @@
                                     <tr align="left">
                                         <td valign="top">Region :</td>
                                         <td>
-                                            <select name="regionID" size="6" multiple> 
+                                            <select name="regionID" multiple size="6" class="xLargeField">
                                                 <cfloop query="qGetRegions">
-                                                    <option value="#qGetRegions.regionid#" <cfif qGetRegions.recordcount eq 1>selected</cfif>>#qGetRegions.regionname#</option>
-                                                </cfloop> 
+                                                	<option value="#qGetRegions.regionID#"><cfif CLIENT.companyID EQ 5>#qGetRegions.companyShort# - </cfif>#qGetRegions.regionname#</option>
+                                                </cfloop>
                                             </select>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td valign="top">Report Type :</td>
                                         <td>
-                                            <select name="reportType" class="xLargeField">
+                                            <select name="compliantOption" class="xLargeField">
+                                                <option value="">Comprehensive Report</option>
+                                                <option value="missing">Missing Paperwork</option>
+                                                <option value="non-compliant">Non-compliant Paperwork</option>                                                
+                                            </select>
+                                        </td>		
+                                    </tr>
+                                    <tr>
+                                        <td valign="top">Output Type :</td>
+                                        <td>
+                                            <select name="outputType" class="xLargeField">
                                                 <option value="onScreen">On Screen</option>
                                                 <option value="Excel">Excel Spreadsheet</option>
                                             </select>
                                         </td>		
+                                    </tr>
+                                    <tr align="left">
+                                        <td>Send as email to Intl. Representative :</td>
+                                        <td>
+                                            <input type="radio" name="sendEmail" id="sendEmailSPNo" value="0" checked="checked"> <label for="sendEmailSPNo">No</label>  
+                                            <input type="radio" name="sendEmail" id="sendEmailSPYes" value="1"> <label for="sendEmailSPYes">Yes</label>
+                                            <br /><font size="-2">Available only on screen option</font>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td colspan="3" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td>
                                     </tr>
                                 </table>
                             </form>
+
                         </td>
-                        <td width="50%" valign="top">&nbsp;</td>
                     </tr>
                 </table><br />
 				
+                
+				<!--- Row 4 - 2 boxes --->
+                <table cellpadding="6" cellspacing="0" align="center" width="95%">
+                    <tr>
+                        <td width="50%" valign="top">
+                            <form action="compliance/doublePlacementPaperworkByIntlRep.cfm" method="POST" target="_blank">
+                                <table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
+                                    <tr><th colspan="3" bgcolor="##e2efc7">Double Placement Paperwork by International Representative</th></tr>
+                                    <tr align="left">
+                                        <td width="20%" valign="top">Program :</td>
+                                        <td>
+                                            <select name="programID" size="6" multiple>
+                                                <cfloop query="qGetProgramList">
+                                                    <option value="#programID#">#programname#</option>
+                                                </cfloop>
+                                            </select>		
+                                        </td>
+                                    </tr>
+                                    <tr align="left">
+                                        <td valign="top">Region :</td>
+                                        <td>
+                                            <select name="regionID" multiple size="6" class="xLargeField">
+                                                <cfloop query="qGetRegions">
+                                                	<option value="#qGetRegions.regionID#"><cfif CLIENT.companyID EQ 5>#qGetRegions.companyShort# - </cfif>#qGetRegions.regionname#</option>
+                                                </cfloop>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top">Filter :</td>
+                                        <td>
+                                            <select name="compliantOption" class="xLargeField">
+                                                <option value="">Comprehensive Report</option>
+                                                <option value="missing">Missing Paperwork</option>
+                                                <option value="non-compliant">Non-compliant Paperwork</option>                                                
+                                            </select>
+                                        </td>		
+                                    </tr>
+                                    <tr>
+                                        <td valign="top">Output Type :</td>
+                                        <td>
+                                            <select name="outputType" class="xLargeField">
+                                                <option value="onScreen">On Screen</option>
+                                                <option value="Excel">Excel Spreadsheet</option>
+                                            </select>
+                                        </td>		
+                                    </tr>
+                                    <tr align="left">
+                                        <td>Send as email to Intl. Representative :</td>
+                                        <td>
+                                            <input type="radio" name="sendEmail" id="sendEmailDPNo" value="0" checked="checked"> <label for="sendEmailDPNo">No</label>  
+                                            <input type="radio" name="sendEmail" id="sendEmailDPYes" value="1"> <label for="sendEmailDPYes">Yes</label>
+                                            <br /><font size="-2">Available only on screen option</font>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td>
+                                    </tr>
+
+                                </table>
+                            </form>
+                        </td>
+                        <td width="50%" valign="top">
+                            <form action="compliance/doublePlacementPaperworkByRegion.cfm" method="POST" target="_blank">
+                                <table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
+                                    <tr><th colspan="3" bgcolor="##e2efc7">Double Placement Paperwork by Region</th></tr>
+                                    <tr align="left">
+                                        <td width="20%" valign="top">Program :</td>
+                                        <td>
+                                            <select name="programID" size="6" multiple>
+                                                <cfloop query="qGetProgramList">
+                                                    <option value="#programID#">#programname#</option>
+                                                </cfloop>
+                                            </select>		
+                                        </td>
+                                    </tr>
+                                    <tr align="left">
+                                        <td valign="top">Region :</td>
+                                        <td>
+                                            <select name="regionID" multiple size="6" class="xLargeField">
+                                                <cfloop query="qGetRegions">
+                                                	<option value="#qGetRegions.regionID#"><cfif CLIENT.companyID EQ 5>#qGetRegions.companyShort# - </cfif>#qGetRegions.regionname#</option>
+                                                </cfloop>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top">Filter :</td>
+                                        <td>
+                                            <select name="compliantOption" class="xLargeField">
+                                                <option value="">Comprehensive Report</option>
+                                                <option value="missing">Missing Paperwork</option>
+                                                <option value="non-compliant">Non-compliant Paperwork</option>                                                
+                                            </select>
+                                        </td>		
+                                    </tr>
+                                    <tr>
+                                        <td valign="top">Report By :</td>
+                                        <td>
+                                            <select name="reportBy" class="xLargeField">
+                                                <option value="placeRepID">Placing Representative</option>
+                                                <option value="areaRepID">Supervising Representative</option>
+                                            </select>
+                                        </td>		
+                                    </tr>                                    
+                                    <tr>
+                                        <td valign="top">Output Type :</td>
+                                        <td>
+                                            <select name="outputType" class="xLargeField">
+                                                <option value="onScreen">On Screen</option>
+                                                <option value="Excel">Excel Spreadsheet</option>
+                                            </select>
+                                        </td>		
+                                    </tr>
+                                    <tr align="left">
+                                        <td>Send as email to Regional Manager :</td>
+                                        <td>
+                                            <input type="radio" name="sendEmail" id="sendEmailDPNo" value="0" checked="checked"> <label for="sendEmailDPNo">No</label>  
+                                            <input type="radio" name="sendEmail" id="sendEmailDPYes" value="1"> <label for="sendEmailDPYes">Yes</label>
+                                            <br /><font size="-2">Available only on screen option</font>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td>
+                                    </tr>
+
+
+                                </table>
+                            </form>
+						</td>
+                    </tr>
+                </table><br />
+
+                
 				<!--- Row 5 - 2 boxes --->
                 <table cellpadding="6" cellspacing="0" align="center" width="95%">
                     <tr>
@@ -266,9 +412,9 @@
                                         </td>		
                                     </tr>
                                     <tr>
-                                        <td valign="top">Report Type :</td>
+                                        <td valign="top">Output Type :</td>
                                         <td>
-                                            <select name="reportType" class="xLargeField">
+                                            <select name="outputType" class="xLargeField">
                                                 <option value="onScreen">On Screen</option>
                                                 <option value="Excel">Excel Spreadsheet</option>
                                             </select>
@@ -313,9 +459,9 @@
                                         </td>		
                                     </tr>
                                     <tr>
-                                        <td valign="top">Report Type :</td>
+                                        <td valign="top">Output Type :</td>
                                         <td>
-                                            <select name="reportType" class="xLargeField">
+                                            <select name="outputType" class="xLargeField">
                                                 <option value="onScreen">On Screen</option>
                                                 <option value="Excel">Excel Spreadsheet</option>
                                             </select>

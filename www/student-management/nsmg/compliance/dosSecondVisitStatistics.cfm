@@ -25,7 +25,7 @@
 		// Param FORM Variables
 		param name="FORM.programID" default=0;	
 		param name="FORM.regionID" default=0;
-		param name="FORM.reportType" default="onScreen";
+		param name="FORM.outputType" default="onScreen";
 		
 		// Set Current Row used to display light blue color on the table
 		vCurrentRow = 0;
@@ -266,7 +266,7 @@
 />	
 
 <!--- Output in Excel --->
-<cfif FORM.reportType EQ 'excel'>
+<cfif FORM.outputType EQ 'excel'>
 	
 	<!--- set content type --->
 	<cfcontent type="application/msexcel">
@@ -279,7 +279,7 @@
 <!--- Run Report --->
 <cfoutput>
 
-    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif FORM.reportType EQ 'excel'> border="1" </cfif> >
+    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif FORM.outputType EQ 'excel'> border="1" </cfif> >
         <tr>
             <th>2<sup>nd</sup> Visit Representative Statistics By Region</th>
         </tr>
@@ -293,7 +293,7 @@
         </tr>
     </table>
     
-    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif FORM.reportType EQ 'excel'> border="1" </cfif> >
+    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif FORM.outputType EQ 'excel'> border="1" </cfif> >
         <tr>
             <th class="left" width="20%">Region</th>
             <th class="center" width="10%">Total Students</th>

@@ -28,7 +28,7 @@
 		param name="FORM.programID" default=0;	
 		param name="FORM.regionID" default=0;
 		param name="FORM.isDueSoon" default=0;
-		param name="FORM.reportType" default="onScreen";
+		param name="FORM.outputType" default="onScreen";
 		
 		// Get Programs
 		qGetPrograms = APPLICATION.CFC.PROGRAM.getPrograms(programIDList=FORM.programID);
@@ -415,7 +415,7 @@
 />	
 
 <!--- Output in Excel --->
-<cfif FORM.reportType EQ 'excel'>
+<cfif FORM.outputType EQ 'excel'>
 	
 	<!--- set content type --->
 	<cfcontent type="application/msexcel">
@@ -428,7 +428,7 @@
 <!--- Run Report --->
 <cfoutput>
 
-    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif FORM.reportType EQ 'excel'> border="1" </cfif> >
+    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif FORM.outputType EQ 'excel'> border="1" </cfif> >
         <tr>
             <th>2<sup>nd</sup> Visit Representative Compliance By Region</th>
         </tr>
@@ -462,7 +462,7 @@
         
         <cfif qGetResultsByRegion.recordCount>
                     
-            <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif FORM.reportType EQ 'excel'> border="1" </cfif> >
+            <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif FORM.outputType EQ 'excel'> border="1" </cfif> >
                 <tr>
                     <th class="left" colspan="7">
                     	<cfif CLIENT.companyID EQ 5>

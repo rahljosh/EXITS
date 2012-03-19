@@ -192,12 +192,11 @@
                         sex, 
                         ssn, 
                         birthdate, 
-                        FLOOR(DATEDIFF(CURRENT_DATE,birthdate)/365) AS age,
-                        cbc_form_received
+                        FLOOR(DATEDIFF(CURRENT_DATE,birthdate)/365) AS age
                     FROM 
                         smg_host_children 
                     WHERE 
-                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
+                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
                     AND
                     	liveAtHome = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">                    
                     AND
@@ -1650,14 +1649,14 @@
 	
     
     <!--- CBC In Compliance --->
-	<cffunction name="hostCBCsubmittedUnderUser" access="public" returntype="query" output="false" hint="Cross data to get host CBCs submitted under user">
+	<cffunction name="getValidHostCBCSubmittedUnderUser" access="public" returntype="query" output="false" hint="Cross data to get host CBCs submitted under user">
         <cfargument name="firstName" type="string" hint="firstName is required">
         <cfargument name="lastName" type="string" hint="lastName is required">
         <cfargument name="dob" type="string" hint="dob is required">
         <cfargument name="ssn" type="string" hint="ssn is required">
 
 		<!--- CROSS DATA - check if was submitted under a user --->
-        <cfquery name="qHostCBCsubmittedUnderUser" datasource="#application.dsn#">
+        <cfquery name="qGetValidHostCBCSubmittedUnderUser" datasource="#application.dsn#">
             SELECT DISTINCT 
             	u.userid, 
                 u.firstName, 
@@ -1674,7 +1673,7 @@
             WHERE 
             	cbc.familyid = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
             AND
-                DATE_ADD(cbc.date_sent, INTERVAL 1 Year) >= CURRENT_DATE
+                DATE_ADD(cbc.date_sent, INTERVAL 1 YEAR) >= CURRENT_DATE
                                                    
             <cfif isDate(ARGUMENTS.dob)>
                 AND 
@@ -1711,60 +1710,73 @@
             </cfif>                
         </cfquery>
         
-        <cfreturn qHostCBCsubmittedUnderUser>
+        <cfreturn qgetValidHostCBCSubmittedUnderUser>
     </cffunction>
     
     
 	<cffunction name="checkHostFamilyCompliance" access="public" returntype="string" output="false" hint="Check if a host family CBC and school acceptance is in compliance">
-        <cfargument name="hostID" type="numeric" hint="hostID is required">
-        <cfargument name="studentID" type="numeric" default="0" hint="studentID is not required">
- 
+        <cfargument name="hostID" type="any" hint="hostID is required">
+        <cfargument name="studentID" type="any" default="0" hint="studentID is not required">
+        <cfargument name="secondVisitRepID" type="any" default="" hint="secondVisitRepID is not required, it must not be missing before approval by headquarters">
+        <cfargument name="schoolAcceptanceDate" type="any" default="" hint="schoolAcceptanceDate is not required">
+        <cfargument name="crossDataUserCBC" type="numeric" default="0" hint="cross data CBC with users">
+         
 		<cfscript>
+			// Placements can only be approved with a valid CBC, 2nd Visit Rep and school acceptance
 			var returnMessage = '';			
 			var vMissingMessage = '';
 			var vExpiredMessage = '';
+			var vOtherMessage = '';
+			var vIsOutOfCompliance = 0;		
 			
-			// Get School Acceptance Date - Placements can only be approved with a valid CBC and school acceptance
-			var vSchoolAcceptanceDate = APPLICATION.CFC.STUDENT.getHostHistoryByID(studentID=ARGUMENTS.studentID, getActiveRecord=1).doc_school_accept_date;
-
 			// Gets Host Family Information
-			qGetHost = APPLICATION.CFC.HOST.getHosts(hostID=ARGUMENTS.hostID);
+			qGetHost = APPLICATION.CFC.HOST.getHosts(hostID=VAL(ARGUMENTS.hostID));
 			
-			// Cross Data - Get CBC submitted under USER
+			// Cross Data - Get CBC submitted under USER - Do only before approving a placement
 			/*
-			qGetMotherCBCUnderUser = hostCBCsubmittedUnderUser(
-				firstName=qGetHost.motherFirstName,
-				lastName=qGetHost.motherLastName,
-				dob=qGetHost.motherDOB,
-				ssn=qGetHost.motherSSN);
-
-			// Cross Data - Get CBC submitted under USER
-			qGetFatherCBCUnderUser = hostCBCsubmittedUnderUser(
-				firstName=qGetHost.fatherFirstName,
-				lastName=qGetHost.fatherLastName,
-				dob=qGetHost.fatherDOB,
-				ssn=qGetHost.fatherSSN);
+			if ( VAL(ARGUMENTS.crossDataUserCBC) ) {
+				
+				qGetMotherCBCUnderUser = getValidHostCBCSubmittedUnderUser(
+					firstName=qGetHost.motherFirstName,
+					lastName=qGetHost.motherLastName,
+					dob=qGetHost.motherDOB,
+					ssn=qGetHost.motherSSN
+				);
+	
+				// Cross Data - Get CBC submitted under USER
+				qGetFatherCBCUnderUser = getValidHostCBCSubmittedUnderUser(
+					firstName=qGetHost.fatherFirstName,
+					lastName=qGetHost.fatherLastName,
+					dob=qGetHost.fatherDOB,
+					ssn=qGetHost.fatherSSN
+				);
+			
+			}
 			*/
 			
 			// Check if CBCs are missing
-			qGetCBCMother = getCBCHostByID(hostID=ARGUMENTS.hostID,cbcType='mother', sortBy="date_sent", sortOrder="DESC", getOneRecord=1);
+			qGetCBCMother = getCBCHostByID(hostID=ARGUMENTS.hostID,cbcType='mother', sortBy="date_sent", sortOrder="DESC", getOneRecord=1);					
 			
-			if ( LEN(qGetHost.motherFirstName) AND LEN(qGetHost.motherLastName) AND NOT VAL(qGetCBCMother.recordCount) ) { //  AND NOT VAL(qGetMotherCBCUnderUser.recordCount)
+			if ( LEN(qGetHost.motherFirstName) AND LEN(qGetHost.motherLastName) AND NOT VAL(qGetCBCMother.recordCount) ) {  //  AND NOT VAL(qGetMotherCBCUnderUser.recordCount)
 				// Store Missing CBC Message
-				vMissingMessage = vMissingMessage & "<p>Missing CBC for host mother</p>";				
+				vIsOutOfCompliance = 1;
+				vMissingMessage = vMissingMessage & "<p>Host Mother - Missing CBC</p>";				
 			} else if ( LEN(qGetHost.motherFirstName) AND LEN(qGetHost.motherLastName) AND isDate(qGetCBCMother.date_expired) AND qGetCBCMother.date_expired LTE now() ) {
-				// Check if CBC is expired   
-				vExpiredMessage = vExpiredMessage & "<p>Host Mother - Expired on: #DateFormat(qGetCBCMother.date_expired, 'mm/dd/yyyy')#</p>";
+				// Check if CBC is expired 
+				vIsOutOfCompliance = 1;
+				vExpiredMessage = vExpiredMessage & "<p>Host Mother - CBC Expired on: #DateFormat(qGetCBCMother.date_expired, 'mm/dd/yyyy')#</p>";
 			}
 			
 			qGetCBCFather = getCBCHostByID(hostID=ARGUMENTS.hostID,cbcType='father', sortBy="date_sent", sortOrder="DESC", getOneRecord=1);
 			
-			if ( LEN(qGetHost.fatherFirstName) AND LEN(qGetHost.fatherLastName) AND NOT VAL(qGetCBCFather.recordCount) ) { //  AND NOT VAL(qGetFatherCBCUnderUser.recordCount)
+			if ( LEN(qGetHost.fatherFirstName) AND LEN(qGetHost.fatherLastName) AND NOT VAL(qGetCBCFather.recordCount) ) {  // AND NOT VAL(qGetFatherCBCUnderUser.recordCount)  
 				// Store Missing CBC Message
-				vMissingMessage = vMissingMessage & "<p>Missing CBC for host father</p>";
+				vIsOutOfCompliance = 1;
+				vMissingMessage = vMissingMessage & "<p>Host Father - Missing CBC</p>";
 			} else if ( LEN(qGetHost.fatherFirstName) AND LEN(qGetHost.fatherLastName) AND isDate(qGetCBCFather.date_expired) AND qGetCBCFather.date_expired LTE now() ) {
 				// Check if CBC is expired   
-				vExpiredMessage = vExpiredMessage & "<p>Host Father - Expired on: #DateFormat(qGetCBCFather.date_expired, 'mm/dd/yyyy')#</p>";				
+				vIsOutOfCompliance = 1;
+				vExpiredMessage = vExpiredMessage & "<p>Host Father - CBC Expired on: #DateFormat(qGetCBCFather.date_expired, 'mm/dd/yyyy')#</p>";				
 			}
 
 			// Get Eligible Family Member CBC
@@ -1785,33 +1797,46 @@
 				
 				if ( NOT VAL(qGetCBCMember.recordCount) ) {
 					// Store Missing CBC Message
-					vMissingMessage = vMissingMessage & "<p>Missing CBC for host member #qGetEligibleMembers.name[i]# #qGetEligibleMembers.lastName[i]#</p>";
+					vIsOutOfCompliance = 1;
+					vMissingMessage = vMissingMessage & "<p>Host Member - Missing CBC for #qGetEligibleMembers.name[i]# #qGetEligibleMembers.lastName[i]#</p>";
 				} else if ( isDate(qGetCBCMember.date_expired) AND qGetCBCMember.date_expired LTE now() ) {
 					// Check if CBC is expired   
-					vExpiredMessage = vExpiredMessage & "<p>Host Member - Expired on: #DateFormat(qGetCBCMember.date_expired, 'mm/dd/yyyy')#</p>";
+					vIsOutOfCompliance = 1;
+					vExpiredMessage = vExpiredMessage & "<p>Host Member - CBC Expired on: #DateFormat(qGetCBCMember.date_expired, 'mm/dd/yyyy')#</p>";
 				}
 				
             }
+
+			// 2nd Visit Representative
+			if ( LEN(ARGUMENTS.secondVisitRepID) AND NOT VAL(ARGUMENTS.secondVisitRepID) ) {
+				vIsOutOfCompliance = 1;
+				vOtherMessage = vOtherMessage & "<p>You must assign a Second Visit Representative</p>";
+			}
+
+			// School Acceptance
+			if ( NOT IsDate(ARGUMENTS.schoolAcceptanceDate) ) {
+				vIsOutOfCompliance = 1;
+				vOtherMessage = vOtherMessage & "<p>Missing School Acceptance Form</p>";
+			}
         </cfscript>
 
-		<cfif LEN(vMissingMessage) OR LEN(vExpiredMessage)>
+		<cfif VAL(vIsOutOfCompliance)>
         
             <cfsavecontent variable="returnMessage">
                 <cfoutput>
                 
                     <div style="color:##F00">
                     
-                        <p>You can only approve a placement when CBCs and School Acceptance are compliant. Please see below:</p>
+                        <p>You can only approve a placement when CBCs, 2nd Visit Representative and School Acceptance Form are compliant. <br /> Please see below:</p>
                         
                         <!--- Display Missing CBC --->
                         #vMissingMessage#
                         
                         <!--- Display Expired CBC --->
                         #vExpiredMessage#
-
-                        <cfif NOT IsDate(vSchoolAcceptanceDate)>
-                            <p>Missing School Acceptance Form</p>
-                        </cfif>
+						
+                        <!--- Second Visit Rep and School Acceptance --->
+                        #vOtherMessage#
                         
                     </div>
                     
