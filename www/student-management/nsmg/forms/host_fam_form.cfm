@@ -46,12 +46,12 @@
     <cfparam name="FORM.companyid" default="">
     <cfparam name="FORM.regionid" default="">
     <cfparam name="FORM.arearepid" default="">
-    <Cfparam name="FORM.submit_Start" default="paper">
-    <!---Set Regions or users or user type that can start host app---->
-	<cfset allowedUsers = '1,12313,7203,1077,14488'>
- 	
+    <cfparam name="FORM.submit_Start" default="paper">
 
 	<cfscript>
+		// Set Regions or users or user type that can start host app
+		allowedUsers = '1,12313,7203,1077,14488';	
+		
     	if ( VAL (URL.hostID) ) {
 			FORM.hostID = URL.hostID;	
 		}
@@ -112,26 +112,36 @@
 		}
 	</cfscript>
     		
-    <!--- FORM Submitted --->
+	<!--- FORM Submitted --->
     <cfif FORM.submitted>
-		<cfif form.submit_Start is 'eHost'>
-            <Cfquery name="checkEmail" datasource="#application.dsn#">
-            select hostid, familylastname 
-            from smg_hosts
-            where email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.email#">
-            <Cfif isDefined('url.hostid')>
-            and hostid != <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.hostid#">
-            </Cfif>
+    
+		<cfif FORM.submit_Start EQ 'eHost'>
+        
+            <cfquery name="qCheckEmail" datasource="#application.dsn#">
+                SELECT 
+                	hostid, 
+                    familylastname 
+                FROM 
+                	smg_hosts
+                WHERE
+                	email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.email#">
+				
+				<cfif VAL(FORM.hostID)>
+                	AND
+                    	hostid != <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.hostid#">
+                </cfif>
             </cfquery>
-            <cfscript>
-			// Data Validation - Check required Fields
-			if ( checkEmail.recordcount NEQ 0 ) {
-				SESSION.formErrors.Add("This email address is already assigned to the #checkEmail.hostid# - #checkEmail.familylastname# family.");
-            }
-		</cfscript>
-         </cfif>
+            
+			<cfscript>
+				// Data Validation - Check required Fields
+				if ( qCheckEmail.recordcount NEQ 0 ) {
+					SESSION.formErrors.Add("This email address is already assigned to the #qCheckEmail.hostid# - #qCheckEmail.familylastname# family.");
+				}
+            </cfscript>
+    
+		</cfif>
 
-        <cfscript>
+		<cfscript>
 			// Data Validation - Check required Fields
 			if ( FORM.lookup_success NEQ 1 ) {
 				SESSION.formErrors.Add("Please lookup the address.");
@@ -207,20 +217,15 @@
         <!--- // Check if there are no errors --->
         <cfif NOT SESSION.formErrors.length()>
         	
- 				 <cfif form.submit_Start is 'eHost'>
-                 	<cfscript>
-                     // Check for email address.
-                    if ( NOT LEN(TRIM(FORM.email)) ) {
-                        // Get all the missing items in a list
-                        SESSION.formErrors.Add("Please enter an email address.");
-                    }	
-					</cfscript>
-				</cfif>   
-            	
-              
-            <cfscript>
-                // Father SSN - Will update if it's blank or there is a new number
-                if ( isValid("social_security_number", Trim(FORM.fatherSSN)) ) {
+			<cfscript>
+                // Check for email address. 
+                if ( form.submit_Start EQ 'eHost' AND NOT LEN(TRIM(FORM.email)) ) {
+                    //Get all the missing items in a list
+                    SESSION.formErrors.Add("Please enter an email address.");
+                }
+
+				// Father SSN - Will update if it's blank or there is a new number
+                if ( VAL(vDisplayFatherSSN) AND isValid("social_security_number", Trim(FORM.fatherSSN)) ) {
                     // Encrypt Social
                     FORM.fatherSSN = APPLICATION.CFC.UDF.encryptVariable(FORM.fatherSSN);
                     // Update
@@ -231,7 +236,7 @@
                 }
                 
                 // Mother SSN - Will update if it's blank or there is a new number
-                if ( isValid("social_security_number", Trim(FORM.motherSSN)) ) {
+                if ( VAL(vDisplayMotherSSN) AND isValid("social_security_number", Trim(FORM.motherSSN)) ) {
                     // Encrypt Social
                     FORM.motherSSN = APPLICATION.CFC.UDF.encryptVariable(FORM.motherSSN);
                     // Update
@@ -253,7 +258,6 @@
 
 			<cfif VAL(FORM.hostID)>
 				    
-    
                 <!--- Update --->
                 <cfquery datasource="MySql" result="test">
                     UPDATE 
@@ -390,58 +394,50 @@
 					FORM.hostID = newRecord.GENERATED_KEY;
 				</cfscript>
         
-            <cfif form.submit_Start is 'eHost'>
+            	<cfif form.submit_Start is 'eHost'>
           
-            
-            <cfsavecontent variable="hostWelcome">
-				<Cfoutput>
-                <cfif form.fatherfirstname is not ''>#fatherfirstname#</cfif><Cfif form.fatherfirstname is not '' and form.motherfirstname is not ''> and</Cfif> <cfif form.motherfirstname is not ''>#form.motherfirstname#</cfif>-
-                
-                <p>I am so excited that you have decided to host a student!</p>
-                
-                <p>To get started in the process of placing a student with you, I need to you fill out a host application.   The application has a number of questions that will help in finding a student who is suited to living with you.  Please fill out the application as completely as possible.</p>
-                
-                <p>We are required by the Department of State to collect the following information:</p>
-                <ul>
-                <li>a background check on any persons who are 17 years of are or older and who are living in the home. 
-                <li>pictures of certain areas of your home and property to reflect where the student will be living.  
-                <li>basic finacial and finacial aid information on your family
-                </ul>
-                
-               <p>The application process can take any where from 15-60 minutes to complete depending on the information you provide and number of pictures you submit.</p> 
-             	
-                <p>You can always come back to the application at a later time to complete it or change any information that you want.  Please keep in mind though, that once the applciation is submitted, you will no longer be able to change any information on the application. </p>
-               <p><i> We have just launched an electronic host family application, and you are one of the first families to use this new tool.  While we have tested it out extensivly, please bear with us as we work out the final bugs. Should you get any errors or feel that something is confusing, please feel free to let us know how we can improve the process.  There is a live chat and email support available through the application if you need immediate assistance while filling out the applciation.  Any and all feedback would be greatly appreciated.</i></p>
-                
-                
-                
-                <p>To start filling out your application, please click on the following link:</p>
-               
-                <p><A href="http://www.iseusa.com/hostApp/">http://www.iseusa.com/hostApp</A></p>
-                
-                <p>Please use the following login information:</p>
-                
-                Username/Email: #form.email#<br />
-                Password: #strPassword#
-                
-         
-           </cfoutput>
-            </cfsavecontent>
-         
-             <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                <cfinvokeargument name="email_to" value="#form.email#">
-                <cfinvokeargument name="email_subject" value="Host Family Application">
-                <cfinvokeargument name="email_message" value="#hostWelcome#">
-                <cfinvokeargument name="email_from" value="#CLIENT.email#">
-               
-               
-               
-            </cfinvoke>
-            
-            </cfif>
-    
-    
-    
+                    <cfsavecontent variable="hostWelcome">
+                        <cfoutput>
+                            <cfif form.fatherfirstname is not ''>#fatherfirstname#</cfif><Cfif form.fatherfirstname is not '' and form.motherfirstname is not ''> and</Cfif> <cfif form.motherfirstname is not ''>#form.motherfirstname#</cfif>-
+                            
+                            <p>I am so excited that you have decided to host a student!</p>
+                            
+                            <p>To get started in the process of placing a student with you, I need to you fill out a host application.   The application has a number of questions that will help in finding a student who is suited to living with you.  Please fill out the application as completely as possible.</p>
+                            
+                            <p>We are required by the Department of State to collect the following information:</p>
+                            <ul>
+                            <li>a background check on any persons who are 17 years of are or older and who are living in the home. 
+                            <li>pictures of certain areas of your home and property to reflect where the student will be living.  
+                            <li>basic finacial and finacial aid information on your family
+                            </ul>
+                            
+                           <p>The application process can take any where from 15-60 minutes to complete depending on the information you provide and number of pictures you submit.</p> 
+                            
+                            <p>You can always come back to the application at a later time to complete it or change any information that you want.  Please keep in mind though, that once the applciation is submitted, you will no longer be able to change any information on the application. </p>
+                           <p><i> We have just launched an electronic host family application, and you are one of the first families to use this new tool.  While we have tested it out extensivly, please bear with us as we work out the final bugs. Should you get any errors or feel that something is confusing, please feel free to let us know how we can improve the process.  There is a live chat and email support available through the application if you need immediate assistance while filling out the applciation.  Any and all feedback would be greatly appreciated.</i></p>
+                            
+                            
+                            
+                            <p>To start filling out your application, please click on the following link:</p>
+                           
+                            <p><A href="http://www.iseusa.com/hostApp/">http://www.iseusa.com/hostApp</A></p>
+                            
+                            <p>Please use the following login information:</p>
+                            
+                            Username/Email: #form.email#<br />
+                            Password: #strPassword#
+                        </cfoutput>
+                    </cfsavecontent>
+             
+                    <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                        <cfinvokeargument name="email_to" value="#form.email#">
+                        <cfinvokeargument name="email_subject" value="Host Family Application">
+                        <cfinvokeargument name="email_message" value="#hostWelcome#">
+                        <cfinvokeargument name="email_from" value="#CLIENT.email#">
+                    </cfinvoke>
+                    
+                </cfif>
+		
 			</cfif> <!--- VAL(FORM.hostID) --->
 
 			<cfscript>
@@ -452,7 +448,6 @@
                 location("#CGI.SCRIPT_NAME#?curdoc=host_fam_info&hostID=#FORM.hostID#", "no");
             </cfscript>
         
-	
     	</cfif> <!---  NOT SESSION.formErrors.length() --->
     
 	<cfelse>
@@ -523,7 +518,6 @@
 	   	$("#fatherSSN").mask("***-**-9999");
 	   	$("#motherSSN").mask("***-**-9999");
 	});	
-
 	//-->
 </script>
 
@@ -547,7 +541,7 @@
         <gui:tableHeader
             imageName="family.gif"
             tableTitle="Host Family Infomation"
-            width="50%"
+            width="95%"
         />
     </cfif>
     
@@ -555,14 +549,14 @@
     <gui:displayPageMessages 
         pageMessages="#SESSION.pageMessages.GetCollection()#"
         messageType="tableSection"
-        width="50%"
+        width="95%"
         />
     
     <!--- Form Errors --->
     <gui:displayFormErrors 
         formErrors="#SESSION.formErrors.GetCollection()#"
         messageType="tableSection"
-        width="50%"
+        width="95%"
         />
 
     <form name="hostFamilyInfo" action="#CGI.SCRIPT_NAME#?curdoc=forms/host_fam_form" method="post">
@@ -570,7 +564,7 @@
         <input type="hidden" name="hostID" value="#FORM.hostID#">
         <input type="hidden" name="lookup_success" value="#FORM.lookup_success#"> <!--- this gets set to 1 by the javascript lookup function on success. --->
 
-        <table width="50%" align="center" class="section" border="0" cellpadding="4" cellspacing="0">
+        <table width="95%" align="center" class="section" border="0" cellpadding="4" cellspacing="0">
             <tr>
             	<td colspan="2">
   					<span class="redtext" style="padding-right:30px;">* Required fields &nbsp; &nbsp; + One phone field is required</span>
@@ -679,7 +673,7 @@
         </table>
 		
         <!--- Father Information --->
-        <table width="50%" align="center" class="section" border="0" cellpadding="4" cellspacing="0">
+        <table width="95%" align="center" class="section" border="0" cellpadding="4" cellspacing="0">
             <tr bgcolor="##e2efc7">
                 
                 <th align="left">Father's Information</th>
@@ -718,7 +712,7 @@
         </table>
 
 		<!--- Mother Information --->
-        <table width="50%" align="center" class="section" border="0" cellpadding="4" cellspacing="0">
+        <table width="95%" align="center" class="section" border="0" cellpadding="4" cellspacing="0">
             <tr bgcolor="##e2efc7">
             	
                 <th align="left">Mother's Information</th>
@@ -758,7 +752,7 @@
 
 		<!--- Region Information | New Host Family Only --->
         <cfif NOT qGetHostFamilyInfo.recordCount>
-            <table width="50%" align="center" class="section" border="0" cellpadding="4" cellspacing="0">
+            <table width="95%" align="center" class="section" border="0" cellpadding="4" cellspacing="0">
                 <tr bgcolor="##e2efc7">
                     <th align="left">Region Information</th>
                      <td>&nbsp;</td>
@@ -778,7 +772,7 @@
         </cfif>
 
 
-        <table width="50%" align="center" class="section" border="0" cellpadding="4" cellspacing="0">
+        <table width="95%" align="center" class="section" border="0" cellpadding="4" cellspacing="0">
             <tr>
             <cfif qGetHostFamilyInfo.recordCount AND ListFind("1,2,3,4", CLIENT.usertype)>
                 <td valign="top">
@@ -803,7 +797,7 @@
 
 	<!--- Table Footer --->
     <gui:tableFooter 
-        width="50%"
+        width="95%"
         imagePath=""
     />
 
