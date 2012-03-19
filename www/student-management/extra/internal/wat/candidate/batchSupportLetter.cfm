@@ -21,7 +21,7 @@
 
 	<cfif FORM.submitted>
 
-        <cfquery name="qGetCandidate" datasource="MySql">
+        <cfquery name="qGetResults" datasource="MySql">
             SELECT 
                 candidateid, 
                 uniqueid 
@@ -126,24 +126,24 @@
         -->
     </style>
     
-    <cfif NOT VAL(qGetCandidate.recordcount)>
+    <cfif NOT VAL(qGetResults.recordcount)>
         No records were found that match your criteria.<br />
         Please use your browsers back button to select different criteria and resubmit.
         <cfabort>
     </cfif>
-
-    <cfloop query="qGetCandidate">
+	
+    <cfloop query="qGetResults">
     	
         <cfscript>
 			// SET FORM VARIABLE THAT IS USED ON supportLetter.cfm
-			FORM.uniqueID = qGetCandidate.uniqueID;
+			FORM.uniqueID = qGetResults.uniqueID;
 		</cfscript>
-        
+
         <!--- Include Letter --->
         <cfinclude template="supportLetter.cfm">
         
         <!--- Add Page Break --->
-        <cfif qGetCandidate.currentRow NEQ qGetCandidate.recordCount>
+        <cfif qGetResults.currentRow NEQ qGetResults.recordCount>
 	        <div style="page-break-after:always"></div>
     	</cfif>
         
