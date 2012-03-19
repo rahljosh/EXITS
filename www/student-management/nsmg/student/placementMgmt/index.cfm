@@ -43,10 +43,25 @@
 		// Get Student Information
 		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(uniqueID=URL.uniqueID);
 
+		// Get Placement History List
+		qGetPlacementHistoryList = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=qGetStudentInfo.studentID);
+		
+		// Get Placement History By ID - First record of qGetPlacementHistoryList is the current record
+		if ( VAL(FORM.historyID) ) {
+			// Get Previous History from FORM
+			qGetPlacementHistoryByID = APPLICATION.CFC.STUDENT.getHostHistoryByID(studentID=qGetStudentInfo.studentID, historyID=FORM.historyID);
+		} else if ( VAL(qGetPlacementHistoryList.isActive) ) {
+			// Get Current History
+			qGetPlacementHistoryByID = APPLICATION.CFC.STUDENT.getHostHistoryByID(studentID=qGetStudentInfo.studentID, historyID=qGetPlacementHistoryList.historyID);
+		} else {
+			// Student is unplaced 
+			qGetPlacementHistoryByID = APPLICATION.CFC.STUDENT.getHostHistoryByID(studentID=qGetStudentInfo.studentID, historyID=0);
+		};
+
 		// Set a list of current reps assigned to student
 		vCurrentUsersAssigned = '';
-		vCurrentUsersAssigned = ListAppend(vCurrentUsersAssigned, qGetStudentInfo.areaRepID);
-		vCurrentUsersAssigned = ListAppend(vCurrentUsersAssigned, qGetStudentInfo.placeRepID);
+		vCurrentUsersAssigned = ListAppend(vCurrentUsersAssigned, qGetPlacementHistoryByID.areaRepID);
+		vCurrentUsersAssigned = ListAppend(vCurrentUsersAssigned, qGetPlacementHistoryByID.placeRepID);
 		
 		// Get list of states that USERS and HOST FAMILIES are assigned to
 		vListOfStates = APPLICATION.CFC.HOST.getHostStateListByRegionID(regionID=qGetStudentInfo.regionassigned);
@@ -84,18 +99,6 @@
 			
 		}
 		
-		// Get Program Information
-		qGetProgramInfo = APPLICATION.CFC.PROGRAM.getPrograms(programID=qGetStudentInfo.programID);
-		
-		// Get Region Assigned - Used in the hostFamily
-		qGetRegionAssigned = APPLICATION.CFC.REGION.getRegions(qGetStudentInfo.regionAssigned);
-			
-		// Get Host Family Information
-		qGetHostInfo = APPLICATION.CFC.HOST.getHosts(hostID=qGetStudentInfo.hostID);
-		
-		// Get Host Kids at Home
-		qGetHostKidsAtHome = APPLICATION.CFC.HOST.getHostMemberByID(hostID=qGetStudentInfo.hostID,liveAtHome='yes');
-		
 		// Get Available Schools based on area reps state
 		qGetAvailableSchools = APPLICATION.CFC.SCHOOL.getSchools(stateList=vListOfStates);
 		
@@ -112,29 +115,44 @@
 			userID=CLIENT.userID, 
 			regionID=qGetStudentInfo.regionAssigned, 
 			is2ndVisitIncluded=1, 
-			includeUserIDs=qGetStudentInfo.secondVisitRepID);
+			includeUserIDs=qGetPlacementHistoryByID.secondVisitRepID);
+
+		// Get Program Information
+		qGetProgramInfo = APPLICATION.CFC.PROGRAM.getPrograms(programID=qGetStudentInfo.programID);
+		
+		// Get Region Assigned - Used in the hostFamily
+		qGetRegionAssigned = APPLICATION.CFC.REGION.getRegions(qGetStudentInfo.regionAssigned);
 			
+		// Get Host Family Information
+		qGetHostInfo = APPLICATION.CFC.HOST.getHosts(hostID=qGetPlacementHistoryByID.hostID);
+		
+		// Get Host Kids at Home
+		qGetHostKidsAtHome = APPLICATION.CFC.HOST.getHostMemberByID(hostID=qGetPlacementHistoryByID.hostID,liveAtHome='yes');
+		
 		// Get Area Rep
-		qGetAreaRepInfo = APPLICATION.CFC.USER.getUserByID(userID=qGetStudentInfo.areaRepID);
+		qGetAreaRepInfo = APPLICATION.CFC.USER.getUserByID(userID=qGetPlacementHistoryByID.areaRepID);
 
 		// Get Place Rep
-		qGetPlaceRepInfo = APPLICATION.CFC.USER.getUserByID(userID=qGetStudentInfo.placeRepID);
+		qGetPlaceRepInfo = APPLICATION.CFC.USER.getUserByID(userID=qGetPlacementHistoryByID.placeRepID);
 
 		// Get 2nd Visit Rep Info
-		qGetSecondVisitRepInfo = APPLICATION.CFC.USER.getUserByID(userID=qGetStudentInfo.secondVisitRepID);
-		
+		qGetSecondVisitRepInfo = APPLICATION.CFC.USER.getUserByID(userID=qGetPlacementHistoryByID.secondVisitRepID);
+
 		// Get Available Double Placement
-		qGetAvailableDoublePlacement = APPLICATION.CFC.STUDENT.getAvailableDoublePlacement(regionID=qGetStudentInfo.regionassigned, studentID=qGetStudentInfo.studentID);
-		
+		qGetAvailableDoublePlacement = APPLICATION.CFC.STUDENT.getAvailableDoublePlacement(regionID=qGetStudentInfo.regionassigned, studentID=qGetStudentInfo.studentID, hostID=qGetPlacementHistoryByID.hostID);
+
 		// Get Double Placement Info
-		qGetDoublePlacementInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=qGetStudentInfo.doublePlace);	
-		
-		// Get Placement History
-		qGetPlacementHistory = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=qGetStudentInfo.studentID);
-		
+		qGetDoublePlacementInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=VAL(qGetPlacementHistoryByID.doublePlacementID));	
+
 		// Get Second Host Family Visit
-		qGetSecondVisitReport = APPLICATION.CFC.PROGRESSREPORT.getSecondHostFamilyVisitReport(studentID=qGetStudentInfo.studentID, hostID=qGetStudentInfo.hostID);
-		
+		qGetSecondVisitReport = APPLICATION.CFC.PROGRESSREPORT.getSecondHostFamilyVisitReport(studentID=qGetStudentInfo.studentID, hostID=qGetPlacementHistoryByID.hostID);
+
+		// Get Host Mother CBC
+		qGetCBCMother = APPLICATION.CFC.CBC.getCBCHostByID(hostID=qGetPlacementHistoryByID.hostID, cbcType='mother', sortBy="date_sent", sortOrder="DESC", getOneRecord=1);
+
+		// Get Host Father CBC
+		qGetCBCFather = APPLICATION.CFC.CBC.getCBCHostByID(hostID=qGetPlacementHistoryByID.hostID, cbcType='father', sortBy="date_sent", sortOrder="DESC", getOneRecord=1);
+
 		// Calculate total of family members
 		vTotalFamilyMembers = 0;
 		
@@ -153,27 +171,21 @@
 		// Set Placement Status (Unplaced / Rejected / Approved / Pending / Incomplete)
 		vPlacementStatus = '';
 		
-		if ( NOT VAL(qGetStudentInfo.hostid) AND NOT VAL(qGetStudentInfo.schoolid) AND NOT VAL(qGetStudentInfo.arearepid) AND NOT VAL(qGetStudentInfo.placerepid) ) {
+		if ( NOT VAL(qGetPlacementHistoryByID.hostID) AND NOT VAL(qGetPlacementHistoryByID.schoolID) AND NOT VAL(qGetPlacementHistoryByID.placeRepID) AND NOT VAL(qGetPlacementHistoryByID.areaRepID) ) {
 			
 			vPlacementStatus = 'Unplaced';
 		
-		} else if ( VAL(qGetStudentInfo.hostid) AND VAL(qGetStudentInfo.schoolID) AND VAL(qGetStudentInfo.placeRepID) AND VAL(qGetStudentInfo.areaRepID) ) {			
+		} else if ( VAL(qGetPlacementHistoryByID.hostID) AND VAL(qGetPlacementHistoryByID.schoolID) AND VAL(qGetPlacementHistoryByID.placeRepID) AND VAL(qGetPlacementHistoryByID.areaRepID) ) {			
 			
 			if ( qGetStudentInfo.host_fam_approved EQ 99 ) {
-				
 				// Placement Rejected
 				vPlacementStatus = 'Rejected';
-				
 			} else if ( ListFind("1,2,3,4", qGetStudentInfo.host_fam_Approved) ) {
-				
 				// Placement Approved
 				vPlacementStatus = 'Approved';
-				
 			} else {
-				
 				// Pending Approval
 				vPlacementStatus = 'Pending';
-				
 			}
 		
 		} else {
@@ -192,44 +204,47 @@
         vNotesImage = 'notes_1';
         vSecondVisitImage = 'secondVisit_1';
 		
-		// Placement Buttons - Placement Not Complete
-        if ( NOT VAL(qGetStudentInfo.hostid) AND ( VAL(qGetStudentInfo.schoolid) OR VAL(qGetStudentInfo.arearepid) OR VAL(qGetStudentInfo.placerepid) ) ) {
-        	vHostImage = 'host_2';
-		}
-		if ( NOT VAL(qGetStudentInfo.schoolid) AND ( VAL(qGetStudentInfo.hostid) OR VAL(qGetStudentInfo.arearepid) OR VAL(qGetStudentInfo.placerepid) ) ) {
-        	vSchoolImage = 'school_2';
-		}
-		if ( NOT VAL(qGetStudentInfo.placerepid) AND ( VAL(qGetStudentInfo.hostid) OR VAL(qGetStudentInfo.schoolid) OR VAL(qGetStudentInfo.arearepid) ) ) {
-        	vPlaceRepImage = 'place_2';
-       	}
-		if ( NOT VAL(qGetStudentInfo.arearepid) AND ( VAL(qGetStudentInfo.hostid) OR VAL(qGetStudentInfo.schoolid) OR VAL(qGetStudentInfo.placerepid) ) ) {
-        	vSuperRepImage = 'super_2';
-        }
-		if ( NOT VAL(qGetStudentInfo.secondVisitRepid) AND ( VAL(qGetStudentInfo.hostid) OR VAL(qGetStudentInfo.schoolid) OR VAL(qGetStudentInfo.placerepid) ) ) {
-        	vSecondVisitImage = 'secondVisit_2';
-		}
+		if (qGetPlacementHistoryByID.recordCount) {
 		
-		// Placement Buttons 
-        if ( VAL(qGetStudentInfo.hostid) ) {
-			vHostImage = 'host_3';
-		}
-        if ( VAL(qGetStudentInfo.schoolid) ) {
-			vSchoolImage = 'school_3';
-        }
-		if ( VAL(qGetStudentInfo.placerepid) ) {
-			vPlaceRepImage = 'place_3';
-        }
-		if ( VAL(qGetStudentInfo.arearepid) ) {
-			vSuperRepImage = 'super_3';
-        }
-		if ( VAL(qGetStudentInfo.doubleplace) ) {
-			vDoublePlaceImage = 'double_3';
-        }
-		if ( VAL(qGetStudentInfo.secondVisitRepID) ) {
-			vSecondVisitImage = 'secondVisit_3';
-		}
-		// End of Set Default Images
+			// Placement Buttons - Placement Not Complete
+			if ( NOT VAL(qGetPlacementHistoryByID.hostID) AND ( VAL(qGetPlacementHistoryByID.schoolID) OR VAL(qGetPlacementHistoryByID.placeRepID) OR VAL(qGetPlacementHistoryByID.areaRepID) ) ) {
+				vHostImage = 'host_2';
+			}
+			if ( NOT VAL(qGetPlacementHistoryByID.schoolID) AND ( VAL(qGetPlacementHistoryByID.hostID) OR VAL(qGetPlacementHistoryByID.placeRepID) OR VAL(qGetPlacementHistoryByID.areaRepID) ) ) {
+				vSchoolImage = 'school_2';
+			}
+			if ( NOT VAL(qGetPlacementHistoryByID.placeRepID) AND ( VAL(qGetPlacementHistoryByID.hostID) OR VAL(qGetPlacementHistoryByID.schoolID OR VAL(qGetPlacementHistoryByID.areaRepID)) ) ) {
+				vPlaceRepImage = 'place_2';
+			}
+			if ( NOT VAL(qGetPlacementHistoryByID.areaRepID) AND ( VAL(qGetPlacementHistoryByID.hostID) OR VAL(qGetPlacementHistoryByID.schoolID) OR VAL(qGetPlacementHistoryByID.placeRepID) ) ) {
+				vSuperRepImage = 'super_2';
+			}
+			if ( NOT VAL(qGetPlacementHistoryByID.secondVisitRepID) AND ( VAL(qGetPlacementHistoryByID.hostID) OR VAL(qGetPlacementHistoryByID.schoolID) OR VAL(qGetPlacementHistoryByID.placeRepID) ) ) {
+				vSecondVisitImage = 'secondVisit_2';
+			}
+			
+			// Placement Buttons 
+			if ( VAL(qGetPlacementHistoryByID.hostID) ) {
+				vHostImage = 'host_3';
+			}
+			if ( VAL(qGetPlacementHistoryByID.schoolID) ) {
+				vSchoolImage = 'school_3';
+			}
+			if ( VAL(qGetPlacementHistoryByID.placeRepID) ) {
+				vPlaceRepImage = 'place_3';
+			}
+			if ( VAL(qGetPlacementHistoryByID.areaRepID) ) {
+				vSuperRepImage = 'super_3';
+			}
+			if ( VAL(qGetPlacementHistoryByID.doublePlacementID) ) {
+				vDoublePlaceImage = 'double_3';
+			}
+			if ( VAL(qGetPlacementHistoryByID.secondVisitRepID) ) {
+				vSecondVisitImage = 'secondVisit_3';
+			}
+			// End of Set Default Images
 		
+		}
 		
 		// Placement Notes
         if ( NOT LEN(qGetStudentInfo.placement_notes) ) {
@@ -240,59 +255,32 @@
 		// End of Placement Notes
 
 		// Get Eligible CBC Host Kids
-		qGetEligibleCBCHostMembers = APPLICATION.CFC.CBC.getEligibleHostMember(hostID=qGetStudentInfo.hostID, studentID=qGetPlacementHistory.studentID);
+		qGetEligibleCBCHostMembers = APPLICATION.CFC.CBC.getEligibleHostMember(hostID=qGetPlacementHistoryByID.hostID, studentID=qGetPlacementHistoryList.studentID);
 
 		// Paperwork
-        if ( VAL(qGetStudentInfo.hostID) ) {
-			
-			vParentsMissingAuthorization = 0;
-			
-			if ( LEN(qGetHostInfo.fatherFirstName) AND NOT isDate(qGetHostInfo.fathercbc_form) ) {
-				vParentsMissingAuthorization = 1;
-			}
-			
-			if ( LEN(qGetHostInfo.motherFirstName) AND NOT isDate(qGetHostInfo.mothercbc_form) ) {
-				vParentsMissingAuthorization = 1;
-			}
-
-			// Check for Host Kids missing CBC Authorizations
-			vHostMemberMissingCBCAuthorization = 0;
-			
-			// Loop through eligible member query
-            For ( i=1; i LTE qGetEligibleCBCHostMembers.recordCount; i=i+1 ) {
-
-				if ( NOT IsDate(qGetEligibleCBCHostMembers.cbc_form_received[i]) ) {
-					// Store Missing CBC Message
-					vHostMemberMissingCBCAuthorization = vHostMemberMissingCBCAuthorization + 1;
-				}
-				
-            }
+        if ( VAL(qGetPlacementHistoryByID.hostID) ) {
 			
 			// Check for Placement Paperwork
 			if ( 				
-					isDate(qGetPlacementHistory.doc_full_host_app_date) 
+					isDate(qGetPlacementHistoryList.doc_full_host_app_date) 
 				AND 
-					isDate(qGetPlacementHistory.doc_letter_rec_date)
+					isDate(qGetPlacementHistoryList.doc_letter_rec_date)
 				AND 
-					isDate(qGetPlacementHistory.doc_rules_rec_date) 
+					isDate(qGetPlacementHistoryList.doc_rules_rec_date) 
 				AND 
-					isDate(qGetPlacementHistory.doc_rules_sign_date) 
+					isDate(qGetPlacementHistoryList.doc_rules_sign_date) 
 				AND 
-					isDate(qGetPlacementHistory.doc_photos_rec_date) 
+					isDate(qGetPlacementHistoryList.doc_photos_rec_date) 
 				AND 
-					isDate(qGetPlacementHistory.doc_school_accept_date)
+					isDate(qGetPlacementHistoryList.doc_school_accept_date)
 				AND 
-					isDate(qGetPlacementHistory.doc_school_profile_rec) 
+					isDate(qGetPlacementHistoryList.doc_school_profile_rec) 
 				AND 
-					isDate(qGetPlacementHistory.doc_conf_host_rec) 
+					isDate(qGetPlacementHistoryList.doc_conf_host_rec) 
 				AND 
-					isDate(qGetPlacementHistory.doc_ref_form_1) 
+					isDate(qGetPlacementHistoryList.doc_ref_form_1) 
 				AND 
-					isDate(qGetPlacementHistory.doc_ref_form_2) 
-				AND 
-					NOT VAL(vParentsMissingAuthorization)
-				AND 
-					NOT VAL(vHostMemberMissingCBCAuthorization)
+					isDate(qGetPlacementHistoryList.doc_ref_form_2) 
 				) {
 							
 					// Paperwork Complete
@@ -310,15 +298,15 @@
 					qGetProgramInfo.seasonID GTE 9 
 				AND
 				(
-						NOT isDate(qGetPlacementHistory.doc_bedroom_photo) 
+						NOT isDate(qGetPlacementHistoryList.doc_bedroom_photo) 
 					OR 
-						NOT isDate(qGetPlacementHistory.doc_bathroom_photo) 
+						NOT isDate(qGetPlacementHistoryList.doc_bathroom_photo) 
 					OR 
-						NOT isDate(qGetPlacementHistory.doc_kitchen_photo) 
+						NOT isDate(qGetPlacementHistoryList.doc_kitchen_photo) 
 					OR 
-						NOT isDate(qGetPlacementHistory.doc_living_room_photo) 
+						NOT isDate(qGetPlacementHistoryList.doc_living_room_photo) 
 					OR 
-						NOT isDate(qGetPlacementHistory.doc_outside_photo) 
+						NOT isDate(qGetPlacementHistoryList.doc_outside_photo) 
 				)
 			) {
 					// Paperwork Incomplete
@@ -331,9 +319,9 @@
 					vTotalFamilyMembers EQ 1 
 				AND 
 					(
-					 	NOT isDate(qGetPlacementHistory.doc_single_ref_form_1) 
+					 	NOT isDate(qGetPlacementHistoryList.doc_single_ref_form_1) 
 					OR 
-						NOT isDate(qGetPlacementHistory.doc_single_ref_form_2) 
+						NOT isDate(qGetPlacementHistoryList.doc_single_ref_form_2) 
 					)
 				) {
 					// Paperwork Incomplete
@@ -344,11 +332,11 @@
 			if ( vPaperworkImage EQ 'paperwork_4' 
 					AND 
 					( 
-					 	NOT isDate(qGetPlacementHistory.stu_arrival_orientation) 
+					 	NOT isDate(qGetPlacementHistoryList.stu_arrival_orientation) 
 					OR 
-						NOT isDate(qGetPlacementHistory.host_arrival_orientation) 
+						NOT isDate(qGetPlacementHistoryList.host_arrival_orientation) 
 					OR
-						NOT isDate(qGetPlacementHistory.doc_class_schedule)
+						NOT isDate(qGetPlacementHistoryList.doc_class_schedule)
 					) 
 				) {
 				  // Paperwork docs are complete but orientations are missing
@@ -461,7 +449,7 @@
         <!--- Include Template --->
         <cfswitch expression="#FORM.action#">
         
-            <cfcase value="initial,paperwork,paperworkHistory,placementNotes" delimiters=",">
+            <cfcase value="initial,paperwork,placementNotes" delimiters=",">
         
                 <!--- Include template --->
                 <cfinclude template="_#FORM.action#.cfm" />
@@ -478,276 +466,156 @@
         
         </cfswitch>
 		
-		<!--- History --->
-        <cfif URL.action EQ 'initial' AND VAL(qGetPlacementHistory.recordCount)>
-            
-            <!--- Current Placement --->
-            <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">                            				
-                <tr class="reportCenterTitle"> 
-                    <th>
-                    	<cfif vPlacementStatus EQ 'unplaced'>
-                        	PLACEMENT HISTORY
-                        <cfelse>
-                        	#APPLICATION.CFC.UDF.convertToOrdinal(qGetPlacementHistory.recordCount)# PLACEMENT ( CURRENT )
-                        </cfif>
-                        
-                        &nbsp; -  &nbsp;
-                         
-                        Period: From 
-                        <cfif isDate(qGetPlacementHistory.dateRelocated)>
-                            #DateFormat(qGetPlacementHistory.dateRelocated, 'mm/dd/yyyy')#
-                        <cfelse>
-                            #DateFormat(qGetPlacementHistory.datePlaced, 'mm/dd/yyyy')#
-                        </cfif>
-                        
-                        <cfif isDate(qGetPlacementHistory.datePlacedEnded)>
-                            to #DateFormat(qGetPlacementHistory.datePlacedEnded, 'mm/dd/yyyy')#
-                        <cfelse>
-                            to present 
-                        </cfif>
-                        
-                        <div style="float:right; padding-right:5px; width:170px;">
-                            <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&action=paperwork">[ View Paperwork ]</a>
-                        </div>
-                    </th>
-                </tr>
-            </table>
-            
-            <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section" align="center"> 
-                <tr bgcolor="##edeff4">
-                    <td class="reportTitleLeftClean" width="15%">Host Family</td>
-                    <td class="reportTitleLeftClean" width="17%">School</td>
-                    <td class="reportTitleLeftClean" width="17%">Placing Rep.</td>
-                    <td class="reportTitleLeftClean" width="17%">Supervising Rep.</td>
-                    <td class="reportTitleLeftClean" width="17%">2<sup>nd</sup> Rep.</td>
-                    <td class="reportTitleLeftClean" width="17%">Double Placement</td>
-                </tr>
-			</table>
-            
-            <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section paperwork" align="center"> 
-                <cfscript>
-                    // Get Actions History
-                    qGetActionsHistory = APPLICATION.CFC.LOOKUPTABLES.getApplicationHistory(
-                        applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,
-                        foreignTable='smg_hostHistory',
-                        foreignID=qGetPlacementHistory.historyID,
-                        sortBy='dateCreated',
-                        sortOrder='DESC'
-                    );
-                </cfscript>
-
-                <tr bgcolor="##FFFFFF">
-                    <td width="15%" <cfif qGetPlacementHistory.hasHostIDChanged> class="placementMgmtChanged" </cfif> >
-                        <cfif VAL(qGetPlacementHistory.hostID)>
-                            <a href="../../index.cfm?curdoc=host_fam_info&hostid=#qGetPlacementHistory.hostID#" target="_blank" title="More Information">
-                            	#qGetPlacementHistory.familyLastName# (###qGetPlacementHistory.hostID#)
-                            </a>
-                        </cfif>
-                    </td>
-                    <td width="17%" <cfif qGetPlacementHistory.hasSchoolIDChanged> class="placementMgmtChanged" </cfif> >
-						<cfif VAL(qGetPlacementHistory.schoolID)>                            
-                            <a href="../../index.cfm?curdoc=school_info&schoolID=#qGetPlacementHistory.schoolID#" target="_blank" title="More Information">
-                            	#qGetPlacementHistory.schoolName# (###qGetPlacementHistory.schoolID#)
-                            </a>
-                        </cfif>
-                    </td>
-                    <td width="17%" <cfif qGetPlacementHistory.hasPlaceRepIDChanged> class="placementMgmtChanged" </cfif> >
-                        <cfif VAL(qGetPlacementHistory.placeRepID)>
-                            <a href="../../index.cfm?curdoc=user_info&userID=#qGetPlacementHistory.placeRepID#" target="_blank" title="More Information">
-                            	#qGetPlacementHistory.placeFirstName# #qGetPlacementHistory.placeLastName# (###qGetPlacementHistory.placeRepID#)
-                            </a>
-                        </cfif>
-                    </td>
-                    <td width="17%" <cfif qGetPlacementHistory.hasAreaRepIDChanged> class="placementMgmtChanged" </cfif> >
-                        <cfif VAL(qGetPlacementHistory.areaRepID)>
-                            <a href="../../index.cfm?curdoc=user_info&userID=#qGetPlacementHistory.areaRepID#" target="_blank" title="More Information">
-	                            #qGetPlacementHistory.areaFirstName# #qGetPlacementHistory.areaLastName# (###qGetPlacementHistory.areaRepID#)
-    						</a>
-                        </cfif>
-                    </td>
-                    <td width="17%" <cfif qGetPlacementHistory.hasSecondVisitRepIDChanged> class="placementMgmtChanged" </cfif> >
-                        <cfif VAL(qGetPlacementHistory.secondVisitRepID)>
-                            <a href="../../index.cfm?curdoc=user_info&userID=#qGetPlacementHistory.secondVisitRepID#" target="_blank" title="More Information">
-                            	#qGetPlacementHistory.secondRepFirstName# #qGetPlacementHistory.secondRepLastName# (###qGetPlacementHistory.secondVisitRepID#)
-                            </a>
-                        </cfif>
-                    </td>
-                    <td width="17%" <cfif qGetPlacementHistory.hasDoublePlacementIDChanged> class="placementMgmtChanged" </cfif> >
-						<cfif VAL(qGetPlacementHistory.doublePlacementID)>
-                        	<a href="../../index.cfm?curdoc=student_info&studentID=#qGetPlacementHistory.doublePlacementID#" target="_blank" title="More Information">
-                            	#qGetPlacementHistory.doublePlacementFirstName# #qGetPlacementHistory.doublePlacementLastName# (###qGetPlacementHistory.doublePlacementID#)
-                            </a>
-                        </cfif>
-                    </td>
-                </tr>
-                
-                <!--- Display Action History --->
-                <cfif qGetActionsHistory.recordCount>
-                    <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
-                        <tr bgcolor="###iif(qGetPlacementHistory.currentrow MOD 2 ,DE("edeff4") ,DE("FFFFFF") )#">
-                            <td class="reportTitleLeftClean" width="25%">Date</td>
-                            <td class="reportTitleLeftClean" width="75%">Actions</td>
-                        </tr>
-                    </table>
-                    
-                    <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section paperwork" align="center">
-                        <cfloop query="qGetActionsHistory">
-                            <tr>
-                                <td valign="top" width="25%">#DateFormat(qGetActionsHistory.dateCreated, 'mm/dd/yyyy')# at #TimeFormat(qGetActionsHistory.dateCreated, 'hh:mm tt')# <!--- EST ---></td>
-                                <td width="75%">#qGetActionsHistory.actions#</td>
-                            </tr>                        
-                        </cfloop>
-					</table>                        
-                </cfif>
-                 
-            </table> 
-            
-        	<!--- Previous Set of Placements --->
-            <cfif VAL(qGetPlacementHistory.recordCount) GT 1> 
-                
-                <cfscript>
-					// Display Cardinal Placement Information
-					vCardinalCount = qGetPlacementHistory.recordCount;
-				</cfscript>
-                
-                <cfloop query="qGetPlacementHistory" startrow="2" endrow="#VAL(qGetPlacementHistory.recordCount)#">
-
-					<cfscript>
-                        vCardinalCount = vCardinalCount - 1;
-                    </cfscript>
-
-                    <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section" align="center" style="border:1px solid ##ccc;">                            				
-                        <tr class="reportCenterTitle"> 
-                            <th align="center">
-                            	<cfif qGetPlacementHistory.currentRow EQ qGetPlacementHistory.recordCount>
-                                	ORIGINAL PLACEMENT
-                                <cfelse>
-                                	#APPLICATION.CFC.UDF.convertToOrdinal(vCardinalCount)# PLACEMENT
-                                </cfif>
-								
-                                &nbsp; -  &nbsp;
-                                
-                                <cfif isDate(qGetPlacementHistory.datePlacedEnded)>
-                                 
-                                    Period: From 
-                                    <cfif isDate(qGetPlacementHistory.dateRelocated)>
-                                        #DateFormat(qGetPlacementHistory.dateRelocated, 'mm/dd/yyyy')#
-                                    <cfelse>
-                                        #DateFormat(qGetPlacementHistory.datePlaced, 'mm/dd/yyyy')#
-                                    </cfif>
-                                    to #DateFormat(qGetPlacementHistory.datePlacedEnded, 'mm/dd/yyyy')#
-								
-                                <cfelse>
-                                
-                                	#DateFormat(qGetPlacementHistory.datePlaced, 'mm/dd/yyyy')#
-                                
-                                </cfif>
-                                
-                                <div style="float:right; padding-right:5px; width:170px;">
-									<cfif VAL(qGetPlacementHistory.hostID)>
-                                    	<a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&action=paperworkHistory&historyID=#qGetPlacementHistory.historyID#">[ View Paperwork History ]</a>
-                                    <cfelse>
-                                        &nbsp;                            
-                                    </cfif>
-                                </div>
-                            </th>
-                        </tr>
-                    </table>
-                
-                    <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section" align="center"> 
-                        <tr bgcolor="###iif(qGetPlacementHistory.currentrow MOD 2 ,DE("FFFFFF") ,DE("edeff4") )#">
-                            <td class="reportTitleLeftClean" width="15%">Host Family</td>
-                            <td class="reportTitleLeftClean" width="17%">School</td>
-                            <td class="reportTitleLeftClean" width="17%">Placing Rep.</td>
-                            <td class="reportTitleLeftClean" width="17%">Supervising Rep.</td>
-                            <td class="reportTitleLeftClean" width="17%">2<sup>nd</sup> Rep.</td>
-                            <td class="reportTitleLeftClean" width="17%">Double Placement</td>
-                        </tr>
-    				</table>
-                    
-                    <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section paperwork" align="center"> 
-                        <cfscript>
-                            // Get Actions History
-                            qGetActionsHistory = APPLICATION.CFC.LOOKUPTABLES.getApplicationHistory(
-                                applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,
-                                foreignTable='smg_hostHistory',
-                                foreignID=qGetPlacementHistory.historyID,
-                                sortBy='dateCreated',
-                                sortOrder='DESC'
-                            );
-                        </cfscript>
-    
-                        <tr bgcolor="###iif(qGetPlacementHistory.currentrow MOD 2 ,DE("edeff4") ,DE("FFFFFF") )#">
-                            <td width="15%" <cfif qGetPlacementHistory.hasHostIDChanged> class="placementMgmtChanged" </cfif> >
-                                <cfif VAL(qGetPlacementHistory.hostID)>
-                                	<a href="../../index.cfm?curdoc=host_fam_info&hostid=#qGetPlacementHistory.hostID#" target="_blank" title="More Information">
-                                        #qGetPlacementHistory.familyLastName# (###qGetPlacementHistory.hostID#)
-                                    </a>
-                                </cfif>
-                            </td>
-                            <td width="17%" <cfif qGetPlacementHistory.hasSchoolIDChanged> class="placementMgmtChanged" </cfif> >
-                                <cfif VAL(qGetPlacementHistory.schoolID)>                            
-                                    <a href="../../index.cfm?curdoc=school_info&schoolID=#qGetPlacementHistory.schoolID#" target="_blank" title="More Information">
-                                        #qGetPlacementHistory.schoolName# (###qGetPlacementHistory.schoolID#)
-                                    </a>
-                                </cfif>
-                            </td>
-                            <td width="17%" <cfif qGetPlacementHistory.hasPlaceRepIDChanged> class="placementMgmtChanged" </cfif> >
-                                <cfif VAL(qGetPlacementHistory.placeRepID)>
-                                    <a href="../../index.cfm?curdoc=user_info&userID=#qGetPlacementHistory.placeRepID#" target="_blank" title="More Information">
-                                    	#qGetPlacementHistory.placeFirstName# #qGetPlacementHistory.placeLastName# (###qGetPlacementHistory.placeRepID#)
-                                    </a>    
-                                </cfif>
-                            </td>
-                            <td width="17%" <cfif qGetPlacementHistory.hasAreaRepIDChanged> class="placementMgmtChanged" </cfif> >
-                                <cfif VAL(qGetPlacementHistory.areaRepID)>
-                                    <a href="../../index.cfm?curdoc=user_info&userID=#qGetPlacementHistory.areaRepID#" target="_blank" title="More Information">
-	                                    #qGetPlacementHistory.areaFirstName# #qGetPlacementHistory.areaLastName# (###qGetPlacementHistory.areaRepID#)
-    								</a>
-                                </cfif>
-                            </td>
-                            <td width="17%" <cfif qGetPlacementHistory.hasSecondVisitRepIDChanged> class="placementMgmtChanged" </cfif> >
-                                <cfif VAL(qGetPlacementHistory.secondVisitRepID)>
-                                	<a href="../../index.cfm?curdoc=user_info&userID=#qGetPlacementHistory.secondVisitRepID#" target="_blank" title="More Information">    
-                                    	#qGetPlacementHistory.secondRepFirstName# #qGetPlacementHistory.secondRepLastName# (###qGetPlacementHistory.secondVisitRepID#)
-                                	</a>
-								</cfif>
-                            </td>
-                            <td width="17%" <cfif qGetPlacementHistory.hasDoublePlacementIDChanged> class="placementMgmtChanged" </cfif> >
-                                <cfif VAL(qGetPlacementHistory.doublePlacementID)>
-                                	<a href="../../index.cfm?curdoc=student_info&studentID=#qGetPlacementHistory.doublePlacementID#" target="_blank" title="More Information">
-                                    	#qGetPlacementHistory.doublePlacementFirstName# #qGetPlacementHistory.doublePlacementLastName# (###qGetPlacementHistory.doublePlacementID#)
-                                    </a>
-                                </cfif>
-                            </td>
-                        </tr>
-                        
-                        <!--- Display Action History --->
-                        <cfif qGetActionsHistory.recordCount>
-                            <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
-                                <tr bgcolor="###iif(qGetPlacementHistory.currentrow MOD 2 ,DE("FFFFFF") ,DE("edeff4") )#">
-                                    <td class="reportTitleLeftClean" width="25%">Date</td>
-                                    <td class="reportTitleLeftClean" width="75%">Actions</td>
-                                </tr>
-							</table>
-                            
-                            <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section paperwork" align="center">
-                                <cfloop query="qGetActionsHistory">
-                                    <tr>
-                                        <td valign="top" width="25%">#DateFormat(qGetActionsHistory.dateCreated, 'mm/dd/yyyy')# at #TimeFormat(qGetActionsHistory.dateCreated, 'hh:mm tt')# <!--- EST ---></td>
-                                        <td width="75%">#qGetActionsHistory.actions#</td>
-                                    </tr>                        
-                                </cfloop>
-							</table>
-                        </cfif>
-                         
-                    </table> 
-                     
-                </cfloop> 
         
-			</cfif>
+        <!--- Placement History --->
+        <cfif FORM.action EQ 'initial'>
+        
+			<cfscript>
+                // Display Cardinal Placement Information
+                vCardinalCount = qGetPlacementHistoryList.recordCount;
+            </cfscript>
             
-		</cfif>        
+            <cfloop query="qGetPlacementHistoryList">
+    
+                <cfscript>
+                    vCardinalCount = vCardinalCount - 1;
+                </cfscript>
+    
+                <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section" align="center" style="border:1px solid ##ccc;">                            				
+                    <tr class="reportCenterTitle"> 
+                        <th align="center">
+                            
+                            <cfif qGetPlacementHistoryList.currentRow EQ qGetPlacementHistoryList.recordCount>
+                                ORIGINAL PLACEMENT
+                            <cfelseif VAL(qGetPlacementHistoryList.isActive)>
+                                #APPLICATION.CFC.UDF.convertToOrdinal(vCardinalCount)# PLACEMENT ( CURRENT )
+                            <cfelse>
+                                #APPLICATION.CFC.UDF.convertToOrdinal(vCardinalCount)# PLACEMENT
+                            </cfif>
+                            
+                            &nbsp; -  &nbsp;
+                            
+                            <cfif isDate(qGetPlacementHistoryList.datePlacedEnded)>
+                             
+                                Period: From 
+                                <cfif isDate(qGetPlacementHistoryList.dateRelocated)>
+                                    #DateFormat(qGetPlacementHistoryList.dateRelocated, 'mm/dd/yyyy')#
+                                <cfelse>
+                                    #DateFormat(qGetPlacementHistoryList.datePlaced, 'mm/dd/yyyy')#
+                                </cfif>
+                                to #DateFormat(qGetPlacementHistoryList.datePlacedEnded, 'mm/dd/yyyy')#
+                            
+                            <cfelse>
+                            
+                                #DateFormat(qGetPlacementHistoryList.datePlaced, 'mm/dd/yyyy')#
+                            
+                            </cfif>
+                            
+                            <div style="float:right; padding-right:5px; width:170px;">
+                                <cfif VAL(qGetPlacementHistoryList.isActive)>
+                                    <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&action=paperwork">[ View Paperwork ]</a>
+                                <cfelseif VAL(qGetPlacementHistoryList.hostID)>
+                                    <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&action=paperwork&historyID=#qGetPlacementHistoryList.historyID#">[ View Paperwork History ]</a>
+                                <cfelse>
+                                    &nbsp;                            
+                                </cfif>
+                            </div>
+                        </th>
+                    </tr>
+                </table>
+            
+                <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section" align="center"> 
+                    <tr bgcolor="###iif(qGetPlacementHistoryList.currentrow MOD 2 ,DE("FFFFFF") ,DE("edeff4") )#">
+                        <td class="reportTitleLeftClean" width="15%">Host Family</td>
+                        <td class="reportTitleLeftClean" width="17%">School</td>
+                        <td class="reportTitleLeftClean" width="17%">Placing Rep.</td>
+                        <td class="reportTitleLeftClean" width="17%">Supervising Rep.</td>
+                        <td class="reportTitleLeftClean" width="17%">2<sup>nd</sup> Rep.</td>
+                        <td class="reportTitleLeftClean" width="17%">Double Placement</td>
+                    </tr>
+                </table>
+                
+                <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section paperwork" align="center"> 
+                    <cfscript>
+                        // Get Actions History
+                        qGetActionsHistory = APPLICATION.CFC.LOOKUPTABLES.getApplicationHistory(
+                            applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,
+                            foreignTable='smg_hostHistory',
+                            foreignID=qGetPlacementHistoryList.historyID,
+                            sortBy='dateCreated',
+                            sortOrder='DESC'
+                        );
+                    </cfscript>
+    
+                    <tr bgcolor="###iif(qGetPlacementHistoryList.currentrow MOD 2 ,DE("edeff4") ,DE("FFFFFF") )#">
+                        <td width="15%" <cfif qGetPlacementHistoryList.hasHostIDChanged> class="placementMgmtChanged" </cfif> >
+                            <cfif VAL(qGetPlacementHistoryList.hostID)>
+                                <a href="../../index.cfm?curdoc=host_fam_info&hostID=#qGetPlacementHistoryList.hostID#" target="_blank" title="More Information">
+                                    #qGetPlacementHistoryList.familyLastName# (###qGetPlacementHistoryList.hostID#)
+                                </a>
+                            </cfif>
+                        </td>
+                        <td width="17%" <cfif qGetPlacementHistoryList.hasSchoolIDChanged> class="placementMgmtChanged" </cfif> >
+                            <cfif VAL(qGetPlacementHistoryList.schoolID)>                            
+                                <a href="../../index.cfm?curdoc=school_info&schoolID=#qGetPlacementHistoryList.schoolID#" target="_blank" title="More Information">
+                                    #qGetPlacementHistoryList.schoolName# (###qGetPlacementHistoryList.schoolID#)
+                                </a>
+                            </cfif>
+                        </td>
+                        <td width="17%" <cfif qGetPlacementHistoryList.hasPlaceRepIDChanged> class="placementMgmtChanged" </cfif> >
+                            <cfif VAL(qGetPlacementHistoryList.placeRepID)>
+                                <a href="../../index.cfm?curdoc=user_info&userID=#qGetPlacementHistoryList.placeRepID#" target="_blank" title="More Information">
+                                    #qGetPlacementHistoryList.placeFirstName# #qGetPlacementHistoryList.placeLastName# (###qGetPlacementHistoryList.placeRepID#)
+                                </a>    
+                            </cfif>
+                        </td>
+                        <td width="17%" <cfif qGetPlacementHistoryList.hasAreaRepIDChanged> class="placementMgmtChanged" </cfif> >
+                            <cfif VAL(qGetPlacementHistoryList.areaRepID)>
+                                <a href="../../index.cfm?curdoc=user_info&userID=#qGetPlacementHistoryList.areaRepID#" target="_blank" title="More Information">
+                                    #qGetPlacementHistoryList.areaFirstName# #qGetPlacementHistoryList.areaLastName# (###qGetPlacementHistoryList.areaRepID#)
+                                </a>
+                            </cfif>
+                        </td>
+                        <td width="17%" <cfif qGetPlacementHistoryList.hassecondVisitRepIDChanged> class="placementMgmtChanged" </cfif> >
+                            <cfif VAL(qGetPlacementHistoryList.secondVisitRepID)>
+                                <a href="../../index.cfm?curdoc=user_info&userID=#qGetPlacementHistoryList.secondVisitRepID#" target="_blank" title="More Information">    
+                                    #qGetPlacementHistoryList.secondRepFirstName# #qGetPlacementHistoryList.secondRepLastName# (###qGetPlacementHistoryList.secondVisitRepID#)
+                                </a>
+                            </cfif>
+                        </td>
+                        <td width="17%" <cfif qGetPlacementHistoryList.hasDoublePlacementIDChanged> class="placementMgmtChanged" </cfif> >
+                            <cfif VAL(qGetPlacementHistoryList.doublePlacementID)>
+                                <a href="../../index.cfm?curdoc=student_info&studentID=#qGetPlacementHistoryList.doublePlacementID#" target="_blank" title="More Information">
+                                    #qGetPlacementHistoryList.doublePlacementFirstName# #qGetPlacementHistoryList.doublePlacementLastName# (###qGetPlacementHistoryList.doublePlacementID#)
+                                </a>
+                            </cfif>
+                        </td>
+                    </tr>
+                    
+                    <!--- Display Action History --->
+                    <cfif qGetActionsHistory.recordCount>
+                        <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
+                            <tr bgcolor="###iif(qGetPlacementHistoryList.currentrow MOD 2 ,DE("FFFFFF") ,DE("edeff4") )#">
+                                <td class="reportTitleLeftClean" width="25%">Date</td>
+                                <td class="reportTitleLeftClean" width="75%">Actions</td>
+                            </tr>
+                        </table>
+                        
+                        <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section paperwork" align="center">
+                            <cfloop query="qGetActionsHistory">
+                                <tr>
+                                    <td valign="top" width="25%">#DateFormat(qGetActionsHistory.dateCreated, 'mm/dd/yyyy')# at #TimeFormat(qGetActionsHistory.dateCreated, 'hh:mm tt')# <!--- EST ---></td>
+                                    <td width="75%">#qGetActionsHistory.actions#</td>
+                                </tr>                        
+                            </cfloop>
+                        </table>
+                    </cfif>
+                     
+                </table> 
+                 
+            </cfloop> 
+    
+    	</cfif>
     
 		<!--- Table Footer --->
         <gui:tableFooter 

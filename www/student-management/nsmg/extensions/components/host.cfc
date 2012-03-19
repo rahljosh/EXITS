@@ -44,7 +44,6 @@
                     fatherDOB,
                     fatherSSN,
                     father_cell,
-                    fatherCBC_form,
                     fatherDriver,
                     fatherCompany,
                     fatherWorkPhone,
@@ -320,58 +319,6 @@
 	<!--- End of Auto Suggest --->
 
 
-	<!--- ------------------------------------------------------------------------- ----
-		
-		PLACEMENT PAPERWORK
-	
-	----- ------------------------------------------------------------------------- --->
-
-	<cffunction name="updateHostPlacementPaperwork" access="public" returntype="void" output="false" hint="Update Placement Paperwork">
-        <cfargument name="hostID" default="0" hint="hostID is not required">
-        <cfargument name="fathercbc_form" default="" hint="fathercbc_form is not required">
-        <cfargument name="mothercbc_form" default="" hint="mothercbc_form is not required">
-
-        <cfquery 
-			datasource="#APPLICATION.dsn#">
-                UPDATE
-	                smg_hosts
-                SET 
-                    fathercbc_form = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.fathercbc_form#" null="#NOT IsDate(ARGUMENTS.fathercbc_form)#">,
-                    mothercbc_form = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.mothercbc_form#" null="#NOT IsDate(ARGUMENTS.mothercbc_form)#">
-                WHERE 
-                    hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">                    	
-		</cfquery>
-
-	</cffunction>
-    
-    
-	<cffunction name="updateMemberPlacementPaperwork" access="public" returntype="void" output="false" hint="Update Placement Paperwork">
-        <cfargument name="childID" default="0" hint="hostID is not required">
-        <cfargument name="hostID" default="0" hint="hostID is not required">
-        <cfargument name="memberID" default="0" hint="memberID is not required">
-        <cfargument name="cbc_form_received" default="" hint="cbc_form_received is not required">
-
-        <cfquery 
-			datasource="#APPLICATION.dsn#">
-                UPDATE
-	                smg_host_children
-                SET 
-                    cbc_form_received = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.cbc_form_received#" null="#NOT IsDate(ARGUMENTS.cbc_form_received)#">
-                WHERE 
-                    childID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.childID)#">  
-                AND
-                    hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">                    	
-		</cfquery>
-
-	</cffunction>
-    
-	<!--- ------------------------------------------------------------------------- ----
-		
-		END OF PLACEMENT PAPERWORK
-	
-	----- ------------------------------------------------------------------------- --->
-
-
 	<cffunction name="getHostStateListByRegionID" access="public" returntype="string" output="false" hint="Returns a list of host family states assigned to a region">
     	<cfargument name="regionID" type="numeric" hint="userID is required">
 
@@ -425,7 +372,6 @@
                     lastName,
                     SSN,
                     school,
-                    cbc_form_received,
                     shared,
                     roomShareWith
                 FROM 

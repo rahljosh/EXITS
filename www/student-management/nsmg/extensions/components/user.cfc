@@ -73,7 +73,7 @@
 
 
 	<cffunction name="getUserByID" access="public" returntype="query" output="false" hint="Gets a user by ID">
-    	<cfargument name="userID" type="numeric" hint="userID is required">
+    	<cfargument name="userID" type="any" hint="userID is required">
               
         <cfquery 
 			name="qGetUserByID" 

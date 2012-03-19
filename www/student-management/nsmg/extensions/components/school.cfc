@@ -136,6 +136,168 @@
 	</cffunction>
 
 
+    <!--- Sends out an email when school reaches 5 students --->
+	<cffunction name="complianceSchoolNotification" access="public" returntype="void" output="false" hint="Sends out an email when school reaches 5 students">
+        <cfargument name="studentID" default="0" hint="studentID is not required">
+        <cfargument name="schoolID" hint="schoolID is required">
+        <cfargument name="startDate" hint="startDate is required">
+        <cfargument name="endDate" hint="endDate is required">        
+    	
+        <cfscript>
+			// Stores email addresses
+			var vEmailTo = '';
+			
+			// ISE
+			if ( listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) ) {
+				vEmailTo = APPLICATION.EMAIL.ISESchoolNotification;
+			// CASE
+			} else if ( CLIENT.companyID EQ 10 ) {
+				vEmailTo = APPLICATION.EMAIL.CASESchoolNotification;
+			}
+		</cfscript>		        
+                        
+        <cfif LEN(vEmailTo) AND VAL(ARGUMENTS.schoolID) AND IsDate(ARGUMENTS.startDate) AND isDate(ARGUMENTS.endDate)>
+
+            <cfquery name="qGetStudentsAssignedToSchool" datasource="#APPLICATION.DSN#">
+                SELECT
+                    CAST(CONCAT(s.firstName, ' ', s.familyLastName,  ' (##', s.studentID, ')') AS CHAR) AS studentInformation,
+                    s.host_fam_approved,                   
+                    CAST(CONCAT(sc.schoolName, ' (##', sc.schoolID, ')') AS CHAR) AS schoolInformation, 
+                    sc.schoolID,
+                    sh.datePlaced,
+                    p.programName,
+                    c.companyShort,
+                    r.regionName                    
+                FROM
+                    smg_students s
+                INNER JOIN
+                	smg_companies c ON c.companyID = s.companyID
+                INNER JOIN
+                	smg_regions r ON r.regionID = s.regionAssigned
+                INNER JOIN
+                    smg_programs p ON p.programID = s.programID
+                        AND
+                            p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.startDate#">
+                        AND
+                            p.endDate <= <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.endDate#">                              
+                INNER JOIN
+                    smg_hostHistory sh ON sh.studentID = s.studentID
+                        AND
+                            sh.isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                INNER JOIN
+                    smg_schools sc ON sh.schoolID = sc.schoolID
+                        AND
+                            sc.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.schoolID#">
+                WHERE
+                    s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                
+                <!--- Check ISE companies --->
+                <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                    AND	
+                        s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+				<cfelse>
+                    AND	
+                        s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                </cfif>
+                
+				ORDER BY
+                	sh.datePlaced DESC,
+                    s.familyLastName                
+            </cfquery>			            
+            
+            <cfquery name="qGetApprovedStudents" dbtype="query">
+                SELECT
+                    studentInformation,                   
+                    schoolInformation, 
+                    schoolID,
+                    datePlaced,
+                    programName,
+                    companyShort,
+                    regionName
+                FROM
+                    qGetStudentsAssignedToSchool 
+                WHERE
+                    host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4" list="yes"> )    
+            </cfquery>
+            
+            <!--- Sent out Notification --->
+            <cfif qGetApprovedStudents.recordCount EQ 5>
+
+				<!--- Email Template --->
+                <cfsavecontent variable="vEmailSchoolNotification">
+                    <cfoutput>
+                        <html>
+                            <head>
+                                <title>Compliance - School Notification</title>
+                            </head>
+                            <body>
+                                
+                                <!--- Include CSS on the body of email --->
+                                <style type="text/css">
+                                    <cfinclude template="../../linked/css/baseStyle.css">
+                                </style>                    
+                                
+                                <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                                    <tr>
+                                    	<th>School Compliance Notification</th>
+                                    </tr>
+                                    <tr>
+                                        <td class="center">
+                                            <a href="https://#CGI.HTTP_HOST#/nsmg/index.cfm?curdoc=school_info&schoolid=#qGetStudentsAssignedToSchool.schoolID#">#qGetStudentsAssignedToSchool.schoolInformation#</a> 
+                                            reached 5 or more students - Additional paperwork required.
+                                        </td>
+                                    </tr>
+                                </table>
+                                
+                                <br />
+                                
+                                <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                                    <tr class="on">
+                                        <td class="subTitleLeft">Division</td>
+                                        <td class="subTitleLeft">Student</td>
+                                        <td class="subTitleLeft">Program</td>
+                                        <td class="subTitleLeft">Region</td>
+                                        <td class="subTitleLeft">Date Placed</td>
+                                        <td class="subTitleLeft">Status</td>
+                                    </tr>     
+                                    <cfloop query="qGetStudentsAssignedToSchool">
+                                        <tr class="#iif(qGetStudentsAssignedToSchool.currentRow MOD 2 ,DE("off") ,DE("on") )#">
+                                            <td>#qGetStudentsAssignedToSchool.companyShort#</td>
+                                            <td>#qGetStudentsAssignedToSchool.studentInformation#</td>
+                                            <td>#qGetStudentsAssignedToSchool.programName#</td>
+                                            <td>#qGetStudentsAssignedToSchool.regionName#</td>
+                                            <td>#DateFormat(qGetStudentsAssignedToSchool.datePlaced, 'mm/dd/yyyy')#</td>
+                                            <td>
+                                            	<cfif listFind("1,2,3,4", qGetStudentsAssignedToSchool.host_fam_approved)>
+                                                	Approved
+                                                <cfelse>
+                                                	Pending
+                                                </cfif>
+                                            </td>
+                                        </tr>
+                                    </cfloop>
+                                </table>
+        
+                           </body>
+                        </html>
+                     </cfoutput>                
+                </cfsavecontent>
+                
+                <!--- Email Placing Representative and Regional Manager --->
+                <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                	<cfinvokeargument name="email_from" value="#CLIENT.support_email#">
+                    <cfinvokeargument name="email_to" value="#vEmailTo#">
+                    <cfinvokeargument name="email_subject" value="School Compliance Notification - #qGetStudentsAssignedToSchool.schoolInformation#">
+                    <cfinvokeargument name="email_message" value="#vEmailSchoolNotification#">
+                </cfinvoke>
+            
+            </cfif>
+	
+    	</cfif>
+    
+	</cffunction>
+
+
 	<cffunction name="getSchoolAndDatesInfo" access="public" returntype="query" output="false" hint="Returns school and date information for a season">
     	<cfargument name="schoolID" hint="schoolID is required">
         <cfargument name="seasonID" hint="seasonID is required">

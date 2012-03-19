@@ -12,7 +12,6 @@
 	output="false" 
 	hint="A collection of functions for the student">
 
-
 	<!--- Return the initialized student object --->
 	<cffunction name="Init" access="public" returntype="student" output="false" hint="Returns the initialized student object">
 		
@@ -53,6 +52,8 @@
                     AND
                         soID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.soID#">
                 </cfif>
+			
+            LIMIT 1                
 		</cfquery>
 		   
 		<cfreturn qGetStudentByID>
@@ -79,6 +80,7 @@
                     s.placeRepID,
                     s.doublePlace,
                     s.secondVisitRepID,
+                    s.datePlaced,
                     s.firstName,
                     s.familyLastName,
                     s.dob,
@@ -95,6 +97,8 @@
                     intlRep.insurance_typeid,                 
                     <!--- Program --->
                     p.programName,
+                    p.startDate,
+                    p.endDate,
                     <!--- Host Family --->
                     host.airport_city, 
                     host.major_air_code,
@@ -271,6 +275,7 @@
 	<cffunction name="getAvailableDoublePlacement" access="public" returntype="query" output="false" hint="Gets placed available students for double placement">
         <cfargument name="regionID" default="0" hint="regionAssigned is not required">
         <cfargument name="studentID" default="0" hint="studentID is not required">
+        <cfargument name="hostID" default="0" hint="hostID is not required">
               
         <cfquery 
 			name="qGetAvailableDoublePlacement" 
@@ -283,8 +288,11 @@
                 	smg_students
                 WHERE 
                 	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                AND
-                	hostID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+
+				<cfif LEN(ARGUMENTS.hostID)>
+                    AND
+                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+                </cfif>
                     
 				<cfif LEN(ARGUMENTS.regionID)>
                     AND
@@ -334,28 +342,34 @@
         <cfargument name="placementStatus" default="" hint="Unplaced/Incomplete/Pending/Approved/Rejected">
             
         <cfscript>	
-			// Get Student Info
-			var qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID);
-			var hasPlacementChanged = 0;
+			// Get Current Placement Information
+			var qGetCurrentPlacementInfo = getPlacementHistory(studentID=ARGUMENTS.studentID);
+			var vHasHostIDChanged = 0;
+			var vHasPlacementChanged = 0;
+		
+			// Check if Host Family has changed - If Yes reset double placement
+			if ( ARGUMENTS.hostID NEQ qGetCurrentPlacementInfo.hostID ) {
+				vHasHostIDChanged = 1;
+			}
 
 			// Check if info has been updated
 			if (
-					ARGUMENTS.hostID NEQ qGetStudentInfo.hostID
+					ARGUMENTS.hostID NEQ qGetCurrentPlacementInfo.hostID
 				OR
-					ARGUMENTS.schoolID NEQ qGetStudentInfo.schoolID
+					ARGUMENTS.schoolID NEQ qGetCurrentPlacementInfo.schoolID
 				OR
-					ARGUMENTS.placeRepID NEQ qGetStudentInfo.placeRepID
+					ARGUMENTS.placeRepID NEQ qGetCurrentPlacementInfo.placeRepID
 				OR
-					ARGUMENTS.areaRepID NEQ qGetStudentInfo.areaRepID
+					ARGUMENTS.areaRepID NEQ qGetCurrentPlacementInfo.areaRepID
 				OR
-					ARGUMENTS.secondVisitRepID NEQ qGetStudentInfo.secondVisitRepID
+					ARGUMENTS.secondVisitRepID NEQ qGetCurrentPlacementInfo.secondVisitRepID
 				OR
-					ARGUMENTS.doublePlace NEQ qGetStudentInfo.doublePlace
+					ARGUMENTS.doublePlace NEQ qGetCurrentPlacementInfo.doublePlacementID
 				OR
-					ARGUMENTS.isWelcomeFamily NEQ qGetStudentInfo.isWelcomeFamily
+					ARGUMENTS.isWelcomeFamily NEQ qGetCurrentPlacementInfo.isWelcomeFamily
 				) {
 					// Data has changed - Update student table
-					hasPlacementChanged = 1;
+					vHasPlacementChanged = 1;
 			}
 
 			// Insert-Update Placement History
@@ -383,7 +397,7 @@
 		</cfscript>
 		
         <!--- Update Student Table --->
-        <cfif VAL(hasPlacementChanged)>
+        <cfif VAL(vHasPlacementChanged)>
         
             <cfquery 
                 datasource="#APPLICATION.DSN#">
@@ -395,7 +409,14 @@
                         placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.placeRepID)#">,
                         areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.areaRepID)#">,
                         secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.secondVisitRepID)#">,
-                        doublePlace = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">,
+                        
+						<!--- Reset Double Placement if host family has changed --->
+                        <cfif VAL(vHasHostIDChanged)>
+                            doublePlace = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+                        <cfelse>
+                            doublePlace = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">,
+                        </cfif>
+                        
                         isWelcomeFamily = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isWelcomeFamily)#">,
                         
                         <!--- Automatically Approve Placement for the Field  --->
@@ -407,9 +428,9 @@
                             ListFind("1,2,3,4", ARGUMENTS.userType) <!--- Office User --->
                         AND
                             (
-                                qGetStudentInfo.hostID NEQ ARGUMENTS.hostID <!--- HF Changed --->
+                                qGetCurrentPlacementInfo.hostID NEQ ARGUMENTS.hostID <!--- HF Changed --->
                             OR	
-                                qGetStudentInfo.schoolID NEQ ARGUMENTS.schoolID <!--- School Changed --->
+                                qGetCurrentPlacementInfo.schoolID NEQ ARGUMENTS.schoolID <!--- School Changed --->
                             )
                         >
                             host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="5">,
@@ -432,7 +453,7 @@
 			/*******************************************************************************
 				Add New Double Placement
 			********************************************************************************/
-			if ( VAL(ARGUMENTS.doublePlace) AND NOT VAL(qGetStudentInfo.doublePlace) ) {
+			if ( VAL(ARGUMENTS.doublePlace) AND NOT VAL(qGetCurrentPlacementInfo.doublePlacementID) ) {
 				
                 // Insert-Update Placement History
                 insertPlacementHistory(
@@ -455,7 +476,7 @@
 				Double Placement Assigned to a Different Student 
 				Remove previous and add new double placement
 			********************************************************************************/
-			} else if ( VAL(ARGUMENTS.doublePlace) AND ARGUMENTS.doublePlace NEQ qGetStudentInfo.doublePlace ) {
+			} else if ( VAL(ARGUMENTS.doublePlace) AND ARGUMENTS.doublePlace NEQ qGetCurrentPlacementInfo.doublePlacementID ) {
 				
 				/*******************************************************************************
 					Remove Double Placement
@@ -463,9 +484,9 @@
 
                 // Insert-Update Placement History
                 insertPlacementHistory(
-					studentID = qGetStudentInfo.doublePlace,					   
+					studentID = qGetCurrentPlacementInfo.doublePlacementID,					   
 					doublePlace = 0,
-					doublePlaceReason = 'Double placement student assigned to a different student - automatically removed',
+					doublePlaceReason = 'Double placement assigned to a different student - automatically removed',
 					changedBy = ARGUMENTS.changedBy,
 					userType = ARGUMENTS.userType,
 					placementAction='setDoublePlacement'
@@ -473,7 +494,7 @@
 				
 				// Update Double Placement Record
 				updateDoublePlacement(
-					studentID = qGetStudentInfo.doublePlace,					   
+					studentID = qGetCurrentPlacementInfo.doublePlacementID,					   
 					doublePlace = 0,
 					userType = ARGUMENTS.userType
 				);
@@ -500,13 +521,35 @@
 				);
 
 			/*******************************************************************************
-				Remove Double Placement Automatically
+				Remove Double Placement Automatically - Student assigned to a different family
 			********************************************************************************/
-			} else if ( NOT VAL(ARGUMENTS.doublePlace) AND VAL(qGetStudentInfo.doublePlace) ) {
+			} else if ( VAL(qGetCurrentPlacementInfo.doublePlacementID) AND VAL(vHasHostIDChanged) ) {
 				
                 // Insert-Update Placement History
                 insertPlacementHistory(
-					studentID = qGetStudentInfo.doublePlace,					   
+					studentID = qGetCurrentPlacementInfo.doublePlacementID,					   
+					doublePlace = 0,
+					doublePlaceReason = 'Double placement student assigned to a different family - automatically removed',
+					changedBy = ARGUMENTS.changedBy,
+					userType = ARGUMENTS.userType,
+					placementAction='setDoublePlacement'
+				);
+				
+				// Update Double Placement Record on the second record
+				updateDoublePlacement(
+					studentID = qGetCurrentPlacementInfo.doublePlacementID,					   
+					doublePlace = 0,
+					userType = ARGUMENTS.userType
+				);
+			
+			/*******************************************************************************
+				Remove Double Placement Automatically
+			********************************************************************************/
+			} else if ( VAL(qGetCurrentPlacementInfo.doublePlacementID) AND NOT VAL(ARGUMENTS.doublePlace) ) {
+				
+                // Insert-Update Placement History
+                insertPlacementHistory(
+					studentID = qGetCurrentPlacementInfo.doublePlacementID,					   
 					doublePlace = 0,
 					doublePlaceReason = 'Double placement automatically removed',
 					changedBy = ARGUMENTS.changedBy,
@@ -516,7 +559,7 @@
 				
 				// Update Double Placement Record on the second record
 				updateDoublePlacement(
-					studentID = qGetStudentInfo.doublePlace,					   
+					studentID = qGetCurrentPlacementInfo.doublePlacementID,					   
 					doublePlace = 0,
 					userType = ARGUMENTS.userType
 				);
@@ -640,8 +683,11 @@
                 WHERE 
                 	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
     	</cfquery>
-
+   
 		<cfscript>
+			// Set Old Records to Inactive
+			setHostHistoryInactive(studentID=ARGUMENTS.studentID);
+		
 			// Set Date Placed Ended
 			setDatePlacedEnded(studentID=ARGUMENTS.studentID,datePlacedEnded=DateFormat(now(), 'mm/dd/yyyy'));
 		
@@ -719,7 +765,7 @@
 
         <cfscript>
 			// Get Student Info
-			var qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID);
+			var qGetStudentInfo = getStudentFullInformationByID(studentID=ARGUMENTS.studentID);
 			
 			var vUpdateDatePlaced = 0;
 			
@@ -1104,7 +1150,7 @@
 			var vAddExtraLine = 0;
 			
 			// Get Current Placement Information
-			qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID);
+			qGetStudentInfo = getStudentFullInformationByID(studentID=ARGUMENTS.studentID);
 
 			// Get User Information
 			qGetEnteredBy = APPLICATION.CFC.USER.getUsers(userID=ARGUMENTS.changedBy);
@@ -1394,7 +1440,6 @@
                         date_host_fam_approved = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                         datePlaced = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                         datePISEmailed = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-						<!--- Placement Notes --->
                         placement_notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
 	            	WHERE
     					studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
@@ -1402,7 +1447,12 @@
             
             <cfscript>
 				// Set Old Records to Inactive
-				setHostHistoryInactive(studentID=ARGUMENTS.studentID);	
+				setHostHistoryInactive(studentID=ARGUMENTS.studentID);
+				
+				// Host Family Changed - Reset Double Placement
+				if ( VAL(hasHostIDChanged) ) {
+					ARGUMENTS.doublePlace = 0;
+				}
 			</cfscript>
             
             <cfquery 
@@ -1669,9 +1719,14 @@
                     UPDATE
                         smg_hosthistory	
                     SET
+                    	<!--- If school has changed reset school paperwork --->
 						<cfif VAL(hasSchoolIDChanged)>
                         	hasSchoolIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="#hasSchoolIDChanged#">,                
-                        </cfif>
+                        	doc_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                            doc_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                            doc_class_schedule = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                            datePISEmailed = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+						</cfif>
                         
                         <cfif VAL(hasPlaceRepIDChanged)>
                         	hasPlaceRepIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="#hasPlaceRepIDChanged#">,
@@ -1699,7 +1754,32 @@
             </cfquery>
         
 		</cfif>
-                
+         
+        <!--- If school has changed reset datePISEmailed --->
+        <cfif VAL(hasSchoolIDChanged)>
+        
+            <cfquery 
+                datasource="#APPLICATION.DSN#">
+					UPDATE
+                    	smg_students
+                    SET
+                        datePISEmailed = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+	            	WHERE
+    					studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+			</cfquery>
+            
+			<cfscript>
+				// Send Out School Notification when school reaches 5 students
+				APPLICATION.CFC.SCHOOL.complianceSchoolNotification(	
+					studentID=ARGUMENTS.studentID, 
+					schoolID=ARGUMENTS.schoolID, 
+					startDate=qGetStudentInfo.startDate, 
+					endDate=qGetStudentInfo.endDate
+				);
+			</cfscript>
+
+        </cfif>
+        
 	</cffunction>
 
 
@@ -1867,6 +1947,7 @@
 	<!--- Get Placement History --->
 	<cffunction name="getPlacementHistory" access="public" returntype="query" output="false" hint="Returns placement history">
     	<cfargument name="studentID" hint="studentID is required">
+        <cfargument name="isActive" default="" hint="isActive is not required">
         
         <cfquery 
         	name="qGetPlacementHistory" 
@@ -1906,6 +1987,8 @@
                     h.doc_single_ref_check1,
                     h.doc_single_ref_form_2,
 					h.doc_single_ref_check2,
+                    h.doc_single_parents_sign_date,
+                    h.doc_single_student_sign_date,
                     <!--- Placement Paperwork --->
                     h.doc_full_host_app_date,
                     h.doc_letter_rec_date,
@@ -1929,13 +2012,12 @@
                     <!--- Arrival Compliance --->
                     h.doc_school_accept_date,
                     h.doc_school_sign_date,
-                    <!--- Student Application --->
-                    h.copy_app_school,
                     <!--- Arrival Orientation --->
                     h.stu_arrival_orientation,
                     h.host_arrival_orientation,
                     h.doc_class_schedule,
                     h.actions,
+                    h.isActive,
                     h.dateOfChange,
                     h.dateCreated,
                     h.dateUpdated,                
@@ -1953,8 +2035,8 @@
                     secondRep.firstName AS secondRepFirstName,
                     secondRep.lastName AS secondRepLastName,
                     <!--- Double Placement --->
-                    DP.firstName AS doublePlacementFirstName,
-                    DP.familyLastName AS doublePlacementLastName,
+                    dp.firstName AS doublePlacementFirstName,
+                    dp.familyLastName AS doublePlacementLastName,
                     <!--- User --->
                     user.firstName AS changedByFirstName, 
                     user.lastName AS changedByLastName
@@ -1971,7 +2053,7 @@
                 LEFT JOIN 
                     smg_users secondRep ON h.secondVisitRepID = secondRep.userID
                 LEFT JOIN
-                	smg_students DP ON h.doublePlacementID = DP.studentID   
+                	smg_students dp ON h.doublePlacementID = dp.studentID   
                 LEFT JOIN 
                     smg_users user ON h.changedby = user.userID
                 WHERE 
@@ -1982,6 +2064,11 @@
                 AND
                 	h.hostID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                 
+                <cfif LEN(ARGUMENTS.isActive)>
+                    AND
+                        h.isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.isActive)#">
+                </cfif>
+                
                 ORDER BY 
                     h.dateCreated DESC, 
                     h.historyid DESC
@@ -1991,7 +2078,7 @@
     </cffunction>
 
 
-	<!--- Get Placement History --->
+	<!--- Get Placement History By ID --->
 	<cffunction name="getHostHistoryByID" access="public" returntype="query" output="false" hint="Returns placement history">
     	<cfargument name="studentID" default="" hint="studentID is required">
         <cfargument name="historyID" default="" hint="historyID is required">
@@ -2035,6 +2122,8 @@
                     doc_single_ref_check1,
                     doc_single_ref_form_2,
 					doc_single_ref_check2,
+                    doc_single_parents_sign_date,
+                    doc_single_student_sign_date,                    
                     <!--- Placement Paperwork --->
                     doc_full_host_app_date,
                     doc_letter_rec_date,
@@ -2058,8 +2147,6 @@
                     <!--- Arrival Compliance --->
                     doc_school_accept_date,
                     doc_school_sign_date,
-                    <!--- Student Application --->
-                    copy_app_school,
                     <!--- Arrival Orientation --->
                     stu_arrival_orientation,
                     host_arrival_orientation,
@@ -2092,6 +2179,67 @@
                 
         <cfreturn qGetHostHistoryByID>
     </cffunction>
+
+
+	<!--- Get Double Placement Tracking History --->
+	<cffunction name="getDoublePlacementPaperworkHistory" access="public" returntype="query" output="false" hint="Returns double placement paperwork history">
+    	<cfargument name="studentID" hint="studentID is required">
+        <cfargument name="historyID" hint="historyID is required">
+        
+        <cfquery 
+        	name="qGetDoublePlacementPaperworkHistory" 
+            datasource="#APPLICATION.DSN#">
+                SELECT 
+                    ht.ID,
+                    ht.isDoublePlacementPaperworkRequired,                    
+                    ht.doublePlacementParentsDateSigned,
+                    ht.doublePlacementStudentDateSigned,
+                    ht.doublePlacementHostFamilyDateSigned,
+                    ht.dateCreated,                    
+                    <!--- Double Placement --->
+                    dp.studentID AS doublePlacementID,
+                    CAST(CONCAT(dp.firstName, ' ', dp.familyLastName,  ' (##', dp.studentID, ')') AS CHAR) AS doublePlacementStudent                    
+                FROM
+                    smg_hostHistoryTracking ht
+				INNER JOIN
+                	smg_students dp ON ht.fieldID = dp.studentID 
+               	WHERE 
+                	ht.historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.historyID)#">
+				AND
+                    ht.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+                AND
+                   	ht.fieldName = <cfqueryparam cfsqltype="cf_sql_varchar" value="doublePlacementID">
+				
+                ORDER BY 
+                    ht.dateCreated DESC, 
+                    ht.historyid DESC
+        </cfquery>
+                
+        <cfreturn qGetDoublePlacementPaperworkHistory>
+    </cffunction>
+    
+    
+	<!--- Updates a double placement tracking history --->
+	<cffunction name="updateDoublePlacementTrackingHistory" access="public" returntype="void" output="false" hint="Updates a double placement tracking history">
+    	<cfargument name="ID" hint="smg_hostHistoryTracking ID is required">
+        <cfargument name="isDoublePlacementPaperworkRequired" default="" hint="isDoublePlacementPaperworkRequired is not required">
+        <cfargument name="doublePlacementParentsDateSigned" default="" hint="doublePlacementParentsDateSigned is not required">
+        <cfargument name="doublePlacementStudentDateSigned" default="" hint="doublePlacementStudentDateSigned is not required">
+        <cfargument name="doublePlacementHostFamilyDateSigned" default="" hint="doublePlacementHostFamilyDateSigned is not required">
+
+        <cfquery 
+            datasource="#APPLICATION.DSN#">
+                UPDATE
+                	smg_hostHistoryTracking
+                SET
+                	isDoublePlacementPaperworkRequired = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isDoublePlacementPaperworkRequired)#" null="#NOT IsNumeric(ARGUMENTS.isDoublePlacementPaperworkRequired)#">,
+                    doublePlacementParentsDateSigned = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doublePlacementParentsDateSigned#" null="#NOT IsDate(ARGUMENTS.doublePlacementParentsDateSigned)#">,
+                    doublePlacementStudentDateSigned = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doublePlacementStudentDateSigned#" null="#NOT IsDate(ARGUMENTS.doublePlacementStudentDateSigned)#">,
+                	doublePlacementHostFamilyDateSigned = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doublePlacementHostFamilyDateSigned#" null="#NOT IsDate(ARGUMENTS.doublePlacementHostFamilyDateSigned)#">
+                WHERE
+					ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
+        </cfquery>
+    </cffunction>
     
 
 	<!--- Placement Paperwork --->
@@ -2104,6 +2252,8 @@
         <cfargument name="doc_single_ref_check1" default="" hint="doc_single_ref_check1 is not required">
         <cfargument name="doc_single_ref_form_2" default="" hint="doc_single_ref_form_2 is not required">
         <cfargument name="doc_single_ref_check2" default="" hint="doc_single_ref_check2 is not required">
+        <cfargument name="doc_single_parents_sign_date" default="" hint="doc_single_parents_sign_date is not required">
+        <cfargument name="doc_single_student_sign_date" default="" hint="doc_single_student_sign_date is not required">
         <!--- Placement Paperwork --->
         <cfargument name="doc_full_host_app_date" default="" hint="doc_full_host_app_date is not required">
         <cfargument name="doc_letter_rec_date" default="" hint="doc_letter_rec_date is not required">
@@ -2126,8 +2276,6 @@
         <!--- Arrival Compliance --->
         <cfargument name="doc_school_accept_date" default="" hint="doc_school_accept_date is not required">
         <cfargument name="doc_school_sign_date" default="" hint="doc_school_sign_date is not required">
-        <!--- Student Application --->
-        <cfargument name="copy_app_school" default="" hint="copy_app_school is not required">
         <!--- Arrival Orientation --->
         <cfargument name="stu_arrival_orientation" default="" hint="stu_arrival_orientation is not required">
         <cfargument name="host_arrival_orientation" default="" hint="host_arrival_orientation is not required">
@@ -2145,6 +2293,8 @@
                     doc_single_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_check1#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_check1)#">,
                     doc_single_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_form_2#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_form_2)#">,
                     doc_single_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_check2#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_check2)#">,
+                    doc_single_parents_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_parents_sign_date#" null="#NOT IsDate(ARGUMENTS.doc_single_parents_sign_date)#">,
+                    doc_single_student_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_student_sign_date#" null="#NOT IsDate(ARGUMENTS.doc_single_student_sign_date)#">,
                     <!--- Placement Paperwork --->
                     doc_full_host_app_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_full_host_app_date#" null="#NOT IsDate(ARGUMENTS.doc_full_host_app_date)#">,
                     doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_letter_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_letter_rec_date)#">,
@@ -2167,8 +2317,6 @@
                     <!--- Arrival Compliance --->
                     doc_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_accept_date#" null="#NOT IsDate(ARGUMENTS.doc_school_accept_date)#">,
                     doc_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_sign_date#" null="#NOT IsDate(ARGUMENTS.doc_school_sign_date)#">,
-					<!--- Student Application --->
-                    copy_app_school = <cfqueryparam cfsqltype="cf_sql_varchar" value="#YesNoFormat(VAL(ARGUMENTS.copy_app_school))#">,
 					<!--- Arrival Orientation --->
                     stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.stu_arrival_orientation#" null="#NOT IsDate(ARGUMENTS.stu_arrival_orientation)#">,
                     host_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.host_arrival_orientation#" null="#NOT IsDate(ARGUMENTS.host_arrival_orientation)#">,
@@ -2217,7 +2365,9 @@
                     sh.doc_single_ref_form_1,
                     sh.doc_single_ref_check1,
                     sh.doc_single_ref_form_2,
-                    sh.doc_single_ref_check2
+                    sh.doc_single_ref_check2,
+                    sh.doc_single_parents_sign_date,
+                    sh.doc_single_student_sign_date
                 FROM 
                 	smg_students s
                 INNER JOIN
@@ -2393,24 +2543,12 @@
 					returnMessage = returnMessage & 'School Acceptance Form has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_school_accept_date, 'mm/dd/yyyy')#. <br />'; 	
 				}
 				
-				// Host Father CBC
-				if ( LEN(qGetHostInfo.fatherFirstName) AND ( NOT LEN(qGetHostInfo.fathercbc_form) OR qGetHostInfo.fathercbc_form GT setDeadline ) ) {
-					returnMessage = returnMessage & 'Host Father CBC has not been received or received after deadline - Date Received: #DateFormat(qGetHostInfo.fathercbc_form, 'mm/dd/yyyy')#. <br />'; 	
-				}
-				
-				// Host Mother CBC
-				if ( LEN(qGetHostInfo.motherFirstName) AND ( NOT LEN(qGetHostInfo.mothercbc_form) OR qGetHostInfo.mothercbc_form GT setDeadline ) ) {
-					returnMessage = returnMessage & 'Host Mother CBC has not been received or received after deadline - Date Received: #DateFormat(qGetHostInfo.mothercbc_form, 'mm/dd/yyyy')#. <br />'; 	
-				}
-
 				// 2nd Confidential Host Family Visit Form
 				/*
 				if ( NOT LEN(qCheckPlacementPaperwork.doc_conf_host_rec2) OR qCheckPlacementPaperwork.doc_conf_host_rec2 GT setDeadline ) {
 					returnMessage = returnMessage & '2nd Confidential Host Family Visit Form has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_conf_host_rec2, 'mm/dd/yyyy')#. <br />'; 	
 				}
 				*/
-				
-				// Host Member CBC
 				
 				// Non-Traditional Placement - Extra Documents
 				if ( totalFamilyMembers EQ 1 ) {

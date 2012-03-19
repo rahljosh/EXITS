@@ -44,14 +44,28 @@
     <cfparam name="FORM.reason" default="" /> 
 
     <cfscript>
-		// Check if Host Family is in compliance
-		vHostInCompliance = APPLICATION.CFC.CBC.checkHostFamilyCompliance(hostID=qGetStudentInfo.hostID, studentID=qGetStudentInfo.studentID);
+		// Set default value
+		vHostInCompliance = '';
+		
+		// Check if is in compliance - Office users
+		if ( ListFind("1,2,3,4", CLIENT.userType) ) {
+
+			// Check if Host Family is in compliance
+			vHostInCompliance = APPLICATION.CFC.CBC.checkHostFamilyCompliance(
+				hostID=qGetPlacementHistoryByID.hostID, 
+				studentID=qGetStudentInfo.studentID,
+				secondVisitRepID=qGetPlacementHistoryByID.secondVisitRepID,
+				schoolAcceptanceDate=qGetPlacementHistoryByID.doc_school_accept_date,
+				crossDataUserCBC=1
+			);
+			
+		}
 		
 		// Get Training Options
 		qGetRelocationReason = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(applicationID=1,fieldKey='changePlacementReason');
 		
 		// Get School Information
-		qGetSchoolInfo = APPLICATION.CFC.SCHOOL.getSchoolAndDatesInfo(schoolID=qGetStudentInfo.schoolID, seasonID=qGetProgramInfo.seasonID);
+		qGetSchoolInfo = APPLICATION.CFC.SCHOOL.getSchoolAndDatesInfo(schoolID=qGetPlacementHistoryByID.schoolID, seasonID=qGetProgramInfo.seasonID);
 		
 		// FORM Submitted - Update Info
 		if ( listLen(FORM.subAction) GT 1 ) {
@@ -171,15 +185,15 @@
 			// Update Double Placement
 			if ( ListFindNoCase(FORM.subAction, "updateDoublePlace") ) {
 			
-				if ( VAL(qGetStudentInfo.doublePlace) AND NOT LEN(FORM.doublePlaceReason) ) {
+				if ( VAL(qGetPlacementHistoryByID.doublePlacementID) AND NOT LEN(FORM.doublePlaceReason) ) {
 					SESSION.formErrors.Add("You must enter a reason for changing double placement");
 				}	
 
 				// Check if double placement is not assigned to a different student
-				qGetDoublePlacementInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=VAL(FORM.doublePlace));
+				qCheckDoublePlacement = APPLICATION.CFC.STUDENT.getStudentByID(studentID=VAL(FORM.doublePlace));
 				
-				if ( VAL(FORM.doublePlace) AND VAL(qGetDoublePlacementInfo.doublePlace) AND qGetDoublePlacementInfo.doublePlace NEQ FORM.doublePlace ) {
-					SESSION.formErrors.Add("Student #qGetDoublePlacementInfo.firstName# #qGetDoublePlacementInfo.familyLastName# ###qGetDoublePlacementInfo.studentID# is already assigned as double placement with student ###qGetDoublePlacementInfo.doublePlace#");
+				if ( VAL(FORM.doublePlace) AND VAL(qCheckDoublePlacement.doublePlace) AND qCheckDoublePlacement.doublePlace NEQ FORM.doublePlace ) {
+					SESSION.formErrors.Add("Student #qCheckDoublePlacement.firstName# #qCheckDoublePlacement.familyLastName# ###qCheckDoublePlacement.studentID# is already assigned as double placement with student ###qCheckDoublePlacement.doublePlace#");
 				}
 				
 			} 
@@ -242,13 +256,13 @@
 				SESSION.formErrors.Add("You must select a supervising representative from the list");
 			}	
 			
-			if ( VAL(FORM.doublePlace) AND qGetStudentInfo.DoublePlace NEQ FORM.doublePlace ) { 
+			if ( VAL(FORM.doublePlace) AND qGetPlacementHistoryByID.doublePlacementID NEQ FORM.doublePlace ) { 
 			
 				// Check if double placement is not assigned to a different student
-				qGetDoublePlacementInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=VAL(FORM.doublePlace));
+				qCheckDoublePlacement = APPLICATION.CFC.STUDENT.getStudentByID(studentID=VAL(FORM.doublePlace));
 				
-				if ( VAL(qGetDoublePlacementInfo.doublePlace) AND qGetDoublePlacementInfo.doublePlace NEQ FORM.studentID ) {
-					SESSION.formErrors.Add("Student #qGetDoublePlacementInfo.firstName# #qGetDoublePlacementInfo.familyLastName# ###qGetDoublePlacementInfo.studentID# is already assigned as double placement with student ###qGetDoublePlacementInfo.doublePlace#");
+				if ( VAL(qCheckDoublePlacement.doublePlace) AND qCheckDoublePlacement.doublePlace NEQ FORM.studentID ) {
+					SESSION.formErrors.Add("Student #qCheckDoublePlacement.firstName# #qCheckDoublePlacement.familyLastName# ###qCheckDoublePlacement.studentID# is already assigned as double placement with student ###qCheckDoublePlacement.doublePlace#");
 				}
 				
 				FORM.subAction = FORM.subAction & ',updateDoublePlace';
@@ -374,7 +388,7 @@
 					changedBy = CLIENT.userID,								 
 					userType = CLIENT.userType,
 					regionID = qGetStudentInfo.regionAssigned,
-					placeRepID = qGetStudentInfo.placeRepID,
+					placeRepID = qqGetPlacementHistoryByID.placeRepID,
 					reason = FORM.reason
 				 );
 
@@ -423,13 +437,13 @@
 			
 			FORM.studentID = qGetStudentInfo.studentID;
 			FORM.uniqueID = qGetStudentInfo.uniqueID;
-			FORM.hostID = qGetStudentInfo.hostID;		
-			FORM.isWelcomeFamily = qGetStudentInfo.isWelcomeFamily;		
-			FORM.schoolID = qGetStudentInfo.schoolID;
-			FORM.placeRepID = qGetStudentInfo.placeRepID;
-			FORM.areaRepID = qGetStudentInfo.areaRepID;
-			FORM.secondVisitRepID = qGetStudentInfo.secondVisitRepID;
-			FORM.doublePlace = qGetStudentInfo.doublePlace;		
+			FORM.hostID = qGetPlacementHistoryByID.hostID;		
+			FORM.isWelcomeFamily = qGetPlacementHistoryByID.isWelcomeFamily;		
+			FORM.schoolID = qGetPlacementHistoryByID.schoolID;
+			FORM.placeRepID = qGetPlacementHistoryByID.placeRepID;
+			FORM.areaRepID = qGetPlacementHistoryByID.areaRepID;
+			FORM.secondVisitRepID = qGetPlacementHistoryByID.secondVisitRepID;
+			FORM.doublePlace = qGetPlacementHistoryByID.doublePlacementID;		
 			
 			// Set subAction to placementInformation if any information is missing
 			if ( vPlacementStatus EQ 'Incomplete' ) {
@@ -862,7 +876,7 @@
                     <td align="center" style="padding-top:10px;">
                         
 						<!--- Check if CBCs are in compliance with DOS --->											
-                        <cfif LEN(vHostInCompliance) AND ListFind("1,2,3,4", CLIENT.userType)>
+                        <cfif ListFind("1,2,3,4", CLIENT.userType) AND LEN(vHostInCompliance)>
                             
                             <!--- Display Compliance --->
                             #vHostInCompliance#
@@ -935,21 +949,21 @@
         </cfswitch>
 
 		<!--- Display Distance in Miles --->
-        <cfif listFind("1,2,3,4", CLIENT.userType) AND vPlacementStatus NEQ 'unplaced' AND qGetPlacementHistory.hfSupervisingDistance GTE 100>
+        <cfif listFind("1,2,3,4", CLIENT.userType) AND vPlacementStatus NEQ 'unplaced' AND qGetPlacementHistoryByID.hfSupervisingDistance GTE 100>
             
 			<cfscript>
 				vSetColorCode = '';
 				
-				if ( VAL(qGetPlacementHistory.hfSupervisingDistance) GT 120 ) {
+				if ( VAL(qGetPlacementHistoryByID.hfSupervisingDistance) GT 120 ) {
 					vSetColorCode = 'class="alert"';	
-				} else if ( VAL(qGetPlacementHistory.hfSupervisingDistance) GTE 100 ) {
+				} else if ( VAL(qGetPlacementHistoryByID.hfSupervisingDistance) GTE 100 ) {
 					vSetColorCode = 'class="attention"';	
 				}
 			</cfscript>
             
             <tr>
                 <td align="center" style="padding:10px 0px 10px 0px; color:##3b5998;">
-                    <p>Supervising Representative is <span #vSetColorCode#> #qGetPlacementHistory.hfSupervisingDistance# mi </span> away from Host Family</p>
+                    <p>Supervising Representative is <span #vSetColorCode#> #qGetPlacementHistoryByID.hfSupervisingDistance# mi </span> away from Host Family</p>
                 </td>
             </tr> 
                                    
@@ -1021,10 +1035,10 @@
                 <td width="50%">
                     <label for="hostID">Host Family <em>*</em> </label>
                     
-                    <cfif VAL(qGetStudentInfo.hostID)>
+                    <cfif VAL(qGetPlacementHistoryByID.hostID)>
                         <div class="placementMgmtLinks">
                             [ 
-                            <a href="../../index.cfm?curdoc=host_fam_info&hostid=#qGetStudentInfo.hostID#" target="_blank">More Information</a>  
+                            <a href="../../index.cfm?curdoc=host_fam_info&hostid=#qGetPlacementHistoryByID.hostID#" target="_blank">More Information</a>  
                             |
                             <a href="javascript:displayUpdateField('divHostID','hostID');">Update</a> 							
                             
@@ -1034,7 +1048,7 @@
                                 <a href="javascript:displayHiddenForm('unplaceStudentForm');">Unplace Student</a> 
                             </cfif>
                             
-							<cfif qGetStudentInfo.isWelcomeFamily EQ 1 AND ListFind("1,2,3,4,5", CLIENT.userType)>
+							<cfif qGetPlacementHistoryByID.isWelcomeFamily EQ 1 AND ListFind("1,2,3,4,5", CLIENT.userType)>
                                 |
                                 <a href="javascript:displayHiddenForm('setAsPermanentForm');">Set as Permanent</a> 
                             </cfif>
@@ -1045,9 +1059,9 @@
                 <td width="50%">
                     <label for="schoolID">School <em>*</em> </label>
 
-                    <cfif VAL(qGetStudentInfo.schoolID)>
+                    <cfif VAL(qGetPlacementHistoryByID.schoolID)>
                         <div class="placementMgmtLinks">
-                            [ <a href="../../index.cfm?curdoc=school_info&schoolID=#qGetStudentInfo.schoolID#" target="_blank">More Information</a> 
+                            [ <a href="../../index.cfm?curdoc=school_info&schoolID=#qGetPlacementHistoryByID.schoolID#" target="_blank">More Information</a> 
                             |
                             <a href="javascript:displayUpdateField('divSchoolID','schoolID');">Update</a> 
                             ]                        
@@ -1088,7 +1102,7 @@
                             <label for="isWelcomeFamily1">Yes</label>
                         	
                             <!--- Display only if it's an update --->
-                            <cfif VAL(qGetStudentInfo.hostID)>
+                            <cfif VAL(qGetPlacementHistoryByID.hostID)>
                             
 								<!--- Relocation - Display only if student has arrived --->
                                 <span>Is this a Relocation? <em>*</em></span>
@@ -1136,14 +1150,14 @@
                         <div id="divHostIDInfo">
                         
 							<!--- HF Deleted / Not Found  --->
-                            <cfif VAL(qGetStudentInfo.hostID) AND NOT VAL(qGetHostInfo.recordCount)>
+                            <cfif VAL(qGetPlacementHistoryByID.hostID) AND NOT VAL(qGetHostInfo.recordCount)>
                             
-                                <font color="##CC3300">Host Family (###qGetStudentInfo.hostid#) was not found in the system.</font>	
+                                <font color="##CC3300">Host Family (###qGetPlacementHistoryByID.hostID#) was not found in the system.</font>	
                              
                             <!--- HF Information --->   
-                            <cfelseif VAL(qGetStudentInfo.hostID)>
+                            <cfelseif VAL(qGetPlacementHistoryByID.hostID)>
                                 
-                                <cfif qGetStudentInfo.isWelcomeFamily EQ 1>
+                                <cfif qGetPlacementHistoryByID.isWelcomeFamily EQ 1>
                                     *** This is a Welcome Family ***<br />
                                 </cfif>	                       
                                 
@@ -1186,7 +1200,7 @@
                             <p class="formNote">List of schools assigned to the #qGetRegionAssigned.regionname# region</p>
 
                             <!--- Display only if it's an update --->
-                            <cfif VAL(qGetStudentInfo.schoolID)>
+                            <cfif VAL(qGetPlacementHistoryByID.schoolID)>
 								
                                 <span>Please indicate why you are changing the school: <em>*</em></span>
                                 <textarea name="schoolIDReason" id="schoolIDReason" class="largeTextArea">#FORM.schoolIDReason#</textarea>
@@ -1199,12 +1213,12 @@
                         <div id="divSchoolIDInfo">
                         
 							<!--- School Deleted / Not Found --->    
-                            <cfif VAL(qGetStudentInfo.schoolID) AND NOT VAL(qGetSchoolInfo.recordCount)>
+                            <cfif VAL(qGetPlacementHistoryByID.schoolID) AND NOT VAL(qGetSchoolInfo.recordCount)>
                             
                                 <font color="##CC3300">School (###qGetSchoolInfo.schoolID#) was not found in the system.</font>
                             
                             <!--- School Information --->       
-                            <cfelseif VAL(qGetStudentInfo.schoolID)>
+                            <cfelseif VAL(qGetPlacementHistoryByID.schoolID)>
         
                                 #qGetSchoolInfo.schoolname# (###qGetSchoolInfo.schoolID#) <br />
                                 #qGetSchoolInfo.city#, #qGetSchoolInfo.state# #qGetSchoolInfo.zip# <br /> <br />
@@ -1233,9 +1247,9 @@
                 <td width="50%">
                     <label for="placeRepID">Placing Representative <em>*</em> </label>
                     
-                    <cfif VAL(qGetStudentInfo.placeRepID)>
+                    <cfif VAL(qGetPlacementHistoryByID.placeRepID)>
                         <div class="placementMgmtLinks">
-                            [ <a href="../../index.cfm?curdoc=user_info&userID=#qGetStudentInfo.placeRepID#" target="_blank">More Information</a> 
+                            [ <a href="../../index.cfm?curdoc=user_info&userID=#qGetPlacementHistoryByID.placeRepID#" target="_blank">More Information</a> 
                             | 
                             <a href="javascript:displayUpdateField('divPlaceRepID','placeRepID');">Update</a> ] 
                         </div>
@@ -1244,9 +1258,9 @@
                 <td width="50%" style="padding-left:10px;">
                     <label for="areaRepID">Supervising Representative <em>*</em> </label>
                     
-                    <cfif VAL(qGetStudentInfo.areaRepID)>
+                    <cfif VAL(qGetPlacementHistoryByID.areaRepID)>
                         <div class="placementMgmtLinks">
-                            [ <a href="../../index.cfm?curdoc=user_info&userID=#qGetStudentInfo.areaRepID#" target="_blank">More Information</a> 
+                            [ <a href="../../index.cfm?curdoc=user_info&userID=#qGetPlacementHistoryByID.areaRepID#" target="_blank">More Information</a> 
                             |
                             <a href="javascript:displayUpdateField('divAreaRepID','areaRepID');">Update</a> ] 
                         </div>
@@ -1272,7 +1286,7 @@
                             </select>
 
                             <!--- Display only if it's an update --->
-                            <cfif VAL(qGetStudentInfo.placeRepID)>
+                            <cfif VAL(qGetPlacementHistoryByID.placeRepID)>
 								
                                 <span>Please indicate why you are changing the placing representative: <em>*</em></span>
                                 <textarea name="placeRepIDReason" id="placeRepIDReason" class="largeTextArea">#FORM.placeRepIDReason#</textarea>
@@ -1285,12 +1299,12 @@
                         <div id="divPlaceRepIDInfo">
                         
 							<!--- Placing Representative Deleted / Not Found  --->
-                            <cfif VAL(qGetStudentInfo.placeRepID) AND NOT VAL(qGetPlaceRepInfo.recordCount)>
+                            <cfif VAL(qGetPlacementHistoryByID.placeRepID) AND NOT VAL(qGetPlaceRepInfo.recordCount)>
                                 
-                                <font color="##CC3300">Placing Representative (###qGetStudentInfo.placeRepID#) was not found in the system.</font>
+                                <font color="##CC3300">Placing Representative (###qGetPlacementHistoryByID.placeRepID#) was not found in the system.</font>
                                 
                             <!--- Placing Representative Information ---> 
-                            <cfelseif VAL(qGetStudentInfo.placeRepID)>
+                            <cfelseif VAL(qGetPlacementHistoryByID.placeRepID)>
                             
                                 #qGetPlaceRepInfo.firstName# #qGetPlaceRepInfo.lastName# (###qGetPlaceRepInfo.userID#) <br />
                                 #qGetPlaceRepInfo.city#, #qGetPlaceRepInfo.state# #qGetPlaceRepInfo.zip#
@@ -1321,7 +1335,7 @@
                             </select>
 
                             <!--- Display only if it's an update --->
-                            <cfif VAL(qGetStudentInfo.areaRepID)>
+                            <cfif VAL(qGetPlacementHistoryByID.areaRepID)>
 								
                                 <span>Please indicate why you are changing the supervising representative: <em>*</em></span>
                                 <textarea name="areaRepIDReason" id="areaRepIDReason" class="largeTextArea">#FORM.areaRepIDReason#</textarea>                                
@@ -1334,18 +1348,18 @@
                         <div id="divAreaRepIDInfo">
                         
 							<!--- Supervising Representative Deleted / Not Found  --->
-                            <cfif VAL(qGetStudentInfo.areaRepID) AND NOT VAL(qGetAreaRepInfo.recordCount)>
+                            <cfif VAL(qGetPlacementHistoryByID.areaRepID) AND NOT VAL(qGetAreaRepInfo.recordCount)>
                                 
-                                <font color="##CC3300">Supervising Representative (###qGetStudentInfo.areaRepID#) was not found in the system.</font>
+                                <font color="##CC3300">Supervising Representative (###qGetPlacementHistoryByID.areaRepID#) was not found in the system.</font>
                                 
                             <!--- Supervising Representative Information ---> 
-                            <cfelseif VAL(qGetStudentInfo.areaRepID)>
+                            <cfelseif VAL(qGetPlacementHistoryByID.areaRepID)>
                             
                                 #qGetAreaRepInfo.firstName# #qGetAreaRepInfo.lastName# (###qGetAreaRepInfo.userID#) <br />
                                 #qGetAreaRepInfo.city#, #qGetAreaRepInfo.state# #qGetAreaRepInfo.zip#
-								<cfif VAL(qGetPlacementHistory.hfSupervisingDistance)>
+								<cfif VAL(qGetPlacementHistoryByID.hfSupervisingDistance)>
                                 	 <br />
-                                	Distance to Host Family: #qGetPlacementHistory.hfSupervisingDistance# miles
+                                	Distance to Host Family: #qGetPlacementHistoryByID.hfSupervisingDistance# miles
                                 </cfif>
 
                             </cfif>
@@ -1365,9 +1379,9 @@
                 <td width="50%">
                     <label for="secondVisitRepID">2<sup>nd</sup> Representative Visit</label>
                     
-                    <cfif VAL(qGetStudentInfo.secondVisitRepID)>
+                    <cfif VAL(qGetPlacementHistoryByID.secondVisitRepID)>
                         <div class="placementMgmtLinks">
-                            [ <a href="../../index.cfm?curdoc=user_info&userID=#qGetStudentInfo.secondVisitRepID#" target="_blank">More Information</a> 
+                            [ <a href="../../index.cfm?curdoc=user_info&userID=#qGetPlacementHistoryByID.secondVisitRepID#" target="_blank">More Information</a> 
                             
                             <cfif NOT VAL(qGetSecondVisitReport.recordCount) AND NOT ListFind(CLIENT.userType, "5,6,7")>
                                 |
@@ -1380,9 +1394,9 @@
                 <td width="50%">
                 	<label for="doublePlacementID">Double Placement &nbsp; (Optional)</label>
                     
-                    <cfif VAL(qGetStudentInfo.doublePlace)>
+                    <cfif VAL(qGetPlacementHistoryByID.doublePlacementID)>
                         <div class="placementMgmtLinks">
-                            [ <a href="../../index.cfm?curdoc=student_info&studentID=#qGetStudentInfo.doublePlace#" target="_blank">More Information</a> 
+                            [ <a href="../../index.cfm?curdoc=student_info&studentID=#qGetPlacementHistoryByID.doublePlacementID#" target="_blank">More Information</a> 
                             |
                             <a href="javascript:displayUpdateField('divDoublePlace','doublePlace');">Update</a> ] 
                         </div>
@@ -1408,7 +1422,7 @@
                             </select>
 
                             <!--- Display only if it's an update --->
-                            <cfif VAL(qGetStudentInfo.secondVisitRepID)>
+                            <cfif VAL(qGetPlacementHistoryByID.secondVisitRepID)>
                                 
                                 <span>Please indicate why you are changing the second visit representative: <em>*</em></span>
                                 <textarea name="secondVisitRepIDReason" id="secondVisitRepIDReason" class="largeTextArea">#FORM.secondVisitRepIDReason#</textarea>  
@@ -1421,12 +1435,12 @@
                         <div id="divSecondVisitRepIDInfo">
 							
 							<!--- 2nd Representative Deleted / Not Found  --->
-                            <cfif VAL(qGetStudentInfo.secondVisitRepID) AND NOT VAL(qGetSecondVisitRepInfo.recordCount)>
+                            <cfif VAL(qGetPlacementHistoryByID.secondVisitRepID) AND NOT VAL(qGetSecondVisitRepInfo.recordCount)>
                                 
-                                <font color="##CC3300">2<sup>nd</sup> Representative (###qGetStudentInfo.secondVisitRepID#) was not found in the system.</font>
+                                <font color="##CC3300">2<sup>nd</sup> Representative (###qGetPlacementHistoryByID.secondVisitRepID#) was not found in the system.</font>
                                 
                             <!--- 2nd Representative Information ---> 
-                            <cfelseif VAL(qGetStudentInfo.secondVisitRepID)>
+                            <cfelseif VAL(qGetPlacementHistoryByID.secondVisitRepID)>
                             
                                 #qGetSecondVisitRepInfo.firstName# #qGetSecondVisitRepInfo.lastName# (###qGetSecondVisitRepInfo.userID#) <br />
                                 #qGetSecondVisitRepInfo.city#, #qGetSecondVisitRepInfo.state# #qGetSecondVisitRepInfo.zip#
@@ -1452,7 +1466,7 @@
                         <div id="divDoublePlace" class="displayNone">
                             
                             <select name="doublePlace" id="doublePlace" class="xLargeField">
-                                <cfif NOT VAL(qGetStudentInfo.doublePlace)>
+                                <cfif NOT VAL(qGetPlacementHistoryByID.doublePlacementID)>
                                 	<option value="0">Select a Double Placement</option>
                                 <cfelse>
                                 	<option value="0">Remove Double Placement</option>
@@ -1464,10 +1478,12 @@
                                 </cfloop>
                             </select>
                             
-                            <p class="formNote">List of placed students assigned to the #qGetRegionAssigned.regionname# region</p>
+                            <p class="formNote">
+                            	List of students assigned to the #qGetHostInfo.familyLastName# family
+							</p>
 
                             <!--- Display only if it's an update --->
-                            <cfif VAL(qGetStudentInfo.doublePlace)>
+                            <cfif VAL(qGetPlacementHistoryByID.doublePlacementID)>
                                 
                                 <span>Please indicate why you are changing the double placement: <em>*</em></span>
                                 <textarea name="doublePlaceReason" id="doublePlaceReason" class="largeTextArea">#FORM.doublePlaceReason#</textarea>  
@@ -1480,12 +1496,12 @@
                         <div id="divDoublePlaceInfo">
 							
 							<!--- Double Placement Deleted / Not Found  --->
-                            <cfif VAL(qGetStudentInfo.doublePlace) AND NOT VAL(qGetDoublePlacementInfo.recordCount)>
+                            <cfif VAL(qGetPlacementHistoryByID.doublePlacementID) AND NOT VAL(qGetDoublePlacementInfo.recordCount)>
                                 
-                                <font color="##CC3300">Double Placement (###qGetStudentInfo.doublePlace#) was not found in the system.</font>
+                                <font color="##CC3300">Double Placement (###qGetPlacementHistoryByID.doublePlacementID#) was not found in the system.</font>
                                 
                             <!--- Double Placement Information ---> 
-                            <cfelseif VAL(qGetStudentInfo.doublePlace)>
+                            <cfelseif VAL(qGetDoublePlacementInfo.recordCount)>
                             
                                 #qGetDoublePlacementInfo.firstName# #qGetDoublePlacementInfo.familyLastName# (###qGetDoublePlacementInfo.studentID#) <br />
         					
