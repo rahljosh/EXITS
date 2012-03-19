@@ -405,9 +405,13 @@
 							if ( CLIENT.userID NEQ 1956 ) {
 							
 								// Check if Host Family is in compliance
-								vHostInCompliance = APPLICATION.CFC.CBC.checkHostFamilyCompliance(hostID=qGetPendingHosts.hostID, studentID=qGetPendingHosts.studentID);
+								vHostInCompliance = APPLICATION.CFC.CBC.checkHostFamilyCompliance(
+														hostID=qGetPendingHosts.hostID, 
+														studentID=qGetPendingHosts.studentID,
+														schoolAcceptanceDate = qGetPendingHosts.doc_school_accept_date
+													);
 								
-								if ( NOT LEN(vHostInCompliance) AND IsDate(qGetPendingHosts.doc_school_accept_date) ) {
+								if ( NOT LEN(vHostInCompliance) ) {
 									vDisplayEmailLink = 1;
 								}
 							
