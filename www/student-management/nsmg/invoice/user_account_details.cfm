@@ -291,18 +291,16 @@ END) AS testCompId --->
 </script>
 
 <style type="text/css">
-	.menu
-	{
-	border-style:solid;
-	border-width:thin;
-	border-color:#004080;
-	background-color:#FFFFEC;
-	padding-left:0.3cm;
-	padding-bottom:0.1cm;
-	display:none;
-	font-size:11px;
+	.menuInvoice {
+		border-style:solid;
+		border-width:thin;
+		border-color:#004080;
+		background-color:#FFFFEC;
+		padding-left:0.3cm;
+		padding-bottom:0.1cm;
+		display:none;
+		font-size:11px;
 	}
-
 </style>
 		
 <Cfoutput>
@@ -446,7 +444,7 @@ END) AS testCompId --->
 								<td onmouseover="javaScript:displayMenu()" onMouseOut="javaScript:hideMenu()">  					
 								:: <cfif client.userid is 1967><cfelse>
 								<a class=nav_bar href="" onClick="javaScript:win=window.open('invoice/add_charge.cfm?userid=#url.userid#', 'Charges', 'height=395, width=602, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"></cfif>Add Charge</a>
-                                <div class="menu" id="chargesMenu" align="justify">
+                                <div class="menuInvoice" id="chargesMenu" align="justify">
                                 	<a href="" onClick="javaScript:win=window.open('invoice/add_charge.cfm?userid=#url.userid#', 'Charges', 'height=395, width=602, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">High School</a><br />
                                     <a href="" onClick="javaScript:win=window.open('invoice/m_w&t_addCharge.cfm?userid=#url.userid#', 'Charges', 'height=395, width=602, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Work & Travel</a><br />
                                     <a href="" onClick="javaScript:win=window.open('invoice/m_trainee_addCharge.cfm?userid=#url.userid#', 'Charges', 'height=395, width=602, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Trainee</a><br />
@@ -460,7 +458,7 @@ END) AS testCompId --->
 							<tr>
 								<td>:: <cfif client.userid is 1967><cfelse><a class=nav_bar href="" onClick="javascript: win=window.open('invoice/receive_payment.cfm?userid=#url.userid#', 'Payments', 'height=395, width=602, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"></cfif>Receive Payment</a></td>
 								<td onmouseover="javaScript:displayMenu1()" onMouseOut="javaScript:hideMenu1()">:: <cfif client.userid is 1967><cfelse><a class=nav_bar href="" onClick="javascript: win=window.open('invoice/credit_account.cfm?userid=#url.userid#', 'Payments', 'height=395, width=602, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"></cfif>Credit Account</a>
-                                <div class="menu" id="cancellationMenu" align="justify">
+                                <div class="menuInvoice" id="cancellationMenu" align="justify">
                                 	<a href="" onClick="javaScript:win=window.open('invoice/m_cancelStud.cfm?userid=#url.userid#', 'Charges', 'height=800, width=1000, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Cancel a student</a><br/>
                                 </div>
                                 </td>
@@ -863,7 +861,7 @@ GROUP BY
 		</table>
 </cfform>
 	</div>
-				<table width=100% cellpadd<strong></strong>ing=0 cellspacing=0 border=0>
+				<table width=100% cellpadding=0 cellspacing=0 border=0>
 					<tr valign=bottom >
 						<td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td>
 						<td width=100% background="pics/header_background_footer.gif"></td>
