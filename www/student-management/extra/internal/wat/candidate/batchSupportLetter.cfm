@@ -36,7 +36,9 @@
                 AND 
                     intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intRep#">
             </cfif>
-            
+			ORDER BY
+            	lastName,
+                firstName            
         </cfquery>
     
     </cfif>
