@@ -121,6 +121,8 @@
         	smg_hostHistory sh ON sh.studentID = s.studentID
             AND
             	sh.isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            AND	
+            	sh.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
 		INNER JOIN
         	smg_companies c ON c.companyID = s.companyID            
 		INNER JOIN
