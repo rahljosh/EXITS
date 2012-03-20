@@ -132,12 +132,11 @@ corporation located at #companyInfo.address#, #companyInfo.city#, #companyInfo.s
   earned prior to such termination.</p>
   
   <li><u> Interpretation of Contract</u>
-  <p>This Agreement shall be deemed to have been entered into in the State of New York
+  <p>This Agreement shall be deemed to have been entered into in the State of <cfif client.companyid eq 10>New Jersey<cfelse>New York</cfif>
   and shall be governed and controlled as to validity, enforcement, interpretation,
-  construction, effect, and in all other respects by the internal laws of the State of New
-  York applicable to contracts made in that State, without regard to its laws of conflict of
+  construction, effect, and in all other respects by the internal laws of the State of <cfif client.companyid eq 10>New Jersey<cfelse>New York</cfif>  applicable to contracts made in that State, without regard to its laws of conflict of
   laws. The Area Representative agrees that the Area Representative will be subject to the
-  personal jurisdiction of the courts of the State of New York for any matter relating to
+  personal jurisdiction of the courts of the State of <cfif client.companyid eq 10>New Jersey<cfelse>New York</cfif>  for any matter relating to
   this Agreement; provided, however, nothing herein shall be deemed to preclude or
   prevent #companyInfo.companyshort_nocolor# from bringing any action or claim to enforce the provisions of this
   Agreement in any other appropriate state or from having jurisdiction over the Area
@@ -453,8 +452,8 @@ cannot be applied to the Placement Paperwork Bonus.</p>
 
 <p>(d) <strong>Payment of Bonuses:</strong> The Early Placement Bonus and the Placement
 Paperwork Bonus will be paid as soon as the manager submits the bonus
-request form for the AR and the New York office approves it.</p>
-<p>Bonus payments request forms must be received in the NY office within 30
+request form for the AR and the <cfif client.companyid eq 10>New Jersey<cfelse>New York</cfif>  office approves it.</p>
+<p>Bonus payments request forms must be received in the <cfif client.companyid eq 10>NJ<cfelse>NY</cfif>  office within 30
 days of the bonus deadline, that is, May 15th for the Fast Track Placement
 Bonus July 1st for the Early Placement Bonus and September 1st for the
 Placement Paperwork Bonus. Payment request forms received after the due
@@ -479,7 +478,7 @@ received in the #companyInfo.companyshort_nocolor# main office. To avoid delay o
 evaluations must be submitted by the 1st of the evaluative month. Evaluations
 submitted beyond 30 days from the due date listed on each report will not be
 eligible for payment.</li>
-<li>The NY office will pro-rate all supervision fees for students who depart from the
+<li>The <cfif client.companyid eq 10>NJ<cfelse>NY</cfif>  office will pro-rate all supervision fees for students who depart from the
 program early.</li>
 <li>Unpaid fees relating to placement of a student that has to move and/or change AR
 will move with the student to the new AR.</li>l
