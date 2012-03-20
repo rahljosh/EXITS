@@ -39,10 +39,9 @@ text-align:center;
 	<tr>
 		<td><img src="../pics/logos/#original_company_info.companyshort#_clear.gif"></td>
 		<td>
-		As mandated by the Department of State, a Criminal Background Check on all
-		Office Staff, Regional Directors/Managers, Regional Advisors, Area
-		Representatives all members of the host family aged 18 and above is required for
-		involvement with the J-1 Secondary School Exchange Visitor Program.
+		<cfif client.companyid NEQ 14>As mandated by the Department of State, a<cfelse> A</cfif> Criminal Background Check on all Office Staff, Regional Directors/
+  Managers, Regional Advisors, Area Representatives and all members of the host family aged 18 and above is 
+  required for involvement with the <cfif client.companyid NEQ 14>J-1 Secondary School</cfif> Exchange <cfif client.companyid NEQ 14>Visitor</cfif> Program.
 		</td>
 	</tr>
 	<tr>

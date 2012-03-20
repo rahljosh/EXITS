@@ -6,9 +6,9 @@
 </cfscript>
 <cfoutput>
 <img src="https://ise.exitsapplication.com/nsmg/pics/#client.companyid#_short_profile_header.jpg" />
-<p>As mandated by the Department of State, a Criminal Background Check on all Office Staff, Regional Directors/
+<p><cfif client.companyid NEQ 14>As mandated by the Department of State, a<cfelse> A</cfif> Criminal Background Check on all Office Staff, Regional Directors/
   Managers, Regional Advisors, Area Representatives and all members of the host family aged 18 and above is 
-  required for involvement with the J-1 Secondary School Exchange Visitor Program.. </p>
+  required for involvement with the <cfif client.companyid NEQ 14>J-1 Secondary School</cfif> Exchange <cfif client.companyid NEQ 14>Visitor</cfif> Program. </p>
 
 <div class="scroll">
          
