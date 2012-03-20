@@ -375,6 +375,7 @@
                             	<a href="index.cfm?curdoc=userPayment/index">Representative Payments</a>
                                 <ul>
                                     <li><a href="index.cfm?curdoc=userPayment/index&action=bonusReport">Bonus Report</a></li>
+                                    <li><a href="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=maintenance">Fee Maintenance</a></li>
                                 </ul>
                             </li>
                         </cfif>

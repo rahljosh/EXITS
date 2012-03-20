@@ -68,6 +68,15 @@
             smg_payment_types pt
         INNER JOIN 
             smg_payment_amount pa ON pt.id = pa.paymentid
+            <!--- ISE - Get Amounts for William --->
+            <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
+                AND
+                    pa.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="1">               
+            <!--- CASE | ESI --->
+			<cfelse>
+                AND
+                    pa.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">               
+            </cfif>		
         WHERE 
             pt.id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.supervisedPaymentType)#">
         AND 
@@ -83,6 +92,15 @@
             smg_payment_types pt
         INNER JOIN 
             smg_payment_amount pa ON pt.id = pa.paymentid
+            <!--- ISE - Get Amounts for William --->
+            <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
+                AND
+                    pa.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="1">               
+            <!--- CASE | ESI --->
+			<cfelse>
+                AND
+                    pa.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">               
+            </cfif>		
         WHERE 
             pt.id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.placedPaymentType)#"> 
         AND 
@@ -98,6 +116,15 @@
             smg_payment_types pt
         INNER JOIN 
             smg_payment_amount pa ON pt.id = pa.paymentid
+            <!--- ISE - Get Amounts for William --->
+            <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
+                AND
+                    pa.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="1">               
+            <!--- CASE | ESI --->
+			<cfelse>
+                AND
+                    pa.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">               
+            </cfif>		
         WHERE 
             pt.id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.secondVisitPaymentType)#"> 
         AND 
