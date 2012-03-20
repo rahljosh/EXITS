@@ -1132,6 +1132,9 @@
 			// History ID
 			var vHostHistoryID = 0;
 			
+			// Stores previous placement history, school dates must be kept the same if changing host family and school remains the same
+			var qGetPreviousPlacementHistory = getPlacementHistory(studentID=ARGUMENTS.studentID, isActive=1);
+			
 			// Set whether we are updating or inserting a record
 			var vQueryType = '';
 			
@@ -1139,12 +1142,12 @@
 			var vUpdatedBy = 'n/a';
 			var vActions = '';			
 			
-			var hasHostIDChanged = 0;
-			var hasSchoolIDChanged = 0;
-			var hasPlaceRepIDChanged = 0;
-			var hasAreaRepIDChanged = 0;
-			var hasSecondVisitRepIDChanged = 0;
-			var hasDoublePlacementIDChanged = 0;
+			var vHasHostIDChanged = 0;
+			var vHasSchoolIDChanged = 0;
+			var vHasPlaceRepIDChanged = 0;
+			var vHasAreaRepIDChanged = 0;
+			var vHasSecondVisitRepIDChanged = 0;
+			var vHasDoublePlacementIDChanged = 0;
 			
 			// Set to 1 to add an extra line on the history
 			var vAddExtraLine = 0;
@@ -1196,7 +1199,7 @@
 				if ( VAL(ARGUMENTS.hostID) AND VAL(qGetStudentInfo.hostID) AND qGetStudentInfo.hostID NEQ ARGUMENTS.hostID ) {
 					vQueryType = 'insert';
 					vAddExtraLine = 1;
-					hasHostIDChanged = 1;
+					vHasHostIDChanged = 1;
 					
 					// Start building record
 					vActions = vActions & "<strong>New Placement Information - Pending Approval</strong> <br /> #CHR(13)#";
@@ -1236,7 +1239,7 @@
 						vQueryType = 'update';
 					}
 					vAddExtraLine = 1;
-					hasSchoolIDChanged = 1;
+					vHasSchoolIDChanged = 1;
 					
 					// Add Message if info has been updated
 					if ( VAL(qGetStudentInfo.schoolID) ) {
@@ -1265,7 +1268,7 @@
 						vQueryType = 'update';
 					}
 					vAddExtraLine = 1;
-					hasPlaceRepIDChanged = 1;
+					vHasPlaceRepIDChanged = 1;
 
 					// Add Message if info has been updated
 					if ( VAL(qGetStudentInfo.placeRepID) ) {
@@ -1293,7 +1296,7 @@
 						vQueryType = 'update';
 					}
 					vAddExtraLine = 1;
-					hasAreaRepIDChanged = 1;
+					vHasAreaRepIDChanged = 1;
 
 					// Add Message if info has been updated
 					if ( VAL(qGetStudentInfo.areaRepID) ) {
@@ -1321,7 +1324,7 @@
 						vQueryType = 'update';
 					}
 					vAddExtraLine = 1;
-					hasSecondVisitRepIDChanged = 1;
+					vHasSecondVisitRepIDChanged = 1;
 
 					// Add Message if info has been updated
 					if ( VAL(qGetStudentInfo.secondVisitRepID) ) {
@@ -1340,7 +1343,7 @@
 						vQueryType = 'update';
 					}
 					vAddExtraLine = 1;
-					hasSecondVisitRepIDChanged = 1;
+					vHasSecondVisitRepIDChanged = 1;
 					
 					vActions = vActions & "<strong>2<sup>nd</sup> Representative Visit Added</strong> <br /> #CHR(13)#";
 
@@ -1358,7 +1361,7 @@
 						vQueryType = 'update';
 					}
 					vAddExtraLine = 1;
-					hasDoublePlacementIDChanged = 1;
+					vHasDoublePlacementIDChanged = 1;
 
 					// Add Message if info has been updated
 					if ( VAL(qGetStudentInfo.doublePlace) ) {
@@ -1381,7 +1384,7 @@
 						vQueryType = 'update';
 					}
 					vAddExtraLine = 1;
-					hasDoublePlacementIDChanged = 1;
+					vHasDoublePlacementIDChanged = 1;
 
 					vActions = vActions & "<strong>Double Placement Added</strong> <br /> #CHR(13)#";
 
@@ -1398,7 +1401,7 @@
 						vQueryType = 'update';
 					}
 					vAddExtraLine = 1;
-					hasDoublePlacementIDChanged = 1;
+					vHasDoublePlacementIDChanged = 1;
 					
 					vActions = vActions & "<strong>Double Placement Removed</strong> <br /> #CHR(13)#";	
 					// Previous Supervising Representative for reference
@@ -1450,7 +1453,7 @@
 				setHostHistoryInactive(studentID=ARGUMENTS.studentID);
 				
 				// Host Family Changed - Reset Double Placement
-				if ( VAL(hasHostIDChanged) ) {
+				if ( VAL(vHasHostIDChanged) ) {
 					ARGUMENTS.doublePlace = 0;
 				}
 			</cfscript>
@@ -1488,19 +1491,19 @@
                     (
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">,
-                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(hasHostIDChanged)#">, 
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(vHasHostIDChanged)#">, 
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.changePlacementReasonID)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.changePlacementExplanation#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.schoolID)#">,
-                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(hasSchoolIDChanged)#">,   
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(vHasSchoolIDChanged)#">,   
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.placeRepID)#">, 
-                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(hasPlaceRepIDChanged)#">, 
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(vHasPlaceRepIDChanged)#">, 
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.areaRepID)#">, 
-                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(hasAreaRepIDChanged)#">, 
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(vHasAreaRepIDChanged)#">, 
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.secondVisitRepID)#">, 
-                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(hasSecondVisitRepIDChanged)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(vHasSecondVisitRepIDChanged)#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">,
-                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(hasDoublePlacementIDChanged)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(vHasDoublePlacementIDChanged)#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.changedBy)#">, 
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isWelcomeFamily)#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isRelocation)#">, 
@@ -1590,11 +1593,27 @@
 				}
             </cfscript>
             
+            <!--- School has not changed, copy school dates from previous history --->
+            <cfif NOT VAL(vHasSchoolIDChanged) AND VAL(qGetPreviousPlacementHistory.recordCount)>
+            
+                <cfquery datasource="#APPLICATION.DSN#" result="test1">
+					UPDATE
+                    	smg_hostHistory
+                    SET
+                    	doc_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPreviousPlacementHistory.doc_school_accept_date#" null="#NOT IsDate(qGetPreviousPlacementHistory.doc_school_accept_date)#">,
+                        doc_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPreviousPlacementHistory.doc_school_sign_date#" null="#NOT IsDate(qGetPreviousPlacementHistory.doc_school_sign_date)#">,
+                        doc_class_schedule = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPreviousPlacementHistory.doc_class_schedule#" null="#NOT IsDate(qGetPreviousPlacementHistory.doc_class_schedule)#">
+                    WHERE
+                    	historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vHostHistoryID)#">                     
+                </cfquery>
+                
+            </cfif>
+            
         </cfif>
         
 		<cfscript>
+			// Get Current HistoryID if we do not have one
 			if ( NOT VAL(vHostHistoryID) ) {
-				// Get Current History
 				vHostHistoryID = getPlacementHistory(studentID=ARGUMENTS.studentID).historyID;
 			}
 				
@@ -1614,7 +1633,7 @@
 			// Insert Placement Log History
 			
 			// Insert Host ID Track
-			if ( VAL(hasHostIDChanged) AND VAL(ARGUMENTS.hostID) ) {
+			if ( VAL(vHasHostIDChanged) AND VAL(ARGUMENTS.hostID) ) {
 
 				insertPlacementTracking(
 					historyID=vHostHistoryID,
@@ -1626,7 +1645,7 @@
 			}
 			
 			// Insert School ID Track
-			if ( VAL(hasSchoolIDChanged) AND VAL(ARGUMENTS.schoolID) ) {
+			if ( VAL(vHasSchoolIDChanged) AND VAL(ARGUMENTS.schoolID) ) {
 
 				insertPlacementTracking(
 					historyID=vHostHistoryID,
@@ -1638,7 +1657,7 @@
 			}
 			
 			// Insert Place Rep ID Track
-			if ( VAL(hasPlaceRepIDChanged) AND VAL(ARGUMENTS.placeRepID) ) {
+			if ( VAL(vHasPlaceRepIDChanged) AND VAL(ARGUMENTS.placeRepID) ) {
 
 				insertPlacementTracking(
 					historyID=vHostHistoryID,
@@ -1650,7 +1669,7 @@
 			}
 			
 			// Insert Area Rep ID Track
-			if ( VAL(hasAreaRepIDChanged) AND VAL(ARGUMENTS.areaRepID) ) {
+			if ( VAL(vHasAreaRepIDChanged) AND VAL(ARGUMENTS.areaRepID) ) {
 
 				insertPlacementTracking(
 					historyID=vHostHistoryID,
@@ -1662,7 +1681,7 @@
 			}
 			
 			// Insert Second Visit Rep Track
-			if ( VAL(hasSecondVisitRepIDChanged) AND VAL(ARGUMENTS.secondVisitRepID) ) {
+			if ( VAL(vHasSecondVisitRepIDChanged) AND VAL(ARGUMENTS.secondVisitRepID) ) {
 
 				insertPlacementTracking(
 					historyID=vHostHistoryID,
@@ -1674,7 +1693,7 @@
 			}
 			
 			// Insert Double Placement Track
-			if ( VAL(hasDoublePlacementIDChanged) AND VAL(ARGUMENTS.doublePlace) ) {
+			if ( VAL(vHasDoublePlacementIDChanged) AND VAL(ARGUMENTS.doublePlace) ) {
 
 				insertPlacementTracking(
 					historyID=vHostHistoryID,
@@ -1686,7 +1705,7 @@
 			}
 			
 			// Update Mileage if Host Family or Supervising Representative is updated
-			if ( ARGUMENTS.placementStatus EQ 'Unplaced' OR VAL(hasHostIDChanged) OR VAL(hasAreaRepIDChanged) ) {
+			if ( ARGUMENTS.placementStatus EQ 'Unplaced' OR VAL(vHasHostIDChanged) OR VAL(vHasAreaRepIDChanged) ) {
 			
 				// Get Host Family Address
 				vHostAddress = APPLICATION.CFC.HOST.getCompleteHostAddress(hostID=ARGUMENTS.hostID).completeAddress;
@@ -1720,28 +1739,28 @@
                         smg_hosthistory	
                     SET
                     	<!--- If school has changed reset school paperwork --->
-						<cfif VAL(hasSchoolIDChanged)>
-                        	hasSchoolIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="#hasSchoolIDChanged#">,                
+						<cfif VAL(vHasSchoolIDChanged)>
+                        	hasSchoolIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="#vHasSchoolIDChanged#">,                
                         	doc_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                             doc_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                             doc_class_schedule = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                             datePISEmailed = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
 						</cfif>
                         
-                        <cfif VAL(hasPlaceRepIDChanged)>
-                        	hasPlaceRepIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="#hasPlaceRepIDChanged#">,
+                        <cfif VAL(vHasPlaceRepIDChanged)>
+                        	hasPlaceRepIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="#vHasPlaceRepIDChanged#">,
                         </cfif>
                         
-                        <cfif VAL(hasAreaRepIDChanged)>
-                        	hasAreaRepIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="#hasAreaRepIDChanged#">,
+                        <cfif VAL(vHasAreaRepIDChanged)>
+                        	hasAreaRepIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="#vHasAreaRepIDChanged#">,
                         </cfif>
                         
-                        <cfif VAL(hasSecondVisitRepIDChanged)>
-                        	hasSecondVisitRepIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="#hasSecondVisitRepIDChanged#">,
+                        <cfif VAL(vHasSecondVisitRepIDChanged)>
+                        	hasSecondVisitRepIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="#vHasSecondVisitRepIDChanged#">,
                         </cfif>
                         
-                        <cfif VAL(hasDoublePlacementIDChanged)>
-                        	hasDoublePlacementIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="#hasDoublePlacementIDChanged#">,
+                        <cfif VAL(vHasDoublePlacementIDChanged)>
+                        	hasDoublePlacementIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="#vHasDoublePlacementIDChanged#">,
                        	</cfif> 
 
                         schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.schoolID)#">,  
@@ -1756,7 +1775,7 @@
 		</cfif>
          
         <!--- If school has changed reset datePISEmailed --->
-        <cfif VAL(hasSchoolIDChanged)>
+        <cfif VAL(vHasSchoolIDChanged)>
         
             <cfquery 
                 datasource="#APPLICATION.DSN#">
