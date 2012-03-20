@@ -180,7 +180,7 @@
 				<th width="12%" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='firstName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">First Name</a></th>
 				<th width="10%" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='sex',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Sex</a></th>
 				<th width="13%" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='country',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Country</a></th>
-				<th width="20%" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='program',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Program</a></th>		
+				<th width="20%" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='programName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Program</a></th>		
 				<th width="25%" bgcolor="##4F8EA4"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='intrep',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Intl. Rep.</a></th>
 			</tr>
             <cfloop query="qCandidates">
