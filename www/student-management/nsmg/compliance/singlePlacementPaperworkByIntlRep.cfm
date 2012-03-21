@@ -29,6 +29,9 @@
 
     <cfquery name="qGetResults" datasource="MySQL">
         SELECT 
+            studentID,
+            firstName,
+            familyLastName,
         	studentName,
             active,
             cancelDate,
@@ -51,7 +54,10 @@
         	(
         
                 SELECT 
-                	CAST(CONCAT(s.firstName, ' ', s.familyLastName,  ' ##', s.studentID) AS CHAR) AS studentName,
+                    s.studentID,
+                    s.firstName,
+                    s.familyLastName,
+                    CAST(CONCAT(s.firstName, ' ', s.familyLastName,  ' ##', s.studentID) AS CHAR) AS studentName,
                     s.active,
                     s.cancelDate,
                     sh.isActive AS isActivePlacement,
@@ -172,17 +178,23 @@
 	
 	<!--- suggest default name for XLS file --->
 	<cfheader name="Content-Disposition" value="attachment; filename=DOS-Single-Placement-Paperwork-By-Intl-Rep.xls"> 
-
-    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" border="1">
-        <tr class="on">
-            <td class="subTitleLeft">International Representative</td>
-            <td class="subTitleLeft">Student</td>
-            <td class="subTitleLeft">Program</td>
-            <td class="subTitleLeft">Region</td>
-            <td class="subTitleLeft">Facilitator</td>
-            <td class="subTitleLeft">Host Family</td>
-            <td class="subTitleCenter">Date Placed</td>
-            <td class="subTitleLeft">Missing Documents</td>
+	
+    <table width="98%" cellpadding="4" cellspacing="0" align="center" border="1">
+        <tr>
+            <th colspan="11">Placement Reports - Single Placement Paperwork by International Representative</th>            
+        </tr>
+        <tr style="font-weight:bold;">
+            <td>International Representative</td>
+            <td>Student ID</td>
+            <td>Student First Name</td>
+            <td>Student Last Name</td>
+            <td>Student Status</td>
+            <td>Program</td>
+            <td>Region</td>
+            <td>Facilitator</td>
+            <td>Host Family</td>
+            <td>Date Placed</td>
+            <td>Missing Documents</td>
         </tr>      
 
 		<cfoutput query="qGetResults">
@@ -229,22 +241,31 @@
                 if ( NOT LEN(vMissingDocumentsMessage) AND NOT LEN(vOutOfComplianceDocuments) ) {
                     vIsCompliant = 1;
                 }
+				
+				// Set Row Color
+				if ( qGetResults.currentRow MOD 2 ) {
+					vRowColor = 'bgcolor="##E6E6E6"';
+				} else {
+					vRowColor = 'bgcolor="##FFFFFF"';
+				}
             </cfscript>
             
-            <tr class="#iif(qGetResults.currentRow MOD 2 ,DE("off") ,DE("on") )#">
-                <td>#qGetResults.businessName#</td>
-                <td>
-                    #qGetResults.studentName#
+            <tr>
+                <td #vRowColor#>#qGetResults.businessName#</td>
+                <td #vRowColor#>#qGetResults.studentID#</td>
+				<td #vRowColor#>#qGetResults.firstName#</td>
+				<td #vRowColor#>#qGetResults.familyLastName#</td>
+				<td #vRowColor#>
                     <cfif VAL(qGetResults.active)>
-                        <span class="note">(Active)</span>
+                        <span class="note">Active</span>
                     <cfelseif isDate(qGetResults.cancelDate)>
-                        <span class="noteAlert">(Cancelled)</span>
+                        <span class="noteAlert">Cancelled</span>
                     </cfif>
-                </td>
-                <td>#qGetResults.programName#</td>
-                <td>#qGetResults.regionName#</td>
-                <td>#qGetResults.facilitatorName#</td>
-                <td>
+                </td> 
+                <td #vRowColor#>#qGetResults.programName#</td>
+                <td #vRowColor#>#qGetResults.regionName#</td>
+                <td #vRowColor#>#qGetResults.facilitatorName#</td>
+                <td #vRowColor#>
                     #qGetResults.hostFamilyLastName# 
                     
                     <span class="note">
@@ -263,8 +284,8 @@
                         )
                     </span>                            
                 </td>
-                <td class="center">#DateFormat(qGetResults.datePlaced, 'mm/dd/yy')#</td>
-                <td>
+                <td #vRowColor#>#DateFormat(qGetResults.datePlaced, 'mm/dd/yy')#</td>
+                <td #vRowColor#>
                     <cfif VAL(vIsCompliant)>
                         compliant
                     <cfelse>
