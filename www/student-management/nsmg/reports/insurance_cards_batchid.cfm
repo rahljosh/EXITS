@@ -71,31 +71,36 @@
 	}
 	
 	.tableHolder {		
-		width:7in; /* 17.7cm */		
+		width:8.3in; /* 21.6 cm */		
 		/* height:10in; /* 25cm */
 		padding:0;
-		margin:0;	
-		/* border: 1px thin black; */
+		margin:0.17in 0.75in 0 0.5in;
+		/* border:1px solid #CCCCCC; */
 	}
 
 	.tableCell {
-		height:2in; /* 5.0cm */
-		width:3.5in; /* 8.9cm */
-		padding:0;
 		margin:0;
+		padding:0;
+		height:2.38in; /* 6 cm */
+		width:3.5in; /* 8.9cm */	
+		/*
+		border-top:1px solid #CCCCCC;
+		border-left:1px solid #CCCCCC;
+		*/
 	}
 
 	.informationDiv {
-		padding-top:0.3in; /*  0.8cm */
-		padding-left:0.2in; /* 0.5cm */
-		width:2.5in; /* 6.4cm */ 
+		margin:0;
+		height:1in;
+		width:3.3in; /* 6.4cm */ 
 		overflow:hidden;
+		padding:0.72in 0 0 0.1in /* 2 cm */
 	}
 
 	/* Student Name, DOB and Dates */
 	.textStyle {
-		font-size: 8pt;
-		line-height:0.3in; /* 0.8cm */
+		font-size: 10pt;
+		line-height:0.35in; /* 0.8cm */
 		display: block;
 		overflow:hidden;
 	}
@@ -141,8 +146,6 @@
                 
                 <span class="textStyle">#DateFormat(qGetStudents.dob, 'mm/dd/yyyy')#</span>
                 
-                <span class="textStyle">#qGetStudents.programName#</span>
-                
             </div>   
                  
         </td>
@@ -155,8 +158,9 @@
     <!--- close table every 10 columsn and add a page break --->
     <cfif qGetStudents.currentRow MOD 10 EQ 0> 
         <cfset startTable = 1>
-        </table>            
-        <!--- <div class="pageBreak"></div>--->
+        </table>      
+		<!--- Break Page --->
+        <div class="pageBreak"></div>
     </cfif>	
 
 </cfoutput>
