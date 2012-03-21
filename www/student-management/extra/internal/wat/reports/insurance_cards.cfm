@@ -57,41 +57,41 @@
 <style>
 	body {
 		padding:0;
-		margin:0;
+		margin-top:0;
 	}
 	
-	.tableHolder {		
-		width:7in; /* 17.7cm */		
+	.tableHolder {	
+		width:6.7in; /* 17.7cm */		
 		/* height:10in; /* 25cm */
 		padding:0;
-		margin:0;	
+		margin-top:0.18in;	
 		/* border: 1px thin black; */
 	}
 
 	.tableCell {
-		height:2in; /* 5.0cm */
-		width:3.5in; /* 8.9cm */
+		height:1.87in; /* 5.0cm */
+		width:3in; /* 8.9cm */
 		padding:0;
 		margin:0;
 	}
 
 	.informationDiv {
 		padding-top:0.3in; /*  0.8cm */
-		padding-left:0.2in; /* 0.5cm */
-		width:2in; /* 5.0cm */ 
+		padding-left:0.45in; /* 0.5cm */
+		width:2.8in; /* 5.0cm */ 
 		overflow:hidden;
 	}
 
 	/* Candidate Name, DOB and Dates */
 	.textStyle {
-		font-size: 8pt;
-		line-height:0.3in; /* 0.8cm */
+		font-size: 7.5pt;
+		line-height:0.25in; /* 0.8cm */
 		display: block;
 		overflow:hidden;
 	}
 	
 	.pageBreak {
-		padding:0;
+		padding-top:0;
 		margin:0;
 		page-break-after:always;
 	}
@@ -112,7 +112,7 @@
     
     <cfif VAL(startTable)>				
         <!--- Start a table for our labels --->            
-        <table class="tableHolder" cellspacing="0" cellpadding="0">	            
+        <table class="tableHolder" cellspacing="0" cellpadding="0">
         <cfset startTable = 0>
     </cfif>
     
@@ -126,12 +126,12 @@
     
             <!--- BODY --->
             <div class="informationDiv">
-            
+                
+                <span class="textStyle">&nbsp;</span>
+            	
                 <span class="textStyle">#qGetCandidates.lastname#, #qGetCandidates.firstname# (###qGetCandidates.candidateid#)</span>
                 
                 <span class="textStyle">#DateFormat(qGetCandidates.dob, 'mm/dd/yyyy')#</span>
-                
-                <span class="textStyle">#DateFormat(qGetCandidates.startDate, 'mm/dd/yyyy')# - #DateFormat(qGetCandidates.endDate, 'mm/dd/yyyy')#</span>
                 
             </div>   
                  
@@ -142,11 +142,11 @@
         </tr>
     </cfif>
 
-    <!--- close table every 10 columsn and add a page break --->
+    <!--- close table every 10 columns and add a page break --->
     <cfif qGetCandidates.currentRow MOD 10 EQ 0> 
         <cfset startTable = 1>
         </table>            
-        <!--- <div class="pageBreak"></div>--->
+        <div class="pageBreak"></div>
     </cfif>	
 
 </cfoutput>
