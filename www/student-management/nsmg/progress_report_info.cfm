@@ -88,8 +88,8 @@ function OpenLetter(url) {
 
 </script>
 <!----SpellCheck info---->
- <!-- 1. include jQuery ... naturally none of this works without jQuery -->
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/jquery-1.4.2.js"></script>
+ <!-- 1. include jQuery ... naturally none of this works without jQuery 
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/jquery-1.4.2.js"></script>-->
  <!-- 2. load the atd.textarea.js -- this script makes it easy to attach AtD to a textarea -->
  <script src="spellCheck/scripts/jquery.atd.textarea.js"></script>
  <!-- 3. this script is a hack that allows cross-domain AJAX -->
