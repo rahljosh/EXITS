@@ -357,6 +357,7 @@
                     <td colspan="2">
                     	<div align="justify">
                             Set margins to: <br>
+                            <strong>Google Chrome - Default Settings - Preferable</strong>
                             IE: top: 0.5 / bottom: 0.4 / left: 0.7 / right: 0.5 <br>                                                
                             Firefox: top: 0.3 / bottom: 0.3 / left: 0.5 / right: 0.5 <br>                                                
                             Make sure you set page scaling to: Shrink to Printable Area <br>
