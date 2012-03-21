@@ -211,19 +211,23 @@
 				SESSION.formErrors.Add("Confidential Host Family Date of Visit is out of compliance");
 			}
 			
-			// Double Placement Docs
-			for ( i=1; i LTE qGetDoublePlacementPaperworkHistory.recordCount; i=i+1 ) {
+			// Double Placement Docs - 12/13 on
+			if ( qGetProgramInfo.seasonID GTE 9) {
 				
-				if ( VAL(qGetDoublePlacementPaperworkHistory.isDoublePlacementPaperworkRequired[i]) AND qGetDoublePlacementPaperworkHistory.doublePlacementParentsDateSigned[i] GT qGetPlacementHistoryByID.datePlaced ) {
-					SESSION.formErrors.Add("Natural Family Date Signed is out of compliance for Double Placement #qGetDoublePlacementPaperworkHistory.doublePlacementStudent#");
-				}
-
-				if ( VAL(qGetDoublePlacementPaperworkHistory.isDoublePlacementPaperworkRequired[i]) AND qGetDoublePlacementPaperworkHistory.doublePlacementStudentDateSigned[i] GT qGetPlacementHistoryByID.datePlaced ) {
-					SESSION.formErrors.Add("Student Date Signed is out of compliance for Double Placement #qGetDoublePlacementPaperworkHistory.doublePlacementStudent#");
-				}
-
-				if ( VAL(qGetDoublePlacementPaperworkHistory.isDoublePlacementPaperworkRequired[i]) AND qGetDoublePlacementPaperworkHistory.doublePlacementHostFamilyDateSigned[i] GT qGetPlacementHistoryByID.datePlaced ) {
-					SESSION.formErrors.Add("Host Family Date Signed is out of compliance for Double Placement #qGetDoublePlacementPaperworkHistory.doublePlacementStudent#");
+				for ( i=1; i LTE qGetDoublePlacementPaperworkHistory.recordCount; i=i+1 ) {
+					
+					if ( VAL(qGetDoublePlacementPaperworkHistory.isDoublePlacementPaperworkRequired[i]) AND qGetDoublePlacementPaperworkHistory.doublePlacementParentsDateSigned[i] GT qGetPlacementHistoryByID.datePlaced ) {
+						SESSION.formErrors.Add("Natural Family Date Signed is out of compliance for Double Placement #qGetDoublePlacementPaperworkHistory.doublePlacementStudent#");
+					}
+	
+					if ( VAL(qGetDoublePlacementPaperworkHistory.isDoublePlacementPaperworkRequired[i]) AND qGetDoublePlacementPaperworkHistory.doublePlacementStudentDateSigned[i] GT qGetPlacementHistoryByID.datePlaced ) {
+						SESSION.formErrors.Add("Student Date Signed is out of compliance for Double Placement #qGetDoublePlacementPaperworkHistory.doublePlacementStudent#");
+					}
+	
+					if ( VAL(qGetDoublePlacementPaperworkHistory.isDoublePlacementPaperworkRequired[i]) AND qGetDoublePlacementPaperworkHistory.doublePlacementHostFamilyDateSigned[i] GT qGetPlacementHistoryByID.datePlaced ) {
+						SESSION.formErrors.Add("Host Family Date Signed is out of compliance for Double Placement #qGetDoublePlacementPaperworkHistory.doublePlacementStudent#");
+					}
+					
 				}
 				
 			}

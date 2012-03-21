@@ -1593,14 +1593,15 @@
 				}
             </cfscript>
             
-            <!--- School has not changed, copy school dates from previous history --->
+            <!--- School has not changed, copy student orientation and school dates from previous history --->
             <cfif NOT VAL(vHasSchoolIDChanged) AND VAL(qGetPreviousPlacementHistory.recordCount)>
             
                 <cfquery datasource="#APPLICATION.DSN#" result="test1">
 					UPDATE
                     	smg_hostHistory
                     SET
-                    	doc_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPreviousPlacementHistory.doc_school_accept_date#" null="#NOT IsDate(qGetPreviousPlacementHistory.doc_school_accept_date)#">,
+                    	stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPreviousPlacementHistory.stu_arrival_orientation#" null="#NOT IsDate(qGetPreviousPlacementHistory.stu_arrival_orientation)#">, 
+                        doc_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPreviousPlacementHistory.doc_school_accept_date#" null="#NOT IsDate(qGetPreviousPlacementHistory.doc_school_accept_date)#">,
                         doc_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPreviousPlacementHistory.doc_school_sign_date#" null="#NOT IsDate(qGetPreviousPlacementHistory.doc_school_sign_date)#">,
                         doc_class_schedule = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPreviousPlacementHistory.doc_class_schedule#" null="#NOT IsDate(qGetPreviousPlacementHistory.doc_class_schedule)#">
                     WHERE
