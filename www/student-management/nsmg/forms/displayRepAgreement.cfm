@@ -272,7 +272,11 @@ and userid = #client.userid#
 <div class="scroll">
          
                 	<Cfif client.usertype neq 15>
-                    	<cfinclude template="AreaRepAgreement.cfm">
+						<cfif client.companyid eq 14>
+                        	<cfinclude template="ESIAreaRepAgreement.cfm">
+                        <cfelse>
+                            <cfinclude template="AreaRepAgreement.cfm">
+                        </cfif>
                     <cfelse>
                     	<cfinclude template="2ndVisitRepAgreement.cfm">
                     </Cfif>
