@@ -685,11 +685,11 @@
     	</cfquery>
    
 		<cfscript>
-			// Set Old Records to Inactive
-			setHostHistoryInactive(studentID=ARGUMENTS.studentID);
-		
 			// Set Date Placed Ended
 			setDatePlacedEnded(studentID=ARGUMENTS.studentID,datePlacedEnded=DateFormat(now(), 'mm/dd/yyyy'));
+
+			// Set Old Records to Inactive
+			setHostHistoryInactive(studentID=ARGUMENTS.studentID);		
 		
 			// Insert History - It tracks placement statuses only, placement updates are tracked on smg_hostHistory
 			insertPlacementActionHistory(
