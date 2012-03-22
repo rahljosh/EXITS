@@ -42,28 +42,28 @@
         <cfscript>
             //First Name
             if ( NOT LEN(qGetCBCUsers.firstName) ) {
-                ArrayAppend(Errors.Messages, "Missing first name for #qGetCBCUsers.companyShort# - User - #firstName# #lastname# (###userid#).");			
+                ArrayAppend(Errors.Messages, "#qGetCBCUsers.companyShort# - Missing first name for User - #firstName# #lastname# (###userid#).");			
                 if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
                     skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
                 }
             }
             // Last Name
             if ( NOT LEN(qGetCBCUsers.lastname) )  {
-                ArrayAppend(Errors.Messages, "Missing last name for #qGetCBCUsers.companyShort# - User - #firstName# #lastname# (###userid#).");
+                ArrayAppend(Errors.Messages, "#qGetCBCUsers.companyShort# - Missing last name for User - #firstName# #lastname# (###userid#).");
                 if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
                     skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
                 }
             }
             // DOB
             if ( NOT LEN(qGetCBCUsers.dob) OR NOT IsDate(qGetCBCUsers.dob) )  {
-                ArrayAppend(Errors.Messages, "Missing DOB for #qGetCBCUsers.companyShort# - User - #firstName# #lastname# (###userid#).");
+                ArrayAppend(Errors.Messages, "#qGetCBCUsers.companyShort# - Missing DOB for User - #firstName# #lastname# (###userid#).");
                 if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
                     skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
                 }
             }
             // SSN
             if ( NOT LEN(qGetCBCUsers.ssn) )  {
-                ArrayAppend(Errors.Messages, "Missing SSN for #qGetCBCUsers.companyShort# - User - #firstName# #lastname# (###userid#).");
+                ArrayAppend(Errors.Messages, "#qGetCBCUsers.companyShort# - Missing SSN for User - #firstName# #lastname# (###userid#).");
                 if ( NOT ListFind(skipUserIDs, qGetCBCUsers.userID) ) {
                     skipUserIDs = ListAppend(skipUserIDs, qGetCBCUsers.userID);
                 }

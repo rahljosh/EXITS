@@ -321,11 +321,11 @@
                     cbc.hostID, 
                     cbc.cbc_type,
                     cbc.seasonID,
-                    cbc.companyID,
                     cbc.isNoSSN,
                     cbc.date_authorized, 
                     cbc.date_sent, 
                     cbc.date_expired,
+                    h.companyID,
                     h.familylastName,
                     h.fatherlastName, 
                     h.fatherfirstName, 
@@ -346,21 +346,21 @@
                 INNER JOIN 
                     smg_hosts h ON h.hostID = cbc.hostID
                 LEFT OUTER JOIN
-                	smg_companies c ON c.companyID = cbc.companyID
+                	smg_companies c ON c.companyID = h.companyID
                 WHERE 
                     cbc.date_authorized IS NOT NULL                
 				AND
                 	cbc.date_sent IS NULL 	
                 AND 
-                    requestID = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                    cbc.requestID = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
                 
                 <!--- Check if we are running ISE's CBC --->
                 <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
                 AND 
-                    cbc.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                    h.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
                 <cfelseif VAL(ARGUMENTS.companyID)>
                 AND 
-                    cbc.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
+                    h.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
                 </cfif>
 
             	<!--- Check if we have a valid SeasonID --->
@@ -416,12 +416,12 @@
                     cbc.hostID, 
                     cbc.cbc_type, 
                     cbc.seasonID,
-                    cbc.companyID,
                     cbc.isNoSSN,
                     cbc.date_authorized, 
                     cbc.date_sent, 
                     cbc.date_expired,
-                	child.childID, 
+                	h.companyID,
+                    child.childID, 
                     child.name, 
                     child.middlename, 
                     child.lastName, 
@@ -438,8 +438,10 @@
                 	smg_host_children child ON child.childID = cbc.familyID
 						AND	
                         	child.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                
+                INNER JOIN	
+                	smg_hosts h ON h.hostID = child.hostID
                 LEFT OUTER JOIN
-                	smg_companies c ON c.companyID = cbc.companyID    
+                	smg_companies c ON c.companyID = h.companyID    
                 WHERE 
                 	cbc.date_authorized IS NOT NULL 
 				AND
@@ -452,10 +454,10 @@
                 <!--- Check if we are running ISE's CBC --->
                 <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
                 AND 
-                    cbc.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                    h.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
                 <cfelseif VAL(ARGUMENTS.companyID)>
                 AND 
-                    cbc.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
+                    h.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
                 </cfif>
 
             	<!--- Check if we have a valid SeasonID --->
@@ -738,13 +740,13 @@
                 INNER JOIN 
                 	user_access_rights uar ON uar.userID = u.userID
 				LEFT OUTER JOIN
-                	smg_companies c ON c.companyID = cbc.companyID                    
+                	smg_companies c ON c.companyID = uar.companyID                    
                 WHERE 
                     cbc.date_authorized IS NOT NULL
 				AND                    
                     cbc.date_sent IS NULL
                 AND 
-                    requestID = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                    cbc.requestID = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
                 AND 
                     cbc.familyID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                 AND 
@@ -753,10 +755,10 @@
                 <!--- Check if we are running ISE's CBC --->
                 <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
                     AND 
-                        cbc.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                        uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
                 <cfelseif VAL(ARGUMENTS.companyID)>
                     AND 
-                        cbc.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
+                        uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
                 </cfif>
 
             	<!--- Check if we have a valid SeasonID --->
@@ -778,7 +780,8 @@
 				</cfif>
 				
                 ORDER BY
-                	cbc.companyID
+                	c.companyShort,
+                    u.lastName
                 
                 <!--- If running batch, limit to 20 so we don't get time outs --->
                 LIMIT 20
@@ -849,7 +852,11 @@
                 AND 
                     u.ssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
 				</cfif>
-
+				
+                ORDER BY
+                	c.companyShort,
+                    u.lastName
+                
                 LIMIT 20
         </cfquery>
    
