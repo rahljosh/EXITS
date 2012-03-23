@@ -897,6 +897,7 @@
                 eh.authenticationType,
                 eh.EIN,
                 eh.workmensCompensation,
+                eh.WCDateExpired,
                 <!--- Candidate Place Company --->
                 ecpc.candCompID,
                 ecpc.status,

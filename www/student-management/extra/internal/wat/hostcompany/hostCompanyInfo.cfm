@@ -55,6 +55,7 @@
     <cfparam name="FORM.authenticationType" default="">
     <cfparam name="FORM.EIN" default="">
 	<cfparam name="FORM.workmensCompensation" default="">
+    <cfparam name="FORM.WCDateExpired" default="">
     <cfparam name="FORM.homepage" default="">
     <cfparam name="FORM.observations" default="">
 	<!--- Arrival Information --->    
@@ -101,6 +102,7 @@
             eh.authenticationType,
             eh.EIN,
             eh.workmensCompensation,
+            eh.WCDateExpired,
             eh.observations,
             eh.housing_options,
             eh.housing_cost,
@@ -343,6 +345,7 @@
                         authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.authenticationType#">,
                         EIN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">,
                         workmensCompensation = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workmensCompensation#" null="#NOT IsNumeric(FORM.workmensCompensation)#">,
+                        WCDateExpired = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.WCDateExpired#" null="#NOT IsDate(FORM.WCDateExpired)#">,
                         homepage = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homepage#">,
                         observations = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.observations#">,
                         <!--- Arrival Information --->
@@ -402,6 +405,7 @@
                         authenticationType,
                         EIN,
                         workmensCompensation,
+                        WCDateExpried,
                         homepage,
                         observations,
                         <!--- Arrival Information --->
@@ -456,6 +460,7 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.authenticationType#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workmensCompensation#" null="#NOT IsNumeric(FORM.workmensCompensation)#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.WCDateExpired#" null="#NOT IsDate(FORM.WCDateExpired)#">
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homepage#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.observations#">,
                         <!--- Arrival Information --->
@@ -531,6 +536,7 @@
 			FORM.authenticationType = qGetHostCompanyInfo.authenticationType;
 			FORM.EIN = qGetHostCompanyInfo.EIN;
 			FORM.workmensCompensation = qGetHostCompanyInfo.workmensCompensation;
+			FORM.WCDateExpired = qGetHostCompanyInfo.WCDateExpired;
 			FORM.homepage = qGetHostCompanyInfo.homepage;
 			FORM.observations = qGetHostCompanyInfo.observations;
 			// Arrival Information
@@ -1106,6 +1112,19 @@
                                                     <option value="1" <cfif FORM.workmensCompensation EQ 1>selected</cfif> >Yes</option>                                                    
                                                     <option value="2" <cfif FORM.workmensCompensation EQ 2>selected</cfif> >N/A</option>
                                                 </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" align="right"><strong>WC Expiration Date:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">
+                                                	<cfif IsDefined("FORM.WCDateExpired") AND NOW() - FORM.WCDateExpired LT 0>
+                                                    	#DateFormat(FORM.WCDateExpired, 'mm/dd/yyyy')#
+                                                  	<cfelse>
+                                                    	Workmen's compensation is missing.
+                                                 	</cfif>
+                                             	</span>
+                                                	<input type="text" name="WCDateExpired" id="WCDateExpired" value="#DateFormat(WCDateExpired, 'mm/dd/yyyy')#" class="style1 datePicker editPage selfPlacementField" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
