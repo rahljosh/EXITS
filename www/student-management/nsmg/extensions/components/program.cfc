@@ -220,7 +220,7 @@
     
     
 	<!----Get available acive programs that match the type of program selected---->
-    <cffunction access="remote" name="qGetActiveInternalPrograms" output="no" returntype="query" hint="Gets a list of active programs associated with the program type indicated. Needs to get the program type id." verifyclient="no" securejson="false">
+    <cffunction name="qGetActiveInternalPrograms" access="remote" output="no" returntype="query" hint="Gets a list of active programs associated with the program type indicated. Needs to get the program type id." verifyclient="no" securejson="false">
     	<cfargument name="programTypeID" default="0" hint="programTypeID is not required">
         <cfargument name="currentProgramID" default="0" hing="currentProgramID is not required">
 		

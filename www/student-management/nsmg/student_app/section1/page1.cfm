@@ -105,8 +105,10 @@
 </cfquery> 
 
 <cfset canadaIDList = ValueList(qAppCanadaPrograms.app_programID)>
-<Cfset additionalPrograms = ValueList(qAppPrograms.app_programID)>
-<Cfparam name="beforeDeadline" default="1">
+<cfset additionalPrograms = ValueList(qAppPrograms.app_programID)>
+
+<cfparam name="beforeDeadline" default="1">
+
 <cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#client.studentid#.*">
 
 <cfoutput>
@@ -219,35 +221,35 @@ $(document).ready(function() {
 				</tr>
 				<tr>
 					<td valign="top">
-                    <Cfif get_latest_status.status gte 8 AND NOT ListFind("1,2,3,4", CLIENT.userType)>
-                    	#qAppPrograms.app_program#
-                        <input type="hidden" value="#qAppPrograms.app_programid#" name="app_indicated_program">
-                    <cfelse>
-                    	<cfselect name="app_indicated_program" id="app_indicated_program" onchange="displayCanada();">
-						<option value="0">Select a Program</option>
-						<cfloop query="qAppPrograms">
-							<option value="#app_programid#" <cfif get_student_info.app_indicated_program EQ app_programid>selected</cfif> >#app_program#</option>
-						</cfloop>
-						</cfselect>
-                     </Cfif>
-                        <br><br><em>Specific Program</em><Br>
-                 <cfif get_latest_status.status gte 8 AND NOT ListFind("1,2,3,4", CLIENT.userType)>
-                 		<Cfquery name="qProgramName" datasource="#application.dsn#">
-                        select programName 
-                        from smg_programs
-                        where programid = #programid#
-                        </cfquery>
-                        #qProgramName.programName#<input type="hidden" name="internalProgram" value="#programID#">
-                 <cfelse>
-                             <cfselect
-                      name="internalProgram" 
-                      id="internalProgram"
-                      value="programID"
-                      display="programName"
-                      selected="#programID#"
-                      bindonload="yes"
-                      bind="cfc:nsmg.extensions.components.program.qGetActiveInternalPrograms(programTypeID={app_indicated_program}, currentProgramID=#programID#)" />
-                  </cfif>
+						<Cfif get_latest_status.status gte 8 AND NOT ListFind("1,2,3,4", CLIENT.userType)>
+                            #qAppPrograms.app_program#
+                            <input type="hidden" value="#qAppPrograms.app_programid#" name="app_indicated_program">
+                        <cfelse>
+                            <cfselect name="app_indicated_program" id="app_indicated_program" onchange="displayCanada();">
+                            <option value="0">Select a Program</option>
+                            <cfloop query="qAppPrograms">
+                                <option value="#app_programid#" <cfif get_student_info.app_indicated_program EQ app_programid>selected</cfif> >#app_program#</option>
+                            </cfloop>
+                            </cfselect>
+                         </Cfif>
+                            <br><br><em>Specific Program</em><Br>
+                     <cfif get_latest_status.status gte 8 AND NOT ListFind("1,2,3,4", CLIENT.userType)>
+                            <Cfquery name="qProgramName" datasource="#application.dsn#">
+                            select programName 
+                            from smg_programs
+                            where programid = #programid#
+                            </cfquery>
+                            #qProgramName.programName#<input type="hidden" name="internalProgram" value="#programID#">
+                     <cfelse>
+                          <cfselect
+                              name="internalProgram" 
+                              id="internalProgram"
+                              value="programID"
+                              display="programName"
+                              selected="#programID#"
+                              bindonload="yes"
+                              bind="cfc:nsmg.extensions.components.program.qGetActiveInternalPrograms(programTypeID={app_indicated_program}, currentProgramID=#get_student_info.programID#)" />
+                      </cfif>
 					</td>
 					<td valign="top" class="additionalProgramDiv" style="display:block;">
                          <table>
