@@ -1118,7 +1118,7 @@
                                         	<td class="style1" align="right"><strong>WC Expiration Date:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly">
-                                                	<cfif IsDefined("FORM.WCDateExpired") AND NOW() - FORM.WCDateExpired LT 0>
+                                                	<cfif IsDate(FORM.WCDateExpired) AND FORM.WCDateExpired GT NOW()>
                                                     	#DateFormat(FORM.WCDateExpired, 'mm/dd/yyyy')#
                                                   	<cfelse>
                                                     	Workmen's compensation is missing.
