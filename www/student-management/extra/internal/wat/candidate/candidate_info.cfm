@@ -1227,6 +1227,19 @@
                                                 </select>
                                             </td>
                                         </tr>
+                                        <tr>
+                                        	<td class="style1" align="right"><strong>WC Expiration Date:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly selfPlacementReadOnly">
+                                                	<cfif IsDefined("qCandidatePlaceCompany.WCDateExpired") AND IsDate(qCandidatePlaceCompany.WCDateExpired) AND NOW() - qCandidatePlaceCompany.WCDateExpired LT 0>
+                                                    	#DateFormat(qCandidatePlaceCompany.WCDateExpired, 'mm/dd/yyyy')#
+                                                  	<cfelse>
+                                                    	Workmen's compensation is missing.
+                                                 	</cfif>
+                                             	</span>
+                                                	<input type="text" name="WCDateExpired" id="WCDateExpired" value="#DateFormat(qCandidatePlaceCompany.WCDateExpired, 'mm/dd/yyyy')#" class="style1 datePicker editPage selfPlacementField" maxlength="10">
+                                            </td>
+                                        </tr>
                                         
                                         <!--- Show New Self Placement Field --->
                                         <cfif VAL(vDisplayNewSelfPlacement)>

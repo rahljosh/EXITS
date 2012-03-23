@@ -31,6 +31,7 @@
 <cfparam name="FORM.authenticationType" default="">
 <cfparam name="FORM.EIN" default="">
 <cfparam name="FORM.workmensCompensation" default="">
+<cfparam name="FORM.WCDateExpried" default="">
 <!--- End of Host Company --->
 <cfparam name="FORM.selfConfirmationDate" default="">
 <cfparam name="FORM.selfFindJobOffer" default="">
@@ -186,6 +187,20 @@
                 extra_hostCompany
             SET 
                 workmensCompensation = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workmensCompensation#" null="#NOT IsNumeric(FORM.workmensCompensation)#">
+            WHERE
+                hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">
+        </cfquery> 
+
+	</cfif>
+    
+    <!--- Update WCExpirationDate on Host Company Table --->
+    <cfif LEN(FORM.WCDateExpired)>
+    
+        <cfquery datasource="#APPLICATION.DSN.Source#">
+            UPDATE 
+                extra_hostCompany
+            SET 
+                WCDateExpired = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.WCDateExpired#" null="#NOT IsDate(FORM.WCDateExpired)#">
             WHERE
                 hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">
         </cfquery> 
