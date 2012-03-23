@@ -72,6 +72,7 @@
         	ec.ds2019_dateActivated IS NULL
 		ORDER BY
         	ec.ds2019_startDate 
+        LIMIT 1
     </cfquery>
 	
 	<cfscript>
@@ -79,7 +80,7 @@
 		For ( i=1;i LTE qGetCandidates.Recordcount; i=i+1 ) {
 			
 			// set email variables
-			vEmailFrom = 'sergei@iseusa.com';
+			vEmailFrom = 'sergei@iseusa.com (Sergei Chernyshov - Trainee Program)';
 			vEmailTo = '';
 	   	    vEmailCC = '';
 			vEmailBCC = '';

@@ -270,7 +270,7 @@
 
 	<cfscript>
 		// set email to
-		vEmailFrom = 'sergei@iseusa.com';
+		vEmailFrom = 'sergei@iseusa.com (Sergei Chernyshov - Trainee Program)';
 		//vEmailCC = 'marcus@iseusa.com';
 		//vEmailCC = 'sergei@iseusa.com';
 	
