@@ -405,7 +405,7 @@
                         authenticationType,
                         EIN,
                         workmensCompensation,
-                        WCDateExpried,
+                        WCDateExpired,
                         homepage,
                         observations,
                         <!--- Arrival Information --->
@@ -460,7 +460,7 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.authenticationType#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workmensCompensation#" null="#NOT IsNumeric(FORM.workmensCompensation)#">,
-                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.WCDateExpired#" null="#NOT IsDate(FORM.WCDateExpired)#">
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.WCDateExpired#" null="#NOT IsDate(FORM.WCDateExpired)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homepage#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.observations#">,
                         <!--- Arrival Information --->
