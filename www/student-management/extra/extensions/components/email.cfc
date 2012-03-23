@@ -532,7 +532,7 @@
 			<cfif LEN(ARGUMENTS.emailFilePath) AND APPLICATION.CFC.DOCUMENT.checkFileExists(filePath=ARGUMENTS.emailFilePath)>
 				<cfmailparam disposition="attachment" file="#ARGUMENTS.emailFilePath#">                
             </cfif>
-            
+
 			<!--- Page Header --->
             <gui:pageHeader
                 headerType="email"

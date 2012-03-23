@@ -67,9 +67,11 @@
 
 	// Set CSB Trainee Information
 	APPLICATION.CSB.Trainee = StructNew();		
-	APPLICATION.CSB.Trainee.name = "CSB International, Inc.";
+	APPLICATION.CSB.Trainee.name = "International Student Exchange";
+	// APPLICATION.CSB.Trainee.name = "CSB International, Inc.";
 	APPLICATION.CSB.Trainee.programName = "Trainee Program";
-	APPLICATION.CSB.Trainee.shortProgramName = "CSB Trainee";
+	APPLICATION.CSB.Trainee.shortProgramName = "ISE Trainee";
+	//APPLICATION.CSB.Trainee.shortProgramName = "CSB Trainee";
 	APPLICATION.CSB.Trainee.programNumber = "";
 	APPLICATION.CSB.Trainee.phone = "(631) 893-4549";
 	APPLICATION.CSB.Trainee.toolFreePhone = "1-877-669-0717";		
@@ -97,7 +99,8 @@
 	APPLICATION.METADATA.pageKeywords = 'Trainee Program, Work and Travel Program, Work Experience';
 	
 	// Set CSB Trainee Information
-	APPLICATION.METADATA.Trainee.pageTitle = 'CSB International, Inc. - Trainee Program';
+	// APPLICATION.METADATA.Trainee.pageTitle = 'CSB International, Inc. - Trainee Program';
+	APPLICATION.METADATA.Trainee.pageTitle = 'International Student Exchange - Trainee Program';
 	APPLICATION.METADATA.Trainee.pageDescription = '';
 	APPLICATION.METADATA.Trainee.pageKeywords = 'Trainee Program';
 	

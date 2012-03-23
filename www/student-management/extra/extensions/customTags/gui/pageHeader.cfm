@@ -51,11 +51,15 @@
 		/>
 
 	<cfscript>
-		// Get what company candidate/user is logged in
-		if ( StructKeyExists(SESSION.CANDIDATE, "companyID") AND VAL(SESSION.CANDIDATE.companyID) ) {
-			ATTRIBUTES.companyID = SESSION.CANDIDATE.companyID;
-		} else if ( StructKeyExists(CLIENT, "companyID") AND VAL(CLIENT.companyID) ) {
-			ATTRIBUTES.companyID = CLIENT.companyID;
+		if ( NOT VAL(ATTRIBUTES.companyID) ) {
+		
+			// Get what company candidate/user is logged in
+			if ( StructKeyExists(SESSION.CANDIDATE, "companyID") AND VAL(SESSION.CANDIDATE.companyID) ) {
+				ATTRIBUTES.companyID = SESSION.CANDIDATE.companyID;
+			} else if ( StructKeyExists(CLIENT, "companyID") AND VAL(CLIENT.companyID) ) {
+				ATTRIBUTES.companyID = CLIENT.companyID;
+			}
+			
 		}
 	</cfscript>
 
@@ -307,6 +311,7 @@
             
             <!--- Email Header --->
             <cfcase value="email">
+            	
                 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
                 <html xmlns="http://www.w3.org/1999/xhtml">
                 <head>
@@ -317,18 +322,41 @@
 
                 <!--- Start of Div Wrapper --->
                 <cfif VAL(ATTRIBUTES.displayEmailLogoHeader)>
-                    <table cellpadding="2" cellspacing="2" style="width:100%; border-bottom:10px solid ##FF7E0D; height:70px;">
-                      <tr>
-                          <td width="70px" align="center">
-                              <a href="#APPLICATION.SITE.URL.main#" title="#APPLICATION.CSB.name#">
-                                  <img src="#APPLICATION.SITE.URL.main#/internal/pics/extra-logo.jpg" border="0" />
-                              </a>
-                          </td>
-                          <td style="font-family: segoe ui, Arial, sans-serif; font-weight:bold; width:100%; padding-left:10px;" valign="top">
-                              #csbEmailHeader#
-                          </td>
-                      </tr>
-                    </table>                                                                    
+                    
+					<!--- Trainee - Display ISE Header --->
+                    <cfif ATTRIBUTES.companyID EQ 7>
+                    
+                        <table cellpadding="2" cellspacing="2" style="width:100%; border-bottom:10px solid ##0054A0; height:70px;">
+                            <tr>
+                                <td width="70px" align="center">
+                                    <a href="#APPLICATION.SITE.URL.main#" title="#APPLICATION.CSB.Trainee.name#">
+                                        <img src="#APPLICATION.SITE.URL.main#/internal/pics/extra-logo.jpg" border="0" />
+                                    </a>
+                                </td>
+                                <td style="font-family: segoe ui, Arial, sans-serif; font-weight:bold; width:100%; padding-left:10px;" valign="top">
+                                    #csbEmailHeader#
+                                </td>
+                            </tr>
+                        </table>   
+                                                                                         
+                    <!--- Work and Travel - Display CSB Header --->
+                    <cfelse>
+                    
+                        <table cellpadding="2" cellspacing="2" style="width:100%; border-bottom:10px solid ##FF7E0D; height:70px;">
+                            <tr>
+                                <td width="70px" align="center">
+                                    <a href="#APPLICATION.SITE.URL.main#" title="#APPLICATION.CSB.name#">
+                                        <img src="#APPLICATION.SITE.URL.main#/internal/pics/extra-logo.jpg" border="0" />
+                                    </a>
+                                </td>
+                                <td style="font-family: segoe ui, Arial, sans-serif; font-weight:bold; width:100%; padding-left:10px;" valign="top">
+                                    #csbEmailHeader#
+                                </td>
+                            </tr>
+                        </table> 
+                                                                                           
+                    </cfif>
+                    
             	</cfif>
                 
 				<!--- Application Body --->
