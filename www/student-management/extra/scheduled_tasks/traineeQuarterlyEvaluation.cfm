@@ -147,7 +147,7 @@
 
 	<cfscript>
 		// set email to
-		vEmailFrom = 'sergei@iseusa.com';
+		vEmailFrom = 'sergei@iseusa.com (Sergei Chernyshov - Trainee Program)';
 	
 		// Email Midterm - Loop Through Query
 		For ( i=1;i LTE qGetActiveCandidates.Recordcount; i=i+1 ) {
