@@ -362,8 +362,8 @@
                     u.firstName,
                     u.lastName,
                     u.lastLogin,
-                    u.userType,
                     u.email,
+                    uar.userType,
                     uar.companyID
                 FROM 
                     smg_users u 
