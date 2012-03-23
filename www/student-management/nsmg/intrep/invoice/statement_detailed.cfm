@@ -1,3 +1,5 @@
+<!--- File invoice/reports/statement_detailed.cfm also needs to be updated --->
+
 <!--- CHECK INVOICE RIGHTS ---->
 <cfinclude template="check_rights.cfm">
 
@@ -53,12 +55,6 @@ function OpenRefund(url)
 	LIMIT 1
 </Cfquery>
 
-<cfquery name="get_companyname" datasource="MySql">
-	SELECT companyid, companyname
-	FROM smg_companies
-	WHERE companyid = '5'
-</cfquery>
-
 <cfoutput>
 
 <cfif NOT IsDefined('form.userid')>
@@ -66,7 +62,7 @@ function OpenRefund(url)
 		<tr valign=middle height=24>
 			<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
 			<td width=26 background="pics/header_background.gif"><img src="pics/$.gif"></td>
-			<td background="pics/header_background.gif"><h2>SMG Detailed Statement</h2></td>
+			<td background="pics/header_background.gif"><h2>Detailed Statement</h2></td>
 			<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
 		</tr>
 	</table>
@@ -77,11 +73,24 @@ function OpenRefund(url)
 				<cfform action="intrep/invoice/statement_detailed.cfm" method="POST" target="blank">
 					<cfinput type="hidden" name="userid" value="#get_intl_rep.userid#">
 					<Table class="nav_bar" cellpadding=6 cellspacing="0" width="60%" align="center">
-						<tr><th colspan="2" bgcolor="##e2efc7">SMG Detailed Statement</th></tr>
+						<tr><th colspan="2" bgcolor="##e2efc7">Detailed Statement</th></tr>
 						<tr>
 							<td width="35%" align="right">International Representative:</td>
 							<td width="65%">#get_intl_rep.businessname#</td>
 						</tr>
+                        <tr>
+							<td align="right">Select Company : </td>
+							<td>
+                            	<select name="chooseCompany">
+                                	<option value="0">All</option>
+                                	<option value="1">ISE</option>
+                            		<option value="10">CASE</option>
+                                    <option value="14">ESI</option>
+                                    <option value="8">Work and Travel</option>
+                                    <option value="7">Trainee</option>
+                            	</select>
+                             </td>
+                        </tr>
 						<tr>
 							<td align="right">From : </td>
 							<td><cfinput type="text" name="date1" size="8" maxlength="10" validate="date"> mm-dd-yyyy</td>
@@ -97,10 +106,21 @@ function OpenRefund(url)
 			</td>
 		</tr>
 	</table>
-<cfinclude template="../../table_footer.cfm">	
+<cfinclude template="../../table_footer.cfm">
 
 <!--- REPORT --->
 <cfelse>
+
+    <cfquery name="get_companyname" datasource="MySql">
+    SELECT companyid, companyname
+    FROM smg_companies
+    WHERE 
+        <cfif #form.chooseCompany#>
+            companyid = #form.chooseCompany#
+        <cfelse>
+            companyid = 5
+        </cfif>
+    </cfquery>
 
 	<Cfquery name="get_intl_rep" datasource="MySQL">
 		SELECT businessname, firstname, lastname, city, smg_countrylist.countryname
@@ -127,27 +147,63 @@ function OpenRefund(url)
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 				AND (smg_charges.invoicedate BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
 			</cfif>
+            <cfswitch expression="#chooseCompany#">
+            	<cfcase value="1">
+                	AND smg_charges.companyid IN (1,2,3,4,5,12)
+                </cfcase>
+            	<cfcase value="10">
+                	AND smg_charges.companyid = #chooseCompany#
+                </cfcase>
+            	<cfcase value="14">
+                	AND smg_charges.companyid = #chooseCompany#
+                </cfcase>   
+            	<cfcase value="8">
+                	AND smg_charges.companyid = #chooseCompany#
+                </cfcase>    
+            	<cfcase value="7">
+                	AND smg_charges.companyid = #chooseCompany#
+                </cfcase>   
+            </cfswitch>
 		GROUP BY smg_users.userid, smg_charges.invoiceid
 		
         UNION
 		
         SELECT 
         	'payments', 
-            paymenttype, 
+            pay.paymenttype, 
             smg_users.businessname, 
-            SUM( pay.totalreceived ) AS total_amount, 
+            SUM( spc.amountapplied ) AS total_amount, 
             pay.date AS orderdate, 
             0 AS invoiceID, 
-            paymentref, 
+            pay.paymentref, 
             0 AS creditID,  
-            'description'
-		FROM smg_payment_received pay
+            'description'            
+        FROM smg_payment_charges spc
+		LEFT JOIN smg_payment_received pay ON pay.paymentid = spc.paymentid
+        LEFT JOIN smg_charges sc ON sc.chargeid = spc.chargeid
 		INNER JOIN smg_users ON pay.agentid = smg_users.userid
 		WHERE smg_users.userid = '#form.userid#'
-			AND pay.paymenttype != 'apply credit'
+		AND pay.paymenttype != 'apply credit'
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 				AND (pay.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
 			</cfif>
+            <cfswitch expression="#chooseCompany#">
+            	<cfcase value="1">
+                	AND sc.companyid IN (1,2,3,4,5,12)
+                </cfcase>
+            	<cfcase value="10">
+                	AND sc.companyid = #chooseCompany#
+                </cfcase>
+            	<cfcase value="14">
+                	AND sc.companyid = #chooseCompany#
+                </cfcase>   
+            	<cfcase value="8">
+                	AND sc.companyid = #chooseCompany#
+                </cfcase>    
+            	<cfcase value="7">
+                	AND sc.companyid = #chooseCompany#
+                </cfcase>   
+            </cfswitch>
 		GROUP BY smg_users.userid, pay.paymentref
 		
         UNION
@@ -168,6 +224,23 @@ function OpenRefund(url)
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 				AND (smg_credit.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
 			</cfif>
+            <cfswitch expression="#chooseCompany#">
+            	<cfcase value="1">
+                	AND smg_credit.companyid IN (1,2,3,4,5,12)
+                </cfcase>
+            	<cfcase value="10">
+                	AND smg_credit.companyid = #chooseCompany#
+                </cfcase>
+            	<cfcase value="14">
+                	AND smg_credit.companyid = #chooseCompany#
+                </cfcase>   
+            	<cfcase value="8">
+                	AND smg_credit.companyid = #chooseCompany#
+                </cfcase>    
+            	<cfcase value="7">
+                	AND smg_credit.companyid = #chooseCompany#
+                </cfcase>   
+            </cfswitch>
 		
         UNION
 		
@@ -186,7 +259,24 @@ function OpenRefund(url)
 		WHERE smg_users.userid = '#form.userid#'
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 				AND (ref.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
-			</cfif>	
+			</cfif>
+            <cfswitch expression="#chooseCompany#">
+            	<cfcase value="1">
+                	AND ref.companyid IN (1,2,3,4,5,12)
+                </cfcase>
+            	<cfcase value="10">
+                	AND ref.companyid = #chooseCompany#
+                </cfcase>
+            	<cfcase value="14">
+                	AND ref.companyid = #chooseCompany#
+                </cfcase>   
+            	<cfcase value="8">
+                	AND ref.companyid = #chooseCompany#
+                </cfcase>    
+            	<cfcase value="7">
+                	AND ref.companyid = #chooseCompany#
+                </cfcase>   
+            </cfswitch>
 		GROUP BY smg_users.userid, refund_receipt_id	
 		ORDER BY orderdate DESC
 	</cfquery>
@@ -209,16 +299,52 @@ function OpenRefund(url)
 				<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 					AND smg_charges.invoicedate < #CreateODBCDateTime(form.date1)#
 				</cfif>
+            <cfswitch expression="#chooseCompany#">
+            	<cfcase value="1">
+                	AND smg_charges.companyid IN (1,2,3,4,5,12)
+                </cfcase>
+            	<cfcase value="10">
+                	AND smg_charges.companyid = #chooseCompany#
+                </cfcase>
+            	<cfcase value="14">
+                	AND smg_charges.companyid = #chooseCompany#
+                </cfcase>   
+            	<cfcase value="8">
+                	AND smg_charges.companyid = #chooseCompany#
+                </cfcase>    
+            	<cfcase value="7">
+                	AND smg_charges.companyid = #chooseCompany#
+                </cfcase>   
+            </cfswitch>
 			GROUP BY smg_users.userid, smg_charges.invoicedate
 			UNION
-			SELECT 'payments', smg_users.businessname, SUM( pay.totalreceived ) AS total_amount, pay.date AS orderdate
-			FROM smg_payment_received pay
+			SELECT 'payments', smg_users.businessname, SUM( spc.amountapplied ) AS total_amount, pay.date AS orderdate
+			FROM smg_payment_charges spc
+            LEFT JOIN smg_payment_received pay ON pay.paymentid = spc.paymentid
+            LEFT JOIN smg_charges sc ON sc.chargeid = spc.chargeid
 			INNER JOIN smg_users ON pay.agentid = smg_users.userid
 			WHERE smg_users.userid = '#form.userid#'
 				AND pay.paymenttype != 'apply credit'
 				<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 					AND pay.date < #CreateODBCDateTime(form.date1)#
 				</cfif>
+                <cfswitch expression="#chooseCompany#">
+                    <cfcase value="1">
+                        AND sc.companyid IN (1,2,3,4,5,12)
+                    </cfcase>
+                    <cfcase value="10">
+                        AND sc.companyid = #chooseCompany#
+                    </cfcase>
+                    <cfcase value="14">
+                        AND sc.companyid = #chooseCompany#
+                    </cfcase>   
+                    <cfcase value="8">
+                        AND sc.companyid = #chooseCompany#
+                    </cfcase>    
+                    <cfcase value="7">
+                        AND sc.companyid = #chooseCompany#
+                    </cfcase>   
+                </cfswitch>
 			GROUP BY smg_users.userid, pay.date
 			UNION
 			SELECT 'credits', smg_users.businessname, SUM( smg_credit.amount ) AS total_amount, smg_credit.date AS orderdate
@@ -228,6 +354,23 @@ function OpenRefund(url)
 				<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 					AND smg_credit.date < #CreateODBCDateTime(form.date1)#
 				</cfif>
+                <cfswitch expression="#chooseCompany#">
+                    <cfcase value="1">
+                        AND smg_credit.companyid IN (1,2,3,4,5,12)
+                    </cfcase>
+                    <cfcase value="10">
+                        AND smg_credit.companyid = #chooseCompany#
+                    </cfcase>
+                    <cfcase value="14">
+                        AND smg_credit.companyid = #chooseCompany#
+                    </cfcase>   
+                    <cfcase value="8">
+                        AND smg_credit.companyid = #chooseCompany#
+                    </cfcase>    
+                    <cfcase value="7">
+                        AND smg_credit.companyid = #chooseCompany#
+                    </cfcase>   
+                </cfswitch>
 			GROUP BY smg_users.userid, smg_credit.date
 			UNION 
 			SELECT 'refund', smg_users.businessname, SUM(ref.amount) AS total_amount, ref.date AS orderdate
@@ -237,6 +380,23 @@ function OpenRefund(url)
 				<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 					AND ref.date < #CreateODBCDateTime(form.date1)#
 				</cfif>
+            <cfswitch expression="#chooseCompany#">
+            	<cfcase value="1">
+                	AND ref.companyid IN (1,2,3,4,5,12)
+                </cfcase>
+            	<cfcase value="10">
+                	AND ref.companyid = #chooseCompany#
+                </cfcase>
+            	<cfcase value="14">
+                	AND ref.companyid = #chooseCompany#
+                </cfcase>   
+            	<cfcase value="8">
+                	AND ref.companyid = #chooseCompany#
+                </cfcase>    
+            	<cfcase value="7">
+                	AND ref.companyid = #chooseCompany#
+                </cfcase>   
+            </cfswitch>
 			GROUP BY smg_users.userid, refund_receipt_id				
 			ORDER BY orderdate
 		</cfquery>
@@ -269,16 +429,52 @@ function OpenRefund(url)
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 				AND (smg_charges.invoicedate BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
 			</cfif>
+            <cfswitch expression="#chooseCompany#">
+            	<cfcase value="1">
+                	AND smg_charges.companyid IN (1,2,3,4,5,12)
+                </cfcase>
+            	<cfcase value="10">
+                	AND smg_charges.companyid = #chooseCompany#
+                </cfcase>
+            	<cfcase value="14">
+                	AND smg_charges.companyid = #chooseCompany#
+                </cfcase>   
+            	<cfcase value="8">
+                	AND smg_charges.companyid = #chooseCompany#
+                </cfcase>    
+            	<cfcase value="7">
+                	AND smg_charges.companyid = #chooseCompany#
+                </cfcase>   
+            </cfswitch>
 		GROUP BY smg_users.userid, smg_charges.invoicedate
 		UNION
-		SELECT 'payments', smg_users.businessname, SUM( pay.totalreceived ) AS total_amount, pay.date AS orderdate
-		FROM smg_payment_received pay
+		SELECT 'payments', smg_users.businessname, SUM( spc.amountapplied ) AS total_amount, pay.date AS orderdate
+		FROM smg_payment_charges spc
+		LEFT JOIN smg_payment_received pay ON pay.paymentid = spc.paymentid
+        LEFT JOIN smg_charges sc ON sc.chargeid = spc.chargeid
 		INNER JOIN smg_users ON pay.agentid = smg_users.userid
 		WHERE smg_users.userid = '#form.userid#'
 			AND pay.paymenttype != 'apply credit'
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 				AND (pay.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
 			</cfif>
+            <cfswitch expression="#chooseCompany#">
+                <cfcase value="1">
+                    AND sc.companyid IN (1,2,3,4,5,12)
+                </cfcase>
+                <cfcase value="10">
+                    AND sc.companyid = #chooseCompany#
+                </cfcase>
+                <cfcase value="14">
+                    AND sc.companyid = #chooseCompany#
+                </cfcase>   
+                <cfcase value="8">
+                    AND sc.companyid = #chooseCompany#
+                </cfcase>    
+                <cfcase value="7">
+                    AND sc.companyid = #chooseCompany#
+                </cfcase>   
+            </cfswitch>
 		GROUP BY smg_users.userid, pay.date
 		UNION
 		SELECT 'credits', smg_users.businessname, SUM( smg_credit.amount ) AS total_amount, smg_credit.date AS orderdate
@@ -288,6 +484,23 @@ function OpenRefund(url)
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 				AND (smg_credit.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
 			</cfif>
+            <cfswitch expression="#chooseCompany#">
+                <cfcase value="1">
+                    AND smg_credit.companyid IN (1,2,3,4,5,12)
+                </cfcase>
+                <cfcase value="10">
+                    AND smg_credit.companyid = #chooseCompany#
+                </cfcase>
+                <cfcase value="14">
+                    AND smg_credit.companyid = #chooseCompany#
+                </cfcase>   
+                <cfcase value="8">
+                    AND smg_credit.companyid = #chooseCompany#
+                </cfcase>    
+                <cfcase value="7">
+                    AND smg_credit.companyid = #chooseCompany#
+                </cfcase>   
+            </cfswitch>
 		GROUP BY smg_users.userid, smg_credit.date
 		UNION
 		SELECT 'refund', smg_users.businessname, SUM(ref.amount) AS total_amount, ref.date AS orderdate
@@ -297,6 +510,23 @@ function OpenRefund(url)
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 				AND (ref.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
 			</cfif>
+            <cfswitch expression="#chooseCompany#">
+            	<cfcase value="1">
+                	AND ref.companyid IN (1,2,3,4,5,12)
+                </cfcase>
+            	<cfcase value="10">
+                	AND ref.companyid = #chooseCompany#
+                </cfcase>
+            	<cfcase value="14">
+                	AND ref.companyid = #chooseCompany#
+                </cfcase>   
+            	<cfcase value="8">
+                	AND ref.companyid = #chooseCompany#
+                </cfcase>    
+            	<cfcase value="7">
+                	AND ref.companyid = #chooseCompany#
+                </cfcase>   
+            </cfswitch>
 		GROUP BY smg_users.userid, refund_receipt_id					
 		ORDER BY orderdate
 	</cfquery>
@@ -332,8 +562,28 @@ function OpenRefund(url)
 		<tr><th colspan="5">
 				<table width="100%">
 					<tr>
-						<th width="100"><img src="../../pics/logos/#get_companyname.companyid#.gif" border="0" /></th>
-						<th width="450" valign="top">#get_companyname.companyname# <br /><br /> Account Statement</th>
+						<th width="100">
+                        	<cfswitch expression="#form.chooseCompany#">
+                            	<cfcase value="0">
+                                	<img src="../../pics/logos/#get_companyname.companyid#.gif" border="0" />
+                                </cfcase>
+                            	<cfcase value="1,10,14">
+                                	<img src="../../pics/logos/#form.chooseCompany#.gif" border="0" />
+                                </cfcase>
+                            	<cfcase value="7,8">
+                                	<img src="../../pics/logos/csb_logo_small.jpg" border="0" />
+                                </cfcase>
+                            </cfswitch>
+                        </th>
+						<th width="450" valign="top">
+                        	<cfif form.chooseCompany>
+								#get_companyname.companyname#
+                            <cfelse>
+                            	All Companies: Overall Balance
+                            </cfif>
+                        	<br /><br />
+                            Account Statement
+                        </th>
 					</tr>
 				</table>
 			</th>

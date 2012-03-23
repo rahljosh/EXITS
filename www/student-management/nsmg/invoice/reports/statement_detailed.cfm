@@ -1,3 +1,5 @@
+<!--- File intrep/invoice/statement_detailed.cfm also needs to be updated --->
+
 <!--- CHECK INVOICE RIGHTS ---->
 <cfinclude template="../check_rights.cfm">
 
@@ -55,17 +57,6 @@ function OpenRefund(url)
 	ORDER BY businessname
 </Cfquery>
 
-<cfquery name="get_companyname" datasource="MySql">
-	SELECT companyid, companyname
-	FROM smg_companies
-	WHERE companyid = 
-    <cfif client.companyid lte 5>
-    '5'
-    <cfelse>
-    #client.companyid#
-   </cfif>
-</cfquery>
-
 <cfoutput>
 
 <cfif NOT IsDefined('form.userid')>
@@ -93,17 +84,30 @@ function OpenRefund(url)
 								</select>
 							</td>
 						</tr>
-						<tr>
+                        <tr align="left">
+							<td>Select Company : </td>
+							<td>
+                            	<select name="chooseCompany">
+                                	<option value="0">All</option>
+                                	<option value="1">ISE</option>
+                            		<option value="10">CASE</option>
+                                    <option value="14">ESI</option>
+                                    <option value="8">Work and Travel</option>
+                                    <option value="7">Trainee</option>
+                            	</select>
+                             </td>
+                        </tr>
+						<tr align="left">
 							<td>From : </td>
 							<td><cfinput type="text" name="date1" size="8" maxlength="10" validate="date"> mm-dd-yyyy</td>
 						</tr>
-						<tr>
+						<tr align="left">
 							<td>To : </td>
 							<td><cfinput type="text" name="date2" size="8" maxlength="10" validate="date"> mm-dd-yyyy</td>
 						</tr>			
-						<tr><td>* Dates are not required.</td></tr>
+						<tr align="left"><td colspan="2">* Dates are not required.</td></tr>
 						<tr><td>&nbsp;</td></tr>	
-						<tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
+						<tr align="left"><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
 					</table>
 				</cfform>
 			</td>
@@ -113,6 +117,17 @@ function OpenRefund(url)
 
 <!--- REPORT --->
 <cfelse>
+
+    <cfquery name="get_companyname" datasource="MySql">
+    SELECT companyid, companyname
+    FROM smg_companies
+    WHERE 
+        <cfif #form.chooseCompany#>
+            companyid = #form.chooseCompany#
+        <cfelse>
+            companyid = 5
+        </cfif>
+    </cfquery>
 
 	<Cfquery name="get_intl_rep" datasource="MySQL">
 		SELECT businessname, firstname, lastname, city, smg_countrylist.countryname
@@ -139,7 +154,23 @@ function OpenRefund(url)
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 				AND (smg_charges.invoicedate BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
 			</cfif>
-        AND smg_charges.companyid != 14 <!--- balance does not include ESI balance --->
+            <cfswitch expression="#chooseCompany#">
+            	<cfcase value="1">
+                	AND smg_charges.companyid IN (1,2,3,4,5,12)
+                </cfcase>
+            	<cfcase value="10">
+                	AND smg_charges.companyid = #chooseCompany#
+                </cfcase>
+            	<cfcase value="14">
+                	AND smg_charges.companyid = #chooseCompany#
+                </cfcase>   
+            	<cfcase value="8">
+                	AND smg_charges.companyid = #chooseCompany#
+                </cfcase>    
+            	<cfcase value="7">
+                	AND smg_charges.companyid = #chooseCompany#
+                </cfcase>   
+            </cfswitch>
 		GROUP BY smg_users.userid, smg_charges.invoiceid
         
 		UNION
@@ -176,14 +207,29 @@ function OpenRefund(url)
         ON 
             su.userid = sch.agentid
         WHERE  
-            sch.agentid = '#form.userid#' 
-		AND
-            sch.companyid != 14 <!--- balance does not include ESI balance --->     
+            sch.agentid = '#form.userid#'     
         AND
             sp.paymenttype != 'apply credit'
         <cfif form.date1 NEQ '' AND form.date2 NEQ ''>
             AND (sp.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
         </cfif>
+            <cfswitch expression="#chooseCompany#">
+            	<cfcase value="1">
+                	AND sch.companyid IN (1,2,3,4,5,12)
+                </cfcase>
+            	<cfcase value="10">
+                	AND sch.companyid = #chooseCompany#
+                </cfcase>
+            	<cfcase value="14">
+                	AND sch.companyid = #chooseCompany#
+                </cfcase>   
+            	<cfcase value="8">
+                	AND sch.companyid = #chooseCompany#
+                </cfcase>    
+            	<cfcase value="7">
+                	AND sch.companyid = #chooseCompany#
+                </cfcase>   
+            </cfswitch>
         GROUP BY 
             su.userid, sp.paymentref
             
@@ -205,7 +251,23 @@ function OpenRefund(url)
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 				AND (smg_credit.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
 			</cfif>
-        AND smg_credit.companyid != 14 <!--- balance does not include ESI balance --->
+            <cfswitch expression="#chooseCompany#">
+            	<cfcase value="1">
+                	AND smg_credit.companyid IN (1,2,3,4,5,12)
+                </cfcase>
+            	<cfcase value="10">
+                	AND smg_credit.companyid = #chooseCompany#
+                </cfcase>
+            	<cfcase value="14">
+                	AND smg_credit.companyid = #chooseCompany#
+                </cfcase>   
+            	<cfcase value="8">
+                	AND smg_credit.companyid = #chooseCompany#
+                </cfcase>    
+            	<cfcase value="7">
+                	AND smg_credit.companyid = #chooseCompany#
+                </cfcase>   
+            </cfswitch>
         GROUP BY creditid
         
 		UNION
@@ -226,7 +288,23 @@ function OpenRefund(url)
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 				AND (ref.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
 			</cfif>	
-        AND ref.companyid != 14 <!--- balance does not include ESI balance --->
+            <cfswitch expression="#chooseCompany#">
+            	<cfcase value="1">
+                	AND ref.companyid IN (1,2,3,4,5,12)
+                </cfcase>
+            	<cfcase value="10">
+                	AND ref.companyid = #chooseCompany#
+                </cfcase>
+            	<cfcase value="14">
+                	AND ref.companyid = #chooseCompany#
+                </cfcase>   
+            	<cfcase value="8">
+                	AND ref.companyid = #chooseCompany#
+                </cfcase>    
+            	<cfcase value="7">
+                	AND ref.companyid = #chooseCompany#
+                </cfcase>   
+            </cfswitch>
 		GROUP BY smg_users.userid, refund_receipt_id	
 		ORDER BY orderdate DESC
 	</cfquery>
@@ -250,7 +328,23 @@ function OpenRefund(url)
 				<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 					AND smg_charges.invoicedate < #CreateODBCDateTime(form.date1)#
 				</cfif>
-            AND smg_charges.companyid != 14 <!--- balance does not include ESI balance --->
+            <cfswitch expression="#chooseCompany#">
+            	<cfcase value="1">
+                	AND smg_charges.companyid IN (1,2,3,4,5,12)
+                </cfcase>
+            	<cfcase value="10">
+                	AND smg_charges.companyid = #chooseCompany#
+                </cfcase>
+            	<cfcase value="14">
+                	AND smg_charges.companyid = #chooseCompany#
+                </cfcase>   
+            	<cfcase value="8">
+                	AND smg_charges.companyid = #chooseCompany#
+                </cfcase>    
+            	<cfcase value="7">
+                	AND smg_charges.companyid = #chooseCompany#
+                </cfcase>
+            </cfswitch>
 			GROUP BY smg_users.userid, smg_charges.invoicedate
             
 			UNION
@@ -289,8 +383,23 @@ function OpenRefund(url)
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
                 AND sp.date < #CreateODBCDateTime(form.date1)#
             </cfif>
-            AND
-                sch.companyid != 14 <!--- balance does not include ESI balance --->           
+                <cfswitch expression="#chooseCompany#">
+                    <cfcase value="1">
+                        AND sch.companyid IN (1,2,3,4,5,12)
+                    </cfcase>
+                    <cfcase value="10">
+                        AND sch.companyid = #chooseCompany#
+                    </cfcase>
+                    <cfcase value="14">
+                        AND sch.companyid = #chooseCompany#
+                    </cfcase>   
+                    <cfcase value="8">
+                        AND sch.companyid = #chooseCompany#
+                    </cfcase>    
+                    <cfcase value="7">
+                        AND sch.companyid = #chooseCompany#
+                    </cfcase>   
+                </cfswitch>          
             GROUP BY 
             	su.userid, sp.date
 
@@ -303,7 +412,23 @@ function OpenRefund(url)
 				<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 					AND smg_credit.date < #CreateODBCDateTime(form.date1)#
 				</cfif>
-            AND smg_credit.companyid !=14 <!--- balance does not include ESI balance --->
+                <cfswitch expression="#chooseCompany#">
+                    <cfcase value="1">
+                        AND smg_credit.companyid IN (1,2,3,4,5,12)
+                    </cfcase>
+                    <cfcase value="10">
+                        AND smg_credit.companyid = #chooseCompany#
+                    </cfcase>
+                    <cfcase value="14">
+                        AND smg_credit.companyid = #chooseCompany#
+                    </cfcase>   
+                    <cfcase value="8">
+                        AND smg_credit.companyid = #chooseCompany#
+                    </cfcase>    
+                    <cfcase value="7">
+                        AND smg_credit.companyid = #chooseCompany#
+                    </cfcase>   
+                </cfswitch>
 			GROUP BY smg_users.userid, smg_credit.date
             
 			UNION 
@@ -315,7 +440,23 @@ function OpenRefund(url)
 				<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 					AND ref.date < #CreateODBCDateTime(form.date1)#
 				</cfif>
-            AND ref.companyid !=14 <!--- balance does not include ESI balance --->
+            <cfswitch expression="#chooseCompany#">
+            	<cfcase value="1">
+                	AND ref.companyid IN (1,2,3,4,5,12)
+                </cfcase>
+            	<cfcase value="10">
+                	AND ref.companyid = #chooseCompany#
+                </cfcase>
+            	<cfcase value="14">
+                	AND ref.companyid = #chooseCompany#
+                </cfcase>   
+            	<cfcase value="8">
+                	AND ref.companyid = #chooseCompany#
+                </cfcase>    
+            	<cfcase value="7">
+                	AND ref.companyid = #chooseCompany#
+                </cfcase>   
+            </cfswitch>
 			GROUP BY smg_users.userid, refund_receipt_id				
 			ORDER BY orderdate
 		</cfquery>
@@ -348,7 +489,23 @@ function OpenRefund(url)
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 				AND (smg_charges.invoicedate BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
 			</cfif>
-        AND smg_charges.companyid != 14 <!--- balance does not include ESI balance --->
+            <cfswitch expression="#chooseCompany#">
+            	<cfcase value="1">
+                	AND smg_charges.companyid IN (1,2,3,4,5,12)
+                </cfcase>
+            	<cfcase value="10">
+                	AND smg_charges.companyid = #chooseCompany#
+                </cfcase>
+            	<cfcase value="14">
+                	AND smg_charges.companyid = #chooseCompany#
+                </cfcase>   
+            	<cfcase value="8">
+                	AND smg_charges.companyid = #chooseCompany#
+                </cfcase>    
+            	<cfcase value="7">
+                	AND smg_charges.companyid = #chooseCompany#
+                </cfcase>   
+            </cfswitch>
 		GROUP BY smg_users.userid, smg_charges.invoicedate
         
 		UNION
@@ -387,8 +544,23 @@ function OpenRefund(url)
         <cfif form.date1 NEQ '' AND form.date2 NEQ ''>
             AND (sp.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
         </cfif>
-        AND
-            sch.companyid != 14 <!--- balance does not include ESI balance --->         
+            <cfswitch expression="#chooseCompany#">
+                <cfcase value="1">
+                    AND sch.companyid IN (1,2,3,4,5,12)
+                </cfcase>
+                <cfcase value="10">
+                    AND sch.companyid = #chooseCompany#
+                </cfcase>
+                <cfcase value="14">
+                    AND sch.companyid = #chooseCompany#
+                </cfcase>   
+                <cfcase value="8">
+                    AND sch.companyid = #chooseCompany#
+                </cfcase>    
+                <cfcase value="7">
+                    AND sch.companyid = #chooseCompany#
+                </cfcase>   
+            </cfswitch>       
         GROUP BY 
             su.userid, sp.date
         
@@ -401,7 +573,23 @@ function OpenRefund(url)
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 				AND (smg_credit.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
 			</cfif>
-        AND smg_credit.companyid !=14 <!--- balance does not include ESI balance --->
+            <cfswitch expression="#chooseCompany#">
+                <cfcase value="1">
+                    AND smg_credit.companyid IN (1,2,3,4,5,12)
+                </cfcase>
+                <cfcase value="10">
+                    AND smg_credit.companyid = #chooseCompany#
+                </cfcase>
+                <cfcase value="14">
+                    AND smg_credit.companyid = #chooseCompany#
+                </cfcase>   
+                <cfcase value="8">
+                    AND smg_credit.companyid = #chooseCompany#
+                </cfcase>    
+                <cfcase value="7">
+                    AND smg_credit.companyid = #chooseCompany#
+                </cfcase>   
+            </cfswitch>
 		GROUP BY smg_users.userid, smg_credit.date
         
 		UNION
@@ -413,7 +601,23 @@ function OpenRefund(url)
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 				AND (ref.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
 			</cfif>
-        AND ref.companyid !=14 <!--- balance does not include ESI balance --->
+            <cfswitch expression="#chooseCompany#">
+            	<cfcase value="1">
+                	AND ref.companyid IN (1,2,3,4,5,12)
+                </cfcase>
+            	<cfcase value="10">
+                	AND ref.companyid = #chooseCompany#
+                </cfcase>
+            	<cfcase value="14">
+                	AND ref.companyid = #chooseCompany#
+                </cfcase>   
+            	<cfcase value="8">
+                	AND ref.companyid = #chooseCompany#
+                </cfcase>    
+            	<cfcase value="7">
+                	AND ref.companyid = #chooseCompany#
+                </cfcase>   
+            </cfswitch>
 		GROUP BY smg_users.userid, refund_receipt_id					
 		ORDER BY orderdate
 	</cfquery>
@@ -449,8 +653,28 @@ function OpenRefund(url)
 		<tr><th colspan="5">
 				<table width="100%">
 					<tr>
-						<th width="100"><img src="../../pics/logos/#get_companyname.companyid#.gif" border="0" /></th>
-						<th width="450" valign="top">#get_companyname.companyname# <br /><br /> Account Statement</th>
+						<th width="100">
+                        	<cfswitch expression="#form.chooseCompany#">
+                            	<cfcase value="0">
+                                	<img src="../../pics/logos/#get_companyname.companyid#.gif" border="0" />
+                                </cfcase>
+                            	<cfcase value="1,10,14">
+                                	<img src="../../pics/logos/#form.chooseCompany#.gif" border="0" />
+                                </cfcase>
+                            	<cfcase value="7,8">
+                                	<img src="../../pics/logos/csb_logo_small.jpg" border="0" />
+                                </cfcase>
+                            </cfswitch>
+                        </th>
+						<th width="450" valign="top">
+                        	<cfif form.chooseCompany>
+								#get_companyname.companyname#
+                            <cfelse>
+                            	All Companies: Overall Balance
+                            </cfif>
+                        	<br /><br />
+                            Account Statement
+                        </th>
 					</tr>
 				</table>
 			</th>
