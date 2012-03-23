@@ -37,11 +37,15 @@
 		/>
 
 	<cfscript>
-		// Get what company candidate/user is logged in
-		if ( StructKeyExists(SESSION.CANDIDATE, "companyID") AND VAL(SESSION.CANDIDATE.companyID) ) {
-			ATTRIBUTES.companyID = SESSION.CANDIDATE.companyID;
-		} else if ( StructKeyExists(CLIENT, "companyID") AND VAL(CLIENT.companyID) ) {
-			ATTRIBUTES.companyID = CLIENT.companyID;
+		if ( NOT VAL(ATTRIBUTES.companyID) ) {
+		
+			// Get what company candidate/user is logged in
+			if ( StructKeyExists(SESSION.CANDIDATE, "companyID") AND VAL(SESSION.CANDIDATE.companyID) ) {
+				ATTRIBUTES.companyID = SESSION.CANDIDATE.companyID;
+			} else if ( StructKeyExists(CLIENT, "companyID") AND VAL(CLIENT.companyID) ) {
+				ATTRIBUTES.companyID = CLIENT.companyID;
+			}
+		
 		}
 	</cfscript>
         
@@ -160,13 +164,27 @@
                     #csbEmailFooter#
 
                 </div>  <!--- End of class="form-container" --->
+				
+                <!--- Trainee - Display CSB Footer --->
+                <cfif ATTRIBUTES.companyID EQ 7>
 
-                <div style="width:100%; height:20px; background-color:##FF7E0D;">
-                    <div style="color:##FFF; text-align:center; font-size:0.7em; font-weight:bold; padding-top:0.3em;">
-                        Copyright &copy; #Year(now())# #APPLICATION.CSB.name#. ALL RIGHTS RESERVED.
+                    <div style="width:100%; height:20px; background-color:##0054A0;">
+                        <div style="color:##FFF; text-align:center; font-size:0.7em; font-weight:bold; padding-top:0.3em;">
+                            Copyright &copy; #Year(now())# #APPLICATION.CSB.Trainee.name#. ALL RIGHTS RESERVED.
+                        </div>
                     </div>
-                </div>
-
+                
+                <!--- Work and Travel - Display CSB Footer --->
+                <cfelse>
+                
+                    <div style="width:100%; height:20px; background-color:##FF7E0D;">
+                        <div style="color:##FFF; text-align:center; font-size:0.7em; font-weight:bold; padding-top:0.3em;">
+                            Copyright &copy; #Year(now())# #APPLICATION.CSB.name#. ALL RIGHTS RESERVED.
+                        </div>
+                    </div>
+				
+				</cfif>
+                
             </cfcase>
 
 
@@ -190,11 +208,25 @@
 
                 </div>  <!--- End of class="form-container" --->
 
-                <div style="width:100%; height:20px; background-color:##FF7E0D;">
-                    <div style="color:##FFF; text-align:center; font-size:0.7em; font-weight:bold; padding-top:0.3em;">
-                        Copyright &copy; #Year(now())# #APPLICATION.CSB.name#. ALL RIGHTS RESERVED.
+                <!--- Trainee - Display CSB Footer --->
+                <cfif ATTRIBUTES.companyID EQ 7>
+
+                    <div style="width:100%; height:20px; background-color:##0054A0;">
+                        <div style="color:##FFF; text-align:center; font-size:0.7em; font-weight:bold; padding-top:0.3em;">
+                            Copyright &copy; #Year(now())# #APPLICATION.CSB.Trainee.name#. ALL RIGHTS RESERVED.
+                        </div>
                     </div>
-                </div>
+                
+                <!--- Work and Travel - Display CSB Footer --->
+                <cfelse>
+                
+                    <div style="width:100%; height:20px; background-color:##FF7E0D;">
+                        <div style="color:##FFF; text-align:center; font-size:0.7em; font-weight:bold; padding-top:0.3em;">
+                            Copyright &copy; #Year(now())# #APPLICATION.CSB.name#. ALL RIGHTS RESERVED.
+                        </div>
+                    </div>
+				
+				</cfif>
 
             </cfcase>
 
@@ -210,11 +242,25 @@
 
                 </div>  <!--- End of class="form-container" --->
 
-                <div style="width:100%; height:20px; background-color:##FF7E0D;">
-                    <div style="color:##FFF; text-align:center; font-size:0.7em; font-weight:bold; padding-top:0.3em;">
-                        Copyright &copy; #Year(now())# #APPLICATION.CSB.name#. ALL RIGHTS RESERVED.
+                <!--- Trainee - Display CSB Footer --->
+                <cfif ATTRIBUTES.companyID EQ 7>
+
+                    <div style="width:100%; height:20px; background-color:##0054A0;">
+                        <div style="color:##FFF; text-align:center; font-size:0.7em; font-weight:bold; padding-top:0.3em;">
+                            Copyright &copy; #Year(now())# #APPLICATION.CSB.Trainee.name#. ALL RIGHTS RESERVED.
+                        </div>
                     </div>
-                </div>
+                
+                <!--- Work and Travel - Display CSB Footer --->
+                <cfelse>
+                
+                    <div style="width:100%; height:20px; background-color:##FF7E0D;">
+                        <div style="color:##FFF; text-align:center; font-size:0.7em; font-weight:bold; padding-top:0.3em;">
+                            Copyright &copy; #Year(now())# #APPLICATION.CSB.name#. ALL RIGHTS RESERVED.
+                        </div>
+                    </div>
+				
+				</cfif>
 
             </cfcase>
             

@@ -341,7 +341,7 @@
 					emailMessage=vSummativeEvaluation,
 					emailFilePath=APPLICATION.PATH.TRAINEE.PDFDOCS & "ISE_Summative_Evaluation.pdf",
 					emailPriority=1,
-					footerType="emailRegular",
+					footerType="emailNoInfo",
 					companyID=7
 				);
 

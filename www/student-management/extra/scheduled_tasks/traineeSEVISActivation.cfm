@@ -122,7 +122,7 @@
 					emailSubject=vCandidateName & " - SEVIS Activation Required",
 					emailMessage=vEditedEvaluationEmailBody,
 					emailPriority=1,
-					footerType="emailRegular",
+					footerType="emailNoInfo",
 					companyID=7
 				);
 			
