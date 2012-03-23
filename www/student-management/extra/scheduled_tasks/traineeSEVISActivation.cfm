@@ -72,7 +72,6 @@
         	ec.ds2019_dateActivated IS NULL
 		ORDER BY
         	ec.ds2019_startDate 
-        LIMIT 1
     </cfquery>
 	
 	<cfscript>
