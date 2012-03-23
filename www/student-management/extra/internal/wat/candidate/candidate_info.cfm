@@ -1231,7 +1231,7 @@
                                         	<td class="style1" align="right"><strong>WC Expiration Date:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly selfPlacementReadOnly">
-                                                	<cfif IsDefined("qCandidatePlaceCompany.WCDateExpired") AND IsDate(qCandidatePlaceCompany.WCDateExpired) AND NOW() - qCandidatePlaceCompany.WCDateExpired LT 0>
+                                                	<cfif IsDate(qCandidatePlaceCompany.WCDateExpired) AND qCandidatePlaceCompany.WCDateExpired GT NOW()>
                                                     	#DateFormat(qCandidatePlaceCompany.WCDateExpired, 'mm/dd/yyyy')#
                                                   	<cfelse>
                                                     	Workmen's compensation is missing.
