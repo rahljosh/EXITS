@@ -2655,6 +2655,53 @@
 
 
 	<!--- ------------------------------------------------------------------------- ----
+		Start of Remote Functions 
+	----- ------------------------------------------------------------------------- --->
+    
+	<cffunction name="deletePlacementHistoryRemote" access="remote" returntype="void" output="false" hint="Deletes a placement history">
+        <cfargument name="historyID" type="any" hint="historyID is not required">
+		
+        <cfif VAL(ARGUMENTS.historyID)>
+        	
+            <!--- applicationHistory --->
+            <cfquery 
+                datasource="#APPLICATION.dsn#">
+                    DELETE FROM
+                        applicationHistory
+                    WHERE
+                    	foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="smg_hostHistory">
+                    AND                  
+                        foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.historyID#">
+            </cfquery>
+            
+            <!--- smg_hostHistoryTracking --->  
+            <cfquery 
+                datasource="#APPLICATION.dsn#">
+                    DELETE FROM
+                        smg_hostHistoryTracking
+                    WHERE
+                        historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.historyID#">
+            </cfquery>
+            
+            <!--- smg_hostHistory --->
+            <cfquery 
+                datasource="#APPLICATION.dsn#">
+                    DELETE FROM
+                        smg_hostHistory
+                    WHERE
+                        historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.historyID#">
+            </cfquery>
+        
+        </cfif>
+        
+	</cffunction>            
+    
+	<!--- ------------------------------------------------------------------------- ----
+		End of Remote Functions 
+	----- ------------------------------------------------------------------------- --->
+
+
+	<!--- ------------------------------------------------------------------------- ----
 		
 		DS-2019 Verification List
 	
