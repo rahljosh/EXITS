@@ -171,7 +171,7 @@
 
 		<!--- No Errors --->
         <cfif NOT LEN(errorMsg)>
-        
+        	
 			<!--- Area Rep and 2nd Visit Rep get the "reports to" selection.  Don't do after "reports to" was displayed and form submitted the second time. --->
             <cfif ListFind("7,15", FORM.userType) AND NOT FORM.advisor>
         
@@ -399,6 +399,20 @@
 		</cfscript>
     
     </cfif> <!--- FORM.submitted --->
+    
+	<cfscript>
+        // Disable these forms if editing 2nd visit information
+        if ( FORM.userType EQ 15 AND NOT LEN(errorMsg) )  {
+            
+			// display the "reports to" selection.
+			FORM.advisor = 1;
+		
+			// disable the region and access level selections.
+			FORM.region_disabled = 'disabled';
+			FORM.access_disabled = 'disabled';
+
+        }	
+    </cfscript>
     
 </cfsilent>
 
