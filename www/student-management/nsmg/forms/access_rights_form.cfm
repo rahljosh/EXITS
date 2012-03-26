@@ -1,6 +1,6 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		access_rights_form.cfm
+	File:		access_rights_FORM.cfm
 	Author:		Marcus Melo
 	Date:		January 14, 2010
 	Desc:		Inserts/Edits User Access Rights
@@ -19,14 +19,15 @@
 
 	<!--- Param FORM Variables --->
 	<cfparam name="FORM.submitted" default="0">
-        
+	<cfparam name="FORM.advisorID" default="0">
+
 	<!--- coming from user_info.cfm with cflocation forcing entry of a Company & Regional Access record record. --->
     <cfparam name="FORM.force" default="0">
     
     <!--- after submit, if usertype 7 we return to this form with the "reports to" selection. --->
     <cfparam name="FORM.advisor" default="0">
     
-    <!--- coming from user_form.cfm after adding a new user.  used to set the user_access_rights.default_access field and disable Access Level. --->
+    <!--- coming from user_FORM.cfm after adding a new user.  used to set the user_access_rights.default_access field and disable Access Level. --->
     <cfparam name="FORM.new_user" default="0">
 
     <cfparam name="FORM.region_disabled" default="">
@@ -39,7 +40,7 @@
 			new = false;	
 		}
 	
-		field_list = 'companyid,regionid,usertype,advisorid';
+		field_list = 'companyid,regionid,usertype,advisorID';
 		
 		// Stores errorMsgs
 		errorMsg = '';	
@@ -47,7 +48,7 @@
 
 	<cfif ListFind("1,2,3,4", CLIENT.userType)>
     
-        <cfquery name="qGetRegions" datasource="#application.dsn#">
+        <cfquery name="qGetRegions" datasource="#APPLICATION.DSN#">
             SELECT 
                 regionid, 
                 CONVERT( CONCAT(regionname,' (',regionid,')') USING latin1) AS region
@@ -68,7 +69,7 @@
 
 	<cfelse>
     
-        <cfquery name="qGetRegions" datasource="#application.dsn#">
+        <cfquery name="qGetRegions" datasource="#APPLICATION.DSN#">
             SELECT 
                 r.regionid, 
                 CONVERT( CONCAT(regionname,' (',r.regionid,')') USING latin1) AS region
@@ -81,14 +82,16 @@
             AND
             	uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userType#"> 
             AND	
-            	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">               
+            	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">    
+                           
 			<cfif VAL(URL.companyID)>
                 AND 
                     uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.companyID#">
             <cfelse>   
                 AND 
                     uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-            </cfif>      
+            </cfif>  
+                
             ORDER BY 
                 r.regionname,
                 r.regionid
@@ -102,7 +105,7 @@
 		<!--- special submit for forced hard coded users. --->
         <cfif isDefined("FORM.hard_coded_user_submitted")>
         
-            <cfquery datasource="#application.dsn#">
+            <cfquery datasource="#APPLICATION.DSN#">
                 INSERT INTO 
                 	user_access_rights 
                 (
@@ -127,7 +130,7 @@
           
         	<cflocation url="index.cfm?curdoc=user_info&userid=#URL.userID#" addtoken="No">
         
-        </cfif>
+        </cfif> <!--- special submit for forced hard coded users. --->
        
 		<cfscript>
 			// Data Validation
@@ -143,7 +146,7 @@
     	<!--- No Errors / Check for Access --->
         <cfif NOT LEN(errorMsg)>
     
-            <cfquery name="qCheckAccess" datasource="#application.dsn#">
+            <cfquery name="qCheckAccess" datasource="#APPLICATION.DSN#">
                 SELECT 
                 	id
                 FROM 
@@ -164,13 +167,13 @@
                 }
             </cfscript>
             
-        </cfif>        
+        </cfif>  <!--- No Errors / Check for Access --->     
 
 		<!--- No Errors --->
         <cfif NOT LEN(errorMsg)>
         
-			<!--- usertype 7 gets the "reports to" selection.  Don't do after "reports to" was displayed and form submitted the second time. --->
-            <cfif FORM.usertype EQ 7 AND NOT FORM.advisor>
+			<!--- Area Rep and 2nd Visit Rep get the "reports to" selection.  Don't do after "reports to" was displayed and form submitted the second time. --->
+            <cfif ListFind("7,15", FORM.userType) AND NOT FORM.advisor>
         
         		<cfscript>
 					// display the "reports to" selection.
@@ -180,10 +183,11 @@
 					FORM.region_disabled = 'disabled';
 					FORM.access_disabled = 'disabled';
 				</cfscript>
-        
+        	
+            <!--- New User --->
 			<cfelseif new>
             
-                <cfquery datasource="#application.dsn#">
+                <cfquery datasource="#APPLICATION.DSN#">
                     INSERT INTO 
                     	user_access_rights 
                     (
@@ -191,7 +195,7 @@
                         companyid, 
                         regionid, 
                         usertype, 
-                        advisorid, 
+                        advisorID, 
                         default_access
                     )
                     VALUES 
@@ -200,7 +204,7 @@
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.companyid#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionid#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.usertype#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.advisorid#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.advisorID#">,
                         <!--- for a new user or forcing entry for user without a record, 
 						this is their first user_access_rights record, so need to set it as the default. --->
                         <cfif FORM.new_user OR FORM.force>
@@ -210,148 +214,147 @@
                         </cfif>
                     )
                 </cfquery>
-               <Cfif client.companyid lte 5 or client.companyid eq 12>
-        	   <cfif ListFind("6,7", form.usertype) >
-                   <cfquery name="newUserInfo" datasource="#application.dsn#">
-                   select u.firstname, u.lastname, u.email, u.address, u.address2, u.city, u.state, u.zip, u.phone, u.email
-                   from smg_users u 
-                   where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
-                   </cfquery>
-                   <Cfquery name="userType" datasource="#application.dsn#">
-                   select usertype
-                   from smg_usertype
-                   where usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.usertype#">
-                   </cfquery>
-                   <cfquery name="regionalManager" datasource="#application.dsn#">
-                    select u.email, u.firstname
-                    from smg_users u
-                    left join user_access_rights uar on uar.userid = u.userid
-                    where uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionid#">
-                    and uar.usertype = 5
-                   </cfquery>
+                
+				<cfif listFind("1,2,3,4,5,12", CLIENT.companyID) AND ListFind("6,7", FORM.usertype)>
+        	   
+                    <cfquery name="newUserInfo" datasource="#APPLICATION.DSN#">
+                        select 
+                            u.firstname, u.lastname, u.email, u.address, u.address2, u.city, u.state, u.zip, u.phone, u.email
+                        from 
+                            smg_users u 
+                        where 
+                            userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
+                    </cfquery>
+                   
+                    <cfquery name="userType" datasource="#APPLICATION.DSN#">
+                        select 
+                            usertype
+                        from 
+                            smg_usertype
+                        where 
+                            usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.usertype#">
+                    </cfquery>
+               
+                    <cfquery name="regionalManager" datasource="#APPLICATION.DSN#">
+                        select 
+                            u.email, u.firstname
+                        from 
+                            smg_users u
+                        left join 
+                            user_access_rights uar on uar.userid = u.userid
+                        where 
+                            uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionid#">
+                        and 
+                            uar.usertype = 5
+                    </cfquery>
+               
                    <cfsavecontent variable="email_message">
-                                   
-                   <cfoutput>
-                   
-                   The following rep was just added to the database:<br /><Br />
-                   
-                   Userype: <strong>#usertype.usertype#</strong><Br />
-                   Program Manager: <strong>#client.programmanager#</strong><br />
-                   <Br />
-                   #newUserInfo.firstname# #newUserInfo.lastname# (#url.userID#)<br />
-                   #newUserInfo.address#<br />
-                   <Cfif newUserInfo.address2 is not ''>
-                   #newUserInfo.address2#<br />
-                   </Cfif>
-                   #newUserInfo.city# #newUserInfo.state#, #newUserInfo.zip#
-                   <br /><br />
-                   Email: #newUserInfo.email#<br />
-                   Phone: #newUserInfo.phone#<br />
-                  
-                  
-                   
-                   </cfoutput>
-                   
-                   
-                    
+                       <cfoutput>
+                           The following rep was just added to the database:<br /><Br />
+                           
+                           Userype: <strong>#usertype.usertype#</strong><Br />
+                           Program Manager: <strong>#CLIENT.programmanager#</strong><br />
+                           <Br />
+                           #newUserInfo.firstname# #newUserInfo.lastname# (#url.userID#)<br />
+                           #newUserInfo.address#<br />
+                           <cfif newUserInfo.address2 is not ''>
+                           #newUserInfo.address2#<br />
+                           </cfif>
+                           #newUserInfo.city# #newUserInfo.state#, #newUserInfo.zip#
+                           <br /><br />
+                           Email: #newUserInfo.email#<br />
+                           Phone: #newUserInfo.phone#<br />
+                       </cfoutput>
                    </cfsavecontent>
-                    
-                    <!--- send email --->
+                
+					<!--- send email --->
                     <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                       
-                       <cfinvokeargument name="email_to" value="megan@iseusa.com">
-                       
-                       <cfif regionalManager.email is not ''>
-                       	<cfinvokeargument name="email_cc" value=" #regionalManager.email#">
-                       </cfif>
-                   		<!----
-                        <cfinvokeargument name="email_to" value="josh@pokytrails.com">
-                        ---->
+                        <cfinvokeargument name="email_to" value="megan@iseusa.com">
+                        <cfif isValid("email", regionalManager.email)>
+                            <cfinvokeargument name="email_cc" value=" #regionalManager.email#">
+                        </cfif>
                         <cfinvokeargument name="email_subject" value="New Rep Added">
                         <cfinvokeargument name="email_message" value="#email_message#">
-                        <cfinvokeargument name="email_from" value="#client.support_email#">
+                        <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
                     </cfinvoke>
+                    
             	</cfif>
-            </Cfif>
+            
         		<cflocation url="index.cfm?curdoc=user_info&userid=#URL.userID#" addtoken="No">
                 
 			<!--- edit --->
             <cfelse>
             
-                <cfquery datasource="#application.dsn#">
+                <cfquery datasource="#APPLICATION.DSN#">
                     UPDATE 
                     	user_access_rights 
                     SET
                         regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionid#">,
                         usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.usertype#">,
-						<!--- if not usertype 7, set advisorid to 0 in case they had one before and the access level was changed. --->
-                        <cfif FORM.usertype NEQ 7>
-                        	advisorid = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-                        <cfelse>
-                        	advisorid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.advisorid#">
-                        </cfif>
+                        advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.advisorID#">
                     WHERE 
                     	id = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.ID#">
                 </cfquery>
-                  <Cfif client.companyid lte 5 or client.companyid eq 12>
-        	   <cfif ListFind("6,7", form.usertype) >
-                   <cfquery name="newUserInfo" datasource="#application.dsn#">
-                   select u.firstname, u.lastname, u.email, u.address, u.address2, u.city, u.state, u.zip, u.phone, u.email
-                   from smg_users u 
-                   where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
-                   </cfquery>
-                   <Cfquery name="userType" datasource="#application.dsn#">
-                   select usertype
-                   from smg_usertype
-                   where usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.usertype#">
-                   </cfquery>
+                
+				<cfif listFind("1,2,3,4,5,12", CLIENT.companyID) AND ListFind("6,7", FORM.usertype)>
+
+                    <cfquery name="newUserInfo" datasource="#APPLICATION.DSN#">
+                        select 
+                        	u.firstname, u.lastname, u.email, u.address, u.address2, u.city, u.state, u.zip, u.phone, u.email
+                        from 
+                        	smg_users u 
+                        where 
+                        	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
+                    </cfquery>
+
+                    <cfquery name="userType" datasource="#APPLICATION.DSN#">
+                        select 
+                        	usertype
+                        from 
+                        	smg_usertype
+                        where 
+                        	usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.usertype#">
+                    </cfquery>
                      
-                   <cfsavecontent variable="email_message">
-                                   
-                   <cfoutput>
-                   
-                   The following rep was just added to the database:<br /><Br />
-                   
-                   Userype: <strong>#usertype.usertype#</strong><Br />
-                   Program Manager: <strong>#client.programmanager#</strong><br />
-                   <Br />
-                   #newUserInfo.firstname# #newUserInfo.lastname# (#url.userID#)<br />
-                   #newUserInfo.address#<br />
-                   <Cfif newUserInfo.address2 is not ''>
-                   #newUserInfo.address2#<br />
-                   </Cfif>
-                   #newUserInfo.city# #newUserInfo.state#, #newUserInfo.zip#
-                   <br /><br />
-                   Email: #newUserInfo.email#<br />
-                   Phone: #newUserInfo.phone#<br />
-                   
-                   </cfoutput>
-                   
-                   
+                    <cfsavecontent variable="email_message">
                     
-                   </cfsavecontent>
+						<cfoutput>
+                            The following rep was just added to the database:<br /><Br />
+                            
+                            Userype: <strong>#usertype.usertype#</strong><Br />
+                            Program Manager: <strong>#CLIENT.programmanager#</strong><br />
+                            <Br />
+                            #newUserInfo.firstname# #newUserInfo.lastname# (#url.userID#)<br />
+                            #newUserInfo.address#<br />
+                            <cfif newUserInfo.address2 is not ''>
+                            #newUserInfo.address2#<br />
+                            </cfif>
+                            #newUserInfo.city# #newUserInfo.state#, #newUserInfo.zip#
+                            <br /><br />
+                            Email: #newUserInfo.email#<br />
+                            Phone: #newUserInfo.phone#<br />
+                        </cfoutput>
+                        
+                    </cfsavecontent>
                     
                     <!--- send email --->
                     <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                        
                        <cfinvokeargument name="email_to" value="megan@iseusa.com">
-                   		<!----
-                        <cfinvokeargument name="email_to" value="josh@pokytrails.com">
-                        ---->
                         <cfinvokeargument name="email_subject" value="New Rep Added">
                         <cfinvokeargument name="email_message" value="#email_message#">
-                        <cfinvokeargument name="email_from" value="#client.support_email#">
+                        <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
                     </cfinvoke>
-            	</cfif>
-            </Cfif>
+			
+				</cfif>
+                
         		<cflocation url="index.cfm?curdoc=user_info&userid=#URL.userID#" addtoken="No">
         	
-            </cfif>
+            </cfif> <!--- Area Rep and 2nd Visit Rep get the "reports to" selection.  Don't do after "reports to" was displayed and form submitted the second time. --->
         
-        </cfif>
+        </cfif> <!--- No Errors --->
         
-	<!--- add --->
-    <cfelseif new>
+	<!--- add | FORM.submitted --->
+    <cfelseif new> 
         
         <cfloop list="#field_list#" index="counter">        
             <cfset "FORM.#counter#" = "">
@@ -359,9 +362,9 @@
             
 		<cfscript>
             FORM.companyid = CLIENT.companyid;
-            FORM.advisorid = 0;
+            FORM.advisorID = 0;
             
-            // we're coming from user_form.cfm after adding a new user.  set FORM.new_user from URL.new_user, and others.
+            // we're coming from user_FORM.cfm after adding a new user.  set FORM.new_user from URL.new_user, and others.
 			if ( isDefined("URL.new_user") ) {
 				FORM.new_user = 1;
 				FORM.usertype = URL.usertype;
@@ -374,10 +377,10 @@
 			}
         </cfscript>
         
-	<!--- edit --->
+	<!--- edit | FORM.submitted --->
     <cfelseif NOT new>
         
-        <cfquery name="qGetRecord" datasource="#application.dsn#">
+        <cfquery name="qGetRecord" datasource="#APPLICATION.DSN#">
             SELECT 
             	*
             FROM 
@@ -401,8 +404,8 @@
 
 <script type="text/javascript">
 	function checkForm() {
-		if (document.my_form.regionid.value.length == 0) {alert("Please select a Region."); return false; }
-		if (document.my_form.usertype.value.length == 0) {alert("Please select an Access Level."); return false; }
+		if (document.my_FORM.regionid.value.length == 0) {alert("Please select a Region."); return false; }
+		if (document.my_FORM.usertype.value.length == 0) {alert("Please select an Access Level."); return false; }
 		return true;
 	}
 </script>
@@ -447,7 +450,7 @@
     
             <cfif FORM.force>
             
-                <cfquery name="qRepInfo" datasource="#application.dsn#">
+                <cfquery name="qRepInfo" datasource="#APPLICATION.DSN#">
                     SELECT 
                         smg_companies.team_id, 
                         smg_usertype.usertypeid, 
@@ -511,7 +514,7 @@
                                     <td class="label">Program Manager:</td>
                                     <td>
                                         <!--- all hard coded users get the same company and not their current company. --->
-                                        <cfquery name="qGetCompany" datasource="#application.dsn#">
+                                        <cfquery name="qGetCompany" datasource="#APPLICATION.DSN#">
                                             SELECT 
                                                 team_id
                                             FROM 
@@ -540,7 +543,7 @@
                                 <tr>
                                     <td class="label">Program Manager:</td>
                                     <td>
-                                        <cfquery name="qGetCompany" datasource="#application.dsn#">
+                                        <cfquery name="qGetCompany" datasource="#APPLICATION.DSN#">
                                             SELECT 
                                                 team_id
                                             FROM 
@@ -567,7 +570,7 @@
                                 <tr>
                                     <td class="label">Access Level: <span class="redtext">*</span></td>
                                     <td>
-                                        <cfquery name="qGetUserTypes" datasource="#application.dsn#">
+                                        <cfquery name="qGetUserTypes" datasource="#APPLICATION.DSN#">
                                             SELECT 
                                                 usertypeid, 
                                                 usertype
@@ -606,7 +609,7 @@
                                     <tr>
                                         <td class="label">Reports To:</td>
                                         <td>
-                                            <cfquery name="qGetAdvisors" datasource="#application.dsn#">
+                                            <cfquery name="qGetAdvisors" datasource="#APPLICATION.DSN#">
                                                 SELECT 
                                                     u.userid, 
                                                     CONCAT(u.firstname,' ',u.lastname) AS advisorname
@@ -626,7 +629,7 @@
                                                     firstname
                                             </cfquery>
                                                                 
-                                            <cfselect NAME="advisorid" query="qGetAdvisors" value="userid" display="advisorname" selected="#FORM.advisorid#" queryPosition="below">
+                                            <cfselect NAME="advisorID" query="qGetAdvisors" value="userid" display="advisorname" selected="#FORM.advisorID#" queryPosition="below">
                                                 <cfif CLIENT.userType NEQ 6>
 	                                                <option value="0">Directly to Director</option>
                                                 </cfif>
@@ -634,7 +637,7 @@
                                         </td>
                                     </tr>
                                 <cfelse>
-                                    <cfinput type="hidden" name="advisorid" value="#FORM.advisorid#">
+                                    <cfinput type="hidden" name="advisorID" value="#FORM.advisorID#">
                                 </cfif>
                             </table>
     
@@ -647,7 +650,7 @@
             <table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
                 <tr>
                     <cfif not new>
-                        <cfquery name="qCheckAccess" datasource="#application.dsn#">
+                        <cfquery name="qCheckAccess" datasource="#APPLICATION.DSN#">
                             SELECT 
                                 user_access_rights.userid
                             FROM 
