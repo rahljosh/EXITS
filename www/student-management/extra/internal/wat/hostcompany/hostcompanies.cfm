@@ -2,7 +2,8 @@
 <cfsilent>
 	
 	<!--- Param URL Variable --->
-	<cfparam name="URL.orderBy" default="name">
+	<cfparam name="URL.sortBy" default="name">  
+    <cfparam name="URL.sortOrder" default="ASC">
     
     <cfquery name="qGetHostCompanies" datasource="MySql">
         SELECT 
@@ -24,47 +25,47 @@
         WHERE 
         	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
         ORDER BY 
-        	<cfswitch expression="#URL.orderBy#">
+        	<cfswitch expression="#URL.sortBy#">
             
             	<cfcase value="hostCompanyID">
-                	eh.hostCompanyID
+                	eh.hostCompanyID #URL.sortOrder#
                 </cfcase>
                 
                 <cfcase value="name">
-                	eh.name,
-                    eh.state
+                	eh.name #URL.sortOrder#,
+                    eh.state #URL.sortOrder#
                 </cfcase>
 
                 <cfcase value="phone">
-                	eh.phone,
-                	eh.name,
-                    eh.state
+                	eh.phone #URL.sortOrder#,
+                	eh.name #URL.sortOrder#,
+                    eh.state #URL.sortOrder#
                 </cfcase>
 
                 <cfcase value="supervisor">
-                	eh.supervisor,
-                	eh.name,
-                    eh.state
+                	eh.supervisor #URL.sortOrder#,
+                	eh.name #URL.sortOrder#,
+                    eh.state #URL.sortOrder#
                 </cfcase>
 
                 <cfcase value="city">
-                	eh.city,
-                    stateName
+                	eh.city #URL.sortOrder#,
+                    stateName #URL.sortOrder#
                 </cfcase>
 
                 <cfcase value="stateName">
-                	stateName,
-                    eh.city
+                	stateName #URL.sortOrder#,
+                    eh.city #URL.sortOrder#
                 </cfcase>
 
                 <cfcase value="typebusiness">
-                	typebusiness,
-                    eh.name
+                	typebusiness #URL.sortOrder#,
+                    eh.name #URL.sortOrder#
                 </cfcase>
 
                 <cfdefaultcase>
-                	eh.name,
-                    eh.state
+                	eh.name #URL.sortOrder#,
+                    eh.state #URL.sortOrder#
                 </cfdefaultcase>
 
 			</cfswitch>                	
@@ -97,13 +98,13 @@
 
 		<table border=0 cellpadding=4 cellspacing="0" class="section" align="center" width="95%">
 			<tr bgcolor="##4F8EA4" >
-				<th width="5%" align="left"><a href="?curdoc=hostcompany/hostcompanies&orderBy=hostCompanyID" class="style2">ID</a></th>
-				<th width="25%" align="left"><a href="?curdoc=hostcompany/hostcompanies&orderBy=name" class="style2">Company Name</a></th>
-				<th width="15%" align="left"><a href="?curdoc=hostcompany/hostcompanies&orderBy=phone" class="style2">Phone</a></th>
-				<th width="15%" align="left"><a href="?curdoc=hostcompany/hostcompanies&orderBy=supervisor" class="style2">Contact</a></th>
-				<th width="10%" align="left"><a href="?curdoc=hostcompany/hostcompanies&orderBy=city" class="style2">City</a></th>
-				<th width="15%" align="left"><a href="?curdoc=hostcompany/hostcompanies&orderBy=stateName" class="style2">State</a></th>		
-				<th width="15%" bgcolor="##4F8EA4"><a href="?curdoc=hostcompany/hostcompanies&orderBy=typebusiness" class="style2">Business</a></th>
+				<th width="5%" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='hostCompanyID',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">ID</a></th>
+				<th width="25%" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='name',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Company Name</a></th>
+				<th width="15%" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='phone',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Phone</a></th>
+				<th width="15%" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='supervisor',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Contact</a></th>
+				<th width="10%" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='city',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">City</a></th>
+				<th width="15%" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='stateName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">State</a></th>		
+				<th width="15%" bgcolor="##4F8EA4"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='typebusiness',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Business</a></th>
 			</tr>
             <cfloop query="qGetHostCompanies">
                 <tr bgcolor="###iif(qGetHostCompanies.currentrow MOD 2 ,DE("E9ECF1") ,DE("FFFFFF") )#">
