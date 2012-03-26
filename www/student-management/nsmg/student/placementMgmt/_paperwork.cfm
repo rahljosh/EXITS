@@ -193,7 +193,17 @@
 		
 			// Single Placement Paperwork
 			if ( vTotalFamilyMembers EQ 1 AND qGetProgramInfo.seasonid GT 7 ) {
-	
+
+				// Natural Family Date Signed
+				if ( isDate(FORM.doc_single_parents_sign_date) AND FORM.doc_single_parents_sign_date GT qGetPlacementHistoryByID.datePlaced ) {
+					SESSION.formErrors.Add("Single Placement Natural Family Date Signed is ouf of compliance");
+				}
+				
+				// Student Date Signed
+				if ( isDate(FORM.doc_single_student_sign_date) AND FORM.doc_single_student_sign_date GT qGetPlacementHistoryByID.datePlaced ) {
+					SESSION.formErrors.Add("Single Placement Student Date Signed is ouf of compliance");
+				}
+
 				// Single Reference 1
 				if ( isDate(FORM.doc_single_ref_check1) AND FORM.doc_single_ref_check1 GT qGetPlacementHistoryByID.datePlaced ) {
 					SESSION.formErrors.Add("Date of Single Placement Reference Check 1 is out of compliance");
@@ -203,7 +213,7 @@
 				if ( isDate(FORM.doc_single_ref_check2) AND FORM.doc_single_ref_check2 GT qGetPlacementHistoryByID.datePlaced ) {
 					SESSION.formErrors.Add("Date of Single Placement Reference Check 2 is out of compliance");
 				}
-	
+				
 			}
 			
 			// Confidential Host Family Visit Form
@@ -409,7 +419,27 @@
                                 <input type="text" name="doc_single_place_auth" id="doc_single_place_auth" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_single_place_auth, 'mm/dd/yyyy')#">
                             </td>
                         </tr>
+
+						<!--- Natural Family Date Signed --->
+                        <tr> 
+                            <td>&nbsp;</td>
+                            <td><label for="doc_single_parents_sign_date">Natural Family Date Signed</label></td>
+                            <td>
+                                <span class="readOnly displayNone">#DateFormat(FORM.doc_single_parents_sign_date, 'mm/dd/yyyy')#</span>
+                                <input type="text" name="doc_single_parents_sign_date" id="doc_single_parents_sign_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_single_parents_sign_date, 'mm/dd/yyyy')#">
+                            </td>
+                        </tr>
                         
+                        <!--- Student Date Signed --->
+                        <tr> 
+                            <td>&nbsp;</td>
+                            <td><label for="doc_single_student_sign_date">Student Date Signed</label></td>
+                            <td>
+                                <span class="readOnly displayNone">#DateFormat(FORM.doc_single_student_sign_date, 'mm/dd/yyyy')#</span>
+                                <input type="text" name="doc_single_student_sign_date" id="doc_single_student_sign_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_single_student_sign_date, 'mm/dd/yyyy')#">
+                            </td>
+                        </tr>
+                    
                         <!--- Single Person Placement Reference 1 --->
                         <tr> 
                             <td class="paperworkLeftColumn">
@@ -453,27 +483,6 @@
                                 <input type="text" name="doc_single_ref_check2" id="doc_single_ref_check2" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_single_ref_check2, 'mm/dd/yyyy')#">
                             </td>
                         </tr>
-
-						<!--- Natural Family Date Signed --->
-                        <tr> 
-                            <td>&nbsp;</td>
-                            <td><label for="doc_single_parents_sign_date">Natural Family Date Signed</label></td>
-                            <td>
-                                <span class="readOnly displayNone">#DateFormat(FORM.doc_single_parents_sign_date, 'mm/dd/yyyy')#</span>
-                                <input type="text" name="doc_single_parents_sign_date" id="doc_single_parents_sign_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_single_parents_sign_date, 'mm/dd/yyyy')#">
-                            </td>
-                        </tr>
-                        
-                        <!--- Student Date Signed --->
-                        <tr> 
-                            <td>&nbsp;</td>
-                            <td><label for="doc_single_student_sign_date">Student Date Signed</label></td>
-                            <td>
-                                <span class="readOnly displayNone">#DateFormat(FORM.doc_single_student_sign_date, 'mm/dd/yyyy')#</span>
-                                <input type="text" name="doc_single_student_sign_date" id="doc_single_student_sign_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_single_student_sign_date, 'mm/dd/yyyy')#">
-                            </td>
-                        </tr>
-                    
                     </table>
                 </cfif> 
                 <!--- End of Single Placement Paperwork --->
