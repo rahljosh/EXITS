@@ -3,7 +3,8 @@
 
 	<!--- Param URL Variable --->
 	<cfparam name="URL.active" default="1">
-	<cfparam name="URL.order" default="businessName">
+	<cfparam name="URL.sortBy" default="businessName">
+    <cfparam name="URL.sortOrder" default="ASC">
     
     <cfquery name="qGetIntlReps" datasource="MySql">
         SELECT DISTINCT
@@ -25,42 +26,42 @@
         AND 
         	u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">            
         ORDER BY 
-        	<cfswitch expression="#URL.order#">
+        	<cfswitch expression="#URL.sortBy#">
             
             	<cfcase value="userID">
-                	u.userID
+                	u.userID #URL.sortOrder#
                 </cfcase>
 
                 <cfcase value="businessName">
-                	u.businessName,
-                    u.lastName,
-                    u.firstName
+                	u.businessName #URL.sortOrder#,
+                    u.lastName #URL.sortOrder#,
+                    u.firstName #URL.sortOrder#
                 </cfcase>
 
                 <cfcase value="firstName">
-                	u.firstName,
-                    u.lastName                   
+                	u.firstName #URL.sortOrder#,
+                    u.lastName #URL.sortOrder#                   
                 </cfcase>
 
                 <cfcase value="lastName">
-                	u.lastName,
-                    u.firstName
+                	u.lastName #URL.sortOrder#,
+                    u.firstName #URL.sortOrder#
                 </cfcase>
 
                 <cfcase value="countryName">
-                	c.countryName,
-                    u.lastName
+                	c.countryName #URL.sortOrder#,
+                    u.lastName #URL.sortOrder#
                 </cfcase>
 
                 <cfcase value="companyID">
-                	uar.companyID,
-                	u.businessName
+                	uar.companyID #URL.sortOrder#,
+                	u.businessName #URL.sortOrder#
                 </cfcase>
 
                 <cfdefaultcase>
-                	u.businessName,
-                    u.lastName,
-                    u.firstName
+                	u.businessName #URL.sortOrder#,
+                    u.lastName #URL.sortOrder#,
+                    u.firstName #URL.sortOrder#
                 </cfdefaultcase>
 
 			</cfswitch>                	
@@ -93,12 +94,12 @@
 
             <table border="0" cellpadding="4" cellspacing="0" class="section" align="center" width="95%">
                 <tr bgcolor="##4F8EA4">
-                    <td width="6%"><a href="?curdoc=intRep/intReps&order=userID" class="style2">ID</a></td>
-                    <td width="30%"><a href="?curdoc=intRep/intReps&order=businessName" class="style2">International Rep.</a></td>
-                    <td width="18%"><a href="?curdoc=intRep/intReps&order=firstName" class="style2">First Name</a></td>
-                    <td width="18%"><a href="?curdoc=intRep/intReps&order=lastName" class="style2">Last Name</a></td>
-                    <td width="18%"><a href="?curdoc=intRep/intReps&order=countryName" class="style2">Country</a></td>
-                    <td width="10%"><a href="?curdoc=intRep/intReps&order=companyID" class="style2">Has Access to Extra?</a></td>
+                    <td width="6%"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='userID',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">ID</a></td>
+                    <td width="30%"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='businessName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">International Rep.</a></td>
+                    <td width="18%"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='firstName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">First Name</a></td>
+                    <td width="18%"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='lastName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Last Name</a></td>
+                    <td width="18%"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='countryName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Country</a></td>
+                    <td width="10%"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='companyID',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Has Access to Extra?</a></td>
                 </tr>
                 <cfloop query="qGetIntlReps">
                     <tr bgcolor="###iif(qGetIntlReps.currentrow MOD 2 ,DE("E9ECF1") ,DE("FFFFFF") )#">
