@@ -30,7 +30,13 @@
     <cfparam name="FORM.uniqueID" default="" />
     <cfparam name="FORM.historyID" default="" />
 
+	<!--- Ajax Call to the Component --->
+    <cfajaxproxy cfc="nsmg.extensions.components.student" jsclassname="studentCFC">
+
     <cfscript>
+		// Users allowed to delete placement history - Marcus Melo | 
+		vDeleteHistoryAllowed = '510';
+	
 		// Store Section on FORM Variable
 		if ( LEN(URL.action) ) {
 			FORM.action = URL.action;	
@@ -355,6 +361,37 @@
         headerType="applicationNoHeader"
         filePath="../../"
     />	
+
+		<script language="javascript">
+            // Create an instance of the proxy. 
+            var stuCFC = new studentCFC();
+        
+            // --- START OF DELETE PLACEMENT HISTORY --- //
+            var confirmDeletePlacementHistory = function(historyID) {
+                var answer = confirm("Are you sure would you like to delete this placement history?")
+                if (answer){
+                    deletePlacementHistory(historyID);
+                } 
+            }	
+        
+            var deletePlacementHistory = function(historyID) {
+                // Setting a callback handler for the proxy automatically makes the proxy's calls asynchronous. 
+                stuCFC.setCallbackHandler(placementHistoryDeleted(historyID)); 
+                stuCFC.setErrorHandler(myErrorHandler); 
+                stuCFC.deletePlacementHistoryRemote(historyID);
+            }
+            
+            var placementHistoryDeleted = function(historyID) {
+                // Reload page
+                location.reload();
+            }
+            // --- END OF DELETE PLACEMENT HISTORY --- //
+        
+            // Error handler for the asynchronous functions. 
+            var myErrorHandler = function(statusCode, statusMsg) { 
+                alert('Status: ' + statusCode + ', ' + statusMsg); 
+            } 
+        </script>
     
 		<!--- Table Header --->
         <gui:tableHeader
@@ -516,6 +553,12 @@
                                     <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&action=paperwork">[ View Paperwork ]</a>
                                 <cfelseif VAL(qGetPlacementHistoryList.hostID)>
                                     <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&action=paperwork&historyID=#qGetPlacementHistoryList.historyID#">[ View Paperwork History ]</a>
+                                    
+                                    <!--- Delete Placement History --->
+                                    <cfif NOT VAL(qGetPlacementHistoryList.isActive) AND ListFind(vDeleteHistoryAllowed, CLIENT.userID)>
+                                    	<a href="javascript:confirmDeletePlacementHistory(#qGetPlacementHistoryList.historyID#);">| [ Delete ]</a>
+                                    </cfif>
+                                    
                                 <cfelse>
                                     &nbsp;                            
                                 </cfif>
