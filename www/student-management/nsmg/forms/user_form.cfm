@@ -60,7 +60,7 @@
 	<!------------------------------------------------------
 		ADDRESS CHANGE - SEND EMAIL NOTIFICATION 
 	------------------------------------------------------->
-	<cfif qGetUserInfo.recordCount 
+	<cfif qGetUserInfo.recordCount AND client.companyid neq 14
 		AND 
 			(
 			 	FORM.address NEQ qGetUserInfo.address 
