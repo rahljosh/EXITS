@@ -322,11 +322,13 @@
                         </td>
                     </tr>	
                 </table>
+                
 				<cfif totalfam eq 1>
                     <div class="alert" align="Center">
                     	<h3>Single Person Placement </h3>
                     </div>
                 </cfif>
+                
 				<cfif VAL(qGetStudentInfo.doubleplace)>
                     <div class="alert" align="Center">
                     	<h3>Double Placement: Two exchange students will be living with this host family. </h3>

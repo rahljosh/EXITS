@@ -454,31 +454,26 @@
                             </td>
                         </tr>
 
-						<!--- Required Starting Aug 12 --->
-                        <cfif qGetProgramInfo.seasonID GTE 9>
-                                    
-                            <!--- Natural Family Date Signed --->
-                            <tr> 
-                                <td>&nbsp;</td>
-                                <td><label for="doc_single_parents_sign_date">Natural Family Date Signed</label></td>
-                                <td>
-                                    <span class="readOnly displayNone">#DateFormat(FORM.doc_single_parents_sign_date, 'mm/dd/yyyy')#</span>
-                                    <input type="text" name="doc_single_parents_sign_date" id="doc_single_parents_sign_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_single_parents_sign_date, 'mm/dd/yyyy')#">
-                                </td>
-                            </tr>
-                            
-                            <!--- Student Date Signed --->
-                            <tr> 
-                                <td>&nbsp;</td>
-                                <td><label for="doc_single_student_sign_date">Student Date Signed</label></td>
-                                <td>
-                                    <span class="readOnly displayNone">#DateFormat(FORM.doc_single_student_sign_date, 'mm/dd/yyyy')#</span>
-                                    <input type="text" name="doc_single_student_sign_date" id="doc_single_student_sign_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_single_student_sign_date, 'mm/dd/yyyy')#">
-                                </td>
-                            </tr>
-						
-						</cfif>
+						<!--- Natural Family Date Signed --->
+                        <tr> 
+                            <td>&nbsp;</td>
+                            <td><label for="doc_single_parents_sign_date">Natural Family Date Signed</label></td>
+                            <td>
+                                <span class="readOnly displayNone">#DateFormat(FORM.doc_single_parents_sign_date, 'mm/dd/yyyy')#</span>
+                                <input type="text" name="doc_single_parents_sign_date" id="doc_single_parents_sign_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_single_parents_sign_date, 'mm/dd/yyyy')#">
+                            </td>
+                        </tr>
                         
+                        <!--- Student Date Signed --->
+                        <tr> 
+                            <td>&nbsp;</td>
+                            <td><label for="doc_single_student_sign_date">Student Date Signed</label></td>
+                            <td>
+                                <span class="readOnly displayNone">#DateFormat(FORM.doc_single_student_sign_date, 'mm/dd/yyyy')#</span>
+                                <input type="text" name="doc_single_student_sign_date" id="doc_single_student_sign_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_single_student_sign_date, 'mm/dd/yyyy')#">
+                            </td>
+                        </tr>
+                    
                     </table>
                 </cfif> 
                 <!--- End of Single Placement Paperwork --->
