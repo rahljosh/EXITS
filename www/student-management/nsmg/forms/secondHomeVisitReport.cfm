@@ -94,10 +94,10 @@
 	<!----Save Report---->
     
         <cfif pr_action is 'save'>
-       
+     
         <cfquery datasource="mysql">
                 UPDATE 
-                    secondVisitAnswers 
+                    secondvisitanswers 
                 SET
                 	dateOfVisit = <cfqueryparam cfsqltype="CF_SQL_DATE" value="#FORM.dateOfVisit#">,
                     neighborhoodAppearance= <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.neighborhoodAppearance#">,
@@ -127,7 +127,7 @@
 	
 	
 	
-	<!--- LEN(FORM.pr_action) --->
+
     
     <Cfquery name="secondvisitanswers" datasource="#application.dsn#">
         select *
@@ -204,56 +204,56 @@
     </cfquery>
     <cfscript>
                  // Set FORM Values   
-                FORM.neighborhoodAppearance = secondVisitAnswers.neighborhoodAppearance;
-                FORM.avoid = secondVisitAnswers.avoid;
-                FORM.homeAppearance = secondVisitAnswers.homeAppearance;
-                FORM.typeOfHome = secondVisitAnswers.typeOfHome;
-                FORM.numberBedRooms = secondVisitAnswers.numberBedRooms;
-                FORM.numberBathRooms = secondVisitAnswers.numberBathRooms;
-                FORM.livingRoom = secondVisitAnswers.livingRoom;
-                FORM.diningRoom = secondVisitAnswers.diningRoom;
-                FORM.kitchen = secondVisitAnswers.kitchen;
-                FORM.homeDetailsOther = secondVisitAnswers.homeDetailsOther;
-                FORM.ownBed = secondVisitAnswers.ownBed;
-                FORM.bathRoom = secondVisitAnswers.bathRoom;
-                FORM.outdoorsFromBedroom = secondVisitAnswers.outdoorsFromBedroom;
-                FORM.storageSpace = secondVisitAnswers.storageSpace;
-                FORM.studySpace = secondVisitAnswers.studySpace;
-                FORM.privacy = secondVisitAnswers.privacy;
-                FORM.pets = secondVisitAnswers.pets;
-                FORM.other = secondVisitAnswers.other;
-                FORM.dateOfVisit = secondVisitAnswers.dateOfVisit;
+                FORM.neighborhoodAppearance = secondvisitanswers.neighborhoodAppearance;
+                FORM.avoid = secondvisitanswers.avoid;
+                FORM.homeAppearance = secondvisitanswers.homeAppearance;
+                FORM.typeOfHome = secondvisitanswers.typeOfHome;
+                FORM.numberBedRooms = secondvisitanswers.numberBedRooms;
+                FORM.numberBathRooms = secondvisitanswers.numberBathRooms;
+                FORM.livingRoom = secondvisitanswers.livingRoom;
+                FORM.diningRoom = secondvisitanswers.diningRoom;
+                FORM.kitchen = secondvisitanswers.kitchen;
+                FORM.homeDetailsOther = secondvisitanswers.homeDetailsOther;
+                FORM.ownBed = secondvisitanswers.ownBed;
+                FORM.bathRoom = secondvisitanswers.bathRoom;
+                FORM.outdoorsFromBedroom = secondvisitanswers.outdoorsFromBedroom;
+                FORM.storageSpace = secondvisitanswers.storageSpace;
+                FORM.studySpace = secondvisitanswers.studySpace;
+                FORM.privacy = secondvisitanswers.privacy;
+                FORM.pets = secondvisitanswers.pets;
+                FORM.other = secondvisitanswers.other;
+                FORM.dateOfVisit = secondvisitanswers.dateOfVisit;
              </cfscript>
 	<cfset approve_error_msg = ''>
     
-  
+
 	<!--- FORM Submitted --->
 	<cfif pr_action is 'approve'>
   
 		  <cfscript>
                  // Set FORM Values   
-                FORM.neighborhoodAppearance = secondVisitAnswers.neighborhoodAppearance;
-                FORM.avoid = secondVisitAnswers.avoid;
-                FORM.homeAppearance = secondVisitAnswers.homeAppearance;
-                FORM.typeOfHome = secondVisitAnswers.typeOfHome;
-                FORM.numberBedRooms = secondVisitAnswers.numberBedRooms;
-                FORM.numberBathRooms = secondVisitAnswers.numberBathRooms;
-                FORM.livingRoom = secondVisitAnswers.livingRoom;
-                FORM.diningRoom = secondVisitAnswers.diningRoom;
-                FORM.kitchen = secondVisitAnswers.kitchen;
-                FORM.homeDetailsOther = secondVisitAnswers.homeDetailsOther;
-                FORM.ownBed = secondVisitAnswers.ownBed;
-                FORM.bathRoom = secondVisitAnswers.bathRoom;
-                FORM.outdoorsFromBedroom = secondVisitAnswers.outdoorsFromBedroom;
-                FORM.storageSpace = secondVisitAnswers.storageSpace;
-                FORM.studySpace = secondVisitAnswers.studySpace;
-                FORM.privacy = secondVisitAnswers.privacy;
-                FORM.pets = secondVisitAnswers.pets;
-                FORM.other = secondVisitAnswers.other;
-                FORM.dateOfVisit = secondVisitAnswers.dateOfVisit;
-             </cfscript>
-             should be assigned
-  
+                FORM.neighborhoodAppearance = secondvisitanswers.neighborhoodAppearance;
+                FORM.avoid = secondvisitanswers.avoid;
+                FORM.homeAppearance = secondvisitanswers.homeAppearance;
+                FORM.typeOfHome = secondvisitanswers.typeOfHome;
+                FORM.numberBedRooms = secondvisitanswers.numberBedRooms;
+                FORM.numberBathRooms = secondvisitanswers.numberBathRooms;
+                FORM.livingRoom = secondvisitanswers.livingRoom;
+                FORM.diningRoom = secondvisitanswers.diningRoom;
+                FORM.kitchen = secondvisitanswers.kitchen;
+                FORM.homeDetailsOther = secondvisitanswers.homeDetailsOther;
+                FORM.ownBed = secondvisitanswers.ownBed;
+                FORM.bathRoom = secondvisitanswers.bathRoom;
+                FORM.outdoorsFromBedroom = secondvisitanswers.outdoorsFromBedroom;
+                FORM.storageSpace = secondvisitanswers.storageSpace;
+                FORM.studySpace = secondvisitanswers.studySpace;
+                FORM.privacy = secondvisitanswers.privacy;
+                FORM.pets = secondvisitanswers.pets;
+                FORM.other = secondvisitanswers.other;
+                FORM.dateOfVisit = secondvisitanswers.dateOfVisit;
+   
+               </cfscript>
+
 		<cfscript>
             // Data Validation
             // Neighborhood Appearance
@@ -370,7 +370,7 @@
             
             <!--- in case the user has multiple approval levels, check them in order and just do the first one. --->
             <!--- supervising rep --->
-            <cfif CLIENT.userid EQ get_report.fk_sr_user and get_report.pr_sr_approved_date EQ ''>
+            <cfif CLIENT.userid EQ get_report.fk_secondVisitRep and get_report.pr_sr_approved_date EQ ''>
                 <cfset approve_field = 'pr_sr_approved_date'>
             <!--- regional advisor --->
             <cfelseif CLIENT.userid EQ get_report.fk_ra_user and get_report.pr_ra_approved_date EQ ''>
@@ -383,6 +383,8 @@
                 <cfset approve_field = 'pr_ny_approved_date'>
             </cfif>
             
+            
+      
             <cfif approve_field NEQ ''>
                 <cfquery datasource="#application.dsn#">
                     UPDATE 
@@ -393,6 +395,18 @@
                     WHERE 
                     	pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
                 </cfquery>
+                
+                <Cfif approve_field eq 'pr_ny_approved_date' and get_report.pr_sr_approved_date eq ''>
+                	<cfquery datasource="#application.dsn#">
+                    UPDATE 
+                    	progress_reports 
+                    SET
+                    	pr_sr_approved_date  = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
+                    	pr_rejected_date = NULL
+                    WHERE 
+                    	pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
+                	</cfquery>
+                </Cfif>
             </cfif>
             <!--- Successfully Updated - Go to Next Page --->
            <cflocation url="index.cfm?curdoc=secondVisitReports" addtoken="No">
@@ -421,25 +435,25 @@
 
          <cfscript>
              // Set FORM Values   
-            FORM.neighborhoodAppearance = secondVisitAnswers.neighborhoodAppearance;
-            FORM.avoid = secondVisitAnswers.avoid;
-            FORM.homeAppearance = secondVisitAnswers.homeAppearance;
-            FORM.typeOfHome = secondVisitAnswers.typeOfHome;
-            FORM.numberBedRooms = secondVisitAnswers.numberBedRooms;
-            FORM.numberBathRooms = secondVisitAnswers.numberBathRooms;
-            FORM.livingRoom = secondVisitAnswers.livingRoom;
-            FORM.diningRoom = secondVisitAnswers.diningRoom;
-            FORM.kitchen = secondVisitAnswers.kitchen;
-            FORM.homeDetailsOther = secondVisitAnswers.homeDetailsOther;
-            FORM.ownBed = secondVisitAnswers.ownBed;
-            FORM.bathRoom = secondVisitAnswers.bathRoom;
-            FORM.outdoorsFromBedroom = secondVisitAnswers.outdoorsFromBedroom;
-            FORM.storageSpace = secondVisitAnswers.storageSpace;
-			FORM.studySpace = secondVisitAnswers.studySpace;
-            FORM.privacy = secondVisitAnswers.privacy;
-            FORM.pets = secondVisitAnswers.pets;
-            FORM.other = secondVisitAnswers.other;
-			FORM.dateOfVisit = secondVisitAnswers.dateOfVisit;
+            FORM.neighborhoodAppearance = secondvisitanswers.neighborhoodAppearance;
+            FORM.avoid = secondvisitanswers.avoid;
+            FORM.homeAppearance = secondvisitanswers.homeAppearance;
+            FORM.typeOfHome = secondvisitanswers.typeOfHome;
+            FORM.numberBedRooms = secondvisitanswers.numberBedRooms;
+            FORM.numberBathRooms = secondvisitanswers.numberBathRooms;
+            FORM.livingRoom = secondvisitanswers.livingRoom;
+            FORM.diningRoom = secondvisitanswers.diningRoom;
+            FORM.kitchen = secondvisitanswers.kitchen;
+            FORM.homeDetailsOther = secondvisitanswers.homeDetailsOther;
+            FORM.ownBed = secondvisitanswers.ownBed;
+            FORM.bathRoom = secondvisitanswers.bathRoom;
+            FORM.outdoorsFromBedroom = secondvisitanswers.outdoorsFromBedroom;
+            FORM.storageSpace = secondvisitanswers.storageSpace;
+			FORM.studySpace = secondvisitanswers.studySpace;
+            FORM.privacy = secondvisitanswers.privacy;
+            FORM.pets = secondvisitanswers.pets;
+            FORM.other = secondvisitanswers.other;
+			FORM.dateOfVisit = secondvisitanswers.dateOfVisit;
          </cfscript>
          
     </cfif>  
@@ -548,12 +562,12 @@
     <Cfset NumberList = '0,1,2,3,4,5,6,7,8,9,10'>
  
 <!--- set the edit/approve/reject/delete access. --->
-<cfset allow_edit = 0>
-<cfset allow_approve = 0>
-<cfset allow_reject = 0>
-<cfset allow_delete = 0>
-<cfset allow_save = 0>
-<cfset show_save = 0>
+<cfset allow_edit = 1>
+<cfset allow_approve = 1>
+<cfset allow_reject = 1>
+<cfset allow_delete = 1>
+<cfset allow_save = 1>
+<cfset show_save = 1>
 
 <!--- used to display the pending message for the supervising rep. --->
 <cfset pending_msg = 0>
@@ -605,11 +619,9 @@
 <!----toggle Edit/save function---->
 <cfif form.pr_action is 'save' or form.pr_action is 'print'>
 	<cfset allow_save = 0>
-
 </cfif>
 <cfif SESSION.formErrors.length()>
 	<cfset allow_save =1>
-    
 </cfif>  
 
 <div id="stylized" class="myform">
