@@ -84,14 +84,6 @@
 		for ( i=1; i LTE qGetAnswersSection3.recordCount; i=i+1 ) {
 			FORM[qGetAnswersSection3.fieldKey[i]] = qGetAnswersSection3.answer[i];
 		}
-		
-		// Self Placement - Display New Fields 
-		vDisplayNewSelfPlacement = 1;
-		
-		// Hide Self Placement fields for confirmed/rejected placements before 2012-03-14
-		if ( ListFindNoCase("confirmed,rejected", qCandidatePlaceCompany.selfJobOfferStatus) AND qCandidatePlaceCompany.selfConfirmationDate LTE '2012-03-14' ) {
-			vDisplayNewSelfPlacement = 0;
-		}
 	</cfscript>
 		
     <cfinclude template="../querys/fieldstudy.cfm">
@@ -1147,20 +1139,15 @@
                                         </tr>
                                         	
 										<!--- Show Old Self Placement Field --->
-                                        <cfif NOT VAL(vDisplayNewSelfPlacement)>
-                                            <tr class="hiddenField selfPlacementInfo">
-                                                <td class="style1" align="right"><strong>Date:</strong></td>
-                                                <td class="style1" colspan="3">
-                                                    <span class="readOnly selfPlacementReadOnly">#DateFormat(qCandidatePlaceCompany.selfConfirmationDate, 'mm/dd/yyyy')#</span>
-                                                    <input type="text" name="selfConfirmationDate" id="selfConfirmationDate" class="style1 datePicker editPage selfPlacementField" value="#DateFormat(qCandidatePlaceCompany.selfConfirmationDate, 'mm/dd/yyyy')#" maxlength="10">
-                                                    <font size="1">(mm/dd/yyyy)</font>
-                                                </td>
-                                            </tr>
-                                        <!--- Do Not Show Old Self Placement Field --->
-                                        <cfelse>
-                                            <input type="hidden" name="selfConfirmationDate" id="selfConfirmationDate" value="#DateFormat(qCandidatePlaceCompany.selfConfirmationDate, 'mm/dd/yyyy')#">
-                                        </cfif>
-                                        
+                                        <tr class="hiddenField selfPlacementInfo">
+                                            <td class="style1" align="right"><strong>Date:</strong></td>
+                                            <td class="style1" colspan="3">
+                                                <span class="readOnly selfPlacementReadOnly">#DateFormat(qCandidatePlaceCompany.selfConfirmationDate, 'mm/dd/yyyy')#</span>
+                                                <input type="text" name="selfConfirmationDate" id="selfConfirmationDate" class="style1 datePicker editPage selfPlacementField" value="#DateFormat(qCandidatePlaceCompany.selfConfirmationDate, 'mm/dd/yyyy')#" maxlength="10">
+                                                <font size="1">(mm/dd/yyyy)</font>
+                                            </td>
+                                        </tr>
+                                    
                                         <tr class="hiddenField selfPlacementInfo">
                                             <td class="style1" align="right"><strong>Name:</strong></td>
                                             <td class="style1">
@@ -1169,24 +1156,18 @@
                                             </td>
                                         </tr>
                                         
-                                        <!--- Show Old Self Placement Field --->
-                                        <cfif NOT VAL(vDisplayNewSelfPlacement)>
-                                            <tr class="hiddenField selfPlacementInfo">
-                                                <td class="style1" align="right"><strong>Method:</strong></td>
-                                                <td class="style1">
-                                                    <span class="readOnly selfPlacementReadOnly">#qCandidatePlaceCompany.selfConfirmationMethod#</span>
-                                                    <select name="selfConfirmationMethod" id="selfConfirmationMethod" class="style1 editPage selfPlacementField smallField"> 
-                                                        <option value=""></option>
-                                                        <option value="Email" <cfif qCandidatePlaceCompany.selfConfirmationMethod EQ 'Email'>selected</cfif> >Email</option>
-                                                        <option value="Phone" <cfif qCandidatePlaceCompany.selfConfirmationMethod EQ 'Phone'>selected</cfif> >Phone</option>
-                                                        <option value="Fax" <cfif qCandidatePlaceCompany.selfConfirmationMethod EQ 'Fax'>selected</cfif> >Fax</option>
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                        <!--- Do Not Show Old Self Placement Field --->
-                                        <cfelse>
-                                            <input type="hidden" name="selfConfirmationMethod" id="selfConfirmationMethod" value="#qCandidatePlaceCompany.selfConfirmationMethod#">
-                                        </cfif>
+                                        <tr class="hiddenField selfPlacementInfo">
+                                            <td class="style1" align="right"><strong>Method:</strong></td>
+                                            <td class="style1">
+                                                <span class="readOnly selfPlacementReadOnly">#qCandidatePlaceCompany.selfConfirmationMethod#</span>
+                                                <select name="selfConfirmationMethod" id="selfConfirmationMethod" class="style1 editPage selfPlacementField smallField"> 
+                                                    <option value=""></option>
+                                                    <option value="Email" <cfif qCandidatePlaceCompany.selfConfirmationMethod EQ 'Email'>selected</cfif> >Email</option>
+                                                    <option value="Phone" <cfif qCandidatePlaceCompany.selfConfirmationMethod EQ 'Phone'>selected</cfif> >Phone</option>
+                                                    <option value="Fax" <cfif qCandidatePlaceCompany.selfConfirmationMethod EQ 'Fax'>selected</cfif> >Fax</option>
+                                                </select>
+                                            </td>
+                                        </tr>
                                         
                                         <tr class="hiddenField selfPlacementInfo">
                                             <td class="style1" align="right"><strong>Authentication:</strong></td>
@@ -1241,29 +1222,22 @@
                                             </td>
                                         </tr>
                                         
-                                        <!--- Show New Self Placement Field --->
-                                        <cfif VAL(vDisplayNewSelfPlacement)>
-                                            <tr class="hiddenField selfPlacementInfo">
-                                                <td class="style1" align="right"><strong>Email Confirmation:</strong></td>
-                                                <td class="style1" colspan="3">
-                                                    <span class="readOnly selfPlacementReadOnly">#DateFormat(qCandidatePlaceCompany.selfEmailConfirmationDate, 'mm/dd/yyyy')#</span>
-                                                    <input type="text" name="selfEmailConfirmationDate" id="selfEmailConfirmationDate" class="style1 datePicker editPage selfPlacementField" value="#DateFormat(qCandidatePlaceCompany.selfEmailConfirmationDate, 'mm/dd/yyyy')#" maxlength="10">
-                                                    <font size="1">(mm/dd/yyyy)</font>
-                                                </td>
-                                            </tr>
-                                            <tr class="hiddenField selfPlacementInfo">
-                                                <td class="style1" align="right"><strong>Phone Confirmation:</strong></td>
-                                                <td class="style1" colspan="3">
-                                                    <span class="readOnly selfPlacementReadOnly">#DateFormat(qCandidatePlaceCompany.selfPhoneConfirmationDate, 'mm/dd/yyyy')#</span>
-                                                    <input type="text" name="selfPhoneConfirmationDate" id="selfPhoneConfirmationDate" class="style1 datePicker editPage selfPlacementField" value="#DateFormat(qCandidatePlaceCompany.selfPhoneConfirmationDate, 'mm/dd/yyyy')#" maxlength="10">
-                                                    <font size="1">(mm/dd/yyyy)</font>
-                                                </td>
-                                            </tr>
-                                        <!--- Do Not Show New Self Placement Field --->                                            
-                                        <cfelse>
-                                            <input type="hidden" name="selfEmailConfirmationDate" id="selfEmailConfirmationDate" value="#DateFormat(qCandidatePlaceCompany.selfEmailConfirmationDate, 'mm/dd/yyyy')#">
-                                            <input type="hidden" name="selfPhoneConfirmationDate" id="selfPhoneConfirmationDate" value="#DateFormat(qCandidatePlaceCompany.selfPhoneConfirmationDate, 'mm/dd/yyyy')#">
-                                        </cfif>
+                                        <tr class="hiddenField selfPlacementInfo">
+                                            <td class="style1" align="right"><strong>Email Confirmation:</strong></td>
+                                            <td class="style1" colspan="3">
+                                                <span class="readOnly selfPlacementReadOnly">#DateFormat(qCandidatePlaceCompany.selfEmailConfirmationDate, 'mm/dd/yyyy')#</span>
+                                                <input type="text" name="selfEmailConfirmationDate" id="selfEmailConfirmationDate" class="style1 datePicker editPage selfPlacementField" value="#DateFormat(qCandidatePlaceCompany.selfEmailConfirmationDate, 'mm/dd/yyyy')#" maxlength="10">
+                                                <font size="1">(mm/dd/yyyy)</font>
+                                            </td>
+                                        </tr>
+                                        <tr class="hiddenField selfPlacementInfo">
+                                            <td class="style1" align="right"><strong>Phone Confirmation:</strong></td>
+                                            <td class="style1" colspan="3">
+                                                <span class="readOnly selfPlacementReadOnly">#DateFormat(qCandidatePlaceCompany.selfPhoneConfirmationDate, 'mm/dd/yyyy')#</span>
+                                                <input type="text" name="selfPhoneConfirmationDate" id="selfPhoneConfirmationDate" class="style1 datePicker editPage selfPlacementField" value="#DateFormat(qCandidatePlaceCompany.selfPhoneConfirmationDate, 'mm/dd/yyyy')#" maxlength="10">
+                                                <font size="1">(mm/dd/yyyy)</font>
+                                            </td>
+                                        </tr>
 
 										<!--- Office View Only --->
                                         <cfif ListFind("1,2,3,4", CLIENT.userType)>
