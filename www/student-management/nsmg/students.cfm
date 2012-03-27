@@ -796,17 +796,20 @@
                     <td>#countryname#</td>
                     <td>
                     	#regionname#
-						<cfif regionguar is 'yes'>
+
+						<cfif r_guarantee NEQ ''>
                             <font color="CC0000">
-                            <cfif r_guarantee NEQ ''>
                                 * #r_guarantee#
-                            <cfelseif state_guarantee NEQ 0>
-                                * #state#
-                            <cfelse>
-                                * Missing
-                            </cfif>
                             </font>
                         </cfif>
+                            
+                        
+                        <Cfif state_guarantee NEQ 0>
+                        	<font color="CC0000">
+                        	  * #state#
+                            </font>
+                        </Cfif> 
+                        
                     </td>
                     <td>
                         #programname#
