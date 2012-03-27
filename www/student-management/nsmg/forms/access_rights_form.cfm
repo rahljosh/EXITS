@@ -635,10 +635,14 @@
                                                     uar.usertype = 6
                                                 AND 
                                                     uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionid#">
-                                                <cfif CLIENT.userType EQ 6>
+                                                AND
+                                                	u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+												<cfif CLIENT.userType EQ 6>
                                                 	AND
                                                     	uar.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
                                                 </cfif>
+                                                OR
+                                                	u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.advisorID)#">
                                                 ORDER BY 
                                                     firstname
                                             </cfquery>
