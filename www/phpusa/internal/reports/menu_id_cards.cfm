@@ -262,6 +262,24 @@
 			</td>
             <td width="2%">&nbsp;</td>
 			<td width="49%" valign="top">
+                <cfform action="reports/returning_student_letter.cfm" method="POST" target="blank">
+                <Table cellpadding=2 cellspacing="0" width="100%" style="border:1px solid ##C4CDE7;">
+                    <tr><th colspan="3" bgcolor="##C4CDE7" height="25px;">Bulk Returning Student Letter</th></tr>
+                    <tr>
+                        <td align="right" width="20%">Program :</td>
+                        <td><cfselect name="programid" multiple size="5">
+                                <cfloop query="get_programs"><option value="#programid#">#programname#</option></cfloop>
+                            </cfselect>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        	<br /><br />
+                        </td>
+                    </tr>							
+                    <tr><td colspan="3" align="center" bgcolor="##C4CDE7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
+                </table>
+                </cfform>
 			</td>
 		</tr>
 	</table><br>
