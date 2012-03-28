@@ -4,6 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><cfoutput>
 <title>#APPLICATION.METADATA.pageTitle#</title>
 <META NAME="description" content="#APPLICATION.METADATA.pageDescription#" />
+<META NAME="keywords" content="#APPLICATION.METADATA.pageKeywords#">
 <cfif CGI.SCRIPT_NAME EQ '/meet-our-students-ad.cfm'> <META NAME="robots" CONTENT="noindex, noarchive"> </cfif> <!--- Ask Google not to Crawl this page --->
 <link rel="shortcut icon" href="favicon.ico" />
 <link href="css/ISEstyle.css" rel="stylesheet" type="text/css" />
