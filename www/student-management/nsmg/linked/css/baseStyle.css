@@ -254,6 +254,16 @@
 	background-color:#FF6; 
 }
 
+.attentionCenter {
+	color:#000;
+	font-weight:bold;
+	padding:5px;
+	margin:0px 3px 0px 3px;
+	text-align:center;
+	border-bottom:1px solid #FFFFFF;
+	background-color:#FF6; 
+}
+
 .attentionGreen {
 	color:#000;
 	font-weight:bold;
@@ -274,6 +284,15 @@
 	color:#FFFFFF;
 	font-weight:bold;
 	padding:5px;
+	margin:0px 2px 0px 2px;
+	background-color:#F00; 
+}
+
+.alertCenter {
+	color:#FFFFFF;
+	font-weight:bold;
+	padding:5px;
+	text-align:center;
 	margin:0px 2px 0px 2px;
 	background-color:#F00; 
 }
