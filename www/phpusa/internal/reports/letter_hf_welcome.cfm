@@ -19,7 +19,7 @@
 	SELECT s.studentid, s.firstname, s.familylastname, s.uniqueid, s.intrep, s.sex,
 		h.hostid, h.familylastname as hostlastname, h.address, h.address2, h.city, h.state, h.zip, 
 		<!--- sta.state as hoststate, --->
-		p.programid, p.programname, p.startdate, p.enddate,
+		p.programid, p.programname, p.startdate, p.enddate, p.seasonid,
 		c.countryname,
 		<!--- FROM THE NEW TABLE PHP_STUDENTS_IN_PROGRAM --->		
 		stu_prog.assignedid, stu_prog.companyid, stu_prog.programid, stu_prog.hostid, stu_prog.schoolid, stu_prog.placerepid, stu_prog.arearepid,
@@ -39,10 +39,14 @@ select schoolid
 from php_students_in_program
 where studentid = #get_student_unqid.studentid#
 </cfquery>
+
 <cfquery name="school_dates" datasource="mysql">
-select max(seasonid) as seasonid, year_begins, semester_ends, semester_begins, year_ends
+select seasonid, year_begins, semester_ends, semester_begins, year_ends
 from php_school_dates
-where schoolid = #school_id.schoolid#
+WHERE
+	schoolid = #school_id.schoolid#
+    AND
+    seasonid = #get_student_unqid.seasonid#
 group by seasonid
 </cfquery>
 <cfoutput>
@@ -83,7 +87,8 @@ group by seasonid
             #DateFormat(school_dates.year_ends,'mmm. d, yyyy')#
             <cfelse>
             #DateFormat(school_dates.semester_ends,'mmm. d, yyyy')#
-            </cfif>
+            </cfif><br><br>
+            
              <!----#DateFormat(get_student_unqid.startdate,'mmm. d, yyyy')# thru #DateFormat(get_student_unqid.enddate,'mmm. d, yyyy')#----><br><br>
 		</td>
 	</tr>
