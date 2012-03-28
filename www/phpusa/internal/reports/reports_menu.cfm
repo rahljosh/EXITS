@@ -169,30 +169,6 @@
 		</tr>
 	</table><br>
 
-	<!--- ROW 4 - 1 box (left justified) --->
-	<table cellpadding=3 cellspacing="0" align="center" width="100%">
-		<tr>
-			<td width="50%" valign="top">
-				<cfform action="reports/returning_student_letter.cfm" method="POST" target="blank">
-				<Table cellpadding=3 cellspacing="0" width="100%">
-					<tr><th colspan="2" bgcolor="##C4CDE7">Returning Student Letters</th></tr>
-					<tr>
-						<td align="right">Program :</td>
-						<td><cfselect name="programid" multiple size="5">
-								<cfloop query="get_programs"><option value="#programid#">#programname#</option></cfloop>
-							</cfselect>
-						</td>
-					</tr>							
-					<tr><td colspan="2" align="center" bgcolor="##C4CDE7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
-				</table>
-				</cfform>
-			</td>
-			<td width="50%" valign="top">
-				&nbsp;
-			</td>
-		</tr>
-	</table><br>
-
 </td>
 </tr>
 </table><br>
