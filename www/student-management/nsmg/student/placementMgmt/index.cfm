@@ -548,19 +548,32 @@
                             
                             </cfif>
                             
-                            <div style="float:right; padding-right:5px; width:170px;">
+                            <div style="float:right; padding-right:5px; width:300px; text-align:right;">
                                 <cfif VAL(qGetPlacementHistoryList.isActive)>
-                                    <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&action=paperwork">[ View Paperwork ]</a>
-                                <cfelseif VAL(qGetPlacementHistoryList.hostID)>
-                                    <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&action=paperwork&historyID=#qGetPlacementHistoryList.historyID#">[ View Paperwork History ]</a>
+                                    <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&action=paperwork">[View Paperwork]</a>
                                     
-                                    <!--- Delete Placement History --->
-                                    <cfif NOT VAL(qGetPlacementHistoryList.isActive) AND ListFind(vDeleteHistoryAllowed, CLIENT.userID)>
-                                    	<a href="javascript:confirmDeletePlacementHistory(#qGetPlacementHistoryList.historyID#);">| [ Delete ]</a>
+									<cfif listFind("1,2,3,4", CLIENT.userType)>
+                                        |
+                                        <a href="" onClick="javascript: win=window.open('../../reports/placementInfoSheet.cfm?uniqueID=#FORM.uniqueid#', 'Settings', 'height=450, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">
+                                            [View PIS]
+                                        </a>
                                     </cfif>
                                     
                                 <cfelse>
-                                    &nbsp;                            
+                                    <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&action=paperwork&historyID=#qGetPlacementHistoryList.historyID#">[View Paperwork History]</a>
+                                	
+    								<cfif listFind("1,2,3,4", CLIENT.userType)>                                
+	                                    |
+                                        <a href="" onClick="javascript: win=window.open('../../reports/placementInfoSheet.cfm?uniqueID=#FORM.uniqueid#&historyID=#qGetPlacementHistoryList.historyID#', 'Settings', 'height=450, width=850, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">
+                                            [View PIS]
+                                        </a>
+                                    </cfif>
+                                    
+                                    <!--- Delete Placement History --->
+                                    <cfif NOT VAL(qGetPlacementHistoryList.isActive) AND ListFind(vDeleteHistoryAllowed, CLIENT.userID)>
+                                        |
+                                        <a href="javascript:confirmDeletePlacementHistory(#qGetPlacementHistoryList.historyID#);">[Delete]</a>
+                                    </cfif>
                                 </cfif>
                             </div>
                         </th>
