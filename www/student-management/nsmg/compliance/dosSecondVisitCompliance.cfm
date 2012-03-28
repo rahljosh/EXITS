@@ -29,12 +29,10 @@
 		param name="FORM.regionID" default=0;
 		param name="FORM.isDueSoon" default=0;
 		param name="FORM.outputType" default="onScreen";
+		param name="FORM.sendEmail" default=0;
 		
 		// Get Programs
 		qGetPrograms = APPLICATION.CFC.PROGRAM.getPrograms(programIDList=FORM.programID);
-		
-		// Get Regions
-		qGetRegions = APPLICATION.CFC.REGION.getRegions(regionIDList=FORM.regionID);
 	</cfscript>	
     
 	<!--- Get Reports --->
@@ -414,171 +412,340 @@
 	headerType="applicationNoHeader"
 />	
 
-<!--- Output in Excel --->
-<cfif FORM.outputType EQ 'excel'>
-	
-	<!--- set content type --->
-	<cfcontent type="application/msexcel">
-	
-	<!--- suggest default name for XLS file --->
-	<cfheader name="Content-Disposition" value="attachment; filename=DOS-Second-Visit-Compliance.xls"> 
-
-</cfif>
-
-<!--- Run Report --->
 <cfoutput>
 
-    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif FORM.outputType EQ 'excel'> border="1" </cfif> >
-        <tr>
-            <th>2<sup>nd</sup> Visit Representative Compliance By Region</th>
-        </tr>
-        <tr>
-            <td class="center">
-                Program(s) included in this report: <br />
-                <cfloop query="qGetPrograms">
-                    #qGetPrograms.programName# <br />
-                </cfloop>
-            </td>
-        </tr>
-    </table>
-    
-    <cfloop query="qGetRegions">
+	<!--- Output in Excel - Do not use GroupBy --->
+    <cfif FORM.outputType EQ 'excel'>
         
-        <cfquery name="qGetResultsByRegion" dbtype="query">
-            SELECT
-                *        		
-            FROM            
-                qGetResults
-            WHERE
-                regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegions.regionID#">
-            <!--- Display records out of compliance or students placed in welcome family missing following report --->
-			AND
-            	(
-                	dateOfVisit IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
-				OR
-                	dateOfVisit > dateEndWindowCompliance
-                )
-        </cfquery>
+        <!--- set content type --->
+        <cfcontent type="application/msexcel">
         
-        <cfif qGetResultsByRegion.recordCount>
-                    
-            <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif FORM.outputType EQ 'excel'> border="1" </cfif> >
-                <tr>
-                    <th class="left" colspan="7">
-                    	<cfif CLIENT.companyID EQ 5>
-                        	- #qGetRegions.companyShort#
-                        </cfif>
-                        
-                    	- #qGetRegions.regionName# Region 
-                        &nbsp; - &nbsp; 
-                        
-                        #qGetResultsByRegion.facilitatorName# 
-                    </th>
-                    <th class="right" colspan="4">
-                    	Total of #qGetResultsByRegion.recordCount# non-compliant report(s)
-                    </th>
-                </tr>      
-                <tr>
-                    <td class="subTitleLeft" width="14%">Student</td>
-                    <td class="subTitleLeft" width="12%">Program</td>
-                    <td class="subTitleLeft" width="13%">Host Family</td>
-                    <td class="subTitleCenter" width="7%">Date Placed</td>
-                    <td class="subTitleCenter" width="7%">Date of Arrival</td>
-                    <td class="subTitleCenter" width="7%">Date of Relocation</td>
-                    <td class="subTitleCenter" width="12%">Assigned Period</td>
-                    <td class="subTitleCenter" width="12%">Window of Compliance</td>
-                    <td class="subTitleCenter" width="7%">Due Date</td>
-                    <td class="subTitleCenter" width="7%">Date Of Visit</td>
-                    <td class="subTitleCenter" width="7%">Days Remaining</td>
-                </tr>      
+        <!--- suggest default name for XLS file --->
+        <cfheader name="Content-Disposition" value="attachment; filename=DOS-Second-Visit-Compliance.xls"> 
+        
+    	<table width="98%" cellpadding="4" cellspacing="0" align="center" border="1">
+            <tr>
+                <th colspan="14">2<sup>nd</sup> Visit Representative Compliance By Region</th>            
+            </tr>
+            <tr style="font-weight:bold;">
+                <td>Division</td>
+                <td>Region</td>
+                <td>Facilitator</td>
+                <td>Student</td>
+                <td>Program</td>
+                <td>Host Family</td>
+                <td>Date Placed</td>
+                <td>Date of Arrival</td>
+                <td>Date of Relocation</td>
+                <td>Assigned Period</td>
+                <td>Window of Compliance</td>
+                <td>Due Date</td>
+                <td>Date Of Visit</td>
+                <td>Days Remaining</td>
+            </tr>      
             
-                <cfloop query="qGetResultsByRegion">
+            <cfloop query="qGetResults">
+                
+                <cfscript>
+                    vSetColorCode = '';
+                    vSetRelocationColorCode = '';
                     
-					<cfscript>
-                        vSetColorCode = '';
-                        vSetRelocationColorCode = '';
-                        
-                        // Set up Remaining Days Alert
-                        if ( IsNumeric(qGetResultsByRegion.remainingDays) AND qGetResultsByRegion.remainingDays LTE 0 ) {
-                            vSetColorCode = 'alert';
-                        } else if ( IsNumeric(qGetResultsByRegion.remainingDays) AND qGetResultsByRegion.remainingDays LTE 14 ) {
-                            vSetColorCode = 'attention';
-                        }
-                        
-                        // Set up Relocation Date Prior to Arrival Date alert
-                        if ( isDate(qGetResultsByRegion.dateArrived) AND isDate(qGetResultsByRegion.dateRelocated) AND qGetResultsByRegion.dateArrived GT qGetResultsByRegion.dateRelocated ) {
-                            vSetRelocationColorCode = 'attention';
-                        }
-                        
-						vSetAsNotNeeded = 0;
-						
-                        // Set Report as Not Needed - EXITS System --> userID = 5
-                        if ( isNumeric(qGetResultsByRegion.totalAssignedPeriod) AND qGetResultsByRegion.totalAssignedPeriod LT qGetResultsByRegion.complianceWindow AND NOT isDate(qGetResultsByRegion.dateOfVisit) ) {
-                            vSetAsNotNeeded = 1;
-							/*
-							APPLICATION.CFC.progressReport.setSecondVisitReportAsNotNeeded(
-								historyID = qGetResultsByRegion.historyID,
-								fk_student = qGetResultsByRegion.studentID,
-								fk_host = qGetResultsByRegion.hostID,
-								fk_secondVisitRep = qGetResultsByRegion.secondVisitRepID
-							);
-							*/
-                        }
-                    </cfscript>		
+                    // Set up Remaining Days Alert
+                    if ( IsNumeric(qGetResults.remainingDays) AND qGetResults.remainingDays LTE 0 ) {
+                        vSetColorCode = '##FF0000';
+                    } else if ( IsNumeric(qGetResults.remainingDays) AND qGetResults.remainingDays LTE 14 ) {
+                        vSetColorCode = '##FFFF00';
+                    }
                     
-                    <tr class="#iif(qGetResultsByRegion.currentRow MOD 2 ,DE("off") ,DE("on") )#">
-                        <td>
-                            #qGetResultsByRegion.studentName#
-                            <cfif VAL(qGetResultsByRegion.active)>
-                                <span class="note">(Active)</span>
-                            <cfelseif isDate(qGetResultsByRegion.cancelDate)>
-                                <span class="noteAlert">(Cancelled)</span>
-                            </cfif>
-                        </td>
-                        <td>#qGetResultsByRegion.programName#</td>
-                        <td>
-                            #qGetResultsByRegion.hostFamilyName# 
-                            <cfif VAL(qGetResultsByRegion.isWelcomeFamily)>
-                                <span class="note">(Welcome)</span>
-                            <cfelse>
-                                <span class="note">(Permanent)</span>
-                            </cfif>
-                        </td>
-                        <td class="center">#DateFormat(qGetResultsByRegion.datePlaced, 'mm/dd/yy')#</td>
-                        <td class="center">#DateFormat(qGetResultsByRegion.dateArrived, 'mm/dd/yy')#</td>
-                        <td class="center #vSetRelocationColorCode#">#DateFormat(qGetResultsByRegion.dateRelocated, 'mm/dd/yy')#</td>
-                        <td class="center">
-                            <cfif isDate(qGetResultsByRegion.dateStartWindowCompliance)>
+                    // Set up Relocation Date Prior to Arrival Date alert
+                    if ( isDate(qGetResults.dateArrived) AND isDate(qGetResults.dateRelocated) AND qGetResults.dateArrived GT qGetResults.dateRelocated ) {
+                        vSetRelocationColorCode = 'attention';
+                    }
+					
+					// Set Row Color
+					if ( qGetResults.currentRow MOD 2 ) {
+						vRowColor = '##E6E6E6';
+					} else {
+						vRowColor = '##FFFFFF';
+					}
+                </cfscript>		
+                
+                <tr>
+                    <td bgcolor="#vRowColor#">#CLIENT.companyShort#</td>
+                    <td bgcolor="#vRowColor#">#qGetResults.regionName#</td>
+                    <td bgcolor="#vRowColor#">#qGetResults.facilitatorName#</td>
+                    <td bgcolor="#vRowColor#">
+                        #qGetResults.studentName#
+                        <cfif VAL(qGetResults.active)>
+                            <span class="note">(Active)</span>
+                        <cfelseif isDate(qGetResults.cancelDate)>
+                            <span class="noteAlert">(Cancelled)</span>
+                        </cfif>
+                    </td>
+                    <td bgcolor="#vRowColor#">#qGetResults.programName#</td>
+                    <td bgcolor="#vRowColor#">
+                        #qGetResults.hostFamilyName# 
+                        <cfif VAL(qGetResults.isWelcomeFamily)>
+                            <span class="noteAlert">(Welcome)</span>
+                        <cfelse>
+                            <span class="note">(Permanent)</span>
+                        </cfif>
+                    </td>
+                    <td bgcolor="#vRowColor#">#DateFormat(qGetResults.datePlaced, 'mm/dd/yy')#</td>
+                    <td bgcolor="#vRowColor#">#DateFormat(qGetResults.dateArrived, 'mm/dd/yy')#</td>
+                    <td bgcolor="#vRowColor#">#DateFormat(qGetResults.dateRelocated, 'mm/dd/yy')#</td>
+                    <td bgcolor="#vRowColor#">
+                        <cfif isDate(qGetResults.dateStartWindowCompliance)>
+                        
+                            #DateFormat(qGetResults.dateStartWindowCompliance, 'mm/dd/yy')# - 
                             
-                                #DateFormat(qGetResultsByRegion.dateStartWindowCompliance, 'mm/dd/yy')# - 
-                                
-                                <cfif isDate(qGetResultsByRegion.datePlacedEnded)>
-                                    #DateFormat(qGetResultsByRegion.datePlacedEnded, 'mm/dd/yy')# (#totalAssignedPeriod# days)
-                                <cfelse>
-                                    present
+                            <cfif isDate(qGetResults.datePlacedEnded)>
+                                #DateFormat(qGetResults.datePlacedEnded, 'mm/dd/yy')# (#totalAssignedPeriod# days)
+                            <cfelse>
+                                present
+                            </cfif>
+                            
+                        </cfif>
+                    </td>
+                    <td bgcolor="#vRowColor#">#DateFormat(qGetResults.dateStartWindowCompliance, 'mm/dd/yy')# - #DateFormat(qGetResults.dateEndWindowCompliance, 'mm/dd/yy')#</td>
+                    <td bgcolor="#vRowColor#">#DateFormat(qGetResults.dateEndWindowCompliance, 'mm/dd/yy')#</td>
+                    <td bgcolor="#vRowColor#">#DateFormat(qGetResults.dateOfVisit, 'mm/dd/yy')#</td>
+                    <cfif LEN(vSetColorCode)>
+                        <td bgcolor="#vSetColorCode#">#qGetResults.remainingDays#</td>
+                    <cfelse>
+                        <td bgcolor="#vRowColor#">#qGetResults.remainingDays#</td>
+                    </cfif>
+                </tr>
+                
+            </cfloop>
+        
+        </table>    
+    
+    <!--- On Screen Report --->
+    <cfelse>
+    
+        <!--- Store Report Header in a Variable --->
+        <cfsavecontent variable="reportHeader">
+            
+            <!--- Run Report --->
+            <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                <tr>
+                    <th>2<sup>nd</sup> Visit Representative Compliance By Region</th>
+                </tr>
+                <tr>
+                    <td class="center">
+                        Program(s) included in this report: <br />
+                        <cfloop query="qGetPrograms">
+                            #qGetPrograms.programName# <br />
+                        </cfloop>
+                    </td>
+                </tr>
+            </table>
+            
+            <br />
+        
+        </cfsavecontent>
+        
+        <!--- Display Report Header --->
+        #reportHeader#
+        
+		<!--- Loop Regions ---> 
+        <cfloop list="#FORM.regionID#" index="currentRegionID">
+
+			<!--- Save Report in a Variable --->
+            <cfsavecontent variable="reportBody">
+
+				<cfscript>
+                    // Get Regional Manager
+                    qGetRegionalManager = APPLICATION.CFC.USER.getRegionalManager(regionID=currentRegionID);
+                </cfscript>
+            
+                <cfquery name="qGetResultsByRegion" dbtype="query">
+                    SELECT
+                        *        		
+                    FROM            
+                        qGetResults
+                    WHERE
+                        regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#currentRegionID#">
+                    <!--- Display records out of compliance or students placed in welcome family missing following report --->
+                    AND
+                        (
+                            dateOfVisit IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                        OR
+                            dateOfVisit > dateEndWindowCompliance
+                        )
+                </cfquery>
+                
+                <cfif qGetResultsByRegion.recordCount>
+                            
+                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                        <tr>
+                            <th class="left" colspan="7">
+                                <cfif CLIENT.companyID EQ 5>
+                                    - #CLIENT.companyShort#
                                 </cfif>
                                 
-								<cfif VAL(vSetAsNotNeeded)>
-									<div class="attention">Report NOT required</div> <!--- Report set as NOT needed --->
-								</cfif>
+                                - #qGetResultsByRegion.regionName# Region 
+                                &nbsp; - &nbsp; 
                                 
-                            </cfif>
-                        </td>
-                        <td class="center">#DateFormat(qGetResultsByRegion.dateStartWindowCompliance, 'mm/dd/yy')# - #DateFormat(qGetResultsByRegion.dateEndWindowCompliance, 'mm/dd/yy')#</td>
-                        <td class="center">#DateFormat(qGetResultsByRegion.dateEndWindowCompliance, 'mm/dd/yy')#</td>
-                        <td class="center">#DateFormat(qGetResultsByRegion.dateOfVisit, 'mm/dd/yy')#</td>
-                        <td class="center #vSetColorCode#">#qGetResultsByRegion.remainingDays#</td>
-                    </tr>
+                                #qGetResultsByRegion.facilitatorName# 
+                            </th>
+                            <th class="right" colspan="4">
+                                Total of #qGetResultsByRegion.recordCount# non-compliant report(s)
+                            </th>
+                        </tr>      
+                        <tr>
+                            <td class="subTitleLeft" width="14%">Student</td>
+                            <td class="subTitleLeft" width="12%">Program</td>
+                            <td class="subTitleLeft" width="13%">Host Family</td>
+                            <td class="subTitleCenter" width="7%">Date Placed</td>
+                            <td class="subTitleCenter" width="7%">Date of Arrival</td>
+                            <td class="subTitleCenter" width="7%">Date of Relocation</td>
+                            <td class="subTitleCenter" width="12%">Assigned Period</td>
+                            <td class="subTitleCenter" width="12%">Window of Compliance</td>
+                            <td class="subTitleCenter" width="7%">Due Date</td>
+                            <td class="subTitleCenter" width="7%">Date Of Visit</td>
+                            <td class="subTitleCenter" width="7%">Days Remaining</td>
+                        </tr>      
                     
-                </cfloop>
+                        <cfloop query="qGetResultsByRegion">
+                            
+                            <cfscript>
+                                vSetColorCode = '';
+                                vSetRelocationColorCode = '';
+                                
+                                // Set up Remaining Days Alert
+                                if ( IsNumeric(qGetResultsByRegion.remainingDays) AND qGetResultsByRegion.remainingDays LTE 0 ) {
+                                    vSetColorCode = 'alertCenter';
+                                } else if ( IsNumeric(qGetResultsByRegion.remainingDays) AND qGetResultsByRegion.remainingDays LTE 14 ) {
+                                    vSetColorCode = 'attentionCenter';
+                                }
+                                
+                                // Set up Relocation Date Prior to Arrival Date alert
+                                if ( isDate(qGetResultsByRegion.dateArrived) AND isDate(qGetResultsByRegion.dateRelocated) AND qGetResultsByRegion.dateArrived GT qGetResultsByRegion.dateRelocated ) {
+                                    vSetRelocationColorCode = 'attention';
+                                }
+                                
+                                vSetAsNotNeeded = 0;
+                                
+                                // Set Report as Not Needed - EXITS System --> userID = 5
+                                if ( isNumeric(qGetResultsByRegion.totalAssignedPeriod) AND qGetResultsByRegion.totalAssignedPeriod LT qGetResultsByRegion.complianceWindow AND NOT isDate(qGetResultsByRegion.dateOfVisit) ) {
+                                    vSetAsNotNeeded = 1;
+                                    /*
+                                    APPLICATION.CFC.progressReport.setSecondVisitReportAsNotNeeded(
+                                        historyID = qGetResultsByRegion.historyID,
+                                        fk_student = qGetResultsByRegion.studentID,
+                                        fk_host = qGetResultsByRegion.hostID,
+                                        fk_secondVisitRep = qGetResultsByRegion.secondVisitRepID
+                                    );
+                                    */
+                                }
+                            </cfscript>		
+                            
+                            <tr class="#iif(qGetResultsByRegion.currentRow MOD 2 ,DE("off") ,DE("on") )#">
+                                <td>
+                                    #qGetResultsByRegion.studentName#
+                                    <cfif VAL(qGetResultsByRegion.active)>
+                                        <span class="note">(Active)</span>
+                                    <cfelseif isDate(qGetResultsByRegion.cancelDate)>
+                                        <span class="noteAlert">(Cancelled)</span>
+                                    </cfif>
+                                </td>
+                                <td>#qGetResultsByRegion.programName#</td>
+                                <td>
+                                    #qGetResultsByRegion.hostFamilyName# 
+                                    <cfif VAL(qGetResultsByRegion.isWelcomeFamily)>
+                                        <span class="note">(Welcome)</span>
+                                    <cfelse>
+                                        <span class="note">(Permanent)</span>
+                                    </cfif>
+                                </td>
+                                <td class="center">#DateFormat(qGetResultsByRegion.datePlaced, 'mm/dd/yy')#</td>
+                                <td class="center">#DateFormat(qGetResultsByRegion.dateArrived, 'mm/dd/yy')#</td>
+                                <td class="center #vSetRelocationColorCode#">#DateFormat(qGetResultsByRegion.dateRelocated, 'mm/dd/yy')#</td>
+                                <td class="center">
+                                    <cfif isDate(qGetResultsByRegion.dateStartWindowCompliance)>
+                                    
+                                        #DateFormat(qGetResultsByRegion.dateStartWindowCompliance, 'mm/dd/yy')# - 
+                                        
+                                        <cfif isDate(qGetResultsByRegion.datePlacedEnded)>
+                                            #DateFormat(qGetResultsByRegion.datePlacedEnded, 'mm/dd/yy')# (#totalAssignedPeriod# days)
+                                        <cfelse>
+                                            present
+                                        </cfif>
+                                        
+                                        <!---
+										<cfif VAL(vSetAsNotNeeded)>
+											<div class="attention">Report NOT required</div> <!--- Report set as NOT needed --->
+										</cfif>
+										--->
+                                        
+                                    </cfif>
+                                </td>
+                                <td class="center">#DateFormat(qGetResultsByRegion.dateStartWindowCompliance, 'mm/dd/yy')# - #DateFormat(qGetResultsByRegion.dateEndWindowCompliance, 'mm/dd/yy')#</td>
+                                <td class="center">#DateFormat(qGetResultsByRegion.dateEndWindowCompliance, 'mm/dd/yy')#</td>
+                                <td class="center">#DateFormat(qGetResultsByRegion.dateOfVisit, 'mm/dd/yy')#</td>
+                                <td class="#vSetColorCode# center">#qGetResultsByRegion.remainingDays#</td>
+                            </tr>
+                            
+                        </cfloop>
+                    
+                    </table>
+                    
+                </cfif>
+        
+        	</cfsavecontent>
             
-            </table>
-    		
-        </cfif>
+			<!--- Display Report --->
+            #reportBody#
     
-    </cfloop>    
+            <!--- Email Regional Manager --->        
+            <cfif VAL(FORM.sendEmail) AND qGetResultsByRegion.recordcount AND IsValid("email", qGetRegionalManager.email) AND IsValid("email", CLIENT.email)>
+                
+                 <cfsavecontent variable="emailBody">
+                    <html>
+                        <head>
+                            <title>#qGetResultsByRegion.regionName# - 2nd Visit Representative Compliance By Region</title>
+                        </head>
+                        <body>
+                            
+                            <!--- Include CSS on the body of email --->
+                            <style type="text/css">
+                                <cfinclude template="../linked/css/baseStyle.css">
+                            </style>                    
+                            
+                            <!--- Display Report Header --->
+                            #reportHeader#	
+                                              
+                            <!--- Display Report --->
+                            #reportBody#
+    
+                       </body>
+                    </html>
+                </cfsavecontent>
+        
+                <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                    <cfinvokeargument name="email_to" value="#qGetRegionalManager.email#">
+                    <cfinvokeargument name="email_cc" value="#CLIENT.email#">
+                    <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
+                    <cfinvokeargument name="email_subject" value="#CLIENT.companyshort# - 2nd Visit Representative Compliance By Region">
+                    <cfinvokeargument name="email_message" value="#emailBody#">
+                </cfinvoke>
+                
+                <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                    <tr>
+                        <th class="left">*** Report emailed to #qGetRegionalManager.firstName# #qGetRegionalManager.lastName# at #qGetRegionalManager.email# ***</th>
+                    </tr>              
+                </table>
+                
+			</cfif>   
+            <!--- Email Regional Manager --->                
+        
+        </cfloop>    
+        
+    </cfif>
 
-</cfoutput>
+</cfoutput> 
 
 <!--- Page Header --->
 <gui:pageFooter />
