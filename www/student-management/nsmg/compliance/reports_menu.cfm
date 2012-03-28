@@ -194,7 +194,7 @@
                                 <table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
                                     <tr><th colspan="3" bgcolor="##e2efc7">Single Placement Paperwork by International Representative</th></tr>
                                     <tr align="left">
-                                        <td width="20%" valign="top">Program :</td>
+                                        <td width="30%" valign="top">Program :</td>
                                         <td>
                                             <select name="programID" size="6" multiple>
                                                 <cfloop query="qGetProgramList">
@@ -259,7 +259,7 @@
                                 <table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
                                     <tr><th colspan="3" bgcolor="##e2efc7">Double Placement Paperwork by International Representative</th></tr>
                                     <tr align="left">
-                                        <td width="20%" valign="top">Program :</td>
+                                        <td width="30%" valign="top">Program :</td>
                                         <td>
                                             <select name="programID" size="6" multiple>
                                                 <cfloop query="qGetProgramList">
@@ -317,7 +317,7 @@
                                 <table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
                                     <tr><th colspan="3" bgcolor="##e2efc7">Double Placement Paperwork by Region</th></tr>
                                     <tr align="left">
-                                        <td width="20%" valign="top">Program :</td>
+                                        <td width="30%" valign="top">Program :</td>
                                         <td>
                                             <select name="programID" size="6" multiple>
                                                 <cfloop query="qGetProgramList">
@@ -392,7 +392,7 @@
                                 <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                     <tr><th colspan="2" bgcolor="##e2efc7">2<sup>nd</sup> Visit Representative Compliance By Region</th></tr>
                                     <tr>
-                                        <td valign="top">Program :</td>
+                                        <td width="30%" valign="top">Program :</td>
                                         <td>
                                             <select name="programID" multiple="yes" size="6" class="xLargeField">
                                                 <cfloop query="qGetProgramList">
@@ -420,6 +420,14 @@
                                             </select>
                                         </td>		
                                     </tr>
+                                    <tr align="left">
+                                        <td>Send as email to Regional Manager :</td>
+                                        <td>
+                                            <input type="radio" name="sendEmail" id="sendEmailSVNo" value="0" checked="checked"> <label for="sendEmailSVNo">No</label>  
+                                            <input type="radio" name="sendEmail" id="sendEmailSVYes" value="1"> <label for="sendEmailSVYes">Yes</label>
+                                            <br /><font size="-2">Available only on screen option</font>
+                                        </td>
+                                    </tr>
                                     <tr>
                                         <td align="right">
                                             <input type="checkbox" name="isDueSoon" id="isDueSoon" value="1" />
@@ -427,7 +435,7 @@
                                         <td>
                                             <label for="isDueSoon">Display only records due within 14 days</label>
                                         </td>
-                                    </tr>                                             
+                                    </tr>  
                                     <tr>
                                         <td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border="0"></td>
                                     </tr>
@@ -439,7 +447,7 @@
                                 <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                                     <tr><th colspan="2" bgcolor="##e2efc7">2<sup>nd</sup> Visit Representative Statistics By Region</th></tr>
                                     <tr>
-                                        <td valign="top">Program :</td>
+                                        <td width="30%" valign="top">Program :</td>
                                         <td>
                                             <select name="programID" multiple="yes" size="6" class="xLargeField">
                                                 <cfloop query="qGetProgramList">

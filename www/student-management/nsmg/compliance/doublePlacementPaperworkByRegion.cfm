@@ -459,7 +459,7 @@
 			<!--- Display Report --->
             #reportBody#
     
-            <!--- Email Intl. Representatives --->        
+            <!--- Email Regional Manager --->        
             <cfif VAL(FORM.sendEmail) AND qGetStudentsInRegion.recordcount AND IsValid("email", qGetRegionalManager.email) AND IsValid("email", CLIENT.email)>
                 
                  <cfsavecontent variable="emailBody">
@@ -494,12 +494,12 @@
                 
                 <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                     <tr>
-                        <th class="left">*** Report emailed to #qGetRegionalManager.email# ***</th>
+                        <th class="left">*** Report emailed to #qGetRegionalManager.firstName# #qGetRegionalManager.lastName# at #qGetRegionalManager.email# ***</th>
                     </tr>              
                 </table>
                 
 			</cfif>   
-            <!--- Email Intl. Representatives --->              
+            <!--- Email Regional Manager --->              
 
 		</cfoutput>
 
