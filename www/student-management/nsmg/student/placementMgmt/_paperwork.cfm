@@ -818,7 +818,7 @@
                             <td width="30%">
                                 <span class="readOnly displayNone">#DateFormat(qGetCBCFather.date_sent, 'mm/dd/yyyy')# to #DateFormat(qGetCBCFather.date_expired, 'mm/dd/yyyy')#</span>
                                 <input type="text" name="fatherCBC" id="fatherCBC" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCFather.date_sent, 'mm/dd/yyyy')#" disabled="disabled">
-                                to
+                                <span class="editPage displayNone">to</span>
                                 <input type="text" name="fatherCBC" id="fatherCBC" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCFather.date_expired, 'mm/dd/yyyy')#" disabled="disabled">
                             </td>
                         </tr>
@@ -832,7 +832,7 @@
                             <td width="30%">
                                 <span class="readOnly displayNone">#DateFormat(qGetCBCMother.date_sent, 'mm/dd/yyyy')# to #DateFormat(qGetCBCMother.date_expired, 'mm/dd/yyyy')#</span>
                                 <input type="text" name="motherCBC" id="motherCBC" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCMother.date_sent, 'mm/dd/yyyy')#" disabled="disabled">
-                                to
+                                <span class="editPage displayNone">to</span>
                                 <input type="text" name="motherCBC" id="motherCBC" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCMother.date_expired, 'mm/dd/yyyy')#" disabled="disabled">
                             </td>
                         </tr>
@@ -852,7 +852,7 @@
                                 <td width="30%">
                                     <span class="readOnly displayNone">#DateFormat(qGetCBCMember.date_sent, 'mm/dd/yyyy')# to #DateFormat(qGetCBCMember.date_expired, 'mm/dd/yyyy')#</span>
                                     <input type="text" name="memberCBC#qGetEligibleCBCHostMembers.currentRow#" id="memberCBC#qGetEligibleCBCHostMembers.currentRow#" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCMember.date_sent, 'mm/dd/yyyy')#" disabled="disabled">
-                                    to
+                                    <span class="editPage displayNone">to</span>
                                     <input type="text" name="memberCBC#qGetEligibleCBCHostMembers.currentRow#" id="memberCBC#qGetEligibleCBCHostMembers.currentRow#" class="datePicker editPage displayNone" value="#DateFormat(qGetCBCMember.date_expired, 'mm/dd/yyyy')#" disabled="disabled">
                                 </td>
                             </tr>
