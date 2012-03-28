@@ -54,7 +54,8 @@
             st.doc_evaluation9, st.doc_evaluation12, st.doc_evaluation2, st.doc_evaluation4, st.doc_evaluation6, 
             st.doc_grade1, st.doc_grade2, st.doc_grade3, st.doc_grade4, st.doc_grade5, st.doc_grade6,st.doc_grade7,
             st.doc_grade8, placementNotes,
-            st.return_student, st.flightinfo_sent, st.flightinfo_received, st.flightinfo_no, st.flightinfo_note
+            st.return_student, st.flightinfo_sent, st.flightinfo_received, st.flightinfo_no, st.flightinfo_note,
+            st.canceledBy
         FROM 
         	smg_students s
         INNER JOIN 

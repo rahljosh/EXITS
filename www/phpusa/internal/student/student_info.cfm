@@ -531,6 +531,11 @@
                         <td width="50%">: : <a href="reports/letter_hf_welcome.cfm?unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#" target="_blank">Host Family Welcome Letter</a></td>
                         <td width="50%">: : <a href="reports/letter_student_arrival.cfm?unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#" target="_blank">Student Arrival Letter</a></td>
                     </tr>
+                    <tr>
+                    	<cfif #get_student_unqid.return_student# EQ 1 AND #get_student_unqid.active# EQ 1 AND #get_student_unqid.canceledBy# EQ 0>
+                        <td width="50%">: : <a href="reports/returning_student_letter.cfm?studentid=#get_student_unqid.studentid#&programid=#get_student_unqid.programid#" target="_blank">Return Student Letter</a></td>
+                        </cfif>
+                    </tr>
                 </table>
             </td>
             <td width="2%" valign="top">&nbsp;</td>
