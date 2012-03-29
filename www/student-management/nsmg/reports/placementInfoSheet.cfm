@@ -258,7 +258,7 @@
                     &nbsp; &nbsp; &nbsp;
                     <input type="image" value="close window" src="../pics/close.gif" alt=" Close this Screen " onClick="javascript:window.close()">
                     &nbsp; &nbsp; &nbsp;
-                    <a href="placementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#&printPage=1"><img src="../pics/print.png"  border="0" alt=" Print "></a>
+                    <a href="placementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#&historyID=#FORM.historyID#&printPage=1"><img src="../pics/print.png"  border="0" alt=" Print "></a>
                 </td>
             </tr>
             <tr>
