@@ -204,7 +204,7 @@
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.companyid#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionid#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.usertype#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.advisorID#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.advisorID)#">,
                         <!--- for a new user or forcing entry for user without a record, 
 						this is their first user_access_rights record, so need to set it as the default. --->
                         <cfif FORM.new_user OR FORM.force>
@@ -402,7 +402,7 @@
     
 	<cfscript>
         // Disable these forms if editing 2nd visit information
-        if ( FORM.userType EQ 15 AND NOT LEN(errorMsg) )  {
+        if ( FORM.userType EQ 15 AND NOT LEN(errorMsg) AND NOT new )  {
             
 			// display the "reports to" selection.
 			FORM.advisor = 1;
@@ -618,8 +618,8 @@
                                         <cfinput type="hidden" name="access_disabled" value="#FORM.access_disabled#">
                                     </td>
                                 </tr>
-        
-                                <cfif FORM.advisor>
+        				
+                                <cfif VAL(FORM.advisor)>
                                     <tr>
                                         <td class="label">Reports To:</td>
                                         <td>
@@ -634,15 +634,20 @@
                                                 WHERE 
                                                     uar.usertype = 6
                                                 AND 
-                                                    uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionid#">
+                                                    uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.regionid)#">
                                                 AND
                                                 	u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+												
 												<cfif CLIENT.userType EQ 6>
                                                 	AND
                                                     	uar.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
                                                 </cfif>
-                                                OR
-                                                	u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.advisorID)#">
+                                                
+                                                <cfif VAL(FORM.advisorID)>
+                                                    OR
+                                                        u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.advisorID#">
+                                                </cfif>
+                                                
                                                 ORDER BY 
                                                     firstname
                                             </cfquery>
