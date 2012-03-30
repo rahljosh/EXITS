@@ -38,6 +38,7 @@
             s.cancelDate,
             sh.placeRepID,
             sh.areaRepID,
+            sh.isRelocation,
             sh.isWelcomeFamily,
             sh.datePlaced,
             sh.isActive AS isActivePlacement,
@@ -70,22 +71,41 @@
                 AND
                     sht.fieldName = <cfqueryparam cfsqltype="cf_sql_varchar" value="doublePlacementID"> 
                 AND
-                    (
-                    	sht.isDoublePlacementPaperworkRequired IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
-                  	OR
-                    	sht.isDoublePlacementPaperworkRequired = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> 
-                    )
+                    sht.isDoublePlacementPaperworkRequired IN ( <cfqueryparam cfsqltype="cf_sql_date" null="yes">, <cfqueryparam cfsqltype="cf_sql_bit" value="1"> )
                 <!--- Get Missing --->
                 <cfif FORM.compliantOption EQ 'missing'>
                     AND 
-                        sht.doublePlacementHostFamilyDateSigned IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                        (
+                        	sht.doublePlacementHostFamilyDateSigned IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                        OR
+                            (
+                                sh.isRelocation = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                            AND
+                                sht.doublePlacementStudentDateSigned IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                            )
+						)                            
                 <!--- Get Non-compliant --->
 				<cfelseif FORM.compliantOption EQ 'non-compliant'>
                     AND 
                         (
-                            sht.doublePlacementHostFamilyDateSigned IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
-						OR
-                            sht.doublePlacementHostFamilyDateSigned > sh.datePlaced
+                            
+                            (
+                            	sht.doublePlacementHostFamilyDateSigned IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+							OR
+                            	sht.doublePlacementHostFamilyDateSigned > sh.datePlaced
+                            )
+                            
+						OR                            
+                            (
+                                sh.isRelocation = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                            AND
+                                (
+                                	sht.doublePlacementStudentDateSigned IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+								OR
+                                    sht.doublePlacementStudentDateSigned > sh.datePlaced
+								)
+                            )
+                            
 						)                            
 				</cfif>                    
 		INNER JOIN
@@ -111,7 +131,7 @@
           	studentName,
           	sht.dateCreated DESC            
     </cfquery>
-
+    
 </cfsilent>
 
 <!--- Page Header --->
@@ -132,7 +152,6 @@
 	</table>
 	<cfabort>
 </cfif>
-
 
 <!--- Output in Excel - Do not use GroupBy --->
 <cfif FORM.outputType EQ 'excel'>
@@ -167,7 +186,7 @@
             <td>Date Placed</td>
             <td>Missing Documents</td>
         </tr>      
-
+		
 		<cfoutput query="qGetResults">
         
 			<cfscript>
@@ -183,7 +202,12 @@
 					if ( NOT isDate(qGetResults.doublePlacementHostFamilyDateSigned) ) {
 						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Host Family Date Signed <br />", " <br />");
 					} 
-				
+					
+					// Student Date Signed
+					if ( VAL(qGetResults.isRelocation) AND NOT isDate(qGetResults.doublePlacementStudentDateSigned) ) {
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Student Date Signed <br />", " <br />");
+					} 
+					
 				// Display Both
 				} else { 
 				
@@ -192,6 +216,13 @@
 						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Host Family Date Signed <br />", " <br />");
 					} else if ( isDate(qGetResults.doublePlacementHostFamilyDateSigned) AND qGetResults.doublePlacementHostFamilyDateSigned GT qGetResults.datePlaced ) {
 						vOutOfComplianceDocuments = ListAppend(vOutOfComplianceDocuments, "Host Family Date Signed is Non-compliant <br />", " <br />");
+					}
+					
+					// Student Date Signed
+					if ( VAL(qGetResults.isRelocation) AND NOT isDate(qGetResults.doublePlacementStudentDateSigned) ) {
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Student Date Signed <br />", " <br />");
+					} else if ( VAL(qGetResults.isRelocation) AND isDate(qGetResults.doublePlacementStudentDateSigned) AND qGetResults.doublePlacementStudentDateSigned GT qGetResults.datePlaced ) {
+						vOutOfComplianceDocuments = ListAppend(vOutOfComplianceDocuments, "Student Date Signed is Non-compliant <br />", " <br />");
 					}
 					
 				}
@@ -235,10 +266,14 @@
                                 Permanent
                             </cfif>
                             -
-                            <cfif VAL(qGetResults.isActivePlacement)>
+							<cfif VAL(qGetResults.isActivePlacement)>
                                 Current
                             <cfelse>
                                 Previous
+                            </cfif>
+
+                            <cfif VAL(qGetResults.isRelocation)>
+                            	- Relocation
                             </cfif>
                         )
                     </span>                            
@@ -372,25 +407,37 @@
                             vOutOfComplianceDocuments = '';
                             vIsCompliant = 0;
     
-                            // Display Missing
-                            if ( FORM.compliantOption EQ 'missing' ) {
-                            
-                                // Host Family Date Signed
-                                if ( NOT isDate(qGetStudentsInRegion.doublePlacementHostFamilyDateSigned) ) {
-                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Host Family Date Signed <br />", " <br />");
-                                } 
-                            
-                            // Display Both
-                            } else { 
-                            
-                                // Host Family Date Signed
-                                if ( NOT isDate(qGetStudentsInRegion.doublePlacementHostFamilyDateSigned) ) {
-                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Host Family Date Signed <br />", " <br />");
-                                } else if ( isDate(qGetStudentsInRegion.doublePlacementHostFamilyDateSigned) AND qGetStudentsInRegion.doublePlacementHostFamilyDateSigned GT qGetStudentsInRegion.datePlaced ) {
-                                    vOutOfComplianceDocuments = ListAppend(vOutOfComplianceDocuments, "Host Family Date Signed is Non-compliant <br />", " <br />");
-                                }
-                                
-                            }
+							// Display Missing
+							if ( FORM.compliantOption EQ 'missing' ) {
+							
+								// Host Family Date Signed
+								if ( NOT isDate(qGetStudentsInRegion.doublePlacementHostFamilyDateSigned) ) {
+									vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Host Family Date Signed <br />", " <br />");
+								} 
+								
+								// Student Date Signed
+								if ( VAL(qGetStudentsInRegion.isRelocation) AND NOT isDate(qGetStudentsInRegion.doublePlacementStudentDateSigned) ) {
+									vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Student Date Signed <br />", " <br />");
+								} 
+								
+							// Display Both
+							} else { 
+							
+								// Host Family Date Signed
+								if ( NOT isDate(qGetStudentsInRegion.doublePlacementHostFamilyDateSigned) ) {
+									vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Host Family Date Signed <br />", " <br />");
+								} else if ( isDate(qGetStudentsInRegion.doublePlacementHostFamilyDateSigned) AND qGetStudentsInRegion.doublePlacementHostFamilyDateSigned GT qGetStudentsInRegion.datePlaced ) {
+									vOutOfComplianceDocuments = ListAppend(vOutOfComplianceDocuments, "Host Family Date Signed is Non-compliant <br />", " <br />");
+								}
+								
+								// Student Date Signed
+								if ( VAL(qGetStudentsInRegion.isRelocation) AND NOT isDate(qGetStudentsInRegion.doublePlacementStudentDateSigned) ) {
+									vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Student Date Signed <br />", " <br />");
+								} else if ( VAL(qGetStudentsInRegion.isRelocation) AND isDate(qGetStudentsInRegion.doublePlacementStudentDateSigned) AND qGetStudentsInRegion.doublePlacementStudentDateSigned GT qGetStudentsInRegion.datePlaced ) {
+									vOutOfComplianceDocuments = ListAppend(vOutOfComplianceDocuments, "Student Date Signed is Non-compliant <br />", " <br />");
+								}
+								
+							}
     
                             // Check if is compliant
                             if ( NOT LEN(vMissingDocumentsMessage) AND NOT LEN(vOutOfComplianceDocuments) ) {
@@ -412,17 +459,22 @@
                                 #qGetStudentsInRegion.hostFamilyLastName#
                                 <span class="note">
                                     (
-                                        <cfif VAL(qGetResults.isWelcomeFamily)>
+                                        <cfif VAL(qGetStudentsInRegion.isWelcomeFamily)>
                                             Welcome
                                         <cfelse>
                                             Permanent
                                         </cfif>
                                         -
-                                        <cfif VAL(qGetResults.isActivePlacement)>
+                                        <cfif VAL(qGetStudentsInRegion.isActivePlacement)>
                                             Current
                                         <cfelse>
                                             Previous
                                         </cfif>
+
+										<cfif VAL(qGetStudentsInRegion.isRelocation)>
+                                            - Relocation
+                                        </cfif>
+                                        
                                     )
                                 </span>                            
                             </td>
