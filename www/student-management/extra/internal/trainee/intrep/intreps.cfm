@@ -81,7 +81,7 @@
             
 			<cfif ListFind("1,2,3,4", CLIENT.userType)>
                 <div align="center" style="margin-top:10px;">
-	          		<a href="index.cfm?curdoc=intRep/intlRepInfo"><img src="../pics/add-intrep.gif" border="0" align="middle" alt="Add a Intl. Rep."></a>
+	          		<a href="index.cfm?curdoc=intRep/intrep_info"><img src="../pics/add-intrep.gif" border="0" align="middle" alt="Add a Intl. Rep."></a>
                 </div>
             </cfif>
             
@@ -97,8 +97,8 @@
               	</tr>
                 <cfloop query="qGetIntlReps">
                     <tr bgcolor="###iif(qGetIntlReps.currentrow MOD 2 ,DE("E9ECF1") ,DE("FFFFFF") )#">
-                        <td class="style4"><a href="?curdoc=intRep/intlRepInfo&uniqueID=#qGetIntlReps.uniqueID#" class="style4">#qGetIntlReps.userID#</a></td>
-                        <td class="style4"><a href="?curdoc=intRep/intlRepInfo&uniqueID=#qGetIntlReps.uniqueID#" class="style4">#qGetIntlReps.businessName#</a></td>
+                        <td class="style4"><a href="?curdoc=intRep/intrep_info&uniqueID=#qGetIntlReps.uniqueID#" class="style4">#qGetIntlReps.userID#</a></td>
+                        <td class="style4"><a href="?curdoc=intRep/intrep_info&uniqueID=#qGetIntlReps.uniqueID#" class="style4">#qGetIntlReps.businessName#</a></td>
                         <td class="style5">#qGetIntlReps.firstName#</td>
                         <td class="style5">#qGetIntlReps.lastName#</td>
                         <td class="style5">#qGetIntlReps.countryName#</td>
@@ -108,7 +108,7 @@
 
 			<cfif ListFind("1,2,3,4", CLIENT.userType)>
                 <div align="center" style="margin-top:10px; margin-bottom:10px;">
-	          		<a href="index.cfm?curdoc=intRep/intlRepInfo"><img src="../pics/add-intrep.gif" border="0" align="middle" alt="Add a Intl. Rep."></a>
+	          		<a href="index.cfm?curdoc=intRep/intrep_info"><img src="../pics/add-intrep.gif" border="0" align="middle" alt="Add a Intl. Rep."></a>
                 </div>
             </cfif>
             
