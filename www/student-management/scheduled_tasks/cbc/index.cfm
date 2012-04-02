@@ -22,6 +22,7 @@
 
 </cfsilent>
 
+
 <!-------------------------------------------------------------	
 	User
 -------------------------------------------------------------->
@@ -36,7 +37,7 @@
 	
 	// User ISE - Run CBCs
 	include "runUsers.cfm";
-	
+
 	// User CASE - Run CBCs
 	include "runUsersCase.cfm";
 </cfscript>
