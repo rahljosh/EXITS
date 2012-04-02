@@ -598,7 +598,7 @@
                         <tr>
                             <td class="reportFieldTitle">Season:</td>
                             <td>
-                                <select name="season">
+                                <select name="seasonID">
                                     <cfloop query="get_seasons">
                                         <option value="#seasonID#">#season#</option>
                                     </cfloop>
@@ -608,17 +608,17 @@
                         <tr>
                         	<td class="reportFieldTitle">Start:</td>
                             <td>
-                                <select name="month">
-                                        <option value="January">January</option>
-                                        <option value="August">August</option>
+                                <select name="startMonth">
+                                    <option value="August">August</option>
+                                    <option value="January">January</option>                                    
                                 </select>               
                             </td>
                         </tr>
                     <tr>
                         <td class="reportFieldTitle">Country:</td>
-                        <td><select name="countryid">			
-                            <option value="0">All Countries</option>
-                            <cfloop query="get_countries"><option value="#Countryid#">#countryname#</option></cfloop>
+                        <td><select name="countryID">			
+                            	<option value="0">All Countries</option>
+                            	<cfloop query="get_countries"><option value="#countryID#">#countryname#</option></cfloop>
                             </select>               
                             </td>
                         </tr>
