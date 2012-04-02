@@ -337,9 +337,13 @@
                 
                 <li>
                 	<a href="index.cfm?curdoc=reports/index">Reports</a>
-                	<ul>
+                	<!---
+					<cfif LISTFIND("1,2,3,4", CLIENT.userType)
+                    <ul>
                     	<li><a href="index.cfm?curdoc=reports/constantContactMenu">Constant Contact</a></li>
                 	</ul>
+                    </cfif>
+                    --->
                 </li>
                 
                 <li>

@@ -153,7 +153,7 @@
                         <table border="0" cellpadding="4" cellspacing="0" width="100%">
                             <tr>
                             	<td>Season:
-                                	<select name="inputSeason" id="inputSeason" onchange="submitform();">
+                                	<select name="inputSeason" id="inputSeason" class="mediumField" onchange="submitform();">
                                         <cfloop query="qGetSeasons">
                                         <option value="#qGetSeasons.seasonid#" <cfif inputSeason EQ qGetSeasons.seasonid>selected="selected"</cfif>>#qGetSeasons.season#</option>
                                         </cfloop>
@@ -190,10 +190,10 @@
                         #qGetRepresentatives.businessname#
                     </td>
                     <td>
-                        <input type="text" name="#qGetRepresentatives.userID#_augustAllocation" value="#qGetRepresentatives.augustAllocation#">
+                        <input type="text" class="smallField" name="#qGetRepresentatives.userID#_augustAllocation" value="#qGetRepresentatives.augustAllocation#">
                     </td>
                     <td>
-                        <input type="text" name="#qGetRepresentatives.userID#_januaryAllocation" value="#qGetRepresentatives.januaryAllocation#">
+                        <input type="text" class="smallField" name="#qGetRepresentatives.userID#_januaryAllocation" value="#qGetRepresentatives.januaryAllocation#">
                     </td>
                 </tr>
             </cfloop>
