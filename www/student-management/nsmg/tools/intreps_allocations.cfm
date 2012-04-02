@@ -7,119 +7,118 @@
 
 ----- ------------------------------------------------------------------------- --->
 
-<!--- Import CustomTag --->
-<cfimport taglib="../extensions/customTags/gui/" prefix="gui" />
+<!--- Kill Extra Output --->
+<cfsilent>
 
-<!--- Param Variables --->
-<cfparam name="FORM.submitted" default="0">
-<cfparam name="FORM.inputSeason" default="0">
-<cfparam name="URL.inputSeason" default="0">
-
-<cfquery name="qGetSeasons" datasource="MySql">
-	SELECT
-    	seasonid,
-        season
-   	FROM
-    	smg_seasons
-    WHERE
-    	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-</cfquery>
-
-
-<cfscript>
-	if ( VAL(URL.inputSeason) ) {		
-		FORM.inputSeason = URL.inputSeason;	
-	}
-	
-	if ( NOT VAL(FORM.inputSeason) ) {
-		FORM.inputSeason = qGetSeasons.seasonID;
-	}
-</cfscript>
-
-
-<cfquery name="qGetRepresentatives" datasource="MySql">
-    SELECT DISTINCT
-        u.userid,
-        u.firstName,
-        u.lastName,
-        u.businessname,
-        sua.augustAllocation,
-        sua.januaryAllocation,
-        sua.ID,
-        s.season,
-        s.seasonid
-    FROM
-        smg_users u
-    INNER JOIN
-        user_access_rights uar ON uar.userid = u.userid
-    INNER JOIN
-    	smg_students stu ON stu.intrep = u.userid
-    LEFT JOIN
-        smg_users_allocation sua ON u.userid = sua.userid
-        <cfif VAL(FORM.inputSeason)>
-        AND
-            sua.seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.inputSeason#">
-        </cfif>
-    LEFT JOIN
-        smg_seasons s ON s.seasonid = sua.seasonid
-    WHERE
-        uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-    AND
-        u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-    AND
-        uar.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
-    ORDER BY
-        u.businessname   
-</cfquery>
-
-<!--- To update the records if update was selected --->
-<cfif VAL(FORM.submitted)>
-
-    <cfloop query="qGetRepresentatives">
-    	
-		<cfif VAL(FORM[qGetRepresentatives.userID & '_allocationID'])>
-        
-        	<cfquery name="updateAllocations" datasource="MySql">
-                UPDATE 	
-                	smg_users_allocation
-                SET 
-                    januaryAllocation = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM[qGetRepresentatives.userID & '_januaryAllocation'])#">,
-                    augustAllocation = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM[qGetRepresentatives.userID & '_augustAllocation'])#">
-                WHERE 
-                    userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRepresentatives.userid#">
-                AND 
-                    seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.inputSeason#">
-
-             </cfquery>
-             
-      	<cfelseif VAL(FORM[qGetRepresentatives.userID & '_januaryAllocation']) OR VAL(FORM[qGetRepresentatives.userID & '_augustAllocation'])>
-		
-            <cfquery name="addAllocations" datasource="MySql">
-                INSERT INTO smg_users_allocation
-                	(
-                    	userID, 
-                        seasonID, 
-                        januaryAllocation, 
-                        augustAllocation,
-                        dateCreated
-                     )
-                VALUES
-                	(
-                        #qGetRepresentatives.userID#, 
-                        #FORM.inputSeason#,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM[qGetRepresentatives.userID & '_januaryAllocation'])#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM[qGetRepresentatives.userID & '_augustAllocation'])#">,
-                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-					)
-             </cfquery>
-             
-        </cfif>
-        
-    </cfloop>
-	
-    <cflocation url="#CGI.SCRIPT_NAME#?curdoc=tools/intreps_allocations&inputSeason=#FORM.inputSeason#" addtoken="no">
+	<!--- Import CustomTag --->
+    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />
     
-</cfif>
+    <cfquery name="qGetSeasons" datasource="MySql">
+        SELECT
+            seasonID,
+            season
+        FROM
+            smg_seasons
+        WHERE
+            active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+    </cfquery>
+    
+    <!--- Param Variables --->
+    <cfparam name="FORM.submitted" default="0">
+    <cfparam name="FORM.inputSeason" default="#qGetSeasons.seasonID#">
+    <cfparam name="URL.inputSeason" default="0">
+    
+    <cfscript>
+        if ( VAL(URL.inputSeason) ) {		
+            FORM.inputSeason = URL.inputSeason;	
+        }
+    </cfscript>
+    
+    <cfquery name="qGetRepresentatives" datasource="MySql">
+        SELECT DISTINCT
+            u.userid,
+            u.firstName,
+            u.lastName,
+            u.businessname,
+            sua.augustAllocation,
+            sua.januaryAllocation,
+            sua.ID,
+            s.season,
+            s.seasonID
+        FROM
+            smg_users u
+        INNER JOIN
+            user_access_rights uar ON uar.userid = u.userid
+        INNER JOIN
+            smg_students stu ON stu.intrep = u.userid
+        LEFT JOIN
+            smg_users_allocation sua ON u.userid = sua.userid
+            <cfif VAL(FORM.inputSeason)>
+            AND
+                sua.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.inputSeason#">
+            </cfif>
+        LEFT JOIN
+            smg_seasons s ON s.seasonID = sua.seasonID
+        WHERE
+            uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+        AND
+            u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        AND
+            uar.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
+        ORDER BY
+            u.businessname   
+    </cfquery>
+
+	<!--- To update the records if update was selected --->
+    <cfif VAL(FORM.submitted)>
+    
+        <cfloop query="qGetRepresentatives">
+            
+            <cfif VAL(FORM[qGetRepresentatives.userID & '_allocationID'])>
+            
+                <cfquery name="updateAllocations" datasource="MySql">
+                    UPDATE 	
+                        smg_users_allocation
+                    SET 
+                        januaryAllocation = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM[qGetRepresentatives.userID & '_januaryAllocation'])#">,
+                        augustAllocation = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM[qGetRepresentatives.userID & '_augustAllocation'])#">
+                    WHERE 
+                        userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRepresentatives.userid#">
+                    AND 
+                        seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.inputSeason#">
+    
+                 </cfquery>
+                 
+            <cfelseif VAL(FORM[qGetRepresentatives.userID & '_januaryAllocation']) OR VAL(FORM[qGetRepresentatives.userID & '_augustAllocation'])>
+            
+                <cfquery name="addAllocations" datasource="MySql">
+                    INSERT INTO smg_users_allocation
+                        (
+                            userID, 
+                            seasonID, 
+                            januaryAllocation, 
+                            augustAllocation,
+                            dateCreated
+                         )
+                    VALUES
+                        (
+                            #qGetRepresentatives.userID#, 
+                            #FORM.inputSeason#,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM[qGetRepresentatives.userID & '_januaryAllocation'])#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM[qGetRepresentatives.userID & '_augustAllocation'])#">,
+                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                        )
+                 </cfquery>
+                 
+            </cfif>
+            
+        </cfloop>
+        
+        <cflocation url="#CGI.SCRIPT_NAME#?curdoc=tools/intreps_allocations&inputSeason=#FORM.inputSeason#" addtoken="no">
+        
+    </cfif>
+
+</cfsilent>
 
 <style type="text/css">
 	input {text-align:right}
@@ -155,7 +154,7 @@
                             	<td>Season:
                                 	<select name="inputSeason" id="inputSeason" class="mediumField" onchange="submitform();">
                                         <cfloop query="qGetSeasons">
-                                        <option value="#qGetSeasons.seasonid#" <cfif inputSeason EQ qGetSeasons.seasonid>selected="selected"</cfif>>#qGetSeasons.season#</option>
+                                        <option value="#qGetSeasons.seasonID#" <cfif inputSeason EQ qGetSeasons.seasonID>selected="selected"</cfif>>#qGetSeasons.season#</option>
                                         </cfloop>
                                   	</select>
                           		</td>
