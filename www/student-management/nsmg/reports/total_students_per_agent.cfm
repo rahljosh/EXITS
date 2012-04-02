@@ -23,21 +23,18 @@
     <cfscript>
 		// Set Program Types
 		if ( FORM.startMonth EQ 'january' ) {
-			
 			vProgramTypeList = '2,4'; // 12 Month - 2nd Semester
-
 		} else {
-		
 			vProgramTypeList = '1,3'; // 10 Month - 1st Semester
-
 		}
+		
+		// Application Status | Submitted | Received | On Hold | Approved
+		vApplicationStatusList = "7,8,10,11";
 	</cfscript>
     
 	<!--- Get total students grouped by Agent --->
 	<cfquery name="qGetIntlReps" datasource="#APPLICATION.DSN#">
 		SELECT DISTINCT
-			count(s.studentid) AS get_vTotalStudentsdents,
-			c.countryname,
 			u.businessname,
 			u.userID,
 			sea.season,
@@ -47,8 +44,6 @@
             sua.augustAllocation
 		FROM 	
 			smg_students s
-		INNER JOIN 
-			smg_countrylist c ON s.countryresident = c.countryID
 		INNER JOIN 
 			smg_users u ON u.userid = s.intrep
 		INNER JOIN 
@@ -67,20 +62,23 @@
                 	sua.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">
 		WHERE
             s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+
+        AND 
+            s.app_current_status IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vApplicationStatusList#" list="yes"> )
 			
 		<cfif VAL(FORM.countryID)>
 			AND 
 				s.countryresident = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.countryID#">
 		</cfif>
 		
-		<!--- Filter for Case, WEP, Canada and ESI --->
-        <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.NonISE, CLIENT.companyID)>
-            AND 
-                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+		<!--- Apps that are not approved have no companyID ( = 0 ) --->                  
+        <cfif CLIENT.companyID EQ 5>
+            AND
+                s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )        
         <cfelse>
             AND
-                s.companyID NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.NonISE#" list="yes"> )
-        </cfif>	
+                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">        
+        </cfif>        
 		  
 		GROUP BY 
 			u.businessname
@@ -142,18 +140,22 @@
             
             <!--- Representative Loop --->
         	<cfloop query="qGetIntlReps">
-            	<cfset vTotalApps=0>
+            	
+                <cfscript>
+					vTotalApps = 0;
+				</cfscript>
                 
                 <tr class="#iif(currentrow MOD 2 ,DE("off") ,DE("on") )#">
                 	<td>#qGetIntlReps.businessname#</td>
                     <td>#qGetIntlReps.countryName#</td>
                     
                     <!--- Inner Loop for Submitted, Received, On Hold, and Accepted --->
-                    <cfloop list = '7,8,10,11' index="i">
+                    <cfloop list='#vApplicationStatusList#' index="i">
                     
                         <cfquery name="qGetTotalApps" datasource="#APPLICATION.DSN#">
                             SELECT
-                                COUNT(s.studentID) AS count
+                                COUNT(s.studentID) AS totalStudents,
+                                studentID                                
                             FROM 
                                 smg_students s
                             INNER JOIN 
@@ -163,23 +165,20 @@
                                     AND
                                         p.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">
                             WHERE 
-                                <!--- RANDID = TO IDENTIFY ONLINE APPS --->
-                                s.randid != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-                            AND 
                                 s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                             AND
                                 s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetIntlReps.userid#">
                             AND 
                                 s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
-                                                
-                            <!--- Filter for Case, WEP, Canada and ESI --->
-                            <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.NonISE, CLIENT.companyID)>
-                                AND 
-                                    s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                           	
+                            <!--- Apps that are not approved have no companyID ( = 0 ) --->                  
+							<cfif CLIENT.companyID EQ 5>
+                                AND
+                                    s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )        
                             <cfelse>
                                 AND
-                                    s.companyID NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.NonISE#" list="yes"> )
-                            </cfif>	
+                                    s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">        
+                            </cfif>        
                             
                             <cfif VAL(FORM.countryID)>
                                 AND 
@@ -188,22 +187,22 @@
                             
                         </cfquery>
                         
-                        <cfset vTotalApps += qGetTotalApps.count>
+                        <cfset vTotalApps += qGetTotalApps.totalStudents>
                         
                         <cfif i EQ 7>
-                        	<cfset vTotalSubmitted += qGetTotalApps.count>
+                        	<cfset vTotalSubmitted += qGetTotalApps.totalStudents>
                         <cfelseif i EQ 8>
-                        	<cfset vTotalReceived += qGetTotalApps.count>
+                        	<cfset vTotalReceived += qGetTotalApps.totalStudents>
                         <cfelseif i EQ 10>
-                        	<cfset vTotalOnHold += qGetTotalApps.count>
+                        	<cfset vTotalOnHold += qGetTotalApps.totalStudents>
                         <cfelseif i EQ 11>
-                        	<cfset vTotalAccepted += qGetTotalApps.count>
+                        	<cfset vTotalAccepted += qGetTotalApps.totalStudents>
                         </cfif>
                         
-                        <td class="center">#qGetTotalApps.count#</td>
+                        <td class="center">#qGetTotalApps.totalStudents#</td>
                     </cfloop>
                     
-                    <cfset vTotalStudents += qGetTotalApps.count>
+                    <cfset vTotalStudents += vTotalApps>
                     
                     <td class="center">#vTotalApps#</td>
                     
@@ -226,7 +225,7 @@
 						<cfscript>
 							vSetColorCode = '';
 							
-							vSetRemaining = vSetAllotment - vTotalStudents;
+							vSetRemaining = vSetAllotment - vTotalApps;
 							vTotalRemaining += vSetRemaining;
                             vTotalAllotment += vSetAllotment;
 							
