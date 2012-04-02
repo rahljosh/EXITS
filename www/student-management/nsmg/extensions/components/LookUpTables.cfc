@@ -254,6 +254,36 @@
 	</cffunction>
 
 
+	<cffunction name="getUserType" access="public" returntype="query" output="false" hint="Returns a usertype list">
+    	<cfargument name="active" default="1" hint="active is not required">
+        <cfargument name="userTypeList" default="" hint="userTypeList is not required">
+
+        <cfquery 
+        	name="qGetUserType"
+        	datasource="MySQL">
+                SELECT 
+                	userTypeID,
+                    userType,
+                    shortUserType,
+                    php_userType,
+                    typeDescription
+                    subOfType,
+                    active,
+                    formType
+				FROM
+                	smg_userType
+                WHERE 
+                    active = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.active#">
+                <cfif LEN(ARGUMENTS.userTypeList)>
+                	AND
+                    	userTypeID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userTypeList#" list="yes"> )
+                </cfif>
+        </cfquery> 
+
+		<cfreturn qGetUserType>
+	</cffunction>
+
+
 	<cffunction name="getCountry" access="public" returntype="query" output="false" hint="Returns a country or list of countries">
     	<cfargument name="countryID" default="0" hint="countryID is not required">
 

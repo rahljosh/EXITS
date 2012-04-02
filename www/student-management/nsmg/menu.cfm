@@ -335,7 +335,12 @@
                 	<li><a href="index.cfm?curdoc=pdf_docs/index">#qGetCompany.companyShort_noColor# Docs</a></li>
                 </cfif>
                 
-                <li><a href="index.cfm?curdoc=reports/index">Reports</a></li>
+                <li>
+                	<a href="index.cfm?curdoc=reports/index">Reports</a>
+                	<ul>
+                    	<li><a href="index.cfm?curdoc=reports/constantContactMenu">Constant Contact</a></li>
+                	</ul>
+                </li>
                 
                 <li>
                     <a href="##">Tools</a>                
@@ -369,6 +374,8 @@
                         <li><a href="index.cfm?curdoc=tools/progress_report_questions">PR Questions</a></li>
     
                         <li><a href="index.cfm?curdoc=tools/regions">Regions</a></li>
+                        
+                        <li><a href="index.cfm?curdoc=tools/intreps_allocations">International Reps Allocations</a></li>
     					
                         <cfif ListFind("1,2,3", CLIENT.userType)>
                         	<li>

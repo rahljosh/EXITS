@@ -41,6 +41,8 @@
 	<cfinclude template="../querys/get_facilitators.cfm">
 	
 	<cfinclude template="../querys/get_insurance_type.cfm">
+    
+    <cfinclude template="../querys/get_seasons.cfm">
 
 </cfsilent>
 
@@ -594,12 +596,21 @@
                 <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                     <tr><td colspan="2" class="reportTitle">Total of Students per International Rep.</td></tr>
                         <tr>
-                            <td class="reportFieldTitle">Program:</td>
+                            <td class="reportFieldTitle">Season:</td>
                             <td>
-                                <select name="programID" multiple size="6">
-                                    <cfloop query="get_program">
-                                        <option value="#programID#">#programname#</option>
+                                <select name="season">
+                                    <cfloop query="get_seasons">
+                                        <option value="#seasonID#">#season#</option>
                                     </cfloop>
+                                </select>               
+                            </td>
+                        </tr>
+                        <tr>
+                        	<td class="reportFieldTitle">Start:</td>
+                            <td>
+                                <select name="month">
+                                        <option value="January">January</option>
+                                        <option value="August">August</option>
                                 </select>               
                             </td>
                         </tr>
