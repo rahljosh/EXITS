@@ -94,7 +94,7 @@
                 <font color="##FF0000">Please review the following issues:</font> <br />
             
                 <cfloop from="1" to="#ArrayLen(Errors.Messages)#" index="i">
-                    #Errors.Messages[i]# <br>        	
+                    <p>#Errors.Messages[i]#</p>
                 </cfloop>
             </cfsavecontent>
         
@@ -239,7 +239,7 @@
                 <font color="##FF0000">Please review the following issues:</font> <br />
             
                 <cfloop from="1" to="#ArrayLen(Errors.Messages)#" index="i">
-                    #Errors.Messages[i]# <br>        	
+                    <p>#Errors.Messages[i]#</p>
                 </cfloop>
             </cfsavecontent>
         

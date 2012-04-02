@@ -97,7 +97,7 @@
         </cfsavecontent>
         
         <!--- Display Errors --->
-        <tr><td>#errorMessage#</td></tr>
+        <tr><td>#errorMessage#</td></tr>        
         
         <!--- Email Errors --->
         <cfmail 
