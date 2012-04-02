@@ -56,13 +56,17 @@ WHERE
 		<cfoutput query="get_programs"><b>#programname# &nbsp; (#ProgramID#)</b><br></cfoutput>
 		<div align="center"><cfoutput>Total of #get_total_students.total# Students</cfoutput></div>
 	</td></tr>
-	<tr><th width="75%">Country</th> <th width="25%">Total of Students</th></tr>
+	<tr>
+    	<th width="75%">Country</th>
+    	<th width="25%">Total of Students</th>
+    </tr>
 	</table><br>
 	<!--- Country Loop --->
 		<cfoutput query="get_country">
 		<table width='650' cellpadding=6 cellspacing="0" align="center" frame="box">
 		<tr bgcolor='ededed'>
 			<th width="75%">#countryname#</th>
+            
 			<th width="25%" align="center">#total_students#</th>
 		</tr>
 		</table><br>
