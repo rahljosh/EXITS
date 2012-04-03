@@ -30,7 +30,7 @@
 
 	<cfscript>
 		// Get Active Programs
-		qGetPrograms = APPCFC.PROGRAM.getPrograms(isActive=1);
+		qGetPrograms = APPCFC.PROGRAM.getPrograms(dateActive=1);
 	
 		// Check if we have a valid URL.isActive
 		if ( LEN(URL.isActive) ) {

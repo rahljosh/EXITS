@@ -28,7 +28,7 @@
     	<cfargument name="programID" default="0" hint="programID is not required">
         <cfargument name="programIDList" default="" hint="List of program IDs">
         <cfargument name="isActive" default="" hint="IsActive is not required">
-        <cfargument name="dateActive" default="" hint="DateActive is not required">
+        <cfargument name="dateActive" default="" hint="DateActive is not required, gets current programs and programs that are starting 6 months from now">
         <cfargument name="companyID" default="" hint="CompanyID is not required">
         <cfargument name="isEndingSoon" default="0" hint="Get only programs that are ending soon for the insurance extension/early return">
         <cfargument name="isFullYear" default="0" hint="Get only 10 month programs">

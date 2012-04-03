@@ -92,7 +92,7 @@
     
     <cfscript>
 		//Check if paperwork is complete for season
-		qGetPrograms = APPLICATION.CFC.program.getPrograms(isActive=1);
+		qGetPrograms = APPLICATION.CFC.program.getPrograms(dateActive=1);
 	
         // save the submitted values
         if ( VAL(FORM.submitted) ) {
@@ -782,7 +782,7 @@
                                  	<tr  ><td colspan=3><td>#getprevhosts.familylastname# (#getprevhosts.hostid#)</td>
                                  </cfif>    
                                     <cfif qGetResults.secondvisitrepid neq indReports.fk_secondvisitrep>
-                                 	<td colspan=2>
+                                 	<tr  ><td colspan=2>
                                     <cfelse>
                               		<td>
                                     
@@ -825,7 +825,7 @@
                                        </tr>
                                    <Cfelse>
                                         <cfif qGetResults.secondvisitrepid eq fk_secondvisitrep>
-                                            <td>
+                                            <tr  ><td>
                                              <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#pr_id#"><img src="pics/buttons/greyedView.png" border=0 /></a>
                                             </td>
                                        </cfif>

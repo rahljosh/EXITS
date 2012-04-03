@@ -763,20 +763,20 @@
 
             	<!--- Check if we have a valid SeasonID --->
 				<cfif VAL(ARGUMENTS.seasonID)>
-                AND 
-                    cbc.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">
+                    AND 
+                        cbc.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">
 				</cfif>
 
             	<!--- Check if we have a valid userID --->
 				<cfif VAL(ARGUMENTS.userID)>
-                AND 
-                    cbc.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                    AND 
+                        cbc.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
 				</cfif>
 
             	<!--- NO SSN --->
 				<cfif VAL(ARGUMENTS.noSSN)>
-                AND 
-                    u.ssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                    AND 
+                        u.ssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
 				</cfif>
 				
                 ORDER BY
