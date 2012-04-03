@@ -94,7 +94,7 @@
 <p>complete</p>
 
 
-
+<!--- Copied to scheduled tasks --->
 <cfquery name="qGetRelocations" datasource="#APPLICATION.DSN#">
     SELECT 
         s.studentID, 
