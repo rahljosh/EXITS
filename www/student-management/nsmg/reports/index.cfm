@@ -100,8 +100,8 @@
     </cfif>
 
 	<!--- Compliance Reports --->
-    <cfif ListFind("1,2,3,4", CLIENT.userType) OR user_compliance.compliance EQ 1>
-        <tr bgcolor="e2efc7"><td colspan="2"><span class="get_attention"><b>::</b></span> Compliance Reports - Available for Compliance Users and Office</td></tr>
+    <cfif ListFind("1,2,3,4,5", CLIENT.userType)>
+        <tr bgcolor="e2efc7"><td colspan="2"><span class="get_attention"><b>::</b></span> Compliance Reports - Available for Office Users and Regional Managers</td></tr>
         <tr>
             <td><a href="?curdoc=compliance/reports_menu">Compliance - Placement Reports</a></td>
             <td></td>
