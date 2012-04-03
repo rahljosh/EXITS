@@ -17,7 +17,7 @@
 
     <cfscript>
 		// Get Programs
-		qGetProgramList = APPLICATION.CFC.program.getPrograms(isActive=1);
+		qGetProgramList = APPLICATION.CFC.program.getPrograms(dateActive=1);
 	
 		// Get User Regions
 		qGetRegionList = APPLICATION.CFC.REGION.getUserRegions(
