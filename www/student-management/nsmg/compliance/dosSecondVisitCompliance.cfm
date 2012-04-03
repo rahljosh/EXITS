@@ -485,11 +485,19 @@
                     <td bgcolor="#vRowColor#">#qGetResults.programName#</td>
                     <td bgcolor="#vRowColor#">
                         #qGetResults.hostFamilyName# 
-                        <cfif VAL(qGetResults.isWelcomeFamily)>
-                            <span class="noteAlert">(Welcome)</span>
-                        <cfelse>
-                            <span class="note">(Permanent)</span>
-                        </cfif>
+                        <span class="note">
+                            (
+                                <cfif VAL(qGetResults.isWelcomeFamily)>
+                                    Welcome
+                                <cfelse>
+                                    Permanent
+                                </cfif>
+                                
+                                <cfif VAL(qGetResults.isRelocation)>
+                                    - Relocation
+                                </cfif>
+                            )
+                        </span>
                     </td>
                     <td bgcolor="#vRowColor#">#DateFormat(qGetResults.datePlaced, 'mm/dd/yy')#</td>
                     <td bgcolor="#vRowColor#">#DateFormat(qGetResults.dateArrived, 'mm/dd/yy')#</td>
@@ -654,11 +662,19 @@
                                 <td>#qGetResultsByRegion.programName#</td>
                                 <td>
                                     #qGetResultsByRegion.hostFamilyName# 
-                                    <cfif VAL(qGetResultsByRegion.isWelcomeFamily)>
-                                        <span class="note">(Welcome)</span>
-                                    <cfelse>
-                                        <span class="note">(Permanent)</span>
-                                    </cfif>
+                                    <span class="note">
+                                        (
+											<cfif VAL(qGetResultsByRegion.isWelcomeFamily)>
+                                                Welcome
+                                            <cfelse>
+                                                Permanent
+                                            </cfif>
+                                            
+                                            <cfif VAL(qGetResultsByRegion.isRelocation)>
+                                                - Relocation
+                                            </cfif>
+                                        )
+                                    </span>
                                 </td>
                                 <td class="center">#DateFormat(qGetResultsByRegion.datePlaced, 'mm/dd/yy')#</td>
                                 <td class="center">#DateFormat(qGetResultsByRegion.dateArrived, 'mm/dd/yy')#</td>
