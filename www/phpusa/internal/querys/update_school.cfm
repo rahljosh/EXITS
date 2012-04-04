@@ -48,12 +48,24 @@
                     <p><strong>NEW SCHOOL ADDRESS</strong></p>
                     #FORM.address#<br />
                     <cfif LEN(FORM.address2)>#FORM.address2#<br /></cfif>
-                    #FORM.city# #FORM.state# #FORM.zip#<br /><br />
+                    #FORM.city#, 
+                    	<cfquery name="qNewState" datasource="MySql">
+                        	SELECT state
+                            FROM smg_states
+                            WHERE smg_states.id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.state#">
+                        </cfquery> 
+               		#qNewState.state# #FORM.zip#<br /><br />
                     
                     <p><strong>PREVIOUS SCHOOL ADDRESS</strong></p>
                     #qGetSchoolInfo.address#<br />
                     <cfif LEN(qGetSchoolInfo.address2)> #qGetSchoolInfo.address2#<br /></cfif>
-                    #qGetSchoolInfo.city# #qGetSchoolInfo.state# #qGetSchoolInfo.zip#<br /><br />
+                    #qGetSchoolInfo.city#, 
+                    	<cfquery name="qPrevState" datasource="MySql">
+                        	SELECT state
+                            FROM smg_states
+                            WHERE smg_states.id = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetSchoolInfo.state#">
+                        </cfquery> 
+                	#qPrevState.state# #qGetSchoolInfo.zip#<br /><br />
                
                     <p>This is the only notification of this change that you will receive.</p>
                     
