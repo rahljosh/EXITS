@@ -109,7 +109,7 @@
     	
         <cfscript>
 			// Update Date Placed
-			APPLICATION.CFC.STUDENT.updateDatePlaced(studentID=qGetStudentInfo.studentID, datePlaced=FORM.newDatePlaced);
+			APPLICATION.CFC.STUDENT.updateDatePlaced(studentID=qGetStudentInfo.studentID, historyID=FORM.historyID, datePlaced=FORM.newDatePlaced);
 			
 			// Reload page
 			location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");		
@@ -284,7 +284,7 @@
     
 
 	<!----Only allow Josh-1, Brian-12313, Marcus-510, Bill-8731, Bob-8743, Gary-12431, Tal-16718, Merri-12389 to change the dates---->
-    <cfif IsDate(qGetPlacementHistory.datePlaced) AND listFind("1,12313,510,8731,8743,12431,16718,12389", CLIENT.userID) AND NOT VAL(FORM.historyID)>		
+    <cfif IsDate(qGetPlacementHistory.datePlaced) AND listFind("1,12313,510,8731,8743,12431,16718,12389", CLIENT.userID)>		
 
         <form name="placementInfoSheet.cfm" method="post">
             <input type="hidden" name="submitted" value="1" />

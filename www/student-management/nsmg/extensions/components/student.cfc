@@ -324,6 +324,7 @@
         <cfargument name="hostID" hint="hostID is required">
         <cfargument name="isWelcomeFamily" default="0" hint="isWelcomeFamily is not required">
         <cfargument name="isRelocation" default="0" hint="isRelocation is not required">
+        <cfargument name="dateRelocated" default="" hint="dateRelocated is not required">
         <cfargument name="changePlacementReasonID" default="" hint="changePlacementReasonID is not required">
         <cfargument name="changePlacementExplanation" default="" hint="changePlacementExplanation is not required">
         <cfargument name="schoolID" hint="schoolID is required">   
@@ -389,7 +390,8 @@
 				doublePlace = ARGUMENTS.doublePlace,
 				doublePlaceReason = ARGUMENTS.doublePlaceReason,
 				isWelcomeFamily = ARGUMENTS.isWelcomeFamily,
-				isRelocation = ARGUMENTS.isRelocation,
+				isRelocation = ARGUMENTS.isRelocation,			
+				dateRelocated = ARGUMENTS.dateRelocated,
 				changedBy = ARGUMENTS.changedBy,
 				userType = ARGUMENTS.userType,
 				placementStatus = ARGUMENTS.placementStatus
@@ -1114,6 +1116,7 @@
         <cfargument name="changePlacementExplanation" default="" hint="changePlacementExplanation is not required">
         <cfargument name="isWelcomeFamily" default="0" hint="isWelcomeFamily is not required">
         <cfargument name="isRelocation" default="0" hint="isRelocation is not required">
+        <cfargument name="dateRelocated" default="" hint="dateRelocated is not required">
         <cfargument name="schoolID" default="0" hint="schoolID is not required">        
         <cfargument name="schoolIDReason" default="" hint="schoolIDReason is not required">     
         <cfargument name="placeRepID" default="0" hint="placeRepID is not required">
@@ -1482,6 +1485,7 @@
                         changedBy,
                         isWelcomeFamily,
                         isRelocation,
+                        dateRelocated,
                         dateOfChange, 
                         reason,
                         isActive,
@@ -1507,6 +1511,7 @@
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.changedBy)#">, 
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isWelcomeFamily)#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isRelocation)#">, 
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateRelocated#" null="#NOT IsDate(ARGUMENTS.dateRelocated)#">, 
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#vActions#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="1">,
@@ -1935,17 +1940,23 @@
     
     <!--- Update Date Placed --->
 	<cffunction name="updateDatePlaced" access="public" returntype="void" output="false" hint="Update Date Placed">
-        <cfargument name="studentID" hint="studentID is not required">
-        <cfargument name="datePlaced" hint="studentID is not required">
-    
-        <cfquery datasource="#APPLICATION.DSN#">
-        	UPDATE 
-				smg_students
-        	SET
-				datePlaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.datePlaced)#">
-        	WHERE
-				studentID = <cfqueryparam cfsqltype="integer" value="#ARGUMENTS.studentID#">
-        </cfquery>
+        <cfargument name="studentID" hint="studentID is required">
+        <cfargument name="historyID" default="0" hint="historyID is not required">
+        <cfargument name="datePlaced" hint="studentID is required">
+    	
+        <!--- Do not update current placement if history ID was passed --->
+        <cfif NOT VAL(ARGUMENTS.historyID)>
+        
+            <cfquery datasource="#APPLICATION.DSN#">
+                UPDATE 
+                    smg_students
+                SET
+                    datePlaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.datePlaced)#">
+                WHERE
+                    studentID = <cfqueryparam cfsqltype="integer" value="#ARGUMENTS.studentID#">
+            </cfquery>
+       
+       </cfif>
         
         <cfquery datasource="#APPLICATION.DSN#">
         	UPDATE 
@@ -1956,8 +1967,17 @@
 				studentID = <cfqueryparam cfsqltype="integer" value="#ARGUMENTS.studentID#">
             AND
             	assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-            AND
-            	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+            
+            <!--- Update active record --->
+			<cfif NOT VAL(ARGUMENTS.historyID)>
+                AND
+                    isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">            
+            <!--- Update history record --->
+			<cfelse>
+                AND
+                    historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.historyID#">
+            </cfif>
+            
             LIMIT 1
         </cfquery>
 	
