@@ -1,33 +1,51 @@
 <cftry>
 
-	<!--- IF THE USER IS AN INTERNATIONAL REPRESENTATIVE, CREATE A MESSAGE --->
-    <cfif CLIENT.usertype EQ 8>
-        
-        <cfinclude template="../querys/get_user.cfm">
-        <cfinclude template="../querys/countrylist.cfm">
-        <cfinclude template="../querys/statelist.cfm">
+	<cfinclude template="../querys/get_user.cfm">
+
+	<!--- IF THE USER IS AN INTERNATIONAL REPRESENTATIVE AND THE INFORMATION HAS CHANGED, CREATE AND SEND A MESSAGE --->
+    <cfif CLIENT.usertype EQ 8 AND
+		(get_user.firstname NEQ FORM.firstname
+		OR get_user.middlename NEQ FORM.middlename
+		OR get_user.lastname NEQ FORM.lastname
+		OR get_user.active NEQ FORM.active
+		OR get_user.sex NEQ FORM.sex
+		OR get_user.dob NEQ FORM.dob
+		OR get_user.drivers_license NEQ FORM.drivers_license
+		OR get_user.address NEQ FORM.address
+		OR get_user.city NEQ FORM.city
+		OR get_user.state NEQ FORM.state
+		OR get_user.country NEQ FORM.country
+		OR get_user.zip NEQ FORM.zip
+		OR get_user.occupation NEQ FORM.occupation
+		OR get_user.businessname NEQ FORM.businessname
+		OR get_user.work_phone NEQ FORM.work_phone
+		OR get_user.cell_phone NEQ FORM.cell_phone
+		OR get_user.email NEQ FORM.email
+		OR get_user.email2 NEQ FORM.email2)>
         
         <cfsavecontent variable="vEmailMessage">
             <cfoutput>
                 <p>INTERNATIONAL REPRESENTATIVE NOTICE OF INFORMATION CHANGE</p>
                 
-                <p><strong>#CLIENT.firstName# #CLIENT.lastName# (###CLIENT.userID#)</strong> has made a change to their profile information.</p>
+                <p><strong>
+                	<cfquery name="getBusinessName" datasource="MySql">
+                    	SELECT businessname
+                        FROM smg_users
+                        WHERE smg_users.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+                    </cfquery>
+                    #getBusinessName.businessname# (###CLIENT.userID#)</strong> has made a change to their profile information.</p>
                 
                 <p><strong>NEW INFORMATION</strong></p>
                 #FORM.address#<br />
                 <cfif LEN(FORM.address2)>#FORM.address2#<br /></cfif>
                 #FORM.city#
                 <cfif FORM.state NEQ 0>
-                    <cfloop query="statelist">
-                        <cfif FORM.state EQ id>, #state# </cfif>
-                    </cfloop>
+          			, #APPLICATION.CFC.LOOKUPTABLES.getState(ID=FORM.state).state#
                 </cfif>
                 
                 <cfif LEN(FORM.zip)>#FORM.zip#</cfif><br />
                 
-                <cfloop query="countrylist">
-                    <cfif FORM.country EQ countryid>#countryname#<br /></cfif>
-                </cfloop>
+                #APPLICATION.CFC.LOOKUPTABLES.getCountry(countryID=FORM.country).countryName#
                 
                 #FORM.phone#<br />
                 #FORM.email#<br />
@@ -40,17 +58,13 @@
                 #get_user.city#
                 
                 <cfif get_user.state NEQ 0>
-                    <cfloop query="statelist">
-                        <cfif get_user.state EQ id>, #state# </cfif>
-                    </cfloop>
+               		, #APPLICATION.CFC.LOOKUPTABLES.getState(ID=get_user.state).state#
 				</cfif>
                     
                 <cfif LEN(get_user.zip)>#get_user.zip#</cfif>
                 <br />
                 
-                <cfloop query="countrylist">
-                    <cfif get_user.country EQ countryid>#countryname#<br /></cfif>
-                </cfloop>
+                #APPLICATION.CFC.LOOKUPTABLES.getCountry(countryID=get_user.country).countryName#
                 
                 #get_user.phone#<br />
                 #get_user.email#<br />
