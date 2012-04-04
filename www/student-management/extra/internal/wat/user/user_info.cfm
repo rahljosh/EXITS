@@ -67,7 +67,7 @@ function UserName() {
 <cfinput type="hidden" name="userid" value="#get_user.userid#">
 <cfinput type="hidden" name="uniqueid" value="#get_user.uniqueid#">
 
-<cfif isDefined('form.edit') AND (client.usertype LTE '4' OR client.usertype EQ '8')>
+<cfif isDefined('form.edit') AND (listFind("1,2,3,4,8", CLIENT.userType))>
 	<cfset edit = '#form.edit#'>
 </cfif>
 
@@ -80,7 +80,7 @@ function UserName() {
 					<td class="title1">&nbsp; &nbsp; User Information</td>
 				</tr>
 			</table>
-			<br>
+			<br />
 			<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="C7CFDC">	
 				<tr>
 					<td width="49%" valign="top">
@@ -158,7 +158,7 @@ function UserName() {
 											<td class="style1"><b>State:</b></td>
 											<td colspan="3" class="style1">
 												<cfif edit EQ 'yes'>		
-												<cfselect name="state" class="style1">
+												<cfselect name="state">
 													<option value="0">State...</option>
 													<cfloop query="statelist">
 													<option value="#id#" <cfif id EQ get_user.state>selected</cfif>>#statename#</option>
@@ -175,7 +175,7 @@ function UserName() {
 											<td class="style1"><b>Country:</b></td>
 											<td colspan="3" class="style1">
 												<cfif edit EQ 'yes'>		
-													<cfselect name="country"  class="style1">
+													<cfselect name="country">
 														<option value="0">Country...</option>
 														<cfloop query="countrylist">
 														<option value="#countryid#" <cfif countryid EQ get_user.country>selected</cfif>>#countryname#</option>
@@ -196,34 +196,40 @@ function UserName() {
 								</td>
 							</tr>
 						</table>
-						<br>
+						
+                        <br />
+                        
 						<!--- EMPLOYMENT INFORMATION --->	
-						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
-							<tr>
-								<td bordercolor="FFFFFF">
-									<table width="100%" cellpadding=3 cellspacing=0 border=0>
-										<tr bgcolor="C2D1EF">
-											<td colspan="2" class="style2" bgcolor="8FB6C9">&nbsp;:: Employment Information</td>
-										</tr>
-										<tr>
-											<td class="style1" width="30%"><b>Occupation:</b></td>
-											<td class="style1" width="70%"><cfif edit EQ 'yes'><cfinput type="text" name="occupation" value="#get_user.occupation#" size="40" maxlength="100"><cfelse>#get_user.occupation#</cfif></td>
-										</tr>											
-										<tr>
-											<td class="style1"><b>Employer:</b></td>
-											<td class="style1"><cfif edit EQ 'yes'><cfinput type="text" name="businessname" value="#get_user.businessname#" size="40" maxlength="100"><cfelse>#get_user.businessname#</cfif></td>
-										</tr>	
-										<tr>
-											<td class="style1"><b>Work Phone:</b></td>
-											<td class="style1" colspan="3"><cfif edit EQ 'yes'><cfinput type="text" name="work_phone" value="#get_user.work_phone#" size="15" maxlength="20"><cfelse>#get_user.work_phone#</cfif></td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-						</table>
-						<br>
-						<!--- NOTES / MISCELLANEOUS INFORMATION --->
-                        <cfif CLIENT.usertype LTE '4'>
+                        <table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
+                            <tr>
+                                <td bordercolor="FFFFFF">
+                                    <table width="100%" cellpadding=3 cellspacing=0 border=0>
+                                        <tr bgcolor="C2D1EF">
+                                            <td colspan="2" class="style2" bgcolor="8FB6C9">&nbsp;:: Employment Information</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1"><b>Business Name:</b></td>
+                                            <td class="style1"><cfif edit EQ 'yes'><cfinput type="text" name="businessname" value="#get_user.businessname#" size="40" maxlength="100"><cfelse>#get_user.businessname#</cfif></td>
+                                        </tr>	
+                                        <tr>
+                                            <td class="style1" width="30%"><b>Occupation:</b></td>
+                                            <td class="style1" width="70%"><cfif edit EQ 'yes'><cfinput type="text" name="occupation" value="#get_user.occupation#" size="40" maxlength="100"><cfelse>#get_user.occupation#</cfif></td>
+                                        </tr>											
+                                        <tr>
+                                            <td class="style1"><b>Work Phone:</b></td>
+                                            <td class="style1" colspan="3"><cfif edit EQ 'yes'><cfinput type="text" name="work_phone" value="#get_user.work_phone#" size="15" maxlength="20"><cfelse>#get_user.work_phone#</cfif></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                                                
+                        <br />
+
+                        <!--- DEFAULT COMPANY ACCESS INFORMATION --->
+						<cfif listFind("1,2,3,4", CLIENT.userType)>
+						
+							<!--- NOTES / MISCELLANEOUS INFORMATION --->
                             <table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
                                 <tr>
                                     <td bordercolor="FFFFFF">
@@ -234,17 +240,22 @@ function UserName() {
                                             <tr>
                                                 <td class="style1" width="30%" valign="top"><b>Notes:</b></td> 
                                                 <td class="style1" width="70%">
-                                                    <textarea cols="40" rows="8" name="comments" <cfif edit NEQ 'yes'>disabled="disabled"</cfif>>#Replace(get_user.comments,"<br>","#chr(10)#","all")#</textarea>
+                                                    <textarea cols="40" rows="8" name="comments" <cfif edit NEQ 'yes'>disabled="disabled"</cfif>>#Replace(get_user.comments,"<br />","#chr(10)#","all")#</textarea>
                                                 </td>
                                             </tr>
                                         </table>									
                                     </td>
                                 </tr>
                             </table>
+                            
                     	</cfif>
+                        
 					</td>
+                    
 					<td width="2%" valign="top">&nbsp;</td>
+                    
 					<td width="49%" valign="top">
+                    
 						<!--- CONTACT INFO --->
 						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
 							<tr>
@@ -284,7 +295,9 @@ function UserName() {
 								</td>
 							</tr>
 						</table>
-						<br>
+                        
+						<br />
+                        
 						<!--- LOGIN INFORMATION --->
 						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
 							<tr>
@@ -320,134 +333,144 @@ function UserName() {
 								</td>
 							</tr>
 						</table>
-						<br>
-						<!--- COMPANY ACCESS INFORMATION --->
-						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
-							<tr>
-								<td bordercolor="FFFFFF">
-									<table width="100%" cellpadding=3 cellspacing=0 border=0>
-										<tr bgcolor="C2D1EF">
-											<td colspan="3" class="style2" bgcolor="8FB6C9">&nbsp;:: Company Access</td>
-										</tr>
-										<tr>
-											<td class="style1" width="40%"><b>Company</b></td>
-											<td class="style1" width="40%"><b>Usertype</b></td>
-											<td class="style1" width="20%" align="center"><b>Delete</b></td>
-										</tr>
-										<cfif edit EQ 'yes' AND client.usertype LTE '4'>
-											<!--- EDIT COMPANY ACCESS --->
-											<cfinput type="hidden" name="user_access_count" value="#get_user_access.recordcount#">
-											<cfloop query="get_user_access">
-												<cfinput type="hidden" name="access_id_#currentrow#" value="#get_user_access.id#">
-												<tr>
-													<td class="style1">
-														#companyshort#
-													</td>
-													<td class="style1">
-													<!--- USERTYPE --->
-													<cfif usertype GTE client.usertype> 
-														<cfselect name="usertype_#currentrow#">
-															<cfset loop_companyid = #get_user_access.companyid#>
-															<cfset loop_usertype = #get_user_access.usertype#>
-															<cfloop query="get_usertype">
-																<option value="#usertypeid#" <cfif loop_usertype EQ usertypeid>selected</cfif>>#usertype#</option>
-															</cfloop>
-														</cfselect>
-													<cfelse>
-														#usertypename#
-														<cfinput type="hidden" name="usertype_#currentrow#" value="#usertype#">
-													</cfif>
-													</td>
-													<td class="style1" align="center">
-														<cfif usertype GTE client.usertype>	
-															<cfinput type="checkbox" name="delete_#currentrow#">
-														</cfif>
-													</td>																				
-												</tr>
-											</cfloop>
-											<!--- NEW COMPANY ACCESS --->
-											<tr><td class="style1" colspan="1"><b>New Access Level</b></td></tr>
-											<tr>
-												<td class="style1">
-													<cfselect name="companyid_new">
-														<option value="0"></option>
-														<cfloop query="list_companies">
-															<option value="#companyid#">#companyshort#</option>
-														</cfloop>
-													</cfselect>
-												</td>
-												<td class="style1">
-													<cfselect name="usertype_new">
-														<option value="0"></option>
-														<cfloop query="get_usertype">
-															<option value="#usertypeid#">#usertype#</option>
-														</cfloop>
-													</cfselect>												
-												</td>
-												<td class="style1">&nbsp;</td>
-											</tr>
-										<cfelse>
-											<cfloop query="get_user_access">
-												<tr>
-													<td class="style1">#companyshort#</td>
-													<td class="style1">#usertypename#</td>
-													<td class="style1">&nbsp;</td>																				
-												</tr>
-											</cfloop>
-										</cfif>
-									</table>									
-								</td>
-							</tr>
-						</table>
-						<br>
-						<!--- DEFAULT COMPANY ACCESS INFORMATION --->
-						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
-							<tr>
-								<td bordercolor="FFFFFF">
-									<table width="100%" cellpadding=3 cellspacing=0 border=0>
-										<tr bgcolor="C2D1EF"><td colspan="2" class="style2" bgcolor="8FB6C9">&nbsp;:: Default Company Access</td></tr>
-										<tr>
-											<td class="style1" width="40%"><b>Default Company:</b></td>
-											<td class="style1" width="60%">
-												<cfif edit EQ 'yes' AND client.usertype LTE '4'>
-													<cfselect name="default_company">
-														<option value="0"></option>
-														<cfloop query="get_user_access">
-															<option value="#companyid#" <cfif default_region EQ 1>selected</cfif>>#companyshort#</option>
-														</cfloop>
-													</cfselect>													
-												<cfelse>
-													<cfif get_user_access.default_region EQ 1>#get_user_access.companyshort#<cfelse>n/a</cfif>
-												</cfif>
-											</td>
-										</tr>
-									</table>									
-								</td>
-							</tr>
-						</table>
+                        
+						<br />
+                        
+                        <!--- DEFAULT COMPANY ACCESS INFORMATION --->
+						<cfif listFind("1,2,3,4", CLIENT.userType)>
+
+							<!--- COMPANY ACCESS INFORMATION --->
+                            <table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
+                                <tr>
+                                    <td bordercolor="FFFFFF">
+                                        <table width="100%" cellpadding=3 cellspacing=0 border=0>
+                                            <tr bgcolor="C2D1EF">
+                                                <td colspan="3" class="style2" bgcolor="8FB6C9">&nbsp;:: Company Access</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="style1" width="40%"><b>Company</b></td>
+                                                <td class="style1" width="40%"><b>Usertype</b></td>
+                                                <td class="style1" width="20%" align="center"><b>Delete</b></td>
+                                            </tr>
+                                            <cfif edit EQ 'yes' AND listFind("1,2,3,4", CLIENT.userType)>
+                                                <!--- EDIT COMPANY ACCESS --->
+                                                <cfinput type="hidden" name="user_access_count" value="#get_user_access.recordcount#">
+                                                <cfloop query="get_user_access">
+                                                    <cfinput type="hidden" name="access_id_#currentrow#" value="#get_user_access.id#">
+                                                    <tr>
+                                                        <td class="style1">
+                                                            #companyshort#
+                                                        </td>
+                                                        <td class="style1">
+                                                        <!--- USERTYPE --->
+                                                        <cfif usertype GTE client.usertype> 
+                                                            <cfselect name="usertype_#currentrow#">
+                                                                <cfset loop_companyid = #get_user_access.companyid#>
+                                                                <cfset loop_usertype = #get_user_access.usertype#>
+                                                                <cfloop query="get_usertype">
+                                                                    <option value="#usertypeid#" <cfif loop_usertype EQ usertypeid>selected</cfif>>#usertype#</option>
+                                                                </cfloop>
+                                                            </cfselect>
+                                                        <cfelse>
+                                                            #usertypename#
+                                                            <cfinput type="hidden" name="usertype_#currentrow#" value="#usertype#">
+                                                        </cfif>
+                                                        </td>
+                                                        <td class="style1" align="center">
+                                                            <cfif usertype GTE client.usertype>	
+                                                                <cfinput type="checkbox" name="delete_#currentrow#">
+                                                            </cfif>
+                                                        </td>																				
+                                                    </tr>
+                                                </cfloop>
+                                                <!--- NEW COMPANY ACCESS --->
+                                                <tr><td class="style1" colspan="1"><b>New Access Level</b></td></tr>
+                                                <tr>
+                                                    <td class="style1">
+                                                        <cfselect name="companyid_new">
+                                                            <option value="0"></option>
+                                                            <cfloop query="list_companies">
+                                                                <option value="#companyid#">#companyshort#</option>
+                                                            </cfloop>
+                                                        </cfselect>
+                                                    </td>
+                                                    <td class="style1">
+                                                        <cfselect name="usertype_new">
+                                                            <option value="0"></option>
+                                                            <cfloop query="get_usertype">
+                                                                <option value="#usertypeid#">#usertype#</option>
+                                                            </cfloop>
+                                                        </cfselect>												
+                                                    </td>
+                                                    <td class="style1">&nbsp;</td>
+                                                </tr>
+                                            <cfelse>
+                                                <cfloop query="get_user_access">
+                                                    <tr>
+                                                        <td class="style1">#companyshort#</td>
+                                                        <td class="style1">#usertypename#</td>
+                                                        <td class="style1">&nbsp;</td>																				
+                                                    </tr>
+                                                </cfloop>
+                                            </cfif>
+                                        </table>									
+                                    </td>
+                                </tr>
+                            </table>
+                            <br />
+                        
+                            <table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
+                                <tr>
+                                    <td bordercolor="FFFFFF">
+                                        <table width="100%" cellpadding=3 cellspacing=0 border=0>
+                                            <tr bgcolor="C2D1EF"><td colspan="2" class="style2" bgcolor="8FB6C9">&nbsp;:: Default Company Access</td></tr>
+                                            <tr>
+                                                <td class="style1" width="40%"><b>Default Company:</b></td>
+                                                <td class="style1" width="60%">
+                                                    <cfif edit EQ 'yes' AND listFind("1,2,3,4", CLIENT.userType)>
+                                                        <cfselect name="default_company">
+                                                            <option value="0"></option>
+                                                            <cfloop query="get_user_access">
+                                                                <option value="#companyid#" <cfif default_region EQ 1>selected</cfif>>#companyshort#</option>
+                                                            </cfloop>
+                                                        </cfselect>													
+                                                    <cfelse>
+                                                        <cfif get_user_access.default_region EQ 1>#get_user_access.companyshort#<cfelse>n/a</cfif>
+                                                    </cfif>
+                                                </td>
+                                            </tr>
+                                        </table>									
+                                    </td>
+                                </tr>
+                            </table>
+						</cfif>
+                        
 					</td>	
 				</tr>
 			</table>
+            
 			<!---- SAVE BUTTON - OFFICE USERS AND INTERNATIONAL REPRESENTATIVES ---->
-			<cfif ((client.usertype LTE '4' OR client.usertype EQ '8') AND edit EQ 'yes')>
-			<table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
-				<tr><td align="center"><br><cfinput name="Submit" type="image" value="  save  " src="../pics/save.gif" alt="Save" border="0"></td></tr>
-			</table>
+			<cfif (listFind("1,2,3,4,8", CLIENT.userType) AND edit EQ 'yes')>
+                <table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
+                    <tr><td align="center"><br /><cfinput name="Submit" type="image" value="  save  " src="../pics/save.gif" alt="Save" border="0"></td></tr>
+                </table>
 			</cfif>
+            
 			</cfform>
 			
 			<!---- EDIT BUTTON - OFFICE USERS AND INTERNATIONAL REPRESENTATIVES ---->
-			<cfif ((client.usertype LTE '4' OR client.usertype EQ '8') AND edit EQ 'no')>
-			<table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
-				<tr><td align="center">
-					<cfform action="" method="post">&nbsp;
-						<cfinput type="hidden" name="edit" value="yes">
-						<cfinput name="Submit" type="image" value="  edit  " src="../pics/edit.gif" alt="Edit"  border=0>
-					</cfform>
-					</td>
-				</tr>
-			</table>
+			<cfif (listFind("1,2,3,4,8", CLIENT.userType) AND edit EQ 'no')>
+                <table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
+                    <tr><td align="center">
+                        <cfform action="" method="post">&nbsp;
+                            <cfinput type="hidden" name="edit" value="yes">
+                            <cfinput name="Submit" type="image" value="  edit  " src="../pics/edit.gif" alt="Edit"  border=0>
+                        </cfform>
+                        </td>
+                    </tr>
+                </table>
 			</cfif>
+            
 		</td>
 	</tr>
 </table>		
