@@ -64,8 +64,8 @@ function UserName() {
 <cfoutput>
 
 <cfform method="post" name="new_user" action="?curdoc=user/qr_user_info">
-<cfinput type="hidden" name="userid" value="#get_user.userid#">
-<cfinput type="hidden" name="uniqueid" value="#get_user.uniqueid#">
+<input type="hidden" name="userid" value="#get_user.userid#">
+<input type="hidden" name="uniqueid" value="#get_user.uniqueid#">
 
 <cfif isDefined('form.edit') AND (listFind("1,2,3,4,8", CLIENT.userType))>
 	<cfset edit = '#form.edit#'>
@@ -100,24 +100,33 @@ function UserName() {
 											<td class="style1" width="30%"><b>User Entered:</b></td>
 											<td class="style1" width="70%">#DateFormat(get_user.datecreated, 'mm/dd/yyyy')#</td>
 										</tr>
-										<tr>
+                                        <tr>
 											<td class="style1"><b>Status:</b></td>
 											<td class="style1">
-												<cfif edit EQ 'yes'>
-													<cfif get_user.active EQ '1'><cfinput type="radio" name="active" value="1" checked="yes"> <cfelse> <cfinput type="radio" name="active" value="1"> </cfif> Active
-													<cfif get_user.active EQ '0'><cfinput type="radio" name="active" value="0" checked="yes"> <cfelse> <cfinput type="radio" name="active" value="1"> </cfif> Inactive																
+												<!--- Only Office Users --->
+                                                <cfif listFind("1,2,3,4", CLIENT.userType)>
+                                                        
+                                                    <cfif edit EQ 'yes'>
+                                                        <cfif get_user.active EQ '1'><input type="radio" name="active" value="1" checked="yes"> <cfelse> <input type="radio" name="active" value="1"> </cfif> Active
+                                                        <cfif get_user.active EQ '0'><input type="radio" name="active" value="0" checked="yes"> <cfelse> <input type="radio" name="active" value="1"> </cfif> Inactive																
+                                                    <cfelse>
+                                                        <cfif get_user.active EQ '1'>Active<cfelse>Inactive</cfif>
+                                                    </cfif>											
+												
 												<cfelse>
-													<cfif get_user.active EQ '1'>Active<cfelse>Inactive</cfif>
-												</cfif>											
+                                                	
+                                                    <cfif get_user.active EQ '1'>Active<cfelse>Inactive</cfif>
+                                                
+                                                </cfif>				
 											</td>
-										</tr>																																																																					
+										</tr>
 										<tr>
 											<td class="style1"><b>First Name:</b></td>
 											<td class="style1"><cfif edit EQ 'yes'><cfinput type="text" name="firstname" value="#get_user.firstname#" size="30" maxlength="100" required="yes" message="First Name is Required."><cfelse>#get_user.firstname#</cfif></td>
 										</tr>
 										<tr>
 											<td class="style1"><b>Middle Name:</b></td>
-											<td class="style1"><cfif edit EQ 'yes'><cfinput type="text" name="middlename" value="#get_user.middlename#" size="30" maxlength="100"><cfelse>#get_user.middlename#</cfif></td>
+											<td class="style1"><cfif edit EQ 'yes'><input type="text" name="middlename" value="#get_user.middlename#" size="30" maxlength="100"><cfelse>#get_user.middlename#</cfif></td>
 										</tr>											
 										<tr>
 											<td class="style1"><b>Last Name:</b></td>
@@ -127,8 +136,8 @@ function UserName() {
 											<td class="style1"><b>Sex:</b></td>
 											<td class="style1">
 												<cfif edit EQ 'yes'>
-													<cfif get_user.sex EQ 'Male'><cfinput type="radio" name="sex" value="Male" checked="yes"> <cfelse> <cfinput type="radio" name="sex" value="Male"> </cfif> Male
-													<cfif get_user.sex EQ 'Female'><cfinput type="radio" name="sex" value="Female" checked="yes"> <cfelse> <cfinput type="radio" name="sex" value="Female"> </cfif> Female																
+													<cfif get_user.sex EQ 'Male'><input type="radio" name="sex" value="Male" checked="yes"> <cfelse> <input type="radio" name="sex" value="Male"> </cfif> Male
+													<cfif get_user.sex EQ 'Female'><input type="radio" name="sex" value="Female" checked="yes"> <cfelse> <input type="radio" name="sex" value="Female"> </cfif> Female																
 												<cfelse>
 													<cfif get_user.sex EQ 'Male'>Male<cfelse>Female</cfif>
 												</cfif>
@@ -136,34 +145,34 @@ function UserName() {
 										</tr>
 										<tr>
 											<td class="style1"><b>Date of Birth:</b></td>
-											<td class="style1"><cfif edit EQ 'yes'><cfinput type="text" name="dob" value="#DateFormat(get_user.dob, 'mm/dd/yyyy')#" size="8" maxlength="10"><cfelse>#DateFormat(get_user.dob, 'mm/dd/yyyy')#</cfif> mm/dd/yyyy</td>
+											<td class="style1"><cfif edit EQ 'yes'><input type="text" name="dob" value="#DateFormat(get_user.dob, 'mm/dd/yyyy')#" size="8" maxlength="10"><cfelse>#DateFormat(get_user.dob, 'mm/dd/yyyy')#</cfif> mm/dd/yyyy</td>
 										</tr>																				
 										<tr>
 											<td class="style1"><b>Drivers License:</b></td>
-											<td class="style1"><cfif edit EQ 'yes'><cfinput type="text" name="drivers_license" value="#get_user.drivers_license#" size="20" maxlength="20"><cfelse>#get_user.drivers_license#</cfif></td>											
+											<td class="style1"><cfif edit EQ 'yes'><input type="text" name="drivers_license" value="#get_user.drivers_license#" size="20" maxlength="20"><cfelse>#get_user.drivers_license#</cfif></td>											
 										</tr>																				
 										<tr>
 											<td class="style1"><b>Address:</b></td>
-											<td class="style1"><cfif edit EQ 'yes'><cfinput type="text" name="address" value="#get_user.address#" size="40" maxlength="100"><cfelse>#get_user.address#</cfif></td>											
+											<td class="style1"><cfif edit EQ 'yes'><input type="text" name="address" value="#get_user.address#" size="40" maxlength="100"><cfelse>#get_user.address#</cfif></td>											
 										</tr>
 										<tr>
 											<td class="style1"></td>
-											<td class="style1"><cfif edit EQ 'yes'><cfinput type="text" name="address2" value="#get_user.address2#" size="40" maxlength="100"><cfelse>#get_user.address2#</cfif></td>											
+											<td class="style1"><cfif edit EQ 'yes'><input type="text" name="address2" value="#get_user.address2#" size="40" maxlength="100"><cfelse>#get_user.address2#</cfif></td>											
 										</tr>											
 										<tr>
 											<td class="style1"><b>City:</b></td>
-											<td class="style1"><cfif edit EQ 'yes'><cfinput type="text" name="city" value="#get_user.city#" size="30" maxlength="100"><cfelse>#get_user.city#</cfif></td>											
+											<td class="style1"><cfif edit EQ 'yes'><input type="text" name="city" value="#get_user.city#" size="30" maxlength="100"><cfelse>#get_user.city#</cfif></td>											
 										</tr>
 										<tr>
 											<td class="style1"><b>State:</b></td>
 											<td colspan="3" class="style1">
 												<cfif edit EQ 'yes'>		
-												<cfselect name="state">
+												<select name="state">
 													<option value="0">State...</option>
 													<cfloop query="statelist">
 													<option value="#id#" <cfif id EQ get_user.state>selected</cfif>>#statename#</option>
 													</cfloop>
-												</cfselect>	
+												</select>	
 												<cfelse>
 													<cfloop query="statelist">
 														<cfif id EQ get_user.state>#statename#</cfif>
@@ -175,12 +184,12 @@ function UserName() {
 											<td class="style1"><b>Country:</b></td>
 											<td colspan="3" class="style1">
 												<cfif edit EQ 'yes'>		
-													<cfselect name="country">
+													<select name="country">
 														<option value="0">Country...</option>
 														<cfloop query="countrylist">
 														<option value="#countryid#" <cfif countryid EQ get_user.country>selected</cfif>>#countryname#</option>
 														</cfloop>
-													</cfselect>	
+													</select>	
 												<cfelse>
 													<cfloop query="countrylist">
 														<cfif countryid EQ get_user.country>#countryname#</cfif>
@@ -190,7 +199,7 @@ function UserName() {
 										</tr>										
 										<tr>
 											<td class="style1"><b>Postal Code:</b></td>
-											<td class="style1"><cfif edit EQ 'yes'><cfinput type="text" name="zip" value="#get_user.zip#" size="8" maxlength="10"><cfelse>#get_user.zip#</cfif></td>											
+											<td class="style1"><cfif edit EQ 'yes'><input type="text" name="zip" value="#get_user.zip#" size="8" maxlength="10"><cfelse>#get_user.zip#</cfif></td>											
 										</tr>
 									</table>
 								</td>
@@ -209,15 +218,15 @@ function UserName() {
                                         </tr>
                                         <tr>
                                             <td class="style1"><b>Business Name:</b></td>
-                                            <td class="style1"><cfif edit EQ 'yes'><cfinput type="text" name="businessname" value="#get_user.businessname#" size="40" maxlength="100"><cfelse>#get_user.businessname#</cfif></td>
+                                            <td class="style1"><cfif edit EQ 'yes'><input type="text" name="businessname" value="#get_user.businessname#" size="40" maxlength="100"><cfelse>#get_user.businessname#</cfif></td>
                                         </tr>	
                                         <tr>
                                             <td class="style1" width="30%"><b>Occupation:</b></td>
-                                            <td class="style1" width="70%"><cfif edit EQ 'yes'><cfinput type="text" name="occupation" value="#get_user.occupation#" size="40" maxlength="100"><cfelse>#get_user.occupation#</cfif></td>
+                                            <td class="style1" width="70%"><cfif edit EQ 'yes'><input type="text" name="occupation" value="#get_user.occupation#" size="40" maxlength="100"><cfelse>#get_user.occupation#</cfif></td>
                                         </tr>											
                                         <tr>
                                             <td class="style1"><b>Work Phone:</b></td>
-                                            <td class="style1" colspan="3"><cfif edit EQ 'yes'><cfinput type="text" name="work_phone" value="#get_user.work_phone#" size="15" maxlength="20"><cfelse>#get_user.work_phone#</cfif></td>
+                                            <td class="style1" colspan="3"><cfif edit EQ 'yes'><input type="text" name="work_phone" value="#get_user.work_phone#" size="15" maxlength="20"><cfelse>#get_user.work_phone#</cfif></td>
                                         </tr>
                                     </table>
                                 </td>
@@ -266,30 +275,30 @@ function UserName() {
 										</tr>
 										<tr>
 											<td class="style1" width="30%"><b>Home Phone:</b></td>
-											<td class="style1" width="70%"><cfif edit EQ 'yes'><cfinput type="text" name="phone" value="#get_user.phone#" size="15" maxlength="20"><cfelse>#get_user.phone#</cfif></td>
+											<td class="style1" width="70%"><cfif edit EQ 'yes'><input type="text" name="phone" value="#get_user.phone#" size="15" maxlength="20"><cfelse>#get_user.phone#</cfif></td>
 										</tr>
 										<tr>
 											<td class="style1"><b>Cell Phone:</b></td>
-											<td class="style1"><cfif edit EQ 'yes'><cfinput type="text" name="cell_phone" value="#get_user.cell_phone#" size="15" maxlength="20"><cfelse>#get_user.cell_phone#</cfif></td>
+											<td class="style1"><cfif edit EQ 'yes'><input type="text" name="cell_phone" value="#get_user.cell_phone#" size="15" maxlength="20"><cfelse>#get_user.cell_phone#</cfif></td>
 										</tr>
 										<tr>
 											<td class="style1"><b>Fax:</b></td>
-											<td class="style1"><cfif edit EQ 'yes'><cfinput type="text" name="fax" value="#get_user.fax#" size="15" maxlength="20"><cfelse>#get_user.fax#</cfif></td>
+											<td class="style1"><cfif edit EQ 'yes'><input type="text" name="fax" value="#get_user.fax#" size="15" maxlength="20"><cfelse>#get_user.fax#</cfif></td>
 										</tr>											
 										
 										<tr>
 											<td class="style1"><b>Email:</b></td>
 											<td class="style1">
 											<cfif client.usertype LT get_user.usertype>
-												<cfif edit EQ 'yes'><cfinput type="text" name="email" size="40" value="#get_user.email#" maxlength="100" onChange="UserName()"><cfelse>#get_user.email#</cfif>
+												<cfif edit EQ 'yes'><input type="text" name="email" size="40" value="#get_user.email#" maxlength="100" onChange="UserName()"><cfelse>#get_user.email#</cfif>
 											<cfelse>
-												<cfif edit EQ 'yes'><cfinput type="text" name="email" size="40" value="#get_user.email#" maxlength="100"><cfelse>#get_user.email#</cfif>
+												<cfif edit EQ 'yes'><input type="text" name="email" size="40" value="#get_user.email#" maxlength="100"><cfelse>#get_user.email#</cfif>
 											</cfif>
 											</td>
 										</tr>
 										<tr>
 											<td class="style1"><b>Alt. Email:</b></td>
-											<td class="style1"><cfif edit EQ 'yes'><cfinput type="text" name="email2" value="#get_user.email2#" size="40" maxlength="100"><cfelse>#get_user.email2#</cfif></td>
+											<td class="style1"><cfif edit EQ 'yes'><input type="text" name="email2" value="#get_user.email2#" size="40" maxlength="100"><cfelse>#get_user.email2#</cfif></td>
 										</tr>
 									</table>																		
 								</td>
@@ -322,8 +331,8 @@ function UserName() {
 											<td class="style1">
 												<cfif (client.usertype LT get_user.usertype OR client.userid EQ get_user.userid) AND client.usertype NEQ '8'>
 													<cfif edit EQ 'yes'><cfinput type="text" name="password" value="#get_user.password#" size="10" maxlength="15" required="yes" message="You must enter a password in order to continue."><cfelse>#get_user.password#</cfif>
-												<cfelseif client.usertype EQ '8' AND edit EQ 'yes'>
-                                                	<a href="?curdoc=user/password_reset">Change Password</a>
+												<cfelseif client.usertype EQ '8'>
+                                                	******** <a href="?curdoc=user/password_reset">[ Change Password ]</a>
                                                 <cfelse>
 													********
 												</cfif>
@@ -354,9 +363,9 @@ function UserName() {
                                             </tr>
                                             <cfif edit EQ 'yes' AND listFind("1,2,3,4", CLIENT.userType)>
                                                 <!--- EDIT COMPANY ACCESS --->
-                                                <cfinput type="hidden" name="user_access_count" value="#get_user_access.recordcount#">
+                                                <input type="hidden" name="user_access_count" value="#get_user_access.recordcount#">
                                                 <cfloop query="get_user_access">
-                                                    <cfinput type="hidden" name="access_id_#currentrow#" value="#get_user_access.id#">
+                                                    <input type="hidden" name="access_id_#currentrow#" value="#get_user_access.id#">
                                                     <tr>
                                                         <td class="style1">
                                                             #companyshort#
@@ -364,21 +373,21 @@ function UserName() {
                                                         <td class="style1">
                                                         <!--- USERTYPE --->
                                                         <cfif usertype GTE client.usertype> 
-                                                            <cfselect name="usertype_#currentrow#">
+                                                            <select name="usertype_#currentrow#">
                                                                 <cfset loop_companyid = #get_user_access.companyid#>
                                                                 <cfset loop_usertype = #get_user_access.usertype#>
                                                                 <cfloop query="get_usertype">
                                                                     <option value="#usertypeid#" <cfif loop_usertype EQ usertypeid>selected</cfif>>#usertype#</option>
                                                                 </cfloop>
-                                                            </cfselect>
+                                                            </select>
                                                         <cfelse>
                                                             #usertypename#
-                                                            <cfinput type="hidden" name="usertype_#currentrow#" value="#usertype#">
+                                                            <input type="hidden" name="usertype_#currentrow#" value="#usertype#">
                                                         </cfif>
                                                         </td>
                                                         <td class="style1" align="center">
                                                             <cfif usertype GTE client.usertype>	
-                                                                <cfinput type="checkbox" name="delete_#currentrow#">
+                                                                <input type="checkbox" name="delete_#currentrow#">
                                                             </cfif>
                                                         </td>																				
                                                     </tr>
@@ -387,20 +396,20 @@ function UserName() {
                                                 <tr><td class="style1" colspan="1"><b>New Access Level</b></td></tr>
                                                 <tr>
                                                     <td class="style1">
-                                                        <cfselect name="companyid_new">
+                                                        <select name="companyid_new">
                                                             <option value="0"></option>
                                                             <cfloop query="list_companies">
                                                                 <option value="#companyid#">#companyshort#</option>
                                                             </cfloop>
-                                                        </cfselect>
+                                                        </select>
                                                     </td>
                                                     <td class="style1">
-                                                        <cfselect name="usertype_new">
+                                                        <select name="usertype_new">
                                                             <option value="0"></option>
                                                             <cfloop query="get_usertype">
                                                                 <option value="#usertypeid#">#usertype#</option>
                                                             </cfloop>
-                                                        </cfselect>												
+                                                        </select>												
                                                     </td>
                                                     <td class="style1">&nbsp;</td>
                                                 </tr>
@@ -428,12 +437,12 @@ function UserName() {
                                                 <td class="style1" width="40%"><b>Default Company:</b></td>
                                                 <td class="style1" width="60%">
                                                     <cfif edit EQ 'yes' AND listFind("1,2,3,4", CLIENT.userType)>
-                                                        <cfselect name="default_company">
+                                                        <select name="default_company">
                                                             <option value="0"></option>
                                                             <cfloop query="get_user_access">
                                                                 <option value="#companyid#" <cfif default_region EQ 1>selected</cfif>>#companyshort#</option>
                                                             </cfloop>
-                                                        </cfselect>													
+                                                        </select>													
                                                     <cfelse>
                                                         <cfif get_user_access.default_region EQ 1>#get_user_access.companyshort#<cfelse>n/a</cfif>
                                                     </cfif>
@@ -452,7 +461,7 @@ function UserName() {
 			<!---- SAVE BUTTON - OFFICE USERS AND INTERNATIONAL REPRESENTATIVES ---->
 			<cfif (listFind("1,2,3,4,8", CLIENT.userType) AND edit EQ 'yes')>
                 <table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
-                    <tr><td align="center"><br /><cfinput name="Submit" type="image" value="  save  " src="../pics/save.gif" alt="Save" border="0"></td></tr>
+                    <tr><td align="center"><br /><input name="Submit" type="image" value="  save  " src="../pics/save.gif" alt="Save" border="0" style="padding-bottom:10px;"></td></tr>
                 </table>
 			</cfif>
             
@@ -462,10 +471,10 @@ function UserName() {
 			<cfif (listFind("1,2,3,4,8", CLIENT.userType) AND edit EQ 'no')>
                 <table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
                     <tr><td align="center">
-                        <cfform action="" method="post">&nbsp;
-                            <cfinput type="hidden" name="edit" value="yes">
-                            <cfinput name="Submit" type="image" value="  edit  " src="../pics/edit.gif" alt="Edit"  border=0>
-                        </cfform>
+                        <form action="" method="post">&nbsp;
+                            <input type="hidden" name="edit" value="yes">
+                            <input name="Submit" type="image" value="  edit  " src="../pics/edit.gif" alt="Edit" border=0 style="padding-bottom:10px;">
+                        </form>
                         </td>
                     </tr>
                 </table>

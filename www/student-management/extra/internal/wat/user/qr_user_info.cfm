@@ -7,7 +7,6 @@
 		(get_user.firstname NEQ FORM.firstname
 		OR get_user.middlename NEQ FORM.middlename
 		OR get_user.lastname NEQ FORM.lastname
-		OR get_user.active NEQ FORM.active
 		OR get_user.sex NEQ FORM.sex
 		OR get_user.dob NEQ FORM.dob
 		OR get_user.drivers_license NEQ FORM.drivers_license
@@ -28,12 +27,7 @@
                 <p>INTERNATIONAL REPRESENTATIVE NOTICE OF INFORMATION CHANGE</p>
                 
                 <p><strong>
-                	<cfquery name="getBusinessName" datasource="MySql">
-                    	SELECT businessname
-                        FROM smg_users
-                        WHERE smg_users.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
-                    </cfquery>
-                    #getBusinessName.businessname# (###CLIENT.userID#)</strong> has made a change to their profile information.</p>
+                    #get_user.businessname# (###get_user.userID#)</strong> has made a change to their profile information.</p>
                 
                 <p><strong>NEW INFORMATION</strong></p>
                 #FORM.address#<br />
