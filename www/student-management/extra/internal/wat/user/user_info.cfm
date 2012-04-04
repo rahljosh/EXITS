@@ -10,13 +10,13 @@
 function UserName() {
 	document.new_user.username.value = document.new_user.email.value;
 }
-//  End -->
+<!--  End -->
 </script>
+
+<cftry>
 
 </head>
 <body>
-
-<cftry>
 
 <cfquery name="get_user" datasource="MySql">
 	SELECT *
@@ -67,7 +67,7 @@ function UserName() {
 <cfinput type="hidden" name="userid" value="#get_user.userid#">
 <cfinput type="hidden" name="uniqueid" value="#get_user.uniqueid#">
 
-<cfif isDefined('form.edit') AND client.usertype LTE '4'>
+<cfif isDefined('form.edit') AND (client.usertype LTE '4' OR client.usertype EQ '8')>
 	<cfset edit = '#form.edit#'>
 </cfif>
 
@@ -223,23 +223,25 @@ function UserName() {
 						</table>
 						<br>
 						<!--- NOTES / MISCELLANEOUS INFORMATION --->
-						<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
-							<tr>
-								<td bordercolor="FFFFFF">
-									<table width="100%" cellpadding=3 cellspacing=0 border=0>
-										<tr bgcolor="C2D1EF">
-											<td colspan="2" class="style2" bgcolor="8FB6C9">&nbsp;:: Notes / Miscellaneous Information</td>
-										</tr>
-										<tr>
-											<td class="style1" width="30%" valign="top"><b>Notes:</b></td> 
-											<td class="style1" width="70%">
-												<textarea cols="40" rows="8" name="comments" <cfif edit NEQ 'yes'>disabled="disabled"</cfif>>#Replace(get_user.comments,"<br>","#chr(10)#","all")#</textarea>
-											</td>
-										</tr>
-									</table>									
-								</td>
-							</tr>
-						</table>
+                        <cfif CLIENT.usertype LTE '4'>
+                            <table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
+                                <tr>
+                                    <td bordercolor="FFFFFF">
+                                        <table width="100%" cellpadding=3 cellspacing=0 border=0>
+                                            <tr bgcolor="C2D1EF">
+                                                <td colspan="2" class="style2" bgcolor="8FB6C9">&nbsp;:: Notes / Miscellaneous Information</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="style1" width="30%" valign="top"><b>Notes:</b></td> 
+                                                <td class="style1" width="70%">
+                                                    <textarea cols="40" rows="8" name="comments" <cfif edit NEQ 'yes'>disabled="disabled"</cfif>>#Replace(get_user.comments,"<br>","#chr(10)#","all")#</textarea>
+                                                </td>
+                                            </tr>
+                                        </table>									
+                                    </td>
+                                </tr>
+                            </table>
+                    	</cfif>
 					</td>
 					<td width="2%" valign="top">&nbsp;</td>
 					<td width="49%" valign="top">
@@ -305,9 +307,11 @@ function UserName() {
 										<tr>
 											<td class="style1"><b>Password:</b></td>
 											<td class="style1">
-												<cfif client.usertype LT get_user.usertype OR client.userid EQ get_user.userid>
+												<cfif (client.usertype LT get_user.usertype OR client.userid EQ get_user.userid) AND client.usertype NEQ '8'>
 													<cfif edit EQ 'yes'><cfinput type="text" name="password" value="#get_user.password#" size="10" maxlength="15" required="yes" message="You must enter a password in order to continue."><cfelse>#get_user.password#</cfif>
-												<cfelse>
+												<cfelseif client.usertype EQ '8' AND edit EQ 'yes'>
+                                                	<a href="?curdoc=user/password_reset">Change Password</a>
+                                                <cfelse>
 													********
 												</cfif>
 											</td>											
@@ -330,7 +334,7 @@ function UserName() {
 											<td class="style1" width="40%"><b>Usertype</b></td>
 											<td class="style1" width="20%" align="center"><b>Delete</b></td>
 										</tr>
-										<cfif edit EQ 'yes'>
+										<cfif edit EQ 'yes' AND client.usertype LTE '4'>
 											<!--- EDIT COMPANY ACCESS --->
 											<cfinput type="hidden" name="user_access_count" value="#get_user_access.recordcount#">
 											<cfloop query="get_user_access">
@@ -405,7 +409,7 @@ function UserName() {
 										<tr>
 											<td class="style1" width="40%"><b>Default Company:</b></td>
 											<td class="style1" width="60%">
-												<cfif edit EQ 'yes'>
+												<cfif edit EQ 'yes' AND client.usertype LTE '4'>
 													<cfselect name="default_company">
 														<option value="0"></option>
 														<cfloop query="get_user_access">
@@ -424,16 +428,16 @@ function UserName() {
 					</td>	
 				</tr>
 			</table>
-			<!---- SAVE BUTTON - OFFICE USERS  ---->
-			<cfif client.usertype LTE '4' AND EDIT EQ 'yes'>
+			<!---- SAVE BUTTON - OFFICE USERS AND INTERNATIONAL REPRESENTATIVES ---->
+			<cfif ((client.usertype LTE '4' OR client.usertype EQ '8') AND edit EQ 'yes')>
 			<table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
 				<tr><td align="center"><br><cfinput name="Submit" type="image" value="  save  " src="../pics/save.gif" alt="Save" border="0"></td></tr>
 			</table>
 			</cfif>
 			</cfform>
 			
-			<!---- EDIT BUTTON - OFFICE USERS  ---->
-			<cfif client.usertype LTE '4' AND edit EQ 'no'>
+			<!---- EDIT BUTTON - OFFICE USERS AND INTERNATIONAL REPRESENTATIVES ---->
+			<cfif ((client.usertype LTE '4' OR client.usertype EQ '8') AND edit EQ 'no')>
 			<table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
 				<tr><td align="center">
 					<cfform action="" method="post">&nbsp;

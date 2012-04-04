@@ -111,7 +111,7 @@
 <cfoutput query="qGetCandidates">
     
     <cfif VAL(startTable)>				
-        <!--- Start a table for our labels --->            
+        <!--- Start a table for our labels --->         
         <table class="tableHolder" cellspacing="0" cellpadding="0">
         <cfset startTable = 0>
     </cfif>
