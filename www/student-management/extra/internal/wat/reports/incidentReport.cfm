@@ -15,6 +15,7 @@
     <cfparam name="FORM.hostCompanyID" default="0">
     <cfparam name="FORM.programID" default="0">
     <cfparam name="FORM.printOption" default="1">
+    <cfparam name="FORM.solved" default="0">
 
     <cfscript>
 		// Get Program List
@@ -74,9 +75,18 @@
                 	AND
                     	eir.hostCompanyID = ecpc.hostCompanyID               
             WHERE 
-                ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">    
-            AND 
-                ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
+                ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+           	<cfif VAL(FORM.programID)>  
+                AND 
+                    ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
+           	</cfif>
+            <cfif FORM.solved EQ 1>
+            	AND
+                	eir.isSolved = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+          	<cfelseif FORM.solved EQ 2>
+            	AND
+                	eir.isSolved = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+           	</cfif>
             AND 
                 ec.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
        		ORDER BY
@@ -103,7 +113,7 @@
                 <td align="right" valign="middle" class="style1"><b>Host Company: </b></td>
                 <td valign="middle">  
                     <select name="hostCompanyID" class="style1">
-                        <option value="ALL">---  All Host Companies  ---</option>
+                        <option value="0">---  All Host Companies  ---</option>
                         <cfloop query="qGetHostCompanyList">
                             <option value="#hostcompanyID#" <cfif qGetHostCompanyList.hostcompanyID EQ FORM.hostCompanyID> selected </cfif> >#qGetHostCompanyList.name#</option>
                         </cfloop>
@@ -114,10 +124,20 @@
                 <td valign="middle" align="right" class="style1"><b>Program: </b></td>
                 <td> 
                     <select name="programID" class="style1">
-                        <option value="0"></option>
+                        <option value="0">--- All Programs ---</option>
                         <cfloop query="qGetProgramList">
                             <option value="#qGetProgramList.programID#" <cfif qGetProgramList.programid EQ FORM.programID> selected</cfif>>#qGetProgramList.programname#</option>
                         </cfloop>
+                    </select>
+                </td>
+            </tr>
+      		<tr>
+                <td valign="middle" align="right" class="style1"><b>Solved: </b></td>
+                <td> 
+                    <select name="solved" class="style1">
+                        <option value="0" <cfif FORM.solved EQ 0> selected </cfif> >All</option>
+                        <option value="1" <cfif FORM.solved EQ 1> selected </cfif> >Yes</option>
+                        <option value="2" <cfif FORM.solved EQ 2> selected </cfif> >No</option>
                     </select>
                 </td>
             </tr>
@@ -266,4 +286,3 @@
     </cfoutput>
 
 </cfif>
-
