@@ -227,6 +227,8 @@
         <cfquery 
 			name="qGetActiveInternalPrograms" 
 			datasource="#APPLICATION.dsn#">
+            select 0 as programid, 'Select a Program' as programname, null as startdate, null as enddate 
+                from dual union
                 SELECT
                 	programid,
 					programname,
@@ -249,7 +251,7 @@
                	</cfif>         
                 
                 ORDER BY 
-                   programname
+                   programid
 		</cfquery>
 		   
 		<cfscript>
