@@ -34,6 +34,8 @@
 		</cfif>
         AND	
             s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
+        AND 
+        	s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
 </cfquery>
 
 <cfoutput>
@@ -83,36 +85,8 @@
 				<tr bgcolor="#iif(get_country.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
 					<td width="75%">#countryname#</td>
 					<td width="25%" align="center">#total_students#</td>
-                    <cfloop query="get_total_students">
-			<cfloop list = '7,8,10,11' index="i">
-                    <cfquery name="apps" datasource="#application.dsn#">
-                        SELECT
-                            COUNT(*) AS count 
-                        FROM 
-                            smg_students
-                        WHERE 
-                            <!--- RANDID = TO IDENTIFY ONLINE APPS --->
-                            randid != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-                            AND
-                                intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_total_students.userid#">
-                            AND 
-                                app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
-                            <cfif CLIENT.companyID EQ 5>
-                                AND
-                                    companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
-                            <cfelse>
-                                AND
-                                    companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-                            </cfif>
-                            <cfif form.countryid neq 0>
-                                AND 
-                                    s.countryresident = #form.countryid#\
-                            </cfif>
-                    </cfquery> 
-                   	<cfoutput><td align="center">#apps.count#</td></cfoutput>
-				</cfloop>
-				</tr>
-			</cfloop>
+                </tr>
+          	</cfloop>
 		</table>
 		<br><br>	
 	</cfif>

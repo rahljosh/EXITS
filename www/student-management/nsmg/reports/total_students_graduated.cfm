@@ -56,6 +56,8 @@
             
             AND
                 s.grades = <cfqueryparam cfsqltype="cf_sql_integer" value="12">
+          	AND
+    			s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
 
 			UNION 
             
@@ -84,6 +86,8 @@
                 s.grades = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
             AND
                 s.countryresident IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="49,237" list="yes"> )
+          	AND
+    			s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
         )  AS t 
                      
     GROUP BY 

@@ -28,11 +28,19 @@ WHERE 	<cfloop list=#form.programid# index='prog'>
 	select s.studentid, s.firstname, s.familylastname, u.businessname
 	from smg_students s
 	INNER JOIN smg_users u ON u.userid = intrep
-	WHERE s.companyid = #client.companyid# and s.active = '1' and hostid = '0' and (
-		<cfloop list=#form.programid# index='prog'>
-				s.programid = #prog# 
-			   <cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-		   </cfloop>)
+	WHERE 
+    	s.companyid = #client.companyid# 
+  	AND 
+    	s.active = '1' 
+    AND 
+    	hostid = '0' 
+    AND (	
+    	<cfloop list=#form.programid# index='prog'>
+       		s.programid = #prog# 
+       		<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
+		</cfloop>)
+   	AND
+    	s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
 </cfquery>
 
 <table width='95%' cellpadding=4 cellspacing="0" align="center">

@@ -43,7 +43,9 @@ WHERE ( <cfloop list=#form.programid# index='prog'>
 		AND ( <cfloop list=#form.programid# index='prog'>
 	 	    	programid = #prog# 
 		   		<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-		   </cfloop> )		
+		   </cfloop> )
+        AND 
+        	smg_students.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">		
 </cfquery>
 
 <table width='680' cellpadding=6 cellspacing="0" align="center">

@@ -58,13 +58,16 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #9
 <cfloop query="get_region">
 
 	<cfquery name="get_students" datasource="MySql">
-		SELECT 	s.studentid, s.firstname, s.familylastname, s.arearepid, s.doc_school_accept_date,
+		SELECT 	s.studentid, s.firstname, s.familylastname, s.arearepid,
 				u.firstname as super_name, u.lastname as super_lastname,
 				p.programname,
 				r.regionname, 
 				sc.begins,
+                h.doc_school_accept_date,
 				flight.dep_date
 		FROM smg_students s
+        INNER JOIN smg_hosthistory h ON s.studentid = h.studentid
+        	AND h.isActive = 1
 		INNER JOIN smg_programs p ON s.programid = p.programid
 		INNER JOIN smg_regions r ON s.regionassigned = r.regionid
 		INNER JOIN smg_schools sc ON s.schoolid = sc.schoolid
@@ -81,7 +84,7 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #9
 			AND flight.flight_type = 'arrival'
 			AND flight.dep_date <= now()
 			AND s.regionassigned = '#get_region.regionid#' 
-			AND s.doc_school_accept_date IS NULL
+			AND doc_school_accept_date IS NULL
 			AND	( <cfloop list=#form.programid# index='prog'>
 					s.programid = #prog# 
 					<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
@@ -92,10 +95,10 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #9
 			<cfif client.usertype EQ '6'>
 				AND ( s.placerepid = 
 				<cfloop list="#ad_users#" index='i' delimiters = ",">
-					'#i#' <cfif #ListLast(ad_users)# is #i#><cfelse> or s.placerepid = </cfif> </Cfloop>)
+					'#i#' <cfif #ListLast(ad_users)# is #i#><cfelse> or s.placerepid = </cfif> </cfloop>)
 				AND ( s.arearepid = 
 					<cfloop list="#ad_users#" index='i' delimiters = ",">
-					'#i#' <cfif #ListLast(ad_users)# is #i#><cfelse> or s.arearepid = </cfif> </Cfloop>)
+					'#i#' <cfif #ListLast(ad_users)# is #i#><cfelse> or s.arearepid = </cfif> </cfloop>)
 			</cfif>	
 		GROUP BY s.studentid
 		ORDER BY r.regionname, u.lastname, s.firstname
@@ -125,7 +128,7 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #9
 				<td>#studentid#</td>
 				<td>#firstname# #familylastname#</td>
 				<td><cfif dep_date NEQ ''>#DateFormat(dep_date, 'mm/dd/yyyy')#</cfif></td>
-				<td align="left"><i><font size="-2"><cfif doc_school_accept_date is ''>School Acceptance &nbsp; &nbsp;</cfif></font></i></td>
+				<td align="left"><i><font size="-2"><cfif doc_school_accept_date IS ''>School Acceptance &nbsp; &nbsp;</cfif></font></i></td>
 			</tr>		
 		</cfloop> <!--- student --->
 		</table><br>

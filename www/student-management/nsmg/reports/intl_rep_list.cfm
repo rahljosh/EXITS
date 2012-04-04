@@ -50,8 +50,8 @@
 			AND country = '#get_intl_rep_country.country#'
 			<cfif form.intrep is 0><cfelse>AND userid = '#form.intrep#'</cfif>
 			<cfif form.insurance NEQ '0'>AND insurance_typeid = '#form.insurance#'</cfif>
-			<cfif form.status is 0>AND active = '1'</cfif>
-			<cfif form.status is 1>AND active = '0'</cfif>
+			<cfif form.status is 0>AND smg_users.active = '1'</cfif>
+			<cfif form.status is 1>AND smg_users.active = '0'</cfif>
 		ORDER BY businessname
 	</cfquery>
 		

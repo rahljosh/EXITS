@@ -18,19 +18,41 @@ WHERE 	<cfloop list=#form.programid# index='prog'>
 
 <!--- get total students in each program according to the company --->
 <cfquery name="total_students" datasource="MySQL">
-SELECT 	s.studentid, s.programid as program, p.programname
-FROM	smg_students s
-INNER JOIN 	smg_programs p ON s.programid = p.programid
-INNER JOIN smg_countrylist c ON s.countryresident = c.countryid
-WHERE 	s.active = '1' AND c.continent = '#form.continent#'
-	<cfif client.companyid is 5><cfelse>AND s.companyid = '#client.companyid#'</cfif>
- 	<cfif form.status is 1>AND hostid != '0' AND s.host_fam_approved <= '4'</cfif>
-	<cfif form.status is 2>AND hostid = '0'</cfif>
-	<cfif form.regionid is 0><cfelse>AND s.regionassigned = '#form.regionid#'</cfif>
-	AND	( <cfloop list=#form.programid# index='prog'>
-		s.programid = #prog# 
-		<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-		</cfloop> )
+    SELECT 	s.studentid, s.programid as program, p.programname
+    FROM	smg_students s
+    INNER JOIN 	smg_programs p ON s.programid = p.programid
+    INNER JOIN smg_countrylist c ON s.countryresident = c.countryid
+    WHERE 	
+    	s.active = '1' 
+  	AND 
+    	c.continent = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.continent#">
+  	<cfif client.companyid is 5>
+	<cfelse>
+    	AND 
+        	s.companyid = '#client.companyid#'
+	</cfif>
+    <cfif form.status is 1>
+    	AND 
+        	hostid != '0' 
+      	AND 
+        	s.host_fam_approved <= '4'
+	</cfif>
+   	<cfif form.status is 2>
+    	AND hostid = '0'
+	</cfif>
+  	<cfif form.regionid IS NOT 0>
+    	AND 
+        	s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.regionid#">
+	</cfif>
+        AND	( 
+        	<cfloop list=#form.programid# index='prog'>
+            	s.programid = #prog# 
+            	<cfif prog IS NOT#ListLast(form.programid)#>
+                	or
+				</cfif>
+            </cfloop> )
+ 	AND
+    	s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
 </cfquery>
 
 <cfoutput>

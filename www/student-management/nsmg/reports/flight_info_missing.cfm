@@ -73,14 +73,19 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #9
 		<cfelseif form.preayp EQ 'orientation'>
 			INNER JOIN smg_aypcamps camp ON camp.campid = s.ayporientation
 		</cfif>
-		WHERE s.active = '1' 
-			AND s.intrep = '#get_agents.userid#' 
-			AND s.host_fam_approved < '5'
-			AND	( <cfloop list=#form.programid# index='prog'>
-					s.programid = #prog# 
-					<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-				</cfloop> )
-			AND s.studentid NOT IN (
+		WHERE 
+        	s.active = '1' 
+		AND 
+        	s.intrep = '#get_agents.userid#' 
+		AND 
+        	s.host_fam_approved < '5'
+		AND	( 
+        	<cfloop list=#form.programid# index='prog'>
+				s.programid = #prog# 
+				<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
+			</cfloop> )
+		AND 
+        	s.studentid NOT IN (
             	SELECT 
                 	studentid 
                 FROM 
@@ -89,7 +94,9 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #9
                 	flight_type IN ( <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival,preAypArrival" list="yes"> )
                 AND 
                 	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
-                )			
+                )
+     	AND
+        	s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">			
 		Order by s.firstname
 	</cfquery>
 	

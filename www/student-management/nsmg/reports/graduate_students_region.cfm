@@ -79,7 +79,8 @@
 							<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
 							</cfloop> )
 						AND regionassigned = '#list_regions.regionid#'
-						AND grades = '12')
+						AND grades = '12'
+                        AND s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">)
 					OR
 						(s.active = '1' 
 						AND hostid != '0'
@@ -89,7 +90,8 @@
 							<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
 							</cfloop> )
 						AND regionassigned = '#list_regions.regionid#'
-						AND grades = '11' and (countryresident = '49' or countryresident = '237'))
+						AND grades = '11' and (countryresident = '49' or countryresident = '237')
+                        AND s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">)
 				ORDER BY familylastname			
 			</cfquery>
 		<cfloop query="list_students">

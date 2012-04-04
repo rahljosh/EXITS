@@ -77,6 +77,8 @@
             smg_users fac ON fac.userID = r.regionFacilitator
         WHERE
             s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
+      	AND
+        	s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
         
         <!---
         AND 
@@ -109,7 +111,7 @@
         <!--- Region --->
 		<cfif VAL(FORM.regionID)>
 			AND 
-            	s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#">
+            	s.regionassigned IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> )
 		</cfif>
         
         <!--- Placement Status --->
@@ -212,7 +214,7 @@
         FROM 
             qGetStudentList
         WHERE 	
-    		regionAssigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentList.regionID#">
+    		regionAssigned IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentList.regionID#" list="yes" > )
 	</cfquery>
 
     <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif FORM.reportType EQ 'excel'> border="1" </cfif> >

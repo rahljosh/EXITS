@@ -154,6 +154,8 @@
                 s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegion.regionid#">
             AND 
                 s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
+            AND
+                s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
             
             <!--- Area Reps --->                 
             <cfif CLIENT.usertype EQ 7>

@@ -52,7 +52,10 @@ WHERE 	(<cfloop list=#form.programid# index='prog'>
         	AND f.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 	INNER JOIN smg_regions r ON s.regionassigned = r.regionid
 	LEFT OUTER JOIN smg_users u ON s.arearepid = u.userid
-	WHERE s.active = 1 
+	WHERE 
+    	s.active = 1 
+    AND
+    	s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
     <!----
 		AND s.regionassigned = #get_region.regionid# 
 		AND (<cfloop list=#form.programid# index='prog'>

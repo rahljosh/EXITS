@@ -67,25 +67,30 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #9
 	INNER JOIN smg_users intrep ON s.intrep = intrep.userid
 	LEFT JOIN smg_schools sc ON s.schoolid = sc.schoolid
 	LEFT JOIN smg_users u ON s.arearepid = u.userid
-	WHERE s.active = 1 
-			AND s.host_fam_approved < '5'
-			AND s.regionassigned = #get_region.regionid# 
-			AND	( <cfloop list=#form.programid# index='prog'>
-					s.programid = #prog# 
-					<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-				</cfloop> )
- 		<cfif client.usertype is '7'>
-			AND (s.placerepid = '#client.userid#' or s.arearepid = '#client.userid#' )
-		</cfif>
-		<cfif client.usertype is '6'>
-			AND ( s.placerepid = 
-			<cfloop list="#ad_users#" index='i' delimiters = ",">
-		 		'#i#' <cfif #ListLast(ad_users)# is #i#><cfelse> or s.placerepid = </cfif> </Cfloop>)
-			AND ( s.arearepid = 
-				<cfloop list="#ad_users#" index='i' delimiters = ",">
-		 		'#i#' <cfif #ListLast(ad_users)# is #i#><cfelse> or s.arearepid = </cfif> </Cfloop>)
-		</cfif>	
-		AND s.studentid NOT IN (SELECT studentid FROM smg_flight_info WHERE flight_type =  'departure' AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">)		
+	WHERE 
+    	s.active = 1 
+	AND 
+    	s.host_fam_approved < '5'
+	AND 
+    	s.regionassigned = #get_region.regionid# 
+	AND	( 
+    	<cfloop list=#form.programid# index='prog'>
+			s.programid = #prog# 
+			<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
+		</cfloop> )
+ 	<cfif client.usertype is '7'>
+		AND (s.placerepid = '#client.userid#' or s.arearepid = '#client.userid#' )
+	</cfif>
+	<cfif client.usertype is '6'>
+		AND 
+        	( s.placerepid = <cfloop list="#ad_users#" index='i' delimiters = ","> '#i#' <cfif #ListLast(ad_users)# is #i#><cfelse> or s.placerepid = </cfif> </Cfloop> )
+		AND 
+        	( s.arearepid = <cfloop list="#ad_users#" index='i' delimiters = ","> '#i#' <cfif #ListLast(ad_users)# is #i#><cfelse> or s.arearepid = </cfif> </Cfloop> )
+	</cfif>	
+	AND 
+    	s.studentid NOT IN (SELECT studentid FROM smg_flight_info WHERE flight_type =  'departure' AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">)
+    AND
+    	s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">			
 	GROUP BY s.studentid
 	ORDER BY r.regionname, u.lastname, s.firstname
 	</cfquery>

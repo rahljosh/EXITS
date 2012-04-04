@@ -24,6 +24,8 @@ WHERE
     	s.canceldate IS NULL		
     AND	
     	s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
+   	AND
+    	s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
 </cfquery>
 
 <!--- ( active = '1' OR canceldate > '2005-08-03') --->

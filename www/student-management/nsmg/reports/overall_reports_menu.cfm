@@ -76,8 +76,7 @@
                     <tr>
                         <td class="reportFieldTitle">Region:</td>
                         <td>
-                            <select name="regionID" class="largeField">
-                                <option value="0">All Regions</option>
+                            <select name="regionID" multiple size="6" class="largeField">
                                 <cfloop query="get_regions">
                                     <option value="#regionid#">#regionname#</option>
                                 </cfloop>
@@ -1083,7 +1082,6 @@
                             </select>               
                         </td>
                     </tr>
-                    <tr><td></td><td><input  type="text" size="8">&nbsp;</input></td></tr>
                     <tr><td colspan="2" class="reportTitle"><input type="image" src="pics/view.gif" align="center" border="0"></td></tr>
                 </table>
             </cfform>		
