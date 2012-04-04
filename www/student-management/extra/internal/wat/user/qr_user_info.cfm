@@ -7,9 +7,60 @@
 
 <body>
 
+<cftransaction action="begin" isolation="serializable">
+
 <cftry>
 
-<cftransaction action="begin" isolation="serializable">
+<!--- IF THE USER IS AN INTERNATIONAL REPRESENTATIVE, CREATE A MESSAGE --->
+<cfif CLIENT.usertype EQ '8'>
+	<cfinclude template="../querys/get_user.cfm">
+ 	<cfinclude template="../querys/countrylist.cfm">
+	<cfinclude template="../querys/statelist.cfm">
+    <cfsavecontent variable="vEmailMessage">
+		<cfoutput>
+            <p>INTERNATIONAL REPRESENTATIVE NOTICE OF INFORMATION CHANGE</p>
+            
+            <p><strong>#CLIENT.firstName# #CLIENT.lastName# (###CLIENT.userID#)</strong> has made a change to their profile information.</p>
+            
+            <p><strong>NEW INFORMATION</strong></p>
+            #FORM.address#<br />
+            <cfif LEN(FORM.address2)>#FORM.address2#<br /></cfif>
+            #FORM.city#
+            <cfif #FORM.state# NEQ 0>
+            	<cfloop query="statelist">
+                	<cfif #FORM.state# EQ #id#>, #state# </cfif>
+                </cfloop>
+			</cfif>
+            <cfif LEN(FORM.zip)>#FORM.zip#</cfif>
+            <br />
+            <cfloop query="countrylist">
+				<cfif #FORM.country# EQ #countryid#>#countryname#<br /></cfif>
+            </cfloop>
+            #FORM.phone#<br />
+            #FORM.email#<br />
+            
+            <p><strong>PREVIOUS INFORMATION</strong></p>
+            #get_user.address#<br />
+            <cfif LEN(get_user.address2)>#get_user.address2#<br /></cfif>
+            #get_user.city#
+            <cfif #get_user.state# NEQ 0>
+            	<cfloop query="statelist">
+                	<cfif #get_user.state# EQ #id#>, #state# </cfif>
+                </cfloop></cfif>
+            <cfif LEN(get_user.zip)>#get_user.zip#</cfif>
+            <br />
+            <cfloop query="countrylist">
+				<cfif #get_user.country# EQ #countryid#>#countryname#<br /></cfif>
+            </cfloop>
+            #get_user.phone#<br />
+            #get_user.email#<br />
+       
+            <p>This is the only notification of this change that you will receive.</p>
+            
+            <p>Please update any records that do NOT pull information from EXTRA.</p>
+        </cfoutput>
+ 	</cfsavecontent>
+</cfif>
 
 <cfoutput>
 
@@ -80,7 +131,7 @@
 		<cfabort>	
 	</cfif>
 
-	<cfset form.comments = #Replace(form.comments,"#chr(10)#","<br>","all")#>
+	<cfif IsDefined('form.comments')><cfset form.comments = #Replace(form.comments,"#chr(10)#","<br>","all")#></cfif>
 
 	<cfquery name="update" datasource="MySql">
 		UPDATE smg_users
@@ -101,37 +152,40 @@
 			work_phone = '#form.work_phone#',
 			phone = '#form.phone#',
 			cell_phone = '#form.cell_phone#',
-			fax = '#form.fax#',
 			email = '#form.email#', 
 			email2 = '#form.email2#',
 			<cfif IsDefined('form.username')>username = '#form.username#',</cfif>
 			<cfif IsDefined('form.password')>password = '#form.password#',</cfif>
-			comments = <cfqueryparam value = "#form.comments#" cfsqltype="cf_sql_longvarchar">
+			<cfif IsDefined('form.comments')>comments = <cfqueryparam value = "#form.comments#" cfsqltype="cf_sql_longvarchar">,</cfif>
+            fax = '#form.fax#'
 		WHERE userid = '#form.userid#'
 		LIMIT 1
 	</cfquery>
 
 	<!--- SET COMPANY DEFAULT --->
-	<cfif form.default_company NEQ 0>
-		<cfquery name="erase_defaults" datasource="MySql">
-			UPDATE user_access_rights uar
-			INNER JOIN smg_companies c ON c.companyid = uar.companyid
-			SET uar.default_region = '0'
-			WHERE userid = '#form.userid#'
-				AND c.system_id = '4'				
-		</cfquery>
-		<cfquery name="set_default_company" datasource="MySql">
-			UPDATE user_access_rights
-			SET default_region = '1'
-			WHERE userid = '#form.userid#'
-				AND companyid = '#form.default_company#'
-			LIMIT 1
-		</cfquery>
-	</cfif>
+    <cfif IsDefined('form.default_company')>
+		<cfif form.default_company NEQ 0>
+            <cfquery name="erase_defaults" datasource="MySql">
+                UPDATE user_access_rights uar
+                INNER JOIN smg_companies c ON c.companyid = uar.companyid
+                SET uar.default_region = '0'
+                WHERE userid = '#form.userid#'
+                    AND c.system_id = '4'				
+            </cfquery>
+            <cfquery name="set_default_company" datasource="MySql">
+                UPDATE user_access_rights
+                SET default_region = '1'
+                WHERE userid = '#form.userid#'
+                    AND companyid = '#form.default_company#'
+                LIMIT 1
+            </cfquery>
+        </cfif>
+    </cfif>
 		
 	<!--- EDIT / DELETE COMPANY ACCESS --->
-	<cfif form.user_access_count GT	0>	
-		<cfloop from="1" to="#form.user_access_count#" index="x">
+	<cfif IsDefined('form.user_access_count')>
+  		<cfloop from="1" to="#form.user_access_count#" index="x">
+        
 			<!--- EDIT COMPANY ACCESS --->
 			<cfif NOT IsDefined('form.delete_'&x)>
 				<cfquery name="update_user_access" datasource="MySql">
@@ -149,28 +203,39 @@
 			</cfif>
 		</cfloop>
 	</cfif>	
-	
+    
 	<!--- ADD NEW COMPANY ACCESS --->
-	<cfif companyid_new NEQ 0 AND usertype_new NEQ 0>
-		<cfquery name="check_user_access" datasource="MySql">
-			SELECT userid
-			FROM user_access_rights
-			WHERE userid = '#form.userid#'
-				AND companyid = '#form.companyid_new#'
-		</cfquery>
-	
-		<cfif check_user_access.recordcount EQ 0>
-			<cfquery name="user_access_rights" datasource="MySql">
-				INSERT INTO user_access_rights
-					(userid, companyid, usertype)
-				VALUES
-					('#form.userid#', '#form.companyid_new#', '#form.usertype_new#')
-			</cfquery>
-		</cfif>
-	</cfif>
+	<cfif IsDefined('form.companyid_new')>
+		<cfif companyid_new NEQ 0 AND usertype_new NEQ 0>
+            <cfquery name="check_user_access" datasource="MySql">
+                SELECT userid
+                FROM user_access_rights
+                WHERE userid = '#form.userid#'
+                    AND companyid = '#form.companyid_new#'
+            </cfquery>
+        
+            <cfif check_user_access.recordcount EQ 0>
+                <cfquery name="user_access_rights" datasource="MySql">
+                    INSERT INTO user_access_rights
+                        (userid, companyid, usertype)
+                    VALUES
+                        ('#form.userid#', '#form.companyid_new#', '#form.usertype_new#')
+                </cfquery>
+            </cfif>
+        </cfif>
+    </cfif>
 
-	<html>
 	<head>
+    
+    <!--- SEND EMAIL IF THIS USER IS AN INTERNATIONAL REPRESENTATIVE --->
+    <cfif CLIENT.usertype EQ '8'>
+	 	<cfinvoke component="EXTRA.extensions.components.email" method="sendEmail">
+          	<cfinvokeargument name="emailTo" value="anca@csb-usa.com">
+          	<cfinvokeargument name="emailSubject" value="EXTRA - International Representative Notice of Information Change">
+          	<cfinvokeargument name="emailMessage" value="#vEmailMessage#">            
+      	</cfinvoke>
+	</cfif>
+    
 	<script language="JavaScript">
 	<!-- 
 	alert("You have successfully updated this page.");
@@ -179,15 +244,15 @@
 	</script>
 	</head>
 	</html> 
-</cfoutput>		
-
-</cftransaction>
+</cfoutput>
 
 <cfcatch type="any">
 	<cfinclude template="../error_message.cfm">
 </cfcatch>
 
 </cftry>
+
+</cftransaction>
 
 </body>
 </html>
