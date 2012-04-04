@@ -26,6 +26,7 @@
 
     <!--- Param FORM Variables --->    
     <cfparam name="FORM.submitted" default="0">
+    <cfparam name="FORM.report_mode" default="">
     <cfparam name="FORM.historyID" default="0">
     <cfparam name="FORM.emailTo" default="">
     <cfparam name="FORM.NewDatePlaced" default="">
@@ -705,8 +706,6 @@
         </tr>
     </table>
     
-
-
 </cfsavecontent>
 
 
@@ -842,8 +841,13 @@
 
 </cfoutput>
 
+<!--- Include Footer if not printing --->
+<cfif NOT VAL(URL.printPage)>
+
 <!--- Page Footer --->
 <gui:pageFooter
 	footerType="application"
 />
+
+</cfif>
 
