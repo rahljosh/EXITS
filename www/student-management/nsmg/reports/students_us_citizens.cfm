@@ -72,6 +72,8 @@
         OR
             s.countrybirth = <cfqueryparam cfsqltype="cf_sql_integer" value="232"> 
         )
+   AND
+    	s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
 	ORDER BY 
     	u.businessname, 
         s.firstname

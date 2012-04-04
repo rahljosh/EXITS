@@ -58,14 +58,21 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #9
 	INNER JOIN smg_regions r ON s.regionassigned = r.regionid
 	INNER JOIN smg_hosts h ON s.hostid = h.hostid
 	INNER JOIN smg_companies c ON s.companyid = c.companyid
-	WHERE s.active = 1 
-		AND s.intrep = #get_agents.userid# 
-		AND s.host_fam_approved < '5'
-		AND	( <cfloop list=#form.programid# index='prog'>
-				s.programid = #prog# 
-				<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-			</cfloop> )
-		AND s.studentid NOT IN (SELECT studentid FROM smg_flight_info WHERE flight_type = 'departure' AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> )
+	WHERE 
+    	s.active = 1 
+	AND 
+    	s.intrep = #get_agents.userid# 
+	AND 
+    	s.host_fam_approved < '5'
+	AND	( 
+    	<cfloop list=#form.programid# index='prog'>
+			s.programid = #prog# 
+			<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
+		</cfloop> )
+	AND 
+    	s.studentid NOT IN (SELECT studentid FROM smg_flight_info WHERE flight_type = 'departure' AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> )
+   	AND
+    	s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">	
 	ORDER BY s.studentid
 	</cfquery>
 	

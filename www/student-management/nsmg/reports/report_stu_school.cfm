@@ -13,14 +13,21 @@
 	INNER JOIN smg_schools sc ON sc.schoolid = s.schoolid
 	INNER JOIN smg_countrylist c ON s.countryresident = c.countryid
 	INNER JOIN smg_programs p ON p.programid = s.programid
-	WHERE s.active = '1'
-		AND s.companyid = '#client.companyid#' 
-		<cfif form.stateid NEQ '0'>AND sc.state = '#form.stateid#'</cfif>
-		<!--- <cfif IsDefined('form.school_filter')>AND count(s.studentid) > 5</cfif> --->
-		AND	( <cfloop list="#form.programid#" index="prog">
+	WHERE 
+    	s.active = '1'
+	AND 
+    	s.companyid = '#client.companyid#' 
+	<cfif form.stateid NEQ '0'>
+    	AND 
+        	sc.state = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.stateid#">
+	</cfif>
+		AND	( 
+        	<cfloop list="#form.programid#" index="prog">
 				s.programid = #prog# 
 				<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-			</cfloop> )	
+			</cfloop> )
+    AND
+    	s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">	
 	ORDER BY schoolstate, sc.schoolname
 </cfquery>
 

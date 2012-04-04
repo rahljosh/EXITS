@@ -145,6 +145,9 @@
                         AND 
             				<cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d', 1, FORM.placedDateTo)#">
             </cfif>
+            
+            AND
+    			s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
                 
             ORDER BY 
                 s.familyLastname,
