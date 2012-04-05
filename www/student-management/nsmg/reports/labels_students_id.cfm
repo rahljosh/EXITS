@@ -66,34 +66,59 @@
 						--->
 			
 			<cfquery name="get_students" datasource="MySql"> 
-				SELECT 	s.studentid, s.familylastname, s.firstname,
-						h.address, h.address2, h.city, h.zip, h.state, h.familylastname as hostname, 
-						p.programname, p.programid, 
-						u.businessname, u.userid,
-						r.regionid, r.regionname,
-						c.companyshort, c.companyid
-				FROM smg_students s
-				INNER JOIN smg_hosts h ON s.hostid = h.hostid
-				INNER JOIN smg_programs p ON s.programid = p.programid 
-				INNER JOIN smg_users u ON s.intrep = u.userid
-				INNER JOIN smg_regions r ON s.regionassigned = r.regionid
-				INNER JOIN smg_companies c ON s.companyid = c.companyid
-						WHERE host_fam_approved < '5'
-						AND s.studentid between #form.id1# AND #form.id2#
-						AND s.active = '1'
-						<cfif form.countryid NEQ 0>
-							AND countryresident = '#form.countryid#'
-						</cfif>
-				ORDER BY s.familylastname, s.firstname
+				SELECT 	
+                	s.studentid, s.familylastname, s.firstname,
+					h.address, h.address2, h.city, h.zip, h.state, h.familylastname as hostname, 
+					p.programname, p.programid, 
+					u.businessname, u.userid,
+					r.regionid, r.regionname,
+					c.companyshort, c.companyid
+				FROM 
+                	smg_students s
+				INNER JOIN 
+                	smg_hosts h ON s.hostid = h.hostid
+				INNER JOIN 
+                	smg_programs p ON s.programid = p.programid 
+				INNER JOIN 
+                	smg_users u ON s.intrep = u.userid
+				INNER JOIN 
+                	smg_regions r ON s.regionassigned = r.regionid
+				INNER JOIN 
+                	smg_companies c ON s.companyid = c.companyid
+                WHERE
+                	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                AND
+                	s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
+                AND 
+                	s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4" list="yes"> )
+                AND 	
+                	s.studentid BETWEEN <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.id1)#"> AND <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.id2)#">
+
+                <cfif CLIENT.companyID EQ 5>
+                    AND          
+                        s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+                <cfelse>
+                    AND          
+                        s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#"> 
+                </cfif>
+                
+				<cfif VAL(FORM.countryid)>
+                    AND 
+                    	countryresident = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.countryid#">
+                </cfif>
+                
+				ORDER BY 
+                	s.familylastname,
+                    s.firstname
 			</cfquery>
 						
 			<!---
-						The table consists has five columns,
-						two lablels and two spacers, interchanged.
-						
-						To identify where to place each, we need to
-						maintain a column counter.
-						--->
+			The table consists has five columns,
+			two lablels and two spacers, interchanged.
+			
+			To identify where to place each, we need to
+			maintain a column counter.
+			--->
 			<cfset col=1>
 			<cfoutput query="get_students">
 				

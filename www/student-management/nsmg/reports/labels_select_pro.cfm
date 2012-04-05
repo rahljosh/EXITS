@@ -721,9 +721,9 @@
                             <tr>
                                 <td>Date Received:</td>
                                 <td>
-                                    <span style="float:left">From: &nbsp;</span>
+                                    From: &nbsp;
                                     <input type="text" name="date1" class="datePicker" maxlength="10">
-                                    <span style="float:left;">To: &nbsp;</span>
+                                    To: &nbsp;
                                     <input type="text" name="date2" class="datePicker" maxlength="10">                                                                                                                                   
                                 </td>
                             </tr>
@@ -749,9 +749,11 @@
                             <tr>
                                 <td>Student ID: </td>
                                 <td>
-                                	From: &nbsp; <input type="text" name="id1" size="4" maxlength="6">
+                                	From: &nbsp; 
+                                    <input type="text" name="id1" size="4" maxlength="6">
                                     &nbsp;
-                                	To: &nbsp; <input type="text" name="id2" size="4" maxlength="6">
+                                	To: &nbsp; 
+                                    <input type="text" name="id2" size="4" maxlength="6">
                                 </td>
                             </tr>
                             <tr><td colspan="2"><font size="-2" color="000066">* Student ID's</font></td></tr>
