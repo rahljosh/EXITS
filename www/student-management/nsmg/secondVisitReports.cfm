@@ -551,20 +551,22 @@
 
                         <cfif get_report.recordCount>
                             	<!--- access is limited to: CLIENT.usertype LTE 4, second vist rep, supervising rep, regional advisor, regional director, and facilitator. --->
-								<cfif CLIENT.usertype LTE 4 or listFind("#get_report.fk_secondVisitRep#,#get_report.fk_sr_user#,#get_report.fk_ra_user#,#get_report.fk_rd_user#,#get_report.fk_ny_user#, #get_report.fk_secondVisitRep#", CLIENT.userid)>
+								<cfif listfind("1,2,3,4", CLIENT.userType) OR listFind("#get_report.fk_secondVisitRep#,#get_report.fk_sr_user#,#get_report.fk_ra_user#,#get_report.fk_rd_user#,#get_report.fk_ny_user#, #get_report.fk_secondVisitRep#", CLIENT.userid)>
 									<!--- restrict view of report until the supervising rep approves it. --->
                                     <!----check the type of report, use appropriate person to view---->
 								
                                         <cfset submittingRep = '#secondVisitRepID#'>
                                     
                                     <cfif get_report.pr_sr_approved_date EQ '' and submittingRep NEQ CLIENT.userid>
+                                    
                                         <!----allow office to view so can delete if needed---->
-                                        <Cfif listfind('1,12313,13799,510,12431,16652,12389', CLIENT.userid)>
-                                       
-                                            <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#get_report.pr_id#">
-                                           
+                                        <Cfif listfind("1,2,3,4", CLIENT.userType)>
+                                            <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#get_report.pr_id#">Pending</a>
+                                        <cfelse>
+                                            Pending
                                         </cfif>	
-                                        Pending</a>
+                                        
+                                        
                                     	<!----end allow view to delete---->
                                     <cfelse>
                                         
@@ -825,7 +827,7 @@
                                        </tr>
                                    <Cfelse>
                                         <cfif qGetResults.secondvisitrepid eq fk_secondvisitrep>
-                                           <td>
+                                           <tr  ><td>
                                              <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#pr_id#"><img src="pics/buttons/greyedView.png" border=0 /></a>
                                             </td>
                                        </cfif>
