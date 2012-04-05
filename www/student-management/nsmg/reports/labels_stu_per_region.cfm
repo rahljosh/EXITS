@@ -52,27 +52,48 @@
 			<!--- Start a table for our labels --->
 			<table border="0" cellspacing="0" cellpadding="0">
 			<cfquery name="get_students" datasource="MySql"> 
-				SELECT 	s.studentid, s.familylastname, s.firstname,
-						h.address, h.address2, h.city, h.zip, h.state, h.familylastname as hostname, 
-						p.programname, p.programid, 
-						u.businessname, u.userid,
-						r.regionid, r.regionname,
-						c.companyshort, c.companyid
-				FROM smg_students s
-				INNER JOIN smg_hosts h ON s.hostid = h.hostid
-				INNER JOIN smg_programs p ON s.programid = p.programid 
-				INNER JOIN smg_users u ON s.intrep = u.userid
-				INNER JOIN smg_regions r ON s.regionassigned = r.regionid
-				INNER JOIN smg_companies c ON s.companyid = c.companyid
-						WHERE host_fam_approved < '5'
-						AND s.active = '1'
-						AND (<cfloop list="#form.regionid#" index='reg'>
-							s.regionassigned = #reg# 
-							<cfif reg is #ListLast(form.regionid)#><Cfelse>or</cfif>
-						</cfloop> )
-						AND ( <cfloop list=#form.programid# index='prog'> s.programid = #prog#
-							<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif></cfloop> )
-				ORDER BY h.familylastname, s.familylastname, s.firstname
+				SELECT 	
+                	s.studentid, s.familylastname, s.firstname,
+                    h.address, h.address2, h.city, h.zip, h.state, h.familylastname as hostname, 
+                    p.programname, p.programid, 
+                    u.businessname, u.userid,
+                    r.regionid, r.regionname,
+                    c.companyshort, c.companyid
+				FROM 
+                	smg_students s
+				INNER JOIN 
+                	smg_hosts h ON s.hostid = h.hostid
+				INNER JOIN 
+                	smg_programs p ON s.programid = p.programid 
+				INNER JOIN 
+                	smg_users u ON s.intrep = u.userid
+				INNER JOIN 
+                	smg_regions r ON s.regionassigned = r.regionid
+				INNER JOIN 
+                	smg_companies c ON s.companyid = c.companyid
+                WHERE 
+                	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                AND
+                	s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
+                AND 
+                	s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
+                AND 
+                	s.regionAssigned IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> )
+                AND 
+                	s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4" list="yes"> )
+
+                <cfif CLIENT.companyID EQ 5>
+                    AND          
+                        s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+                <cfelse>
+                    AND          
+                        s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#"> 
+                </cfif>
+
+				ORDER BY 
+                	h.familylastname, 
+                    s.familylastname, 
+                    s.firstname
 			</cfquery>
 			<!---
 				The table consists has five columns, two lablels and two spacers, interchanged.
