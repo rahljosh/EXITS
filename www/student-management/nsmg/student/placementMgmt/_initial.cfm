@@ -388,7 +388,7 @@
 					changedBy = CLIENT.userID,								 
 					userType = CLIENT.userType,
 					regionID = qGetStudentInfo.regionAssigned,
-					placeRepID = qqGetPlacementHistoryByID.placeRepID,
+					placeRepID = qGetPlacementHistoryByID.placeRepID,
 					reason = FORM.reason
 				 );
 
