@@ -207,31 +207,6 @@
 
 	</cfif>
     	
-    <!--- Update other records assigned to same host company and program --->
-    <cfif IsDate(FORM.selfPhoneConfirmationDate)>
-    
-        <cfquery datasource="#APPLICATION.DSN.Source#">
-            UPDATE 
-                extra_candidate_place_company
-            SET 
-                selfPhoneConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfPhoneConfirmationDate#">
-            WHERE 
-            	hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">
-           	AND     
-                status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-            AND
-            	candidateID IN (
-                	SELECT
-                    	candidateID
-                    FROM
-                    	extra_candidates
-                    WHERE
-                    	programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
-                )
-        </cfquery>
-    
-    </cfif>
-
 	<!--- New Host Company --->
     <cfif qGetCandidateInfo.hostCompanyID NEQ FORM.hostcompanyID>
         
@@ -331,6 +306,76 @@
                 candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCurrentPlacement.candcompid)#">
         </cfquery>
 	
+    </cfif>
+    
+    <!--- Update other records assigned to same host company and program --->
+    <cfif IsDate(FORM.selfPhoneConfirmationDate)>
+    
+        <cfquery datasource="#APPLICATION.DSN.Source#">
+            UPDATE 
+                extra_candidate_place_company ecpc
+            INNER JOIN
+            	extra_candidates ec ON ec.candidateID = ecpc.candidateID
+                    AND
+                        ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">   
+                    AND	
+                   		ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">             
+            SET 
+                ecpc.selfPhoneConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfPhoneConfirmationDate#">
+            WHERE 
+            	ecpc.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">
+           	AND     
+                ecpc.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+            AND
+            	ecpc.selfPhoneConfirmationDate IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+        </cfquery>
+    
+    <!--- Check if there is a date in other records, if there is update this record --->
+    <cfelse>
+
+        <cfquery name="qGetPlaceCompanyInfo" datasource="#APPLICATION.DSN.Source#">
+            SELECT
+            	ecpc.selfPhoneConfirmationDate
+            FROM
+            	extra_candidate_place_company ecpc
+            INNER JOIN
+            	extra_candidates ec ON ec.candidateID = ecpc.candidateID
+                    AND
+                        ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">   
+                    AND	
+                   		ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">             
+            WHERE 
+            	ecpc.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">
+           	AND     
+                ecpc.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+            AND
+            	ecpc.selfPhoneConfirmationDate IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+			LIMIT 1                
+        </cfquery>
+        
+        <cfif isDate(qGetPlaceCompanyInfo.selfPhoneConfirmationDate)>
+
+            <cfquery datasource="#APPLICATION.DSN.Source#">
+                UPDATE 
+                    extra_candidate_place_company ecpc
+                INNER JOIN
+                    extra_candidates ec ON ec.candidateID = ecpc.candidateID
+                        AND
+                            ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">   
+                        AND	
+                            ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">             
+                SET 
+                    ecpc.selfPhoneConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPlaceCompanyInfo.selfPhoneConfirmationDate#">
+                WHERE 
+                    ecpc.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">
+                AND     
+                    ecpc.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                AND
+                    ecpc.selfPhoneConfirmationDate IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+            </cfquery>
+
+    	</cfif>
+    
     </cfif>
     
 <!--- Not a valid Host Company Assigned --->
