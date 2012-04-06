@@ -52,30 +52,38 @@ if (document.new_program.seasonid.value == '0') {
 	</tr>
 	<tr>
 		<td align="right">Program Type: </td>
-		<td><cfselect name="type" required="yes" message="You must select the program's type.">
-			<option value=0></option>
-			<cfloop query="program_types">
-			<option value="#programtypeid#">#programtype#</option>
-			</cfloop> (select the program's lenght)
+		<td>
+        	<cfselect name="type" required="yes" message="You must select the program's type.">
+                <option value="0"></option>
+                <cfloop query="program_types">
+                    <option value="#programtypeid#">#programtype#</option>
+                </cfloop> (select the program's lenght)
 			</cfselect>
 		</td>
 	</tr>	
-	<tr>
+    <tr>
 		<td align="right">Start Date:</td>
-		<td><cfinput type="text" name="startdate" value="" size=10 validate="date" required="yes" message="You must enter a start date"> (mm-dd-yyyy)</td>
+		<td><cfinput type="text" name="startdate" value="" validate="date" required="yes" message="You must enter a start date" class="datePicker"> (mm-dd-yyyy)</td>
 	</tr>
 	<tr>
 		<td align="right">End Date:</td>
-		<td><cfinput type="text" name="enddate" value="" size=10 validate="date" required="yes" message="You must enter an end date"> (mm-dd-yyyy)</td>
+		<td><cfinput type="text" name="enddate" value="" validate="date" required="yes" message="You must enter an end date" class="datePicker"> (mm-dd-yyyy)</td>
+	</tr>
+    <tr>
+		<td align="right">Application Deadline:</td>
+		<td>
+        	<cfinput type="text" name="applicationDeadline" value="" validate="date" required="yes" message="You must enter a start date" class="datePicker"> (mm-dd-yyyy)
+        	program will not show on student application after this date
+        </td>
 	</tr>
 	<tr><td colspan="2" bgcolor="C2D1EF"><b>Insurance Information</b></td></tr>
 	<tr>
 		<td align="right">Insurance Start Date: </td>
-		<td><cfinput type="text" name="insurance_startdate" value="" validate="date" size=10> (mm-dd-yyyy)</td>
+		<td><cfinput type="text" name="insurance_startdate" value="" validate="date" class="datePicker"> (mm-dd-yyyy)</td>
 	</tr>
 	<tr>
 		<td align="right">Insurance End Date: </td>
-		<td><cfinput type="text" name="insurance_enddate" value="" validate="date" size=10> (mm-dd-yyyy)</td>
+		<td><cfinput type="text" name="insurance_enddate" value="" validate="date" class="datePicker"> (mm-dd-yyyy)</td>
 	</tr>
 	<tr><td colspan="2" bgcolor="C2D1EF"><b>Program Season</b></td></tr>
 	<tr><td align="right">Program Season:</td>

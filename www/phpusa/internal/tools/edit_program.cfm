@@ -25,16 +25,22 @@ if (document.new_program.seasonid.value == '0') {
 <body>
 
 <Cfquery name="get_program" datasource="MySQL">
-	SELECT  p.programid, p.programname, p.type, p.startdate, p.enddate, p.insurance_startdate, p.insurance_enddate, p.insurance_batch,
-			p.companyid, p.programfee, p.seasonid, p.programfee, p.insurance_w_deduct, p.insurance_wo_deduct,
-			smg_companies.companyshort,
-			smg_program_type.programtype,
-			smg_seasons.season
-	FROM smg_programs p
-	INNER JOIN smg_companies ON smg_companies.companyid = p.companyid
-	LEFT JOIN smg_program_type ON smg_program_type.programtypeid = p.type
-	LEFT JOIN smg_seasons ON smg_seasons.seasonid = p.seasonid
-	WHERE p.programid = <cfqueryparam value="#url.programid#" cfsqltype="cf_sql_integer">
+	SELECT 
+    	p.programid, p.programname, p.type, p.startdate, p.enddate, p.insurance_startdate, p.insurance_enddate, p.insurance_batch, p.applicationDeadline,
+        p.companyid, p.programfee, p.seasonid, p.programfee, p.insurance_w_deduct, p.insurance_wo_deduct,
+        smg_companies.companyshort,
+        smg_program_type.programtype,
+        smg_seasons.season
+	FROM
+    	smg_programs p
+	INNER JOIN 
+    	smg_companies ON smg_companies.companyid = p.companyid
+	LEFT JOIN 
+    	smg_program_type ON smg_program_type.programtypeid = p.type
+	LEFT JOIN 
+    	smg_seasons ON smg_seasons.seasonid = p.seasonid
+	WHERE 
+    	p.programid = <cfqueryparam value="#url.programid#" cfsqltype="cf_sql_integer">
 </Cfquery>
 
 <cfquery name="program_types" datasource="mysql">
@@ -81,7 +87,16 @@ if (document.new_program.seasonid.value == '0') {
 		<td align="right">End Date:</td>
 		<td><cfinput type="text" name="enddate" value="#DateFormat(enddate, 'mm-dd-yyyy')#" size=10 validate="date" required="yes" message="You must enter an end date"> (mm-dd-yyyy)</td>
 	</tr>
-		<tr>
+    
+    <tr>
+		<td align="right">Application Deadline:</td>
+		<td>
+        	<cfinput type="text" name="applicationDeadline" value="#DateFormat(get_program.applicationDeadline, 'mm-dd-yyyy')#" validate="date" required="yes" message="You must enter a start date" class="datePicker"> (mm-dd-yyyy)
+        	program will not show on student application after this date
+        </td>
+	</tr>
+    
+	<tr>
 		<td align="right">Default Program Fee:</td>
 		<td><cfinput type="text" name="programfee" value="#programfee#" size=10  required="yes" message="You must enter a program fee"> 0000.00</td>
 	</tr>
