@@ -8,6 +8,7 @@
         type = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.type)#">,
         startdate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.startdate#" null="#NOT IsDate(FORM.startdate)#">,
         enddate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.enddate#" null="#NOT IsDate(FORM.enddate)#">,
+        applicationDeadline = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.applicationDeadline#" null="#NOT IsDate(FORM.applicationDeadline)#">,
         insurance_startdate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.insurance_startdate#" null="#NOT IsDate(FORM.insurance_startdate)#">,
         insurance_enddate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.insurance_enddate#" null="#NOT IsDate(FORM.insurance_enddate)#">,
         insurance_w_Deduct = <cfqueryparam cfsqltype="cf_sql_decimal" value="#FORM.insurance_w_Deduct#">,
