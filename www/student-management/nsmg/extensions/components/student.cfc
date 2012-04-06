@@ -1815,27 +1815,49 @@
         <cfargument name="fieldName" default="0" hint="fieldName is not required">
         <cfargument name="fieldID" default="0" hint="fieldID is not required">
 		
-        <cfquery 
+        <!--- Check if record is already in the history --->
+        <cfquery
+        	name="qCheckRecord" 
 			datasource="#APPLICATION.DSN#">
-                INSERT INTO 
-                    smg_hostHistoryTracking
-                (
-                    historyID,
-                    studentID,
-                    fieldName,
-                    fieldID,
-                    dateCreated
-                )
-                VALUES 
-                (
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.historyID)#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fieldName#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.fieldID)#">,
-                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-                ) 
-        </cfquery>
-
+        		SELECT
+                	historyID
+                FROM
+                	smg_hostHistoryTracking
+                WHERE
+                	historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.historyID)#">
+                AND
+                	studentiD = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+                AND
+                	fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.fieldID)#">
+                AND
+                	fieldName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fieldName#">
+		</cfquery>                    
+        
+        <cfif NOT VAL(qCheckRecord.recordCount)>
+        
+            <cfquery 
+                datasource="#APPLICATION.DSN#">
+                    INSERT INTO 
+                        smg_hostHistoryTracking
+                    (
+                        historyID,
+                        studentID,
+                        fieldName,
+                        fieldID,
+                        dateCreated
+                    )
+                    VALUES 
+                    (
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.historyID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fieldName#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.fieldID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                    ) 
+            </cfquery>
+    
+    	</cfif>
+    
 	</cffunction>
 
 	
