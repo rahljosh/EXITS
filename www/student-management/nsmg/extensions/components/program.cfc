@@ -222,53 +222,56 @@
 	<!----Get available acive programs that match the type of program selected---->
     <cffunction name="qGetActiveInternalPrograms" access="remote" output="no" returntype="query" hint="Gets a list of active programs associated with the program type indicated. Needs to get the program type id." verifyclient="no" securejson="false">
     	<cfargument name="programTypeID" default="0" hint="programTypeID is not required">
-        <cfargument name="currentProgramID" default="0" hing="currentProgramID is not required">
+        <cfargument name="currentprogramID" default="0" hing="currentprogramID is not required">
 		
         <cfquery 
 			name="qGetActiveInternalPrograms" 
 			datasource="#APPLICATION.dsn#">
-            select 0 as programid, 'Select a Program' as programname, null as startdate, null as enddate 
-                from dual union
+            	SELECT 
+                	0 AS programID, 
+                    ' Select a Program' AS programName, 
+                    NULL AS startDate, 
+                    NULL AS endDate 
+                FROM 
+                	DUAL UNION
                 SELECT
-                	programid,
-					programname,
-                    startdate,
-                    enddate
+                	programID,
+					programName,
+                    startDate,
+                    endDate
                 FROM 
                     smg_programs
                 WHERE
                 	fk_smg_student_app_programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.programTypeID)#">
-                    							  
                 AND
                     active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-				
                 AND
                     applicationDeadline >= <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
                 
-                <cfif VAL(ARGUMENTS.currentProgramID)>
+                <cfif VAL(ARGUMENTS.currentprogramID)>
                 	OR
-                		programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.currentProgramID#">
+                		programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.currentprogramID#">
                	</cfif>         
                 
                 ORDER BY 
-                   programid
+                   programName
 		</cfquery>
-		   
+           
 		<cfscript>
 			// Return message to user if not was found
 			if ( NOT VAL(qGetActiveInternalPrograms.recordCount) ) {
 				QueryAddRow(qGetActiveInternalPrograms, 1);
 				QuerySetCell(qGetActiveInternalPrograms, "programID", 0);	
-				QuerySetCell(qGetActiveInternalPrograms, "programname", "---- No Additional Program Info ----", 1);
+				QuerySetCell(qGetActiveInternalPrograms, "programName", "---- No Additional Program Info ----", 1);
 				
 			}
 			
 			// Return message if companyID is not valid
 			if ( NOT VAL(ARGUMENTS.programTypeID) ) {
-				qGetActiveInternalPrograms = QueryNew("programID, programname");
+				qGetActiveInternalPrograms = QueryNew("programID, programName");
 				QueryAddRow(qGetActiveInternalPrograms);
 				QuerySetCell(qGetActiveInternalPrograms, "programID", 0);	
-				QuerySetCell(qGetActiveInternalPrograms, "programname", "---- Select a program type ----", 1);
+				QuerySetCell(qGetActiveInternalPrograms, "programName", "---- Select a program type ----", 1);
 				
 			}
 
