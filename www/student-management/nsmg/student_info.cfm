@@ -91,7 +91,7 @@
     <cfdirectory name="getVirtualFolder" directory="#virtualDirectory#" filter="*.*">
 
     <!----International Rep---->
-    <cfquery name="qGetIntlRep" datasource="#application.dsn#">
+    <cfquery name="qGetIntlRep" datasource="#APPLICATION.DSN#">
         SELECT 
         	u.businessname, 
             u.firstname, 
@@ -110,7 +110,7 @@
         	u.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.intrep)#">
     </cfquery>
    
-    <cfquery name="qGetActivePrograms" datasource="#application.dsn#">
+    <cfquery name="qGetActivePrograms" datasource="#APPLICATION.DSN#">
         SELECT 
         	programname, 
             programid, 
@@ -124,6 +124,8 @@
         	companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12,13" list="yes">)
         AND 
         	enddate > #currentDate#
+        OR
+        	programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.programid#">
         ORDER BY
         	programname
     </cfquery>
@@ -138,7 +140,7 @@
     </cfquery>
     
     <!----Ins. Policy Code---->
-    <Cfquery name="qGetInsurancePolicyInfo" datasource="#application.dsn#">
+    <Cfquery name="qGetInsurancePolicyInfo" datasource="#APPLICATION.DSN#">
         SELECT 
         	policycode
         FROM 
@@ -167,7 +169,7 @@
     </cfquery>
     
     <!----Get Expired Student Programs---->
-    <cfquery name="qCheckForExpiredProgram" datasource="#application.dsn#">
+    <cfquery name="qCheckForExpiredProgram" datasource="#APPLICATION.DSN#">
         SELECT 
         	smg_students.studentID, 
             smg_students.programid, 
@@ -182,7 +184,7 @@
         	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
     </cfquery>
         
-    <cfquery name="qStates" datasource="#application.dsn#">
+    <cfquery name="qStates" datasource="#APPLICATION.DSN#">
         SELECT 
         	id, 
             statename
@@ -196,7 +198,7 @@
         	id
     </cfquery>
         
-    <cfquery name="qSevisStatus" datasource="#application.dsn#">
+    <cfquery name="qSevisStatus" datasource="#APPLICATION.DSN#">
         SELECT 
         	batchid, 
             received, 
@@ -211,7 +213,7 @@
         	received = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
     </cfquery>
     
-    <cfquery name="qGetSevisDates" datasource="#application.dsn#">
+    <cfquery name="qGetSevisDates" datasource="#APPLICATION.DSN#">
         SELECT 
         	start_date, 
             end_date
@@ -226,7 +228,7 @@
     </cfquery>
     
     <!----Date of last phone contact---->
-    <cfquery name="qLastContact" datasource="#application.dsn#">
+    <cfquery name="qLastContact" datasource="#APPLICATION.DSN#">
         SELECT 
         	max(date) as qLastContact
         FROM 
