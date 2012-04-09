@@ -37,7 +37,6 @@
 		
          //Check if paperwork is complete for season
 		get_paperwork = APPLICATION.CFC.udf.allpaperworkCompleted(userid=url.userid,seasonid=9);
-		
 	</cfscript>
 
 	<!----Rep Info---->
@@ -302,19 +301,23 @@
 		<cflocation url="index.cfm?curdoc=forms/access_rights_form&userid=#rep_info.userid#&force=1" addtoken="no">
     </cfif>
 </cfif>
+
 <cfoutput query="rep_info">
-<cfif not val(accountCreationVerified)>
+
+<cfif not val(accountCreationVerified) AND uar_usertype NEQ 8>
+
 	<cfif get_paperwork.reviewAcct eq 1>
-    <div class="alert">
-    <h1>Account Review Required - Account appears ready for manual reveiw. </h1>
-    <em>Please review references and run CBC.  When everything looks fine, approve the CBC through Paperwork menu to activate account.</em> </div>
-    <br />
+        <div class="alert">
+        <h1>Account Review Required - Account appears ready for manual reveiw. </h1>
+        <em>Please review references and run CBC.  When everything looks fine, approve the CBC through Paperwork menu to activate account.</em> </div>
+        <br />
     <cfelseif get_paperwork.areaRepOK eq 0 or get_paperwork.arearepOk is ''>
-    <div class="alert">
-    <h1>Account Not Active </h1>
-    <em>Please review items missing in the paperwork section.</em> </div>
-    <br />
+        <div class="alert">
+        <h1>Account Not Active </h1>
+        <em>Please review items missing in the paperwork section.</em> </div>
+        <br />
     </cfif>
+    
 </cfif>
 
 <!--- SIZING TABLE --->
