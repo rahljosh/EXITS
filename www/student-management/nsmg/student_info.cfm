@@ -25,6 +25,7 @@
 		currentDate = now();
 		
 		vAllowedDivisionChangeList = "8731,8743,12313,12431,16718,12389";  // Bill, Bob, Brian Hause, Gary, Tal and Merri	
+		
 		// Get Student Information 
 		qGetStudentInfo = AppCFC.STUDENT.getStudentByID(studentID=studentID); 
 
@@ -109,12 +110,12 @@
         	u.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.intrep)#">
     </cfquery>
    
-    <cfquery name="qProgramInfo" datasource="#application.dsn#">
+    <cfquery name="qGetActivePrograms" datasource="#application.dsn#">
         SELECT 
         	programname, 
             programid, 
             enddate,
-            seasonid
+            seasonID
         FROM 
         	smg_programs
         WHERE 
@@ -127,18 +128,42 @@
         	programname
     </cfquery>
     
+    <cfquery name="qGetSelectedProgram" dbtype="query">
+        SELECT 
+        	*
+        FROM 
+        	qGetActivePrograms
+        WHERE 
+			programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.programid#">
+    </cfquery>
+    
     <!----Ins. Policy Code---->
-    <Cfquery name="qInsPolicy" datasource="#application.dsn#">
+    <Cfquery name="qGetInsurancePolicyInfo" datasource="#application.dsn#">
         SELECT 
         	policycode
         FROM 
         	smg_insurance_codes
         WHERE 
-        	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
-        AND 
-        	seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qProgramInfo.seasonid#">
-        AND 
-        	insutypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetIntlRep.insurance_typeid#">
+        	seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetSelectedProgram.seasonID#">
+            
+		<!--- Combine ISE Companies --->  
+        <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
+            AND
+                companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        <cfelse>
+            AND
+                companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+        </cfif>
+        
+        <!--- ESI - Elite Only --->
+        <cfif CLIENT.companyID EQ 14>
+            AND
+                insuTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="11">                           
+        <cfelse>
+            AND
+                insuTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetIntlRep.insurance_typeID)#">                           
+        </cfif>
+            
     </cfquery>
     
     <!----Get Expired Student Programs---->
@@ -446,7 +471,7 @@
 												<a href="javascript:OpenApp('student_app/print_application.cfm?unqid=#uniqueid#');"><img src="pics/exits.jpg" border="0"></a>
 											</cfif>
 											<br /><a href="javascript:OpenMediumW('student_app/section4/page22print.cfm?unqid=#uniqueid#');"><img src="pics/attached-files.gif" border="0"></a>	
-											<cfif client.usertype lt 7>
+											<cfif CLIENT.usertype lt 7>
                                             <br /><a href="javascript:SendEmail('student_app/email_form.cfm?unqid=#uniqueid#', 400, 450);"><img src="pics/send-email.gif" border="0"></a>	</cfif>
 											</td>
 										</tr>
@@ -484,7 +509,7 @@
 					<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#qGetStudentInfo.studentID#', 700, 500);" class="nav_bar">Representative Payments</a> 					
                     <a href="javascript:openPopUp('forms/missing_documents.cfm', 450, 500);" class="nav_bar">Missing Documents</a>
 					<a href="javascript:openPopUp('forms/notes.cfm', 450, 500);" class="nav_bar"><cfif LEN(qGetStudentInfo.notes)><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Notes</a> 	
-                    <a href="javascript:openPopUp('forms/ssp.cfm?studentid=#client.studentid#', 600, 450);" class="nav_bar">Student Services Project</a>	
+                    <a href="javascript:openPopUp('forms/ssp.cfm?studentid=#CLIENT.studentid#', 600, 450);" class="nav_bar">Student Services Project</a>	
 				</cfif> 
                 
 				<!--- OFFICE - MANAGERS ONLY --->
@@ -531,7 +556,7 @@
 						<cfelse>
 							<select name="program" id="program" onchange="displayProgramReason(#qGetStudentInfo.programID#, this.value);" <cfif FORM.edit EQ 'no'>disabled</cfif>>
                                 <option value="0">Unassigned</option>
-                                <cfloop query="qProgramInfo">
+                                <cfloop query="qGetActivePrograms">
                                 	<option value="#programid#" <cfif qGetStudentInfo.programid EQ programid> selected </cfif>>#programname#</option>
                                 </cfloop>
                             </select>
@@ -565,7 +590,7 @@
 						<a href="index.cfm?curdoc=user_info&userid=#qGetPlaceRep.userid#">#qGetPlaceRep.firstname# #qGetPlaceRep.lastname#</a></cfif> 
 					</td>				
 				</tr>	
-               <Cfif client.companyid NEQ 14> <tr><td>2nd Visit Rep. :</td>
+               <Cfif CLIENT.companyid NEQ 14> <tr><td>2nd Visit Rep. :</td>
 					<td><cfif secondVisitRepID is 0>	Not Assigned <cfelse> 
 						<a href="index.cfm?curdoc=user_info&userid=#qGet2ndVisitRep.userid#">#qGet2ndVisitRep.firstname# #qGet2ndVisitRep.lastname#</a></cfif> 
 					</td>				
@@ -752,8 +777,9 @@
 				<tr>
 					<td><cfif qGetIntlRep.insurance_typeid LTE 1><input type="checkbox" name="insurance_check" value="0" disabled><cfelse><input type="checkbox" name="insurance_check" value="1" checked disabled></cfif></td>
 					<td>Policy Type :</td>
-					<td><cfif qGetIntlRep.insurance_typeid EQ 0>
-							<font color="FF0000">Missing Policy Type</font>
+					<td>
+						<cfif qGetIntlRep.insurance_typeid EQ 0>
+							<font color="##FF0000">Missing Policy Type</font>
 						<cfelseif qGetIntlRep.insurance_typeid EQ 1> 
                         	n/a
 						<cfelse> 
@@ -764,7 +790,7 @@
                 <tr>
                     <td></td> 	
                     <Td>Policy No.</Td>
-                    <Td>#qInsPolicy.policycode#</Td>
+                    <Td>#qGetInsurancePolicyInfo.policycode#</Td>
                 </tr>
 				<!--- Insurance Information --->
                 <tr>
@@ -1023,6 +1049,3 @@
 <gui:tableFooter />
 
 </cfoutput>
-
-</body>
-</html>
