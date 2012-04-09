@@ -626,7 +626,14 @@
                                 where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
                             </cfquery>
                             <cfif (CLIENT.userid EQ 64 OR CLIENT.userid EQ 126) OR (CLIENT.usertype NEQ 8 AND invoice_check.invoice_access NEQ 1)> 
-                                Not available. <br /> If you wish a copy of your statement please contact Marcel Maebara at marcel@student-management.com
+                                <cfswitch expression="#client.companyid#">
+                                	<cfcase value="14">
+                                    	Not available. <br /> If you wish a copy of your statement please contact Stacy Brewer at stacy@exchange-service.org
+                                    </cfcase>
+                                    <cfdefaultcase>
+                                    	Not available. <br /> If you wish a copy of your statement please contact Marcel Maebara at marcel@student-management.com
+                                    </cfdefaultcase>
+                                </cfswitch>
                             <cfelse>
                                 SMG Detailed Statement : <a href="index.cfm?curdoc=intrep/invoice/statement_detailed" class="smlink" target="_top">View Statement</a><br />
                             </cfif>
