@@ -228,12 +228,26 @@
                 smg_insurance_type it
             INNER JOIN
                 smg_insurance_codes ic ON ic.insuTypeID =  it.insuTypeID
-                    AND
-                        ic.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudents.companyID)#">
                     AND	
                         ic.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudents.seasonID)#"> 
-                    AND
-                        ic.insuTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudents.insurance_typeID)#">                           
+                
+					<!--- Combine ISE Companies --->  
+                    <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
+                        AND
+                            ic.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                    <cfelse>
+                        AND
+                            ic.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudents.companyID)#">
+                    </cfif>
+                    
+					<!--- ESI - Elite Only --->
+                    <cfif CLIENT.companyID EQ 14>
+                        AND
+                            ic.insuTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="11">                           
+                    <cfelse>
+                        AND
+                            ic.insuTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudents.insurance_typeID)#">                           
+                    </cfif>
         </cfquery>
         
         <link rel="stylesheet" href="../linked/css/student_profile.css" type="text/css">
@@ -298,12 +312,12 @@
                                         <td><span class="title">ID</span></td>
                                         <td>###studentid#</td>
                                     </tr>
-                                   <Cfif client.companyid neq 14>
+                                   <cfif CLIENT.companyid neq 14>
                                     <tr>
                                         <td><span class="title">#CLIENT.DSFormName#</span></td>
                                         <td>#ds2019_no#</td>
                                     </tr>
-                                    </Cfif>
+                                    </cfif>
                                     <tr>
                                         <td><span class="title">Program</span></td>
                                         <td>#qGetProgram.programname#</td>
@@ -426,9 +440,9 @@
                                 
                                 <table cellpadding="2" cellspacing="2" border="0" width="100%">
                                     <tr>
-                                        <td><Cfif client.companyid eq 14>Elite<cfelse>#qGetInsuranceInfo.type#</Cfif></td>
+                                        <td>#qGetInsuranceInfo.type#</td>
                                         <td>&middot;</td>
-                                        <td>Policy: <Cfif client.companyid eq 14>IEGE000185586<cfelse>#qGetInsuranceInfo.policycode#</Cfif></td>
+                                        <td>Policy: #qGetInsuranceInfo.policycode#</td>
                                         <td>&middot;</td>
                                         <td>(727) 894 7282</td>
                                         <td>&middot;</td>
@@ -438,7 +452,7 @@
             
                             </td>
                         </Tr> 
-                        <Cfif client.companyid neq 14>    
+                        <cfif CLIENT.companyid NEQ 14>    
                         <Tr>
                             <td valign="top" width="100%" colspan=2>
                                 <span class="profileTitleSection">DEPARTMENT OF STATE</span>
@@ -451,8 +465,10 @@
                                         <td>&middot;</td>
                                         <td>Washington, D.C. 20037</td>
                                         <td>&middot;</td>
-                                        <td>1-866-283-9090<br />
-                                        1-202-203-5096</td>
+                                        <td>
+                                        	1-866-283-9090<br />
+                                        	1-202-203-5096
+                                        </td>
                                         <td>&middot;</td>
                                         <td>jvisas@state.gov</td>
                                     </tr>
@@ -460,7 +476,7 @@
             
                             </td>
                         </Tr>                       
-                        </Cfif>
+                        </cfif>
                 	</table> 
                     
 				</td>
