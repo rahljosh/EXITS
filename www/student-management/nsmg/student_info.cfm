@@ -144,7 +144,7 @@
         FROM 
         	smg_insurance_codes
         WHERE 
-        	seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetSelectedProgram.seasonID#">
+        	seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetSelectedProgram.seasonID)#">
             
 		<!--- Combine ISE Companies --->  
         <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
