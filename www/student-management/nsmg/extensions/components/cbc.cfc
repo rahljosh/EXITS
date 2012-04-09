@@ -1813,17 +1813,22 @@
 				}
 				
             }
-
-			// 2nd Visit Representative
-			if ( LEN(ARGUMENTS.secondVisitRepID) AND NOT VAL(ARGUMENTS.secondVisitRepID) ) {
-				vIsOutOfCompliance = 1;
-				vOtherMessage = vOtherMessage & "<p>You must assign a Second Visit Representative</p>";
-			}
-
-			// School Acceptance
-			if ( NOT IsDate(ARGUMENTS.schoolAcceptanceDate) ) {
-				vIsOutOfCompliance = 1;
-				vOtherMessage = vOtherMessage & "<p>Missing School Acceptance Form</p>";
+			
+			// These are not required for ESI
+			if ( CLIENT.companyID NEQ 14 ) {
+			
+				// 2nd Visit Representative
+				if ( LEN(ARGUMENTS.secondVisitRepID) AND NOT VAL(ARGUMENTS.secondVisitRepID) ) {
+					vIsOutOfCompliance = 1;
+					vOtherMessage = vOtherMessage & "<p>You must assign a Second Visit Representative</p>";
+				}
+	
+				// School Acceptance
+				if ( NOT IsDate(ARGUMENTS.schoolAcceptanceDate) ) {
+					vIsOutOfCompliance = 1;
+					vOtherMessage = vOtherMessage & "<p>Missing School Acceptance Form</p>";
+				}
+			
 			}
         </cfscript>
 
