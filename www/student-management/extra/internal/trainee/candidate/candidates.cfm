@@ -34,7 +34,8 @@
             ec.status, 
             ec.uniqueid,
             ec.ds2019_startDate,
-            ec.ds2019_endDate, 
+            ec.ds2019_endDate,
+            ec.entrydate, 
             c.countryname, 
             p.programname, 
             u.businessname
@@ -149,6 +150,7 @@
 				<th width="12%" bgcolor="4F8EA4" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='programName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Program</a></th>		
 				<th width="25%" bgcolor="4F8EA4" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='businessName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Intl. Rep.</a></th>
                 <th width="12%" bgcolor="4F8EA4" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='ds2019_startDate',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Program Dates</a></th>
+                <th width="12%" bgcolor="4F8EA4" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='ds2019_startDate',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Date of Entry</a></th>
 			</tr>
 		<cfloop query="qCandidatesList">
 			<tr bgcolor="#iif(qCandidatesList.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
@@ -159,7 +161,8 @@
 				<td class="style5">#countryname#</td>
 				<td class="style5">#programname#</td>		
 				<td class="style5">#businessname#</td>
-				<td class="style5">#DateFormat(ds2019_startDate, 'mm/dd/yy')# - #DateFormat(ds2019_endDate, 'mm/dd/yy')#</td>                
+				<td class="style5">#DateFormat(ds2019_startDate, 'mm/dd/yy')# - #DateFormat(ds2019_endDate, 'mm/dd/yy')#</td>  
+                <td class="style5">#DateFormat(entrydate, 'mm/dd/yy')#</td>              
 			</tr>
 		</cfloop>
 		</table>
