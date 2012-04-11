@@ -54,10 +54,17 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #2
                     <cfif pr_sr_approved_date EQ '' and fk_sr_user NEQ client.userid>
                         Pending
                     <cfelse>
-                        <form action="../index.cfm?curdoc=lists/progress_report_info" method="post" name="theForm_#pr_id#" id="theForm_#pr_id#" target="_blank">
-                        <input type="hidden" name="pr_id" value="#pr_id#">
-                        </form>
-                        <a href="javascript:document.theForm_#pr_id#.submit();">View</a>
+                    	<cfif CLIENT.usertype EQ 8>
+                            <form action="../lists/progress_report_info.cfm" method="post" name="theForm_#pr_id#" id="theForm_#pr_id#" target="_blank">
+                            <input type="hidden" name="pr_id" value="#pr_id#">
+                            </form>
+                            <a href="javascript:document.theForm_#pr_id#.submit();">View</a>
+                        <cfelse>
+                            <form action="../index.cfm?curdoc=lists/progress_report_info" method="post" name="theForm_#pr_id#" id="theForm_#pr_id#" target="_blank">
+                            <input type="hidden" name="pr_id" value="#pr_id#">
+                            </form>
+                            <a href="javascript:document.theForm_#pr_id#.submit();">View</a>
+                        </cfif>
                     </cfif>
                 </td>
                 <td>#programname#</td>

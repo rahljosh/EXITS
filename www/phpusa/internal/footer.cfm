@@ -16,7 +16,6 @@
     <cfimport taglib="extensions/customTags/gui/" prefix="gui" />	
 
 </cfsilent>
-
 <!--- Page Footer --->
 <gui:pageFooter
 	footerType="application"

@@ -148,7 +148,7 @@ where php_students_in_program.studentid = #get_student_unqid.studentid#
 		<tr><td><font face="" color="Gray">Weight:</font></td><td>#weight#</td><td></td><td><font face="" color="Gray">Eyes:</font></td><td>#eyecolor#</td></tr>					
 	</table>
 	<br>
-	<table cellpadding=0 cellspacing=0 border=0 width=65% style="font-size:13px">
+	<table cellpadding=0 cellspacing=0 border=0 width=80% style="font-size:13px">
 		<tr><td align="center" width="360">
 				<cfdirectory directory="#APPLICATION.PATH.onlineApp.studentLetter#" name="stuletter" filter="#studentid#.*">
 				<cfif Right(stuletter.name, 3) EQ 'jpg' OR Right(stuletter.name, 3) EQ 'gif'>
@@ -174,6 +174,8 @@ where php_students_in_program.studentid = #get_student_unqid.studentid#
 				&nbsp - &nbsp			
                 <!--- Flight Information --->
                 <a href="student/index.cfm?action=flightInformation&uniqueID=#get_student_unqid.uniqueid#&programID=#get_student_unqid.programID#" class="jQueryModal">Flight Information</a>
+                &nbsp - &nbsp
+                <a href="" onClick="javascript: win=window.open('forms/received_progress_reports.cfm?unqid=#get_student_unqid.uniqueid#', 'Reports', 'height=450, width=610, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A> 
 			</td></tr>
 	</table>
 </table>
