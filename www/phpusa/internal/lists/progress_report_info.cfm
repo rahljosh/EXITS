@@ -550,7 +550,7 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
                 <input type="hidden" name="pr_id" value="#form.pr_id#">
                 <input name="Submit" type="image" src="pics/approve.gif" alt="Approve Report" border=0>
                 </form>
-            <cfelse>
+            <cfelseif CLIENT.usertype NEQ 8>
             	<img src="pics/no_approve.jpg" alt="Approve Report" border=0>
             </cfif>
           </td>
@@ -562,7 +562,7 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
                 <input type="hidden" name="pr_id" value="#form.pr_id#">
                 <input name="Submit" type="image" src="pics/reject.gif" alt="Reject Report" border=0>
                 </form>
-            <cfelse>
+            <cfelseif CLIENT.usertype NEQ 8>
             	<img src="pics/no_reject.jpg" alt="Reject" border=0>
             </cfif>
           </td>
@@ -575,7 +575,7 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
                 <input type="hidden" name="pr_id" value="#form.pr_id#">
                 <input name="Submit" type="image" src="pics/delete.gif" alt="Delete Report" border=0>
                 </form>
-            <cfelse>
+            <cfelseif CLIENT.usertype NEQ 8>
             	<img src="pics/no_delete.jpg" alt="Delete Report"  border=0>
             </cfif>
           </td>
@@ -584,11 +584,20 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
               <td width="15">&nbsp;</td>
               <td>
                 <!--- print --->
-                <form action="lists/progress_report_info.cfm" method="post" target="_blank">
-                <input type="hidden" name="pr_id" value="#form.pr_id#">
-                <input type="hidden" name="report_mode" value="print">
-                <input name="Submit" type="image" src="pics/printer.gif" alt="Print Report" border=0>
-                </form>
+                <cfif CLIENT.usertype EQ 8>
+                	<form action="progress_report_info.cfm" method="post" target="_blank">
+                    <input type="hidden" name="pr_id" value="#form.pr_id#">
+                    <input type="hidden" name="report_mode" value="print">
+                    <input name="Submit" type="image" src="../pics/printer.gif" alt="Print Report" border=0>
+                    </form>
+                <cfelse>
+                	<form action="lists/progress_report_info.cfm" method="post" target="_blank">
+                    <input type="hidden" name="pr_id" value="#form.pr_id#">
+                    <input type="hidden" name="report_mode" value="print">
+                    <input name="Submit" type="image" src="pics/printer.gif" alt="Print Report" border=0>
+                    </form>
+               	</cfif>
+                
               </td>
             <cfif client.usertype LTE 4>
                 <td width="15">&nbsp;</td>
@@ -603,9 +612,9 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
         </cfif>
         </tr>
       </table>
-      
-      <a href="index.cfm?curdoc=lists/progress_reports">Back to Progress Reports</a>
-        
+      <cfif client.usertype NEQ 8>
+      	<a href="index.cfm?curdoc=lists/progress_reports">Back to Progress Reports</a>
+      </cfif>  
         </td>
       </tr>
     </table>

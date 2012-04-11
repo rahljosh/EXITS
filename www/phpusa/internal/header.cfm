@@ -54,8 +54,7 @@
         	messagetype = <cfqueryparam cfsqltype="cf_sql_varchar" value="update">
     </cfquery>
 
-</cfsilent>    
-
+</cfsilent>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -79,7 +78,6 @@
 <body>
 
 <cfoutput>
-
 <table align="center" border="0" height="12" width="90%" cellspacing="0" cellpadding="0">
     <tr>
         <td height="12" align="right" background="images/top_02.gif" >
@@ -146,7 +144,6 @@
         </td>
 	</tr>
 </table>
-
 <!--- Start of Table Body --->
 <table align="center" width="90%" cellpadding="0" cellspacing="0" border="0" bgcolor="##e9ecf1"> 
 	<tr>

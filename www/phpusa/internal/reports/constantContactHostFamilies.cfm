@@ -3,9 +3,7 @@
 	File:		constantContactHostFamilies.cfm
 	Author:		James Griffiths
 	Date:		March 12, 2012
-	Desc:		Constant Contact Information for Students
-
-	Updated:  	
+	Desc:		Constant Contact Information for Host Families
 
 ----- ------------------------------------------------------------------------- --->
 
