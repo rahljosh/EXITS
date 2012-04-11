@@ -604,7 +604,7 @@
             
             <!--- OTHER FAMILY MEMBERS ---> 	
             <tr>
-                <th colspan="9" bgcolor="##e2efc7">O T H E R &nbsp; F A M I L Y &nbsp; M E M B E R S &nbsp; O V E R &nbsp; 17 &nbsp; Y E A R S &nbsp; O L D &nbsp; (Living at Home)</th>
+                <th colspan="9" bgcolor="##e2efc7">O T H E R &nbsp; F A M I L Y &nbsp; M E M B E R S &nbsp; O V E R &nbsp; 16 &nbsp; Y E A R S &nbsp; O L D &nbsp; (Living at Home)</th>
                 <th bgcolor="##e2efc7"><a href="cbc/hostMemberInfo.cfm?hostID=#qGetHost.hostID#" class="jQueryModal">Edit Family Members Info</a></th>
             </tr>
             <tr><td colspan="7">&nbsp;</td></tr>

@@ -264,7 +264,7 @@
                             FLOOR(DATEDIFF("#DateFormat( DateAdd("d", -5, qGetProgramInfo.endDate), 'yyyy-mm-dd')#", birthdate)/365) >= <cfqueryparam cfsqltype="cf_sql_integer" value="18">
                     <cfelse>                    
                         AND 
-                            FLOOR(DATEDIFF(CURRENT_DATE, birthdate)/365) >= <cfqueryparam cfsqltype="cf_sql_integer" value="17">
+                            FLOOR(DATEDIFF(CURRENT_DATE, birthdate)/365) >= <cfqueryparam cfsqltype="cf_sql_integer" value="16">
                     </cfif>
                     
                     ORDER BY 
