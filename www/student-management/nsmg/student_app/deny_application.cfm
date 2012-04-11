@@ -73,7 +73,7 @@ function CheckCompany() {
 	WHERE 
     <Cfif client.companyid eq 14>
     companyid = '14'
-    <cfelseif client.companyid = 10>
+    <cfelseif client.companyid eq 10>
     companyid = '10'
 	<cfelse>
     companyid <= '6'
