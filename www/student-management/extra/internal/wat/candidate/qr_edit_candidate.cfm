@@ -11,6 +11,7 @@
 <cfparam name="FORM.wat_doc_job_offer_applicant" default="0">
 <cfparam name="FORM.wat_doc_job_offer_employer" default="0">
 <cfparam name="FORM.wat_doc_other" default="">
+<cfparam name="FORM.wat_doc_other_received" default="">
 <cfparam name="FORM.verification_address" default="0">
 <cfparam name="FORM.verification_sevis" default="0">
 <cfparam name="FORM.watDateCheckedIn" default="">
@@ -443,6 +444,7 @@
         wat_doc_job_offer_applicant = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_job_offer_applicant#">,
         wat_doc_job_offer_employer = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_job_offer_employer#">,
 		wat_doc_other = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.wat_doc_other#">,
+        wat_doc_other_received = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.wat_doc_other_received#">,
 		
 		<!---- form DS-2019 ---->
         verification_received = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.verification_received#" null="#NOT IsDate(FORM.verification_received)#">,
