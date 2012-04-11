@@ -168,7 +168,64 @@
 
 		<cfreturn qGetCBCHostByID>
 	</cffunction>
+    
+    
+    <!--- Begin of Hosts --->
+	<cffunction name="getLastHostCBC" access="public" returntype="query" output="false" hint="Returns last CBC records for the family">
+		<cfargument name="hostID" required="yes" hint="Host ID is required">
 
+        <cfquery 
+            name="qGetLastHostCBC" 
+            datasource="#APPLICATION.dsn#">
+                SELECT 
+                	*
+                FROM 
+                (
+                    SELECT 
+                        cbc.cbcfamID, 
+                        cbc.hostID, 
+                        cbc.familyID,
+                        cbc.cbc_type,
+                        cbc.date_sent, 
+                        cbc.date_expired,
+                        (
+                            CASE 
+                                WHEN 
+                                    cbc_type = 'father' 
+                                THEN 
+                                    CONCAT('Father - ', h.fatherFirstName, ' ', h.fatherLastName)
+                                WHEN 	
+                                    cbc_type = 'mother' 
+                                THEN 
+                                    CONCAT('Mother - ', h.motherFirstName, ' ', h.motherLastName)
+                                WHEN 	
+                                    cbc_type = 'member' 
+                                THEN 
+                                    CAST(CONCAT('Member - ', shc.name, ' ', shc.lastName, ' - ', FLOOR(DATEDIFF(CURRENT_DATE,birthdate)/365), ' years old') AS CHAR)
+                            END
+                        ) AS fullName                    
+                    FROM 
+                        smg_hosts_cbc cbc
+                    INNER JOIN
+                        smg_hosts h ON h.hostID = cbc.hostID                    
+                    LEFT OUTER JOIN
+                        smg_host_children shc ON shc.hostID = cbc.hostID
+                            AND
+                                shc.childID = cbc.familyID
+                    WHERE 
+                        cbc.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">             	
+                    ORDER BY 
+                        cbc.date_sent DESC
+				) AS tmpTable
+                GROUP BY                    
+                    fullName     
+				ORDER BY
+                	familyID                                            
+		</cfquery>
+		
+		<cfreturn qGetLastHostCBC>
+    </cffunction>            
+    
 
 	<cffunction name="getEligibleHostMember" access="public" returntype="query" output="false" hint="Returns CBC for family members 17 years old and older">
 		<cfargument name="hostID" required="yes" hint="HostID is required">
@@ -778,7 +835,9 @@
                     AND 
                         u.ssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
 				</cfif>
-				
+                
+				GROUP BY
+    				u.userID
                 ORDER BY
                 	c.companyShort,
                     u.lastName
@@ -808,11 +867,11 @@
                     cbc.date_authorized, 
                     cbc.date_sent, 
                     cbc.date_expired,
-                    u.firstName, 
-                    u.lastName, 
-                    u.middlename, 
-                    u.dob, 
-                    u.ssn,
+                    uf.firstName, 
+                    uf.lastName, 
+                    uf.middlename, 
+                    uf.dob, 
+                    uf.ssn,
                     c.companyShort,
                     c.gis_username,
                     c.gis_password,
@@ -820,7 +879,7 @@
                 FROM 
                 	smg_users_cbc cbc
                 INNER JOIN 
-                	smg_user_family u ON u.ID = cbc.familyID
+                	smg_user_family uf ON uf.ID = cbc.familyID
 				LEFT OUTER JOIN
                 	smg_companies c ON c.companyID = cbc.companyID                    
                 WHERE 
@@ -850,13 +909,16 @@
             	<!--- NO SSN --->
 				<cfif VAL(ARGUMENTS.noSSN)>
                 AND 
-                    u.ssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                    uf.ssn = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
 				</cfif>
-				
+                
+				GROUP BY
+                	uf.ID
                 ORDER BY
                 	c.companyShort,
-                    u.lastName
+                    uf.lastName
                 
+                <!--- If running batch, limit to 20 so we don't get time outs --->
                 LIMIT 20
         </cfquery>
    
