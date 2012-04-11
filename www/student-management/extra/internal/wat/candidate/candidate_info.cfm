@@ -367,7 +367,7 @@
 	<ul>
 		<li>the candidate record was deleted or renumbered
 		<li>the link you are following is out of date
-		<li>you do not have proper access lefts to view the candidate
+		<li>you do not have proper access rights to view the candidate
 	</ul>
 	If you feel this is incorrect, please contact <a href="mailto:support@student-management.com">Support</a>
 	<cfabort>
@@ -873,20 +873,37 @@
                                         	<td class="style1" colspan="4">
                                             	
                                                 <table width="100%" cellpadding="4" cellspacing="0" border="0">
-                                                    <tr>
-                                                        <td width="30%" class="style1" align="right">
-                                                            <strong>Other:</strong>
-                                                            <span class="readOnly">#qGetCandidate.wat_doc_other#</span>   
+                                                	<tr>
+                                                		<td width="35%" class="style1" align="right">
+                                                            <strong>Other Document Received:</strong>
                                             			</td>
-                                                        <td width="70%" class="style1" align="left">
+                                                        <td width="65%" class="style1" align="left">
+                                                        	<span class="readOnly">#qGetCandidate.wat_doc_other_received#</span>
+                                                            <input type="text" name="wat_doc_other_received" class="style1 editPage xLargeField" value="#qGetCandidate.wat_doc_other_received#" maxlength="250">
+                                                        </td>
+                                                	</tr>
+                                               	</table>
+                                                     
+                                            </td>
+										</tr> 
+                                        <tr>
+                                        	<td class="style1" colspan="4">
+                                            	
+                                                <table width="100%" cellpadding="4" cellspacing="0" border="0">
+                                                    <tr>
+                                                        <td width="35%" class="style1" align="right">
+                                                            <strong>Other:</strong>
+                                            			</td>
+                                                        <td width="65%" class="style1" align="left">
+                                                        	<span class="readOnly">#qGetCandidate.wat_doc_other#</span> 
                                                             <input type="text" name="wat_doc_other" class="style1 editPage xLargeField" value="#qGetCandidate.wat_doc_other#" maxlength="250">
                                                         </td>
                                                     </tr>
-											
-                               					</table>                
-                                                
-                                            </td>
-										</tr>                                        
+                               					</table>
+                                                                
+                                       		</td>
+                                      	</tr>
+                                                                              
                                     </table>
                    
                                 </td>
