@@ -784,7 +784,7 @@
                                  	<tr  ><td colspan=3><td>#getprevhosts.familylastname# (#getprevhosts.hostid#)</td>
                                  </cfif>    
                                     <cfif qGetResults.secondvisitrepid neq indReports.fk_secondvisitrep>
-                                 	<tr  ><td colspan=2>
+                                 	<td colspan=2>
                                     <cfelse>
                               		<td>
                                     
