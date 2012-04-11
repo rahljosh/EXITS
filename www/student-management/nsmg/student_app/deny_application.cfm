@@ -71,10 +71,12 @@ function CheckCompany() {
 	SELECT companyid, companyname
 	FROM smg_companies
 	WHERE 
-    <cfif client.companyid neq 10>
-    companyid <= '6'
-    <Cfelse>
+    <Cfif client.companyid eq 14>
+    companyid = '14'
+    <cfelseif client.companyid = 10>
     companyid = '10'
+	<cfelse>
+    companyid <= '6'
     </cfif>
 </cfquery>
 
