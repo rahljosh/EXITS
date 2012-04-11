@@ -827,7 +827,7 @@
                                        </tr>
                                    <Cfelse>
                                         <cfif qGetResults.secondvisitrepid eq fk_secondvisitrep>
-                                           <tr  ><td>
+                                           <td>
                                              <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#pr_id#"><img src="pics/buttons/greyedView.png" border=0 /></a>
                                             </td>
                                        </cfif>
