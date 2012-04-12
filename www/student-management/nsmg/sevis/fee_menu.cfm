@@ -39,7 +39,7 @@
 		<tr><th colspan="2" bgcolor="#ededed">Create I-901 Fee Collection (Up to 2000)</th></tr>
 		<tr><td colspan="2" bgcolor="#ededed" align="center">Please, DO NOT Create Files Unnecessarily.</td>
 		<tr><td>Batch ID :</td>
-			<td align="left"><select name="batchid" multiple  size="5">
+			<td align="left"><select name="batchid" multiple size="8">
 				<cfoutput query="get_batches"><option value="#batchid#">#batchid# &nbsp; #DateFormat(datecreated,'mm/dd/yy')# &nbsp;</option></cfoutput></select></td>
 		</tr>
 		<tr>
@@ -57,7 +57,7 @@
 		<tr align="left">
 			<TD width="15%">Program :</td>
 			<TD>
-			<select name="programid"  multiple  size="5">			
+			<select name="programid"  multiple size="8">			
 			<!--- <option value=0>All Programs</option> --->
 			<cfoutput query="get_program"><option value="#ProgramID#">#programname#</option></cfoutput>
 			</select>

@@ -70,7 +70,7 @@
 	<tr><th colspan="2" bgcolor="ededed">Amend Program Dates (Up to 250 students)</th></tr>
 	<tr align="left">
 		<TD width="23%">Program :</td>
-		<TD><select name="programid" multiple  size="5">			
+		<TD><select name="programid" multiple size="8">			
 			<cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
 			</select></td></tr>
 	<tr align="left">

@@ -23,7 +23,7 @@
         qGetPrograms = APPCFC.PROGRAM.getPrograms(dateActive=1);
 		
 		// Get Users
-		qGetIntlRep = APPCFC.USER.getUsers(userType=8);
+		qGetIntlRep = APPCFC.USER.getIntlRepresentatives();
     </cfscript>
 
     <cfquery name="qGetSevisHistory" datasource="MySql">
@@ -57,7 +57,7 @@
 	<tr align="left">
 		<td width="15%">Program :</td>
 		<td>
-        	<select name="programid" multiple  size="5">			
+        	<select name="programid" multiple size="8">			
 				<cfloop query="qGetPrograms"><option value="#qGetPrograms.ProgramID#">#qGetPrograms.programname#</option></cfloop>
 			</select>
         </td>
@@ -65,7 +65,7 @@
 	<tr align="left">
 		<td width="15%">Intl. Representative :</td>
 		<td>
-        	<select name="intRep" multiple  size="5">			
+        	<select name="intRep" multiple  size="10">			
 				<cfloop query="qGetIntlRep"><option value="#qGetIntlRep.userID#">#qGetIntlRep.businessName#</option></cfloop>
 			</select>
         </td>
