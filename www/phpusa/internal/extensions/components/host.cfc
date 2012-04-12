@@ -43,7 +43,6 @@
                     fatherDOB,
                     fatherSSN,
                     father_cell,
-                    fatherCBC_form,
                     fatherDriver,
                     fatherCompany,
                     fatherWorkPhone,
@@ -57,7 +56,6 @@
                     motherDOB,
                     motherSSN,
                     mother_cell,
-                    motherCBC_form,
                     motherDriver,
                     motherCompany,
                     motherWorkPhone,
@@ -218,7 +216,6 @@
                     lastName,
                     SSN,
                     school,
-                    cbc_form_received,
                     shared,
                     roomShareWith
                 FROM 
