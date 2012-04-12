@@ -1,58 +1,79 @@
-<cfparam name="URL.userid" default="">
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		user_form.cfm
+	Author:		Marcus Melo
+	Date:		April 11, 2012
+	Desc:		User Information
 
-<cfif URL.userid EQ "">
-	<cfset new = true>
-<cfelse>
-	<cfif not isNumeric(URL.userid)>
-        a numeric userid is required.
+	Updated:	04/11/2012 - Keeping log of active/inactive
+	
+----- ------------------------------------------------------------------------- --->
+
+<!--- Kill Extra Output --->
+<cfsilent>
+
+	<cfparam name="URL.userID" default="">
+
+	<!--- checkboxes, radio buttons aren't defined if not checked. --->
+    <cfparam name="FORM.submitted" default="0">
+    <cfparam name="FORM.SSN" default="">
+    <cfparam name="FORM.sex" default="">
+    <cfparam name="FORM.changepass" default="1">
+    <cfparam name="FORM.bypass_checklist" default="0">
+    <cfparam name="FORM.invoice_access" default="0">
+    <cfparam name="FORM.active" default="0">
+    <cfparam name="FORM.usebilling" default="0">
+    <!--- these fields aren't always displayed. --->
+    <cfparam name="FORM.comments" default="">
+    <!--- default to USA for non-international users. --->
+    <cfparam name="FORM.country" default="USA">
+    <cfparam name="FORM.date_2nd_visit_contract_received" default="">
+	
+    <cfscript>
+		field_list = 'firstname,middlename,lastname,occupation,businessname,address,address2,city,state,zip,country,drivers_license,dob,sex,phone,phone_ext,work_phone,work_ext,cell_phone,fax,email,email2,skype_id,username,changepass,invoice_access,bypass_checklist,date_contract_received,date_2nd_visit_contract_received,active,dateCancelled,datecreated,usebilling,billing_company,billing_contact,billing_address,billing_address2,billing_city,billing_country,billing_zip,billing_phone,billing_fax,billing_email,comments';
+		
+		// Set new default value
+		new = true;
+
+		// Set Display SSN
+		vDisplaySSN = 0;
+	
+		// This will set if SSN needs to be updated
+		vUpdateSSN = 0;
+	
+		// Get Current User Information
+		qGetUserInfo = APPLICATION.CFC.USER.getUserByID(userID=VAL(URL.userID));
+		
+		// Get Current User Information
+		qGetUserComplianceInfo = APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID);
+	
+		// allow SSN Field - If null or user has access.
+		if ( NOT LEN(qGetUserInfo.SSN) OR qGetUserComplianceInfo.compliance EQ 1 ) {
+			vDisplaySSN = 1;
+			
+			if ( NOT VAL(FORM.submitted) ) {
+				// Display SSN
+				FORM.SSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetUserInfo.SSN, displayType='user');	
+			}
+			
+		}
+	</cfscript>
+    
+</cfsilent>
+
+<cfif LEN(URL.userID)>
+
+	<cfset new = false>
+
+	<cfif NOT isNumeric(URL.userID)>
+        a numeric userID is required.
         <cfabort>
 	</cfif>
-	<cfset new = false>
+
 	<!--- CHECK RIGHTS --->
     <cfinclude template="../check_rights.cfm">
+
 </cfif>
-
-<cfset field_list = 'firstname,middlename,lastname,occupation,businessname,address,address2,city,state,zip,country,drivers_license,dob,sex,phone,phone_ext,work_phone,work_ext,cell_phone,fax,email,email2,skype_id,username,changepass,invoice_access,bypass_checklist,date_contract_received,date_2nd_visit_contract_received,active,dateCancelled,datecreated,usebilling,billing_company,billing_contact,billing_address,billing_address2,billing_city,billing_country,billing_zip,billing_phone,billing_fax,billing_email,comments'>
-
-<!--- checkboxes, radio buttons aren't defined if not checked. --->
-<cfparam name="FORM.submitted" default="0">
-<cfparam name="FORM.SSN" default="">
-<cfparam name="FORM.sex" default="">
-<cfparam name="FORM.changepass" default="1">
-<cfparam name="FORM.bypass_checklist" default="0">
-<cfparam name="FORM.invoice_access" default="0">
-<cfparam name="FORM.active" default="0">
-<cfparam name="FORM.usebilling" default="0">
-<!--- these fields aren't always displayed. --->
-<cfparam name="FORM.comments" default="">
-<!--- default to USA for non-international users. --->
-<cfparam name="FORM.country" default="USA">
-<cfparam name="FORM.date_2nd_visit_contract_received" default="">
-
-<cfscript>
-	// Get Current User Information
-	qGetUserInfo = APPLICATION.CFC.USER.getUserByID(userID=VAL(URL.userID));
-	
-	// Get Current User Information
-	qGetUserComplianceInfo = APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID);
-
-	// Set Display SSN
-	vDisplaySSN = 0;
-
-	// This will set if SSN needs to be updated
-	vUpdateSSN = 0;
-
-	// allow SSN Field - If null or user has access.
-	if ( NOT LEN(qGetUserInfo.SSN) OR qGetUserComplianceInfo.compliance EQ 1 ) {
-		vDisplaySSN = 1;
-		
-		if ( NOT VAL(FORM.submitted) ) {
-			// Display SSN
-			FORM.SSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetUserInfo.SSN, displayType='user');	
-		}
-		
-	}
-</cfscript>
 
 <!--- Process Form Submission --->
 <cfif VAL(FORM.submitted)>
@@ -60,7 +81,7 @@
 	<!------------------------------------------------------
 		ADDRESS CHANGE - SEND EMAIL NOTIFICATION 
 	------------------------------------------------------->
-	<cfif qGetUserInfo.recordCount AND client.companyid neq 14
+	<cfif qGetUserInfo.recordCount AND CLIENT.companyid NEQ 14
 		AND 
 			(
 			 	FORM.address NEQ qGetUserInfo.address 
@@ -82,7 +103,7 @@
 			vEmailToList = '';
 		</cfscript>
         
-        <cfquery name="qGetRegionalManagerEmail" datasource="#application.dsn#">
+        <cfquery name="qGetRegionalManagerEmail" datasource="#APPLICATION.DSN#">
             SELECT 
                 u.firstName,
                 u.lastName,
@@ -90,14 +111,14 @@
             FROM 
                 smg_users u
             LEFT OUTER JOIN
-                user_access_rights uar on uar.userid = u.userid
+                user_access_rights uar on uar.userID = u.userID
             WHERE 
                 uar.regionid IN ( 
                                   SELECT 
                                       regionID 
                                   FROM 
                                       user_access_rights 
-                                  WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#"> ) 
+                                  WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#"> ) 
             AND
                 uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="5"> 
             AND 
@@ -140,7 +161,7 @@
 			<cfoutput>
            		<p>NOTICE OF ADDRESS CHANGE</p>
                 
-	            <p><strong>#FORM.firstname# #FORM.lastname# (###qGetUserInfo.userid#)</strong> has made a change to their address.</p>
+	            <p><strong>#FORM.firstname# #FORM.lastname# (###qGetUserInfo.userID#)</strong> has made a change to their address.</p>
                 
 				<p><strong>NEW ADDRESSS</strong></p>
            		#FORM.address#<br />
@@ -176,27 +197,40 @@
 	------------------------------------------------------->
 
 	<cfif isDefined("FORM.username")>
-        <cfquery name="check_username" datasource="#application.dsn#">
-            SELECT userid
-            FROM smg_users 
-            WHERE username = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(FORM.username)#">
+    
+        <cfquery name="check_username" datasource="#APPLICATION.DSN#">
+            SELECT 
+            	userID
+            FROM 
+            	smg_users 
+            WHERE 
+            	username = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(FORM.username)#">
             <cfif not new>
-                AND userid <> <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
+                AND 
+                	userID != <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
             </cfif>
         </cfquery>
+        
     </cfif>
-    	<cfif isDefined("FORM.email")>
-        <cfquery name="check_email" datasource="#application.dsn#">
-            SELECT userid
-            FROM smg_users 
-            WHERE email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(FORM.email)#">
+    
+    <cfif isDefined("FORM.email")>
+    
+        <cfquery name="check_email" datasource="#APPLICATION.DSN#">
+            SELECT 
+            	userID
+            FROM 
+            	smg_users 
+            WHERE 
+            	email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(FORM.email)#">
             <cfif not new>
-                AND userid <> <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
+                AND 
+                	userID != <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
             </cfif>
         </cfquery>
+        
     </cfif>
 
-	<cfif FORM.lookup_success NEQ "1">
+	<cfif FORM.lookup_success NEQ 1>
 		<cfset errorMsg = 'Please lookup the address.'>
 	<cfelseif trim(FORM.firstname) EQ ''>
 		<cfset errorMsg = "Please enter the First Name.">
@@ -275,7 +309,8 @@
 		<cfif new>
             
         	<cflock timeout="30">
-                <cfquery datasource="#application.dsn#">
+                
+                <cfquery datasource="#APPLICATION.DSN#">
                     INSERT INTO 
                     	smg_users 
                     (
@@ -401,7 +436,7 @@
                         </cfif>
                         
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.comments#" null="#yesNoFormat(trim(FORM.comments) EQ '')#">, 
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">,
                         
                        	
                        	<cfqueryparam cfsqltype="cf_sql_integer" value="0">,
@@ -415,30 +450,30 @@
                     )  
                 </cfquery>
                 
-                <cfquery name="get_id" datasource="#application.dsn#">
+                <cfquery name="get_id" datasource="#APPLICATION.DSN#">
                     SELECT 
-                    	MAX(userid) AS userid
+                    	MAX(userID) AS userID
                     FROM 
                     	smg_users 
                 </cfquery>
                 
             </cflock>
             
-            <cfif FORM.usertype eq 8>
+            <cfif FORM.usertype EQ 8>
 
 				<!--- add company & regional access record only for usertype 8. --->
-                <cfquery datasource="#application.dsn#">
+                <cfquery datasource="#APPLICATION.DSN#">
                     INSERT INTO 
                     	user_access_rights 
                     (
-                    	userid, 
+                    	userID, 
                         companyid, 
                         usertype, 
                         default_access
                     )
                     VALUES 
                     (
-                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#get_id.userid#">,
+                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#get_id.userID#">,
                     	<cfqueryparam cfsqltype="cf_sql_integer" value="5">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="8">, 
                         <cfqueryparam cfsqltype="cf_sql_integer" value="1">
@@ -451,7 +486,7 @@
                         <strong>Ellen</strong> - Please send out a contract to that Agent<br />
                         <strong>Marcel</strong> - Please make sure you have a price, insurance, and SEVIS option.<br />
                         <strong>Brian</strong> - Make sure this agent has been issued an allocation<br /><br />
-                        Agent Info: <a href="#exits_url#/nsmg/index.cfm?curdoc=user_info&userid=">#FORM.businessname#</a>
+                        Agent Info: <a href="#exits_url#/nsmg/index.cfm?curdoc=user_info&userID=">#FORM.businessname#</a>
                     </cfsavecontent>
                 </cfoutput>
 			
@@ -471,7 +506,7 @@
 					<cfinvokeargument name="email_replyto" value="#CLIENT.email#">
                     <cfinvokeargument name="email_subject" value="New Account Created / Login Information">
                     <cfinvokeargument name="include_content" value="send_login">
-                    <cfinvokeargument name="userid" value="#get_id.userid#">
+                    <cfinvokeargument name="userID" value="#get_id.userID#">
                 </cfinvoke>
             </cfif>
             
@@ -482,22 +517,22 @@
 					<cfinvokeargument name="email_replyto" value="#CLIENT.email#">
                     <cfinvokeargument name="email_subject" value="Account Created - more info needed">
                     <cfinvokeargument name="include_content" value="newUserMoreInfo">
-                    <cfinvokeargument name="userid" value="#get_id.userid#">
+                    <cfinvokeargument name="userID" value="#get_id.userID#">
                 </cfinvoke>
             </cfif>
             
             <!--- company & regional access record was added above for usertype 8, so go to user info page. --->
             <cfif FORM.usertype EQ 8>
-            	<cflocation url="index.cfm?curdoc=user_info&userid=#get_id.userid#" addtoken="No">
+            	<cflocation url="index.cfm?curdoc=user_info&userID=#get_id.userID#" addtoken="No">
             <!--- go to company & regional access page.
 			usertype is passed because that was selected on add_user.cfm, so we need to disable it on the access rights FORM. --->
             <cfelse>
-            	<cflocation url="index.cfm?curdoc=forms/access_rights_form&userid=#get_id.userid#&usertype=#FORM.usertype#&new_user=1" addtoken="No">
+            	<cflocation url="index.cfm?curdoc=forms/access_rights_form&userID=#get_id.userID#&usertype=#FORM.usertype#&new_user=1" addtoken="No">
             </cfif>
             
 		<!--- edit --->
 		<cfelse>
-        	
+        
             <cfscript>
 				// Check if we are inactivating an user, if Yes set date // VAL(qGetUserInfo.active) AND 
 				if ( NOT VAL(FORM.active) AND NOT isDate(FORM.dateCancelled) ) {
@@ -505,9 +540,67 @@
 				} else if ( VAL(FORM.active) AND isDate(FORM.dateCancelled) ) {
 					FORM.dateCancelled = "";					
 				}
+				
+				/*-----------------------------------------------------------
+					SETTING RECORD AS ACTIVE/INACTIVE - KEEP HISTORY 
+				-----------------------------------------------------------*/
+				
+				// Reset Fully Enabled Date 
+				vResetDateAccountVerified = 0;
+				
+				// Inactivating User
+				if ( VAL(qGetUserInfo.active) AND NOT VAL(FORM.active) ) {
+
+					// Get User Information
+					qGetEnteredBy = APPLICATION.CFC.USER.getUsers(userID=CLIENT.userID);
+					
+					// Set Action Message
+					vActions = "<strong>Representative set as Inactive</strong> <br /> #CHR(13)#";
+
+					// Add User Information
+					vActions = vActions & "Updated by: #qGetEnteredBy.firstName# #qGetEnteredBy.lastName# (###qGetEnteredBy.userID#) <br /> #CHR(13)#";
+
+					APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
+						applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,
+						foreignTable='smg_users',
+						foreignID=URL.userID,
+						enteredByID=CLIENT.userID,
+						actions=vActions
+					);	
+				
+				// Activating User - Reset fully enabled date
+				} else if ( NOT VAL(qGetUserInfo.active) AND VAL(FORM.active) ) {
+
+					// Get User Information
+					qGetEnteredBy = APPLICATION.CFC.USER.getUsers(userID=CLIENT.userID);
+					
+					// Set Action Message
+					vActions = "<strong>Representative set as Active</strong> <br /> #CHR(13)#";
+
+					//Reset fully enabled date - if user has been enabled before
+					if ( isDate(qGetUserInfo.dateAccountVerified) ) {
+						vResetDateAccountVerified = 1;
+						vActions = vActions & "Previous fully enabled date: #DateFormat(qGetUserInfo.dateAccountVerified, 'mm/dd/yyyy')# <br /> #CHR(13)#";
+					}
+
+					// Add User Information
+					vActions = vActions & "Updated by: #qGetEnteredBy.firstName# #qGetEnteredBy.lastName# (###qGetEnteredBy.userID#) <br /> #CHR(13)#";
+
+					APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
+						applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,
+						foreignTable='smg_users',
+						foreignID=URL.userID,
+						enteredByID=CLIENT.userID,
+						actions=vActions
+					);	
+
+				}
+				/*-----------------------------------------------------------
+					END OF SETTING RECORD AS ACTIVE/INACTIVE - KEEP HISTORY 
+				-----------------------------------------------------------*/
 			</cfscript>
             
-			<cfquery datasource="#application.dsn#">
+			<cfquery datasource="#APPLICATION.DSN#">
 				UPDATE 
                 	smg_users 
                 SET
@@ -578,15 +671,21 @@
                         comments = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.comments#" null="#yesNoFormat(trim(FORM.comments) EQ '')#">,
                     </cfif>
                     
+                    <!--- Reset Date Account Verified --->
+                    <cfif VAL(vResetDateAccountVerified)>
+                    	dateAccountVerified = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                    </cfif>
+                    
                     skype_id = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.skype_id#" null="#yesNoFormat(trim(FORM.skype_id) EQ '')#">
                     
                     WHERE 
-                    	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
+                    	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
 			</cfquery>
             
-            <cflocation url="index.cfm?curdoc=user_info&userid=#URL.userid#" addtoken="No">
+            <cflocation url="index.cfm?curdoc=user_info&userID=#URL.userID#" addtoken="No">
             
 		</cfif>
+        
 	</cfif>
 
 <!--- add --->
@@ -627,7 +726,7 @@
 	<!--- get the access level of the user viewed.
 	If null, then user viewing won't have access to username, etc. --->
     <cfinvoke component="nsmg.cfc.user" method="get_access_level" returnvariable="FORM.usertype">
-        <cfinvokeargument name="userid" value="#URL.userid#">
+        <cfinvokeargument name="userID" value="#URL.userID#">
     </cfinvoke>
 
     <!--- International users don't have the lookup. --->
@@ -673,28 +772,28 @@ function checkForm() {
 }
 function CopyContact() {
 	if (document.my_FORM.copycontact.checked) {
-	document.my_FORM.billing_company.value = document.my_FORM.businessname.value;
-	document.my_FORM.billing_contact.value = document.my_FORM.firstname.value+' '+document.my_FORM.lastname.value;
-	document.my_FORM.billing_address.value = document.my_FORM.address.value;
-	document.my_FORM.billing_address2.value = document.my_FORM.address2.value;
-	document.my_FORM.billing_city.value = document.my_FORM.city.value;      
-	document.my_FORM.billing_country.value = document.my_FORM.country.value;
-	document.my_FORM.billing_zip.value =  document.my_FORM.zip.value;
-	document.my_FORM.billing_phone.value =  document.my_FORM.phone.value;
-	document.my_FORM.billing_fax.value = document.my_FORM.fax.value;
-	document.my_FORM.billing_email.value = document.my_FORM.email.value;
+		document.my_FORM.billing_company.value = document.my_FORM.businessname.value;
+		document.my_FORM.billing_contact.value = document.my_FORM.firstname.value+' '+document.my_FORM.lastname.value;
+		document.my_FORM.billing_address.value = document.my_FORM.address.value;
+		document.my_FORM.billing_address2.value = document.my_FORM.address2.value;
+		document.my_FORM.billing_city.value = document.my_FORM.city.value;      
+		document.my_FORM.billing_country.value = document.my_FORM.country.value;
+		document.my_FORM.billing_zip.value =  document.my_FORM.zip.value;
+		document.my_FORM.billing_phone.value =  document.my_FORM.phone.value;
+		document.my_FORM.billing_fax.value = document.my_FORM.fax.value;
+		document.my_FORM.billing_email.value = document.my_FORM.email.value;
 	}
 	else {
-	document.my_FORM.billing_company.value = '';
-	document.my_FORM.billing_contact.value = '';
-	document.my_FORM.billing_address.value =  '';
-	document.my_FORM.billing_address2.value = '';
-	document.my_FORM.billing_city.value = '';      
-	document.my_FORM.billing_country.value = '';
-	document.my_FORM.billing_zip.value =  ''; 
-	document.my_FORM.billing_phone.value =  '';
-	document.my_FORM.billing_fax.value = '';
-	document.my_FORM.billing_email.value = '';
+		document.my_FORM.billing_company.value = '';
+		document.my_FORM.billing_contact.value = '';
+		document.my_FORM.billing_address.value =  '';
+		document.my_FORM.billing_address2.value = '';
+		document.my_FORM.billing_city.value = '';      
+		document.my_FORM.billing_country.value = '';
+		document.my_FORM.billing_zip.value =  ''; 
+		document.my_FORM.billing_phone.value =  '';
+		document.my_FORM.billing_fax.value = '';
+		document.my_FORM.billing_email.value = '';
    }
 }
 function CopyEmail() {
@@ -714,7 +813,7 @@ function CopyEmail() {
 	</tr>
 </table>
 
-<cfform action="index.cfm?curdoc=forms/user_form&userid=#URL.userid#" method="post" name="my_form" onSubmit="return checkForm();">
+<cfform action="index.cfm?curdoc=forms/user_form&userID=#URL.userID#" method="post" name="my_form" onSubmit="return checkForm();">
 <input type="hidden" name="submitted" value="1">
 <input type="hidden" name="usertype" value="#FORM.usertype#">
 <input type="hidden" name="lookup_success" value="#FORM.lookup_success#"> <!--- this gets set to 1 by the javascript lookup function on success. --->
@@ -755,7 +854,7 @@ function CopyEmail() {
 		<!---- Int. Reps ---->
         <cfif FORM.usertype EQ 8>
 
-            <cfquery name="country_list" datasource="#application.dsn#">
+            <cfquery name="country_list" datasource="#APPLICATION.DSN#">
                 select countryname, countryid
                 from smg_countrylist
                 ORDER BY countryname
@@ -843,7 +942,7 @@ function CopyEmail() {
                 <tr>
                     <td align="right">State: <span class="redtext">*</span></td>
                     <td>
-                        <cfquery name="get_states" datasource="#application.dsn#">
+                        <cfquery name="get_states" datasource="#APPLICATION.DSN#">
                             SELECT state, statename
                             FROM smg_states
                             ORDER BY id
@@ -993,7 +1092,7 @@ function CopyEmail() {
                 	<td colspan=2 bgcolor="CCCCCC"><u>Login Information</u></td>
                 </tr>
                 
-				<cfif new or listFind("1,2,3,4", CLIENT.userType) or CLIENT.usertype lt FORM.usertype or CLIENT.userid eq URL.userid>
+				<cfif new or listFind("1,2,3,4", CLIENT.userType) or CLIENT.usertype lt FORM.usertype or CLIENT.userID eq URL.userID>
                     <tr>
                         <td align="right">Username: <span class="redtext">*</span></td>
                         <td>
