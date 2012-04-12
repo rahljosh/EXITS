@@ -153,12 +153,6 @@
 		// Get Second Host Family Visit
 		qGetSecondVisitReport = APPLICATION.CFC.PROGRESSREPORT.getSecondHostFamilyVisitReport(studentID=qGetStudentInfo.studentID, hostID=qGetPlacementHistoryByID.hostID);
 
-		// Get Host Mother CBC
-		qGetCBCMother = APPLICATION.CFC.CBC.getCBCHostByID(hostID=qGetPlacementHistoryByID.hostID, cbcType='mother', sortBy="date_sent", sortOrder="DESC", getOneRecord=1);
-
-		// Get Host Father CBC
-		qGetCBCFather = APPLICATION.CFC.CBC.getCBCHostByID(hostID=qGetPlacementHistoryByID.hostID, cbcType='father', sortBy="date_sent", sortOrder="DESC", getOneRecord=1);
-
 		// Calculate total of family members
 		vTotalFamilyMembers = 0;
 		
@@ -259,9 +253,6 @@
 			vNotesImage = 'notes_3';
 		}
 		// End of Placement Notes
-
-		// Get Eligible CBC Host Kids
-		qGetEligibleCBCHostMembers = APPLICATION.CFC.CBC.getEligibleHostMember(hostID=qGetPlacementHistoryByID.hostID, studentID=qGetPlacementHistoryList.studentID);
 
 		// Paperwork
         if ( VAL(qGetPlacementHistoryByID.hostID) ) {

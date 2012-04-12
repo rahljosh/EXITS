@@ -622,6 +622,26 @@ div.errors ol {
 
 
 /********************************************
+	 INLINE FORM ERROR
+********************************************/
+span.errors { 
+	text-align:center;
+    margin:0px auto 10px 10px;
+	padding: 5px 10px; 
+	border: #FC6 1px solid; 
+	background-color: #FFC; 
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	color: #C00; 
+	font-style: normal; 
+	font-weight: bold; 
+}
+/********************************************
+	 END OF INLINE FORM ERROR
+********************************************/
+
+
+/********************************************
 	 REPORTS STYLE
 ********************************************/
 table.nav_bar { 
