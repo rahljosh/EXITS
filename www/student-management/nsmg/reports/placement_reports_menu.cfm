@@ -203,64 +203,38 @@
 	<cfif client.usertype LTE '4'>
 	<!--- Row 3 - 2 boxes --->
 	<table cellpadding=6 cellspacing="0" align="center" width="97%">
-	<tr>
-	<td width="50%" align="left" valign="top">
-		<cfform action="reports/welcome_fam_report.cfm" method="POST" target="blank">
-			<table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
-				<tr><th colspan="2" bgcolor="##e2efc7">Welcome Family Report</th></tr>
-				<tr align="left">
-					<td valign="top">Program :</td>
-					<td>
-					<select name="programid" multiple  size="6">
-					<cfloop query="qGetProgramList"><option value="#ProgramID#">#programname#</option></cfloop>
-					</select>
-					</td>
-				</tr>
-				<tr align="left">
-					<td valign="top">Region :</td>
-					<td>
-					<select name="regionid" size="1">
-					<cfif client.usertype GT 4><cfelse>
-					<option value=0>All Regions</option>
-					</cfif>
-					<cfloop query="qGetRegions"><option value="#regionid#"><cfif #len(qGetRegions.regionname)# gt 25>#Left(qGetRegions.regionname, 23)#...<cfelse>#regionname#</cfif></option></cfloop>
-					</select>
-					</td>		
-				</tr>
-				<tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
-			</table>
-		</cfform>
-	</td>
-	<td width="50%" align="right" valign="top">
-		<cfform action="reports/double_placement.cfm" method="POST" target="blank">
-			<table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
-				<tr><th colspan="2" bgcolor="##e2efc7">Double Placement - All Students</th></tr>
-				<tr align="left">
-					<td valign="top">Program :</td>
-					<td>
-					<select name="programid" multiple  size="6">
-					<cfloop query="qGetProgramList"><option value="#ProgramID#">#programname#</option></cfloop>
-					</select>
-					</td>
-				</tr>
-				<tr align="left">
-					<td valign="top">Region :</td>
-					<td>
-					<select name="regionid" size="1">
-					<cfif client.usertype GT 4><cfelse>
-					<option value=0>All Regions</option>
-					</cfif>
-					<cfloop query="qGetRegions"><option value="#regionid#">#regionname#</option></cfloop>
-					</select>
-					</td>		
-				</tr>
-				<tr>
-					<td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td>
-				</tr>
-			</table>
-		</cfform>
-	</td>
-	</tr>
+        <tr>
+            <td width="50%" align="left" valign="top">
+                <cfform action="reports/welcome_fam_report.cfm" method="POST" target="blank">
+                    <table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
+                        <tr><th colspan="2" bgcolor="##e2efc7">Welcome Family Report</th></tr>
+                        <tr align="left">
+                            <td valign="top">Program :</td>
+                            <td>
+                            <select name="programid" multiple  size="6">
+                            <cfloop query="qGetProgramList"><option value="#ProgramID#">#programname#</option></cfloop>
+                            </select>
+                            </td>
+                        </tr>
+                        <tr align="left">
+                            <td valign="top">Region :</td>
+                            <td>
+                            <select name="regionid" size="1">
+                            <cfif client.usertype GT 4><cfelse>
+                            <option value=0>All Regions</option>
+                            </cfif>
+                            <cfloop query="qGetRegions"><option value="#regionid#"><cfif #len(qGetRegions.regionname)# gt 25>#Left(qGetRegions.regionname, 23)#...<cfelse>#regionname#</cfif></option></cfloop>
+                            </select>
+                            </td>		
+                        </tr>
+                        <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
+                    </table>
+                </cfform>
+            </td>
+            <td width="50%" align="right" valign="top">
+        		
+            </td>
+        </tr>
 	</table><br>
 	</cfif>
 	
@@ -394,81 +368,10 @@
         </tr>
 	</table>
 	<br>
-
+	
+	<cfif client.usertype LTE '4'>
+	
 	<!--- Row 6 - 2 boxes --->
-	<table cellpadding=6 cellspacing="0" align="center" width="97%">
-	<tr>
-	<td width="50%" align="left" valign="top">
-		<cfform action="reports/double_doc_tracking.cfm" method="POST" target="blank">
-			<table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
-				<tr><th colspan="2" bgcolor="##e2efc7">Missing Double Placement Docs</th></tr>
-				<tr align="left">
-					<td valign="top">Program :</td>
-					<td>
-                        <select name="programid" multiple  size="6">
-                        <cfloop query="qGetProgramList"><option value="#ProgramID#">#programname#</option></cfloop>
-                        </select>
-					</td>
-				</tr>
-				<tr align="left">
-					<td>Region :</td>
-					<td>
-					<select name="regionid">
-					<cfif client.usertype GT 4><cfelse>
-					<option value=0>All Regions</option>
-					</cfif>
-					<cfloop query="qGetRegions"><option value="#regionid#">#regionname#</option></cfloop>
-					</select>
-					</td>
-                </tr>
-                <tr align="left">
-                    <td>Send as email to manager :</td>
-                    <td>
-                        <input type="radio" name="sendemail" id="sendEmailNo" value="0" checked="checked"> <label for="sendEmailNo">No</label>  
-                        <input type="radio" name="sendemail" id="sendEmailYes" value="1"> <label for="sendEmailYes">Yes</label>
-                    </td>
-                </tr>
-				<tr>
-					<td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td>
-				</tr>
-			</table>
-		</cfform>
-	</td>
-	<td width="50%" align="right" valign="top">
-	<cfif client.usertype LTE '4'>
-		<cfform action="reports/double_doc_tracking_by_fac.cfm" method="POST" target="blank">
-			<table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
-				<tr><th colspan="2" bgcolor="##e2efc7">Missing Double Placement Docs by Fac.</th></tr>
-				<tr align="left">
-					<td valign="top">Program :</td>
-				  <td>
-					<select name="programid" multiple  size="6">
-					<cfloop query="qGetProgramList"><option value="#ProgramID#">#programname#</option></cfloop>
-					</select>
-					<select name="userid" size="1">
-					  <option value=0>All </option>
-					  <cfloop query="get_facilitators">
-					    <option value="#userid#">#get_facilitators.firstname# #get_facilitators.lastname#</option>
-				      </cfloop>
-				    </select></td>
-				</tr>
-				<tr align="left">
-					<td valign="top">Facilitator :</td>
-					<td>&nbsp;</td>		
-				</tr>
-				<tr>
-					<td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td>
-				</tr>
-			</table>
-		</cfform>
-	</cfif>
-	</td>
-	</tr>
-	</table><br>
-	
-	<cfif client.usertype LTE '4'>
-	
-	<!--- Row 7 - 2 boxes --->
 	<table cellpadding=6 cellspacing="0" align="center" width="97%">
 		<tr bgcolor="e2efc7"><th colspan="2">Visible for Office users only</th></tr>
 	</table>
