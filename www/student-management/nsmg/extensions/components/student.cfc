@@ -2317,6 +2317,7 @@
         <cfargument name="doc_single_parents_sign_date" default="" hint="doc_single_parents_sign_date is not required">
         <cfargument name="doc_single_student_sign_date" default="" hint="doc_single_student_sign_date is not required">
         <!--- Placement Paperwork --->
+        <cfargument name="dateRelocated" default="" hint="dateRelocated is not required">
         <cfargument name="doc_full_host_app_date" default="" hint="doc_full_host_app_date is not required">
         <cfargument name="doc_letter_rec_date" default="" hint="doc_letter_rec_date is not required">
         <cfargument name="doc_rules_rec_date" default="" hint="doc_rules_rec_date is not required">
@@ -2358,6 +2359,9 @@
                     doc_single_parents_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_parents_sign_date#" null="#NOT IsDate(ARGUMENTS.doc_single_parents_sign_date)#">,
                     doc_single_student_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_student_sign_date#" null="#NOT IsDate(ARGUMENTS.doc_single_student_sign_date)#">,
                     <!--- Placement Paperwork --->
+                    <!--- Waiting to be Pushed Live - 04/11/2012 - Marcus Melo
+					dateRelocated = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateRelocated#" null="#NOT IsDate(ARGUMENTS.dateRelocated)#">,
+					--->
                     doc_full_host_app_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_full_host_app_date#" null="#NOT IsDate(ARGUMENTS.doc_full_host_app_date)#">,
                     doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_letter_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_letter_rec_date)#">,
                     doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_rules_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_rules_rec_date)#">,

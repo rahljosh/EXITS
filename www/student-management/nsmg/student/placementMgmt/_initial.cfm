@@ -24,6 +24,7 @@
     <cfparam name="FORM.changePlacementExplanation" default="" />
     <cfparam name="FORM.isWelcomeFamily" default="" />
     <cfparam name="FORM.isRelocation" default="" />
+    <cfparam name="FORM.dateRelocated" default="" />
     <cfparam name="FORM.dateSetHostPermanent" default="#DateFormat(now(), 'mm/dd/yyyy')#" />
     <!--- School --->
     <cfparam name="FORM.schoolID" default="0" />  
@@ -67,7 +68,7 @@
 		// Get School Information
 		qGetSchoolInfo = APPLICATION.CFC.SCHOOL.getSchoolAndDatesInfo(schoolID=qGetPlacementHistoryByID.schoolID, seasonID=qGetProgramInfo.seasonID);
 		
-		// FORM Submitted - Update Info
+		// FORM Submitted - Update Placement Information
 		if ( listLen(FORM.subAction) GT 1 ) {
 			
 			// Update hostID
@@ -85,7 +86,13 @@
 				if ( NOT LEN(FORM.isRelocation) ) {
 					SESSION.formErrors.Add("You must answer whether is a relocation or not");
 				}			
-			
+				
+				/* Waiting to be Pushed Live - 04/11/2012 - Marcus Melo
+				if ( VAL(FORM.isRelocation) AND isDate(FORM.dateRelocated) AND FORM.dateRelocated LT now() ) {
+					SESSION.formErrors.Add("Relocation date is out of compliance, please enter a new date");
+				}
+				*/
+
 				if ( NOT VAL(FORM.changePlacementReasonID) ) {
 					SESSION.formErrors.Add("You must select a reason for changing host family");
 				}	
@@ -184,16 +191,21 @@
 			
 			// Update Double Placement
 			if ( ListFindNoCase(FORM.subAction, "updateDoublePlace") ) {
-			
+				
 				if ( VAL(qGetPlacementHistoryByID.doublePlacementID) AND NOT LEN(FORM.doublePlaceReason) ) {
 					SESSION.formErrors.Add("You must enter a reason for changing double placement");
 				}	
 
 				// Check if double placement is not assigned to a different student
 				qCheckDoublePlacement = APPLICATION.CFC.STUDENT.getStudentByID(studentID=VAL(FORM.doublePlace));
-				
-				if ( VAL(FORM.doublePlace) AND VAL(qCheckDoublePlacement.doublePlace) AND qCheckDoublePlacement.doublePlace NEQ FORM.doublePlace ) {
+
+				if ( VAL(FORM.doublePlace) AND VAL(qCheckDoublePlacement.doublePlace) AND qCheckDoublePlacement.doublePlace NEQ FORM.doublePlace AND qCheckDoublePlacement.doublePlace NEQ FORM.studentID ) {
 					SESSION.formErrors.Add("Student #qCheckDoublePlacement.firstName# #qCheckDoublePlacement.familyLastName# ###qCheckDoublePlacement.studentID# is already assigned as double placement with student ###qCheckDoublePlacement.doublePlace#");
+				}
+				
+				// Check if double placement is not assigned to a different host family
+				if ( VAL(FORM.doublePlace) AND qCheckDoublePlacement.hostID NEQ FORM.hostID ) {
+					SESSION.formErrors.Add("Student #qCheckDoublePlacement.firstName# #qCheckDoublePlacement.familyLastName# ###qCheckDoublePlacement.studentID# is not assigned to the same host family");
 				}
 				
 			} 
@@ -207,6 +219,7 @@
 					hostID = FORM.hostID,
 					isWelcomeFamily = FORM.isWelcomeFamily,
 					isRelocation = FORM.isRelocation,
+					dateRelocated = FORM.dateRelocated,
 					changePlacementReasonID = FORM.changePlacementReasonID,
 					changePlacementExplanation = FORM.changePlacementExplanation,
 					schoolID = FORM.schoolID,
@@ -232,8 +245,8 @@
 			
 			}
 
-		// FORM SUBMITTED - Placement Information
-		} else if ( FORM.subAction EQ "placementInformation" ) {
+		// FORM SUBMITTED - NEW Placement Information
+		} else if ( FORM.subAction EQ 'placementInformation' ) {
 			
 			// Data Validation
 			if ( NOT VAL(FORM.hostID) ) {
@@ -264,8 +277,11 @@
 				if ( VAL(qCheckDoublePlacement.doublePlace) AND qCheckDoublePlacement.doublePlace NEQ FORM.studentID ) {
 					SESSION.formErrors.Add("Student #qCheckDoublePlacement.firstName# #qCheckDoublePlacement.familyLastName# ###qCheckDoublePlacement.studentID# is already assigned as double placement with student ###qCheckDoublePlacement.doublePlace#");
 				}
-				
-				FORM.subAction = FORM.subAction & ',updateDoublePlace';
+
+				// Check if double placement is not assigned to a different host family
+				if ( VAL(FORM.doublePlace) AND qCheckDoublePlacement.hostID NEQ FORM.hostID ) {
+					SESSION.formErrors.Add("Student #qCheckDoublePlacement.firstName# #qCheckDoublePlacement.familyLastName# ###qCheckDoublePlacement.studentID# is not assigned to the same host family");
+				}
 				
 			}
 
@@ -374,7 +390,7 @@
 				SESSION.formErrors.Add("You must enter a reason for rejecting this placement");
 			}	
 
-			if ( LEN(FORM.reason) AND LEN(FORM.reason) LT 5 ) { 
+			if ( LEN(FORM.reason) AND NOT LEN(FORM.reason) ) { 
 				// Get all the missing items in a list
 				SESSION.formErrors.Add("Please provide details for rejecting this placement");
 			}	
@@ -408,7 +424,7 @@
 				SESSION.formErrors.Add("You must enter a reason for unplacing this student");
 			}	
 
-			if ( LEN(FORM.reason) AND LEN(FORM.reason) LT 10 ) { 
+			if ( LEN(FORM.reason) AND NOT LEN(FORM.reason) ) { 
 				// Get all the missing items in a list
 				SESSION.formErrors.Add("Please provide details for unplacing this student");
 			}	
@@ -463,13 +479,18 @@
 	$(document).ready(function() {
 							   
 		// opener.location.reload();
+		
 		// Display Form Fields
 		displayFormFields();
+		
+		// Display Relocation Date
+		displayRelocationDate();
 		
 		// Display Change Placecement
 		displayChangePlacementReason();
 		
 	});
+	
 	
 	var displayFormFields = function() { 			
 		
@@ -518,36 +539,9 @@
 
 			displayHiddenForm('setAsPermanentForm');
 
-		</cfif>
+		</cfif>	
 		
-		<cfif NOT ListFindNoCase(FORM.subAction, "reject") AND CLIENT.userType NEQ 7>
-		
-			// Always show the 2nd Visit Rep if it's not assigned and not submitting a rejection form
-			if ( $("#secondVisitRepID").val() == 0 ) { // && $("#validationErrors").val() != 0 
-				vDisplaySaveButton = 1;
-				$("#divSecondVisitRepIDInfo").slideUp();
-				$("#divSecondVisitRepID").slideDown();
-			}
-			
-		<cfelse>
-		
-			// Display 2nd Representative information
-			$("#divSecondVisitRepIDInfo").slideUp();
-			$("#divSecondVisitRepIDInfo").slideDown();
-
-		</cfif>
-
-		<cfif NOT ListFindNoCase(FORM.subAction, "reject")>
-			
-			// Always show the double placement if student is not assigned and not submitting a rejection form
-			if ( $("#doublePlace").val() == 0  ) { // && $("#validationErrors").val() != 0
-				vDisplaySaveButton = 1;
-				$("#divDoublePlaceInfo").slideUp();
-				$("#divDoublePlace").slideDown();
-			}
-
-		</cfif>
-
+		// Update Host
 		<cfif ListFindNoCase(FORM.subAction, "updatehostID")>
 			
 			if ( $("#hostID").val() == 0 || $("#validationErrors").val() != 0 ) {
@@ -559,6 +553,7 @@
 		
 		</cfif>
 		
+		// Update School
 		<cfif ListFindNoCase(FORM.subAction, "updateSchoolID")>		
 			
 			if ( $("#schoolID").val() == 0 || $("#validationErrors").val() != 0 ) {
@@ -569,6 +564,7 @@
 		
 		</cfif>
 		
+		// Update Place Rep ID
 		<cfif ListFindNoCase(FORM.subAction, "updatePlaceRepID")>
 			
 			if ( $("#placeRepID").val() == 0 || $("#validationErrors").val() != 0 ) {
@@ -579,6 +575,7 @@
 		
 		</cfif>
 		
+		// Update Area Rep ID
 		<cfif ListFindNoCase(FORM.subAction, "updateAreaRepID")>
 			
 			if ( $("#areaRepID").val() == 0 || $("#validationErrors").val() != 0 ) { 
@@ -588,23 +585,56 @@
 			}
 		
 		</cfif>
-
-		<cfif ListFindNoCase(FORM.subAction, "updateSecondRepID")>
+		
+		// 2nd Visit Representative - Display if not assigned and not submitting a reject form
+		<cfif CLIENT.userType NEQ 7>
+		
+			<cfif FORM.subAction EQ "placementInformation" OR ListFindNoCase(FORM.subAction, "updateSecondVisitRepID")>
 			
-			if ( $("#secondVisitRepID").val() == 0 || $("#validationErrors").val() != 0 ) { 
+				// Display 2nd Representative information
 				vDisplaySaveButton = 1;
-				$("#divSecondRepIDInfo").slideUp();
-				$("#divSecondRepID").slideDown();
-			}
+				$("#divSecondVisitRepIDInfo").slideUp();
+				$("#divSecondVisitRepID").slideDown();
+
+			<cfelseif NOT listFind("reject,resubmit,unplace,setFamilyAsPermanent", FORM.subAction)>
+			
+				// 2nd Visit Representative not assigned
+				if ( $("#secondVisitRepID").val() == 0 ) { // && $("#validationErrors").val() != 0 
+					vDisplaySaveButton = 1;
+					$("#divSecondVisitRepIDInfo").slideUp();
+					$("#divSecondVisitRepID").slideDown();
+				}
+	
+			</cfif>
 		
 		</cfif>
+		
+		// Double Placement - Display if not assigned and not submitting a reject form
+		<cfif FORM.subAction EQ "placementInformation" OR ListFindNoCase(FORM.subAction, "updateDoublePlace")>
+			
+			// Double Placement Information
+			vDisplaySaveButton = 1;
+			$("#divDoublePlaceInfo").slideUp();
+			$("#divDoublePlace").slideDown();
 
+		<cfelseif NOT listFind("reject,resubmit,unplace,setFamilyAsPermanent", FORM.subAction)>
+		
+			// Double Placement not assigned
+			if ( $("#doublePlace").val() == 0 ) {  // && $("#validationErrors").val() != 0 
+				vDisplaySaveButton = 1;
+				$("#divDoublePlaceInfo").slideUp();
+				$("#divDoublePlace").slideDown();
+			}
+
+		</cfif>
+		
 		// Display Save Button
 		if ( vDisplaySaveButton == 1 ) {
 			$("#tableDisplaySaveButton").slideDown();
 		}
 	
 	}
+
 
 	var displayChangePlacementReason = function() {
 		
@@ -633,6 +663,28 @@
 
 	}
 
+	
+	var displayRelocationDate = function() {
+		
+		/* Waiting to be Pushed Live - 04/11/2012 - Marcus Melo
+		// Get Change Placement Reason ID Value		
+		vGetRelocationOption = $("input[name='isRelocation']:checked").val() ;
+		
+		// Used when relocation is hard coded
+		vCheckIsRelocationHiddenField = $("#isRelocation").val();
+		
+		if ( vGetRelocationOption == 1 || vCheckIsRelocationHiddenField == 1 ) {
+			// Show Form
+			$(".relocationDateInput").fadeIn('fast');
+		} else {
+			// Hide Forms
+			$(".relocationDateInput").fadeOut('fast');
+		}
+		*/
+		
+	}
+
+
 	var displayHiddenForm = function(formID, buttonID) {
 		
 		// Hide Button ( Approval/Reject | Resubmit )
@@ -644,6 +696,7 @@
 		$("#" + formID).slideDown();
 
 	}
+
 
 	var displayUpdateField = function(div, formField) { 
 		
@@ -675,6 +728,8 @@
 			
 			$("#isWelcomeFamily0").attr('checked', false);
 			$("#isWelcomeFamily1").attr('checked', false);
+			
+			displayRelocationDate();
 		}
 		
 		// School Field
@@ -712,6 +767,7 @@
 	
 	}
 	
+	
 	// Display Approval Button
 	var displayApprovalButton = function(divID) { 
 	
@@ -728,6 +784,7 @@
 		}
 		
 	}	
+	
 	
 	// Modal Confirmation - Approve Placement
 	var approvePlacement = function() { 	
@@ -1111,12 +1168,18 @@
                                 	<input type="hidden" name="isRelocation" id="isRelocation" value="#VAL(FORM.isRelocation)#" />
                                     <label for="isRelocation">#YesNoFormat(VAL(FORM.isRelocation))#</label>  
                                 <cfelse>
-                                    <input type="radio" name="isRelocation" id="isRelocation0" value="0" <cfif NOT VAL(FORM.isRelocation)> checked="checked" </cfif> >
+                                    <input type="radio" name="isRelocation" id="isRelocation0" value="0" <cfif NOT VAL(FORM.isRelocation)> checked="checked" </cfif> onchange="displayRelocationDate();">
                                     <label for="isRelocation0">No</label>                            
                                     &nbsp;                            
-                                    <input type="radio" name="isRelocation" id="isRelocation1" value="1" <cfif FORM.isRelocation EQ 1> checked="checked" </cfif> >
+                                    <input type="radio" name="isRelocation" id="isRelocation1" value="1" <cfif FORM.isRelocation EQ 1> checked="checked" </cfif> onchange="displayRelocationDate();">
                                     <label for="isRelocation1">Yes</label>
                                 </cfif>
+
+								<!--- Relocation Date --->
+                                <!--- Waiting to be Pushed Live - 04/11/2012 - Marcus Melo
+                                <span class="relocationDateInput" style="display:none">Please enter a relocation date (if known):</span> 
+                                <input type="text" name="dateRelocated" id="dateRelocated" class="datePicker relocationDateInput displayNone" value="#DateFormat(FORM.dateRelocated, 'mm/dd/yyyy')#">
+                                --->
                                 
 								<!--- Reason --->
                                 <span>Please indicate why you are changing the host family: <em>*</em></span> 
