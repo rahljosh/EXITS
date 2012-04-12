@@ -809,8 +809,7 @@
 					
 				// UNPLACE STUDENT
 				case 'unplaceStudent':
-					vActions = "
-					<strong>Student Set to Unplaced</strong> <br /> #CHR(13)#";			
+					vActions = "<strong>Student Set to Unplaced</strong> <br /> #CHR(13)#";			
 					break; 
 					
 				// SET FAMILY AS PERMANENT
