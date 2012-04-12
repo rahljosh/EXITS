@@ -90,6 +90,48 @@
 	</cffunction>
 
 
+	<cffunction name="getIntlRepresentatives" access="public" returntype="query" output="false" hint="Gets a list of intl. representatives assigned to active students">
+        <cfargument name="isActive" default="1" hint="isActive is not required">
+
+        <cfquery 
+			name="qGetIntlRepresentatives" 
+			datasource="#APPLICATION.dsn#">
+                SELECT DISTINCT
+					u.*
+                FROM 
+                    smg_users u
+                INNER JOIN
+                	user_access_rights uar ON uar.userID = u.userID
+                INNER JOIN
+                	smg_students s ON s.intRep = u.userID
+                    	AND
+                        	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+						<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
+                            AND          
+                                s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+                        <cfelse>
+                            AND          
+                                s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#"> 
+                        </cfif>
+                WHERE
+                    uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+                    
+                <cfif LEN(ARGUMENTS.isActive)>
+                	AND
+                    	u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.isActive#">
+                </cfif>
+
+                GROUP BY
+                	u.userID 
+                                   
+                ORDER BY 
+                    u.businessName                
+			</cfquery>
+		   
+		<cfreturn qGetIntlRepresentatives>
+	</cffunction>
+
+
 	<cffunction name="getCompleteUserAddress" access="public" returntype="query" output="false" hint="Returns complete user address">
     	<cfargument name="userID" default="" hint="userID is required">
         

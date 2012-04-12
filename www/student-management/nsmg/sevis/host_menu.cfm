@@ -71,7 +71,7 @@
 	<tr><td colspan="2" align="center" bgcolor="ededed"><font size="-2">Approved Placement Students Only</font></td></tr>
 	<tr align="left">
 		<TD width="15%">Program :</td>
-		<TD><select name="programid" multiple  size="5">			
+		<TD><select name="programid" multiple size="8">			
 			<cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
 			</select></td></tr>
 	<tr align="left">

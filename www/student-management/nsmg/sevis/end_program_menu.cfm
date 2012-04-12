@@ -56,7 +56,7 @@
 	<tr><td colspan="2" align="center">According to Flight Information or Termination Date prior to today's date.</td></tr>
 	<tr>
 		<TD width="15%">Program :</td>
-		<TD><cfselect name="programid" multiple  size="5">			
+		<TD><cfselect name="programid" multiple size="8">			
 			<cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
 			</cfselect></td></tr>
 	<tr>
