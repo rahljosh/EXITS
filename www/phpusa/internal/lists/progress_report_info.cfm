@@ -1,3 +1,7 @@
+
+<!--- Import CustomTag --->
+<cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
+
 <cfparam name="form.pr_action" default="">
 <cfswitch expression="#form.pr_action#">
 <!--- delete contact date. --->
@@ -80,7 +84,7 @@ function OpenLetter(url) {
 
 <!--- view or print --->
 <cfparam name="form.report_mode" default="view">
-
+<link rel="stylesheet" href="../phpusa.css" type="text/css">
 <cfif form.report_mode EQ 'print'>
 	<link rel="stylesheet" href="../phpusa.css" type="text/css">
     <!--- override the blue background color on the style sheet with white. --->
@@ -92,6 +96,14 @@ function OpenLetter(url) {
     -->
     </style>
 </cfif>
+
+<style type="text/css">
+span.mainSpan {
+		color:white; 
+		font-weight:bold;
+		font-size:12px;
+	}
+</style>
 
 <cfparam name="form.pr_id" default="">
 <cfif not isNumeric(form.pr_id)>
@@ -239,13 +251,32 @@ function OpenLetter(url) {
 
 <cfoutput>
 
-<cfif form.report_mode EQ 'view'>
-
+	<center>
     <br />
     <!--- outside table --->
-    <table cellpadding="5" align="center" bgcolor="ffffff" class="box">
-        <tr bgcolor="C2D1EF">
-            <td><span class="get_attention"><b>::</b> Progress Report</span></td>
+    <table width="45%" cellpadding="5" align="center" bgcolor="ffffff" style="border-style:solid; border-width:thin;">
+    	<tr>
+        	<td align="center">
+            	<cfif form.report_mode EQ 'print'>
+					<!--- the image isn't working on the PDF so put company name instead of image. --->
+                    <cfif isDefined("form.pdf")>
+                        <cfquery name="get_company" datasource="#application.dsn#">
+                            SELECT companyname
+                            FROM smg_companies
+                            WHERE companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student.companyid#">
+                        </cfquery>
+                        #get_company.companyname#<br />
+                    <cfelse>
+                        <img src="../../images/#CLIENT.companyID#_short_profile_header.jpg" width="790" height="170" />
+                    </cfif>
+               	</cfif>
+            </td>
+      	</tr>
+        <tr>
+            <td align="center">
+            	<span>Progress Report for </span>
+            	<span style="font-weight:bold; font-size:18px;">#get_student.firstname# #get_student.familylastname# (#get_student.studentid#)<br>#monthasstring(get_report.pr_month_of_report)#</span>
+          	</td>
         </tr>
         <tr>
             <td>
@@ -261,37 +292,13 @@ function OpenLetter(url) {
         </table>
     </cfif>
 
-</cfif>
-
-<center>
 <br />
-<font size="2"><strong>
 
-<cfif form.report_mode EQ 'print'>
-	<!--- the image isn't working on the PDF so put company name instead of image. --->
-	<cfif isDefined("form.pdf")>
-        <cfquery name="get_company" datasource="#application.dsn#">
-            SELECT companyname
-            FROM smg_companies
-            WHERE companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student.companyid#">
-        </cfquery>
-        #get_company.companyname#<br />
-    <cfelse>
-    	<img src="../pics/dmd-logo.jpg" border=0 align="left">
-    </cfif>
-    Student Progress Report<br />
-</cfif>
-
-Student: #get_student.firstname# #get_student.familylastname# (#get_student.studentid#)<br>
-#monthasstring(get_report.pr_month_of_report)#
-</strong></font>
-<br /><br />
-
-<table cellpadding="2" cellspacing="0">
+<table cellpadding="2" cellspacing="0" width="100%">
 
 <cfif form.report_mode EQ 'view'>
-      <tr align="center">
-      	<td bgcolor="C2D1EF" colspan="2"><span class="get_attention">Status</span></td>
+      <tr align="center" height="25">
+      	<td colspan="2"><img src=<cfif form.report_mode EQ 'print'>"../pics/pisStatus.png"<cfelse>"pics/pisStatus.png"</cfif> /></td>
       </tr>
       <tr>
         <th align="right">SR Approved:</th>
@@ -337,8 +344,8 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
       </tr>
 </cfif>
 
-  <tr align="center">
-    <td bgcolor="C2D1EF" colspan="2"><span class="get_attention">Program</span></td>
+  <tr width="100%" height="25" align="center">
+    <td colspan="2"><img src=<cfif form.report_mode EQ 'print'>"../pics/pisProgram.png"<cfelse>"pics/pisProgram.png"</cfif> /></td>
   </tr>
   <tr>
     <th align="right">Program Name:</th>
@@ -375,33 +382,42 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
         </cfif>
     </td>
   </tr>
-  <!---<tr>
-    <th align="right">International Agent:</th>
-    <td>#get_international_rep.businessname# (#get_international_rep.userid#)</td>
-  </tr>--->
 </table>
 
 <br />
 
-<table cellpadding="2" cellspacing="0">
-  <tr>
-    <td bgcolor="C2D1EF" colspan="2">
-        <table cellpadding="0" cellspacing="0" width="100%">
-          <tr align="center">
-            <td><span class="get_attention">Contact Dates</span></td>
-		<cfif allow_edit and form.report_mode EQ 'view'>
-			<!--- add contact date. --->
-            <form action="index.cfm?curdoc=forms/pr_date_form" method="post">
-            <td width="1">
-                <input type="hidden" name="pr_id" value="#form.pr_id#">
-                <input name="Submit" type="image" src="pics/new.gif" alt="Add Contact Date" border=0>
-            </td>
-            </form>
-		</cfif>
-          </tr>
-        </table>
-    </td>
-  </tr>
+<cfif form.report_mode EQ 'print'>
+	<table cellpadding="2" cellspacing="0" width="100%">
+   		<tr>
+        	<td colspan="2">
+            	<table cellpadding="0" cellspacing="0" width="100%">
+              		<tr align="center">
+                		<td colspan="2"><img src="../pics/pisContactDates.png" /></td>
+          			</tr>
+        		</table>
+    		</td>
+  		</tr>
+<cfelse>
+    <table cellpadding="2" cellspacing="0" width="100%">
+      <tr>
+        <td bgcolor="1E2456" colspan="2">
+            <table cellpadding="0" cellspacing="0" width="100%">
+              <tr align="center">
+                <td colspan="2"><span class="mainSpan">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CONTACT DATES</span></td>
+            <cfif allow_edit and form.report_mode EQ 'view'>
+                <!--- add contact date. --->
+                <form action="index.cfm?curdoc=forms/pr_date_form" method="post">
+                <td width="1">
+                    <input type="hidden" name="pr_id" value="#form.pr_id#">
+                    <input name="Submit" type="image" src="pics/new.gif" alt="Add Contact Date" border=0>
+                </td>
+                </form>
+            </cfif>
+              </tr>
+            </table>
+        </td>
+      </tr>
+</cfif>
 <cfif form.report_mode EQ 'view'>
   <tr>
     <td colspan="2"><font size=-2>Each report must show monthly contact, including at least one contact for both Host Family and Student.</font></td>
@@ -460,9 +476,9 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
 
 <br />
 
-<table cellpadding="2" cellspacing="0">
-  <tr align="center">
-    <td bgcolor="C2D1EF" colspan="2"><span class="get_attention">Questions</span></td>
+<table cellpadding="2" cellspacing="0" width="100%">
+  <tr align="center" height="25">
+    <td colspan="2"><img src=<cfif form.report_mode EQ 'print'>"../pics/pisQuestions.png"<cfelse>"pics/pisQuestions.png"</cfif> /></td>
   </tr>
   <tr align="center">
     <td colspan="2">
@@ -503,9 +519,9 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
 
 	<br />
 
-    <table border=0 align="center" width="100%">
-      <tr align="center">
-        <td bgcolor="C2D1EF"><span class="get_attention">Options</span></td>
+    <table align="center" width="100%">
+      <tr align="center" height="25">
+        <td colspan="2"><img src=<cfif form.report_mode EQ 'print'>"../pics/pisOptions.png"<cfelse>"pics/pisOptions.png"</cfif> /></td>
       </tr>
     </table>
 
