@@ -840,7 +840,13 @@
                         <td><label for="doc_school_sign_date">Date of Signature</label></td>
                         <td>
                             <span class="readOnly displayNone">#DateFormat(FORM.doc_school_sign_date, 'mm/dd/yyyy')#</span>
-                            <input type="text" name="doc_school_sign_date" id="doc_school_sign_date" class="datePicker editPage displayNone compliantField" value="#DateFormat(FORM.doc_school_sign_date, 'mm/dd/yyyy')#" onchange="displayNonCompliant('doc_school_sign_date');">
+                            
+                            <!--- Display Compliance for 12/13 --->
+                            <cfif qGetProgramInfo.seasonid GTE 9>
+	                            <input type="text" name="doc_school_sign_date" id="doc_school_sign_date" class="datePicker editPage displayNone compliantField" value="#DateFormat(FORM.doc_school_sign_date, 'mm/dd/yyyy')#" onchange="displayNonCompliant('doc_school_sign_date');">
+                            <cfelse>
+	                            <input type="text" name="doc_school_sign_date" id="doc_school_sign_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_school_sign_date, 'mm/dd/yyyy')#">
+    						</cfif>
                         </td>
                     </tr>				
 				</table>
