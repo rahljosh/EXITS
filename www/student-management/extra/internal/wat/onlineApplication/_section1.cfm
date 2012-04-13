@@ -399,7 +399,7 @@
     <input type="hidden" name="currentTabID" value="0" />
     <input type="hidden" name="candidateID" id="candidateID" value="#FORM.candidateID#" />
     
-    <p class="legend"><strong>Note:</strong> Required fields are marked with an asterisk (<em>*</em>)</p>
+    <cfif printApplication EQ 0><p class="legend"><strong>Note:</strong> Required fields are marked with an asterisk (<em>*</em>)</p></cfif>
         
     <!--- Personal Data --->
     <fieldset>
@@ -966,6 +966,8 @@
                 <p class="note">(if applicable - E.g.: 2010 - CSB)</p>
             </cfif>            
         </div>
+        
+        <div style="clear:both;"></div>
         
         <!--- Social Security Number --->
         <div class="field">

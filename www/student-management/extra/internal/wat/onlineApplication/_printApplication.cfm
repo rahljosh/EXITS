@@ -117,23 +117,25 @@
                     <div class="printWrapper">
                         <cfinclude template="_section1.cfm">
                     </div>
-            
-                    <!--- Page Break --->
-                    <cfdocumentitem type="pagebreak"></cfdocumentitem>
-            
-                    <!--- Section 2 --->
-                    <div class="printWrapper">
-                        <cfinclude template="_section2.cfm">
-                    </div>
-            
-                    <!--- Page Break --->
-                    <cfdocumentitem type="pagebreak"></cfdocumentitem>
-            
-                    <!--- Section 3 --->
-                    <div class="printWrapper">
-                        <cfinclude template="_section3.cfm">
-                    </div>
+            		
+                    <cfif NOT ListFind("1,2,3,4", CLIENT.userType)>
+						<!--- Page Break --->
+                        <cfdocumentitem type="pagebreak"></cfdocumentitem>
                 
+                        <!--- Section 2 --->
+                        <div class="printWrapper">
+                            <cfinclude template="_section2.cfm">
+                        </div>
+                	</cfif>
+                
+                        <!--- Page Break --->
+                        <cfdocumentitem type="pagebreak"></cfdocumentitem>
+                
+                        <!--- Section 3 --->
+                        <div class="printWrapper">
+                            <cfinclude template="_section3.cfm">
+                        </div>
+                    
                 </cfdefaultcase>
             
             </cfswitch>
