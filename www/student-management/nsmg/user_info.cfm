@@ -1430,7 +1430,7 @@
                         <td height="24" width="13" background="pics/header_leftcap.gif">&nbsp;</td>
                         <td width="26" background="pics/header_background.gif"><img src="pics/notes.gif"></td>
                         <td background="pics/header_background.gif"><h2>References</h2></td>
-                        <td background="pics/header_background.gif" width="140" align="right"><a href="javascript:openPopUp('forms/repRefs.cfm?curdoc=repRefs', 640, 800);">Add/Edit Refs</a></td>
+                        <td background="pics/header_background.gif" width="140" align="right"><a href="javascript:openPopUp('forms/repRefs.cfm?curdoc=repRefs&userid=#url.userid#', 640, 800);">Add/Edit Refs</a></td>
                         <td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
                     </tr>
                 </table>
