@@ -55,6 +55,42 @@
 
 </cfsilent>
 
+<script type="text/javascript">
+	$(document).ready(function() {
+		
+		// --- START OF VERICATION RECEIVED --- //
+		var confirmReceived = function() {
+			// Are you sure you would like to check DS-2019 verification for student #" + studentID + " as received?
+			if (confirm(" Are you sure you would like to delete this application? \n If you change your mind in the future, please contact suppport to reactivate this account.")){
+				return true; 
+			} else {
+				return false; 
+			}
+		}	
+	
+		// Pop Up Application 
+		$('.popUpOnlineApplication').popupWindow({ 
+			height:600, 
+			width:1100,
+			centerBrowser:1,
+			scrollbars:1,
+			resizable:1,
+			windowName:'onlineApplication'
+		}); 
+		
+		// Pop Up Application 
+		$('.popUpDisplayLogin').popupWindow({ 
+			height:250, 
+			width:600,
+			centerBrowser:1,
+			scrollbars:0,
+			resizable:1,
+			windowName:'loginInformation'
+		}); 
+		
+	});
+</script>
+
 <cfoutput>
 
 <div class="divPageBox">
@@ -142,35 +178,3 @@
 </div>
 
 </cfoutput>
-
-<script type="text/javascript">
-	// --- START OF VERICATION RECEIVED --- //
-	var confirmReceived = function() {
-		// Are you sure you would like to check DS-2019 verification for student #" + studentID + " as received?
-		if (confirm(" Are you sure you would like to delete this application? \n If you change your mind in the future, please contact suppport to reactivate this account.")){
-			return true; 
-		} else {
-			return false; 
-		}
-	}	
-
-	// Pop Up Application 
-	$('.popUpOnlineApplication').popupWindow({ 
-		height:600, 
-		width:1100,
-		centerBrowser:1,
-		scrollbars:1,
-		resizable:1,
-		windowName:'onlineApplication'
-	}); 
-	
-	// Pop Up Application 
-	$('.popUpDisplayLogin').popupWindow({ 
-		height:250, 
-		width:600,
-		centerBrowser:1,
-		scrollbars:0,
-		resizable:1,
-		windowName:'loginInformation'
-	}); 
-</script>
