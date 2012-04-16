@@ -84,8 +84,8 @@ function OpenLetter(url) {
 
 <!--- view or print --->
 <cfparam name="form.report_mode" default="view">
-<link rel="stylesheet" href="../phpusa.css" type="text/css">
-<cfif form.report_mode EQ 'print'>
+<cfparam name="form.email" default="">
+<cfif form.report_mode EQ 'print' OR CLIENT.userType EQ 8>
 	<link rel="stylesheet" href="../phpusa.css" type="text/css">
     <!--- override the blue background color on the style sheet with white. --->
 	<style type="text/css">
@@ -257,7 +257,7 @@ span.mainSpan {
     <table width="45%" cellpadding="5" align="center" bgcolor="ffffff" style="border-style:solid; border-width:thin;">
     	<tr>
         	<td align="center">
-            	<cfif form.report_mode EQ 'print'>
+            	<cfif form.report_mode EQ 'print' OR CLIENT.userType EQ 8>
 					<!--- the image isn't working on the PDF so put company name instead of image. --->
                     <cfif isDefined("form.pdf")>
                         <cfquery name="get_company" datasource="#application.dsn#">
@@ -298,7 +298,7 @@ span.mainSpan {
 
 <cfif form.report_mode EQ 'view'>
       <tr align="center" height="25">
-      	<td colspan="2"><img src=<cfif form.report_mode EQ 'print'>"../pics/pisStatus.png"<cfelse>"pics/pisStatus.png"</cfif> /></td>
+      	<td colspan="2"><img src=<cfif (NOT isDefined(form.email)) AND (form.report_mode EQ 'print' OR CLIENT.usertype EQ 8)>"../pics/pisStatus.png"<cfelse>"pics/pisStatus.png"</cfif> /></td>
       </tr>
       <tr>
         <th align="right">SR Approved:</th>
@@ -345,7 +345,7 @@ span.mainSpan {
 </cfif>
 
   <tr width="100%" height="25" align="center">
-    <td colspan="2"><img src=<cfif form.report_mode EQ 'print'>"../pics/pisProgram.png"<cfelse>"pics/pisProgram.png"</cfif> /></td>
+    <td colspan="2"><img src=<cfif (NOT isDefined(form.email)) AND (form.report_mode EQ 'print' OR CLIENT.usertype EQ 8)>"../pics/pisProgram.png"<cfelse>"pics/pisProgram.png"</cfif> /></td>
   </tr>
   <tr>
     <th align="right">Program Name:</th>
@@ -386,13 +386,13 @@ span.mainSpan {
 
 <br />
 
-<cfif form.report_mode EQ 'print'>
+<cfif form.report_mode EQ 'print' OR CLIENT.userType EQ 8>
 	<table cellpadding="2" cellspacing="0" width="100%">
    		<tr>
         	<td colspan="2">
             	<table cellpadding="0" cellspacing="0" width="100%">
               		<tr align="center">
-                		<td colspan="2"><img src="../pics/pisContactDates.png" /></td>
+                		<td colspan="2"><img src=<cfif isDefined(form.email)>"pics/pisContactDates.png"<cfelse>"../pics/pisContactDates.png"</cfif> /></td>
           			</tr>
         		</table>
     		</td>
@@ -478,7 +478,7 @@ span.mainSpan {
 
 <table cellpadding="2" cellspacing="0" width="100%">
   <tr align="center" height="25">
-    <td colspan="2"><img src=<cfif form.report_mode EQ 'print'>"../pics/pisQuestions.png"<cfelse>"pics/pisQuestions.png"</cfif> /></td>
+    <td colspan="2"><img src=<cfif (NOT isDefined(form.email)) AND (form.report_mode EQ 'print' OR CLIENT.usertype EQ 8)>"../pics/pisQuestions.png"<cfelse>"pics/pisQuestions.png"</cfif> /></td>
   </tr>
   <tr align="center">
     <td colspan="2">
@@ -521,7 +521,7 @@ span.mainSpan {
 
     <table align="center" width="100%">
       <tr align="center" height="25">
-        <td colspan="2"><img src=<cfif form.report_mode EQ 'print'>"../pics/pisOptions.png"<cfelse>"pics/pisOptions.png"</cfif> /></td>
+        <td colspan="2"><img src=<cfif (NOT isDefined(form.email)) AND (form.report_mode EQ 'print' OR CLIENT.usertype EQ 8)>"../pics/pisOptions.png"<cfelse>"pics/pisOptions.png"</cfif> /></td>
       </tr>
     </table>
 

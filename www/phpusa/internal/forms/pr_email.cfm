@@ -27,7 +27,9 @@
 			<!--- form.pr_id and form.report_mode are required for the progress report in print mode.
 			form.pdf is used to not display the logo which isn't working on the PDF. --->
             <cfset form.report_mode = 'print'>
-            <cfset form.pdf = 1>
+            <!---<cfset form.pdf = 1>--->
+            <!--- This variable is to display the images properly if coming from this file --->
+            <cfset form.email = "email">
             <cfinclude template="../lists/progress_report_info.cfm">
         </cfdocument>
                 
