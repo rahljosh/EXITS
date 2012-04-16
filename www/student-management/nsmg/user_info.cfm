@@ -385,8 +385,10 @@
 					<td height="24" width="13" background="pics/header_leftcap.gif">&nbsp;</td>
 					<td width="26" background="pics/header_background.gif"><img src="pics/user.gif"></td>
 					<td background="pics/header_background.gif"><h2>Personal Information</h2></td>
-					<td background="pics/header_background.gif" width="16"><a href="index.cfm?curdoc=forms/user_form&userid=#rep_info.userid#"><img src="pics/edit.png" border="0" alt="Edit"></a></td>
-					<td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
+					<cfif CLIENT.userType NEQ 27>
+                    	<td background="pics/header_background.gif" width="16"><a href="index.cfm?curdoc=forms/user_form&userid=#rep_info.userid#"><img src="pics/edit.png" border="0" alt="Edit"></a></td>
+					</cfif>
+                    <td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
 				</tr>
 			</table>
 			<table width="100%" cellpadding=10 cellspacing="0" border="0" class="section">
@@ -473,17 +475,24 @@
                             <strong>Username:</strong>&nbsp;&nbsp;#username#<br>
                             <strong>Password:</strong>&nbsp;&nbsp;#password#<br>
                       </cfif>
+                      
                         <!--- change password: if viewing own profile. --->
                         <cfif CLIENT.userid EQ rep_info.userid>
                             <a href="index.cfm?curdoc=forms/change_password">Change Password</a><br>
                         </cfif>
+                        
 						<cfif CLIENT.usertype LTE 4 AND rep_info.changepass eq 1>
 							<i>User will be required to change password on next log in.</i><br />
 						</cfif>
+                        
                         <cfif CLIENT.usertype LTE 6>
                             <a href="index.cfm?curdoc=history&userid=#rep_info.userid#">view history</a><br>
                         </cfif>
-                        <a href="index.cfm?curdoc=user_info&action=resend_login&userid=#rep_info.userid#"><img src="pics/email.gif" border="0" align="left"> Resend Login Info Email</a>
+                        
+                        <cfif CLIENT.userType NEQ 27>
+	                        <a href="index.cfm?curdoc=user_info&action=resend_login&userid=#rep_info.userid#"><img src="pics/email.gif" border="0" align="left"> Resend Login Info Email</a>
+    					</cfif>
+                        
                         <cfif URL.action EQ 'resend_login'><font color="red"> - Sent</font></cfif>
 					</td>
 				</tr>
@@ -1068,7 +1077,9 @@
                         <td height="24" width="13" background="pics/header_leftcap.gif">&nbsp;</td>
                         <td width="26" background="pics/header_background.gif"><img src="pics/family.gif"></td>
                         <td background="pics/header_background.gif"><h2>&nbsp;Other Family Members</h2></td>
-                        <td background="pics/header_background.gif" width="16"><a href="?curdoc=forms/edit_family_members&userid=#rep_info.userid#"><img src="pics/edit.png" border="0" alt="Edit"></a></td>
+                        <cfif CLIENT.userType NEQ 27>
+                        	<td background="pics/header_background.gif" width="16"><a href="?curdoc=forms/edit_family_members&userid=#rep_info.userid#"><img src="pics/edit.png" border="0" alt="Edit"></a></td>
+                        </cfif>
                         <td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
                     </tr>
                 </table>
@@ -1430,7 +1441,9 @@
                         <td height="24" width="13" background="pics/header_leftcap.gif">&nbsp;</td>
                         <td width="26" background="pics/header_background.gif"><img src="pics/notes.gif"></td>
                         <td background="pics/header_background.gif"><h2>References</h2></td>
-                        <td background="pics/header_background.gif" width="140" align="right"><a href="javascript:openPopUp('forms/repRefs.cfm?curdoc=repRefs&userid=#url.userid#', 640, 800);">Add/Edit Refs</a></td>
+                        <cfif CLIENT.userType NEQ 27>
+                        	<td background="pics/header_background.gif" width="140" align="right"><a href="javascript:openPopUp('forms/repRefs.cfm?curdoc=repRefs&userid=#url.userid#', 640, 800);">Add/Edit Refs</a></td>
+                        </cfif>
                         <td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
                     </tr>
                 </table>

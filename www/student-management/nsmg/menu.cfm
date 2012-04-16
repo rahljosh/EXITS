@@ -67,7 +67,7 @@
                     </ul>
                 </li>
             
-                <li><a href="index.cfm?curdoc=user_info&userid=#CLIENT.userid#">My Info</a></li>
+                <li><a href="index.cfm?curdoc=user_info&userID=#CLIENT.userID#">My Info</a></li>
                 
                 <li>
                 	<a href="index.cfm?curdoc=reports/flightInfoMenu">Reports</a>
@@ -78,13 +78,12 @@
                 
                 <li><a href="index.cfm?curdoc=helpdesk/help_desk_list">Support</a></li>
                 
-                <!--- Case Store --->
-                <cfif CLIENT.companyID EQ 10>
-                     <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
-                <cfelseif CLIENT.companyid EQ 14>
                 <!--- ISE Store --->
-                <cfelseif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
                     <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
+                <!--- Case Store --->
+				<cfelseif CLIENT.companyID EQ 10>
+                     <li><a href="http://www.case-usa.org/store/store.cfm" target="_blank">Store</a></li>
                 </cfif>
                 
             </ul>
@@ -112,17 +111,16 @@
                     </ul>
                 </li>
                 
-                <li><a href="index.cfm?curdoc=branch/branch_info&branchid=#CLIENT.userid#">My Info</a></li>
+                <li><a href="index.cfm?curdoc=branch/branch_info&branchid=#CLIENT.userID#">My Info</a></li>
                 
                 <li><a href="index.cfm?curdoc=helpdesk/help_desk_list">Support</a></li>
                 
-                <!--- Case Store --->
-                <cfif CLIENT.companyID EQ 10>
-                     <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
-                     <cfelseif CLIENT.companyid EQ 14>
                 <!--- ISE Store --->
-                <cfelseif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
                     <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
+                <!--- Case Store --->
+				<cfelseif CLIENT.companyID EQ 10>
+                     <li><a href="http://www.case-usa.org/store/store.cfm" target="_blank">Store</a></li>
                 </cfif>
             
             </ul>
@@ -137,15 +135,14 @@
                     <a href="index.cfm?curdoc=secondVisit/students">Students</a>
                 </li>
                 
-                <li><a href="index.cfm?curdoc=user_info&userid=#CLIENT.userid#">My Info</a></li>
+                <li><a href="index.cfm?curdoc=user_info&userID=#CLIENT.userID#">My Info</a></li>
                 
-                <!--- Case Store --->
-                <cfif CLIENT.companyID EQ 10>
-                     <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
-                 <cfelseif CLIENT.companyid EQ 14>
                 <!--- ISE Store --->
-                <cfelse>
+                <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
                     <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
+                <!--- Case Store --->
+				<cfelseif CLIENT.companyID EQ 10>
+                     <li><a href="http://www.case-usa.org/store/store.cfm" target="_blank">Store</a></li>
                 </cfif>
                 
             </ul>
@@ -167,15 +164,14 @@
                     </ul>
                 </li>
             
-                <li><a href="index.cfm?curdoc=user_info&userid=#CLIENT.userid#">My Info</a></li>
+                <li><a href="index.cfm?curdoc=user_info&userID=#CLIENT.userID#">My Info</a></li>
                 
-                <!--- Case Store --->
-                <cfif CLIENT.companyID EQ 10>
-                     <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
-                 <cfelseif CLIENT.companyid EQ 14>
                 <!--- ISE Store --->
-                <cfelse>
+                <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
                     <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
+                <!--- Case Store --->
+				<cfelseif CLIENT.companyID EQ 10>
+                     <li><a href="http://www.case-usa.org/store/store.cfm" target="_blank">Store</a></li>
                 </cfif>
                 
             </ul>
@@ -189,20 +185,38 @@
 				<!--- Host Leads - ISE Only --->
                 <li><a href="index.cfm?curdoc=hostLeads/index">Host Leads</a></li>   
             
-                <li><a href="index.cfm?curdoc=user_info&userid=#CLIENT.userid#">My Info</a></li>
+                <li><a href="index.cfm?curdoc=user_info&userID=#CLIENT.userID#">My Info</a></li>
                 
-                <!--- Case Store --->
-                <cfif CLIENT.companyID EQ 10>
-                     <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
-                 <cfelseif CLIENT.companyid EQ 14>
                 <!--- ISE Store --->
-                <cfelse>
+                <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
                     <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
+                <!--- Case Store --->
+				<cfelseif CLIENT.companyID EQ 10>
+                     <li><a href="http://www.case-usa.org/store/store.cfm" target="_blank">Store</a></li>
                 </cfif>
                 
             </ul>
         </cfcase>
     
+
+        <!--- Menu for DOS Guest User --->
+        <cfcase value="27">
+            <ul id="MenuBar1" class="MenuBarHorizontal">
+
+                <li>
+                    <a href="index.cfm?curdoc=students">Students</a>
+                </li>
+
+                <li>
+                    <a href="index.cfm?curdoc=users">Users</a>
+                    <ul>
+                        <li><a href="index.cfm?curdoc=user_info&userID=#CLIENT.userID#">My Information</a></li>
+                    </ul>
+                </li>
+                
+            </ul>
+        </cfcase>
+
     
         <!--- Menu for the Field | Managers | Advisors | Area Reps | Student View --->
         <cfcase value="5,6,7,9">
@@ -227,14 +241,14 @@
                 <li>
                     <a href="index.cfm?curdoc=users">Users</a>
                     <ul>
-                        <li><a href="index.cfm?curdoc=user_info&userid=#CLIENT.userid#">My Information</a></li>
+                        <li><a href="index.cfm?curdoc=user_info&userID=#CLIENT.userID#">My Information</a></li>
                     </ul>
                 </li>
                 
                 <li><a href="index.cfm?curdoc=pdf_docs/index">#qGetCompany.companyShort_noColor# Docs</a></li>
 
                 
-                <!--- Not Student View --->
+                <!--- Student View does not have access to reports --->
                 <cfif CLIENT.usertype NEQ 9>
                     <li><a href="index.cfm?curdoc=reports/index">Reports</a></li>
                 </cfif>
@@ -242,7 +256,7 @@
                 <li><a href="index.cfm?curdoc=support">Support</a></li>
                 
                 <!--- Webmail | Only Office and Managers have email account --->
-                <cfif CLIENT.userType LTE 5>
+                <cfif listFind("1,2,3,4,5", CLIENT.userType)>
                     <cfswitch expression="#CLIENT.companyid#">
                         
                         <cfcase value="1,2,3,4,12">
@@ -260,14 +274,12 @@
                     </cfswitch>
                 </cfif>
                 
-                <!--- Case Store --->
-                <cfif CLIENT.companyID EQ 10>
-                     <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
-                <cfelseif CLIENT.companyid EQ 14>
                 <!--- ISE Store --->
-                
-                <cfelse>
+                <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
                     <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
+                <!--- Case Store --->
+				<cfelseif CLIENT.companyID EQ 10>
+                     <li><a href="http://www.case-usa.org/store/store.cfm" target="_blank">Store</a></li>
                 </cfif>
             
             </ul>
@@ -299,7 +311,7 @@
                                     <li><a href="index.cfm?curdoc=hostLeads/index&action=report">Reports</a></li>
                                 </ul>
                             </li>   
-                   			<cfif ListFind(allowedUsers, CLIENT.userid)>
+                   			<cfif ListFind(allowedUsers, CLIENT.userID)>
                             	<li><a href="index.cfm?curdoc=hostApplication/hostAppIndex">Host Family Apps</a></li>
                        		</cfif>
                         </ul>
@@ -311,7 +323,7 @@
                 <li>
                     <a href="index.cfm?curdoc=users">Users</a>
                     <ul>
-                        <li><a href="index.cfm?curdoc=user_info&userid=#CLIENT.userid#">My Information</a></li>
+                        <li><a href="index.cfm?curdoc=user_info&userID=#CLIENT.userID#">My Information</a></li>
                     </ul>
                 </li>
                 
@@ -339,18 +351,18 @@
                 	<a href="index.cfm?curdoc=reports/index">Reports</a>
                 	<!---
 					<cfif LISTFIND("1,2,3,4", CLIENT.userType)
-                    <ul>
-                    	<li><a href="index.cfm?curdoc=reports/constantContactMenu">Constant Contact</a></li>
-                	</ul>
-                    </cfif>
-                    --->
+					<ul>
+						<li><a href="index.cfm?curdoc=reports/constantContactMenu">Constant Contact</a></li>
+					</ul>
+					</cfif>
+					--->
                 </li>
                 
                 <li>
                     <a href="##">Tools</a>                
                     <ul>
                         <!--- CBC Access --->
-                        <cfif CLIENT.usertype LTE 2 OR CLIENT.compliance EQ 1>    
+                        <cfif listFind("1,2", CLIENT.usertype) OR CLIENT.compliance EQ 1>    
                             <li>
                                 <a href="index.cfm?curdoc=cbc/cbc_menu">CBC Batch</a>
                             </li>
@@ -417,7 +429,7 @@
                 </li>
                 
                 <!--- Webmail | Only Office and Managers have email account --->
-                <cfif CLIENT.userType LTE 5>
+                <cfif listFind("1,2,3,4,5", CLIENT.userType)>
                     <cfswitch expression="#CLIENT.companyid#">
                         
                         <cfcase value="1,2,3,4,5,12">
@@ -436,7 +448,7 @@
                     <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
                 <!--- Case Store --->
 				<cfelseif CLIENT.companyID EQ 10>
-                     <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
+                     <li><a href="http://www.case-usa.org/store/store.cfm" target="_blank">Store</a></li>
                 </cfif>
             
             </ul>
@@ -448,7 +460,7 @@
             <ul id="MenuBar1" class="MenuBarHorizontal">
                 
                 <!--- Webmail | Only Office and Managers have email account --->
-                <cfif CLIENT.userType LTE 5>
+                <cfif listFind("1,2,3,4,5", CLIENT.userType)>
                     <cfswitch expression="#CLIENT.companyid#">
                         
                         <cfcase value="1,2,3,4,5,12">
@@ -467,7 +479,7 @@
                     <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
                 <!--- Case Store --->
 				<cfelseif CLIENT.companyID EQ 10>
-                     <li><a href="http://www.case-usa.org/Store/store.cfm" target="_blank">Store</a></li>
+                     <li><a href="http://www.case-usa.org/store/store.cfm" target="_blank">Store</a></li>
                 </cfif>
             
 			</ul>        
@@ -487,7 +499,7 @@
         <li>
             <a href="index.cfm?curdoc=users">Users</a>
             <ul>
-                <li><a href="index.cfm?curdoc=user_info&userid=#CLIENT.userid#">My Information</a></li>
+                <li><a href="index.cfm?curdoc=user_info&userID=#CLIENT.userID#">My Information</a></li>
             </ul>
         </li>
         
