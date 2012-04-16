@@ -29,9 +29,12 @@
 	<cfparam name="URL.isActive" default="">
 
 	<cfscript>
+		// Total students
+		vTotalStudents = 0;
+
 		// Get Active Programs
 		qGetPrograms = APPCFC.PROGRAM.getPrograms(dateActive=1);
-	
+		
 		// Check if we have a valid URL.isActive
 		if ( LEN(URL.isActive) ) {
 			FORM.isActive = URL.isActive;	
@@ -303,6 +306,10 @@
                             <td>#programName#</td>
                             <td><cfif not isDefined('hours')>0<cfelse>#hours#</cfif></td>
                         </tr>
+                        <cfscript>
+							vTotalStudents++;
+						</cfscript>
+                        
                     </cfoutput> <!--- Students --->
  					
                     <tr><td colspan="3">&nbsp;</td></tr>
@@ -310,6 +317,12 @@
                 </cfoutput> <!--- group="arearepID" --->
         
             </cfoutput> <!--- group="regionID" --->                
+			
+            <cfoutput>
+                <tr>
+                    <td colspan="3" bgcolor="##EEEEEE"><strong>Total Students: &nbsp; #vTotalStudents#</strong></td>
+                <tr>
+            </cfoutput>
 
         </table>
     
