@@ -132,15 +132,15 @@ function OpenRefund(url)
 	<!--- RUNNING BALANCE --->
 	<cfquery name="get_statement" datasource="MySql">
 		SELECT 
-        	'invoice', 
-            'paymenttype', 
-            smg_users.businessname, 
-            SUM( smg_charges.amount_due ) AS total_amount, 
-            smg_charges.invoicedate AS orderdate, 
-            CONVERT(invoiceid USING latin1) AS invoiceID, 
-            'paymentref', 
-            0 AS creditID, 
-            'description' 
+			'invoice', 
+			'paymenttype', 
+			smg_users.businessname, 
+			SUM( smg_charges.amount_due ) AS total_amount, 
+			smg_charges.invoicedate as orderdate, 
+			CONVERT(invoiceid USING latin1) AS invoiceID, 
+			'paymentref', 
+			0 AS creditID, 
+			'description' 
 		FROM smg_charges
 		INNER JOIN smg_users ON smg_charges.agentid = smg_users.userid
 		WHERE smg_users.userid = '#form.userid#'
@@ -151,131 +151,180 @@ function OpenRefund(url)
             	<cfcase value="1">
                 	AND smg_charges.companyid IN (1,2,3,4,5,12)
                 </cfcase>
-            	<cfcase value="10">
+            	<cfcase value="7,8,10,14">
                 	AND smg_charges.companyid = #chooseCompany#
                 </cfcase>
-            	<cfcase value="14">
-                	AND smg_charges.companyid = #chooseCompany#
-                </cfcase>   
-            	<cfcase value="8">
-                	AND smg_charges.companyid = #chooseCompany#
-                </cfcase>    
-            	<cfcase value="7">
-                	AND smg_charges.companyid = #chooseCompany#
-                </cfcase>   
             </cfswitch>
 		GROUP BY smg_users.userid, smg_charges.invoiceid
-		
-        UNION
-		
+        
+		UNION ALL
+        
         SELECT 
-        	'payments', 
-            pay.paymenttype, 
-            smg_users.businessname, 
-            SUM( spc.amountapplied ) AS total_amount, 
-            pay.date AS orderdate, 
-            0 AS invoiceID, 
-            pay.paymentref, 
-            0 AS creditID,  
-            'description'            
-        FROM smg_payment_charges spc
-		LEFT JOIN smg_payment_received pay ON pay.paymentid = spc.paymentid
-        LEFT JOIN smg_charges sc ON sc.chargeid = spc.chargeid
-		INNER JOIN smg_users ON pay.agentid = smg_users.userid
-		WHERE smg_users.userid = '#form.userid#'
-		AND pay.paymenttype != 'apply credit'
+            'payments',            
+            sp.paymenttype,                
+            su.businessname,                
+            IFNULL(SUM(spc.amountapplied),0) AS total_amount,                 
+            sp.date AS orderdate,                
+            0 AS invoiceID,                
+            sp.paymentref, 
+            (CASE 
+            WHEN sch.companyid = 1 THEN 1
+            WHEN sch.companyid = 2 THEN 1
+            WHEN sch.companyid = 3 THEN 1
+            WHEN sch.companyid = 4 THEN 1                
+            WHEN sch.companyid = 12 THEN 1
+            ELSE sch.companyid
+            END) AS testCompId,
+            'description'
+        FROM 
+            smg_payment_charges spc
+        LEFT JOIN 
+            smg_charges sch
+        ON 
+            sch.chargeid = spc.chargeid
+        LEFT JOIN 
+            smg_payment_received sp 
+        ON 
+            sp.paymentid = spc.paymentid
+        LEFT JOIN 
+            smg_users su 
+        ON 
+            su.userid = sch.agentid
+        WHERE  
+            sch.agentid = '#form.userid#'     
+        AND
+            sp.paymenttype != 'apply credit'
+        <cfif form.date1 NEQ '' AND form.date2 NEQ ''>
+            AND (sp.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
+        </cfif>
+            <cfswitch expression="#chooseCompany#">
+            	<cfcase value="1">
+                	AND sch.companyid IN (1,2,3,4,5,12)
+                </cfcase>
+            	<cfcase value="7,8,10,14">
+                	AND sch.companyid = #chooseCompany#
+                </cfcase>  
+            </cfswitch>
+        GROUP BY 
+            su.userid, sp.paymentref
+            
+		UNION ALL
+        
+        SELECT
+            'credits',    
+            scr.type,    
+            su.businessname,    
+            sum(spc.amountapplied),     
+            scr.date as orderdate,    
+            CONVERT(scr.invoiceid USING latin1) AS invoiceID,
+            (CASE 
+            WHEN sc.companyid = 1 THEN 1
+            WHEN sc.companyid = 2 THEN 1
+            WHEN sc.companyid = 3 THEN 1
+            WHEN sc.companyid = 4 THEN 1                
+            WHEN sc.companyid = 12 THEN 1
+            ELSE sc.companyid
+            END) AS companyid,      
+            CONVERT(scr.creditid USING latin1) AS creditID,    
+            CAST(CONCAT('stu id: ', scr.stuid, ' inv: ',  scr.invoiceid, '. ', scr.description) as CHAR) as description
+        FROM 
+            smg_payment_charges spc
+        LEFT JOIN 
+            smg_payment_received spr ON spr.paymentid = spc.paymentid
+        AND 
+            spr.paymenttype = "apply credit"
+        LEFT JOIN 
+            smg_charges sc ON sc.chargeid = spc.chargeid    
+        LEFT JOIN
+             smg_users su ON su.userid = spr.agentid     
+        LEFT JOIN
+             (SELECT creditid, type, date, invoiceid, stuid, description
+              FROM smg_credit
+              GROUP BY creditid) scr
+             ON scr.creditid = spr.paymentref
+        WHERE 
+            spr.agentid = '#form.userid#'
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
-				AND (pay.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
+				AND (scr.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
 			</cfif>
             <cfswitch expression="#chooseCompany#">
             	<cfcase value="1">
                 	AND sc.companyid IN (1,2,3,4,5,12)
                 </cfcase>
-            	<cfcase value="10">
+            	<cfcase value="7,8,10,14">
                 	AND sc.companyid = #chooseCompany#
                 </cfcase>
-            	<cfcase value="14">
-                	AND sc.companyid = #chooseCompany#
-                </cfcase>   
-            	<cfcase value="8">
-                	AND sc.companyid = #chooseCompany#
-                </cfcase>    
-            	<cfcase value="7">
-                	AND sc.companyid = #chooseCompany#
-                </cfcase>   
             </cfswitch>
-		GROUP BY smg_users.userid, pay.paymentref
-		
-        UNION
-		
-        SELECT 
-        	'credits', 
-            type, 
-            smg_users.businessname, 
-            smg_credit.amount AS total_amount, 
-            smg_credit.date AS orderdate, 
-            CONVERT(invoiceid USING latin1) AS invoiceID, 
-            'paymentref', 
-            CONVERT(smg_credit.creditid USING latin1) AS creditID, 
-            CAST(CONCAT('stu id: ', smg_credit.stuid, ' inv: ',  smg_credit.invoiceid, '. ', smg_credit.description) AS CHAR) AS description
-		FROM smg_credit
-		INNER JOIN smg_users ON smg_credit.agentid = smg_users.userid
-		WHERE smg_users.userid = '#form.userid#'
+        GROUP BY 
+            spr.paymentref, companyid
+        
+        
+        UNION ALL
+        
+        SELECT
+            'credits',    
+            scr.type,    
+            su.businessname,    
+            sum(scr.amount-scr.amount_applied) as remaining,    
+            scr.date as orderdate,    
+            CONVERT(scr.invoiceid USING latin1) AS invoiceID,    
+            (CASE 
+            WHEN scr.companyid = 1 THEN 1
+            WHEN scr.companyid = 2 THEN 1
+            WHEN scr.companyid = 3 THEN 1
+            WHEN scr.companyid = 4 THEN 1                
+            WHEN scr.companyid = 12 THEN 1
+            ELSE scr.companyid
+            END) AS companyid,     
+            CONVERT(scr.creditid USING latin1) AS creditID,    
+            CAST(CONCAT('stu id: ', scr.stuid, ' inv: ',  scr.invoiceid, '. ', scr.description) as CHAR) as description
+        FROM 
+            smg_credit scr   
+        LEFT JOIN
+             smg_users su ON su.userid = scr.agentid
+        WHERE 
+            scr.agentid = '#form.userid#'
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
-				AND (smg_credit.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
+				AND (scr.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
 			</cfif>
             <cfswitch expression="#chooseCompany#">
             	<cfcase value="1">
-                	AND smg_credit.companyid IN (1,2,3,4,5,12)
+                	AND scr.companyid IN (1,2,3,4,5,12)
                 </cfcase>
-            	<cfcase value="10">
-                	AND smg_credit.companyid = #chooseCompany#
+            	<cfcase value="7,8,10,14">
+                	AND scr.companyid = #chooseCompany#
                 </cfcase>
-            	<cfcase value="14">
-                	AND smg_credit.companyid = #chooseCompany#
-                </cfcase>   
-            	<cfcase value="8">
-                	AND smg_credit.companyid = #chooseCompany#
-                </cfcase>    
-            	<cfcase value="7">
-                	AND smg_credit.companyid = #chooseCompany#
-                </cfcase>   
-            </cfswitch>
-		
-        UNION
-		
-        SELECT 
-        	'refund', 
-            'paymenttype', 
-            smg_users.businessname, 
-            SUM(ref.amount) AS total_amount, 
-            ref.date AS orderdate, 
-            CONVERT(refund_receipt_id USING latin1) AS invoiceID, 
-            'paymentref', 
-            0 AS creditID,  
-            'description'
+            </cfswitch>   
+        GROUP BY 
+            scr.creditid, companyid
+        HAVING
+        	remaining > 0
+        
+		UNION ALL
+        
+		SELECT 
+			'refund', 
+			'paymenttype', 
+			smg_users.businessname, 
+			SUM(ref.amount) AS total_amount, 
+			ref.date as orderdate, 
+			CONVERT(refund_receipt_id USING latin1) AS invoiceID, 
+			'paymentref', 
+			0 AS creditID, 
+			'description'
 		FROM smg_invoice_refunds ref
 		INNER JOIN smg_users ON ref.agentid = smg_users.userid
 		WHERE smg_users.userid = '#form.userid#'
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 				AND (ref.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
-			</cfif>
+			</cfif>	
             <cfswitch expression="#chooseCompany#">
             	<cfcase value="1">
                 	AND ref.companyid IN (1,2,3,4,5,12)
                 </cfcase>
-            	<cfcase value="10">
+            	<cfcase value="7,8,10,14">
                 	AND ref.companyid = #chooseCompany#
                 </cfcase>
-            	<cfcase value="14">
-                	AND ref.companyid = #chooseCompany#
-                </cfcase>   
-            	<cfcase value="8">
-                	AND ref.companyid = #chooseCompany#
-                </cfcase>    
-            	<cfcase value="7">
-                	AND ref.companyid = #chooseCompany#
-                </cfcase>   
             </cfswitch>
 		GROUP BY smg_users.userid, refund_receipt_id	
 		ORDER BY orderdate DESC
@@ -292,7 +341,7 @@ function OpenRefund(url)
 	<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
 	
 		<cfquery name="beginning_balance" datasource="MySql">
-			SELECT 'invoice', smg_users.businessname, SUM( smg_charges.amount_due ) AS total_amount, smg_charges.invoicedate AS orderdate
+			SELECT 'invoice', smg_users.businessname, SUM( smg_charges.amount_due ) AS total_amount, smg_charges.invoicedate as orderdate, 'testCompId'
 			FROM smg_charges
 			INNER JOIN smg_users ON smg_charges.agentid = smg_users.userid
 			WHERE smg_users.userid = '#form.userid#'
@@ -303,77 +352,145 @@ function OpenRefund(url)
             	<cfcase value="1">
                 	AND smg_charges.companyid IN (1,2,3,4,5,12)
                 </cfcase>
-            	<cfcase value="10">
+            	<cfcase value="7,8,10,14">
                 	AND smg_charges.companyid = #chooseCompany#
                 </cfcase>
-            	<cfcase value="14">
-                	AND smg_charges.companyid = #chooseCompany#
-                </cfcase>   
-            	<cfcase value="8">
-                	AND smg_charges.companyid = #chooseCompany#
-                </cfcase>    
-            	<cfcase value="7">
-                	AND smg_charges.companyid = #chooseCompany#
-                </cfcase>   
             </cfswitch>
 			GROUP BY smg_users.userid, smg_charges.invoicedate
-			UNION
-			SELECT 'payments', smg_users.businessname, SUM( spc.amountapplied ) AS total_amount, pay.date AS orderdate
-			FROM smg_payment_charges spc
-            LEFT JOIN smg_payment_received pay ON pay.paymentid = spc.paymentid
-            LEFT JOIN smg_charges sc ON sc.chargeid = spc.chargeid
-			INNER JOIN smg_users ON pay.agentid = smg_users.userid
-			WHERE smg_users.userid = '#form.userid#'
-				AND pay.paymenttype != 'apply credit'
+            
+			UNION ALL
+            
+            SELECT 
+            	'payments',
+                su.businessname,                                         
+                IFNULL(SUM(spc.amountapplied),0) AS total_amount,                 
+                sp.date AS orderdate,
+                (CASE 
+                WHEN sch.companyid = 1 THEN 1
+                WHEN sch.companyid = 2 THEN 1
+                WHEN sch.companyid = 3 THEN 1
+                WHEN sch.companyid = 4 THEN 1                
+                WHEN sch.companyid = 12 THEN 1
+                ELSE sch.companyid
+                END) AS testCompId
+            FROM 
+            	smg_payment_charges spc
+            LEFT JOIN 
+            	smg_charges sch
+            ON 
+            	sch.chargeid = spc.chargeid
+            LEFT JOIN 
+            	smg_payment_received sp 
+            ON 
+            	sp.paymentid = spc.paymentid
+            LEFT JOIN 
+            	smg_users su 
+            ON 
+            	su.userid = sch.agentid
+            WHERE  
+            	sch.agentid = '#form.userid#'
+            AND
+                sp.paymenttype != 'apply credit'
+			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
+                AND sp.date < #CreateODBCDateTime(form.date1)#
+            </cfif>
+                <cfswitch expression="#chooseCompany#">
+                    <cfcase value="1">
+                        AND sch.companyid IN (1,2,3,4,5,12)
+                    </cfcase>
+                    <cfcase value="7,8,10,14">
+                        AND sch.companyid = #chooseCompany#
+                    </cfcase>  
+                </cfswitch>          
+            GROUP BY 
+            	su.userid, sp.date
+
+			UNION ALL
+            
+            SELECT
+                'credits',        
+                su.businessname,    
+                sum(spc.amountapplied) AS total_amount,     
+                scr.date as orderdate,    
+                (CASE 
+                WHEN sc.companyid = 1 THEN 1
+                WHEN sc.companyid = 2 THEN 1
+                WHEN sc.companyid = 3 THEN 1
+                WHEN sc.companyid = 4 THEN 1                
+                WHEN sc.companyid = 12 THEN 1
+                ELSE sc.companyid
+                END) AS companyid  
+            FROM 
+                smg_payment_charges spc
+            LEFT JOIN 
+                smg_payment_received spr ON spr.paymentid = spc.paymentid
+            AND 
+                spr.paymenttype = "apply credit"
+            LEFT JOIN 
+                smg_charges sc ON sc.chargeid = spc.chargeid    
+            LEFT JOIN
+                 smg_users su ON su.userid = spr.agentid     
+            LEFT JOIN
+                 (SELECT creditid, type, date, invoiceid, stuid, description
+                  FROM smg_credit
+                  GROUP BY creditid) scr
+                 ON scr.creditid = spr.paymentref
+            WHERE 
+                spr.agentid = '#form.userid#'
 				<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
-					AND pay.date < #CreateODBCDateTime(form.date1)#
+					AND scr.date < #CreateODBCDateTime(form.date1)#
 				</cfif>
                 <cfswitch expression="#chooseCompany#">
                     <cfcase value="1">
                         AND sc.companyid IN (1,2,3,4,5,12)
                     </cfcase>
-                    <cfcase value="10">
+                    <cfcase value="7,8,10,14">
                         AND sc.companyid = #chooseCompany#
-                    </cfcase>
-                    <cfcase value="14">
-                        AND sc.companyid = #chooseCompany#
-                    </cfcase>   
-                    <cfcase value="8">
-                        AND sc.companyid = #chooseCompany#
-                    </cfcase>    
-                    <cfcase value="7">
-                        AND sc.companyid = #chooseCompany#
-                    </cfcase>   
+                    </cfcase>  
                 </cfswitch>
-			GROUP BY smg_users.userid, pay.date
-			UNION
-			SELECT 'credits', smg_users.businessname, SUM( smg_credit.amount ) AS total_amount, smg_credit.date AS orderdate
-			FROM smg_credit
-			INNER JOIN smg_users ON smg_credit.agentid = smg_users.userid
-			WHERE smg_users.userid = '#form.userid#'
+            GROUP BY 
+                su.userid, scr.date, companyid
+                
+            UNION ALL
+            
+            SELECT
+                'credits',      
+                su.businessname,    
+                sum(scr.amount-scr.amount_applied) as remaining,    
+                scr.date as orderdate,    
+                (CASE 
+                WHEN scr.companyid = 1 THEN 1
+                WHEN scr.companyid = 2 THEN 1
+                WHEN scr.companyid = 3 THEN 1
+                WHEN scr.companyid = 4 THEN 1                
+                WHEN scr.companyid = 12 THEN 1
+                ELSE scr.companyid
+                END) AS companyid   
+            FROM 
+                smg_credit scr   
+            LEFT JOIN
+                 smg_users su ON su.userid = scr.agentid
+            WHERE 
+                scr.agentid =  '#form.userid#'
 				<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
-					AND smg_credit.date < #CreateODBCDateTime(form.date1)#
+					AND scr.date < #CreateODBCDateTime(form.date1)#
 				</cfif>
                 <cfswitch expression="#chooseCompany#">
                     <cfcase value="1">
-                        AND smg_credit.companyid IN (1,2,3,4,5,12)
+                        AND scr.companyid IN (1,2,3,4,5,12)
                     </cfcase>
-                    <cfcase value="10">
-                        AND smg_credit.companyid = #chooseCompany#
-                    </cfcase>
-                    <cfcase value="14">
-                        AND smg_credit.companyid = #chooseCompany#
-                    </cfcase>   
-                    <cfcase value="8">
-                        AND smg_credit.companyid = #chooseCompany#
-                    </cfcase>    
-                    <cfcase value="7">
-                        AND smg_credit.companyid = #chooseCompany#
-                    </cfcase>   
-                </cfswitch>
-			GROUP BY smg_users.userid, smg_credit.date
-			UNION 
-			SELECT 'refund', smg_users.businessname, SUM(ref.amount) AS total_amount, ref.date AS orderdate
+                    <cfcase value="7,8,10,14">
+                        AND scr.companyid = #chooseCompany#
+                    </cfcase>  
+                </cfswitch>  
+            GROUP BY 
+                su.userid, scr.date, companyid
+        HAVING
+        	remaining > 0
+            
+			UNION ALL
+            
+			SELECT 'refund', smg_users.businessname, SUM(ref.amount) AS total_amount, ref.date as orderdate, 'testCompId'
 			FROM smg_invoice_refunds ref
 			INNER JOIN smg_users ON ref.agentid = smg_users.userid
 			WHERE smg_users.userid = '#form.userid#'
@@ -384,18 +501,9 @@ function OpenRefund(url)
             	<cfcase value="1">
                 	AND ref.companyid IN (1,2,3,4,5,12)
                 </cfcase>
-            	<cfcase value="10">
+            	<cfcase value="7,8,10,14">
                 	AND ref.companyid = #chooseCompany#
                 </cfcase>
-            	<cfcase value="14">
-                	AND ref.companyid = #chooseCompany#
-                </cfcase>   
-            	<cfcase value="8">
-                	AND ref.companyid = #chooseCompany#
-                </cfcase>    
-            	<cfcase value="7">
-                	AND ref.companyid = #chooseCompany#
-                </cfcase>   
             </cfswitch>
 			GROUP BY smg_users.userid, refund_receipt_id				
 			ORDER BY orderdate
@@ -422,7 +530,7 @@ function OpenRefund(url)
 
 	<!--- OUTSTANDING BALANCE ---->
 	<cfquery name="outstanding_balance" datasource="MySql">
-		SELECT 'invoice', smg_users.businessname, SUM( smg_charges.amount_due ) AS total_amount, smg_charges.invoicedate AS orderdate
+		SELECT 'invoice', smg_users.businessname, SUM( smg_charges.amount_due ) AS total_amount, smg_charges.invoicedate as orderdate, 'testCompId'
 		FROM smg_charges
 		INNER JOIN smg_users ON smg_charges.agentid = smg_users.userid
 		WHERE smg_users.userid = '#form.userid#'
@@ -433,99 +541,159 @@ function OpenRefund(url)
             	<cfcase value="1">
                 	AND smg_charges.companyid IN (1,2,3,4,5,12)
                 </cfcase>
-            	<cfcase value="10">
+            	<cfcase value="7,8,10,14">
                 	AND smg_charges.companyid = #chooseCompany#
-                </cfcase>
-            	<cfcase value="14">
-                	AND smg_charges.companyid = #chooseCompany#
-                </cfcase>   
-            	<cfcase value="8">
-                	AND smg_charges.companyid = #chooseCompany#
-                </cfcase>    
-            	<cfcase value="7">
-                	AND smg_charges.companyid = #chooseCompany#
-                </cfcase>   
+                </cfcase>  
             </cfswitch>
 		GROUP BY smg_users.userid, smg_charges.invoicedate
-		UNION
-		SELECT 'payments', smg_users.businessname, SUM( spc.amountapplied ) AS total_amount, pay.date AS orderdate
-		FROM smg_payment_charges spc
-		LEFT JOIN smg_payment_received pay ON pay.paymentid = spc.paymentid
-        LEFT JOIN smg_charges sc ON sc.chargeid = spc.chargeid
-		INNER JOIN smg_users ON pay.agentid = smg_users.userid
-		WHERE smg_users.userid = '#form.userid#'
-			AND pay.paymenttype != 'apply credit'
+        
+		UNION ALL
+        
+        SELECT 
+            'payments',
+            su.businessname,                                         
+            IFNULL(SUM(spc.amountapplied),0) AS total_amount,                 
+            sp.date AS orderdate,
+            (CASE 
+            WHEN sch.companyid = 1 THEN 1
+            WHEN sch.companyid = 2 THEN 1
+            WHEN sch.companyid = 3 THEN 1
+            WHEN sch.companyid = 4 THEN 1                
+            WHEN sch.companyid = 12 THEN 1
+            ELSE sch.companyid
+            END) AS testCompId
+        FROM 
+            smg_payment_charges spc
+        LEFT JOIN 
+            smg_charges sch
+        ON 
+            sch.chargeid = spc.chargeid
+        LEFT JOIN 
+            smg_payment_received sp 
+        ON 
+            sp.paymentid = spc.paymentid
+        LEFT JOIN 
+            smg_users su 
+        ON 
+            su.userid = sch.agentid
+        WHERE  
+            sch.agentid = '#form.userid#'
+        AND
+            sp.paymenttype != 'apply credit'
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
-				AND (pay.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
+				AND (sp.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
 			</cfif>
             <cfswitch expression="#chooseCompany#">
                 <cfcase value="1">
-                    AND sc.companyid IN (1,2,3,4,5,12)
+                    AND sch.companyid IN (1,2,3,4,5,12)
                 </cfcase>
-                <cfcase value="10">
-                    AND sc.companyid = #chooseCompany#
-                </cfcase>
-                <cfcase value="14">
-                    AND sc.companyid = #chooseCompany#
-                </cfcase>   
-                <cfcase value="8">
-                    AND sc.companyid = #chooseCompany#
-                </cfcase>    
-                <cfcase value="7">
-                    AND sc.companyid = #chooseCompany#
-                </cfcase>   
-            </cfswitch>
-		GROUP BY smg_users.userid, pay.date
-		UNION
-		SELECT 'credits', smg_users.businessname, SUM( smg_credit.amount ) AS total_amount, smg_credit.date AS orderdate
-		FROM smg_credit
-		INNER JOIN smg_users ON smg_credit.agentid = smg_users.userid
-		WHERE smg_users.userid = '#form.userid#'
-			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
-				AND (smg_credit.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
-			</cfif>
-            <cfswitch expression="#chooseCompany#">
-                <cfcase value="1">
-                    AND smg_credit.companyid IN (1,2,3,4,5,12)
-                </cfcase>
-                <cfcase value="10">
-                    AND smg_credit.companyid = #chooseCompany#
-                </cfcase>
-                <cfcase value="14">
-                    AND smg_credit.companyid = #chooseCompany#
-                </cfcase>   
-                <cfcase value="8">
-                    AND smg_credit.companyid = #chooseCompany#
-                </cfcase>    
-                <cfcase value="7">
-                    AND smg_credit.companyid = #chooseCompany#
-                </cfcase>   
-            </cfswitch>
-		GROUP BY smg_users.userid, smg_credit.date
-		UNION
-		SELECT 'refund', smg_users.businessname, SUM(ref.amount) AS total_amount, ref.date AS orderdate
+                <cfcase value="7,8,10,14">
+                    AND sch.companyid = #chooseCompany#
+                </cfcase>  
+            </cfswitch>       
+        GROUP BY 
+            su.userid, sp.date
+        
+		UNION ALL
+        
+            SELECT
+                'credits',        
+                su.businessname,    
+                sum(spc.amountapplied) AS total_amount,     
+                scr.date as orderdate,    
+                (CASE 
+                WHEN sc.companyid = 1 THEN 1
+                WHEN sc.companyid = 2 THEN 1
+                WHEN sc.companyid = 3 THEN 1
+                WHEN sc.companyid = 4 THEN 1                
+                WHEN sc.companyid = 12 THEN 1
+                ELSE sc.companyid
+                END) AS companyid  
+            FROM 
+                smg_payment_charges spc
+            LEFT JOIN 
+                smg_payment_received spr ON spr.paymentid = spc.paymentid
+            AND 
+                spr.paymenttype = "apply credit"
+            LEFT JOIN 
+                smg_charges sc ON sc.chargeid = spc.chargeid    
+            LEFT JOIN
+                 smg_users su ON su.userid = spr.agentid     
+            LEFT JOIN
+                 (SELECT creditid, type, date, invoiceid, stuid, description
+                  FROM smg_credit
+                  GROUP BY creditid) scr
+                 ON scr.creditid = spr.paymentref
+            WHERE 
+                spr.agentid = '#form.userid#'
+				<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
+                    AND (scr.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
+                </cfif>
+                <cfswitch expression="#chooseCompany#">
+                    <cfcase value="1">
+
+                        AND sc.companyid IN (1,2,3,4,5,12)
+                    </cfcase>
+                    <cfcase value="7,8,10,14">
+                        AND sc.companyid = #chooseCompany#
+                    </cfcase>  
+                </cfswitch>
+            GROUP BY 
+                su.userid, scr.date, companyid
+                
+            UNION ALL
+            
+            SELECT
+                'credits',      
+                su.businessname,    
+                sum(scr.amount-scr.amount_applied) as remaining,    
+                scr.date as orderdate,    
+                (CASE 
+                WHEN scr.companyid = 1 THEN 1
+                WHEN scr.companyid = 2 THEN 1
+                WHEN scr.companyid = 3 THEN 1
+                WHEN scr.companyid = 4 THEN 1                
+                WHEN scr.companyid = 12 THEN 1
+                ELSE scr.companyid
+                END) AS companyid  
+            FROM 
+                smg_credit scr   
+            LEFT JOIN
+                 smg_users su ON su.userid = scr.agentid
+            WHERE 
+                scr.agentid =  '#form.userid#'
+				<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
+                    AND (scr.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
+                </cfif>
+                <cfswitch expression="#chooseCompany#">
+                    <cfcase value="1">
+                        AND scr.companyid IN (1,2,3,4,5,12)
+                    </cfcase>
+                    <cfcase value="7,8,10,14">
+                        AND scr.companyid = #chooseCompany#
+                    </cfcase>  
+                </cfswitch>   
+            GROUP BY 
+                su.userid, scr.date, companyid
+        HAVING
+        	remaining > 0
+        
+		UNION ALL
+        
+		SELECT 'refund', smg_users.businessname, SUM(ref.amount) AS total_amount, ref.date as orderdate, 'testCompId'
 		FROM smg_invoice_refunds ref
 		INNER JOIN smg_users ON ref.agentid = smg_users.userid
 		WHERE smg_users.userid = '#form.userid#'
 			<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
-				AND (ref.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
-			</cfif>
+                AND (ref.date BETWEEN #CreateODBCDateTime(form.date1)# AND #CreateODBCDateTime(form.date2)#)
+            </cfif>
             <cfswitch expression="#chooseCompany#">
             	<cfcase value="1">
                 	AND ref.companyid IN (1,2,3,4,5,12)
                 </cfcase>
-            	<cfcase value="10">
+            	<cfcase value="7,8,10,14">
                 	AND ref.companyid = #chooseCompany#
                 </cfcase>
-            	<cfcase value="14">
-                	AND ref.companyid = #chooseCompany#
-                </cfcase>   
-            	<cfcase value="8">
-                	AND ref.companyid = #chooseCompany#
-                </cfcase>    
-            	<cfcase value="7">
-                	AND ref.companyid = #chooseCompany#
-                </cfcase>   
             </cfswitch>
 		GROUP BY smg_users.userid, refund_receipt_id					
 		ORDER BY orderdate
