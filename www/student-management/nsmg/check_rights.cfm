@@ -2,23 +2,23 @@
 
 <cfset grant_access = 0>
 
-<cfif client.usertype LTE 5 OR client.userid EQ url.userid>
+<cfif ListFind("1,2,3,4,5", CLIENT.usertype) OR CLIENT.userid EQ url.userid OR CLIENT.userType EQ 27>
 	<cfset grant_access = 1>
 </cfif>
 
-<cfif grant_access EQ 0 AND listFind("5,6", client.usertype)>	
+<cfif listFind("5,6", CLIENT.usertype) AND NOT VAL(grant_access)>	
         
     <!--- CHECK IF CURRENT USER IS A MANAGER OR ADVISOR OF URL.USER --->
     <cfquery name="get_user_regions" datasource="#application.dsn#">
         SELECT user_access_rights.regionid
         FROM user_access_rights 
         INNER JOIN smg_companies ON user_access_rights.companyid = smg_companies.companyid
-        WHERE smg_companies.website = <cfif client.companyshort is 'CASE'>'CASE'<cfelse>'SMG'</cfif>
+        WHERE smg_companies.website = <cfif CLIENT.companyshort is 'CASE'>'CASE'<cfelse>'SMG'</cfif>
         AND user_access_rights.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.userid#">
-        AND user_access_rights.usertype > <cfqueryparam cfsqltype="cf_sql_integer" value="#client.usertype#">
-		AND user_access_rights.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.regionid#">
-        <cfif client.usertype EQ 6>
-            AND user_access_rights.advisorid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+        AND user_access_rights.usertype > <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.usertype#">
+		AND user_access_rights.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionid#">
+        <cfif CLIENT.usertype EQ 6>
+            AND user_access_rights.advisorid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
         </cfif>
     </cfquery>
    
@@ -43,7 +43,7 @@
 			</td>
 		</tr>
 		<tr><td align="center">If you think this is a mistake please contact <cfoutput>#APPLICATION.EMAIL.support#</cfoutput></td></tr>
-		<tr><td align="center">You can view your account by clicking <a href="?curdoc=user_info&userid=<cfoutput>#client.userid#</cfoutput>">here<a/>.<br /><br /></td></tr>			
+		<tr><td align="center">You can view your account by clicking <a href="?curdoc=user_info&userid=<cfoutput>#CLIENT.userid#</cfoutput>">here<a/>.<br /><br /></td></tr>			
 	</table>
 	<cfinclude template="table_footer.cfm">
 	<cfabort>

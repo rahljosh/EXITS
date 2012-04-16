@@ -5,22 +5,23 @@
 	Date:		n/a
 	Desc:		
 
-	Updated:	
+	Updated:	04/13/2012 - Adding DOS Guest Account
 				
 ----- ------------------------------------------------------------------------- --->
 
 <!--- Kill Extra Output --->
 <cfsilent>
 	
+    <!--- Default Page --->
+    <cfparam name="URL.curdoc" default="initial_welcome">
+    
     <cfscript>
 		// MPD Tour Users
-		if ( CLIENT.userID EQ 15019 AND NOT isDefined('url.curdoc') ) {
-			url.curdoc = "tours/mpdtours";										  
-		}
-	
-    	// Default Page
-		if ( NOT isDefined("url.curdoc") ) {
-			url.curdoc = "initial_welcome";
+		if ( CLIENT.userID EQ 15103 AND URL.curdoc EQ 'initial_welcome' ) {
+			URL.curdoc = "tours/mpdtours";										  
+		// DOS Guest Account - Access to Student Search - No Initial Welcome
+		} else if ( CLIENT.userType EQ 27 AND URL.curdoc EQ 'initial_welcome' ) {
+			URL.curdoc = "students";										  
 		}
 	</cfscript>
     
@@ -32,10 +33,10 @@
 <table align="center" width="90%" cellpadding="0" cellspacing="0"  border="0"> 
 	<tr>
 		<td>
-			<cfif right(url.curdoc,4) is '.cfr'>
-                <cfinclude template="#url.curdoc#">
-            <cfelse>
-                <cfinclude template="#url.curdoc#.cfm">
+			<cfif right(URL.curdoc,4) EQ '.cfr'>
+                <cfinclude template="#URL.curdoc#">
+			<cfelse>
+                <cfinclude template="#URL.curdoc#.cfm">
             </cfif>
 		</td>
 	</tr>

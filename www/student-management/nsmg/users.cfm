@@ -126,13 +126,17 @@
             <input type="text" name="keyword" value="#keyword#" size="10" maxlength="50" style="width:150px;">         
         </td>
         </cfoutput>
-        <td>
-            New Users<br />
-            <select name="new_user">
-                <option value="">All</option>
-                <option value="1" <cfif new_user EQ 1>selected</cfif>>Yes</option>
-            </select>            
-        </td>
+        
+        <!--- Do Not Show this option for Guest User --->
+        <cfif CLIENT.userType NEQ 27>
+            <td>
+                New Users<br />
+                <select name="new_user">
+                    <option value="">All</option>
+                    <option value="1" <cfif new_user EQ 1>selected</cfif>>Yes</option>
+                </select>            
+            </td>
+        </cfif>
         <td>
             Active<br />
             <select name="active">
@@ -295,6 +299,81 @@
             	uar.companyid, 
                 uar.regionid, 
                 uar.usertype
+        </cfquery>
+    
+    <!--- Guest Account --->
+    <cfelseif CLIENT.userType EQ 27>
+
+        <cfquery name="qGetResults" datasource="#APPLICATION.DSN#">
+            SELECT DISTINCT 
+            	u.userid, 
+                u.firstname, 
+                u.lastname, 
+                u.city, 
+                u.state, 
+                u.phone, 
+                u.businessname, 
+                u.datecreated, 
+                cl.countryname
+            FROM 
+            	user_access_rights uar
+            INNER JOIN 
+            	smg_users u ON u.userid = uar.userid
+            LEFT OUTER JOIN 
+            	smg_countrylist cl ON u.country = cl.countryid
+            WHERE 
+				<!--- Guest User / DO NOT SHOW STUDENT VIEW --->
+            	uar.userType IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7,15" list="yes"> )
+            
+			<!--- Students under companies --->
+			<cfif CLIENT.companyID EQ 5>
+                AND
+                    uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> ) 
+            <cfelse>
+                AND
+                    uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+            </cfif>
+            
+            <cfif LEN(TRIM(keyword))>
+                AND (
+                		u.userid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(keyword)#">
+                	OR 
+                    	u.firstname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
+                	OR 
+                    	u.lastname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
+                	OR 
+                    	u.city LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
+                	OR 
+                    	u.state LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
+                	OR 
+                    	u.phone LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
+                	OR 
+                    	u.businessname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
+                	OR 
+                    	cl.countryname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#TRIM(keyword)#%">
+                )
+            </cfif>
+            
+            <cfif LEN(active)>
+                AND 
+                	u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#active#">
+            </cfif>
+            
+            ORDER BY 
+            	
+                <cfswitch expression="#orderby#">
+
+                	<cfcase value="userID,lastName,firstName,businessName,city,state,countryName,phone">
+                    	#orderby#
+                    </cfcase>
+
+                	<cfdefaultcase>
+                    	lastName,
+                        firstName
+                    </cfdefaultcase>
+				
+                </cfswitch>   
+                              
         </cfquery>
         
     <!--- FIELD --->
