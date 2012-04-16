@@ -9,10 +9,9 @@
         SELECT t.invoice, t.invoiceid, t.date, SUM( t.amount_due ) AS invBalance, t.companyid, t.testCompId
         FROM (
         SELECT 'invoice', sc.invoiceid, sc.date, sc.amount_due, sc.companyid, (CASE 
-WHEN sp.type = 7 THEN 7
-WHEN sp.type = 8 THEN 7
-WHEN sp.type = 9 THEN 7
+WHEN sp.type IN (7,8,9) THEN 7
 WHEN sp.type = 11 THEN 8
+WHEN sc.companyid IN (1,2,3,4,5,12) THEN 1
 ELSE sc.companyid
 END) AS testCompId
         FROM smg_charges sc
@@ -21,11 +20,10 @@ END) AS testCompId
         AND sc.companyid IN (1,2,3,4,5,7,8,10,12)
         UNION ALL
         SELECT 'payment', sc.invoiceid, spr.date, SUM( spc.amountapplied ) * -1 AS amountApplied, spr.companyid, (CASE 
-WHEN sp.type = 7 THEN 7
-WHEN sp.type = 8 THEN 7
-WHEN sp.type = 9 THEN 7
+WHEN sp.type IN (7,8,9) THEN 7
 WHEN sp.type = 11 THEN 8
-ELSE sc.companyid
+WHEN spr.companyid IN (1,2,3,4,5,12) THEN 1
+ELSE spr.companyid
 END) AS testCompId
         FROM smg_payment_charges spc
         LEFT JOIN smg_charges sc ON sc.chargeid = spc.chargeid
@@ -38,10 +36,9 @@ END) AS testCompId
         GROUP BY t.invoiceid HAVING invBalance > 0
         UNION ALL
         SELECT 'credit note', sc.creditid, sc.date, SUM(sc.amount - sc.amount_applied)*-1, sc.companyid, (CASE 
-WHEN sp.type = 7 THEN 7
-WHEN sp.type = 8 THEN 7
-WHEN sp.type = 9 THEN 7
+WHEN sp.type IN (7,8,9) THEN 7
 WHEN sp.type = 11 THEN 8
+WHEN sc.companyid IN (1,2,3,4,5,12) THEN 1
 ELSE sc.companyid
 END) AS testCompId
         FROM smg_credit sc
@@ -54,14 +51,13 @@ END) AS testCompId
         ORDER BY date DESC
         </cfquery>
 
-		<cfquery name="getTotalBalancePerAgent" datasource="MySQL"> 
+<!--- 		<cfquery name="getTotalBalancePerAgent" datasource="MySQL"> 
         SELECT t.agentid, t.businessname, SUM(t.total) AS totalPerAgent
         FROM (
         SELECT sch.agentid, su.businessname, sch.programid, IFNULL(SUM(sch.amount_due),0) AS total, (CASE 
-WHEN sp.type = 7 THEN 7
-WHEN sp.type = 8 THEN 7
-WHEN sp.type = 9 THEN 7
+WHEN sp.type IN (7,8,9) THEN 7
 WHEN sp.type = 11 THEN 8
+WHEN sch.companyid IN (1,2,3,4,5,12) THEN 1
 ELSE sch.companyid
 END) AS testCompId
         FROM smg_charges sch
@@ -73,10 +69,9 @@ END) AS testCompId
         UNION ALL
         SELECT sch.agentid, su.businessname, sch.programid, IFNULL(SUM(spc.amountapplied)*-1,0) AS total,  
 (CASE 
-WHEN sp.type = 7 THEN 7
-WHEN sp.type = 8 THEN 7
-WHEN sp.type = 9 THEN 7
+WHEN sp.type IN (7,8,9) THEN 7
 WHEN sp.type = 11 THEN 8
+WHEN sch.companyid IN (1,2,3,4,5,12) THEN 1
 ELSE sch.companyid
 END) AS testCompId
         FROM smg_payment_charges spc
@@ -89,10 +84,9 @@ END) AS testCompId
         UNION ALL
         SELECT sc.agentid, su.businessname, sch.programid, IFNULL(SUM(sc.amount - sc.amount_applied)* -1,0) AS total, 
 (CASE 
-WHEN sp.type = 7 THEN 7
-WHEN sp.type = 8 THEN 7
-WHEN sp.type = 9 THEN 7
+WHEN sp.type IN (7,8,9) THEN 7
 WHEN sp.type = 11 THEN 8
+WHEN sc.companyid IN (1,2,3,4,5,12) THEN 1
 ELSE sc.companyid
 END) AS testCompId
         FROM smg_credit sc
@@ -105,6 +99,20 @@ END) AS testCompId
         GROUP BY sc.agentid
         ) t
         GROUP BY t.agentid    
+        </cfquery> --->
+        
+        <cfquery name="getCompIDs" dbtype="query"> 
+        SELECT
+        	distinct(testCompID) as compID
+        FROM
+        	getInvoicesCreditNotes
+        </cfquery>
+        
+        <cfquery name="getTotalBalancePerAgent" dbtype="query"> 
+        SELECT
+            SUM(invBalance) AS totalPerAgent
+        FROM
+            getInvoicesCreditNotes
         </cfquery>
         
         <cfquery name="getAgentInfo" datasource="MySQL">
@@ -132,8 +140,8 @@ END) AS testCompId
             </cfquery>
         </cfif>
         
-        <cfif getAgentInfo.billing_email IS NOT "">
-    
+        <cfif getAgentInfo.billing_email IS NOT "" AND getTotalBalancePerAgent.totalPerAgent GT 0>
+
             <cfmail from="marcel@student-management.com" to="#getAgentInfo.billing_email#" bcc="marcel@student-management.com" subject="#getAgentInfo.businessname# - Account Balance Update" type="html">
             
                 <style type="text/css">
@@ -189,74 +197,82 @@ END) AS testCompId
                 
                 As of now, your account has a total outstanding balance amount <strong>#LsCurrencyFormat(getTotalBalancePerAgent.totalPerAgent)#</strong> as follows:<br/><br/>
             
-                <table class="frame">
-                            
-                    <tr class="darkBlue">
-                        <td class="right"><strong><small>Type</small></strong></td>
-                        <td class="right"><strong><small>Docum Numb</small></strong></td>
-                        <td class="right"><strong><small>Date Created</small></strong></td>
-                        <td class="right"><strong><small>Amount</small></strong></td>
-                        <td class="right"><strong><small>Company</small></strong></td>
-                    </tr>
+    			<cfloop query="getCompIDs">
                 
-                    <cfloop query="getInvoicesCreditNotes">
-                    
-                        <cfswitch expression="#getInvoicesCreditNotes.testCompId#">
-                            <cfcase value="1">
-                                <cfset company = 'ISE High School'>
-                            </cfcase>
-                            <cfcase value="2">
-                                <cfset company = 'ISE High School'>
-                            </cfcase>
-                            <cfcase value="3">
-                                <cfset company = 'ISE High School'>
-                            </cfcase>
-                            <cfcase value="4">
-                                <cfset company = 'ISE High School'>
-                            </cfcase>
-                            <cfcase value="5">
-                                <cfset company = 'SMG'>
-                            </cfcase>
-                            <cfcase value="7">
-                                <cfset company = 'CSB Trainee'>
-                            </cfcase>
-                            <cfcase value="8">
-                                <cfset company = 'CSB Work & Travel'>
-                            </cfcase>
-                            <cfcase value="10">
-                                <cfset company = 'CASE High School'>
-                            </cfcase>
-                            <cfcase value="12">
-                                <cfset company = 'ISE High School'>
-                            </cfcase>
-                        </cfswitch>
-            
-                        <tr <cfif getInvoicesCreditNotes.currentRow MOD 2>bgcolor="##FFFFFF"</cfif>>
-                            <td class="two <cfif getInvoicesCreditNotes.invBalance LT 0>style2</cfif>"><small>#getInvoicesCreditNotes.invoice#</small></td>
-                            <td class="two">
-                            	<cfif getInvoicesCreditNotes.invoice IS "invoice">
-                                    <small><a href="#CLIENT.exits_url#/nsmg/intrep/invoice/invoice_view.cfm?id=#getInvoicesCreditNotes.invoiceid#" target="_top">#getInvoicesCreditNotes.invoiceid#</a></small>
-									<cfelse>
-                                        <small><a href="#CLIENT.exits_url#/nsmg/intrep/invoice/credit_note.cfm?creditid=#getInvoicesCreditNotes.invoiceid#" target="_top">#getInvoicesCreditNotes.invoiceid#</a></small>
-                                </cfif>
-                            </td>
-                            <td class="two"><small>#DateFormat(getInvoicesCreditNotes.date,'mm/dd/yyyy')#</small></td>
-                            <td class="two <cfif getInvoicesCreditNotes.invBalance LT 0>style2</cfif>"><small>#LsCurrencyFormat(getInvoicesCreditNotes.invBalance)#</small></td>
-                            <td class="two"><small>#variables.company#</small></td>
+                    <table class="frame">
+                                
+                        <tr class="darkBlue">
+                            <td class="right"><strong><small>Type</small></strong></td>
+                            <td class="right"><strong><small>Docum Numb</small></strong></td>
+                            <td class="right"><strong><small>Date Created</small></strong></td>
+                            <td class="right"><strong><small>Amount</small></strong></td>
+                            <td class="right"><strong><small>Company</small></strong></td>
                         </tr>
-                    </cfloop>
+                        
+                        <cfquery name="getInvCredNotes" dbtype="query">
+                        SELECT *
+                        FROM getInvoicesCreditNotes
+                        WHERE testCompId = #getCompIDs.compID#
+                        </cfquery>
+                        
+                        <cfloop query="getInvCredNotes">
+                                 
+                            <cfswitch expression="#getInvCredNotes.testCompId#">
+                                <cfcase value="1,2,3,4,12">
+                                    <cfset company = 'ISE High School'>
+                                </cfcase>
+                                <cfcase value="5">
+                                    <cfset company = 'SMG'>
+                                </cfcase>
+                                <cfcase value="7">
+                                    <cfset company = 'Trainee'>
+                                </cfcase>
+                                <cfcase value="8">
+                                    <cfset company = 'CSB Work & Travel'>
+                                </cfcase>
+                                <cfcase value="10">
+                                    <cfset company = 'CASE High School'>
+                                </cfcase>
+                            </cfswitch>
+                
+                            <tr <cfif getInvCredNotes.currentRow MOD 2>bgcolor="##FFFFFF"</cfif>>
+                                <td class="two <cfif getInvCredNotes.invBalance LT 0>style2</cfif>"><small>#getInvCredNotes.invoice#</small></td>
+                                <td class="two">
+                                    <cfif getInvCredNotes.invoice IS "invoice">
+                                        <small><a href="#CLIENT.exits_url#/nsmg/intrep/invoice/invoice_view.cfm?id=#getInvCredNotes.invoiceid#" target="_top">#getInvCredNotes.invoiceid#</a></small>
+                                        <cfelse>
+                                            <small><a href="#CLIENT.exits_url#/nsmg/intrep/invoice/credit_note.cfm?creditid=#getInvCredNotes.invoiceid#" target="_top">#getInvCredNotes.invoiceid#</a></small>
+                                    </cfif>
+                                </td>
+                                <td class="two"><small>#DateFormat(getInvCredNotes.date,'mm/dd/yyyy')#</small></td>
+                                <td class="two <cfif getInvCredNotes.invBalance LT 0>style2</cfif>"><small>#LsCurrencyFormat(getInvCredNotes.invBalance)#</small></td>
+                                <td class="two"><small>#variables.company#</small></td>
+                            </tr>
+                        
+                        </cfloop>
+                        
+                        <cfquery name="getBalPerComp" dbtype="query"> 
+                        SELECT
+                            SUM(invBalance) as compBal
+                        FROM
+                            getInvoicesCreditNotes
+                        WHERE
+                            testCompID = #compID#
+                        </cfquery>
+            
+                        <tr style="background-color:##0052A4;">
+                            <td class="right"></td>
+                            <td class="right"></td>
+                            <td class="right"><strong><small>Total</small></strong></td>
+                            <td class="right"><strong><small>#LsCurrencyFormat(getBalPerComp.compBal)#</small></strong></td>
+                            <td class="right"></td>
+                        </tr>
+                                
+                    </table><br/>
+                
+                </cfloop>
         
-                    <tr style="background-color:##0052A4;">
-                        <td class="right"></td>
-                        <td class="right"></td>
-                        <td class="right"><strong><small>Total</small></strong></td>
-                        <td class="right"><strong><small>#LsCurrencyFormat(getTotalBalancePerAgent.totalPerAgent)#</small></strong></td>
-                        <td class="right"></td>
-                    </tr>
-                            
-                </table><br/>
-        
-                We will appreciate if you could please transfer the total amount <strong>#LsCurrencyFormat(getTotalBalancePerAgent.totalPerAgent)#</strong> as soon as possible. Please check the invoices for the correct bank account for payment (for example, all work programs' balances must be remitted to CSB's account while High School program balances must be remitted to ISE's account).<br/><br/>
+                We will appreciate if you transfer the total amount <strong>#LsCurrencyFormat(getTotalBalancePerAgent.totalPerAgent)#</strong> as soon as possible. Please check the invoices for the correct bank account when making payments since ISE, CSB and CASE are separate companies and thus have their own bank accounts. Payments remitted to the wrong bank account will be returned to your bank account without exception.<br/><br/>
                 
                 <small><strong>Notes:</strong><br/><br/>
                 
