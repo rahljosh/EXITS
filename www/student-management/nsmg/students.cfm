@@ -588,13 +588,13 @@
 				AND 
                 	privateschool = <cfqueryparam cfsqltype="cf_sql_integer" value="#privateschool#">
 			</cfif>
-            
-			<cfif VAL(placed)>
+
+			<cfif placed EQ 1>
                 AND 
-                	s.hostID != <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-            <cfelseif NOT VAL(placed)>
+                	s.hostid != <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+            <cfelseif placed EQ 0>
                 AND 
-                	s.hostID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                	s.hostid = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
             </cfif>
         
         <!--- Guest Account --->
@@ -787,7 +787,7 @@
                 </cfdefaultcase>
                         
             </cfswitch>
-            
+
     </cfquery>
     
 	<cfif qGetResults.recordCount>
@@ -973,7 +973,7 @@
         </table>
         
     </cfif>
-    
+
 </cfif>
    
 <cfinclude template="table_footer.cfm">
