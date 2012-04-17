@@ -65,10 +65,6 @@
 .paging a:hover {font-weight: bold;}
 </style>
 
-
-<script type="text/javascript"
-src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
-
 <script>$(document).ready(function() {
 //Show the paging and activate its first link
 $(".paging").show();
