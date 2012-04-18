@@ -89,7 +89,7 @@
 	<cfset form.uniqueid = '#createuuid()#'>
 	
 	<cfset form.comments = #Replace(form.comments,"#chr(10)#","<br>","all")#>
-		
+        
 	<cfquery name="new_user" datasource="MySql">
 		INSERT INTO smg_users
 			(uniqueid, companyid, datecreated, firstname, middlename, lastname, sex, dob, drivers_license, address, city, state,
