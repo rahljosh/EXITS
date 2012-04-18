@@ -14,6 +14,9 @@
 
 	<!--- Import CustomTag --->
     <cfimport taglib="../../../extensions/customTags/gui/" prefix="gui" />	
+    
+  	<!--- Ajax Call to the Component --->
+    <cfajaxproxy cfc="extra.extensions.components.udf" jsclassname="UDFComponent">
 
     <!--- Param variables --->
     <cfparam name="URL.hostCompanyID" default="0">
@@ -27,11 +30,13 @@
     <cfparam name="FORM.address" default="">
     <cfparam name="FORM.city" default="">
     <cfparam name="FORM.state" default="">
+    <cfparam name="FORM.stateID" default="">
     <cfparam name="FORM.zip" default="">
     <!--- HQ Address --->
     <cfparam name="FORM.hqAddress" default="">
     <cfparam name="FORM.hqCity" default="">
     <cfparam name="FORM.hqState" default="">
+    <cfparam name="FORM.hqSateID" default="">
     <cfparam name="FORM.hqZip" default="">
     <!--- Housing Information --->
     <cfparam name="FORM.isHousingProvided" default="0">
@@ -73,6 +78,12 @@
     <cfscript>
 		vGoogleMaps = '';
 	</cfscript>
+    
+    <style type="text/css">
+		.displayNone {
+			background:red;
+		}
+	</style>
     
     <cfquery name="qGetHostCompanyInfo" datasource="MySql">
         SELECT 
@@ -210,7 +221,7 @@
     
     <!--- FORM Submitted --->
     <cfif FORM.submitted>
-    	
+    
         <cfquery name="qCheckForDuplicates" datasource="MySql">
             SELECT 
                 hostCompanyID, 
@@ -316,12 +327,12 @@
                         <!--- Work Site Address --->
                         address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
                         city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
-                        state = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.state#">,
+                        state = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.stateID#">,
                         zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
                         <!--- HQ Address --->
                         hqAddress = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqAddress#">,
                         hqCity = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqCity#">,
-                        hqState = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hqState#">,
+                        hqState = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hqStateID#">,
                         hqZip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqZip#">,
                         <!--- Housing Information --->
                         isHousingProvided = <cfqueryparam cfsqltype="cf_sql_tinyint" value="#FORM.isHousingProvided#">,
@@ -431,12 +442,12 @@
                         <!--- Work Site Address --->
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.state#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.stateID#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
                         <!--- HQ Address --->
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqAddress#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqCity#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hqState#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hqStateID#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqZip#">,
 						<!--- Housing Information --->
                         <cfqueryparam cfsqltype="cf_sql_tinyint" value="#FORM.isHousingProvided#">,
@@ -673,9 +684,333 @@
 	   $("#pickUpContactPhone").mask("(999)999-9999");
 	});	
 	// --> 
+	
+	// Function to find the index in an array of the first entry with a specific value. 
+	// It is used to get the index of a column in the column list. 
+	Array.prototype.findIdx = function(value){ 
+		for (var i=0; i < this.length; i++) { 
+			if (this[i] == value) { 
+				return i; 
+			} 
+		} 
+	} 
+
+	// Create an instance of the proxy. 
+	var udf = new UDFComponent();
+ 
+	var verifyAddress = function() { 
+		
+		// Check required Fields
+		var errorMessage = "";
+		if($("#name").val() == ''){
+			errorMessage = (errorMessage + 'Please enter the Business Name. \n')
+		}
+		if($("#business_typeID").val() == 0){
+			errorMessage = (errorMessage + 'Please select the Business Type. \n')
+		}
+		if($("#address").val() == ''){
+			errorMessage = (errorMessage + 'Please enter the Work Site Address. \n')
+		}
+		if($("#city").val() == ''){
+			errorMessage = (errorMessage + 'Please enter the Work Site City. \n')
+		}
+		if($("#state").val() == 0){
+			errorMessage = (errorMessage + 'Please enter the Work Site State. \n')
+		}
+		if($("#zip").val() == ''){
+			errorMessage = (errorMessage + 'Please enter the Work Site Zip. \n')
+		}
+		if($("#hqAddress").val() == ''){
+			errorMessage = (errorMessage + 'Please enter the HQ Address. \n')
+		}
+		if($("#hqCity").val() == ''){
+			errorMessage = (errorMessage + 'Please enter the HQ City. \n')
+		}
+		if($("#hqState").val() == 0){
+			errorMessage = (errorMessage + 'Please enter the HQ State. \n')
+		}
+		if($("#hqZip").val() == ''){
+			errorMessage = (errorMessage + 'Please enter the HQ Zip. \n')
+		}
+		if (errorMessage != "") {
+			alert(errorMessage);
+		} else {
+			// FORM Variables
+			var address = $("#address").val();
+			var city = $("#city").val();
+			var state = $("#state").val();
+			var zip = $("#zip").val();
+			
+			// Setting a callback handler for the proxy automatically makes the proxy's calls asynchronous. 
+			udf.setCallbackHandler(checkAddress); 
+			udf.setErrorHandler(myErrorHandler);
+			udf.addressLookup(address,city,state,zip,"232");
+		}
+	} 
+
+	// Callback function to handle the results returned by the getHostLeadList function and populate the table. 
+	var checkAddress = function(googleResponse) { 
+	
+		var isAddressVerified = googleResponse.ISVERIFIED;
+	
+		if ( isAddressVerified == 1 ) {
+		
+			// Get Data Back	
+			var streetAddress = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('ADDRESS')]
+			var city = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('CITY')]
+			var state = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('STATE')]
+			var zip = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('ZIP')]
+			var inputState = googleResponse.INPUTSTATE;
+			
+			if ((streetAddress == $("#address").val()) && (city == $("#city").val()) && (state == inputState) && (zip == $("#zip").val()))
+			{
+				callCheckHQAddress();
+			} else {
+				$(function() {
+					$( "#dialog:ui-dialog" ).dialog( "destroy" );
+					$( "#dialog-approveAddress-confirm" ).empty();
+					$( "#dialog-approveAddress-confirm" ).append(
+						"<table width='100%'>" +
+							"<tr width='100%'><td width='50%'>Verified Address:</td><td width='50%'>Input Address:</td></tr>" +
+							"<tr><td>" + streetAddress + "</td><td>" + $("#address").val() + "</td></tr>" +
+							"<tr><td>" + city + ", " + state + " " + zip + "</td><td>" + $("#city").val() + ", " + inputState + " " + $("#zip").val() + "</td></tr>" +
+						"</table>");
+					$( "#dialog-approveAddress-confirm").dialog({
+						resizable: false,
+						height:200,
+						width:360,
+						modal: true,
+						buttons: {
+							"Use verified": function() {
+								$("#address").val(streetAddress);
+								$("#city").val(city);
+								$("#state").val(state);
+								$("#zip").val(zip);
+								$( this ).dialog( "close" );
+								callCheckHQAddress();
+							},
+							"Use input": function() {
+								$( this ).dialog( "close" );
+								callCheckHQAddress();
+							},
+							"Go back": function() {
+								$( this ).dialog( "close" );
+							}
+						}
+					});
+				});
+			}
+		} else {
+			$(function() {
+				$( "#dialog:ui-dialog" ).dialog( "destroy" );
+				$( "#dialog-canNotVerify-confirm" ).empty();
+				$( "#dialog-canNotVerify-confirm" ).append("We could not verify the following address:<br />" + $("#address").val() + "<br />" + $("#city").val() + ", " + $("#state").val() + " " + $("#zip").val());
+				$( "#dialog-canNotVerify-confirm").dialog({
+					resizable: false,
+					height:200,
+					width:360,
+					modal: true,
+					buttons: {
+						"Use anyway": function() {
+							$( this ).dialog( "close" );
+							callCheckHQAddress();
+						},
+						"Go back": function() {
+							$( this ).dialog( "close" );
+						}
+					}
+				});
+			});
+		}
+	}
+	
+	var callCheckHQAddress = function() {
+		var hqAddress = $("#hqAddress").val();
+		var hqCity = $("#hqCity").val();
+		var hqState = $("#hqState").val();
+		var hqZip = $("#hqZip").val();
+		
+		udf.setCallbackHandler(checkHQAddress); 
+		udf.setErrorHandler(myErrorHandler);
+		udf.addressLookup(hqAddress,hqCity,hqState,hqZip,"232");
+	}
+	
+	// Callback function to handle the results returned by the getHostLeadList function and populate the table. 
+	var checkHQAddress = function(googleResponse) { 
+
+		var isAddressVerified = googleResponse.ISVERIFIED;
+
+		if ( isAddressVerified == 1 ) {
+		
+			// Get Data Back	
+			var streetAddress = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('ADDRESS')]
+			var city = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('CITY')]
+			var state = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('STATE')]
+			var zip = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('ZIP')]
+			var inputState = googleResponse.INPUTSTATE;
+			
+			if ((streetAddress == $("#hqAddress").val()) && (hqCity == $("#city").val()) && (hqState == inputState) && (hqZip == $("#zip").val()))
+			{
+				$("#hostCompany").submit();
+			} else {
+				$(function() {
+					$( "#dialog:ui-dialog" ).dialog( "destroy" );
+					$( "#dialog-approveAddress-confirmHQ" ).empty();
+					$( "#dialog-approveAddress-confirmHQ" ).append(
+						"<table width='100%'>" +
+							"<tr width='100%'><td width='50%'>Verified Address:</td><td width='50%'>Input Address:</td></tr>" +
+							"<tr><td>" + streetAddress + "</td><td>" + $("#hqAddress").val() + "</td></tr>" +
+							"<tr><td>" + city + ", " + state + " " + zip + "</td><td>" + $("#hqCity").val() + ", " + inputState + " " + $("#hqZip").val() + "</td></tr>" +
+						"</table>");
+					$( "#dialog-approveAddress-confirmHQ").dialog({
+						resizable: false,
+						height:200,
+						width:360,
+						modal: true,
+						buttons: {
+							"Use verified": function() {
+								$( this ).dialog( "close" );
+								$("#hqAddress").val(streetAddress);
+								$("#hqCity").val(city);
+								$("#hqState").val(state);
+								$("#hqZip").val(zip);
+								$("#hostCompany").submit();
+							},
+							"Use input": function() {
+								$( this ).dialog( "close" );
+								$("#hostCompany").submit();
+							},
+							"Go back": function() {
+								$( this ).dialog( "close" );
+							}
+						}
+					});
+				});
+			}
+		} else {
+			$(function() {
+				$( "#dialog:ui-dialog" ).dialog( "destroy" );
+				$( "#dialog-canNotVerify-confirmHQ" ).empty();
+				$( "#dialog-canNotVerify-confirmHQ" ).append("We could not verify the following address:<br />" + $("#hqAddress").val() + "<br />" + $("#hqCity").val() + ", " + $("#hqState").val() + " " + $("#hqZip").val());
+				$( "#dialog-canNotVerify-confirmHQ").dialog({
+					resizable: false,
+					height:200,
+					width:360,
+					modal: true,
+					buttons: {
+						"Use anyway": function() {
+							$( this ).dialog( "close" );
+							$("#hostCompany").submit();
+						},
+						"Go back": function() {
+							$( this ).dialog( "close" );
+						}
+					}
+				});
+			});
+		}	
+	}
+	
+	// Use an asynchronous call to get the city and state from the zip code. The function is called when the user inputs a zip. 
+	var getLocationByZipWorkSite = function(fieldid) { 
+		
+		// FORM Variables
+		var zip = $("#" + fieldid).val();
+
+		if (zip.length == 5) {
+			// Setting a callback handler for the proxy automatically makes the proxy's calls asynchronous. 
+			udf.setCallbackHandler(checkZipWorkSite); 
+			udf.setErrorHandler(myErrorHandler); 
+			udf.zipCodeLookUp(zip);
+		} else {
+			alert("Please verify your zip code");
+		}
+	} 
+	
+	var checkZipWorkSite = function(googleResponse) { 
+
+		var isAddressVerified = googleResponse.ISVERIFIED;
+
+		if ( isAddressVerified == 1 ) {
+		
+			// Get Data Back	
+			var city = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('CITY')]
+			var state = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('STATE')]
+			var zip = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('ZIP')]
+			
+			$("#city").val(city);
+			$("#state").val(state);
+			$("#zip").val(zip);
+			
+			$("#trZipLookUp").fadeOut();
+		} else {
+			alert("Please verify your zip code");
+		}
+
+	}
+	
+	// Use an asynchronous call to get the city and state from the zip code. The function is called when the user inputs a zip. 
+	var getLocationByZipHQ = function(fieldid) { 
+		
+		// FORM Variables
+		var zip = $("#" + fieldid).val();
+
+		if (zip.length == 5) {
+			// Setting a callback handler for the proxy automatically makes the proxy's calls asynchronous. 
+			udf.setCallbackHandler(checkZipHQ); 
+			udf.setErrorHandler(myErrorHandler); 
+			udf.zipCodeLookUp(zip);
+		} else {
+			alert("Please verify your zip code");
+		}
+	} 
+	
+	var checkZipHQ = function(googleResponse) { 
+
+		var isAddressVerified = googleResponse.ISVERIFIED;
+
+		if ( isAddressVerified == 1 ) {
+		
+			// Get Data Back	
+			var city = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('CITY')]
+			var state = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('STATE')]
+			var zip = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('ZIP')]
+			
+			$("#hqCity").val(city);
+			$("#hqState").val(state);
+			$("#hqZip").val(zip);
+			
+			$("#trZipLookUpHQ").fadeOut();
+		} else {
+			alert("Please verify your zip code");
+		}
+
+	}
+
+	// Error handler for the asynchronous functions. 
+	var myErrorHandler = function(statusCode, statusMsg) { 
+		alert('Status: ' + statusCode + ', ' + statusMsg); 
+	}
+	
 </script>
 
 <cfoutput>
+
+<!--- Modal Dialogs --->
+
+<!--- Approve Address - Modal Dialog Box --->
+<div id="dialog-approveAddress-confirmHQ" title="Do you want to approve this HQ Address?" style="font-size:12px;" class="displayNone"> 
+</div>
+<!--- Can Not Verify Address - Modal Dialog Box --->
+<div id="dialog-canNotVerify-confirmHQ" title="We could not verify the HQ Address." style="font-size:12px;" class="displayNone">
+</div>
+    
+<!--- Approve Address - Modal Dialog Box --->
+<div id="dialog-approveAddress-confirm" title="Do you want to approve this Work Site Address?" style="font-size:12px;" class="displayNone">
+</div>
+<!--- Can Not Verify Address - Modal Dialog Box --->
+<div id="dialog-canNotVerify-confirm" title="We could not verify the Work Site Address." style="font-size:12px;" class="displayNone">
+</div>
 
 <!--- TABLE HOLDER --->
 <table width="100%" height="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="##CCCCCC" bgcolor="##F4F4F4">
@@ -743,12 +1078,12 @@
                         <table width="100%" align="center" cellpadding="2" class="editPage">
                             <tr>
                                 <td width="40%" align="right" class="style1"><strong>Business Name:</strong> </td>
-                                <td><input type="text" name="name" value="#FORM.name#" class="style1" size="50" maxlength="250"></td>
+                                <td><input type="text" id="name" name="name" value="#FORM.name#" class="style1" size="50" maxlength="250"></td>
                             </tr>
                             <tr>
                                 <td align="right" class="style1"><strong>Business Type:</strong></td>
                                 <td>
-                                    <select name="business_typeID" id="business_typeID" class="style1" onchange="showHideBusinessTypeOther();">
+                                    <select id="business_typeID" name="business_typeID" id="business_typeID" class="style1" onchange="showHideBusinessTypeOther();">
                                         <option value="0"></option>
                                         <option value="Other" <cfif FORM.business_typeID EQ 'Other'>selected="selected"</cfif> >-- Other --</option>
                                         <cfloop query="qGetBusinessType">
@@ -759,7 +1094,7 @@
                             </tr>
                             <tr id="rowBusinessTypeID" class="hiddenField">
                                 <td align="right" class="style1"><strong>Specity if Other:</strong> </td>
-                                <td><input type="text" name="businessTypeOther" id="businessTypeOther" value="#FORM.businessTypeOther#" class="style1" size="35" maxlength="100"></td>
+                                <td><input type="text" id="businessTypeOther" name="businessTypeOther" id="businessTypeOther" value="#FORM.businessTypeOther#" class="style1" size="35" maxlength="100"></td>
                             </tr>
                         </table>
 
@@ -792,6 +1127,10 @@
                                                 </cfif>
                                             </td>
                                         </tr>
+                                        <tr id="trZipLookUp">
+											<td class="style1" align="right"><strong>Input your zip code:</strong></td>
+											<td class="style1"><input type="text" name="zipLookup" id="zipLookup" size="10" maxlength="5" class="style1 editPage" onBlur="getLocationByZipWorkSite(this.id);"></td>											
+										</tr>
                                         <tr>
                                             <td width="35%" class="style1" align="right"><strong>Address:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
@@ -813,7 +1152,7 @@
                                                 <select name="state" id="state" class="style1 editPage">
                                               		<option value="0"></option>
                                               		<cfloop query="qGetStateList">
-		                                                <option value="#qGetStateList.ID#" <cfif qGetStateList.ID eq FORM.state>selected</cfif>>#qGetStateList.stateName#</option>
+		                                                <option value="#qGetStateList.id#" <cfif qGetStateList.id eq FORM.state>selected</cfif>>#qGetStateList.stateName#</option>
         	                                      	</cfloop>
 	                                            </select>
                                             </td>
@@ -822,7 +1161,7 @@
                                             <td class="style1" align="right"><strong>Zip:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">#FORM.zip#</span>
-                                                <input type="text" name="zip" id="zip" value="#FORM.zip#" class="style1 editPage" size="35" maxlength="10">
+                                                <input type="text" name="zip" id="zip" value="#FORM.zip#" class="style1 editPage" size="10" maxlength="5" onblur="getLocationByZipWorkSite(this.id);">
                                             </td>
                                         </tr>
                                     </table>
@@ -832,7 +1171,7 @@
                         
                         <br />
 
-                        <!--- WORK SITE ADDRESS --->
+                        <!--- HQ ADDRESS --->
                         <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
                             <tr>
 								<td bordercolor="##FFFFFF">
@@ -845,6 +1184,10 @@
                                         	<td class="style1" align="right"><input type="checkbox" name="copyAddress" id="copyAddress" class="style1 editPage" onclick="jsCopyAddress();" /></td>
                                             <td class="style1"><strong><label for="copyAddress">Same as Main Address</label></strong></td>
                                         </tr>
+                                        <tr id="trZipLookUpHQ">
+											<td class="style1" align="right"><strong>Input your zip code:</strong></td>
+											<td class="style1"><input type="text" name="zipLookup" id="zipLookupHQ" size="10" maxlength="5" class="style1 editPage" onBlur="getLocationByZipHQ(this.id);"></td>											
+										</tr>
                                         <tr>
                                             <td width="35%" class="style1" align="right"><strong>Address:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
@@ -866,7 +1209,7 @@
                                                 <select name="hqState" id="hqState" class="style1 editPage">
                                               		<option value="0"></option>
                                               		<cfloop query="qGetStateList">
-		                                                <option value="#qGetStateList.ID#" <cfif qGetStateList.ID eq FORM.hqState>selected</cfif>>#qGetStateList.stateName#</option>
+		                                                <option value="#qGetStateList.id#" <cfif qGetStateList.id eq FORM.hqState>selected</cfif>>#qGetStateList.stateName#</option>
         	                                      	</cfloop>
 	                                            </select>
                                             </td>
@@ -875,7 +1218,7 @@
                                             <td class="style1" align="right"><strong>Zip:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">#FORM.hqZip#</span>
-                                                <input type="text" name="hqZip" id="hqZip" value="#FORM.hqZip#" class="style1 editPage" size="35" maxlength="10">
+                                                <input type="text" name="hqZip" id="hqZip" value="#FORM.hqZip#" class="style1 editPage" size="10" maxlength="5" onblur="getLocationByZipHQ(this.id);">
                                             </td>
                                         </tr>
                                     </table>
@@ -1308,9 +1651,9 @@
                             <div class="editPage">                            
                                 
                                 <cfif VAL(qGetHostCompanyInfo.hostCompanyID)>
-	                                <input name="Submit" type="image" src="../pics/update.gif" alt="Update Host Company" border="0">
+                                    <img src="../pics/update.gif" style="cursor:pointer" onclick="javascript:verifyAddress();" />
 								<cfelse>
-	                                <input name="Submit" type="image" src="../pics/save.gif" alt="Save Host Company" border="0">
+                                    <img src="../pics/save.gif" style="cursor:pointer" onclick="javascript:verifyAddress();" />
                                 </cfif>                                    
                             </div>
                             

@@ -576,5 +576,89 @@
         
 	</cffunction>
 
+    <cffunction name="addressLookup" access="remote" returnFormat="json" output="false" hint="empty for no accurate match">
+		<cfargument name="address" type="string" required="yes">
+        <cfargument name="city" type="string" required="yes">
+        <cfargument name="state" type="string" required="yes">
+        <cfargument name="zip" type="string" required="yes">
+        <cfargument name="country" type="string" required="yes">
+        
+        <cfscript>
+			vGetStateAbbr = APPLICATION.CFC.LookupTables.getState(ID=ARGUMENTS.state).state;
+			vGetCountryCode = APPLICATION.CFC.LookupTables.getCountry(countryID=ARGUMENTS.country).countryCode;
+		</cfscript>
+        
+        <cfhttp result="geo" url="https://maps.google.com/maps/geo?q=#address#%20#city#%20#vGetStateAbbr#%20#zip#%20#vGetCountryCode#&output=xml&oe=utf8\&sensor=false&key=#APPLICATION.KEY.googleMapsAPI#" resolveurl="yes" />
+       	
+		<cfscript>
+            locationXML = xmlParse(geo.filecontent);
+		
+			// Set return structure that will store query + verify information
+			stResult = StructNew();
+			
+			stResult.isVerified = 0;
+			stResult.inputCountry = vGetCountryCode;
+			stResult.inputState = vGetStateAbbr;
+			
+			// Create Query
+            qAddress = QueryNew("Address, City, State, Zip, Country");
+			
+            if ( locationXML.kml.Response.Status.code.XmlText EQ 200 AND listFind("8,9", locationXML.kml.Response.Placemark.AddressDetails.XmlAttributes.Accuracy) ) {
+				
+				stResult.isVerified = 1;
+				
+                QueryAddRow(qAddress);
+                QuerySetCell(qAddress, "address", ListGetAt(locationXML.kml.Response.Placemark.address.XmlText, 1));
+                QuerySetCell(qAddress, "city", locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.Locality.LocalityName.XmlText );
+                QuerySetCell(qAddress, "state", locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.AdministrativeAreaName.XmlText );
+                QuerySetCell(qAddress, "zip", locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.Locality.PostalCode.PostalCodeNumber.XmlText );
+				QuerySetCell(qAddress, "country", locationXML.kml.Response.Placemark.AddressDetails.Country.CountryNameCode.XmlText );
+            }
+			
+			// Add structure to query
+			stResult.QUERY = qAddress;
+			
+			return stResult;
+        </cfscript>
+            
+	</cffunction>
+    
+
+    <cffunction name="zipCodeLookUp" access="remote" returnFormat="json" output="false" hint="empty for no accurate match">
+        <cfargument name="zip" type="string" required="yes">
+        
+        <cfhttp result="geo" url="https://maps.google.com/maps/geo?q=#zip#&output=xml&oe=utf8\&sensor=false&key=#APPLICATION.KEY.googleMapsAPI#" resolveurl="yes" />
+       	
+		<cfscript>
+            locationXML = xmlParse(geo.filecontent);
+			
+			// Set return structure that will store query + verify information
+			stResult = StructNew();
+			
+			stResult.isVerified = 0;
+			
+			// Create Query
+            qAddress = QueryNew("City, State, Zip");
+			
+            if ( locationXML.kml.Response.Status.code.XmlText EQ 200 AND listFind("5", locationXML.kml.Response.Placemark.AddressDetails.XmlAttributes.Accuracy) ) {
+				
+				stResult.isVerified = 1;
+				
+				vGetStateID = APPLICATION.CFC.LookupTables.getState(shortState=locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.AdministrativeAreaName.XmlText).ID;
+				
+                QueryAddRow(qAddress);
+                QuerySetCell(qAddress, "city", locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.Locality.LocalityName.XmlText );
+                QuerySetCell(qAddress, "state", vGetStateID );
+				QuerySetCell(qAddress, "zip", ARGUMENTS.zip );
+				
+            }
+			
+			// Add structure to query
+			stResult.QUERY = qAddress;
+			
+			return stResult;
+        </cfscript>
+            
+	</cffunction>
 
 </cfcomponent>

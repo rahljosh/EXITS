@@ -139,6 +139,9 @@
 
 	/***** Set Settings based on Live or Dev Servers *****/
 	
+	/***** Create APPLICATION.KEY structure *****/
+	APPLICATION.KEY = StructNew();	
+	
 	// Check if this is Dev or Live 
 	if ( APPLICATION.isServerLocal ) {
 		// ***** DEVELOPMENT Server Settings *****
@@ -156,6 +159,9 @@
 
 		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());	'
 		APPLICATION.PATH.base = 'C:/Websites/www/student-management/extra/internal/';
+		
+		APPLICATION.KEY.googleMapsAPI = 'ABQIAAAAiT0TfDoNFmmMRtOgGZNu_RQ7SAcFHxXg_-mJGkd4r8IEQsqs-RTA-mZLUkFOvNCYFwvV4y4wGdOOyg'; // URL: http://smg.local
+
 	
 	} else {
 		// ***** PRODUCTION Server Settings *****
@@ -171,6 +177,9 @@
 		
 		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());	'
 		APPLICATION.PATH.base = 'C:/Websites/student-management/extra/internal/';
+		
+		APPLICATION.KEY.googleMapsAPI = 'ABQIAAAAiT0TfDoNFmmMRtOgGZNu_RRLNEIHL1-VAyvTpFfu6UHsH4aa6RS5HJTmI0cZToeRuO_UU4JcIi2qaw'; // URL: http://exitsapplication.com
+
 	}
 	
 	// Set up so emails sent from EXTRA are stored in this address.

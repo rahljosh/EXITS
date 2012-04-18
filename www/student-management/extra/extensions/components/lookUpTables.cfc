@@ -103,7 +103,8 @@
 
 
 	<cffunction name="getState" access="public" returntype="query" output="false" hint="Returns a state or list of states">
-    	<cfargument name="ID" default="0" hint="countryID is not required">
+    	<cfargument name="ID" default="0" hint="stateID is not required">
+        <cfargument name="shortState" default="" hint="shortState is not required">
 
         <cfquery 
         	name="qGetState"
@@ -115,12 +116,21 @@
                     guarantee_fee
 				FROM
                 	smg_states
+				WHERE 
+					1 = 1
+                    
 				<cfif VAL(ARGUMENTS.ID)>
-	                WHERE 
+	                AND 
                         ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
+                </cfif>       
+				
+				<cfif LEN(ARGUMENTS.shortState)>
+	                AND 
+                        state LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.shortState#">
                 </cfif>                        
+                                 
         </cfquery> 
-
+        
 		<cfreturn qGetState>
 	</cffunction>
 
