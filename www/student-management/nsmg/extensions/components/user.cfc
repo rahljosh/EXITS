@@ -629,37 +629,6 @@
 	<cffunction name="getTraining" access="public" returntype="query" output="false" hint="Gets a list of training records for a userID">
     	<cfargument name="userID" default="0" hint="userID is not required">
 
-		<!--- Update Training Records / Remove this Later --->
-        <!---
-        <cfquery name="getTrainingRecords" datasource="#application.dsn#">
-            SELECT 
-                sut.id,
-                sut.training_id,
-                sut.notes,
-                alup.fieldID
-            FROM 
-                smg_users_training sut
-            INNER JOIN
-                applicationLookUp alup ON alup.name = sut.notes        
-            WHERE 
-                training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-        </cfquery>
-        
-        <cfloop query="getTrainingRecords">
-        
-            <cfquery datasource="#application.dsn#">
-                UPDATE
-                    smg_users_training
-                SET
-                    training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#getTrainingRecords.fieldID#">           
-                WHERE 
-                    id = <cfqueryparam cfsqltype="cf_sql_integer" value="#getTrainingRecords.id#">        
-            </cfquery>
-        
-        </cfloop>
-		--->
-		<!--- Update Training Records / Remove this Later --->
-
         <cfquery 
 			name="qGetTraining" 
 			datasource="#APPLICATION.dsn#">
@@ -1110,8 +1079,184 @@
             }			
         </cfscript>
         
-	</cffunction>    
+	</cffunction> 
+    
 
+	<cffunction name="generateTraincasterLoginLink" access="public" returntype="string" output="No" hint="Generates a traincaster login link">
+    	<cfargument name="userID" type="numeric" hint="User ID is required">
+		
+		<cfscript>
+			/***************************************************************************************************
+			http://doslocalcoordinatortraining.traincaster.com/app/clients/doslocalcoordinatortraining/Login.pm
+			---------------------------------------------------------------
+			Accepts seven parameters (all required; order doesn't matter) 
+			---------------------------------------------------------------
+			person_id (up to 36 chars) 
+			first_name (up to 50 chars) 
+			last_name (up to 50 chars) 
+			program_sponsor (up to 100 chars) 
+			timestamp (integer) 
+			email (up to 50 characters)
+			digest (hex hash key)
+			---------------------------------------------------------------
+			The process for creating the digest would look similar to this: 
+			hash = sha1(<person_id> + 'password' + <timestamp>) 
+			---------------------------------------------------------------
+			timestamp must be ± 60 seconds of our calculation of time.  
+			---------------------------------------------------------------
+			Entering above url for the first time creates the account and logs the user in to TrainCaster.  
+			Subsequent accesses to the URL causes the user account information to be updated and then logs the user into TrainCaster.			
+			***************************************************************************************************/		
+		
+			// Get User Information
+            qGetUserInfo = getUserByID(userID=ARGUMENTS.userID);
+            
+            var vTrainCasterURL = "http://doslocalcoordinatortraining.traincaster.com/app/clients/doslocalcoordinatortraining/Login.pm";
+			var vProgramSponsor = "";
+			var vTrainCasterToken = "";
+            
+			// ISE
+			if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) ) {
+				vProgramSponsor = "International Student Exchange";	
+				vTrainCasterPassword = "ZG2qK3vJgTHkhbSxQ6nxH273NKVS5T7Dwztm5k4B";
+			// CASE
+			} else {
+				vProgramSponsor = "Cultural Academic Student Exchange";
+				vTrainCasterPassword = "";
+			}
+			
+            vUnixTimeStamp = int(now().getTime()/1000);
+            
+            vSetDigest = lCase(Hash(qGetUserInfo.userID & vTrainCasterPassword & vUnixTimeStamp, "SHA-1"));
+            
+			// Store date account was created
+			
+			// Build Login URL
+            return "#vTraincasterURL#?timestamp=#vUnixTimeStamp#&person_id=#qGetUserInfo.userID#&first_name=#qGetUserInfo.firstName#&last_name=#qGetUserInfo.lastName#&email=#qGetUserInfo.email#&program_sponsor=#vProgramSponsor#&digest=#vSetDigest#";
+        </cfscript>
+        
+	</cffunction>
+    
+
+	<cffunction name="importTraincasterTestResults" access="public" returntype="string" output="No" hint="Download results from traincaster and inserts them into the database">
+        <cfargument name="date" default="#DateFormat(now(), 'yyyy-dd-mm')#" hint="Date is NOT required yyyy-mm-dd">
+		<cfargument name="companyID" type="numeric" hint="company ID is required">
+        
+		<cfscript>
+			/***************************************************************************************************
+			The URL and parameters for extracting training completion records from TrainCaster:
+			---------------------------------------------------------------
+			https://doslocalcoordinatortraining.traincaster.com/app/clients/doslocalcoordinatortraining/Training_Recs.pm
+			---------------------------------------------------------------
+			Accepts three parameters (all required; order doesn't matter)
+			---------------------------------------------------------------
+			date in yyyy-mm-dd format (passing a date of 2011-1-1 will return all records from the beginning of the year)
+			program_sponsor 
+			token (the token is <provided upon request>)
+			---------------------------------------------------------------
+			Accessing this will return one tab delimited string per training completion record generated on or after date that will have the following five fields in this order:
+			course name
+			person_id
+			date completed
+			passed or failed
+			score
+			***************************************************************************************************/	
+			
+			var vTrainCasterURL = "https://doslocalcoordinatortraining.traincaster.com/app/clients/doslocalcoordinatortraining/Training_Recs.pm";
+			var vProgramSponsor = "";
+			var vTrainCasterToken = "";
+
+			// Make sure we have a valid date
+			if ( NOT isDate(ARGUMENTS.date) ) {
+				ARGUMENTS.date = DateFormat(now(), 'yyyy-dd-mm');	
+			}
+			
+			// ISE
+			if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID) ) {
+				vProgramSponsor = "International Student Exchange";	
+				vTrainCasterToken = "VtGxtRJTV33nVK2qZk8H";
+			// CASE
+			} else if ( ARGUMENTS.companyID EQ 10 ) {
+				vProgramSponsor = "Cultural Academic Student Exchange";
+				vTrainCasterToken = "";
+			}
+
+			/* create new http service */ 
+		    vHTTPService = new http(); 			
+
+			/* set attributes using implicit setters */ 
+			vHTTPService.setMethod("post"); 
+			vHTTPService.setCharset("utf-8"); 
+			vHTTPService.setUrl(vTrainCasterURL); 
+			
+			/* add httpparams using addParam() */ 
+			vHTTPService.addParam(type="formfield",name="token",value=vTrainCasterToken); 
+			vHTTPService.addParam(type="formfield",name="program_sponsor",value=vProgramSponsor); 
+			vHTTPService.addParam(type="formfield",name="date",value=ARGUMENTS.date); 
+			
+			/* make the http call to the URL using send() */ 
+			vResult = vHTTPService.send().getPrefix(); 
+			
+			/* process the filecontent returned */  //Transform list result to array | Chr(10) --> line break
+			vArray = listToArray(vResult.filecontent,chr(10)); 
+
+			// Loop Through Rows | Chr(9) --> tab
+            for (row = 1; row <= arrayLen(vArray); row++) {
+                
+				// Default Values
+                vCourseName = '';
+                vPersonID = '';
+                vDateCompleted = '';
+                vPassedOrFailed = '';
+                vScore = '';
+                
+                // Loop Through Columns - chr(9) Tab Delimited List
+                for (col = 1; col <= listLen(vArray[row], Chr(9)); col++) { 
+				
+                    switch (col) {
+                        
+                        case 1:
+                            vCourseName = listGetAt(vArray[row], col, chr(9));
+                        break;
+    
+                        case 2:
+                            vPersonID = listGetAt(vArray[row], col, chr(9));
+                        break;
+    
+                        case 3:
+                            vDateCompleted = listGetAt(vArray[row], col, chr(9));
+                        break;
+    
+                        case 4:
+                            vPassedOrFailed = listGetAt(vArray[row], col, chr(9));
+                        break;
+    
+                        case 5:
+                            vScore = listGetAt(vArray[row], col, chr(9));
+                        break;
+                        
+                    }
+                    
+                }
+                
+                if ( VAL(vPersonID) AND isDate(vDateCompleted) AND isNumeric(vScore) ) {
+                
+                    // Insert Training
+                    insertTraining(
+                        userID=vPersonID,
+                        trainingID=2,
+                        dateTrained=vDateCompleted,
+                        score=vScore
+                    );
+                
+                }
+                
+            }
+			
+			return "<p>Traincaster Test Results - Total of #arrayLen(vArray)# records inserted into EXITS</p>";
+        </cfscript>
+        
+	</cffunction>
 	<!--- ------------------------------------------------------------------------- ----
 		
 		End of User Training
