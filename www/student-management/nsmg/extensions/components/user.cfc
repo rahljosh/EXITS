@@ -342,8 +342,8 @@
                     AND
                     	u.accountCreationVerified != <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                     <!---
-                    AND
-                    	u.dateAccountVerified IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+					AND
+						u.dateAccountVerified IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
 					--->						
                     <cfif VAL(is2ndVisitIncluded)>
                         AND 
@@ -380,8 +380,8 @@
                     AND
                     	u.accountCreationVerified != <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                     <!---
-                    AND
-                    	u.dateAccountVerified IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+					AND
+						u.dateAccountVerified IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
 					--->						
                     
 					<cfif ListLen(ARGUMENTS.regionID) EQ 1>
@@ -684,56 +684,51 @@
             }	
 		</cfscript>	
 		
-        <!--- Check if has been entered --->
         <cfquery 
-			name="qCheckData" 
-			datasource="#APPLICATION.dsn#">
-            	SELECT
-                	id
-                FROM	
-                	smg_users_training
-                WHERE
-                	user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
-                AND
-                	training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.trainingID#">
-                AND
-                	date_trained = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(ARGUMENTS.dateTrained)#">
-                AND
-                	score = <cfqueryparam cfsqltype="cf_sql_float" value="#ARGUMENTS.score#">
-		</cfquery>            
-        
-        <cfif NOT VAL(qCheckData.recordCount)>
-                             
-            <cfquery 
-                name="qInsertTraining" 
-                datasource="#APPLICATION.dsn#">
-                    INSERT INTO
-                        smg_users_training
-                    (
-                        user_id,
-                        office_user_id,
-                        training_id,
-                        date_trained,
-                        score,
-                        has_passed,
-                        date_created,
-                        date_updated
-                    )
-                    VALUES
-                    (
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.officeUserID#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.trainingID#">,
-                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.dateTrained)#">,
-                        <cfqueryparam cfsqltype="cf_sql_float" value="#ARGUMENTS.score#">,
-                        <cfqueryparam cfsqltype="cf_sql_bit" value="#hasPassed#">,
-                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">,
-                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">
-                    )	
-            </cfquery>
+            name="qInsertTraining" 
+            datasource="#APPLICATION.dsn#">
+                INSERT INTO 
+                    smg_users_training
+                (
+                    user_id,
+                    office_user_id,
+                    training_id,
+                    date_trained,
+                    score,
+                    has_passed,
+                    date_created,
+                    date_updated
+                )
+                SELECT 
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.officeUserID#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.trainingID#">,
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.dateTrained)#">,
+                    <cfqueryparam cfsqltype="cf_sql_float" value="#ARGUMENTS.score#">,
+                    <cfqueryparam cfsqltype="cf_sql_bit" value="#hasPassed#">,
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">,
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">
+                FROM 
+                    dual
+                <!--- DO NOT INSERT IF ITS ALREADY EXISTS --->
+                WHERE 
+                	NOT EXISTS 
+                        (	
+                            SELECT
+                                ID
+                            FROM	
+                                smg_users_training
+                            WHERE
+                                user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                            AND
+                                training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.trainingID#">
+                            AND
+                                date_trained = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(ARGUMENTS.dateTrained)#">
+                            AND
+                                score = <cfqueryparam cfsqltype="cf_sql_float" value="#ARGUMENTS.score#">
+                        )   
+        </cfquery>
 		
-        </cfif>
-        		   
 	</cffunction>
 
 
@@ -1139,7 +1134,7 @@
     
 
 	<cffunction name="importTraincasterTestResults" access="public" returntype="string" output="No" hint="Download results from traincaster and inserts them into the database">
-        <cfargument name="date" default="#DateFormat(now(), 'yyyy-dd-mm')#" hint="Date is NOT required yyyy-mm-dd">
+        <cfargument name="date" default="#DateFormat(now(), 'yyyy-mm-dd')#" hint="Date is NOT required yyyy-mm-dd">
 		<cfargument name="companyID" type="numeric" hint="company ID is required">
         
 		<cfscript>
