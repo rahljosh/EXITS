@@ -33,10 +33,17 @@
 <cfquery name="get_region" datasource="MySQL">
 	SELECT	regionname, company, regionid
 	FROM smg_regions
-	WHERE company = '#client.companyid#'
-		<cfif form.regionid is  not 0>
-			AND regionid = '#form.regionid#'	
-		</cfif>
+	WHERE 
+    
+    <cfif CLIENT.companyID EQ 5>
+    	company IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+    <cfelse>
+    	 company = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+    </cfif>
+
+	<cfif form.regionid is  not 0>
+        AND regionid = '#form.regionid#'	
+    </cfif>
 	ORDER BY regionname
 </cfquery>
 
@@ -52,8 +59,13 @@
         	u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
 		AND            
             uar.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-        AND
-        	uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+		<cfif CLIENT.companyID EQ 5>
+            AND
+            	uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+        <cfelse>
+             AND
+             	uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        </cfif>
 	</cfquery>
 	<cfset ad_users = ValueList(get_users_under_adv.userid, ',')>
     <CFIF client.usertype neq 6>
@@ -65,7 +77,12 @@
 <cfquery name="get_total_students" datasource="MySQL">
 	SELECT	studentid, hostid
 	FROM 	smg_students
-	WHERE companyid = '#client.companyid#' 
+	WHERE 
+		<cfif CLIENT.companyID EQ 5>
+            companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+        <cfelse>
+            companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        </cfif>
 		AND host_fam_approved <= '4'
 		<cfif form.active EQ 0> <!--- inactive --->
 			AND active = '0'
@@ -125,7 +142,6 @@
 			<cfelseif form.active EQ 2> <!--- canceled --->
 				AND smg_students.canceldate IS NOT NULL
 			</cfif>
-			AND smg_students.companyid = '#client.companyid#' 
 			AND smg_students.hostid != '0'
 			AND host_fam_approved <= '4'
 			AND (<cfloop list=#form.programid# index='prog'>
@@ -152,7 +168,6 @@
 			<cfelseif form.active EQ 2> <!--- canceled --->
 				AND canceldate IS NOT NULL
 			</cfif>		
-			AND companyid = '#client.companyid#' 
 			AND hostid != '0'
 			AND host_fam_approved <= '4'
 			<cfif IsDefined('form.dates')>
@@ -194,7 +209,6 @@
 				<cfelseif form.active EQ 2> <!--- canceled --->
 					AND s.canceldate IS NOT NULL
 				</cfif>
-				AND s.companyid = '#client.companyid#' 
 				AND s.placerepid = '#list_repid.placerepid#' AND host_fam_approved <= '4'
 				<cfif IsDefined('form.dates')>
 				AND (s.dateplaced between #CreateODBCDateTime(form.date1)# and #CreateODBCDateTime(form.date2)#) 

@@ -108,7 +108,7 @@
             
                 <cfform action="reports/email_ds2019_verification.cfm" method="POST" target="blank">
                     <Table class="nav_bar" cellpadding="6" cellspacing="0" align="left"  width="100%">
-                        <tr><th colspan="2" bgcolor="e2efc7">#CLIENT.DSFormName# Verification Reports</th></tr>
+                        <tr><th colspan="2" bgcolor="e2efc7"><cfoutput>#CLIENT.DSFormName#</cfoutput> Verification Reports</th></tr>
                         <tr align="left">
                             <TD>Program :</td>
                             <TD>
@@ -139,32 +139,6 @@
 		</tr>
 		</table><br />
 	</td></tr>
-	
-	<tr>
-    	<td>
-    
-			<!--- Row 2 - 2 boxes --->
-            <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
-                <tr>
-                    <td width="50%" align="left">
-                        <form action="reports/placed_students_place.cfm" method="POST" target="blank">
-                            <Table class="nav_bar" cellpadding="6" cellspacing="0" align="left"  width="100%">
-                                <tr><th colspan="2" bgcolor="e2efc7">Acceptance Letters</th></tr>
-                            </table>
-                        </form>
-                    </td>
-                    <td width="50%" align="right" valign="top">
-                        <form action="reports/placed_students_place.cfm" method="POST" target="blank">
-                            <Table class="nav_bar" cellpadding="6" cellspacing="0" align="left"  width="100%">
-                                <tr><th colspan="2" bgcolor="e2efc7">Not Available</th></tr>
-                            </table>
-                        </form>
-                    </td>
-                </tr>
-            </table><br />
-        
-		</td>
-    </tr>
 </table>
 
 <cfinclude template="../table_footer.cfm">

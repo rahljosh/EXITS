@@ -29,10 +29,15 @@ Please close this window and be sure you select at least one program from the pr
 <cfquery name="get_region" datasource="MySQL">
 	SELECT	regionname, company, regionid
 	FROM smg_regions
-	WHERE company = '#client.companyid#'
-		<cfif form.regionid is  not 0>
-			AND regionid = '#form.regionid#'	
-		</cfif>
+	WHERE 
+    <cfif CLIENT.companyID EQ 5>
+    	company IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+    <cfelse>
+    	 company = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+    </cfif>
+	<cfif form.regionid is  not 0>
+        AND regionid = '#form.regionid#'	
+    </cfif>
 	ORDER BY regionname
 </cfquery>
 
@@ -48,8 +53,13 @@ Please close this window and be sure you select at least one program from the pr
         	u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
 		AND            
             uar.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-        AND
-        	uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+		<cfif CLIENT.companyID EQ 5>
+            AND
+	            uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+        <cfelse>
+             AND
+             	uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        </cfif>
 	</cfquery>
 	<cfset ad_users = ValueList(get_users_under_adv.userid, ',')>
 	<cfset ad_users = ListAppend(ad_users, #client.userid#)>
@@ -59,7 +69,14 @@ Please close this window and be sure you select at least one program from the pr
 <cfquery name="get_total_students" datasource="MySQL">
 	SELECT	studentid, hostid
 	FROM 	smg_students
-	WHERE companyid = #client.companyid# 
+	WHERE 
+    
+		<cfif CLIENT.companyID EQ 5>
+        	companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+        <cfelse>
+			companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        </cfif>
+    
 		and active = '1' 
 		AND hostid <> '0'
 		AND host_fam_approved <= '4'
@@ -105,7 +122,7 @@ Please close this window and be sure you select at least one program from the pr
 	SELECT arearepid, u.firstname as repname
 	FROM smg_students
 	LEFT JOIN smg_users u ON arearepid = userid
-	where smg_students.active = '1' AND smg_students.regionassigned = '#get_region.regionid#' AND smg_students.companyid = '#client.companyid#' 
+	where smg_students.active = '1' AND smg_students.regionassigned = '#get_region.regionid#'
 			 AND smg_students.hostid <> '0'
 			 AND (<cfloop list=#form.programid# index='prog'>
 				smg_students.programid = #prog# 
@@ -123,7 +140,7 @@ Please close this window and be sure you select at least one program from the pr
 	<Cfquery name="get_total_in_region" datasource="MySQL">
 		select studentid
 		from smg_students
-		where active = '1' AND regionassigned = '#get_region.regionid#'  AND companyid = '#client.companyid#'		<cfif IsDefined('form.dates')>
+		where active = '1' AND regionassigned = '#get_region.regionid#'  <cfif IsDefined('form.dates')>
 			AND (dateplaced between #CreateODBCDateTime(form.date1)# and #CreateODBCDateTime(form.date2)#) 
 		</cfif>
 AND hostid <> '0'
@@ -155,7 +172,7 @@ AND hostid <> '0'
 			from smg_students s
 			INNER JOIN smg_countrylist c ON s.countryresident = countryid
 			INNER JOIN smg_hosts h ON s.hostid = h.hostid
-			where s.active = '1' AND s.regionassigned = '#current_region#'  AND s.companyid = '#client.companyid#' 
+			where s.active = '1' AND s.regionassigned = '#current_region#'  
     				   	       AND s.arearepid = '#list_repid.arearepid#' AND s.host_fam_approved <= '4'
 							   <cfif IsDefined('form.dates')>
 							   AND (s.dateplaced between #CreateODBCDateTime(form.date1)# and #CreateODBCDateTime(form.date2)#) 
