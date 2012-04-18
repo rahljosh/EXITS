@@ -146,6 +146,16 @@
                 ec.candidateID            
         </cfquery>
 
+        <cfquery name="qTotalFormsIssued" dbtype="query">
+            SELECT
+                ds2019
+            FROM
+                qGetAllCandidates
+            WHERE
+                ds2019 is not null
+            AND
+                ds2019 != ''
+        </cfquery>
 
         <cffunction name="filterGetAllCandidates" hint="Gets total by Intl. Rep">
         	<cfargument name="placementType" default="" hint="Placement Type is not required">
@@ -182,8 +192,8 @@
 			
             <cfreturn qFilterGetAllCandidates>
         </cffunction>
-		
-    </cfif>       
+
+    </cfif>
     
 </cfsilent>
 
@@ -307,6 +317,12 @@
         
         <div class="style1">&nbsp; &nbsp; <strong>Total Number of Students:</strong> #qGetAllCandidates.recordCount# <br /><br /> </div>
         
+        <div class="style1">&nbsp; &nbsp; <strong>Total Number of Forms Issued:</strong> #qTotalFormsIssued.recordCount# <br /><br /> </div>
+        
+        <cfset totalFormsNotIssued = qGetAllCandidates.recordCount - qTotalFormsIssued.recordCount>
+        
+        <div class="style1">&nbsp; &nbsp; <strong>Total Number of Forms to be Issued:</strong> #totalFormsNotIssued# <br /><br /> </div>
+        
         <div class="style1">&nbsp; &nbsp; Report Prepared on #DateFormat(now(), 'dddd, mmm, d, yyyy')#</div>
         
         <div style="border-bottom:1px solid ##999; margin:10px;">&nbsp;</div>
@@ -320,10 +336,29 @@
                     qTotalPerAgent = filterGetAllCandidates(placementType='ALL', intRep=qGetIntlReps.userID);
                 </cfscript>
                 
+                <cfquery name="qCountFormsIssued" dbtype="query">
+                SELECT
+                	ds2019
+                FROM
+                	qTotalPerAgent
+                WHERE
+                	ds2019 is not null
+				AND
+                	ds2019 != ''
+                </cfquery>
+                
+                <cfset formsIssued = qCountFormsIssued.recordCount>
+                <cfset formsNotIssued = qTotalPerAgent.recordCount - qCountFormsIssued.recordCount>                
+                
                 <cfif qTotalPerAgent.recordCount>
                     <tr>
-                        <td colspan="9"><strong>#qGetIntlReps.businessname# - Total candidates: #qTotalPerAgent.recordCount#</strong></td>
+                        <td colspan="16">
+                        	<strong><small>
+                            	#qGetIntlReps.businessname#  |  Total candidates: #qTotalPerAgent.recordCount#  |  DS-2019 forms issued: #formsIssued#  |  DS-2019 forms to be issued: #formsNotIssued#
+                            </strong></small>
+                        </td>
                     </tr>
+                    
                     <cfif ListFind("2,3", FORM.printOption)>
                         <tr>
                             <td colspan="9"><img src="../../pics/black_pixel.gif" width="100%" height="2"></td>
