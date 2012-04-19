@@ -224,10 +224,71 @@
 		<cfset count1 = 1> 
 		<cfset countRed = countRed + 1>
 	</cfif>	
-  
+
 	<cfloop query="page1">
+  
+    <!----Check on Father Information---->
+    <cfif (smg_students.mothersname is '' AND smg_students.fathersname is '') >
+		 <cfset get_field = page1.table_located &"."& page1.field_name>
+            <cfif #isNumeric(Evaluate(get_field))#>
+                <Cfset compareVariable = 'VAL(Evaluate(get_field))'>
+            <cfelse>
+                <Cfset compareVariable = 'LEN(Evaluate(get_field))'>	
+            </cfif>
+          
+            <cfif NOT #Evaluate(compareVariable)# AND required EQ 1>
+                <tr><td><font color="FF0000">#field_label#</font><br></td></tr>
+                <cfset count1 = 1> 
+                <cfset countRed = countRed + 1>
+            <cfelseif NOT LEN(Evaluate(get_field)) AND NOT VAL(required)>
+                <tr><td><font color="0000FF">#field_label#</font><br></td></tr>
+                <cfset count1 = 1>
+            </cfif>
+            
+    <cfelseif listfind('fathersname,fatheraddress,fathercountry,fatherbirth,fatherenglish,fathercompany,fatherworkphone,fatherworkposition', '#field_name#')>
     
-		<cfset get_field = page1.table_located &"."& page1.field_name>
+    	<cfif smg_students.fathersname is not ''>
+			<cfset get_field = page1.table_located &"."& page1.field_name>
+            <cfif #isNumeric(Evaluate(get_field))#>
+                <Cfset compareVariable = 'VAL(Evaluate(get_field))'>
+            <cfelse>
+                <Cfset compareVariable = 'LEN(Evaluate(get_field))'>	
+            </cfif>
+          
+            <cfif NOT #Evaluate(compareVariable)# AND required EQ 1>
+                <tr><td><font color="FF0000">#field_label#</font><br></td></tr>
+                <cfset count1 = 1> 
+                <cfset countRed = countRed + 1>
+            <cfelseif NOT LEN(Evaluate(get_field)) AND NOT VAL(required)>
+                <tr><td><font color="0000FF">#field_label#</font><br></td></tr>
+                <cfset count1 = 1>
+            </cfif>
+         </cfif>
+    <cfelseif listfind('mothersname,motheraddress,mothercountry,motherbirth,motherenglish,mothercompany,motherworkphone,motherworkposition', '#field_name#')>
+    	<cfif smg_students.mothersname is not ''>
+    
+			<!----check on mother infomation--->
+              
+                <cfset get_field = page1.table_located &"."& page1.field_name>
+                <cfif #isNumeric(Evaluate(get_field))#>
+                    <Cfset compareVariable = 'VAL(Evaluate(get_field))'>
+                <cfelse>
+                    <Cfset compareVariable = 'LEN(Evaluate(get_field))'>	
+                </cfif>
+              
+                <cfif NOT #Evaluate(compareVariable)# AND required EQ 1>
+                    <tr><td><font color="FF0000">#field_label#</font><br></td></tr>
+                    <cfset count1 = 1> 
+                    <cfset countRed = countRed + 1>
+                <cfelseif NOT LEN(Evaluate(get_field)) AND NOT VAL(required)>
+                    <tr><td><font color="0000FF">#field_label#</font><br></td></tr>
+                    <cfset count1 = 1>
+                </cfif>
+            </cfif>    
+
+    
+    <cfelse>
+    	<cfset get_field = page1.table_located &"."& page1.field_name>
 		<cfif #isNumeric(Evaluate(get_field))#>
         	<Cfset compareVariable = 'VAL(Evaluate(get_field))'>
         <cfelse>
@@ -242,6 +303,9 @@
 			<tr><td><font color="0000FF">#field_label#</font><br></td></tr>
 			<cfset count1 = 1>
 		</cfif>
+    
+    </cfif>
+    
 	</cfloop>
 	
 	<cfif NOT VAL(count1)>
