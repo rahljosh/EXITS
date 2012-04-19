@@ -16,15 +16,25 @@
     <cfsetting requesttimeout="9999">
     
     <cfscript>
+		// Param FORM Variables
+		param name="URL.date" default="";	
+		
+		// Make sure we have a valid date
+		if ( NOT isDate(URL.date) ) {
+			URL.date = DateFormat(now(), 'yyyy-mm-dd');
+		}
+	
 		// ISE
-	    vTraincasterMessage = APPLICATION.CFC.USER.importTraincasterTestResults(companyID=1);
+	    vTraincasterISEMessage = APPLICATION.CFC.USER.importTraincasterTestResults(companyID=1,date=URL.date);
 		
 		// CASE
-	    vTotalResults = APPLICATION.CFC.USER.importTraincasterTestResults(companyID=10);
+	    vTraincasterCaseMessage = APPLICATION.CFC.USER.importTraincasterTestResults(companyID=10,date=URL.date);
 	</cfscript>
     
 </cfsilent>
 
 <cfoutput>
-	#vTraincasterMessage#
+	#vTraincasterISEMessage#
+    
+    #vTraincasterCaseMessage#
 </cfoutput>

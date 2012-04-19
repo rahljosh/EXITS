@@ -665,6 +665,7 @@
 
 	<cffunction name="insertTraining" access="public" returntype="void" output="false" hint="Inserts a training. UserID must be passed.">
         <cfargument name="userID" hint="userID is required">
+        <cfargument name="companyID" default="#CLIENT.companyID#" hint="companyID is required">
         <cfargument name="officeUserID" default="0" hint="officeUserID is not required">
         <cfargument name="trainingID" hint="trainingID is required">
         <cfargument name="dateTrained" hint="dateTrained is required">
@@ -691,6 +692,7 @@
                     smg_users_training
                 (
                     user_id,
+                    company_id,
                     office_user_id,
                     training_id,
                     date_trained,
@@ -701,6 +703,7 @@
                 )
                 SELECT 
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.officeUserID#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.trainingID#">,
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.dateTrained)#">,
@@ -1115,7 +1118,7 @@
 				vTrainCasterPassword = "ZG2qK3vJgTHkhbSxQ6nxH273NKVS5T7Dwztm5k4B";
 			// CASE
 			} else {
-				vProgramSponsor = "Cultural Academic Student Exchange";
+				vProgramSponsor = "CULTURAL ACADEMIC STUDENT EXCHANGE, INC.";
 				vTrainCasterPassword = "45RdPmWVrZtG6TCkSxVBbmkxPnqq2cr6Q3zJtSMp";
 			}
 			
@@ -1134,7 +1137,7 @@
 
 	<cffunction name="importTraincasterTestResults" access="public" returntype="string" output="No" hint="Download results from traincaster and inserts them into the database">
         <cfargument name="date" default="#DateFormat(now(), 'yyyy-mm-dd')#" hint="Date is NOT required yyyy-mm-dd">
-		<cfargument name="companyID" type="numeric" hint="company ID is required">
+		<cfargument name="companyID" default="#CLIENT.companyID#" hint="company ID is required">
         
 		<cfscript>
 			/***************************************************************************************************
@@ -1159,19 +1162,24 @@
 			var vTrainCasterURL = "https://doslocalcoordinatortraining.traincaster.com/app/clients/doslocalcoordinatortraining/Training_Recs.pm";
 			var vProgramSponsor = "";
 			var vTrainCasterToken = "";
-
+			
 			// Make sure we have a valid date
 			if ( NOT isDate(ARGUMENTS.date) ) {
 				ARGUMENTS.date = DateFormat(now(), 'yyyy-dd-mm');	
 			}
 			
+			// Make sure we have a valid Company
+			if ( NOT VAL(ARGUMENTS.companyID) ) {
+				ARGUMENTS.companyID = CLIENT.companyID;			 
+			}
+
 			// ISE
 			if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID) ) {
 				vProgramSponsor = "International Student Exchange";	
 				vTrainCasterToken = "VtGxtRJTV33nVK2qZk8H";
 			// CASE
 			} else if ( ARGUMENTS.companyID EQ 10 ) {
-				vProgramSponsor = "Cultural Academic Student Exchange";
+				vProgramSponsor = "CULTURAL ACADEMIC STUDENT EXCHANGE, INC.";
 				vTrainCasterToken = "Q8FKFmpFvzPZJX7jVSnn";
 			}
 
@@ -1238,6 +1246,7 @@
                     // Insert Training
                     insertTraining(
                         userID=vPersonID,
+						companyID=ARGUMENTS.companyID,
                         trainingID=2,
                         dateTrained=vDateCompleted,
                         score=vScore
@@ -1247,7 +1256,15 @@
                 
             }
 			
-			return "<p>Traincaster Test Results - Total of #arrayLen(vArray)# records inserted into EXITS</p>";
+			// ISE
+			if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID) ) {
+				return "<p>ISE - Traincaster Test Results - Total of #arrayLen(vArray)# records</p>";
+			// CASE
+			} else if ( ARGUMENTS.companyID EQ 10 ) {
+				return "<p>CASE - Traincaster Test Results - Total of #arrayLen(vArray)# records</p>";
+			} else {
+				return "<p>No Company - Traincaster Test Results - Total of #arrayLen(vArray)# records</p>";
+			}
         </cfscript>
         
 	</cffunction>
