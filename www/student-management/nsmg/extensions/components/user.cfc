@@ -1108,7 +1108,6 @@
             
             var vTrainCasterURL = "http://doslocalcoordinatortraining.traincaster.com/app/clients/doslocalcoordinatortraining/Login.pm";
 			var vProgramSponsor = "";
-			var vTrainCasterToken = "";
             
 			// ISE
 			if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) ) {
@@ -1117,7 +1116,7 @@
 			// CASE
 			} else {
 				vProgramSponsor = "Cultural Academic Student Exchange";
-				vTrainCasterPassword = "";
+				vTrainCasterPassword = "45RdPmWVrZtG6TCkSxVBbmkxPnqq2cr6Q3zJtSMp";
 			}
 			
             vUnixTimeStamp = int(now().getTime()/1000);
@@ -1173,7 +1172,7 @@
 			// CASE
 			} else if ( ARGUMENTS.companyID EQ 10 ) {
 				vProgramSponsor = "Cultural Academic Student Exchange";
-				vTrainCasterToken = "";
+				vTrainCasterToken = "Q8FKFmpFvzPZJX7jVSnn";
 			}
 
 			/* create new http service */ 
