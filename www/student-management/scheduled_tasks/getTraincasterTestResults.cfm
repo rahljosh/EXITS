@@ -13,12 +13,14 @@
 <!--- Kill Extra Output --->
 <cfsilent>
 	
+    <cfsetting requesttimeout="9999">
+    
     <cfscript>
 		// ISE
 	    vTraincasterMessage = APPLICATION.CFC.USER.importTraincasterTestResults(companyID=1);
 		
 		// CASE
-	    // vTotalResults = APPLICATION.CFC.USER.importTraincasterTestResults(companyID=10);
+	    vTotalResults = APPLICATION.CFC.USER.importTraincasterTestResults(companyID=10);
 	</cfscript>
     
 </cfsilent>
