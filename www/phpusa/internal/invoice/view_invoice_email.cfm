@@ -312,11 +312,14 @@ table.nav_bar {  background-color: ##ffffff; border: 1px solid ##000000; }
             #AppInvoice.bankName# <br />
             #AppInvoice.bankAddress# <br />
             #AppInvoice.bankCity#, #AppInvoice.bankState# #AppInvoice.bankZip# <br />
+            SWIFT Code ## #AppInvoice.bankSwift#<br />
 			ABA/Routing ## #AppInvoice.bankRouting#<br />
 			Account ## #AppInvoice.bankAccount#
 		</td>
-		<td valign="top">
-        	<br />
+		<td valign="middle" style="color:##FF0000">
+        	<cfif #dateformat(now(),'mm/dd/yyyy')# lte '08/30/2012'>
+        	<h3><strong>Please note the new KCK's bank account (updated on January 24th 2012).</strong></h3>
+            </cfif>
 		</td>
 	</tr>
 </table>
