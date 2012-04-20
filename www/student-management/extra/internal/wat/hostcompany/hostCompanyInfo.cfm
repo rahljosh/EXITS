@@ -861,7 +861,7 @@
 						"<table width='100%'>" +
 							"<tr width='100%'><td width='50%'>Verified Address:</td><td width='50%'>Input Address:</td></tr>" +
 							"<tr><td>" + streetAddress + "</td><td>" + $("#hqAddress").val() + "</td></tr>" +
-							"<tr><td>" + city + ", " + state + " " + zip + "</td><td>" + $("#hqCity").val() + ", " + inputState + " " + $("#hqZip").val() + "</td></tr>" +
+							"<tr><td>" + hqCity + ", " + hqState + " " + hqZip + "</td><td>" + $("#hqCity").val() + ", " + inputState + " " + $("#hqZip").val() + "</td></tr>" +
 						"</table>");
 					$( "#dialog-approveAddress-confirmHQ").dialog({
 						resizable: false,
@@ -872,9 +872,9 @@
 							"Use verified": function() {
 								$( this ).dialog( "close" );
 								$("#hqAddress").val(streetAddress);
-								$("#hqCity").val(city);
+								$("#hqCity").val(hqCity);
 								$("#hqState").val(verifiedStateID);
-								$("#hqZip").val(zip);
+								$("#hqZip").val(hqZip);
 								$("#hostCompany").submit();
 							},
 							"Use input": function() {
@@ -1128,10 +1128,12 @@
                                                 </cfif>
                                             </td>
                                         </tr>
-                                        <tr id="trZipLookUp">
-											<td class="style1" align="right"><strong>Input your zip code:</strong></td>
-											<td class="style1"><input type="text" name="zipLookup" id="zipLookup" size="10" maxlength="5" class="style1 editPage" onBlur="getLocationByZipWorkSite(this.id);"></td>											
-										</tr>
+                                        <cfif #hostCompanyID# EQ 0 >
+                                            <tr id="trZipLookUp">
+                                                <td class="style1" align="right"><strong>Input your zip code:</strong></td>
+                                                <td class="style1"><input type="text" name="zipLookup" id="zipLookup" size="10" maxlength="5" class="style1 editPage" onBlur="getLocationByZipWorkSite(this.id);"></td>											
+                                            </tr>
+                                        </cfif>
                                         <tr>
                                             <td width="35%" class="style1" align="right"><strong>Address:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
@@ -1185,10 +1187,12 @@
                                         	<td class="style1" align="right"><input type="checkbox" name="copyAddress" id="copyAddress" class="style1 editPage" onclick="jsCopyAddress();" /></td>
                                             <td class="style1"><strong><label for="copyAddress">Same as Main Address</label></strong></td>
                                         </tr>
-                                        <tr id="trZipLookUpHQ">
-											<td class="style1" align="right"><strong>Input your zip code:</strong></td>
-											<td class="style1"><input type="text" name="zipLookup" id="zipLookupHQ" size="10" maxlength="5" class="style1 editPage" onBlur="getLocationByZipHQ(this.id);"></td>											
-										</tr>
+                                        <cfif #hostCompanyID# EQ 0 >
+                                            <tr id="trZipLookUpHQ">
+                                                <td class="style1" align="right"><strong>Input your zip code:</strong></td>
+                                                <td class="style1"><input type="text" name="zipLookup" id="zipLookupHQ" size="10" maxlength="5" class="style1 editPage" onBlur="getLocationByZipHQ(this.id);"></td>											
+                                            </tr>
+                                        </cfif>
                                         <tr>
                                             <td width="35%" class="style1" align="right"><strong>Address:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">

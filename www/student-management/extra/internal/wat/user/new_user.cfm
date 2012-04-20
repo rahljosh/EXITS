@@ -28,33 +28,52 @@ function UserName() {
 	var udf = new UDFComponent();
  
 	var verifyAddress = function() { 
-		// Check if this is a US address
-		if ($("#country").val() == 232) {
-			if (($("#address").val() != "") && ($("#city").val() != "") && ($("#zip").val() != "")) {
-				var address = $("#address").val();
-				var city = $("#city").val();
-				var state = $("#state").val();
-				var zip = $("#zip").val();
-				var country = $("#country").val();
 	
-				udf.setCallbackHandler(checkAddress); 
-				udf.setErrorHandler(myErrorHandler);
-				udf.addressLookup(address,city,state,zip,country);
-			} else {
-				$("#new_user").submit();
-			}
+		// Check required Fields
+		var errorMessage = "";
+		if($("#firstname").val() == ''){
+			errorMessage = (errorMessage + 'Please enter the first name. \n')
+		}
+		if($("#lastname").val() == 0){
+			errorMessage = (errorMessage + 'Please enter the last name. \n')
+		}
+		if($("#username").val() == 0){
+			errorMessage = (errorMessage + 'Please enter a username. \n')
+		}
+		if($("#password").val() == 0){
+			errorMessage = (errorMessage + 'Please enter a password. \n')
+		}
+		if (errorMessage != "") {
+			alert(errorMessage);
 		} else {
-			if (($("#address").val() != "") && ($("#city").val() != "") && ($("#zip").val() != "")) {
-				var address = $("#address").val();
-				var city = $("#city").val();
-				var zip = $("#zip").val();
-				var country = $("#country").val();
-				 
-				udf.setCallbackHandler(checkAddress); 
-				udf.setErrorHandler(myErrorHandler);
-				udf.addressLookup(address,city,"",zip, country);
+			// Check if this is a US address
+			if ($("#country").val() == 232) {
+				if (($("#address").val() != "") && ($("#city").val() != "") && ($("#zip").val() != "")) {
+					var address = $("#address").val();
+					var city = $("#city").val();
+					var state = $("#state").val();
+					var zip = $("#zip").val();
+					var country = $("#country").val();
+		
+					udf.setCallbackHandler(checkAddress); 
+					udf.setErrorHandler(myErrorHandler);
+					udf.addressLookup(address,city,state,zip,country);
+				} else {
+					$("#new_user").submit();
+				}
 			} else {
-				$("#new_user").submit();
+				if (($("#address").val() != "") && ($("#city").val() != "") && ($("#zip").val() != "")) {
+					var address = $("#address").val();
+					var city = $("#city").val();
+					var zip = $("#zip").val();
+					var country = $("#country").val();
+					 
+					udf.setCallbackHandler(checkAddress); 
+					udf.setErrorHandler(myErrorHandler);
+					udf.addressLookup(address,city,"",zip, country);
+				} else {
+					$("#new_user").submit();
+				}
 			}
 		}
 	} 
