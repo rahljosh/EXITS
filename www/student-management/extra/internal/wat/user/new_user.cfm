@@ -110,8 +110,8 @@ function UserName() {
 						"</table>");
 					$( "#dialog-approveAddress-confirm").dialog({
 						resizable: false,
-						height:200,
-						width:360,
+						height:230,
+						width:400,
 						modal: true,
 						buttons: {
 							"Use verified": function() {
@@ -140,8 +140,8 @@ function UserName() {
 				$( "#dialog-canNotVerify-confirm" ).append("We could not verify the following address:<br />" + $("#address").val() + "<br />" + $("#city").val() + ", " + inputState + " " + $("#zip").val());
 				$( "#dialog-canNotVerify-confirm").dialog({
 					resizable: false,
-					height:200,
-					width:360,
+					height:230,
+					width:400,
 					modal: true,
 					buttons: {
 						"Use anyway": function() {
@@ -226,11 +226,10 @@ function UserName() {
 <!--- Modal Dialogs --->
 
 <!--- Approve Address - Modal Dialog Box --->
-<div id="dialog-approveAddress-confirm" title="Do you want to approve this Address?" style="font-size:12px;" class="displayNone" >
-</div>
+<div id="dialog-approveAddress-confirm" title="Do you want to approve this Address?" style="font-size:12px;" class="displayNone"></div>
+
 <!--- Can Not Verify Address - Modal Dialog Box --->
-<div id="dialog-canNotVerify-confirm" title="We could not verify this Address." style="font-size:12px;" class="displayNone">
-</div>
+<div id="dialog-canNotVerify-confirm" title="We could not verify this Address." style="font-size:12px;" class="displayNone"></div>
 
 <cfform method="post" name="new_user" action="?curdoc=user/qr_new_user">
 

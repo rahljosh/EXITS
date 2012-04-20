@@ -77,12 +77,6 @@
 		vGoogleMaps = '';
 	</cfscript>
     
-    <style type="text/css">
-		.displayNone {
-			background:red;
-		}
-	</style>
-    
     <cfquery name="qGetHostCompanyInfo" datasource="MySql">
         SELECT 
         	eh.hostCompanyID,
@@ -777,8 +771,8 @@
 						"</table>");
 					$( "#dialog-approveAddress-confirm").dialog({
 						resizable: false,
-						height:200,
-						width:360,
+						height:230,
+						width:400,
 						modal: true,
 						buttons: {
 							"Use verified": function() {
@@ -807,8 +801,8 @@
 				$( "#dialog-canNotVerify-confirm" ).append("We could not verify the following address:<br />" + $("#address").val() + "<br />" + $("#city").val() + ", " + $("#state").val() + " " + $("#zip").val());
 				$( "#dialog-canNotVerify-confirm").dialog({
 					resizable: false,
-					height:200,
-					width:360,
+					height:230,
+					width:400,
 					modal: true,
 					buttons: {
 						"Use anyway": function() {
@@ -865,8 +859,8 @@
 						"</table>");
 					$( "#dialog-approveAddress-confirmHQ").dialog({
 						resizable: false,
-						height:200,
-						width:360,
+						height:230,
+						width:400,
 						modal: true,
 						buttons: {
 							"Use verified": function() {
@@ -895,8 +889,8 @@
 				$( "#dialog-canNotVerify-confirmHQ" ).append("We could not verify the following address:<br />" + $("#hqAddress").val() + "<br />" + $("#hqCity").val() + ", " + $("#hqState").val() + " " + $("#hqZip").val());
 				$( "#dialog-canNotVerify-confirmHQ").dialog({
 					resizable: false,
-					height:200,
-					width:360,
+					height:230,
+					width:400,
 					modal: true,
 					buttons: {
 						"Use anyway": function() {
@@ -1000,18 +994,16 @@
 <!--- Modal Dialogs --->
 
 <!--- Approve Address - Modal Dialog Box --->
-<div id="dialog-approveAddress-confirmHQ" title="Do you want to approve this HQ Address?" style="font-size:12px;" class="displayNone"> 
-</div>
+<div id="dialog-approveAddress-confirmHQ" title="Do you want to approve this HQ Address?" style="font-size:12px;" class="displayNone"></div>
+
 <!--- Can Not Verify Address - Modal Dialog Box --->
-<div id="dialog-canNotVerify-confirmHQ" title="We could not verify the HQ Address." style="font-size:12px;" class="displayNone">
-</div>
+<div id="dialog-canNotVerify-confirmHQ" title="We could not verify the HQ Address." style="font-size:12px;" class="displayNone"></div>
     
 <!--- Approve Address - Modal Dialog Box --->
-<div id="dialog-approveAddress-confirm" title="Do you want to approve this Work Site Address?" style="font-size:12px;" class="displayNone">
-</div>
+<div id="dialog-approveAddress-confirm" title="Do you want to approve this Work Site Address?" style="font-size:12px;" class="displayNone"></div>
+
 <!--- Can Not Verify Address - Modal Dialog Box --->
-<div id="dialog-canNotVerify-confirm" title="We could not verify the Work Site Address." style="font-size:12px;" class="displayNone">
-</div>
+<div id="dialog-canNotVerify-confirm" title="We could not verify the Work Site Address." style="font-size:12px;" class="displayNone"></div>
 
 <!--- TABLE HOLDER --->
 <table width="100%" height="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="##CCCCCC" bgcolor="##F4F4F4">
