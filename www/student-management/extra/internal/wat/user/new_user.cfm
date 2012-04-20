@@ -85,11 +85,12 @@ function UserName() {
 	
 		if ( isAddressVerified == 1 ) {
 			// Get Data Back	
-			var streetAddress = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('ADDRESS')]
-			var city = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('CITY')]
-			var state = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('STATE')]
-			var zip = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('ZIP')]
-			var country = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('COUNTRY')]
+			var streetAddress = googleResponse.ADDRESS;
+			var city = googleResponse.CITY;
+			var state = googleResponse.STATE;
+			var zip = googleResponse.ZIP;
+			zip = zip.substring('zip='.length);
+			var country = googleResponse.COUNTRY;
 			var inputState = googleResponse.INPUTSTATE;
 			var inputCountry = googleResponse.INPUTCOUNTRY;
 			var verifiedStateID = googleResponse.VERIFIEDSTATEID;
@@ -157,9 +158,8 @@ function UserName() {
 		}
 	}
 	 
-	var getLocationByZip = function() { 
+	var getLocationByZip = function(zip) { 
 		if ($("#country").val() == 232) {
-			var zip = $("#zipLookup").val();
 			if (zip.length == 5) {
 				udf.setCallbackHandler(checkZip); 
 				udf.setErrorHandler(myErrorHandler); 
@@ -174,10 +174,10 @@ function UserName() {
 
 		if ( isAddressVerified == 1 ) {
 		
-			// Get Data Back	
-			var city = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('CITY')]
-			var state = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('STATE')]
-			var zip = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('ZIP')]
+			var city = googleResponse.CITY;
+			var state = googleResponse.STATE;
+			var zip = googleResponse.ZIP;
+			zip = zip.substring('zip='.length);
 			
 			$("#city").val(city);
 			$("#state").val(state);
@@ -284,7 +284,7 @@ function UserName() {
                                         
                                         <tr id="trZipLookUp">
 											<td class="style1"><b>Zip Code Lookup:</b></td>
-											<td class="style1"><cfinput type="text" name="zipLookup" id="zipLookup" size="10" maxlength="10" onBlur="getLocationByZip();"></td>											
+											<td class="style1"><cfinput type="text" name="zipLookup" id="zipLookup" size="10" maxlength="5" onBlur="getLocationByZip(this.value);"></td>											
 										</tr>
 																		
 										<tr>
@@ -312,7 +312,7 @@ function UserName() {
 										</tr>
                                         <tr>
 											<td class="style1"><b>Zip Code:</b></td>
-											<td class="style1"><cfinput type="text" name="zip" id="zip" size="10" maxlength="10"></td>											
+											<td class="style1"><cfinput type="text" name="zip" id="zip" size="10" maxlength="10" onBlur="getLocationByZip(this.value);"></td>											
 										</tr>
                                         <tr>
 											<td class="style1"><b>Country:</b></td>
