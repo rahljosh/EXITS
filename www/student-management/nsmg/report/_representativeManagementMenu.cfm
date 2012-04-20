@@ -37,7 +37,7 @@
 <gui:tableHeader
 	imageName="docs.gif"
 	tableTitle="Reports - Representative Management"
-	tableRightTitle='<a href="#CGI.SCRIPT_NAME#?curdoc=report/index" title="Click for Student Management Reports">[ Reports Menu ]</a>'
+	tableRightTitle='<h2><a href="#CGI.SCRIPT_NAME#?curdoc=report/index" title="Click for Student Management Reports">[ Reports Menu ]</a></h2>'
 />
 
 <table class="reportSection">
