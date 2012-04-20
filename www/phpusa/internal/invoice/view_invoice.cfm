@@ -286,7 +286,6 @@ where intrepid = 49
             SWIFT Code ## #AppInvoice.bankSwift#<br />
 			ABA/Routing ## #AppInvoice.bankRouting#<br />
 			Account ## #AppInvoice.bankAccount#
-
 		</td>
 		<td valign="middle" style="color:##FF0000">
         	<cfif #dateformat(now(),'mm/dd/yyyy')# lte '08/30/2012'>
