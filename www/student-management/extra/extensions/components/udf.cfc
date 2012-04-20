@@ -599,6 +599,7 @@
 			stResult.isVerified = 0;
 			stResult.inputCountry = vGetCountryCode;
 			stResult.inputState = vGetStateAbbr;
+			stResult.verifiedStateID = APPLICATION.CFC.LookupTables.getState(shortState=locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.AdministrativeAreaName.XmlText).ID;
 			
 			// Create Query
             qAddress = QueryNew("Address, City, State, Zip, Country");

@@ -30,13 +30,11 @@
     <cfparam name="FORM.address" default="">
     <cfparam name="FORM.city" default="">
     <cfparam name="FORM.state" default="">
-    <cfparam name="FORM.stateID" default="">
     <cfparam name="FORM.zip" default="">
     <!--- HQ Address --->
     <cfparam name="FORM.hqAddress" default="">
     <cfparam name="FORM.hqCity" default="">
     <cfparam name="FORM.hqState" default="">
-    <cfparam name="FORM.hqSateID" default="">
     <cfparam name="FORM.hqZip" default="">
     <!--- Housing Information --->
     <cfparam name="FORM.isHousingProvided" default="0">
@@ -327,12 +325,12 @@
                         <!--- Work Site Address --->
                         address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
                         city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
-                        state = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.stateID#">,
+                        state = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.state#">,
                         zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
                         <!--- HQ Address --->
                         hqAddress = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqAddress#">,
                         hqCity = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqCity#">,
-                        hqState = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hqStateID#">,
+                        hqState = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hqState#">,
                         hqZip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqZip#">,
                         <!--- Housing Information --->
                         isHousingProvided = <cfqueryparam cfsqltype="cf_sql_tinyint" value="#FORM.isHousingProvided#">,
@@ -442,12 +440,12 @@
                         <!--- Work Site Address --->
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.stateID#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.state#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
                         <!--- HQ Address --->
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqAddress#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqCity#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hqStateID#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hqState#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqZip#">,
 						<!--- Housing Information --->
                         <cfqueryparam cfsqltype="cf_sql_tinyint" value="#FORM.isHousingProvided#">,
@@ -618,6 +616,7 @@
 			$("#hqCity").val($("#city").val());
 			$("#hqState").val($("#state").val());
 			$("#hqZip").val($("#zip").val());
+			$("#trZipLookUpHQ").fadeOut();
 		} else {
 			$("#hqAddress").val("");
 			$("#hqCity").val("");
@@ -761,6 +760,7 @@
 			var state = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('STATE')]
 			var zip = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('ZIP')]
 			var inputState = googleResponse.INPUTSTATE;
+			var verifiedStateID = googleResponse.VERIFIEDSTATEID;
 			
 			if ((streetAddress == $("#address").val()) && (city == $("#city").val()) && (state == inputState) && (zip == $("#zip").val()))
 			{
@@ -784,7 +784,7 @@
 							"Use verified": function() {
 								$("#address").val(streetAddress);
 								$("#city").val(city);
-								$("#state").val(state);
+								$("#state").val(verifiedStateID);
 								$("#zip").val(zip);
 								$( this ).dialog( "close" );
 								callCheckHQAddress();
@@ -844,11 +844,12 @@
 		
 			// Get Data Back	
 			var streetAddress = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('ADDRESS')]
-			var city = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('CITY')]
-			var state = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('STATE')]
-			var zip = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('ZIP')]
+			var hqCity = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('CITY')]
+			var hqState = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('STATE')]
+			var hqZip = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('ZIP')]
 			var inputState = googleResponse.INPUTSTATE;
-			
+			var verifiedStateID = googleResponse.VERIFIEDSTATEID;
+				
 			if ((streetAddress == $("#hqAddress").val()) && (hqCity == $("#city").val()) && (hqState == inputState) && (hqZip == $("#zip").val()))
 			{
 				$("#hostCompany").submit();
@@ -872,7 +873,7 @@
 								$( this ).dialog( "close" );
 								$("#hqAddress").val(streetAddress);
 								$("#hqCity").val(city);
-								$("#hqState").val(state);
+								$("#hqState").val(verifiedStateID);
 								$("#hqZip").val(zip);
 								$("#hostCompany").submit();
 							},
