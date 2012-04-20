@@ -23,13 +23,31 @@
 
 <cfswitch expression="#action#">
 
-    <cfcase value="menu,studentManagementMenu,hostFamilyManagementMenu,representativeManagementMenu,studentListByRegion" delimiters=",">
+    <cfcase value="menu,studentManagementMenu,hostFamilyManagementMenu,representativeManagementMenu" delimiters=",">
 
         <!--- Include template --->
         <cfinclude template="_#action#.cfm" />
 
     </cfcase>
+	
+    <!--- List of Student Management Reports --->
+    <cfcase value="studentListByRegion" delimiters=",">
 
+        <!--- Include template --->
+        <cfinclude template="_#action#.cfm" />
+
+    </cfcase>
+    
+    <!--- List of Host Family Management Reports --->
+    <cfcase value="welcomeFamilyByRegion" delimiters=",">
+
+        <!--- Include template --->
+        <cfinclude template="_#action#.cfm" />
+
+    </cfcase>
+    
+    <!--- List of Representative Management Reports --->
+    
 
     <!--- The default case is the login page --->
     <cfdefaultcase>
