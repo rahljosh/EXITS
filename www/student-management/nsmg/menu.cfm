@@ -246,7 +246,6 @@
                 </li>
                 
                 <li><a href="index.cfm?curdoc=pdf_docs/index">#qGetCompany.companyShort_noColor# Docs</a></li>
-
                 
                 <!--- Student View does not have access to reports --->
                 <cfif CLIENT.usertype NEQ 9>
@@ -349,6 +348,12 @@
                 
                 <li>
                 	<a href="index.cfm?curdoc=reports/index">Reports</a>
+					
+                    <cfif listFind("1,510,17313,12313", CLIENT.userID)>
+                        <ul>
+                            <li><a href="index.cfm?curdoc=report/index">New Reports</a></li>
+                        </ul>
+                    </cfif>
                 	<!---
 					<cfif LISTFIND("1,2,3,4", CLIENT.userType)
 					<ul>
