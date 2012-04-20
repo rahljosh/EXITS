@@ -749,10 +749,11 @@
 		if ( isAddressVerified == 1 ) {
 		
 			// Get Data Back	
-			var streetAddress = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('ADDRESS')]
-			var city = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('CITY')]
-			var state = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('STATE')]
-			var zip = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('ZIP')]
+			var streetAddress = googleResponse.ADDRESS;
+			var city = googleResponse.CITY;
+			var state = googleResponse.STATE;
+			var zip = googleResponse.ZIP
+			zip = zip.substring('zip='.length);
 			var inputState = googleResponse.INPUTSTATE;
 			var verifiedStateID = googleResponse.VERIFIEDSTATEID;
 			
@@ -837,10 +838,11 @@
 		if ( isAddressVerified == 1 ) {
 		
 			// Get Data Back	
-			var streetAddress = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('ADDRESS')]
-			var hqCity = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('CITY')]
-			var hqState = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('STATE')]
-			var hqZip = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('ZIP')]
+			var streetAddress = googleResponse.ADDRESS;
+			var hqCity = googleResponse.CITY;
+			var hqState = googleResponse.STATE;
+			var hqZip = googleResponse.ZIP;
+			hqZip = hqZip.substring('zip='.length);
 			var inputState = googleResponse.INPUTSTATE;
 			var verifiedStateID = googleResponse.VERIFIEDSTATEID;
 				
@@ -929,9 +931,10 @@
 		if ( isAddressVerified == 1 ) {
 		
 			// Get Data Back	
-			var city = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('CITY')]
-			var state = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('STATE')]
-			var zip = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('ZIP')]
+			var city = googleResponse.CITY;
+			var state = googleResponse.STATE;
+			var zip = googleResponse.ZIP;
+			zip = zip.substring('zip='.length);
 			
 			$("#city").val(city);
 			$("#state").val(state);
@@ -967,9 +970,10 @@
 		if ( isAddressVerified == 1 ) {
 		
 			// Get Data Back	
-			var city = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('CITY')]
-			var state = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('STATE')]
-			var zip = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('ZIP')]
+			var city = googleResponse.CITY;
+			var state = googleResponse.STATE;
+			var zip = googleResponse.ZIP;
+			zip = zip.substring('zip='.length);
 			
 			$("#hqCity").val(city);
 			$("#hqState").val(state);
