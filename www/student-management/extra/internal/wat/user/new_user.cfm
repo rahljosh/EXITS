@@ -73,6 +73,7 @@ function UserName() {
 			var country = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('COUNTRY')]
 			var inputState = googleResponse.INPUTSTATE;
 			var inputCountry = googleResponse.INPUTCOUNTRY;
+			var verifiedStateID = googleResponse.VERIFIEDSTATEID;
 			
 			if ((streetAddress == $("#address").val()) && (city == $("#city").val()) && (state == inputState) && (zip == $("#zip").val()))
 			{
@@ -97,7 +98,7 @@ function UserName() {
 							"Use verified": function() {
 								$("#address").val(streetAddress);
 								$("#city").val(city);
-								//$("#state").val(state);
+								$("#state").val(verifiedStateID);
 								$("#zip").val(zip);
 								$( this ).dialog( "close" );
 								$("#new_user").submit();
@@ -160,7 +161,7 @@ function UserName() {
 			var zip = googleResponse.QUERY.DATA[0][googleResponse.QUERY.COLUMNS.findIdx('ZIP')]
 			
 			$("#city").val(city);
-			$("#state").val(state); // convert to number
+			$("#state").val(state);
 			$("#zip").val(zip);
 			
 			$("#trZipLookUp").fadeOut();
