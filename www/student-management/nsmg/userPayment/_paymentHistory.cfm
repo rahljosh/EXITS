@@ -76,8 +76,15 @@
             smg_payment_types type ON type.id = rep.paymenttype
         WHERE 
             rep.agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRepInfo.userID#"> 
-        AND 
-        	rep.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        
+        <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+            AND 
+                rep.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+        <cfelse>
+            AND 
+                rep.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        </cfif>
+
         ORDER BY         
             studentID DESC,
             rep.date DESC
