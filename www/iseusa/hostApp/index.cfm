@@ -23,7 +23,9 @@
 </head>
 
 <body class="oneColFixCtr">
-
+<!----
+<cfinclude template="../slidingLogin.cfm">
+---->
 <Cfparam name="url.page" default="hello">
 
 <cfquery name="hostInfo" datasource="mysql">
@@ -38,8 +40,8 @@ where email = '#client.email#'
 <cfinclude template="../topBarLinks.cfm">
 <div id="logoBoxB">
   <div class="blueBox">
-  <a href="../index.cfm"><img src="../hostApp/images/logo_21.png" width="214" height="165" alt="ISE logo" border="0" /></a>
-<cfif url.page is not 'hello'>
+  <a href="../index.cfm"><img src="../images/logo_21.png" width="214" height="165" alt="ISE logo" border="0" /></a>
+<cfif url.page is not 'hello' AND url.page is not 'hostLogin'>
 	<cfinclude template="includes/leftMenu.cfm">
 </cfif>
 <!--logoBoxB --></div>

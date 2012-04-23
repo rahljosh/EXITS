@@ -16,29 +16,25 @@
 	margin-left: auto;
 	top: 0px;
 	left: -435px;
+	background-color: #06C;
 }
 #leftSide {
-	width: 150px;
-	padding-left: 0px;
+	background-color: #06C;
+	width: 196px;
+	padding-left: 2px;
 	font-family: Arial, Helvetica, sans-serif;
-	font-size: 12px;
+	font-size: 14px;
 	color: #FFF;
 	font-weight: bold;
-	line-height: 20px;
-	margin-left: 18px;
+	line-height: 18px;
 }
-#logoBox #leftSide ul, li {
+#logoBox #leftSide li {
+	line-height: 24px;
 	list-style-type: none;
 }
 .clearfix {
 	display: block;
 	height: 5px;
-}
-.blueBox {
-	width: 180px;
-	margin-left: 0px;
-	background-image: url(../hostApp/images/blueStrip_32.png);
-	background-repeat: repeat-y;
 }
 -->
 </style>
@@ -48,9 +44,7 @@
 
 <body>
 
-<div id="logoBoxB">
-  <div class="blueBox">
-  <a href="../index.cfm"><img src="../hostApp/images/logo_21.png" width="214" height="165" alt="ISE logo" border="0" /></a>
+<div id="logoBoxB"><a href="../index.cfm"><img src="../images/ISElogo.png" width="214" height="165" alt="ISE logo" border="0" /></a><div class="clearfix"></div>
 
 <div id="leftSide">
 
@@ -62,9 +56,8 @@
 <li>Misc Info</li>
 <li>Complete</li>
 </ul>
-<div class="clearfix"><!--clearfix --></div>
+<div class="clearfix"></div>
 
-<!--leftside --></div><!--logoBoxB --></div>
-<!--blueBox --></div>
+</div></div>
 </body>
 </html>

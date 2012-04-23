@@ -1,4 +1,4 @@
-  <div class="HFtopPic"><img src="images/hostFamily/pic1.png" width="700" Border="0" /><img src="images/hostFamily/HF_bar.jpg" width="700" height="13" />
+  <div class="HFtopPic"><img src="images/hostFamily/become-a-host-family.png" alt="become a host family" width="700" Border="0" /><img src="images/hostFamily/HF_bar.jpg" width="700" height="13" />
 
      <!--end subPages--> </div>
       <div class="HFsidebarR"><br /><div class="HFgradient"><h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />What are ISE students like?</h1>
@@ -18,7 +18,7 @@
           <br />
       <div class="HFpicR"><img src="images/hostFamily/HF_pic2.jpg" width="84" height="230" /></div>  
 <div class="HFgradient"><h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />What are the requirements on becoming an ISE host family?</h1>
-          <p>To be an ISE host family, you must be able to provide a warm and loving home with full room and board. </p>
+          <p>To be an ISE <strong>host family</strong>, you must be able to provide a warm and loving home with full room and board. </p>
           <p>Students may share a room with siblings of the same sex. A host family consists of two or more people related by blood or marriage. Single parents with children may host  if they meet the ISE requirements. Your application to become a host family will be reviewed by local ISE.<a href="become-a-host-family.cfm?page=/HostFamily/family-requirements" target="_self" > <img src="images/hostFamily/learnMore.png" width="80" height="10" border="0"/></a></p></div><br />
           <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />What kind of support will I have  as an ISE host family?</h1>
           <p>All host families are assigned a supervising area representative to help you through the entire process from beginning to end. The supervising representative will be with you every step of the way providing extensive guidance and support during the student's exchange program.<a href="become-a-host-family.cfm?page=/HostFamily/host-family-support" target="_self" > <img src="images/hostFamily/learnMore.png" width="80" height="10" border="0" /></a></p><br />

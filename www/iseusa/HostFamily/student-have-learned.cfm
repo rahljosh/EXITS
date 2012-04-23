@@ -81,7 +81,7 @@
 
 
 <ul>
-	<li><strong>"Americans way of life"</strong> &#8211; Sarah</li>
+	<li><strong>"The way of life in America"</strong> &#8211; Sarah</li>
 	<li><strong>"I learned to share and to live in a way I never did before"</strong> &#8211; Laura</li>
 	<li><strong>"I learned to love another family and to have the support of another person"</strong> &#8211; Clara</li>
 	<li><strong>"A different family structure then my own"</strong> &#8211; Coco</li>

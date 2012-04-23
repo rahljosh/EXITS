@@ -192,7 +192,7 @@
          Before your applcation can be approved, you will need to agree to and electronically sign the Host Family Rule Page and background checks will need to be run on all household members over the age of 18.<br /><br />
          If you have not already been in contact with a representative, you will be contacted shortly after your application is submitted.</p>
         	<div align="right">
-			<cfif appInfo.lead neq 0>
+			<cfif appInfo.lead eq 0>
             	<a href="index.cfm?page=startHostApp##pageTop"><img src="../images/buttons/startApp.png" alt="start" border="0" /></a>
             <cfelse>
             	<a href="index.cfm?page=startHostApp"><img src="../images/buttons/continueApp.png" alt="continue" border="0" /></a>

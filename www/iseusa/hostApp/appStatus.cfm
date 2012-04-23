@@ -5,7 +5,7 @@
 <Cfquery name="cl" datasource="mysql">
 SELECT * 
 FROM smg_hosts
-WHERE hostid = #client.hostid# 
+WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(client.hostid)#"> 
 </cfquery>
 
 <cfset appNotComplete = 0>
@@ -183,7 +183,7 @@ WHERE hostid = #client.hostid#
 <Cfquery name="familyMembers" datasource="mysql">
 	SELECT *
 	FROM smg_host_children
-	WHERE hostid = #cl.hostid#
+	WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(cl.hostid)#"> 
 </cfquery>
 <Cfif familyMembers.recordcount gt 0>
 <Cfloop query="familyMembers">
@@ -328,8 +328,8 @@ WHERE hostid = #client.hostid#
 </Cfquery>
 <Cfquery name="hostPics" datasource="mysql">
 	select *
-    from host_picture_album
-    where fk_hostID = #cl.hostid#
+    from smg_host_picture_album
+    where fk_hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(client.hostid)#"> 
 </Cfquery>
 <cfloop query="hostPicCat">
 	<cfquery dbtype="query" name="catExist">
@@ -363,7 +363,7 @@ WHERE hostid = #client.hostid#
      <cfquery name="get_kids" datasource="MySQL">
     select childid, name, shared
     from smg_host_children
-    where hostid = #client.hostid#
+    where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(client.hostid)#">  
     </cfquery>
     
 
@@ -471,7 +471,7 @@ WHERE hostid = #client.hostid#
 	<Cfquery name="churchInfo" datasource="mysql">
     select *
     from churches 
-    where churchid = #cl.churchid#
+    where churchid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(cl.churchid)#">  
     </cfquery>
 
             <cfscript>
@@ -649,7 +649,7 @@ WHERE hostid = #client.hostid#
 <cfquery name="schoolInfo" datasource="mySql">
 select *
 from smg_schools
-where schoolid = #cl.schoolid#
+where schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(cl.schoolid)#">  
 </Cfquery>
 <cfscript>
           		
@@ -685,7 +685,7 @@ where schoolid = #cl.schoolid#
 			
 			
 			// State
-            if ( (cl.schooltransportation is 'other') AND (NOT LEN(TRIM(cl.other_desc))) ) {
+            if ( (cl.schooltransportation is 'other') AND (NOT LEN(TRIM(cl.schooltransportationother))) ) {
               // Get all the missing items in a list
                 SESSION.formErrors.Add("School Info You indicated that the student will get to school but Other, but didn't specify what that other method would be.");
             }	
@@ -779,19 +779,20 @@ where schoolid = #cl.schoolid#
 <Cfquery name="references" datasource="mysql">
 	SELECT *
 	FROM smg_family_references
-	WHERE referencefor = #cl.hostid#
+	WHERE referencefor = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(cl.hostid)#">
 </cfquery>
 
     <!---number kids at home---->
     <cfquery name="kidsAtHome" datasource="mysql">
     select count(childid) as kidcount
     from smg_host_children
-    where liveathome = 'yes' and hostid =#client.hostid#
+    where liveathome = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
+     and hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(cl.hostid)#">
     </cfquery>
  	<Cfquery name="get_host_info" datasource="mysql">
     select fatherfirstname, motherfirstname
     from smg_hosts
-    where hostid = #client.hostid#
+    where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(cl.hostid)#">
     </cfquery>
 
 	<Cfset father=0>

@@ -24,6 +24,9 @@
 
 <cfset field_list = 'familylastname,address,address2,city,state,zip,phone,email,fatherlastname,fatherfirstname,fathermiddlename,fatherdob,fatherssn,fatherworktype,father_cell,motherlastname,motherfirstname,mothermiddlename,motherdob,motherssn,motherworktype,mother_cell,regionid'>
 
+<!--- the key for encrypting and decrypting the ssn. --->
+<cfset ssn_key = 'BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR'>
+
 <!--- Process Form Submission --->
 <cfif isDefined("form.submitted")>
     
@@ -62,10 +65,10 @@
 	<cfelse>
     	<!--- encrypt the SSN. --->
 		<cfif isDefined("form.fatherssn") and trim(form.fatherssn) NEQ ''>
-            <cfset form.fatherssn = encrypt("#trim(form.fatherssn)#", "#APPLICATION.SETTINGS.encryptKey#", "desede", "hex")>
+            <cfset form.fatherssn = encrypt("#trim(form.fatherssn)#", "#ssn_key#", "desede", "hex")>
         </cfif>
 		<cfif isDefined("form.motherssn") and trim(form.motherssn) NEQ ''>
-            <cfset form.motherssn = encrypt("#trim(form.motherssn)#", "#APPLICATION.SETTINGS.encryptKey#", "desede", "hex")>
+            <cfset form.motherssn = encrypt("#trim(form.motherssn)#", "#ssn_key#", "desede", "hex")>
         </cfif>
         <!--- set the birth year field from the birth date field. --->
         <cfif trim(form.fatherdob) NEQ ''>
@@ -211,13 +214,13 @@
 	<cfif get_record.fatherssn EQ '' or user_compliance.compliance EQ 1>
 		<cfset form.allow_fatherssn = 1>
         <cfif get_record.fatherssn NEQ ''>
-			<cfset form.fatherssn = decrypt(get_record.fatherssn, "#APPLICATION.SETTINGS.encryptKey#", "desede", "hex")>
+			<cfset form.fatherssn = decrypt(get_record.fatherssn, "#ssn_key#", "desede", "hex")>
         </cfif>
 	</cfif>
 	<cfif get_record.motherssn EQ '' or user_compliance.compliance EQ 1>
 		<cfset form.allow_motherssn = 1>
         <cfif get_record.motherssn NEQ ''>
-			<cfset form.motherssn = decrypt(get_record.motherssn, "#APPLICATION.SETTINGS.encryptKey#", "desede", "hex")>
+			<cfset form.motherssn = decrypt(get_record.motherssn, "#ssn_key#", "desede", "hex")>
         </cfif>
 	</cfif>
 

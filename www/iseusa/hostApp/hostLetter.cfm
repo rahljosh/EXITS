@@ -1,10 +1,33 @@
+<!--- Kill Extra Output --->
+	<!--- Import CustomTag Used for Page Messages and Form Errors --->
+    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
+
+
 <cfif isdefined('form.submit')>
     <cfquery name="insert_family_letter" datasource="MySQL">
     update smg_hosts
         set familyletter = "#form.letter#"
     where hostid = #client.hostid#
     </cfquery>
- 	<cflocation url="index.cfm?page=familyAlbum" addtoken="no">
+    
+     <cfscript>
+            // Data Validation
+			//No Letter
+			 if (  (LEN(TRIM(FORM.letter)) EQ 0)) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("The letter is required. If you would like to move onto another portion of the application with out finishing your letter, please use the menu to the left to navigate past this page.");
+			 }
+			
+			//Letter to Short
+			 if (  (LEN(TRIM(FORM.letter)) GTE 1) AND (LEN(TRIM(FORM.letter)) LT 300)  ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Your letter is to short. If you would like to move onto another portion of the application with out finishing your letter, please use the menu to the left to navigate past this page.");
+			 }
+		
+		</cfscript>
+         <cfif NOT SESSION.formErrors.length()>
+ 			<cflocation url="index.cfm?page=familyAlbum" addtoken="no">
+    	 </cfif>
 </cfif>
 
 
@@ -16,6 +39,11 @@ where hostid = #client.hostid#
 <cfform method="post" action="index.cfm?page=hostLetter">
 <input type="hidden" name="submit" />
 <h2>Personal Description</h2>
+<!--- Form Errors --->
+    <gui:displayFormErrors 
+        formErrors="#SESSION.formErrors.GetCollection()#"
+        messageType="section"
+        />
 Your personal description is THE most important part of this application. Along with photos of your family and your home, this description will be your
 personal explanation of you and your family and why you have decided to host an exchange student. <br /><br />
 We ask that you be brief yet

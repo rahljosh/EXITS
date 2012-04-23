@@ -13,14 +13,14 @@
     <cffile action="delete" 
     	file="C:\websites\student-management\nsmg\uploadedfiles\HostAlbum\thumbs\#url.delPic#"> 
         <cfquery name="delPic" datasource="MySQL">
-            delete from host_picture_album
+            delete from smg_host_picture_album
             where filename = '#url.delPic#'   
         </cfquery>
         <cflocation url="index.cfm?page=familyAlbum">
 </cfif>
 <Cfquery name="current_photos" datasource="mysql">
 select filename, description, cat 
-from host_picture_album
+from smg_host_picture_album
 where fk_hostid = #client.hostid#
 </cfquery>
 
@@ -34,14 +34,14 @@ from smg_host_pic_cat
 		<cfif IsDefined('form.updateDesc')>
 			<cfloop query="current_photos">
 				<cfquery name="insert_kids" datasource="MySQL">
-					update host_picture_album
+					update smg_host_picture_album
                     set description = '#form["desc_" & filename]#' 
                   	where filename = '#filename#'   
                 </cfquery>
 			</cfloop>
             <Cfquery name="current_photos" datasource="mysql">
             select filename, description 
-            from host_picture_album
+            from smg_host_picture_album
             where fk_hostid = #client.hostid#
             </cfquery>
             <cflocation url="index.cfm?page=roomPetsSmoke" addtoken="no">
@@ -90,7 +90,7 @@ from smg_host_pic_cat
     >
 
      <cfquery datasource="MySQL">
-     	insert into host_picture_album (fk_hostID, filename, cat)
+     	insert into smg_host_picture_album (fk_hostID, filename, cat)
      	values(#client.hostid#, '#newFName#', #form.picCat#)
      </cfquery>
 
@@ -153,11 +153,12 @@ Select a catagory for this picture:<br />
         		source="http://ise.exitsapplication.com/nsmg/uploadedfiles/hostAlbum/thumbs/#filename#" height = 100><br />
                 #catDesc.cat_name#<br />
                 <a href="index.cfm?page=familyAlbum&delPic=#filename#"><img src="../images/buttons/delete.png"  border=0 /></a>
-</Td>
-                <td valign="top">
+		</Td>
+        <td valign="top">
                 Description of picture:<br />
-                <textarea name="desc_#filename#" cols="20" rows="5">#description#</textarea>
+                <textarea name="desc_#filename#" cols="15" rows="5">#description#</textarea>
               <Cfset count = #count# + 1>
+        </td>      
  	<Cfif  #count#  mod 2>
     </tr>
     </Cfif>
