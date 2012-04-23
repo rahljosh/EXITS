@@ -537,7 +537,7 @@
                 <!--- Generate New Password --->
                 <cfset setPassword = generatePassword()>
                 
-                <cfquery datasource="#APPLICATION.DSN.Source#">
+                <cfquery result="newRecord" datasource="#APPLICATION.DSN.Source#">
                     INSERT INTO
                         smg_host_lead 
                     (
@@ -582,6 +582,14 @@
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                     )		
                 </cfquery>
+
+                <cfscript>
+					//Create Host Object
+					//h = createObject("component","extensions.components.host");
+					
+					// Insert Hash ID and Initial Comment
+					APPLICATION.CFC.HOST.setHostLeadDataIntegrity(ID=newRecord.GENERATED_KEY);
+				</cfscript>
                 
                 <cfsavecontent variable="vEmailMessage">
 	                <cfoutput>

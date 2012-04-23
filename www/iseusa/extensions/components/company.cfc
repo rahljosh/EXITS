@@ -31,7 +31,7 @@
               
         <cfquery 
 			name="qGetCompanies" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN.Source#">
                 SELECT
                 	companyID,
                     companyName,
@@ -100,7 +100,7 @@
               
         <cfquery 
 			name="qGetCompanyByID" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN.Source#">
                 SELECT
                 	companyID,
                     companyName,
