@@ -285,7 +285,7 @@ EXCHANGE STUDENTS are 15-18 years old when they enter the U.S. The high school t
 
 <div id="q17">
 <p><strong>17. How long is the EXCHANGE STUDENT'S stay?</strong><br />
-  School year EXCHANGE STUDENTS arrive in August for a 10 month academic stay, returning home to their home country in June. Semester EXCHANGE STUDENTS come for a 5 month stay - some will arrive in August and stay until January and others arrive in January and stay until June. EXCHANGE STUDENTS from the Southern Hemisphere can come in January for the 12 month program</p></div>
+  school year EXCHANGE STUDENTS arrive in August for a 10 month academic stay, returning home to their home country in June. Semester EXCHANGE STUDENTS come for a 5 month stay - some will arrive in August and stay until January and others arrive in January and stay until June. EXCHANGE STUDENTS from the Southern Hemisphere can come in January for the 12 month program</p></div>
 
 <p><a href="#top" class="GyLink">Back to the top.</a></p>
 

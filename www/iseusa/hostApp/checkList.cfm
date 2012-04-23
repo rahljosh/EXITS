@@ -374,7 +374,7 @@ have been approved as a host family, it simpliy indicates that your application 
 </Cfquery>
 <Cfquery name="hostPics" datasource="mysql">
 	select *
-    from host_picture_album
+    from smg_host_picture_album
     where fk_hostID = #cl.hostid#
 </Cfquery>
 <cfloop query="hostPicCat">
@@ -421,7 +421,7 @@ have been approved as a host family, it simpliy indicates that your application 
             // Data Validation
 						
 			// Family Smokes
-             if ( NOT LEN(TRIM(cl.smokes)) ) {
+             if ( NOT LEN(TRIM(cl.hostsmokes)) ) {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please indicate if any one in your family smokes.");
 			 }
@@ -1008,7 +1008,10 @@ where schoolid = #cl.schoolid#
         <cfif StillMissingInfo eq 1>
         	<img src="../images/buttons/SubmitApp_03_grey.png" width="244" height="66" />
         <cfelse>
-        	<img src="../images/buttons/SubmitApp_03.png" width="244" height="66" />
+         <form method="post" action="?index.cfm?page=hello">
+            	<input name="processApp" type="hidden" value="" />
+        	<input type="image" src="../images/buttons/SubmitApp_03.png" width="244" height="66" />
+            </form>
     	</cfif>
         </Td>
     </tr>

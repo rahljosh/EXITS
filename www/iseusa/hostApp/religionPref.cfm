@@ -44,7 +44,7 @@ where hostid = #client.hostid#
         <cfif NOT SESSION.formErrors.length()>
          <cfquery datasource="mysql">
         update smg_hosts
-            set religious_participation = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.church_Activity#">,
+            set religious_participation = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.church_Activity#">,
                <cfif isDefined('form.stu_Attend')> churchfam =  <cfqueryparam cfsqltype="cf_sql_integer" value="#form.stu_attend#">, </cfif>
                 churchtrans = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.stu_trans#">,
                 churchfam = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.stu_attend#">,
@@ -118,8 +118,8 @@ How often do you go to your religious establishment?<span class="redtext">*</spa
     	<td colspan=2><cfinput type="radio"
          onclick="document.getElementById('showname').style.display='table-row';"
          name="church_Activity" 
-         checked='#form.religious_participation eq 4#'
-         value="4" 
+         checked="#form.religious_participation is 'Active'#"
+         value="Active" 
          
         > Active (2+ times a week)</td>
     </tr>
@@ -128,8 +128,8 @@ How often do you go to your religious establishment?<span class="redtext">*</spa
 		<cfinput type="radio" 
         name="church_Activity" 
         onclick="document.getElementById('showname').style.display='table-row';"
-        value="3" 
-        checked='#form.church_activity eq 3#'
+        value="Average" 
+        checked="#form.church_activity is 'Average'#"
        >Average (1-2x a week) 
 </td>
     </tr>
@@ -138,8 +138,8 @@ How often do you go to your religious establishment?<span class="redtext">*</spa
 		<cfinput type="radio" 
         onclick="document.getElementById('showname').style.display='table-row';"
         name="church_Activity" 
-        value="2" 
-        checked='#form.church_activity eq 2#'
+        value="LIttle Interest" 
+        checked="#form.church_activity is 'Little Interest'#"
         >Little Interest (occasionally)
 </td>
     </tr>
@@ -147,9 +147,9 @@ How often do you go to your religious establishment?<span class="redtext">*</spa
     	<Td colspan=2>
 		<cfinput type="radio" 
         name="church_Activity" 
-        value="1" 
+        value="Inactive" 
         onclick="document.getElementById('showname').style.display='none';"
-        checked='#form.church_activity eq 1#'
+        checked="#form.church_activity is 'Inactive'#"
         >Inactive (Never attend)
         </td>
     </tr>
@@ -158,8 +158,8 @@ How often do you go to your religious establishment?<span class="redtext">*</spa
 		<cfinput type="radio" 
         name="church_Activity" 
         onclick="document.getElementById('showname').style.display='none';"
-        value="0" 
-        checked='#form.church_activity eq 0#'
+        value="No Interest" 
+        checked="#form.church_activity is 'No Interest'#"
         >No Interest
 		</td>
     </tr>

@@ -93,7 +93,7 @@ winslide.focus()
    <div class="whtTop"></div>
    <div class="whtMiddleService">
     <div class="SuccessInfo">
-     <h1 class="enter">New York Trip</h1>
+     <h1 class="enter">New York Trip 2011</h1>
      <table width="638">
       <tr>
        <td width="630" height="45" colspan="2" align="center" scope="row" ><img src="images/webStore_lines_03.gif" width="600" height="15" alt="line" /><br />

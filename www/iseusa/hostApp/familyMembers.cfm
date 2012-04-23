@@ -11,8 +11,17 @@
 <cfif url.childid EQ "">
 	<cfset new = true>
 <cfelse>
+	<cfquery name="verifyFam" datasource="mysql">
+    select hostid
+    from smg_host_children
+    where childid = #url.childid#
+    </cfquery>
+    <cfif verifyFam.hostid neq client.hostid>
+    	<h3>The child you are trying to edit is not assigned to your account.  </h3>
+       	<cfabort>
+    </cfif>
 	<cfif not isNumeric(url.childid)>
-        a numeric childid is required to edit a family member.
+        A numeric childid is required to edit a family member.
         <cfabort>
 	</cfif>
 	<cfset new = false>
@@ -206,7 +215,18 @@ Please include all your children, whether they are living at home or not, and an
     	<cfif not new>
 			<td></td>
         </cfif>
-		<td align="right"><A href="index.cfm?page=familyQuestionInterupt"><img src="../images/done.png" border="0" /></A>		  <input name="Submit" type="image" src="../images/addMember.png" border=0></td>
+		<td align="right">
+		<Cfif url.childid is not ''><a href="?page=familyMembers">
+        	<img src="../images/buttons/goBack_44.png" border=0/></a> 
+            <input name="Submit" type="image" src="../images/buttons/update_44.png" border=0> 
+        <cfelse>
+        	<input name="Submit" type="image" src="../images/addMember.png" border=0>
+        </Cfif> <br />
+        
+         <a onclick="ShowHide(); return false;" href="##">
+         I am finished entering family members.</a>
+<div id="slidingDiv" display:"none">
+        <A href="index.cfm?page=familyQuestionInterupt"><img src="../images/buttons/next.png" border="0" /></A>	</div>	</td>
 	</tr>
 </table>
 

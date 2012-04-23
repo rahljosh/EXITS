@@ -1,7 +1,7 @@
 
 <!--- Import CustomTag Used for Page Messages and Form Errors --->
 <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
-
+<cfparam name="submitForm" default=0>
 <cfquery name="qHostParentsMembers" datasource="mysql">
 select h.fatherfirstname, h.fatherdob, h.fatherlastname, h.motherfirstname, h.motherlastname, h.motherdob, h.fatherssn, h.motherssn
 from smg_hosts h
@@ -48,6 +48,10 @@ where active = 1
                 // Get all the missing items in a list
                SESSION.formErrors.Add("The SSN for #form.fatherfirstname# does not appear to be a valid SSN. <br> Please make sure the SSN is entered in the 999-99-9999 format.");
            }	
+		   if (not len(trim(form.fathersig))){
+                // Get all the missing items in a list
+               SESSION.formErrors.Add("The signature for #form.fatherfirstname# is missing");
+           }	
 		 </cfscript>
    		</cfif>	
         <!----Validate Mother ssn, if needed---->
@@ -60,6 +64,10 @@ where active = 1
                 // Get all the missing items in a list
                SESSION.formErrors.Add("The SSN for #form.motherfirstname# does not appear to be a valid SSN. <br> Please make sure the SSN is entered in the 999-99-9999 format.");
            }	
+		   if (not len(trim(form.mothersig))){
+                // Get all the missing items in a list
+               SESSION.formErrors.Add("The signature for #form.motherfirstname# is missing");
+           }
 		 </cfscript>
    		</cfif>	
         <!----check to make sure that the person should have a background check run---->
@@ -71,6 +79,7 @@ where active = 1
             from smg_host_children k
             where k.childid = #x# 
             </cfquery>
+            <Cfif isDefined('#form[x & "_ssn"]#')>
         	<Cfif #DateDiff('yyyy',cbcCheck.birthdate,now())# gte 18 and cbcCheck.liveathome is 'yes'>
             
 				<cfscript>
@@ -81,20 +90,17 @@ where active = 1
                         // Get all the missing items in a list
                        SESSION.formErrors.Add("The SSN for #form[x & "_name"]# does not appear to be a valid SSN. <br> Please make sure the SSN is entered in the 999-99-9999 format.");
                    }	
-                    
+                    // Valid Signature
+                   if  ( NOT LEN(TRIM(#form[x & "_sig"]#))) {
+                        // Get all the missing items in a list
+                       SESSION.formErrors.Add("The signature for #form[x & "_name"]# is missing.");
+                   }	
                 
                 </cfscript>
         	</Cfif>
+            </Cfif>
         </Cfloop>
-         <cfscript>
-            // Data Validation
-			
-			// Valid SSN
-           if  ( form.season EQ 0) {
-                // Get all the missing items in a list
-               SESSION.formErrors.Add("Please indicate the season for which you are authorizing these background checks.");
-           }	
-		 </cfscript>
+
         <!--- Check if there are no errors --->
         <cfif NOT SESSION.formErrors.length()>
 			<!--- the key for encrypting and decrypting the ssn. --->
@@ -107,6 +113,24 @@ where active = 1
                     set fatherSSN = '#encfatherssn#'
                     where hostid = #client.hostid#
                     </cfquery>
+                      <cfif DirectoryExists('C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/')>
+        				<cfelse>
+           				 <cfdirectory action = "create" directory = "C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/" >
+        				</cfif>
+                    <cfdocument format="PDF" filename="C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/#form.fatherSig#cbcAuthorization.pdf" overwrite="yes">
+                    <!--- form.pr_id and form.report_mode are required for the progress report in print mode.
+                    form.pdf is used to not display the logo which isn't working on the PDF. --->
+                    <cfset form.report_mode = 'print'>
+                    <cfset form.pdf = 1>
+                    <cfinclude template="completedCBCAuth.cfm">
+                    <br /><Br />
+                    <Cfoutput>
+                    Electronically Signed<Br />
+                    #form.fatherSig#<br />
+                    #DateFormat(now(), 'mmm d, yyyy')# at #TimeFormat(now(), 'h:mm:ss tt')#<Br />
+                    IP: #cgi.REMOTE_ADDR# 
+                    </Cfoutput>
+                </cfdocument>    
              </Cfif>
              <!----Insert mothers ssn if defined---->
              <Cfif isDefined('form.motherssn')>
@@ -116,6 +140,26 @@ where active = 1
                     set motherSSN = '#encmotherssn#'
                     where hostid = #client.hostid#
                     </cfquery>
+                    
+				
+                      <cfif DirectoryExists('C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/')>
+        				<cfelse>
+           				 <cfdirectory action = "create" directory = "C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/" >
+        				</cfif>
+                    <cfdocument format="PDF" filename="C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/#form.motherSig#_cbcAuthorization.pdf" overwrite="yes">
+                    <!--- form.pr_id and form.report_mode are required for the progress report in print mode.
+                    form.pdf is used to not display the logo which isn't working on the PDF. --->
+                    <cfset form.report_mode = 'print'>
+                    <cfset form.pdf = 1>
+                    <cfinclude template="completedCBCAuth.cfm">
+                    <br /><Br />
+                    <Cfoutput>
+                    Electronically Signed<Br />
+                    #form.motherSig#<br />
+                    #DateFormat(now(), 'mmm d, yyyy')# at #TimeFormat(now(), 'h:mm:ss tt')#<Br />
+                    IP: #cgi.REMOTE_ADDR# 
+                    </Cfoutput>
+                </cfdocument> 
              </Cfif>
               <Cfloop list="#famList#" index="x">
                <cfquery name="cbcCheck" datasource="mysql">
@@ -132,7 +176,29 @@ where active = 1
                         where childid = #x#
                         </cfquery>
                      </Cfif>
-              </Cfloop>
+                      
+                      <cfif DirectoryExists('C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/')>
+        				<cfelse>
+           				 <cfdirectory action = "create" directory = "C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/" >
+        				</cfif>
+                    <cfdocument format="PDF" filename="C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/#form[x & "_sig"]#_cbcAuthorization.pdf" overwrite="yes">
+                    <!--- form.pr_id and form.report_mode are required for the progress report in print mode.
+                    form.pdf is used to not display the logo which isn't working on the PDF. --->
+                    <cfset form.report_mode = 'print'>
+                    <cfset form.pdf = 1>
+                    <Cfset form.childid = #x#>
+                    
+                    <cfinclude template="completedCBCAuth.cfm">
+                    <br /><Br />
+                    <Cfoutput>
+                    Electronically Signed<Br />
+                    #form[x & "_sig"]#<br />
+                    #DateFormat(now(), 'mmm d, yyyy')# at #TimeFormat(now(), 'h:mm:ss tt')#<Br />
+                    IP: #cgi.REMOTE_ADDR# 
+                    </Cfoutput>
+                </cfdocument> 
+                
+              	</Cfloop>
               <!----Udpate Lead Table that Application is in process---->
             <cfquery datasource="mysql">
             update smg_host_lead 
@@ -191,9 +257,11 @@ where active = 1
                         </cfscript>
                         
                     </cfcatch>
-                </cftry>        
+                </cftry>  
+                
+        
             <!----Don't Process CBC's yet---->
-            <!---
+            
                 <cfscript>
                     // Gets List of Companies
                     qGetCompanies = APPCFC.COMPANY.getCompanies();
@@ -536,7 +604,7 @@ where active = 1
             <!----
             <cflocation url="?page=familyInterests">
 			---->
-			---->
+			
             <cflocation url="?page=familyInterests">
 		</cfif>	
 
@@ -550,9 +618,11 @@ where active = 1
         />
 Due to Department of State Regulations&dagger;, criminal background checks will need to be run on the following persons.  Please provide the following information on each person so that we can complete the background check. <Br />
 <Br />
+
 <cfform method="post" action="?page=familyQuestionInterupt">
+
 <cfoutput>
-<input type="hidden" name="processCBC" />
+<input type="hidden" name="processCBC"/>
 <input type="hidden" name="hostid" value="#client.hostid#" />
 <input type="hidden" name="submitted" value="1" />
 
@@ -577,8 +647,9 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
             <td>
           	<cfif checkFatherCBC.recordcount eq 0>
             	<cfinput type="text"  name="fatherssn"  mask="999-99-9999" size=12 typeahead="no" showautosuggestloadingicon="true" value="#fatherssn#">
+                <cfset submitForm = 1>
       		<cfelse>
-            	Submitted on #DateFormat(checkFatherCBC.date_sent, 'mmm. d, yyyy')#
+            	Request Submitted
             </cfif>
             </td>
       </tr>
@@ -594,8 +665,9 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
             <td>
             <cfif checkMotherCBC.recordcount eq 0>
             	<cfinput type="text"  name="motherssn"  mask="999-99-9999" size=12 typeahead="no" showautosuggestloadingicon="true" value="#motherssn#">
+                <cfset submitForm = 1>
       		<cfelse>
-            	Submitted on #DateFormat(checkMotherCBC..date_sent, 'mmm. d, yyyy')#
+            	Request Submitted
             </cfif>
             </td>
 
@@ -619,9 +691,12 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
                 
                 <td>
                 <input type="hidden" name="#qHostFamilyMembers.childid#_name" value="#name#" />
-              
-                <cfinput type="text" name="#qHostFamilyMembers.childid#_ssn" mask="999-99-9999" size=12 typeahead="no"  showautosuggestloadingicon="true" value="#ssn#"></td>
-              	
+              <Cfif ssn is not ''>
+              	Request Submitted
+              <cfelse>
+                <cfinput type="text" name="#qHostFamilyMembers.childid#_ssn" mask="999-99-9999" size=12 typeahead="no"  showautosuggestloadingicon="true" value="#ssn#">
+                <cfset submitForm = 1></td>
+              </Cfif>	
             <cfelse>
                 <td colspan=2 >Background check is not required for #name#.</td>
             </Cfif> 
@@ -634,16 +709,56 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
 <h3>Season</h3>
 	<table width=100% cellspacing=0 cellpadding=2 class="border">
    <Tr  bgcolor="##deeaf3">
-   	<Th align="center">I/We are submitting this authorization for a criminal background check on the above <br /> individuals for the following academic season:</th>
+   	<Th align="center">I/We are submitting this authorization for a criminal background check on the above individuals.  Please use our typed name in place of a signature to initiate the background check process.<br />
+    
+    </th>
+    
     </Tr>
     <tr  bgcolor="##deeaf3">
-    	<td align="Center">
-        	<select name="season">
-            <option value="0"></option>
-            <cfloop query="qActiveSeasons">
-        	<option value="#seasonid#">#season#</option>
+    
+    	<td >
+        <table align="center">
+        	<Cfloop query="qHostParentsMembers">
+            <cfif fatherfirstname is not ''>
+            <tr>
+                <Td><h3><p class=p_uppercase>#fatherfirstname# #fatherlastname#</h3></Td>
+                <Td>
+                <cfif checkFatherCBC.recordcount eq 0>
+                	<input type="text" name="FatherSig" size=20/></Td>
+                <cfelse>
+            		Request Submitted
+            	</cfif>
+            </tr>    
+            </cfif>
+            <cfif motherfirstname is not ''>
+            <tr>
+                <Td><h3><p class=p_uppercase>#motherfirstname# #motherlastname#</h3></Td>
+                <Td>
+                <cfif checkMotherCBC.recordcount eq 0>
+                	<input type="text" name="MotherSig" size=20/>
+                <cfelse>
+            		Request Submitted
+            	</cfif>
+                </Td>
+            </tr>    
+            </cfif>
             </cfloop>
-            </select>
+            <Cfloop query="qHostFamilyMembers">
+				<Cfif #DateDiff('yyyy',birthdate,now())# gte 18 and liveathome is 'yes'>
+                    <tr>
+                		<Td><h3><p class=p_uppercase>#name# #lastname#</p></h3></Td><td>
+                        <Cfif ssn is not ''>
+                        Request Submitted
+                        <cfelse>
+                        <input type="text" name="#qHostFamilyMembers.childid#_sig" />
+                        </Cfif>
+                        </td>
+                    </tr>
+                </Cfif>
+			</Cfloop>
+        	</table>
+        </td>
+     </tr>
     </table>
 </cfoutput>
 
@@ -655,7 +770,14 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
 <p>Upon proper identification and via a request submitted directly to General Information Services, Inc., I have the right to request from General Information Services, Inc. information about the nature and substance of all records on file about me at the time of my request.  This may include the type of information requested as well as those who requested reports from General Information Services, Inc.  within the two-year period preceding my request.</p>
 <table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
 	<tr>
-		<td align="right"><input name="Submit" type="image" src="../images/buttons/submitBlue.png" border=0></td>
+		<td align="right">
+        
+        <cfif submitForm eq 0>
+        <a href="?page=familyInterests"><img src="../images/buttons/submitBlue.png" border=0 /></a>
+        <cfelse>
+        <input name="Submit" type="image" src="../images/buttons/submitBlue.png" border=0>
+        </cfif>
+        </td>
 	</tr>
 </table>
 </cfform>
