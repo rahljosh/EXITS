@@ -27,7 +27,7 @@
 		param name="FORM.pageSize" default=30;	
 		
 		// Make sure records have a valid hashID and the initial record in the history table
-		APPLICATION.CFC.HOST.setHostLeadDataIntegrity();
+		// APPLICATION.CFC.HOST.setHostLeadDataIntegrity();
 	
 		// Follow Up User List
 		qGetFollowUpUserList = APPLICATION.CFC.USER.getUsers(userType=26);
