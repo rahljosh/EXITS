@@ -828,7 +828,7 @@
               his
               <cfelse>her
             </cfif>  
-            own permanet bed? 
+            own permanent bed? 
             <span class="small">Bed may not be a futon or inflatable</span>
           </label>
           <Cfif allow_save>
