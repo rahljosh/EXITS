@@ -66,7 +66,7 @@
             pa.amount
         FROM 
             smg_payment_types pt
-        INNER JOIN 
+        LEFT OUTER JOIN
             smg_payment_amount pa ON pt.id = pa.paymentid
             <!--- ISE - Get Amounts for William --->
             <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
@@ -90,7 +90,7 @@
             pa.amount
         FROM 
             smg_payment_types pt
-        INNER JOIN 
+        LEFT OUTER JOIN
             smg_payment_amount pa ON pt.id = pa.paymentid
             <!--- ISE - Get Amounts for William --->
             <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
@@ -114,7 +114,7 @@
             pa.amount
         FROM 
             smg_payment_types pt
-        INNER JOIN 
+        LEFT OUTER JOIN
             smg_payment_amount pa ON pt.id = pa.paymentid
             <!--- ISE - Get Amounts for William --->
             <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
@@ -290,7 +290,7 @@
                 <cfparam name="FORM.#studentID#superAmount" default="">
                 <cfparam name="FORM.#studentID#superComment" default="">
                 
-                <cfif LEN(Evaluate("FORM." & studentID & "superPaymentTypeID")) AND VAL(Evaluate('FORM.' & studentID & 'superAmount'))>
+                <cfif VAL(FORM[studentID & 'superPaymentTypeID']) AND isNumeric(FORM[studentID & 'superAmount'])>
                 
                     <cfquery datasource="MySQL" result="newRecord">
                         INSERT INTO 
@@ -312,15 +312,15 @@
                         (
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">, 
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#studentID#">, 
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'superProgramID')#">,
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'superHostID')#">,
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'superPaymentTypeID')#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM[studentID & 'superProgramID']#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM[studentID & 'superHostID']#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM[studentID & 'superPaymentTypeID']#">, 
                             <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vTimeStamp#">, 
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="supervision">, 
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">, 
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & studentID & 'superAmount')#">, 
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM[studentID & 'superAmount']#">, 
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">, 
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & studentID & 'superComment')#">
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM[studentID & 'superComment']#">
                         )
                     </cfquery>
                 
@@ -342,7 +342,7 @@
                 <cfparam name="FORM.#studentID#placeAmount" default="">
                 <cfparam name="FORM.#studentID#placeComment" default="">
             
-                <cfif LEN(Evaluate("FORM." & studentID & "placePaymentTypeID")) AND VAL(Evaluate('FORM.' & studentID & 'placeAmount'))>
+                <cfif VAL(FORM[studentID & 'placePaymentTypeID']) AND isNumeric(FORM[studentID & 'placeAmount'])>
                 
                     <cfquery datasource="MySQL" result="newRecord">
                         INSERT INTO 
@@ -364,15 +364,15 @@
                         (
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">, 
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#studentID#">, 
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'placeProgramID')#">,
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'placeHostID')#">,
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'placePaymentTypeID')#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM[studentID & 'placeProgramID']#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM[studentID & 'placeHostID']#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM[studentID & 'placePaymentTypeID']#">, 
                             <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vTimeStamp#">, 
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="placement">, 
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">, 
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & studentID & 'placeAmount')#">, 
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM[studentID & 'placeAmount']#">, 
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">, 
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & studentID & 'placeComment')#">
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM[studentID & 'placeComment']#">
                         )
                     </cfquery>
                     
@@ -396,7 +396,7 @@
                 <cfparam name="FORM.#studentID#secondVisitComment" default="">
                 	
                 <!--- Block Payment if report is not selected --->
-                <cfif LEN(Evaluate("FORM." & studentID & "secondVisitPaymentTypeID")) AND VAL(Evaluate('FORM.' & studentID & 'secondVisitreportID'))>
+                <cfif VAL(FORM[studentID & 'secondVisitPaymentTypeID']) AND isNumeric(FORM[studentID & 'secondVisitreportID'])>
                 	
                     <cfquery datasource="MySQL" result="newRecord">
                         INSERT INTO 
@@ -419,16 +419,16 @@
                         (
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">, 
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#studentID#">, 
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'secondVisitProgramID')#">,
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'secondVisitHostID')#">, 
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'secondVisitreportID')#">, 
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & studentID & 'secondVisitPaymentTypeID')#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM[studentID & 'secondVisitProgramID']#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM[studentID & 'secondVisitHostID']#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM[studentID & 'secondVisitreportID']#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM[studentID & 'secondVisitPaymentTypeID']#">, 
                             <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vTimeStamp#">, 
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="secondVisit">, 
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">, 
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & studentID & 'secondVisitAmount')#">, 
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM[studentID & 'secondVisitAmount']#">, 
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">, 
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.' & studentID & 'secondVisitComment')#">
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM[studentID & 'secondVisitComment']#">
                         )
                     </cfquery>
                 
