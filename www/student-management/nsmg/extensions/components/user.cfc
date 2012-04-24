@@ -90,6 +90,43 @@
 	</cffunction>
 
 
+	<cffunction name="getFacilitators" access="public" returntype="query" output="false" hint="Gets a list of facilitators assigned to a region">
+        <cfargument name="isActive" default="1" hint="isActive is not required">
+
+        <cfquery 
+			name="qGetFacilitators" 
+			datasource="#APPLICATION.dsn#">
+               	SELECT
+					u.*
+				FROM
+                	smg_users u
+                INNER JOIN
+                	smg_regions r ON r.regionFacilitator = u.userID
+						AND
+                        	subOfRegion = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+					<cfif CLIENT.companyID EQ 5>
+                        AND          
+                            r.company IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+                    <cfelse>
+                        AND          
+                            r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                    </cfif>
+                            
+				<cfif LEN(ARGUMENTS.isActive)>
+                	WHERE
+                    	u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.isActive#">
+                </cfif>
+               	
+                GROUP BY 
+                	u.userID
+               	ORDER BY
+                	u.firstName
+			</cfquery>
+		   
+		<cfreturn qGetFacilitators>
+	</cffunction>
+
+
 	<cffunction name="getIntlRepresentatives" access="public" returntype="query" output="false" hint="Gets a list of intl. representatives assigned to active students">
         <cfargument name="isActive" default="1" hint="isActive is not required">
 
@@ -108,10 +145,10 @@
                         	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 						<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
                             AND          
-                                s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+                                s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
                         <cfelse>
                             AND          
-                                s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#"> 
+                                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
                         </cfif>
                 WHERE
                     uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
@@ -503,9 +540,9 @@
                 WHERE 
                     rep.agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
                 <cfif ARGUMENTS.companyID GT 5>
-                    AND rep.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
+                    AND rep.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
                 <cfelse>
-                    AND rep.companyid < <cfqueryparam cfsqltype="cf_sql_integer" value="6"> 
+                    AND rep.companyID < <cfqueryparam cfsqltype="cf_sql_integer" value="6"> 
                 </cfif>
                 GROUP BY
                     s.seasonID            
@@ -548,7 +585,7 @@
                 LEFT JOIN 
                     smg_payment_types type ON type.id = rep.paymenttype
                 LEFT JOIN 
-                    smg_companies c ON c.companyid = rep.companyid
+                    smg_companies c ON c.companyID = rep.companyID
                 WHERE 
                     rep.agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
 				AND
@@ -655,6 +692,8 @@
                 	smg_users officeUser ON officeUser.userID = sut.office_user_id                                       	
                 WHERE
                     sut.user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                AND
+                	has_passed = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                 ORDER BY 
                     sut.date_created
 		</cfquery>
