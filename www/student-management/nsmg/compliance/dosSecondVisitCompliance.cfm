@@ -376,16 +376,17 @@
                 )
         	            
         GROUP BY
+        	<!--- historyID, ---> <!--- Will get duplicate records but will avoid not displaying students if they have more than one record for the same host family --->
             studentID,
             hostID
 		
-        <!--- Only display present records or records with a days diff > 0  --->
+        <!--- Display present records (current placements) or records with a days diff > 0 --->
         HAVING
         
         (
-        	totalAssignedPeriod IS NULL
+        	totalAssignedPeriod IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
         OR
-        	totalAssignedPeriod > 0
+        	totalAssignedPeriod > <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
 		)
         
 		<cfif VAL(FORM.isDueSoon)>
