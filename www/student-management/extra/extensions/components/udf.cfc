@@ -613,28 +613,32 @@
 				stResult.address = ListGetAt(locationXML.kml.Response.Placemark.address.XmlText, 1);
 				stResult.country = locationXML.kml.Response.Placemark.AddressDetails.Country.CountryNameCode.XmlText;
 				stResult.state = locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.AdministrativeAreaName.XmlText;
-		
+				
 				if ( StructKeyExists(locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea, "SubAdministrativeArea") ) {
 					if ( StructKeyExists(locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea, "Locality") ) {
-						stResult.city = locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.DependentLocality.DependentLocalityName.XmlText;
-						stResult.zip = locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.DependentLocality.PostalCode.PostalCodeNumber.XmlText;
-						stResult.zip = "zip=" & stResult.zip;
+						stResult.city = locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.LocalityName.XmlText;
+						if ( StructKeyExists(locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality, "DependentLocality") ) {
+							stResult.zip = "zip=" & locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.DependentLocality.PostalCode.PostalCodeNumber.XmlText;
+						} else {
+							stResult.zip = "zip=" & locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.PostalCode.PostalCodeNumber.XmlText;
+						}
 					} else if ( StructKeyExists(locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea, "DependentLocality") ) {
-						stResult.city = locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.DependentLocality.Dep50endentLocalityName.XmlText;
-						stResult.zip = locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.DependentLocality.PostalCode.PostalCodeNumber.XmlText;
-						stResult.zip = "zip=" & stResult.zip;
+						stResult.city = locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.DependentLocality.DependentLocalityName.XmlText;
+						stResult.zip = "zip=" & locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.DependentLocality.PostalCode.PostalCodeNumber.XmlText;
 					} else {
 						stResult.isVerified = 0;
 					}
 				} else {
 					if ( StructKeyExists(locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea, "Locality") ) {
 						stResult.city = locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.Locality.LocalityName.XmlText;
-						stResult.zip = locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.Locality.PostalCode.PostalCodeNumber.XmlText;
-						stResult.zip = "zip=" & stResult.zip;
+						if ( StructKeyExists(locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.Locality, "DependentLocality") ) {
+							stResult.zip = "zip=" & locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.Locality.DependentLocality.PostalCode.PostalCodeNumber.XmlText;
+						} else {
+							stResult.zip = "zip=" & locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.Locality.PostalCode.PostalCodeNumber.XmlText;
+						}
 					} else if ( StructKeyExists(locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea, "DependentLocality") ) {
 						stResult.city = locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.DependentLocality.DependentLocalityName.XmlText;
-						stResult.zip = locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.DependentLocality.PostalCode.PostalCodeNumber.XmlText;
-						stResult.zip = "zip=" & stResult.zip;
+						stResult.zip = "zip=" & locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.DependentLocality.PostalCode.PostalCodeNumber.XmlText;
 					} else {
 						stResult.isVerified = 0;
 					}
@@ -689,7 +693,6 @@
 					}
 				}
             }
-			
 			
 			return stResult;
         </cfscript>

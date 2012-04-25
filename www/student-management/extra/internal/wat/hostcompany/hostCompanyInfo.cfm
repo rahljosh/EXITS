@@ -317,15 +317,15 @@
                         name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.name#">,
                         business_typeID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.business_typeID#">,
                         <!--- Work Site Address --->
-                        address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
-                        city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
-                        state = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.state#">,
-                        zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
+                        address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.address)#">,
+                        city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.city)#">,
+                        state = <cfqueryparam cfsqltype="cf_sql_integer" value="#TRIM(FORM.state)#">,
+                        zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.zip)#">,
                         <!--- HQ Address --->
-                        hqAddress = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqAddress#">,
-                        hqCity = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqCity#">,
-                        hqState = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hqState#">,
-                        hqZip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqZip#">,
+                        hqAddress = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.hqAddress)#">,
+                        hqCity = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.hqCity)#">,
+                        hqState = <cfqueryparam cfsqltype="cf_sql_integer" value="#TRIM(FORM.hqState)#">,
+                        hqZip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.hqZip)#">,
                         <!--- Housing Information --->
                         isHousingProvided = <cfqueryparam cfsqltype="cf_sql_tinyint" value="#FORM.isHousingProvided#">,
                         housingProvidedInstructions = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingProvidedInstructions#">,
@@ -432,15 +432,15 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.name#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.business_typeID#">,
                         <!--- Work Site Address --->
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.state#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.address)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.city)#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#TRIM(FORM.state)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.zip)#">,
                         <!--- HQ Address --->
-						<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqAddress#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqCity#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hqState#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hqZip#">,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.hqAddress)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.hqCity)#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#TRIM(FORM.hqState)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.hqZip)#">,
 						<!--- Housing Information --->
                         <cfqueryparam cfsqltype="cf_sql_tinyint" value="#FORM.isHousingProvided#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingProvidedInstructions#">,
@@ -692,7 +692,6 @@
 	var udf = new UDFComponent();
  
 	var verifyAddress = function() { 
-		
 		// Check required Fields
 		var errorMessage = "";
 		if($("#name").val() == ''){
@@ -729,10 +728,10 @@
 			alert(errorMessage);
 		} else {
 			// FORM Variables
-			var address = $("#address").val();
-			var city = $("#city").val();
-			var state = $("#state").val();
-			var zip = $("#zip").val();
+			var address = $.trim($("#address").val());
+			var city = $.trim($("#city").val());
+			var state = $.trim($("#state").val());
+			var zip = $.trim($("#zip").val());
 			
 			// Setting a callback handler for the proxy automatically makes the proxy's calls asynchronous. 
 			udf.setCallbackHandler(checkAddress); 
@@ -743,7 +742,7 @@
 
 	// Callback function to handle the results returned by the getHostLeadList function and populate the table. 
 	var checkAddress = function(googleResponse) { 
-	
+
 		var isAddressVerified = googleResponse.ISVERIFIED;
 	
 		if ( isAddressVerified == 1 ) {
@@ -757,7 +756,7 @@
 			var inputState = googleResponse.INPUTSTATE;
 			var verifiedStateID = googleResponse.VERIFIEDSTATEID;
 			
-			if ((streetAddress == $("#address").val()) && (city == $("#city").val()) && (state == inputState) && (zip == $("#zip").val()))
+			if ((streetAddress == $.trim($("#address").val())) && (city == $.trim($("#city").val())) && (state == inputState) && (zip == $.trim($("#zip").val())))
 			{
 				callCheckHQAddress();
 			} else {
@@ -799,7 +798,7 @@
 			$(function() {
 				$( "#dialog:ui-dialog" ).dialog( "destroy" );
 				$( "#dialog-canNotVerify-confirm" ).empty();
-				$( "#dialog-canNotVerify-confirm" ).append("We could not verify the following address:<br />" + $("#address").val() + "<br />" + $("#city").val() + ", " + $("#state").val() + " " + $("#zip").val());
+				$( "#dialog-canNotVerify-confirm" ).append("We could not verify the following address:<br />" + $("#address").val() + "<br />" + $("#city").val() + ", " + inputState + " " + $("#zip").val());
 				$( "#dialog-canNotVerify-confirm").dialog({
 					resizable: false,
 					height:230,
@@ -820,10 +819,10 @@
 	}
 	
 	var callCheckHQAddress = function() {
-		var hqAddress = $("#hqAddress").val();
-		var hqCity = $("#hqCity").val();
-		var hqState = $("#hqState").val();
-		var hqZip = $("#hqZip").val();
+		var hqAddress = $.trim($("#hqAddress").val());
+		var hqCity = $.trim($("#hqCity").val());
+		var hqState = $.trim($("#hqState").val());
+		var hqZip = $.trim($("#hqZip").val());
 		
 		udf.setCallbackHandler(checkHQAddress); 
 		udf.setErrorHandler(myErrorHandler);
@@ -846,7 +845,7 @@
 			var inputState = googleResponse.INPUTSTATE;
 			var verifiedStateID = googleResponse.VERIFIEDSTATEID;
 				
-			if ((streetAddress == $("#hqAddress").val()) && (hqCity == $("#city").val()) && (hqState == inputState) && (hqZip == $("#zip").val()))
+			if ((streetAddress == $.trim($("#hqAddress").val())) && (hqCity == $.trim($("#hqCity").val())) && (hqState == inputState) && (hqZip == $.trim($("#hqZip").val())))
 			{
 				$("#hostCompany").submit();
 			} else {
@@ -888,7 +887,7 @@
 			$(function() {
 				$( "#dialog:ui-dialog" ).dialog( "destroy" );
 				$( "#dialog-canNotVerify-confirmHQ" ).empty();
-				$( "#dialog-canNotVerify-confirmHQ" ).append("We could not verify the following address:<br />" + $("#hqAddress").val() + "<br />" + $("#hqCity").val() + ", " + $("#hqState").val() + " " + $("#hqZip").val());
+				$( "#dialog-canNotVerify-confirmHQ" ).append("We could not verify the following address:<br />" + $("#hqAddress").val() + "<br />" + $("#hqCity").val() + ", " + inputState + " " + $("#hqZip").val());
 				$( "#dialog-canNotVerify-confirmHQ").dialog({
 					resizable: false,
 					height:230,

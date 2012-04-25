@@ -99,7 +99,7 @@
 			('#form.uniqueid#', '#form.companyid#', #CreateODBCDate(now())#, '#form.firstname#', '#form.middlename#', '#form.lastname#', 
 			<cfif IsDefined('form.sex')>'#form.sex#'<cfelse>''</cfif>, 
 			<cfif form.dob EQ ''>NULL<cfelse>#CreateODBCDate(dob)#</cfif>,
-			'#form.drivers_license#', '#form.address#', '#form.city#', '#form.state#', '#form.country#', '#form.zip#', '#form.occupation#',
+			'#form.drivers_license#', '#TRIM(form.address)#', '#TRIM(form.city)#', '#TRIM(form.state)#', '#TRIM(form.country)#', '#TRIM(form.zip)#', '#form.occupation#',
 			'#form.businessname#', '#form.work_phone#', '#form.phone#', '#form.cell_phone#', '#form.fax#', '#form.email#', '#form.email2#',
 			'#form.usertype#', '#form.username#', '#form.password#', 
 			<cfqueryparam value = "#form.comments#" cfsqltype="cf_sql_longvarchar">)
