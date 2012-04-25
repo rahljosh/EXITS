@@ -27,7 +27,8 @@
     	<cfargument name="studentID" default="" hint="studentID is not required">
         <cfargument name="uniqueID" default="" hint="uniqueID is not required">
         <cfargument name="soID" default="" hint="INTO International Representative IDs">
-              
+        <cfargument name="companyID" default="" hint="CompanyID is not required">
+        
         <cfquery 
 			name="qGetStudentByID" 
 			datasource="#APPLICATION.DSN#">
@@ -52,7 +53,15 @@
                     AND
                         soID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.soID#">
                 </cfif>
-			
+                
+				<cfif ARGUMENTS.companyID EQ 5>
+                    AND          
+                        companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+                <cfelseif VAL(ARGUMENTS.companyID)>
+                    AND          
+                        companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                </cfif>
+
             LIMIT 1                
 		</cfquery>
 		   

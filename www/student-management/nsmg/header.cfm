@@ -6,12 +6,59 @@
     <cfparam name="url.menu" default="">
     <cfparam name="url.submenu" default="">
     <cfparam name="url.action" default="">
+
+    <!--- Quick Search Form --->
+    <cfparam name="FORM.quickSearchStudentID" default="">
+    <cfparam name="FORM.quickSearchHostFamilyID" default="">
 	
     <cfscript>
 		// check to make sure we have a valid companyID
 		if ( NOT VAL(CLIENT.companyID) ) {
 			CLIENT.companyID = 5;
 		}	
+
+		// Quick Search Student 
+        if ( VAL(FORM.quickSearchStudentID) ) {
+    
+            qQuickSearchStudent = APPLICATION.CFC.STUDENT.getStudentByID(studentID=FORM.quickSearchStudentID,companyID=CLIENT.companyID);
+        
+            // Student Found
+            if ( qQuickSearchStudent.recordCount ) {
+                
+                // Depending on usertype they see different student page
+                switch ( CLIENT.usertype ) {
+                    
+                    case 9:
+                        Location("index.cfm?curdoc=student_profile&uniqueID=#qQuickSearchStudent.uniqueID#", "no");
+                        break;
+                    
+                    case 27: 
+                        Location("index.cfm?curdoc=student/index&action=studentInformation&studentID=#qQuickSearchStudent.studentID#", "no");
+                        break;
+                    
+                    default:
+                        Location("index.cfm?curdoc=student_info&studentID=#qQuickSearchStudent.studentID#", "no");
+                }				
+            // Student Not Found
+			} else {
+				
+			}			
+        }
+		
+		// Quick Search Host Family
+        if ( VAL(FORM.quickSearchHostFamilyID) ) {
+			
+            qQuickSearchHostFamily = APPLICATION.CFC.HOST.getHosts(hostID=FORM.quickSearchHostFamilyID,companyID=CLIENT.companyID);
+		
+            // Host Found
+            if ( qQuickSearchHostFamily.recordCount ) {
+				Location("?curdoc=host_fam_info&hostID=#qQuickSearchHostFamily.hostID#", "no");
+			// Host Not Found
+			} else {
+				
+			}
+		
+		}
 	</cfscript>
 
     <cfquery name="get_messages" datasource="#application.dsn#">
@@ -82,13 +129,16 @@
 </head>
 <body>
 
-<!----
-<div id="top"><cfoutput><img src="pics/logos/#original_company_info.companyshort#_logo.gif"  alt="" border="0" align="right"><h2>#original_company_info.companyname#</cfoutput> <Cfif client.usertype lte 4> <font size=-2>[ <a href="stats/default.htm">stats</a> ]</font></Cfif></h2>
-<Cfif isdefined('client.name')><cfoutput>#client.name#</cfoutput> [<a href="index.cfm">Home</a>] [ <a href="logout.cfm">Logout</a> ] <cfif #Len(client.companies)# gt 1>[ <Cfoutput><A href="change_company_view.cfm?curdoc=#url.curdoc#">Change Company</A></Cfoutput> ]</cfif> <cfelse>[ <as href="loginform.cfm">Login</a> ]</Cfif> </div>
----->
+<script type="text/javascript">
+	// Avoid two selections on quick search
+	var quickSearchValidation = function(formID) {		
+		$("#" + formID).val("");
+	}
+</script>
+
 <cfoutput>
 
-<table width="100%" bgcolor="##FFFFFF" cellpadding=0 cellspacing=0 border=0 <cfif APPLICATION.isServerLocal> background="pics/development.jpg" <cfelse> background="pics/#client.companyid#_header.png" </cfif> >
+<table width="100%" bgcolor="##FFFFFF" cellpadding="0" cellspacing="0" border="0" <cfif APPLICATION.isServerLocal> background="pics/development.jpg" <cfelse> background="pics/#client.companyid#_header.png" </cfif> >
 	<tr>
 		<td valign="top">
             <table>
@@ -107,66 +157,100 @@
 						#client.name# [<a href="index.cfm">Home</a>] [ <a href="index.cfm?curdoc=logout">Logout</a> ]
                     </div>
                     </td>
-                    <!----<td>
-                    <a href="http://spreadfirefox.com/community/?q=affiliates&amp;id=114920&amp;t=82"><img border="0" alt="Firefox 2" title="Firefox 2"  src="http://sfx-images.mozilla.org/affiliates/Buttons/firefox2/firefox-spread-btn-1.png"/ align="absmiddle"></a>
-                    </td>---->
                 </tr>
             </table>
 		</td>
-   		<!----<td align="left">
+        
+   		<!----
+		<td align="left">
 		<cfinclude template="tools/region_access.cfm">
-		</td>---->
+		</td>
+		---->
 
 		<cfif not isDefined('url.novelaro')>
-            <cfif client.usertype eq 8 >
+        
+            <cfif CLIENT.usertype eq 8>
                 <td>		
-                    <!-- http://www.LiveZilla.net Chat Button Link Code --><a href="javascript:void(window.open('http://www.exitsapplication.com/livezilla/livezilla.php','','width=600,height=600,left=0,top=0,resizable=yes,menubar=no,location=yes,status=yes,scrollbars=yes'))"><img src="https://www.exitsapplication.com/livezilla/image.php?id=04" width="128" height="42" border="0" alt="LiveZilla Live Help"></a><noscript><div></div></noscript><!-- http://www.LiveZilla.net Chat Button Link Code --><!-- http://www.LiveZilla.net Tracking Code --><div id="livezilla_tracking" style="display:none"></div><script language="JavaScript" type="text/javascript">var script = document.createElement("script");script.type="text/javascript";var src = "http://www.exitsapplication.com/livezilla/server.php?request=track&output=jcrpt&nse="+Math.random();setTimeout("script.src=src;document.getElementById('livezilla_tracking').appendChild(script)",1);</script><!-- http://www.LiveZilla.net Tracking Code -->
-                         
-                </td>
-               <cfelse>
-                        <td>	
-				<!----	
-                  <!-- http://www.LiveZilla.net Tracking Code --><div id="livezilla_tracking" style="display:none"></div><script language="JavaScript" type="text/javascript">var script = document.createElement("script");script.type="text/javascript";var src = "http://www.exitsapplication.com/livezilla/server.php?request=track&output=jcrpt&nse="+Math.random();setTimeout("script.src=src;document.getElementById('livezilla_tracking').appendChild(script)",1);</script><!-- http://www.LiveZilla.net Tracking Code -->      
-               ---->
-			    </td>
-               
+                    <!-- http://www.LiveZilla.net Chat Button Link Code -->
+                    <a href="javascript:void(window.open('http://www.exitsapplication.com/livezilla/livezilla.php','','width=600,height=600,left=0,top=0,resizable=yes,menubar=no,location=yes,status=yes,scrollbars=yes'))"><img src="https://www.exitsapplication.com/livezilla/image.php?id=04" width="128" height="42" border="0" alt="LiveZilla Live Help"></a>
+                    <noscript><div></div></noscript>
+                    <!-- http://www.LiveZilla.net Chat Button Link Code --><!-- http://www.LiveZilla.net Tracking Code -->
+                    <div id="livezilla_tracking" style="display:none"></div>
+					<script language="JavaScript" type="text/javascript">var script = document.createElement("script");script.type="text/javascript";var src = "http://www.exitsapplication.com/livezilla/server.php?request=track&output=jcrpt&nse="+Math.random();setTimeout("script.src=src;document.getElementById('livezilla_tracking').appendChild(script)",1);</script>
+                    <!-- http://www.LiveZilla.net Tracking Code -->
+				</td>
+			<!----
+			<cfelse>		
+				<td>	
+					<!-- http://www.LiveZilla.net Tracking Code --><div id="livezilla_tracking" style="display:none"></div><script language="JavaScript" type="text/javascript">var script = document.createElement("script");script.type="text/javascript";var src = "http://www.exitsapplication.com/livezilla/server.php?request=track&output=jcrpt&nse="+Math.random();setTimeout("script.src=src;document.getElementById('livezilla_tracking').appendChild(script)",1);</script><!-- http://www.LiveZilla.net Tracking Code -->      
+				</td>
+			---->
             </cfif> 
+            
         </cfif>
 		
 		<td valign="top">
-            <u>Site Stats</u><br>
-			<cfif client.usertype LTE 4>
+            <u>Site Stats</u><br />
+			<cfif listFind("1,2,3,4", CLIENT.userType)>
             	<a href="?curdoc=trackman">Users Online: #structcount(Application.Online)#</a>
             <cfelse>
             	Users Online: #structcount(Application.Online)#
             </cfif>
-            <br>
-            
 		</td>
 		
-		<cfif alert_messages.recordcount NEQ 0>
+		<cfif alert_messages.recordcount>
 			<td bgcolor="##cc0000" valign="top">
                 <div class="alerts"> 
                 <h3>Alerts & Notifications</h3> 
                 <cfloop query="alert_messages">
-                    <a class=nav_bar href="" onClick="javascript: win=window.open('message_details.cfm?id=#alert_messages.messageid#', 'Details', 'height=480, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><font color="white">#alert_messages.message#</font></a><br>
+                    <a class=nav_bar href="" onClick="javascript: win=window.open('message_details.cfm?id=#alert_messages.messageid#', 'Details', 'height=480, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><font color="white">#alert_messages.message#</font></a><br />
                 </cfloop>
 				</div>
 			</td>
         </cfif>
 		
-		<cfif update_messages.recordcount NEQ 0>
+		<cfif update_messages.recordcount>
 			<td bgcolor="##005b01" valign="top">
                 <div class="updates">
                 <h3>System Updates</h3>
                 <cfloop query="update_messages">
-                	<a class=nav_bar href="" onClick="javascript: win=window.open('message_details.cfm?id=#update_messages.messageid#', 'Details', 'height=480, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><font color="white">#message#</font></a><br>
+                	<a class=nav_bar href="" onClick="javascript: win=window.open('message_details.cfm?id=#update_messages.messageid#', 'Details', 'height=480, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><font color="white">#message#</font></a><br />
                 </cfloop>
                 </div>
 			</td>
 		</cfif>
 
-        <td align="right" rowspan="2" valign="top">
+        <!--- Quick Search Options --->
+		<cfif listFind("1", CLIENT.userType)>
+            <td valign="top">
+                
+                <table width="280px" cellpadding="2" cellspacing="0" class="quickSearchTable" align="right">
+                    <tr>
+                        <th colspan="3">
+                            Quick Search
+                           	<!--- Display Error Messages Here ---> 
+                           	<cfif VAL(FORM.quickSearchStudentID) OR VAL(FORM.quickSearchHostFamilyID)>
+                            	<span>record not found</span>	
+                            </cfif>
+                        </th>
+                    </tr>
+                    <form name="quickSearchForm" method="post" action="" style="margin:0px; padding:0px;">
+                        <tr class="on">
+                            <td class="subTitleRightNoBorderMiddle">Student ID: </td>
+                            <td><input type="text" name="quickSearchStudentID" id="quickSearchStudentID" value="#FORM.quickSearchStudentID#" onclick="quickSearchValidation('quickSearchHostFamilyID');" class="xSmallField" maxlength="6" /></td>
+                            <td rowspan="2"><input type="image" src="pics/submitBlue.png" align="center" border="0"></td>
+                        </tr>
+                        <tr class="on">
+                            <td class="subTitleRightNoBorderMiddle">Host Family ID: </td>
+                            <td><input type="text" name="quickSearchHostFamilyID" id="quickSearchHostFamilyID" value="#FORM.quickSearchHostFamilyID#" onclick="quickSearchValidation('quickSearchStudentID');" class="xSmallField" maxlength="6" /></td>
+                        </tr>
+                    </form> 
+                </table>
+                
+            </td>
+        </cfif>
+		
+        <td width="130" align="right" rowspan="2" valign="top">
             <cfif client.usertype EQ 8 OR client.usertype EQ 11>
                 <cfif client.usertype eq 11>
                     <cfquery name="get_intrep" datasource="#application.dsn#">
@@ -209,14 +293,14 @@
         <td colspan=8 valign="bottom" align="right"><img src="pics/logos/#client.companyid#_px.png" height=12 width="100%"></td>
     </tr>
 </table>
-<table width="100%" cellspacing=0 cellpadding=0 bgcolor="eeeeee">
+<table width="100%" cellspacing="0" cellpadding="0" bgcolor="eeeeee">
 	<tr> 
 		<td>
            <cfinclude template="menu.cfm">
 		</td>
 	</tr>
 </table>
-<table width="100%" cellspacing=0 cellpadding=0>
+<table width="100%" cellspacing="0" cellpadding="0">
 	<tr> 
 		<td><img src="pics/logos/#client.companyid#_px.png" width="100%" height="1"></td>
 	</tr>
