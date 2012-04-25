@@ -312,6 +312,7 @@
 ********************************************/
 .quickSearchTable {
 	border:1px solid #085dad;
+	margin-top:1px;
 }
 
 .quickSearchTable th {
