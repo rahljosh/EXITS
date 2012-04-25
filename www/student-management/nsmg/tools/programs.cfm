@@ -4,29 +4,34 @@
 
 <Cfquery name="programs" datasource="MySQL">
 	SELECT 
-    	programid, programname, type, smg_programs.startdate, smg_programs.enddate, insurance_startdate, insurance_enddate, smg_programs.companyid, programfee,
-        application_fee, insurance_w_deduct, insurance_wo_deduct, blank, hold, smg_programs.tripid, smg_programs.active, smg_programs.fieldviewable,
+    	programid, programname, type, p.startdate, p.enddate, insurance_startdate, insurance_enddate, p.companyid, programfee,
+        application_fee, insurance_w_deduct, insurance_wo_deduct, blank, hold, p.tripid, p.active, p.fieldviewable,
         smg_companies.companyshort,
         smg_program_type.programtype,
         smg_incentive_trip.trip_place, smg_incentive_trip.trip_year,
         smg_seasons.season,
         smg.season as smgseason
 	FROM 
-    	smg_programs
+    	smg_programs p
 	INNER JOIN 
-    	smg_companies ON smg_companies.companyid = smg_programs.companyid
+    	smg_companies ON smg_companies.companyid = p.companyid
 	LEFT JOIN 
-    	smg_program_type ON smg_program_type.programtypeid = smg_programs.type
+    	smg_program_type ON smg_program_type.programtypeid = p.type
 	LEFT JOIN 
-    	smg_incentive_trip ON smg_incentive_trip.tripid = smg_programs.tripid
+    	smg_incentive_trip ON smg_incentive_trip.tripid = p.tripid
 	LEFT JOIN 
-    	smg_seasons ON smg_seasons.seasonid = smg_programs.seasonid
+    	smg_seasons ON smg_seasons.seasonid = p.seasonid
 	LEFT JOIN 
-    	smg_seasons smg ON smg.seasonid = smg_programs.smgseasonid
+    	smg_seasons smg ON smg.seasonid = p.smgseasonid
 	WHERE 
-    	smg_programs.active = <cfqueryparam value="#URL.active#" cfsqltype="cf_sql_integer">
-	AND 
-    	smg_programs.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12,13" list="yes">)
+    	p.active = <cfqueryparam value="#URL.active#" cfsqltype="cf_sql_integer">
+    <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, CLIENT.companyID)>
+        AND 
+            p.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12,13" list="yes">)
+	<cfelse>
+        AND 
+            p.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+    </cfif>
 	ORDER BY     	
         endDate DESC
 </Cfquery>

@@ -1,12 +1,3 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link rel="stylesheet" type="text/css" href="../smg.css">
-<title>New Policy Code</title>
-</head>
-
 <script type="text/javascript">
 <!--
 function CheckData() {
@@ -22,28 +13,34 @@ if (document.new_program.smg_trip.value == '0') {
 //-->
 </script>
 
-<body>
-
-<cfquery name="program_types" datasource="mysql">
+<cfquery name="qGetProgramTypeList" datasource="mysql">
 	SELECT * 
 	FROM smg_program_type
 	WHERE systemid = '1'
 		AND active = '1'
 	ORDER BY programtype
 </cfquery>
-<cfquery name="student_app_program_types" datasource="mysql">
-	SELECT app_programid, app_program 
-	FROM smg_student_app_programs
-	WHERE  companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12,13" list="yes">)
-    and isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-	ORDER BY app_program
+
+<cfquery name="qGetStudentAppProgramTypeList" datasource="mysql">
+	SELECT 
+    	app_programid, 
+        app_program 
+	FROM 
+    	smg_student_app_programs
+	WHERE  
+        companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> )
+    AND 
+    	isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+	ORDER BY 
+    	app_program
 </cfquery>
-<cfquery name="smg_trips" datasource="MySql">
+
+<cfquery name="qGetTripList" datasource="MySql">
 	SELECT tripid, trip_place, trip_year  
 	FROM smg_incentive_trip
 </cfquery>
 
-<cfquery name="smg_seasons" datasource="MySql">
+<cfquery name="qGetSeasonList" datasource="MySql">
 	SELECT seasonid, season
 	FROM smg_seasons
 </cfquery>
@@ -76,7 +73,7 @@ if (document.new_program.smg_trip.value == '0') {
 				<td align="right">Program Type: </td>
 				<td> <select name="type">
 					<option value=00>Select Type</option>
-					<cfloop query="program_types">
+					<cfloop query="qGetProgramTypeList">
 					<option value="#programtypeid#">#programtype#</option>
 					</cfloop>
 					</select>
@@ -86,7 +83,7 @@ if (document.new_program.smg_trip.value == '0') {
 				<td align="right">Student Application: </td>
 				<td> <select name="studentAppType">
 					<option value=00>Select Type</option>
-					<cfloop query="student_app_program_types">
+					<cfloop query="qGetStudentAppProgramTypeList">
 					<option value="#app_programid#">#app_program#</option>
 					</cfloop>
 					</select>
@@ -116,7 +113,7 @@ if (document.new_program.smg_trip.value == '0') {
 			<tr><td align="right">Program Season:</td>
 				<td><cfselect name="seasonid" required="yes" message="You must select a season for the program">
 					<option value="0"></option>
-					<cfloop query="smg_seasons">
+					<cfloop query="qGetSeasonList">
 					<option value="#seasonid#">#season#</option>
 					</cfloop>
 					</cfselect></td>
@@ -126,7 +123,7 @@ if (document.new_program.smg_trip.value == '0') {
 			<tr><td align="right">Season:</td>
 				<td><select name="smgseasonid">
 					<option value="0"></option>
-					<cfloop query="smg_seasons">
+					<cfloop query="qGetSeasonList">
 					<option value="#seasonid#">#season#</option>
 					</cfloop>
 					</select></td>
@@ -136,7 +133,7 @@ if (document.new_program.smg_trip.value == '0') {
 			<tr><td align="right">Incentive Trip:</td>
 				<td><cfselect name="smg_trip" required="yes" message="You must select an incentive trip for the program">
 					<option value="0"></option>
-					<cfloop query="smg_trips">
+					<cfloop query="qGetTripList">
 					<option value="#tripid#">#trip_place#</option>
 					</cfloop>
 					</cfselect></td>
@@ -160,7 +157,3 @@ if (document.new_program.smg_trip.value == '0') {
 </cfform>
 
 </cfoutput>
-<br><br>
-
-</body>
-</html>
