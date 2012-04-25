@@ -555,7 +555,7 @@
                     <td></td>
                 </tr>
                 <tr>
-                   	<td class="get_attention"><span class="get_attention"><b>::</b></span> Marketing Material <img src="pics/new_03.png" /></td>
+                   	<td class="get_attention"><span class="get_attention"><b>::</b></span> Marketing Material</td>
                     <td class="get_attention"><span class="get_attention"><b>::</b></span> New Users <font size=-2>since #new_date#</font></u></td>
                 </tr>
                 <tr valign="top">
@@ -563,6 +563,7 @@
                   <!---_Available for All companies---->
                   	<cfif ListFind("1,2,3,4,5,10,12,14", CLIENT.companyid) >
                     Here are some new brochures to help in your marketing.<Br />
+                    <a href="marketing/HostFam2012/HostFamiles.cfm" target="_blank">Host Families</a><img src="pics/new_03.png" /><br />
                     <a href="marketing/openHeart.cfm" target="_blank">Open Heart & Soul</a><br />
                  	<A href="marketing/aroundWorld.cfm" target="_blank"> School Around the World</A><Br />
                     <cfif ListFind("1,2,3,4,5,10,12", CLIENT.companyid) >
