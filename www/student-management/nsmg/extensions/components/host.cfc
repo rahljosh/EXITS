@@ -29,6 +29,7 @@
 	<cffunction name="getHosts" access="public" returntype="query" output="false" hint="Gets a list with hosts, if HostID is passed gets a Host by ID">
     	<cfargument name="hostID" default="" hint="HostID is not required">
         <cfargument name="regionID" default="" hint="regionID is not required">
+        <cfargument name="companyID" default="" hint="CompanyID is not required">
         
         <cfquery 
 			name="qGetHosts" 
@@ -191,6 +192,14 @@
                 <cfif LEN(ARGUMENTS.regionID)>
                     AND
                         regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
+                </cfif>
+                
+				<cfif ARGUMENTS.companyID EQ 5>
+                    AND          
+                        companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+                <cfelseif VAL(ARGUMENTS.companyID)>
+                    AND          
+                        companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
                 </cfif>
                     
                 ORDER BY 
