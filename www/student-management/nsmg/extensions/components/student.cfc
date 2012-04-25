@@ -28,6 +28,7 @@
         <cfargument name="uniqueID" default="" hint="uniqueID is not required">
         <cfargument name="soID" default="" hint="INTO International Representative IDs">
         <cfargument name="companyID" default="" hint="CompanyID is not required">
+        <cfargument name="onlyApprovedApps" default="0" hint="onlyApprovedApps is not required">
         
         <cfquery 
 			name="qGetStudentByID" 
@@ -54,14 +55,20 @@
                         soID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.soID#">
                 </cfif>
                 
-				<cfif ARGUMENTS.companyID EQ 5>
+				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
                     AND          
-                        companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+                        companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
                 <cfelseif VAL(ARGUMENTS.companyID)>
                     AND          
                         companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
                 </cfif>
-
+				
+                <!--- SHOW ONLY APPS APPROVED --->
+                <cfif VAL(ARGUMENTS.onlyApprovedApps)>
+					AND                    					
+                    	app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">                
+                </cfif>
+                
             LIMIT 1                
 		</cfquery>
 		   

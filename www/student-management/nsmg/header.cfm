@@ -20,7 +20,7 @@
 		// Quick Search Student 
         if ( VAL(FORM.quickSearchStudentID) ) {
     
-            qQuickSearchStudent = APPLICATION.CFC.STUDENT.getStudentByID(studentID=FORM.quickSearchStudentID,companyID=CLIENT.companyID);
+            qQuickSearchStudent = APPLICATION.CFC.STUDENT.getStudentByID(studentID=FORM.quickSearchStudentID,companyID=CLIENT.companyID,onlyApprovedApps=1);
         
             // Student Found
             if ( qQuickSearchStudent.recordCount ) {
@@ -221,7 +221,7 @@
 		</cfif>
 
         <!--- Quick Search Options --->
-		<cfif listFind("1", CLIENT.userType)>
+		<cfif listFind("1,2,3,4", CLIENT.userType)>
             <td valign="top">
                 
                 <table width="280px" cellpadding="2" cellspacing="0" class="quickSearchTable" align="right">
