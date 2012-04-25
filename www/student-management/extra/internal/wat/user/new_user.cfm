@@ -49,11 +49,11 @@ function UserName() {
 			// Check if this is a US address
 			if ($("#country").val() == 232) {
 				if (($("#address").val() != "") && ($("#city").val() != "") && ($("#zip").val() != "")) {
-					var address = $("#address").val();
-					var city = $("#city").val();
-					var state = $("#state").val();
-					var zip = $("#zip").val();
-					var country = $("#country").val();
+					var address = $.trim($("#address").val());
+					var city = $.trim($("#city").val());
+					var state = $.trim($("#state").val());
+					var zip = $.trim($("#zip").val());
+					var country = $.trim($("#country").val());
 		
 					udf.setCallbackHandler(checkAddress); 
 					udf.setErrorHandler(myErrorHandler);
@@ -63,10 +63,10 @@ function UserName() {
 				}
 			} else {
 				if (($("#address").val() != "") && ($("#city").val() != "") && ($("#zip").val() != "")) {
-					var address = $("#address").val();
-					var city = $("#city").val();
-					var zip = $("#zip").val();
-					var country = $("#country").val();
+					var address = $.trim($("#address").val());
+					var city = $.trim($("#city").val());
+					var zip = $.trim($("#zip").val());
+					var country = $.trim($("#country").val());
 					 
 					udf.setCallbackHandler(checkAddress); 
 					udf.setErrorHandler(myErrorHandler);
@@ -95,7 +95,7 @@ function UserName() {
 			var inputCountry = googleResponse.INPUTCOUNTRY;
 			var verifiedStateID = googleResponse.VERIFIEDSTATEID;
 			
-			if ((streetAddress == $("#address").val()) && (city == $("#city").val()) && (state == inputState) && (zip == $("#zip").val()))
+			if ((streetAddress == $.trim($("#address").val())) && (city == $.trim($("#city").val())) && (state == inputState) && (zip == $.trim($("#zip").val())))
 			{
 				$("#new_user").submit();
 			} else {
