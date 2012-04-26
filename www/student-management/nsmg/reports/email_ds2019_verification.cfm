@@ -54,31 +54,34 @@
             smg_countrylist citizen ON s.countrycitizen = citizen.countryid
         WHERE  
             s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-         AND 
-            s.verification_received IS NULL
-         AND 
-            s.ds2019_no = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-         AND 
-            s.onhold_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
-         AND  
-            s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> )
-         AND 
-         	s.countrybirth != <cfqueryparam cfsqltype="cf_sql_integer" value="232">
-         AND 
-         	s.countryresident != <cfqueryparam cfsqltype="cf_sql_integer" value="232">
-         AND 
-         	s.countrycitizen != <cfqueryparam cfsqltype="cf_sql_integer" value="232">		 
-		 <cfif CLIENT.companyID EQ 5>
-             AND 
-                s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
-         <cfelse>
-             AND 
-                s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#"> 
-         </cfif>
-         <cfif VAL(FORM.intrep)>
-            AND 
-                s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
-         </cfif>
+		<!--- SHOW ONLY APPS APPROVED --->
+		AND
+	        s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
+        AND 
+          s.verification_received IS NULL
+        AND 
+          s.ds2019_no = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+        AND 
+          s.onhold_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
+        AND  
+          s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> )
+        AND 
+          s.countrybirth != <cfqueryparam cfsqltype="cf_sql_integer" value="232">
+        AND 
+          s.countryresident != <cfqueryparam cfsqltype="cf_sql_integer" value="232">
+        AND 
+          s.countrycitizen != <cfqueryparam cfsqltype="cf_sql_integer" value="232">		 
+        <cfif CLIENT.companyID EQ 5>
+           AND 
+              s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+        <cfelse>
+           AND 
+              s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#"> 
+        </cfif>
+        <cfif VAL(FORM.intrep)>
+          AND 
+              s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
+        </cfif>
         ORDER BY 
             u.businessname, 
             s.familylastname, 
