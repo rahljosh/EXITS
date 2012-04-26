@@ -60,7 +60,9 @@
 <cfquery name="get_access" datasource="#application.dsn#">
     SELECT uar.id, uar.companyid, uar.regionid, uar.usertype, r.regionname, c.companyshort, c.team_id, ut.usertype AS usertypename
     FROM user_access_rights uar
-    LEFT JOIN smg_regions r ON uar.regionid = r.regionid
+    INNER JOIN smg_regions r ON uar.regionid = r.regionid
+    	AND
+        	r.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
     INNER JOIN smg_companies c ON uar.companyid = c.companyid
     INNER JOIN smg_usertype ut ON uar.usertype = ut.usertypeid
     WHERE c.website = '#client.company_submitting#'
