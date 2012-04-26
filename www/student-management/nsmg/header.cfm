@@ -9,6 +9,7 @@
 
     <!--- Quick Search Form --->
     <cfparam name="FORM.quickSearchStudentID" default="">
+    <cfparam name="FORM.quickSearchUserID" default="">
     <cfparam name="FORM.quickSearchHostFamilyID" default="">
 	
     <cfscript>
@@ -16,11 +17,16 @@
 		if ( NOT VAL(CLIENT.companyID) ) {
 			CLIENT.companyID = 5;
 		}	
-
+		
+		vQuickSearchNotFound = 0;
+		
 		// Quick Search Student 
         if ( VAL(FORM.quickSearchStudentID) ) {
-    
-            qQuickSearchStudent = APPLICATION.CFC.STUDENT.getStudentByID(studentID=FORM.quickSearchStudentID,companyID=CLIENT.companyID,onlyApprovedApps=1);
+    		
+			// Create Object
+			s = createObject("component","extensions.components.student");
+			
+            qQuickSearchStudent = s.getStudentByID(studentID=FORM.quickSearchStudentID,companyID=CLIENT.companyID,onlyApprovedApps=1);
         
             // Student Found
             if ( qQuickSearchStudent.recordCount ) {
@@ -41,23 +47,44 @@
                 }				
             // Student Not Found
 			} else {
-				
+				vQuickSearchNotFound = 1;	
 			}			
         }
 		
 		// Quick Search Host Family
         if ( VAL(FORM.quickSearchHostFamilyID) ) {
 			
-            qQuickSearchHostFamily = APPLICATION.CFC.HOST.getHosts(hostID=FORM.quickSearchHostFamilyID,companyID=CLIENT.companyID);
+			// Create Object
+			h = createObject("component","extensions.components.host");
+			
+            qQuickSearchHostFamily = h.getHosts(hostID=FORM.quickSearchHostFamilyID,companyID=CLIENT.companyID);
 		
             // Host Found
             if ( qQuickSearchHostFamily.recordCount ) {
 				Location("?curdoc=host_fam_info&hostID=#qQuickSearchHostFamily.hostID#", "no");
 			// Host Not Found
 			} else {
-				
+				vQuickSearchNotFound = 1;
 			}
 		
+		}
+		
+		// Quick Search User
+		if ( VAL(FORM.quickSearchUserID) ) {
+			
+			// Create Object
+			u = createObject("component","extensions.components.user");
+			
+			qQuickSearchUser = u.getUsers(userID=FORM.quickSearchUserID,companyID=CLIENT.companyID);
+			
+			// User Found
+			if ( qQuickSearchUser.recordCount ) {
+				Location("?curdoc=user_info&userID=#qQuickSearchUser.userID#", "no");
+			// Host Not Found
+			} else {
+				vQuickSearchNotFound = 1;
+			}
+			
 		}
 	</cfscript>
 
@@ -131,8 +158,8 @@
 
 <script type="text/javascript">
 	// Avoid two selections on quick search
-	var quickSearchValidation = function(formID) {		
-		$("#" + formID).val("");
+	var quickSearchValidation = function() {		
+		$(".quickSearchField").val("");
 	}
 </script>
 
@@ -223,30 +250,30 @@
         <!--- Quick Search Options --->
 		<cfif listFind("1,2,3,4", CLIENT.userType)>
             <td valign="top">
-                
-                <table width="280px" cellpadding="2" cellspacing="0" class="quickSearchTable" align="right">
+                <form name="quickSearchForm" method="post" action="" style="margin:0px; padding:0px;">
+                <table width="300px" cellpadding="2" cellspacing="0" class="quickSearchTable" align="right">
                     <tr>
-                        <th colspan="3">
+                        <th colspan="4">
                             Quick Search
                            	<!--- Display Error Messages Here ---> 
-                           	<cfif VAL(FORM.quickSearchStudentID) OR VAL(FORM.quickSearchHostFamilyID)>
+                           	<cfif VAL(vQuickSearchNotFound)>
                             	<span>record not found</span>	
                             </cfif>
                         </th>
                     </tr>
-                    <form name="quickSearchForm" method="post" action="" style="margin:0px; padding:0px;">
-                        <tr class="on">
-                            <td class="subTitleRightNoBorderMiddle">Student ID: </td>
-                            <td><input type="text" name="quickSearchStudentID" id="quickSearchStudentID" value="#FORM.quickSearchStudentID#" onclick="quickSearchValidation('quickSearchHostFamilyID');" class="xSmallField" maxlength="6" /></td>
-                            <td rowspan="2"><input type="image" src="pics/submitBlue.png" align="center" border="0"></td>
-                        </tr>
-                        <tr class="on">
-                            <td class="subTitleRightNoBorderMiddle">Host Family ID: </td>
-                            <td><input type="text" name="quickSearchHostFamilyID" id="quickSearchHostFamilyID" value="#FORM.quickSearchHostFamilyID#" onclick="quickSearchValidation('quickSearchStudentID');" class="xSmallField" maxlength="6" /></td>
-                        </tr>
-                    </form> 
+                    <tr class="on">
+                        <td class="subTitleRightNoBorderMiddle">Student ID: </td>
+                        <td><input type="text" name="quickSearchStudentID" id="quickSearchStudentID" value="#FORM.quickSearchStudentID#" onclick="quickSearchValidation();" class="xSmallField quickSearchField" maxlength="6" /></td>
+                        <td class="subTitleRightNoBorderMiddle">User ID: </td>
+                        <td><input type="text" name="quickSearchUserID" id="quickSearchUserID" value="#FORM.quickSearchUserID#" onclick="quickSearchValidation();" class="xSmallField quickSearchField" maxlength="6" /></td>
+                    </tr>
+                    <tr class="on">
+                        <td class="subTitleRightNoBorderMiddle">Host Family ID: </td>
+                        <td><input type="text" name="quickSearchHostFamilyID" id="quickSearchHostFamilyID" value="#FORM.quickSearchHostFamilyID#" onclick="quickSearchValidation();" class="xSmallField quickSearchField" maxlength="6" /></td>
+                    	<td colspan="2" align="center"><input type="image" src="pics/submitBlue.png" border="0"></td>
+                    </tr>
                 </table>
-                
+                </form> 
             </td>
         </cfif>
 		
