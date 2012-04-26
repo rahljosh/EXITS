@@ -25,9 +25,10 @@
 
 	
 	<cffunction name="getUsers" access="public" returntype="query" output="false" hint="Gets a list of users, if usertype is passed gets users by usertype">
-    	<cfargument name="userID" default="0" hint="userID is not required">
+    	<cfargument name="userID" default="" hint="userID is not required">
     	<cfargument name="usertype" default="0" hint="usertype is not required">
         <cfargument name="isActive" default="1" hint="isActive is not required">
+        <cfargument name="companyID" default="" hint="CompanyID is not required">
               
         <cfquery 
 			name="qGetUsers" 
@@ -41,9 +42,9 @@
                 WHERE
                 	1 = 1
 
-				<cfif VAL(ARGUMENTS.userID)>
+				<cfif LEN(ARGUMENTS.userID)>
                 	AND	
-                    	u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                    	u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
                 </cfif>
                     
                 <cfif LEN(ARGUMENTS.isActive)>
@@ -54,6 +55,14 @@
 				<cfif VAL(ARGUMENTS.usertype)>
                 	AND	
                     	uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.usertype#">
+                </cfif>
+
+				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
+                    AND          
+                        uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                <cfelseif VAL(ARGUMENTS.companyID)>
+                    AND          
+                        uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
                 </cfif>
                 
                 GROUP BY
@@ -699,6 +708,71 @@
 		</cfquery>
 		   
 		<cfreturn qGetTraining>
+	</cffunction>
+
+
+	<cffunction name="getExpiringTraining" access="public" returntype="query" output="false" hint="Gets a list of training expiring within 30 days">
+    	<cfargument name="companyID" hint="companyID is required">
+        <cfargument name="trainingID" default="2" hint="DOS Certification">
+
+        <cfquery 
+			name="qGetExpiringTraining" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+                	userID,
+                    userInformation,
+                    email,
+                    dateExpired
+				FROM
+                (                    
+                    SELECT DISTINCT
+                        u.userID,
+                        CONCAT(u.firstName, ' ', u.lastName) AS userInformation,
+                        u.email,
+                        <!--- Get Latest Training --->                
+                        (
+                            SELECT 
+                                DATE_ADD(sut.date_trained, INTERVAL 11 MONTH)
+                            FROM 
+                                smg_users_training sut
+                            WHERE 
+                                u.userID = sut.user_ID 
+                            AND	
+                                sut.training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.trainingID#">
+                            AND
+                                sut.has_passed = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                            ORDER BY 
+                                date_trained DESC
+                            LIMIT 1                            
+                        ) AS dateExpired
+                    FROM 
+                        smg_users u                   				 
+                    INNER JOIN	
+                        user_access_rights uar ON uar.userID = u.userID
+                        <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
+                            AND          
+                                uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                        <cfelseif VAL(ARGUMENTS.companyID)>
+                            AND          
+                                uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                        </cfif>
+                    INNER JOIN
+                        smg_users_training su ON su.user_ID = u.userID
+                            AND	
+                                su.training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.trainingID#">
+                            AND
+                                su.has_passed = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+					WHERE
+                    	u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">                                
+				) AS t
+                
+                WHERE
+                	CURRENT_DATE >= dateExpired                               
+                ORDER BY 
+                    userInformation
+		</cfquery>
+		   
+		<cfreturn qGetExpiringTraining>
 	</cffunction>
 
 
