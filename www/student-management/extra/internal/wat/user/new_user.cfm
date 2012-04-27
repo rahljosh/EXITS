@@ -82,6 +82,7 @@ function UserName() {
 	var checkAddress = function(googleResponse) { 
 	
 		var isAddressVerified = googleResponse.ISVERIFIED;
+		var inputState = googleResponse.INPUTSTATE;
 	
 		if ( isAddressVerified == 1 ) {
 			// Get Data Back	
@@ -91,7 +92,6 @@ function UserName() {
 			var zip = googleResponse.ZIP;
 			zip = zip.substring('zip='.length);
 			var country = googleResponse.COUNTRY;
-			var inputState = googleResponse.INPUTSTATE;
 			var inputCountry = googleResponse.INPUTCOUNTRY;
 			var verifiedStateID = googleResponse.VERIFIEDSTATEID;
 			
