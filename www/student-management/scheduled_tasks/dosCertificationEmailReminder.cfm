@@ -91,6 +91,7 @@
 					email_from="<megan@iseusa.com> (Megan Perlleshi - ISE)",
 					email_to=qGetIseExpiredTraining.email,
 					//email_bcc="support@iseusa.com",
+					email_replyto="megan@iseusa.com",
 					email_subject="Department of State Annual Certification deadline is approaching!",
 					email_message=vIseEmailMessage	
 				);
@@ -121,6 +122,7 @@
 					email_from="<stacy@case-usa.org> (Stacy Lynn - CASE)",
 					email_to=qGetCaseExpiredTraining.email,
 					email_bcc="stacy@case-usa.org",
+					email_replyto="stacy@case-usa.org",
 					email_subject="Department of State Annual Certification deadline is approaching!",
 					email_message=vCaseEmailMessage					
 				);
