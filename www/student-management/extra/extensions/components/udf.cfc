@@ -679,9 +679,10 @@
 			stResult.city = "";
 			stResult.state = "";
 			stResult.zip = "";
-		</cfscript>
-        <cftry>
-        	<cfscript>
+			
+			// Wrap it up with a try/catch just in case we haven't account for all possibilities
+			try {
+
 				if ( locationXML.kml.Response.Status.code.XmlText EQ 200 AND listFind("5", locationXML.kml.Response.Placemark.AddressDetails.XmlAttributes.Accuracy) ) {
 					
 					stResult.isVerified = 1;
@@ -691,6 +692,7 @@
 					stResult.zip = "zip=" & zip;
 					
 					if ( StructKeyExists(locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea, "SubAdministrativeArea") ) {
+						
 						if ( StructKeyExists(locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea, "Locality") ) {
 							stResult.city = locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.LocalityName.XmlText;
 						} else if ( StructKeyExists(locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea, "DependentLocality") ) {
@@ -698,7 +700,9 @@
 						} else {
 							stResult.isVerified = 0;
 						}
+						
 					} else {
+						
 						if ( StructKeyExists(locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea, "Locality") ) {
 							stResult.city = locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.Locality.LocalityName.XmlText;
 						} else if ( StructKeyExists(locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea, "DependentLocality") ) {
@@ -706,16 +710,14 @@
 						} else {
 							stResult.isVerified = 0;
 						}
+						
 					}
 				}
-			</cfscript>
-            <cfcatch type="any">
-            	<cfscript>
-					stResult.isVerified = 0;
-				</cfscript>
-          	</cfcatch>
-      	</cftry>
-        <cfscript>           
+
+			} catch( Any e ) {
+				stResult.isVerified = 0;
+			}        
+
 			return stResult;
         </cfscript>
             
