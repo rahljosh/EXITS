@@ -34,7 +34,7 @@
 
 <cfscript>
 	// Get Canada Area Choice
-	qGetCanadaAreaChoiceList = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(
+	qGetCanadaAreaChoiceList = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUP(
 		applicationID=APPLICATION.CONSTANTS.type.publicHighSchool,
 		fieldKey='canadaAreaChoice',
 		includeFieldIDList=get_student_info.app_canada_area
@@ -82,6 +82,7 @@
         qAppProgramList
     WHERE 
         app_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="regular">
+       
 </cfquery>
  
 <cfquery name="qAppAddPrograms" dbtype="query">
@@ -248,7 +249,7 @@ $(document).ready(function() {
                               display="programName"
                               selected="#programID#"
                               bindonload="yes"
-                              bind="cfc:nsmg.extensions.components.program.qGetActiveInternalPrograms(programTypeID={app_indicated_program}, currentProgramID=#get_student_info.programID#)" />
+                              bind="cfc:nsmg.extensions.components.program.qGetActiveInternalPrograms(programTypeID={app_indicated_program}, currentProgramID=#get_student_info.programID#,companyid=#client.companyid#)" />
                               
                               
                       </cfif>
