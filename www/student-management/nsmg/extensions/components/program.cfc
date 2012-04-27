@@ -222,7 +222,8 @@
 	<!----Get available acive programs that match the type of program selected---->
     <cffunction name="qGetActiveInternalPrograms" access="remote" output="no" returntype="query" hint="Gets a list of active programs associated with the program type indicated. Needs to get the program type id." verifyclient="no" securejson="false">
     	<cfargument name="programTypeID" default="0" hint="programTypeID is not required">
-        <cfargument name="currentprogramID" default="0" hing="currentprogramID is not required">
+        <cfargument name="currentprogramID" default="0" hint="currentprogramID is not required">
+        <cfargument name="companyID" default="0" hint="pass in companyid if only need specific company">
 		
         <cfquery 
 			name="qGetActiveInternalPrograms" 
@@ -247,7 +248,11 @@
                     active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                 AND
                     applicationDeadline >= <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
-                
+                <CFif not listFind('1,2,3,4,5,10,12','#ARGUMENTS.companyid#')> 
+                    and companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyid#">
+                <Cfelse>
+                	and companyID != <cfqueryparam cfsqltype="cf_sql_integer" value="14">
+                </CFif>
                 <cfif VAL(ARGUMENTS.currentprogramID)>
                 	OR
                 		programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.currentprogramID#">
