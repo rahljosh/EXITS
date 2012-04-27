@@ -744,6 +744,7 @@
 	var checkAddress = function(googleResponse) { 
 
 		var isAddressVerified = googleResponse.ISVERIFIED;
+		var inputState = googleResponse.INPUTSTATE;
 	
 		if ( isAddressVerified == 1 ) {
 		
@@ -753,7 +754,6 @@
 			var state = googleResponse.STATE;
 			var zip = googleResponse.ZIP
 			zip = zip.substring('zip='.length);
-			var inputState = googleResponse.INPUTSTATE;
 			var verifiedStateID = googleResponse.VERIFIEDSTATEID;
 			
 			if ((streetAddress == $.trim($("#address").val())) && (city == $.trim($("#city").val())) && (state == inputState) && (zip == $.trim($("#zip").val())))
@@ -833,6 +833,7 @@
 	var checkHQAddress = function(googleResponse) { 
 
 		var isAddressVerified = googleResponse.ISVERIFIED;
+		var inputState = googleResponse.INPUTSTATE;
 
 		if ( isAddressVerified == 1 ) {
 		
@@ -842,7 +843,6 @@
 			var hqState = googleResponse.STATE;
 			var hqZip = googleResponse.ZIP;
 			hqZip = hqZip.substring('zip='.length);
-			var inputState = googleResponse.INPUTSTATE;
 			var verifiedStateID = googleResponse.VERIFIEDSTATEID;
 				
 			if ((streetAddress == $.trim($("#hqAddress").val())) && (hqCity == $.trim($("#hqCity").val())) && (hqState == inputState) && (hqZip == $.trim($("#hqZip").val())))
