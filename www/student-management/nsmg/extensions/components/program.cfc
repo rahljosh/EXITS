@@ -77,9 +77,9 @@
                         p.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
                 <cfelse>
                     AND
-                        p.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12,13" list="yes">)
-                </cfif>	                
-                    
+                        p.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.publicHS#" list="yes">)
+                </cfif>	    
+                
 				<cfif VAL(ARGUMENTS.programID)>
                 	AND
                     	p.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">
@@ -248,11 +248,15 @@
                     active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                 AND
                     applicationDeadline >= <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
-                <CFif not listFind('1,2,3,4,5,10,12','#ARGUMENTS.companyid#')> 
-                    and companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyid#">
-                <Cfelse>
-                	and companyID != <cfqueryparam cfsqltype="cf_sql_integer" value="14">
-                </CFif>
+                
+				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, ARGUMENTS.companyid)> 
+                    AND 
+                    	companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.publicHS#" list="yes"> )
+                <cfelse>
+                	AND 
+                    	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyid#">
+                </cfif>
+                
                 <cfif VAL(ARGUMENTS.currentprogramID)>
                 	OR
                 		programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.currentprogramID#">
