@@ -171,6 +171,11 @@
             <cfif CLIENT.companyID EQ 5>
                 AND 
                     c.website = <cfqueryparam cfsqltype="cf_sql_varchar" value="SMG">
+            <cfelseif client.companyID eq 14>
+                 AND 
+                    p.is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                AND 
+                    p.companyID = (<cfqueryparam cfsqltype="cf_sql_integer" value="14" list="yes">)           
             <cfelse>
                 AND 
                     p.is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
