@@ -236,7 +236,7 @@
                     </td>
 					<td class="style1">#sex#</td>
 					<td class="style1">#countryname#</td>
-                    <td class="style1">#APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='section1', foreignTable=APPLICATION.foreignTable, foreignID=qGetCandidates.candidateID, applicationQuestionID=27).answer#</td>
+                    <td class="style1">#APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='section1', foreignTable=APPLICATION.foreignTable, foreignID=VAL(qGetCandidates.candidateID), applicationQuestionID=27).answer#</td>
 					<td class="style1">#name#</td>
                     <td class="style1">#change_requested_comment#</td>
 					<td class="style1">#englishAssessment#</td>
