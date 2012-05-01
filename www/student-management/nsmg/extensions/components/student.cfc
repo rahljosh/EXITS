@@ -2737,17 +2737,7 @@
                 FROM 
                 	smg_students
                 WHERE 
-                	 active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                AND                    					
                     app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">                
-
-				<cfif IsNumeric(ARGUMENTS.searchString)>
-                    AND
-                    	studentID LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
-                <cfelse>
-                    AND 
-                    	familyLastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
-                </cfif>				
 
 				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
                     AND          
@@ -2756,6 +2746,18 @@
                     AND          
                         companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
                 </cfif>
+
+				<cfif IsNumeric(ARGUMENTS.searchString)>
+                    AND
+                    	studentID LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+                <cfelse>
+                    AND 
+                    	(
+                        	familyLastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+	                    OR
+    	                	firstName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+        				)
+                </cfif>				
 				
                 ORDER BY 
                     familyLastName,

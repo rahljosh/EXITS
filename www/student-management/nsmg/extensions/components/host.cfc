@@ -274,8 +274,14 @@
                     	hostID LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
                 <cfelse>
                     AND 
-                    	familyLastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
-                </cfif>	
+                    	(                        
+                        	familyLastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+                		OR
+                        	fatherFirstName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+                        OR
+                        	motherFirstName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+						)
+				</cfif>	
 
                 ORDER BY 
                     familyLastName
