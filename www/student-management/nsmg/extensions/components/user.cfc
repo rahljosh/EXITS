@@ -114,7 +114,18 @@
 			datasource="#APPLICATION.dsn#">
                 SELECT DISTINCT
                 	u.userID,
-					CAST( CONCAT(u.lastName, ', ', u.firstName, ' (##', u.userID, ')' ) AS CHAR) AS displayName
+                    (
+                        CASE                     
+                            WHEN 
+                                u.businessName = '' 
+                            THEN 
+                                CAST( CONCAT(u.lastName, ', ', u.firstName, ' (##', u.userID, ')' ) AS CHAR)                                    
+                            WHEN 
+                                u.businessName != '' 
+                            THEN 
+                                CAST( CONCAT(u.lastName, ', ', u.firstName, ' (##', u.userID, ') - ', u.businessName ) AS CHAR) 
+                        END
+                    ) AS displayName                      
                 FROM 
                 	smg_users u
                 INNER JOIN
@@ -131,9 +142,9 @@
 					<cfif IsNumeric(ARGUMENTS.searchString)>
                     	u.userID LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
                     <cfelse>
-                    	u.lastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
-                    OR
-                    	u.businessName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+                            u.lastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+                        OR
+                            u.businessName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
 					</cfif>				
                     
                 ORDER BY 

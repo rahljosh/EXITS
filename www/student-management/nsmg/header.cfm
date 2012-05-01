@@ -26,6 +26,10 @@
 		// Quick Search Student 
         if ( VAL(FORM.quickSearchStudentID) ) {
     		
+			Location("index.cfm?curdoc=student_info&studentID=#FORM.quickSearchStudentID#", "no");
+			
+			/******* - No need to check if we have a valid record *******/
+			/*
 			// Create Object
 			s = createObject("component","extensions.components.student");
 			
@@ -51,12 +55,17 @@
             // Student Not Found
 			} else {
 				vQuickSearchNotFound = 1;	
-			}			
+			}	
+			*/
         }
 		
 		// Quick Search Host Family
         if ( VAL(FORM.quickSearchHostID) ) {
 			
+			Location("?curdoc=host_fam_info&hostID=#FORM.quickSearchHostID#", "no");
+			
+			/******* - No need to check if we have a valid record *******/
+			/*
 			// Create Object
 			h = createObject("component","extensions.components.host");
 			
@@ -69,12 +78,17 @@
 			} else {
 				vQuickSearchNotFound = 1;
 			}
+			*/
 		
 		}
 		
 		// Quick Search User
 		if ( VAL(FORM.quickSearchUserID) ) {
 			
+			Location("?curdoc=user_info&userID=#FORM.quickSearchUserID#", "no");
+			
+			/******* - No need to check if we have a valid record *******/
+			/*
 			// Create Object
 			u = createObject("component","extensions.components.user");
 			
@@ -87,6 +101,7 @@
 			} else {
 				vQuickSearchNotFound = 1;
 			}
+			*/
 			
 		}
 	</cfscript>
@@ -369,7 +384,7 @@
                         <tr class="on">
                             <td class="subTitleRightNoBorderMiddle">Host Family: </td>
                             <td><input type="text" name="quickSearchAutoSuggestHostID" id="quickSearchAutoSuggestHostID" value="#FORM.quickSearchAutoSuggestHostID#" onclick="quickSearchValidation();" class="mediumField quickSearchField" maxlength="20" /></td>
-                            <td colspan="2" align="center"><span class="note">Type in ID ## or Last Name</span></td>
+                            <td colspan="2" align="center"><span class="note">Type in ID ##, Name or Business Name</span></td>
                         </tr>
                     </table>
                 </cfform> 
