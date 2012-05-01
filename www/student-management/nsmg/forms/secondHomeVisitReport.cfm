@@ -615,6 +615,13 @@
     <cfset allow_delete = 1>
     <cfset allow_save = 1>
 	<Cfset show_save = 1>
+<cfelseif len(get_report.pr_ny_approved_date)>
+	  <cfset allow_edit = 0>
+	<cfset allow_approve = 0>
+	<cfset allow_reject = 0>
+    <cfset allow_delete = 0>
+    <cfset allow_save = 0>
+	<Cfset show_save = 0>
 </cfif>
 <!----toggle Edit/save function---->
 <cfif form.pr_action is 'save' or form.pr_action is 'print'>
