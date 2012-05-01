@@ -8,10 +8,13 @@
     <cfparam name="url.action" default="">
 
     <!--- Quick Search Form --->
+    <cfparam name="FORM.quickSearchAutoSuggestStudentID" default="">
     <cfparam name="FORM.quickSearchStudentID" default="">
+    <cfparam name="FORM.quickSearchAutoSuggestUserID" default="">
     <cfparam name="FORM.quickSearchUserID" default="">
-    <cfparam name="FORM.quickSearchHostFamilyID" default="">
-	
+    <cfparam name="FORM.quickSearchAutoSuggestHostID" default="">
+    <cfparam name="FORM.quickSearchHostID" default="">
+
     <cfscript>
 		// check to make sure we have a valid companyID
 		if ( NOT VAL(CLIENT.companyID) ) {
@@ -52,12 +55,12 @@
         }
 		
 		// Quick Search Host Family
-        if ( VAL(FORM.quickSearchHostFamilyID) ) {
+        if ( VAL(FORM.quickSearchHostID) ) {
 			
 			// Create Object
 			h = createObject("component","extensions.components.host");
 			
-            qQuickSearchHostFamily = h.getHosts(hostID=FORM.quickSearchHostFamilyID,companyID=CLIENT.companyID);
+            qQuickSearchHostFamily = h.getHosts(hostID=FORM.quickSearchHostID,companyID=CLIENT.companyID);
 		
             // Host Found
             if ( qQuickSearchHostFamily.recordCount ) {
@@ -100,15 +103,15 @@
         AND 
         	startdate < #now()#
         AND 
-        	lowest_level >= <cfqueryparam cfsqltype="cf_sql_integer" value="#client.usertype#">
+        	lowest_level >= <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.usertype#">
         AND 
           <cfif CLIENT.companyID EQ 10 or CLIENT.companyID EQ 11 or CLIENT.companyid EQ 13 or CLIENT.companyid EQ 14>
-          		companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+          		companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
           <cfelse>
         	(
             	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
             OR 
-            	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+            	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
             )
             </cfif>
         ORDER BY 
@@ -161,27 +164,118 @@
 	var quickSearchValidation = function() {		
 		$(".quickSearchField").val("");
 	}
+	
+	$(function() {
+
+		// Quick Search - Student Auto Suggest
+		$("#quickSearchAutoSuggestStudentID").autocomplete({
+
+			source: function(request, response) {
+				$.ajax({
+					url: "extensions/components/student.cfc?method=remoteLookUpStudent",
+					dataType: "json",
+					data: { 
+						searchString: request.term
+					},
+					success: function(data) {
+						response( $.map( data, function(item) {
+							return {
+								//label: item.DISPLAYNAME,
+								value: item.DISPLAYNAME,
+								valueID: item.STUDENTID
+							}
+						}));
+					}
+				})
+			},
+			select: function(event, ui) {
+				$("#quickSearchStudentID").val(ui.item.valueID);
+				$("#quickSearchForm").submit();
+			},
+			minLength: 2
+				
+		});
+
+		// Quick Search - Host Auto Suggest  
+		$("#quickSearchAutoSuggestHostID").autocomplete({
+
+			source: function(request, response) {
+				$.ajax({
+					url: "extensions/components/host.cfc?method=remoteLookUpHost",
+					dataType: "json",
+					data: { 
+						searchString: request.term
+					},
+					success: function(data) {
+						response( $.map( data, function(item) {
+							return {
+								//label: item.DISPLAYNAME,
+								value: item.DISPLAYNAME,
+								valueID: item.HOSTID
+							}
+						}));
+					}
+				})
+			},
+			select: function(event, ui) {
+				$("#quickSearchHostID").val(ui.item.valueID);
+				$("#quickSearchForm").submit();
+			},
+			minLength: 2
+				
+		});
+		
+		// Quick Search - User Auto Suggest
+		$("#quickSearchAutoSuggestUserID").autocomplete({
+														
+			source: function(request, response) {
+				$.ajax({
+					url: "extensions/components/user.cfc?method=remoteLookUpUser",
+					dataType: "json",
+					data: { 
+						searchString: request.term
+					},
+					success: function(data) {
+						response( $.map( data, function(item) {
+							return {
+								//label: item.DISPLAYNAME,
+								value: item.DISPLAYNAME,
+								valueID: item.USERID
+							}
+						}));
+					}
+				})
+			},
+			select: function(event, ui) {
+				$("#quickSearchUserID").val(ui.item.valueID);
+				$("#quickSearchForm").submit();
+			},
+			minLength: 2
+			
+		});
+		
+	});	
 </script>
 
 <cfoutput>
 
-<table width="100%" bgcolor="##FFFFFF" cellpadding="0" cellspacing="0" border="0" <cfif APPLICATION.isServerLocal> background="pics/development.jpg" <cfelse> background="pics/#client.companyid#_header.png" </cfif> >
+<table width="100%" bgcolor="##FFFFFF" cellpadding="0" cellspacing="0" border="0" <cfif APPLICATION.isServerLocal> background="pics/development.jpg" <cfelse> background="pics/#CLIENT.companyid#_header.png" </cfif> >
 	<tr>
 		<td valign="top">
             <table>
                 <tr> 
                     <td>
                     <div style="font: bold Arial,sans-serif; margin:0px; padding: 2px;" >
-                    	<font style="font: 150%">#client.companyname#</font> <img src="pics/logos/#client.companyid#_header_icon.png"><br>
-                        Program Manager is #client.programmanager#<br>
-						<cfif client.levels gt 1>
-                        	<a href="index.cfm?curdoc=forms/change_access_level" title="Change Access Level">#client.accesslevelname#</a>
+                    	<font style="font: 150%">#CLIENT.companyname#</font> <img src="pics/logos/#CLIENT.companyid#_header_icon.png"><br>
+                        Program Manager is #CLIENT.programmanager#<br>
+						<cfif CLIENT.levels gt 1>
+                        	<a href="index.cfm?curdoc=forms/change_access_level" title="Change Access Level">#CLIENT.accesslevelname#</a>
                         <cfelse>
-                        	#client.accesslevelname#
+                        	#CLIENT.accesslevelname#
                         </cfif>
                     </div>
                     <div style="padding: 2px;">
-						#client.name# [<a href="index.cfm">Home</a>] [ <a href="index.cfm?curdoc=logout">Logout</a> ]
+						#CLIENT.name# [<a href="index.cfm">Home</a>] [ <a href="index.cfm?curdoc=logout">Logout</a> ]
                     </div>
                     </td>
                 </tr>
@@ -250,55 +344,60 @@
         <!--- Quick Search Options --->
 		<cfif listFind("1,2,3,4", CLIENT.userType)>
             <td valign="top">
-                <form name="quickSearchForm" method="post" action="" style="margin:0px; padding:0px;">
-                <table width="300px" cellpadding="2" cellspacing="0" class="quickSearchTable" align="right">
-                    <tr>
-                        <th colspan="4">
-                            Quick Search
-                           	<!--- Display Error Messages Here ---> 
-                           	<cfif VAL(vQuickSearchNotFound)>
-                            	<span>record not found</span>	
-                            </cfif>
-                        </th>
-                    </tr>
-                    <tr class="on">
-                        <td class="subTitleRightNoBorderMiddle">Student ID: </td>
-                        <td><input type="text" name="quickSearchStudentID" id="quickSearchStudentID" value="#FORM.quickSearchStudentID#" onclick="quickSearchValidation();" class="xSmallField quickSearchField" maxlength="6" /></td>
-                        <td class="subTitleRightNoBorderMiddle">User ID: </td>
-                        <td><input type="text" name="quickSearchUserID" id="quickSearchUserID" value="#FORM.quickSearchUserID#" onclick="quickSearchValidation();" class="xSmallField quickSearchField" maxlength="6" /></td>
-                    </tr>
-                    <tr class="on">
-                        <td class="subTitleRightNoBorderMiddle">Host Family ID: </td>
-                        <td><input type="text" name="quickSearchHostFamilyID" id="quickSearchHostFamilyID" value="#FORM.quickSearchHostFamilyID#" onclick="quickSearchValidation();" class="xSmallField quickSearchField" maxlength="6" /></td>
-                    	<td colspan="2" align="center"><input type="image" src="pics/submitBlue.png" border="0"></td>
-                    </tr>
-                </table>
-                </form> 
+                <cfform name="quickSearchForm" id="quickSearchForm" method="post" action="" style="margin:0px; padding:0px;">
+                
+                	<input type="hidden" name="quickSearchStudentID" id="quickSearchStudentID" value="#FORM.quickSearchStudentID#" class="quickSearchField" />
+                    <input type="hidden" name="quickSearchHostID" id="quickSearchHostID" value="#FORM.quickSearchHostID#" class="quickSearchField" /> 
+                    <input type="hidden" name="quickSearchUserID" id="quickSearchUserID" value="#FORM.quickSearchUserID#" class="quickSearchField" />                
+                
+                    <table width="450px" cellpadding="2" cellspacing="0" class="quickSearchTable" align="right">
+                        <tr>
+                            <th colspan="4">
+                                Quick Search
+                                <!--- Display Error Messages Here ---> 
+                                <cfif VAL(vQuickSearchNotFound)>
+                                    <span class="errors">record not found</span>	
+                                </cfif>
+                            </th>
+                        </tr>
+                        <tr class="on">
+                            <td class="subTitleRightNoBorderMiddle">Student: </td>
+                            <td><input type="text" name="quickSearchAutoSuggestStudentID" id="quickSearchAutoSuggestStudentID" value="#FORM.quickSearchAutoSuggestStudentID#" onclick="quickSearchValidation();" class="mediumField quickSearchField" maxlength="6" /></td>
+                            <td class="subTitleRightNoBorderMiddle">User: </td>
+                            <td><input type="text" name="quickSearchAutoSuggestUserID" id="quickSearchAutoSuggestUserID" value="#FORM.quickSearchAutoSuggestUserID#" onclick="quickSearchValidation();" class="mediumField quickSearchField" maxlength="6" /></td>
+                        </tr>
+                        <tr class="on">
+                            <td class="subTitleRightNoBorderMiddle">Host Family: </td>
+                            <td><input type="text" name="quickSearchAutoSuggestHostID" id="quickSearchAutoSuggestHostID" value="#FORM.quickSearchAutoSuggestHostID#" onclick="quickSearchValidation();" class="mediumField quickSearchField" maxlength="6" /></td>
+                            <td colspan="2" align="center"><span class="note">Type in ID ## or Last Name</span></td>
+                        </tr>
+                    </table>
+                </cfform> 
             </td>
         </cfif>
 		
         <td width="130" align="right" rowspan="2" valign="top">
-            <cfif client.usertype EQ 8 OR client.usertype EQ 11>
-                <cfif client.usertype eq 11>
+            <cfif CLIENT.usertype EQ 8 OR CLIENT.usertype EQ 11>
+                <cfif CLIENT.usertype eq 11>
                     <cfquery name="get_intrep" datasource="#application.dsn#">
                         select intrepid
                         from smg_users
-                        where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+                        where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
                     </cfquery>
                 </cfif>
                 <cfquery name="logo" datasource="#application.dsn#">
                     select logo
                     from smg_users 
-                    <cfif client.usertype eq 11>
+                    <cfif CLIENT.usertype eq 11>
                     	where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_intrep.intrepid#">
                     <cfelse>
-                    	where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+                    	where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
                     </cfif>
                 </cfquery>
                 
 				<cfif NOT LEN(logo.logo)>
 
-                    <cfdirectory directory="#AppPath.companyLogo#" name="file" filter="#client.companyid#_header_logo.png">
+                    <cfdirectory directory="#AppPath.companyLogo#" name="file" filter="#CLIENT.companyid#_header_logo.png">
                         <cfif file.recordcount>
                             <!--- SMG LOGO --->
                             <img src="pics/logos/#file.name#">
@@ -312,12 +411,12 @@
                     </cfif>
                     
                 <cfelse>
-                    <img src="pics/logos/#client.companyid#_header_logo.png">
+                    <img src="pics/logos/#CLIENT.companyid#_header_logo.png">
                 </cfif>
         </td>
     </tr>
     <tr height="10">
-        <td colspan=8 valign="bottom" align="right"><img src="pics/logos/#client.companyid#_px.png" height=12 width="100%"></td>
+        <td colspan=8 valign="bottom" align="right"><img src="pics/logos/#CLIENT.companyid#_px.png" height=12 width="100%"></td>
     </tr>
 </table>
 <table width="100%" cellspacing="0" cellpadding="0" bgcolor="eeeeee">
@@ -329,7 +428,7 @@
 </table>
 <table width="100%" cellspacing="0" cellpadding="0">
 	<tr> 
-		<td><img src="pics/logos/#client.companyid#_px.png" width="100%" height="1"></td>
+		<td><img src="pics/logos/#CLIENT.companyid#_px.png" width="100%" height="1"></td>
 	</tr>
 </table>
 </cfoutput>

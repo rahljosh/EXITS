@@ -27,7 +27,7 @@
 	<cffunction name="getUsers" access="public" returntype="query" output="false" hint="Gets a list of users, if usertype is passed gets users by usertype">
     	<cfargument name="userID" default="" hint="userID is not required">
     	<cfargument name="usertype" default="0" hint="usertype is not required">
-        <cfargument name="isActive" default="1" hint="isActive is not required">
+        <cfargument name="isActive" default="" hint="isActive is not required">
         <cfargument name="companyID" default="" hint="CompanyID is not required">
               
         <cfquery 
@@ -39,6 +39,18 @@
                     smg_users u
                 INNER JOIN
                 	user_access_rights uar ON uar.userID = u.userID
+					<cfif VAL(ARGUMENTS.usertype)>
+                        AND	
+                            uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.usertype#">
+                    </cfif>
+    
+                    <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
+                        AND          
+                            uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                    <cfelseif VAL(ARGUMENTS.companyID)>
+                        AND          
+                            uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                    </cfif>
                 WHERE
                 	1 = 1
 
@@ -49,22 +61,9 @@
                     
                 <cfif LEN(ARGUMENTS.isActive)>
                 	AND
-                    	u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isActive#">
+                    	u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.isActive)#">
                 </cfif>
 
-				<cfif VAL(ARGUMENTS.usertype)>
-                	AND	
-                    	uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.usertype#">
-                </cfif>
-
-				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
-                    AND          
-                        uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
-                <cfelseif VAL(ARGUMENTS.companyID)>
-                    AND          
-                        uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
-                </cfif>
-                
                 GROUP BY
                 	u.userID 
                                    
@@ -97,6 +96,67 @@
 		   
 		<cfreturn qGetUserByID>
 	</cffunction>
+
+
+	<!--- Start of Auto Suggest --->
+    <cffunction name="remoteLookUpUser" access="remote" returnFormat="json" output="false" hint="Remote function to get users, returns an array">
+        <cfargument name="searchString" type="string" default="" hint="Search is not required">
+        <cfargument name="maxRows" type="numeric" required="false" default="20" hint="Max Rows is not required" />
+        <cfargument name="companyID" default="#CLIENT.companyID#" hint="CompanyID is not required">
+        
+        <cfscript>
+			var vReturnArray = arrayNew(1);
+		</cfscript>
+        
+        <!--- Do search --->
+        <cfquery 
+			name="qRemoteLookUpUser" 
+			datasource="#APPLICATION.dsn#">
+                SELECT DISTINCT
+                	u.userID,
+					CAST( CONCAT(u.lastName, ', ', u.firstName, ' (##', u.userID, ')' ) AS CHAR) AS displayName
+                FROM 
+                	smg_users u
+                INNER JOIN
+                	user_access_rights uar ON uar.userID = u.userID
+					<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
+                        AND          
+                            uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                    <cfelseif VAL(ARGUMENTS.companyID)>
+                        AND          
+                            uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                    </cfif>
+                WHERE 
+                   
+					<cfif IsNumeric(ARGUMENTS.searchString)>
+                    	u.userID LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+                    <cfelse>
+                    	u.lastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+                    </cfif>				
+                    
+                ORDER BY 
+                    u.lastName,
+                    u.firstName
+				LIMIT 
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.maxRows#" />                 
+        </cfquery>
+
+		<cfscript>
+			// Loop through query
+            For ( i=1; i LTE qRemoteLookUpUser.recordCount; i=i+1 ) {
+
+				vUserStruct = structNew();
+				vUserStruct.userID = qRemoteLookUpUser.userID[i];
+				vUserStruct.displayName = qRemoteLookUpUser.displayName[i];
+				
+				ArrayAppend(vReturnArray,vUserStruct);
+            }
+			
+			return vReturnArray;
+        </cfscript>
+
+    </cffunction>
+	<!--- End of Auto Suggest --->
 
 
 	<cffunction name="getFacilitators" access="public" returntype="query" output="false" hint="Gets a list of facilitators assigned to a region">

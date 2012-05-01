@@ -2719,6 +2719,68 @@
 	<!--- ------------------------------------------------------------------------- ----
 		Start of Remote Functions 
 	----- ------------------------------------------------------------------------- --->
+    <cffunction name="remoteLookUpStudent" access="remote" returnFormat="json" output="false" hint="Remote function to get students, returns an array">
+        <cfargument name="searchString" type="string" default="" hint="Search is not required">
+        <cfargument name="maxRows" type="numeric" required="false" default="20" hint="Max Rows is not required" />
+        <cfargument name="companyID" default="#CLIENT.companyID#" hint="CompanyID is not required">
+        
+        <cfscript>
+			var vReturnArray = arrayNew(1);
+		</cfscript>
+        
+        <cfquery 
+			name="qRemoteLookUpStudent" 
+			datasource="#APPLICATION.dsn#">
+                SELECT 
+                	studentID,
+					CAST( CONCAT(familyLastName, ', ', firstName, ' (##', studentID, ')' ) AS CHAR) AS displayName
+                FROM 
+                	smg_students
+                WHERE 
+                	 active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                AND                    					
+                    app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">                
+
+				<cfif IsNumeric(ARGUMENTS.searchString)>
+                    AND
+                    	studentID LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+                <cfelse>
+                    AND 
+                    	familyLastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+                </cfif>				
+
+				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
+                    AND          
+                        companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                <cfelseif VAL(ARGUMENTS.companyID)>
+                    AND          
+                        companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                </cfif>
+				
+                ORDER BY 
+                    familyLastName,
+                    firstName
+
+				LIMIT 
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.maxRows#" />                 
+        </cfquery>
+
+		<cfscript>
+			// Loop through query
+            For ( i=1; i LTE qRemoteLookUpStudent.recordCount; i=i+1 ) {
+
+				vUserStruct = structNew();
+				vUserStruct.studentID = qRemoteLookUpStudent.studentID[i];
+				vUserStruct.displayName = qRemoteLookUpStudent.displayName[i];
+				
+				ArrayAppend(vReturnArray,vUserStruct);
+            }
+			
+			return vReturnArray;
+        </cfscript>
+
+    </cffunction>       
+
     
 	<cffunction name="deletePlacementHistoryRemote" access="remote" returntype="void" output="false" hint="Deletes a placement history">
         <cfargument name="historyID" type="any" hint="historyID is not required">
