@@ -192,8 +192,8 @@
 				$("#quickSearchStudentID").val(ui.item.valueID);
 				$("#quickSearchForm").submit();
 			},
-			minLength: 2
-				
+			minLength: 2	
+			
 		});
 
 		// Quick Search - Host Auto Suggest  
@@ -220,9 +220,9 @@
 			select: function(event, ui) {
 				$("#quickSearchHostID").val(ui.item.valueID);
 				$("#quickSearchForm").submit();
-			},
+			}, 
 			minLength: 2
-				
+			
 		});
 		
 		// Quick Search - User Auto Suggest
@@ -250,7 +250,7 @@
 				$("#quickSearchUserID").val(ui.item.valueID);
 				$("#quickSearchForm").submit();
 			},
-			minLength: 2
+			minLength: 2	
 			
 		});
 		
@@ -350,7 +350,7 @@
                     <input type="hidden" name="quickSearchHostID" id="quickSearchHostID" value="#FORM.quickSearchHostID#" class="quickSearchField" /> 
                     <input type="hidden" name="quickSearchUserID" id="quickSearchUserID" value="#FORM.quickSearchUserID#" class="quickSearchField" />                
                 
-                    <table width="450px" cellpadding="2" cellspacing="0" class="quickSearchTable" align="right">
+                    <table width="430px" cellpadding="2" cellspacing="0" class="quickSearchTable" align="right">
                         <tr>
                             <th colspan="4">
                                 Quick Search
@@ -362,13 +362,13 @@
                         </tr>
                         <tr class="on">
                             <td class="subTitleRightNoBorderMiddle">Student: </td>
-                            <td><input type="text" name="quickSearchAutoSuggestStudentID" id="quickSearchAutoSuggestStudentID" value="#FORM.quickSearchAutoSuggestStudentID#" onclick="quickSearchValidation();" class="mediumField quickSearchField" maxlength="6" /></td>
+                            <td><input type="text" name="quickSearchAutoSuggestStudentID" id="quickSearchAutoSuggestStudentID" value="#FORM.quickSearchAutoSuggestStudentID#" onclick="quickSearchValidation();" class="mediumField quickSearchField" maxlength="20" /></td>
                             <td class="subTitleRightNoBorderMiddle">User: </td>
-                            <td><input type="text" name="quickSearchAutoSuggestUserID" id="quickSearchAutoSuggestUserID" value="#FORM.quickSearchAutoSuggestUserID#" onclick="quickSearchValidation();" class="mediumField quickSearchField" maxlength="6" /></td>
+                            <td><input type="text" name="quickSearchAutoSuggestUserID" id="quickSearchAutoSuggestUserID" value="#FORM.quickSearchAutoSuggestUserID#" onclick="quickSearchValidation();" class="mediumField quickSearchField" maxlength="20" /></td>
                         </tr>
                         <tr class="on">
                             <td class="subTitleRightNoBorderMiddle">Host Family: </td>
-                            <td><input type="text" name="quickSearchAutoSuggestHostID" id="quickSearchAutoSuggestHostID" value="#FORM.quickSearchAutoSuggestHostID#" onclick="quickSearchValidation();" class="mediumField quickSearchField" maxlength="6" /></td>
+                            <td><input type="text" name="quickSearchAutoSuggestHostID" id="quickSearchAutoSuggestHostID" value="#FORM.quickSearchAutoSuggestHostID#" onclick="quickSearchValidation();" class="mediumField quickSearchField" maxlength="20" /></td>
                             <td colspan="2" align="center"><span class="note">Type in ID ## or Last Name</span></td>
                         </tr>
                     </table>

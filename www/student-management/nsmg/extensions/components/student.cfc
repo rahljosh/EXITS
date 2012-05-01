@@ -2721,7 +2721,7 @@
 	----- ------------------------------------------------------------------------- --->
     <cffunction name="remoteLookUpStudent" access="remote" returnFormat="json" output="false" hint="Remote function to get students, returns an array">
         <cfargument name="searchString" type="string" default="" hint="Search is not required">
-        <cfargument name="maxRows" type="numeric" required="false" default="20" hint="Max Rows is not required" />
+        <cfargument name="maxRows" type="numeric" required="false" default="30" hint="Max Rows is not required" />
         <cfargument name="companyID" default="#CLIENT.companyID#" hint="CompanyID is not required">
         
         <cfscript>
