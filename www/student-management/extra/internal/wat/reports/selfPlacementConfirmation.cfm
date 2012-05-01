@@ -105,6 +105,7 @@
                 ecpc.selfPhoneConfirmationDate,
                 ecpc.selfConfirmationMethod,  
                 ecpc.selfConfirmationNotes,
+                ecpc.placement_date,
                 ej.title AS jobTitle,          
                 u.businessName
             FROM
@@ -371,6 +372,7 @@
                         <th align="left" class="#tableTitleClass#">End Date</th>
                         <th align="left" class="#tableTitleClass#">Placement Information</th>
                         <th align="left" class="#tableTitleClass#">Job Title</th>
+                        <th align="left" class="#tableTitleClass#">Placement Date</th>                        
                         <th align="left" class="#tableTitleClass#">Job Offer Status</th>
                         <cfif FORM.selfJobOfferStatus NEQ 'pending'>
                         	<th align="left" class="#tableTitleClass#">Contact Date</th>
@@ -405,6 +407,7 @@
                                 <a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qTotalPerAgent.hostCompanyID#" target="_blank" class="style4">#qTotalPerAgent.name#</a>
                             </td>
                             <td class="style1">#qTotalPerAgent.jobTitle#</td>
+                            <td class="style1">#DateFormat(qTotalPerAgent.placement_date, 'mm/dd/yyyy')#</td>                            
                             <td class="style1">#qTotalPerAgent.selfJobOfferStatus#</td>                            
                             <cfif FORM.selfJobOfferStatus NEQ 'pending'>
 	                            <td class="style1">#DateFormat(qTotalPerAgent.selfConfirmationDate, 'mm/dd/yyyy')#</td>
