@@ -230,6 +230,77 @@
 
 
 	<!--- Start of Auto Suggest --->
+    <cffunction name="remoteLookUpHost" access="remote" returnFormat="json" output="false" hint="Remote function to get host families, returns an array">
+        <cfargument name="searchString" type="string" default="" hint="Search is not required">
+        <cfargument name="maxRows" type="numeric" required="false" default="20" hint="Max Rows is not required" />
+        <cfargument name="companyID" default="#CLIENT.companyID#" hint="CompanyID is not required">
+        
+        <cfscript>
+			var vReturnArray = arrayNew(1);
+		</cfscript>
+        
+        <cfquery 
+			name="qRemoteLookUpHost" 
+			datasource="#APPLICATION.dsn#">
+                SELECT 
+                	hostID,
+					CAST( 
+                    	CONCAT(                      
+                            familyLastName,
+                            ' - ', 
+                            IFNULL(fatherFirstName, ''),                                                  
+                            IF (fatherFirstName != '', IF (motherFirstName != '', ' and ', ''), ''),
+                            IFNULL(motherFirstName, ''),
+                            ' (##',
+                            hostID,
+                            ')'                    
+						) 
+					AS CHAR) AS displayName
+                FROM 
+                	smg_hosts
+                WHERE 
+                	 active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+
+				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
+                    AND          
+                        companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                <cfelseif VAL(ARGUMENTS.companyID)>
+                    AND          
+                        companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                </cfif>
+
+				<cfif IsNumeric(ARGUMENTS.searchString)>
+                    AND
+                    	hostID LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+                <cfelse>
+                    AND 
+                    	familyLastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+                </cfif>	
+
+                ORDER BY 
+                    familyLastName
+
+				LIMIT 
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.maxRows#" />                 
+        </cfquery>
+
+		<cfscript>
+			// Loop through query
+            For ( i=1; i LTE qRemoteLookUpHost.recordCount; i=i+1 ) {
+
+				vUserStruct = structNew();
+				vUserStruct.hostID = qRemoteLookUpHost.hostID[i];
+				vUserStruct.displayName = qRemoteLookUpHost.displayName[i];
+				
+				ArrayAppend(vReturnArray,vUserStruct);
+            }
+			
+			return vReturnArray;
+        </cfscript>
+
+    </cffunction>       
+    
+    
     <cffunction name="lookupHostFamily" access="remote" returntype="string" output="false" hint="Remote function to get host families">
         <cfargument name="search" type="string" default="" hint="Search is not required">
         <cfargument name="regionID" default="" hint="regionID is not required">
@@ -328,7 +399,7 @@
 
 
 	<cffunction name="getHostStateListByRegionID" access="public" returntype="string" output="false" hint="Returns a list of host family states assigned to a region">
-    	<cfargument name="regionID" type="numeric" hint="userID is required">
+    	<cfargument name="regionID" type="numeric" hint="regionID is required">
 
         <cfquery 
 			name="qGetHostStateListByRegionID" 

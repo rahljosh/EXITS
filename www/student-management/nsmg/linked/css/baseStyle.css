@@ -323,17 +323,6 @@
 	text-transform:uppercase;
 }
 
-.quickSearchTable span { 
-	text-align:center;
-    margin:0px 5px 0px 15px;
-	padding:0px 8px 0px 8px; 
-	border: #FC6 1px solid; 
-	background-color: #FFC; 
-	-moz-border-radius: 10px;
-	border-radius: 10px;
-	color: #C00; 
-}
-
 .quickSearchTable td.subTitleRightNoBorderMiddle {
 	color:#085dad;
 	font-weight:bold;
@@ -345,6 +334,23 @@
 .quickSearchTable tr.on {
 	background-color:#EDEFF4;
 }
+
+.quickSearchTable span.errors { 
+	text-align:center;
+    margin:0px 5px 0px 15px;
+	padding:0px 8px 0px 8px; 
+	border: #FC6 1px solid; 
+	background-color: #FFC; 
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	color: #C00; 
+}
+
+.quickSearchTable span.note {
+	font-size:10px;
+	color:#085dad;
+}
+
 /********************************************
 	END OF QUICK SEARCH
 ********************************************/
