@@ -117,13 +117,11 @@
                     (
                         CASE                     
                             WHEN 
-                                u.businessName = '' 
-                            THEN 
-                                CAST( CONCAT(u.lastName, ', ', u.firstName, ' (##', u.userID, ')' ) AS CHAR)                                    
-                            WHEN 
                                 u.businessName != '' 
                             THEN 
                                 CAST( CONCAT(u.lastName, ', ', u.firstName, ' (##', u.userID, ') - ', u.businessName ) AS CHAR) 
+                            ELSE
+                                CAST( CONCAT(u.lastName, ', ', u.firstName, ' (##', u.userID, ')' ) AS CHAR)                                    
                         END
                     ) AS displayName                      
                 FROM 
@@ -143,6 +141,8 @@
                     	u.userID LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
                     <cfelse>
                             u.lastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+                        OR
+                            u.firstName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
                         OR
                             u.businessName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
 					</cfif>				
