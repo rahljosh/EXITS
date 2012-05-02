@@ -39,7 +39,7 @@
     </cfcase>
     
     <!--- List of Host Family Management Reports --->
-    <cfcase value="welcomeFamilyByRegion" delimiters=",">
+    <cfcase value="welcomeFamilyByRegion,hostsAuthorizationNotReceived,usersAuthorizationNotReceived" delimiters=",">
 
         <!--- Include template --->
         <cfinclude template="_#action#.cfm" />
@@ -47,7 +47,12 @@
     </cfcase>
     
     <!--- List of Representative Management Reports --->
-    
+    <cfcase value="hierarchyReport,complianceMileageReport,secondVisitRepCompliance,pendingStudentMissingSecondVisitRep,listTrainingsByRegion,nonComplianceReport" delimiters=",">
+
+        <!--- Include template --->
+        <cfinclude template="_#action#.cfm" />
+
+    </cfcase>
 
     <!--- The default case is the login page --->
     <cfdefaultcase>
