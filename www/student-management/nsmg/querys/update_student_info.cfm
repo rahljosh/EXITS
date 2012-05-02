@@ -300,7 +300,7 @@
             
             // Email CC List
             if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyid) ) {
-                emailCC = CLIENT.projectmanager_email & ';' & CLIENT.email & ';' & 'ellen@iseusa.com;sergei@iseusa.com;brendan@iseusa.com';
+                emailCC = CLIENT.projectmanager_email & ';' & CLIENT.email & ';' & 'ellen@iseusa.com;sergei@iseusa.com;';
             } else { 
                 emailCC = CLIENT.projectmanager_email & ';' & CLIENT.email;
             }
