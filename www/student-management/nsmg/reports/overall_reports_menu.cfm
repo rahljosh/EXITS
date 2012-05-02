@@ -24,10 +24,20 @@
 		} else {
 			reportRightTitle = '<a href="?curdoc=reports/overall_reports_menu&All=1">Show All Programs</a>';
 		}
+    	if ( CLIENT.companyid eq 13 OR client.companyid eq 14){
+			get_program = APPCFC.PROGRAM.getPrograms(companyid=client.companyid,isActive=1);
+		}
+		else
+			{
+			get_program = APPCFC.PROGRAM.getPrograms(isActive=1);
+		}
 	</cfscript>
 	
+
+			
+    <!----
 	<cfinclude template="../querys/get_programs.cfm">
-	
+	---->
 	<cfinclude template="../querys/get_regions.cfm">
 	
 	<cfinclude template="../querys/get_intl_rep.cfm">
