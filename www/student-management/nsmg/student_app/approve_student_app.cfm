@@ -43,9 +43,15 @@
 		} else {
 			qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=studentID);	
 		}
+		if ( CLIENT.companyid eq 13 OR client.companyid eq 14){
+			qGetProgramList = APPCFC.PROGRAM.getPrograms(companyid=client.companyid,isUpcomingPrograms=1);
+		}
+		else
+			{
+			qGetProgramList = APPCFC.PROGRAM.getPrograms(isUpcomingPrograms=1);
+		}
+			
 		
-		// Get Program List
-		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(isUpcomingPrograms=1);
 		
 		// Get Company List
 		qGetCompanyList = APPLICATION.CFC.COMPANY.getCompanies(companyIDList=APPLICATION.SETTINGS.COMPANYLIST.All);
