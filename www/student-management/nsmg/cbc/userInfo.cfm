@@ -39,7 +39,21 @@
 		qGetUserInfo = APPLICATION.CFC.USER.getUserByID(userID=FORM.userID);
 
 		// This will set if SSN needs to be updated
-		vUpdateUserSSN = 0;
+		vUpdateSSN = 0;
+		
+		// Displays SSN field if empty or logged in user has access to view it
+		if ( NOT LEN(qGetUserInfo.SSN) ) {
+			vDisplaySSN = 1;
+		} else {
+			// Set Display SSN - Sets to 1 if logged in user has access to SSN
+			vDisplaySSN = APPLICATION.CFC.USER.hasLoggedInUserComplianceAccess();
+		}
+		
+		// SET FORM.SSN
+		if ( VAL(vDisplaySSN) AND NOT VAL(FORM.submitted) ) {
+			// Display SSN
+			FORM.SSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetUserInfo.SSN, displayType='user');	
+		}
 	</cfscript>
 
     <!--- FORM Submitted --->
@@ -69,16 +83,16 @@
         <cfif NOT SESSION.formErrors.length()>
 
             <cfscript>
-                // Father SSN - Will update if it's blank or there is a new number
-                if ( isValid("social_security_number", Trim(FORM.SSN)) ) {
-                    // Encrypt Social
-                    FORM.SSN = APPLICATION.CFC.UDF.encryptVariable(FORM.SSN);
-                    // Update
-                    vUpdateUserSSN = 1;
-                } else if ( NOT LEN(FORM.SSN) ) {
-                    // Update - Erase SSN
-                    vUpdateUserSSN = 1;
-                }
+				// SSN - Will update if it's blank or there is a new number
+				if ( VAL(vDisplaySSN) AND isValid("social_security_number", Trim(FORM.SSN)) ) {
+					// Encrypt Social
+					FORM.SSN = APPLICATION.CFC.UDF.encryptVariable(FORM.SSN);
+					// Update
+					vUpdateSSN = 1;
+				} else if ( VAL(vDisplaySSN) AND NOT LEN(FORM.SSN) ) {
+					// Update - Erase SSN
+					// vUpdateSSN = 1;
+				}
             </cfscript>
 
             <cfquery datasource="#APPLICATION.DSN#">
@@ -88,8 +102,8 @@
                     firstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.firstName#">,
                     middleName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.middleName#">,
                     lastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.lastName#">,
-                    <!--- Father SSN --->
-                    <cfif VAL(vUpdateUserSSN)>
+                    <!--- SSN --->
+                    <cfif VAL(vUpdateSSN)>
                         SSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.SSN#">,
                     </cfif>
                     DOB = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.DOB#" null="#NOT IsDate(FORM.DOB)#">

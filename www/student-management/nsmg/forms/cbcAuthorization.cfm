@@ -161,7 +161,7 @@ body {
                     vUpdateUserSSN = 1;
                 } else if ( NOT LEN(FORM.SSN) ) {
                     // Update - Erase SSN
-                    vUpdateUserSSN = 1;
+                    // vUpdateUserSSN = 1;
                 }
             </cfscript>
           <cfquery name="progManager" datasource="#application.dsn#">
