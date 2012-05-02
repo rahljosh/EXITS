@@ -82,9 +82,19 @@
 		
 		// Get Facilitator for this Region
 		qFacilitator = APPCFC.USER.getUserByID(userID=VAL(qRegionAssigned.regionfacilitator));
+		//Get available programs
+		if ( CLIENT.companyid eq 13 OR client.companyid eq 14){
+			qGetActivePrograms = APPCFC.PROGRAM.getPrograms(companyid=client.companyid,isActive=1);
+		}
+		else
+			{
+			qGetActivePrograms = APPCFC.PROGRAM.getPrograms(isActive=1);
+		}
+			
+			
 	</cfscript>
-	
-    <!--- Student Picture --->
+
+	<!--- Student Picture --->
 	<cfdirectory directory="#AppPath.onlineApp.picture#" name="studentPicture" filter="#qGetStudentInfo.studentID#.*">
 
 	<!--- check virtual folder files --->
@@ -109,7 +119,7 @@
         WHERE 
         	u.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.intrep)#">
     </cfquery>
-   
+   <!----
     <cfquery name="qGetActivePrograms" datasource="#APPLICATION.DSN#">
         SELECT 
         	programname, 
@@ -129,7 +139,7 @@
         ORDER BY
         	programname
     </cfquery>
-    
+      ---->
     <cfquery name="qGetSelectedProgram" dbtype="query">
         SELECT 
         	*
@@ -138,7 +148,7 @@
         WHERE 
 			programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.programid#">
     </cfquery>
-    
+  
     <!----Ins. Policy Code---->
     <Cfquery name="qGetInsurancePolicyInfo" datasource="#APPLICATION.DSN#">
         SELECT 
