@@ -432,10 +432,17 @@
                 SELECT 
                 	u.userid,
                     u.firstName,
+                    u.middleName,
                     u.lastName,
                     u.email,
+                    u.fax,
                     u.phone,
                     u.work_phone,
+                    u.address,
+                    u.address2,
+                    u.city,
+                    u.state,
+                    u.zip,
                     r.regionName
                 FROM 
                 	smg_users u

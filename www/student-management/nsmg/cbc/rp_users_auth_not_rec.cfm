@@ -68,9 +68,9 @@
 					<cfif form.usertype EQ '2'>
 						<cfquery name="check_hosts" datasource="MySQL">
 							SELECT DISTINCT h.hostid, h.fatherssn, h.motherssn
-							FROM smg_hosts h
+							FROM smg_hostsype = h
 							INNER JOIN smg_hosts_cbc cbc ON h.hostid = cbc.hostid
-							WHERE cbc.cbc_type = 'father' AND (h.fatherssn = '#get_cbc_users.ssn#' OR (h.fatherfirstname = '#get_cbc_users.firstname#' AND h.familylastname = '#get_cbc_users.lastname#'))
+							WHERE cbc.cbc_t 'father' AND (h.fatherssn = '#get_cbc_users.ssn#' OR (h.fatherfirstname = '#get_cbc_users.firstname#' AND h.familylastname = '#get_cbc_users.lastname#'))
 								  OR 
 								  cbc.cbc_type = 'mother' AND (h.motherssn = '#get_cbc_users.ssn#' OR (h.motherfirstname = '#get_cbc_users.firstname#' AND h.familylastname = '#get_cbc_users.lastname#'))
 						</cfquery>

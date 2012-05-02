@@ -42,7 +42,7 @@
             	<div class="reportButton">Representative Management</div>
             </a>
         </td>
-	</tr>        
+	</tr>       
 </table>
 
 <!--- Table Footer --->

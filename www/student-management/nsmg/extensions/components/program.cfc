@@ -318,5 +318,54 @@
 
 	</cffunction>
 
+	<cffunction name="addHistory" access="public">
+    	<cfargument name="studentID" type="numeric" required="yes">
+        <cfargument name="programID" type="numeric" required="yes">
+        <cfargument name="reason" type="string" required="no" default="No reason given">
+        <cfquery name="qGetStudent" datasource="MySql">
+        	SELECT
+            	studentid,
+                programid
+          	FROM
+            	smg_students
+          	WHERE
+            	smg_students.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentID#">
+        </cfquery>
+        <cfquery name="qGetHistory" datasource="MySql">
+        	SELECT
+            	Count(s.studentid) as studentnum
+           	FROM
+            	smg_students s
+            INNER JOIN 
+            	smg_programhistory h ON h.studentid = s.studentid
+          	WHERE
+            	s.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentID#">
+        </cfquery>
+        <cfif qGetStudent.programID NEQ programID OR qGetHistory.studentnum EQ 0>
+        	<cfquery name="program_history" datasource="MySql">
+                INSERT INTO 
+                    smg_programhistory
+                    (
+                    studentID, 
+                    programID, 
+                    reason, 
+                    changedby,  
+                    date
+                    )
+                VALUES
+                (
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#studentID#">, 
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#programID#">, 
+                    <cfif VAL(qGetStudent.programID) AND qGetHistory.studentnum NEQ 0>
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#reason#">, 
+                   	<cfelse>
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="Student was unassigned">, 
+                    </cfif>
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">,
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDateTime(now())#"> 
+                )
+            </cfquery>
+        </cfif>
+	</cffunction>
 
 </cfcomponent>

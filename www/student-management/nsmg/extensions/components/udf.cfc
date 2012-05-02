@@ -665,6 +665,81 @@
 		</cfscript>
         
     </cffunction>
+
+
+    <cffunction name="addressLookup" access="remote" returnFormat="json" output="false" hint="empty for no accurate match">
+		<cfargument name="address" type="string" required="yes">
+        <cfargument name="city" type="string" required="yes">
+        <cfargument name="state" type="string" required="yes">
+        <cfargument name="zip" type="string" required="yes">
+        
+        <cfhttp result="geo" url="https://maps.google.com/maps/geo?q=#address#%20#city#%20#state#%20#zip#&output=xml&oe=utf8\&sensor=false&key=#APPLICATION.KEY.googleMapsAPI#" resolveurl="yes" />
+       	
+		<cfscript>
+            locationXML = xmlParse(geo.filecontent);
+		
+			// Set return structure that will store query + verify information
+			stResult = StructNew();
+			
+			stResult.isVerified = 0;
+			
+			// Create Query
+            qAddress = QueryNew("Address, City, State, Zip");
+			
+            if ( locationXML.kml.Response.Status.code.XmlText EQ 200 AND listFind("8,9", locationXML.kml.Response.Placemark.AddressDetails.XmlAttributes.Accuracy) ) {
+				
+				stResult.isVerified = 1;
+				
+                QueryAddRow(qAddress);
+                QuerySetCell(qAddress, "address", ListGetAt(locationXML.kml.Response.Placemark.address.XmlText, 1));
+                QuerySetCell(qAddress, "city", locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.Locality.LocalityName.XmlText );
+                QuerySetCell(qAddress, "state", locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.AdministrativeAreaName.XmlText );
+                QuerySetCell(qAddress, "zip", locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.Locality.PostalCode.PostalCodeNumber.XmlText );
+				
+            }
+			
+			// Add structure to query
+			stResult.QUERY = qAddress;
+			
+			return stResult;
+        </cfscript>
+            
+	</cffunction>
+    
+
+    <cffunction name="zipCodeLookUp" access="remote" returnFormat="json" output="false" hint="empty for no accurate match">
+        <cfargument name="zip" type="string" required="yes">
+        
+        <cfhttp result="geo" url="https://maps.google.com/maps/geo?q=#zip#&output=xml&oe=utf8\&sensor=false&key=#APPLICATION.KEY.googleMapsAPI#" resolveurl="yes" />
+       	
+		<cfscript>
+            locationXML = xmlParse(geo.filecontent);
+		
+			// Set return structure that will store query + verify information
+			stResult = StructNew();
+			
+			stResult.isVerified = 0;
+			
+			// Create Query
+            qAddress = QueryNew("City, State");
+			
+            if ( locationXML.kml.Response.Status.code.XmlText EQ 200 AND listFind("5", locationXML.kml.Response.Placemark.AddressDetails.XmlAttributes.Accuracy) ) {
+				
+				stResult.isVerified = 1;
+				
+                QueryAddRow(qAddress);
+                QuerySetCell(qAddress, "city", locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.Locality.LocalityName.XmlText );
+                QuerySetCell(qAddress, "state", locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.AdministrativeAreaName.XmlText );
+				
+            }
+			
+			// Add structure to query
+			stResult.QUERY = qAddress;
+			
+			return stResult;
+        </cfscript>
+            
+	</cffunction>
     
     
 	<!---Check if paperwork is complete for a specific user for a specific season to be allowed access---->
