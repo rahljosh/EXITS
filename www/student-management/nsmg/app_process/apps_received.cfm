@@ -1,5 +1,5 @@
 <!--- ONLY OFFICE USERS --->
-<cfif not client.usertype LTE 4>
+<cfif not CLIENT.usertype LTE 4>
 	You do not have the rights to see this page.
 	<cfabort>
 </cfif>
@@ -73,44 +73,89 @@
 <cfif submitted>
 
     <cfquery name="getResults" datasource="#application.dsn#">
-        SELECT s.studentid, s.uniqueid, s.familylastname, s.firstname, s.dob, s.sex, s.countryresident, s.active, s.app_current_status, s.app_indicated_program, 
-            s.dateapplication, s.hostid, s.randid, s.companyid,
-            smg_countrylist.countryname, p.app_program, c.companyshort, u.businessname, hold.hold_reason
-        FROM smg_students s
-        INNER JOIN smg_users u ON u.userid = s.intrep
+        SELECT 
+        	s.studentid, 
+            s.uniqueid, 
+            s.familylastname, 
+            s.firstname, 
+            s.dob, 
+            s.sex, 
+            s.countryresident, 
+            s.active, 
+            s.app_current_status, 
+            s.app_indicated_program, 
+            s.dateapplication, 
+            s.hostid, 
+            s.randid, 
+            s.companyid,
+            smg_countrylist.countryname, 
+            p.app_program, 
+            c.companyshort, 
+            u.businessname, 
+            hold.hold_reason
+        FROM 
+        	smg_students s
+        INNER JOIN 
+        	smg_users u ON u.userid = s.intrep
         <!--- we need a left join on smg_companies because unassigned students can show up. --->
-        LEFT JOIN smg_companies c ON c.companyid = s.companyid
-        LEFT JOIN smg_countrylist ON countryresident = smg_countrylist.countryid
-        LEFT JOIN smg_student_app_programs p ON p.app_programid = s.app_indicated_program
-        LEFT JOIN smg_student_app_hold hold ON hold.holdid = s.onhold_reasonid
+        LEFT JOIN 
+        	smg_companies c ON c.companyid = s.companyid
+        LEFT JOIN 
+        	smg_countrylist ON countryresident = smg_countrylist.countryid
+        LEFT JOIN 
+        	smg_student_app_programs p ON p.app_programid = s.app_indicated_program
+        LEFT JOIN 
+        	smg_student_app_hold hold ON hold.holdid = s.onhold_reasonid
         WHERE 1=1
-		<cfif client.companyid NEQ 5>
-            AND s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+        
+        <!--- Filter out CASE, Canada and ESI if under ISE --->
+		<cfif CLIENT.companyID EQ 5>
+            AND 
+            	s.companyid NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="10,13,14" list="yes"> )
+        <cfelse>
+            AND 
+            	s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         </cfif>
+        
         <cfif status EQ 'received'>
-            AND s.app_current_status = 8
-            AND s.active = 1
+            AND 
+            	s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+            AND 
+            	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         <cfelseif status EQ 'hold'>
-            AND s.app_current_status = 10
-            AND s.active = 1
+            AND 
+            	s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="10">
+            AND 
+            	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         <cfelseif status EQ 'denied'>
-            AND s.app_current_status = 9
+            AND
+            	s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="9">
         </cfif>
-        <cfif keyword NEQ ''>
-            AND (
-                s.studentid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#keyword#">
-                OR s.familylastname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#keyword#%">
-                OR s.firstname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#keyword#%">
-                OR smg_countrylist.countryname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#keyword#%">
-                OR p.app_program LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#keyword#%">
-                OR u.businessname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#keyword#%">
-                OR hold.hold_reason LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#keyword#%">
-            )
+        
+        <cfif LEN(keyword)>
+            AND 
+            	(
+                	s.studentid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#keyword#">
+                OR 
+                	s.familylastname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#keyword#%">
+                OR 
+                	s.firstname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#keyword#%">
+                OR 
+                	smg_countrylist.countryname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#keyword#%">
+                OR 
+                	p.app_program LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#keyword#%">
+                OR 	
+                	u.businessname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#keyword#%">
+                OR 
+                	hold.hold_reason LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#keyword#%">
+            	)
         </cfif>
-        ORDER BY #orderby#
+        
+        ORDER BY 
+        	#orderby#
     </cfquery>
 
-	<cfif getResults.recordCount GT 0>
+	<cfif getResults.recordCount>
 
 		<cfparam name="url.startPage" default="1">
 		<cfset totalPages = ceiling(getResults.recordCount / recordsToShow)>
@@ -165,7 +210,7 @@
                 <td>Actions</td>
             </tr>
             <cfloop query="getResults" startrow="#startrow#" endrow="#endrow#">
-				<cfif dateapplication GT client.lastlogin>
+				<cfif dateapplication GT CLIENT.lastlogin>
                     <cfset bgcolor="##e2efc7">
                 <cfelseif DateDiff('d',dateapplication, now()) GTE 25 AND DateDiff('d',dateapplication, now()) LTE 34>
                     <cfset bgcolor="##B3D9FF">
