@@ -402,6 +402,27 @@
 	</cffunction>
 
 
+	<cffunction name="hasLoggedInUserComplianceAccess" access="public" returntype="numeric" output="false" hint="Returns 0 or 1">
+              
+        <cfquery 
+			name="qHasLoggedInUserComplianceAccess" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+					userID,
+                    hasComplianceAccess
+                FROM 
+                    smg_users
+                WHERE	
+                    userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+		</cfquery>
+		
+        <cfscript>
+			return VAL(qHasLoggedInUserComplianceAccess.hasComplianceAccess);
+		</cfscript>
+        
+	</cffunction>
+
+
 	<cffunction name="getRegionalManager" access="public" returntype="query" output="false" hint="Gets a regional manager for a given region">
         <cfargument name="regionID" type="numeric" default="0" hint="regionID is required">
               

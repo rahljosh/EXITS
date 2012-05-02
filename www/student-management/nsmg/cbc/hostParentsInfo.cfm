@@ -43,9 +43,27 @@
 		// Get Host Family Info
 		qGetHostFamilyInfo = APPLICATION.CFC.HOST.getHosts(hostID=FORM.hostID);
 
+		// Get Current User Information
+		qGetUserComplianceInfo = APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID);
+
+		// Set Display SSN
+		vDisplayFatherSSN = 0;
+		vDisplayMotherSSN = 0;
+		
 		// These will set if SSN needs to be updated
-		vUpdatefatherSSN = 0;
-		vUpdatemotherSSN = 0;
+		vUpdateFatherSSN = 0;
+		vUpdateMotherSSN = 0;
+
+		// allow SSN Field - If null or user has access.
+		// Father
+		if ( NOT LEN(qGetHostFamilyInfo.fatherSSN) OR qGetUserComplianceInfo.compliance EQ 1 ) {
+			vDisplayFatherSSN = 1;
+		}
+		
+		// Mother
+		if ( NOT LEN(qGetHostFamilyInfo.motherSSN) OR qGetUserComplianceInfo.compliance EQ 1 ) {
+			vDisplayMotherSSN = 1;
+		}
 	</cfscript>
 
     <!--- FORM Submitted --->
@@ -80,26 +98,26 @@
         <cfif NOT SESSION.formErrors.length()>
 
             <cfscript>
-                // Father SSN - Will update if it's blank or there is a new number
-                if ( isValid("social_security_number", Trim(FORM.fatherSSN)) ) {
+				// Father SSN - Will update if it's blank or there is a new number
+                if ( VAL(vDisplayFatherSSN) AND isValid("social_security_number", Trim(FORM.fatherSSN)) ) {
                     // Encrypt Social
                     FORM.fatherSSN = APPLICATION.CFC.UDF.encryptVariable(FORM.fatherSSN);
                     // Update
                     vUpdateFatherSSN = 1;
-                } else if ( NOT LEN(FORM.fatherSSN) ) {
+                } else if ( VAL(vDisplayFatherSSN) AND NOT LEN(FORM.fatherSSN) ) {
                     // Update - Erase SSN
-                    vUpdateFatherSSN = 1;
+                    // vUpdateFatherSSN = 1;
                 }
                 
                 // Mother SSN - Will update if it's blank or there is a new number
-                if ( isValid("social_security_number", Trim(FORM.motherSSN)) ) {
+                if ( VAL(vDisplayMotherSSN) AND isValid("social_security_number", Trim(FORM.motherSSN)) ) {
                     // Encrypt Social
                     FORM.motherSSN = APPLICATION.CFC.UDF.encryptVariable(FORM.motherSSN);
                     // Update
                     vUpdateMotherSSN = 1;
-                } else if ( NOT LEN(FORM.motherSSN) ) {
+                } else if ( VAL(vDisplayMotherSSN) AND NOT LEN(FORM.motherSSN) ) {
                     // Update - Erase SSN
-                    vUpdateMotherSSN = 1;
+                    // vUpdateMotherSSN = 1;
                 }
             </cfscript>
 

@@ -353,9 +353,9 @@
         <input type="hidden" name="userCount" value="#qGetCBCUser.recordcount#">
     
         <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
-            <tr><td colspan="7">&nbsp;</td></tr>
+            <tr><td colspan="9">&nbsp;</td></tr>
             <tr>
-            	<th colspan="7" bgcolor="##e2efc7">#qGetUser.firstname# #qGetUser.lastname# (###qGetUser.userID#)</th>
+            	<th colspan="9" bgcolor="##e2efc7">#qGetUser.firstname# #qGetUser.lastname# (###qGetUser.userID#)</th>
             	<th bgcolor="##e2efc7" colspan=2><a href="cbc/userInfo.cfm?userID=#qGetUser.userID#" class="jQueryModal">Edit User Info</a></th>
                 
             </tr>
@@ -417,13 +417,13 @@
             <!--- User New --->
             <cfif VAL(qGetUserSeason.recordcount)>
                 <cfif NOT LEN(qGetUser.dob)>
-                    <tr><td colspan="7">Date of birth cannot be blank. Please check the DOB before you continue.</td></tr>
+                    <tr><td colspan="9">Date of birth cannot be blank. Please check the DOB before you continue.</td></tr>
                     <input type="hidden" name="seasonID" value="0">
                 <cfelse>
                     
                     <!--- SSN Warning --->
                     <cfif NOT LEN(qGetUser.ssn)>
-                        <tr><td colspan="7"><font color="##FF0000">SSN is currently blank. Please check the SSN before you continue.</font></td></tr>
+                        <tr><td colspan="9"><font color="##FF0000">SSN is currently blank. Please check the SSN before you continue.</font></td></tr>
                     </cfif>            
                 
                     <tr>
@@ -452,17 +452,17 @@
             <cfelse>
                 <input type="hidden" name="seasonID" value="0">
             </cfif>
-            <tr><td colspan="7">&nbsp; <br><br></td></tr>
+            <tr><td colspan="9">&nbsp; <br><br></td></tr>
         
             <!--- OTHER FAMILY MEMBERS --->
             <tr>
-            	<th colspan="7" bgcolor="##e2efc7">Other Family Members 18 years old and older</th>
+            	<th colspan="9" bgcolor="##e2efc7">Other Family Members 18 years old and older</th>
                 <th bgcolor="##e2efc7"><a href="cbc/userMemberInfo.cfm?userID=#qGetUser.userID#" class="jQueryModal">Edit Member(s) Info</a></th>
             </tr>
-            <tr><td colspan="7">&nbsp;</td></tr>
+            <tr><td colspan="9">&nbsp;</td></tr>
             <cfif NOT VAL(qGetUserMembers.recordcount)>
-                <tr><td colspan="7">There are no eligible family members.</td></tr>
-                <tr><td colspan="7">&nbsp;</td></tr>
+                <tr><td colspan="9">There are no eligible family members.</td></tr>
+                <tr><td colspan="9">&nbsp;</td></tr>
             <cfelse>	
                 <cfloop query="qGetUserMembers">
                     
@@ -482,7 +482,7 @@
        
                     <input type="hidden" name="#familyID#count" value="#qGetCBCMember.recordcount#">
                     
-                    <tr><th colspan="7" bgcolor="##e2efc7">#qGetUserMembers.firstname# #qGetUserMembers.lastname#</th><th bgcolor="##e2efc7"></th></tr>
+                    <tr><th colspan="9" bgcolor="##e2efc7">#qGetUserMembers.firstname# #qGetUserMembers.lastname#</th><th bgcolor="##e2efc7"></th></tr>
                     <tr style="font-weight:bold;">
                         <td valign="top"><b>Company</b></td>
                         <td valign="top"><b>Season</b></td>		
@@ -556,7 +556,7 @@
                     <cfelse>
                         <input type="hidden" name="#familyID#seasonID" value="0">
                     </cfif>
-                <tr><td colspan="7">&nbsp; <br><br></td></tr>			
+                <tr><td colspan="9">&nbsp; <br><br></td></tr>			
                 </cfloop>
             </cfif>
         </table>

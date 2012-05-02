@@ -101,7 +101,7 @@
 						FORM["updateSSN" & i] = 1;
 					} else if ( NOT LEN(FORM["SSN" & i]) ) {
 						// Update - Erase SSN
-						FORM["updateSSN" & i] = 1;
+						// FORM["updateSSN" & i] = 1;
 					}
 				</cfscript>
 

@@ -35,6 +35,11 @@
 		// Set new default value
 		new = true;
 
+
+		// Set Display SSN - Sets to 1 if user has access to compliance
+		vDisplaySSN = APPLICATION.CFC.USER.hasClientUserComplianceAccess(userID=CLIENT.userID);
+
+
 		// Set Display SSN
 		vDisplaySSN = 0;
 	
@@ -45,10 +50,10 @@
 		qGetUserInfo = APPLICATION.CFC.USER.getUserByID(userID=VAL(URL.userID));
 		
 		// Get Current User Information
-		qGetUserComplianceInfo = APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID);
+		vHasUserComplianceAccess = APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID);
 	
 		// allow SSN Field - If null or user has access.
-		if ( NOT LEN(qGetUserInfo.SSN) OR qGetUserComplianceInfo.compliance EQ 1 ) {
+		if ( NOT LEN(qGetUserInfo.SSN) OR VAL(vHasUserComplianceAccess) ) {
 			vDisplaySSN = 1;
 			
 			if ( NOT VAL(FORM.submitted) ) {
@@ -302,7 +307,7 @@
                 vUpdateSSN = 1;
             } else if ( VAL(vDisplaySSN) AND NOT LEN(FORM.SSN) ) {
                 // Update - Erase SSN
-                vUpdateSSN = 1;
+                // vUpdateSSN = 1;
             }
         </cfscript>
         
