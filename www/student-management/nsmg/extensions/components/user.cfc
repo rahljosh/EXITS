@@ -1195,6 +1195,8 @@
                 	AND	
 	                    u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">      
                 	AND
+                    	u.accountCreationVerified != <cfqueryparam cfsqltype="cf_sql_integer" value="0">     
+                    AND
                     	u.dateAccountVerified 
                    	BETWEEN 
                     	<cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateCreatedFrom#">
