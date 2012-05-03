@@ -13,7 +13,7 @@
 <cfsilent>
 
 	<!--- Import CustomTag --->
-    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
+    <cfimport taglib="../../extensions/customTags/gui/" prefix="gui" />	
 
     <cfscript>	
 		// Param FORM Variables

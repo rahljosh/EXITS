@@ -48,10 +48,10 @@
         <td>
 		
         	<!--- Row 1 Column 1 - Hierarchy Report --->
-            <form action="report/index.cfm?action=hierarchyReport" name="hierarchyReport" id="hierarchyReport" method="post" target="blank">
+            <form action="report/index.cfm?action=userHierarchyReport" name="userHierarchyReport" id="userHierarchyReport" method="post" target="blank">
                 
                 <table width="98%" cellpadding="4" cellspacing="0" class="blueThemeReportTable left">
-                    <tr><th colspan="2">Hierarchy Report</th></tr>
+                    <tr><th colspan="2">User Hierarchy Report</th></tr>
                     <tr class="on">
                         <td class="subTitleRightNoBorder">Region: <span class="required">*</span></td>
                         <td>
@@ -280,10 +280,10 @@
     	<td>
         
         	<!--- Row 3 Column 1 - List of Trainings by Region --->
-            <form action="report/index.cfm?action=listTrainingsByRegion" name="listTrainingsByRegion" id="listTrainingsByRegion" method="post" target="blank">
+            <form action="report/index.cfm?action=userTrainingListByRegion" name="userTrainingListByRegion" id="userTrainingListByRegion" method="post" target="blank">
                 
                 <table width="98%" cellpadding="4" cellspacing="0" class="blueThemeReportTable left">
-                    <tr><th colspan="2">List of Trainings by Region</th></tr>
+                    <tr><th colspan="2">User Training List by Region</th></tr>
                     <tr class="on">
                         <td class="subTitleRightNoBorder">Program: <span class="required">*</span></td>
                         <td>
@@ -331,10 +331,10 @@
         <td>
         
         	<!--- Row 3 Column 2 - Non Compliance Report --->
-            <form action="report/index.cfm?action=nonComplianceReport" name="nonComplianceReport" id="nonComplianceReport" method="post" target="blank">
+            <form action="report/index.cfm?action=userTrainingNonCompliant" name="userTrainingNonCompliant" id="userTrainingNonCompliant" method="post" target="blank">
                 
                 <table width="98%" cellpadding="4" cellspacing="0" class="blueThemeReportTable left">
-                    <tr><th colspan="2">Non-Compliance Report</th></tr>
+                    <tr><th colspan="2">User Training Non-Compliant Report</th></tr>
                     <tr class="on">
                         <td class="subTitleRightNoBorder">Region: <span class="required">*</span></td>
                         <td>

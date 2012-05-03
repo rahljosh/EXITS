@@ -45,10 +45,10 @@
         <td>
 
             <!--- Row 1 Column 1 - Hosts Authorization Not Received --->
-            <form action="report/index.cfm?action=hostsAuthorizationNotReceived" name="hostsAuthorizationNotReceived" id="hostsAuthorizationNotReceived" method="post" target="blank">
+            <form action="report/index.cfm?action=hostFamilyCBCAuthorizationNotReceived" name="hostFamilyCBCAuthorizationNotReceived" id="hostFamilyCBCAuthorizationNotReceived" method="post" target="blank">
                 
                 <table width="98%" cellpadding="4" cellspacing="0" class="blueThemeReportTable left">
-                    <tr><th colspan="2">Hosts Authorization Not Received</th></tr>
+                    <tr><th colspan="2">Host Family CBC Authorization Not Received</th></tr>
                     <tr class="on">
                         <td class="subTitleRightNoBorder">User Type: <span class="required">*</span></td>
                         <td>
@@ -94,7 +94,7 @@
             </form>
             
 		</td>
-        <td valign="top">
+        <td>
 
             <!--- Row 1 Column 2- Welcome Family By Region --->
             <form action="report/index.cfm?action=welcomeFamilyByRegion" name="welcomeFamily" id="welcomeFamily" method="post" target="blank">
@@ -142,7 +142,7 @@
     	<td>
         
         	<!--- Row 2 Column 1 - Active Users Authorization Not Received --->
-            <form action="report/index.cfm?action=usersAuthorizationNotReceived" name="usersAuthorizationNotReceived" id="usersAuthorizationNotReceived" method="post" target="blank">
+            <form action="report/index.cfm?action=usersCBCAuthorizationNotReceived" name="usersCBCAuthorizationNotReceived" id="usersCBCAuthorizationNotReceived" method="post" target="blank">
                 
                 <table width="98%" cellpadding="4" cellspacing="0" class="blueThemeReportTable left">
                     <tr><th colspan="2">Active Users Authorization Not Received</th></tr>
