@@ -23,36 +23,54 @@
 
 <cfswitch expression="#action#">
 
-    <cfcase value="menu,studentManagementMenu,hostFamilyManagementMenu,representativeManagementMenu" delimiters=",">
+    <cfcase value="menu,studentManagementMenu,hostFamilyManagementMenu,representativeManagementMenu,officeManagementMenu" delimiters=",">
 
         <!--- Include template --->
         <cfinclude template="_#action#.cfm" />
 
     </cfcase>
 	
+    
     <!--- List of Student Management Reports --->
-    <cfcase value="studentListByRegion" delimiters=",">
+    <cfcase value="studentListByRegion,placementPaperworkByRegion" delimiters=",">
 
         <!--- Include template --->
-        <cfinclude template="_#action#.cfm" />
+        <cfinclude template="studentManagement/_#action#.cfm" />
 
     </cfcase>
+    
     
     <!--- List of Host Family Management Reports --->
-    <cfcase value="welcomeFamilyByRegion,hostsAuthorizationNotReceived,usersAuthorizationNotReceived" delimiters=",">
+    <cfcase value="welcomeFamilyByRegion,hostFamilyCBCAuthorizationNotReceived,usersCBCAuthorizationNotReceived" delimiters=",">
 
         <!--- Include template --->
-        <cfinclude template="_#action#.cfm" />
+        <cfinclude template="hostManagement/_#action#.cfm" />
 
     </cfcase>
     
+    
     <!--- List of Representative Management Reports --->
-    <cfcase value="hierarchyReport,complianceMileageReport,secondVisitRepCompliance,pendingStudentMissingSecondVisitRep,listTrainingsByRegion,nonComplianceReport" delimiters=",">
+    <cfcase value="userHierarchyReport,complianceMileageReport,secondVisitRepCompliance,pendingStudentMissingSecondVisitRep,userTrainingListByRegion,userTrainingNonCompliant" delimiters=",">
+    
+    <!--- List of Office Management Reports --->
+    
 
         <!--- Include template --->
-        <cfinclude template="_#action#.cfm" />
+        <cfinclude template="representativeManagement/_#action#.cfm" />
 
     </cfcase>
+
+
+    <!--- List of Office Management Reports --->
+    <!---
+    <cfcase value="" delimiters=",">
+
+        <!--- Include template --->
+        <cfinclude template="officeManagement/_#action#.cfm" />
+
+    </cfcase>
+	--->
+    
 
     <!--- The default case is the login page --->
     <cfdefaultcase>

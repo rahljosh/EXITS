@@ -1,6 +1,6 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		_hostsAuthorizationNotReceived.cfm
+	File:		_hostFamilyCBCAuthorizationNotReceived.cfm
 	Author:		James Griffiths
 	Date:		April 20, 2012
 	Desc:		Hosts Authorization Not Received
@@ -17,7 +17,7 @@
     <cfsetting requesttimeout="9999">
     
 	<!--- Import CustomTag --->
-    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
+    <cfimport taglib="../../extensions/customTags/gui/" prefix="gui" />	
 	
     <cfscript>	
 		// Param FORM Variables

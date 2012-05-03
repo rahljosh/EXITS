@@ -1,9 +1,9 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		_nonComplianceReport.cfm
+	File:		_listTrainingsByRegion.cfm
 	Author:		James Griffiths
 	Date:		May 2, 2012
-	Desc:		Non-Compliance Report
+	Desc:		List Trainings By Region
 
 	Updated:
 				
@@ -13,17 +13,30 @@
 <cfsilent>
 
 	<!--- Import CustomTag --->
-    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
+    <cfimport taglib="../../extensions/customTags/gui/" prefix="gui" />	
 
     <cfscript>	
-		// Param FORM Variables	
+		// Param FORM Variables
+		param name="FORM.programID" default=0;	
 		param name="FORM.regionID" default=0;
 		param name="FORM.trainingID" default=0;
 		param name="FORM.outputType" default="onScreen";
-
+		
 		// Get Regions
-		qGetRegions = APPLICATION.CFC.REGION.getRegionsByList(regionIDList=FORM.regionID, companyID=CLIENT.companyID);
+      	qGetRegions = APPLICATION.CFC.REGION.getRegionsByList(regionIDList=FORM.regionID, companyID=CLIENT.companyID);
+		
+		// Programs
+		qGetProgramsListIn = APPLICATION.CFC.PROGRAM.getPrograms(dateActive=1);
 	</cfscript>
+    
+    <cfquery name="qGetPrograms" dbtype="query">
+    	SELECT 
+        	*
+        FROM 
+        	qGetProgramsListIn
+        WHERE
+        	qGetProgramsListIn.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
+    </cfquery>
     
     <!--- This gets the total number of representatives that will be displayed --->
     <cfscript>
@@ -31,7 +44,7 @@
 	</cfscript>
     <cfloop query="qGetRegions">
     	<cfscript>
-    		qGetResults = APPLICATION.CFC.USER.reportTrainingNonCompliance(regionID=qGetRegions.regionID,trainingIDList=FORM.trainingID,userID=CLIENT.userID,userType=CLIENT.userType);
+    		qGetResults = APPLICATION.CFC.USER.reportTrainingByRegion(regionID=qGetRegions.regionID,trainingIDList=FORM.trainingID,userID=CLIENT.userID,userType=CLIENT.userType,programID=FORM.programID);
 		</cfscript>
         <cfquery name="qTotal" dbtype="query">
         	SELECT DISTINCT
@@ -59,16 +72,15 @@
 	<cfcontent type="application/msexcel">
 	
 	<!--- suggest default name for XLS file --->
-	<cfheader name="Content-Disposition" value="attachment; filename=NonComplianceReport.xls"> 
+	<cfheader name="Content-Disposition" value="attachment; filename=TrainingReport.xls"> 
 	
 	<table width="98%" cellpadding="4" cellspacing="0" align="center" border="1">
 		<tr>
-          	<th colspan="4">Training Report</th>            
+          	<th colspan="3">Training Report</th>            
        	</tr>
       	<tr style="font-weight:bold;">
             <td>Region</td>
             <td>Representative</td>
-            <td>Status</td>
             <td>Training</td>
        	</tr>
         
@@ -79,8 +91,7 @@
         <cfloop query="qGetRegions">
         
         	<cfscript>
-				qGetResults = APPLICATION.CFC.USER.reportTrainingNonCompliance(regionID=qGetRegions.regionID,trainingIDList=FORM.trainingID,userID=CLIENT.userID,userType=CLIENT.userType);
-				qGetTrainingInfo = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(applicationID=7,fieldKey='smgUsersTraining',fieldID=FORM.trainingID);
+				qGetResults = APPLICATION.CFC.USER.reportTrainingByRegion(regionID=qGetRegions.regionID,trainingIDList=FORM.trainingID,userID=CLIENT.userID,userType=CLIENT.userType,programID=FORM.programID);
 			</cfscript>
 			
 			<cfoutput query="qGetResults">
@@ -97,16 +108,14 @@
 				<tr>
 					<td bgcolor="#vRowColor#">#qGetResults.regionName#</td>
 					<td bgcolor="#vRowColor#">#qGetResults.firstName# #qGetResults.lastName# ###qGetResults.userID#</td>
-                    <td bgcolor="#vRowColor#">
-                    	<cfif LEN(qGetResults.date_trained) AND NOT VAL(qGetResults.has_passed)>
-                            <span style="color:##F00;">Failed</span>
-                        <cfelseif LEN(qGetResults.date_trained) AND DateAdd("yyyy", 1, qGetResults.date_trained) LTE now()>
-                            <span style="color:##F00;">Expired</span>
-                        <cfelse>
-                            <span style="color:##F00;">Missing</span>
+					<td bgcolor="#vRowColor#">
+						<cfif LEN(qGetResults.date_trained)>
+                            Date: #DateFormat(qGetResults.date_trained, 'mm/dd/yyyy')# - #qGetResults.trainingName#
+                            <cfif LEN(qGetResults.score)> 
+                                - Score: #qGetResults.score#
+                            </cfif>
                         </cfif>
                    	</td>
-					<td bgcolor="#vRowColor#">#qGetTrainingInfo.name#</td>
 				</tr>
                 
                 <cfscript>
@@ -126,18 +135,25 @@
     	<table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
             <tr>
             	<th width="33%"></th>
-                <th class="center" width="34%">Non-Compliance Report</th>
+                <th class="center" width="34%"> Training Report</th>
                 <th class="right" width="33%">#vTotalReps# Total Representatives</th>
+            </tr>
+            <tr>
+                <td class="center" colspan="3">
+                    Program(s) included in this report: <br />
+                    <cfloop query="qGetPrograms">
+                        #qGetPrograms.programName# <br />
+                    </cfloop>
+                </td>
             </tr>
         </table>
     </cfoutput>
     
-    <!--- Loop through regions --->
+    <!--- Loopt through regions --->
     <cfloop query="qGetRegions">
     
     	<cfscript>
-			qGetResults = APPLICATION.CFC.USER.reportTrainingNonCompliance(regionID=qGetRegions.regionID,trainingIDList=FORM.trainingID,userID=CLIENT.userID,userType=CLIENT.userType);
-			qGetTrainingInfo = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(applicationID=7,fieldKey='smgUsersTraining',fieldID=FORM.trainingID);
+			qGetResults = APPLICATION.CFC.USER.reportTrainingByRegion(regionID=qGetRegions.regionID,trainingIDList=FORM.trainingID,userID=CLIENT.userID,userType=CLIENT.userType,programID=FORM.programID);
 		</cfscript>
         
         <cfquery name="qTotalInRegion" dbtype="query">
@@ -151,13 +167,11 @@
             <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                 <tr>
                     <th class="left">#qGetResults.regionName# Region</th>
-                    <th></th>
                     <th class="right">#qTotalInRegion.recordCount# Representatives</th>
                 </tr>
                 <tr>
                     <td class="subTitleLeft" width="50%">Representative</td>
-                    <td class="subTitleLeft" width="20%">Status</td>
-                    <td class="subTitleLeft" width="30%">Training</td>
+                    <td class="subTitleLeft" width="50%">Training</td>
                 </tr>
        	</cfoutput>
        	
@@ -177,16 +191,15 @@
             <tr #vClass#>
 				<td>#qGetResults.firstName# #qGetResults.lastName# ###qGetResults.userID#</td>
                 <td>
-                    <cfif LEN(qGetResults.date_trained) AND NOT VAL(qGetResults.has_passed)>
-                        <span style="color:##F00;">Failed</span>
-                    <cfelseif LEN(qGetResults.date_trained) AND DateAdd("yyyy", 1, qGetResults.date_trained) LTE now()>
-                        <span style="color:##F00;">Expired</span>
-                    <cfelse>
-                        <span style="color:##F00;">Missing</span>
-                    </cfif>
-                </td>
-                <td>
-                    #qGetTrainingInfo.name#
+                    <cfoutput>
+                        <cfif LEN(qGetResults.date_trained)>
+                            Date: #DateFormat(qGetResults.date_trained, 'mm/dd/yyyy')# - #qGetResults.trainingName#
+                            <cfif LEN(qGetResults.score)> 
+                                - Score: #qGetResults.score#
+                            </cfif>
+                            <br />
+                        </cfif>  
+                    </cfoutput> 
                 </td>
             </tr>
             

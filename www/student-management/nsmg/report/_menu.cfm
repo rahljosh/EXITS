@@ -28,7 +28,7 @@
 />
 
 <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
-	<tr>
+    <tr>
     	<td align="center">
         	<a href="#CGI.SCRIPT_NAME#?curdoc=report/index&action=studentManagementMenu" title="Click for Student Management Reports">
                 <div class="reportButton">Student Management</div>
@@ -41,8 +41,12 @@
             <a href="#CGI.SCRIPT_NAME#?curdoc=report/index&action=representativeManagementMenu" title="Click for Representative Management Reports">
             	<div class="reportButton">Representative Management</div>
             </a>
+            
+            <a href="#CGI.SCRIPT_NAME#?curdoc=report/index&action=officeManagementMenu" title="Click for Office Management Reports">
+            	<div class="reportButton">Office Management</div>
+            </a>
         </td>
-	</tr>       
+	</tr>    
 </table>
 
 <!--- Table Footer --->
