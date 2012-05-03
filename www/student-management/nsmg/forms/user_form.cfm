@@ -50,7 +50,7 @@
 		qGetUserInfo = APPLICATION.CFC.USER.getUserByID(userID=VAL(URL.userID));
 		
 		// Get Current User Information
-		vHasUserComplianceAccess = APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID);
+		vHasUserComplianceAccess = APPLICATION.CFC.USER.hasLoggedInUserComplianceAccess();
 	
 		// allow SSN Field - If null or user has access.
 		if ( NOT LEN(qGetUserInfo.SSN) OR VAL(vHasUserComplianceAccess) ) {
