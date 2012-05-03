@@ -37,7 +37,7 @@
 
 
 		// Set Display SSN - Sets to 1 if user has access to compliance
-		vDisplaySSN = APPLICATION.CFC.USER.hasClientUserComplianceAccess(userID=CLIENT.userID);
+		vDisplaySSN = APPLICATION.CFC.USER.hasLoggedInUserComplianceAccess(userID=CLIENT.userID);
 
 
 		// Set Display SSN
