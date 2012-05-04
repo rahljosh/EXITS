@@ -64,11 +64,14 @@
                     p.fieldViewable,
                     p.insurance_batch,
                     c.companyName,
-                    c.companyShort
+                    c.companyShort,
+                    s.season as seasonname
                 FROM 
                     smg_programs p
 				LEFT OUTER JOIN
                 	smg_companies c ON c.companyID = p.companyID                    
+                LEFT OUTER JOIN 
+                	smg_seasons s on s.seasonID = p.seasonID
                 WHERE
                 	p.is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                
@@ -204,7 +207,7 @@
                         companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
                 <cfelse>
                     AND
-                        companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12,13,14" list="yes">)
+                        companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,6,10,12,13,14" list="yes">)
                 </cfif>	                
                     
 				<cfif LEN(ARGUMENTS.isActive)>
