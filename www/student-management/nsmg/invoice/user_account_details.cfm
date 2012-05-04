@@ -89,15 +89,15 @@ END) AS testCompId --->
         LEFT JOIN smg_users su ON su.userid = sch.agentid
         WHERE sch.agentid = #url.userid#
         <cfswitch expression="#client.companyid#">
-        <cfcase value="5,10,14">
-        	AND sch.companyid = #client.companyid#
-        </cfcase>
-        <cfcase value="7,8">
-        	AND sch.companyid IN (7,8)
-        </cfcase>
-        <cfdefaultcase>
-        	AND sch.companyid IN (1,2,3,4,5,7,8,10,12)
-        </cfdefaultcase>
+            <cfcase value="5,10,14">
+                AND sch.companyid = #client.companyid#
+            </cfcase>
+            <cfcase value="7,8">
+                AND sch.companyid IN (7,8)
+            </cfcase>
+            <cfdefaultcase>
+                AND sch.companyid IN (1,2,3,4,5,7,8,10,12)
+            </cfdefaultcase>
         </cfswitch>
 		GROUP BY sch.companyid<!--- testCompId --->
 		<cfif form.view is not 'all'>
@@ -118,15 +118,15 @@ END) AS testCompId --->
         LEFT JOIN smg_users su ON su.userid = sch.agentid
         WHERE  sch.agentid = #url.userid#
         <cfswitch expression="#client.companyid#">
-        <cfcase value="5,10,14">
-        	AND sch.companyid = #client.companyid#
-        </cfcase>
-        <cfcase value="7,8">
-        	AND sch.companyid IN (7,8)
-        </cfcase>
-        <cfdefaultcase>
-        	AND sch.companyid IN (1,2,3,4,5,7,8,10,12)
-        </cfdefaultcase>
+            <cfcase value="5,10,14">
+                AND sch.companyid = #client.companyid#
+            </cfcase>
+            <cfcase value="7,8">
+                AND sch.companyid IN (7,8)
+            </cfcase>
+            <cfdefaultcase>
+                AND sch.companyid IN (1,2,3,4,5,7,8,10,12)
+            </cfdefaultcase>
         </cfswitch>
 		GROUP BY sch.companyid<!--- testCompId --->
 		<cfif form.view is not 'all'>
@@ -146,7 +146,17 @@ END) AS testCompId --->
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         LEFT JOIN smg_users su ON su.userid = sc.agentid
         WHERE sc.active =1
-        AND sc.companyid IN (1,2,3,4,5,7,8,10,12)
+        <cfswitch expression="#client.companyid#">
+            <cfcase value="5,10,14">
+                AND sc.companyid = #client.companyid#
+            </cfcase>
+            <cfcase value="7,8">
+                AND sc.companyid IN (7,8)
+            </cfcase>
+            <cfdefaultcase>
+                AND sc.companyid IN (1,2,3,4,5,7,8,10,12)
+            </cfdefaultcase>
+        </cfswitch>
         AND sc.agentid = #url.userid#
 		GROUP BY sc.companyid<!--- testCompId --->
 		<cfif form.view is not 'all'>
