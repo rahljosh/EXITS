@@ -68,6 +68,7 @@
 </head>
 
 <cfparam name="FORM.selectPrograms" default="0">
+<cfparam name="form.printFormat" default="0">
 
 <cfscript>
 	// returns total balance per agent
@@ -120,7 +121,7 @@ ORDER BY
         </select>
         <br/>
         <cfif client.companyid NEQ 14>
-        	<cfinput name="printFormat" type="checkbox" checked="yes"> <strong><small>Display print format?</small></strong>
+        	<cfinput name="printFormat" value="1" type="checkbox" checked="yes"> <strong><small>Display print format?</small></strong>
         </cfif>
         <br/>
         <cfinput name="submit" type="image" src="../pics/update.gif">
@@ -246,7 +247,7 @@ ORDER BY
 
 <cfform method="post" action="m_sendEmailNotification.cfm">
 
-<cfif NOT ISDEFINED('form.printFormat')>
+<cfif form.printFormat NEQ 0 OR client.companyid NEQ 14>
     <div align="center">
         <cfinput type="image" name="sendEmail" src="../pics/send-email.gif">
     </div>
@@ -263,7 +264,7 @@ ORDER BY
 <table class="frame">
 
     <tr class="darkBlue">
-    	<cfif NOT ISDEFINED('form.printFormat')>
+    	<cfif form.printFormat NEQ 0 OR client.companyid NEQ 14>
             <td align="center">
                 <cfinput name="emailAgent" id="emailAgent" type="checkbox" onClick="javaScript:checkUncheck();" checked="true">
             </td>
@@ -380,7 +381,7 @@ ORDER BY
     <cfset grandTotalBal = #variables.grandTotalBal# + #qTotalAgentBalance.totalPerAgent#>
             
     <tr <cfif qTotalAgentBalance.currentRow MOD 2>bgcolor="##FFFFFF"</cfif>>
-    	<cfif NOT ISDEFINED('form.printFormat')>
+    	<cfif form.printFormat NEQ 0 OR client.companyid NEQ 14>
             <td align="center">
                 <cfinput name="email#qTotalAgentBalance.agentid#" id="email#qTotalAgentBalance.agentid#" type="checkbox" checked="yes" align="absmiddle">
             </td>
@@ -406,7 +407,7 @@ ORDER BY
 <cfoutput>
 
     <tr class="darkBlue">
-    	<cfif NOT ISDEFINED('form.printFormat')>
+    	<cfif form.printFormat NEQ 0 OR client.companyid NEQ 14>
     		<td></td>
         </cfif>
         <td class="right">TOTAL</td>
