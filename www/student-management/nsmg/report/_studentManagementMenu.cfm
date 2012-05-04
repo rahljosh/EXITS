@@ -35,30 +35,26 @@
 </cfsilent>
 
 <script type="text/javascript">
-	// Document Ready
-	$(document).ready(function() {
-		showHidePlacementDates('StudentListByRegion');
-		showHidePlacementDates('PlacementPaperworkByRegion');
-	});	
-
 	// Display/Hide Form Options
-	var showHidePlacementDates = function(reportName) {
+	var showReport = function(reportID) {
 		
-		// Get Placement Status
-		var vPlacementStatus = $("#placementStatus" + reportName).val();
+		// Hide Menu
+		$(".reportMenu").fadeOut();
 		
-		// Erase data
-		$("#dateTo" + reportName).val("");
-		$("#dateFrom" + reportName).val("");
-
-		if ( vPlacementStatus == 'Placed' ) {
-			// Show Fields
-			$(".trPlacementDate" + reportName).slideDown();
-		} else {
-			// Hide Fields
-			$(".trPlacementDate" + reportName).slideUp();
-		}
-
+		// Show Report	
+		$("#" + reportID).fadeIn();
+		
+	}
+	
+	// Display/Hide Form Options
+	var showMenu = function(reportID) {
+		
+		// Hide Report
+		$(".reportForm").fadeOut();
+		
+		// Show Menu
+		$(".reportMenu").fadeIn();
+		
 	}
 </script>
 
@@ -71,63 +67,123 @@
 	tableRightTitle='<h2><a href="#CGI.SCRIPT_NAME#?curdoc=report/index" title="Click for Student Management Reports">[ Reports Menu ]</a></h2>'
 />
 
+<!--- Reports Menu --->
 <table class="reportSection">
-    <tr>
+    <tr class="reportMenu">
         <td>
-			
-            <h1>Select your report below:</h1>
+            <input type="radio" name="reportSelection" id="radioStudentListByRegion" value="studentListByRegion" onclick="showReport('studentListByRegion');"/>                 
+            <label for="radioStudentListByRegion">Student List By Region</label>
+            <ul>
+                <li>
+                	Generate a list of all students in your region <br />
+                    Filter by: placed/unplaced, date placed, program 
+                </li>
+            </ul>  
+        </td>
+        <td>
+            <input type="radio" name="reportSelection" id="radioRelocationReport" value="relocationReport" onclick="showReport(this.value);"/>                 
+            <label for="radioRelocationReport">Relocation Report</label>
+            <ul>
+                <li>
+                    Generate a list of all relocation in your region <br />
+                    Filter by: date relocated, reason, program <br />
+                    This report will provide you with a detailed explanation of each reloctaion including: date relocated, rep assigned, HF name, date of relocation, reason for relocation
+                </li>
+            </ul>  
+        </td>
+        <td>
+            <input type="radio" name="reportSelection" id="radioPlacementPaperworkByRegion" value="placementPaperworkByRegion" onclick="showReport(this.value);"/>                 
+            <label for="radioPlacementPaperworkByRegion">Placement Paperwork by Region</label>
+            <ul>
+                <li>
+                    Generate a list of all students in your region and paperwork HQ has not received <br />
+					Filter by: Rep (place vs super), program, date placed <br />
+                    This report will provide you with a list, by student, of any paperwork that has still not been received by your facilitator.  
+                    This will include both current and previous placements
+                </li>
+            </ul>   
+        </td>
+	</tr>   
+    
+    <tr class="reportMenu">
+        <td>
+            <input type="radio" name="reportSelection" id="radioDoublePlacementPaperworkByRegion" value="doublePlacementPaperworkByRegion" onclick="showReport(this.value);"/>                 
+            <label for="radioDoublePlacementPaperworkByRegion">Double Placement Paperwork By Region</label>
+            <ul>
+                <li>
+                    Generate a list of all students in your region and double placement paperwork HQ has not received <br />
+                    Filter by: Rep (place vs super), program, date placed, missing/received/all, on screen/excel <br />  
+                    This report will provide you with a list, by rep and student, of all paperwork due. 
+                    It will also note paperwork thatis compliant, non-compliant, and has still not been received by your facilitator
+                </li>
+            </ul>  
+        </td>
+        <td>
+            <input type="radio" name="reportSelection" id="radioFlightinformation" value="flightInformation" onclick="showReport(this.value);"/>                 
+            <label for="radioFlightinformation">Flight Information</label>
+            <ul>
+                <li>
+                    Generate a list of all students and their flight information <br />
+                    Filter by program, rep, missing/received, arrival/departure, date placed <br />
+                    This report will provide you with a comprehensive list of students and their arrival/departure flight information. 
+                    You can sort this by place or super rep so that a list of students' flight info can be sent to your reps. 
+                    Missing flight info can also be generated so that you know who still needs to submit it.
+                </li>
+            </ul>  
+        </td>
+        <td>
+            <input type="radio" name="reportSelection" id="radioHelpCommunityService" value="helpCommunityService" onclick="showReport(this.value);"/>                 
+            <label for="radioHelpCommunityService">Help Communitiy Service</label>
+            <ul>
+                <li>
+                    Generate a report of students and the amount of Help hours submitted/approved <br />
+                    Filter by: prorgam, activity status, ## of hours, student status <br />
+                    This report will offer you a list of student, by AR, and the amount of HELP hours they have completed. 
+                    You can also generat a list of students that have not completed and hours so you know who still needs some motivation. You can export this into Excel.
+                </li>
+            </ul>   
+        </td>
+	</tr>  
+    
+    <tr class="reportMenu">
+        <td>
+            <input type="radio" name="reportSelection" id="radioProgressReports" value="progressReports" onclick="showReport(this.value);"/>                 
+            <label for="radioProgressReports">Progress Reports</label>
+            <ul>
+                <li>
+                    Generate a report of missing/completed and approved/non progress reports <br />
+                    Filter by: program, month, missing/complete/all, approval status <br />
+                    This report will provide you with a list of students, by super rep, and the status of each student's progress reports for a given month. 
+                    You can easily see who has completed their reports and whether or not they have been approved.
+                </li>
+            </ul>   
+        </td>
+        <td>
+            <input type="radio" name="reportSelection" id="radioSecondVisitReport" value="secondVisitReport" onclick="showReport(this.value);"/>                 
+            <label for="radioSecondVisitReport">Second Visit Reports</label>
+            <ul>
+                <li>
+					Generate a list of 2nd visit reports with completion and compliance status <br />
+                    Filter by: program, date placed, approval and completion status <br />
+                    This report will summarize all of the second visits required for your region by student. 
+                    It will provide all of the information needed to determine which reports are completed and compliant vs non. 
+                    (student,HF,date placed, date of arrival, window of compliance, due date, date of visit, days left)
+                </li>
+            </ul>  
+        </td>
+        <td>
             
-            <!--- Report Options --->
-            <ul class="mainList">
-            	
-                <li><a href="javascript:displayDiv('studentListByRegion');">Student List By Region</a></li> 
-
-                <ul class="childList">
-                    <li>Generate a list of all students in your region - Filter by: placed/unplaced, date placed and program</li>
-                </ul>  
-                                     
-                <li><a href="javascript:displayDiv('placementPaperworkByRegion');">Placement Paperwork by Region</a></li>
-                
-                <ul class="childList">
-                    <li>Generate a list of all relocation in your region - Filter by: Representative (place vs super), program, date placed </li>
-                </ul>   
-                
-                <li><a href="">Double Placement Paperwork By Region</a></li>
-
-                <ul class="childList">
-                    <li>Generate a list of all students in your region - Filter by: placed/unplaced, date placed and program</li>
-                </ul>   
-                
-                <li><a href="">Flight Information</a></li>
-
-                <ul class="childList">
-                    <li>Generate a list of all students in your region - Filter by: placed/unplaced, date placed and program</li>
-                </ul>   
-                
-                <li><a href="">Help Communitiy Service</a></li>
-
-                <ul class="childList">
-                    <li>Generate a list of all students in your region - Filter by: placed/unplaced, date placed and program</li>
-                </ul>   
-                
-                <li><a href="">Progress Reports</a></li>
-
-                <ul class="childList">
-                    <li>Generate a list of all students in your region - Filter by: placed/unplaced, date placed and program</li>
-                </ul>   
-                
-                <li><a href="">Second Visit Reports</a></li>
-
-                <ul class="childList">
-                    <li>Generate a list of all students in your region - Filter by: placed/unplaced, date placed and program</li>
-                </ul>   
-			
-            </ul>                
-            
+        </td>
+	</tr> 
+    
+    <!--- List Reports Below --->
+    <tr>
+    	<td colspan="3">
+        
             <!--- Student List By Region --->
-            <form action="report/index.cfm?action=studentListByRegion" name="studentListByRegion" id="studentListByRegion" method="post" target="blank" class="displayNone">
+            <form action="report/index.cfm?action=studentListByRegion" name="studentListByRegion" id="studentListByRegion" method="post" class="displayNone reportForm" target="blank">
                 
-                <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable" align="center">
+                <table width="40%" cellpadding="4" cellspacing="0" class="blueThemeReportTable" align="center">
                     <tr><th colspan="2">Student List By Region</th></tr>
                     <tr class="on">
                         <td class="subTitleRightNoBorder">Program: <span class="required">*</span></td>
@@ -198,14 +254,17 @@
                         <td class="required noteAlert">* Required Fields</td>
                     </tr>
                     <tr>
-                        <th colspan="2"><input type="image" src="pics/view.gif" align="center" border="0"></th>
+                        <th colspan="2" align="center">
+                        	<input type="image" src="pics/view.gif" align="center" border="0">                        
+                        	<input type="image" class="buttonBack" src="pics/back.gif" align="center" border="0" onclick="showMenu();">
+                        </th>
                     </tr>
                 </table>
             </form>
             
             
             <!--- Placement Paperwork By Region --->
-            <form action="report/index.cfm?action=placementPaperworkByRegion" name="placementPaperworkByRegion" id="placementPaperworkByRegion" method="post" target="blank" class="displayNone">
+            <form action="report/index.cfm?action=placementPaperworkByRegion" name="placementPaperworkByRegion" id="placementPaperworkByRegion" method="post" class="displayNone reportForm" target="blank">
                 
                 <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable" align="center">
                     <tr><th colspan="2">Placement Paperwork By Region</th></tr>
@@ -304,14 +363,17 @@
                         <td class="required noteAlert">* Required Fields</td>
                     </tr>
                     <tr>
-                        <th colspan="2"><input type="image" src="pics/view.gif" align="center" border="0"></th>
+                        <th colspan="2" align="center">
+                        	<input type="image" src="pics/view.gif" align="center" border="0">                        
+                        	<input type="image" class="buttonBack" src="pics/back.gif" align="center" border="0" onclick="showMenu();">
+                        </th>
                     </tr>
                 </table>
             </form>            
-
-		</td>
-    </tr>
-</table>    
+        
+        </td>
+	</tr>        
+</table>  
 
 <!--- Table Footer --->
 <gui:tableFooter />
