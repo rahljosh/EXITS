@@ -119,7 +119,9 @@ ORDER BY
             </cfoutput>
         </select>
         <br/>
-        <cfinput name="printFormat" type="checkbox" checked="yes"> <strong><small>Display print format?</small></strong>
+        <cfif client.companyid NEQ 14>
+        	<cfinput name="printFormat" type="checkbox" checked="yes"> <strong><small>Display print format?</small></strong>
+        </cfif>
         <br/>
         <cfinput name="submit" type="image" src="../pics/update.gif">
     
