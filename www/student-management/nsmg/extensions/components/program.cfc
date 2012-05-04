@@ -254,7 +254,8 @@
                 
 				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, ARGUMENTS.companyid)> 
                     AND 
-                    	companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.publicHS#" list="yes"> )
+                    	( companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.publicHS#" list="yes"> ) 
+                        	OR companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.php#" list="yes"> ) )
                 <cfelse>
                 	AND 
                     	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyid#">
