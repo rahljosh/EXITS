@@ -56,7 +56,9 @@
 
 
 <Cfoutput>
-	<div align="center"><a href="?curdoc=invoice/user_account_details&userid=#url.userid#">Show only this Company</a> :: <a href="?curdoc=invoice/user_account_details&userid=#url.userid#&invall">Include all company numbers</a></div>
+	<cfif client.companyID NEQ 14>
+		<div align="center"><a href="?curdoc=invoice/user_account_details&userid=#url.userid#">Show only this Company</a> :: <a href="?curdoc=invoice/user_account_details&userid=#url.userid#&invall">Include all company numbers</a></div>
+    </cfif>
 </Cfoutput>
 
 <Cfquery name="agent_details" datasource="MySQL">
