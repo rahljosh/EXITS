@@ -82,7 +82,7 @@ SELECT
 FROM 
 	smg_programs
 WHERE
-	companyID IN (1,7,8,9,10,12)
+	companyID IN (1,7,8,9,10,12,14)
 AND
 	type NOT IN (6,10,13,14,15,16,17,18,19,20,21)
 ORDER BY 
@@ -104,15 +104,16 @@ ORDER BY
             <option value="0">Charges not related to a program</option>
             <cfoutput query="getPrograms">
                 <cfswitch expression="#companyid#">
-                    <cfcase value="1"><cfset compId = 'High School'></cfcase>
+                    <cfcase value="1"><cfset compId = 'ISE'></cfcase>
 <!---                     <cfcase value="2"><cfset compId = 'MARGARITA'></cfcase>
                     <cfcase value="3"><cfset compId = 'DIANA'></cfcase>
                     <cfcase value="4"><cfset compId = 'GARY'></cfcase>
                     <cfcase value="12"><cfset compId = 'BRIAN'></cfcase> --->
-                    <cfcase value="7"><cfset compId = 'Trainee'></cfcase>
+                    <cfcase value="7"><cfset compId = 'TRAINEE'></cfcase>
                     <cfcase value="8"><cfset compId = 'W&T'></cfcase>
                     <cfcase value="9"><cfset compId = 'H2B'></cfcase>
 					<cfcase value="10"><cfset compId = 'CASE'></cfcase>
+                    <cfcase value="14"><cfset compId = 'ESI'></cfcase>
                 </cfswitch>
                 <option value="#programid#">#variables.compId# - #getPrograms.programname#</option>
             </cfoutput>
@@ -168,6 +169,7 @@ ORDER BY
                     <cfcase value="8"><cfset compId = 'W&T'></cfcase>
                     <cfcase value="9"><cfset compId = 'H2B'></cfcase>
 					<cfcase value="10"><cfset compId = 'CASE'></cfcase>
+                    <cfcase value="14"><cfset compId = 'ESI'></cfcase>
                 </cfswitch>
                 
                 <small>#variables.compId# - #getProgramsSelected.programname# (###getProgramsSelected.programid#)</small> <br/>
