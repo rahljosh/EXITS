@@ -32,6 +32,9 @@ function OpenApp(url)
 
 <cfinclude template="../querys/get_students_host.cfm">
 
+<!--- Student Picture --->
+<cfdirectory directory="#AppPath.onlineApp.picture#" name="studentPicture" filter="#get_student_info.studentID#.*">
+
 <cfif get_unqid.recordcount EQ 0> <!--- Block if they try to cheat changing the student id in the address bar --->
 	<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
 		<tr valign=middle height=24>
@@ -166,7 +169,34 @@ Order by birthdate
 <table  width=650 align="center" border=0 bgcolor="FFFFFF" style="font-size:13px"> 
 	<tr><td colspan="2"><hr width=80% align="center"></td></tr>
 	<tr>
-		<td bgcolor="F3F3F3" valign="top" width=133><div align="left"><img src="../uploadedfiles/web-students/#get_student_info.studentid#.jpg" width=133></td>
+          <td width="135">
+              <!--- Use a cftry instead of cfif. Using cfif when image is not available CF throws an error. --->
+              <cftry>
+              
+                  <cfscript>
+                      // CF throws errors if can't read head of the file "ColdFusion was unable to create an image from the specified source file". 
+                      // Possible cause is a gif file renamed as jpg. Student #17567 per instance.
+                  
+                      // this file is really a gif, not a jpeg
+                      pathToImage = AppPath.onlineApp.picture & studentPicture.name;
+                      imageFile = createObject("java", "java.io.File").init(pathToImage);
+                      
+                      // read the image into a BufferedImage
+                      ImageIO = createObject("java", "javax.imageio.ImageIO");
+                      bi = ImageIO.read(imageFile);
+                      img = ImageNew(bi);
+                  </cfscript>              
+                  
+                  <cfimage source="#img#" name="myImage">
+                  <!---- <cfset ImageScaleToFit(myimage, 250, 135)> ---->
+                  <cfimage source="#myImage#" action="writeToBrowser" border="0" width="135px"><br />
+                 
+                  <cfcatch type="any">
+                      <img src="../pics/no_stupicture.jpg" width="135">
+                  </cfcatch>
+                  
+              </cftry>
+          </td>
 		<td valign="top" width=504>
 		<span class="application_section_header">STUDENT PROFILE</span><br><br>
 		
