@@ -103,9 +103,9 @@
         
         
       
-                <cfmail to="anca@csb-usa.com" cc="#form.email#" from="info@csb-usa.com" subject="#form.LastName# #form.FirstName# Questionnaire Response ##2" type="html">
+                <cfmail to="support@csb-usa.com" cc="#form.email#" from='CSB Summer Work Travel<support@csb-usa.com>' subject="#form.LastName#, #form.FirstName# - CSB April Mandatory Evaluation" type="html">
             
-               <h3> CSB - Mandatory Summer Work Travel Questionnaire  - #dateformat(Now())#.</h3>
+               <h3> CSB - April Mandatory Evaluation  - #dateformat(Now())#.</h3>
                 
                 1. SEVIS Number:<strong> #form.Sevis#</strong> <br /> 
                 2. Last name:<strong> #form.LastName#</strong><br /> 
@@ -268,7 +268,7 @@ a:active {
         messageType="section"
         />
 
-<div class="header">CSB - #2 Mandatory Summer Work Travel Questionnaire</div>
+<div class="header">CSB - April Mandatory Summer Work Travel Evaluation</div>
 <div class="info"> <span class="red"><strong>The CSB  monthly questionnaire  is below</strong></span><strong> - there are 7 (seven) questions you must  answer. <span class="red">You must  respond in full within 10 (ten) business days</span> of  receiving this  questionnaire.</strong>
 </div>
 <div class="grey">

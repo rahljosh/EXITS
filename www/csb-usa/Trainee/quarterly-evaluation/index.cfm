@@ -38,24 +38,22 @@
 		vMonthEvaluation = '';
 		
 		switch(vCurrentMonth) {
-			
 			// February
-			case 2: case 3: case 4: {
+			case 2: case 3: case 4: 
 				vMonthEvaluation = 2;
-			}
+				break;
 			// May
-			case 5: case 6: case 7: {
+			case 5: case 6: case 7: 
 				vMonthEvaluation = 5;
-			}
+				break;
 			// August
-			case 8: case 9: case 10: {
+			case 8: case 9: case 10: 
 				vMonthEvaluation = 8;
-			}
+				break;
 			// November
-			case 11: case 12: case 1: {
+			case 11: case 12: case 1: 
 				vMonthEvaluation = 11;
-			}
-
+				break;
 		}
 	</cfscript>
     
@@ -132,19 +130,19 @@
             // Q5
             if ( NOT LEN(TRIM(FORM.hasHousingChanged)) ) {
                 // Get all the missing items in a list
-                SESSION.formErrors.Add("Please answer the Yes/No question: Have you changed your housing address since your last report to CSB?");
+                SESSION.formErrors.Add("Please answer the Yes/No question: Have you changed your housing address since your last report to ISE?");
             }
 
             // Q5 Expalin if Yes
             if ( VAL(FORM.hasHousingChanged) and NOT LEN(TRIM(FORM.housingChangedDetails) ) ) {
                 // Get all the missing items in a list
-                SESSION.formErrors.Add("You answered Yes to: Have you changed your housing address since your last report to CSB, but did not provide your new address.");
+                SESSION.formErrors.Add("You answered Yes to: Have you changed your housing address since your last report to ISE, but did not provide your new address.");
             }
 
             // Q6
             if ( NOT LEN(TRIM(FORM.hostCompanyEvaluation)) ) {
                 // Get all the missing items in a list
-                SESSION.formErrors.Add("Please answer the Yes/No question: Have you changed your employer since your last report to CSB?");
+                SESSION.formErrors.Add("Please answer the Yes/No question: Have you changed your employer since your last report to ISE?");
             }
             
             // Q7
@@ -239,7 +237,7 @@
         	
             <cfsavecontent variable="reportDetails">
             	<cfoutput>
-                    <h3>CSB - Mandatory Trainee #MonthAsString(vMonthEvaluation)# Quarterly Questionnaire - #DateFormat(Now(), 'mm/dd/yyyy')#.</h3>
+                    <h3>ISE - Mandatory Trainee #MonthAsString(vMonthEvaluation)# Quarterly Questionnaire - #DateFormat(Now(), 'mm/dd/yyyy')#.</h3>
                     
                     <p>1. SEVIS Number: <strong>#FORM.ds2019#</strong> </p>
                     
@@ -250,12 +248,12 @@
                     <p>4. Email: <strong>#FORM.email#</strong> </p>
                     
                     <p>
-                        5. Have you changed your housing address, email and contract phone since your last report to CSB? <br />
+                        5. Have you changed your housing address, email and contract phone since your last report to ISE? <br />
                         <strong>#YesNoFormat(VAL(FORM.hasHousingChanged))#</strong> 
                     </p>
                     
                     <p>
-                        <i>If Yes and you did not previously inform CSB, please provide your full new housing address:</i> <br />
+                        <i>If Yes and you did not previously inform ISE, please provide your full new housing address:</i> <br />
                         <strong>#FORM.housingChangedDetails#</strong>
                     </p>
                     
@@ -280,7 +278,7 @@
             	to="sergei@iseusa.com" 
                 <!--- cc="#FORM.email#"  --->
                 from="info@csb-usa.com" 
-                subject="#FORM.lastName# #FORM.firstName# (###qLookUpCandidate.candidateID#) - CSB Trainee #MonthAsString(vMonthEvaluation)# Quarterly Questionnaire Submitted" type="html">
+                subject="#FORM.lastName# #FORM.firstName# (###qLookUpCandidate.candidateID#) - ISE Trainee #MonthAsString(vMonthEvaluation)# Quarterly Questionnaire Submitted" type="html">
                 #reportDetails#
 			</cfmail>
                 
@@ -304,7 +302,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title><cfoutput>CSB Trainee #MonthAsString(vMonthEvaluation)# Quarterly Questionnaire</cfoutput></title>
+<title><cfoutput>ISE Trainee #MonthAsString(vMonthEvaluation)# Quarterly Questionnaire</cfoutput></title>
 <link rel="stylesheet" href="../../linked/css/baseStyle.css" type="text/css">
 <style type="text/css">
 	body table  {
@@ -397,13 +395,13 @@
 
     <div class="wrapper">
     
-        <div class="header">CSB Trainee #MonthAsString(vMonthEvaluation)# Quarterly Questionnaire</div>
+        <div class="header">ISE Trainee #MonthAsString(vMonthEvaluation)# Quarterly Questionnaire</div>
         
 		<!--- Check if there are no errors --->
         <cfif FORM.submitted AND NOT SESSION.formErrors.length()>
 
             <div class="info">
-                <h3>The following information has been succesfully submitted to CSB.</h3>
+                <h3>The following information has been succesfully submitted to ISE.</h3>
             </div>
             
             <div class="grey">
@@ -420,7 +418,7 @@
         <cfelse>
 
             <div class="info">
-                <span class="red">The CSB Quarterly questionnaire is below</span> - there are 7 (seven) questions you must answer. <br /> 
+                <span class="red">The ISE Quarterly questionnaire is below</span> - there are 7 (seven) questions you must answer. <br /> 
                 <span class="red">You must respond in full within 10 (ten) business days</span> of receiving this  questionnaire.
             </div>
         
@@ -465,7 +463,7 @@
                         <tr><td colspan="2"><hr /></td></tr>
                         
                         <tr>
-                            <td colspan="2" class="bold">5. Have you changed your housing address, email and contract phone since your last report to CSB? <span class="required">*</span></td>
+                            <td colspan="2" class="bold">5. Have you changed your housing address, email and contract phone since your last report to ISE? <span class="required">*</span></td>
                         </tr>
                         <tr>
                             <td colspan="2">
@@ -478,7 +476,7 @@
                         </tr>
                         <tr>
                             <td colspan="2" class="bold">
-                                <label for="housingChangedDetails">If Yes and you did not previously inform CSB, please provide your full new housing address, email and contact phone number</label> 
+                                <label for="housingChangedDetails">If Yes and you did not previously inform ISE, please provide your full new housing address, email and contact phone number</label> 
                             </td>
                         </tr>
                         <tr>
