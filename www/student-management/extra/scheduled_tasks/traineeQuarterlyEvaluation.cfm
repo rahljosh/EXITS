@@ -20,9 +20,7 @@
 		vProgramList = '194,195,196,197,198,199';
 		
 		// Set Current Month Evaluation
-		//vCurrentMonth = Month(now());
-		
-		vCurrentMonth = 2;
+		vCurrentMonth = Month(now());
 		
 		// Set Month of Evaluation Report
 		vMonthEvaluation = 0;
