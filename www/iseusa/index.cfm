@@ -200,7 +200,7 @@ $("#slidingDiv").animate({"height": "toggle"}, { duration: 1000 });
 <table width="210" border="0" style="margin-left:0px;">
   <tr>
     <th scope="row" align="left">
-    	<a href="https://www.esecutive.com/smg/" target="_blank"><img src="images/BaggageInsurance.png" width="91" height="40" border="0" title="Global Secutive Insurance" /></a>
+    	<a href="https://www.esecutive.com/ise/" target="_blank"><img src="images/BaggageInsurance.png" width="91" height="40" border="0" title="Global Secutive Insurance" /></a>
     </th>
     <th scope="row" align="right"><a href="http://www.esecutive.com/index.php"><img src="images/GSlogo.png" width="79" height="34" /></a></th>
     <th scope="row" align="right">
