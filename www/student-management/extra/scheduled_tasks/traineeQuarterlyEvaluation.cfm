@@ -20,30 +20,30 @@
 		vProgramList = '194,195,196,197,198,199';
 		
 		// Set Current Month Evaluation
-		vCurrentMonth = Month(now());
+		//vCurrentMonth = Month(now());
+		
+		vCurrentMonth = 2;
 		
 		// Set Month of Evaluation Report
-		vMonthEvaluation = '';
+		vMonthEvaluation = 0;
 		
 		switch(vCurrentMonth) {
-			
 			// February
-			case 2: case 3: case 4: {
+			case 2: case 3: case 4: 
 				vMonthEvaluation = 2;
-			}
+				break;
 			// May
-			case 5: case 6: case 7: {
+			case 5: case 6: case 7: 
 				vMonthEvaluation = 5;
-			}
+				break;
 			// August
-			case 8: case 9: case 10: {
+			case 8: case 9: case 10: 
 				vMonthEvaluation = 8;
-			}
+				break;
 			// November
-			case 11: case 12: case 1: {
+			case 11: case 12: case 1: 
 				vMonthEvaluation = 11;
-			}
-
+				break;
 		}
 		
 		// Store Midterm Email Body in a variable
@@ -53,18 +53,18 @@
 				<p>Dear Participant,</p>
 				
 				<p>				
-					Your participation in the Training Program is sponsored by CSB International. 
+					Your participation in the Training Program is sponsored by ISE. 
 					We are committed to provide you with an ongoing support during your program in the United States. 
 					Every three months you will receive quarterly evaluations by e-mail. These evaluations are crucial for your successful experience.
 				</p>
 				
 				<p>	
-					Please use the link below to access the CSB quarterly evaluation, it consists of 7 (seven) questions you must answer. 
+					Please use the link below to access the ISE quarterly evaluation, it consists of 7 (seven) questions you must answer. 
 					You must respond in full within 10 (ten) business days of receiving this email.
 				</p>
 				
 				<p>
-					<a href=""{vQuarterlyEvaluationLink}"">CSB Quarterly Evaluation</a>
+					<a href=""{vQuarterlyEvaluationLink}"">ISE Quarterly Evaluation</a>
 				</p>
 				
 				<p>
@@ -82,7 +82,7 @@
 				<p>	
 					Sergei Chernyshov  <br />
 					Program Manager  <br />
-					CSB International  <br />
+					International Student Exchange  <br />
 					119 Cooper St, Babylon, NY, 11702  <br />
 					Phone:(631) 893-4540 Ext.131 Fax:(631) 893-4550  <br />
 					Toll Free: 1-800-766-4656  <br />
@@ -144,7 +144,7 @@
         	p.programID,
             ec.lastName 
     </cfquery>
-
+    
 	<cfscript>
 		// set email to
 		vEmailFrom = 'sergei@iseusa.com (Sergei Chernyshov - Trainee Program)';
@@ -163,7 +163,7 @@
 					emailFrom=vEmailFrom,
 					emailTo=qGetActiveCandidates.email[i],
 					emailReplyTo=vEmailFrom,
-					emailSubject=qGetActiveCandidates.firstName[i] & ' ' & qGetActiveCandidates.lastName[i] & " CSB Trainee #MonthAsString(vMonthEvaluation)# Quarterly Questionnaire",
+					emailSubject=qGetActiveCandidates.firstName[i] & ' ' & qGetActiveCandidates.lastName[i] & " ISE Trainee #MonthAsString(vMonthEvaluation)# Quarterly Questionnaire",
 					emailMessage=vQuarterlyEvaluationLink,
 					emailPriority=1,
 					footerType="emailNoInfo",
