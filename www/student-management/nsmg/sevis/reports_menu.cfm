@@ -65,7 +65,8 @@
                 SELECT 	                	
                     count(s.studentID) AS totalStudents,
                     u.userID,
-                    u.businessName
+                    u.businessName,
+                    u.accepts_sevis_fee
                 FROM 
                     smg_students s
                 INNER JOIN 
@@ -89,28 +90,41 @@
             
 	<!--- FORM Submitted - Display Report --->
     <cfif FORM.submitted AND NOT SESSION.formErrors.length()>
-
+		
+        <cfscript>
+			vTotal = 0;
+		</cfscript>
+        
         <table width="60%" class="report" cellpadding="3" cellspacing="0" align="center">
             <tr>
-            	<td colspan="2" style="font-weight:bold; border:1px solid ##CCC;" align="center">
+            	<td colspan="3" style="font-weight:bold; border:1px solid ##CCC;" align="center">
                 	<p>Total of Students By International Representative</p>
                 </td>
 			</tr>	  
             <tr>
-            	<td colspan="2" style="font-weight:bold; border:1px solid ##CCC;">
+            	<td colspan="3" style="font-weight:bold; border:1px solid ##CCC;">
                     <p>Batches included in this report: #FORM.listBatchID#</p>
                 </td>
 			</tr>	            
             <tr bgcolor="##FFFFE6">
                 <td valign="top" style="font-weight:bold; border:1px solid ##CCC;">International Representative</td>
+                <td valign="top" style="font-weight:bold; border:1px solid ##CCC;">SEVIS Fee</td>
                 <td valign="top" style="font-weight:bold; border:1px solid ##CCC;" align="center">Total of Students</td>
             </tr>
             <cfloop query="qGetResults">
                 <tr bgcolor="###iif(qGetResults.currentRow MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
                     <td style="border:1px solid ##CCC;">#qGetResults.businessName#</td>
+                    <td style="border:1px solid ##CCC;">#YesNoFormat(qGetResults.accepts_sevis_fee)#</td>
                     <td style="border:1px solid ##CCC;" align="center">#qGetResults.totalStudents#</td>
                 </tr>
+				<cfscript>
+                    vTotal = vTotal+qGetResults.totalStudents;
+                </cfscript>
 			</cfloop>
+            <tr bgcolor="###iif(qGetResults.currentRow MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
+                <td colspan="2" style="border:1px solid ##CCC;">Total</td>
+                <td style="border:1px solid ##CCC;" align="center">#vTotal#</td>
+            </tr>
 		</table>                
     
     <!--- FORM --->
@@ -233,8 +247,3 @@
     </cfif>
 
 </cfoutput>
-
-
-
-
-
