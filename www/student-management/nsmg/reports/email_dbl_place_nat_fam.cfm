@@ -23,7 +23,7 @@
 <cfinclude template="../querys/get_company_short.cfm">
 
 <cfquery name="get_student_info" datasource="mysql">
-	SELECT s.studentid, s.familylastname, s.address, s.address2, s.city, s.zip, s.hostid, s.doubleplace, s.familylastname, s.firstname, s.ds2019_no,
+	SELECT s.studentid, s.familylastname, s.address, s.address2, s.city, s.zip, s.hostid, s.doubleplace, s.familylastname, s.firstname, s.ds2019_no, s.sex,
 			s.arearepid, s.regionassigned, s.programid, s.intrep,
 			c.countryname,
 			p.startdate
@@ -35,7 +35,7 @@
 
 <!--- Double Placement Student --->
 <cfquery name="double_placement" datasource="MySQL">
-	SELECT s.firstname, s.familylastname, s.ds2019_no,
+	SELECT s.firstname, s.familylastname, s.ds2019_no,s.sex,
 			c.countryname,
 			p.startdate
 	FROM smg_students s
@@ -131,8 +131,12 @@ TO="#emails#" failto="#get_current_user.email#" REPLYTO="""#companyshort.company
 	<td width="300" class="style1" valign="top">#UCASE(RTRIM(get_student_info.firstname))# #UCASE(RTRIM(get_student_info.familylastname))# <br>
 		#CLIENT.DSFormName# no.: &nbsp; #get_student_info.ds2019_no# <br>
 		Program Start Date: &nbsp; #DateFormat(get_student_info.startdate, 'mm/dd/yyyy')#</td>
-	<td width="80" class="style1" valign="top">FROM</td>
-	<td class="style1" valign="top">#UCASE(RTRIM(get_student_info.countryname))#</td>
+	<td width="80" class="style1" valign="top"><p>FROM</p>
+	  <p>GENDER</p>
+	  </td>
+	<td class="style1" valign="top"><p>#UCASE(RTRIM(get_student_info.countryname))#</p>
+	  <p>#UCASE(RTRIM(get_student_info.sex))#</p></td>
+	
 </tr>
 <tr>
 	<cfif get_student_info.doubleplace is 0>
@@ -142,8 +146,10 @@ TO="#emails#" failto="#get_current_user.email#" REPLYTO="""#companyshort.company
 	<td width="300" class="style1" valign="top">#UCASE(RTRIM(double_placement.firstname))# #UCASE(RTRIM(double_placement.familylastname))# <br>
 		#CLIENT.DSFormName# no.: &nbsp; #double_placement.ds2019_no# <br>
 		Program Start Date: &nbsp; #DateFormat(double_placement.startdate, 'mm/dd/yyyy')#</td>
-	<td class="style1" valign="top">FROM</td>
-	<td class="style1" valign="top">#UCASE(RTRIM(double_placement.countryname))#</td>
+	 <td width="80" class="style1" valign="top"><p>FROM</p>
+    <p>GENDER</p></td>
+	<td class="style1" valign="top"><p>#UCASE(RTRIM(double_placement.countryname))#</p>
+	  <p>#UCASE(RTRIM(double_placement.sex))#</p></td>
 	</cfif>
 </tr>
 </table><BR>
