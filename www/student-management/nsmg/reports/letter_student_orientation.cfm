@@ -33,7 +33,7 @@
 
 <table width=650 align="center" border=0 bgcolor="FFFFFF" cellpadding="4" cellspacing="1">
 	<tr><th><i>STUDENT ORIENTATION SIGN-OFF</i></th></tr>
-</table><br><br>
+</table>
 
 <table width=650 align="center" border=0 bgcolor="FFFFFF" cellpadding="4" cellspacing="1"> 
 	<tr class="style1">
@@ -68,7 +68,7 @@
 		<td width="120">&nbsp; &nbsp; &nbsp; &nbsp; / &nbsp; &nbsp; &nbsp; &nbsp; / &nbsp; &nbsp; &nbsp; &nbsp; .<br><img src="../pics/line.gif" width="115" height="1" border="0" align="absmiddle"></td>		
 		<td width="350">I was told and I understood the following: </td>
 	</tr>
-	<tr class="style1"><td>&nbsp;</td><td align="center">Date</td><td>&nbsp;</td></tr>
+	
 </table><br>
 
 <table width=650 align="center" border=0 bgcolor="FFFFFF" cellpadding="3" cellspacing="0">
