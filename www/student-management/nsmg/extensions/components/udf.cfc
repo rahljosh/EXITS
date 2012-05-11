@@ -962,8 +962,7 @@
                 AND checkAgreement.ar_cbc_auth_form is not '' 
                 AND cbcCheck.date_approved is ''
                 AND checkAgreement.ar_agreement is not ''
-                AND checkAgreement.cbcSig is not ''
-                AND checkAgreement.agreeSig is not ''>
+                >
                 <cfset secondRepReviewAcct = 1>
             <cfelse>
                 <cfset secondRepReviewAcct = 0>
