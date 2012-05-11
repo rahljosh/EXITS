@@ -362,7 +362,7 @@
             <tr style="font-weight:bold;">
                 <td valign="top">Company</td>
                 <td valign="top">Season</td>		
-                <td valign="top">Autdorization Received <br><font size="-2">mm/dd/yyyy</font></td>		
+                <td valign="top">Authorization Received <br><font size="-2">mm/dd/yyyy</font></td>		
                 <td valign="top">CBC Sent <br><font size="-2">mm/dd/yyyy</font></td>
                 <td valign="top">Expiration Date<br><font size="-2">mm/dd/yyyy</font></td>		
                 <td valign="top">Request ID</td>
