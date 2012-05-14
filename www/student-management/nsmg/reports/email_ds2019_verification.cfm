@@ -128,9 +128,9 @@
         <table width="80%" cellpadding=10 cellspacing="0" align="center" frame="below">
             <tr>
             	<td colspan="4">
-                    <strong> 
-                    As an agent, you are now required to complete all verifications electronically. <br />
-                    Please find the directions below:</strong>
+                    <p style="font-weight:bold;">
+                        As an agent, you are now required to complete all verifications electronically. Please find the directions below:
+                    </p>
                     
                     <ol>
                     	<li>Login to your EXITS account</li>
@@ -146,6 +146,15 @@
 					</ol>                        
 					
                     <p>If you have clicked received by mistake, please contact #APPLICATION.CFC.UDF.displayAdmissionsInformation(displayInfo='emailLink')#</p>
+
+                    <cfif isDate(FORM.deadline)>
+						<p>
+                        	<strong>ISE will be processing all verified DS2019 forms on #DateFormat(FORM.deadline, 'mm/dd/yyyy')#</strong>. 
+                            Please make sure that all of your verifications are completed prior to this date.
+                            If they are not completed prior to this date, your students will not be included in this batch and will not be processed until the next batch. 
+                            It could easily be another 3-4 weeks before we process another batch.                     
+                    	</p>
+                    </cfif>
 					
                     <p>Please find list of students below that we have NOT received an electronically verification report.</p>
                 </td>
