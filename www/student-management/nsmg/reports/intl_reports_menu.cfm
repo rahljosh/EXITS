@@ -130,7 +130,7 @@
                             <td>Deadline(optional):</td>
                             <td><input type="text" name="deadline" maxlength="10" class="datePicker"> mm/dd/yyyy</td>
                         </tr>
-                        <tr><td colspan="2"><input type="checkbox" name="send_email" value="1">&nbsp; Send automated emails to International Representatives</input></td></tr>
+                        <tr><td colspan="2"><input type="checkbox" name="send_email" id="ds2019VerificationEmail" value="1">&nbsp; <label for="ds2019VerificationEmail">Send automated emails to International Representatives</label></input></td></tr>
                         <tr><TD colspan="2" align="center" bgcolor="e2efc7"><input type="image" src="pics/view.gif" align="center" border="0" readonly="yes"></td></tr>
                     </table>
                 </cfform>
