@@ -310,7 +310,7 @@
                 FROM
                     smg_students s 
                 INNER JOIN
-                    smg_flight_info fi ON fi.studentID = s.studentID 					
+                    smg_flight_info fi ON fi.studentID = s.studentID 
                     AND 
                          fi.dep_date = ( 
 				                         	SELECT 
@@ -319,8 +319,10 @@
                                             	smg_flight_info
                                             WHERE 
                                             	studentID = s.studentID 
+                                            AND
+                                                programID = s.programID				
                                             AND 
-                                            	fi.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure"> 
+                                            	flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure"> 
                                             AND 
                                             	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
 										) 
