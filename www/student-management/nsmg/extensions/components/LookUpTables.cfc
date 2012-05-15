@@ -34,7 +34,7 @@
 
         <cfquery 
         	name="qGetApplicationLookUp"
-        	datasource="MySQL">
+        	datasource="#APPLICATION.DSN#">
                 SELECT 
                 	ID,
                     applicationID,
@@ -117,7 +117,7 @@
         
         <cfquery 
         	name="qGetApplicationHistory"
-        	datasource="MySQL">
+        	datasource="#APPLICATION.DSN#">
                 SELECT 
                 	ah.ID,
                     ah.applicationID,
@@ -177,7 +177,7 @@
         <cfargument name="dateUpdated" default="#now()#" hint="dateCreated is not required">
 
         <cfquery 
-        	datasource="MySQL">
+        	datasource="#APPLICATION.DSN#">
                 INSERT
                     applicationHistory
                  (
@@ -218,7 +218,7 @@
 
         <cfquery 
         	name="qGetPaymentType"
-        	datasource="MySQL">
+        	datasource="#APPLICATION.DSN#">
                 SELECT 
                 	ID,
                     type,
@@ -260,7 +260,7 @@
 
         <cfquery 
         	name="qGetUserType"
-        	datasource="MySQL">
+        	datasource="#APPLICATION.DSN#">
                 SELECT 
                 	userTypeID,
                     userType,
@@ -284,12 +284,39 @@
 	</cffunction>
 
 
-	<cffunction name="getCountry" access="public" returntype="query" output="false" hint="Returns a country or list of countries">
-    	<cfargument name="countryID" default="0" hint="countryID is not required">
+	<cffunction name="getSeason" access="public" returntype="query" output="false" hint="Returns a list of seasons or a specific season">
+    	<cfargument name="seasonID" default="" hint="seasonID is not required">
+        <cfargument name="isActive" default="1" hint="isActive is not required">
+
+        <cfquery 
+        	name="qGetSeason"
+        	datasource="#APPLICATION.DSN#">
+                SELECT 
+                	seasonID,
+                    season,
+                    active,
+                    startDate,
+                    endDate
+                FROM 
+                	smg_seasons
+				WHERE 
+                	active = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isActive)#">
+				<cfif LEN(ARGUMENTS.seasonID)>
+                  	AND  
+                        seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+                </cfif>                        
+        </cfquery> 
+
+		<cfreturn qGetSeason>
+	</cffunction>
+
+
+	<cffunction name="getCountry" access="public" returntype="query" output="false" hint="Returns a list of countries or a specific country">
+    	<cfargument name="countryID" default="" hint="countryID is not required">
 
         <cfquery 
         	name="qGetCountry"
-        	datasource="MySQL">
+        	datasource="#APPLICATION.DSN#">
                 SELECT 
                 	countryID,
                     countryName,
@@ -298,9 +325,9 @@
                     continent
 				FROM
                 	smg_countrylist
-				<cfif VAL(ARGUMENTS.countryID)>
+				<cfif LEN(ARGUMENTS.countryID)>
 	                WHERE 
-                        countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.countryID#">
+                        countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.countryID)#">
                 </cfif>                        
         </cfquery> 
 
@@ -308,12 +335,12 @@
 	</cffunction>
 
 
-	<cffunction name="getState" access="public" returntype="query" output="false" hint="Returns a state or list of states">
-    	<cfargument name="stateID" default="0" hint="stateID is not required">
+	<cffunction name="getState" access="public" returntype="query" output="false" hint="Returns a list of states or a specific state">
+    	<cfargument name="stateID" default="" hint="stateID is not required">
 
         <cfquery 
         	name="qGetState"
-        	datasource="MySQL">
+        	datasource="#APPLICATION.DSN#">
                 SELECT 
                 	ID,
                     state,
@@ -321,9 +348,9 @@
                     guarantee_fee
 				FROM
                 	smg_states
-				<cfif VAL(ARGUMENTS.stateID)>
+				<cfif LEN(ARGUMENTS.stateID)>
                     WHERE 
-                        ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.stateID#">
+                        ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.stateID)#">
                 </cfif>                        
         </cfquery> 
 
@@ -337,7 +364,7 @@
 
         <cfquery 
         	name="qGetInterest"
-        	datasource="MySQL">
+        	datasource="#APPLICATION.DSN#">
                 SELECT 
                 	interestID,
                     interest,
@@ -365,7 +392,7 @@
 
         <cfquery 
         	name="qGetPrivateSchool"
-        	datasource="MySQL">
+        	datasource="#APPLICATION.DSN#">
                 SELECT 
                 	privateSchoolID,
                     privateSchoolPrice,

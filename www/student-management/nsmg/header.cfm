@@ -2,10 +2,10 @@
 <cfsilent>
 	
     <!--- Param URL variables --->
-	<cfparam name="url.curdoc" default="initial_welcome">
-    <cfparam name="url.menu" default="">
-    <cfparam name="url.submenu" default="">
-    <cfparam name="url.action" default="">
+	<cfparam name="URL.curdoc" default="initial_welcome">
+    <cfparam name="URL.menu" default="">
+    <cfparam name="URL.submenu" default="">
+    <cfparam name="URL.action" default="">
 
     <!--- Quick Search Form --->
     <cfparam name="FORM.quickSearchAutoSuggestStudentID" default="">

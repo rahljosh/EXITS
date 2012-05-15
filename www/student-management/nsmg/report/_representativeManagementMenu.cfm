@@ -47,72 +47,6 @@
     <tr>
         <td>
 		
-        	<!--- Row 1 Column 1 - Hierarchy Report --->
-            <form action="report/index.cfm?action=userHierarchyReport" name="userHierarchyReport" id="userHierarchyReport" method="post" target="blank">
-                
-                <table width="98%" cellpadding="4" cellspacing="0" class="blueThemeReportTable left">
-                    <tr><th colspan="2">User Hierarchy Report</th></tr>
-                    <tr class="on">
-                        <td class="subTitleRightNoBorder">Region: <span class="required">*</span></td>
-                        <td>
-                            <select name="regionID" id="regionID" class="xLargeField" multiple size="6" required>
-                                <cfloop query="qGetRegionList"><option value="#qGetRegionList.regionID#">#qGetRegionList.regionname#</option></cfloop>
-                            </select>
-                        </td>		
-                    </tr>
-                    <tr class="on">
-                        <td class="subTitleRightNoBorder">Sort By: <span class="required">*</span></td>
-                        <td>
-                            <select name="order" id="order" class="xLargeField" required>
-                                <option value="lastName" selected="selected">Last Name</option>
-                                <option value="firstname">First Name</option>
-                                <option value="userID">User ID</option>
-                                <option value="phone">Phone</option>
-                                <option value="fax">Fax</option>
-                                <option value="email">Email</option>
-                                <option value="city">City</option>
-                                <option value="state">State</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr class="on">
-                        <td class="subTitleRightNoBorder">Begin Date: </td> 
-                        <td>
-                        	<input type="text" class="datePicker" name="beginDate" id="beginDate" /> (Account Creation Verified)
-                        </td>
-                    </tr>
-                    <tr class="on">
-                        <td class="subTitleRightNoBorder">End Date: </td> 
-                        <td>
-                        	<input type="text" class="datePicker" name="endDate" id="endDate" /> (Account Creation Verified)
-                        </td>
-                    </tr>
-                    <tr class="on">
-                        <td class="subTitleRightNoBorder">Options</td>
-                        <td>
-                        	<input type="checkbox" name="includeViewOnly" id="includeViewOnly" />Include Users With View Only Access 
-                            <br />
-                            <input type="checkbox" name="includeStudents" id="includeStudents" />Include Students
-                        </td>
-                    </tr>
-                    <tr class="on">
-                        <td class="subTitleRightNoBorder">Output Type: <span class="required">*</span></td>
-                        <td>
-                            <select name="outputType" class="xLargeField">
-                                <option value="onScreen">On Screen</option>
-                                <option value="Excel">Excel Spreadsheet</option>
-                            </select>
-                        </td>		
-                    </tr>
-                    <tr class="on">
-                        <td>&nbsp;</td>
-                        <td class="required noteAlert">* Required Fields</td>
-                    </tr>
-                    <tr>
-                        <th colspan="2"><input type="image" src="pics/view.gif" align="center" border="0"></th>
-                    </tr>
-                </table>
-            </form>	
 
 		</td>
         <td>
@@ -120,7 +54,7 @@
         	<!--- Row 1 Column 2 - Compliance Mileage Report --->
             <form action="report/index.cfm?action=complianceMileageReport" name="complianceMileageReport" id="complianceMileageReport" method="post" target="blank">
                 
-                <table width="98%" cellpadding="4" cellspacing="0" class="blueThemeReportTable left">
+                <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable left">
                     <tr><th colspan="2">Compliance Mileage Report</th></tr>
                     <tr class="on">
                         <td class="subTitleRightNoBorder">Program: <span class="required">*</span></td>
@@ -173,7 +107,7 @@
         	<!--- Row 2 Column 1 - Second Visit Representatives Compliance By Region --->
             <form action="report/index.cfm?action=secondVisitRepCompliance" name="secondVisitRepCompliance" id="secondVisitRepCompliance" method="post" target="blank">
                 
-                <table width="98%" cellpadding="4" cellspacing="0" class="blueThemeReportTable left">
+                <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable left">
                     <tr><th colspan="2">Second Visit Representatives Compliance By Region</th></tr>
                     <tr class="on">
                         <td class="subTitleRightNoBorder">Program: <span class="required">*</span></td>
@@ -227,7 +161,7 @@
         	<!--- Row 2 Column 2 - Pending Student Missing Second Visit Representative --->
             <form action="report/index.cfm?action=pendingStudentMissingSecondVisitRep" name="pendingStudentMissingSecondVisitRep" id="pendingStudentMissingSecondVisitRep" method="post" target="blank">
                 
-                <table width="98%" cellpadding="4" cellspacing="0" class="blueThemeReportTable left">
+                <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable left">
                     <tr><th colspan="2">Pending Students Missing Second Visit Representative</th></tr>
                     <tr class="on">
                         <td class="subTitleRightNoBorder">Program: <span class="required">*</span></td>
@@ -282,7 +216,7 @@
         	<!--- Row 3 Column 1 - List of Trainings by Region --->
             <form action="report/index.cfm?action=userTrainingListByRegion" name="userTrainingListByRegion" id="userTrainingListByRegion" method="post" target="blank">
                 
-                <table width="98%" cellpadding="4" cellspacing="0" class="blueThemeReportTable left">
+                <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable left">
                     <tr><th colspan="2">User Training List by Region</th></tr>
                     <tr class="on">
                         <td class="subTitleRightNoBorder">Program: <span class="required">*</span></td>
@@ -333,7 +267,7 @@
         	<!--- Row 3 Column 2 - Non Compliance Report --->
             <form action="report/index.cfm?action=userTrainingNonCompliant" name="userTrainingNonCompliant" id="userTrainingNonCompliant" method="post" target="blank">
                 
-                <table width="98%" cellpadding="4" cellspacing="0" class="blueThemeReportTable left">
+                <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable left">
                     <tr><th colspan="2">User Training Non-Compliant Report</th></tr>
                     <tr class="on">
                         <td class="subTitleRightNoBorder">Region: <span class="required">*</span></td>
@@ -369,6 +303,48 @@
                     </tr>
                 </table>
             </form>	
+        
+        
+        <!--- Active Users Authorization Not Received --->
+            <form action="report/index.cfm?action=usersCBCAuthorizationNotReceived" name="usersCBCAuthorizationNotReceived" id="usersCBCAuthorizationNotReceived" method="post" target="blank">
+                
+                <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable" align="center">
+                    <tr><th colspan="2">Active Users Authorization Not Received</th></tr>
+                    <tr class="on">
+                        <td class="subTitleRightNoBorder">User Type: <span class="required">*</span></td>
+                        <td>
+                            <select name="type" id="type" class="xLargeField" required>
+                                <option value="0">Office</option>
+                                <option value="1">Reps</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr class="on">
+                        <td class="subTitleRightNoBorder">Region: <span class="required">*</span></td>
+                        <td>
+                            <select name="regionID" id="regionID" class="xLargeField" multiple size="6" required>
+                                <cfloop query="qGetRegionList"><option value="#qGetRegionList.regionID#">#qGetRegionList.regionname#</option></cfloop>
+                            </select>
+                        </td>		
+                    </tr>
+                    <tr class="on">
+                        <td class="subTitleRightNoBorder">Output Type: <span class="required">*</span></td>
+                        <td>
+                            <select name="outputType" class="xLargeField">
+                                <option value="onScreen">On Screen</option>
+                                <option value="Excel">Excel Spreadsheet</option>
+                            </select>
+                        </td>		
+                    </tr>
+                    <tr class="on">
+                        <td>&nbsp;</td>
+                        <td class="required noteAlert">* Required Fields</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2"><input type="image" src="pics/view.gif" align="center" border="0"></th>
+                    </tr>
+                </table>
+            </form>
         
         </td>
     </tr>

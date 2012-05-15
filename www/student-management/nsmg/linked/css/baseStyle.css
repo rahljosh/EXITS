@@ -357,11 +357,11 @@
 
 
 /********************************************
-	REPORTS
+	NEW REPORTS MENU
 ********************************************/
 
 .reportButton {
-	width:22%;
+	width:20%;
 	color:#3b5998;
 	font-size:1.3em;
 	font-weight:bold;
@@ -375,16 +375,32 @@
 	background-color: #EDEFF4;
 }
 
-.reportButton a {
+.reportButtonSelected {
+	width:20%;
+	color:#3b5998;
+	font-size:1.3em;
+	font-weight:bold;
+	text-align:center;
+	padding: 15px;
+	margin: 15px 8px 15px 8px; 
+	display:inline-table;
+	-moz-border-radius: 15px;
+	border-radius: 10px;
+	border: #3b5998 1px solid; 
+	background-color: #FFF; 
+}
+
+.reportButton a, .reportButtonSelected a {
 	color:#3b5998;
 	text-decoration:none;
 }
 
-.reportButton:hover {
+.reportButton:hover, .reportButtonSelected:hover {
 	background-color: #FFF; 	
+	border: #3b5998 1px solid; 
 }
 
-.reportSection {
+.reportMenuTable {
 	width:100%;
 	border-bottom: 0px; 
 	background: #ffffff;
@@ -394,57 +410,94 @@
 	border-left: 2px solid #c6c6c6;
 }
 
-.reportSection td {
+.reportMenuTable td {
 	width:30%;
 	vertical-align:top;
 }
 
-/* DELETE */
-.reportSection .left {
-	float:left;	
-	margin-bottom:10px;
-}
-/* DELETE */
-.reportSection .right {
-	float:right;
-	margin-bottom:10px;
-}
-
-.reportSection input {
+.reportMenuTable input {
 	margin-top:1em;	
 }
 
-.reportSection label {
+.reportMenuTable label {
 	color:#3b5998;
 	cursor:pointer;
 	font-size:1.1em;
 	font-weight:bold;
 }
 
-.reportSection label:hover {
+.reportMenuTable label:hover {
 	color:#900;
 	font-size:1.2em;
 	text-decoration:none;
 }
 
-.reportSection ul {
+.reportMenuTable td {
+	width:33%;
+	padding:0.5em 1em 0em 1em;
+	border-right:1px solid #EDEFF4; /* #dbe3f5 */
+	border-bottom:1px solid #EDEFF4; 
+} 
+
+.reportMenuTable td.right {
+	border-right:0px;
+} 
+
+.reportMenuTable td.lastRow {
+	border-bottom:0px;
+} 
+
+.reportMenuTable td.noBorder {
+	border:0px;
+} 
+
+.reportMenuTable ul.mainList {
+	margin-left:0em; 
+	padding-left:0.2em; 
+	margin-bottom:1em;
+}
+
+.reportMenuTable ul.mainList li { 
+	color:#3b5998;
+	cursor:pointer;
+	font-size:1.2em;
+	font-weight:bold;
+	list-style: none; 
+	padding-left: 0.8em; 
+	margin-bottom:0.5em; 
+	background:url(../../pics/bullet.gif) 0em 0.3em no-repeat; /* change background em accordingly */ 
+}
+
+.reportMenuTable ul.mainList li:hover {
+	color:#900;
+	text-decoration:none;
+}
+
+.reportMenuTable ul.mainList ul { 
+	padding-left:2em;
+}
+
+.reportMenuTable .mainList ul li {
 	color:#000;
-	font-size:0.9em;
+	cursor:text;
+	font-size:1em;
 	font-weight:normal;
-  	padding-left:1em; 
-	margin:0.6em 0em 1em 1.4em;
+	background-image:url(../../pics/bullet_child.gif); 
 }
 
-.reportSection ul li {
-	list-style: none; 	
-	margin-bottom:0.5em;
-	padding-left: 1em; 
-	background:url(../../pics/bullet.gif) 0em 0.5em no-repeat; /* change background em accordingly */
+.reportMenuTable .mainList ul li:hover {
+	color:#000;
+	text-decoration:none;
 }
 
-.reportSection .buttonBack {
-	float:right;
-}
+/********************************************
+	END OF NEW REPORTS MENU
+********************************************/
+
+
+/********************************************
+	REPORTS
+********************************************/
 
 .blueThemeReportTable {
 	border:1px solid #3b5998;

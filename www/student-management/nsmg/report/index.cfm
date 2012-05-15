@@ -11,10 +11,27 @@
 
 <!--- Kill extra output --->
 <cfsilent>
+
+    <cfscript>
+		// Param Variables
+		param name="action" default="menu";
+
+		// Get Programs
+		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(dateActive=1);
+		
+		// Get Facilitators
+		qGetFacilitatorList = APPLICATION.CFC.USER.getFacilitators();
+
+		// Get User Regions
+		qGetRegionList = APPLICATION.CFC.REGION.getUserRegions(
+			companyID=CLIENT.companyID,
+			userID=CLIENT.userID,
+			userType=CLIENT.userType
+		);
+		
+		qGetSeasonList = APPLICATION.CFC.LOOKUPTABLES.getSeason();
+	</cfscript>
 	
-	<!--- Param local variables --->
-	<cfparam name="action" default="list">
-    
 </cfsilent>
 	
 <!--- 
@@ -22,40 +39,27 @@
 --->
 
 <cfswitch expression="#action#">
-
-    <cfcase value="menu,studentManagementMenu,hostFamilyManagementMenu,representativeManagementMenu,officeManagementMenu" delimiters=",">
-
-        <!--- Include template --->
-        <cfinclude template="_#action#.cfm" />
-
-    </cfcase>
 	
     
     <!--- List of Student Management Reports --->
-    <cfcase value="studentListByRegion,placementPaperworkByRegion" delimiters=",">
+    <cfcase value="studentByRegion,studentFlightInformation,studentHelpCommunityService,studentPlacementPaperworkByRegion">
 
-        <!--- Include template --->
         <cfinclude template="studentManagement/_#action#.cfm" />
 
     </cfcase>
     
     
     <!--- List of Host Family Management Reports --->
-    <cfcase value="welcomeFamilyByRegion,hostFamilyCBCAuthorizationNotReceived,usersCBCAuthorizationNotReceived" delimiters=",">
+    <cfcase value="hostFamilyCBCAuthorization,hostFamilySpreadsheet,hostFamilyWelcomeByRegion">
 
-        <!--- Include template --->
         <cfinclude template="hostManagement/_#action#.cfm" />
 
     </cfcase>
     
     
     <!--- List of Representative Management Reports --->
-    <cfcase value="userHierarchyReport,complianceMileageReport,secondVisitRepCompliance,pendingStudentMissingSecondVisitRep,userTrainingListByRegion,userTrainingNonCompliant" delimiters=",">
-    
-    <!--- List of Office Management Reports --->
-    
+    <cfcase value="userAreaRepPaperwork,userCBCAuthorization,userComplianceMileageReport,userPendingStudentMissingSecondVisitRep,userRegionalHierarchy,userSecondVisitCompliance,userTrainingListByRegion,userTrainingNonCompliant">
 
-        <!--- Include template --->
         <cfinclude template="representativeManagement/_#action#.cfm" />
 
     </cfcase>
@@ -63,19 +67,16 @@
 
     <!--- List of Office Management Reports --->
     <!---
-    <cfcase value="" delimiters=",">
+    <cfcase value="">
 
-        <!--- Include template --->
         <cfinclude template="officeManagement/_#action#.cfm" />
 
     </cfcase>
 	--->
     
-
-    <!--- The default case is the login page --->
+    <!--- Menu Options --->
     <cfdefaultcase>
-        
-        <!--- Include template --->
+    
         <cfinclude template="_menu.cfm" />
 
     </cfdefaultcase>
