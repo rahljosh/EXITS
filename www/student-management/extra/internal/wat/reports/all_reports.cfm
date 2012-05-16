@@ -83,6 +83,8 @@
                         
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/list_students_work_study_wt" class="style4">- List of Candidates for DOS</a></p>
                         
+                        <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/candidatesByStateAndCity" class="style4">- Candidates by State and City</a></p>
+                        
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/taxback" class="style4">- Report for Taxback</a></p>
 				  </td>
 				</tr>
