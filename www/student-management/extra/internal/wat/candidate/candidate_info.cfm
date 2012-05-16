@@ -1465,22 +1465,10 @@
                                     <table width="100%" cellpadding=3 cellspacing="0" border="0">
                                         <tr bgcolor="##C2D1EF">
                                         	<td colspan="4" class="style2" bgcolor="##8FB6C9">&nbsp;:: Arrival Verification</td>
-                                        </tr>	
-                                        <tr>
-                                        	<td class="style1" width="30%" align="right"><label for="verification_address"><strong>House Address Verified:</strong></label></td>
-                                            <td class="style1" width="70%">
-                                            	<input type="checkbox" name="verification_address" id="verification_address" value="1" class="formField" disabled <cfif VAL(qGetCandidate.verification_address)>checked="checked"</cfif> >
-                                            </td>
                                         </tr>
                                         <tr>
-                                        	<td class="style1" align="right"><label for="verification_sevis"><strong>SEVIS Activated:</strong></label></td>
-                                        	<td class="style1">
-                                        		<input type="checkbox" name="verification_sevis" id="verification_sevis" value="1" class="formField" disabled <cfif VAL(qGetCandidate.verification_sevis)>checked="checked"</cfif> >
-                                        	</td>
-                                        </tr>
-                                        <tr>
-                                        	<td class="style1" align="right"><label for="watDateCheckedIn"><strong>Checked-In Date:</strong></label></td>
-                                        	<td class="style1">
+                                        	<td class="style1" width="30%" align="right"><label for="watDateCheckedIn"><strong>Check-in/Validation Date:</strong></label></td>
+                                        	<td class="style1" width="70%">
                                                 <span class="readOnly">#dateFormat(qGetCandidate.watDateCheckedIn, 'mm/dd/yyyy')#</span>
                                                 <input type="text" name="watDateCheckedIn" id="watDateCheckedIn" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.watDateCheckedIn, 'mm/dd/yyyy')#" maxlength="10">
                                         		<font size="1">(mm/dd/yyyy)</font>
