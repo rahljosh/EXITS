@@ -6,7 +6,33 @@
     
 </cfsilent>    
 
-
+<cfscript>
+	// Get Regions
+	qGetRegions = APPLICATION.CFC.REGION.getUserRegions(companyID=CLIENT.companyID, userID=CLIENT.userID, userType=CLIENT.userType);
+	
+	if ( VAL(URL.all) ) {
+		
+		if ( CLIENT.companyid eq 13 OR client.companyid eq 14){
+			qGetProgramList = APPCFC.PROGRAM.getPrograms(companyid=client.companyid,isActive=1);
+		}
+		else {
+		// Programs
+		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms();
+		}
+		
+		
+	} else {
+		// Programs
+		if ( CLIENT.companyid eq 13 OR client.companyid eq 14){
+			qGetProgramList = APPCFC.PROGRAM.getPrograms(companyid=client.companyid,isActive=1);
+		}
+		else {
+		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(dateActive=1);
+		}
+	}
+	
+	
+</cfscript>
 
 <cfinclude template="../querys/get_intl_rep.cfm">
 
@@ -16,15 +42,12 @@
 
 <cfinclude template="../querys/get_facilitators.cfm">
 
-<cfinclude template="../querys/get_user_regions.cfm">
-
-<cfinclude template="../querys/get_programs.cfm">
-
-
 <style type="text/css">
 	table.nav_bar { font-size: 10px; background-color: #ffffe6; border: 1px solid e2efc7; }
 </style>
-
+<cfscript>
+    	
+</cfscript>
 <cfoutput>
 
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
@@ -32,7 +55,7 @@
 		<td height="24" width="13" background="pics/header_leftcap.gif">&nbsp;</td>
 		<td width="26" background="pics/header_background.gif"><img src="pics/students.gif"></td>
 		<td background="pics/header_background.gif"><h2>Placement Reports</h2></td>
-		<cfif ListFind("1,2,3,4", CLIENT.userType)>
+		<cfif ListFind("1,2,3,4,5", CLIENT.userType)>
             <td background="pics/header_background.gif" align="right">
                 <cfif NOT VAL(URL.All)>
                     <a href="?curdoc=reports/placement_reports_menu&all=1">Show All Programs</a>
@@ -59,7 +82,7 @@
 					<td valign="top">Program :</td>
 					<td>
 					<select name="programid" multiple  size="6">
-					<cfloop query="get_program"><option value="#ProgramID#">#programname#</option></cfloop>
+					<cfloop query="qGetProgramList"><option value="#ProgramID#">#programname#</option></cfloop>
 					</select>
 					</td>
 				</tr>
@@ -70,7 +93,7 @@
 					<cfif client.usertype GT 4><cfelse>
 					<option value=0>All Regions</option>
 					</cfif>
-					<cfloop query="get_regions"><option value="#regionid#"><cfif #len(get_regions.regionname)# gt 25>#Left(get_regions.regionname, 23)#...<cfelse>#regionname#</cfif></option></cfloop>
+					<cfloop query="qGetRegions"><option value="#regionid#"><cfif #len(qGetRegions.regionname)# gt 25>#Left(qGetRegions.regionname, 23)#...<cfelse>#regionname#</cfif></option></cfloop>
 					</select>
 					</td>		
 				</tr>
@@ -88,7 +111,7 @@
 				<tr align="left">
 					<td valign="top">Program:</td>
 					<td><select name="programid" multiple  size="6">
-					  <cfloop query="get_program">
+					  <cfloop query="qGetProgramList">
 					    <option value="#ProgramID#">#programname#</option>
 				      </cfloop>
 				    </select></td>
@@ -100,7 +123,7 @@
 					<cfif client.usertype GT 4><cfelse>
 					<option value=0>All Regions</option>
 					</cfif>
-					<cfloop query="get_regions"><option value="#regionid#"><cfif #len(get_regions.regionname)# gt 25>#Left(get_regions.regionname, 23)#...<cfelse>#regionname#</cfif></option></cfloop>
+					<cfloop query="qGetRegions"><option value="#regionid#"><cfif #len(qGetRegions.regionname)# gt 25>#Left(qGetRegions.regionname, 23)#...<cfelse>#regionname#</cfif></option></cfloop>
 					</select>
 					</td>		
 				</tr>
@@ -137,7 +160,7 @@
 					<td valign="top">Program :</td>
 					<td>
 					<select name="programid" multiple  size="6">
-					<cfloop query="get_program"><option value="#ProgramID#">#programname#</option></cfloop>
+					<cfloop query="qGetProgramList"><option value="#ProgramID#">#programname#</option></cfloop>
 					</select>
 					</td>
 				</tr>
@@ -148,7 +171,7 @@
 					<cfif client.usertype GT 4><cfelse>
 					<option value=0>All Regions</option>
 					</cfif>
-					<cfloop query="get_regions"><option value="#regionid#"><cfif #len(get_regions.regionname)# gt 25>#Left(get_regions.regionname, 23)#...<cfelse>#regionname#</cfif></option></cfloop>
+					<cfloop query="qGetRegions"><option value="#regionid#"><cfif #len(qGetRegions.regionname)# gt 25>#Left(qGetRegions.regionname, 23)#...<cfelse>#regionname#</cfif></option></cfloop>
 					</select>
 					</td>		
 				</tr>
@@ -167,7 +190,7 @@
 					<td valign="top">Program :</td>
 					<td>
 					<select name="programid" multiple  size="6">
-					<cfloop query="get_program"><option value="#ProgramID#">#programname#</option></cfloop>
+					<cfloop query="qGetProgramList"><option value="#ProgramID#">#programname#</option></cfloop>
 					</select>
 					</td>
 				</tr>
@@ -178,7 +201,7 @@
 					<cfif client.usertype GT 4><cfelse>
 					<option value=0>All Regions</option>
 					</cfif>
-					<cfloop query="get_regions"><option value="#regionid#">#regionname#</option></cfloop>
+					<cfloop query="qGetRegions"><option value="#regionid#">#regionname#</option></cfloop>
 					</select>
 					</td>		
 				</tr>
@@ -197,64 +220,38 @@
 	<cfif client.usertype LTE '4'>
 	<!--- Row 3 - 2 boxes --->
 	<table cellpadding=6 cellspacing="0" align="center" width="97%">
-	<tr>
-	<td width="50%" align="left" valign="top">
-		<cfform action="reports/welcome_fam_report.cfm" method="POST" target="blank">
-			<table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
-				<tr><th colspan="2" bgcolor="##e2efc7">Welcome Family Report</th></tr>
-				<tr align="left">
-					<td valign="top">Program :</td>
-					<td>
-					<select name="programid" multiple  size="6">
-					<cfloop query="get_program"><option value="#ProgramID#">#programname#</option></cfloop>
-					</select>
-					</td>
-				</tr>
-				<tr align="left">
-					<td valign="top">Region :</td>
-					<td>
-					<select name="regionid" size="1">
-					<cfif client.usertype GT 4><cfelse>
-					<option value=0>All Regions</option>
-					</cfif>
-					<cfloop query="get_regions"><option value="#regionid#"><cfif #len(get_regions.regionname)# gt 25>#Left(get_regions.regionname, 23)#...<cfelse>#regionname#</cfif></option></cfloop>
-					</select>
-					</td>		
-				</tr>
-				<tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
-			</table>
-		</cfform>
-	</td>
-	<td width="50%" align="right" valign="top">
-		<cfform action="reports/double_placement.cfm" method="POST" target="blank">
-			<table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
-				<tr><th colspan="2" bgcolor="##e2efc7">Double Placement - All Students</th></tr>
-				<tr align="left">
-					<td valign="top">Program :</td>
-					<td>
-					<select name="programid" multiple  size="6">
-					<cfloop query="get_program"><option value="#ProgramID#">#programname#</option></cfloop>
-					</select>
-					</td>
-				</tr>
-				<tr align="left">
-					<td valign="top">Region :</td>
-					<td>
-					<select name="regionid" size="1">
-					<cfif client.usertype GT 4><cfelse>
-					<option value=0>All Regions</option>
-					</cfif>
-					<cfloop query="get_regions"><option value="#regionid#">#regionname#</option></cfloop>
-					</select>
-					</td>		
-				</tr>
-				<tr>
-					<td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td>
-				</tr>
-			</table>
-		</cfform>
-	</td>
-	</tr>
+        <tr>
+            <td width="50%" align="left" valign="top">
+                <cfform action="reports/welcome_fam_report.cfm" method="POST" target="blank">
+                    <table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
+                        <tr><th colspan="2" bgcolor="##e2efc7">Welcome Family Report</th></tr>
+                        <tr align="left">
+                            <td valign="top">Program :</td>
+                            <td>
+                            <select name="programid" multiple  size="6">
+                            <cfloop query="qGetProgramList"><option value="#ProgramID#">#programname#</option></cfloop>
+                            </select>
+                            </td>
+                        </tr>
+                        <tr align="left">
+                            <td valign="top">Region :</td>
+                            <td>
+                            <select name="regionid" size="1">
+                            <cfif client.usertype GT 4><cfelse>
+                            <option value=0>All Regions</option>
+                            </cfif>
+                            <cfloop query="qGetRegions"><option value="#regionid#"><cfif #len(qGetRegions.regionname)# gt 25>#Left(qGetRegions.regionname, 23)#...<cfelse>#regionname#</cfif></option></cfloop>
+                            </select>
+                            </td>		
+                        </tr>
+                        <tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
+                    </table>
+                </cfform>
+            </td>
+            <td width="50%" align="right" valign="top">
+        		
+            </td>
+        </tr>
 	</table><br>
 	</cfif>
 	
@@ -266,10 +263,10 @@
                     <table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
                         <tr><th colspan="3" bgcolor="##e2efc7">Missing Placement Docs</th></tr>
                         <tr align="left">
-                            <td valign="top">Program :</td>
+                            <td width="20%" valign="top">Program :</td>
                             <td>
                                 <select name="programid" size="6" multiple>
-                                    <cfloop query="get_program">
+                                    <cfloop query="qGetProgramList">
                                         <option value="#ProgramID#">#programname#</option>
                                     </cfloop>
                                 </select>		
@@ -279,8 +276,8 @@
                             <td valign="top">Region :</td>
                             <td>
                                 <select name="regionID" size="6" multiple> 
-                                    <cfloop query="get_regions">
-                                        <option value="#get_regions.regionid#" <cfif get_regions.recordcount eq 1>selected</cfif>>#get_regions.regionname#</option>
+                                    <cfloop query="qGetRegions">
+                                        <option value="#qGetRegions.regionid#" <cfif qGetRegions.recordcount eq 1>selected</cfif>>#qGetRegions.regionname#</option>
                                     </cfloop> 
                                 </select>
                             </td>
@@ -297,7 +294,6 @@
                                 </td>		
                             </tr>
                         </cfif>
-
                         <tr align="left">
                             <td>Send as email to manager :</td>
                             <td>
@@ -324,59 +320,27 @@
 				<cfform action="reports/document_tracking_previous_host.cfm" method="POST" target="blank">
 					<table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
 						<tr><th colspan="2" bgcolor="##e2efc7">Missing Previous Placement Docs</th></tr>
-						<tr align="left">
-							<td valign="top">Program :</td>
-							<td>
-							<select name="programid" multiple size="6" selected>
-							<cfloop query="get_program">
-                                <option value="#ProgramID#"> #programname#</option> </cfloop>
-							</select>
-							</td>
-						</tr>
+                        <tr align="left">
+                            <td width="20%" valign="top">Program :</td>
+                            <td>
+                                <select name="programid" size="6" multiple>
+                                    <cfloop query="qGetProgramList">
+                                        <option value="#ProgramID#">#programname#</option>
+                                    </cfloop>
+                                </select>		
+                            </td>
+                        </tr>
                         <tr align="left">
                             <td valign="top">Region :</td>
-                            <td colspan="2"><cfselect enabled="Yes" name="regionid" size="6" multiple> <cfloop query="get_regions">
-                              <option value="#regionid#" <cfif get_regions.recordcount eq 1>selected</cfif>>#regionname#
-                                <cfif #get_program.currentrow# eq 1></cfif>
-                              </option>
-                            </cfloop> </cfselect></td>
+                            <td>
+                                <select name="regionID" size="6" multiple> 
+                                    <cfloop query="qGetRegions">
+                                        <option value="#qGetRegions.regionid#" <cfif qGetRegions.recordcount eq 1>selected</cfif>>#qGetRegions.regionname#</option>
+                                    </cfloop> 
+                                </select>
+                            </td>
                         </tr>
-                        <tr><td width="5">From : </td><td><cfinput type="text" name="dateFrom" size="8" maxlength="10" value="mm/dd/yyyy" OnClick="this.value='';"></cfinput></td></tr>
-                        <tr><td width="5">To : </td><td><cfinput type="text" name="dateTo" size="8" maxlength="10" value="mm/dd/yyyy" OnClick="this.value='';"></cfinput></td></tr><tr>		
-						<tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
-					</table>
-				</cfform>
-            </td>
-        </tr>
-	</table>
-	<br>
-
-	<!--- Row 6 - 2 boxes --->
-	<table cellpadding=6 cellspacing="0" align="center" width="97%">
-	<tr>
-	<td width="50%" align="left" valign="top">
-		<cfform action="reports/double_doc_tracking.cfm" method="POST" target="blank">
-			<table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
-				<tr><th colspan="2" bgcolor="##e2efc7">Missing Double Placement Docs</th></tr>
-				<tr align="left">
-					<td valign="top">Program :</td>
-					<td>
-                        <select name="programid" multiple  size="6">
-                        <cfloop query="get_program"><option value="#ProgramID#">#programname#</option></cfloop>
-                        </select>
-					</td>
-				</tr>
-				<tr align="left">
-					<td>Region :</td>
-					<td>
-					<select name="regionid">
-					<cfif client.usertype GT 4><cfelse>
-					<option value=0>All Regions</option>
-					</cfif>
-					<cfloop query="get_regions"><option value="#regionid#">#regionname#</option></cfloop>
-					</select>
-					</td>
-					<!--- Add Option to List by Facilitator
+                        <!--- Add Option to List by Facilitator --->
                         <cfif ListFind("1,2,3,4", CLIENT.userType)>
                             <tr align="left">
                                 <td>Facilitator :</td>
@@ -387,68 +351,44 @@
                                     </select>
                                 </td>		
                             </tr>
-                        </cfif> --->
+                        </cfif>
+                        <tr align="left">
+                            <td>Report By :</td>
+                            <td>
+                                <select name="reportBy"> 
+                                    <option value="Placing">Placing Representative</option>	
+                                    <option value="Supervising">Supervising Representative</option>	
+                                </select>
+                            </td>
+                        </tr>
+                        <tr align="left">
+                        	<td>Date Placed From : </td>
+                        	<td><input type="text" name="dateFrom" size="8" maxlength="10" value="" class="datePicker"></td>
+                        </tr>
+                        <tr align="left">
+                        	<td>To : </td>
+                            <td><input type="text" name="dateTo" size="8" maxlength="10" value="" class="datePicker"></td>
+                        </tr>
                         <tr align="left">
                             <td>Send as email to manager :</td>
                             <td>
-                                <input type="radio" name="sendemail" id="sendEmailNo" value="0" checked="checked"> <label for="sendEmailNo">No</label>  
-                                <input type="radio" name="sendemail" id="sendEmailYes" value="1"> <label for="sendEmailYes">Yes</label>
+                                <input type="radio" name="sendemail" id="sendPreviousEmailNo" value="0" checked="checked"> <label for="sendPreviousEmailNo">No</label>  
+                                <input type="radio" name="sendemail" id="sendPreviousEmailYes" value="1"> <label for="sendPreviousEmailYes">Yes</label>
                             </td>
                         </tr>
-                        <!----
                         <tr>
-                            <td>Report By :</td>
-                            <td>&nbsp;</td>
-                        </tr>	
-				
-                <tr>
-				  <select name="reportBy2">
-				    <option value="Placing">Placing Representative</option>
-				    <option value="Supervising">Supervising Representative</option>
-			      </select>
-				</tr>
-				---->	
-				<tr>
-					<td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td>
-				</tr>
-			</table>
-		</cfform>
-	</td>
-	<td width="50%" align="right" valign="top">
-	<cfif client.usertype LTE '4'>
-		<cfform action="reports/double_doc_tracking_by_fac.cfm" method="POST" target="blank">
-			<table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
-				<tr><th colspan="2" bgcolor="##e2efc7">Missing Double Placement Docs by Fac.</th></tr>
-				<tr align="left">
-					<td valign="top">Program :</td>
-				  <td>
-					<select name="programid" multiple  size="6">
-					<cfloop query="get_program"><option value="#ProgramID#">#programname#</option></cfloop>
-					</select>
-					<select name="userid" size="1">
-					  <option value=0>All </option>
-					  <cfloop query="get_facilitators">
-					    <option value="#userid#">#get_facilitators.firstname# #get_facilitators.lastname#</option>
-				      </cfloop>
-				    </select></td>
-				</tr>
-				<tr align="left">
-					<td valign="top">Facilitator :</td>
-					<td>&nbsp;</td>		
-				</tr>
-				<tr>
-					<td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td>
-				</tr>
-			</table>
-		</cfform>
-	</cfif>
-	</td>
-	</tr>
-	</table><br>
+                            <td colspan="3" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td>
+                        </tr>
+					</table>
+				</cfform>
+            </td>
+        </tr>
+	</table>
+	<br>
 	
 	<cfif client.usertype LTE '4'>
 	
-	<!--- Row 7 - 2 boxes --->
+	<!--- Row 6 - 2 boxes --->
 	<table cellpadding=6 cellspacing="0" align="center" width="97%">
 		<tr bgcolor="e2efc7"><th colspan="2">Visible for Office users only</th></tr>
 	</table>
@@ -456,26 +396,42 @@
 	<table cellpadding=6 cellspacing="0" align="center" width="97%">
 	<tr>
 		<td width="50%" align="left" valign="top">
-			<cfform action="reports/hf_x_supervising_distance.cfm" method="POST" target="blank">
+			<cfform action="reports/complianceMileageReport.cfm" method="POST" target="blank">
 				<table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
-					<tr><th colspan="2" bgcolor="##e2efc7">Host Family x Supervising Rep Distance in Miles (> 75 miles)</th></tr>
+					<tr><th colspan="2" bgcolor="##e2efc7">Compliance Mileage Report</th></tr>
 					<tr align="left">
 						<td valign="top">Program :</td>
 						<td>
-						<select name="programid" multiple  size="6">
-						<cfloop query="get_program"><option value="#ProgramID#">#programname#</option></cfloop>
+						<select name="programid" multiple="multiple" size="6" class="xLargeField">
+                            <cfloop query="qGetProgramList">
+                                <option value="#qGetProgramList.ProgramID#">#qGetProgramList.programname#</option>
+                            </cfloop>
 						</select>
 						</td>
 					</tr>
 					<tr align="left">
 						<td valign="top">Region :</td>
 						<td>
-							<select name="regionid" size="1">
-							<cfif client.usertype LT 4><option value=0>All Regions</option></cfif>
-							<cfloop query="get_regions"><option value="#regionid#"><cfif #len(get_regions.regionname)# gt 25>#Left(get_regions.regionname, 23)#...<cfelse>#regionname#</cfif></option></cfloop>
+							<select name="regionid" multiple="multiple" size="6" class="xLargeField">
+								<cfloop query="qGetRegions">
+                                	<option value="#qGetRegions.regionid#">
+                                    	<cfif CLIENT.companyID EQ 5>
+                                    		#qGetRegions.companyShort# - 
+                                    	</cfif>
+                                        #qGetRegions.regionname#
+                                    </option>
+                                </cfloop>
 							</select>
 						</td>		
 					</tr>
+                    <tr>
+                    	<td align="right">
+                        	<input type="checkbox" name="displayOutOfCompliance" id="displayOutOfCompliance" value="1" checked="checked" />
+                        </td>
+                        <td>
+                        	<label for="displayOutOfCompliance">Display only out of compliance records</label>
+                        </td>
+					</tr>                                             
 					<tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>				
 				</table>
 			</cfform>
@@ -489,7 +445,7 @@
                         <td class="reportFieldTitle">Program:</td>
                         <td>
                             <select name="programID" multiple size="6">
-                                <cfloop query="get_program">
+                                <cfloop query="qGetProgramList">
                                     <option value="#programID#">#programname#</option>
                                 </cfloop>
                             </select>               
@@ -502,7 +458,7 @@
 							<cfif client.usertype GT 4><cfelse>
                             <option value=0>All Regions</option>
                             </cfif>
-                            <cfloop query="get_regions"><option value="#regionid#">#regionname#</option></cfloop>
+                            <cfloop query="qGetRegions"><option value="#regionid#">#regionname#</option></cfloop>
                             </select>
 					            
                         </td>
@@ -528,18 +484,6 @@
 	                        </select>
 						</td>
                     </tr>					
-<!---
-                    <tr>
-                        <td class="reportFieldTitle">Report Format:</td>
-                        <td>
-                            <select name="reportFormat">
-                                <option value='Screen'>Screen</option>
-                                <option value='Excel'>Excel</option>
-                            </select>
-                            * Only Available for Pre-AYP report
-                        </td>
-                    </tr>	
---->
     				<tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
                  </table>
             </form>
@@ -559,7 +503,7 @@
 						<td valign="top">Program :</td>
 						<td>
 						<select name="programid" multiple  size="6">
-						<cfloop query="get_program"><option value="#ProgramID#">#programname#</option></cfloop>
+						<cfloop query="qGetProgramList"><option value="#ProgramID#">#programname#</option></cfloop>
 						</select>
 						</td>
 					</tr>
@@ -577,7 +521,7 @@
 						<td valign="top">Program :</td>
 						<td>
 						<select name="programid" multiple  size="6">
-						<cfloop query="get_program"><option value="#ProgramID#">#programname#</option></cfloop>
+						<cfloop query="qGetProgramList"><option value="#ProgramID#">#programname#</option></cfloop>
 						</select>
 						</td>
 					</tr>
