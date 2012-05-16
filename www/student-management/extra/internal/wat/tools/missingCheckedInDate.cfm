@@ -125,10 +125,10 @@
 				} else {
 					tableBody += '<tr id="' + candidateID + '" class="rowOn">';
 				}
-				tableBody += '<td class="style5"><a href="javascript:getCandidateDetails(' + candidateID + ');" class="style4">#' + candidateID + '</a></td>';
-				tableBody += '<td class="style5"><a href="javascript:getCandidateDetails(' + candidateID + ');" class="style4">' + lastName + '</a></td>';
-				tableBody += '<td class="style5"><a href="javascript:getCandidateDetails(' + candidateID + ');" class="style4">' + firstName + '</a></td>';
-				tableBody += '<td class="style5"><a href="javascript:getCandidateDetails(' + candidateID + ');" class="style4">' + middleName + '</a></td>';			
+				tableBody += '<td class="style5">' + candidateID + '</td>';
+				tableBody += '<td class="style5">' + lastName + '</td>';
+				tableBody += '<td class="style5">' + firstName + '</td>';
+				tableBody += '<td class="style5">' + middleName + '</td>';			
 				tableBody += '<td class="style5">' + sex + '</td>';
 				tableBody += '<td class="style5">' + dob + '</td>';
 				tableBody += '<td class="style5">' + birthCity + '</td>';
