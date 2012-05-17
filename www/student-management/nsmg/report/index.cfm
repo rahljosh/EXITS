@@ -66,13 +66,11 @@
 
 
     <!--- List of Office Management Reports --->
-    <!---
-    <cfcase value="">
+    <cfcase value="regionalAllocation">
 
         <cfinclude template="officeManagement/_#action#.cfm" />
 
     </cfcase>
-	--->
     
     <!--- Menu Options --->
     <cfdefaultcase>

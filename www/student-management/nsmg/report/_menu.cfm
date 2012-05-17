@@ -82,11 +82,9 @@
             	<div id="representativeManagementMenuButton" class="divButton reportButton">Representative Management</div>
             </a>
 			
-            <!---
             <a href="javascript:showSelectedMenuOption('officeManagementMenu');" title="Click for Office Management Reports">
             	<div id="officeManagementMenuButton" class="divButton reportButton">Office Management</div>
             </a>
-			--->
         </td>
 	</tr>    
 </table>
@@ -122,7 +120,7 @@
 				</ul>
             </ul>  
         </td>
-	</tr>   
+	</tr>
     
     <tr>
         <td>
@@ -290,7 +288,13 @@
 <table id="officeManagementMenu" class="reportMenuTable menuOption displayNone">
     <tr>
         <td>
-
+			<ul class="mainList">
+                <li onclick="loadSelectedReport('regionalAllocation');">Regional Allocation</li>
+                <ul>
+                    <li>Generate a report of allocations by company and region</li>
+                    <li>Filter by: season, August/January allocations, region</li>
+				</ul>
+            </ul>
         </td>
         <td>
 
