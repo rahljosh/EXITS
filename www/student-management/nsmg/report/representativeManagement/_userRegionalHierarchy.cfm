@@ -86,6 +86,9 @@
 <!--- FORM NOT submitted --->
 <cfif NOT VAL(FORM.Submitted)>
 
+    <!--- Call the basescript again so it works when ajax loads this page --->
+    <script type="text/javascript" src="linked/js/basescript.js "></script> <!-- BaseScript -->
+
 	<cfoutput>
 
         <form action="report/index.cfm?action=userRegionalHierarchy" name="userRegionalHierarchy" id="userRegionalHierarchy" method="post" target="blank">
@@ -118,23 +121,29 @@
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Begin Date: </td> 
                     <td>
-                        <input type="text" class="datePicker" name="beginDate" id="beginDate" /> <span class="note">Account Creation Verified</span>
+                        <input type="text" class="datePicker" name="beginDate" id="beginDate" /> <span class="note">(Account Creation Verified)</span>
                     </td>
                 </tr>
                 <tr class="on">
                     <td class="subTitleRightNoBorder">End Date: </td> 
                     <td>
-                        <input type="text" class="datePicker" name="endDate" id="endDate" /> <span class="note">Account Creation Verified</span>
+                        <input type="text" class="datePicker" name="endDate" id="endDate" /> <span class="note">(Account Creation Verified)</span>
                     </td>
                 </tr>
                 <tr class="on">
-                    <td class="subTitleRightNoBorder">Options</td>
+                    <td class="subTitleRightNoBorder">Options:</td>
                     <td>
-                        <input type="checkbox" name="includeViewOnly" id="includeViewOnly" /> <label for="includeViewOnly">Include Users With View Only Access</label> 
-                        <br />
-                        <input type="checkbox" name="includeStudents" id="includeStudents" /> <label for="includeStudents">Include Students</label>
+                    	<input type="checkbox" name="includeViewOnly" id="includeViewOnly" /> 
+                    	<label for="includeViewOnly">Include Users With View Only Access</label> 
                     </td>
-                </tr>
+                </tr>                                             
+                <tr class="on">
+                    <td class="subTitleRightNoBorder">&nbsp;</td>
+                    <td>
+                    	<input type="checkbox" name="includeStudents" id="includeStudents" /> 
+                    	<label for="includeStudents">Include Students</label>
+                    </td>
+                </tr>                                             
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Output Type: <span class="required">*</span></td>
                     <td>

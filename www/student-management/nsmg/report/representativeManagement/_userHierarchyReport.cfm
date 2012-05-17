@@ -66,8 +66,10 @@
 	headerType="applicationNoHeader"
 />	
 
-
 <cfoutput>
+
+    <!--- Call the basescript again so it works when ajax loads this page --->
+    <script type="text/javascript" src="linked/js/basescript.js "></script> <!-- BaseScript -->
 
 	<!--- Report Header Information --->
     <cfsavecontent variable="reportHeader">

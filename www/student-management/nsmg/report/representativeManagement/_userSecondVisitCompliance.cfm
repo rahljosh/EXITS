@@ -430,6 +430,9 @@
 <!--- FORM NOT submitted --->
 <cfif NOT VAL(FORM.Submitted)>
 
+    <!--- Call the basescript again so it works when ajax loads this page --->
+    <script type="text/javascript" src="linked/js/basescript.js "></script> <!-- BaseScript -->
+
 	<cfoutput>
 
         <form action="report/index.cfm?action=userSecondVisitCompliance" name="userSecondVisitCompliance" id="userSecondVisitCompliance" method="post" target="blank">
@@ -454,15 +457,19 @@
                     </td>		
                 </tr>
                 <tr class="on">
-                    <td class="subTitleRightNoBorder">Options</td>
-                    <td><input type="checkbox" name="isDueSoon" id="isDueSoon" value="1" />Only show records due within 14 days</td>
-                </tr>
+                    <td class="subTitleRightNoBorder">Options:</td>
+                    <td>
+                    	<input type="checkbox" name="isDueSoon" id="isDueSoon" value="1" />
+                    	<label for="isDueSoon">Only show records due within 14 days</label>
+                    </td>
+                </tr>                                             
                 <cfif ListFind("1,2,3,4", CLIENT.userType)>
                     <tr class="on">
-                        <td class="subTitleRightNoBorder">Options</td>
+                        <td class="subTitleRightNoBorder">&nbsp;</td>
                         <td>
-                            <input type="checkbox" name="sendEmail" id="sendEmail" value="1" />Send as email to regional manager
-                            <br />(only available in on screen report)
+                            <input type="checkbox" name="sendEmail" id="sendEmail" value="1" />
+                            <label for="sendEmail">Send as email to regional manager</label> <br />
+                            <span class="note">(only available in on screen report)</span>
                         </td>
                     </tr>
                 </cfif>

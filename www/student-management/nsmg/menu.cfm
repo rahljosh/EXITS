@@ -396,8 +396,10 @@
                         
                         <li><a href="index.cfm?curdoc=tools/intreps_allocations">International Reps Allocations</a></li>
                         
-                        <li><a href="index.cfm?curdoc=tools/regions_allocations">Region Allocations</a></li>
-    					
+                        <cfif ListFind("1,2,3,4", CLIENT.userType)>
+                            <li><a href="index.cfm?curdoc=tools/regions_allocations">Region Allocations</a></li>
+    					</cfif>
+                        
                         <cfif ListFind("1,2,3", CLIENT.userType)>
                         	<li>
                             	<a href="index.cfm?curdoc=userPayment/index">Representative Payments</a>

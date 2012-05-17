@@ -43,64 +43,6 @@
 	tableRightTitle='<h2><a href="#CGI.SCRIPT_NAME#?curdoc=report/index" title="Click for Student Management Reports">[ Reports Menu ]</a></h2>'
 />
 
-<table class="reportSection">
-    <tr>
-        <td>
-		
-
-		</td>
-        <td>
-        
-        	<!--- Row 1 Column 2 - Compliance Mileage Report --->
-            <form action="report/index.cfm?action=complianceMileageReport" name="complianceMileageReport" id="complianceMileageReport" method="post" target="blank">
-                
-                <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable left">
-                    <tr><th colspan="2">Compliance Mileage Report</th></tr>
-                    <tr class="on">
-                        <td class="subTitleRightNoBorder">Program: <span class="required">*</span></td>
-                        <td>
-                            <select name="programID" id="programID" class="xLargeField" multiple size="6" required>
-                                <cfloop query="qGetProgramList"><option value="#qGetProgramList.programID#">#qGetProgramList.programname#</option></cfloop>
-                            </select>
-                        </td>		
-                    </tr>
-                    <tr class="on">
-                        <td class="subTitleRightNoBorder">Region: <span class="required">*</span></td>
-                        <td>
-                            <select name="regionID" id="regionID" class="xLargeField" multiple size="6" required>
-                                <cfloop query="qGetRegionList"><option value="#qGetRegionList.regionID#">#qGetRegionList.regionname#</option></cfloop>
-                            </select>
-                        </td>		
-                    </tr>
-                    <tr class="on">
-                        <td class="subTitleRightNoBorder">Options</td>
-                        <td>
-                        	<input type="checkbox" name="displayOutOfCompliance" id="displayOutOfCompliance" />Only display out of compliance
-                            <br />
-                            <input type="checkbox" name="displayPending" id="displayPending" />Only display pending
-                        </td>
-                    </tr>
-                    <tr class="on">
-                        <td class="subTitleRightNoBorder">Output Type: <span class="required">*</span></td>
-                        <td>
-                            <select name="outputType" class="xLargeField">
-                                <option value="onScreen">On Screen</option>
-                                <option value="Excel">Excel Spreadsheet</option>
-                            </select>
-                        </td>		
-                    </tr>
-                    <tr class="on">
-                        <td>&nbsp;</td>
-                        <td class="required noteAlert">* Required Fields</td>
-                    </tr>
-                    <tr>
-                        <th colspan="2"><input type="image" src="pics/view.gif" align="center" border="0"></th>
-                    </tr>
-                </table>
-            </form>	
-        
-        </td>
-    </tr>
     <tr>
     	<td>
         

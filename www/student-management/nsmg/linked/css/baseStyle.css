@@ -359,7 +359,6 @@
 /********************************************
 	NEW REPORTS MENU
 ********************************************/
-
 .reportButton {
 	width:20%;
 	color:#3b5998;
@@ -417,19 +416,6 @@
 
 .reportMenuTable input {
 	margin-top:1em;	
-}
-
-.reportMenuTable label {
-	color:#3b5998;
-	cursor:pointer;
-	font-size:1.1em;
-	font-weight:bold;
-}
-
-.reportMenuTable label:hover {
-	color:#900;
-	font-size:1.2em;
-	text-decoration:none;
 }
 
 .reportMenuTable td {
@@ -500,8 +486,16 @@
 ********************************************/
 
 .blueThemeReportTable {
-	border:1px solid #3b5998;
 	margin-top:5px;
+	border:1px solid #3b5998;	
+}
+
+.blueThemeReportTable input, select {
+	margin:0px;	
+}
+
+.blueThemeReportTable label {
+	padding-left:5px;
 }
 
 .blueThemeReportTable .note {
@@ -565,6 +559,17 @@
 	font-weight:bold;
 	border-bottom:1px solid #FFFFFF;
 	background-color:#F00; 
+}
+
+
+.blueThemeReportTable label {
+	color:#3b5998;
+	font-weight:bold;
+}
+
+.blueThemeReportTable label:hover {
+	color:#3b5998;
+	font-weight:bold;
 }
 
 .blueThemeReportTable td {

@@ -82,9 +82,11 @@
             	<div id="representativeManagementMenuButton" class="divButton reportButton">Representative Management</div>
             </a>
 			
-            <a href="javascript:showSelectedMenuOption('officeManagementMenu');" title="Click for Office Management Reports">
-            	<div id="officeManagementMenuButton" class="divButton reportButton">Office Management</div>
-            </a>
+            <cfif ListFind("1,2,3,4", CLIENT.userType)>
+                <a href="javascript:showSelectedMenuOption('officeManagementMenu');" title="Click for Office Management Reports">
+                    <div id="officeManagementMenuButton" class="divButton reportButton">Office Management</div>
+                </a>
+            </cfif>
         </td>
 	</tr>    
 </table>
@@ -122,10 +124,10 @@
         </td>
 	</tr>
     
+    <!---
     <tr>
         <td>
 			<!--- Report is not ready --->
-            <!---
             <ul class="mainList">
                 <li onclick="loadSelectedReport('studentPlacementPaperworkByRegion');">Placement Paperwork by Region</li>
                 <ul>
@@ -133,10 +135,8 @@
                     <li>Filter by: Rep (place vs super), program, date placed</li>
 				</ul>
             </ul>
-			--->  
         </td>
         <td>
-        	<!---
             <ul class="mainList">
                 <li onclick="loadSelectedReport('studentRelocationReport');">Relocation Report</li>
                 <ul>
@@ -144,10 +144,8 @@
                     <li>Filter by: date relocated, reason, program</li>
 				</ul>
             </ul>  
-			--->
         </td>
         <td class="right">
-        	<!---
             <ul class="mainList">
                 <li onclick="loadSelectedReport('studentDoublePlacementPaperworkByRegion');">Double Placement Paperwork By Region</li>
                 <ul>
@@ -155,9 +153,9 @@
                     <li>Filter by: Rep (place vs super), program, date placed, missing/received/all, on screen/excel</li>
 				</ul>
             </ul>  
-			--->
         </td>
-	</tr>  
+	</tr>  	
+	--->
     
     <!---
     <tr>
@@ -199,15 +197,6 @@
 				</ul>
             </ul>  
         </td>
-        <td class="lastRow">
-            <ul class="mainList">
-                <li onclick="loadSelectedReport('hostFamilySpreadsheet');">Host Family Spreadsheet</li>
-                <ul>
-                    <li>Generate a list of all HFs in your region</li>
-                    <li>Filter by: state, active/inactive, currently hosting</li>
-				</ul>
-            </ul>  
-        </td>
         <td class="lastRow right">
             <ul class="mainList">
                 <li onclick="loadSelectedReport('hostFamilyWelcomeByRegion');">Welcome Host Family</li>
@@ -216,6 +205,17 @@
                     <li>Filter by: program </li>
 				</ul>
             </ul>  
+        </td>
+        <td class="lastRow">
+        	<!---
+            <ul class="mainList">
+                <li onclick="loadSelectedReport('hostFamilySpreadsheet');">Host Family Spreadsheet</li>
+                <ul>
+                    <li>Generate a list of all HFs in your region</li>
+                    <li>Filter by: state, active/inactive, currently hosting</li>
+				</ul>
+            </ul> 
+			---> 
         </td>
 	</tr> 
 </table>
@@ -263,13 +263,15 @@
             </ul>  
         </td>
         <td class="lastRow">
+            <!---
             <ul class="mainList">
                 <li onclick="loadSelectedReport('userPendingStudentMissingSecondVisitRep');">Second Visit Assigned</li>
                 <ul>
                     <li>Generate a list of 2nd visit reps assigned by student</li>
                     <li>Filter by: program, compliant/non-compliant </li>
 				</ul>
-            </ul>  
+            </ul>
+			--->  
         </td>
         <td class="lastRow right">
             <ul class="mainList">
@@ -278,7 +280,7 @@
                     <li>Generate a list of reps and the trainings they have completed</li>
                     <li>Filter by: program, training, missing/complete/all</li>
 				</ul>
-            </ul>  
+            </ul>
         </td>
 	</tr>   
 </table> 
@@ -313,9 +315,17 @@
         
         </td>
     </tr>
-    
 </table>
 
+<!---
+<table width="100%" border="0" cellpadding="4" cellspacing="0" id="loadReportTable" class="section displayNone">
+    <tr>
+    	<td colspan="3" id="loadReport">
+        
+        </td>
+    </tr>
+</table>
+--->
 
 <!--- Table Footer --->
 <gui:tableFooter />

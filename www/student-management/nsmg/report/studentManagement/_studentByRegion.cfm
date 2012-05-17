@@ -174,7 +174,7 @@
                         AND
                             s.hostID != <cfqueryparam cfsqltype="cf_sql_bit" value="0">                            
                         AND 
-                            s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )	
+                            s.host_fam_approved ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )	
                     </cfcase>
                 
                 </cfswitch>
@@ -192,7 +192,10 @@
 
 <!--- FORM NOT submitted --->
 <cfif NOT VAL(FORM.Submitted)>
-
+	
+    <!--- Call the basescript again so it works when ajax loads this page --->
+    <script type="text/javascript" src="linked/js/basescript.js "></script> <!-- BaseScript -->
+    
 	<cfoutput>
 
         <form action="report/index.cfm?action=studentByRegion" name="studentListByRegion" id="studentListByRegion" method="post" target="blank">
@@ -237,11 +240,11 @@
                         </select>
                     </td>		
                 </tr>
-                <tr class="on trPlacementDateStudentListByRegion">
+                <tr class="on">
                     <td class="subTitleRightNoBorder">Placed From:</td>
                     <td><input type="text" name="dateFrom" id="dateFromStudentListByRegion" value="" size="7" maxlength="10" class="datePicker"> <span class="note">mm-dd-yyyy</span></td>
                 </tr>
-                <tr class="on trPlacementDateStudentListByRegion">
+                <tr class="on">
                     <td class="subTitleRightNoBorder">Placed To: </td>
                     <td><input type="text" name="dateTo" id="dateToStudentListByRegion" value="" size="7" maxlength="10" class="datePicker"> <span class="note">mm-dd-yyyy</span></td>
                 </tr>
