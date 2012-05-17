@@ -357,7 +357,7 @@
 					--->
                 </li>
 
-				<cfif listFind("1,510,17313,12313", CLIENT.userID)> <!--- <cfif LISTFIND("1,2,3,4", CLIENT.userType)> --->
+				<cfif listFind("1,510,17313,12313,17306", CLIENT.userID)> <!--- <cfif LISTFIND("1,2,3,4", CLIENT.userType)> --->
                     <li><a href="index.cfm?curdoc=report/index">New Reports</a></li>
                 </cfif>
                 
@@ -395,6 +395,8 @@
                         <li><a href="index.cfm?curdoc=tools/regions">Regions</a></li>
                         
                         <li><a href="index.cfm?curdoc=tools/intreps_allocations">International Reps Allocations</a></li>
+                        
+                        <li><a href="index.cfm?curdoc=tools/regions_allocations">Region Allocations</a></li>
     					
                         <cfif ListFind("1,2,3", CLIENT.userType)>
                         	<li>

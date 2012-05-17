@@ -81,10 +81,8 @@
                     r.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                	AND
                 	r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )
-               	<cfif FORM.regionID NEQ 5>
-                    AND
-                        r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )
-           		</cfif>
+                AND
+                    r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )
                 GROUP BY
                     r.regionName
                 ORDER BY
@@ -224,10 +222,8 @@
                     *
                 FROM
                     qGetResults
-                <cfif qGetCompanies.companyID NEQ 5>
-                    WHERE
-                        qGetResults.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCompanies.companyID#">
-                </cfif>
+                WHERE
+                    qGetResults.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCompanies.companyID#">
             </cfquery>
             
             <cfloop query="qGetRegionsInCompany">
@@ -340,10 +336,8 @@
                 	*
                	FROM
                 	qGetResults
-               	<cfif qGetCompanies.companyID NEQ 5>
-                	WHERE
-                    	qGetResults.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCompanies.companyID#">
-                </cfif>
+                WHERE
+                    qGetResults.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCompanies.companyID#">
             </cfquery>
             
             <cfif qGetRegionsUnderCompany.recordCount>
