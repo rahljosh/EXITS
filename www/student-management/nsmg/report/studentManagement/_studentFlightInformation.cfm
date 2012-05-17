@@ -206,12 +206,15 @@
 <!--- FORM NOT submitted --->
 <cfif NOT VAL(FORM.Submitted)>
 
+    <!--- Call the basescript again so it works when ajax loads this page --->
+    <script type="text/javascript" src="linked/js/basescript.js "></script> <!-- BaseScript -->
+
 	<cfoutput>
 
 		<!--- Flight Information Report --->
         <form action="report/index.cfm?action=studentFlightInformation" name="flightInformation" id="flightInformation" method="post" target="blank">
             <input type="hidden" name="submitted" value="1" />
-            <table width="40%" cellpadding="4" cellspacing="0" class="blueThemeReportTable" align="center">
+            <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable" align="center">
                 <tr><th colspan="2">Student Management - Flight Information</th></tr>
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Program: <span class="required">*</span></td>
@@ -243,13 +246,13 @@
                     </td>		
                 </tr>
                 <tr class="on">
-                    <td class="subTitleRightNoBorder"><br />From: </td>
+                    <td class="subTitleRightNoBorder">From: </td>
                     <td>
                         <input type="text" name="dateFrom" id="dateFrom" class="datePicker" />
                     </td>		
                 </tr>
                 <tr class="on">
-                    <td class="subTitleRightNoBorder"><br />To: </td>
+                    <td class="subTitleRightNoBorder">To: </td>
                     <td>
                         <input type="text" type="text" name="dateTo" id="dateTo" class="datePicker" />
                     </td>		

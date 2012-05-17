@@ -116,6 +116,9 @@
 <!--- FORM NOT submitted --->
 <cfif NOT VAL(FORM.Submitted)>
 
+    <!--- Call the basescript again so it works when ajax loads this page --->
+    <script type="text/javascript" src="linked/js/basescript.js "></script> <!-- BaseScript -->
+
 	<cfoutput>
 
         <form action="report/index.cfm?action=studentPlacementPaperworkByRegion" name="placementPaperworkByRegion" id="placementPaperworkByRegion" method="post" target="blank">

@@ -128,6 +128,9 @@
 <!--- FORM NOT submitted --->
 <cfif NOT VAL(FORM.Submitted)>
 
+    <!--- Call the basescript again so it works when ajax loads this page --->
+    <script type="text/javascript" src="linked/js/basescript.js "></script> <!-- BaseScript -->
+
 	<cfoutput>
 
         <form action="report/index.cfm?action=userComplianceMileageReport" name="userComplianceMileageReport" id="userComplianceMileageReport" method="post" target="blank">
@@ -151,12 +154,18 @@
                     </td>		
                 </tr>
                 <tr class="on">
-                    <td class="subTitleRightNoBorder"><input type="checkbox" name="displayOutOfCompliance" id="displayOutOfCompliance" value="1" checked="checked" /></td>
-                    <td><label for="displayOutOfCompliance">Display only out of compliance records</label></td>
+                    <td class="subTitleRightNoBorder">Options:</td>
+                    <td>
+                    	<input type="checkbox" name="displayOutOfCompliance" id="displayOutOfCompliance" value="1" checked="checked" /> 
+                    	<label for="displayOutOfCompliance">Display only out of compliance records</label>
+                    </td>
                 </tr>                                             
                 <tr class="on">
-                    <td class="subTitleRightNoBorder"><input type="checkbox" name="displayPendingPlacement" id="displayPendingPlacement" value="1" /></td>
-                    <td><label for="displayPendingPlacement">Display only pending placements</label></td>
+                    <td class="subTitleRightNoBorder">&nbsp;</td>
+                    <td>
+                    	<input type="checkbox" name="displayPendingPlacement" id="displayPendingPlacement" value="1" />
+                    	<label for="displayPendingPlacement">Display only pending placements</label>
+                    </td>
                 </tr>                                             
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Output Type: <span class="required">*</span></td>

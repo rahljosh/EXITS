@@ -81,12 +81,15 @@
 <!--- FORM NOT submitted --->
 <cfif NOT VAL(FORM.Submitted)>
 
+    <!--- Call the basescript again so it works when ajax loads this page --->
+    <script type="text/javascript" src="linked/js/basescript.js "></script> <!-- BaseScript -->
+
 	<cfoutput>
 
 		<!--- Help Community Service Report --->
         <form action="report/index.cfm?action=studentHelpCommunityService" name="helpCommunityService" id="helpCommunityService" method="post" target="blank">
             <input type="hidden" name="submitted" value="1" />
-            <table width="40%" cellpadding="4" cellspacing="0" class="blueThemeReportTable" align="center">
+            <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable" align="center">
                 <tr><th colspan="2">Student Management - Help Community Service</th></tr>
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Program: <span class="required">*</span></td>
@@ -125,11 +128,12 @@
                     </td>		
                 </tr>
                 <tr class="on">
-                    <td class="subTitleRightNoBorder">Students W/O Hours: </td>
+                    <td class="subTitleRightNoBorder">Options:</td>
                     <td>
-                        <input type="checkbox" name="noHours" id="noHours" />
-                    </td>		
-                </tr> 
+                    	<input type="checkbox" name="noHours" id="noHours" />
+                    	<label for="noHours">Students W/O Hours</label>
+                    </td>
+                </tr>                                             
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Minimum Hours: <span class="required">*</span></td>
                     <td>
