@@ -931,13 +931,24 @@
             
                 <tr>
                     <td align="center" style="padding-top:10px;">
-                        
+
 						<!--- Check if CBCs are in compliance with DOS --->											
                         <cfif ListFind("1,2,3,4", CLIENT.userType) AND LEN(vHostInCompliance)>
                             
                             <!--- Display Compliance --->
                             #vHostInCompliance#
 
+							<!--- Display Rejection Button --->
+							<cfif CLIENT.usertype LT qGetStudentInfo.host_fam_Approved>
+                            
+                                <span id="actionButtons">
+                                
+                                    <a href="javascript:displayHiddenForm('rejectPlacementForm','actionButtons');"><img src="../../pics/reject.gif" border="0" alt="Reject Placement" /></a>
+                           
+                                </span>
+                                
+							</cfif>
+                            
                         <cfelseif CLIENT.usertype LT qGetStudentInfo.host_fam_Approved>
                             
                             <span id="actionButtons" class="displayNone">
@@ -947,35 +958,35 @@
                                 <a href="javascript:displayHiddenForm('rejectPlacementForm','actionButtons');"><img src="../../pics/reject.gif" border="0" alt="Reject Placement" /></a>
                        
                        		</span>
-
-							<!--- Approve Placement ---->
-                            <form name="approvePlacementForm" id="approvePlacementForm" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="displayNone">
-                                <input type="hidden" name="subAction" id="subAction" value="approve" />
-                                <input type="hidden" name="studentID" id="studentID" value="#FORM.studentID#" />
-                                <input type="image" name="submit" src="../../pics/approve.gif" alt="Approve Placement" />
-                            </form>
-
-							<!--- Reject Placement ---->
-                            <form name="rejectPlacementForm" id="rejectPlacementForm" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="displayNone">
-                                <input type="hidden" name="subAction" id="subAction" value="reject" />
-                                <input type="hidden" name="studentID" id="studentID" value="#FORM.studentID#" />
-
-                                <table width="680px" border="0" cellpadding="4" cellspacing="0" class="" align="center">                            				
-                                    <tr class="reportCenterTitle"> 
-                                        <th>REJECT PLACEMENT</th>
-                                    </tr>
-                                    <tr>
-                                        <td class="placementMgmtInfo" align="center">
-                                            <label class="reportTitleLeftClean" for="rejectReason">Please provide details as to why you are rejecting this placement:</label>
-                                            <textarea name="reason" id="rejectReason" class="xLargeTextArea">#FORM.reason#</textarea>
-                                            <input type="image" name="submit" src="../../student_app/pics/submit.gif" alt="Reject Placement" style="display:block;" />    
-                                        </td>
-                                    </tr>
-                                </table>
-
-                            </form>           
                             
                         </cfif>
+
+						<!--- Approve Placement ---->
+                        <form name="approvePlacementForm" id="approvePlacementForm" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="displayNone">
+                            <input type="hidden" name="subAction" id="subAction" value="approve" />
+                            <input type="hidden" name="studentID" id="studentID" value="#FORM.studentID#" />
+                            <input type="image" name="submit" src="../../pics/approve.gif" alt="Approve Placement" />
+                        </form>
+
+                        <!--- Reject Placement ---->
+                        <form name="rejectPlacementForm" id="rejectPlacementForm" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="displayNone">
+                            <input type="hidden" name="subAction" id="subAction" value="reject" />
+                            <input type="hidden" name="studentID" id="studentID" value="#FORM.studentID#" />
+
+                            <table width="680px" border="0" cellpadding="4" cellspacing="0" class="" align="center">                            				
+                                <tr class="reportCenterTitle"> 
+                                    <th>REJECT PLACEMENT</th>
+                                </tr>
+                                <tr>
+                                    <td class="placementMgmtInfo" align="center">
+                                        <label class="reportTitleLeftClean" for="rejectReason">Please provide details as to why you are rejecting this placement:</label>
+                                        <textarea name="reason" id="rejectReason" class="xLargeTextArea">#FORM.reason#</textarea>
+                                        <input type="image" name="submit" src="../../student_app/pics/submit.gif" alt="Reject Placement" style="display:block;" />    
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </form>           
 
                     </td>
                 </tr>
