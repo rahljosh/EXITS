@@ -133,7 +133,7 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
     <td width="491" height="85"><h1>Perhaps Together, We CAN Make a Difference in the World...</h1></td>
   </tr>
   <tr>
-    <td><a href="http://www.case-usa.org"><img src="images/print/#companyImage#_MDlarge_03.png" width="1952" height="117" /></a></td>
+    <td><a href="#companyInfo.url#"><img src="images/print/#companyImage#_MDlarge_03.png" width="1952" height="117" /></a></td>
   </tr>
 </table>
     <!-- end .header --></div>
@@ -143,10 +143,10 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
     <table width="2550" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td width="228" rowspan="2"><img src="images/print/MDlarge_09.png" width="985" height="1026" /></td>
-    <td width="342" height="123" class="text"><br /><p>Cultural Academic Student Exchange (CASE) is a non-profit, educational and cultural organization founded in 1988 on the belief that international student exchange promotes understanding, respect and goodwill among people of all nations. CASE brings foreign teens together with US volunteer host families. Our program grants students, host families and entire communities the ability to discover and value other cultures, which ultimately increases international harmony and creates lasting friendships.</p><BR /></td>
+    <td width="342" height="123" class="text"><br /><p>#companyInfo.companyname# (#companyInfo.companyshort_nocolor#) is a non-profit, educational and cultural organization founded in 1988 on the belief that international student exchange promotes understanding, respect and goodwill among people of all nations. #companyInfo.companyshort_nocolor# brings foreign teens together with US volunteer host families. Our program grants students, host families and entire communities the ability to discover and value other cultures, which ultimately increases international harmony and creates lasting friendships.</p><BR /></td>
   </tr>
   <tr>
-    <td class="info"><p>If you are interested in learning more about student exchange, please visit our website <strong>www.case-usa.org</strong> or contact <strong>#repInfo.firstname# #repInfo.lastname#</strong> at <strong>#repInfo.phone#</strong> or email <strong>#repInfo.email#</strong>.</p></td>
+    <td class="info"><p>If you are interested in learning more about student exchange, please visit our website <strong>#companyInfo.url#</strong> or contact <strong>#repInfo.firstname# #repInfo.lastname#</strong> at <strong>#repInfo.phone#</strong> or email <strong>#repInfo.email#</strong>.</p></td>
   </tr>
 </table>
 <!-- end .content --></div>

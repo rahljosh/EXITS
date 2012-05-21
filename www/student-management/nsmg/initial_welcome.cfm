@@ -563,7 +563,7 @@
                   <!---_Available for All companies---->
                   	<cfif ListFind("1,2,3,4,5,10,12,14", CLIENT.companyid) >
                     Here are some new brochures to help in your marketing.<Br />
-                   
+                   <a href="marketing/difference.cfm" target="_blank">Make A Difference</a><img src="pics/new_03.png" /><br />
                     <a href="marketing/openHeart.cfm" target="_blank">Open Heart & Soul</a><br />
                  	<A href="marketing/aroundWorld.cfm" target="_blank"> School Around the World</A><Br />
                     <cfif ListFind("1,2,3,4,5,10,12", CLIENT.companyid) >
@@ -574,7 +574,7 @@
                      <a href="marketing/HostFam2012/HostFamiles.cfm" target="_blank">Host Families</a><img src="pics/new_03.png" /><br />
                      </cfif>
                     <cfif ListFind("10", CLIENT.companyid) >
-					<a href="marketing/difference.cfm" target="_blank">Make A Difference</a><br />
+					
 				 	</cfif>
                     <br /><br />
                      <font size=-1> <em>Click on the Save/Print option to generate a PDF that is suitable for printing.</em></font>
