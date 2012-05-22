@@ -83,7 +83,11 @@ SELECT
 FROM 
 	smg_programs
 WHERE
-	companyID IN (1,7,8,9,10,12,14)
+	<cfif CLIENT.companyid EQ 14>
+    	companyID = 14
+    <cfelse>
+		companyID IN (1,7,8,9,10,12,14)
+    </cfif>
 AND
 	type NOT IN (6,10,13,14,15,16,17,18,19,20,21)
 ORDER BY 
@@ -120,9 +124,7 @@ ORDER BY
             </cfoutput>
         </select>
         <br/>
-        <cfif client.companyid NEQ 14>
         	<cfinput name="printFormat" value="1" type="checkbox" checked="yes"> <strong><small>Display print format?</small></strong>
-        </cfif>
         <br/>
         <cfinput name="submit" type="image" src="../pics/update.gif">
     
@@ -247,7 +249,7 @@ ORDER BY
 
 <cfform method="post" action="m_sendEmailNotification.cfm">
 
-<cfif form.printFormat NEQ 0 OR client.companyid NEQ 14>
+<cfif form.printFormat EQ 0>
     <div align="center">
         <cfinput type="image" name="sendEmail" src="../pics/send-email.gif">
     </div>
@@ -264,7 +266,7 @@ ORDER BY
 <table class="frame">
 
     <tr class="darkBlue">
-    	<cfif form.printFormat NEQ 0 OR client.companyid NEQ 14>
+    	<cfif form.printFormat EQ 0>
             <td align="center">
                 <cfinput name="emailAgent" id="emailAgent" type="checkbox" onClick="javaScript:checkUncheck();" checked="true">
             </td>
@@ -381,7 +383,7 @@ ORDER BY
     <cfset grandTotalBal = #variables.grandTotalBal# + #qTotalAgentBalance.totalPerAgent#>
             
     <tr <cfif qTotalAgentBalance.currentRow MOD 2>bgcolor="##FFFFFF"</cfif>>
-    	<cfif form.printFormat NEQ 0 OR client.companyid NEQ 14>
+    	<cfif form.printFormat EQ 0>
             <td align="center">
                 <cfinput name="email#qTotalAgentBalance.agentid#" id="email#qTotalAgentBalance.agentid#" type="checkbox" checked="yes" align="absmiddle">
             </td>
@@ -407,7 +409,7 @@ ORDER BY
 <cfoutput>
 
     <tr class="darkBlue">
-    	<cfif form.printFormat NEQ 0 OR client.companyid NEQ 14>
+    	<cfif form.printFormat EQ 0>
     		<td></td>
         </cfif>
         <td class="right">TOTAL</td>
