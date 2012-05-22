@@ -39,8 +39,10 @@
 		}
 		
         // Summary
+		vSummaryAssigned = 0;
         vSummaryPlaced = 0;
         vSummaryPending = 0;
+		vSummaryUnplaced = 0;
         vSummaryPlacement = 0;
         vSummaryGoal = 0;
         vSummaryPercentage = 0;
@@ -205,13 +207,15 @@
         <cfheader name="Content-Disposition" value="attachment; filename=regionAllocation.xls">
         
         <table width="98%" cellpadding="4" cellspacing="0" align="center" border="1">
-            <tr><th colspan="8">Office Management - Region Allocation</th></tr>
+            <tr><th colspan="10">Office Management - Region Allocation</th></tr>
             <tr style="font-weight:bold;">
                 <td>Company</td>
                 <td>Region</td>
                 <td>Regional Manager</td>
+                <td>Total Assigned</td>
                 <td>Placed</td>
                 <td>Pending</td>
+                <td>Unplaced</td>
                 <td>Total Placements</td>
                 <td>Goal</td>
                 <td>Percentage</td>
@@ -219,10 +223,11 @@
         
             <cfoutput query="qGetResults">
 
-                <cfquery name="qGetPlacements" datasource="#APPLICATION.DSN#">
+                <cfquery name="qGetStudents" datasource="#APPLICATION.DSN#">
                     SELECT
                         s.studentID,
-                        s.host_fam_approved
+                        s.host_fam_approved,
+                        h.hostID
                     FROM
                         smg_students s
                     INNER JOIN 
@@ -230,21 +235,32 @@
                             AND
                                 p.type IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vProgramTypeList#" list="yes"> )
                             AND
-                            	p.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> 
-                    INNER JOIN
+                                p.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> 
+                    LEFT OUTER JOIN
                         smg_hosts h ON h.hostID = s.hostID
                     WHERE
                         s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                     AND
                         s.regionAssigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.regionID#">
                 </cfquery>
-
+    
+                <cfquery name="qGetUnplaced" dbtype="query">
+                    SELECT
+                        studentID
+                    FROM
+                        qGetStudents
+                    WHERE
+                        hostID IS NULL
+                </cfquery>
+                
                 <cfquery name="qGetPlaced" dbtype="query">
                     SELECT
                         studentID
                     FROM
-                        qGetPlacements
+                        qGetStudents
                     WHERE
+                        hostID IS NOT NULL
+                    AND
                         host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="1,2,3,4"> )
                 </cfquery>
                 
@@ -252,8 +268,10 @@
                     SELECT
                         studentID
                     FROM
-                        qGetPlacements 
+                        qGetStudents 
                     WHERE
+                        hostID IS NOT NULL
+                    AND
                         host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="5,6,7"> )
                 </cfquery>
                 
@@ -268,8 +286,10 @@
 					}
 					
 					// Calculate Summary Total
+					vSummaryAssigned += qGetStudents.recordCount;
 					vSummaryPlaced += qGetPlaced.recordCount;
 					vSummaryPending += qGetPending.recordCount;
+					vSummaryUnplaced += qGetUnplaced.recordCount;
 					vSummaryGoal += VAL(qGetResults.allocation);
 				
 					// Set Row Color
@@ -284,8 +304,10 @@
                     <td #vRowColor#>#qGetResults.companyShort#</td>
                     <td #vRowColor#>#qGetResults.regionName#</td>
                     <td #vRowColor#>#qGetResults.firstName# #qGetResults.lastName# ###qGetResults.userID#</td>
+                    <td #vRowColor#>#qGetStudents.recordCount#</td>
                     <td #vRowColor#>#qGetPlaced.recordCount#</td>
                     <td #vRowColor#>#qGetPending.recordCount#</td>
+                    <td #vRowColor#>#qGetUnplaced.recordCount#</td>
                     <td #vRowColor#>#vPlacement#</td>
                     <td #vRowColor#>#qGetResults.allocation#</td>
                     <td #vRowColor#>#NumberFormat(vPercentage, '___.__')#%</td>
@@ -312,12 +334,14 @@
             
             <cfoutput>
                 <tr>
-                    <td class="subTitleLeft" colspan="3">Total</td>
-                    <td class="subTitleLeft">#vSummaryPlaced#</td>
-                    <td class="subTitleLeft">#vSummaryPending#</td>
-                    <td class="subTitleLeft">#vSummaryPlacement#</td>
-                    <td class="subTitleLeft">#vSummaryGoal#</td>
-                    <td class="subTitleLeft">#NumberFormat(vSummaryPercentage, '___.__')#%</td>
+                    <td colspan="3">Total</td>
+                    <td>#vSummaryAssigned#</td>
+                    <td>#vSummaryPlaced#</td>
+                    <td>#vSummaryPending#</td>
+                    <td>#vSummaryUnplaced#</td>
+                    <td>#vSummaryPlacement#</td>
+                    <td>#vSummaryGoal#</td>
+                    <td>#NumberFormat(vSummaryPercentage, '___.__')#%</td>
                 </tr>
             </cfoutput>
 		</table>
@@ -340,13 +364,15 @@
             
             <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                 <tr>
-                    <th class="left" colspan="7">#qGetResults.companyShort#</th>
+                    <th class="left" colspan="9">#qGetResults.companyShort#</th>
                 </tr>      
                 <tr>
-                    <td class="subTitleLeft" width="25%">Region</td>	
-                    <td class="subTitleLeft" width="25%">Regional Manager</td>
+                    <td class="subTitleLeft" width="15%">Region</td>	
+                    <td class="subTitleLeft" width="15%">Regional Manager</td>
+                    <td class="subTitleLeft" width="10%">Total Assigned</td>
                     <td class="subTitleLeft" width="10%">Placed</td>
                     <td class="subTitleLeft" width="10%">Pending</td>
+                    <td class="subTitleLeft" width="10%">Unplaced</td>
                     <td class="subTitleLeft" width="10%">Total Placements</td>
                     <td class="subTitleLeft" width="10%">Goal</td>
                     <td class="subTitleLeft" width="10%">Percentage</td>
@@ -354,10 +380,11 @@
 
                 <cfoutput>
 
-                    <cfquery name="qGetPlacements" datasource="#APPLICATION.DSN#">
+                    <cfquery name="qGetStudents" datasource="#APPLICATION.DSN#">
                         SELECT
                             s.studentID,
-                            s.host_fam_approved
+                            s.host_fam_approved,
+                            h.hostID
                         FROM
                             smg_students s
                         INNER JOIN 
@@ -366,20 +393,31 @@
                                     p.type IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vProgramTypeList#" list="yes"> )
                                 AND
                                     p.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> 
-                        INNER JOIN
+                        LEFT OUTER JOIN
                             smg_hosts h ON h.hostID = s.hostID
                         WHERE
                             s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                         AND
                             s.regionAssigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.regionID#">
                     </cfquery>
-    
+
+                    <cfquery name="qGetUnplaced" dbtype="query">
+                        SELECT
+                            studentID
+                        FROM
+                            qGetStudents
+                        WHERE
+                            hostID IS NULL
+                    </cfquery>
+    				
                     <cfquery name="qGetPlaced" dbtype="query">
                         SELECT
                             studentID
                         FROM
-                            qGetPlacements
+                            qGetStudents
                         WHERE
+                        	hostID IS NOT NULL
+                        AND
                             host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="1,2,3,4"> )
                     </cfquery>
                     
@@ -387,8 +425,10 @@
                         SELECT
                             studentID
                         FROM
-                            qGetPlacements 
+                            qGetStudents 
                         WHERE
+                        	hostID IS NOT NULL
+                        AND
                             host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="5,6,7"> )
                     </cfquery>
                     
@@ -405,16 +445,20 @@
 						}
 						
 						// Calculate Summary Total
+						vSummaryAssigned += qGetStudents.recordCount;
                         vSummaryPlaced += qGetPlaced.recordCount;
                         vSummaryPending += qGetPending.recordCount;
+						vSummaryUnplaced += qGetUnplaced.recordCount;
                         vSummaryGoal += VAL(qGetResults.allocation);
 					</cfscript>
                         
                     <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
                         <td>#qGetResults.regionName#</td>
                         <td>#qGetResults.firstName# #qGetResults.lastName# ###qGetResults.userID#</td>                        
+                        <td>#qGetStudents.recordCount#</td>
                         <td>#qGetPlaced.recordCount#</td>
                         <td>#qGetPending.recordCount#</td>
+                        <td>#qGetUnplaced.recordCount#</td>
                         <td>#vPlacement#</td>
                         <td>#qGetResults.allocation#</td>
                         <td>#NumberFormat(vPercentage, '___.__')#%</td>
@@ -434,8 +478,10 @@
                 
                 <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
                     <td class="subTitleLeft" colspan="2">Total</td>
+                    <td class="subTitleLeft">#vSummaryAssigned#</td>
                     <td class="subTitleLeft">#vSummaryPlaced#</td>
                     <td class="subTitleLeft">#vSummaryPending#</td>
+                    <td class="subTitleLeft">#vSummaryUnplaced#</td>
                     <td class="subTitleLeft">#vSummaryPlacement#</td>
                     <td class="subTitleLeft">#vSummaryGoal#</td>
                     <td class="subTitleLeft">#NumberFormat(vSummaryPercentage, '___.__')#%</td>
