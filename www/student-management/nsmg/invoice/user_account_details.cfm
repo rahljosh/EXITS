@@ -1199,7 +1199,7 @@ WHERE su.userid = #url.userid#
 	</cfcase>	
 	<cfcase value="14">
 		<cfset compName = "esi">
-		<cfset emailFrom = 'stacy@case-usa.org'>
+		<cfset emailFrom = 'stacy@exchange-service.org'>
 	</cfcase>
 	<cfdefaultcase>
 		<cfset compName = "ise">
@@ -1259,7 +1259,28 @@ Please find attached your invoices.<br/>
 <font color="##FF0000"><strong>PAYMENT INSTRUCTION</strong></font>: For every payment remitted, please send me an e-mail with the wire receipt for proper payment identification as well as include the invoice number and respective amounts being paid on all payment information so that we can keep both records, your and ours, on the same page.<br/>
 Payments by check should be mailed directly to our office address (Do not mail checks directly to our bank).<br/>
 
-Thank you for your cooperation,<br/><br/>
+		<cfif FORM.companyID EQ 14>
+            Please keep in mind that full payment is required before the districts will release the I-20.<br/><br/>
+            
+            Thank you for your cooperation,<br/>
+            Stacy
+        <cfelse>
+            Thank you for your cooperation,<br/><br/>
+            
+            Marcel<br/>
+            Financial Department<br/><br/>
+            
+            Student Management Group<br/>
+            119 Cooper St<br/>
+            Babylon, NY 11702<br/>
+            800-766-4656-Toll Free<br/>
+            631-893-4540-Phone<br/>
+            631-893-4550-Fax<br/>
+            marcel@student-management.com<br/><br/>
+            
+            visit our web site at #CLIENT.exits_url#</small> 
+        </cfif>
+
 	</cfcase>
 	
 	<cfcase value="credit_note">
@@ -1270,23 +1291,30 @@ These are documents that confirm the cancellations that have been processed in y
 I'll wait for your instructions on how to apply each credit note just as we normally do for a regular payment (just let me know/confirm the invoice number and respective amounts to apply it). <br/>
 Just remember to pay for invoices that belong to the same company as the credit note (ex. an ISE credit note must be used to pay for ISE invoices).<br/><br/>
 
-These confirmations are one more effort to keep both, yours and our records in the same page.<br/><br/>	
+These confirmations are one more effort to keep both, yours and our records in the same page.<br/><br/>
+
+		<cfif FORM.companyID EQ 14>            
+            Thank you for your cooperation,<br/>
+            Stacy
+        <cfelse>
+            Thank you for your cooperation,<br/><br/>
+            
+            Marcel<br/>
+            Financial Department<br/><br/>
+            
+            Student Management Group<br/>
+            119 Cooper St<br/>
+            Babylon, NY 11702<br/>
+            800-766-4656-Toll Free<br/>
+            631-893-4540-Phone<br/>
+            631-893-4550-Fax<br/>
+            marcel@student-management.com<br/><br/>
+            
+            visit our web site at #CLIENT.exits_url#</small> 
+        </cfif>
+    
 	</cfcase>
 </cfswitch>
-
-Best regards,<br/>
-Marcel<br/>
-Financial Department<br/><br/>
-
-Student Management Group<br/>
-119 Cooper St<br/>
-Babylon, NY 11702<br/>
-800-766-4656-Toll Free<br/>
-631-893-4540-Phone<br/>
-631-893-4550-Fax<br/>
-marcel@student-management.com<br/><br/>
-
-visit our web site at #CLIENT.exits_url#</small>
 
 	<cfloop list="#form.docNumber#" index="iDocNumb">
 		<cfmailparam disposition="attachment" type="html" file="#AppPath.uploadedFiles#invoices_pdf/#variables.compName#_#variables.docType#_#iDocNumb#.pdf">

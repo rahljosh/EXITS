@@ -17,7 +17,11 @@ END) AS testCompId
         FROM smg_charges sc
         LEFT JOIN smg_programs sp ON sp.programid = sc.programid
         WHERE sc.agentid = #indexAgentId#
-        AND sc.companyid IN (1,2,3,4,5,7,8,10,12)
+        <cfif CLIENT.companyID EQ 14>
+        	AND sc.companyid = 14
+        <cfelse>
+        	AND sc.companyid IN (1,2,3,4,5,7,8,10,12)
+        </cfif>
         UNION ALL
         SELECT 'payment', sc.invoiceid, spr.date, SUM( spc.amountapplied ) * -1 AS amountApplied, spr.companyid, (CASE 
 WHEN sp.type IN (7,8,9) THEN 7
@@ -30,7 +34,11 @@ END) AS testCompId
         LEFT JOIN smg_programs sp ON sp.programid = sc.programid
         LEFT JOIN smg_payment_received spr ON spr.paymentid = spc.paymentid
         WHERE spr.agentid = #indexAgentId#
-        AND sc.companyid IN (1,2,3,4,5,7,8,10,12)
+        <cfif CLIENT.companyID EQ 14>
+        	AND sc.companyid = 14
+        <cfelse>
+        	AND sc.companyid IN (1,2,3,4,5,7,8,10,12)
+        </cfif>
         GROUP BY sc.invoiceid
         )t
         GROUP BY t.invoiceid HAVING invBalance > 0
@@ -45,7 +53,11 @@ END) AS testCompId
         LEFT JOIN smg_charges sch ON sch.chargeid = sc.chargeid
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         WHERE sc.agentid = #indexAgentId#
-        AND sc.companyid IN (1,2,3,4,5,7,8,10,12)
+        <cfif CLIENT.companyID EQ 14>
+        	AND sc.companyid = 14
+        <cfelse>
+        	AND sc.companyid IN (1,2,3,4,5,7,8,10,12)
+        </cfif>
         AND sc.active = 1
         GROUP BY creditid
         ORDER BY date DESC
@@ -141,8 +153,17 @@ END) AS testCompId
         </cfif>
         
         <cfif getAgentInfo.billing_email IS NOT "" AND getTotalBalancePerAgent.totalPerAgent GT 0>
+        
+<cfswitch expression="#CLIENT.companyID#">	
+	<cfcase value="14">
+		<cfset emailFrom = 'stacy@exchange-service.org'>
+	</cfcase>
+	<cfdefaultcase>
+		<cfset emailFrom = 'marcel@student-management.com'>
+	</cfdefaultcase>
+</cfswitch>
 
-            <cfmail from="marcel@student-management.com" to="#getAgentInfo.billing_email#" bcc="marcel@student-management.com" subject="#getAgentInfo.businessname# - Account Balance Update" type="html">
+            <cfmail from="#VARIABLES.emailFrom#" to="#getAgentInfo.billing_email#" bcc="#VARIABLES.emailFrom#" subject="#getAgentInfo.businessname# - Account Balance Update" type="html">
             
                 <style type="text/css">
     
@@ -233,6 +254,9 @@ END) AS testCompId
                                 <cfcase value="10">
                                     <cfset company = 'CASE High School'>
                                 </cfcase>
+                                <cfcase value="14">
+                                    <cfset company = 'ESI'>
+                                </cfcase>
                             </cfswitch>
                 
                             <tr <cfif getInvCredNotes.currentRow MOD 2>bgcolor="##FFFFFF"</cfif>>
@@ -272,7 +296,10 @@ END) AS testCompId
                 
                 </cfloop>
         
-                We will appreciate if you transfer the total amount <strong>#LsCurrencyFormat(getTotalBalancePerAgent.totalPerAgent)#</strong> as soon as possible. Please check the invoices for the correct bank account when making payments since ISE, CSB and CASE are separate companies and thus have their own bank accounts. Payments remitted to the wrong bank account will be returned to your bank account without exception.<br/><br/>
+                We will appreciate if you transfer the total amount <strong>#LsCurrencyFormat(getTotalBalancePerAgent.totalPerAgent)#</strong> as soon as possible. 
+                <cfif CLIENT.companyID NEQ 14>
+                Please check the invoices for the correct bank account when making payments since ISE, CSB and CASE are separate companies and thus have their own bank accounts. Payments remitted to the wrong bank account will be returned to your bank account without exception.<br/><br/>
+                </cfif>
                 
                 <small><strong>Notes:</strong><br/><br/>
                 
@@ -287,7 +314,14 @@ END) AS testCompId
                 Thank you for your cooperation.<br/><br/>
                 
                 Best regards,<br/>
-                Marcel
+                <cfswitch expression="#CLIENT.companyID#">	
+                    <cfcase value="14">
+                        Stacy
+                    </cfcase>
+                    <cfdefaultcase>
+                        Marcel
+                    </cfdefaultcase>
+                </cfswitch>
     
             </cfmail>
             
