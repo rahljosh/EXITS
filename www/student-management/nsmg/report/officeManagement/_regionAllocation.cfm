@@ -24,8 +24,19 @@
 		param name="FORM.submitted" default=0;
 		param name="FORM.seasonID" default=0;
 		param name="FORM.regionID" default=0;
-		param name="FORM.augJan" default=0;
-		param name="FORM.outputType" default="";
+		param name="FORM.allocationPeriod" default="";
+		param name="FORM.outputType" default="onScreen";
+		
+		vProgramTypeList = '';
+		
+		// Set Program Types
+		if ( FORM.allocationPeriod EQ 'January' ) {
+			 // 12 Month - 2nd Semester
+			vProgramTypeList = '2,4';
+		} else {
+			// 10 Month - 1st Semester
+			vProgramTypeList = '1,3'; 
+		}
 		
         // Summary
         vSummaryPlaced = 0;
@@ -59,7 +70,7 @@
                     r.regionID,
                     r.regionName,
                     r.company,
-                    <cfif FORM.augJan EQ 1>
+                    <cfif FORM.allocationPeriod EQ 'August'>
                     	a.augustAllocation AS allocation,
                    	<cfelse>
                     	a.januaryAllocation AS allocation,
@@ -117,9 +128,9 @@
                 <tr class="on">
                 	<td class="subTitleRightNoBorder">August/January: <span class="required">*</span></td>
                     <td>
-                    	<select name="augJan" id="augJan" class="xLargeField" required>
-                        	<option value="1">August Allocation</option>
-                            <option value="2">January Allocation</option>
+                    	<select name="allocationPeriod" id="allocationPeriod" class="xLargeField" required>
+                        	<option value="August">August Allocation</option>
+                            <option value="January">January Allocation</option>
                     	</select>
                     </td>
                 </tr>
@@ -208,25 +219,31 @@
         
             <cfoutput query="qGetResults">
 
-                <cfquery name="qGetPlacedStudents" datasource="#APPLICATION.DSN#">
+                <cfquery name="qGetPlacements" datasource="#APPLICATION.DSN#">
                     SELECT
                         s.studentID,
                         s.host_fam_approved
                     FROM
                         smg_students s
+                    INNER JOIN 
+                        smg_programs p ON s.programID = p.programID
+                            AND
+                                p.type IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vProgramTypeList#" list="yes"> )
+                            AND
+                            	p.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> 
+                    INNER JOIN
+                        smg_hosts h ON h.hostID = s.hostID
                     WHERE
                         s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                     AND
                         s.regionAssigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.regionID#">
-                    AND
-                        s.hostID > <cfqueryparam cfsqltype="cf_sql_integer" value="0">	
                 </cfquery>
 
                 <cfquery name="qGetPlaced" dbtype="query">
                     SELECT
                         studentID
                     FROM
-                        qGetPlacedStudents
+                        qGetPlacements
                     WHERE
                         host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="1,2,3,4"> )
                 </cfquery>
@@ -235,7 +252,7 @@
                     SELECT
                         studentID
                     FROM
-                        qGetPlacedStudents 
+                        qGetPlacements 
                     WHERE
                         host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="5,6,7"> )
                 </cfquery>
@@ -337,25 +354,31 @@
 
                 <cfoutput>
 
-                    <cfquery name="qGetPlacedStudents" datasource="#APPLICATION.DSN#">
+                    <cfquery name="qGetPlacements" datasource="#APPLICATION.DSN#">
                         SELECT
                             s.studentID,
                             s.host_fam_approved
                         FROM
                             smg_students s
+                        INNER JOIN 
+                            smg_programs p ON s.programID = p.programID
+                                AND
+                                    p.type IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vProgramTypeList#" list="yes"> )
+                                AND
+                                    p.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> 
+                        INNER JOIN
+                            smg_hosts h ON h.hostID = s.hostID
                         WHERE
                             s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                         AND
                             s.regionAssigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.regionID#">
-                        AND
-                            s.hostID > <cfqueryparam cfsqltype="cf_sql_integer" value="0">	
                     </cfquery>
     
                     <cfquery name="qGetPlaced" dbtype="query">
                         SELECT
                             studentID
                         FROM
-                            qGetPlacedStudents
+                            qGetPlacements
                         WHERE
                             host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="1,2,3,4"> )
                     </cfquery>
@@ -364,7 +387,7 @@
                         SELECT
                             studentID
                         FROM
-                            qGetPlacedStudents 
+                            qGetPlacements 
                         WHERE
                             host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="5,6,7"> )
                     </cfquery>
