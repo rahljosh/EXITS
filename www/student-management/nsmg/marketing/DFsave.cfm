@@ -3,6 +3,11 @@
 <cfelseif client.companyid eq 10>
 	<cfset companyImage = 10>
 </cfif>
+<cfquery name="companyInfo" datasource="MySQL">
+select *
+from smg_companies
+where companyid = #client.companyid#
+</cfquery>
 <Cfquery name="repInfo" datasource="MySQL">
 select firstname, lastname, email, phone
 from smg_users
