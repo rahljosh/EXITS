@@ -124,10 +124,8 @@
         </td>
 	</tr>
     
-    <!---
     <tr>
         <td>
-			<!--- Report is not ready --->
             <ul class="mainList">
                 <li onclick="loadSelectedReport('studentPlacementPaperworkByRegion');">Placement Paperwork by Region</li>
                 <ul>
@@ -137,6 +135,7 @@
             </ul>
         </td>
         <td>
+            <!---
             <ul class="mainList">
                 <li onclick="loadSelectedReport('studentRelocationReport');">Relocation Report</li>
                 <ul>
@@ -144,18 +143,20 @@
                     <li>Filter by: date relocated, reason, program</li>
 				</ul>
             </ul>  
+			--->
         </td>
         <td class="right">
+        	<!---
             <ul class="mainList">
                 <li onclick="loadSelectedReport('studentDoublePlacementPaperworkByRegion');">Double Placement Paperwork By Region</li>
                 <ul>
                     <li>Generate a list of all students in your region and double placement paperwork HQ has not received</li>
                     <li>Filter by: Rep (place vs super), program, date placed, missing/received/all, on screen/excel</li>
 				</ul>
-            </ul>  
+            </ul> 
+			---> 
         </td>
 	</tr>  	
-	--->
     
     <!---
     <tr>
@@ -291,7 +292,7 @@
     <tr>
         <td>
 			<ul class="mainList">
-                <li onclick="loadSelectedReport('regionalAllocation');">Regional Allocation</li>
+                <li onclick="loadSelectedReport('regionAllocation');">Region Allocation</li>
                 <ul>
                     <li>Generate a report of allocations by company and region</li>
                     <li>Filter by: season, August/January allocations, region</li>

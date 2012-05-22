@@ -219,7 +219,7 @@
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Program: <span class="required">*</span></td>
                     <td>
-                        <select name="programID" id="programIDStudentListByRegion" class="xLargeField" multiple size="6" required>
+                        <select name="programID" id="programID" class="xLargeField" multiple size="6" required>
                             <cfloop query="qGetProgramList"><option value="#qGetProgramList.programID#">#qGetProgramList.programName#</option></cfloop>
                         </select>
                     </td>
@@ -227,8 +227,13 @@
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Region: <span class="required">*</span></td>
                     <td>
-                        <select name="regionID" id="regionIDStudentListByRegion" class="xLargeField" multiple size="6" required>
-                            <cfloop query="qGetRegionList"><option value="#qGetRegionList.regionID#">#qGetRegionList.regionname#</option></cfloop>
+                        <select name="regionID" id="regionID" class="xLargeField" multiple size="6" required>
+                            <cfloop query="qGetRegionList">
+                            	<option value="#qGetRegionList.regionID#">
+                                	<cfif CLIENT.companyID EQ 5>#qGetRegionList.companyShort# -</cfif> 
+                                    #qGetRegionList.regionname#
+                                </option>
+                            </cfloop>
                         </select>
                     </td>		
                 </tr>
@@ -260,7 +265,7 @@
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Output Type: <span class="required">*</span></td>
                     <td>
-                        <select name="outputType" id="outputTypeStudentListByRegion" class="xLargeField">
+                        <select name="outputType" id="outputType" class="xLargeField">
                             <option value="onScreen">On Screen</option>
                             <option value="Excel">Excel Spreadsheet</option>
                         </select>

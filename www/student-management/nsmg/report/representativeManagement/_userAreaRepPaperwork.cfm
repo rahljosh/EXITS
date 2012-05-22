@@ -125,7 +125,12 @@
                     <td class="subTitleRightNoBorder">Region: <span class="required">*</span></td>
                     <td>
                         <select name="regionID" id="regionID" class="xLargeField" multiple size="6" required>
-                            <cfloop query="qGetRegionList"><option value="#qGetRegionList.regionID#">#qGetRegionList.regionname#</option></cfloop>
+                            <cfloop query="qGetRegionList">
+                            	<option value="#qGetRegionList.regionID#">
+                                	<cfif CLIENT.companyID EQ 5>#qGetRegionList.companyShort# -</cfif> 
+                                    #qGetRegionList.regionname#
+                                </option>
+                            </cfloop>
                         </select>
                     </td>		
                 </tr>

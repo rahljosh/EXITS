@@ -66,7 +66,7 @@
 
 
     <!--- List of Office Management Reports --->
-    <cfcase value="regionalAllocation">
+    <cfcase value="regionAllocation">
 
         <cfinclude template="officeManagement/_#action#.cfm" />
 
