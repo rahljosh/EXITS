@@ -22,6 +22,10 @@
 		param name="FORM.submitted" default=0;
 		param name="FORM.programID" default=0;	
 		param name="FORM.regionID" default="";
+		param name="FORM.studentStatus" default="Active";
+		param name="FORM.placementStatus" default="Placed";
+		param name="FORM.placedDateFrom" default="";
+		param name="FORM.placedDateTo" default="";
 		param name="FORM.compliantOption" default="";
 		param name="FORM.reportBy" default="placeRepID";
 		param name="FORM.outputType" default="onScreen";
@@ -61,17 +65,60 @@
                     CAST(CONCAT(s.firstName, ' ', s.familyLastName,  ' ##', s.studentID) AS CHAR) AS studentName,
                     s.active,
                     s.cancelDate,
-                    sh.placeRepID,
                     sh.areaRepID,
+                    sh.placeRepID,
                     sh.isRelocation,
                     sh.isWelcomeFamily,
-                    sh.datePlaced,
                     sh.isActive AS isActivePlacement,
+                    sh.datePlaced,
+                    sh.doc_full_host_app_date,
+                    sh.doc_letter_rec_date, 
+                    sh.doc_rules_rec_date, 
+                    sh.doc_rules_sign_date,
+                    sh.doc_photos_rec_date, 
+                    <!--- Added 02/27/2012 - Required for August 12 Students --->
+                    sh.doc_bedroom_photo,
+                    sh.doc_bathroom_photo,
+                    sh.doc_kitchen_photo,
+                    sh.doc_living_room_photo,
+                    sh.doc_outside_photo,
+                    <!--- End of Added 02/27/2012 - Required for August 12 Students --->
+                    sh.doc_school_accept_date, 
+                    sh.doc_school_profile_rec,
+                    sh.doc_conf_host_rec, 
+                    sh.doc_date_of_visit, 
+                    sh.doc_ref_form_1, 
+                    sh.doc_ref_form_2, 
+                    sh.doc_single_place_auth,
+                    sh.stu_arrival_orientation, 
+                    sh.host_arrival_orientation, 
+                    sh.doc_class_schedule,
+                    sh.doc_income_ver_date,
+                    sh.doc_single_ref_check1,
+                    sh.doc_single_ref_check2,
+                    <!--- Second Visit Report --->
+                    secondVisitReport.pr_ny_approved_date,
                     <!--- Program --->
                     p.programName,
+                    p.seasonID,
                     <!--- Host Family --->
                     h.hostID,             
                     h.familyLastName as hostFamilyLastName,
+                    h.fatherFirstName,
+                    h.motherFirstName,
+                    <!--- Get Total of Children at home --->
+                    (
+                        SELECT 
+                            COUNT(shc.childID) 
+                        FROM 
+                            smg_host_children shc
+                        WHERE
+                            shc.hostID = h.hostID
+                        AND
+                            shc.liveathome = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
+                        AND	
+                            shc.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                    ) AS totalChildrenAtHome,
                     <!--- Region --->
                     r.regionID,
                     r.regionName,
@@ -85,22 +132,164 @@
                     smg_students s
                 INNER JOIN
                     smg_hostHistory sh ON sh.studentID = s.studentID
+					<!--- Date Placed --->
+                    <cfif isDate(FORM.placedDateFrom) AND isDate(FORM.placedDateTo)>
+                        AND 
+                            sh.datePlaced
+                            BETWEEN 
+                                <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.placedDateFrom#"> 	
+                            AND
+                                <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.placedDateTo#"> 	
+                    </cfif>
                 INNER JOIN
-                    smg_programs p on p.programid = s.programid
+                    smg_programs p on p.programID = s.programID
+                    <!--- Program --->
+                    AND
+                    	p.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> ) 
                 INNER JOIN
                     smg_hosts h ON h.hostID = sh.hostID
                 INNER JOIN
                     smg_regions r ON r.regionID = s.regionAssigned
+                    <!--- Region --->
+                    AND
+                        r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> ) 
+				<!--- Second Visit Report - Check the report itself and not the fields on placement paperwork --->
+                LEFT OUTER JOIN 
+                    progress_reports secondVisitReport ON secondVisitReport.fk_student = s.studentID
+                        AND
+                            secondVisitReport.fk_host = sh.hostID
+                        AND
+                            secondVisitReport.fk_reporttype = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
+                        AND
+                            secondVisitReport.pr_ny_approved_date IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">                    
                 LEFT OUTER JOIN 
                     smg_users fac ON r.regionFacilitator = fac.userID            
-                LEFT OUTER JOIN 
+                INNER JOIN
+                	<!--- Report By ---->
                     smg_users u ON sh.#FORM.reportBy# = u.userID
                 WHERE 
-                    s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> ) 
-                AND 
-                    s.host_fam_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">	
-                AND
-                    s.regionAssigned IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> ) 
+					1 = 1
+                    
+                <!--- Student Status --->
+                <cfif FORM.studentStatus EQ 'Active'>
+                	AND
+                    	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                <cfelseif FORM.studentStatus EQ 'Inactive'>
+                	AND
+                    	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                <cfelseif FORM.studentStatus EQ 'Canceled'>
+                	AND
+                    	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                    AND
+                    	s.cancelDate IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                </cfif>
+
+                <!--- Placement Status --->
+                <cfif FORM.placementStatus EQ 'Placed'>
+                    AND 
+                        s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4" list="yes"> )	
+                <cfelseif FORM.placementStatus EQ 'Pending'>
+                    AND 
+                        s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )	
+                <cfelseif FORM.placementStatus EQ 'Rejected'>
+                    AND 
+                        s.host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="99"> 	
+                <cfelse>
+                    AND 
+                        s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,6,7,99" list="yes"> )	
+				</cfif>
+                
+                <!--- Paperwork Option --->
+                <cfif FORM.compliantOption EQ 'Missing'>
+                    AND 
+                        (
+                            sh.doc_full_host_app_date IS NULL 
+                        OR 
+                            sh.doc_letter_rec_date IS NULL 
+                        OR 
+                            sh.doc_rules_rec_date IS NULL 
+                        OR
+                            sh.doc_rules_sign_date IS NULL
+                        OR
+                            sh.doc_photos_rec_date IS NULL 
+                        OR 
+                            sh.doc_school_accept_date IS NULL 
+                        OR 
+                            sh.doc_school_profile_rec IS NULL 
+                        OR
+                            sh.doc_conf_host_rec IS NULL 
+                        OR 
+                            sh.doc_date_of_visit IS NULL 
+                        OR 
+                            sh.doc_ref_form_1 IS NULL 
+                        OR 
+                            sh.doc_ref_form_2 IS NULL
+                        OR 
+                            sh.stu_arrival_orientation IS NULL 
+                        OR 
+                            sh.host_arrival_orientation IS NULL 
+                        OR 
+                            sh.doc_class_schedule IS NULL
+                        OR
+                            sh.doc_income_ver_date IS NULL
+                        OR
+                            sh.doc_single_ref_check1 IS NULL
+                        OR
+                            sh.doc_single_ref_check2 IS NULL            
+                        <!---  Second Visit Report - Check the report itself - OR s.doc_conf_host_rec2 IS NULL --->
+                        OR
+                            secondVisitReport.pr_ny_approved_date IS NULL 
+                        )
+                  
+                    <!--- Added 02/27/2012 / Required starting Aug 12 --->                                                               
+                    OR
+                        (
+                            p.seasonID >= <cfqueryparam cfsqltype="cf_sql_integer" value="9">
+							
+							<!--- Student Status --->
+                            <cfif FORM.studentStatus EQ 'Active'>
+                                AND
+                                    s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                            <cfelseif FORM.studentStatus EQ 'Inactive'>
+                                AND
+                                    s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                            <cfelseif FORM.studentStatus EQ 'Canceled'>
+                                AND
+                                    s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                                AND
+                                    s.cancelDate IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                            </cfif>
+
+							<!--- Placement Status --->
+                            <cfif FORM.placementStatus EQ 'Placed'>
+                                AND 
+                                    s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4" list="yes"> )	
+                            <cfelseif FORM.placementStatus EQ 'Pending'>
+                                AND 
+                                    s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )	
+                            <cfelseif FORM.placementStatus EQ 'Rejected'>
+                                AND 
+                                    s.host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="99"> 	
+                            <cfelse>
+                                AND 
+                                    s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,6,7,99" list="yes"> )	
+                            </cfif>
+
+                            AND 
+                                (                   	
+                                    sh.doc_bedroom_photo IS NULL   
+                                OR
+                                    sh.doc_bathroom_photo IS NULL   
+                                OR
+                                    sh.doc_kitchen_photo IS NULL   
+                                OR
+                                    sh.doc_living_room_photo IS NULL   
+                                OR
+                                    sh.doc_outside_photo IS NULL   
+                                )                        
+                        )
+                </cfif>
+
                 ORDER BY   
                     repName,          
                     studentName,
@@ -128,7 +317,7 @@
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Program: <span class="required">*</span></td>
                     <td>
-                        <select name="programID" id="programIDPlacementPaperworkByRegion" class="xLargeField" multiple size="6" required>
+                        <select name="programID" id="programID" class="xLargeField" multiple size="6" required>
                             <cfloop query="qGetProgramList"><option value="#qGetProgramList.programID#">#qGetProgramList.programName#</option></cfloop>
                         </select>
                     </td>
@@ -136,15 +325,20 @@
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Region: <span class="required">*</span></td>
                     <td>
-                        <select name="regionID" id="regionIDPlacementPaperworkByRegion" class="xLargeField" multiple size="6" required>
-                            <cfloop query="qGetRegionList"><option value="#qGetRegionList.regionID#">#qGetRegionList.regionname#</option></cfloop>
+                        <select name="regionID" id="regionID" class="xLargeField" multiple size="6" required>
+                            <cfloop query="qGetRegionList">
+                            	<option value="#qGetRegionList.regionID#">
+                                	<cfif CLIENT.companyID EQ 5>#qGetRegionList.companyShort# -</cfif>
+                                    #qGetRegionList.regionname#
+                                </option>
+                            </cfloop>
                         </select>
                     </td>		
                 </tr>
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Student Status: <span class="required">*</span></td>
                     <td>
-                        <select name="studentStatus" id="studentStatusPlacementPaperworkByRegion" class="xLargeField" required>
+                        <select name="studentStatus" id="studentStatus" class="xLargeField" required>
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                             <option value="Canceled">Canceled</option>
@@ -155,44 +349,36 @@
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Placement Status: <span class="required">*</span></td>
                     <td>
-                        <select name="placementStatus" id="placementStatusPlacementPaperworkByRegion" class="xLargeField" onChange="showHidePlacementDates('PlacementPaperworkByRegion');" required>
+                        <select name="placementStatus" id="placementStatus" class="xLargeField" onChange="showHidePlacementDates('PlacementPaperworkByRegion');" required>
                             <option value="Placed">Placed</option>
                             <option value="Pending">Pending</option>
-                            <option value="All">Both</option>
+                            <option value="Rejected">Rejected</option>
+                            <option value="All">All</option>
                         </select>
                     </td>		
                 </tr>
-                <tr class="on trPlacementDatePlacementPaperworkByRegion">
+                <tr class="on">
                     <td class="subTitleRightNoBorder">Placed From:</td>
-                    <td><input type="text" name="dateFrom" id="dateFromPlacementPaperworkByRegion" value="" size="7" maxlength="10" class="datePicker"> <span class="note">mm-dd-yyyy</span></td>
+                    <td><input type="text" name="placedDateFrom" id="placedDateFrom" value="" size="7" maxlength="10" class="datePicker"> <span class="note">mm-dd-yyyy</span></td>
                 </tr>
-                <tr class="on trPlacementDatePlacementPaperworkByRegion">
+                <tr class="on">
                     <td class="subTitleRightNoBorder">Placed To: </td>
-                    <td><input type="text" name="dateTo" id="dateToPlacementPaperworkByRegion" value="" size="7" maxlength="10" class="datePicker"> <span class="note">mm-dd-yyyy</span></td>
+                    <td><input type="text" name="placedDateTo" id="placedDateTo" value="" size="7" maxlength="10" class="datePicker"> <span class="note">mm-dd-yyyy</span></td>
                 </tr>
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Paperwork Option: <span class="required">*</span></td>
                     <td>
-                        <select name="compliantOption" id="compliantOptionPlacementPaperworkByRegion" class="xLargeField">
-                            <option value="">Comprehensive Report</option>
-                            <option value="missing">Missing Paperwork</option>
-                            <option value="non-compliant">Non-compliant Paperwork</option>                                                
+                        <select name="compliantOption" id="compliantOption" class="xLargeField">
+                            <!--- <option value="Comprehensive">Comprehensive Report</option> --->
+                            <option value="Missing">Missing Paperwork</option>
+                            <!---  <option value="Non-compliant">Non-compliant Paperwork</option> --->
                         </select>
                     </td>		
                 </tr>
                 <tr class="on">
-                    <td class="subTitleRightNoBorder">Facilitator: <span class="required">*</span></td>
-                    <td>
-                        <select name="facilitatorID" id="facilitatorIDPlacementPaperworkByRegion" class="xLargeField">
-                            <option value="0">All</option>
-                            <cfloop query="qGetFacilitatorList"><option value="#qGetFacilitatorList.userID#">#qGetFacilitatorList.firstName# #qGetFacilitatorList.lastName#</option></cfloop>
-                        </select>
-                    </td>		
-                </tr>   
-                <tr class="on">
                     <td class="subTitleRightNoBorder">Report By: <span class="required">*</span></td>
                     <td>
-                        <select name="reportBy" id="reportByPlacementPaperworkByRegion" class="xLargeField">
+                        <select name="reportBy" id="reportBy" class="xLargeField">
                             <option value="placeRepID">Placing Representative</option>
                             <option value="areaRepID">Supervising Representative</option>
                         </select>
@@ -201,7 +387,7 @@
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Output Type: <span class="required">*</span></td>
                     <td>
-                        <select name="outputType" id="outputTypePlacementPaperworkByRegion" class="xLargeField">
+                        <select name="outputType" id="outputType" class="xLargeField">
                             <option value="onScreen">On Screen</option>
                             <option value="Excel">Excel Spreadsheet</option>
                         </select>
@@ -210,8 +396,8 @@
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Email Regional Manager: <span class="required">*</span></td>
                     <td>
-                        <input type="radio" name="sendEmail" id="sendEmailPlacementPaperworkByRegionNo" value="0" checked="checked"> <label for="sendEmailPlacementPaperworkByRegionNo">No</label>  
-                        <input type="radio" name="sendEmail" id="sendEmailPlacementPaperworkByRegionYes" value="1"> <label for="sendEmailPlacementPaperworkByRegionYes">Yes</label>
+                        <input type="radio" name="sendEmail" id="sendEmailNo" value="0" checked="checked"> <label for="sendEmailNo">No</label>  
+                        <input type="radio" name="sendEmail" id="sendEmailYes" value="1"> <label for="sendEmailYes">Yes</label>
                         <br /><font size="-2">Available only on screen option</font>
                     </td>
                 </tr>
@@ -261,7 +447,7 @@
         <cfcontent type="application/msexcel">
         
         <!--- suggest default name for XLS file --->
-        <cfheader name="Content-Disposition" value="attachment; filename=DOS-Missing-Placement-Paperwork-By-Region.xls"> 
+        <cfheader name="Content-Disposition" value="attachment; filename=DOS-Placement-Paperwork-By-Region.xls"> 
         
         <table width="98%" cellpadding="4" cellspacing="0" align="center" border="1">
             <tr>
@@ -282,8 +468,8 @@
                 <td>Student Last Name</td>
                 <td>Student Status</td>
                 <td>Program</td>
+                <td>Host Family ID</td>
                 <td>Host Family</td>
-                <td>Double Placement</td>
                 <td>Date Placed</td>
                 <td>Missing Documents</td>
             </tr>      
@@ -291,54 +477,169 @@
             <cfoutput query="qGetResults">
             
                 <cfscript>
-                    // Set Variable to Handle Missing Documents
-                    vMissingDocumentsMessage = '';
-                    vOutOfComplianceDocuments = '';
-                    vIsCompliant = 0;
-                    
-                    // Display Missing
-                    if ( FORM.compliantOption EQ 'missing' ) {
-                    
-                        // Host Family Date Signed
-                        if ( NOT isDate(qGetResults.doublePlacementHostFamilyDateSigned) ) {
-                            vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Host Family Date Signed <br />", " <br />");
-                        } 
-                        
-                        // Student Date Signed
-                        if ( VAL(qGetResults.isRelocation) AND NOT isDate(qGetResults.doublePlacementStudentDateSigned) ) {
-                            vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Student Date Signed <br />", " <br />");
-                        } 
-                        
-                    // Display Both
-                    } else { 
-                    
-                        // Host Family Date Signed
-                        if ( NOT isDate(qGetResults.doublePlacementHostFamilyDateSigned) ) {
-                            vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Host Family Date Signed <br />", " <br />");
-                        } else if ( isDate(qGetResults.doublePlacementHostFamilyDateSigned) AND qGetResults.doublePlacementHostFamilyDateSigned GT qGetResults.datePlaced ) {
-                            vOutOfComplianceDocuments = ListAppend(vOutOfComplianceDocuments, "Host Family Date Signed is Non-compliant <br />", " <br />");
-                        }
-                        
-                        // Student Date Signed
-                        if ( VAL(qGetResults.isRelocation) AND NOT isDate(qGetResults.doublePlacementStudentDateSigned) ) {
-                            vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Student Date Signed <br />", " <br />");
-                        } else if ( VAL(qGetResults.isRelocation) AND isDate(qGetResults.doublePlacementStudentDateSigned) AND qGetResults.doublePlacementStudentDateSigned GT qGetResults.datePlaced ) {
-                            vOutOfComplianceDocuments = ListAppend(vOutOfComplianceDocuments, "Student Date Signed is Non-compliant <br />", " <br />");
-                        }
-                        
-                    }
-            
-                    // Check if is compliant
-                    if ( NOT LEN(vMissingDocumentsMessage) AND NOT LEN(vOutOfComplianceDocuments) ) {
-                        vIsCompliant = 1;
-                    }
-                    
-                    // Set Row Color
-                    if ( qGetResults.currentRow MOD 2 ) {
-                        vRowColor = 'bgcolor="##E6E6E6"';
-                    } else {
-                        vRowColor = 'bgcolor="##FFFFFF"';
-                    }
+					// Set Variable to Handle Missing Documents
+					vIsCompliant = 0;
+					vMissingDocumentsMessage = '';
+					vOutOfComplianceDocuments = '';
+	
+					vIsFatherHome = 0;
+					vIsMotherHome = 0;
+					vTotalFamilyMembers = 0;
+					
+					// Father is Home
+					if ( LEN(qGetResults.fatherFirstName) ) {
+						vIsFatherHome = 1;
+					}
+					
+					if ( LEN(qGetResults.motherFirstName) ) {
+						vIsMotherHome = 1;
+					}
+					
+					vTotalFamilyMembers = vIsFatherHome + vIsMotherHome + qGetResults.totalChildrenAtHome;
+	
+					// Required for Single Parents 
+					if ( qGetResults.seasonID GTE 8 AND vTotalFamilyMembers EQ 1 ) {  
+						
+						// Single Person Placement Verification
+						if ( NOT isDate(qGetResults.doc_single_place_auth) ) {
+							vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Single Person Placement Verification <br />", " <br />");
+						}
+						
+						// Date of S.P. Reference Check 1
+						if ( NOT isDate(qGetResults.doc_single_ref_check1) ) {
+							vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Ref Check (Single) <br />", " <br />");
+						}
+	
+						// Date of S.P. Reference Check 2
+						if ( NOT isDate(qGetResults.doc_single_ref_check2) ) {
+							vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "2nd Ref Check (Single) <br />", " <br />");
+						}
+						
+					}
+	
+					// Host Application Received
+					if ( NOT isDate(qGetResults.doc_full_host_app_date) ) {
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Host Family <br />", " <br />");
+					}
+					
+					// Host Family Letter Received
+					if ( NOT isDate(qGetResults.doc_letter_rec_date) ) {
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "HF Letter <br />", " <br />");
+					}
+					
+					// Host Family Rules Form
+					if ( NOT isDate(qGetResults.doc_rules_rec_date) ) {
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "HF Rules <br />", " <br />");
+					}
+					
+					// Host Family Rules Date Signed
+					if ( NOT isDate(qGetResults.doc_rules_sign_date) ) {
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "HF Rules Date Signed <br />", " <br />");
+					}		
+					
+					// Family Photo
+					if ( NOT isDate(qGetResults.doc_photos_rec_date) ) {
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Family Photo <br />", " <br />");
+					}
+	
+					// Required starting Aug 12
+					if ( qGetResults.seasonID GTE 9 ) {
+						
+						// Student Bedroom Photo
+						if ( NOT isDate(qGetResults.doc_bedroom_photo) ) {
+							vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Student Bedroom Photo <br />", " <br />");
+						}
+	
+						// Student Bathroom Photo
+						if ( NOT isDate(qGetResults.doc_bathroom_photo) ) {
+							vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Student Bathroom Photo <br />", " <br />");
+						}
+	
+						// Kitchen Photo
+						if ( NOT isDate(qGetResults.doc_kitchen_photo) ) {
+							vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Kitchen Photo <br />", " <br />");
+						}
+	
+						// Living Room Photo
+						if ( NOT isDate(qGetResults.doc_living_room_photo) ) {
+							vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Living Room Photo <br />", " <br />");
+						}
+						
+						// Outside Photo
+						if ( NOT isDate(qGetResults.doc_outside_photo) ) {
+							vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Outside Photo <br />", " <br />");
+						}
+	
+					}  
+					
+					// School & Community Profile Form
+					if ( NOT isDate(qGetResults.doc_school_profile_rec) ) {
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "School & Community Profile <br />", " <br />");
+					}
+					
+					// Confidential Host Family Visit Form
+					if ( NOT isDate(qGetResults.doc_conf_host_rec) ) {
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Visit Form <br />", " <br />");
+					}
+					
+					// Confidential Host Family Visit Form - Date of Visit
+					if ( NOT isDate(qGetResults.doc_date_of_visit) ) {
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Date of Visit <br />", " <br />");
+					}
+					
+					// Reference Form 1
+					if ( NOT isDate(qGetResults.doc_ref_form_1) ) {
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Ref. 1 <br />", " <br />");
+					}
+					
+					// Reference Form 2
+					if ( NOT isDate(qGetResults.doc_ref_form_2) ) {
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Ref. 2 <br />", " <br />");
+					}
+					
+					// School Acceptance Form
+					if ( NOT isDate(qGetResults.doc_school_accept_date) ) {
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "School Acceptance <br />", " <br />");
+					}								
+	
+					// Income Verification Form
+					if ( NOT isDate(qGetResults.doc_income_ver_date) ) {
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Income Verification <br />", " <br />");
+					}
+					
+					// 2nd Confidential Host Family Visit Form
+					if ( NOT isDate(qGetResults.pr_ny_approved_date) ) { 
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "2nd Conf. Host Visit <br />", " <br />");
+					}
+	
+					// Student Orientation
+					if ( NOT isDate(qGetResults.stu_arrival_orientation) ) {
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Student Orientation <br />", " <br />");
+					}
+					
+					// HF Orientation
+					if ( NOT isDate(qGetResults.host_arrival_orientation) ) {
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "HF Orientation <br />", " <br />");
+					}
+					
+					// Class Schedule
+					if ( NOT isDate(qGetResults.doc_class_schedule) ) {
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Class Schedule <br />", " <br />");
+					}
+					
+					// Check if is compliant
+					/*
+					if ( NOT LEN(vMissingDocumentsMessage) AND NOT LEN(vOutOfComplianceDocuments) ) {
+						vIsCompliant = 1;
+					}
+					*/
+					
+					// Set Row Color
+					if ( qGetResults.currentRow MOD 2 ) {
+						vRowColor = 'bgcolor="##E6E6E6"';
+					} else {
+						vRowColor = 'bgcolor="##FFFFFF"';
+					}
                 </cfscript>
                 
                 <tr>
@@ -347,7 +648,7 @@
                     <td #vRowColor#>#qGetResults.repName#</td>
                     <td #vRowColor#>#qGetResults.studentID#</td>
                     <td #vRowColor#>#qGetResults.firstName#</td>
-                    <td #vRowColor#>#qGetResults.familyLastName#</td>
+                    <td #vRowColor#>#qGetResults.familyLastName#</td>                    
                     <td #vRowColor#>
                         <cfif VAL(qGetResults.active)>
                             <span class="note">Active</span>
@@ -356,6 +657,7 @@
                         </cfif>
                     </td>
                     <td #vRowColor#>#qGetResults.programName#</td>
+                    <td #vRowColor#>#qGetResults.hostID#</td>
                     <td #vRowColor#>
                         #qGetResults.hostFamilyLastName#
     
@@ -378,14 +680,6 @@
                                 </cfif>
                             )
                         </span>                            
-                    </td>
-                    <td #vRowColor#>
-                        #qGetResults.doublePlacementStudentName#
-                        <cfif VAL(qGetResults.isActivePlacement) AND VAL(qGetResults.isActiveDoublePlacement)>
-                            <span class="note">(Current)</span>
-                        <cfelse>
-                            <span class="note">(Previous)</span>
-                        </cfif>
                     </td>
                     <td #vRowColor#>#DateFormat(qGetResults.datePlaced, 'mm/dd/yy')#</td>
                     <td #vRowColor#>
@@ -422,10 +716,19 @@
                             <cfloop query="qGetPrograms">
                                 #qGetPrograms.programName# <br />
                             </cfloop>
+                            
+                            Student Status: #FORM.studentStatus# <br />
+                            
+                            Placement Status: #FORM.placementStatus# <br />
+                            
+                            <cfif isDate(FORM.placedDateFrom) AND isDate(FORM.placedDateTo)>
+	                            Placed From #FORM.placedDateFrom# to #FORM.placedDateTo# <br />
+							</cfif>
+                            
+                            Paperwork Option: #FORM.compliantOption# <br />
                         </td>
                     </tr>
-                </table>
-                <br />
+                </table><br />
             
             </cfsavecontent>
         
@@ -433,16 +736,16 @@
             #reportHeader#
         
         </cfoutput>
-        
-        <!--- Loop Regions ---> 
-        <cfloop list="#FORM.regionID#" index="currentRegionID">
+                
+		<!--- Loop Regions ---> 
+        <cfloop query="qGetRegions">
     
             <!--- Save Report in a Variable --->
             <cfsavecontent variable="reportBody">
         
                 <cfscript>
                     // Get Regional Manager
-                    qGetRegionalManager = APPLICATION.CFC.USER.getRegionalManager(regionID=currentRegionID);
+                    qGetRegionalManager = APPLICATION.CFC.USER.getRegionalManager(regionID=qGetRegions.regionID);
                 </cfscript>
         
                 <cfquery name="qGetStudentsInRegion" dbtype="query">
@@ -455,8 +758,16 @@
                 </cfquery>
                 
                 <cfoutput>
-                         
-                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                    
+                    <cfscript>
+						if ( ListFirst(FORM.regionID) EQ currentRegionID ) {
+							vTableClass = 'blueThemeReportTable';
+						} else {						
+							vTableClass = 'blueThemeReportTableNewSection';
+						}
+					</cfscript>
+                    
+                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="#vTableClass#">
                         <tr>
                             <th class="left">
                                 #qGetStudentsInRegion.regionName#
@@ -485,9 +796,8 @@
                             <td class="subTitleLeft" width="20%">Student</td>
                             <td class="subTitleLeft" width="10%">Program</td>
                             <td class="subTitleLeft" width="15%">Host Family</td>
-                            <td class="subTitleLeft" width="20%">Double Placement</td>
                             <td class="subTitleCenter" width="10%">Date Placed</td>
-                            <td class="subTitleLeft" width="25%">Missing Documents</td>
+                            <td class="subTitleLeft" width="45%">Missing Documents</td>
                         </tr>      
                         
                         <cfscript>
@@ -503,46 +813,161 @@
                                 vCurrentRow ++;
                                 
                                 // Set Variable to Handle Missing Documents
-                                vMissingDocumentsMessage = '';
-                                vOutOfComplianceDocuments = '';
                                 vIsCompliant = 0;
-        
-                                // Display Missing
-                                if ( FORM.compliantOption EQ 'missing' ) {
-                                
-                                    // Host Family Date Signed
-                                    if ( NOT isDate(qGetStudentsInRegion.doublePlacementHostFamilyDateSigned) ) {
-                                        vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Host Family Date Signed <br />", " <br />");
-                                    } 
-                                    
-                                    // Student Date Signed
-                                    if ( VAL(qGetStudentsInRegion.isRelocation) AND NOT isDate(qGetStudentsInRegion.doublePlacementStudentDateSigned) ) {
-                                        vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Student Date Signed <br />", " <br />");
-                                    } 
-                                    
-                                // Display Both
-                                } else { 
-                                
-                                    // Host Family Date Signed
-                                    if ( NOT isDate(qGetStudentsInRegion.doublePlacementHostFamilyDateSigned) ) {
-                                        vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Host Family Date Signed <br />", " <br />");
-                                    } else if ( isDate(qGetStudentsInRegion.doublePlacementHostFamilyDateSigned) AND qGetStudentsInRegion.doublePlacementHostFamilyDateSigned GT qGetStudentsInRegion.datePlaced ) {
-                                        vOutOfComplianceDocuments = ListAppend(vOutOfComplianceDocuments, "Host Family Date Signed is Non-compliant <br />", " <br />");
-                                    }
-                                    
-                                    // Student Date Signed
-                                    if ( VAL(qGetStudentsInRegion.isRelocation) AND NOT isDate(qGetStudentsInRegion.doublePlacementStudentDateSigned) ) {
-                                        vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Student Date Signed <br />", " <br />");
-                                    } else if ( VAL(qGetStudentsInRegion.isRelocation) AND isDate(qGetStudentsInRegion.doublePlacementStudentDateSigned) AND qGetStudentsInRegion.doublePlacementStudentDateSigned GT qGetStudentsInRegion.datePlaced ) {
-                                        vOutOfComplianceDocuments = ListAppend(vOutOfComplianceDocuments, "Student Date Signed is Non-compliant <br />", " <br />");
-                                    }
-                                    
+								vMissingDocumentsMessage = '';
+                                vOutOfComplianceDocuments = '';
+
+                                vIsFatherHome = 0;
+                                vIsMotherHome = 0;
+                                vTotalFamilyMembers = 0;
+								
+                                // Father is Home
+                                if ( LEN(qGetStudentsInRegion.fatherFirstName) ) {
+                                    vIsFatherHome = 1;
                                 }
-        
+                                
+                                if ( LEN(qGetStudentsInRegion.motherFirstName) ) {
+                                    vIsMotherHome = 1;
+                                }
+                                
+                                vTotalFamilyMembers = vIsFatherHome + vIsMotherHome + qGetStudentsInRegion.totalChildrenAtHome;
+
+                                // Required for Single Parents 
+                                if ( qGetStudentsInRegion.seasonID GTE 8 AND vTotalFamilyMembers EQ 1 ) {  
+                                    
+									// Single Person Placement Verification
+									if ( NOT isDate(qGetStudentsInRegion.doc_single_place_auth) ) {
+                                    	vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Single Person Placement Verification &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                	}
+									
+									// Date of S.P. Reference Check 1
+									if ( NOT isDate(qGetStudentsInRegion.doc_single_ref_check1) ) {
+										vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Ref Check (Single) &nbsp; &nbsp;", " &nbsp; &nbsp;");
+									}
+
+									// Date of S.P. Reference Check 2
+                                    if ( NOT isDate(qGetStudentsInRegion.doc_single_ref_check2) ) {
+                                        vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "2nd Ref Check (Single) &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    }
+									
+                                }
+
+                                // Host Application Received
+                                if ( NOT isDate(qGetStudentsInRegion.doc_full_host_app_date) ) {
+                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Host Family &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+								
+                                // Host Family Letter Received
+                                if ( NOT isDate(qGetStudentsInRegion.doc_letter_rec_date) ) {
+                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "HF Letter &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+								
+                                // Host Family Rules Form
+                                if ( NOT isDate(qGetStudentsInRegion.doc_rules_rec_date) ) {
+                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "HF Rules &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+								
+                                // Host Family Rules Date Signed
+                                if ( NOT isDate(qGetStudentsInRegion.doc_rules_sign_date) ) {
+                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "HF Rules Date Signed &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }		
+								
+                                // Family Photo
+                                if ( NOT isDate(qGetStudentsInRegion.doc_photos_rec_date) ) {
+                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Family Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+
+                                // Required starting Aug 12
+                                if ( qGetStudentsInRegion.seasonID GTE 9 ) {
+                                    
+									// Student Bedroom Photo
+									if ( NOT isDate(qGetStudentsInRegion.doc_bedroom_photo) ) {
+										vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Student Bedroom Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+									}
+
+									// Student Bathroom Photo
+									if ( NOT isDate(qGetStudentsInRegion.doc_bathroom_photo) ) {
+										vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Student Bathroom Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+									}
+
+									// Kitchen Photo
+									if ( NOT isDate(qGetStudentsInRegion.doc_kitchen_photo) ) {
+										vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Kitchen Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+									}
+
+									// Living Room Photo
+									if ( NOT isDate(qGetStudentsInRegion.doc_living_room_photo) ) {
+										vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Living Room Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+									}
+									
+									// Outside Photo
+									if ( NOT isDate(qGetStudentsInRegion.doc_outside_photo) ) {
+										vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Outside Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+									}
+
+                                }  
+								
+                                // School & Community Profile Form
+                                if ( NOT isDate(qGetStudentsInRegion.doc_school_profile_rec) ) {
+                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "School & Community Profile &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+								
+                                // Confidential Host Family Visit Form
+                                if ( NOT isDate(qGetStudentsInRegion.doc_conf_host_rec) ) {
+                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Visit Form &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+								
+                                // Confidential Host Family Visit Form - Date of Visit
+                                if ( NOT isDate(qGetStudentsInRegion.doc_date_of_visit) ) {
+                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Date of Visit &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+								
+                                // Reference Form 1
+                                if ( NOT isDate(qGetStudentsInRegion.doc_ref_form_1) ) {
+                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Ref. 1 &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+								
+                                // Reference Form 2
+                                if ( NOT isDate(qGetStudentsInRegion.doc_ref_form_2) ) {
+                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Ref. 2 &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+								
+                                // School Acceptance Form
+                                if ( NOT isDate(qGetStudentsInRegion.doc_school_accept_date) ) {
+                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "School Acceptance &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }								
+
+								// Income Verification Form
+								if ( NOT isDate(qGetStudentsInRegion.doc_income_ver_date) ) {
+									vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Income Verification &nbsp; &nbsp;", " &nbsp; &nbsp;");
+								}
+								
+								// 2nd Confidential Host Family Visit Form
+								if ( NOT isDate(qGetStudentsInRegion.pr_ny_approved_date) ) { 
+									vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "2nd Conf. Host Visit &nbsp; &nbsp;", " &nbsp; &nbsp;");
+								}
+
+                                // Student Orientation
+                                if ( NOT isDate(qGetStudentsInRegion.stu_arrival_orientation) ) {
+                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Student Orientation &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+								
+                                // HF Orientation
+                                if ( NOT isDate(qGetStudentsInRegion.host_arrival_orientation) ) {
+                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "HF Orientation &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+								
+                                // Class Schedule
+                                if ( NOT isDate(qGetStudentsInRegion.doc_class_schedule) ) {
+                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Class Schedule &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+								
                                 // Check if is compliant
-                                if ( NOT LEN(vMissingDocumentsMessage) AND NOT LEN(vOutOfComplianceDocuments) ) {
+                                /*
+								if ( NOT LEN(vMissingDocumentsMessage) AND NOT LEN(vOutOfComplianceDocuments) ) {
                                     vIsCompliant = 1;
                                 }
+								*/
                             </cfscript>
                             
                             <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
@@ -552,11 +977,13 @@
                                         <span class="note">(Active)</span>
                                     <cfelseif isDate(qGetStudentsInRegion.cancelDate)>
                                         <span class="noteAlert">(Cancelled)</span>
+                                    <cfelseif NOT VAL(qGetStudentsInRegion.active)>
+                                        <span class="note">(Inactive)</span>
                                     </cfif>
                                 </td>
                                 <td>#qGetStudentsInRegion.programName#</td>
                                 <td>
-                                    #qGetStudentsInRegion.hostFamilyLastName#
+                                    #qGetStudentsInRegion.hostFamilyLastName# ###qGetStudentsInRegion.hostID# 
                                     <span class="note">
                                         (
                                             <cfif VAL(qGetStudentsInRegion.isWelcomeFamily)>
@@ -574,17 +1001,8 @@
                                             <cfif VAL(qGetStudentsInRegion.isRelocation)>
                                                 - Relocation
                                             </cfif>
-                                            
                                         )
                                     </span>                            
-                                </td>
-                                <td>
-                                    #qGetStudentsInRegion.doublePlacementStudentName#
-                                    <cfif VAL(qGetStudentsInRegion.isActivePlacement) AND VAL(qGetStudentsInRegion.isActiveDoublePlacement)>
-                                        <span class="note">(Current)</span>
-                                    <cfelse>
-                                        <span class="note">(Previous)</span>
-                                    </cfif>
                                 </td>
                                 <td class="center">#DateFormat(qGetStudentsInRegion.datePlaced, 'mm/dd/yy')#</td>
                                 <td>
@@ -623,7 +1041,7 @@
                                 
                                 <!--- Include CSS on the body of email --->
                                 <style type="text/css">
-                                    <cfinclude template="../linked/css/baseStyle.css">
+                                    <cfinclude template="../../linked/css/baseStyle.css">
                                 </style>                    
                                 
                                 <!--- Display Report Header --->
@@ -640,7 +1058,7 @@
                         <cfinvokeargument name="email_to" value="#qGetRegionalManager.email#">
                         <cfinvokeargument name="email_cc" value="#CLIENT.email#">
                         <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
-                        <cfinvokeargument name="email_subject" value="#CLIENT.companyshort# - Missing Double Placement Paperwork Report">
+                        <cfinvokeargument name="email_subject" value="#CLIENT.companyshort# - Missing Placement Paperwork Report">
                         <cfinvokeargument name="email_message" value="#emailBody#">
                     </cfinvoke>
                     

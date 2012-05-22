@@ -205,7 +205,7 @@
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Program: <span class="required">*</span></td>
                     <td>
-                        <select name="programID" id="programIDStudentListByRegion" class="xLargeField" multiple size="6" required>
+                        <select name="programID" id="programID" class="xLargeField" multiple size="6" required>
                             <cfloop query="qGetProgramList"><option value="#qGetProgramList.programID#">#qGetProgramList.programName#</option></cfloop>
                         </select>
                     </td>
@@ -213,15 +213,20 @@
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Region: <span class="required">*</span></td>
                     <td>
-                        <select name="regionID" id="regionIDStudentListByRegion" class="xLargeField" multiple size="6" required>
-                            <cfloop query="qGetRegionList"><option value="#qGetRegionList.regionID#">#qGetRegionList.regionname#</option></cfloop>
+                        <select name="regionID" id="regionID" class="xLargeField" multiple size="6" required>
+                            <cfloop query="qGetRegionList">
+                            	<option value="#qGetRegionList.regionID#">
+                                	<cfif CLIENT.companyID EQ 5>#qGetRegionList.companyShort# -</cfif> 
+                                    #qGetRegionList.regionname#
+                                </option>
+                            </cfloop>
                         </select>
                     </td>		
                 </tr>
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Student Status: <span class="required">*</span></td>
                     <td>
-                        <select name="studentStatus" id="studentStatusStudentListByRegion" class="xLargeField" required>
+                        <select name="studentStatus" id="studentStatus" class="xLargeField" required>
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                             <option value="Canceled">Canceled</option>
@@ -232,7 +237,7 @@
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Placement Status: <span class="required">*</span></td>
                     <td>
-                        <select name="placementStatus" id="placementStatusStudentListByRegion" class="xLargeField" onchange="showHidePlacementDates('StudentListByRegion');" required>
+                        <select name="placementStatus" id="placementStatus" class="xLargeField" onchange="showHidePlacementDates('StudentListByRegion');" required>
                             <option value="Placed">Placed</option>
                             <option value="Unplaced">Unplaced</option>
                             <option value="Pending">Pending</option>
@@ -242,16 +247,16 @@
                 </tr>
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Placed From:</td>
-                    <td><input type="text" name="dateFrom" id="dateFromStudentListByRegion" value="" size="7" maxlength="10" class="datePicker"> <span class="note">mm-dd-yyyy</span></td>
+                    <td><input type="text" name="dateFrom" id="dateFrom" value="" size="7" maxlength="10" class="datePicker"> <span class="note">mm-dd-yyyy</span></td>
                 </tr>
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Placed To: </td>
-                    <td><input type="text" name="dateTo" id="dateToStudentListByRegion" value="" size="7" maxlength="10" class="datePicker"> <span class="note">mm-dd-yyyy</span></td>
+                    <td><input type="text" name="dateTo" id="dateTo" value="" size="7" maxlength="10" class="datePicker"> <span class="note">mm-dd-yyyy</span></td>
                 </tr>
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Report By: <span class="required">*</span></td>
                     <td>
-                        <select name="reportByStudent" id="reportByStudentListByRegion" class="xLargeField">
+                        <select name="reportByStudent" id="reportByStudent" class="xLargeField">
                             <option value="placeRepID">Placing Representative</option>
                             <option value="areaRepID">Supervising Representative</option>
                         </select>
@@ -260,7 +265,7 @@
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Output Type: <span class="required">*</span></td>
                     <td>
-                        <select name="outputType" id="outputTypeStudentListByRegion" class="xLargeField">
+                        <select name="outputType" id="outputType" class="xLargeField">
                             <option value="onScreen">On Screen</option>
                             <option value="Excel">Excel Spreadsheet</option>
                         </select>
