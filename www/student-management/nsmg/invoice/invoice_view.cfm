@@ -331,32 +331,34 @@
                 <cfif qGetInvoiceInfo.type EQ 'trainee program'>
                 	
                     <!--- EXTRA - Trainee --->  
-                    <span class="style1">                    	
-                        Please note our new bank information <br /><br />                    
-                        KCK Inc. <br />
-                        Suffolk County National Bank<br />
-                        228 East Main St.<br />
-                        Port Jefferson, NY 11777<br />
-                        ABA/Routing: 021405464<br />
-                        Account: 1110039771<br />
-                    </span>                                 
+                    <span class="style3">
+                        Please note our new bank information <br />  <br />               
+                        International Student Exchange<br />
+                        Chase Bank<br />
+                        595 Sunrise Highway<br />
+                        West Babylon, NY 11704<br />
+                        ABA/Routing: 021000021<br />
+                        Account: 465496912<br />
+                        SWIFT code: CHASUS33<br />      
+                    </span>                                  
                     
                 <cfelse>
                 
                     <cfswitch expression="#qGetInvoiceInfo.setCompanyID#">
 
 						<!--- EXTRA - Trainee --->                
-                        <!--- <cfcase value="7">
-                            <span class="style1">                    	
-                                Please note our new bank information <br /><br />                    
-                                KCK Inc. <br />
-                                Suffolk County National Bank<br />
-                                228 East Main St.<br />
-                                Port Jefferson, NY 11777<br />
-                                ABA/Routing: 021405464<br />
-                                Account: 1110039771<br />
-                            </span>                                 
-                        </cfcase> --->
+                        <cfcase value="7">
+                            <span class="style3">
+                                Please note our new bank information <br />  <br />               
+                                International Student Exchange<br />
+                                Chase Bank<br />
+                                595 Sunrise Highway<br />
+                                West Babylon, NY 11704<br />
+                                ABA/Routing: 021000021<br />
+                                Account: 465496912<br />
+                                SWIFT code: CHASUS33<br />      
+                            </span> 
+                        </cfcase>
 
                         <!--- Extra - WAT --->
                         <cfcase value="8">
