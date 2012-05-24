@@ -97,7 +97,7 @@
 							<td class="fieldTitle">Status:</td>
 							<td>
 								<select name="representativeStatus" class="xLargeField">
-                                	<option value="allRepresentatives">All</option>
+                                	<!--- <option value="allRepresentatives">All</option> --->
                                 	<option value="activeFullyEnabledRepresentatives">Active and Fully Enabled</option>
                                     <option value="activeNotFullyEnabledRepresentatives">Active and not Fully Enabled</option>
                                     <option value="inactiveRepresentatives">Inactive</option>

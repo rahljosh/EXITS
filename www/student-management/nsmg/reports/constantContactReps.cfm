@@ -46,14 +46,18 @@
                     AND
                         u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                   	AND
-                    	u.dateAccountVerified <= <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+                    	accountCreationVerified > <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                    AND
+                    	u.dateAccountVerified IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">  
                 </cfcase>
 
                 <cfcase value="activeNotFullyEnabledRepresentatives">
                     AND
                         u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                   	AND
-                    	u.dateAccountVerified = <cfqueryparam cfsqltype="cf_sql_date" null="yes">       	
+                    	accountCreationVerified = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                  	AND
+                    	u.dateAccountVerified IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">       	
                 </cfcase>
                 
                 <cfcase value="inactiveRepresentatives">
