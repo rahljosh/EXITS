@@ -75,7 +75,7 @@
 			
 			// Set the default values of the FORM 
 			FORM.activityID = VAL(qGetCulturalActivityInfo.ID);
-			FORM.date = qGetCulturalActivityInfo.date;
+			FORM.date = qGetCulturalActivityInfo.dateActivity;
 			FORM.details = qGetCulturalActivityInfo.details;
 			
 		}
