@@ -396,9 +396,20 @@ ORDER BY businessname
         </cfquery>
         
         <cfquery name="get_credits" datasource="MySQL">
-        select creditid,SUM(amount) AS amount,companyid, SUM(amount_applied) AS amount_applied from smg_credit
-        where agentid = #FORM.choseNAgent# and active =1
-        GROUP BY creditid
+        select 
+        	creditid,SUM(amount) AS amount,companyid, 
+            SUM(amount_applied) AS amount_applied from smg_credit
+        where 
+        	agentid = #FORM.choseNAgent# 
+        and 
+        	active =1
+		<cfif CLIENT.companyID EQ 14>
+            AND companyID = 14
+        <cfelse>
+            AND companyID != 14
+        </cfif> 
+        GROUP BY 
+        	creditid
         </cfquery>	
 
         <table align="center">
@@ -447,7 +458,9 @@ ORDER BY businessname
                         </cfoutput>
                         <cfoutput query="get_credits">
                             <cfquery name="companyname" datasource="mysql">
-                            select companyshort from smg_companies where companyid = #get_credits.companyid#
+                            select companyshort
+                            from smg_companies
+                            where companyid = #get_credits.companyid#
                             </cfquery>
                             <cfset amount_avail = #amount# - #amount_applied#> 
                             <cfinput type="radio" name="creditId" id="creditId#creditid#" value="#creditid#" onClick="javaScript:getCreditValue('#amount_avail#');">
