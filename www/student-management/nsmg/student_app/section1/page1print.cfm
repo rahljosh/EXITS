@@ -250,9 +250,9 @@ where programid = #get_student_info.programid#
 				<br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
 			</tr>
 			<tr><td>&nbsp;</td></tr>
-			<tr><td width="160"><em>Year of Birth (yyyy)</em></td><td width="160"><em>Speaks English</em></td></tr>	
+			<tr><td width="160"><em>Date of Birth <font size="-2">(mm/dd/yyyy)</font></em></td><td width="160"><em>Speaks English</em></td></tr>	
 			<tr>
-				<td>#fatherbirth#<br><img src="#path#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>
+				<td>#DateFormat(fatherDOB, 'mm/dd/yyyy')#<br><img src="#path#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>
 				<td>
 					<cfif fatherenglish is 'yes'><img src="#path#pics/RadioY.gif" width="13" height="13" border="0"><cfelse><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"></cfif> Yes &nbsp; &nbsp;
 					<cfif fatherenglish is 'no'><img src="#path#pics/RadioY.gif" width="13" height="13" border="0"><cfelse><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"></cfif> No 
@@ -285,9 +285,9 @@ where programid = #get_student_info.programid#
 				<br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
 			</tr>
 			<tr><td>&nbsp;</td></tr>
-			<tr><td><em>Year of Birth (yyyy)</em></td><td><em>Speaks English</em></td></tr>	
+			<tr><td><em>Date of Birth <font size="-2">(mm/dd/yyyy)</font></em></td><td><em>Speaks English</em></td></tr>	
 			<tr>
-				<td>#motherbirth#<br><img src="#path#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>
+				<td>#DateFormat(motherDOB, 'mm/dd/yyyy')#<br><img src="#path#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>
 				<td>
 					<cfif motherenglish is 'yes'><img src="#path#pics/RadioY.gif" width="13" height="13" border="0"><cfelse><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"></cfif> Yes &nbsp; &nbsp;
 					<cfif motherenglish is 'no'><img src="#path#pics/RadioY.gif" width="13" height="13" border="0"><cfelse><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"></cfif> No 

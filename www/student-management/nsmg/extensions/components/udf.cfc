@@ -278,7 +278,7 @@
 			var newString = replaceList(ARGUMENTS.varString, list1, list2) ; 
 	
 			// Return String
-			return(newString);
+			return(TRIM(newString));
         </cfscript>
 		   
 	</cffunction>
