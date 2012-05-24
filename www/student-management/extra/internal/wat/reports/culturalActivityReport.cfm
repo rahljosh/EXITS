@@ -15,6 +15,7 @@
     <cfparam name="FORM.programID" default="0">
     <cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.solved" default="0">
+    <cfparam name="FORM.status" default="0">
 
     <cfscript>
 		// Get Program List
@@ -33,8 +34,10 @@
                 ec.wat_placement,
                 ec.startDate,
                 ec.intRep,
-                eca.dateActivity,
-                eca.details,
+                <cfif NOT VAL(FORM.status)>
+                    eca.dateActivity,
+                    eca.details,
+              	</cfif>
                 u.businessname,
                 p.programName,
                 p.programID           
@@ -43,11 +46,16 @@
             INNER JOIN
                 smg_users u ON u.userid = ec.intrep               
           	INNER JOIN
-            	smg_programs p ON p.programID = ec.programID
-           	INNER JOIN
-            	extra_cultural_activity eca ON eca.candidateID = ec.candidateID          
+            	smg_programs p ON p.programID = ec.programID	
+            <cfif NOT VAL(FORM.status)>
+                INNER JOIN
+                    extra_cultural_activity eca ON eca.candidateID = ec.candidateID
+         	</cfif>          
             WHERE 
                 ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+           	<cfif VAL(FORM.status)>
+            	AND NOT EXISTS ( SELECT a.candidateID FROM extra_cultural_activity a WHERE a.candidateID = ec.candidateID )
+            </cfif>
            	<cfif VAL(FORM.programID)>  
                 AND 
                     ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
@@ -82,6 +90,15 @@
                         <cfloop query="qGetProgramList">
                             <option value="#qGetProgramList.programID#" <cfif qGetProgramList.programid EQ FORM.programID> selected</cfif>>#qGetProgramList.programname#</option>
                         </cfloop>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td valign="middle" align="right" class="style1"><b>Status: </b></td>
+                <td> 
+                    <select name="status" class="style1">
+                 		<option value="0" <cfif FORM.status EQ 0>selected="selected"</cfif> >Candidates with cultural activity</option>
+                        <option value="1" <cfif FORM.status EQ 1>selected="selected"</cfif>>Candidates without cultural activity</option>
                     </select>
                 </td>
             </tr>
@@ -125,6 +142,8 @@
                     u.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
                 AND
                     u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+              	ORDER BY
+                	u.businessName
             </cfquery>
                     
       		<cfloop query="qGetAgents">
@@ -150,8 +169,8 @@
                             <tr style="background-color:##4F8EA4; color:##FFF; padding:5px; font-weight:bold; font-size: 12px;">
                                 <td width="3%"></td>
                                 <td width="62%">Candidate</Td>
-                                <td width="10%">Date</Td>
-                                <td width="25%">Details</Td>
+                                <td width="10%"><cfif NOT VAL(FORM.status)>Date</cfif></Td>
+                                <td width="25%"><cfif NOT VAL(FORM.status)>Details</cfif></Td>
                             </tr>
                     </cfoutput>
                             
