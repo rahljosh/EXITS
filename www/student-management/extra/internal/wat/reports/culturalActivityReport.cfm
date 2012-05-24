@@ -33,7 +33,7 @@
                 ec.wat_placement,
                 ec.startDate,
                 ec.intRep,
-                eca.date,
+                eca.dateActivity,
                 eca.details,
                 u.businessname,
                 p.programName,
@@ -175,7 +175,7 @@
                             </td>
                             <td valign="top">
                                 <cfloop query="qGetCulturalActivityReport">		
-                                    #DateFormat(qGetCulturalActivityReport.date, 'mm/dd/yyyy')#
+                                    #DateFormat(qGetCulturalActivityReport.dateActivity, 'mm/dd/yyyy')#
                                     <br />
                                 </cfloop>
                             </td>

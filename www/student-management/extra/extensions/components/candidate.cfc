@@ -1089,7 +1089,7 @@
                 SELECT
                 	a.ID,
                     a.candidateID,
-                    a.date,
+                    a.dateActivity,
                     a.details
                 FROM 
                     extra_cultural_activity a
@@ -1114,7 +1114,7 @@
                 </cfif>
 			
             ORDER BY
-            	a.date DESC                
+            	a.dateActivity DESC                
 		</cfquery>
 		   
 		<cfreturn qGetCulturalActivityReport>
@@ -1127,12 +1127,6 @@
         <cfargument name="userID" required="yes" hint="User entering/updating information">
         <cfargument name="date" default="" hint="date of the activity">
         <cfargument name="details" default="" hint="details - the name of the activity">
-		
-        <cfscript>
-			// Get Current User
-			qGetUserInfo = APPLICATION.CFC.USER.getUserByID(userID=ARGUMENTS.userID);
-			
-        </cfscript>
         
         <!--- Update --->
         <cfif VAL(ARGUMENTS.activityID)>
@@ -1143,7 +1137,7 @@
                         extra_cultural_activity
                     SET
                         userID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(ARGUMENTS.userID)#">,
-                        date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date#" null="#NOT IsDate(ARGUMENTS.date)#">,
+                        dateActivity = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date#" null="#NOT IsDate(ARGUMENTS.date)#">,
                         details = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.details#">
                     WHERE
                         ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.activityID#">
@@ -1161,7 +1155,7 @@
                     (
 						candidateID,
                         userID,
-                        date,
+                        dateActivity,
                         details,
                         dateCreated                    
                     )

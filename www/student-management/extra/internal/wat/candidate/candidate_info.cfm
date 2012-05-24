@@ -1657,7 +1657,7 @@
                                                 <tr <cfif qGetCulturalActivityReport.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>     
                                                     <td class="style1">
                                                     	<a href="candidate/culturalActivityReport.cfm?uniqueID=#qGetCandidate.uniqueID#&activityID=#qGetCulturalActivityReport.ID#" class="style4 jQueryModal">
-                                                            #DateFormat(qGetCulturalActivityReport.date, 'mm/dd/yy')#
+                                                            #DateFormat(qGetCulturalActivityReport.dateActivity, 'mm/dd/yy')#
                                                       	</a>
                                                     </td>
                                                     <td class="style1">
