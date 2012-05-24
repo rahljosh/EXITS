@@ -89,16 +89,17 @@
 			</td>
 			<td valign="top"> 
 				
-                 <!--- Representatives --->
+             	<!--- Representatives --->
                 <form action="reports/constantContactReps.cfm" method="post" target="_blank">
 					<table cellpadding="4" cellspacing="0" class="nav_bar" width="90%" align="center">
 						<tr><th colspan="2" bgcolor="e2efc7" class="title">Representatives</th></tr>
 						<tr>
-							<td class="fieldTitle">Active:</td>
+							<td class="fieldTitle">Status:</td>
 							<td>
 								<select name="representativeStatus" class="xLargeField">
                                 	<option value="allRepresentatives">All</option>
-                                	<option value="activeRepresentatives">Active</option>
+                                	<option value="activeFullyEnabledRepresentatives">Active and Fully Enabled</option>
+                                    <option value="activeNotFullyEnabledRepresentatives">Active and not Fully Enabled</option>
                                     <option value="inactiveRepresentatives">Inactive</option>
                                 </select>
 							</td>

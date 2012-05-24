@@ -42,14 +42,23 @@
             
             <cfswitch expression="#FORM.representativeStatus#">
                 
-                <cfcase value="activeRepresentatives">
+                <cfcase value="activeFullyEnabledRepresentatives">
                     AND
                         u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                  	AND
+                    	u.dateAccountVerified <= <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
                 </cfcase>
 
-                <cfcase value="inactiveRepresentatives">
+                <cfcase value="activeNotFullyEnabledRepresentatives">
                     AND
-                        u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">         	
+                        u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                  	AND
+                    	u.dateAccountVerified = <cfqueryparam cfsqltype="cf_sql_date" null="yes">       	
+                </cfcase>
+                
+                <cfcase value="inactiveRepresentatives">
+                	AND
+                    	u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                 </cfcase>
                     
             </cfswitch>
