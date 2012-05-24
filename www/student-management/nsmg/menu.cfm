@@ -348,13 +348,11 @@
                 
                 <li>
                 	<a href="index.cfm?curdoc=reports/index">Reports</a>
-                	<!---
-					<cfif LISTFIND("1,2,3,4", CLIENT.userType)
+					<cfif LISTFIND("1,2,3,4", CLIENT.userType)>
 						<ul>
 							<li><a href="index.cfm?curdoc=reports/constantContactMenu">Constant Contact</a></li>
 						</ul>
 					</cfif>
-					--->
                 </li>
 
 				<cfif listFind("1,510,17313,12313,17306", CLIENT.userID)> <!--- <cfif LISTFIND("1,2,3,4", CLIENT.userType)> --->
