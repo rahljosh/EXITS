@@ -46,6 +46,7 @@
             r.firstname AS repFirstName,
             r.lastname AS repLastName,
             r.userID AS repID,
+            r.businessName,
             ej.title,
             com.companyShort,
             p.programName
@@ -111,7 +112,6 @@
             <td valign="middle" align="right" class="style1" width="45%"><b>Program: </b></td>
             <td> 
             	<select name="programID" class="style1">
-                    <option value="0">ALL</option>
                     <cfloop query="qGetProgramList">
                         <option value="#qGetProgramList.programID#" <cfif qGetProgramList.programid eq FORM.programID> selected</cfif>>#qGetProgramList.programname#</option>
                     </cfloop>
@@ -202,7 +202,7 @@
                             <td colspan="4" style="font-weight:bold; font-size: 8.5px; font-family:Verdana, Geneva, sans-serif;">&nbsp;&nbsp&nbsp;&nbsp;&nbsp;#qGetCities.city#: #qGetNumCity.recordCount#</td>
                         </tr>
                         
-                        <tr style="background-color:##4F8EA4; color:##FFF; padding:5px; font-weight:bold; font-size: 12px;">
+                        <tr style="background-color:##4F8EA4; color:##FFF; padding:5px; font-weight:bold; font-size: 9px;">
                             <!--- The td widths are set differently for the onScreen report and the print report --->
 							<cfif FORM.printOption EQ 1>
                                 <td width="4%">ID</Td>
@@ -210,26 +210,26 @@
                                 <td width="10%">First Name</td>
                                 <td width="4%">Gender</td>
                                 <td width="7%">Country</td>
-                                <td width="10%">E-mail</td>
-                                <td width="7%">Start Date</td>
-                                <td width="7%">End Date</td>
-                                <td width="7%">Placement Information</td>
+                                <td width="10%">Email</td>
+                                <td width="6%">Start Date</td>
+                                <td width="6%">End Date</td>
+                                <td width="10%">Placement Info</td>
                                 <td width="10%">Job Title</td>
-                                <td width="10%">Option</td>
-                                <td width="14%">Host Company</td>
+                                <td width="8%">Option</td>
+                                <td width="15%">Intl. Rep.</td>
                           	<cfelse>
                             	<td>ID</Td>
                                 <td>Last Name</td>
                                 <td>First Name</td>
                                 <td>Gender</td>
                                 <td>Country</td>
-                                <td>E-mail</td>
+                                <td>Email</td>
                                 <td>Start Date</td>
                                 <td>End Date</td>
-                                <td>Placement Information</td>
+                                <td>Placement Info</td>
                                 <td>Job Title</td>
                                 <td>Option</td>
-                                <td>Host Company</td>
+                                <td>Intl. Rep</td>
                             </cfif>
                         </tr>
                     
@@ -243,8 +243,8 @@
                                 vRowCount = vRowCount + 1;
                             </cfscript>
                             
-                            <tr bgcolor="###IIf(vRowCount MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#" style="font-size:11px;">
-                                <td valign="top">
+                            <tr bgcolor="###IIf(vRowCount MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#" style="font-size:10px;">
+                                <td valign="center">
                                     <a href="?curdoc=candidate/candidate_info&uniqueid=#qGetNumCity.uniqueID#" target="_blank" class="style4">
                                         #qGetNumCity.candidateid#
                                     </a>
@@ -256,10 +256,10 @@
                                 <td>#qGetNumCity.email#</td>
                                 <td>#DateFormat(qGetNumCity.startdate, 'mm/dd/yyyy')#</td>
                                 <td>#DateFormat(qGetNumCity.enddate, 'mm/dd/yyyy')#</td>
-                                <td>#qGetNumCity.companyShort#</td>
+                                <td>#qGetNumCity.name#</td>
                                 <td>#qGetNumCity.title#</td>
                                 <td>#qGetNumCity.wat_placement#</td>
-                                <td>#qGetNumCity.name#</td>
+                                <td>#qGetNumCity.businessName#</td>
                             </tr>
                             
                         </cfloop>
