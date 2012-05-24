@@ -33,7 +33,9 @@
                 ec.lastname, 
                 ec.wat_placement,
                 ec.startDate,
+                ec.endDate,
                 ec.intRep,
+                h.name,
                 <cfif NOT VAL(FORM.status)>
                     eca.dateActivity,
                     eca.details,
@@ -46,7 +48,9 @@
             INNER JOIN
                 smg_users u ON u.userid = ec.intrep               
           	INNER JOIN
-            	smg_programs p ON p.programID = ec.programID	
+            	smg_programs p ON p.programID = ec.programID
+          	INNER JOIN
+            	extra_hostCompany h ON h.hostCompanyID = ec.hostCompanyID
             <cfif NOT VAL(FORM.status)>
                 INNER JOIN
                     extra_cultural_activity eca ON eca.candidateID = ec.candidateID
@@ -162,15 +166,14 @@
                     <cfoutput>
                         <table width="98%" cellpadding="3" cellspacing="0" align="center" style="margin-top:20px; margin-bottom:20px; border:1px solid ##4F8EA4"> 
                             <tr>
-                                <td></td>
-                                <td colspan="2" style="font-weight:bold; font-size: 11px;">#qGetAgents.businessName#</td>
-                                <td align="right" style="font-weight:bold; font-size: 11px;">Candidates Under Agent: #qGetCandidatesUnderAgent.recordCount#</td>
+                                <td colspan="5" style="font-weight:bold; font-size: 11px;">#qGetAgents.businessName#: #qGetCandidatesUnderAgent.recordCount#</td>
                             </tr>
                             <tr style="background-color:##4F8EA4; color:##FFF; padding:5px; font-weight:bold; font-size: 12px;">
-                                <td width="3%"></td>
-                                <td width="62%">Candidate</Td>
-                                <td width="10%"><cfif NOT VAL(FORM.status)>Date</cfif></Td>
-                                <td width="25%"><cfif NOT VAL(FORM.status)>Details</cfif></Td>
+                                <td width="40%">Candidate</Td>
+                                <td width="10%">Start Date</Td>
+                                <td width="10%">End Date</Td>
+                                <td width="20%">Placement Information</Td>
+                                <td width="20%"><cfif NOT VAL(FORM.status)>Cultural Activity</cfif></Td>
                             </tr>
                     </cfoutput>
                             
@@ -186,21 +189,17 @@
                         </cfscript>
                     
                         <tr bgcolor="###IIf(vRowCount MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#" style="font-size:11px;">
-                            <td></td>
-                            <td valign="top">
+                            <td valign="center">
                                 <a href="?curdoc=candidate/candidate_info&uniqueid=#qGetCandidatesUnderAgent.uniqueID#" target="_blank" class="style4">
                                     #qGetCandidatesUnderAgent.firstname# #qGetCandidatesUnderAgent.lastname# (###qGetCandidatesUnderAgent.candidateid#)
                                 </a>
                             </td>
-                            <td valign="top">
-                                <cfloop query="qGetCulturalActivityReport">		
-                                    #DateFormat(qGetCulturalActivityReport.dateActivity, 'mm/dd/yyyy')#
-                                    <br />
-                                </cfloop>
-                            </td>
+                            <td valign="center">#DateFormat(qGetCandidatesUnderAgent.startDate, 'mm/dd/yyyy')#</td>
+                            <td valign="center">#DateFormat(qGetCandidatesUnderAgent.endDate, 'mm/dd/yyyy')#</td>
+                            <td valign="center">#qGetCandidatesUnderAgent.name#</td>
                             <td valign="top">
                                 <cfloop query="qGetCulturalActivityReport">
-                                    #qGetCulturalActivityReport.details#
+                                    #DateFormat(qGetCulturalActivityReport.dateActivity, 'mm/dd/yyyy')# - #qGetCulturalActivityReport.details#
                                     <br />
                                 </cfloop>
                             </td>
