@@ -115,54 +115,64 @@
 <cfoutput>
 
 <script type="text/javascript">
-<!--
-function CheckLink()
-{
-  if (document.page1.CheckChanged.value != 0)
-  {
-    if (confirm("You have made changes on this page that have not been saved.\n\These changes will be lost if you navigate away from this page.\n\Click OK to contine and discard changes, or click cancel and click on save to save your changes."))
-      return true;
-    else
-      return false;
-  }
-}
-function DataChanged()
-{
-  document.page1.CheckChanged.value = 1;
-}
-function NextPage() {
-	document.page1.action = '?curdoc=section1/qr_page1&next';
-}
-function areYouSure() { 
-   if(confirm("You are about to delete the passaport photo. Click OK to continue")) { 
-     form.submit(); 
-        return true; 
-   } else { 
-        return false; 
-   } 
-} 
-
-function displayCanada() {
-	// Get canada list from the query
-	canadaList = '#canadaIDList#';
-	currentProgram = $("##app_indicated_program").val();
-
-	if ( $.ListFind(canadaList, currentProgram, ',') ) {
-		$(".canadaAreaDiv").fadeIn("slow");		
-		$(".additionalProgramDiv").fadeOut("slow");		
-	} else {
-		$("##app_canada_area").val(0);
-		$(".canadaAreaDiv").fadeOut("slow");
-		$(".additionalProgramDiv").fadeIn("slow");	
+	<!--
+	function CheckLink() {
+	  if (document.page1.CheckChanged.value != 0) {
+		if (confirm("You have made changes on this page that have not been saved.\n\These changes will be lost if you navigate away from this page.\n\Click OK to contine and discard changes, or click cancel and click on save to save your changes."))
+		  return true;
+		else
+		  return false;
+	  }
 	}
-}
+	
+	function DataChanged() {
+	  document.page1.CheckChanged.value = 1;
+	}
+	
+	function NextPage() {
+		document.page1.action = '?curdoc=section1/qr_page1&next';
+	}
+	
+	function areYouSure() { 
+	   if(confirm("You are about to delete the passaport photo. Click OK to continue")) { 
+		 form.submit(); 
+			return true; 
+	   } else { 
+			return false; 
+	   } 
+	} 
 
+	$(document).ready(function() {
+		displayCanada();
+	});
 
+	function displayCanada() {
+		// Get canada list from the query
+		canadaList = '#canadaIDList#';
+		currentProgram = $("##app_indicated_program").val();
+	
+		if ( $.ListFind(canadaList, currentProgram, ',') ) {
+			$(".canadaAreaDiv").fadeIn("slow");		
+			$(".additionalProgramDiv").fadeOut("slow");		
+		} else {
+			$("##app_canada_area").val(0);
+			$(".canadaAreaDiv").fadeOut("slow");
+			$(".additionalProgramDiv").fadeIn("slow");	
+		}
+	}
+	
+	// Jquery Masks 
+	jQuery(function($){
+		// Student DOB
+		$("##dob").mask("99/99/9999");
 
+		// Student DOB
+		$("##fatherDOB").mask("99/99/9999");
 
-$(document).ready(function() {
-	displayCanada();
-});
+		// Student DOB
+		$("##motherDOB").mask("99/99/9999");
+	});	
+	
 //-->
 </script>
 
@@ -340,7 +350,7 @@ $(document).ready(function() {
 					<cfif sex is 'male'><cfinput type="radio" name="sex" value="male" checked="yes" onchange="DataChanged();">Male<cfelse><cfinput type="radio" name="sex" value="male" onchange="DataChanged();">Male</cfif>&nbsp; 
 					<cfif sex is 'female'><cfinput type="radio" name="sex" value="female" checked="yes" onchange="DataChanged();">Female<cfelse><cfinput type="radio" name="sex" value="female" onchange="DataChanged();">Female</cfif>
 				</td>
-				<td>&nbsp;&nbsp;<cfinput type="text" name="dob" size="15" maxlength="10" validate="date" value="#DateFormat(dob, 'mm/dd/yyyy')#" onchange="DataChanged();" validateat="onsubmit,onserver" message="Date of Birth - Please enter a valid date in the MM/DD/YYYY format."></td>
+				<td>&nbsp;&nbsp;<cfinput type="text" name="dob" id="dob" size="15" maxlength="10" validate="date" value="#DateFormat(dob, 'mm/dd/yyyy')#" onchange="DataChanged();" validateat="onsubmit,onserver" message="Date of Birth - Please enter a valid date in the MM/DD/YYYY format."></td>
 			</tr>
 			<tr><td>&nbsp;</td></tr>						
 		</table>	
@@ -428,9 +438,9 @@ $(document).ready(function() {
 				</cfselect></td>
 			</tr>
 			<tr><td>&nbsp;</td></tr>
-			<tr><td><em>Year of Birth (yyyy)</em></td><td><em>Speaks English</em></td></tr>	
+			<tr><td><em>Date of Birth <font size="-2">(mm/dd/yyyy)</font></em></td><td><em>Speaks English</em></td></tr>	
 			<tr>
-				<td><cfinput type="text" name="fatherbirth" size="10" maxlength="4" value="#fatherbirth#" onchange="DataChanged();"></td>
+				<td><cfinput type="text" name="fatherDOB" id="fatherDOB" size="15" maxlength="10" validate="date" value="#DateFormat(fatherDOB, 'mm/dd/yyyy')#" onchange="DataChanged();" validateat="onsubmit,onserver" message="Father Date of Birth - Please enter a valid date in the MM/DD/YYYY format."></td>
 				<td>
 					<cfif fatherenglish is 'yes'><cfinput type="radio" name="fatherenglish" value="Yes" checked="yes" onchange="DataChanged();">Yes<cfelse><cfinput type="radio" name="fatherenglish" value="Yes" onchange="DataChanged();">Yes</cfif>&nbsp; &nbsp;
 					<cfif fatherenglish is 'no'><cfinput type="radio" name="fatherenglish" value="No" checked="yes" onchange="DataChanged();">No<cfelse><cfinput type="radio" name="fatherenglish" value="No" onchange="DataChanged();">No</cfif> 
@@ -467,9 +477,9 @@ $(document).ready(function() {
 				</cfselect></td>
 			</tr>
 			<tr><td>&nbsp;</td></tr>
-			<tr><td><em>Year of Birth (yyyy)</em></td><td><em>Speaks English</em></td></tr>	
+			<tr><td><em>Date of Birth <font size="-2">(mm/dd/yyyy)</font></em></td><td><em>Speaks English</em></td></tr>	
 			<tr>
-				<td><cfinput type="text" name="motherbirth" size="10" maxlength="4" value="#motherbirth#" onchange="DataChanged();"></td>
+				<td><cfinput type="text" name="motherDOB" id="motherDOB" size="15" maxlength="10" validate="date" value="#DateFormat(motherDOB, 'mm/dd/yyyy')#" onchange="DataChanged();" validateat="onsubmit,onserver" message="Mother Date of Birth - Please enter a valid date in the MM/DD/YYYY format."></td>
 				<td>
 					<cfif motherenglish is 'yes'><cfinput type="radio" name="motherenglish" value="Yes" checked="yes" onchange="DataChanged();">Yes<cfelse><cfinput type="radio" name="motherenglish" value="Yes" onchange="DataChanged();">Yes</cfif>&nbsp; &nbsp;
 					<cfif motherenglish is 'no'><cfinput type="radio" name="motherenglish" value="No" checked="yes" onchange="DataChanged();">No<cfelse><cfinput type="radio" name="motherenglish" value="No" onchange="DataChanged();">No</cfif>	
