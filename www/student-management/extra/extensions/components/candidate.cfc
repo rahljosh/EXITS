@@ -1073,6 +1073,114 @@
 	<!------------------------------------------------------------ 
 		End of Candidate Incident Report 
 	------------------------------------------------------------->
+    
+    
+	<!------------------------------------------------------------
+		Candidate Cultural Activity Report 
+	------------------------------------------------------------->
+	<cffunction name="getCulturalActivityReport" access="public" returntype="query" output="false" hint="Gets all cultural activities for a candidate">
+    	<cfargument name="activityID" default="" hint="activityID is not required">
+        <cfargument name="candidateID" default="" hint="candidateID is not required">
+        <cfargument name="uniqueID" default="" hint="uniqueID is not required">
+              
+        <cfquery 
+			name="qGetCulturalActivityReport" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT
+                	a.ID,
+                    a.candidateID,
+                    a.date,
+                    a.details
+                FROM 
+                    extra_cultural_activity a
+                INNER JOIN
+                	extra_candidates ec ON ec.candidateID = a.candidateID                   
+                WHERE
+                	1 = 1 
+
+				<cfif LEN(ARGUMENTS.activityID)>
+                    AND
+                        a.ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.activityID)#">
+                </cfif>
+                    
+				<cfif LEN(ARGUMENTS.candidateID)>
+                    AND
+                        ec.candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.uniqueID)>
+                    AND
+                        ec.uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.uniqueID)#">
+                </cfif>
+			
+            ORDER BY
+            	a.date DESC                
+		</cfquery>
+		   
+		<cfreturn qGetCulturalActivityReport>
+	</cffunction>
+    
+
+	<cffunction name="insertUpdateCulturalActivity" access="public" returntype="void" output="false" hint="Insert/Update Cultural Activity Information">
+		<cfargument name="activityID" default="0" hint="activity ID" />
+		<cfargument name="candidateID" required="yes" hint="Candidate ID is required">
+        <cfargument name="userID" required="yes" hint="User entering/updating information">
+        <cfargument name="date" default="" hint="date of the activity">
+        <cfargument name="details" default="" hint="details - the name of the activity">
+		
+        <cfscript>
+			// Get Current User
+			qGetUserInfo = APPLICATION.CFC.USER.getUserByID(userID=ARGUMENTS.userID);
+			
+        </cfscript>
+        
+        <!--- Update --->
+        <cfif VAL(ARGUMENTS.activityID)>
+        	
+            <cfquery 
+                datasource="#APPLICATION.DSN.Source#">
+                    UPDATE
+                        extra_cultural_activity
+                    SET
+                        userID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(ARGUMENTS.userID)#">,
+                        date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date#" null="#NOT IsDate(ARGUMENTS.date)#">,
+                        details = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.details#">
+                    WHERE
+                        ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.activityID#">
+                    AND
+                    	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">
+            </cfquery>
+		
+        <!--- Insert --->
+        <cfelse>
+        
+            <cfquery 
+                datasource="#APPLICATION.DSN.Source#">
+                    INSERT INTO
+                        extra_cultural_activity
+                    (
+						candidateID,
+                        userID,
+                        date,
+                        details,
+                        dateCreated                    
+                    )
+                    VALUES
+                    (
+                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(ARGUMENTS.userID)#">,
+                    	<cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date#" null="#NOT IsDate(ARGUMENTS.date)#">,
+                    	<cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.details#">,
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                    )
+            </cfquery>
+        
+        </cfif>
+        	
+	</cffunction>
+	<!------------------------------------------------------------ 
+		End of Candidate Cultural Activity Report 
+	------------------------------------------------------------->
 
 
 	<!------------------------------------------------------------ 

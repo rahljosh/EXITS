@@ -48,6 +48,9 @@
 		// Get Incident Report
 		qGetIncidentReport = APPLICATION.CFC.CANDIDATE.getIncidentReport(candidateID=qGetCandidate.candidateID);
 		
+		// Get Cultural Activity Report
+		qGetCulturalActivityReport = APPLICATION.CFC.CANDIDATE.getCulturalActivityReport(candidateID=qGetCandidate.candidateID);
+		
 		/*** Online Application ***/
 		
 		// Get Uploaded Resume
@@ -1629,6 +1632,54 @@
                             <br />
                             
                         </cfif>
+                        
+                        <!---- Cultural Activity Report --->
+                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+                                <td bordercolor="##FFFFFF">
+                        
+                                    <table width="100%" cellpadding=3 cellspacing="0" border="0">
+                                        <tr bgcolor="##C2D1EF">
+                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">
+                                                &nbsp;:: Cultural Activity
+                                                <span style="float:right; padding-right:20px;">
+                                                    <a href="candidate/culturalActivityReport.cfm?uniqueID=#qGetCandidate.uniqueID#" class="style2 jQueryModal">[ New Activity ]</a>
+                                                </span>
+                                            </td>
+                                        </tr>	
+                                        <tr>
+                                            <td class="style1"><strong>Date</strong></td>
+                                            <td class="style1"><strong>Details</strong></td>
+                                        </tr>
+                                        
+                                        <cfif VAL(qGetCulturalActivityReport.recordCount)>
+                                            <cfloop query="qGetCulturalActivityReport">
+                                                <tr <cfif qGetCulturalActivityReport.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>     
+                                                    <td class="style1">
+                                                    	<a href="candidate/culturalActivityReport.cfm?uniqueID=#qGetCandidate.uniqueID#&activityID=#qGetCulturalActivityReport.ID#" class="style4 jQueryModal">
+                                                            #DateFormat(qGetCulturalActivityReport.date, 'mm/dd/yy')#
+                                                      	</a>
+                                                    </td>
+                                                    <td class="style1">
+                                                   		<a href="candidate/culturalActivityReport.cfm?uniqueID=#qGetCandidate.uniqueID#&activityID=#qGetCulturalActivityReport.ID#" class="style4 jQueryModal">
+                                                            #qGetCulturalActivityReport.details#
+                                                      	</a>
+                                                    </td>
+                                                </tr>
+                                            </cfloop>
+                                        <cfelse>
+                                            <tr bgcolor="##E4E4E4">
+                                                <td colspan="4" class="style1" align="center">There are no activities recorded</td>                                                
+                                            </tr>
+                                        </cfif>
+                                                                                       
+                                    </table>
+                                    
+                                </td>
+                            </tr>
+                        </table> 
+
+                        <br />
                         
                     </td>
                     <!--- END OF RIGHT SECTION --->
