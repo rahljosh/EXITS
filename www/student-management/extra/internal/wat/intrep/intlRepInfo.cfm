@@ -22,6 +22,7 @@
     <cfparam name="FORM.userID" default="0">
     <cfparam name="FORM.uniqueID" default="">
     <cfparam name="FORM.active" default="1">
+    <cfparam name="FORM.cancellationReason" default="">
 	<cfparam name="FORM.businessName" default="">
 	<cfparam name="FORM.address" default="">
 	<cfparam name="FORM.address2" default="">
@@ -199,6 +200,10 @@
                 // Get all the missing items in a list
                 SESSION.formErrors.Add('Password is required and must have at least 6 characters');
             }
+			
+			if ( NOT VAL(FORM.active) AND NOT LEN(FORM.cancellationReason) ) {
+				SESSION.formErrors.Add('You must enter a cancellation reason');
+			}
 		</cfscript>
         
         <!--- // Check if there are no errors --->
@@ -212,6 +217,11 @@
                         smg_users 
                     SET 
                         active = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.active)#">,
+                        <cfif VAL(FORM.active)>
+                        	watCancellationReason = <cfqueryparam cfsqltype="cf_sql_varchar" value="">,
+                        <cfelse>
+                        	watCancellationReason = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cancellationReason#">,
+                      	</cfif>
                         businessName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.businessName#">,
                         address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
                         address2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address2#">,
@@ -278,6 +288,7 @@
                         companyID,
                         userType,
                         active,
+                        watCancellationReason,
                         businessName,
                         address,
                         address2,
@@ -333,6 +344,11 @@
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="8">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.active)#">,
+                        <cfif VAL(FORM.active)>
+                        	<cfqueryparam cfsqltype="cf_sql_varchar" value="">,
+                        <cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cancellationReason#">,
+                      	</cfif>
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.businessName#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address2#">,
@@ -407,6 +423,7 @@
 				// Escape Double Quotes
 				FORM.businessName = APPLICATION.CFC.UDF.escapeQuotes(qGetIntlRepInfo.businessName);
 				FORM.active = qGetIntlRepInfo.active;
+				FORM.cancellationReason = qGetIntlRepInfo.watCancellationReason;
 				FORM.address = qGetIntlRepInfo.address;
 				FORM.address2 = qGetIntlRepInfo.address2;
 				FORM.city = qGetIntlRepInfo.city;
@@ -506,7 +523,15 @@
 			$("#billing_fax").val("");
 		}
 	}
-	// --> 
+	
+	function isActive() {
+		$("#cancellationTR").attr('style', 'visibility:hidden;');
+	}
+	
+	function notActive() {
+		$("#cancellationTR").removeAttr('style');
+	}
+	
 </script>
 
 <cfoutput>
@@ -565,7 +590,7 @@
                                     <cfif VAL(FORM.active)>
                                     	Active
                                     <cfelse>
-                                    	Inactive
+                                    	Inactive - #FORM.cancellationReason#
                                     </cfif>    
                                 </td>
                             </tr>																																																																															
@@ -588,13 +613,17 @@
                             <tr>
                                 <td class="fieldTitle">Status:</td>
                                 <td class="style1">
-                                    <input type="radio" name="active" id="active1" value="1" class="formField" disabled <cfif VAL(FORM.active)> checked </cfif> > 
+                                    <input type="radio" name="active" id="active1" value="1" class="formField" disabled <cfif VAL(FORM.active)> checked </cfif> onClick="isActive();"> 
                                     <label for="active1">Active</label>
                                     
-                                    <input type="radio" name="active" id="active0" value="0" class="formField" disabled <cfif NOT VAL(FORM.active)> checked </cfif> >
+                                    <input type="radio" name="active" id="active0" value="0" class="formField" disabled <cfif NOT VAL(FORM.active)> checked </cfif> onClick="notActive();">
                                     <label for="active0">Inactive</label>
                                 </td>
-                            </tr>																																																																															
+                            </tr>
+                            <tr id="cancellationTR" <cfif VAL(FORM.active)>style="visibility:hidden;"</cfif>>
+                            	<td class="fieldTitle">Reason For Cancellation:</td>
+                                <td class="style1"><input type="text" name="cancellationReason" id="cancellationReason" value="#FORM.cancellationReason#" class="style1 xLargeField" maxlength="250" /></td>
+                            </tr>																																																																														
                         </table>
 
                     </td>

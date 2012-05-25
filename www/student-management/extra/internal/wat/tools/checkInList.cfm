@@ -85,6 +85,7 @@
 			tableHeader += '<td class="listTitle style2">DS 2019</td>';
 			tableHeader += '<td class="listTitle style2">Program</td>';
 			tableHeader += '<td class="listTitle style2">Intl. Rep.</td>';
+			tableHeader += '<td class="listTitle style2">U.S. Phone</td>';
 			tableHeader += '<td class="listTitle style2">Program <br /> Start Date</td>';
 			tableHeader += '<td class="listTitle style2">Program <br /> End Date</td>';
             tableHeader += '<td class="listTitle style2" align="center">Actions</td>';                                                          
@@ -113,6 +114,7 @@
 			var businessName = verList.DATA[i][verList.COLUMNS.findIdx('BUSINESSNAME')];
 			var startDate = verList.DATA[i][verList.COLUMNS.findIdx('STARTDATE')];
 			var endDate = verList.DATA[i][verList.COLUMNS.findIdx('ENDDATE')];
+			var usPhone = verList.DATA[i][verList.COLUMNS.findIdx('US_PHONE')];
 
 			// Create Table Rows
 			var tableBody = '';	
@@ -130,12 +132,14 @@
 				tableBody += '<td class="style5">' + ds2019 + '</td>';
 				tableBody += '<td class="style5">' + programName + '</td>';
 				tableBody += '<td class="style5">' + businessName + '</td>';
+				tableBody += '<td class="style5"><input type="text" size="12" id="usphone' + candidateID + '" value="' + usPhone + '" onclick="applyPhoneMask(this.id);" /></td>';
 				tableBody += '<td class="style5">' + startDate + '</td>';
 				tableBody += '<td class="style5">' + endDate + '</td>';
 				tableBody += '<td align="center" class="style5"><a href="javascript:setCheckInReceived(' + candidateID + ');" class="style4">[Received]</a></td>';
 			tableBody += '</tr>';
 			// Append table rows
 			$("#verificationList").append(tableBody);
+			
 		} 
 		
 	}
@@ -147,13 +151,15 @@
 		
 		// Create an instance of the proxy. 
 		var c = new candidate();
+		
+		var initPhone = document.getElementById('usphone' + candidateID).value;
 
 		// Setting a callback handler for the proxy automatically makes the proxy's calls asynchronous. 
 		c.setCallbackHandler(checkInReceived(candidateID)); 
 		c.setErrorHandler(myErrorHandler); 
 		
 		// This time, pass the intlRep ID to the getVerificationList CFC function. 
-		c.confirmCheckInReceived(candidateID);
+		c.confirmCheckInReceived(candidateID, initPhone);
 		
 	}
 	
@@ -171,7 +177,12 @@
 	// Error handler for the asynchronous functions. 
 	var myErrorHandler = function(statusCode, statusMsg) { 
 		alert('Status: ' + statusCode + ', ' + statusMsg); 
-	} 
+	}
+	
+	var applyPhoneMask = function(usPhoneID) {
+		$("#" + usPhoneID).mask("9-999-999-9999");
+	}
+	
 </script>
 
 

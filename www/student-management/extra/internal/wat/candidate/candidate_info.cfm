@@ -231,6 +231,8 @@
 	jQuery(function($){
 		// SSN
 		$("#SSN").mask("***-**-9999");
+		
+		$("#usPhone").mask("9-999-999-9999");
 	});	
 
 
@@ -1477,6 +1479,13 @@
                                         		<font size="1">(mm/dd/yyyy)</font>
                                             </td>
                                         </tr>
+                                        <tr>
+                                        	<td class="style1" width="30%" align="right"><label for="usPhone"><strong>U.S. Phone:</strong></label></td>
+                                        	<td class="style1" width="70%">
+                                            	<span class="readOnly">#qGetCandidate.us_phone#</span>
+                                                <input type="text" name="usPhone" id="usPhone" class="style1 editPage" value="#qGetCandidate.us_phone#" maxlength="10">
+                                            </td>
+                                        </tr>
                         			</table>
                                     
                                 </td>
@@ -1499,7 +1508,7 @@
                                         	<td class="style1" width="70%">
                                                 <span class="readOnly">#dateFormat(qGetCandidate.watDateEvaluation1, 'mm/dd/yyyy')#</span>
                                                 <input type="text" name="watDateEvaluation1" id="watDateEvaluation1" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.watDateEvaluation1, 'mm/dd/yyyy')#" maxlength="10">
-                                        		<font size="1">(mm/dd/yyyy)</font>
+                                        		<cfif NOT LEN(qGetcandidate.watDateEvaluation1)><font size="1">(mm/dd/yyyy)</font></cfif>
                                             </td>
                                         </tr>
                                         <tr>
@@ -1507,7 +1516,23 @@
                                         	<td class="style1">
                                                 <span class="readOnly">#dateFormat(qGetCandidate.watDateEvaluation2, 'mm/dd/yyyy')#</span>
                                                 <input type="text" name="watDateEvaluation2" id="watDateEvaluation2" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.watDateEvaluation2, 'mm/dd/yyyy')#" maxlength="10">
-                                        		<font size="1">(mm/dd/yyyy)</font>
+                                        		<cfif NOT LEN(qGetcandidate.watDateEvaluation2)><font size="1">(mm/dd/yyyy)</font></cfif>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" width="30%" align="right"><label for="watDateCheckedIn"><strong>Evaluation 3 Date:</strong></label></td>
+                                        	<td class="style1" width="70%">
+                                                <span class="readOnly">#dateFormat(qGetCandidate.watDateEvaluation3, 'mm/dd/yyyy')#</span>
+                                                <input type="text" name="watDateEvaluation3" id="watDateEvaluation3" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.watDateEvaluation3, 'mm/dd/yyyy')#" maxlength="10">
+                                        		<cfif NOT LEN(qGetcandidate.watDateEvaluation3)><font size="1">(mm/dd/yyyy)</font></cfif>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" width="30%" align="right"><label for="watDateCheckedIn"><strong>Evaluation 4 Date:</strong></label></td>
+                                        	<td class="style1" width="70%">
+                                                <span class="readOnly">#dateFormat(qGetCandidate.watDateEvaluation4, 'mm/dd/yyyy')#</span>
+                                                <input type="text" name="watDateEvaluation4" id="watDateEvaluation4" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.watDateEvaluation4, 'mm/dd/yyyy')#" maxlength="10">
+                                        		<cfif NOT LEN(qGetcandidate.watDateEvaluation4)><font size="1">(mm/dd/yyyy)</font></cfif>
                                             </td>
                                         </tr>
                         			</table>
