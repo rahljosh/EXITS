@@ -107,7 +107,8 @@
 			   Must have at least 1 lower case letter */
 		
 			// Set up available lower case values.
-			strLowerCaseAlpha = "abcdefghijklmnopqrstuvwxyz";
+			//strLowerCaseAlpha = "abcdefghijklmnopqrstuvwxyz";
+			strLowerCaseAlpha = "abcdefghjkmnpqrstuvwxyz";
 			
 			// Set up available upper case values
 			strUpperCaseAlpha = UCase( strLowerCaseAlpha );
