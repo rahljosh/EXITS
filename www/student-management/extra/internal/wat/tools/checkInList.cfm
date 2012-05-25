@@ -85,9 +85,9 @@
 			tableHeader += '<td class="listTitle style2">DS 2019</td>';
 			tableHeader += '<td class="listTitle style2">Program</td>';
 			tableHeader += '<td class="listTitle style2">Intl. Rep.</td>';
-			tableHeader += '<td class="listTitle style2">U.S. Phone</td>';
 			tableHeader += '<td class="listTitle style2">Program <br /> Start Date</td>';
 			tableHeader += '<td class="listTitle style2">Program <br /> End Date</td>';
+			tableHeader += '<td class="listTitle style2">U.S. Phone</td>';
             tableHeader += '<td class="listTitle style2" align="center">Actions</td>';                                                          
 		tableHeader += '</tr>';
 		
@@ -132,9 +132,9 @@
 				tableBody += '<td class="style5">' + ds2019 + '</td>';
 				tableBody += '<td class="style5">' + programName + '</td>';
 				tableBody += '<td class="style5">' + businessName + '</td>';
-				tableBody += '<td class="style5"><input type="text" size="12" id="usphone' + candidateID + '" value="' + usPhone + '" onclick="applyPhoneMask(this.id);" /></td>';
 				tableBody += '<td class="style5">' + startDate + '</td>';
 				tableBody += '<td class="style5">' + endDate + '</td>';
+				tableBody += '<td class="style5"><input type="text" size="12" id="usphone' + candidateID + '" value="' + usPhone + '" onclick="applyPhoneMask(this.id);" /></td>';
 				tableBody += '<td align="center" class="style5"><a href="javascript:setCheckInReceived(' + candidateID + ');" class="style4">[Received]</a></td>';
 			tableBody += '</tr>';
 			// Append table rows
