@@ -494,8 +494,13 @@
 			if ( APPLICATION.isServerLocal ) {
 				
 				emailIntendedTo = emailIntendedTo & "<p>Email To: #ARGUMENTS.emailTo#</p>";
-				
-				ARGUMENTS.emailTo = APPLICATION.EMAIL.support;
+
+				// IT / Office
+				if ( ListFind("1,2,3", CLIENT.userType) ) {
+					ARGUMENTS.email_to = CLIENT.email;	  
+				} else {
+					ARGUMENTS.email_to = APPLICATION.EMAIL.support;
+				}
 				
 				if ( LEN(ARGUMENTS.emailCC) ) {
 					emailIntendedTo = emailIntendedTo & "<p>Email CC: #ARGUMENTS.emailCC#</p>";
