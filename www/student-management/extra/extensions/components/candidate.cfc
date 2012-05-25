@@ -1345,6 +1345,7 @@
                         	ec.watDateEvaluation4 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes"> 
                     </cfcase>
                     
+                    <!--- Evaluation 1 - Non-Compliant - 40 days after checkin date --->
                     <cfcase value="5">
                     	AND
                         	ec.watDateEvaluation1 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
@@ -1352,6 +1353,7 @@
                         	ec.watDateCheckedIn <=  <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-40,NOW())#"> 
                     </cfcase>
                     
+                    <!--- Evaluation 2 - Non-Compliant - 70 days after checkin date --->
                     <cfcase value="6">
                     	AND
                         	ec.watDateEvaluation2 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
@@ -1359,6 +1361,7 @@
                         	ec.watDateCheckedIn <=  <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-70,NOW())#"> 
                     </cfcase>
                     
+                    <!--- Evaluation 3 - Non-Compliant - 100 days after checkin date --->
                     <cfcase value="7">
                     	AND
                         	ec.watDateEvaluation3 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
@@ -1366,6 +1369,7 @@
                         	ec.watDateCheckedIn <=  <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-100,NOW())#">
                     </cfcase>
                     
+                    <!--- Evaluation 4 - Non-Compliant - 130 days after checkin date --->
                     <cfcase value="8">
                     	AND
                         	ec.watDateEvaluation4 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
@@ -1379,12 +1383,12 @@
                                 ec.watDateEvaluation1 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes"> 
                             OR
                                 ec.watDateEvaluation2 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes"> 
-                            )  
+                            <!--- Going live in June 2012 ---
                             OR
                                 ec.watDateEvaluation3 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes"> 
-                            ) 
                             OR
                                 ec.watDateEvaluation4 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes"> 
+							--->
                             )               
                     </cfdefaultcase>
                 
@@ -1402,57 +1406,33 @@
 	<cffunction name="confirmEvaluationReceived" access="remote" returntype="void" hint="Updates evaluation 1 record.">
         <cfargument name="candidateID" required="yes" hint="candidateID is required">
         <cfargument name="evaluationID" required="yes" hint="evaluationID 1 = evaluation1 | 2 = evaluation2 | 3 = evaluation3 | 4 = evaluation4">
-
-		<cfif ARGUMENTS.evaluationID EQ 1>
-        
-            <cfquery 
-                datasource="#APPLICATION.DSN.Source#">
-                    UPDATE
-                        extra_candidates
-                    SET
-                        watDateEvaluation1 = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
-                    WHERE
-                        candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
-            </cfquery>
 		
-        <cfelseif ARGUMENTS.evaluationID EQ 2>
+        <cfscript>
+			var vEvaluationField = "";
+		
+			// Make sure we have a valid evaluation
+			if ( listFind("1,2,3,4", ARGUMENTS.evaluationID) ) {
+				
+				// Set which evaluation field to update
+				vEvaluationField = "watDateEvaluation#ARGUMENTS.evaluationID#";
+				
+			}
+		</cfscript>
+        
+        <cfif LEN(vEvaluationField)>
         
             <cfquery 
-                datasource="#APPLICATION.DSN.Source#">
+                datasource="#APPLICATION.DSN.Source#" result="test">
                     UPDATE
                         extra_candidates
                     SET
-                        watDateEvaluation2 = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
-                    WHERE
-                        candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
-            </cfquery>
-       	
-        <cfelseif ARGUMENTS.evaluationID EQ 3>
-        
-        	<cfquery 
-                datasource="#APPLICATION.DSN.Source#">
-                    UPDATE
-                        extra_candidates
-                    SET
-                        watDateEvaluation3 = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
-                    WHERE
-                        candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
-            </cfquery>
-        
-        <cfelseif ARGUMENTS.evaluationID EQ 4>
-        
-        	<cfquery 
-                datasource="#APPLICATION.DSN.Source#">
-                    UPDATE
-                        extra_candidates
-                    SET
-                        watDateEvaluation4 = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
+                        #vEvaluationField# = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
                     WHERE
                         candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
             </cfquery>
         
         </cfif>
-        		   
+
 	</cffunction>
 	<!------------------------------------------------------------ 
 		End of Monthly Evaluation Tool
