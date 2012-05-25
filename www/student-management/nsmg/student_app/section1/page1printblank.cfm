@@ -176,7 +176,7 @@
 				<br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
 			</tr>
 			<tr><td>&nbsp;</td></tr>
-			<tr><td width="160"><em>Year of Birth (yyyy)</em></td><td width="160"><em>Speaks English</em></td></tr>	
+			<tr><td width="160"><em>Date of Birth <font size="-2">(mm/dd/yyyy)</font></em></td><td width="160"><em>Speaks English</em></td></tr>	
 			<tr>
 				<td><br><img src="#path#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>
 				<td>
@@ -210,7 +210,7 @@
 				<br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
 			</tr>
 			<tr><td>&nbsp;</td></tr>
-			<tr><td><em>Year of Birth (yyyy)</em></td><td><em>Speaks English</em></td></tr>	
+			<tr><td><em>Date of Birth <font size="-2">(mm/dd/yyyy)</font></em></td><td><em>Speaks English</em></td></tr>	
 			<tr>
 				<td><br><img src="#path#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>
 				<td>

@@ -6,36 +6,47 @@
 	<title>Student Profile</title>
 </head>
 <body>
-<cftry>
 
-<SCRIPT>
+<script type="text/javascript">
 <!--
 // open online application 
-function OpenApp(url)
-{
+function OpenApp(url) {
 	newwindow=window.open(url, 'Application', 'height=580, width=790, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); 
 	if (window.focus) {newwindow.focus()}
 }
 //-->
-</SCRIPT>
+</script>
 
-<cfif isdefined('url.unqid')>
-	<cfquery name="get_unqid" datasource="MySql">
+<cfif isdefined('URL.unqid')>
+	<cfquery name="qGetStudentByUniqueID" datasource="MySql">
 		SELECT *
 		FROM smg_students
-		WHERE uniqueid = '#url.unqid#'
+		WHERE uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#URL.unqid#">
 	</cfquery>
-	<cfset client.studentid = #get_unqid.studentid#>
+	<cfset client.studentid = qGetStudentByUniqueID.studentid>
 </cfif>
 
 <cfinclude template="../querys/get_student_info.cfm">
 
 <cfinclude template="../querys/get_students_host.cfm">
 
+<cfscript>
+	vFatherAge = "";
+	vMotherAge = "";
+	
+	if ( isDate(get_student_info.fatherDOB) ) {
+		vFatherAge = "(#DateDiff('yyyy', get_student_info.fatherDOB, now())# years old)";
+	}
+
+	if ( isDate(get_student_info.motherDOB) ) {
+		vMotherAge = "(#DateDiff('yyyy', get_student_info.motherDOB, now())# years old)";
+	}
+</cfscript>
+
 <!--- Student Picture --->
 <cfdirectory directory="#AppPath.onlineApp.picture#" name="studentPicture" filter="#get_student_info.studentID#.*">
 
-<cfif get_unqid.recordcount EQ 0> <!--- Block if they try to cheat changing the student id in the address bar --->
+<cfif qGetStudentByUniqueID.recordcount EQ 0> <!--- Block if they try to cheat changing the student id in the address bar --->
 	<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
 		<tr valign=middle height=24>
 			<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
@@ -45,7 +56,7 @@ function OpenApp(url)
 	</table>
 	<table width=100% border=0 cellpadding=4 cellspacing=0 class="section">
 	<tr><td align="center"><br><div align="justify"><h3>
-		The student ID you are looking for, <cfoutput>#url.studentid#</cfoutput>, was not found. This could be for a number of reasons.<br><br>
+		The student ID you are looking for, <cfoutput>#URL.studentid#</cfoutput>, was not found. This could be for a number of reasons.<br><br>
 		<ul>
 			<li>the student record was deleted or renumbered
 			<li>the link you are following is out of date
@@ -68,68 +79,68 @@ function OpenApp(url)
 <cfquery name="regions" datasource="MySQL">
 select regionname
 from smg_regions
-where regionid = #get_Student_info.regionassigned#
+where regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_Student_info.regionassigned#">
 </cfquery>
 
 <cfquery name="region_guarantee" datasource="MySQL">
 select regionname
 from smg_regions
-where regionid = #get_Student_info.regionalguarantee#
+where regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_Student_info.regionalguarantee#">
 </cfquery>
 
 <Cfquery name="religion" datasource="MySQL">
 select religionname 
 from smg_religions
-where religionid = #get_Student_info.religiousaffiliation#
+where religionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_Student_info.religiousaffiliation#">
 </cfquery>
 
 <cfquery name="int_Agent" datasource="MySQL">
 select companyid, businessname
 from smg_users 
-where userid = #get_Student_info.intrep#
+where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_Student_info.intrep#">
 </cfquery>
 
 <Cfquery name="companyshort" datasource="MySQL">
 select companyshort
 from smg_companies
-where companyid = #get_student_info.companyid#
+where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.companyid#">
 </Cfquery>
 
 <cfquery name="program_name" datasource="MySQL">
 select programname
 from smg_programs
-where programid = #get_Student_info.programid#
+where programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_Student_info.programid#">
 </cfquery>
 
 <cfquery name="get_siblings" datasource="MySQL">
 Select name, liveathome, sex, birthdate, studentid, childid
 From smg_student_siblings
-Where studentid = #get_student_info.studentid#
+Where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
 Order by birthdate
 </cfquery>
 
 <cfquery name="country_birth" datasource="MySql">
 	SELECT countryname 
 	FROM smg_countrylist	
-	WHERE countryid = '#get_student_info.countrybirth#'
+	WHERE countryid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.countrybirth#">
 </cfquery>
 
 <cfquery name="country_citizen" datasource="MySql">
 	SELECT countryname  
 	FROM smg_countrylist 
-	WHERE countryid = '#get_student_info.countrycitizen#'
+	WHERE countryid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.countrycitizen#">
 </cfquery>
 
 <cfquery name="country_resident" datasource="MySql">
 	SELECT countryname  
 	FROM smg_countrylist
-	WHERE countryid = '#get_student_info.countryresident#'
+	WHERE countryid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.countryresident#">
 </cfquery>
 
 <cfquery name="get_state_guarantee" datasource="MySql">
 	SELECT statename  
 	FROM smg_states
-	WHERE id = '#get_student_info.state_guarantee#'
+	WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.state_guarantee#">
 </cfquery>
 	
 <cfoutput>
@@ -260,14 +271,14 @@ Order by birthdate
 	<tr><td colspan="2"><span class="application_section_header">Natural Parents & Family In Home Country</span></td></tr>
 	<tr><td width="50%">
 		<table>
-			<tr><td width="100"><font color="Gray">Father:</font></td><td width="180">#get_student_info.fathersname# <cfif get_student_info.fatherbirth is '0'><cfelse><cfset calc_age_father = #CreateDate(get_student_info.fatherbirth,01,01)#> (#DateDiff('yyyy', calc_age_father, now())#)</cfif></td></tr>
+			<tr><td width="100"><font color="Gray">Father:</font></td><td width="180">#get_student_info.fathersname# #vFatherAge#</td></tr>
 			<tr><td><font color="Gray">Occupation:</font></td><td><cfif get_Student_info.fatherworkposition is ''>n/a<cfelse>#get_Student_info.fatherworkposition#</cfif></td></tr>
 			<tr><td><font face="" color="Gray">Speaks English:</font></td><td>#get_Student_info.fatherenglish#</td></tr>
 		</table>	
 	</td>
 	<td width="50%">
 		<table>
-			<tr><td width="100"><font color="Gray">Mother:</font></td><td width="180">#get_student_info.mothersname# <cfif get_student_info.motherbirth is '0'><cfelse><cfset calc_age_mom = #CreateDate(get_student_info.motherbirth,01,01)#> (#DateDiff('yyyy', calc_age_mom, now())#)</cfif></td></tr>
+			<tr><td width="100"><font color="Gray">Mother:</font></td><td width="180">#get_student_info.mothersname# #vMotherAge#</td></tr>
 			<tr><td><font color="Gray">Occupation:</font></td><td><cfif get_Student_info.motherworkposition is ''>n/a<cfelse>#get_Student_info.motherworkposition#</cfif></td></tr>
 			<tr><td><font face="" color="Gray">Speaks English:</font></td><td>#get_Student_info.motherenglish#</td></tr>
 		</table>	
@@ -367,11 +378,6 @@ Order by birthdate
 
 <!--- FOOTER OF TABLE --->
 <cfinclude template="footer_table.cfm">
-
-<cfcatch type="any">
-	<cfinclude template="error_message.cfm">
-</cfcatch>
-</cftry>
 
 </body>
 </html>

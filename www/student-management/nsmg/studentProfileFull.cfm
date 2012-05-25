@@ -10,53 +10,72 @@
 <!--- CHECK SESSIONS --->
 <cfinclude template="check_sessions.cfm">
 
-<SCRIPT>
+<script type="text/javascript">
 <!--
 // open online application 
-function OpenApp(url)
-{
+function OpenApp(url) {
 	newwindow=window.open(url, 'Application', 'height=580, width=790, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); 
 	if (window.focus) {newwindow.focus()}
 }
 //-->
-</SCRIPT>
-	<cfif  isDefined('url.uniqued')>
-    <cfif url.uniqueid is ''>
-        You have not specified a valid studentid.
+</script>
+
+<cfif isDefined('URL.uniqued')>
+    <cfif URL.uniqueid is ''>
+        You have not specified a valid studentID.
         <cfabort>
     </cfif>
 </cfif>
 
-
-<cfif isdefined('url.uniqueid') >
-	<cfquery name="get_id" datasource="mysql">
-		select studentid 
-		from smg_students
-		where uniqueid = '#url.uniqueid#'
+<cfif isdefined('URL.uniqueid') >
+	<cfquery name="qLookUpStudent" datasource="mysql">
+		select 
+        	studentID 
+		from 
+        	smg_students
+		where 
+        	uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#URL.uniqueid#">
 	</cfquery>
-	<cfset url.studentid = #get_id.studentid#>
+	<cfset URL.studentID = qLookUpStudent.studentID>
 </cfif>
 
-
-<cfquery name="get_student_info" datasource="mysql">
-	select *
-	from smg_students
-	where studentid = #url.studentid#
+<cfquery name="qGetStudentInfo" datasource="mysql">
+	select 	
+    	*
+	from 
+    	smg_students
+	where 
+    	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.studentID)#">
 </cfquery>
 
-<cfquery name="get_students_host" datasource="MySQL">
-select smg_students.studentid, smg_students.hostid, smg_hosts.*
-from smg_students inner join smg_hosts
-where (smg_students.studentid = #url.studentid#) and (smg_students.hostid = smg_hosts.hostid)
-</cfquery>
+<cfscript>
+	vFatherAge = "";
+	vMotherAge = "";
+	
+	if ( isDate(qGetStudentInfo.fatherDOB) ) {
+		vFatherAge = "(#DateDiff('yyyy', qGetStudentInfo.fatherDOB, now())# years old)";
+	}
 
-<cfif client.usertype GT 4> <!--- Block if they try to cheat changing the student id in the address bar --->
-	<cfquery name="check_stu_region" datasource="MySql">
-		SELECT regionid, companyid, userid 		FROM user_access_rights
-			WHERE regionid = '#get_student_info.regionassigned#' 
-			AND  userid = #client.userid#
-	</cfquery>		
-	<cfif get_Student_info.companyid is not #client.companyid# OR check_stu_region.recordcount is 0><br>
+	if ( isDate(qGetStudentInfo.motherDOB) ) {
+		vMotherAge = "(#DateDiff('yyyy', qGetStudentInfo.motherDOB, now())# years old)";
+	}
+</cfscript>
+
+<!--- Block if they try to cheat changing the student id in the address bar --->
+<cfif client.usertype GT 4> 
+
+	<cfquery name="qCheckUserAccess" datasource="MySql">
+		SELECT 
+        	regionid, companyid, userid 		
+        FROM 
+        	user_access_rights
+		WHERE 
+        	regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.regionassigned#"> 
+		AND  
+        	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+	</cfquery>	
+    	
+	<cfif qGetStudentInfo.companyid is not client.companyid OR qCheckUserAccess.recordcount is 0><br>
 		<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
 			<tr valign=middle height=24>
 				<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
@@ -79,71 +98,71 @@ where (smg_students.studentid = #url.studentid#) and (smg_students.hostid = smg_
 	</cfif>
 </cfif>
 
-<cfquery name="regions" datasource="MySQL">
+<cfquery name="qGetRegionAssigned" datasource="MySQL">
 select regionname
 from smg_regions
-where regionid = #get_Student_info.regionassigned#
+where regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.regionassigned#">
 </cfquery>
 
-<cfquery name="region_guarantee" datasource="MySQL">
+<cfquery name="qGetRegionGuaranteed" datasource="MySQL">
 select regionname
 from smg_regions
-where regionid = #get_Student_info.regionalguarantee#
+where regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.regionalguarantee#">
 </cfquery>
 
-<Cfquery name="religion" datasource="MySQL">
+<Cfquery name="qGetReligionInfo" datasource="MySQL">
 select religionname, religionid
 from smg_religions
-where religionid = #get_Student_info.religiousaffiliation#
+where religionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.religiousaffiliation#">
 </cfquery>
 
-<cfquery name="int_Agent" datasource="MySQL">
+<cfquery name="qGetIntlRep" datasource="MySQL">
 select companyid, businessname
 from smg_users 
-where userid = #get_Student_info.intrep#
+where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.intrep#">
 </cfquery>
 
-<Cfquery name="companyshort" datasource="MySQL">
+<Cfquery name="qGetCompanyShort" datasource="MySQL">
 select companyshort, companyshort_nocolor, team_id
 from smg_companies
-where companyid = #client.companyid#
+where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
 </Cfquery>
 
-<cfquery name="program_name" datasource="MySQL">
+<cfquery name="qGetProgramName" datasource="MySQL">
 select programname
 from smg_programs
-where programid = #get_Student_info.programid#
+where programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.programid#">
 </cfquery>
 
-<cfquery name="get_siblings" datasource="MySQL">
-Select name, liveathome, sex, birthdate, studentid, childid
+<cfquery name="qGetSiblings" datasource="MySQL">
+Select name, liveathome, sex, birthdate, studentID, childid
 From smg_student_siblings
-Where studentid = #get_student_info.studentid#
+Where studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#">
 Order by birthdate
 </cfquery>
 
-<cfquery name="country_birth" datasource="MySql">
+<cfquery name="qGetCountryBirth" datasource="MySql">
 	SELECT countryname 
 	FROM smg_countrylist	
-	WHERE countryid = '#get_student_info.countrybirth#'
+	WHERE countryid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.countrybirth#">
 </cfquery>
 
-<cfquery name="country_citizen" datasource="MySql">
+<cfquery name="qGetCountryCitizenship" datasource="MySql">
 	SELECT countryname  
 	FROM smg_countrylist 
-	WHERE countryid = '#get_student_info.countrycitizen#'
+	WHERE countryid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.countrycitizen#">
 </cfquery>
 
-<cfquery name="country_resident" datasource="MySql">
+<cfquery name="qGetCountryResidence" datasource="MySql">
 	SELECT countryname  
 	FROM smg_countrylist
-	WHERE countryid = '#get_student_info.countryresident#'
+	WHERE countryid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.countryresident#">
 </cfquery>
 
-<cfquery name="get_state_guarantee" datasource="MySql">
+<cfquery name="qGetStateGuaranteed" datasource="MySql">
 	SELECT statename  
 	FROM smg_states
-	WHERE id = '#get_student_info.state_guarantee#'
+	WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.state_guarantee#">
 </cfquery>
 	
 <link rel="stylesheet" href="profile.css" type="text/css">
@@ -153,82 +172,82 @@ Order by birthdate
 <table width=650 align="center" border=0 bgcolor="FFFFFF">
 	<tr>
 	<td valign="top" width=200><span id="titleleft">
-		 Intl. Agent: <cfif len(#int_agent.businessname#) gt  25>#Left(int_agent.businessname,22)#..</font></a><cfelse>#int_agent.businessname#</cfif><br>
-		 <!--- Date Entry: #DateFormat(get_Student_info.dateapplication, 'mmm d, yyyy')# ---><br><br>
-		<Cfif get_Student_info.hostid is not 0>
-		Date Placed:  #DateFormat(get_Student_info.dateplaced, 'mmm d, yyyy')#
+		 Intl. Agent: <cfif len(#qGetIntlRep.businessname#) gt  25>#Left(qGetIntlRep.businessname,22)#..</font></a><cfelse>#qGetIntlRep.businessname#</cfif><br>
+		 <!--- Date Entry: #DateFormat(qGetStudentInfo.dateapplication, 'mmm d, yyyy')# ---><br><br>
+		<Cfif qGetStudentInfo.hostid is not 0>
+		Date Placed:  #DateFormat(qGetStudentInfo.dateplaced, 'mmm d, yyyy')#
 		<cfelse>
 		 Today's Date: #DateFormat(now(), 'mmm d, yyyy')#<br>
-		 <!--- Days Unplaced: #DateDiff('d',get_Student_info.dateapplication, now())# --->
+		 <!--- Days Unplaced: #DateDiff('d',qGetStudentInfo.dateapplication, now())# --->
 	  </cfif></td> 
 	<td valign="top"><div align="center">
-		<font size=+2><b>#companyshort.companyshort_nocolor#</b></font><br>
+		<font size=+2><b>#qGetCompanyShort.companyshort_nocolor#</b></font><br>
 		
-		Program: #program_name.programname#<br>
-		Region: #regions.regionname# 
-		<cfif #get_student_info.regionguar# is 'yes'><b> - #region_guarantee.regionname# Guaranteed</b></cfif>
-		<cfif #get_student_info.state_guarantee# NEQ 0><b> - #get_state_guarantee.statename# Guaranteed</b></cfif><br>
-		<cfif get_student_info.scholarship is '1'>Participant of Scholarship Program</cfif></td>
+		Program: #qGetProgramName.programname#<br>
+		Region: #qGetRegionAssigned.regionname# 
+		<cfif #qGetStudentInfo.regionguar# is 'yes'><b> - #qGetRegionGuaranteed.regionname# Guaranteed</b></cfif>
+		<cfif #qGetStudentInfo.state_guarantee# NEQ 0><b> - #qGetStateGuaranteed.statename# Guaranteed</b></cfif><br>
+		<cfif qGetStudentInfo.scholarship is '1'>Participant of Scholarship Program</cfif></td>
 	</div><td><img src="pics/logos/#client.companyid#_small.gif" border="0" align="right"></td></tr>	
 </table>
 
 <table  width=650 align="center" border=0 bgcolor="FFFFFF" style="font-size:13px"> 
 	<hr width=100% align="center">
 	<td bgcolor="F3F3F3" valign="top" width=133><div align="left">
-		<cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#url.studentid#.*">
+		<cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#URL.studentID#.*">
 		<cfif file.recordcount>
 			<img src="uploadedfiles/web-students/#file.name#" width="135">
 		<cfelse>
 			<img src="pics/no_stupicture.jpg" width="135">
 		</cfif>
 	<br>
-	<!--- <td bgcolor="F3F3F3" valign="top" width=133><div align="left"><img <cfif #get_student_info.old_stuid# is 0>src="#CLIENT.exits_url#/pics/#client.studentid#.jpg"<cfelse> src="#CLIENT.exits_url#/pics/web-students/#client.studentid#.jpg"</cfif> width=133><br> --->
+	<!--- <td bgcolor="F3F3F3" valign="top" width=133><div align="left"><img <cfif #qGetStudentInfo.old_stuid# is 0>src="#CLIENT.exits_url#/pics/#client.studentID#.jpg"<cfelse> src="#CLIENT.exits_url#/pics/web-students/#client.studentID#.jpg"</cfif> width=133><br> --->
 	</div></td>
 	<td valign="top" width=504>
 	<span class="application_section_header">STUDENT PROFILE</span><br>
 	
 	<table cellpadding=0 cellspacing=0 border=0 style="font-size:13px">
-		<tr><td width="50"><font face="" color="Gray">Name: </font><b></td><td>#get_student_info.firstname# #get_student_info.middlename# #get_student_info.familylastname# (#get_student_info.studentid#)</b></td></tr>	
-		<tr><td><font face="" color="Gray">Sex: </font></td><td>#get_student_info.sex#</td></tr>
-		<tr><td><font face="" color="Gray">DOB: </font></td><td>#DateFormat(get_student_info.dob, 'mmm d, yyyy')#</td></tr>
+		<tr><td width="50"><font face="" color="Gray">Name: </font><b></td><td>#qGetStudentInfo.firstname# #qGetStudentInfo.middlename# #qGetStudentInfo.familylastname# (#qGetStudentInfo.studentID#)</b></td></tr>	
+		<tr><td><font face="" color="Gray">Sex: </font></td><td>#qGetStudentInfo.sex#</td></tr>
+		<tr><td><font face="" color="Gray">DOB: </font></td><td>#DateFormat(qGetStudentInfo.dob, 'mmm d, yyyy')#</td></tr>
 	</table>
 	<br> 
 	<table cellpadding=0 cellspacing=0 border=0 width=65% style="font-size:13px">
 		<tr>
         	<td><font face="" color="Gray">Age:</font></td>
-        	<td><cfif IsDate(get_student_info.dob)>#DateDiff('yyyy', get_student_info.dob, now())#<cfelse>Missing</cfif></td>
+        	<td><cfif IsDate(qGetStudentInfo.dob)>#DateDiff('yyyy', qGetStudentInfo.dob, now())#<cfelse>Missing</cfif></td>
             <td></td>
             <td><font face="" color="Gray">Smoker:</font></td>
-            <td>#get_student_info.smoke#</td></tr>
-		<tr><td><font face="" color="Gray">Height:</font></td><td>#get_student_info.height#</td><td width=15%></td><td><font face="" color="Gray">Hair:</font></td><td>#get_student_info.haircolor#</td></tr>
-		<tr><td><font face="" color="Gray">Weight:</font></td><td>#get_student_info.weight#</td><td></td><td><font face="" color="Gray">Eyes:</font></td><td>#get_student_info.eyecolor#</td></tr>					
+            <td>#qGetStudentInfo.smoke#</td></tr>
+		<tr><td><font face="" color="Gray">Height:</font></td><td>#qGetStudentInfo.height#</td><td width=15%></td><td><font face="" color="Gray">Hair:</font></td><td>#qGetStudentInfo.haircolor#</td></tr>
+		<tr><td><font face="" color="Gray">Weight:</font></td><td>#qGetStudentInfo.weight#</td><td></td><td><font face="" color="Gray">Eyes:</font></td><td>#qGetStudentInfo.eyecolor#</td></tr>					
 	</table>
 	<br>
 	<table cellpadding=0 cellspacing=0 border=0 width=65% style="font-size:13px">
 		<tr><td align="center" width="360">
-				<cfdirectory directory="#AppPath.onlineApp.studentLetter#" name="stuletter" filter="#get_student_info.studentid#.*">
+				<cfdirectory directory="#AppPath.onlineApp.studentLetter#" name="stuletter" filter="#qGetStudentInfo.studentID#.*">
 				<cfif ListFind("jpg,gif", LCase(Right(stuletter.name, 3)))>
-					<a href="javascript:OpenApp('student_app/print_letter_profile.cfm?studentid=#get_student_info.studentid#&letter=students');">Student's Letter</a>
+					<a href="javascript:OpenApp('student_app/print_letter_profile.cfm?studentID=#qGetStudentInfo.studentID#&letter=students');">Student's Letter</a>
 				<cfelseif stuletter.recordcount>
 					<a href="uploadedfiles/letters/students/#stuletter.name#" target="_blank">Student's Letter</a>
-				<cfelseif get_student_info.app_current_status NEQ 0>
-					<a href="javascript:OpenApp('student_app/section1/page5print.cfm?uniqueid=#url.uniqueid#');">Student's Letter</a>
+				<cfelseif qGetStudentInfo.app_current_status NEQ 0>
+					<a href="javascript:OpenApp('student_app/section1/page5print.cfm?uniqueid=#URL.uniqueid#');">Student's Letter</a>
 				<cfelse>
 					Students Letter n/a					
 				</cfif>
 				&nbsp - &nbsp  
-				<cfdirectory directory="#AppPath.onlineApp.parentLetter#" name="paletter" filter="#get_student_info.studentid#.*">
+				<cfdirectory directory="#AppPath.onlineApp.parentLetter#" name="paletter" filter="#qGetStudentInfo.studentID#.*">
 				<cfif ListFind("jpg,gif", LCase(Right(paletter.name, 3)))>
-					<a href="javascript:OpenApp('student_app/print_letter_profile.cfm?studentid=#get_student_info.studentid#&letter=parents');">Parent's Letter</a>
+					<a href="javascript:OpenApp('student_app/print_letter_profile.cfm?studentID=#qGetStudentInfo.studentID#&letter=parents');">Parent's Letter</a>
 				<cfelseif paletter.recordcount>
 					<a href="uploadedfiles/letters/parents/#paletter.name#" target="_blank">Parent's Letter</a>
-				<cfelseif get_student_info.app_current_status NEQ 0>
-					<a href="javascript:OpenApp('student_app/section1/page6print.cfm?uniqueid=#url.uniqueid#');">Parent's Letter</a>
+				<cfelseif qGetStudentInfo.app_current_status NEQ 0>
+					<a href="javascript:OpenApp('student_app/section1/page6print.cfm?uniqueid=#URL.uniqueid#');">Parent's Letter</a>
 				<cfelse>
 					Parents Letter n/a
 				</cfif>
 				&nbsp - &nbsp 
-				<a href="student/index.cfm?action=printFlightInformation&uniqueID=#get_student_info.uniqueID#&programID=#get_student_info.programID#">Flight Information</a>
+				<a href="student/index.cfm?action=printFlightInformation&uniqueID=#qGetStudentInfo.uniqueID#&programID=#qGetStudentInfo.programID#">Flight Information</a>
 			</td></tr>
 	</table>
 </table>
@@ -239,51 +258,51 @@ Order by birthdate
 		<tr><td width="50%">
 		<span class="application_section_header">Citizenship</span><br>
 			<table>
-				<tr><td width="150"><font face="" color="Gray">Place of Birth:</font></td><td width="180">#get_student_info.citybirth#</td></tr>
-				<tr><td><font face="" color="Gray">Country of Birth:</font></td><td>#country_birth.countryname#</td></tr>
-				<tr><td><font face="" color="Gray">Country of Citizenship:</font></td><td>#country_citizen.countryname#</td></tr>
-				<tr><td><font face="" color="Gray">Country of Residence:</font></td><td>#country_resident.countryname#</td></tr>
+				<tr><td width="150"><font face="" color="Gray">Place of Birth:</font></td><td width="180">#qGetStudentInfo.citybirth#</td></tr>
+				<tr><td><font face="" color="Gray">Country of Birth:</font></td><td>#qGetCountryBirth.countryname#</td></tr>
+				<tr><td><font face="" color="Gray">Country of Citizenship:</font></td><td>#qGetCountryCitizenship.countryname#</td></tr>
+				<tr><td><font face="" color="Gray">Country of Residence:</font></td><td>#qGetCountryResidence.countryname#</td></tr>
 			</table>
 		</td>
 		<td width="50%">
 		<span class="application_section_header">Religious Info</span><br>
 			<table>
-				<tr><td width="150"><font color="Gray">Religion:</font></td><td width="180"><cfif religion.religionid eq 3>Not Interested<cfelse>#religion.religionname#</cfif></td></tr>
-				<tr><td><font color="Gray">Participation:</font></td><td>#get_student_info.religious_participation#</td></tr>
-				<tr><td><font face="" color="Gray">Attend with host family:</font></td><td>#get_student_info.churchfam#</td></tr>
-				<tr><td><font face="" color="Gray">Church groups:</font></td><td><cfif get_Student_info.churchgroup is ''>n/a<cfelse>#get_Student_info.churchgroup#</cfif></td></tr>
+				<tr><td width="150"><font color="Gray">Religion:</font></td><td width="180"><cfif qGetReligionInfo.religionid eq 3>Not Interested<cfelse>#qGetReligionInfo.religionname#</cfif></td></tr>
+				<tr><td><font color="Gray">Participation:</font></td><td>#qGetStudentInfo.religious_participation#</td></tr>
+				<tr><td><font face="" color="Gray">Attend with host family:</font></td><td>#qGetStudentInfo.churchfam#</td></tr>
+				<tr><td><font face="" color="Gray">Church groups:</font></td><td><cfif qGetStudentInfo.churchgroup is ''>n/a<cfelse>#qGetStudentInfo.churchgroup#</cfif></td></tr>
 			</table>
 		</td></tr>
 	</table><br>
-	
+    
 	<table width=650 align="center" border=0 bgcolor="FFFFFF" style="font-size:13px"> 
 	<hr width=80% align="center">
 	<span class="application_section_header">Natural Parents & Family In Home Country</span><br> 
 		<tr><td width="50%">
 			<table>
-				<tr><td width="100"><font color="Gray">Father:</font></td><td width="180">#get_student_info.fathersname# <cfif get_student_info.fatherbirth is '0'><cfelse><cfset calc_age_father = #CreateDate(get_student_info.fatherbirth,01,01)#> (#DateDiff('yyyy', calc_age_father, now())#)</cfif></td></tr>
-				<tr><td><font color="Gray">Occupation:</font></td><td><cfif get_Student_info.fatherworkposition is ''>n/a<cfelse>#get_Student_info.fatherworkposition#</cfif></td></tr>
-				<tr><td><font face="" color="Gray">Speaks English:</font></td><td>#get_Student_info.fatherenglish#</td></tr>
+				<tr><td width="100"><font color="Gray">Father:</font></td><td width="180">#qGetStudentInfo.fathersname# #vFatherAge#</td></tr>
+				<tr><td><font color="Gray">Occupation:</font></td><td><cfif qGetStudentInfo.fatherworkposition is ''>n/a<cfelse>#qGetStudentInfo.fatherworkposition#</cfif></td></tr>
+				<tr><td><font face="" color="Gray">Speaks English:</font></td><td>#qGetStudentInfo.fatherenglish#</td></tr>
 			</table>	
 		</td>
 		<td width="50%">
 			<table>
-				<tr><td width="100"><font color="Gray">Mother:</font></td><td width="180">#get_student_info.mothersname# <cfif get_student_info.motherbirth is '0'><cfelse><cfset calc_age_mom = #CreateDate(get_student_info.motherbirth,01,01)#> (#DateDiff('yyyy', calc_age_mom, now())#)</cfif></td></tr>
-				<tr><td><font color="Gray">Occupation:</font></td><td><cfif get_Student_info.motherworkposition is ''>n/a<cfelse>#get_Student_info.motherworkposition#</cfif></td></tr>
-				<tr><td><font face="" color="Gray">Speaks English:</font></td><td>#get_Student_info.motherenglish#</td></tr>
+				<tr><td width="100"><font color="Gray">Mother:</font></td><td width="180">#qGetStudentInfo.mothersname# #vMotherAge#</td></tr>
+				<tr><td><font color="Gray">Occupation:</font></td><td><cfif qGetStudentInfo.motherworkposition is ''>n/a<cfelse>#qGetStudentInfo.motherworkposition#</cfif></td></tr>
+				<tr><td><font face="" color="Gray">Speaks English:</font></td><td>#qGetStudentInfo.motherenglish#</td></tr>
 			</table>	
 		</td>
 		</tr>		
 		<tr><td colspan="2">
 		</cfoutput>
-			<table>
-				<tr><td><font face="" color="Gray">Siblings: &nbsp </font>
-				<cfoutput query="get_siblings">
-				#get_siblings.name# <cfif get_siblings.birthdate is ''><cfelse>#DateDiff('yyyy', get_siblings.birthdate, now())#
-				year old</cfif> #iif(Sex is 'Female', de("Sister"), de("Brother"))# &nbsp &nbsp; 
-				</cfoutput></td></tr>
-			</table>
-			</td></tr>
+        <table>
+            <tr><td><font face="" color="Gray">Siblings: &nbsp </font>
+            <cfoutput query="qGetSiblings">
+                #qGetSiblings.name# <cfif isDate(qGetSiblings.birthdate)>#DateDiff('yyyy', qGetSiblings.birthdate, now())# years old</cfif> 
+                #iif(Sex is 'Female', de("Sister"), de("Brother"))# &nbsp &nbsp; 
+            </cfoutput></td></tr>
+        </table>
+        </td></tr>
 	</table><br>
 	
 	<cfoutput> 
@@ -292,18 +311,18 @@ Order by birthdate
 	<hr width=80% align="center">
 	<span class="application_section_header">Academic and Language Evaluation</span>
 		<tr>
-		<td width="250"><font face="" color="Gray">Band: &nbsp </font><cfif get_student_info.band is ''><cfelse>#get_student_info.band#</cfif></td>
-		<td width="200"><font face="" color="Gray">Orchestra: &nbsp </font><cfif get_student_info.orchestra is ''><cfelse>#get_Student_info.orchestra#</cfif></td>
-		<td width="200"><font face="" color="Gray">Est. GPA: &nbsp </font><cfif get_student_info.orchestra is ''><cfelse>#get_Student_info.estgpa#</cfif></td>
+		<td width="250"><font face="" color="Gray">Band: &nbsp </font><cfif qGetStudentInfo.band is ''><cfelse>#qGetStudentInfo.band#</cfif></td>
+		<td width="200"><font face="" color="Gray">Orchestra: &nbsp </font><cfif qGetStudentInfo.orchestra is ''><cfelse>#qGetStudentInfo.orchestra#</cfif></td>
+		<td width="200"><font face="" color="Gray">Est. GPA: &nbsp </font><cfif qGetStudentInfo.orchestra is ''><cfelse>#qGetStudentInfo.estgpa#</cfif></td>
 		</tr>
 		<tr><td> </td></tr>
 		<tr><td> </td></tr>	
 		<tr>
    		<td><font face="" color="Gray">
-			<cfif get_student_info.grades is '12'>Must be placed in: &nbsp </font>#get_student_info.grades#th grade<cfelse>				
-				  Last Grade Completed: &nbsp </font><cfif get_student_info.grades is '0'>n/a<cfelse>#get_student_info.grades#th grade</cfif></cfif></td>
-    	<td><font face="" color="Gray">Years of English: &nbsp </font><cfif get_student_info.yearsenglish is '0'>n/a<cfelse>#get_student_info.yearsenglish#</cfif></td>
-		<td><font face="" color="Gray">Convalidation needed: &nbsp </font><cfif get_student_info.convalidation_needed is ''>no<cfelse>#get_student_info.convalidation_needed#</cfif></td>
+			<cfif qGetStudentInfo.grades is '12'>Must be placed in: &nbsp </font>#qGetStudentInfo.grades#th grade<cfelse>				
+				  Last Grade Completed: &nbsp </font><cfif qGetStudentInfo.grades is '0'>n/a<cfelse>#qGetStudentInfo.grades#th grade</cfif></cfif></td>
+    	<td><font face="" color="Gray">Years of English: &nbsp </font><cfif qGetStudentInfo.yearsenglish is '0'>n/a<cfelse>#qGetStudentInfo.yearsenglish#</cfif></td>
+		<td><font face="" color="Gray">Convalidation needed: &nbsp </font><cfif qGetStudentInfo.convalidation_needed is ''>no<cfelse>#qGetStudentInfo.convalidation_needed#</cfif></td>
 		</tr>
 		<tr><td> </td></tr>
 		<tr><td> </td></tr>
@@ -314,16 +333,16 @@ Order by birthdate
 	<span class="application_section_header">Personal Information</span><br>
 		<tr>
 		<td width="110"><font face="" color="Gray">Allergies</font></td>
-		<td width="140"><font face="" color="Gray">Animal: &nbsp </font><cfif get_Student_info.animal_allergies is ''>no<cfelse>#get_Student_info.animal_allergies#</cfif></td>
-		<td width="200"><font face="" color="Gray">Medical Allergies: &nbsp </font><cfif get_Student_info.med_allergies is ''>no<cfelse>#get_Student_info.med_allergies#</cfif></td>
-		<td width="200"><font face="" color="Gray">Other: &nbsp </font><cfif get_Student_info.other_allergies is ''>no<cfelse>#get_Student_info.other_allergies#</cfif></td>
+		<td width="140"><font face="" color="Gray">Animal: &nbsp </font><cfif qGetStudentInfo.animal_allergies is ''>no<cfelse>#qGetStudentInfo.animal_allergies#</cfif></td>
+		<td width="200"><font face="" color="Gray">Medical Allergies: &nbsp </font><cfif qGetStudentInfo.med_allergies is ''>no<cfelse>#qGetStudentInfo.med_allergies#</cfif></td>
+		<td width="200"><font face="" color="Gray">Other: &nbsp </font><cfif qGetStudentInfo.other_allergies is ''>no<cfelse>#qGetStudentInfo.other_allergies#</cfif></td>
 		</tr>
 		<tr><td> </td></tr>
 		<tr><td> </td></tr>
 		<tr>
 		<td colspan="4">
 			<font face="" color="Gray">Interests: &nbsp </font>
-			<cfloop list=#get_student_info.interests# index=i>
+			<cfloop list=#qGetStudentInfo.interests# index=i>
 				<cfquery name="get_interests" datasource="MySQL">
 				Select interest 
 				from smg_interests 
@@ -335,33 +354,33 @@ Order by birthdate
 		</tr>	
 		<tr><td> </td></tr>
 		<tr><td> </td></tr>	
-		<cfif get_student_info.aypenglish is 'no' ><cfelse>
+		<cfif qGetStudentInfo.aypenglish NEQ 'no' >
 			<tr><td colspan="4">The Student Participant of the Pre-AYP English Camp.</td></tr>
 			<tr><td> </td></tr>
 			<tr><td> </td></tr>	
 		</cfif>				
-		<cfif get_student_info.ayporientation is 'no' ><cfelse>
+		<cfif qGetStudentInfo.ayporientation NEQ 'no' >
 			<tr><td colspan="4">The Student Participant of the Pre-AYP Orientation Camp.</td></tr>
 			<tr><td> </td></tr>
 			<tr><td> </td></tr>	
 		</cfif>	
-		<cfif get_student_info.iffschool is 'no' ><cfelse>
+		<cfif qGetStudentInfo.iffschool NEQ 'no' >
 			<tr><td colspan="4">The Student Accepts IFF School.</td></tr>
 			<tr><td> </td></tr>
 			<tr><td> </td></tr>	
 		</cfif>
-		<cfif VAL(get_student_info.privateschool)>
+		<cfif VAL(qGetStudentInfo.privateschool)>
 			<cfquery name="private_schools" datasource="MySQL">
 				SELECT *
 				FROM smg_private_schools
-				WHERE privateschoolid = #get_student_info.privateschool#
+				WHERE privateschoolid = #qGetStudentInfo.privateschool#
 			</cfquery>
 			<tr><td colspan="4">The Student Accepts Private HS #private_schools.privateschoolprice#.</td></tr>
 			<tr><td> </td></tr>
 			<tr><td> </td></tr>	
 		</cfif>				
 		<tr>
-		<td colspan="4"><div align="justify"><font face="" color="Gray">Comments: &nbsp </font>#get_Student_info.interests_other#</div></td>
+		<td colspan="4"><div align="justify"><font face="" color="Gray">Comments: &nbsp </font>#qGetStudentInfo.interests_other#</div></td>
 		</tr>
 	</table>
 </cfoutput>

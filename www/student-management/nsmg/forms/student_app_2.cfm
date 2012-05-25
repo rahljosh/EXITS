@@ -90,8 +90,8 @@ order by countryname
 				<td><cfif fatherenglish is 'yes'><cfinput type="radio" name="fatherenglish" size="10" value="yes" checked>Yes <cfinput type="radio" name="fatherenglish" size="10" value="no">No</cfif>
 					<cfif fatherenglish is 'no'><cfinput type="radio" name="fatherenglish" size="10" value="yes">Yes <cfinput type="radio" name="fatherenglish" size="10" value="no" checked>No </cfif>
 					<cfif fatherenglish is ''><cfinput type="radio" name="fatherenglish" size="10" value="yes">Yes <cfinput type="radio" name="fatherenglish" size="10" value="no">No </cfif></td></tr>
-			<tr><td class="label">Year of Birth:</td>
-				<td><cfinput type="text" name="fatherdob" size="4" value="#fatherbirth#" maxlength="4"> yyyy</td></tr>
+			<tr><td class="label">Date of Birth:</td>
+				<td><cfinput type="text" name="fatherDOB" id="fatherDOB" value="#DateFormat(fatherDOB, 'mm/dd/yyyy')#" size=10 maxlength="10"> mm-dd-yyyy</td></tr>
 			<tr><td class="label">Occupation:</td>
 				<td><cfinput type="text" size=20 name="fatherocc" value="#fatherworkposition#"></td></tr>
 			<tr><td class="label">Employed by:</td>
@@ -129,8 +129,8 @@ order by countryname
 					<cfif motherenglish is 'no'><cfinput type="radio" name="motherenglish" size="10" value="yes">Yes <cfinput type="radio" name="motherenglish" size="10" value="no" checked>No</cfif>
 					<cfif motherenglish is ''><cfinput type="radio" name="motherenglish" size="10" value="yes">Yes <cfinput type="radio" name="motherenglish" size="10" value="no">No</cfif></td></tr>
 			<tr bgcolor="e2efc7">
-				<td class="label">Year of Birth:</td>
-				<td><cfinput type="text" name="Motherdob" size="4" value="#motherbirth#" maxlength="4"> yyyy</td></tr>
+				<td class="label">Date of Birth:</td>
+				<td><cfinput type="text" name="motherDOB" id="motherDOB" value="#DateFormat(motherDOB, 'mm/dd/yyyy')#" size=10 maxlength="10"> mm-dd-yyyy</td></tr>
 			<tr bgcolor="e2efc7">
 				<td class="label">Occupation:</td>
 				<td><cfinput type="text" size=20 name="motherocc" value="#motherworkposition#"></td></tr>
