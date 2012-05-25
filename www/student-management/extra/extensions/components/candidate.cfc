@@ -1193,6 +1193,8 @@
                     ec.firstName,
                     ec.middleName,
                     ec.lastName,
+                    ec.email,
+                    ec.ds2019,
 					CASE 
                     	WHEN ec.sex = 'f' THEN 'female' 
                         WHEN ec.sex = 'm' THEN 'male' 
@@ -1267,7 +1269,7 @@
 	<cffunction name="getMonthlyEvaluationList" access="remote" returnFormat="json" output="false" hint="Returns verification report list in Json format">
     	<cfargument name="intRep" default="0" hint="International Representative is not required">
         <cfargument name="programID" default="0" hint="programID is not required">
-        <cfargument name="evaluationID" default="" hint="1 = evaluation1 | 2 = evaluation2">
+        <cfargument name="evaluationID" default="" hint="1-4: evaluation1 - evaluation4 respectively, 5-8: evaluation1 - evaluation4 without compliance respectively.">
         
         <cfquery 
 			name="qGetMonthlyEvaluationList" 
@@ -1280,8 +1282,12 @@
                     ec.lastName,
                     ec.email,
                     ec.ds2019,
+                    DATE_FORMAT(ec.watDateCheckedIn, '%m/%e/%Y') AS checkInDate,
+                    ec.watDateCheckedIn,
                     IFNULL(DATE_FORMAT(ec.watDateEvaluation1, '%m/%e/%Y'), '') AS watDateEvaluation1,
                     IFNULL(DATE_FORMAT(ec.watDateEvaluation2, '%m/%e/%Y'), '') AS watDateEvaluation2,
+                    IFNULL(DATE_FORMAT(ec.watDateEvaluation3, '%m/%e/%Y'), '') AS watDateEvaluation3,
+                    IFNULL(DATE_FORMAT(ec.watDateEvaluation4, '%m/%e/%Y'), '') AS watDateEvaluation4,
                     DATE_FORMAT(ec.dob, '%m/%e/%Y') AS dob,
                     DATE_FORMAT(ec.startDate, '%m/%e/%Y') AS startDate,
                     DATE_FORMAT(ec.endDate, '%m/%e/%Y') AS endDate,
@@ -1300,11 +1306,13 @@
                     ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
                 AND
                 	ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+               	AND
+                	ec.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                 AND    
                     ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
                 AND
 		        	ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
-                
+              
 				<cfif VAL(ARGUMENTS.intRep)>
                     AND
                         ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.intRep#">
@@ -1327,13 +1335,57 @@
                         	ec.watDateEvaluation2 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes"> 
                     </cfcase>
                     
+                    <cfcase value="3">
+                    	AND
+                        	ec.watDateEvaluation3 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes"> 
+                    </cfcase>
+                    
+                    <cfcase value="4">
+                    	AND
+                        	ec.watDateEvaluation4 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes"> 
+                    </cfcase>
+                    
+                    <cfcase value="5">
+                    	AND
+                        	ec.watDateEvaluation1 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                      	AND
+                        	ec.watDateCheckedIn <=  <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-40,NOW())#"> 
+                    </cfcase>
+                    
+                    <cfcase value="6">
+                    	AND
+                        	ec.watDateEvaluation2 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                      	AND
+                        	ec.watDateCheckedIn <=  <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-70,NOW())#"> 
+                    </cfcase>
+                    
+                    <cfcase value="7">
+                    	AND
+                        	ec.watDateEvaluation3 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                      	AND
+                        	ec.watDateCheckedIn <=  <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-100,NOW())#">
+                    </cfcase>
+                    
+                    <cfcase value="8">
+                    	AND
+                        	ec.watDateEvaluation4 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                      	AND
+                        	ec.watDateCheckedIn <=  <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-130,NOW())#"> 
+                    </cfcase>
+                    
                     <cfdefaultcase>
                         AND
                             (
                                 ec.watDateEvaluation1 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes"> 
                             OR
                                 ec.watDateEvaluation2 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes"> 
-                            )                
+                            )  
+                            OR
+                                ec.watDateEvaluation3 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes"> 
+                            ) 
+                            OR
+                                ec.watDateEvaluation4 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes"> 
+                            )               
                     </cfdefaultcase>
                 
                 </cfswitch>
@@ -1349,7 +1401,7 @@
     
 	<cffunction name="confirmEvaluationReceived" access="remote" returntype="void" hint="Updates evaluation 1 record.">
         <cfargument name="candidateID" required="yes" hint="candidateID is required">
-        <cfargument name="evaluationID" required="yes" hint="evaluationID 1 = evaluation1 | 2 = evaluation2">
+        <cfargument name="evaluationID" required="yes" hint="evaluationID 1 = evaluation1 | 2 = evaluation2 | 3 = evaluation3 | 4 = evaluation4">
 
 		<cfif ARGUMENTS.evaluationID EQ 1>
         
@@ -1371,6 +1423,30 @@
                         extra_candidates
                     SET
                         watDateEvaluation2 = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
+                    WHERE
+                        candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
+            </cfquery>
+       	
+        <cfelseif ARGUMENTS.evaluationID EQ 3>
+        
+        	<cfquery 
+                datasource="#APPLICATION.DSN.Source#">
+                    UPDATE
+                        extra_candidates
+                    SET
+                        watDateEvaluation3 = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
+                    WHERE
+                        candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
+            </cfquery>
+        
+        <cfelseif ARGUMENTS.evaluationID EQ 4>
+        
+        	<cfquery 
+                datasource="#APPLICATION.DSN.Source#">
+                    UPDATE
+                        extra_candidates
+                    SET
+                        watDateEvaluation4 = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
                     WHERE
                         candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
             </cfquery>
