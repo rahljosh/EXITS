@@ -1195,6 +1195,7 @@
                     ec.lastName,
                     ec.email,
                     ec.ds2019,
+                    ec.us_phone,
 					CASE 
                     	WHEN ec.sex = 'f' THEN 'female' 
                         WHEN ec.sex = 'm' THEN 'male' 
@@ -1245,6 +1246,7 @@
     
 	<cffunction name="confirmCheckInReceived" access="remote" returntype="void" hint="Updates a candidate record.">
         <cfargument name="candidateID" required="yes" hint="candidateID is required">
+        <cfargument name="initPhone" default="" hint="initPhone is not required">
 
         <cfquery 
 			datasource="#APPLICATION.DSN.Source#">
@@ -1252,7 +1254,10 @@
 					extra_candidates
 				SET
                     watDateCheckedIn = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
-                    verification_sevis = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
+                    verification_sevis = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
+                    <cfif LEN(initPhone)>
+                    	us_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.initPhone#">
+                   	</cfif>
                 WHERE
                     candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
 		</cfquery>
