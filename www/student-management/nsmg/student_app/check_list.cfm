@@ -245,7 +245,7 @@
                 <cfset count1 = 1>
             </cfif>
             
-    <cfelseif listfind('fathersname,fatheraddress,fathercountry,fatherbirth,fatherenglish,fathercompany,fatherworkphone,fatherworkposition', '#field_name#')>
+    <cfelseif listfind('fathersname,fatheraddress,fathercountry,fatherDOB,fatherenglish,fathercompany,fatherworkphone,fatherworkposition', '#field_name#')>
     
     	<cfif smg_students.fathersname is not ''>
 			<cfset get_field = page1.table_located &"."& page1.field_name>
@@ -264,7 +264,7 @@
                 <cfset count1 = 1>
             </cfif>
          </cfif>
-    <cfelseif listfind('mothersname,motheraddress,mothercountry,motherbirth,motherenglish,mothercompany,motherworkphone,motherworkposition', '#field_name#')>
+    <cfelseif listfind('mothersname,motheraddress,mothercountry,mortherDOB,motherenglish,mothercompany,motherworkphone,motherworkposition', '#field_name#')>
     	<cfif smg_students.mothersname is not ''>
     
 			<!----check on mother infomation--->
