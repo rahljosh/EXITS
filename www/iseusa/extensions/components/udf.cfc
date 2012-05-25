@@ -114,7 +114,8 @@
 			strUpperCaseAlpha = UCase( strLowerCaseAlpha );
 			
 			// Set up available numbers
-			strNumbers = "0123456789";
+			//strNumbers = "0123456789";
+			strNumbers = "23456789";
 	
 			// Set up additional valid password chars
 			strOtherChars = "~!@##$%^&*";
