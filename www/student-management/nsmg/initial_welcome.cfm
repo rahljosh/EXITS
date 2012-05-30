@@ -555,7 +555,7 @@
                     <td></td>
                 </tr>
                 <tr>
-                   	<td class="get_attention"><span class="get_attention"><b>::</b></span> Marketing Material</td>
+                   	<td class="get_attention"><span class="get_attention"><b>::</b></span> Marketing Material </td>
                     <td class="get_attention"><span class="get_attention"><b>::</b></span> New Users <font size=-2>since #new_date#</font></u></td>
                 </tr>
                 <tr valign="top">
@@ -563,18 +563,21 @@
                   <!---_Available for All companies---->
                   	<cfif ListFind("1,2,3,4,5,10,12,14", CLIENT.companyid) >
                     Here are some new brochures to help in your marketing.<Br />
-                   <a href="marketing/difference.cfm" target="_blank">Make A Difference</a><img src="pics/new_03.png" /><br />
+                    
                     <a href="marketing/openHeart.cfm" target="_blank">Open Heart & Soul</a><br />
                  	<A href="marketing/aroundWorld.cfm" target="_blank"> School Around the World</A><Br />
-                    <cfif ListFind("1,2,3,4,5,10,12", CLIENT.companyid) >
+                    <a href="marketing/bookmark.cfm" target="_blank">Enrich Your Life Bookmarks</a><br />
+                    <!----ESI ONLY Docs---->
+                    <cfif ListFind("14", CLIENT.companyid) >
 					<a href="marketing/bookmark.cfm" target="_blank">Enrich Your Life Bookmarks</a><br />
 				 	</cfif>
-                    <!---Not Showing for ESI---->
-                    <cfif ListFind("1,2,3,4,5,10,12", CLIENT.companyid) >
-                     <a href="marketing/HostFam2012/HostFamiles.cfm" target="_blank">Host Families</a><img src="pics/new_03.png" /><br />
-                     </cfif>
-                    <cfif ListFind("10", CLIENT.companyid) >
-					
+                    <!----NOT ESI---->
+                    <cfif ListFind("1,2,3,4,5,10,12,14", CLIENT.companyid) >
+                    <a href="marketing/HostFam2012/HostFamiles.cfm" target="_blank">Host Families</a><img src="pics/new_03.png" /><br />
+                    </cfif>
+					<!---CASE ONLY---->
+					<cfif ListFind("10", CLIENT.companyid) >
+					<a href="marketing/difference.cfm" target="_blank">Make A Difference</a><br />
 				 	</cfif>
                     <br /><br />
                      <font size=-1> <em>Click on the Save/Print option to generate a PDF that is suitable for printing.</em></font>
@@ -643,11 +646,13 @@
                      </td>
                 </tr>
                 <tr>
-                	<td></td>
-                     <td class="get_attention" width="50%"><span class="get_attention"><b>::</b></span> New Students <font size=-2>since #new_date#</font></u></td>
+                <td class="get_attention" width="50%">
+                    	<cfif client.usertype lte 4> <span class="get_attention"><b>::</b></span> New Students <font size=-2>since #new_date#</font></u></cfif></td>
+                	<td  class="get_attention"><b>::</b> State & Region Availability</td>
+                    
                 </tr>
                 <tr>
-                    <td></td>
+                   
                      <td>
                         <cfif new_students.recordcount eq 0>
                             There are no new students.
@@ -669,9 +674,25 @@
                             </cfif>
                         </cfif>
                     </td>
+                      <td valign="top" align="Center">
+                   <Cfif client.usertype lte 4>
+                    <table>
+                	<Tr>
+                    	<Td>
+           <a href="javascript:openPopUp('tools/stateStatus.cfm', 875, 675);"><img src="pics/buttons/state.png"border=0/></a>
+            			</Td>
+                     	<td>
+            <a href="javascript:openPopUp('tools/regionStatus.cfm', 750, 775);"><img src="pics/buttons/region.png"border=0/></a>
+                        </td>
+                    </Tr>
+                </table>
+                 
+				</cfif>
+                    
+                    </td>
                 </tr>
                 <tr>
-                	<Td></Td>
+                	
                     <form name="form" id="form">
                     <td><font size="1">
 						Display students & users newer than
@@ -685,6 +706,7 @@
                         </select>
                     </font></td>
                     </form>
+                    <Td></Td>
                 </tr>
                 </cfif>
             </table>
@@ -728,7 +750,7 @@
 	<table cellpadding="2" cellspacing="4" width=100% bgcolor="##FFFFFF" class="section">
 		<tr>
 			<td class="get_attention" width="50%"><span class="get_attention"><b>::</b></span> News, Alerts, and Updates from #companyname.businessname#</u></td>
-			<td class="get_attention"><span class="get_attention"><b>::</b></span> Your Current Help Desk Tickets </Td>
+			<td class="get_attention"><span class="get_attention"><b>::</b></span> State & Region Access</Td>
 		</tr>
 		<tr>
 			<td valign="top">
@@ -764,7 +786,7 @@
                     </cfloop>
                 </cfif>
 				
-                <!--- Flight Information --->
+  <!--- Flight Information --->
                 <p align="center">
                 	<a href="index.cfm?curdoc=intRep/index&action=flightInformationList">
                         <img src="pics/flightSchedule.jpg" border="0" align="middle" />
@@ -772,9 +794,28 @@
                 </p>
                 
 			</td>
-			<td valign="top">
+			<td valign="top" rowspan=2 align="center">
+            	<table>
+                	<Tr>
+                    	<Td>
+            <a href="javascript:openPopUp('tools/stateStatus.cfm', 875, 675);"><img src="pics/buttons/state.png"border=0/></a>
+            			</Td>
+                     	<td>
+            <a href="javascript:openPopUp('tools/regionStatus.cfm', 750, 675);"><img src="pics/buttons/region.png"border=0/></a>
+                        </td>
+                    </Tr>
+                </table>
+           
             
-            	<!--- Help Desk Items --->
+                
+			</td>
+		</tr>
+        <Tr>
+        	<td class="get_attention"><span class="get_attention"><b>::</b></span> Your Current Help Desk Tickets </Td>
+            <td></td>
+        </Tr>
+        <tr>
+           <td valign="top"> <!--- Help Desk Items --->
 				<table width="100%" cellpadding="4" cellspacing=0 border="0">
 					<tr>
                     	<td width="20%">Submitted</td>
@@ -795,8 +836,11 @@
                     </cfif>
 				</table>
                 
-			</td>
-		</tr>
+            
+            </td>
+			<td></Td>
+        </Tr>
+        <tr>
 	</table>
 
 <!--- Intl Branch --->
