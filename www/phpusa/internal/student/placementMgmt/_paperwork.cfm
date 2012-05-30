@@ -187,6 +187,18 @@
                         <td><input type="text" name="datePISEmailed" id="datePISEmailed" class="datePicker" value="#DateFormat(qGetStudentInfo.datePISEmailed, 'mm/dd/yyyy')#" disabled="disabled"></td>
                     </tr>
 
+					<!--- Original School Acceptance --->
+                    <tr>
+                        <td class="paperworkLeftColumn">
+                            <input type="checkbox" name="originalSchoolAcceptanceCheckBox" id="originalSchoolAcceptanceCheckBox" class="editPage displayNone" onclick="setTodayDate(this.id, 'original_school_acceptance');" <cfif isDate(FORM.original_school_acceptance)>checked</cfif> >
+						</td>
+                        <td><label for="schoolAcceptanceCheckBox">Original School Acceptance</label></td>
+                        <td>
+                            <span class="readOnly displayNone">#DateFormat(FORM.original_school_acceptance, 'mm/dd/yyyy')#</span>
+                            <input type="text" name="original_school_acceptance" id="original_school_acceptance" class="datePicker editPage displayNone" value="#DateFormat(FORM.original_school_acceptance, 'mm/dd/yyyy')#">
+                        </td>
+                    </tr>
+                    
                     <!--- School Acceptance --->
                     <tr>
                         <td class="paperworkLeftColumn">
@@ -196,18 +208,6 @@
                         <td>
                             <span class="readOnly displayNone">#DateFormat(FORM.doc_letter_rec_date, 'mm/dd/yyyy')#</span>
                             <input type="text" name="school_acceptance" id="school_acceptance" class="datePicker editPage displayNone" value="#DateFormat(FORM.school_acceptance, 'mm/dd/yyyy')#">
-                        </td>
-                    </tr>
-                    
-                    <!--- Original School Acceptance --->
-                    <tr>
-                        <td class="paperworkLeftColumn">
-                            <input type="checkbox" name="originalSchoolAcceptanceCheckBox" id="originalSchoolAcceptanceCheckBox" class="editPage displayNone" onclick="setTodayDate(this.id, 'original_school_acceptance');" <cfif isDate(FORM.original_school_acceptance)>checked</cfif> >
-						</td>
-                        <td><label for="schoolAcceptanceCheckBox">Original School Acceptance</label></td>
-                        <td>
-                            <span class="readOnly displayNone">#DateFormat(FORM.original_school_acceptance, 'mm/dd/yyyy')#</span>
-                            <input type="text" name="original_school_acceptance" id="original_school_acceptance" class="datePicker editPage displayNone" value="#DateFormat(FORM.original_school_acceptance, 'mm/dd/yyyy')#">
                         </td>
                     </tr>
                     
