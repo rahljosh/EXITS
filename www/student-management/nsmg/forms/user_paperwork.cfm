@@ -94,6 +94,7 @@ function CheckDates(ckname, frname) {
 			// Get User CBC
 		qGetCBCUser = APPCFC.CBC.getCBCUserByID(userID=url.userid,cbcType='user');
 		</cfscript>
+        
  <cfquery name="currentSeasonStatus" dbtype="query">
  select *
  from get_paperwork 
