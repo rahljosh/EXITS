@@ -12,6 +12,8 @@
 	<cfinclude template="../error_message.cfm">
 </cfif>
 
+<cfparam name="FORM.showOriginalSchoolAcceptance" default="">
+
 <!--- Get Program --->
 <cfquery name="qGetPrograms" datasource="MYSQL">
 	SELECT	
@@ -40,7 +42,8 @@
 		sc.schoolname,
 		php.datecreated, 
         php.dateplaced, 
-        php.school_acceptance, 
+        php.school_acceptance,
+        php.original_school_acceptance,
         php.hf_placement, 
         php.i20received,
 		php.hf_application, 
@@ -68,6 +71,18 @@
     	php.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
     AND
     	php.programid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> )
+        
+   	<!--- Get only chinese students --->
+   	<cfif FORM.showOriginalSchoolAcceptance NEQ "">
+    	AND (
+        	s.countryBirth = <cfqueryparam cfsqltype="cf_sql_integer" value="46">
+            OR
+            s.countryCitizen = <cfqueryparam cfsqltype="cf_sql_integer" value="46">
+            OR
+            s.countryResident = <cfqueryparam cfsqltype="cf_sql_integer" value="46">
+            )
+    </cfif>
+    
     ORDER BY 
     	#FORM.orderby# 
 </cfquery>
@@ -98,6 +113,9 @@
 		<td width="7%"><b>Date Entered</b></td>
 		<td width="16%"><b>School</b></td>
 		<td width="7%"><b>Ret/Trans/Ext</b></td>
+        <cfif FORM.showOriginalSchoolAcceptance NEQ "">
+        	<td width="7%"><b>Orig. School Accep.</b></td>
+		</cfif>
 		<td width="7%"><b>School Accep.</b></td>
 		<td width="6%"><b>I-20</b></td>
 		<td width="7%"><b>HF Place</b></td>
@@ -112,6 +130,9 @@
 			<td><cfif qGetResults.datecreated NEQ ''>#DateFormat(qGetResults.datecreated, 'mm/dd/yyyy')#</cfif></td>
 			<td>#qGetResults.schoolname#</td>
 			<td><i><font size="-2">#qGetResults.PHPReturnOption#</font></i></td>
+            <cfif FORM.showOriginalSchoolAcceptance NEQ "">
+            	<td><i><font size="-2"><cfif qGetResults.original_school_acceptance NEQ ''>#DateFormat(qGetResults.original_school_acceptance, 'mm/dd/yy')#<cfelse>n/a</cfif></font></i></td>
+           	</cfif>
 			<td><i><font size="-2"><cfif qGetResults.school_acceptance NEQ ''>#DateFormat(qGetResults.school_acceptance, 'mm/dd/yy')#<cfelse>n/a</cfif></font></i></td>
 			<td><i><font size="-2"><cfif qGetResults.i20received NEQ ''>#DateFormat(qGetResults.i20received, 'mm/dd/yy')#<cfelse>n/a</cfif></font></i></td>
 			<td><i><font size="-2"><cfif qGetResults.hf_placement NEQ ''>#DateFormat(qGetResults.hf_placement, 'mm/dd/yy')#<cfelse>n/a</cfif></font></i></td>

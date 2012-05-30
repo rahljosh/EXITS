@@ -182,7 +182,8 @@
                     php.flightinfo_sent, 
                     php.flightinfo_note,
                     php.welcome_letter_printed,
-                    php.school_acceptance, 
+                    php.school_acceptance,
+                    php.original_school_acceptance, 
                     php.sevis_fee_paid, 
                     php.i20no, 
                     php.i20received, 
@@ -1635,6 +1636,7 @@
         <cfargument name="historyID" default="0" hint="historyID is not required">
         <!--- Placement Paperwork --->
         <cfargument name="school_acceptance" default="" hint="school_acceptance is not required">
+        <cfargument name="original_school_acceptance" default="" hint="original_school_acceptance is not required">
         <cfargument name="sevis_fee_paid" default="" hint="sevis_fee_paid is not required">
         <cfargument name="i20received" default="" hint="i20received is not required">
         <cfargument name="hf_placement" default="" hint="hf_placement is not required">
@@ -1654,6 +1656,7 @@
                 SET 
                     <!--- Placement Paperwork --->
                     school_acceptance = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.school_acceptance#" null="#NOT IsDate(ARGUMENTS.school_acceptance)#">,
+                    original_school_acceptance = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.original_school_acceptance#" null="#NOT IsDate(ARGUMENTS.original_school_acceptance)#">,
                     sevis_fee_paid = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.sevis_fee_paid#" null="#NOT IsDate(ARGUMENTS.sevis_fee_paid)#">,
                     i20received = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.i20received#" null="#NOT IsDate(ARGUMENTS.i20received)#">,
                     hf_placement = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.hf_placement#" null="#NOT IsDate(ARGUMENTS.hf_placement)#">,
