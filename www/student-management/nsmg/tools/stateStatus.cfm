@@ -29,6 +29,61 @@
 </head>
 
 <body>
+
+<cfparam name="form.selectedProgram" default="">
+
+<cfif isDefined('url.programid')>
+	<cfset form.selectedProgram = #url.programid#>
+<cfelse>
+	<cfset url.programid = #form.selectedProgram#>
+</cfif>
+<cfscript>
+	// Get Programs
+	qGetActivePrograms= APPLICATION.CFC.program.getPrograms(
+		isActive=1,
+		companyid=1
+	);
+</cfscript>
+<cfif NOT VAL(form.selectedProgram)>
+
+
+
+<h1>Available State Guarantees</h1>
+<em>State guarantees differ between programs.  The status of any given state can change with out notice and availability of a state gurantee is not ensured until your application is succesfully submitted</em>.  
+<Br /><br />
+<div align="center">
+Please select a program to view availability.
+<table>
+	<Tr>
+    	<Td>
+<Cfoutput>
+<form method="post" action="stateStatus.cfm">
+<select name="selectedProgram" >
+	<cfloop query="qGetActivePrograms">
+    	<option value="#programid#">#programname#</option>
+    </cfloop>
+</option>
+</select>		
+		</td>
+        <Td>
+    	<input type="image" src="../pics/buttons/Next.png" />
+        </Td>
+      </tr>
+   </table>
+  </form>
+
+</cfoutput>
+</div>
+<cfabort>
+<Cfelse>
+<cfscript>
+	// Get Program
+	qCurrentProgram= APPLICATION.CFC.program.getPrograms(
+		programID=#form.selectedProgram#
+	);
+</cfscript>
+</cfif>
+
 <cfset closedList = ''>
 <cfif isDefined('url.stateID')>
 
@@ -55,7 +110,7 @@ where (s.id < 52 AND s.id !=11 and s.id !=2)
 select sc.fk_stateID, s.statename
 from regionStateClosure sc 
 LEFT join smg_states s on s.id = sc.fk_stateID
-where  sc.fk_programid = #url.programid#
+where  sc.fk_programid = #qCurrentProgram.programid#
 <cfif client.companyid lte 5 OR client.companyid eq 12>
 and fk_companyid = 1
 <cfelse>
@@ -67,14 +122,16 @@ and fk_companyid = #client.companyid#
 </Cfloop>
 
 <cfoutput>
+
 <div align="center">
-	<h2>Program: #url.program# <BR /> Season: #url.label#</h2>
+	<h2>Program: #qCurrentProgram.programname# <BR /> Season: #qCurrentProgram.seasonname#</h2>
+    <a href="stateStatus.cfm">Choose a different program</a>
 </div>
 	<table width=670 border=0 cellpadding=4 cellspacing="0" align="center" class="statenavbar">
 
         <tr>
         <cfloop query="states">
-        	<td <cfif ListFind(closedList, id)>bgcolor="##f0d0d1"</cfif>><A href="stateStatus.cfm?stateid=#id#&isActive=<cfif ListFind(closedList, id)>1<cfelse>0</cfif>&programid=#url.programid#&label=#url.label#&program=#url.program#">#statename#</A></td>
+        	<td <cfif ListFind(closedList, id)>bgcolor="##f0d0d1"</cfif>><Cfif client.usertype lte 4><A href="stateStatus.cfm?stateid=#id#&isActive=<cfif ListFind(closedList, id)>1<cfelse>0</cfif>&programid=#url.programid#&label=#qCurrentProgram.seasonname#&program=#qCurrentProgram.programname#"></cfif>#statename#</A></td>
         	<cfif states.currentrow mod 4>
             <cfelse>
             </tr>

@@ -6,6 +6,18 @@
 </head>
 
 <body>
+<cfparam name="form.selectedProgram" default="">
+<cfscript>
+	// Get Programs
+	qGetActivePrograms= APPLICATION.CFC.program.getPrograms(
+		isActive=1,
+		companyid=1
+	);
+</cfscript>
+<cfif isDefined('url.programid')>
+	<cfset form.selectedProgram = #url.programid#>
+</cfif>
+
 <cfif isDefined('url.regionid')>
 
 	<cfif url.isActive eq 1>
@@ -21,11 +33,51 @@
 		</cfquery>
     </cfif>
 </cfif>
+<!----If no program is selected, user needs to specify which program---->
+	<cfif NOT VAL(form.selectedProgram)>
+    
+    
+    
+    <h1>Available Region Guarantees</h1>
+    <em>Region guarantees differ between programs.  The status of any given region can change with out notice and availability of a regional gurantee is not ensured until your application is succesfully submitted</em>.  
+    <Br /><br />
+    <div align="center">
+    Please select a program to view availability.
+    <table>
+        <Tr>
+            <Td>
+    <Cfoutput>
+    <form method="post" action="regionStatus.cfm">
+    <select name="selectedProgram" >
+        <cfloop query="qGetActivePrograms">
+            <option value="#programid#">#programname#</option>
+        </cfloop>
+    </option>
+    </select>		
+            </td>
+            <Td>
+            <input type="image" src="../pics/buttons/Next.png" />
+            </Td>
+          </tr>
+       </table>
+      </form>
+    
+    </cfoutput>
+    </div>
+    <cfabort>
+    <Cfelse>
 
+		<cfscript>
+            // Get Program
+            qCurrentProgram= APPLICATION.CFC.program.getPrograms(
+                programID=#form.selectedProgram#
+            );
+        </cfscript>
+</cfif>
 <cfquery name="inActiveRegions" datasource="#application.dsn#">
 select *
 from regionStateClosure
-where fk_programid = #url.programid#
+where fk_programid = #qCurrentProgram.programid#
 <cfif client.companyid lte 5 OR client.companyid eq 12>
 and fk_companyid = 1
 <cfelse>
@@ -74,25 +126,31 @@ and fk_companyid = #client.companyid#
 </cfquery>
 <Cfoutput>
       <table width=670 border=0 cellpadding=4 cellspacing=4 align="center">
-                        <tr><td colspan="3" align="Center"><h2>Program: #url.program# <BR /> Season: #url.label#</h2></td></tr>
+                        <tr><td colspan="3" align="Center"><h2>Program: #qCurrentProgram.programname# <BR /> Season: #qCurrentProgram.seasonname#</h2>
+                        <br /><a href="regionStatus.cfm">Choose a different program</a>
+                        </td></tr>
                         <tr>
                             <td valign="top"><Cfif westActive.recordcount eq 0><img src="../student_app/pics/west.jpg"><cfelse><img src="../student_app/pics/WestFade.jpg"></Cfif></td>
                             <td valign="top"><Cfif centralActive.recordcount eq 0><img src="../student_app/pics/central.jpg"><cfelse><img src="../student_app/pics/centralFade.jpg"></Cfif></td>
                         </tr>
                         <tr>
                         	<td align="center">
+                            <cfif client.usertype lte 4>
 								<Cfif westActive.recordcount gt 0>
-                                	<a href="regionStatus.cfm?regionid=6&isActive=0&programid=#url.programid#&label=#url.label#&program=#url.program#"><img src="../pics/Available.png" /></a>
+                                	<a href="regionStatus.cfm?regionid=6&isActive=0&programid=#qCurrentProgram.programid#&label=#qCurrentProgram.seasonname#&program=#qCurrentProgram.programname#"><img src="../pics/Available.png" /></a>
                                 <cfelse>
-                                	<a href="regionStatus.cfm?regionid=6&isActive=1&programid=#url.programid#&label=#url.label#&program=#url.program#"><img src="../pics/unAvailable.png" />
+                                	<a href="regionStatus.cfm?regionid=6&isActive=1&programid=#qCurrentProgram.programid#&label=#qCurrentProgram.seasonname#&program=#qCurrentProgram.programname#"><img src="../pics/unAvailable.png" />
                                 </Cfif>
+                             </cfif>
                             </td>
                             <td align="center">
+                            <cfif client.usertype lte 4>
 								<Cfif centralActive.recordcount gt 0>
-                                	<a href="regionStatus.cfm?regionid=7&isActive=0&programid=#url.programid#&label=#url.label#&program=#url.program#"><img src="../pics/Available.png" />
+                                	<a href="regionStatus.cfm?regionid=7&isActive=0&programid=#qCurrentProgram.programid#&label=#qCurrentProgram.seasonname#&program=#qCurrentProgram.programname#"><img src="../pics/Available.png" />
                                 <cfelse>
-                                	<a href="regionStatus.cfm?regionid=7&isActive=1&programid=#url.programid#&label=#url.label#&program=#url.program#"><img src="../pics/unAvailable.png" />
+                                	<a href="regionStatus.cfm?regionid=7&isActive=1&programid=#qCurrentProgram.programid#&label=#qCurrentProgram.seasonname#&program=#qCurrentProgram.programname#"><img src="../pics/unAvailable.png" />
                                 </Cfif>
+                             </cfif>
                             </td>
                         </tr>
                         <tr>
@@ -105,18 +163,22 @@ and fk_companyid = #client.companyid#
                         </tr>
                         <tr>
                         	<td align="center">
+                            <cfif client.usertype lte 4>
 								<Cfif southActive.recordcount gt 0>
-                                	<a href="regionStatus.cfm?regionid=8&isActive=0&programid=#url.programid#&label=#url.label#&program=#url.program#"><img src="../pics/Available.png" />
+                                	<a href="regionStatus.cfm?regionid=8&isActive=0&programid=#qCurrentProgram.programid#&label=#qCurrentProgram.seasonname#&program=#qCurrentProgram.programname#"><img src="../pics/Available.png" />
                                 <cfelse>
-                                	<a href="regionStatus.cfm?regionid=8&isActive=1&programid=#url.programid#&label=#url.label#&program=#url.program#"><img src="../pics/unAvailable.png" />
+                                	<a href="regionStatus.cfm?regionid=8&isActive=1&programid=#qCurrentProgram.programid#&label=#qCurrentProgram.seasonname#&program=#qCurrentProgram.programname#"><img src="../pics/unAvailable.png" />
                                 </Cfif>
+                            </cfif>
                             </td>
                             <td align="center">
+                            <cfif client.usertype lte 4>
 								<Cfif eastActive.recordcount gt 0>
-                                	<a href="regionStatus.cfm?regionid=9&isActive=0&programid=#url.programid#&label=#url.label#&program=#url.program#"><img src="../pics/Available.png" />
+                                	<a href="regionStatus.cfm?regionid=9&isActive=0&programid=#qCurrentProgram.programid#&label=#qCurrentProgram.seasonname#&program=#qCurrentProgram.programname#"><img src="../pics/Available.png" />
                                 <cfelse>
-                                	<a href="regionStatus.cfm?regionid=9&isActive=1&programid=#url.programid#&label=#url.label#&program=#url.program#"><img src="../pics/unAvailable.png" />
+                                	<a href="regionStatus.cfm?regionid=9&isActive=1&programid=#qCurrentProgram.programid#&label=#qCurrentProgram.seasonname#&program=#qCurrentProgram.programname#"><img src="../pics/unAvailable.png" />
                                 </Cfif>
+                            </cfif>
                             </td>
                         </tr>
                     </table>
