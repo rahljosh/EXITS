@@ -19,6 +19,7 @@
     
     <!--- Placement Paperwork --->
     <cfparam name="FORM.school_acceptance" default="">
+    <cfparam name="FORM.original_school_acceptance" default="">
     <cfparam name="FORM.sevis_fee_paid" default="">
     <cfparam name="FORM.i20received" default="">
     <cfparam name="FORM.hf_placement" default="">
@@ -41,6 +42,7 @@
 				historyID = qGetPlacementHistory.historyID,
 				// Placement Paperwork
 				school_acceptance = FORM.school_acceptance,
+				original_school_acceptance = FORM.original_school_acceptance,
 				sevis_fee_paid = FORM.sevis_fee_paid,
 				i20received = FORM.i20received,
 				hf_placement = FORM.hf_placement,
@@ -66,6 +68,7 @@
 			FORM.studentID = qGetStudentInfo.studentID;
 			// Placement Paperwork
 			FORM.school_acceptance = qGetStudentInfo.school_acceptance;
+			FORM.original_school_acceptance = qGetStudentInfo.original_school_acceptance;
 			FORM.sevis_fee_paid = qGetStudentInfo.sevis_fee_paid;
 			FORM.i20received = qGetStudentInfo.i20received;
 			FORM.hf_placement = qGetStudentInfo.hf_placement;
@@ -193,6 +196,18 @@
                         <td>
                             <span class="readOnly displayNone">#DateFormat(FORM.doc_letter_rec_date, 'mm/dd/yyyy')#</span>
                             <input type="text" name="school_acceptance" id="school_acceptance" class="datePicker editPage displayNone" value="#DateFormat(FORM.school_acceptance, 'mm/dd/yyyy')#">
+                        </td>
+                    </tr>
+                    
+                    <!--- Original School Acceptance --->
+                    <tr>
+                        <td class="paperworkLeftColumn">
+                            <input type="checkbox" name="originalSchoolAcceptanceCheckBox" id="originalSchoolAcceptanceCheckBox" class="editPage displayNone" onclick="setTodayDate(this.id, 'original_school_acceptance');" <cfif isDate(FORM.original_school_acceptance)>checked</cfif> >
+						</td>
+                        <td><label for="schoolAcceptanceCheckBox">Original School Acceptance</label></td>
+                        <td>
+                            <span class="readOnly displayNone">#DateFormat(FORM.original_school_acceptance, 'mm/dd/yyyy')#</span>
+                            <input type="text" name="original_school_acceptance" id="original_school_acceptance" class="datePicker editPage displayNone" value="#DateFormat(FORM.original_school_acceptance, 'mm/dd/yyyy')#">
                         </td>
                     </tr>
                     
