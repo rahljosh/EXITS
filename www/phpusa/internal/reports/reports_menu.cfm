@@ -45,12 +45,6 @@
 							</cfselect>
 						</td>
 					</tr>
-                    <tr>
-                    	<td align="right" width="50%">Show Original School Acceptance - only Chinese students - </td>
-                        <td>
-                        	<input type="checkbox" name="showOriginalSchoolAcceptance" id="showOriginalSchoolAcceptance" />
-                        </td>
-                    </tr>
 					<tr><td colspan="2" align="center" bgcolor="##C4CDE7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
 				</table>
 				</cfform>
