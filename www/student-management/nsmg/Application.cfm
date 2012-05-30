@@ -101,13 +101,21 @@
             </cfif>
         
         <!--- force agreement. --->
-        <cfelseif isDefined("CLIENT.agreement_needed") AND NOT APPLICATION.IsServerLocal>
+        <cfelseif isDefined("CLIENT.agreement_needed")>
         
             <!--- allow user only on yearly agreement page. --->
             <cfif NOT (isDefined("URL.curdoc") AND listFindNoCase("forms/yearly_agreement,repRefs,displayRepAgreement,cbcAuthorization,employmentHistory,logout", URL.curdoc))>
                 <cflocation url="/nsmg/index.cfm?curdoc=forms/yearly_agreement&userid=#CLIENT.userid#" addtoken="no"><br />
             </cfif>
+         
+        <cfelseif isDefined('CLIENT.needsSSN')>
+			<cfif NOT (isDefined("URL.curdoc") AND listFindNoCase("forms/verifyInfo, forms/verifyInfo2, logout", URL.curdoc))>
+            	
+                
+                	<cflocation url="/nsmg/index.cfm?curdoc=forms/verifyInfo" addtoken="no"><br />
             
+            </cfif>
+			
         </cfif>
         
     </cfif>
