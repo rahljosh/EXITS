@@ -609,6 +609,7 @@
                         u.xml_received,
                         u.notes,
                         u.flagCBC,
+                        u.denied,
                         s.season,
                         c.companyshort                        
                     FROM
