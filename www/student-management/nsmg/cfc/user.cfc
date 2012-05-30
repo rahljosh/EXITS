@@ -1,7 +1,8 @@
 <cfcomponent>
-	
-    <cfparam name="CLIENT.companyID" default="0">
-    <cfparam name="season" default="8">
+	<Cfset client.loginError=''> 
+    <cfparam name="CLIENT.companyID" default="1">
+    
+    <cfparam name="season" default="9">
     <!----This should be removed when SMG uses the global login page---->
 	   
 	<!--- Login.  called by: flash/login.cfm --->
@@ -122,16 +123,16 @@
             	*
             FROM 
             	smg_users
+           
             WHERE 
-            	username = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(username)#">
+            	smg_users.username = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(username)#">
             AND 
-            	password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(password)#">
-            AND 
-            	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+            	smg_users.password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(password)#">
+
         </cfquery>
         
         <cfif qAuthenticateUser.recordcount EQ 0>
-        	<cfreturn 'Invalid Login'>            
+        	<cfreturn 'Username & Password combination is not valid.'>            
         </cfif>
         
 		<!--- get all of the user's access records in the SMG companies. --->
@@ -149,7 +150,7 @@
             ORDER 
             	BY user_access_rights.usertype
         </cfquery>
-
+		
         <cfif get_access.recordcount EQ 0>
         	<cfreturn 'You have no Company & Regional Access record assigned.  One must be assigned first before you can login.  Contact your facilitator.'>            
         </cfif>
@@ -173,7 +174,42 @@
                 	get_access
             </cfquery>
         </cfif>
-
+        
+         
+        
+        
+     
+		<!----Check if they have all paperwork and account is not expired or disabled---->
+       
+            
+            <Cfscript>
+                //Check if paperwork is complete for season
+				qAllPaperWorkCompleted = APPLICATION.CFC.udf.allpaperworkCompleted(userid=#qAuthenticateUser.userID#,seasonid=9);
+			</cfscript>
+            
+       
+   		
+         
+        <Cfif not val(qAuthenticateUser.accountCreationVerified)>
+       
+        	<cfquery name="disabledReasonid" datasource="#application.dsn#">
+            select max(id) as maxid 
+            from smg_accountDisabledHistory
+            where fk_userDisabled = <cfqueryparam cfsqltype="cf_sql_integer" value="#qAuthenticateUser.userID#">
+            </cfquery>
+            <cfquery name="disabledReason" datasource="#application.dsn#">
+            select date, reason
+            from smg_accountDisabledHistory
+            where id = <cfqueryparam cfsqltype="cf_sql_integer" value="#disabledReasonid.maxid#">
+            </cfquery>
+            
+        	<cfreturn 'This account was disabled on #dateformat(disabledReason.date, "mm/dd/yyyy")# for #disabledReason.reason#'>
+        
+        </Cfif>
+      
+      <Cfif len(client.loginError)>
+      	<cflocation url="http://#cgi.server_name#">
+      </Cfif>
 		<cfset CLIENT.userID = qAuthenticateUser.userID>
 		<cfset CLIENT.name = qAuthenticateUser.firstname & ' ' & qAuthenticateUser.lastname>
         <cfset CLIENT.email = qAuthenticateUser.email>
@@ -188,7 +224,10 @@
         <cfset CLIENT.usertype = get_default_access.usertype>
         <cfset CLIENT.regions = get_default_access.regionid>  <!--- these are both the same, but phase out CLIENT.regions --->
         <cfset CLIENT.regionid = get_default_access.regionid>
-        
+    <!----Check is SSN is missing---->
+        <cfif qAuthenticateUser.dateAccountVerified is not  '' AND qAuthenticateUser.ssn is '' AND   listfind('1,2,3,4,5,6,7', CLIENT.usertype)>
+        	<cfset CLIENT.needsSSN = 1>
+        </cfif>
         <!--- companyname, programmanager and accesslevelname are used in header.cfm.  These are also set in forms/change_access_level.cfm. --->
         <cfquery name="qGetCompany" datasource="#APPLICATION.dsn#">
             SELECT companyname, team_id, pm_email, support_email, url, companyshort_nocolor, projectManager, financeEmail,website
@@ -288,21 +327,16 @@
       	  		<cfset CLIENT.verify_info = 1>
             </cfif>
 		</cfif>
-        
+       
 		<!--- this usertype doesn't need to verify information or submit agreements --->
-        <cfif listfind("5,6,7,15", CLIENT.usertype) AND (qAuthenticateUser.accountCreationVerified lt 1)>
+        <cfif listfind("5,6,7,15", CLIENT.usertype) >
         	<!---Check if new user agreement is needed. --->
-            <Cfset url.userid = "#qAuthenticateUser.userID#">
             
-            <Cfscript>
-                //Check if paperwork is complete for season
-				qAllPaperWorkCompleted = APPLICATION.CFC.udf.allpaperworkCompleted(userid=url.userid,season=9);
-			</cfscript>
             <!----Check files for office users---->
             
             
             <!---Check files for user office users----->
-            
+          
             
             <cfif client.usertype eq 15>
             	<cfif qAllPaperWorkCompleted.secondVisitRepOK neq 1>
@@ -418,7 +452,7 @@
         <!--- Check if server is local, if it is do not redirect to SSL --->
 		<cfif APPLICATION.IsServerLocal>
 
-			<cflocation url="/nsmg/index.cfm?initial_welcome" addtoken="no">
+			<cflocation url="/nsmg/index.cfm?curdoc=initial_welcome" addtoken="no">
 		
         <!--- Production / Force SSL if not Case --->
         <cfelse>
