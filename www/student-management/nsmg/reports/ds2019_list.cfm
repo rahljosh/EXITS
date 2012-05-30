@@ -16,6 +16,9 @@
     	s.ds2019_no = ''
     AND 
     	s.verification_received IS null 
+	<!--- SHOW ONLY APPS APPROVED --->
+    AND
+        s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
     AND 
     	s.active = '1'
     AND 

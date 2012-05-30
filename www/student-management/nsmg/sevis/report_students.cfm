@@ -2,17 +2,12 @@
 
 <!--- Get Program --->
 <cfquery name="get_program" datasource="MYSQL">
-SELECT	*
-FROM 	smg_programs 
-LEFT OUTER JOIN smg_program_type ON type = programtypeid
-WHERE ( <cfloop list=#form.programid# index='prog'>
-	 	    programid = #prog# 
-		   <cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-	   </cfloop> )
+    SELECT	*
+    FROM 	smg_programs 
+    LEFT OUTER JOIN smg_program_type ON type = programtypeid
+    WHERE
+    	programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
 </cfquery>
-
-<!-----Company Information----->
-<cfinclude template="../querys/get_company_short.cfm">
 
 <!--- get Students  --->
 <Cfquery name="get_students" datasource="MySQL">
@@ -57,6 +52,9 @@ WHERE ( <cfloop list=#form.programid# index='prog'>
     	smg_sevisfee fee ON s.sevis_bulkid = fee.bulkid
 	WHERE 
     	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+    AND
+        s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
+
 	<cfif CLIENT.companyID EQ 5>
         AND 
             s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
@@ -64,9 +62,12 @@ WHERE ( <cfloop list=#form.programid# index='prog'>
         AND 
             s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
     </cfif>
+    
 	<cfif VAL(form.intrep)>
-        AND s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.intrep#">
+        AND 
+        	s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.intrep#">
     </cfif>
+    
 	ORDER BY 
     	u.businessname, 
         s.sevis_batchID,
@@ -75,7 +76,7 @@ WHERE ( <cfloop list=#form.programid# index='prog'>
 </cfquery>  
 
 <table width='97%' cellpadding=4 cellspacing="0" align="center">
-<span class="application_section_header"><cfoutput>#companyshort.companyshort# -  SEVIS Batch Report per International Rep.</cfoutput></span>
+<span class="application_section_header"><cfoutput>SEVIS Batch Report per International Rep.</cfoutput></span>
 </table>
 <br>
 
