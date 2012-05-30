@@ -129,23 +129,16 @@
 <cfoutput>
 		
 	<h2>
-    	Recorded WebEx sessions available
-        <!--- Phasing Out Calendar as per Gary Lubrat request on 06/02/2011 ---->
-		<!--- #DateFormat( dtThisMonth, "mmmm yyyy" )# WebEx Calendar --->        
+		#DateFormat( dtThisMonth, "mmmm yyyy" )# WebEx Calendar
 	</h2>
 
 	<p id="calendarcontrols">
-		<!--- Phasing Out Calendar as per Gary Lubrat request on 06/02/2011 ---->
-        <!--- 
-        &laquo;
+		&laquo;
 		<a href="#REQUEST.URLPath#&action=month&date=#Fix( dtPrevMonth )#">#DateFormat( dtPrevMonth, "mmmm yyyy" )#</a> &nbsp;|&nbsp;
 		<a href="#REQUEST.URLPath#&action=month&date=#Fix( dtNextMonth )#">#DateFormat( dtNextMonth, "mmmm yyyy" )#</a>
 		&raquo;
-		--->
 	</p>
 	
-    <!--- Phasing Out Calendar as per Gary Lubrat request on 06/02/2011 ---->
-    <!---
 	<form id="calendarform" action="index.cfm" method="get">
 
     	<input type="hidden" name="curdoc" value="#REQUEST.Curdoc#" />
@@ -356,8 +349,7 @@
 		</td>
 	</tr>
 	</table>
-	--->
-    
+
     <!--- Insert Scheduled Sessions --->
     #scheduledSessions#
     
