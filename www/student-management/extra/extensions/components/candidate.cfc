@@ -1246,18 +1246,18 @@
     
 	<cffunction name="confirmCheckInReceived" access="remote" returntype="void" hint="Updates a candidate record.">
         <cfargument name="candidateID" required="yes" hint="candidateID is required">
-        <cfargument name="initPhone" default="" hint="initPhone is not required">
+        <cfargument name="us_phone" default="" hint="initPhone is not required">
 
         <cfquery 
 			datasource="#APPLICATION.DSN.Source#">
                 UPDATE
 					extra_candidates
 				SET
-                    watDateCheckedIn = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
-                    verification_sevis = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
-                    <cfif LEN(initPhone)>
-                    	us_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.initPhone#">
+                	<cfif LEN(us_phone)>
+                    	us_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.us_phone#">,
                    	</cfif>
+                    watDateCheckedIn = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
+                    verification_sevis = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                 WHERE
                     candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
 		</cfquery>
