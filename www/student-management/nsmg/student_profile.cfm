@@ -165,10 +165,7 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
                                     <td><span class="title">Religious Participation:</span></td>
                                     <td>#qGetStudentInfo.religious_participation#</td>
                                 </tr>        
-                                <tr>
-                                    <td><span class="title">Program:</span></td>
-                                    <td>#qGetProgram.programname#</td>
-                                </tr>                                    
+                                                                  
                             </table>
                             
                         </td>
@@ -176,11 +173,12 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
                         
                             <table cellpadding="4" cellspacing="0" class="inner_profileTable" border=0>
                            
-                               
+                               <!----
                                 <tr>
                                     <td><span class="title">Place of Birth:</span></td>
                                     <td>#qGetStudentInfo.citybirth#</td>
                                 </tr>
+								---->
                                 <tr>
                                     <td><span class="title">Country of Birth:</span></td>
                                     <td>#getCountryBirth#</td>
@@ -193,6 +191,10 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
                                     <td><span class="title">Country of Residence:</span></td>
                                     <td>#getCountryResident#</td>
                                 </tr>
+                                <tr>
+                                    <td><span class="title">Program:</span></td>
+                                    <td>#qGetProgram.programname#</td>
+                                </tr>  
                                 <Tr>
                                 	<Td colspan=2>  <cfif VAL(qGetStudentInfo.scholarship)>Participant of Scholarship Program</cfif></Td>
                                 </Tr>
@@ -257,39 +259,37 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
             </td>
         </tr>                
     </table>
-     <!--- Siblings --->
+     <!--- Siblings ---->
      <Cfquery name="sibling" datasource="#application.dsn#">
      select *
      from smg_student_siblings
      where studentid = #qGetStudentInfo.studentID#
      </cfquery>
+     <cfquery name="numberSis" dbtype="query">
+         select count(sex)
+         from sibling
+         where sex = 'female'
+     </cfquery>
+     <cfquery name="numberBro" dbtype="query">
+         select count(sex)
+         from sibling
+         where sex = 'male'
+     </cfquery>
     <table align="center" class="profileTable2">
         <tr bgcolor="##0854a0"><td colspan="3"><span class="profileTitleSection">SIBLINGS</span></td></tr>     
-        <tr>
-            <td width="250px"><span class="title">Name</span></td>
-            <td width="200px"><span class="title">Age</span></td>
-            <td width="200px"><span class="title">Relation </span></td>
-        </tr>
-       <cfloop query="sibling">
+      
+      
         <tr>
             <td>
-            <cfset str = "#name#">
-			<cfset maxwords = 1>
-             <cfoutput>
-             #REReplace(str,"^(#RepeatString('[^ ]* ',maxwords)#).*","\1")#
-            </cfoutput>   
-            <td>
-            	<Cfif birthdate is not ''>
-             	#DateDiff('yyyy', birthdate, now())#
-                </Cfif>
+           <span class="title">Sisters</span> #numberSis.recordcount# 
             </td>
             <td>
-       			<cfif sex is 'male'>Brother<cfelse>Sister</cfif>
+       		 <span class="title">Brothers</span> #numberBro.recordcount# 
             </td>
-        </tr>
-       </cfloop>
+            
+        </tr>    
     </table>
-    
+  
     <!--- Academic and Language Evaluation --->
     <table align="center" class="profileTable2">
         <tr bgcolor="##0854a0"><td colspan="3"><span class="profileTitleSection">ACADEMIC AND LANGUAGE EVALUATION</span></td></tr>     
