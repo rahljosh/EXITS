@@ -531,6 +531,66 @@
 			</div>
             	<div class="rdbottom"></div> <!-- end bottom --> 
          	</div>
+            
+<cfif uar_usertype EQ 8>
+<!--- SIZING TABLE --->
+ 
+              <!--- ------------------------------------------------------------------------- ---->
+            <!----Logo Management for Int. Agent---->
+            <!--- ------------------------------------------------------------------------- ---->
+                <div class="rdholder" style="width:100%;float:left;" > 
+				<div class="rdtop"> 
+                <span class="rdtitle">Logo Management</span>
+                	 <cfif rep_info.logo is ''><Cfelse><img src="pics/logos/#rep_info.logo#"  height=16></cfif>
+            	</div> 
+                <div class="rdbox">
+                <table width="100%" cellpadding="4" cellspacing="0" border="0">
+                    <tr>
+                        <td>
+                            You can set what logo appears in the upper right hand corner for you, branch offices and your students.<br>
+                            <cfform action="querys/upload_logo.cfm"  method="post" enctype="multipart/form-data" preloader="no">
+                                <cfinput type="hidden" name="userid" value="#rep_info.userid#">
+                                <cfinput type="file" name="UploadFile" size=35 required="yes" message="Please specify a file." validateat="onsubmit,onserver"> 
+                                <cfinput type="submit" name="upload" value="Upload Picture">
+                            </cfform>
+                            <i>logo should be 71 pixels in height</i>
+                        </td>
+                    </tr>
+                </table>
+                 </div>
+            <div class="rdbottom"></div> <!-- end bottom --> 
+            </div>
+              <!--- ------------------------------------------------------------------------- ---->
+            <!----END Logo Management for Int. Agent---->
+            <!--- ------------------------------------------------------------------------- ---->
+            
+            <!--- ------------------------------------------------------------------------- ---->
+            <!----Notes for Int. Agent---->
+            <!--- ------------------------------------------------------------------------- ---->
+            
+            
+            <!---- NOTES ---->
+                <div class="rdholder" style="width:100%;float:left;" > 
+				<div class="rdtop"> 
+                <span class="rdtitle">Notes</span>
+                	 
+            	</div> 
+                <div class="rdbox">
+                <table width="100%" cellpadding="4" cellspacing="0" border="0">
+                    <tr>
+                        <td style="line-height:20px;" valign="top">
+                            <cfif comments EQ ''>No additional information available.<cfelse>#comments#</cfif><br><br>
+                        </td>
+                    </tr>
+                </table>
+               </div>
+            <div class="rdbottom"></div> <!-- end bottom --> 
+            </div>
+            <!--- ------------------------------------------------------------------------- ---->
+            <!----End Notes for Int. Agent---->
+            <!--- ------------------------------------------------------------------------- ---->
+            
+<cfelse>
             <!----Regional Information---->
                             <cfquery name="region_company_access" datasource="#APPLICATION.DSN#">
                                 SELECT uar.id, uar.regionid, uar.usertype, uar.changedate, uar.default_access, r.regionname, c.companyshort, c.companyID, ut.usertype AS usertypename,
@@ -965,7 +1025,7 @@
                 </cfif>
 
   
-  
+  </cfif>
   </div>
   
     <!--- ------------------------------------------------------------------------- ---->
@@ -996,15 +1056,23 @@
                            </tr>
                           
                            <tr>
-                           		<td><strong>Area Rep Paperwork:</strong></td><td>
-								<a href="?curdoc=forms/user_paperwork&userid=#url.userid#">
-								<cfif get_paperwork.arearepok eq 1>
-                                Complete<cfelse>Incomplete</cfif></a></td>
+                           		<td>
+									<cfif uar_usertype NEQ 8>
+                                    <strong>Area Rep Paperwork:</strong></td><td>
+                                    <a href="?curdoc=forms/user_paperwork&userid=#url.userid#">
+                                    <cfif get_paperwork.arearepok eq 1>
+                                    Complete<cfelse>Incomplete</cfif></a>
+                                    </cfif>
+                                </td>
                            <tr>
-                           		<td><strong>2<sup>nd</sup> Visit Paperwork:</strong></td><td>
-								<a href="?curdoc=forms/user_paperwork&userid=#url.userid#">
-								<cfif get_paperwork.secondVisitRepOK eq 1>
-                                Complete<cfelse>Incomplete</cfif></a></td>
+                           		<td>
+									<cfif uar_usertype NEQ 8>
+                                    <strong>2<sup>nd</sup> Visit Paperwork:</strong></td><td>
+                                    <a href="?curdoc=forms/user_paperwork&userid=#url.userid#">
+                                    <cfif get_paperwork.secondVisitRepOK eq 1>
+                                    Complete<cfelse>Incomplete</cfif></a>
+                                    </cfif>
+                                </td>
                            </tr>
                           </table>
      				</td>
@@ -1019,9 +1087,11 @@
                                 <tr>
                                 	<td><strong>User Entered:</strong></td><td> #DateFormat(datecreated, 'mm/dd/yyyy')#</td>
                                 </tr>
-                                <Tr>
-                                	<td><strong>Access Valid:</strong></td><td> #dateDiff('d','#now()#','2012-08-31')#  days </td>
-                                </tr>
+                                <cfif uar_usertype NEQ 8>
+                                    <Tr>
+                                        <td><strong>Access Valid:</strong></td><td> #dateDiff('d','#now()#','2012-08-31')#  days</td>
+                                    </tr>
+                                </cfif> 
                              </table>   
                     </Td>
                     <Td>
@@ -1085,7 +1155,91 @@
             <!--- ------------------------------------------------------------------------- ---->
             <!----End Account Status---->
             <!--- ------------------------------------------------------------------------- ---->     
-           
+<cfif uar_usertype EQ 8>
+			<!--- ------------------------------------------------------------------------- ---->
+            <!----SEVIS AND INSURANCE FOR INT REP---->
+            <!--- ------------------------------------------------------------------------- ---->   
+   <div class="rdholder" style="width:100%;float:right;" > 
+				<div class="rdtop"> 
+                <span class="rdtitle">Insurance & SEVIS Information</span> 
+            	</div> <!-- end top --> 
+             <div class="rdbox">
+                <table width="100%" cellpadding="4" cellspacing="0" border="0">
+                    <tr>
+                        <td align="right"><b>Insurance :</b></td>
+                        <td>
+                            <cfif insurance_typeid EQ '0'>
+                                <font color="FF0000">Insurance Type Information is Missing</font>
+                            <cfelseif insurance_typeid EQ '1'>
+                                #rep_info.type# insurance
+                            <cfelse>
+                                Takes #rep_info.type# insurance
+                            </cfif>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right"><b>SEVIS : </b></td>
+                        <td>
+                            <cfif accepts_sevis_fee EQ ''>
+                                Missing SEVIS fee information
+                            <cfelseif rep_info.accepts_sevis_fee EQ 0>
+                                Does not accept SEVIS fee
+                            <cfelse>
+    
+                                Accepts SEVIS fee.
+                            </cfif>				
+                        </td>
+                    </tr>
+                </table>
+              </div>
+                 <div class="rdbottom"></div> <!-- end bottom --> 
+                
+                 </div>
+                 <!--- ------------------------------------------------------------------------- ---->
+            <!----END SEVIS AND INSURANCE FOR INT REP---->
+            <!--- ------------------------------------------------------------------------- ---->     
+            
+			<!--- ------------------------------------------------------------------------- ---->
+            <!----Account Statement FOR INT REP---->
+            <!--- ------------------------------------------------------------------------- ---->     
+            <div class="rdholder" style="width:100%;float:right;" > 
+				<div class="rdtop"> 
+                <span class="rdtitle">Account Activity - Statement</span> 
+            	</div> <!-- end top --> 
+             <div class="rdbox">
+                <table width="100%" cellpadding="4" cellspacing="0" border="0">
+                    <tr>
+                        <td style="line-height:20px;" valign="top">
+                            <!--- HIDE STATEMENT FOR OFFICE USERS AND LITZ AND ECSE AGENTS --->
+                            <cfquery name="invoice_check" datasource="#APPLICATION.DSN#">
+                                select invoice_access 
+                                from smg_users
+                                where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+                            </cfquery>
+                            <cfif (CLIENT.userid EQ 64 OR CLIENT.userid EQ 126) OR (CLIENT.usertype NEQ 8 AND invoice_check.invoice_access NEQ 1)> 
+                                <cfswitch expression="#client.companyid#">
+                                	<cfcase value="14">
+                                    	Not available. <br /> If you wish a copy of your statement please contact Stacy Brewer at stacy@exchange-service.org
+                                    </cfcase>
+                                    <cfdefaultcase>
+                                    	Not available. <br /> If you wish a copy of your statement please contact Marcel Maebara at marcel@student-management.com
+                                    </cfdefaultcase>
+                                </cfswitch>
+                            <cfelse>
+                                SMG Detailed Statement : <a href="index.cfm?curdoc=intrep/invoice/statement_detailed" class="smlink" target="_top">View Statement</a><br />
+                            </cfif>
+                        </td>
+                    </tr>
+                </table>
+                 </div>
+                 <div class="rdbottom"></div> 
+                
+                 </div>
+            	<!--- ------------------------------------------------------------------------- ---->
+            <!----END Account Statement FOR INT REP---->
+            <!--- ------------------------------------------------------------------------- ---->  
+            
+<cfelse>
             <!--- ------------------------------------------------------------------------- ---->
             <!----Trainging---->
             <!--- ------------------------------------------------------------------------- ---->     
@@ -1343,6 +1497,11 @@
             </td>
         </tr>
     </table>
+
+	<!--- ------------------------------------------------------------------------- ---->
+            <!----END Int. Rep---->
+            <!--- ------------------------------------------------------------------------- ---->   
+
 
 <!--- NON-INTERNATIONAL REPRESENTATIVE --->
 <cfelse>
@@ -1684,7 +1843,7 @@
             
 			
 
-
+</cfif>
 		
 	
             
