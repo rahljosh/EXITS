@@ -971,7 +971,7 @@ input.projectHelpHours {
 	padding:10px 15px;
 	margin:0;
 	display: block;
-	min-height: 137px;
+	min-height: 50px;
  } 
 
 .rdtop {
@@ -986,6 +986,28 @@ input.projectHelpHours {
 	-moz-border-radius-topleft:12px;
 	background-color: #FFF;
 	color: #006699;
+	
+	background-image: linear-gradient(bottom, rgb(239,239,239) 31%, rgb(255,255,255) 51%);
+	background-image: -o-linear-gradient(bottom, rgb(239,239,239) 31%, rgb(255,255,255) 51%);
+	background-image: -moz-linear-gradient(bottom, rgb(239,239,239) 31%, rgb(255,255,255) 51%);
+	background-image: -webkit-linear-gradient(bottom, rgb(239,239,239) 31%, rgb(255,255,255) 51%);
+	background-image: -ms-linear-gradient(bottom, rgb(239,239,239) 31%, rgb(255,255,255) 51%);
+
+	background-image: -webkit-gradient(
+	linear,
+	left bottom,
+	left top,
+	color-stop(0.31, rgb(239,239,239)),
+	color-stop(0.51, rgb(255,255,255)));
+	
+	/* For Internet Explorer 5.5 - 7 */
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#efefef);
+        /* For Internet Explorer 8 */
+        -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#efefef)";    
+        background-color: #ffffff;
+		
+  	border-top-right-radius: 7px;
+	border-top-left-radius: 7px;
 } 
 
 .rdtop .rdtitle {
@@ -1000,12 +1022,24 @@ input.projectHelpHours {
 	color: #006699;
 }
 
+
+ 
+ .floatLeft{ 
+ 	float:left; 
+ }
+ 
+ .floatRight{ 
+ 	float:right;
+ }
 .rdbottom {
 	width:auto;
 	height:10px;
+  display: block;
 	border-bottom: 1px solid #c6c6c6;
 	border-left:1px solid #c6c6c6;
 	border-right:1px solid #c6c6c6;
+  border-bottom-right-radius: 7px;
+  border-bottom-left-radius: 7px;
 	/* -webkit for Safari and Google Chrome */
 	-webkit-border-bottom-left-radius:12px;
 	-webkit-border-bottom-right-radius:12px;
