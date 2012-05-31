@@ -191,20 +191,22 @@
    		
          
         <Cfif not val(qAuthenticateUser.accountCreationVerified)>
-       
+        
         	<cfquery name="disabledReasonid" datasource="#application.dsn#">
             select max(id) as maxid 
             from smg_accountDisabledHistory
             where fk_userDisabled = <cfqueryparam cfsqltype="cf_sql_integer" value="#qAuthenticateUser.userID#">
             </cfquery>
-            <cfquery name="disabledReason" datasource="#application.dsn#">
-            select date, reason
-            from smg_accountDisabledHistory
-            where id = <cfqueryparam cfsqltype="cf_sql_integer" value="#disabledReasonid.maxid#">
-            </cfquery>
-            
-        	<cfreturn 'This account was disabled on #dateformat(disabledReason.date, "mm/dd/yyyy")# for #disabledReason.reason#'>
-        
+           
+            <cfif val(disabledReasonid.maxid)>
+                <cfquery name="disabledReason" datasource="#application.dsn#">
+                select date, reason
+                from smg_accountDisabledHistory
+                where id = <cfqueryparam value="#VAL(disabledReasonid.maxid)#" cfsqltype="CF_SQL_INTEGER" >
+                </cfquery>
+                
+                <cfreturn 'This account was disabled on #dateformat(disabledReason.date, "mm/dd/yyyy")# for #disabledReason.reason#'>
+        	</cfif>
         </Cfif>
       
       <Cfif len(client.loginError)>
