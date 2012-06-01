@@ -448,7 +448,9 @@
                                                 AND 
                                                     pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vPreviousReportMonth)#">
                                             	AND
-                                                	fk_sr_user = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.arearepid#">
+                                                	fk_sr_user = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.arearepID#">
+                                                AND
+                                                	fk_program = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.programID#">
                                             </cfquery>
                                         
                                             <cfscript>
