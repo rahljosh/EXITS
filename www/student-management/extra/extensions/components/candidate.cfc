@@ -886,6 +886,7 @@
 
 	<cffunction name="getCandidatePlacementInformation" access="public" returntype="query" output="false" hint="Gets host company information for a candidate">
     	<cfargument name="candidateID" required="yes" hint="candidateID is required">
+        <cfargument name="placementStatus" default="1" hint="Gets active placement by default">
 
         <cfquery 
         	name="qGetCandidatePlacementInformation" 
@@ -929,8 +930,14 @@
             	extra_jobs ej ON ej.ID = ecpc.jobID
             WHERE 
                 ecpc.candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">
-            AND 	
-                ecpc.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            
+            <cfif LEN(ARGUMENTS.placementStatus)>
+                AND 	
+                    ecpc.status = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.placementStatus)#">
+            </cfif>
+            
+            ORDER BY
+            	ecpc.status DESC
         </cfquery>
         
 		<cfreturn qGetCandidatePlacementInformation>

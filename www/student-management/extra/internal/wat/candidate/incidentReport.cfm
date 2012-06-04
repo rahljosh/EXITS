@@ -21,6 +21,7 @@
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.uniqueID" default="">	
     <cfparam name="FORM.incidentID" default="0">
+    <cfparam name="FORM.hostCompanyID" default="0">
     <cfparam name="FORM.dateIncident" default="">
 	<cfparam name="FORM.subject" default="">
 	<cfparam name="FORM.notes" default="">
@@ -38,8 +39,8 @@
 		// Get Current Candidate Information
 		qGetCandidateInfo = APPLICATION.CFC.CANDIDATE.getCandidateByID(uniqueID=FORM.uniqueID);
 		
-		// Get Host Company Information
-		qGetPlacementInformation = APPLICATION.CFC.CANDIDATE.getCandidatePlacementInformation(candidateID=qGetCandidateInfo.candidateID);
+		// Get Complete History
+		qGetPlacementHistory = APPLICATION.CFC.CANDIDATE.getCandidatePlacementInformation(candidateID=qGetCandidateInfo.candidateID,placementStatus="");
 		
 		// Get Incident Information
 		qGetIncidentInfo = APPLICATION.CFC.CANDIDATE.getIncidentReport(incidentID=FORM.incidentID, candidateID=qGetCandidateInfo.candidateID);
@@ -67,7 +68,7 @@
 				APPLICATION.CFC.CANDIDATE.insertUpdateIncident(
 					incidentID = FORM.incidentID,
 					candidateID = qGetCandidateInfo.candidateID,
-					hostCompanyID = VAL(qGetPlacementInformation.hostCompanyID),
+					hostCompanyID = FORM.hostCompanyID,
 					userID = CLIENT.userID,
 					dateIncident = FORM.dateIncident,
 					subject = FORM.subject,
@@ -84,6 +85,7 @@
 			
 			// Set the default values of the FORM 
 			FORM.incidentID = VAL(qGetIncidentInfo.ID);
+			FORM.hostCompanyID = VAL(qGetIncidentInfo.hostCompanyID);
 			FORM.dateIncident = qGetIncidentInfo.dateIncident;
 			FORM.subject = qGetIncidentInfo.subject;
 			if ( NOT VAL(qGetIncidentInfo.recordCount) ) {
@@ -147,7 +149,13 @@
                         <table width="97%" cellpadding="3" cellspacing="0" align="center" style="padding:5px; background-color:##FFFFFF; border:1px solid ##C7CFDC; padding-bottom:10px; margin-bottom:10px;">
                             <tr>
                                 <td width="25%" class="style2" style="background-color:##8FB6C9; border-bottom:1px solid ##C7CFDC; text-align:right; padding-right:10px;">Host Company</td>
-                                <td width="75%" style="border-bottom:1px solid ##C7CFDC;">#qGetPlacementInformation.hostCompanyName#</td>
+                                <td width="75%" style="border-bottom:1px solid ##C7CFDC;">
+                                	<select name="hostCompanyID" id="hostCompanyID" class="xLargeField">
+                                    	<cfloop query="qGetPlacementHistory">
+                                        	<option value="#qGetPlacementHistory.hostCompanyID#" <cfif qGetPlacementHistory.hostCompanyID EQ FORM.hostCompanyID> selected="selected" </cfif> >#qGetPlacementHistory.hostCompanyName#</option>
+                                        </cfloop>
+                                    </select>
+                                </td>
                             </tr>
                             <tr>
                                 <td class="style2" style="background-color:##8FB6C9; border-bottom:1px solid ##C7CFDC; text-align:right; padding-right:10px;">Date</td>
