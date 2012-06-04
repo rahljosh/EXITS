@@ -121,7 +121,7 @@
 
 <!----Activation History---->
 <cfif NOT LEN(FORM.active_reason)>
-    <cfquery name="active_reason" datasource="mysql">
+    <cfquery name="active_reason" datasource="#APPLICATION.DSN#">
         INSERT INTO 
         	smg_active_stu_reasons 
         (
@@ -141,7 +141,7 @@
 <!--- REGION HISTORY --->
 <cfif qStudentInfo.regionassigned NEQ FORM.region>
 
-	<cfquery name="update_dateassigned" datasource="MySql">
+	<cfquery datasource="#APPLICATION.DSN#">
 		UPDATE 
         	smg_students
 		SET 
@@ -157,7 +157,7 @@
 <cfif qStudentInfo.programID NEQ FORM.program>
 
 	<!--- INSERT PROGRAM HISTORY --->
-    <cfquery name="program_history" datasource="MySql">
+    <cfquery name="program_history" datasource="#APPLICATION.DSN#">
 		INSERT INTO 
         	smg_programhistory
 		(
@@ -273,7 +273,7 @@
 <!---  CANCELLING A STUDENT --->
 <cfif IsDefined('FORM.student_cancel')>
 	
-    <cfquery datasource="MySql">
+    <cfquery datasource="#APPLICATION.DSN#">
 		UPDATE 
         	smg_students
 		SET 
@@ -300,11 +300,18 @@
             
             // Email CC List
             if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyid) ) {
-                emailCC = CLIENT.projectmanager_email & ';' & CLIENT.email & ';' & 'ellen@iseusa.com;sergei@iseusa.com;';
+                emailCC = CLIENT.projectmanager_email & ';ellen@iseusa.com;marcus@iseusa.com;' & CLIENT.email;
             } else { 
                 emailCC = CLIENT.projectmanager_email & ';' & CLIENT.email;
             }
-                
+			
+			// Get PM Email
+			vGetProjectManagerEmail = APPLICATION.CFC.COMPANY.getCompanies(companyID=qStudentInfo.companyID).pm_email;
+			
+			if ( isValid("email",vGetProjectManagerEmail) ) {
+				emailCC = 	emailCC  & ';' & vGetProjectManagerEmail;	 
+			}
+               
             // Display All Emails Involved
             emailList = CLIENT.finance_email & ';' & emailCC;
             
@@ -379,7 +386,7 @@
 
 <cfelse>
 
-    <cfquery name="cancel_student" datasource="MySql">
+    <cfquery datasource="#APPLICATION.DSN#">
         UPDATE 
         	smg_students
         SET 
@@ -396,7 +403,7 @@
 <cftransaction>
 
 <!--- UPDATE STUDENT INFORMATION --->
-<cfquery name="Update_Student" datasource="MySql">
+<cfquery datasource="#APPLICATION.DSN#">
 	UPDATE 
     	smg_students
 	SET 
