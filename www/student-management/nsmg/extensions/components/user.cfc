@@ -823,6 +823,7 @@
                 	userID,
                     userInformation,
                     email,
+                    regionID,
                     dateExpired
 				FROM
                 (                    
@@ -830,6 +831,7 @@
                         u.userID,
                         CONCAT(u.firstName, ' ', u.lastName) AS userInformation,
                         u.email,
+                        uar.regionID,
                         <!--- Get Latest Training --->                
                         (
                             SELECT 
