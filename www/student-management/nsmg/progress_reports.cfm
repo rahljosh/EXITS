@@ -220,6 +220,7 @@
                         </cfloop>
                     </select>                        
                 </td>
+                <!----
                 <td>
                     Status<br />
                     <select name="cancelled" class="mediumField">
@@ -227,6 +228,7 @@
                         <option value="1" <cfif CLIENT.pr_cancelled EQ 1>selected</cfif>>Cancelled</option>
                     </select>            
                 </td>
+				---->
             </tr>
             <tr>
                 <td colspan="5" align="center" style="border-top:1px solid ##ccc">
@@ -250,6 +252,7 @@
         s.uniqueID, 
         s.firstName, 
         s.familyLastName, 
+        s.canceldate,
         <!--- Arrival Date --->
         (
             SELECT 
@@ -330,14 +333,14 @@
     	s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
     </cfif>
     
-    <cfif NOT VAL(CLIENT.pr_cancelled)>
+
         AND 
-        	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-    <cfelse>
-        AND 
-        	s.canceldate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateFormat(DateAdd('m', -2, now()),'yyyy-mm-dd')#">
-    </cfif>
+        	(s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
     
+        OR 
+        	s.canceldate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateFormat(DateAdd('m', -2, now()),'yyyy-mm-dd')#">)
+  
+   
     <!----Only Progress Reports have active and fieldviewable variables---->
     AND 
         p.progress_reports_active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
@@ -578,6 +581,7 @@
                             </a>
                             
                             <span style="font-size:0.8em;">- #qGetResults.programName#</span>
+                            <Cfif qGetResults.canceldate is not ''><span style="font-size:0.8em;"><em>Canceled: #DateFormat(qGetResults.canceldate, 'mm/dd/yyyy')#</em></span></Cfif>
                         </td>
                         <td>#yesNoFormat(qGetCurrentReport.recordCount)#</td>
                         <td <cfif url.lastReport eq #qGetResults.studentID#> class="cellStrike"</cfif>>
