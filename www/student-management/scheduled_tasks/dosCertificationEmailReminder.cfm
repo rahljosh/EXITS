@@ -23,10 +23,10 @@
 		e = createObject("component","nsmg.cfc.email");
 
 		// ISE
-	    qGetIseExpiredTraining = APPLICATION.CFC.USER.getExpiringTraining(companyID=1);
-
+	    qGetIseExpiredTraining = u.getExpiringTraining(companyID=1);
+		
 		// CASE
-	    qGetCaseExpiredTraining = APPLICATION.CFC.USER.getExpiringTraining(companyID=10);
+	    qGetCaseExpiredTraining = u.getExpiringTraining(companyID=10);
 	</cfscript>
 
 	<cfsavecontent variable="vIseEmailTemplate">
@@ -84,12 +84,16 @@
         <cfscript>
 			vIseEmailMessage = ReplaceNoCase(vIseEmailTemplate, "{userInformation}", qGetIseExpiredTraining.userInformation);
 			
-			if ( isValid("email", qGetIseExpiredTraining.email) ) {
+			// Get Regional Manager
+			qGetRegionalManagerEmail = u.getRegionalManager(regionID=qGetIseExpiredTraining.regionID).email;
+			
+			if ( isValid("email", qGetIseExpiredTraining.email) AND isValid("email", qGetRegionalManagerEmail) ) {
 				
 				// Send Email				
 				e.send_mail(
 					email_from="<megan@iseusa.com> (Megan Perlleshi - ISE)",
 					email_to=qGetIseExpiredTraining.email,
+					email_cc=qGetRegionalManagerEmail,
 					//email_bcc="support@iseusa.com",
 					email_replyto="megan@iseusa.com",
 					email_subject="Department of State Annual Certification deadline is approaching!",
@@ -100,7 +104,7 @@
 		</cfscript>
 
     </cfloop>
-
+	    
 	<p>ISE - Total of #qGetIseExpiredTraining.recordCount# records</p>
 
 
