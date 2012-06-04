@@ -15,7 +15,7 @@
     <cfparam name="FORM.hostCompanyID" default="0">
     <cfparam name="FORM.programID" default="0">
     <cfparam name="FORM.printOption" default="1">
-    <cfparam name="FORM.solved" default="0">
+    <cfparam name="FORM.isSolved" default="">
 
     <cfscript>
 		// Get Program List
@@ -29,11 +29,9 @@
         FROM 
         	extra_hostcompany eh
         INNER JOIN	
-        	extra_candidate_place_company ecpc ON ecpc.hostCompanyID = eh.hostCompanyID
+        	extra_incident_report eir ON eir.hostCompanyID = eh.hostCompanyID
         WHERE         	
             eh.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-        AND 
-        	eh.name != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
         GROUP BY
             eh.hostCompanyID
         ORDER BY
@@ -49,7 +47,6 @@
                 ec.uniqueID,
                 ec.firstname,             
                 ec.lastname, 
-                ec.hostCompanyID,
                 ec.wat_placement,
                 ec.startDate,
                 u.businessname,
@@ -57,38 +54,34 @@
                 eir.subject,
                 eir.notes,
                 eir.isSolved,
+                ehc.hostCompanyID,
                 ehc.name AS hostCompanyName              
             FROM   
                 extra_candidates ec
             INNER JOIN
                 smg_users u on u.userid = ec.intrep
-            INNER JOIN	
-                extra_candidate_place_company ecpc ON ecpc.candidateID = ec.candidateID
-				   <cfif VAL(FORM.hostcompanyID)> 
-                        AND
-                            ecpc.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               
-                    </cfif>                
-			INNER JOIN
-            	extra_hostCompany ehc ON ehc.hostCompanyID = ecpc.hostCompanyID
             INNER JOIN
             	extra_incident_report eir ON eir.candidateID = ec.candidateID
-                	AND
-                    	eir.hostCompanyID = ecpc.hostCompanyID               
+					<cfif LEN(FORM.isSolved)>
+                        AND
+                            eir.isSolved = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isSolved)#">
+                    </cfif>
+			INNER JOIN
+            	extra_hostCompany ehc ON ehc.hostCompanyID = eir.hostCompanyID
+					<cfif VAL(FORM.hostcompanyID)> 
+                        AND
+                            ehc.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               
+                    </cfif> 
             WHERE 
                 ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-           	<cfif VAL(FORM.programID)>  
+            AND 
+                ec.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+           	
+			<cfif VAL(FORM.programID)>  
                 AND 
                     ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
            	</cfif>
-            <cfif FORM.solved EQ 1>
-            	AND
-                	eir.isSolved = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-          	<cfelseif FORM.solved EQ 2>
-            	AND
-                	eir.isSolved = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-           	</cfif>
-            AND 
-                ec.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            
        		ORDER BY
                 ehc.name,
                 ec.candidateID
@@ -134,10 +127,10 @@
       		<tr>
                 <td valign="middle" align="right" class="style1"><b>Solved: </b></td>
                 <td> 
-                    <select name="solved" class="style1">
-                        <option value="0" <cfif FORM.solved EQ 0> selected </cfif> >All</option>
-                        <option value="1" <cfif FORM.solved EQ 1> selected </cfif> >Yes</option>
-                        <option value="2" <cfif FORM.solved EQ 2> selected </cfif> >No</option>
+                    <select name="isSolved" class="style1">
+                        <option value="" <cfif NOT LEN(FORM.isSolved)> selected </cfif> >All</option>
+                        <option value="1" <cfif FORM.isSolved EQ 1> selected </cfif> >Yes</option>
+                        <option value="0" <cfif FORM.isSolved EQ 0> selected </cfif> >No</option>
                     </select>
                 </td>
             </tr>
@@ -154,7 +147,7 @@
                     <br /> <input type="submit" class="style1" value="Generate Report" />
                 </td>
             </tr>
-        </table> <br/>
+        </table> <br />
     
     </form>
 
@@ -169,7 +162,7 @@
             
             <table width="98%" cellpadding="3" cellspacing="0" align="center" style="margin-top:20px; margin-bottom:20px; border:1px solid ##4F8EA4"> 
                 <tr>
-                    <td colspan="6" style="font-weight:bold; font-size: 12px;">#qGetCandidates.hostCompanyName#</td>
+                    <td colspan="6" style="font-weight:bold; font-size: 12px;">#qGetCandidates.hostCompanyName# (###qGetCandidates.hostCompanyID#)</td>
                 </tr>
                 <tr style="background-color:##4F8EA4; color:##FFF; padding:5px; font-weight:bold; font-size: 12px;">
                     <td width="20%">Candidate</Td>
