@@ -406,7 +406,10 @@
 		   <div class="rdholder" style="width:100%;float:left;"> 
 				<div class="rdtop"> 
                 <span class="rdtitle">Personal Information</span> 
-                <a href="index.cfm?curdoc=forms/user_form&userid=#url.userid#"><img src="pics/buttons/pencilBlue23x29.png" class="floatRight" border=0/></a>
+                <!--- DOS Usertype does not have access to edit information --->
+				<cfif CLIENT.userType NEQ 27>
+	                <a href="index.cfm?curdoc=forms/user_form&userid=#url.userid#"><img src="pics/buttons/pencilBlue23x29.png" class="floatRight" border=0/></a>
+                </cfif>
             	</div> <!-- end top --> 
              <div class="rdbox">
              <!-----****personal info****---->
@@ -517,7 +520,7 @@
                         </table>
 					</td>
                     <cfif client.usertype NEQ 8>
-                    <td valign="top" align="right">
+                    <tr  ><td valign="top" align="right">
                     <!----
                     <a href="http://www.showmyweather.com/" title="Show My Weather Forecast" onclick="window.open(this.href);return(false);"><script type="text/javascript" src="https://www.showmyweather.com/weather_widget.php?int=0&type=js&country=us&state=#statename#&city=#city#&smallicon=0&current=1&forecast=0&background_color=ffffff&color=000000&width=175&padding=2&border_width=0&border_color=000000&font_size=10&font_family=Verdana&showicons=1&measure=F&d=#dateFormat(now(), 'yyyy-mm-dd')#"></script></a><div style="width:160px;text-align:center;font-size:0.6em;margin-top:0.5em;"></div>---->
                   
@@ -697,12 +700,23 @@
                                             <cfif usertype EQ 4>
                                             
                                                 <cfquery name="check_facilitator_assignment" datasource="#APPLICATION.DSN#">
-                                                    select user_access_rights.userid, user_access_rights.usertype, smg_users.firstname, smg_users.lastname
-                                                    from user_access_rights 
-                                                    INNER JOIN smg_users on user_access_rights.userid = smg_users.userid
-                                                    where user_access_rights.usertype = 4
-                                                    and regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#regionid#">
-                                                    and smg_users.userid <> <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userid#">
+                                                    SELECT 
+                                                    	user_access_rights.userid, 
+                                                        user_access_rights.usertype, 
+                                                        smg_users.firstname, 
+                                                        smg_users.lastname
+                                                    FROM 
+                                                    	user_access_rights 
+                                                    INNER JOIN 
+                                                    	smg_users on user_access_rights.userid = smg_users.userid
+                                                    WHERE 
+                                                    	user_access_rights.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="4">
+                                                    AND 
+                                                    	regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#regionid#">
+                                                    AND 
+                                                    	smg_users.userid != <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userid#">
+                                                    AND
+                                                    	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                                                 </cfquery>
     
                                                 <cfloop query="check_facilitator_assignment">
@@ -716,12 +730,23 @@
                                             <cfelseif usertype EQ 5>
                                             
                                                 <cfquery name="check_manager_assignment" datasource="#APPLICATION.DSN#">
-                                                    SELECT user_access_rights.userid, user_access_rights.usertype, smg_users.firstname, smg_users.lastname
-                                                    FROM user_access_rights 
-                                                    INNER JOIN smg_users ON user_access_rights.userid = smg_users.userid
-                                                    WHERE user_access_rights.usertype = 5
-                                                    AND regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#regionid#">
-                                                    AND smg_users.userid <> <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userid#">
+                                                    SELECT 
+                                                    	user_access_rights.userid, 
+                                                        user_access_rights.usertype, 
+                                                        smg_users.firstname, 
+                                                        smg_users.lastname
+                                                    FROM 
+                                                    	user_access_rights 
+                                                    INNER JOIN 
+                                                    	smg_users ON user_access_rights.userid = smg_users.userid
+                                                    WHERE 
+                                                    	user_access_rights.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
+                                                    AND 
+                                                    	regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#regionid#">
+                                                    AND 
+                                                    	smg_users.userid != <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userid#">
+													AND
+                                                    	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">                                                    
                                                 </cfquery>
     
                                                 <cfloop query="check_manager_assignment">
@@ -811,19 +836,28 @@
                             <td align="center" style="line-height:20px;"><cfif NOT isDate(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
                             <td align="center" style="line-height:20px;"><cfif NOT isDate(date_expired)>processing<cfelse>#DateFormat(date_expired, 'mm/dd/yyyy')#</cfif></td>
                             <td align="center" style="line-height:20px;"><cfif NOT LEN(requestID)>processing<cfelseif flagcbc EQ 1>On Hold Contact Compliance<cfelse><cfif CLIENT.usertype lte 4><a href="cbc/view_user_cbc.cfm?userID=#get_cbc_user.userID#&cbcID=#get_cbc_user.cbcID#&file=batch_#get_cbc_user.batchid#_user_#get_cbc_user.userid#_rec.xml" target="_blank"><!----#requestid#---->View </a></cfif></cfif></td>
-                            <cfif client.usertype lte 4><td>#notes#</td></cfif>
+                            <td>
+								<cfif client.usertype lte 4>
+                                	#notes#
+                            	<cfelse>
+                                	&nbsp;
+                                </cfif>
+                            </td>
                             <cfif client.usertype lte 4 and client.companyid eq 10><td align="center" valign="top"><a href="delete_cbc.cfm?type=user&id=#requestid#&userid=#url.userid#"><img src="pics/deletex.gif" border=0/></td></cfif>
                         </tr>
                         </cfloop>
                     </cfif>
+                    
                     <cfloop query="check_hosts">
                         <tr><td colspan="3">CBC Submitted for Host Family (###hostid#).</td></tr>
                         <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("efefef") )#"> 
                             <td align="center" style="line-height:20px;"><b>#season#</b></td>
                             <td align="center" style="line-height:20px;"><cfif NOT isDate(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
                             <td align="center" style="line-height:20px;"><cfif NOT isDate(date_expired)>processing<cfelse>#DateFormat(date_expired, 'mm/dd/yyyy')#</cfif></td>
-                            <td align="center" style="line-height:20px;"><cfif NOT LEN(requestID)>processing<cfelse><cfif CLIENT.usertype lte 4>#requestid#</cfif></cfif></td>
-                            <cfif client.usertype lte 4 and client.companyid eq 10><td align="center" valign="top"><a href="delete_cbc.cfm?type=user&id=#requestid#&userid=#url.userid#"><img src="pics/deletex.gif" border=0/></td></cfif>
+                            <td align="center" style="line-height:20px;" colspan="2"><cfif NOT LEN(requestID)>processing<cfelse><cfif CLIENT.usertype lte 4>#requestid#</cfif></cfif></td>
+                            <cfif client.usertype lte 4 and client.companyid eq 10>
+                            	<td align="center" valign="top"><a href="delete_cbc.cfm?type=user&id=#requestid#&userid=#url.userid#"><img src="pics/deletex.gif" border=0/></a></td>
+							</cfif>
                         </tr>
                     </cfloop>				
                 </table>
@@ -1249,7 +1283,7 @@
              <div class="rdholder" style="width:100%;float:right;" > 
 				<div class="rdtop"> 
                 <span class="rdtitle">Training</span> 
-                <cfif VAL(CLIENT.USERTYPE) LTE 4>
+                <cfif listFind("1,2,3,4", CLIENT.userType)>
                 <a href="javascript:displayTrainingForm();"><img src="pics/buttons/pencilBlue23x29.png" border="0" alt="Edit" class="floatRight"></a>
                 </cfif>
             	</div> <!-- end top --> 
@@ -1516,7 +1550,10 @@
              <div class="rdholder" style="width:100%;float:right;" > 
 				<div class="rdtop"> 
                 <span class="rdtitle">Other Family Members</span> 
-                <a href="?curdoc=forms/edit_family_members&userid=#rep_info.userid#"><img src="pics/buttons/pencilBlue23x29.png" border="0" alt="Edit" class="floatRight"></a>
+                <!--- DOS Usertype does not have access to edit information --->
+				<cfif CLIENT.userType NEQ 27>
+	                <a href="?curdoc=forms/edit_family_members&userid=#rep_info.userid#"><img src="pics/buttons/pencilBlue23x29.png" border="0" alt="Edit" class="floatRight"></a>
+    			</cfif>
             	</div> <!-- end top --> 
              <div class="rdbox">
                 
@@ -1752,9 +1789,12 @@
                 <div class="rdholder"  style="width:100%;float:right;" > 
 				<div class="rdtop"> 
                 <span class="rdtitle">References</span> 
-                
-                <a href="javascript:openPopUp('forms/repRefs.cfm?curdoc=repRefs&userid=#url.userid#', 640, 800);"><img src="pics/buttons/pencilBlue23x29.png" border="0" alt="Edit" class="floatRight"></a>
-                
+
+                <!--- DOS Usertype does not have access to edit information --->
+				<cfif CLIENT.userType NEQ 27>
+	                <a href="javascript:openPopUp('forms/repRefs.cfm?curdoc=repRefs&userid=#url.userid#', 640, 800);"><img src="pics/buttons/pencilBlue23x29.png" border="0" alt="Edit" class="floatRight"></a>
+    			</cfif>
+                            
             	</div> <!-- end top --> 
              <div class="rdbox">    
                  <!----
