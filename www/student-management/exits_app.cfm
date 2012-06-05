@@ -12,15 +12,28 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 	<link rel="stylesheet" type="text/css" href="nsmg/student_app/app.css">
 	<cfquery name="get_student_info" datasource="MySql">
-	 	SELECT s.firstname, s.familylastname, s.studentid,
+	 	SELECT 
+        	s.firstname, 
+        	s.familylastname, 
+            s.studentid,
+            s.cancelDate,
 			u.businessname
-		FROM smg_students s
-		INNER JOIN smg_users u ON u.userid = s.intrep
-		WHERE s.uniqueid = <cfqueryparam value="#url.unqid#" cfsqltype="cf_sql_varchar">
+		FROM 
+        	smg_students s
+		INNER JOIN 
+        	smg_users u ON u.userid = s.intrep
+		WHERE 
+        	s.uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#url.unqid#">
 	</cfquery>
 	<cfset client.studentid = '#get_student_info.studentid#'>
 	<title>EXITS Online Application <cfoutput query="get_student_info"> - #firstname# #familylastname# (###studentid#)</cfoutput></title>
 </head>
+
+<!--- DOS Request - Link for Fellipe Casale's application 27070 has been shared and it's out of compliance | Block access to canceled students --->
+<cfif isDate(get_student_info.cancelDate)>
+	<p><h1 align="center">Sorry this application is no longer available.</h1></p>
+	<cfabort>
+</cfif>
 
 <cfoutput>
 <script language="JavaScript" type="text/JavaScript">
