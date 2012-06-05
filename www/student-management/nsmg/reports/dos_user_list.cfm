@@ -5,7 +5,7 @@
 	Date:		March 08, 2010
 	Desc:		Department of State User List Report
 
-	Updated:  	
+	Updated:  	06/05/2012 - Modified to get users involved from 2011/01/01
 
 ----- ------------------------------------------------------------------------- --->
 
@@ -16,52 +16,75 @@
     <cfsetting requesttimeout="9999" enablecfoutputonly="yes">
     
     <cfquery name="qUsers" datasource="MySQL">
-        <!--- Get all active reps regardless if they are involved in placing/supervising kids --->
-        SELECT DISTINCT
-			u.userID,
-            u.firstName,
-            u.lastName,
-            u.ssn,
-            u.dateCreated
-   		FROM
-        	smg_users u
-        INNER JOIN
-        	smg_students s ON (s.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes">) AND (s.placeRepID = u.userID OR s.areaRepID = u.userID) )
-        INNER JOIN
-        	smg_programs p ON s.programID = p.programID AND p.startdate >= <cfqueryparam cfsqltype="cf_sql_date" value="2009/01/01">
-		
-        UNION
-        
-        SELECT
-			u.userID,
-            u.firstName,
-            u.lastName,
-            u.ssn,
-            u.dateCreated
-  		FROM
-        	smg_users u
-        INNER JOIN
-        	smg_hosthistory h ON (h.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes">) AND (h.placeRepID = u.userID OR h.areaRepID = u.userID) )
-        
-        <!---
-        UNION
-        
-        <!--- Get inactive reps that were involved in placing/supervising kids --->
-        SELECT
-			u.userID,
-            u.firstName,
-            u.lastName,
-            u.ssn,
-            u.dateCreated
-  		FROM
-        	smg_users u
-        INNER JOIN
-        	smg_students s ON (s.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes">) AND (s.placeRepID = u.userID OR s.areaRepID = u.userID) )
-        INNER JOIN
-        	smg_programs p ON s.programID = p.programID AND p.startdate >= <cfqueryparam cfsqltype="cf_sql_date" value="2009/01/01">
-        WHERE
-            u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">       
-		--->
+        <!--- Placing Reps --->
+		SELECT
+			userID,
+            firstName,
+            lastName,
+            ssn,
+            dateCreated,
+            regionID,
+            userType
+        FROM
+        	(
+                <!--- Placing Reps --->
+                SELECT DISTINCT
+                    u.userID,
+                    u.firstName,
+                    u.lastName,
+                    u.ssn,
+                    u.dateCreated,
+                    uar.regionID,
+                    uar.userType
+                FROM
+					smg_students s
+                INNER JOIN
+                    smg_programs p ON s.programID = p.programID
+                    	AND
+                        	p.startdate >= <cfqueryparam cfsqltype="cf_sql_date" value="2011/01/01"> 
+                INNER JOIN
+                    smg_hosthistory h ON s.studentID = h.studentID
+				INNER JOIN
+                	smg_users u ON u.userID = h.placeRepID
+                INNER JOIN
+                    user_access_rights uar ON uar.userID = u.userID
+                    	AND
+                        	uar.regionID = s.regionAssigned
+                WHERE
+                	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+                
+                UNION
+                
+                <!--- Supervising Reps --->
+                SELECT DISTINCT
+                    u.userID,
+                    u.firstName,
+                    u.lastName,
+                    u.ssn,
+                    u.dateCreated,
+                    uar.regionID,
+                    uar.userType
+                FROM
+					smg_students s
+                INNER JOIN
+                    smg_programs p ON s.programID = p.programID
+                    	AND
+                        	p.startdate >= <cfqueryparam cfsqltype="cf_sql_date" value="2011/01/01"> 
+                INNER JOIN
+                    smg_hosthistory h ON s.studentID = h.studentID
+				INNER JOIN
+                	smg_users u ON u.userID = h.areaRepID
+                INNER JOIN
+                    user_access_rights uar ON uar.userID = u.userID
+                    	AND
+                        	uar.regionID = s.regionAssigned
+                WHERE
+                	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+                
+			) AS t
+            
+        GROUP BY
+        	userID
         
         ORDER BY
         	lastName,
@@ -124,25 +147,20 @@
 
 </cfsilent>    
 
-
 <!--- set content type --->
 <cfcontent type="application/msexcel">
 
 <!--- suggest default name for XLS file --->
 <!--- "Content-Disposition" in cfheader also ensures 
 relatively correct Internet Explorer behavior. --->
-<cfheader name="Content-Disposition" value="attachment; filename=smg_students.xls"> 
-
-<!--- <cfheader name="Content-Disposition"filename=caremed_template.xls">  Open in the Browser --->
+<cfheader name="Content-Disposition" value="attachment; filename=dos-user-list.xls"> 
 
 <!--- Format data using cfoutput and a table. Excel converts the table to a spreadsheet.
 The cfoutput tags around the table tags force output of the HTML when using cfsetting enablecfoutputonly="Yes" --->
 
-
 <cfoutput>
 
 	<style type="text/css">
-	
 		table.tableReport {
 			border-width: 0px 0px 0px 0px;
 			border-spacing: 0px;
@@ -189,7 +207,7 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
         <tr>
         	<td colspan="12">
                 LOCAL COORDINATOR STAFF LIST <br />
-                Input date for everyone who functioned as a local coordinator* for any period of time since January 1, 2009 <br />
+                Input date for everyone who functioned as a local coordinator* for any period of time since January 1, 2011 <br />
                 *Local coordinator is defined as anyone with direct responsability for securing home and school placements and for monitoring exchange visitors.                        
             </td>
         </tr>
@@ -216,13 +234,19 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                 FROM
                     qRegionalManagersList
                 WHERE
-                    regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(APPCFC.USER.getUserAccessRights(userID=qUsers.userID, companyID=CLIENT.companyID).regionID)#">     	
+                    regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qUsers.regionID#">     	
             </cfquery>
 
             <tr>
                 <td>#qUsers.firstName#</td>
                 <td>#qUsers.lastName#</td>
-                <td>AR</td>
+                <td>	
+                	<cfif qUsers.userType EQ 5>
+                    	Regional Manager
+                    <cfelse>
+                    	AR
+                    </cfif>
+                </td>
                 <td>#qRegionalManager.name#</td>
                 <td>#checkHostFamily(qUsers.SSN)#</td>
                 <td>N/A</td>
