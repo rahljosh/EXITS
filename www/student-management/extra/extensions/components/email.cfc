@@ -497,9 +497,9 @@
 
 				// IT / Office
 				if ( ListFind("1,2,3", CLIENT.userType) ) {
-					ARGUMENTS.email_to = CLIENT.email;	  
+					ARGUMENTS.emailTo = CLIENT.email;	  
 				} else {
-					ARGUMENTS.email_to = APPLICATION.EMAIL.support;
+					ARGUMENTS.emailTo = APPLICATION.EMAIL.support;
 				}
 				
 				if ( LEN(ARGUMENTS.emailCC) ) {
