@@ -5,7 +5,8 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #2
 </style>
 
 <title>Progress Reports</title>
-<CFif isDefined('form.addReportNow')>
+
+<cfif isDefined('form.addReportNow')>
 <Cfset form.studentid = #url.stuid#>
  <cfquery name="get_student" datasource="#application.dsn#">
         SELECT secondVisitRepID, arearepid, placerepid, intrep, regionassigned, hostid, programid, companyid
@@ -128,45 +129,73 @@ where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.stuid#">
         </tr>
     <cfelse>
         <tr align="left">
-            <th>&nbsp;</th>
+            <th>Action</th>
             <th>Type</th>
-            <th>SR Approved</th>
-            <th>RA Approved</th>
-            <th>RD Approved</th>
-            <th>Facilitator Approved</th>
-            <th>Rejected</th>
+            <!--- DOS User do not have access to details --->
+            <cfif CLIENT.userType NEQ 27>
+                <th>SR Approved</th>
+                <th>RA Approved</th>
+                <th>RD Approved</th>
+                <th>Facilitator Approved</th>
+                <th>Rejected</th>
+            </cfif>
         </tr>
         <cfoutput query="get_progress_reports">
             <tr bgcolor="#iif(currentRow MOD 2 ,DE("ffffe6") ,DE("white") )#">
                 <td>
+                    <form action="../index.cfm?curdoc=progress_report_info" method="post" name="theForm_#pr_id#" id="theForm_#pr_id#" target="_blank">
+                        <input type="hidden" name="pr_id" value="#pr_id#">
+                    </form>
+                
 					<!--- restrict view of report until the supervising rep approves it.
 					(we're intentionally not including the other checks to only allow SR, RA, etc. to view like on the progress report list) --->
                     <cfif (pr_sr_approved_date EQ '' and fk_sr_user NEQ client.userid) OR (client.usertype eq 8 and pr_ny_approved_date EQ '')>
                         Pending
                     <cfelse>
-                        <form action="../index.cfm?curdoc=progress_report_info" method="post" name="theForm_#pr_id#" id="theForm_#pr_id#" target="_blank">
-                        <input type="hidden" name="pr_id" value="#pr_id#">
-                        </form>
-                       <Cfif fk_reportType eq 1>
-                       		<a href="javascript:document.theForm_#pr_id#.submit();">
-                       <cfelse>
-                       		<a href="../index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#get_progress_reports.pr_id#" target="_blank">
-                       </cfif>
-                       View</a>
+                    	<!--- Progress Reports --->
+                       	<cfif fk_reportType eq 1>
+                       		<a href="javascript:document.theForm_#pr_id#.submit();">View</a>
+                       	<!--- Second Visit --->
+						<cfelse>
+                       		<a href="../index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#get_progress_reports.pr_id#" target="_blank">View</a>
+                       	</cfif>
                     </cfif>
                 </td>
-                <td>#description#</td>
-                <td>#dateFormat(pr_sr_approved_date, 'mm/dd/yyyy')#</td>
                 <td>
-                    <cfif fk_ra_user EQ ''>
-                        N/A
+                	<!--- Display the month of the report --->
+                	<cfif get_progress_reports.description EQ 'Progress Reports'>
+                        
+                        <cfswitch expression="#get_progress_reports.pr_month_of_report#">
+                        
+                            <cfcase value="9,10,11,12,2,3,4,5,6">
+                                #MonthAsString(get_progress_reports.pr_month_of_report-1)# - Progress Report
+                            </cfcase>
+                            
+                            <cfcase value="1">
+                                December - Progress Report
+                            </cfcase>
+                            
+                        </cfswitch>
+                    
                     <cfelse>
-                        #DateFormat(get_progress_reports.pr_ra_approved_date, 'mm/dd/yyyy')#
+                        #get_progress_reports.description#
                     </cfif>
+                                  
                 </td>
-                <td>#DateFormat(pr_rd_approved_date, 'mm/dd/yyyy')#</td>
-                <td>#DateFormat(pr_ny_approved_date, 'mm/dd/yyyy')#</td>
-                <td>#DateFormat(pr_rejected_date, 'mm/dd/yyyy')#</td>
+                <!--- DOS User do not have access to details --->
+                <cfif CLIENT.userType NEQ 27>
+                    <td>#dateFormat(pr_sr_approved_date, 'mm/dd/yyyy')#</td>
+                    <td>
+                        <cfif fk_ra_user EQ ''>
+                            N/A
+                        <cfelse>
+                            #DateFormat(get_progress_reports.pr_ra_approved_date, 'mm/dd/yyyy')#
+                        </cfif>
+                    </td>
+                    <td>#DateFormat(pr_rd_approved_date, 'mm/dd/yyyy')#</td>
+                    <td>#DateFormat(pr_ny_approved_date, 'mm/dd/yyyy')#</td>
+                    <td>#DateFormat(pr_rejected_date, 'mm/dd/yyyy')#</td>
+				</cfif>                    
             </tr>	
         </cfoutput>
     </cfif>
@@ -181,15 +210,12 @@ where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.stuid#">
     ORDER BY smg_prquestion_details.report_number DESC
 </cfquery>
 
-<table width="100%" border=0 cellpadding=4 cellspacing=0 class="section">
-	<tr>
-    	<td colspan=6><span class="get_attention"><b>></b></span> <u>Reports Received prior to 09/16/2009</u></td>
-    </tr>
-    <cfif get_old_progress_reports.recordCount EQ 0>
+<cfif get_old_progress_reports.recordCount>
+
+    <table width="100%" border=0 cellpadding=4 cellspacing=0 class="section">
         <tr>
-            <td colspan=6>There are no reports.</td>
+            <td colspan=6><span class="get_attention"><b>></b></span> <u>Reports Received prior to 09/16/2009</u></td>
         </tr>
-    <cfelse>
         <tr align="left">
             <th>&nbsp;</th>
             <th>Submitted</th>
@@ -208,8 +234,9 @@ where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.stuid#">
                 <td>#submit_type#</td>
             </tr>	
         </cfoutput>
-    </cfif>
-</table>
+    </table>
+    
+</cfif>
 
 <table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
 	<tr>
@@ -220,7 +247,7 @@ where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.stuid#">
        				<input type="image" value="close window" src="../pics/close.png"  onClick="javascript:window.close()">
         		</Td>
                 <Td>
-					<Cfif client.usertype lte 4>
+					<cfif client.usertype lte 4>
                     <cfoutput>
                     <Form method="post" action="received_progress_reports.cfm?stuid=#url.stuid#"><input type="image" src="../pics/2visit.png" />
                     <input type="hidden" name="addReport" />
