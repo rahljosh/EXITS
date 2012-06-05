@@ -141,23 +141,23 @@
 		<cfswitch expression="#CLIENT.companyID#">
         
         	<cfcase value="1,2,3,4,5,12,13,14">
-            	<cfset vEmailToList = 'thea@iseusa.com,#CLIENT.programmanager_email#,#vRMEmailList#'>
+            	<cfset vEmailToList = 'thea@iseusa.com;eric@iseusa.com;#CLIENT.programmanager_email#;#vRMEmailList#'>
             </cfcase>
 			
         	<cfcase value="6">
-            	<cfset vEmailToList = 'luke@phpusa.com'>
+            	<cfset vEmailToList = 'luke@phpusa.com;eric@iseusa.com'>
             </cfcase>
 
         	<cfcase value="7">
-            	<cfset vEmailToList = 'sergei@iseusa.com'>
+            	<cfset vEmailToList = 'sergei@iseusa.com;eric@iseusa.com'>
             </cfcase>
 
         	<cfcase value="8">
-            	<cfset vEmailToList = 'anca@csb-usa.com'>
+            	<cfset vEmailToList = 'anca@csb-usa.com;eric@iseusa.com'>
             </cfcase>
             
         	<cfcase value="10">
-            	<cfset vEmailToList = 'stacy@case-usa.org'>
+            	<cfset vEmailToList = 'stacy@case-usa.org;eric@iseusa.com'>
             </cfcase>
             
 		</cfswitch>        
