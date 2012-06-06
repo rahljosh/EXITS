@@ -322,16 +322,81 @@
                     countryName,
                     countryCode,
                     sevisCode,
-                    continent
+                    continent,
+                    funFact
 				FROM
                 	smg_countrylist
 				<cfif LEN(ARGUMENTS.countryID)>
 	                WHERE 
                         countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.countryID)#">
-                </cfif>                        
+                </cfif>     
+				ORDER BY
+                	countryName                    
         </cfquery> 
 
 		<cfreturn qGetCountry>
+	</cffunction>
+
+
+	<cffunction name="getCountryAssignedToStudent" access="public" returntype="query" output="false" hint="Returns a list of countries assigned to a student">
+
+        <cfquery 
+        	name="qGetCountryAssignedToStudent"
+        	datasource="#APPLICATION.DSN#">
+                SELECT DISTINCT
+                	cl.countryID,
+                    cl.countryName,
+                    cl.countryCode,
+                    cl.sevisCode,
+                    cl.continent,
+                    cl.funFact
+				FROM
+                	smg_countrylist cl
+                INNER JOIN
+                	smg_students s ON 
+                    ( 
+                    	s.countryBirth = cl.countryID
+					OR
+                    	s.countryResident = cl.countryID
+                    OR
+                    	s.countryCitizen = cl.countryID
+                    ) 
+                    AND
+                    	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">                       		
+				GROUP BY
+                	cl.countryID
+                ORDER BY
+                	cl.countryName                    
+        </cfquery> 
+
+		<cfreturn qGetCountryAssignedToStudent>
+	</cffunction>
+
+
+	<cffunction name="getCountryLanguage" access="public" returntype="query" output="false" hint="Returns a list of languages for a country">
+    	<cfargument name="countryID" hint="countryID is required">
+
+        <cfquery 
+        	name="qGetCountryLanguage"
+        	datasource="#APPLICATION.DSN#">
+                SELECT 
+                	clJN.ID,
+                    clJN.countryID,
+                    clJN.languageID,
+                    clJN.dateCreated,
+                    clJN.dateUpdated,
+                    alu.name
+				FROM
+                	smg_countryLanguageJN clJN
+                INNER JOIN
+					applicationLookUp alu ON alu.fieldID = clJN.languageID
+                    	AND
+                        	fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="language">
+                WHERE 
+                    clJN.countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.countryID)#">
+        </cfquery> 
+
+		<cfreturn qGetCountryLanguage>
 	</cffunction>
 
 

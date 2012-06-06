@@ -134,7 +134,7 @@
 	APPLICATION.PATH.jQueryTheme = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/excite-bike/jquery-ui.css';
 	// 	APPLICATION.PATH.jQueryTheme = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/themes/redmond/jquery-ui.css';
 
-
+	APPLICATION.PATH.pics = APPLICATION.PATH.base & "pics/"; 
 	APPLICATION.PATH.companyLogo = APPLICATION.PATH.base & "pics/logos/"; 
 	APPLICATION.PATH.uploadedFiles = APPLICATION.PATH.base & "uploadedfiles/";	
 	

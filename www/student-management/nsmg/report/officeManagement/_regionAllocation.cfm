@@ -369,13 +369,13 @@
                 <tr>
                     <td class="subTitleLeft" width="15%">Region</td>	
                     <td class="subTitleLeft" width="15%">Regional Manager</td>
-                    <td class="subTitleLeft" width="10%">Total Assigned</td>
-                    <td class="subTitleLeft" width="10%">Placed</td>
-                    <td class="subTitleLeft" width="10%">Pending</td>
-                    <td class="subTitleLeft" width="10%">Unplaced</td>
-                    <td class="subTitleLeft" width="10%">Total Placements</td>
-                    <td class="subTitleLeft" width="10%">Goal</td>
-                    <td class="subTitleLeft" width="10%">Percentage</td>
+                    <td class="subTitleCenter" width="10%">Total Assigned</td>
+                    <td class="subTitleCenter" width="10%">Placed</td>
+                    <td class="subTitleCenter" width="10%">Pending</td>
+                    <td class="subTitleCenter" width="10%">Unplaced</td>
+                    <td class="subTitleCenter" width="10%">Total Placements</td>
+                    <td class="subTitleCenter" width="10%">Goal</td>
+                    <td class="subTitleCenter" width="10%">Percentage</td>
                 </tr>
 
                 <cfoutput>
@@ -384,7 +384,7 @@
                         SELECT
                             s.studentID,
                             s.host_fam_approved,
-                            h.hostID
+                            sh.hostID
                         FROM
                             smg_students s
                         INNER JOIN 
@@ -394,7 +394,9 @@
                                 AND
                                     p.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> 
                         LEFT OUTER JOIN
-                            smg_hosts h ON h.hostID = s.hostID
+                        	smg_hostHistory sh ON sh.studentID = s.studentID
+                            AND
+                            	sh.isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                         WHERE
                             s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                         AND
@@ -455,13 +457,13 @@
                     <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
                         <td>#qGetResults.regionName#</td>
                         <td>#qGetResults.firstName# #qGetResults.lastName# ###qGetResults.userID#</td>                        
-                        <td>#qGetStudents.recordCount#</td>
-                        <td>#qGetPlaced.recordCount#</td>
-                        <td>#qGetPending.recordCount#</td>
-                        <td>#qGetUnplaced.recordCount#</td>
-                        <td>#vPlacement#</td>
-                        <td>#qGetResults.allocation#</td>
-                        <td>#NumberFormat(vPercentage, '___.__')#%</td>
+                        <td class="center">#qGetStudents.recordCount#</td>
+                        <td class="center">#qGetPlaced.recordCount#</td>
+                        <td class="center">#qGetPending.recordCount#</td>
+                        <td class="center">#qGetUnplaced.recordCount#</td>
+                        <td class="center">#vPlacement#</td>
+                        <td class="center">#qGetResults.allocation#</td>
+                        <td class="center">#NumberFormat(vPercentage, '___.__')#%</td>
                     </tr>
                     
                 </cfoutput>
@@ -478,13 +480,13 @@
                 
                 <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
                     <td class="subTitleLeft" colspan="2">Total</td>
-                    <td class="subTitleLeft">#vSummaryAssigned#</td>
-                    <td class="subTitleLeft">#vSummaryPlaced#</td>
-                    <td class="subTitleLeft">#vSummaryPending#</td>
-                    <td class="subTitleLeft">#vSummaryUnplaced#</td>
-                    <td class="subTitleLeft">#vSummaryPlacement#</td>
-                    <td class="subTitleLeft">#vSummaryGoal#</td>
-                    <td class="subTitleLeft">#NumberFormat(vSummaryPercentage, '___.__')#%</td>
+                    <td class="subTitleCenter">#vSummaryAssigned#</td>
+                    <td class="subTitleCenter">#vSummaryPlaced#</td>
+                    <td class="subTitleCenter">#vSummaryPending#</td>
+                    <td class="subTitleCenter">#vSummaryUnplaced#</td>
+                    <td class="subTitleCenter">#vSummaryPlacement#</td>
+                    <td class="subTitleCenter">#vSummaryGoal#</td>
+                    <td class="subTitleCenter">#NumberFormat(vSummaryPercentage, '___.__')#%</td>
                 </tr>
             </table>
             

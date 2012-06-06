@@ -248,10 +248,17 @@
                 <li><a href="index.cfm?curdoc=pdf_docs/index">#qGetCompany.companyShort_noColor# Docs</a></li>
                 
                 <!--- Student View does not have access to reports --->
-                <cfif CLIENT.usertype NEQ 9>
+                <cfif listFind("5,6,7", CLIENT.userType)>
                     <li><a href="index.cfm?curdoc=reports/index">Reports</a></li>
                 </cfif>
-    
+                
+                <!--- Reports For Managers --->
+                <!---
+				<cfif listFind("5", CLIENT.userType)>
+                    <li><a href="index.cfm?curdoc=report/index">New Reports</a></li>
+    			</cfif>
+				--->
+                
                 <li><a href="index.cfm?curdoc=support">Support</a></li>
                 
                 <!--- Webmail | Only Office and Managers have email account --->
@@ -355,29 +362,29 @@
 					</cfif>
                 </li>
 
-				<cfif listFind("1,510,17313,12313,17306", CLIENT.userID)> <!--- <cfif LISTFIND("1,2,3,4", CLIENT.userType)> --->
+				<!--- <cfif listFind("1,510,17313,12313,17306", CLIENT.userID)> --->
+                <cfif listFind("1,510,17313,12313,17306", CLIENT.userID)>
                     <li><a href="index.cfm?curdoc=report/index">New Reports</a></li>
                 </cfif>
+                <!--- </cfif> --->
                 
                 <li>
                     <a href="##">Tools</a>                
                     <ul>
-                        <!--- CBC Access --->
-                        <cfif listFind("1,2", CLIENT.usertype) OR CLIENT.compliance EQ 1>    
-                            <li>
-                                <a href="index.cfm?curdoc=cbc/cbc_menu">CBC Batch</a>
-                            </li>
-    
+                        <!--- Compliance Access --->
+                        <cfif VAL(CLIENT.compliance)>    
+                            <li><a href="index.cfm?curdoc=cbc/cbc_menu">CBC Batch</a></li>
                             <li><a href="index.cfm?curdoc=cbc/combine_hosts">Combining Hosts</a></li>   
-                            
                             <li><a href="index.cfm?curdoc=compliance/combine_schools">Combining Schools</a></li>
                         </cfif>
-    
-                        <li><a href="index.cfm?curdoc=tools/countries">Countries</a></li>
 
+                        <li><a href="index.cfm?curdoc=tools/countryMaintenance">Country Maintenance</a></li> 
+    
     					<li><a href="index.cfm?curdoc=tools/verification_received">#CLIENT.DSFormName# Verification List</a></li>
 
     					<li><a href="index.cfm?curdoc=tools/importFLSID">FLS Import Tool</a></li>
+
+						<li><a href="index.cfm?curdoc=tools/intlRepAllocation">International Rep. Allocation</a></li>
                     
                         <li>
                             <a href="index.cfm?curdoc=insurance/index">Insurance Menu</a>
@@ -390,13 +397,10 @@
     
                         <li><a href="index.cfm?curdoc=tools/progress_report_questions">PR Questions</a></li>
     
-                        <li><a href="index.cfm?curdoc=tools/regions">Regions</a></li>
+                        <li><a href="index.cfm?curdoc=tools/regions">Region Maintenance</a></li>
                         
-                        <li><a href="index.cfm?curdoc=tools/intreps_allocations">International Reps Allocations</a></li>
-                        
-                        <cfif ListFind("1,2,3,4", CLIENT.userType)>
-                            <li><a href="index.cfm?curdoc=tools/regions_allocations">Region Allocations</a></li>
-    					</cfif>
+						<li><a href="index.cfm?curdoc=tools/regionAllocation">Region Allocation</a></li>
+
                         
                         <cfif ListFind("1,2,3", CLIENT.userType)>
                         	<li>
