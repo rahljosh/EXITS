@@ -1,0 +1,5 @@
+Create Inbound TCP Port 80 connection
+
+Name	Group	Profile	Enabled	Action	Override	Program	Local Address	Remote Address	Protocol	Local Port	Remote Port	Allowed Users	Allowed Computers	
+Apache-Port-80		All	Yes	Allow	No	Any	Any	Any	TCP	80	Any	Any	Any	
+	
