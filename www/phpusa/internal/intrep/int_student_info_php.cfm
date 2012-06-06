@@ -19,9 +19,9 @@
 
 <cfquery name="get_student_info" datasource="mysql">
 	SELECT DISTINCT s.studentid, s.uniqueid, s.familylastname, s.firstname, s.middlename, s.fathersname, s.fatheraddress,
-		s.fatheraddress2, s.fathercity, s.fathercountry, s.fatherzip, s.fatherbirth, s.fathercompany, s.fatherworkphone,
+		s.fatheraddress2, s.fathercity, s.fathercountry, s.fatherzip, s.fatherDOB, s.fathercompany, s.fatherworkphone,
 		s.fatherworkposition, s.fatherworktype, s.fatherenglish, s.motherenglish, s.mothersname, s.motheraddress,
-		s.motheraddress2, s.mothercity, s.mothercountry, s.motherzip, s.motherbirth, s.mothercompany, s.motherworkphone,
+		s.motheraddress2, s.mothercity, s.mothercountry, s.motherzip, s.motherDOB, s.mothercompany, s.motherworkphone,
 		s.motherworkposition, s.motherworktype, s.emergency_phone, s.emergency_name,s. emergency_address, 
 		s.emergency_country, s.address, s.address2, s.city, s.country, s.zip, s.phone, s.fax, s.email, s.citybirth, s.countrybirth,
 		s.countryresident, s.countrycitizen, s.sex, s.dob, s.religiousaffiliation, s.dateapplication, s.entered_by,

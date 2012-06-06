@@ -22,7 +22,7 @@
 			fathercountry = '#form.fathercountry#',
 			fatherzip = '#form.fatherzip#',
 			fatherenglish = <cfif IsDefined('form.fatherenglish')>'#form.fatherenglish#'<cfelse>''</cfif>,
-			fatherbirth = <cfif form.fatherbirth NEQ ''>'#form.fatherbirth#'<cfelse>0</cfif>,
+			fatherDOB = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.fatherDOB#">,
 			fatherworkposition = '#form.fatherworkposition#',
 			fathercompany = '#form.fathercompany#',
 			fatherworkphone = '#form.fatherworkphone#',
@@ -35,7 +35,7 @@
 			emergency_name = '#form.emergency_name#',
 			emergency_phone = '#form.emergency_phone#',
 			motherenglish = <cfif IsDefined('form.motherenglish')>'#form.motherenglish#'<cfelse>''</cfif>,
-			motherbirth = <cfif form.motherbirth NEQ ''>'#form.motherbirth#'<cfelse>0</cfif>,
+			motherDOB = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.motherDOB#">,
 			motherworkposition = '#form.motherworkposition#',
 			mothercompany = '#form.mothercompany#',
 			motherworkphone = '#form.motherworkphone#'
