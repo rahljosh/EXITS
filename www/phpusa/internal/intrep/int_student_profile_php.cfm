@@ -29,9 +29,9 @@ function OpenApp(url)
 
 <cfquery name="get_student_info" datasource="mysql">
 	SELECT s.studentid, s.uniqueid, s.familylastname, s.firstname, s.middlename, s.fathersname, s.fatheraddress,
-		s.fatheraddress2, s.fathercity, s.fathercountry, s.fatherzip, s.fatherbirth, s.fathercompany, s.fatherworkphone,
+		s.fatheraddress2, s.fathercity, s.fathercountry, s.fatherzip, s.fatherDOB, s.fathercompany, s.fatherworkphone,
 		s.fatherworkposition, s.fatherworktype, s.fatherenglish, s.motherenglish, s.mothersname, s.motheraddress,
-		s.motheraddress2, s.mothercity, s.mothercountry, s.motherzip, s.motherbirth, s.mothercompany, s.motherworkphone,
+		s.motheraddress2, s.mothercity, s.mothercountry, s.motherzip, s.motherDOB, s.mothercompany, s.motherworkphone,
 		s.motherworkposition, s.motherworktype, s.emergency_phone, s.emergency_name,s. emergency_address, 
 		s.emergency_country, s.address, s.address2, s.city, s.country, s.zip, s.phone, s.fax, s.email, s.citybirth, s.countrybirth,
 		s.countryresident, s.countrycitizen, s.sex, s.dob, s.religiousaffiliation, s.entered_by,
@@ -242,14 +242,14 @@ Order by birthdate
 	<span class="application_section_header">Natural Parents & Family In Home Country</span><br> 
 		<tr><td width="50%">
 			<table>
-				<tr><td width="100"><font color="Gray">Father:</font></td><td width="180">#get_student_info.fathersname# <cfif get_student_info.fatherbirth is '0'><cfelse><cfset calc_age_father = #CreateDate(get_student_info.fatherbirth,01,01)#> (#DateDiff('yyyy', calc_age_father, now())#)</cfif></td></tr>
+				<tr><td width="100"><font color="Gray">Father:</font></td><td width="180">#get_student_info.fathersname# <cfif isDate(get_student_info.fatherDOB)><cfset calc_age_father = #DateFormat(get_student_info.fatherDOB,"mm/dd/yyyy")#> (#DateDiff('yyyy', calc_age_father, now())#)</cfif></td></tr>
 				<tr><td><font color="Gray">Occupation:</font></td><td><cfif get_Student_info.fatherworkposition is ''>n/a<cfelse>#get_Student_info.fatherworkposition#</cfif></td></tr>
 				<tr><td><font face="" color="Gray">Speaks English:</font></td><td>#get_Student_info.fatherenglish#</td></tr>
 			</table>	
 		</td>
 		<td width="50%">
 			<table>
-				<tr><td width="100"><font color="Gray">Mother:</font></td><td width="180">#get_student_info.mothersname# <cfif get_student_info.motherbirth is '0'><cfelse><cfset calc_age_mom = #CreateDate(get_student_info.motherbirth,01,01)#> (#DateDiff('yyyy', calc_age_mom, now())#)</cfif></td></tr>
+				<tr><td width="100"><font color="Gray">Mother:</font></td><td width="180">#get_student_info.mothersname# <cfif isDate(get_student_info.motherDOB)><cfset calc_age_mom = #DateFormat(get_student_info.motherDOB,"mm/dd/yyyy")#> (#DateDiff('yyyy', calc_age_mom, now())#)</cfif></td></tr>
 				<tr><td><font color="Gray">Occupation:</font></td><td><cfif get_Student_info.motherworkposition is ''>n/a<cfelse>#get_Student_info.motherworkposition#</cfif></td></tr>
 				<tr><td><font face="" color="Gray">Speaks English:</font></td><td>#get_Student_info.motherenglish#</td></tr>
 			</table>	

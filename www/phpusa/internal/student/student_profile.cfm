@@ -211,14 +211,14 @@ where php_students_in_program.studentid = #get_student_unqid.studentid#
 		<tr>
 		<td width="50%">
 			<table>
-				<tr><td width="100"><font color="Gray">Father:</font></td><td width="180">#fathersname# <cfif fatherbirth is '0'><cfelse><cfset calc_age_father = #CreateDate(fatherbirth,01,01)#> (#DateDiff('yyyy', calc_age_father, now())#)</cfif></td></tr>
+				<tr><td width="100"><font color="Gray">Father:</font></td><td width="180">#fathersname# <cfif isDate(fatherDOB)><cfset calc_age_father = #DateFormat(fatherDOB, "mm/dd/yyyy")#> (#DateDiff('yyyy', calc_age_father, now())#)</cfif></td></tr>
 				<tr><td><font color="Gray">Occupation:</font></td><td><cfif fatherworkposition is ''>n/a<cfelse>#fatherworkposition#</cfif></td></tr>
 				<tr><td><font face="" color="Gray">Speaks English:</font></td><td>#fatherenglish#</td></tr>
 			</table>	
 		</td>
 		<td width="50%">
 			<table>
-				<tr><td width="100"><font color="Gray">Mother:</font></td><td width="180">#mothersname# <cfif motherbirth is '0'><cfelse><cfset calc_age_mom = #CreateDate(motherbirth,01,01)#> (#DateDiff('yyyy', calc_age_mom, now())#)</cfif></td></tr>
+				<tr><td width="100"><font color="Gray">Mother:</font></td><td width="180">#mothersname# <cfif isDate(motherDOB)><cfset calc_age_mom = #DateFormat(motherDOB,"mm/dd/yyyy")#> (#DateDiff('yyyy', calc_age_mom, now())#)</cfif></td></tr>
 				<tr><td><font color="Gray">Occupation:</font></td><td><cfif motherworkposition is ''>n/a<cfelse>#motherworkposition#</cfif></td></tr>
 				<tr><td><font face="" color="Gray">Speaks English:</font></td><td>#motherenglish#</td></tr>
 			</table>	

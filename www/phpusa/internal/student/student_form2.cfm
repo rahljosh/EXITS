@@ -110,7 +110,7 @@ form2.mothercountry.value = '0';
 						<cfif fatherenglish EQ 'no'><cfinput type="radio" name="fatherenglish" value="No" checked="yes" onchange="DataChanged();">No<cfelse><cfinput type="radio" name="fatherenglish" value="No" onchange="DataChanged();">No</cfif>	
 					</td>
 				</tr>
-				<tr><td align="right">Year of Birth:</td><td><cfinput type="text" name="fatherbirth" size="4" value="#fatherbirth#" maxlength="4" onchange="DataChanged();"> (yyyy)</td></tr>
+				<tr><td align="right">Date of Birth:</td><td><cfinput type="text" name="fatherDOB" size="10" value="#DateFormat(fatherDOB,'mm/dd/yyyy')#" maxlength="10" class="datePicker" onchange="DataChanged();"></td></tr>
 				<tr><td align="right">Occupation:</td><td><cfinput type="text" name="fatherworkposition" size="35" value="#fatherworkposition#" maxlength="50" onchange="DataChanged();"></td></tr>
 				<tr><td align="right">Employed By:</td><td><cfinput type="text" name="fathercompany" size="35" value="#fathercompany#" maxlength="50" onchange="DataChanged();"></td></tr>
 				<tr><td align="right">Business Phone:</td><td><cfinput name="fatherworkphone" value="#fatherworkphone#" size="16" maxlength="16" onchange="DataChanged();"></td></tr>
@@ -143,7 +143,7 @@ form2.mothercountry.value = '0';
 						<cfif motherenglish EQ 'no'><cfinput type="radio" name="motherenglish" value="No" checked="yes" onchange="DataChanged();">No<cfelse><cfinput type="radio" name="motherenglish" value="No" onchange="DataChanged();">No</cfif>	
 					</td>
 				</tr>
-				<tr><td align="right">Year of Birth:</td><td><cfinput type="text" name="motherbirth" size="4" value="#motherbirth#" maxlength="4" onchange="DataChanged();"> (yyyy)</td></tr>
+				<tr><td align="right">Date of Birth:</td><td><cfinput type="text" name="motherDOB" size="10" value="#DateFormat(motherDOB,'mm/dd/yyyy')#" maxlength="10" class="datePicker" onchange="DataChanged();"></td></tr>
 				<tr><td align="right">Occupation:</td><td><cfinput type="text" name="motherworkposition" size="35" value="#motherworkposition#" maxlength="50" onchange="DataChanged();"></td></tr>
 				<tr><td align="right">Employed By:</td><td><cfinput type="text" name="mothercompany" size="35" value="#mothercompany#" maxlength="50" onchange="DataChanged();"></td></tr>
 				<tr><td align="right">Business Phone:</td><td><cfinput name="motherworkphone" value="#motherworkphone#" size="16" maxlength="16" onchange="DataChanged();"></td></tr>

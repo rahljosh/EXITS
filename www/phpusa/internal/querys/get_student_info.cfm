@@ -29,9 +29,9 @@
     <cfquery name="get_student_info" datasource="mysql">
         SELECT 
             s.studentid, uniqueid, familylastname, firstname, middlename, fathersname, fatheraddress,
-            fatheraddress2, fathercity, fathercountry, fatherzip, fatherbirth, fathercompany, fatherworkphone,
+            fatheraddress2, fathercity, fathercountry, fatherzip, fatherDOB, fathercompany, fatherworkphone,
             fatherworkposition, fatherworktype, fatherenglish, motherenglish, mothersname, motheraddress,
-            motheraddress2, mothercity, mothercountry, motherzip, motherbirth, mothercompany, motherworkphone,
+            motheraddress2, mothercity, mothercountry, motherzip, motherDOB, mothercompany, motherworkphone,
             motherworkposition, motherworktype, emergency_phone, emergency_name, emergency_address, 
             emergency_country, address, address2, city, country, zip, phone, fax, email, citybirth, countrybirth,
             countryresident, countrycitizen, sex, dob, religiousaffiliation, dateapplication, entered_by,

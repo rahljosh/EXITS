@@ -236,14 +236,14 @@ Order by birthdate
 	<span class="application_section_header">Natural Parents & Family In Home Country</span><br> 
 		<tr><td width="50%">
 			<table>
-				<tr><td width="100"><font color="Gray">Father:</font></td><td width="180">#get_student_info.fathersname# <cfif get_student_info.fatherbirth is '0'><cfelse><cfset calc_age_father = #CreateDate(get_student_info.fatherbirth,01,01)#> (#DateDiff('yyyy', calc_age_father, now())#)</cfif></td></tr>
+				<tr><td width="100"><font color="Gray">Father:</font></td><td width="180">#get_student_info.fathersname# <cfif isDate(get_student_info.fatherDOB)><cfset calc_age_father = #DateFormat(get_student_info.fatherDOB,"mm/dd/yyyy")#> (#DateDiff('yyyy', calc_age_father, now())#)</cfif></td></tr>
 				<tr><td><font color="Gray">Occupation:</font></td><td><cfif get_Student_info.fatherworkposition is ''>n/a<cfelse>#get_Student_info.fatherworkposition#</cfif></td></tr>
 				<tr><td><font face="" color="Gray">Speaks English:</font></td><td>#get_Student_info.fatherenglish#</td></tr>
 			</table>	
 		</td>
 		<td width="50%">
 			<table>
-				<tr><td width="100"><font color="Gray">Mother:</font></td><td width="180">#get_student_info.mothersname# <cfif get_student_info.motherbirth is '0'><cfelse><cfset calc_age_mom = #CreateDate(get_student_info.motherbirth,01,01)#> (#DateDiff('yyyy', calc_age_mom, now())#)</cfif></td></tr>
+				<tr><td width="100"><font color="Gray">Mother:</font></td><td width="180">#get_student_info.mothersname# <cfif isDate(get_student_info.motherDOB)><cfset calc_age_mom = #DateFormat(get_student_info.motherDOB,"mm/dd/yyyy")#> (#DateDiff('yyyy', calc_age_mom, now())#)</cfif></td></tr>
 				<tr><td><font color="Gray">Occupation:</font></td><td><cfif get_Student_info.motherworkposition is ''>n/a<cfelse>#get_Student_info.motherworkposition#</cfif></td></tr>
 				<tr><td><font face="" color="Gray">Speaks English:</font></td><td>#get_Student_info.motherenglish#</td></tr>
 			</table>	
