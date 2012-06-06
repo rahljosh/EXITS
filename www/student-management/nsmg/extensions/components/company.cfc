@@ -34,11 +34,15 @@
 			datasource="#APPLICATION.dsn#">
                 SELECT
                 	companyID,
-                    companyName,
                     team_ID,
+                    system_ID,
+                    companyName,
                     companyShort,
                     companyShort_nocolor,
                     URL,
+                    pm_email,
+                    projectManager,
+                    financeEmail,
                     address,
                     city,
                     state,
@@ -65,7 +69,9 @@
                     dos_letter_sig,
                     dos_letter_title,
                     system_ID,
-                    website
+                    website,
+                    url_ref,
+                    company_color
                 FROM 
                     smg_companies
                 WHERE	
