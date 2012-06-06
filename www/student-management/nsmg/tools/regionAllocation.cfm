@@ -1,6 +1,6 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		regions_allocations.cfm
+	File:		regionAllocation.cfm
 	Author:		James Griffiths
 	Date:		May 16, 2012
 	Desc:		Regions Allocations
@@ -25,12 +25,12 @@
     
     <!--- Param Variables --->
     <cfparam name="FORM.submitted" default="0">
-    <cfparam name="FORM.inputSeason" default="#qGetSeasons.seasonID#">
-    <cfparam name="URL.inputSeason" default="0">
+    <cfparam name="FORM.seasonID" default="#qGetSeasons.seasonID#">
+    <cfparam name="URL.seasonID" default="0">
     
     <cfscript>
-        if ( VAL(URL.inputSeason) ) {		
-            FORM.inputSeason = URL.inputSeason;	
+        if ( VAL(URL.seasonID) ) {		
+            FORM.seasonID = URL.seasonID;	
         }
     </cfscript>
     
@@ -54,7 +54,7 @@
        	LEFT JOIN
         	smg_users_allocation a ON a.userID = u.userID
             AND
-            	a.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.inputSeason#">
+            	a.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">
       	WHERE
         	uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
        	AND
@@ -85,8 +85,7 @@
                     WHERE 
                         userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.userid#">
                     AND 
-                        seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.inputSeason#">
-    
+                        seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">
                  </cfquery>
                  
             <cfelseif VAL(FORM[qGetResults.userID & '_januaryAllocation']) OR VAL(FORM[qGetResults.userID & '_augustAllocation'])>
@@ -103,9 +102,9 @@
                          )
                     VALUES
                         (
-                            #qGetResults.userID#, 
-                            #FORM.inputSeason#,
-                            #qGetResults.regionID#,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.userID#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.regionID#">,
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM[qGetResults.userID & '_januaryAllocation'])#">,
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM[qGetResults.userID & '_augustAllocation'])#">,
                             <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
@@ -115,8 +114,14 @@
             </cfif>
             
         </cfloop>
-        
-        <cflocation url="#CGI.SCRIPT_NAME#?curdoc=tools/regions_allocations&inputSeason=#FORM.inputSeason#" addtoken="no">
+
+        <cfscript>
+			// Set Page Message if updating data
+			SESSION.pageMessages.Add("Form successfully submitted.");
+
+			// Reload page
+			location("#CGI.SCRIPT_NAME#?curdoc=tools/regionAllocation&seasonID=#FORM.seasonID#", "no");	
+		</cfscript>
         
     </cfif>
 
@@ -130,7 +135,7 @@
 	<!--
 	// submit the form
 	var submitform = function() {
-		//$("#submit").submit();
+		$("#submitted").val(0);
 		$("#intlRepAllocation").submit();
 	}
 	//-->
@@ -141,12 +146,26 @@
 	<!--- Table Header --->
     <gui:tableHeader
         imageName="students.gif"
-        tableTitle="Region Allocations"
+        tableTitle="Region Allocation"
     />
+
+	<!--- Page Messages --->
+    <gui:displayPageMessages 
+        pageMessages="#SESSION.pageMessages.GetCollection()#"
+        messageType="tableSection"
+        width="100%"
+        />
+    
+    <!--- Form Errors --->
+    <gui:displayFormErrors 
+        formErrors="#SESSION.formErrors.GetCollection()#"
+        messageType="tableSection"
+        width="100%"
+        />
     
     <!--- Form to choose which seasons to show allocation for --->
-    <form name="intlRepAllocation" id="intlRepAllocation" action="#CGI.SCRIPT_NAME#?curdoc=tools/regions_allocations" method="post">
-        <input type="hidden" name="submitted" value="1">
+    <form name="intlRepAllocation" id="intlRepAllocation" action="#CGI.SCRIPT_NAME#?curdoc=tools/regionAllocation" method="post">
+        <input type="hidden" name="submitted" id="submitted" value="1">
         
         <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
                 <tr>
@@ -154,9 +173,9 @@
                         <table border="0" cellpadding="4" cellspacing="0" width="100%">
                             <tr>
                             	<td>Season:
-                                	<select name="inputSeason" id="inputSeason" class="mediumField" onchange="submitform();">
+                                	<select name="seasonID" id="seasonID" class="mediumField" onchange="submitform();">
                                         <cfloop query="qGetSeasons">
-                                        <option value="#qGetSeasons.seasonID#" <cfif inputSeason EQ qGetSeasons.seasonID>selected="selected"</cfif>>#qGetSeasons.season#</option>
+                                        <option value="#qGetSeasons.seasonID#" <cfif FORM.seasonID EQ qGetSeasons.seasonID>selected="selected"</cfif>>#qGetSeasons.season#</option>
                                         </cfloop>
                                   	</select>
                           		</td>
@@ -167,54 +186,33 @@
 		</table>
          	
         <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
-            <tr>
-                <td>
-                    <strong>Region ID</strong>
-                </td>
-                <td>
-                    <strong>Region Name</strong>
-                </td>
-                <td>
-                    <strong>Regional Manager</strong>
-                </td>
-                <td>
-                    <strong>August Allocation</strong>
-                </td>
-                <td>
-                    <strong>January Allocation</strong>
-                </td>
+            <tr style="font-weight:bold;">
+                <td>Region Name</td>
+                <td>Regional Manager</td>
+                <td>August Allocation</td>
+                <td>January Allocation</td>
             </tr>
-            
             <cfloop query="qGetResults">
-                
                 <input type="hidden" name="#qGetResults.userID#_allocationID" value="#qGetResults.ID#">
-                
                 <tr bgcolor="#iif(currentrow MOD 2 ,DE("ffffe6") ,DE("white") )#">
-                	<td>#qGetResults.regionID#</td>
-                    <td>#qGetResults.regionName#</td>
+                    <td>#qGetResults.regionName# (###qGetResults.regionID#)</td>
                     <td>#qGetResults.firstName# #qGetResults.lastName# ###qGetResults.userID#</td>
-                    <td>
-                        <input type="text" class="smallField" name="#qGetResults.userID#_augustAllocation" value="#qGetResults.augustAllocation#">
-                    </td>
-                    <td>
-                        <input type="text" class="smallField" name="#qGetResults.userID#_januaryAllocation" value="#qGetResults.januaryAllocation#">
-                    </td>
+                    <td><input type="text" class="smallField" name="#qGetResults.userID#_augustAllocation" value="#qGetResults.augustAllocation#"></td>
+                    <td><input type="text" class="smallField" name="#qGetResults.userID#_januaryAllocation" value="#qGetResults.januaryAllocation#"></td>
                 </tr>
-                
         	</cfloop>
         </table>
         
-        <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
-            <tr>
-                <td align="center">
-					<input type="submit" name="Submit" value="Update" />                    
-                </td>
-            </tr>
-        </table>
+		<cfif listFind("1,2,3,4", CLIENT.userType)>
+            <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
+                <tr>
+                    <td colspan="6" align="center"><input type="image" name="submit" src="pics/buttons_submit.png" border="0"></td>
+                </tr>
+            </table>
+        </cfif> 	
     </form>
+
+	<!--- Table Footer --->
+    <gui:tableFooter />
     
 </cfoutput>
-
-<!--- Table Footer --->
-<cfinclude template="../table_footer.cfm">      
-
