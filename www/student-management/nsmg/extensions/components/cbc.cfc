@@ -1358,7 +1358,8 @@
         <cfargument name="userType" type="string" default="" hint="Father,Mother,User,Member">
         <cfargument name="hostID" type="numeric" default="0" hint="Optional">
         <cfargument name="userID" type="numeric" default="0" hint="Optional"> 
-        <cfargument name="familyID" type="numeric" default="0" hint="User or Host member ID">  
+        <cfargument name="familyID" type="numeric" default="0" hint="User or Host member ID"> 
+        <cfargument name="dateProcessed" type="date" default="" hint="Optional"> 
 			
             <cfscript>
 				// Parse XML
@@ -1460,7 +1461,12 @@
                     <tr bgcolor="##CCCCCC"><th colspan="2"><cfif APPLICATION.isServerLocal>DEVELOPMENT SERVER - </cfif> #qGetCompany.companyName#</th></tr>
                     <tr><td colspan="2">&nbsp;</td></tr>
 
-                    <tr bgcolor="##CCCCCC"><th colspan="2">Criminal Backgroud Check &nbsp; -  &nbsp; Date Processed: #DateFormat(now(), 'mm/dd/yyyy')#</th></tr>
+                    <tr bgcolor="##CCCCCC">
+                    	<th colspan="2">	
+                        	Criminal Backgroud Check &nbsp; -  &nbsp; 
+                            Date Processed: <cfif IsDate(ARGUMENTS.dateProcessed)>#DateFormat(ARGUMENTS.dateProcessed, 'mm/dd/yyyy')#<cfelse>#DateFormat(now(), 'mm/dd/yyyy')#</cfif>
+                        </th>
+                    </tr>
                     <tr><td colspan="2">&nbsp;</td></tr>
                     
                     <tr bgcolor="##CCCCCC">
