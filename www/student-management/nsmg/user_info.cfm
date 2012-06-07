@@ -37,7 +37,6 @@
 		
          //Check if paperwork is complete for season
 		get_paperwork = APPLICATION.CFC.udf.allpaperworkCompleted(userid=url.userid,seasonid=9);
-		
 	</cfscript>
 
 	<!----Rep Info---->
@@ -481,8 +480,8 @@
                             </tr>    
                             <tr>
                                 <Td><strong>Password:</strong></Td><td align="left">#password#</td>
-                            </cfif>
-                          </tr>
+                            </tr></cfif>
+                          
                           
                         <cfif CLIENT.usertype LTE 4 AND rep_info.changepass eq 1><br />
 							<tr>
@@ -526,8 +525,8 @@
                   
                     </td>
                     
-                    </cfif>
-				</tr>
+                    </tr></cfif>
+				
 			</table>
             <!-----*****end Personal Info****---->
 			
@@ -1096,8 +1095,8 @@
                                     <a href="?curdoc=forms/user_paperwork&userid=#url.userid#">
                                     <cfif get_paperwork.arearepok eq 1>
                                     Complete<cfelse>Incomplete</cfif></a>
-                                    </cfif>
-                                </td>
+                                    </td></cfif>
+                                
                            <tr>
                            		<td>
 									<cfif uar_usertype NEQ 8>
@@ -1105,8 +1104,8 @@
                                     <a href="?curdoc=forms/user_paperwork&userid=#url.userid#">
                                     <cfif get_paperwork.secondVisitRepOK eq 1>
                                     Complete<cfelse>Incomplete</cfif></a>
-                                    </cfif>
-                                </td>
+                                    </td></cfif>
+                                
                            </tr>
                           </table>
      				</td>
@@ -1308,7 +1307,7 @@
                                     <table width="100%">
                                         <tr>
                                             <td><label for="dateTrained">Date Trained:</label></td>
-                                            <td><input type="text" name="dateTrained" value="#DateFormat(FORM.dateTrained, 'mm/dd/yyyy')#" id="dateTrained" class="date-pick" maxlength="10" />  (mm/dd/yyyy)</td>
+                                            <td><input type="text" name="dateTrained" value="#DateFormat(FORM.dateTrained, 'mm/dd/yyyy')#" id="dateTrained" class="datePicker" maxlength="10" />  (mm/dd/yyyy)</td>
                                         </tr>
                                         <tr>
                                             <td valign="top"><label for="trainingID">Training:</label></td>
