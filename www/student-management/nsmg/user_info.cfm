@@ -847,18 +847,20 @@
                         </cfloop>
                     </cfif>
                     
-                    <cfloop query="check_hosts">
-                        <tr><td colspan="3">CBC Submitted for Host Family (###hostid#).</td></tr>
-                        <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("efefef") )#"> 
-                            <td align="center" style="line-height:20px;"><b>#season#</b></td>
-                            <td align="center" style="line-height:20px;"><cfif NOT isDate(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
-                            <td align="center" style="line-height:20px;"><cfif NOT isDate(date_expired)>processing<cfelse>#DateFormat(date_expired, 'mm/dd/yyyy')#</cfif></td>
-                            <td align="center" style="line-height:20px;" colspan="2"><cfif NOT LEN(requestID)>processing<cfelse><cfif CLIENT.usertype lte 4>#requestid#</cfif></cfif></td>
-                            <cfif client.usertype lte 4 and client.companyid eq 10>
-                            	<td align="center" valign="top"><a href="delete_cbc.cfm?type=user&id=#requestid#&userid=#url.userid#"><img src="pics/deletex.gif" border=0/></a></td>
-							</cfif>
-                        </tr>
-                    </cfloop>				
+                    <cfif check_hosts.recordCount>
+                        <tr><td colspan="3"><strong>CBC Submitted for Host Family (###hostid#).</strong></td></tr>
+                        <cfloop query="check_hosts">
+                            <tr bgcolor="#iif(currentrow MOD 2 ,DE("efefef") ,DE("FFFFFF") )#"> 
+                                <td align="center" style="line-height:20px;"><b>#season#</b></td>
+                                <td align="center" style="line-height:20px;"><cfif NOT isDate(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
+                                <td align="center" style="line-height:20px;"><cfif NOT isDate(date_expired)>processing<cfelse>#DateFormat(date_expired, 'mm/dd/yyyy')#</cfif></td>
+                                <td align="center" style="line-height:20px;" colspan="2"><cfif NOT LEN(requestID)>processing<cfelse><cfif CLIENT.usertype lte 4>#requestid#</cfif></cfif></td>
+                                <cfif client.usertype lte 4 and client.companyid eq 10>
+                                    <td align="center" valign="top"><a href="delete_cbc.cfm?type=user&id=#requestid#&userid=#url.userid#"><img src="pics/deletex.gif" border=0/></a></td>
+                                </cfif>
+                            </tr>
+                        </cfloop>		
+					</cfif>                        		
                 </table>
 				<!----footer of  cbc  table---->
                    </div>
