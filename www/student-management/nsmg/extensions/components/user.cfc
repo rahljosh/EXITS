@@ -888,17 +888,18 @@
         <cfargument name="score" default="0.00" hint="score is not required">
         
         <cfscript>
-			// DOS Certification - Score >= 27 to pass
-			var hasPassed = 0;
+			// Set Default Value
+			var hasPassed = 1;
 			
-			if ( ARGUMENTS.SCORE >= 90 ) {
-				hasPassed = 1;
-			}
-            
             // Set a default value for ARGUMENTS.score
             if ( NOT LEN(ARGUMENTS.score) ) {
             	ARGUMENTS.score = '0.00';
             }	
+			
+			// DOS Certification - Score >= 27 to pass
+			if ( ARGUMENTS.trainingID EQ 2 AND ARGUMENTS.SCORE < 90 ) {
+				hasPassed = 0;
+			}
 		</cfscript>	
 		
         <cfquery 
