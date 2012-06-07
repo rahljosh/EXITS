@@ -67,6 +67,8 @@
             <cfcase value="receivedPreAYPArrival">
             	INNER JOIN	
                 	smg_flight_info flight ON flight.studentID = s.studentID 
+                    AND
+                    	flight.programID = s.programID
                     AND	
                         flight.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="preAypArrival">
 					AND 
@@ -78,6 +80,8 @@
             <cfcase value="receivedArrival">
             	INNER JOIN	
                 	smg_flight_info flight ON flight.studentID = s.studentID 
+                    AND
+                    	flight.programID = s.programID
                     AND	
                         flight.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
 					AND 
@@ -89,6 +93,8 @@
         	<cfcase value="receivedDeparture">
             	INNER JOIN	
                 	smg_flight_info flight ON flight.studentID = s.studentID 
+                    AND
+                    	flight.programID = s.programID
                     AND	
                         flight.flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
 					AND 
@@ -122,13 +128,13 @@
             	s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
         </cfif>
         
-		<cfif form.place_date1 is not '' and form.place_date2 is not ''>
+		<cfif isDate(FORM.place_date1) AND isDate(FORM.place_date2)>
         	AND 
             	dateplaced 
             BETWEEN 
-            	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(form.place_Date1)#">
+            	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.place_Date1)#">
 	        AND
-            	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(form.place_Date2)#">
+            	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.place_Date2)#">
         </cfif>
 
         <!--- Flight Option --->
@@ -143,6 +149,8 @@
                         	smg_flight_info flight
                         WHERE
 							flight.studentID = s.studentID	
+                        AND
+                            flight.programID = s.programID
                 		AND
                         	flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="preAypArrival">
                         AND 
@@ -161,6 +169,8 @@
                         	smg_flight_info flight
                         WHERE
 							flight.studentID = s.studentID	
+                        AND
+                            flight.programID = s.programID
                 		AND
                         	flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
                         AND 
@@ -179,6 +189,8 @@
                         	smg_flight_info flight
                         WHERE
 							flight.studentID = s.studentID	
+                        AND
+                            flight.programID = s.programID
 						AND
                 			flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
                         AND 
