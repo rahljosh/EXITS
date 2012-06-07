@@ -74,8 +74,12 @@
                 	smg_seasons s on s.seasonID = p.seasonID
                 WHERE
                 	p.is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-               
-				<cfif LEN(ARGUMENTS.companyID)>
+				
+                <!--- Canada and ESI hast it's own programs --->
+                <cfif listFind("13,14", CLIENT.companyID)>
+                    AND
+                        p.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+				<cfelseif LEN(ARGUMENTS.companyID)>
                     AND
                         p.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
                 <cfelse>
