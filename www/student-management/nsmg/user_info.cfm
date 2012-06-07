@@ -944,9 +944,9 @@
                <!----CBC Authorization---->
                
                  <!--- Documents 
-                <cfdirectory directory="c:\websites\student-management\nsmg\uploadedfiles\users\#userid#\" name="documents">
-				----> 
                 <cfdirectory directory="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/users/#userid#/" name="documents">
+				----> 
+                <cfdirectory directory="c:\websites\student-management\nsmg\uploadedfiles\users\#userid#\" name="documents">
                
                 <div class="rdholder" style="width:100%;float:left;"  > 
 				<div class="rdtop"> 
