@@ -19,7 +19,7 @@
     
     <cfscript>
 		// Get Batch Information		
-		qGetBatchInfo =  APPCFC.CBC.getCBCHostByID(
+		qGetBatchInfo =  APPLICATION.CFC.CBC.getCBCHostByID(
 			hostID=URL.hostID,
 			CBCFamID=URL.CBCFamID
 		);												   
@@ -43,12 +43,13 @@
 
     <cfscript>
 		// Display Results		
-		APPCFC.CBC.displayXMLResult(
+		APPLICATION.CFC.CBC.displayXMLResult(
 			companyID=qGetBatchInfo.companyID, 
 			responseXML=qGetBatchInfo.xml_received, 
 			userType=qGetBatchInfo.cbc_type,
 			hostID=qGetBatchInfo.hostID,
-			familyID=qGetBatchInfo.familyID
+			familyID=qGetBatchInfo.familyID,
+			dateProcessed=qGetBatchInfo.date_sent
 		);												   
 	</cfscript>
 
@@ -63,22 +64,23 @@
             responseXML = XmlParse(receivedFile);
             
             // Display Results		
-            APPCFC.CBC.displayXMLResult(
+            APPLICATION.CFC.CBC.displayXMLResult(
                 companyID=qGetBatchInfo.companyID, 
                 responseXML=responseXML, 
                 userType=qGetBatchInfo.cbc_type,
                 hostID=qGetBatchInfo.hostID,
-				familyID=qGetBatchInfo.familyID
+				familyID=qGetBatchInfo.familyID,
+				dateProcessed=qGetBatchInfo.date_sent
             );			
 			
 			// Updates XML Received		
-			APPCFC.CBC.UpdateHostXMLReceived(
+			APPLICATION.CFC.CBC.UpdateHostXMLReceived(
 				cbcFamID=qGetBatchInfo.cbcfamID,
 				xmlReceived=responseXML
 			);
 			
 			//Check if XML Received has been updated
-			qGetBatchInfo =  APPCFC.CBC.getCBCHostByID(
+			qGetBatchInfo =  APPLICATION.CFC.CBC.getCBCHostByID(
 				hostID=URL.hostID,
 				CBCFamID=URL.CBCFamID
 			);												   
@@ -90,9 +92,7 @@
     	</cfif>
     	
         <cfcatch type="any">
-        	<p>
-	        	The file /uploadedfiles/xml_files/gis/#qGetBatchInfo.companyshort#/#URL.file# could not be found.
-            </p>
+        	<p>The file /uploadedfiles/xml_files/gis/#qGetBatchInfo.companyshort#/#URL.file# could not be found.</p>
         </cfcatch>
     
     </cftry>

@@ -19,7 +19,7 @@
     
     <cfscript>
 		// Get Batch Information		
-		qGetBatchInfo = APPCFC.CBC.getCBCUserByID(
+		qGetBatchInfo = APPLICATION.CFC.CBC.getCBCUserByID(
 			userID=URL.userID,
 			cbcID=URL.cbcID
 		);												   
@@ -49,14 +49,14 @@
 
     <cfscript>
 		// Display Results		
-		APPCFC.CBC.displayXMLResult(
+		APPLICATION.CFC.CBC.displayXMLResult(
 			companyID=qGetBatchInfo.companyID, 
 			responseXML=qGetBatchInfo.xml_received, 
 			userType=userType,
 			userID=qGetBatchInfo.userID,
-			familyID=qGetBatchInfo.familyID
+			familyID=qGetBatchInfo.familyID,
+			dateProcessed=qGetBatchInfo.date_sent
 		);										
-		
 	</cfscript>
 
 <cfelse>
@@ -70,22 +70,23 @@
             responseXML = XmlParse(receivedFile);
             
             // Display Results		
-            APPCFC.CBC.displayXMLResult(
+            APPLICATION.CFC.CBC.displayXMLResult(
                 companyID=qGetBatchInfo.companyID, 
                 responseXML=responseXML, 
                 userType=userType,
                 userID=qGetBatchInfo.userID,
-				familyID=qGetBatchInfo.familyID
+				familyID=qGetBatchInfo.familyID,
+				dateProcessed=qGetBatchInfo.date_sent
             );		
 			
 			// Updates XML Received		
-			APPCFC.CBC.updateUserXMLReceived(
+			APPLICATION.CFC.CBC.updateUserXMLReceived(
 				cbcID=qGetBatchInfo.cbcID,
 				xmlReceived=responseXML
 			);
 			
 			//Check if XML Received has been updated
-			qGetBatchInfo = APPCFC.CBC.getCBCUserByID(
+			qGetBatchInfo = APPLICATION.CFC.CBC.getCBCUserByID(
 				userID=URL.userID,
 				cbcID=URL.cbcID
 			);												   
