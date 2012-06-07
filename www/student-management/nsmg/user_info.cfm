@@ -654,7 +654,7 @@
                                     
                                         <cfloop query="region_company_access">
                                        
-                                            <tr bgcolor="#iif(currentRow MOD 2 ,DE("ffffff") ,DE("efefef") )#">
+                                            <tr bgcolor="#iif(currentRow MOD 2 ,DE("efefef") ,DE("ffffff") )#">
                                             <cfif CLIENT.usertype LTE 5>
                                                 <td>
                                                     <!--- don't allow delete if user has only one record or for the default record. Dont allow edit on 2nd VIsit Reps.  Must convert to re-block access according to training. --->
@@ -719,7 +719,7 @@
                                                 </cfquery>
     
                                                 <cfloop query="check_facilitator_assignment">
-                                                    <tr bgcolor="#iif(region_company_access.currentRow MOD 2 ,DE("ffffff") ,DE("efefef") )#">
+                                                    <tr bgcolor="#iif(region_company_access.currentRow MOD 2 ,DE("efefef") ,DE("ffffff") )#">
                                                         <td>&nbsp;</td>
                                                         <!---<td>&nbsp;</td>--->
                                                         <td colspan="6"><em>#check_facilitator_assignment.firstname#  #check_facilitator_assignment.lastname# is also assigned as a Facilitator for this region.</em></td>
@@ -749,7 +749,7 @@
                                                 </cfquery>
     
                                                 <cfloop query="check_manager_assignment">
-                                                    <tr bgcolor="#iif(region_company_access.currentRow MOD 2 ,DE("ffffff") ,DE("efefef") )#">
+                                                    <tr bgcolor="#iif(region_company_access.currentRow MOD 2 ,DE("efefef") ,DE("ffffff") )#">
                                                         <td>&nbsp;</td>
                                                         <!---<td>&nbsp;</td>--->
                                                         <td colspan="6"><em>#check_manager_assignment.firstname#  #check_manager_assignment.lastname# is also assigned as a Regional Manager for this region.</em></td>
@@ -830,7 +830,7 @@
                         <tr><td align="center" colspan="5">No CBC has been submitted.</td></tr>
                     <cfelse>
                         <cfloop query="get_cbc_user">
-                        <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("efefef") )#"> 
+                        <tr bgcolor="#iif(currentrow MOD 2 ,DE("efefef") ,DE("ffffff") )#"> 
                             <td align="center" style="line-height:20px;"><b>#season#</b></td>
                             <td align="center" style="line-height:20px;"><cfif NOT isDate(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
                             <td align="center" style="line-height:20px;"><cfif NOT isDate(date_expired)>processing<cfelse>#DateFormat(date_expired, 'mm/dd/yyyy')#</cfif></td>
@@ -850,7 +850,7 @@
                     <cfif check_hosts.recordCount>
                         <tr><td colspan="3"><strong>CBC Submitted for Host Family (###check_hosts.hostid#).</strong></td></tr>
                         <cfloop query="check_hosts">
-                            <tr bgcolor="#iif(currentrow MOD 2 ,DE("efefef") ,DE("FFFFFF") )#"> 
+                            <tr bgcolor="#iif(currentrow MOD 2 ,DE("efefef") ,DE("ffffff") )#"> 
                                 <td align="center" style="line-height:20px;"><b>#season#</b></td>
                                 <td align="center" style="line-height:20px;"><cfif NOT isDate(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
                                 <td align="center" style="line-height:20px;"><cfif NOT isDate(date_expired)>processing<cfelse>#DateFormat(date_expired, 'mm/dd/yyyy')#</cfif></td>
@@ -1696,7 +1696,7 @@
                                         </tr>
                                         </Cfif>
                                         <cfloop query="get_placed_Students">
-                                        <tr bgcolor="#iif(get_placed_Students.currentrow MOD 2 ,DE("ffffff") ,DE("efefef") )#">		
+                                        <tr bgcolor="#iif(get_placed_Students.currentrow MOD 2 ,DE("efefef") ,DE("ffffff") )#">		
                                             
                                             <td align="left">#firstname# #familylastname# (#studentid#)</td>
                                             
@@ -1724,7 +1724,7 @@
                                  </tr>
                                  </Cfif>
                                 <cfloop query="get_supervised_students">
-                                <tr bgcolor="#iif(get_supervised_students.currentrow MOD 2 ,DE("ffffff") ,DE("efefef") )#">		
+                                <tr bgcolor="#iif(get_supervised_students.currentrow MOD 2 ,DE("efefef") ,DE("ffffff") )#">		
                                             
                                             <td align="left">#firstname# #familylastname# (#studentid#)</td>
                                             
@@ -1755,7 +1755,7 @@
                                         </tr>
                                 </Cfif>
                                 <cfloop query="get_2ndvisit_students">
-                                <tr bgcolor="#iif(get_2ndvisit_students.currentrow MOD 2 ,DE("ffffff") ,DE("efefef") )#">		
+                                <tr bgcolor="#iif(get_2ndvisit_students.currentrow MOD 2 ,DE("efefef") ,DE("ffffff") )#">		
                                         <td align="left">#firstname# #familylastname# (#studentid#)</td>
                                         <td align="left">#sex#</td>
                                         <td  align="left">#Left(countryname,13)#</td>
