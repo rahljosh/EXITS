@@ -848,7 +848,7 @@
                     </cfif>
                     
                     <cfif check_hosts.recordCount>
-                        <tr><td colspan="3"><strong>CBC Submitted for Host Family (###hostid#).</strong></td></tr>
+                        <tr><td colspan="3"><strong>CBC Submitted for Host Family (###check_hosts.hostid#).</strong></td></tr>
                         <cfloop query="check_hosts">
                             <tr bgcolor="#iif(currentrow MOD 2 ,DE("efefef") ,DE("FFFFFF") )#"> 
                                 <td align="center" style="line-height:20px;"><b>#season#</b></td>
