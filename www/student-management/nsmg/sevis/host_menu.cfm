@@ -65,7 +65,7 @@
 </tr>
 </table><br>
 
-<cfform action="sevis/host_xml.cfm" method="POST" target="blank">
+<cfform action="sevis/hostFamilyXML.cfm" method="POST" target="blank">
 <Table class="nav_bar" cellpadding=6 cellspacing="0" align="center" width="96%">
 	<tr><th colspan="2" bgcolor="ededed">Update Host Families (Up to 250 students)</th></tr>
 	<tr><td colspan="2" align="center" bgcolor="ededed"><font size="-2">Approved Placement Students Only</font></td></tr>

@@ -51,7 +51,7 @@
 	<td width="15%" align="right" bgcolor="ededed"><a href="" onClick="javascript: win=window.open('sevis/xml_list_files.cfm?type=new_forms', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Virtual Folder</a>&nbsp; - &nbsp;<a href="index.cfm?menu=tools&submenu=users&curdoc=sevis/menu"><img src="pics/sevis_menu.gif" border="0"></a></td>
 </tr>
 </table><br>
-<cfform action="sevis/new_forms_xml.cfm" method="POST" target="blank">
+<cfform action="sevis/newFormXML.cfm" method="POST" target="blank">
 <Table class="nav_bar" cellpadding=6 cellspacing="0" align="center" width="96%">
 	<tr><th colspan="2" bgcolor="ededed">#CLIENT.DSFormName# Create XML Files (Up to 250 students)</th></tr>
 	<tr align="left">
