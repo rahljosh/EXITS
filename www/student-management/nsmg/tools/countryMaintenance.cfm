@@ -18,7 +18,7 @@
 		vContinentList = "Africa,Asia,Europe,North America,South America,Oceania";
 		
 		// Get Country List
-		qGetCountryList = APPLICATION.CFC.LOOKUPTABLES.getCountryAssignedToStudent();
+		qGetCountryList = APPLICATION.CFC.LOOKUPTABLES.getCountryList();
 	
 		// Param Form Variables
 		param name="FORM.submitted" default=0;	

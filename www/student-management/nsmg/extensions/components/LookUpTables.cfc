@@ -338,10 +338,10 @@
 	</cffunction>
 
 
-	<cffunction name="getCountryAssignedToStudent" access="public" returntype="query" output="false" hint="Returns a list of countries assigned to a student">
+	<cffunction name="getCountryList" access="public" returntype="query" output="false" hint="Returns a list of countries assigned to active students">
 
         <cfquery 
-        	name="qGetCountryAssignedToStudent"
+        	name="qGetCountryList"
         	datasource="#APPLICATION.DSN#">
                 SELECT DISTINCT
                 	cl.countryID,
@@ -369,7 +369,7 @@
                 	cl.countryName                    
         </cfquery> 
 
-		<cfreturn qGetCountryAssignedToStudent>
+		<cfreturn qGetCountryList>
 	</cffunction>
 
 
