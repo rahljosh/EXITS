@@ -111,10 +111,16 @@
                 <img src="https://ise.exitsapplication.com/nsmg/pics/#qGetStudentFullInformation.companyID#_short_profile_header.jpg" />
                 <span class="title"><font size=+1>Trip Permission Form</font></span>
             </td>
-        </Tr>
+        </tr>
+        <tr>
+            <td align="Center">    
+                <span class="title">MPD TOUR America, Inc.</span> <br />
+                Phone: 1-800-983-7780 &nbsp; - &nbsp; Fax: 1-718-439-8565
+            </td>
+        </tr>
     </table>
      
-    <table width="800" align="center" border="0" cellpadding="4" cellspacing="0">
+    <table width="800" align="center" border="0" cellpadding="3" cellspacing="0">
         <tr>           
             <td colspan="2" align="center"><img src="https://ise.exitsapplication.com/nsmg/pics/student.jpg" /></td>
         </tr>
@@ -174,7 +180,7 @@
         </tr>                   
     </table>
     
-    <table width="800" align="center" border="0" cellpadding="4" cellspacing="0">
+    <table width="800" align="center" border="0" cellpadding="3" cellspacing="0">
         <tr>           
             <td colspan="2" align="center"><img src="https://ise.exitsapplication.com/nsmg/pics/HFbanner.png" /></td>
         </tr>
@@ -237,7 +243,7 @@
         </tr>                
     </table>
     
-    <table width="800" align="center" border="0" cellpadding="4" cellspacing="0">
+    <table width="800" align="center" border="0" cellpadding="3" cellspacing="0">
         <tr>
             <td valign="top" width="50%">
             
@@ -289,7 +295,7 @@
         </tr>
     </table>            
     
-    <table width="800" align="center" border="0" cellpadding="4" cellspacing="0">
+    <table width="800" align="center" border="0" cellpadding="3" cellspacing="0">
         <tr>           
             <td align="center"><img src="https://ise.exitsapplication.com/nsmg/pics/signatures.jpg" /></td>
         </tr>
