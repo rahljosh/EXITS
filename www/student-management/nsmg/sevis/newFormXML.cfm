@@ -41,7 +41,7 @@
             s.companyID,
             s.ayporientation, 
             s.aypenglish, 
-            s.hostid, 
+            s.hostID, 
             s.schoolid, 
             s.host_fam_approved, 
             birth.seviscode as birthseviscode,
@@ -81,7 +81,7 @@
         INNER JOIN 
             smg_countrylist citizen ON s.countrycitizen = citizen.countryid
         LEFT JOIN 
-            smg_hosts h ON s.hostid = h.hostid
+            smg_hosts h ON s.hostID = h.hostID
         LEFT JOIN 
             smg_schools sc ON s.schoolid = sc.schoolid
         WHERE 
@@ -227,9 +227,11 @@
 	<cfsilent>
     	
         <!--- Host Family Address --->
-        <cfif VAL(qGetStudents.hostid) AND qGetStudents.host_fam_approved LT 5>
-        
+        <cfif VAL(qGetStudents.hostID) AND qGetStudents.host_fam_approved LT 5>
+        	
         	<!--- Student Placed --->
+            <cfset vSetHostID = qGetStudents.hostID>
+            
             <cfsavecontent variable="vHostFamilyAddress">
                 <Address1>#XMLFormat(s.displayHostFamilyName(fatherFirstName=qGetStudents.fatherFirstName,fatherLastName=qGetStudents.fatherLastName,motherFirstName=qGetStudents.motherFirstName,motherLastName=qGetStudents.motherLastName))#</Address1> 	
                 <Address2>#XMLFormat(qGetStudents.hostaddress)#</Address2> 					
@@ -241,6 +243,8 @@
         <cfelse>
         
         	<!--- Student Not Placed --->
+            <cfset vSetHostID = 0>
+            
         	<cfsavecontent variable="vHostFamilyAddress">
                 <Address1>#qGetCompany.address#</Address1> 
                 <City>#qGetCompany.city#</City> 
@@ -254,18 +258,22 @@
 		<cfif VAL(qGetStudents.schoolid) AND qGetStudents.host_fam_approved LT 5>
         
         	<!--- Student Placed --->
+            <cfset vSetSchoolName = XMLFormat(TRIM(qGetStudents.schoolname))>
+            
         	<cfsavecontent variable="vSiteOfActivity">
                 <Address1>#XMLFormat(qGetStudents.schooladdress)#</Address1> <cfif LEN(qGetStudents.schooladdress2)><Address2>#XMLFormat(qGetStudents.schooladdress2)#</Address2></cfif>
                 <City>#XMLFormat(qGetStudents.schoolcity)#</City> 
                 <State>#XMLFormat(qGetStudents.schoolstate)#</State> 
                 <PostalCode>#XMLFormat(qGetStudents.schoolzip)#</PostalCode> 
-                <SiteName>#XMLFormat(qGetStudents.schoolname)#</SiteName>
+                <SiteName>#XMLFormat(TRIM(qGetStudents.schoolname))#</SiteName>
                 <PrimarySite>true</PrimarySite>
 			</cfsavecontent>  
                           
         <cfelse>
         
         	<!--- Student Not Placed --->
+            <cfset vSetSchoolName = qGetCompany.companyname>
+
         	<cfsavecontent variable="vSiteOfActivity">
                 <Address1>#qGetCompany.address#</Address1> <cfif LEN(schooladdress2)><Address2>#schooladdress2#</Address2></cfif>
                 <City>#qGetCompany.city#</City> 
@@ -299,8 +307,8 @@
 			s.insertBatchHistory(
 				batchID=sBatchInfo.newRecord,
 				studentID=qGetStudents.studentID,
-				hostID=qGetStudents.hostID,
-				schoolName=qGetStudents.schoolName,
+				hostID=vSetHostID,
+				schoolName=vSetSchoolName,
 				startDate=vSetStartDate,
 				endDate=sevis_enddate
 			);
