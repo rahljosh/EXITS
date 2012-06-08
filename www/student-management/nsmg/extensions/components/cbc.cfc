@@ -1359,7 +1359,7 @@
         <cfargument name="hostID" type="numeric" default="0" hint="Optional">
         <cfargument name="userID" type="numeric" default="0" hint="Optional"> 
         <cfargument name="familyID" type="numeric" default="0" hint="User or Host member ID"> 
-        <cfargument name="dateProcessed" type="date" default="" hint="Optional"> 
+        <cfargument name="dateProcessed" type="any" default="" hint="Optional"> 
 			
             <cfscript>
 				// Parse XML
