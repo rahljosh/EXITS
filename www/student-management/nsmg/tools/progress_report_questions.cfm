@@ -97,7 +97,7 @@ Select the month of questions you'd like to view:
 		<option value="?curdoc=tools/progress_report_questions&month=4" <cfif url.month eq 4>selected</cfif>>April</option>
         <option value="?curdoc=tools/progress_report_questions&month=5" <cfif url.month eq 5>selected</cfif>>May</option>
 		<option value="?curdoc=tools/progress_report_questions&month=6" <cfif url.month eq 6>selected</cfif>>June</option>
-
+		<option value="?curdoc=tools/progress_report_questions&month=7" <cfif url.month eq 7>selected</cfif>>July</option>
 		
 		</select>
 	

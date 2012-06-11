@@ -26,7 +26,8 @@
         WHERE #now()# >= startdate and #now()# <= endDate
         </cfquery>
      	 <Cfloop from="#DateRange.startDate#" to="#DateRange.endDate#" index=i step="#CreateTimeSpan(31,0,0,0)#">
-                <Cfif client.pr_rmonth eq "#DatePart('m', '#i#')#">
+       
+                <Cfif client.pr_rmonth eq "#DatePart('m', '#i#')#"  OR client.pr_rmonth eq 7>
                     <Cfset firstDate = '#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01'>
                     <Cfset lastDay = '#DateAdd("d", "31", "#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01")#"'>
                     <cfset thisDay = '#DateFormat('#now()#', 'yyyy-mm-dd')#'>
