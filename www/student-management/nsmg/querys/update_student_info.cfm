@@ -18,7 +18,7 @@
 
 	<cfscript>
 		// Get Student Information 
-		qStudentInfo = AppCFC.STUDENT.getStudentByID(studentID=FORM.studentID); 
+		qStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=FORM.studentID); 
 	</cfscript>
     <!----
     <cfscript>
@@ -186,20 +186,20 @@
     	
     	<cfscript>	
 			// Get Intl. Rep. Info
-			qGetIntlRep = APPCFC.USER.getUserByID(userID=qStudentInfo.intRep);
+			qGetIntlRep = APPLICATION.CFC.USER.getUserByID(userID=qStudentInfo.intRep);
 
 			// Get Current Program
-			qGetPreviousProgram = APPCFC.PROGRAM.getPrograms(ProgramID=qStudentInfo.programID);
+			qGetPreviousProgram = APPLICATION.CFC.PROGRAM.getPrograms(ProgramID=qStudentInfo.programID);
 
 			// Get Current Program
-			qGetNewProgram = APPCFC.PROGRAM.getPrograms(ProgramID=FORM.program);
+			qGetNewProgram = APPLICATION.CFC.PROGRAM.getPrograms(ProgramID=FORM.program);
 		
 			// Always send a copy of the email to Admissions
 			emailCC = APPLICATION.CFC.UDF.displayAdmissionsInformation(displayInfo='email');
 			
 			// If there is a valid email, send a copy to the current user
-			if ( IsValid("email", APPCFC.USER.getUserByID(userID=CLIENT.userID).email) ) {
-				emailCC = emailCC & ';' & APPCFC.USER.getUserByID(userID=CLIENT.userID).email;				
+			if ( IsValid("email", APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID).email) ) {
+				emailCC = emailCC & ';' & APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID).email;				
 			}
 			
 			// Display All Emails Involved
@@ -211,48 +211,38 @@
 		
         <cfoutput>
             <cfsavecontent variable="emailChangeProgram">
-                #qStudentInfo.firstName# #qStudentInfo.familyLastName# has been assigned to a new program. <br /><br />
+                <p>#qStudentInfo.firstName# #qStudentInfo.familyLastName# has been assigned to a new program.</p>
 
-                Student: <strong>#qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# (###qStudentInfo.Studentid#)</strong> <br />
+                Student: <strong>#qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# (###qStudentInfo.Studentid#)</strong><br />
 
-                Division: <strong>#APPCFC.COMPANY.getCompanies(companyID=qStudentInfo.companyID).companyShort#</strong> <br />
+                Division: <strong>#APPLICATION.CFC.COMPANY.getCompanies(companyID=qStudentInfo.companyID).companyShort#</strong><br />
                 
                 Intl. Agent: <strong>#qGetIntlRep.businessName# (###qGetIntlRep.userID#)</strong><br />
     
-                Previous Program:
-                <strong>#qGetPreviousProgram.programName# (###qGetPreviousProgram.programID#)</strong> <br />                         
+                Previous Program: <strong>#qGetPreviousProgram.programName# (###qGetPreviousProgram.programID#)</strong><br />
     
                 New Program: 
                 <cfif VAL(FORM.program)>
                     <strong>#qGetNewProgram.programName# (###qGetNewProgram.programID#)</strong>
                 <cfelse>
                     <strong>Unassigned</strong>
-                </cfif> <br />                            
-                
-                Date/Time: <strong>#DateFormat(now(), 'mm/dd/yy')# #TimeFormat(now(), 'hh:mm:ss tt')#</strong> <br />
+                </cfif>
+                                            
+                Date/Time: <strong>#DateFormat(now(), 'mm/dd/yy')# #TimeFormat(now(), 'hh:mm:ss tt')#</strong><br />
     
-                Reason: <strong> #FORM.program_reason# </strong> <br />
+                Reason: <strong>#FORM.program_reason#</strong><br />
     
                 SEVIS No.: 
                 <cfif NOT LEN(qStudentInfo.ds2019_no)>
-                    <strong>No SEVIS Number on File</strong>
+                    <strong>No SEVIS Number on File</strong><br />
                 <cfelse>
-                    <strong>#qStudentInfo.ds2019_no#</strong>
-                </cfif> <br />                         
+                    <strong>#qStudentInfo.ds2019_no#</strong><br />
+                </cfif>                         
                 
-                Assigned By: 
-                <strong>#APPCFC.USER.getUserByID(userID=CLIENT.userID).firstName# #APPCFC.USER.getUserByID(userID=CLIENT.userID).lastName# (###CLIENT.userID#)</strong> <br /><br />
+                Assigned By: <strong>#APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID).firstName# #APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID).lastName# (###CLIENT.userID#)</strong><br />
                 
-                The following people received this notice: <br /> 
-                <strong>#emailList#</strong> <br /> <br />
-                
-                <p>
-                    <cfif APPLICATION.IsServerLocal>
-                        PS: Development Server
-                    <cfelse>
-                        PS: Production Server
-                    </cfif>
-                </p>
+                <p>The following people received this notice:</p>
+                <strong>#emailList#</strong>
             </cfsavecontent>
         </cfoutput>
 
@@ -293,14 +283,14 @@
 			APPLICATION.CFC.STUDENT.setDatePlacedEnded(studentID=qStudentInfo.studentID, datePlacedEnded=FORM.date_canceled);
 		
             // Get Intl. Rep. Info
-            qGetIntlRep = APPCFC.USER.getUserByID(userID=qStudentInfo.intRep);
+            qGetIntlRep = APPLICATION.CFC.USER.getUserByID(userID=qStudentInfo.intRep);
     
             // Get Current Program
-            qGetProgramInfo = APPCFC.PROGRAM.getPrograms(ProgramID=qStudentInfo.programID);		
+            qGetProgramInfo = APPLICATION.CFC.PROGRAM.getPrograms(ProgramID=qStudentInfo.programID);		
             
             // Email CC List
-            if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyid) ) {
-                emailCC = CLIENT.projectmanager_email & ';ellen@iseusa.com;marcus@iseusa.com;' & CLIENT.email;
+            if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) ) {
+                emailCC = CLIENT.projectmanager_email & ';ellen@iseusa.com;marcus@iseusa.com;sergei@iseusa.com;' & CLIENT.email;
             } else { 
                 emailCC = CLIENT.projectmanager_email & ';' & CLIENT.email;
             }
@@ -321,14 +311,13 @@
     
         <cfoutput>
             <cfsavecontent variable="email_message">
-                #qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# has been cancelled. <br /><br />
+                <p>#qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# has been cancelled.</p>
                 
                 Student: <strong>#qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# (###qStudentInfo.Studentid#)</strong><br />
                 
                 Intl. Agent: <strong>#qGetIntlRep.businessName# (###qGetIntlRep.userID#)</strong><br />
                 
-                Program: 
-                <strong>#qGetProgramInfo.programName# (###qGetProgramInfo.programID#)</strong> <br />
+                Program: <strong>#qGetProgramInfo.programName# (###qGetProgramInfo.programID#)</strong><br />
                 
                 Cancel Date: <strong>#DateFormat(FORM.date_canceled,'mm/dd/yyyy')#</strong><br />
                 
@@ -355,18 +344,10 @@
                     <strong>Paid on #DateFormat(qStudentInfo.sevis_fee_paid_date,'mm/dd/yyyy')#</strong>
                 </cfif> <br />
                 
-                Cancelled By: <strong>#CLIENT.name# - #CLIENT.email#</strong> <br /><br />
+                Cancelled By: <strong>#CLIENT.name# - #CLIENT.email#</strong><br /><br />
                 
                 The following people received this notice: <br /> 
-                <strong>#emailList#</strong> <br /> <br />
-             
-                <p>
-                    <cfif APPLICATION.IsServerLocal>
-                        PS: Development Server
-                    <cfelse>
-                        PS: Production Server
-                    </cfif>
-                </p>
+                <strong>#emailList#</strong><br /> <br />
             </cfsavecontent>
         </cfoutput>
     	
