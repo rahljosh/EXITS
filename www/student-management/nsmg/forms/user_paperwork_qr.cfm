@@ -1,17 +1,18 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Update User Paperwork</title>
-</head>
 
-<body>
 
 <cfif NOT IsDefined('form.userid')>
 	Sorry, an error has ocurred. Please go back and try again.
 	<cfabort>
 </cfif>
-
+<Cfif isDefined('form.deleteSeason')>
+	<cfquery name="deleteSeason" datasource="#application.dsn#">
+    delete from smg_users_paperwork
+    where seasonid = <cfqueryparam value="#form.deleteSeason#" cfsqltype="cf_sql_integer" maxlength="6">
+    and userid = <cfqueryparam value="#form.userid#" cfsqltype="cf_sql_integer" maxlength="6">
+    </cfquery>
+    
+</Cfif>
+<Cfif isDefined('form.updatePaperwork')>
 <!--- UPDATE PAPERWORK --->
 <cftransaction action="begin" isolation="SERIALIZABLE">	  
 	<cfloop From = "1" To = "#form.count#" Index = "x">
@@ -25,17 +26,19 @@
                 ar_training = <cfif form["ar_training_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_training_" & x])#</cfif>,
                </cfif>
 				ar_cbc_auth_form = <cfif form["ar_cbc_auth_form_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_cbc_auth_form_" & x])#</cfif>,
-                ar_agreement = <cfif form["ar_agreement_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_agreement_" & x])#</cfif>,
-				secondVisit = <cfif form["ar_secondVisit_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_secondVisit_" & x])#</cfif>
+                ar_agreement = <cfif form["ar_agreement_" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["ar_agreement_" & x])#</cfif>
 			WHERE paperworkid = '#form["paperworkid_" & x]#'
 			LIMIT 1
 		</cfquery>	
 	</cfloop>
+         <cfscript>
+	    SESSION.pageMessages.Add("All paperwork records have been updated.");
+	</cfscript>
 </cftransaction>
-
+</Cfif>
 
 <!--- NEW SET OF PAPERWORK --->
-<cfif form.seasonid NEQ '0'>
+<cfif isDefined('form.addNewSeason')>
 	<cftransaction action="begin" isolation="SERIALIZABLE">	
 		<cfquery name="insert_paperwork" datasource="MySQL">
 			INSERT INTO smg_users_paperwork 
@@ -51,8 +54,8 @@
                 </cfif>
 
                 ar_cbc_auth_form, 
-                ar_agreement, 
-                secondVisit)
+                ar_agreement 
+                )
 			VALUES 
 				(#client.companyid#,
                 '#form.userid#',
@@ -65,9 +68,12 @@
                     <cfif form.ar_training EQ ''>NULL<cfelse>#CreateODBCDate(form.ar_training)#</cfif>,
                 </cfif>
 					<cfif form.ar_cbc_auth_form EQ ''>NULL<cfelse>#CreateODBCDate(form.ar_cbc_auth_form)#</cfif>,
-                    <cfif form.ar_agreement EQ ''>NULL<cfelse>#CreateODBCDate(form.ar_agreement)#</cfif>,
-				    <cfif form.ar_secondVisit EQ ''>NULL<cfelse>#CreateODBCDate(form.ar_secondVisit)#</cfif>)
+                    <cfif form.ar_agreement EQ ''>NULL<cfelse>#CreateODBCDate(form.ar_agreement)#</cfif>)
 		</cfquery>	
+        
+     <cfscript>
+	    SESSION.pageMessages.Add("The new season of paperwork was added.");
+	</cfscript>
 	</cftransaction>
 </cfif>
 
@@ -107,20 +113,11 @@
                       
                     </cfinvoke>	 
              </cfif>
-       
+      
+<Cflocation url="index.cfm?curdoc=forms/user_paperwork&userid=#form.userid#">
 
-<html>
-<head>
-<cfoutput>
-<script language="JavaScript">
-<!-- 
-alert("You have successfully updated this page. Thank You.");
-	location.replace("?curdoc=forms/user_paperwork&userid=#form.userid#");
-//-->
-</script>
-</cfoutput>
-</head>
-</html> 		
+
+		
 
 </body>
 </html>
