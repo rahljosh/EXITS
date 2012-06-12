@@ -205,7 +205,7 @@
                 where id = <cfqueryparam value="#VAL(disabledReasonid.maxid)#" cfsqltype="CF_SQL_INTEGER" >
                 </cfquery>
                 
-                <cfreturn 'This account was disabled on #dateformat(disabledReason.date, "mm/dd/yyyy")# for #disabledReason.reason#'>
+                <cfreturn 'This account was disabled on #dateformat(disabledReason.date, "mm/dd/yyyy")#.  Please contact your regional manager.'>
         	</cfif>
         </Cfif>
       
