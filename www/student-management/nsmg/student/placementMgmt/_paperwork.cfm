@@ -987,14 +987,14 @@
 						<!--- Date of 2nd Visit --->
                         <tr class="rowColor"> 
                             <td>&nbsp;</td>
-                            <td><label>Date of 2nd Visit</label></td>
+                            <td><label>Date of 2<sup>nd</sup> Visit</label></td>
                             <td>
                             	<span class="readOnly displayNone">#DateFormat(qGetSecondVisitReport.dateOfVisit, 'mm/dd/yyyy')#</span>
                             	<input type="text" name="dateOfVisit" id="dateOfVisit" class="datePicker editPage displayNone" value="#DateFormat(qGetSecondVisitReport.dateOfVisit, 'mm/dd/yyyy')#" disabled="disabled">
                             </td>
                             <td>
                                 <input type="checkbox" name="checkSecondVisitDateCompliance" id="checkSecondVisitDateCompliance" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'secondVisitDateCompliance');" <cfif isDate(FORM.secondVisitDateCompliance)>checked</cfif> <cfif NOT qGetSecondVisitReport.recordCount>disabled="disabled"</cfif> >
-                                <input type="hidden" name="secondVisitDateCompliance" id="secondVisitDateCompliance" class="datePicker editPage displayNone" value="#DateFormat(FORM.secondVisitDateCompliance, 'mm/dd/yyyy')#" disabled="disabled">
+                                <input type="hidden" name="secondVisitDateCompliance" id="secondVisitDateCompliance" class="datePicker editPage displayNone" value="#DateFormat(FORM.secondVisitDateCompliance, 'mm/dd/yyyy')#">
                             </td>
                         </tr>
                         
