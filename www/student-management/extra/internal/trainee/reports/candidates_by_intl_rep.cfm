@@ -149,7 +149,7 @@
             </tr>
             
             <cfloop query="qGetCandidates">
-                <tr>
+                <tr <cfif qGetCandidates.currentRow MOD 2>bgcolor="##E4E4E4"</cfif>>
                     <td class="style1">#qGetCandidates.firstname#</td>
                     <td class="style1">#qGetCandidates.lastname#</td>
                     <td class="style1">#qGetCandidates.sex#</td>
