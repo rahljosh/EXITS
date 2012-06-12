@@ -12,11 +12,11 @@
 	// CLEAR SESSION SCOPE - Use only when we switch to Application.cfc
 	// StructClear(SESSION);
 
-	// Param Session Variables
+	// Param SESSION Variables
 	param name="SESSION.started" default=now();	
 	param name="SESSION.expires" default=DateAdd('h', 12, now());	
 
-	// These are arrays and cannot be stored in client variables
+	// These are arrays and cannot be stored in CLIENT variables
 	param name="SESSION.pageMessages" default='';	
 	param name="SESSION.formErrors" default='';	
 	
@@ -31,4 +31,7 @@
 		// Form Errors
 		SESSION.formErrors = CreateCFC("formErrors").Init();
 	}
+	
+	// Set User Roles
+	APPLICATION.CFC.USER.setUserRoles(userID=CLIENT.userID);	
 </cfscript>

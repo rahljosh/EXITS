@@ -98,6 +98,80 @@
 	</cffunction>
 
 
+	<cffunction name="setUserRoles" access="public" returntype="void" output="false" hint="Set SESSION user roles">
+    	<cfargument name="userID" type="numeric" hint="userID is required">
+              
+        <cfquery 
+			name="qGetUserRoles" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+                	alup.fieldKey,
+                    alup.fieldID,
+                    alup.name,
+                    alup.isActive,
+                    surJN.userID
+                FROM
+                	applicationLookUp alup                
+                LEFT OUTER JOIN
+                	smg_users_role_JN surJN ON alup.fieldID = surJN.roleID
+                    AND
+                    	surJN.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+                WHERE
+                	alup.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="userRole">	
+		</cfquery>
+        
+        <cfscript>
+			// Set SESSION.ROLES
+			SESSION.ROLES = StructNew();
+			
+			// Loop Through Roles
+			for ( i=1; i LTE qGetUserRoles.recordCount; i=i+1 ) {
+				
+				// Check if user has roles
+				if ( VAL(qGetUserRoles.userID[i]) ) {
+					// Set Roles
+					SESSION.ROLES[qGetUserRoles.name[i]] = 1;
+				} else {
+					// Set Not Allowed
+					SESSION.ROLES[qGetUserRoles.name[i]] = 0;
+				}
+				
+			}
+		</cfscript>
+		
+	</cffunction>
+    
+    
+	<cffunction name="hasUserRoleAccess" access="public" returntype="numeric" output="false" hint="Returns 1/0 depeding on user access">
+	    <cfargument name="userID" type="numeric" hint="userID is required">
+    	<cfargument name="role" type="string" hint="role is required">
+		
+        <cfscript>
+			var vRoleAccess = 0;
+			
+			try {
+				// Check if roles do not exist
+				if ( StructIsEmpty(SESSION.ROLES) ) {
+					// Set Roles
+					setUserRoles(userID=ARGUMENTS.userID);
+				}
+			} catch (Any e) {
+				// Set Roles
+				setUserRoles(userID=ARGUMENTS.userID);
+			}
+			
+			try {
+				// Get Role Access
+				return SESSION.ROLES[ARGUMENTS.role];
+			} catch (Any e) {
+				// Error
+				return 0;
+			}
+		</cfscript>
+		
+	</cffunction>
+
+
 	<!--- Start of Auto Suggest --->
     <cffunction name="remoteLookUpUser" access="remote" returnFormat="json" output="false" hint="Remote function to get users, returns an array">
         <cfargument name="searchString" type="string" default="" hint="Search is not required">
