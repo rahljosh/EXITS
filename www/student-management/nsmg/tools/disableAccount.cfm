@@ -9,7 +9,7 @@
     <gui:pageHeader
         headerType="applicationNoHeader"
     />
-<body onload="opener.location.reload()">
+
 <cfif isDefined('form.userToDisable')>
 	<cfquery name="addReason" datasource="#application.dsn#">
     insert into smg_accountDisabledHistory (date, fk_whoDisabled, fk_userDisabled, reason, accountAction)
@@ -21,15 +21,14 @@
                   where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#userToDisable#">
 	</cfquery>
 <div style="width:600px;text-align:center;margin-right:auto;margin-left:auto;" >
+<body onload="parent.$.fn.colorbox.close();">
 <h2>This account is now disabled. </h2> 
 If the user is currently logged in, they will be able to finish there session, <Br /> but will not be able to re-login.
 </div>
-  <!----Clost window if signature is fine---->
-		<SCRIPT LANGUAGE="JavaScript"><!--
-        setTimeout('self.close()',2000);
-        //--></SCRIPT>
+
 <cfabort>
 </cfif>
+<body>
 <cfoutput>
 <div class="rdholder" style="width:100%;float:right;"> 
 				<div class="rdtop"> 
@@ -40,8 +39,7 @@ If the user is currently logged in, they will be able to finish there session, <
 <input type="hidden" name="userToDisable" value="#url.userid#"/>
 <div style="width:600px;text-align:center;margin-right:auto;margin-left:auto;" >
 <h2>Please indicate why you are disabling this account.</h2> 
-<p>This information is  recorded for future reference, no emails are sent out although <br />
-this will be displayed if user attempts to login<br />
+<p>This information is  recorded for future reference, no emails are sent out and the user doesn't see this message when they attempt to login.<br />
 <br />
   
   
