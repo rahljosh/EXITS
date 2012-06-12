@@ -2023,7 +2023,7 @@
 
 
 	<!--- Get Placement History --->
-	<cffunction name="getPlacementHistory" access="public" returntype="query" output="false" hint="Returns placement history">
+	<cffunction name="getPlacementHistory" access="public" returntype="query" output="false" hint="Returns full placement information">
     	<cfargument name="studentID" hint="studentID is required">
         <cfargument name="isActive" default="" hint="isActive is not required">
         
@@ -2157,7 +2157,7 @@
 
 
 	<!--- Get Placement History By ID --->
-	<cffunction name="getHostHistoryByID" access="public" returntype="query" output="false" hint="Returns placement history">
+	<cffunction name="getHostHistoryByID" access="public" returntype="query" output="false" hint="Returns placement/paperwork history">
     	<cfargument name="studentID" default="" hint="studentID is required">
         <cfargument name="historyID" default="" hint="historyID is required">
         <cfargument name="getActiveRecord" default="0" hint="getActiveRecord is not required">
@@ -2196,39 +2196,71 @@
                     dateSetHostPermanent,
                     <!--- Single Person Placement Paperwork --->
                     doc_single_place_auth,
-					doc_single_ref_form_1,
-                    doc_single_ref_check1,
-                    doc_single_ref_form_2,
-					doc_single_ref_check2,
+                    compliance_single_place_auth,
                     doc_single_parents_sign_date,
-                    doc_single_student_sign_date,                    
+                    compliance_single_parents_sign_date,
+                    doc_single_student_sign_date,  
+                    compliance_single_student_sign_date,  
+					doc_single_ref_form_1,
+					compliance_single_ref_form_1,
+                    doc_single_ref_check1,
+                    compliance_single_ref_check1,
+                    doc_single_ref_form_2,
+                    compliance_single_ref_form_2,
+					doc_single_ref_check2,
+					compliance_single_ref_check2,
                     <!--- Placement Paperwork --->
                     doc_full_host_app_date,
+                    compliance_full_host_app_date,
                     doc_letter_rec_date,
+                    compliance_letter_rec_date,
                     doc_rules_rec_date,
+                    compliance_rules_rec_date,
                     doc_rules_sign_date,
+                    compliance_rules_sign_date,
                     doc_photos_rec_date,
+                    compliance_photos_rec_date,
                     doc_bedroom_photo,
+                    compliance_bedroom_photo,
                     doc_bathroom_photo,
+                    compliance_bathroom_photo,
                     doc_kitchen_photo,
+                    compliance_kitchen_photo,
                     doc_living_room_photo,
+                    compliance_living_room_photo,
                     doc_outside_photo,
+                    compliance_outside_photo,
                     doc_school_profile_rec,
+                    compliance_school_profile_rec,
                     doc_conf_host_rec,
+                    compliance_conf_host_rec,
                     doc_date_of_visit,
+                    compliance_date_of_visit,
                     doc_ref_form_1,
+                    compliance_ref_form_1,
                     doc_ref_check1,
+                    compliance_ref_check1,
                     doc_ref_form_2,
+                    compliance_ref_form_2,
                     doc_ref_check2,
-                    doc_host_orientation,
+                    compliance_ref_check2,
                     doc_income_ver_date,
+                    compliance_income_ver_date,
                     <!--- Arrival Compliance --->
                     doc_school_accept_date,
+                    compliance_school_accept_date,
                     doc_school_sign_date,
+                    compliance_school_sign_date,
                     <!--- Arrival Orientation --->
                     stu_arrival_orientation,
+                    compliance_stu_arrival_orientation,
                     host_arrival_orientation,
+                    compliance_host_arrival_orientation,
                     doc_class_schedule,
+                    compliance_class_schedule,
+                    <!--- Compliance --->
+                    dateComplianceReviewed,
+                    complianceNotes,
                     actions,
                     dateOfChange,
                     dateCreated,
@@ -2254,7 +2286,7 @@
                 </cfif>
                 
         </cfquery>
-                
+        
         <cfreturn qGetHostHistoryByID>
     </cffunction>
 
@@ -2271,8 +2303,11 @@
                     ht.ID,
                     ht.isDoublePlacementPaperworkRequired,                    
                     ht.doublePlacementParentsDateSigned,
+                    ht.doublePlacementParentsDateCompliance,
                     ht.doublePlacementStudentDateSigned,
+                    ht.doublePlacementStudentDateCompliance,
                     ht.doublePlacementHostFamilyDateSigned,
+                    ht.doublePlacementHostFamilyDateCompliance,
                     ht.dateCreated,                    
                     <!--- Double Placement --->
                     dp.studentID AS doublePlacementID,
@@ -2302,8 +2337,11 @@
     	<cfargument name="ID" hint="smg_hostHistoryTracking ID is required">
         <cfargument name="isDoublePlacementPaperworkRequired" default="" hint="isDoublePlacementPaperworkRequired is not required">
         <cfargument name="doublePlacementParentsDateSigned" default="" hint="doublePlacementParentsDateSigned is not required">
+        <cfargument name="doublePlacementParentsDateCompliance" default="" hint="doublePlacementParentsDateCompliance is not required">
         <cfargument name="doublePlacementStudentDateSigned" default="" hint="doublePlacementStudentDateSigned is not required">
+        <cfargument name="doublePlacementStudentDateCompliance" default="" hint="doublePlacementStudentDateCompliance is not required">
         <cfargument name="doublePlacementHostFamilyDateSigned" default="" hint="doublePlacementHostFamilyDateSigned is not required">
+        <cfargument name="doublePlacementHostFamilyDateCompliance" default="" hint="doublePlacementHostFamilyDateCompliance is not required">
 
         <cfquery 
             datasource="#APPLICATION.DSN#">
@@ -2312,8 +2350,11 @@
                 SET
                 	isDoublePlacementPaperworkRequired = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isDoublePlacementPaperworkRequired)#" null="#NOT IsNumeric(ARGUMENTS.isDoublePlacementPaperworkRequired)#">,
                     doublePlacementParentsDateSigned = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doublePlacementParentsDateSigned#" null="#NOT IsDate(ARGUMENTS.doublePlacementParentsDateSigned)#">,
+                    doublePlacementParentsDateCompliance = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doublePlacementParentsDateCompliance#" null="#NOT IsDate(ARGUMENTS.doublePlacementParentsDateCompliance)#">,
                     doublePlacementStudentDateSigned = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doublePlacementStudentDateSigned#" null="#NOT IsDate(ARGUMENTS.doublePlacementStudentDateSigned)#">,
-                	doublePlacementHostFamilyDateSigned = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doublePlacementHostFamilyDateSigned#" null="#NOT IsDate(ARGUMENTS.doublePlacementHostFamilyDateSigned)#">
+                    doublePlacementStudentDateCompliance = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doublePlacementStudentDateCompliance#" null="#NOT IsDate(ARGUMENTS.doublePlacementStudentDateCompliance)#">,
+                    doublePlacementHostFamilyDateSigned = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doublePlacementHostFamilyDateSigned#" null="#NOT IsDate(ARGUMENTS.doublePlacementHostFamilyDateSigned)#">,
+                    doublePlacementHostFamilyDateCompliance = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doublePlacementHostFamilyDateCompliance#" null="#NOT IsDate(ARGUMENTS.doublePlacementHostFamilyDateCompliance)#">
                 WHERE
 					ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
         </cfquery>
@@ -2326,40 +2367,73 @@
         <cfargument name="historyID" default="0" hint="historyID is not required">
 		<!--- Single Person Placement --->
         <cfargument name="doc_single_place_auth" default="" hint="doc_single_place_auth is not required">
-        <cfargument name="doc_single_ref_form_1" default="" hint="doc_single_ref_form_1 is not required">
-        <cfargument name="doc_single_ref_check1" default="" hint="doc_single_ref_check1 is not required">
-        <cfargument name="doc_single_ref_form_2" default="" hint="doc_single_ref_form_2 is not required">
-        <cfargument name="doc_single_ref_check2" default="" hint="doc_single_ref_check2 is not required">
+        <cfargument name="compliance_single_place_auth" default="" hint="compliance_single_place_auth is not required">
         <cfargument name="doc_single_parents_sign_date" default="" hint="doc_single_parents_sign_date is not required">
+        <cfargument name="compliance_single_parents_sign_date" default="" hint="compliance_single_parents_sign_date is not required">
         <cfargument name="doc_single_student_sign_date" default="" hint="doc_single_student_sign_date is not required">
+        <cfargument name="compliance_single_student_sign_date" default="" hint="compliance_single_student_sign_date is not required">
+        <cfargument name="doc_single_ref_form_1" default="" hint="doc_single_ref_form_1 is not required">
+        <cfargument name="compliance_single_ref_form_1" default="" hint="compliance_single_ref_form_1 is not required">
+        <cfargument name="doc_single_ref_check1" default="" hint="doc_single_ref_check1 is not required">
+        <cfargument name="compliance_single_ref_check1" default="" hint="compliance_single_ref_check1 is not required">
+        <cfargument name="doc_single_ref_form_2" default="" hint="doc_single_ref_form_2 is not required">
+        <cfargument name="compliance_single_ref_form_2" default="" hint="compliance_single_ref_form_2 is not required">
+        <cfargument name="doc_single_ref_check2" default="" hint="doc_single_ref_check2 is not required">
+        <cfargument name="compliance_single_ref_check2" default="" hint="compliance_single_ref_check2 is not required">
         <!--- Placement Paperwork --->
         <cfargument name="dateRelocated" default="" hint="dateRelocated is not required">
         <cfargument name="doc_full_host_app_date" default="" hint="doc_full_host_app_date is not required">
+        <cfargument name="compliance_full_host_app_date" default="" hint="compliance_full_host_app_date is not required">
         <cfargument name="doc_letter_rec_date" default="" hint="doc_letter_rec_date is not required">
+        <cfargument name="compliance_letter_rec_date" default="" hint="compliance_letter_rec_date is not required">
         <cfargument name="doc_rules_rec_date" default="" hint="doc_rules_rec_date is not required">
+        <cfargument name="compliance_rules_rec_date" default="" hint="compliance_rules_rec_date is not required">
         <cfargument name="doc_rules_sign_date" default="" hint="doc_rules_sign_date is not required">
+        <cfargument name="compliance_rules_sign_date" default="" hint="compliance_rules_sign_date is not required">
         <cfargument name="doc_photos_rec_date" default="" hint="doc_photos_rec_date is not required">
+        <cfargument name="compliance_photos_rec_date" default="" hint="compliance_photos_rec_date is not required">
         <cfargument name="doc_bedroom_photo" default="" hint="doc_bedroom_photo is not required">
+        <cfargument name="compliance_bedroom_photo" default="" hint="compliance_bedroom_photo is not required">
         <cfargument name="doc_bathroom_photo" default="" hint="doc_bathroom_photo is not required">
+        <cfargument name="compliance_bathroom_photo" default="" hint="compliance_bathroom_photo is not required">
         <cfargument name="doc_kitchen_photo" default="" hint="doc_kitchen_photo is not required">
+        <cfargument name="compliance_kitchen_photo" default="" hint="compliance_kitchen_photo is not required">
         <cfargument name="doc_living_room_photo" default="" hint="doc_living_room_photo is not required">
+        <cfargument name="compliance_living_room_photo" default="" hint="compliance_living_room_photo is not required">
         <cfargument name="doc_outside_photo" default="" hint="doc_outside_photo is not required">
+        <cfargument name="compliance_outside_photo" default="" hint="compliance_outside_photo is not required">
         <cfargument name="doc_school_profile_rec" default="" hint="doc_school_profile_rec is not required">
+        <cfargument name="compliance_school_profile_rec" default="" hint="compliance_school_profile_rec is not required">
         <cfargument name="doc_conf_host_rec" default="" hint="doc_conf_host_rec is not required">
+        <cfargument name="compliance_conf_host_rec" default="" hint="compliance_conf_host_rec is not required">
         <cfargument name="doc_date_of_visit" default="" hint="doc_date_of_visit is not required">
+        <cfargument name="compliance_date_of_visit" default="" hint="compliance_date_of_visit is not required">
         <cfargument name="doc_ref_form_1" default="" hint="doc_ref_form_1 is not required">
+        <cfargument name="compliance_ref_form_1" default="" hint="compliance_ref_form_1 is not required">
         <cfargument name="doc_ref_check1" default="" hint="doc_ref_check1 is not required">
+        <cfargument name="compliance_ref_check1" default="" hint="compliance_ref_check1 is not required">
         <cfargument name="doc_ref_form_2" default="" hint="doc_ref_form_2 is not required">
+        <cfargument name="compliance_ref_form_2" default="" hint="compliance_ref_form_2 is not required">
         <cfargument name="doc_ref_check2" default="" hint="doc_ref_check2 is not required">
+        <cfargument name="compliance_ref_check2" default="" hint="compliance_ref_check2 is not required">
         <cfargument name="doc_income_ver_date" default="" hint="doc_income_ver_date is not required">
+        <cfargument name="compliance_income_ver_date" default="" hint="compliance_income_ver_date is not required">
         <!--- Arrival Compliance --->
         <cfargument name="doc_school_accept_date" default="" hint="doc_school_accept_date is not required">
+        <cfargument name="compliance_school_accept_date" default="" hint="compliance_school_accept_date is not required">
         <cfargument name="doc_school_sign_date" default="" hint="doc_school_sign_date is not required">
+        <cfargument name="compliance_school_sign_date" default="" hint="compliance_school_sign_date is not required">
         <!--- Arrival Orientation --->
         <cfargument name="stu_arrival_orientation" default="" hint="stu_arrival_orientation is not required">
+        <cfargument name="compliance_stu_arrival_orientation" default="" hint="compliance_stu_arrival_orientation is not required">
         <cfargument name="host_arrival_orientation" default="" hint="host_arrival_orientation is not required">
+        <cfargument name="compliance_host_arrival_orientation" default="" hint="compliance_host_arrival_orientation is not required">
         <cfargument name="doc_class_schedule" default="" hint="doc_class_schedule is not required">    
-        
+        <cfargument name="compliance_class_schedule" default="" hint="compliance_class_schedule is not required">    
+        <!--- Compliance --->
+        <cfargument name="dateComplianceReviewed" default="" hint="dateComplianceReviewed is not required">
+        <cfargument name="complianceNotes" default="" hint="complianceNotes is not required">
+
         <!--- Update Host History Documents --->
         <cfquery 
 			datasource="#APPLICATION.DSN#">
@@ -2368,41 +2442,76 @@
                 SET 
 					<!--- Single Person Placement Paperwork --->
                     doc_single_place_auth = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_place_auth#" null="#NOT IsDate(ARGUMENTS.doc_single_place_auth)#">,
+                    compliance_single_place_auth = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_single_place_auth#" null="#NOT IsDate(ARGUMENTS.compliance_single_place_auth)#">,
                     doc_single_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_form_1#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_form_1)#">,
+                    compliance_single_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_single_ref_form_1#" null="#NOT IsDate(ARGUMENTS.compliance_single_ref_form_1)#">,
                     doc_single_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_check1#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_check1)#">,
+                    compliance_single_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_single_ref_check1#" null="#NOT IsDate(ARGUMENTS.compliance_single_ref_check1)#">,
                     doc_single_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_form_2#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_form_2)#">,
+                    compliance_single_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_single_ref_form_2#" null="#NOT IsDate(ARGUMENTS.compliance_single_ref_form_2)#">,
                     doc_single_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_ref_check2#" null="#NOT IsDate(ARGUMENTS.doc_single_ref_check2)#">,
+                    compliance_single_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_single_ref_check2#" null="#NOT IsDate(ARGUMENTS.compliance_single_ref_check2)#">,
                     doc_single_parents_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_parents_sign_date#" null="#NOT IsDate(ARGUMENTS.doc_single_parents_sign_date)#">,
+                    compliance_single_parents_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_single_parents_sign_date#" null="#NOT IsDate(ARGUMENTS.compliance_single_parents_sign_date)#">,
                     doc_single_student_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_student_sign_date#" null="#NOT IsDate(ARGUMENTS.doc_single_student_sign_date)#">,
+                    compliance_single_student_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_single_student_sign_date#" null="#NOT IsDate(ARGUMENTS.compliance_single_student_sign_date)#">,
                     <!--- Placement Paperwork --->
                     <!--- Waiting to be Pushed Live - 04/11/2012 - Marcus Melo
 					dateRelocated = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateRelocated#" null="#NOT IsDate(ARGUMENTS.dateRelocated)#">,
 					--->
                     doc_full_host_app_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_full_host_app_date#" null="#NOT IsDate(ARGUMENTS.doc_full_host_app_date)#">,
+                    compliance_full_host_app_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_full_host_app_date#" null="#NOT IsDate(ARGUMENTS.compliance_full_host_app_date)#">,
                     doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_letter_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_letter_rec_date)#">,
+                    compliance_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_letter_rec_date#" null="#NOT IsDate(ARGUMENTS.compliance_letter_rec_date)#">,
                     doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_rules_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_rules_rec_date)#">,
+                    compliance_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_rules_rec_date#" null="#NOT IsDate(ARGUMENTS.compliance_rules_rec_date)#">,
                     doc_rules_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_rules_sign_date#" null="#NOT IsDate(ARGUMENTS.doc_rules_sign_date)#">,
+                    compliance_rules_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_rules_sign_date#" null="#NOT IsDate(ARGUMENTS.compliance_rules_sign_date)#">,
                     doc_photos_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_photos_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_photos_rec_date)#">,
+                    compliance_photos_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_photos_rec_date#" null="#NOT IsDate(ARGUMENTS.compliance_photos_rec_date)#">,
                     doc_bedroom_photo = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_bedroom_photo#" null="#NOT IsDate(ARGUMENTS.doc_bedroom_photo)#">,
+                    compliance_bedroom_photo = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_bedroom_photo#" null="#NOT IsDate(ARGUMENTS.compliance_bedroom_photo)#">,
                     doc_bathroom_photo = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_bathroom_photo#" null="#NOT IsDate(ARGUMENTS.doc_bathroom_photo)#">,
+                    compliance_bathroom_photo = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_bathroom_photo#" null="#NOT IsDate(ARGUMENTS.compliance_bathroom_photo)#">,
                     doc_kitchen_photo = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_kitchen_photo#" null="#NOT IsDate(ARGUMENTS.doc_kitchen_photo)#">,
+                    compliance_kitchen_photo = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_kitchen_photo#" null="#NOT IsDate(ARGUMENTS.compliance_kitchen_photo)#">,
                     doc_living_room_photo = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_living_room_photo#" null="#NOT IsDate(ARGUMENTS.doc_living_room_photo)#">,
+                    compliance_living_room_photo = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_living_room_photo#" null="#NOT IsDate(ARGUMENTS.compliance_living_room_photo)#">,
                     doc_outside_photo = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_outside_photo#" null="#NOT IsDate(ARGUMENTS.doc_outside_photo)#">,
+                    compliance_outside_photo = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_outside_photo#" null="#NOT IsDate(ARGUMENTS.compliance_outside_photo)#">,                    
                     doc_school_profile_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_profile_rec#" null="#NOT IsDate(ARGUMENTS.doc_school_profile_rec)#">,
+                    compliance_school_profile_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_school_profile_rec#" null="#NOT IsDate(ARGUMENTS.compliance_school_profile_rec)#">,
                     doc_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_conf_host_rec#" null="#NOT IsDate(ARGUMENTS.doc_conf_host_rec)#">,
+                    compliance_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_conf_host_rec#" null="#NOT IsDate(ARGUMENTS.compliance_conf_host_rec)#">,
                     doc_date_of_visit = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_date_of_visit#" null="#NOT IsDate(ARGUMENTS.doc_date_of_visit)#">,
+                    compliance_date_of_visit = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_date_of_visit#" null="#NOT IsDate(ARGUMENTS.compliance_date_of_visit)#">,
                     doc_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_form_1#" null="#NOT IsDate(ARGUMENTS.doc_ref_form_1)#">,
+                    compliance_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_ref_form_1#" null="#NOT IsDate(ARGUMENTS.compliance_ref_form_1)#">,
                     doc_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_check1#" null="#NOT IsDate(ARGUMENTS.doc_ref_check1)#">,
+                    compliance_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_ref_check1#" null="#NOT IsDate(ARGUMENTS.compliance_ref_check1)#">,
                     doc_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_form_2#" null="#NOT IsDate(ARGUMENTS.doc_ref_form_2)#">,
+                    compliance_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_ref_form_2#" null="#NOT IsDate(ARGUMENTS.compliance_ref_form_2)#">,
                     doc_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_check2#" null="#NOT IsDate(ARGUMENTS.doc_ref_check2)#">,
+                    compliance_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_ref_check2#" null="#NOT IsDate(ARGUMENTS.compliance_ref_check2)#">,
                     doc_income_ver_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_income_ver_date#" null="#NOT IsDate(ARGUMENTS.doc_income_ver_date)#">,
+                    compliance_income_ver_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_income_ver_date#" null="#NOT IsDate(ARGUMENTS.compliance_income_ver_date)#">,
                     <!--- Arrival Compliance --->
                     doc_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_accept_date#" null="#NOT IsDate(ARGUMENTS.doc_school_accept_date)#">,
+                    compliance_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_school_accept_date#" null="#NOT IsDate(ARGUMENTS.compliance_school_accept_date)#">,
                     doc_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_sign_date#" null="#NOT IsDate(ARGUMENTS.doc_school_sign_date)#">,
+                    compliance_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_school_sign_date#" null="#NOT IsDate(ARGUMENTS.compliance_school_sign_date)#">,
+                    <!--- Compliance --->
+                    <cfif VAL(CLIENT.compliance)>
+                        dateComplianceReviewed = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateComplianceReviewed#" null="#NOT IsDate(ARGUMENTS.dateComplianceReviewed)#">,
+                        complianceNotes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.complianceNotes#">,
+                    </cfif>
 					<!--- Arrival Orientation --->
                     stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.stu_arrival_orientation#" null="#NOT IsDate(ARGUMENTS.stu_arrival_orientation)#">,
+                    compliance_stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_stu_arrival_orientation#" null="#NOT IsDate(ARGUMENTS.compliance_stu_arrival_orientation)#">,
                     host_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.host_arrival_orientation#" null="#NOT IsDate(ARGUMENTS.host_arrival_orientation)#">,
-                    doc_class_schedule = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_class_schedule#" null="#NOT IsDate(ARGUMENTS.doc_class_schedule)#">
+                    compliance_host_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_host_arrival_orientation#" null="#NOT IsDate(ARGUMENTS.compliance_host_arrival_orientation)#">,
+                    doc_class_schedule = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_class_schedule#" null="#NOT IsDate(ARGUMENTS.doc_class_schedule)#">,
+                    compliance_class_schedule = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_class_schedule#" null="#NOT IsDate(ARGUMENTS.compliance_class_schedule)#">
                 WHERE 
                     historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.historyID)#"> 
                 AND
@@ -2659,6 +2768,88 @@
         
 	</cffunction>
 
+
+	<!--- Double Placement - Check Primary Language Spoken --->
+	<cffunction name="checkDoublePlacementCompliance" access="public" returntype="numeric" output="false" hint="Double placement is compliant by not having two students that speak the same language">
+    	<cfargument name="studentID" hint="studentID is required">
+        <cfargument name="doublePlacementID" hint="doublePlacementID is required">
+		
+        <cfscript>
+			// Set Local Variables
+			var vIsDoublePlacementCompliant = 1;	
+			
+			// Get Student Primary Language
+			qGetStudentPrimaryLanguage = getStudentPrimaryLanguage(studentID=ARGUMENTS.studentID);
+			
+			vStudentPrimaryLanguageIDList = ValueList(qGetStudentPrimaryLanguage.languageID);
+		</cfscript>
+        
+        <cfif LEN(vStudentPrimaryLanguageIDList)>
+        
+            <cfquery 
+                name="qCheckDoublePlacementPrimaryLanguage"
+                datasource="#APPLICATION.DSN#">
+                    SELECT 
+                        clJN.countryID,
+                        clJN.languageID,
+                        alu.name
+                    FROM
+                        smg_countryLanguageJN clJN
+                    INNER JOIN
+                        applicationLookUp alu ON alu.fieldID = clJN.languageID
+                            AND
+                                fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="language">
+                    INNER JOIN	
+                         smg_students s ON clJN.countryID = s.countryResident
+                         AND
+                            s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlacementID)#">      
+                    WHERE
+                        clJN.languageID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vStudentPrimaryLanguageIDList#" list="yes"> )                                 
+            </cfquery> 
+		
+        	<cfscript>
+				// Check if students speak the same language, if it does set as not compliant
+				if ( qCheckDoublePlacementPrimaryLanguage.recordCount) {
+					vIsDoublePlacementCompliant = 0;
+				}
+			</cfscript>
+        
+        </cfif>
+        
+        <cfscript>
+			return vIsDoublePlacementCompliant;
+		</cfscript>
+	</cffunction>
+    
+
+	<!--- Primary Language --->
+	<cffunction name="getStudentPrimaryLanguage" access="public" returntype="query" output="false" hint="Gets the student primary language">
+    	<cfargument name="studentID" hint="studentID is required">
+        
+        <cfquery 
+        	name="qGetStudentPrimaryLanguage"
+        	datasource="#APPLICATION.DSN#">
+                SELECT 
+                    clJN.countryID,
+                    clJN.languageID,
+                    alu.name
+				FROM
+                	smg_countryLanguageJN clJN
+                INNER JOIN
+					applicationLookUp alu ON alu.fieldID = clJN.languageID
+                    	AND
+                        	fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="language">
+                INNER JOIN	
+                     smg_students s ON clJN.countryID = s.countryResident
+                     AND
+                     	s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">                
+        </cfquery> 
+		
+        <cfscript>
+			return qGetStudentPrimaryLanguage;
+		</cfscript>
+	</cffunction>
+    
 
     <!--- START OF PLACEMENT MANAGEMENT FUNCTIONS --->
 	<cffunction name="assignEnglishCamp" access="public" returntype="void" hint="Sets Pre-AYP english camp based on host family state">

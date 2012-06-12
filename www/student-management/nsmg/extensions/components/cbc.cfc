@@ -188,6 +188,7 @@
                         cbc.cbc_type,
                         cbc.date_sent, 
                         cbc.date_expired,
+                        cbc.dateCompliance,
                         (
                             CASE 
                                 WHEN 
@@ -326,11 +327,7 @@
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isNoSSN#">,
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isReRun#">,
-                            <cfif LEN(ARGUMENTS.dateAuthorized)>
-                                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.dateAuthorized)#">,
-                            <cfelse>
-                                NULL,                          
-                            </cfif>
+                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#ARGUMENTS.dateAuthorized#" null="#NOT IsDate(ARGUMENTS.dateAuthorized)#">,
                             <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                         )
                 </cfquery>	
@@ -340,25 +337,42 @@
 	</cffunction>
 
 
+	<cffunction name="updateHostDateCompliance" access="public" returntype="void" output="false" hint="Updates compliance check date for a record">
+		<cfargument name="cbcFamID" required="yes" hint="cbcFamID is required">
+        <cfargument name="dateCompliance" default="" hint="date of compliance check">
+            
+        <cfquery 
+			datasource="#APPLICATION.DSN#">
+                UPDATE 
+                    smg_hosts_cbc
+                SET 
+                    dateCompliance = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateCompliance#" null="#NOT IsDate(ARGUMENTS.dateCompliance)#">
+                WHERE 
+                    cbcFamID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcFamID#">
+        </cfquery>	
+        
+	</cffunction>
+
+
 	<cffunction name="updateHostOptions" access="public" returntype="void" output="false" hint="Updates the flag and SSN field on the CBC record. It does not return a value">
 		<cfargument name="cbcFamID" required="yes" hint="cbcFamID is required">
         <cfargument name="isNoSSN" default="" hint="isNoSSN is not required. Values 0 or 1">
 		<cfargument name="flagCBC" default="0" hint="flagCBC is not required. Values 0 or 1">
         <cfargument name="notes" default="" hint="any notes on the CBC">
         <cfargument name="date_approved" default="" hint="date the cbc was approved">
-            <cfquery 
-            	name="qUpdateHostOptions" 
-                datasource="#APPLICATION.dsn#">
-                    UPDATE 
-                        smg_hosts_cbc
-                    SET 
-                        isNoSSN = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.isNoSSN#">,
-                        flagcbc = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.flagCBC#">,
-                        notes  = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#">,
-                        date_approved = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date_approved#">
-                    WHERE 
-                        cbcFamID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcFamID#">
-            </cfquery>	
+        
+        <cfquery 
+			datasource="#APPLICATION.DSN#">
+                UPDATE 
+                    smg_hosts_cbc
+                SET 
+                    isNoSSN = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.isNoSSN#">,
+                    flagcbc = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.flagCBC#">,
+                    notes  = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#">,
+                    date_approved = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date_approved#">
+                WHERE 
+                    cbcFamID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcFamID#">
+        </cfquery>	
 
 	</cffunction>
 
@@ -1358,8 +1372,8 @@
         <cfargument name="userType" type="string" default="" hint="Father,Mother,User,Member">
         <cfargument name="hostID" type="numeric" default="0" hint="Optional">
         <cfargument name="userID" type="numeric" default="0" hint="Optional"> 
-        <cfargument name="familyID" type="numeric" default="0" hint="User or Host member ID"> 
-        <cfargument name="dateProcessed" type="any" default="" hint="Optional"> 
+        <cfargument name="familyID" type="numeric" default="0" hint="User or Host member ID">  
+        <cfargument name="dateProcessed" type="any" default="" hint="Optional">
 			
             <cfscript>
 				// Parse XML
@@ -1793,6 +1807,7 @@
 	<cffunction name="checkHostFamilyCompliance" access="public" returntype="string" output="false" hint="Check if a host family CBC and school acceptance is in compliance">
         <cfargument name="hostID" type="any" hint="hostID is required">
         <cfargument name="studentID" type="any" default="0" hint="studentID is not required">
+        <cfargument name="doublePlacementID" type="any" default="0" hint="doublePlacementID is not required">
         <cfargument name="secondVisitRepID" type="any" default="" hint="secondVisitRepID is not required, it must not be missing before approval by headquarters">
         <cfargument name="schoolAcceptanceDate" type="any" default="" hint="schoolAcceptanceDate is not required">
         <cfargument name="crossDataUserCBC" type="numeric" default="0" hint="cross data CBC with users">
@@ -1898,6 +1913,16 @@
 					vOtherMessage = vOtherMessage & "<p>Missing School Acceptance Form</p>";
 				}
 			
+			}
+			
+			/***************************************************************************************
+				Check Double Placement Language - Make sure kids do not speak the same language 
+			***************************************************************************************/
+			vIsDoublePlacementCompliant = APPLICATION.CFC.STUDENT.checkDoublePlacementCompliance(studentID=ARGUMENTS.studentID,doublePlacementID=ARGUMENTS.doublePlacementID);
+			
+			if ( NOT VAL(vIsDoublePlacementCompliant) ) {
+				vIsOutOfCompliance = 1;
+				vOtherMessage = vOtherMessage & "<p>Double Placement Non Compliant - Both students speak the same language</p>";
 			}
         </cfscript>
 
