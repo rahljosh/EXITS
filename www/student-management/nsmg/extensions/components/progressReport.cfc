@@ -263,6 +263,7 @@
                     sva.pets,
                     sva.other,
                     sva.dateOfVisit,
+                    sva.dateCompliance,
                     pReport.fk_host,
                     pReport.pr_sr_approved_date,
                     pReport.pr_ra_approved_date,
@@ -323,7 +324,23 @@
 		</cfquery>
         
 	</cffunction>
-
+    
+    
+	<cffunction name="updateSecondVisitDateCompliance" access="public" returntype="void" output="false" hint="Updates compliance check date for a record">
+		<cfargument name="ID" required="yes" hint="ID is required">
+        <cfargument name="dateCompliance" default="" hint="date of compliance check">
+            
+        <cfquery 
+			datasource="#APPLICATION.DSN#">
+                UPDATE 
+                    secondVisitAnswers
+                SET 
+                    dateCompliance = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateCompliance#" null="#NOT IsDate(ARGUMENTS.dateCompliance)#">
+                WHERE 
+                    ID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.ID#">
+        </cfquery>	
+        
+	</cffunction>
 
 	<!--- ------------------------------------------------------------------------- ----
 		
