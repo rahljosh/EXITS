@@ -5,7 +5,8 @@
 	Date:		June 15, 2011
 	Desc:		Placement Paperwork Management
 
-	Updated:	05/30/2012 - Added Compliances
+	Updated:	06/12/2012 - User Role Access Added
+				05/30/2012 - Added Compliances
 				04/03/2012 - Displaying non-compliant message in line instead of gui
 				03/30/2012 - Displaying when records are out of compliance on the fly
 				03/09/2012 - Adding double placement docs to the Compliance
@@ -99,13 +100,6 @@
     <cfparam name="FORM.cbcComplianceIDList" default="">
 
     <cfscript>
-		vSetComplianceClass = 'disabled="disabled"';
-		
-		// Compliance User - Allow Edit
-		if ( CLIENT.compliance EQ 1 ) {
-			vSetComplianceClass = '';	
-		}
-		
 		// Get Most Recent CBCs
 		qGetMostRecentCBC = APPLICATION.CFC.CBC.getLastHostCBC(hostID=qGetPlacementHistoryByID.hostID);
 
@@ -399,7 +393,7 @@
 		
 		loopNonCompliant();		
 		
-		<cfif VAL(CLIENT.compliance)>
+		<cfif VAL(APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID,role="studentComplianceCheckList"))>
 			// Enable Compliance Check 
 			$(".complianceCheck").removeAttr('disabled'); 
 		<cfelse>
