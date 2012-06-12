@@ -17,19 +17,19 @@
     
 	<cfscript>
 		// Get Programs
-		qGetPrograms = APPCFC.PROGRAM.getPrograms(dateActive=1);
+		qGetPrograms = APPLICATION.CFC.PROGRAM.getPrograms(dateActive=1);
 		
 		// Get Programs Ending Soon
-		qGetProgramsEndingSoon = APPCFC.PROGRAM.getPrograms(isEndingSoon=1);
+		qGetProgramsEndingSoon = APPLICATION.CFC.PROGRAM.getPrograms(isEndingSoon=1);
 
 		// Get Programs Ending Soon
-		qGetYearPrograms = APPCFC.PROGRAM.getPrograms(dateActive=1,isFullYear=1);
+		qGetYearPrograms = APPLICATION.CFC.PROGRAM.getPrograms(dateActive=1,isFullYear=1);
 
 		//Get Insurance Policies
-		qGetInsurancePolicies = APPCFC.INSURANCE.getInsurancePolicies(provider="global");
+		qGetInsurancePolicies = APPLICATION.CFC.INSURANCE.getInsurancePolicies(provider="global");
 		
 		// Get Insurance History
-		qGetInsuranceHistory = APPCFC.INSURANCE.getInsuranceHistory(companyID=CLIENT.companyID);
+		qGetInsuranceHistory = APPLICATION.CFC.INSURANCE.getInsuranceHistory(companyID=CLIENT.companyID);
     </cfscript>
     
 </cfsilent>

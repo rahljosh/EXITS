@@ -568,12 +568,12 @@
 				vReturnName = vReturnName & ' (##' & ARGUMENTS.hostID & ')';
 			}
 			
-			// Return Encrypted Variable
+			// Return Host Family Formatted Name
 			return(vReturnName);
         </cfscript>
 		   
 	</cffunction>
-
+    
 
 	<!--- ------------------------------------------------------------------------- ----
 		
