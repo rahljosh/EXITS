@@ -681,7 +681,11 @@
                             INNER JOIN 
                                 smg_companies ON user_access_rights.companyid = smg_companies.companyid
                             WHERE 
-                                smg_companies.website = <cfqueryparam cfsqltype="cf_sql_varchar" value="SMG">
+							<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                                smg_companies.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                            <cfelse>
+                                smg_companies.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                            </cfif>
                             AND 
                                 user_access_rights.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
                         </cfquery>

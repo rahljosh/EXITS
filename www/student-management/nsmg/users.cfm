@@ -37,7 +37,11 @@
         INNER JOIN 
         	smg_companies c ON r.company = c.companyid
         WHERE 
-        	c.website = <cfqueryparam cfsqltype="cf_sql_varchar" value="#CLIENT.company_submitting#">
+			<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                c.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+            <cfelse>
+                c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+            </cfif>
         AND 
         	r.subofregion = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         AND 
@@ -208,9 +212,6 @@
 
 			<cfif assigned EQ 1>
 	        
-                AND 
-                	c.website = <cfqueryparam cfsqltype="cf_sql_varchar" value="#CLIENT.company_submitting#">
-	            
 				<cfif listFirst(company_region) EQ 'company'>
                     AND 
                         uar.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#listLast(company_region)#">
@@ -294,7 +295,13 @@
             LEFT OUTER JOIN 
             	smg_regions r ON uar.regionid = r.regionid
             WHERE 
-            	c.website = <cfqueryparam cfsqltype="cf_sql_varchar" value="#CLIENT.company_submitting#">
+                
+			<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                c.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+            <cfelse>
+                c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+            </cfif>
+                
             ORDER BY 
             	uar.companyid, 
                 uar.regionid, 

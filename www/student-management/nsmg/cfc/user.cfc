@@ -493,7 +493,7 @@
 			<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
                 AND          
                     uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
-            <cfelseif VAL(ARGUMENTS.companyID)>
+            <cfelse>
                 AND          
                     uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
             </cfif>
