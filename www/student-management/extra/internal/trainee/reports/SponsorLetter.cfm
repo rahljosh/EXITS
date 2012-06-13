@@ -71,7 +71,7 @@
     
         Respectfully Submitted,
         <br />
-        <img src="../../pics/signature.jpg" width="200" height="116" />
+        <img src="../../pics/traineeSignature.jpg" width="200" height="116" />
         <br />
     
         Sergei Chernyshov, Program Manager<br />

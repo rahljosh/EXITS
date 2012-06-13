@@ -72,7 +72,7 @@ WHERE uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#url.uniqueid#"
    			<br>
             <br>
       Sincerely,<br>
-      <img src="../../pics/signature.jpg" width="200" height="116" />
+      <img src="../../pics/traineeSignature.jpg" width="200" height="116" />
       <br>
 Sergei Chernyshov<br>
 Program Manager
