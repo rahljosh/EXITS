@@ -36,13 +36,19 @@
                 SELECT smg_programs.programid, smg_companies.companyshort, smg_programs.programname
                 FROM smg_programs
                 INNER JOIN smg_companies ON smg_programs.companyid = smg_companies.companyid
-                WHERE smg_programs.active = 1
-                <cfif client.companyid EQ 5>
-                    AND smg_companies.website = 'SMG'
-                <cfelse>
-                    AND smg_programs.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
-                </cfif>
-                ORDER BY smg_programs.companyid, smg_programs.startdate DESC, smg_programs.programname
+                WHERE 
+                	smg_programs.active = 1
+					<cfif CLIENT.companyID EQ 5>
+                        AND          
+                            smg_companies.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                    <cfelse>
+                        AND          
+                            smg_companies.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                    </cfif>
+                ORDER BY 
+                	smg_programs.companyid, 
+                    smg_programs.startdate DESC, 
+                    smg_programs.programname
             </cfquery>
             Program<br />
             <cfif client.companyid EQ 5>

@@ -65,8 +65,14 @@
         	r.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
     INNER JOIN smg_companies c ON uar.companyid = c.companyid
     INNER JOIN smg_usertype ut ON uar.usertype = ut.usertypeid
-    WHERE c.website = '#client.company_submitting#'
-    AND uar.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+    WHERE 
+		<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+            c.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+        <cfelse>
+            c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+        </cfif>
+    AND 
+    	uar.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
     ORDER BY uar.companyid, uar.regionid, uar.usertype
 </cfquery>
 

@@ -169,8 +169,8 @@
             WHERE 
                 p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
             <cfif CLIENT.companyID EQ 5>
-                AND 
-                    c.website = <cfqueryparam cfsqltype="cf_sql_varchar" value="SMG">
+                AND          
+                    c.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
             <cfelseif client.companyID eq 14>
                  AND 
                     p.is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">

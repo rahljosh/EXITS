@@ -10,13 +10,18 @@
             INNER JOIN smg_companies ON smg_programs.companyid = smg_companies.companyid
             WHERE smg_programs.active = 1
             <cfif programid_list NEQ ''>
-            	AND smg_programs.programid IN (#programid_list#)
+            	AND 
+                	smg_programs.programid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#programid_list#" list="yes"> )
             </cfif>
-            <cfif client.companyid EQ 5>
-                AND smg_companies.website = '#client.company_submitting#'
+            
+			<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                AND
+                	smg_companies.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
             <cfelse>
-                AND smg_programs.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+                AND
+                	smg_companies.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
             </cfif>
+            
             ORDER BY smg_programs.companyid, smg_programs.startdate DESC, smg_programs.programname
         </cfquery>
 		<cfreturn get_programs>
@@ -42,9 +47,17 @@
                 SELECT smg_regions.regionid, smg_regions.regionname, smg_companies.companyid, smg_companies.team_id
                 FROM smg_regions
                 INNER JOIN smg_companies ON smg_regions.company = smg_companies.companyid
-                WHERE smg_companies.website = '#client.company_submitting#'
-                AND smg_regions.subofregion = '0'
-                ORDER BY smg_companies.companyid, smg_regions.regionname
+                WHERE 
+				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                    smg_companies.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                <cfelse>
+                    smg_companies.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                </cfif>
+                AND 
+                	smg_regions.subofregion = '0'
+                ORDER BY 
+                	smg_companies.companyid, 
+                    smg_regions.regionname
             </cfquery>
 		<cfreturn get_all_regions>
 	</cffunction>

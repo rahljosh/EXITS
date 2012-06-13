@@ -118,15 +118,20 @@
 			<!--- set all others to no first --->
             <cfquery name="get_all_access" datasource="#APPLICATION.DSN#">
                 SELECT 
-                	user_access_rights.id
+                	uar.id
                 FROM 
-                	user_access_rights
-                INNER JOIN 
-                	smg_companies ON user_access_rights.companyid = smg_companies.companyid
+                	user_access_rights uar
                 WHERE 
-                	smg_companies.website = <cfqueryparam cfsqltype="cf_sql_varchar" value="#CLIENT.company_submitting#">
-                AND 
                 	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
+                    
+				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                    AND          
+                        uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                <cfelse>
+                    AND          
+                        uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                </cfif>
+               	
             </cfquery>
             
             <cfquery datasource="#APPLICATION.DSN#">
@@ -621,7 +626,7 @@
                 <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
                     AND          
                         uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
-                <cfelseif VAL(ARGUMENTS.companyID)>
+                <cfelse>
                     AND          
                         uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
                 </cfif>
