@@ -70,9 +70,9 @@
         <br /><br />
     
         Respectfully Submitted,
-        <br /><br />
-        <br /><br />
-        <br /><br />
+        <br />
+        <img src="../../pics/signature.jpg" width="200" height="116" />
+        <br />
     
         Sergei Chernyshov, Program Manager<br />
         International Student Exchange<br />
