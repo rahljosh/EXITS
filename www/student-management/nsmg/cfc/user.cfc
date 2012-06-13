@@ -474,37 +474,62 @@
 	called by: forms/user_form.cfm, user_info.cfm --->
 	<cffunction name="get_access_level" access="public" returntype="string">
 		<cfargument name="userID" type="string" required="yes">
-
-		<cfset var get_usertypes = ''>
-        <cfset var get_company_usertypes = ''>
-        <cfset var usertype_list = ''>
+		
+        <cfscript>
+			var get_usertypes = '';
+			var get_company_usertypes = '';
+			var usertype_list = '';
+		</cfscript>
 
         <cfquery name="get_usertypes" datasource="#APPLICATION.dsn#">
-            SELECT user_access_rights.companyid, user_access_rights.usertype
-            FROM user_access_rights
-            INNER JOIN smg_companies ON user_access_rights.companyid = smg_companies.companyid
-            WHERE smg_companies.website = '#CLIENT.company_submitting#'
-            AND user_access_rights.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#userID#">
-            ORDER BY user_access_rights.usertype
+            SELECT 
+            	uar.companyid, 
+                uar.usertype
+            FROM 
+            	user_access_rights uar
+            WHERE 
+                uar.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#userID#">
+                
+			<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                AND          
+                    uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+            <cfelseif VAL(ARGUMENTS.companyID)>
+                AND          
+                    uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+            </cfif>
+
+            ORDER BY 
+            	uar.usertype
         </cfquery>
+        
         <!--- user has no access records. --->
         <cfif get_usertypes.recordCount EQ 0>
+        
             <cfreturn 0>
+            
         <cfelse>
+        
         	<!--- get the usertypes of the company of the user logged in viewing this user. --->
             <cfquery name="get_company_usertypes" dbtype="query">
                 SELECT usertype
                 FROM get_usertypes
                 WHERE (companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#"> OR usertype = 8)
             </cfquery>
+            
             <cfset usertype_list = valueList(get_company_usertypes.usertype)>
+            
             <!--- if any are international, set to that. --->
             <cfif listFind(usertype_list, 8)>
+            
                 <cfreturn 8>
+                
             <cfelse>
+            
                 <!--- If a user viewed has multiple levels used the highest.  If none, then returns null. --->
                 <cfreturn listFirst(usertype_list)>
+                
             </cfif>
+            
         </cfif>
 
 	</cffunction>
