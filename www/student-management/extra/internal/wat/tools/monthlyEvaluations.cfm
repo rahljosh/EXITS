@@ -88,16 +88,25 @@
 			tableHeader += '<td class="listTitle style2">Intl. Rep.</td>';
 			tableHeader += '<td class="listTitle style2">Program <br /> Start Date</td>';
 			tableHeader += '<td class="listTitle style2">Program <br /> End Date</td>';
-			if ( evaluationID == 1 ) {
+			tableHeader += '<td class="listTitle style2">Check-in Date</td>';
+			if ( (evaluationID == 1) || (evaluationID == 5) ) {
 				// Month 1
 				tableHeader += '<td class="listTitle style2" align="center">Evaluation 1</td>';
-			} else if ( evaluationID == 2 ) {
+			} else if ( (evaluationID == 2) || (evaluationID == 6) ) {
 				// Month 2
 				tableHeader += '<td class="listTitle style2" align="center">Evaluation 2</td>';
+			} else if ( (evaluationID == 3) || (evaluationID == 7) ) {
+				// Month 2
+				tableHeader += '<td class="listTitle style2" align="center">Evaluation 3</td>';
+			} else if ( (evaluationID == 4) || (evaluationID == 8) ) {
+				// Month 2
+				tableHeader += '<td class="listTitle style2" align="center">Evaluation 4</td>';
 			} else { 
 				// Display Both Evaluations
 				tableHeader += '<td width="100px" class="listTitle style2" align="center">Evaluation 1</td>';
 				tableHeader += '<td width="100px" class="listTitle style2" align="center">Evaluation 2</td>';
+				tableHeader += '<td width="100px" class="listTitle style2" align="center">Evaluation 3</td>';
+				tableHeader += '<td width="100px" class="listTitle style2" align="center">Evaluation 4</td>';
 			}
 		tableHeader += '</tr>';
 		
@@ -122,8 +131,18 @@
 			var businessName = verList.DATA[i][verList.COLUMNS.findIdx('BUSINESSNAME')];
 			var startDate = verList.DATA[i][verList.COLUMNS.findIdx('STARTDATE')];
 			var endDate = verList.DATA[i][verList.COLUMNS.findIdx('ENDDATE')];
+			var checkIn = verList.DATA[i][verList.COLUMNS.findIdx('CHECKINDATE')];
+			if (checkIn == null)
+				checkIn = "missing";
 			var evaluation1 = verList.DATA[i][verList.COLUMNS.findIdx('WATDATEEVALUATION1')];
 			var evaluation2 = verList.DATA[i][verList.COLUMNS.findIdx('WATDATEEVALUATION2')];
+			var evaluation3 = verList.DATA[i][verList.COLUMNS.findIdx('WATDATEEVALUATION3')];
+			var evaluation4 = verList.DATA[i][verList.COLUMNS.findIdx('WATDATEEVALUATION4')];
+			
+			// These are for comparing the evaluation dates in order to show alerts
+			var cIn = new Date(checkIn);
+			var now = new Date();
+			var tempDate = new Date(cIn);
 
 			// Create Table Rows
 			var tableBody = '';	
@@ -141,23 +160,72 @@
 				tableBody += '<td class="style5">' + businessName + '</td>';
 				tableBody += '<td class="style5">' + startDate + '</td>';
 				tableBody += '<td class="style5">' + endDate + '</td>';
-				if ( evaluationID == 1 ) {
+				tableBody += '<td class="style5">' + checkIn + '</td>';
+				if ( (evaluationID == 1) || (evaluationID == 5) ) {
 					// Month 1
-					tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',1);" class="style4">[Set as Received]</a></td>';
-				} else if ( evaluationID == 2 ) {
-					// Month 2
-					tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',2);" class="style4">[Set as Received]</a></td>';
-				} else { 
-					// Display Both Evaluations
-					if ( evaluation1 == '' ) {
+					if (tempDate.setDate(cIn.getDate() + 25) <= now) {
+						tableBody += '<td align="center" class="style5" style="background-color:red;"><a href="javascript:setEvaluationReceived(' + candidateID + ',1);" class="style4">[Set as Received]</a></td>';
+					} else {
 						tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',1);" class="style4">[Set as Received]</a></td>';
+					}
+				} else if ( (evaluationID == 2) || (evaluationID == 6) ) {
+					// Month 2
+					if (tempDate.setDate(cIn.getDate() + 55) <= now) {
+						tableBody += '<td align="center" class="style5" style="background-color:red;"><a href="javascript:setEvaluationReceived(' + candidateID + ',2);" class="style4">[Set as Received]</a></td>';
+					} else {
+						tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',2);" class="style4">[Set as Received]</a></td>';
+					}
+				} else if ( (evaluationID == 3) || (evaluationID == 7) ) {
+					// Month 2
+					if (tempDate.setDate(cIn.getDate() + 85) <= now) {
+						tableBody += '<td align="center" class="style5" style="background-color:red;"><a href="javascript:setEvaluationReceived(' + candidateID + ',3);" class="style4">[Set as Received]</a></td>';
+					} else {
+						tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',3);" class="style4">[Set as Received]</a></td>';
+					}
+				} else if ( (evaluationID == 4) || (evaluationID == 8) ) {
+					// Month 2
+					if (tempDate.setDate(cIn.getDate() + 115) <= now) {
+						tableBody += '<td align="center" class="style5" style="background-color:red;"><a href="javascript:setEvaluationReceived(' + candidateID + ',4);" class="style4">[Set as Received]</a></td>';
+					} else {
+						tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',4);" class="style4">[Set as Received]</a></td>';
+					}
+				} else { 
+					// Display All Evaluations
+					if ( evaluation1 == '' ) {
+						if (tempDate.setDate(cIn.getDate() + 25) <= now) {
+							tableBody += '<td align="center" class="style5" style="background-color:red;"><a href="javascript:setEvaluationReceived(' + candidateID + ',1);" class="style4">[Set as Received]</a></td>';
+						} else {
+							tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',1);" class="style4">[Set as Received]</a></td>';
+						}
 					} else {
 						tableBody += '<td align="center" class="style5">' + evaluation1 + '</td>';
 					}
 					if ( evaluation2 == '' ) {
-						tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',2);" class="style4">[Set as Received]</a></td>';
+						if (tempDate.setDate(cIn.getDate() + 55) <= now) {
+							tableBody += '<td align="center" class="style5" style="background-color:red;"><a href="javascript:setEvaluationReceived(' + candidateID + ',2);" class="style4">[Set as Received]</a></td>';
+						} else {
+							tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',2);" class="style4">[Set as Received]</a></td>';
+						}
 					} else {
 						tableBody += '<td align="center" class="style5">' + evaluation2 + '</td>';
+					}
+					if ( evaluation3 == '' ) {
+						if (tempDate.setDate(cIn.getDate() + 85) <= now) {
+							tableBody += '<td align="center" class="style5" style="background-color:red;"><a href="javascript:setEvaluationReceived(' + candidateID + ',3);" class="style4">[Set as Received]</a></td>';
+						} else {
+							tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',3);" class="style4">[Set as Received]</a></td>';
+						}
+					} else {
+						tableBody += '<td align="center" class="style5">' + evaluation3 + '</td>';
+					}
+					if ( evaluation4 == '' ) {
+						if (tempDate.setDate(cIn.getDate() + 115) <= now) {
+							tableBody += '<td align="center" class="style5" style="background-color:red;"><a href="javascript:setEvaluationReceived(' + candidateID + ',4);" class="style4">[Set as Received]</a></td>';
+						} else {
+							tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',4);" class="style4">[Set as Received]</a></td>';
+						}
+					} else {
+						tableBody += '<td align="center" class="style5">' + evaluation4 + '</td>';
 					}
 				}
 			tableBody += '</tr>';
@@ -282,7 +350,7 @@
     <table cellpadding="0" cellspacing="0" align="center" class="section listTable">
         <tr>
             <td class="formTitle">
-            	International Representative: 
+            	Intl. Rep: 
                 &nbsp;
                 <select name="intlRep" id="intlRep" onchange="getCandidateList();">
                     <option value=""></option>
@@ -306,6 +374,12 @@
                     <option value=""></option>
                     <option value="1">Month 1</option>
                     <option value="2">Month 2</option>
+                    <option value="3">Month 3</option>
+                    <option value="4">Month 4</option>
+                    <option value="5">Month 1 Non-Compliant</option>
+                    <option value="6">Month 2 Non-Compliant</option>
+                    <option value="7">Month 3 Non-Compliant</option>
+                    <option value="8">Month 4 Non-Compliant</option>
                 </select>
                 &nbsp;
                 <input name="send" type="submit" value="Submit" onclick="getCandidateList();" />
