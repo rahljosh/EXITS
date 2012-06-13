@@ -47,6 +47,7 @@ window.location.href = URL;
 <cfif not isDefined('url.month')>
 	<cfset url.month = 10>
 </cfif>
+
 <cfquery name="questions" datasource="MySQL">
 select * 
 from smg_prquestions 
