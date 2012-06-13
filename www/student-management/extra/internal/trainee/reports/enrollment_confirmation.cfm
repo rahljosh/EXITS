@@ -29,7 +29,6 @@ INNER JOIN smg_programs ON smg_programs.programid = extra_candidates.programid
 INNER JOIN smg_countrylist ON smg_countrylist.countryid = extra_candidates.citizen_country
 WHERE uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#url.uniqueid#">
 </cfquery>
-<cfdump var="#get_student#">
 
 <cfoutput query="get_student">
 <table width="100%" border="0">
@@ -61,26 +60,21 @@ WHERE uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#url.uniqueid#"
                     <cfelse> #subfield#</cfif>. We have reviewed the application materials for #firstname# #middlename# #lastname# and verified that the individual is well qualified for the Trainee program.<br />
                   <br />
                   #firstname# #middlename# #lastname# is a citizen of #countryname# and has been accepted into the ISE Trainee Program. Form DS-2019 number #ds2019# has been issued for the above-mentioned student to train in the field of
-              <cfif #subfield# EQ ''>
-                    #fieldstudy#
-                    <cfelse>
-                    #subfield#
-        </cfif>
-              .<br />
-              <br />
+			<cfif #subfield# EQ ''>
+       			#fieldstudy#
+			<cfelse>
+   				#subfield#
+        	</cfif>
+  				.<br />
+              	<br />
               If there are any questions about this student or about the ISE Trainee program, please feel free to contact me directly at any time.
+      		<br>
+   			<br>
+            <br>
+      Sincerely,<br>
+      <img src="../../pics/signature.jpg" width="200" height="116" />
       <br>
- 
-   <br>
-      <br>
-  Sincerely,<br>
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br>
-  Sergei Chernyshov<br>
+Sergei Chernyshov<br>
 Program Manager
 <br>
   <p align="center" class="style1">    www.isetraining.com</p>    </td>
