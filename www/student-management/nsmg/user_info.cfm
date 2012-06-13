@@ -1399,7 +1399,7 @@
                 <table width="100%" cellpadding="0" cellspacing="0" border="0" height="24">
                     <tr valign="middle" height="24">
                         <td height="24" width="13" background="pics/header_leftcap.gif">&nbsp;</td>
-                        <td width="26" background="pics/header_background.gif"><cfif rep_info.logo is ''><img src="pics/logos/smg_clear.gif" height=16><Cfelse><img src="pics/logos/#rep_info.logo#" height=16></cfif></td>
+                        <td width="26" background="pics/header_background.gif"><cfif rep_info.logo is ''><img src="pics/logos/exits.jpg" height=16><Cfelse><img src="pics/logos/#rep_info.logo#" height=16></cfif></td>
                         <td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Logo Management</h2></td>
                         <td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
                     </tr>

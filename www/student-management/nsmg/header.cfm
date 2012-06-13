@@ -418,7 +418,7 @@
                             <img src="pics/logos/#file.name#">
                        <cfelse>
                             <!--- SMG LOGO --->
-                            <img src="pics/logos/smg_clear.gif">
+                            <img src="pics/logos/exits.jpg">
                         </cfif>
                     <cfelse>
                         <!--- INTL. AGENT LOGO --->
