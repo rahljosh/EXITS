@@ -60,18 +60,17 @@
     </cfquery>
    
     <!---see if there are any reasons why account isn't enabled---->
+    <cfquery name="disableReasonID" datasource="#application.dsn#">
+    select max(id) as id
+    from smg_accountDisabledHistory where fk_userDisabled = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
+    </cfquery>
     
-        <cfquery name="disableReasonID" datasource="#application.dsn#">
-        select max(id) as id
-        from smg_accountDisabledHistory where fk_userDisabled = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
+    <cfif val(disableReasonid.id)>
+        <cfquery name="disableReason" datasource="#application.dsn#">
+        select *
+        from smg_accountDisabledHistory where id = <cfqueryparam cfsqltype="cf_sql_integer" value="#disableReasonID.id#">
         </cfquery>
-        
-        <cfif val(disableReasonid.id)>
-            <cfquery name="disableReason" datasource="#application.dsn#">
-            select *
-            from smg_accountDisabledHistory where id = <cfqueryparam cfsqltype="cf_sql_integer" value="#disableReasonID.id#">
-            </cfquery>
-        </cfif>
+    </cfif>
  
    
     <!--- Check if logged in user has access to compliance --->
@@ -94,8 +93,7 @@
         	referencefor = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
     </cfquery>	
 
-    <!--- get the access level of the user viewed.
-    If null, then user viewing won't have access to username, etc. --->
+    <!--- get the access level of the user viewed. If null, then user viewing won't have access to username, etc. --->
     <cfinvoke component="nsmg.cfc.user" method="get_access_level" returnvariable="uar_usertype">
         <cfinvokeargument name="userid" value="#rep_info.userid#">
     </cfinvoke>
@@ -238,7 +236,8 @@
             }
         }
     </cfscript>
-<!----Denial/Submit/Approve info history---->
+    
+	<!----Denial/Submit/Approve info history---->
     <Cfquery name="accountDisableHistory" datasource="#application.dsn#">
     select h.date, h.fk_whoDisabled, h.reason, h.accountAction, smg_users.firstname, smg_users.lastname
     from smg_accountDisabledHistory h
@@ -246,27 +245,16 @@
     where fk_userDisabled = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
     order by date desc
     </Cfquery>
+    
 </cfsilent>
-<script type="text/javascript" language="javascript">
-                       $(document).ready(function() {
-               $(".jQueryModal").colorbox( {
-                       width:"60%",
-                       height:"60%",
-                       iframe:true,
-                       overlayClose:false,
-                       escKey:false
-               });
-                       });
-               </script>
-<style type="text/css">
 
+<style type="text/css">
 .smlink         		{font-size: 11px;}
 .section        		{border-top: 1px solid #c6c6c6;; border-right: 2px solid #c6c6c6;border-left: 2px solid #c6c6c6;border-bottom: 0px; background: #ffffff;}
 .sectionFoot    		{border-bottom: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;font-size:2px;}
 .sectionBottomDivider 	{border-bottom: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;}
 .sectionTopDivider 		{border-top: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;}
 .sectionSubHead			{font-size:11px;font-weight:bold;}
-
 .alert{
 	width:auto;
 	height:55px;
@@ -278,14 +266,12 @@
 	vertical-align:center;
 
 }
-
 .clearfix {
 	display: block;
 	clear: both;
 	height: 5px;
 	width: 100%;
 }
-
 </style>
 
 <script type="text/javascript" language="javascript">
@@ -294,7 +280,17 @@
 		// Get Selected Training
 		displayTrainingScore();
 	});
-	
+
+	$(document).ready(function() {
+		$(".jQueryModal").colorbox( {
+			   width:"60%",
+			   height:"60%",
+			   iframe:true,
+			   overlayClose:false,
+			   escKey:false
+		});
+	});
+
 	// Display WebExForm
 	function displayTrainingForm() {
 		if($("#webExForm").css("display") == "none"){
@@ -314,6 +310,7 @@
 			$("#trainingScore").slideUp("slow");	
 		}
 	}	
+	
 	// Display References
 	function displayDisableHistory() {
 		if($("#DisableHistory").css("display") == "none"){
@@ -322,6 +319,7 @@
 			$("#DisableHistory").slideUp("slow");	
 		}
 	}	
+	
 	// Display Experience
 	function displayExperienceForm() {
 		if($("#ExperienceForm").css("display") == "none"){
@@ -330,7 +328,6 @@
 			$("#ExperienceForm").slideUp("slow");	
 		}
 	}		
-	
 </script>
 
 <!--- user has no access records - force entry of one. --->
@@ -594,25 +591,51 @@
             
 <cfelse>
             <!----Regional Information---->
-                            <cfquery name="region_company_access" datasource="#APPLICATION.DSN#">
-                                SELECT uar.id, uar.regionid, uar.usertype, uar.changedate, uar.default_access, r.regionname, c.companyshort, c.companyID, ut.usertype AS usertypename,
-                                    adv.userid AS advisorid, adv.firstname, adv.lastname
-                                FROM user_access_rights uar
-                                LEFT JOIN smg_regions r ON uar.regionid = r.regionid
-                                INNER JOIN smg_companies c ON uar.companyid = c.companyid
-                                INNER JOIN smg_usertype ut ON uar.usertype = ut.usertypeid
-                                LEFT JOIN smg_users adv ON uar.advisorid = adv.userid
-                                WHERE c.website = '#client.company_submitting#'
-                                AND uar.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userid#">
-                                ORDER BY uar.companyid, uar.regionid, uar.usertype
-                            </cfquery>
-                            
-                            <cfquery name="check_default" dbtype="query">
-                                SELECT id
-                                FROM region_company_access
-                                WHERE default_access = 1
-                            </cfquery>
-                           
+            <cfquery name="region_company_access" datasource="#APPLICATION.DSN#">
+                SELECT 
+                    uar.id, 
+                    uar.regionid, 
+                    uar.usertype, 
+                    uar.changedate, 
+                    uar.default_access, 
+                    r.regionname, 
+                    c.companyshort, 
+                    c.companyID, 
+                    ut.usertype AS usertypename,
+                    adv.userid AS advisorid, 
+                    adv.firstname, 
+                    adv.lastname
+                FROM 
+                    user_access_rights uar
+                LEFT JOIN 
+                    smg_regions r ON uar.regionid = r.regionid
+                INNER JOIN 
+                    smg_companies c ON uar.companyid = c.companyid
+                INNER JOIN 
+                    smg_usertype ut ON uar.usertype = ut.usertypeid
+                LEFT OUTER JOIN 
+                    smg_users adv ON uar.advisorid = adv.userid
+                WHERE 
+                    uar.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userid#">
+                    
+                <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                    AND          
+                        uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                <cfelseif VAL(ARGUMENTS.companyID)>
+                    AND          
+                        uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                </cfif>
+                    
+                ORDER BY 
+                    uar.companyid, uar.regionid, uar.usertype
+            </cfquery>
+            
+            <cfquery name="check_default" dbtype="query">
+                SELECT id
+                FROM region_company_access
+                WHERE default_access = 1
+            </cfquery>
+           
  			<!--- ------------------------------------------------------------------------- ---->
             <!----Regional & Company Information---->
             <!--- ------------------------------------------------------------------------- ---->

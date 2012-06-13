@@ -1,34 +1,38 @@
 <!--- CHECK RIGHTS - included on user_info.cfm, forms/user_form.cfm, forms/access_rights_form.cfm, forms/edit_family_members.cfm, and other user forms? --->
+<cfset vGrantAccess = 0>
 
-<cfset grant_access = 0>
-
-<cfif ListFind("1,2,3,4,5", CLIENT.usertype) OR CLIENT.userid EQ url.userid OR CLIENT.userType EQ 27>
-	<cfset grant_access = 1>
-</cfif>
-
-<cfif listFind("5,6", CLIENT.usertype) AND NOT VAL(grant_access)>	
+<!--- Office or User viewing his own information --->
+<cfif ListFind("1,2,3,4", CLIENT.usertype) OR CLIENT.userid EQ URL.userid OR CLIENT.userType EQ 27>
+	
+	<cfset vGrantAccess = 1>
+    
+<cfelseif listFind("5,6", CLIENT.usertype) AND NOT VAL(vGrantAccess)>	
         
     <!--- CHECK IF CURRENT USER IS A MANAGER OR ADVISOR OF URL.USER --->
-    <cfquery name="get_user_regions" datasource="#application.dsn#">
-        SELECT user_access_rights.regionid
-        FROM user_access_rights 
-        INNER JOIN smg_companies ON user_access_rights.companyid = smg_companies.companyid
-        WHERE smg_companies.website = <cfif CLIENT.companyshort is 'CASE'>'CASE'<cfelse>'SMG'</cfif>
-        AND user_access_rights.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.userid#">
-        AND user_access_rights.usertype > <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.usertype#">
-		AND user_access_rights.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionid#">
+    <cfquery name="qCheckUserRegion" datasource="#application.dsn#">
+        SELECT 
+        	uar.regionid
+        FROM 
+        	user_access_rights uar
+        WHERE 
+        	uar.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
+        AND 
+        	uar.usertype > <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.usertype#">
+		AND 
+        	uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionid#">
         <cfif CLIENT.usertype EQ 6>
-            AND user_access_rights.advisorid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+            AND 
+            	uar.advisorid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
         </cfif>
     </cfquery>
    
-    <cfif get_user_regions.recordcount>
-        <cfset grant_access = 1>
+    <cfif qCheckUserRegion.recordcount>
+        <cfset vGrantAccess = 1>
     </cfif>
 
 </cfif>
 
-<cfif grant_access EQ 0>	
+<cfif vGrantAccess EQ 0>	
 	<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
 		<tr valign=middle height=24>
 			<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
