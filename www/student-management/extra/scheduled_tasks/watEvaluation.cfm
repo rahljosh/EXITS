@@ -198,34 +198,36 @@
 </cfsilent>
     
 <cfscript>
-	vEvaluationEmailBody = "
-		<p>
-			Your participation in the Summer Travel Program is sponsored by CSB. We are committed to provide you with an ongoing 
-			support during your program in the United States. During your program, you will receive monthly evaluations by e-mail, 
-			as required by the US Department of State. These evaluations are mandatory and crucial for your experience.
-		</p>
-	
-		<p>
-			<strong>The CSB monthly evaluation consists of</strong> 9 (nine) questions that require your answer. 
-			You must <strong><u>answer in full</u></strong> within 10 (ten) days of receiving the evaluation notification.
-		</p>
-		
-		<p style='font-weight:bold; text-decoration:underline; font-size:16px; text-align:center;'><a href='http://www.csb-usa.com/evaluation/'>Take Evaluation</a></p>
-		
-		<p style='color:red;'>Note: Failure to respond in a timely manner may result in program termination. It is very important that you respond.</p>
-		
-		Kind Regards,<br />
-		CSB Summer Work Travel Program <br /> 
-		119 Cooper Street <br />
-		Babylon, NY 11702 <br />
-		877-669-0717 - Toll Free <br />
-		631-893-4549 -  Phone <br />
-		support@csb-usa.com <br />";
 
 	vEmailFrom = 'support@csb-usa.com (CSB International, Inc.)';
 	
 	// Evaluation 1
 	For ( i=1;i LTE qEvaluation1.Recordcount; i=i+1 ) {
+
+		vEmailTo = qEvaluation1.email[i];
+		vEvaluationEmailBody = 
+			"<p>Your participation in the Summer Travel Program is sponsored by CSB. 
+			We are committed to provide you with an ongoing support during your program 
+			in the United States. During your program, you will receive monthly evaluations 
+			by e-mail, as required by the US Department of State. These evaluations are 
+			mandatory and crucial for your experience.</p>
+			<p><b>The CSB monthly evaluation consists of</b> 9 (nine) questions that 
+			require your answer. You must <b><u>answer in full</u></b> within 10 (ten) days 
+			of receiving the evaluation notification.</p>
+			<center><p><span style='font-weight:bold; text-decoration:underline; font-size:16px; 
+			text-align:center;'><a href='http://csb-usa.com/evaluation?evaluation=1&uniqueID=" & qEvaluation1.uniqueID[i] & "'>
+			Take Evaluation</a></span></p></center>
+			<p><span style='color:red;'>Note: Failure to respond in a timely 
+			manner may result in program termination. It is very important that you respond.
+			</span></p>
+			Kind Regards,<br />
+			CSB Summer Work Travel Program<br /> 
+			119 Cooper Street<br />
+			Babylon, NY 11702<br />
+			877-669-0717   - Toll Free<br />
+			631-893-4549   -  Phone<br />
+			support@csb-usa.com<br />";
+			
 		if ( IsValid("email", qEvaluation1.email[i]) ) {
 			APPLICATION.CFC.EMAIL.sendEmail(
 				emailFrom=vEmailFrom,
@@ -242,8 +244,31 @@
 
 	// Evaluation 2
 	For ( i=1;i LTE qEvaluation2.Recordcount; i=i+1 ) {
+		vEmailTo = qEvaluation2.email[i];
+		vEvaluationEmailBody = 
+			"<p>Your participation in the Summer Travel Program is sponsored by CSB. 
+			We are committed to provide you with an ongoing support during your program 
+			in the United States. During your program, you will receive monthly evaluations 
+			by e-mail, as required by the US Department of State. These evaluations are 
+			mandatory and crucial for your experience.</p>
+			<p><b>The CSB monthly evaluation consists of</b> 9 (nine) questions that 
+			require your answer. You must <b><u>answer in full</u></b> within 10 (ten) days 
+			of receiving the evaluation notification.</p>
+			<center><p><span style='font-weight:bold; text-decoration:underline; font-size:16px; 
+			text-align:center;'><a href='http://csb-usa.com/evaluation?evaluation=2&uniqueID=" & qEvaluation2.uniqueID[i] & "'>
+			Take Evaluation</a></span></p></center>
+			<p><span style='color:red;'>Note: Failure to respond in a timely 
+			manner may result in program termination. It is very important that you respond.
+			</span></p>
+			Kind Regards,<br />
+			CSB Summer Work Travel Program<br /> 
+			119 Cooper Street<br />
+			Babylon, NY 11702<br />
+			877-669-0717   - Toll Free<br />
+			631-893-4549   -  Phone<br />
+			support@csb-usa.com<br />";
 		if ( IsValid("email", qEvaluation2.email[i]) ) {
-			APPLICATION.CFC.EMAIL.sendEmail(
+				APPLICATION.CFC.EMAIL.sendEmail(
 				emailFrom=vEmailFrom,
 				emailTo=qEvaluation2.email[i],
 				emailReplyTo=vEmailFrom,
@@ -258,6 +283,29 @@
 	
 	// Evaluation 3
 	For ( i=1;i LTE qEvaluation3.Recordcount; i=i+1 ) {
+		vEmailTo = qEvaluation3.email[i];	
+		vEvaluationEmailBody = 
+			"<p>Your participation in the Summer Travel Program is sponsored by CSB. 
+			We are committed to provide you with an ongoing support during your program 
+			in the United States. During your program, you will receive monthly evaluations 
+			by e-mail, as required by the US Department of State. These evaluations are 
+			mandatory and crucial for your experience.</p>
+			<p><b>The CSB monthly evaluation consists of</b> 9 (nine) questions that 
+			require your answer. You must <b><u>answer in full</u></b> within 10 (ten) days 
+			of receiving the evaluation notification.</p>
+			<center><p><span style='font-weight:bold; text-decoration:underline; font-size:16px; 
+			text-align:center;'><a href='http://csb-usa.com/evaluation?evaluation=3&uniqueID=" & qEvaluation3.uniqueID[i] & "'>
+			Take Evaluation</a></span></p></center>
+			<p><span style='color:red;'>Note: Failure to respond in a timely 
+			manner may result in program termination. It is very important that you respond.
+			</span></p>
+			Kind Regards,<br />
+			CSB Summer Work Travel Program<br /> 
+			119 Cooper Street<br />
+			Babylon, NY 11702<br />
+			877-669-0717   - Toll Free<br />
+			631-893-4549   -  Phone<br />
+			support@csb-usa.com<br />";
 		if ( IsValid("email", qEvaluation3.email[i]) ) {
 			APPLICATION.CFC.EMAIL.sendEmail(
 				emailFrom=vEmailFrom,
@@ -274,6 +322,29 @@
 	
 	// Evaluation 4
 	For ( i=1;i LTE qEvaluation4.Recordcount; i=i+1 ) {
+		vEmailTo = qEvaluation4.email[i];
+		vEvaluationEmailBody = 
+			"<p>Your participation in the Summer Travel Program is sponsored by CSB. 
+			We are committed to provide you with an ongoing support during your program 
+			in the United States. During your program, you will receive monthly evaluations 
+			by e-mail, as required by the US Department of State. These evaluations are 
+			mandatory and crucial for your experience.</p>
+			<p><b>The CSB monthly evaluation consists of</b> 9 (nine) questions that 
+			require your answer. You must <b><u>answer in full</u></b> within 10 (ten) days 
+			of receiving the evaluation notification.</p>
+			<center><p><span style='font-weight:bold; text-decoration:underline; font-size:16px; 
+			text-align:center;'><a href='http://csb-usa.com/evaluation?evaluation=4&uniqueID=" & qEvaluation4.uniqueID[i] & "'>
+			Take Evaluation</a></span></p></center>
+			<p><span style='color:red;'>Note: Failure to respond in a timely 
+			manner may result in program termination. It is very important that you respond.
+			</span></p>
+			Kind Regards,<br />
+			CSB Summer Work Travel Program<br /> 
+			119 Cooper Street<br />
+			Babylon, NY 11702<br />
+			877-669-0717   - Toll Free<br />
+			631-893-4549   -  Phone<br />
+			support@csb-usa.com<br />";
 		if ( IsValid("email", qEvaluation4.email[i]) ) {
 			APPLICATION.CFC.EMAIL.sendEmail(
 				emailFrom=vEmailFrom,
@@ -287,14 +358,13 @@
 			);
 		}
 	}
+		
 </cfscript>
 
 <cfoutput>
 	
     <!--- Evaluation Results --->
     <cfloop list="1,2,3,4" index="i">
-    	
-        <cfset vQueryName = "qEvaluation" & i>
         
         <table width="100%" cellpadding="3" cellspacing="0" style="margin:10px; border:1px solid ##999;">
             <tr>
@@ -306,15 +376,16 @@
                 <td style="border-bottom:1px solid ##999; border-left:1px solid ##999;">Program</td>
                 <td style="border-bottom:1px solid ##999; border-left:1px solid ##999;">Host Company</td>
             </tr>
-            <cfloop query="#vQueryName#">
+            
+            <cfloop query="qEvaluation#i#">
                 <tr>
-                    <td style="border-bottom:1px solid ##999;">###vQueryName.candidateID# #vQueryName.firstName# #vQueryName.lastName#</td>
-                    <td style="border-bottom:1px solid ##999; border-left:1px solid ##999;">#vQueryName.email#</td>
-                    <td style="border-bottom:1px solid ##999; border-left:1px solid ##999;">#vQueryName.programName#</td>
-                    <td style="border-bottom:1px solid ##999; border-left:1px solid ##999;">#vQueryName.hostCompanyName#</td>
+                    <td style="border-bottom:1px solid ##999;">###candidateID# #firstName# #lastName#</td>
+                    <td style="border-bottom:1px solid ##999; border-left:1px solid ##999;">#email#</td>
+                    <td style="border-bottom:1px solid ##999; border-left:1px solid ##999;">#programName#</td>
+                    <td style="border-bottom:1px solid ##999; border-left:1px solid ##999;">#hostCompanyName#</td>
                 </tr>
             </cfloop>
-        </table> <br />
+        </table>
         
 	</cfloop>
     
