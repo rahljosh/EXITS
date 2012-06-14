@@ -4,6 +4,8 @@
     sessionmanagement="yes" 
     sessiontimeout="#CreateTimeSpan(0,0,20,0)#">
     
+    <cfparam name="CLIENT.userType" default="">
+    
 	<cfscript>
         // Check if we need to initialize Application scope
 
@@ -11,6 +13,12 @@
 		function CreateCFC(strCFCName){
             return(CreateObject("component", ("extensions.components." & ARGUMENTS.strCFCName)));
         }
+		
+		// Store the initialized UDF Library object in the Application scope
+		APPLICATION.CFC.UDF = CreateCFC("udf");
+		
+		// Store Application.IsServerLocal - This needs be declare before the other CFC components
+		APPLICATION.IsServerLocal = APPLICATION.CFC.UDF.IsServerLocal();
 		
 	   // Page Messages
 	   SESSION.PageMessages = CreateCFC("pageMessages").Init();
