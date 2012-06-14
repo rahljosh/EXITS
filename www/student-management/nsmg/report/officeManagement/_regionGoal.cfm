@@ -1,11 +1,11 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		_regionAllocation.cfm
+	File:		_regionGoal.cfm
 	Author:		James Griffiths
 	Date:		May 17, 2012
-	Desc:		Allocation Per Region
+	Desc:		Goal Per Region
 				
-				#CGI.SCRIPT_NAME#?curdoc=report/index?action=regionalAllocation
+				#CGI.SCRIPT_NAME#?curdoc=report/index?action=regionGoal
 				
 	Updated: 				
 				
@@ -24,13 +24,13 @@
 		param name="FORM.submitted" default=0;
 		param name="FORM.seasonID" default=0;
 		param name="FORM.regionID" default=0;
-		param name="FORM.allocationPeriod" default="";
+		param name="FORM.goalPeriod" default="";
 		param name="FORM.outputType" default="onScreen";
 		
 		vProgramTypeList = '';
 		
 		// Set Program Types
-		if ( FORM.allocationPeriod EQ 'January' ) {
+		if ( FORM.goalPeriod EQ 'January' ) {
 			 // 12 Month - 2nd Semester
 			vProgramTypeList = '2,4';
 		} else {
@@ -72,7 +72,7 @@
                     r.regionID,
                     r.regionName,
                     r.company,
-                    <cfif FORM.allocationPeriod EQ 'August'>
+                    <cfif FORM.goalPeriod EQ 'August'>
                     	a.augustAllocation AS allocation,
                    	<cfelse>
                     	a.januaryAllocation AS allocation,
@@ -115,10 +115,10 @@
 
 	<cfoutput>
 
-        <form action="report/index.cfm?action=regionAllocation" name="regionAllocation" id="regionAllocation" method="post" target="blank">
+        <form action="report/index.cfm?action=regionGoal" name="regionGoal" id="regionGoal" method="post" target="blank">
             <input type="hidden" name="submitted" value="1" />
             <table width="50%" cellpadding="8" cellspacing="0" class="blueThemeReportTable" align="center">
-                <tr><th colspan="2">Office Management - Region Allocation</th></tr>
+                <tr><th colspan="2">Office Management - Region Goal</th></tr>
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Season: <span class="required">*</span></td>
                     <td>
@@ -128,11 +128,11 @@
                     </td>		
                 </tr>
                 <tr class="on">
-                	<td class="subTitleRightNoBorder">August/January: <span class="required">*</span></td>
+                	<td class="subTitleRightNoBorder">Period: <span class="required">*</span></td>
                     <td>
-                    	<select name="allocationPeriod" id="allocationPeriod" class="xLargeField" required>
-                        	<option value="August">August Allocation</option>
-                            <option value="January">January Allocation</option>
+                    	<select name="goalPeriod" id="goalPeriod" class="xLargeField" required>
+                        	<option value="August">August Goal</option>
+                            <option value="January">January Goal</option>
                     	</select>
                     </td>
                 </tr>
@@ -165,7 +165,7 @@
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Description:</td>
                     <td>
-                        This report will provide a list of each region's allocation for a chosen season and August/January allocation.
+                        This report will provide a list of each region's goal for a chosen season and August/January goal.
                     </td>		
                 </tr>
                 <tr>
@@ -204,10 +204,10 @@
         <cfcontent type="application/msexcel">
         
         <!--- suggest default name for XLS file --->
-        <cfheader name="Content-Disposition" value="attachment; filename=regionAllocation.xls">
+        <cfheader name="Content-Disposition" value="attachment; filename=regionGoal.xls">
         
         <table width="98%" cellpadding="4" cellspacing="0" align="center" border="1">
-            <tr><th colspan="10">Office Management - Region Allocation</th></tr>
+            <tr><th colspan="10">Office Management - Region Goal</th></tr>
             <tr style="font-weight:bold;">
                 <td>Company</td>
                 <td>Region</td>
@@ -352,7 +352,7 @@
 		<!--- Include Report Header --->   
         <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
             <tr>
-                <th>Office Management - Region Allocation</th>            
+                <th>Office Management - Region Goal</th>            
             </tr>
         </table>
         

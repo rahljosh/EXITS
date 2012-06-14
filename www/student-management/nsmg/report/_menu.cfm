@@ -292,10 +292,10 @@
     <tr>
         <td>
 			<ul class="mainList">
-                <li onclick="loadSelectedReport('regionAllocation');">Region Allocation</li>
+                <li onclick="loadSelectedReport('regionGoal');">Region Goal</li>
                 <ul>
                     <li>Generate a report of allocations by company and region</li>
-                    <li>Filter by: season, August/January allocations, region</li>
+                    <li>Filter by: season, August/January goals, region</li>
 				</ul>
             </ul>
         </td>
