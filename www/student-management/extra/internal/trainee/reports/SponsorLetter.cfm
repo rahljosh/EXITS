@@ -13,7 +13,7 @@
 <!--
 .style1 {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 13px;
+	font-size: 12px;
 }
 .style2 {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 16px; font-weight: bold; }
 .style3 {font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold; }
@@ -67,18 +67,45 @@
         <br /><br />
     
         <span class="style3">http://www.ssa.gov/employer/hiring.htm</span>
-        <br /><br />
-    
-        Respectfully Submitted,
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+    	Sincerely Yours,
         <br />
         <img src="../../pics/traineeSignature.jpg" width="200" height="116" />
         <br />
-    
         Sergei Chernyshov, Program Manager<br />
         International Student Exchange<br />
         119 Cooper Street<br />
         Babylon, NY  11702<br />
-        1-800-776-4656
+        1-631-693-4540 ext. 131<br />
+        sergei@iseusa.com<br />
+        <p align="center" class="style1">
+            www.isetraining.com
+        </p>
     </p>   
 </cfoutput>
 

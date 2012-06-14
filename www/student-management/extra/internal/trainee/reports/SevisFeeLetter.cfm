@@ -46,10 +46,7 @@
             In the meantime, please find the necessary information below in order to pay  the required SEVIS fee ($180.00 US for trainees) to the United States  Department of Homeland Security (DHS).
             <br />
             <br />
-            This fee can be  paid by accessing form I-901 at the following web site:
-            <br />
-            <br />
-            <b>https://www.fmjfee.com/index.jhtml</b>
+            This fee can be  paid by accessing form I-901 at the following web site: <b>https://www.fmjfee.com/index.jhtml</b>
             <br />
             <br />
             The SEVIS fee must be paid before applying for the J-1 visa at the U.S. Embassy  or Consulate.
@@ -117,13 +114,24 @@
             <td><span class="style1">TRAINEE ($180.00)</span></td>
           </tr>
         </table>
-    
+        <p class="style1">
+        	Please do not hesitate to contact  ISE Training Program staff should you have any questions.
+      	</p>
+        Sincerely Yours,
         <br />
-        <p class="style1">Please do not hesitate to contact  ISE Training Program staff should you have any questions.</p>
-        <p class="style1">Sincerely,</p>
         <img src="../../pics/traineeSignature.jpg" width="200" height="116" />
-        <p class="style1">Sergei Chernyshov (sergei@iseusa.com)
+        <br />
+        Sergei Chernyshov, Program Manager<br />
+        International Student Exchange<br />
+        119 Cooper Street<br />
+        Babylon, NY  11702<br />
+        1-631-693-4540 ext. 131<br />
+        sergei@iseusa.com<br />
+        <p align="center" class="style1">
+            www.isetraining.com
+        </p>
+        
+  	</cfoutput>
     
-    </cfoutput>
-
 </cfdocument>
+

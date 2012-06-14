@@ -14,7 +14,7 @@ WHERE uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#url.uniqueid#"
 <!--
 .style1 {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 13px;
+	font-size: 12px;
 }
 .style2 {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 16px; font-weight: bold; }
 .style3 {font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold; }
@@ -61,16 +61,32 @@ WHERE uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#url.uniqueid#"
     <br />
     During your training in the USA you are insured from the start day to the last day of your training (please see your DS2019 form). You are responsible for the insurance before and after the training program start and end dates accordingly.<br><br>
     <strong>After you arrive to America, please send me your new address and date when you actually arrived. You must do it within 2 weeks of your arrival.  If this is not done we cannot activate your status in the SEVIS database and your profile will be cancelled automatically. </strong><br>
-    <br>
-    Respectfully Submitted,<br />
-    <br>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    Sincerely Yours,
+    <br />
     <img src="../../pics/traineeSignature.jpg" width="200" height="116" />
-    <br>
-</p>
-<p class="style1">
-    Sergei Chernyshov<br>
-    Program Manager
-</p>
+    <br />
+    Sergei Chernyshov, Program Manager<br />
+    International Student Exchange<br />
+    119 Cooper Street<br />
+    Babylon, NY  11702<br />
+    1-631-693-4540 ext. 131<br />
+    sergei@iseusa.com<br />
+    <p align="center" class="style1">
+        www.isetraining.com
+    </p>
 
 </cfoutput>
 
