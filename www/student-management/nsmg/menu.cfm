@@ -362,11 +362,7 @@
 					</cfif>
                 </li>
 
-				<!--- <cfif listFind("1,510,17313,12313,17306", CLIENT.userID)> --->
-                <cfif listFind("1,510,17313,12313,17306", CLIENT.userID)>
-                    <li><a href="index.cfm?curdoc=report/index">New Reports</a></li>
-                </cfif>
-                <!--- </cfif> --->
+                <li><a href="index.cfm?curdoc=report/index">New Reports</a></li>
                 
                 <li>
                     <a href="##">Tools</a>                
