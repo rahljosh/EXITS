@@ -5,31 +5,31 @@
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
     
     <!----Initialize variables---->
-    <Cfparam name=url.request default=''>
-    <cfparam name="form.sevis" default="">       
-    <cfparam name="form.LastName" default="">
-    <cfparam name="form.FirstName" default="">
-    <cfparam name="form.email" default="">
-    <cfparam name="form.Q5" default="">
-    <cfparam name="form.Q5_explain" default="">
-    <cfparam name="form.Q6" default="">
-    <cfparam name="form.Q6_explain" default="">
-    <cfparam name="form.Q6file" default="">
-    <cfparam name="form.Q7" default="">
-    <cfparam name="form.Q7_explain" default="">
-    <cfparam name="form.Q7file" default="">
-    <cfparam name="form.Q8" default="">
-    <cfparam name="form.Q8_explain" default="">
-    <cfparam name="form.Q9_explain" default="">
-    <cfparam name="form.sendFile" default=0>
-    <cfparam name="q6filename" default="">
-    <cfparam name="q7filename" default="">
+    <Cfparam name="url.request" default=''>
+    <cfparam name="FORM.submitted" default="0">
+    <cfparam name="FORM.sevis" default="">       
+    <cfparam name="FORM.LastName" default="">
+    <cfparam name="FORM.FirstName" default="">
+    <cfparam name="FORM.email" default="">
+    <cfparam name="FORM.Q5" default="">
+    <cfparam name="FORM.Q5_explain" default="">
+    <cfparam name="FORM.Q6" default="">
+    <cfparam name="FORM.Q6_explain" default="">
+    <cfparam name="FORM.Q6file" default="">
+    <cfparam name="FORM.Q7" default="">
+    <cfparam name="FORM.Q7_explain" default="">
+    <cfparam name="FORM.Q7file" default="">
+    <cfparam name="FORM.Q8" default="">
+    <cfparam name="FORM.Q8_explain" default="">
+    <cfparam name="FORM.Q9_explain" default="">
+    <cfparam name="FORM.q6filename" default="">
+    <cfparam name="FORM.q7filename" default="">
+	<cfparam name="FORM.evaluation" default="">
     
     <cfparam name="URL.uniqueID" default="">
     <cfparam name="URL.evaluation" default="">
-    <cfparam name="FORM.evaluation" default="">
     
-    <cfif URL.uniqueID NEQ "">
+    <cfif LEN(URL.uniqueID)>
         
         <cfquery name="qGetCandidateInfo" datasource="MySql">
             SELECT
@@ -57,17 +57,8 @@
 
 <!----error checking on a submit---->
 <!----First check to see if its being submitted---->
-<Cfif val(form.sendFile)>
+<Cfif val(FORM.submitted)>
 
-	<cfif not isValid("email", FORM.email)>
-		<cfscript>
-			if ( 1 eq 1 ) {
-			// Get all the missing items in a list
-			SESSION.formErrors.Add("Your email address does not appear to be valid.");
-			}	
-		</cfscript>
-	</cfif>
-        
 	<cfscript>
 		// Data Validation
 		
@@ -76,160 +67,163 @@
 			// Get all the missing items in a list
 			SESSION.formErrors.Add("Please enter your SEVIS number.");
 		}	
+		
 		// Last Name
 		if ( NOT LEN(TRIM(FORM.LastName)) ) {
 			// Get all the missing items in a list
 			SESSION.formErrors.Add("Please enter your Last Name.");
 		}
+		
 		// First Name
 		if ( NOT LEN(TRIM(FORM.FirstName)) ) {
 			// Get all the missing items in a list
 			SESSION.formErrors.Add("Please enter your First Name.");
 		}
+		
 		// Email
 		if ( NOT LEN(TRIM(FORM.email)) ) {
 			// Get all the missing items in a list
 			SESSION.formErrors.Add("Please enter your email address.");
 		}
+
+		if ( LEN(TRIM(FORM.email)) AND NOT isValid("email", TRIM(FORM.email)) ) {
+			// Get all the missing items in a list
+			SESSION.formErrors.Add("Your email address does not appear to be valid.");
+		}	
+		
 		// Q5
 		if ( NOT LEN(TRIM(FORM.q5)) ) {
 			// Get all the missing items in a list
 			SESSION.formErrors.Add("Please answer the Yes/No question: Housing address - Have you changed your housing address since your last report to CSB?");
 		}
+		
 		// Q5 Expalin if Yes
-		if ( q5 eq 'yes' and NOT LEN(TRIM(FORM.q5_explain) ) ) {
+		if ( FORM.q5 EQ 'yes' AND NOT LEN(TRIM(FORM.q5_explain) ) ) {
 			// Get all the missing items in a list
-			SESSION.formErrors.Add("You  answered Yes to: Housing address - Have you changed your housing address since your last report to CSB?, but did not provide your new address.");
+			SESSION.formErrors.Add("You answered Yes to: Housing address - Have you changed your housing address since your last report to CSB?, but did not provide your new address.");
 		}
+		
 		// Q6
 		if ( NOT LEN(TRIM(FORM.q6)) ) {
 			// Get all the missing items in a list
 			SESSION.formErrors.Add("Please answer the Yes/No question: Main employer - Have you changed your main employer since your last report to CSB?");
 		}
+		
 		// Q6 Expalin if Yes
-		if ( q6 eq 'yes' and NOT LEN(TRIM(FORM.q6_explain) ) ) {
+		if ( FORM.q6 EQ 'yes' and NOT LEN(TRIM(FORM.q6_explain) ) ) {
 			// Get all the missing items in a list
 			SESSION.formErrors.Add("You answered Yes to: Have you changed your main employer since your last report to CSB?, but you did not provide your new employer's information.");
 		}
+		
 		// Q7
 		if ( NOT LEN(TRIM(FORM.q7)) ) {
 			// Get all the missing items in a list
 			SESSION.formErrors.Add("Please answer the Yes/No question: Second job - Do you currently have a second job?");
 		}
+		
 		// Q7 Expalin if Yes
-		if ( q7 eq 'yes' and NOT LEN(TRIM(FORM.q7_explain) ) ) {
+		if ( FORM.q7 EQ 'yes' and NOT LEN(TRIM(FORM.q7_explain) ) ) {
 			// Get all the missing items in a list
 			SESSION.formErrors.Add("You  answered Yes to: Second job - Do you currently have a second job? but did not provide any details.  Please let us know your concerns.");
 		}
+		
 		// Q8
 		if ( NOT LEN(TRIM(FORM.q8)) ) {
 			// Get all the missing items in a list
 			SESSION.formErrors.Add("Please answer the Yes/No question: Do you have any current problems or concerns?");
 		}
+		
 		// Q8 Explain if Yes
-		if ( q8 eq 'yes' and NOT LEN(TRIM(FORM.q8_explain) ) ) {
+		if ( FORM.q8 EQ 'yes' and NOT LEN(TRIM(FORM.q8_explain) ) ) {
 			// Get all the missing items in a list
 			SESSION.formErrors.Add("You answered Yes to: Do you have any current problems or concerns? but did not provide any details. Please let us know your concerns.");
 		}
+		
 		// Q9 Explain if Yes
 		 if ( NOT LEN(TRIM(FORM.q9_explain)) )  {
 			// Get all the missing items in a list
 			SESSION.formErrors.Add("Please list some of the cultural activities you have experienced while being in the U.S.");
 		}
-			
 	</cfscript>
 
 	<!--- Check if there are no errors --->
     <cfif NOT SESSION.formErrors.length()>
-        
-		<Cfif val(FORM.sendFile)>
 		
-			<!-----Upload Files so we can attach them---->
-            <cfif Len(FORM.Q6file)>
-                <cffile action="upload" destination="C:\websites\csb-usa\uploadedfiles\" filefield="Q6file" nameconflict="overwrite" />
-                <cffile action="rename" source="C:\websites\csb-usa\uploadedfiles\#file.ServerFile#" destination="C:\websites\csb-usa\uploadedfiles\Question6.#file.ClientFileExt#"attributes="normal">
-            	<Cfset q6filename = 'Question6.#file.ClientFileExt#'>
-        	</cfif>
-       		<cfif Len(FORM.Q7file)>
-                <cffile action="upload" destination="C:\websites\csb-usa\uploadedfiles\" filefield="Q7file" nameconflict="overwrite"/>
-                <cffile action="rename" source="C:\websites\csb-usa\uploadedfiles\#file.ServerFile#" destination="C:\websites\csb-usa\uploadedfiles\Question7.#file.ClientFileExt#"attributes="normal">
-                <cfset q7filename = 'Question7.#file.ClientFileExt#'>
-        	</cfif>
- 
-            <cfquery name="qGetStudent" datasource="MySql">
-                SELECT
-                    *
-                FROM
-                    extra_candidates
-            </cfquery>
+		<!-----Upload Files so we can attach them---->
+        <cfif Len(FORM.Q6file)>
+            <cffile action="upload" destination="C:\websites\csb-usa\uploadedfiles\" filefield="Q6file" nameconflict="overwrite" />
+            <cffile action="rename" source="C:\websites\csb-usa\uploadedfiles\#file.ServerFile#" destination="C:\websites\csb-usa\uploadedfiles\Question6.#file.ClientFileExt#"attributes="normal">
+            <Cfset FORM.q6filename = 'Question6.#file.ClientFileExt#'>
+        </cfif>
+        
+        <cfif Len(FORM.Q7file)>
+            <cffile action="upload" destination="C:\websites\csb-usa\uploadedfiles\" filefield="Q7file" nameconflict="overwrite"/>
+            <cffile action="rename" source="C:\websites\csb-usa\uploadedfiles\#file.ServerFile#" destination="C:\websites\csb-usa\uploadedfiles\Question7.#file.ClientFileExt#"attributes="normal">
+            <cfset FORM.q7filename = 'Question7.#file.ClientFileExt#'>
+        </cfif>
+
+        <cfscript>
+            vEmailContent = '<h3> CSB - Mandatory Evaluation #FORM.evaluation# - #dateformat(Now(),'mm/dd/yyyy')#.</h3>
+                <p style="font-size: 11px; font-family:Arial, Helvetica, sans-serif;"> 
+                1. SEVIS Number:<strong> #FORM.Sevis#</strong> <br /> 
+                2. Last name:<strong> #FORM.LastName#</strong><br /> 
+                3. First name:<strong> #FORM.FirstName#</strong><br /> 
+                4. Email:<strong> #FORM.email#</strong><br /> <br /> 
+                5. Have you changed your housing address since your last report to CSB?<strong> #FORM.Q5#</strong><br />
+                &nbsp;&nbsp;<i>If Yes and you did not previously inform CSB, please provide your full new housing address:</i><strong> #FORM.Q5_explain#</strong><br /><br /> 
+                
+                6. Main employer - Have you changed your main employer since your last report to CSB?<strong> #FORM.Q6#</strong><br /> 
+                &nbsp;&nbsp;<i>If Yes and you did not previously inform CSB, please provide your full new employer information (name, address and phone number) and a new signed job offer for verification:</i><strong> #FORM.Q6_explain# </strong>
+                <br />#FORM.q6filename#<br /> <br /> 
+                
+                7. Second job - Do you currently have a second job?<strong> #FORM.Q7#</strong><br />#FORM.q7filename#<br /> 
+                &nbsp;&nbsp;<i>If Yes, please list and provide full details (where/what/who/why):</i><strong> #FORM.Q7_explain# </strong><br /><br /> 
+                 8. Do you have any current problems or concerns?<strong> #FORM.Q8#</strong><br /> 
+                &nbsp;&nbsp;<i>If Yes, please provide full details (where, when, what, who, why):</i><strong> #FORM.Q8_explain# </strong><br /><br />
+                9. Cultural activities <strong> #FORM.Q9_explain# </strong><br /><br /></p>
+                --';
             
-            <cfscript>
-				
-				vEmailContent = '<h3> CSB - Mandatory Evaluation #FORM.evaluation# - #dateformat(Now(),'mm/dd/yyyy')#.</h3>
-					<p style="font-size: 11px; font-family:Arial, Helvetica, sans-serif;"> 
-					1. SEVIS Number:<strong> #form.Sevis#</strong> <br /> 
-					2. Last name:<strong> #form.LastName#</strong><br /> 
-					3. First name:<strong> #form.FirstName#</strong><br /> 
-					4. Email:<strong> #form.email#</strong><br /> <br /> 
-					5. Have you changed your housing address since your last report to CSB?<strong> #form.Q5#</strong><br />
-					&nbsp;&nbsp;<i>If Yes and you did not previously inform CSB, please provide your full new housing address:</i><strong> #form.Q5_explain#</strong><br /><br /> 
-					
-					6. Main employer - Have you changed your main employer since your last report to CSB?<strong> #form.Q6#</strong><br /> 
-					&nbsp;&nbsp;<i>If Yes and you did not previously inform CSB, please provide your full new employer information (name, address and phone number) and a new signed job offer for verification:</i><strong> #form.Q6_explain# </strong>
-					<br />#q6filename#<br /> <br /> 
-					
-					7. Second job - Do you currently have a second job?<strong> #form.Q7#</strong><br />#q7filename#<br /> 
-					&nbsp;&nbsp;<i>If Yes, please list and provide full details (where/what/who/why):</i><strong> #form.Q7_explain# </strong><br /><br /> 
-					 8. Do you have any current problems or concerns?<strong> #form.Q8#</strong><br /> 
-					&nbsp;&nbsp;<i>If Yes, please provide full details (where, when, what, who, why):</i><strong> #form.Q8_explain# </strong><br /><br />
-					9. Cultural activities <strong> #form.Q9_explain# </strong><br /><br /></p>
-					--';
-				
-				email=CreateObject("component","cfc.email");
-			
-				email.send_mail(
-					email_from='CSB Summer Work Travel<support@csb-usa.com>',
-					email_to='support@iseusa.com',
-					email_subject=FORM.LastName & ', ' & FORM.FirstName & ' - CSB Monthly Evaluation ' & FORM.evaluation,
-					email_cc=FORM.email,
-					email_message=vEmailContent
-					);												
-			
-			</cfscript>
-      
-      		<meta http-equiv="refresh" content="2;url=http://www.csb-usa.com/SWT/">
-          		<div class="yellow" style="background-color: #CCC; font-size: 11px; padding: 20px; font-family:Arial, Helvetica, sans-serif; width: 800px;">
-      				<h3>The following information has been successfully submitted to CSB Summer Work and Travel from the CSB - Mandatory Summer Work Travel Questionnaire.</h3>
-					<cfoutput>
-               			<table width=90% align="center">
-                      		<tr>
-                            	<td class="text">
-            						<p style="font-size: 11px; font-family:Arial, Helvetica, sans-serif;">1. SEVIS Number:<strong> #form.Sevis#</strong> <br /> 
-                                    2. Last name:<strong> #form.LastName#</strong><br /> 
-                                    3. First name:<strong> #form.FirstName#</strong><br /> 
-                                    4. Email:<strong> #form.email#</strong><br /> <br /> 
-                                    5. Housing address - Have you changed your housing address since your last report to CSB?<strong> #form.Q5#</strong><br />
-                                    &nbsp;&nbsp;<i>If Yes and you did not previously inform CSB, please provide your full new housing address:</i><strong> #form.Q5_explain#</strong><br /><br /> 
-                                    6. Main employer - Have you changed your main employer since your last report to CSB?<strong> #form.Q6#</strong><br /> 
-                                    &nbsp;&nbsp;<i>If Yes and you did not previously inform CSB, please provide your full new employer information (name, address and phone number) and a new signed job offer for verification:</i><strong> #form.Q6_explain#</strong><br />#form.Q6file#<br /> <br /> 
-                               		7. Second job - Do you currently have a second job?<strong> #form.Q7#</strong><br />#form.Q7file#<br /> 
-                                    &nbsp;&nbsp;<i>If Yes, please list and provide full details (where/what/who/why):</i><strong> #form.Q7_explain# </strong><br /><br />
-                              		8. Do you have any current problems or concerns?<strong> #form.Q8#</strong><br /> 
-                                    &nbsp;&nbsp;<i>If Yes, please provide full details (where, when, what, who, why):</i><strong> #form.Q8_explain# </strong><br /><br />
-                                    9. Cultural activities <strong> #form.Q9_explain# </strong><br /><br /></p>
-                              	</td>
-                        	</tr>
-                  		</table>
-                	</cfoutput>
-              	</div>
-      			<cfabort>
-		
-		</cfif>           
+            email=CreateObject("component","cfc.email");
         
+            email.send_mail(
+                email_from='CSB Summer Work Travel<support@csb-usa.com>',
+                email_to='support@csb-usa.com',
+                email_subject=FORM.LastName & ', ' & FORM.FirstName & ' - CSB Monthly Evaluation ' & FORM.evaluation,
+                email_cc=FORM.email,
+                email_message=vEmailContent
+            );												
+        </cfscript>
+  
+        <meta http-equiv="refresh" content="2;url=http://www.csb-usa.com/SWT/">
+            <div class="yellow" style="background-color: #CCC; font-size: 11px; padding: 20px; font-family:Arial, Helvetica, sans-serif; width: 800px;">
+                <h3>The following information has been successfully submitted to CSB Summer Work and Travel from the CSB - Mandatory Summer Work Travel Questionnaire.</h3>
+                <cfoutput>
+                    <table width=90% align="center">
+                        <tr>
+                            <td class="text">
+                                <p style="font-size: 11px; font-family:Arial, Helvetica, sans-serif;">1. SEVIS Number:<strong> #FORM.Sevis#</strong> <br /> 
+                                2. Last name:<strong> #FORM.LastName#</strong><br /> 
+                                3. First name:<strong> #FORM.FirstName#</strong><br /> 
+                                4. Email:<strong> #FORM.email#</strong><br /> <br /> 
+                                5. Housing address - Have you changed your housing address since your last report to CSB?<strong> #FORM.Q5#</strong><br />
+                                &nbsp;&nbsp;<i>If Yes and you did not previously inform CSB, please provide your full new housing address:</i><strong> #FORM.Q5_explain#</strong><br /><br /> 
+                                6. Main employer - Have you changed your main employer since your last report to CSB?<strong> #FORM.Q6#</strong><br /> 
+                                &nbsp;&nbsp;<i>If Yes and you did not previously inform CSB, please provide your full new employer information (name, address and phone number) and a new signed job offer for verification:</i><strong> #FORM.Q6_explain#</strong><br />#FORM.Q6file#<br /> <br /> 
+                                7. Second job - Do you currently have a second job?<strong> #FORM.Q7#</strong><br />#FORM.Q7file#<br /> 
+                                &nbsp;&nbsp;<i>If Yes, please list and provide full details (where/what/who/why):</i><strong> #FORM.Q7_explain# </strong><br /><br />
+                                8. Do you have any current problems or concerns?<strong> #FORM.Q8#</strong><br /> 
+                                &nbsp;&nbsp;<i>If Yes, please provide full details (where, when, what, who, why):</i><strong> #FORM.Q8_explain# </strong><br /><br />
+                                9. Cultural activities <strong> #FORM.Q9_explain# </strong><br /><br /></p>
+                            </td>
+                        </tr>
+                    </table>
+                </cfoutput>
+            </div>
+            <cfabort>
+    
 	</cfif>
 		 
 </cfif>
-
 
 <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
     <tr>
@@ -351,6 +345,7 @@ a:active {
 <body>
 
 <div class="wrapper">
+
 	<!--- Form Errors --->
     <gui:displayFormErrors 
         formErrors="#SESSION.formErrors.GetCollection()#"
@@ -366,30 +361,30 @@ a:active {
 <div class="grey">
 <Cfoutput>
 <cfform action="index.cfm" method="post" name="form" id="form" enctype="multipart/form-data">
-	<input type="hidden" name="sendFile" value="1" />
+	<input type="hidden" name="submitted" value="1" />
     <input type="hidden" name="evaluation" id="evaluation" value="#FORM.evaluation#" />
   <table width="665" border="0" cellspacing="0" cellpadding="5">
   <tr bgcolor="##EFEFEF" >
     <td width="132" bgcolor="##EFEFEF" class="Bold">1. SEVIS Number:</td>
     <td width="418">
       <label for="Sevis"></label>
-      <input type="text" name="Sevis" id="Sevis" value="#form.Sevis#" />
+      <input type="text" name="Sevis" id="Sevis" value="#FORM.Sevis#" />
     </td>
   </tr>
   <tr>
     <td class="Bold">2. Last Name:</td>
     <td><label for="Sevis"></label>
-      <input type="text" name="LastName" id="LastName"  value="#form.LastName#"/></td>
+      <input type="text" name="LastName" id="LastName"  value="#FORM.LastName#"/></td>
   </tr>
   <tr bgcolor="##EFEFEF" >
     <td class="Bold">3. First Name:</td>
     <td><label for="Sevis"></label>
-      <input type="text" name="FirstName" id="FirstName"  value="#form.FirstName#"/></td>
+      <input type="text" name="FirstName" id="FirstName"  value="#FORM.FirstName#"/></td>
   </tr>
     <tr>
     <td class="Bold">4. E-mail:</td>
     <td><label for="Sevis"></label>
-      <input type="text" name="email" id="email" value="#form.email#" /></td>
+      <input type="text" name="email" id="email" value="#FORM.email#" /></td>
   </tr>
   <tr bgcolor="##EFEFEF" >
     <td colspan="2" bgcolor="##EFEFEF" class="Bold">
@@ -397,12 +392,12 @@ a:active {
     <table width="625" border="0" cellspacing="5"> 
   <tr valign="middle">
     <td width="90" align="left">
-    	<input type="radio" name="Q5" id="Q5" value="No" <Cfif form.q5 is 'no'>checked</cfif>  />
+    	<input type="radio" name="Q5" id="Q5" value="No" <Cfif FORM.q5 is 'no'>checked</cfif>  />
         <label for="NO" class="Bold">NO</label></td>
     <td width="516"></td>
   </tr>
   <tr valign="top">
-    <td align="left"><input type="radio" name="Q5" id="Q5" value="YES" <cfif form.q5 is 'yes'>checked</cfif> />
+    <td align="left"><input type="radio" name="Q5" id="Q5" value="YES" <cfif FORM.q5 is 'yes'>checked</cfif> />
       	<label for="YES" class="Bold">YES</label></td>
     <td align="left">If Yes and you did not previously inform CSB, please provide your new housing address (street and number, city, state, zip code).<br />
       
@@ -411,7 +406,7 @@ a:active {
   <tr>
     <td valign="middle"> If YES, Explain</td>
     <td><label for="Q5_explain"></label>
-      <textarea name="Q5_explain" id="Q5_explain" cols="45" rows="5" >#form.Q5_explain#</textarea></td>
+      <textarea name="Q5_explain" id="Q5_explain" cols="45" rows="5" >#FORM.Q5_explain#</textarea></td>
   </tr>
 </table>
 </td>
@@ -421,12 +416,12 @@ a:active {
     6. Main employer - Have you changed your main employer since your last report to CSB?
       <table width="625" border="0" cellspacing="5">
         <tr valign="middle">
-    <td><input type="radio" name="Q6" id="Q6" value="No" <cfif form.Q6 is 'No'>checked</cfif> />
+    <td><input type="radio" name="Q6" id="Q6" value="No" <cfif FORM.Q6 is 'No'>checked</cfif> />
       <label for="NO" class="Bold">NO</label></td>
     <td colspan="2">&nbsp;</td>
   </tr>
   <tr valign="top">
-    <td width="87"><input type="radio" name="Q6" id="Q6" value="Yes" <cfif form.Q6 is 'Yes'>checked</cfif> />
+    <td width="87"><input type="radio" name="Q6" id="Q6" value="Yes" <cfif FORM.Q6 is 'Yes'>checked</cfif> />
       <label for="YES" class="Bold">YES</label></td>
     <td colspan="2">If Yes and you did not previously inform CSB, please provide your new employer information (name of company, address, phone number, supervisor)and attach the signed job offer. If you don't have the job offer form, please contact CSB.<br />
 <strong><u>Remember:</u></strong> CSB must confirm/approve the new job before you start work. If you start work in an unverified job, your program will be terminated.</td>
@@ -434,7 +429,7 @@ a:active {
   <tr>
     <td valign="middle"> If YES, Explain</td>
     <td width="519"><label for="Q6_explain"></label>
-      <textarea name="Q6_explain" id="Q6_explain" cols="45" rows="5">#form.Q6_explain#</textarea></td>
+      <textarea name="Q6_explain" id="Q6_explain" cols="45" rows="5">#FORM.Q6_explain#</textarea></td>
  
   </tr>
     <tr>
@@ -449,12 +444,12 @@ a:active {
     7. Second job - Do you currently have a second job?
       <table width="625" border="0" cellspacing="5">
        <tr valign="middle">
-    <td><input type="radio" name="Q7" id="Q7" value="No" <cfif form.Q7 is 'No'>checked</cfif>  />
+    <td><input type="radio" name="Q7" id="Q7" value="No" <cfif FORM.Q7 is 'No'>checked</cfif>  />
       <label for="NO" class="Bold">NO</label></td>
     <td colspan="2">&nbsp;</td>
   </tr>
   <tr valign="top">
-    <td width="87"><input type="radio" name="Q7" id="Q7" value="Yes" <cfif form.Q7 is 'Yes'>checked</cfif>  />
+    <td width="87"><input type="radio" name="Q7" id="Q7" value="Yes" <cfif FORM.Q7 is 'Yes'>checked</cfif>  />
       <label for="YES" class="Bold">YES</label></td>
     <td colspan="2">If Yes and you did not previously inform CSB, please provide your second employer information (name of company, address, phone number, supervisor) and attach the job offer. If you don't have the job offer form, please contact CSB.<br />
 <strong><u>Remember:</u></strong> CSB must confirm/approve the second job before you start work. If you starting work in an unverified job, your program will be terminated.</td>
@@ -465,19 +460,11 @@ a:active {
     <td width="519">
   
     <label for="Q7_explain"></label>
-      <textarea name="Q7_explain" id="Q7_explain" cols="45" rows="5">#form.Q7_explain#</textarea></td>
+      <textarea name="Q7_explain" id="Q7_explain" cols="45" rows="5">#FORM.Q7_explain#</textarea></td>
   </tr>
     <tr>
     <td valign="middle">&nbsp;</td>
-    <td colspan="2"><cfinput type="file" name="Q7file" size= "20"><br />
-<!---<Cfif isDefined('FORM.sendFile')>
-<cfoutput>
-	<p>Success!<br />
-     The file #form.file# was successfully sent.   If you need to send another file, just attach the new file below.</p>
-</cfoutput>
-<Cfelse>
-	<p>Please attach the job offer Form.</p>
-</Cfif>---></td>
+    <td colspan="2"><cfinput type="file" name="Q7file" size= "20"><br /></td>
     </tr>
 </table>
 </td>
@@ -488,12 +475,12 @@ a:active {
     8. Do you have any current problems or concerns?
       <table width="625" border="0" cellspacing="5">
        <tr valign="middle">
-    <td><input type="radio" name="Q8" id="Q8" value="No" <cfif form.Q8 is 'No'>checked</cfif>  />
+    <td><input type="radio" name="Q8" id="Q8" value="No" <cfif FORM.Q8 is 'No'>checked</cfif>  />
       <label for="NO" class="Bold">NO</label></td>
     <td colspan="2">&nbsp;</td>
   </tr>
   <tr valign="top">
-    <td width="88"><input type="radio" name="Q8" id="Q8" value="Yes" <cfif form.Q8 is 'Yes'>checked</cfif>  />
+    <td width="88"><input type="radio" name="Q8" id="Q8" value="Yes" <cfif FORM.Q8 is 'Yes'>checked</cfif>  />
       <label for="YES" class="Bold">YES</label></td>
     <td colspan="2">If Yes, please provide full details (where, when, what, who, why).</td>
   </tr>
@@ -501,7 +488,7 @@ a:active {
   <tr>
     <td valign="middle">&nbsp;</td>
     <td width="518"><label for="Q8_explain"></label>
-      <textarea name="Q8_explain" id="Q8_explain" cols="45" rows="5">#form.Q8_explain#</textarea></td>
+      <textarea name="Q8_explain" id="Q8_explain" cols="45" rows="5">#FORM.Q8_explain#</textarea></td>
     
       
   </tr>
@@ -525,7 +512,7 @@ a:active {
   <tr>
     <td width="89" valign="middle">&nbsp;</td>
     <td width="517"><label for="Q9_explain"></label>
-      <textarea name="Q9_explain" id="Q9_explain" cols="45" rows="5">#form.Q9_explain#</textarea></td>
+      <textarea name="Q9_explain" id="Q9_explain" cols="45" rows="5">#FORM.Q9_explain#</textarea></td>
     
       
   </tr>
