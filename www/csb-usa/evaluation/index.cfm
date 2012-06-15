@@ -185,16 +185,26 @@
             
             email=CreateObject("component","extensions.components.email");
         
-            email.send_mail(
-                email_from='CSB Summer Work Travel<support@csb-usa.com>',
-                email_to='support@csb-usa.com',
-                email_subject=FORM.LastName & ', ' & FORM.FirstName & ' - CSB Monthly Evaluation ' & FORM.evaluation,
-                email_cc=FORM.email,
-                email_message=vEmailContent,
-				email_file=APPLICATION.UPLOAD & FORM.q6filename,
-				email_file2=APPLICATION.UPLOAD & FORM.q7filename
-            );												
-        </cfscript>
+			// Set up the upload files (will send an empty string if there is no file).
+			file6 = '';
+			file7 = '';
+			if (LEN(FORM.Q6file))
+				file6 = APPLICATION.UPLOAD & FORM.q6filename;
+			if (LEN(FORM.Q7file))
+				file7 = APPLICATION.UPLOAD & FORM.q7filename;
+			
+			// Send the email
+			email.send_mail(
+				email_from='CSB Summer Work Travel<support@csb-usa.com>',
+				email_to='support@csb-usa.com',
+				email_subject=FORM.LastName & ', ' & FORM.FirstName & ' - CSB Monthly Evaluation ' & FORM.evaluation,
+				email_cc=FORM.email,
+				email_file=file6,
+				email_file2=file7,
+				email_message=vEmailContent
+			);
+			
+        </cfscript> 
   
         <meta http-equiv="refresh" content="2;url=http://www.csb-usa.com/SWT/">
             <div class="yellow" style="background-color: #CCC; font-size: 11px; padding: 20px; font-family:Arial, Helvetica, sans-serif; width: 800px;">
