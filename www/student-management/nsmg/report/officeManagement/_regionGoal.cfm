@@ -7,7 +7,8 @@
 				
 				#CGI.SCRIPT_NAME#?curdoc=report/index?action=regionGoal
 				
-	Updated: 				
+	Updated: 	06/14/2012 - Combing Great Lakes Region
+				06/14/2012 - Renaming report from Allocation to Goal		
 				
 ----- ------------------------------------------------------------------------- --->
 
@@ -27,8 +28,6 @@
 		param name="FORM.goalPeriod" default="";
 		param name="FORM.outputType" default="onScreen";
 		
-		vProgramTypeList = '';
-		
 		// Set Program Types
 		if ( FORM.goalPeriod EQ 'January' ) {
 			 // 12 Month - 2nd Semester
@@ -38,13 +37,34 @@
 			vProgramTypeList = '1,3'; 
 		}
 		
+		vExcelTotalRowColor = "##d8d8d8";
+
+		// Great Lakes Summary - Combining great lakes region
+		vGreatLakesRegionIDList = "1086,1251,1250,1266";
+		vGreatLakesSummaryAssigned = 0;
+		vGreatLakesSummaryPlaced = 0;
+		vGreatLakesSummaryPending = 0;
+		vGreatLakesSummaryUnplaced = 0;
+		vGreatLakesSummaryPlacement = 0;
+		vGreatLakesSummaryAllocation = 0;
+		vGreatLakesSummaryPercentage = 0;
+
+		// Set Division Summary
+		vDivisionSummaryAssigned = 0;
+		vDivisionSummaryPlaced = 0;
+		vDivisionSummaryPending = 0;
+		vDivisionSummaryUnplaced = 0;
+		vDivisionSummaryPlacement = 0;
+		vDivisionSummaryAllocation = 0;
+		vDivisionSummaryPercentage = 0;
+
         // Summary
 		vSummaryAssigned = 0;
         vSummaryPlaced = 0;
         vSummaryPending = 0;
 		vSummaryUnplaced = 0;
         vSummaryPlacement = 0;
-        vSummaryGoal = 0;
+        vSummaryAllocation = 0;
         vSummaryPercentage = 0;
 	</cfscript>
     
@@ -107,6 +127,95 @@
 		</cfif> <!--- NOT SESSION.formErrors.length() ---->
 
 	</cfif> <!--- FORM Submitted --->
+
+
+	<cffunction name="getStatisticsPerRegion" access="public" returntype="struct" output="false" hint="Returns stastics per region">
+    	<cfargument name="regionID" default="0" hint="Region ID is required">
+
+        <cfquery name="qGetStudents" datasource="#APPLICATION.DSN#">
+            SELECT
+                s.studentID,
+                s.host_fam_approved,
+                sh.hostID
+            FROM
+                smg_students s
+            INNER JOIN 
+                smg_programs p ON s.programID = p.programID
+                    AND
+                        p.type IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vProgramTypeList#" list="yes"> )
+                    AND
+                        p.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> 
+            LEFT OUTER JOIN
+                smg_hostHistory sh ON sh.studentID = s.studentID
+                AND
+                    sh.isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+            WHERE
+                s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            AND
+                s.regionAssigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
+        </cfquery>
+        
+        <cfquery name="qGetUnplaced" dbtype="query">
+            SELECT
+                studentID
+            FROM
+                qGetStudents
+            WHERE
+                hostID IS NULL
+        </cfquery>
+        
+        <cfquery name="qGetPlaced" dbtype="query">
+            SELECT
+                studentID
+            FROM
+                qGetStudents
+            WHERE
+                hostID IS NOT NULL
+            AND
+                host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="1,2,3,4"> )
+        </cfquery>
+        
+        <cfquery name="qGetPending" dbtype="query">
+            SELECT
+                studentID
+            FROM
+                qGetStudents 
+            WHERE
+                hostID IS NOT NULL
+            AND
+                host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="5,6,7"> )
+        </cfquery>
+		
+        <cfscript>
+			// Set New Structure
+			stRegionStatistics = StructNew();
+			// Feed Results
+			stRegionStatistics.totalStudents = qGetStudents.recordCount;
+			stRegionStatistics.totalUnplaced = qGetUnplaced.recordCount;
+			stRegionStatistics.totalPlaced = qGetPlaced.recordCount;
+			stRegionStatistics.totalPending = qGetPending.recordCount;
+			// Return Structure
+			return stRegionStatistics;
+		</cfscript>
+        
+	</cffunction>
+    
+    
+	<cffunction name="setRowColor" access="public" returntype="string" output="false" hint="Sets excel row color">
+    	<cfargument name="currentRow" hint="currentRow is required">
+    
+    	<cfscript>
+			// Set Row Color
+			if ( ARGUMENTS.currentRow MOD 2 ) {
+				vRowColor = "##F2F2F2";
+			} else {
+				vRowColor = "##FFFFFF";
+			}							
+		
+			return vRowColor;		
+		</cfscript>
+        
+    </cffunction>
     
 </cfsilent>
 
@@ -139,7 +248,7 @@
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Region: <span class="required">*</span></td>
                     <td>
-                        <select name="regionID" id="regionID" class="xLargeField" multiple size="6" required>
+                        <select name="regionID" id="regionID" class="xLargeField" multiple size="8" required>
                             <cfloop query="qGetRegionList">
                             	<option value="#qGetRegionList.regionID#">
                                 	<cfif CLIENT.companyID EQ 5>#qGetRegionList.companyShort# -</cfif>
@@ -205,7 +314,7 @@
         
         <!--- suggest default name for XLS file --->
         <cfheader name="Content-Disposition" value="attachment; filename=regionGoal.xls">
-        
+
         <table width="98%" cellpadding="4" cellspacing="0" align="center" border="1">
             <tr><th colspan="10">Office Management - Region Goal</th></tr>
             <tr style="font-weight:bold;">
@@ -220,131 +329,161 @@
                 <td>Goal</td>
                 <td>Percentage</td>
             </tr>
-        
-            <cfoutput query="qGetResults">
 
-                <cfquery name="qGetStudents" datasource="#APPLICATION.DSN#">
-                    SELECT
-                        s.studentID,
-                        s.host_fam_approved,
-                        h.hostID
-                    FROM
-                        smg_students s
-                    INNER JOIN 
-                        smg_programs p ON s.programID = p.programID
-                            AND
-                                p.type IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vProgramTypeList#" list="yes"> )
-                            AND
-                                p.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> 
-                    LEFT OUTER JOIN
-                        smg_hosts h ON h.hostID = s.hostID
-                    WHERE
-                        s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                    AND
-                        s.regionAssigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.regionID#">
-                </cfquery>
+			<cfoutput query="qGetResults" group="companyShort">
+        
+                <cfscript>
+                    vCurrentRow = 0;
+                    
+                    // Set Division Summary
+                    vDivisionSummaryAssigned = 0;
+                    vDivisionSummaryPlaced = 0;
+                    vDivisionSummaryPending = 0;
+                    vDivisionSummaryUnplaced = 0;
+                    vDivisionSummaryPlacement = 0;
+                    vDivisionSummaryAllocation = 0;
+                    vDivisionSummaryPercentage = 0;
+                </cfscript>
     
-                <cfquery name="qGetUnplaced" dbtype="query">
-                    SELECT
-                        studentID
-                    FROM
-                        qGetStudents
-                    WHERE
-                        hostID IS NULL
-                </cfquery>
-                
-                <cfquery name="qGetPlaced" dbtype="query">
-                    SELECT
-                        studentID
-                    FROM
-                        qGetStudents
-                    WHERE
-                        hostID IS NOT NULL
-                    AND
-                        host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="1,2,3,4"> )
-                </cfquery>
-                
-                <cfquery name="qGetPending" dbtype="query">
-                    SELECT
-                        studentID
-                    FROM
-                        qGetStudents 
-                    WHERE
-                        hostID IS NOT NULL
-                    AND
-                        host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="5,6,7"> )
-                </cfquery>
+				<cfoutput>
+
+                    <cfscript>
+                        // Increase Current Row
+                        vCurrentRow ++;
+
+                        vCurrentRowPlacecement = 0;
+                        vCurrentRowPercentage = 0;
+                        
+                        // Get Statistics Per Region
+                        stGetStatisticsPerRegion = getStatisticsPerRegion(regionID=qGetResults.regionID);
+    
+                        // Set Total Placed and Percentage
+                        vCurrentRowPlacecement = stGetStatisticsPerRegion.totalPlaced + stGetStatisticsPerRegion.totalPending;
+                        
+                        if ( VAL(qGetResults.allocation) ) {
+                            vCurrentRowPercentage = ( vCurrentRowPlacecement / qGetResults.allocation ) * 100;
+                        }
+                            
+                        // Calculate Division Summary
+                        vDivisionSummaryAssigned += stGetStatisticsPerRegion.totalStudents;
+                        vDivisionSummaryPlaced += stGetStatisticsPerRegion.totalPlaced;
+                        vDivisionSummaryPending += stGetStatisticsPerRegion.totalPending;
+                        vDivisionSummaryUnplaced += stGetStatisticsPerRegion.totalUnplaced;
+                        vDivisionSummaryAllocation += VAL(qGetResults.allocation);
+                        
+                        // Calculate Summary
+                        vSummaryAssigned += stGetStatisticsPerRegion.totalStudents;
+                        vSummaryPlaced += stGetStatisticsPerRegion.totalPlaced;
+                        vSummaryPending += stGetStatisticsPerRegion.totalPending;
+                        vSummaryUnplaced += stGetStatisticsPerRegion.totalUnplaced;
+                        vSummaryAllocation += VAL(qGetResults.allocation);
+
+                        // Great Lakes Region - Calculate Total
+                        if ( listFind(vGreatLakesRegionIDList, qGetResults.regionID) ) {
+                            vGreatLakesSummaryAssigned += stGetStatisticsPerRegion.totalStudents;
+                            vGreatLakesSummaryPlaced += stGetStatisticsPerRegion.totalPlaced;
+                            vGreatLakesSummaryPending += stGetStatisticsPerRegion.totalPending;
+                            vGreatLakesSummaryUnplaced += stGetStatisticsPerRegion.totalUnplaced;
+                            vGreatLakesSummaryAllocation += VAL(qGetResults.allocation);
+                            vGreatLakesSummaryPlacement = vGreatLakesSummaryPlaced + vGreatLakesSummaryPending;
+                            vGreatLakesSummaryAllocation += VAL(qGetResults.allocation);
+                            
+                            if ( VAL(vGreatLakesSummaryAllocation) ) {
+                                vGreatLakesSummaryPercentage = ( vGreatLakesSummaryPlacement / vGreatLakesSummaryAllocation ) * 100;
+                            }
+                            
+                        }
+                    </cfscript>
+                    
+                    <!--- Do not display Great Lakes Regions --->
+                    <cfif NOT listFind(vGreatLakesRegionIDList, qGetResults.regionID)>
+                        
+                        <tr>
+                            <td bgcolor="#setRowColor(vCurrentRow)#">#qGetResults.companyShort#</td>
+                            <td bgcolor="#setRowColor(vCurrentRow)#">#qGetResults.regionName#</td>
+                            <td bgcolor="#setRowColor(vCurrentRow)#">#qGetResults.firstName# #qGetResults.lastName#</td>                        
+                            <td bgcolor="#setRowColor(vCurrentRow)#">#stGetStatisticsPerRegion.totalStudents#</td>
+                            <td bgcolor="#setRowColor(vCurrentRow)#">#stGetStatisticsPerRegion.totalPlaced#</td>
+                            <td bgcolor="#setRowColor(vCurrentRow)#">#stGetStatisticsPerRegion.totalPending#</td>
+                            <td bgcolor="#setRowColor(vCurrentRow)#">#stGetStatisticsPerRegion.totalUnplaced#</td>
+                            <td bgcolor="#setRowColor(vCurrentRow)#">#vCurrentRowPlacecement#</td>
+                            <td bgcolor="#setRowColor(vCurrentRow)#">#qGetResults.allocation#</td>
+                            <td bgcolor="#setRowColor(vCurrentRow)#">#NumberFormat(vCurrentRowPercentage, '___.__')#%</td>
+                        </tr>
+                    
+                    <!--- Display Total for Great Lakes --->
+                    <cfelseif qGetResults.regionID EQ ListLast(vGreatLakesRegionIDList)>
+                    
+                        <cfscript>
+                            // Increase Current Row
+                            vCurrentRow ++;
+                        </cfscript>
+                        <tr>
+                        	<td bgcolor="#setRowColor(vCurrentRow)#">#qGetResults.companyShort#</td>
+                            <td bgcolor="#setRowColor(vCurrentRow)#">Great Lakes</td>
+                            <td bgcolor="#setRowColor(vCurrentRow)#">#qGetResults.firstName# #qGetResults.lastName#</td>
+                            <td bgcolor="#setRowColor(vCurrentRow)#">#vGreatLakesSummaryAssigned#</td>
+                            <td bgcolor="#setRowColor(vCurrentRow)#">#vGreatLakesSummaryPlaced#</td>
+                            <td bgcolor="#setRowColor(vCurrentRow)#">#vGreatLakesSummaryPending#</td>
+                            <td bgcolor="#setRowColor(vCurrentRow)#">#vGreatLakesSummaryUnplaced#</td>
+                            <td bgcolor="#setRowColor(vCurrentRow)#">#vGreatLakesSummaryPlacement#</td>
+                            <td bgcolor="#setRowColor(vCurrentRow)#">#vGreatLakesSummaryAllocation#</td>
+							<td bgcolor="#setRowColor(vCurrentRow)#">#NumberFormat(vGreatLakesSummaryPercentage, '___.__')#% </td>
+                        </tr> 
+                        
+                    </cfif>
+                    
+                </cfoutput>
                 
                 <cfscript>
-					vPlacement = 0;
-					vPercentage = 0;
+                    // Increase Current Row
+                    vCurrentRow ++;
 
-					vPlacement = qGetPlaced.recordCount + qGetPending.recordCount;
-					
-					if ( VAL(qGetResults.allocation) ) {
-						vPercentage = ( vPlacement / qGetResults.allocation ) * 100;
-					}
-					
-					// Calculate Summary Total
-					vSummaryAssigned += qGetStudents.recordCount;
-					vSummaryPlaced += qGetPlaced.recordCount;
-					vSummaryPending += qGetPending.recordCount;
-					vSummaryUnplaced += qGetUnplaced.recordCount;
-					vSummaryGoal += VAL(qGetResults.allocation);
-				
-					// Set Row Color
-					if ( qGetResults.currentRow MOD 2 ) {
-						vRowColor = 'bgcolor="##E6E6E6"';
-					} else {
-						vRowColor = 'bgcolor="##FFFFFF"';
-					}
-				</cfscript>
+                    vDivisionSummaryPlacement = vDivisionSummaryPlaced + vDivisionSummaryPending;
+                    
+                    if ( VAL(vDivisionSummaryAllocation) ) {
+                        vDivisionSummaryPercentage = ( vDivisionSummaryPlacement / vDivisionSummaryAllocation ) * 100;
+                    }		
+                    
+                    vSummaryPlacement = vSummaryPlaced + vSummaryPending;
+                    
+                    if ( VAL(vSummaryAllocation) ) {
+                        vSummaryPercentage = ( vSummaryPlacement / vSummaryAllocation ) * 100;
+                    }				
+                </cfscript>
                 
                 <tr>
-                    <td #vRowColor#>#qGetResults.companyShort#</td>
-                    <td #vRowColor#>#qGetResults.regionName#</td>
-                    <td #vRowColor#>#qGetResults.firstName# #qGetResults.lastName# ###qGetResults.userID#</td>
-                    <td #vRowColor#>#qGetStudents.recordCount#</td>
-                    <td #vRowColor#>#qGetPlaced.recordCount#</td>
-                    <td #vRowColor#>#qGetPending.recordCount#</td>
-                    <td #vRowColor#>#qGetUnplaced.recordCount#</td>
-                    <td #vRowColor#>#vPlacement#</td>
-                    <td #vRowColor#>#qGetResults.allocation#</td>
-                    <td #vRowColor#>#NumberFormat(vPercentage, '___.__')#%</td>
-                </tr> 
-                
-            </cfoutput>
+                    <td bgcolor="#vExcelTotalRowColor#" colspan="3">Total</td>
+                    <td bgcolor="#vExcelTotalRowColor#">#vDivisionSummaryAssigned#</td>
+                    <td bgcolor="#vExcelTotalRowColor#">#vDivisionSummaryPlaced#</td>
+                    <td bgcolor="#vExcelTotalRowColor#">#vDivisionSummaryPending#</td>
+                    <td bgcolor="#vExcelTotalRowColor#">#vDivisionSummaryUnplaced#</td>
+                    <td bgcolor="#vExcelTotalRowColor#">#vDivisionSummaryPlacement#</td>
+                    <td bgcolor="#vExcelTotalRowColor#">#vDivisionSummaryAllocation#</td>
+                    <td bgcolor="#vExcelTotalRowColor#">#NumberFormat(vDivisionSummaryPercentage, '___.__')#%</td>
+                </tr>
             
-			<cfscript>
-				qGetResults.currentRow += 1;
-				
-				// Set Row Color
-				if ( qGetResults.currentRow MOD 2 ) {
-					vRowColor = 'bgcolor="##E6E6E6"';
-				} else {
-					vRowColor = 'bgcolor="##FFFFFF"';
-				}
-			
-                vSummaryPlacement = vSummaryPlaced + vSummaryPending;
-                
-                if ( VAL(vSummaryGoal) ) {
-                    vSummaryPercentage = ( vSummaryPlacement / vSummaryGoal ) * 100;
-                }				
-            </cfscript>
+        </cfoutput>
             
+		<!--- ISE - Display Total Divisions --->
+        <cfif CLIENT.companyID EQ 5>
+
             <cfoutput>
                 <tr>
-                    <td colspan="3">Total</td>
-                    <td>#vSummaryAssigned#</td>
-                    <td>#vSummaryPlaced#</td>
-                    <td>#vSummaryPending#</td>
-                    <td>#vSummaryUnplaced#</td>
-                    <td>#vSummaryPlacement#</td>
-                    <td>#vSummaryGoal#</td>
-                    <td>#NumberFormat(vSummaryPercentage, '___.__')#%</td>
+                    <td bgcolor="#vExcelTotalRowColor#" colspan="3">Total Divisions</td>
+                    <td bgcolor="#vExcelTotalRowColor#">#vSummaryAssigned#</td>
+                    <td bgcolor="#vExcelTotalRowColor#">#vSummaryPlaced#</td>
+                    <td bgcolor="#vExcelTotalRowColor#">#vSummaryPending#</td>
+                    <td bgcolor="#vExcelTotalRowColor#">#vSummaryUnplaced#</td>
+                    <td bgcolor="#vExcelTotalRowColor#">#vSummaryPlacement#</td>
+                    <td bgcolor="#vExcelTotalRowColor#">#vSummaryAllocation#</td>
+                    <td bgcolor="#vExcelTotalRowColor#">#NumberFormat(vSummaryPercentage, '___.__')#%</td>
                 </tr>
             </cfoutput>
-		</table>
+            
+        </cfif>
+	
+    </table>
     
     <!--- On Screen Report --->
     <cfelse>
@@ -360,6 +499,15 @@
     
             <cfscript>
                 vCurrentRow = 0;
+				
+				// Set Division Summary
+				vDivisionSummaryAssigned = 0;
+				vDivisionSummaryPlaced = 0;
+				vDivisionSummaryPending = 0;
+				vDivisionSummaryUnplaced = 0;
+				vDivisionSummaryPlacement = 0;
+				vDivisionSummaryAllocation = 0;
+				vDivisionSummaryPercentage = 0;
             </cfscript>
             
             <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
@@ -380,118 +528,157 @@
 
                 <cfoutput>
 
-                    <cfquery name="qGetStudents" datasource="#APPLICATION.DSN#">
-                        SELECT
-                            s.studentID,
-                            s.host_fam_approved,
-                            sh.hostID
-                        FROM
-                            smg_students s
-                        INNER JOIN 
-                            smg_programs p ON s.programID = p.programID
-                                AND
-                                    p.type IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vProgramTypeList#" list="yes"> )
-                                AND
-                                    p.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> 
-                        LEFT OUTER JOIN
-                        	smg_hostHistory sh ON sh.studentID = s.studentID
-                            AND
-                            	sh.isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                        WHERE
-                            s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                        AND
-                            s.regionAssigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.regionID#">
-                    </cfquery>
-
-                    <cfquery name="qGetUnplaced" dbtype="query">
-                        SELECT
-                            studentID
-                        FROM
-                            qGetStudents
-                        WHERE
-                            hostID IS NULL
-                    </cfquery>
-    				
-                    <cfquery name="qGetPlaced" dbtype="query">
-                        SELECT
-                            studentID
-                        FROM
-                            qGetStudents
-                        WHERE
-                        	hostID IS NOT NULL
-                        AND
-                            host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="1,2,3,4"> )
-                    </cfquery>
-                    
-                    <cfquery name="qGetPending" dbtype="query">
-                        SELECT
-                            studentID
-                        FROM
-                            qGetStudents 
-                        WHERE
-                        	hostID IS NOT NULL
-                        AND
-                            host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="5,6,7"> )
-                    </cfquery>
-                    
                     <cfscript>
+						// Increase Current Row
                         vCurrentRow ++;
                         
-                        vPlacement = 0;
-                        vPercentage = 0;
-
-						vPlacement = qGetPlaced.recordCount + qGetPending.recordCount;
+						vCurrentRowPlacecement = 0;
+						vCurrentRowPercentage = 0;
+						
+						// Get Statistics Per Region
+						stGetStatisticsPerRegion = getStatisticsPerRegion(regionID=qGetResults.regionID);
+	
+						// Set Total Placed and Percentage
+						vCurrentRowPlacecement = stGetStatisticsPerRegion.totalPlaced + stGetStatisticsPerRegion.totalPending;
 						
 						if ( VAL(qGetResults.allocation) ) {
-                        	vPercentage = ( vPlacement / qGetResults.allocation ) * 100;
+							vCurrentRowPercentage = ( vCurrentRowPlacecement / qGetResults.allocation ) * 100;
 						}
+							
+						// Calculate Division Summary
+						vDivisionSummaryAssigned += stGetStatisticsPerRegion.totalStudents;
+						vDivisionSummaryPlaced += stGetStatisticsPerRegion.totalPlaced;
+						vDivisionSummaryPending += stGetStatisticsPerRegion.totalPending;
+						vDivisionSummaryUnplaced += stGetStatisticsPerRegion.totalUnplaced;
+						vDivisionSummaryAllocation += VAL(qGetResults.allocation);
 						
-						// Calculate Summary Total
-						vSummaryAssigned += qGetStudents.recordCount;
-                        vSummaryPlaced += qGetPlaced.recordCount;
-                        vSummaryPending += qGetPending.recordCount;
-						vSummaryUnplaced += qGetUnplaced.recordCount;
-                        vSummaryGoal += VAL(qGetResults.allocation);
+						// Calculate Summary
+						vSummaryAssigned += stGetStatisticsPerRegion.totalStudents;
+						vSummaryPlaced += stGetStatisticsPerRegion.totalPlaced;
+						vSummaryPending += stGetStatisticsPerRegion.totalPending;
+						vSummaryUnplaced += stGetStatisticsPerRegion.totalUnplaced;
+						vSummaryAllocation += VAL(qGetResults.allocation);
+
+						// Great Lakes Region - Calculate Total
+						if ( listFind(vGreatLakesRegionIDList, qGetResults.regionID) ) {
+							vGreatLakesSummaryAssigned += stGetStatisticsPerRegion.totalStudents;
+							vGreatLakesSummaryPlaced += stGetStatisticsPerRegion.totalPlaced;
+							vGreatLakesSummaryPending += stGetStatisticsPerRegion.totalPending;
+							vGreatLakesSummaryUnplaced += stGetStatisticsPerRegion.totalUnplaced;
+							vGreatLakesSummaryAllocation += VAL(qGetResults.allocation);
+							vGreatLakesSummaryPlacement = vGreatLakesSummaryPlaced + vGreatLakesSummaryPending;
+							vGreatLakesSummaryAllocation += VAL(qGetResults.allocation);
+							
+							if ( VAL(vGreatLakesSummaryAllocation) ) {
+								vGreatLakesSummaryPercentage = ( vGreatLakesSummaryPlacement / vGreatLakesSummaryAllocation ) * 100;
+							}
+							
+						}
 					</cfscript>
+                    
+                    <!--- Do not display Great Lakes Regions --->
+                    <cfif NOT listFind(vGreatLakesRegionIDList, qGetResults.regionID)>
                         
-                    <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
-                        <td>#qGetResults.regionName#</td>
-                        <td>#qGetResults.firstName# #qGetResults.lastName# ###qGetResults.userID#</td>                        
-                        <td class="center">#qGetStudents.recordCount#</td>
-                        <td class="center">#qGetPlaced.recordCount#</td>
-                        <td class="center">#qGetPending.recordCount#</td>
-                        <td class="center">#qGetUnplaced.recordCount#</td>
-                        <td class="center">#vPlacement#</td>
-                        <td class="center">#qGetResults.allocation#</td>
-                        <td class="center">#NumberFormat(vPercentage, '___.__')#%</td>
-                    </tr>
+                        <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
+                            <td>#qGetResults.regionName#</td>
+                            <td>#qGetResults.firstName# #qGetResults.lastName#</td>                        
+                            <td class="center">#stGetStatisticsPerRegion.totalStudents#</td>
+                            <td class="center">#stGetStatisticsPerRegion.totalPlaced#</td>
+                            <td class="center">#stGetStatisticsPerRegion.totalPending#</td>
+                            <td class="center">#stGetStatisticsPerRegion.totalUnplaced#</td>
+                            <td class="center">#vCurrentRowPlacecement#</td>
+                            <td class="center">#qGetResults.allocation#</td>
+                            <td class="center">#NumberFormat(vCurrentRowPercentage, '___.__')#%</td>
+                        </tr>
+                    
+					<!--- Display Total for Great Lakes --->
+                    <cfelseif qGetResults.regionID EQ ListLast(vGreatLakesRegionIDList)>
+                    
+                    	<cfscript>
+							// Increase Current Row
+							vCurrentRow ++;
+						</cfscript>
+                        <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
+                            <td>Great Lakes</td>
+                            <td>#qGetResults.firstName# #qGetResults.lastName#</td>
+                            <td class="center">#vGreatLakesSummaryAssigned#</td>
+                            <td class="center">#vGreatLakesSummaryPlaced#</td>
+                            <td class="center">#vGreatLakesSummaryPending#</td>
+                            <td class="center">#vGreatLakesSummaryUnplaced#</td>
+                            <td class="center">#vGreatLakesSummaryPlacement#</td>
+                            <td class="center">#vGreatLakesSummaryAllocation#</td>
+                            <td class="center">#NumberFormat(vGreatLakesSummaryPercentage, '___.__')#% </td>
+                        </tr> 
+                        
+                    </cfif>
                     
                 </cfoutput>
                 
                 <cfscript>
+					// Increase Current Row
 					vCurrentRow ++;
+					
+					vDivisionSummaryPlacement = vDivisionSummaryPlaced + vDivisionSummaryPending;
+					
+					if ( VAL(vDivisionSummaryAllocation) ) {
+						vDivisionSummaryPercentage = ( vDivisionSummaryPlacement / vDivisionSummaryAllocation ) * 100;
+					}		
 					
 					vSummaryPlacement = vSummaryPlaced + vSummaryPending;
 					
-					if ( VAL(vSummaryGoal) ) {
-						vSummaryPercentage = ( vSummaryPlacement / vSummaryGoal ) * 100;
+					if ( VAL(vSummaryAllocation) ) {
+						vSummaryPercentage = ( vSummaryPlacement / vSummaryAllocation ) * 100;
 					}				
 				</cfscript>
                 
                 <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
                     <td class="subTitleLeft" colspan="2">Total</td>
-                    <td class="subTitleCenter">#vSummaryAssigned#</td>
-                    <td class="subTitleCenter">#vSummaryPlaced#</td>
-                    <td class="subTitleCenter">#vSummaryPending#</td>
-                    <td class="subTitleCenter">#vSummaryUnplaced#</td>
-                    <td class="subTitleCenter">#vSummaryPlacement#</td>
-                    <td class="subTitleCenter">#vSummaryGoal#</td>
-                    <td class="subTitleCenter">#NumberFormat(vSummaryPercentage, '___.__')#%</td>
+                    <td class="subTitleCenter">#vDivisionSummaryAssigned#</td>
+                    <td class="subTitleCenter">#vDivisionSummaryPlaced#</td>
+                    <td class="subTitleCenter">#vDivisionSummaryPending#</td>
+                    <td class="subTitleCenter">#vDivisionSummaryUnplaced#</td>
+                    <td class="subTitleCenter">#vDivisionSummaryPlacement#</td>
+                    <td class="subTitleCenter">#vDivisionSummaryAllocation#</td>
+                    <td class="subTitleCenter">#NumberFormat(vDivisionSummaryPercentage, '___.__')#%</td>
                 </tr>
             </table>
             
 		</cfoutput>
         
+        <!--- ISE - Display Total Divisions --->
+		<cfif CLIENT.companyID EQ 5>
+
+			<cfoutput>
+                <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                    <tr>
+                        <th class="left" colspan="9">Total Divisions</th>
+                    </tr>      
+                    <tr>
+                        <td class="subTitleLeft" width="15%">Region</td>	
+                        <td class="subTitleLeft" width="15%">Regional Manager</td>
+                        <td class="subTitleCenter" width="10%">Total Assigned</td>
+                        <td class="subTitleCenter" width="10%">Placed</td>
+                        <td class="subTitleCenter" width="10%">Pending</td>
+                        <td class="subTitleCenter" width="10%">Unplaced</td>
+                        <td class="subTitleCenter" width="10%">Total Placements</td>
+                        <td class="subTitleCenter" width="10%">Goal</td>
+                        <td class="subTitleCenter" width="10%">Percentage</td>
+                    </tr>
+                    <tr class="on">
+                        <td colspan="2">n/a</td>
+                        <td class="subTitleCenter">#vSummaryAssigned#</td>
+                        <td class="subTitleCenter">#vSummaryPlaced#</td>
+                        <td class="subTitleCenter">#vSummaryPending#</td>
+                        <td class="subTitleCenter">#vSummaryUnplaced#</td>
+                        <td class="subTitleCenter">#vSummaryPlacement#</td>
+                        <td class="subTitleCenter">#vSummaryAllocation#</td>
+                        <td class="subTitleCenter">#NumberFormat(vSummaryPercentage, '___.__')#%</td>
+                    </tr>
+                </table>
+			</cfoutput>
+            
+        </cfif>
+                                    
     </cfif>
 
     <!--- Page Header --->
