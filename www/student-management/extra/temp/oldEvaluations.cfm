@@ -41,7 +41,7 @@
         LEFT OUTER JOIN
             smg_programs p ON p.programID = ec.programID
         WHERE
-            ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+            ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
         AND
             ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         AND
@@ -60,50 +60,61 @@
     </cfquery>
     
 </cfsilent>
+
+<cfsavecontent variable="vEmailBody">
+    <p>
+        Your participation in the Summer Travel Program is sponsored by CSB. We are committed to provide you with an ongoing support during your program 
+        in the United States. During your program, you will receive monthly evaluations by e-mail, as required by the US Department of State. 
+        These evaluations are mandatory and crucial for your experience.
+    </p>
+    
+    <p>
+        <strong>The CSB monthly evaluation consists of</strong> 9 (nine) questions that require your answer. You must <strong><u>answer in full</u></strong> 
+        within 10 (ten) days of receiving the evaluation notification.
+    </p>
+    
+    <p style="font-weight:bold; text-decoration:underline; font-size:16px; text-align:center;">
+        <a href="http://www.csb-usa.com/evaluation?evaluation={evaluationID}&uniqueID={uniqueID}">Take Evaluation</a>
+    </p>
+    
+    <p style="color:red;">
+        Note: Failure to respond in a timely manner may result in program termination. It is very important that you respond.
+    </p>
+    
+    Kind Regards,<br />
+    CSB Summer Work Travel Program<br /> 
+    119 Cooper Street<br />
+    Babylon, NY 11702<br />
+    877-669-0717 - Toll Free<br />
+    631-893-4549 - Phone<br />
+    support@csb-usa.com<br />
+</cfsavecontent>
     
 <cfscript>
-
-	vEmailFrom = 'support@csb-usa.com (CSB International, Inc.)';
+	vEmailFrom = 'support@csb-usa.com (CSB Summer Work Travel)';
 	
 	// Evaluation 1
 	For ( i=1;i LTE qEvaluation.Recordcount; i=i+1 ) {
 
 		vEmailTo = qEvaluation.email[i];
-		vEvaluationEmailBody = 
-			"<p>Your participation in the Summer Travel Program is sponsored by CSB. 
-			We are committed to provide you with an ongoing support during your program 
-			in the United States. During your program, you will receive monthly evaluations 
-			by e-mail, as required by the US Department of State. These evaluations are 
-			mandatory and crucial for your experience.</p>
-			<p><b>The CSB monthly evaluation consists of</b> 9 (nine) questions that 
-			require your answer. You must <b><u>answer in full</u></b> within 10 (ten) days 
-			of receiving the evaluation notification.</p>
-			<center><p><span style='font-weight:bold; text-decoration:underline; font-size:16px; 
-			text-align:center;'><a href='http://csb-usa.com/evaluation?evaluation=1&uniqueID=" & qEvaluation.uniqueID[i] & "'>
-			Take Evaluation</a></span></p></center>
-			<p><span style='color:red;'>Note: Failure to respond in a timely 
-			manner may result in program termination. It is very important that you respond.
-			</span></p>
-			Kind Regards,<br />
-			CSB Summer Work Travel Program<br /> 
-			119 Cooper Street<br />
-			Babylon, NY 11702<br />
-			877-669-0717   - Toll Free<br />
-			631-893-4549   -  Phone<br />
-			support@csb-usa.com<br />";
+		vEvaluationEmailBody = ReplaceNoCase(vEmailBody, "{evaluationID}", 1);
+		vEvaluationEmailBody = ReplaceNoCase(vEvaluationEmailBody, "{uniqueID}", qEvaluation.uniqueID[i]);
 			
 		if ( IsValid("email", qEvaluation.email[i]) ) {
 			APPLICATION.CFC.EMAIL.sendEmail(
 				emailFrom=vEmailFrom,
 				emailTo=qEvaluation.email[i],
+				//emailTo="marcus@iseusa.com",
 				emailReplyTo=vEmailFrom,
 				emailSubject='CSB - 1 - Mandatory Summer Work Travel Evaluation',
 				emailMessage=vEvaluationEmailBody,
-				emailPriority=1,
 				footerType="emailNoInfo",
-				companyID=7
+				companyID=8
 			);
 		}
 	}
-		
 </cfscript>
+
+<cfoutput>
+	<p>Total of #qEvaluation.recordCount# records</p>
+</cfoutput>
