@@ -150,15 +150,15 @@
     <cfif NOT SESSION.formErrors.length()>
 		
 		<!-----Upload Files so we can attach them---->
-        <cfif Len(FORM.Q6file)>
-            <cffile action="upload" destination="C:\websites\csb-usa\uploadedfiles\" filefield="Q6file" nameconflict="overwrite" />
-            <cffile action="rename" source="C:\websites\csb-usa\uploadedfiles\#file.ServerFile#" destination="C:\websites\csb-usa\uploadedfiles\Question6.#file.ClientFileExt#"attributes="normal">
+        <cfif LEN(FORM.Q6file)>
+            <cffile action="upload" destination="#APPLICATION.UPLOAD#" filefield="Q6file" nameconflict="overwrite" />
+            <cffile action="rename" source="#APPLICATION.UPLOAD##file.ServerFile#" destination="#APPLICATION.UPLOAD#Question6.#file.ClientFileExt#" attributes="normal">
             <Cfset FORM.q6filename = 'Question6.#file.ClientFileExt#'>
         </cfif>
         
-        <cfif Len(FORM.Q7file)>
-            <cffile action="upload" destination="C:\websites\csb-usa\uploadedfiles\" filefield="Q7file" nameconflict="overwrite"/>
-            <cffile action="rename" source="C:\websites\csb-usa\uploadedfiles\#file.ServerFile#" destination="C:\websites\csb-usa\uploadedfiles\Question7.#file.ClientFileExt#"attributes="normal">
+        <cfif LEN(FORM.Q7file)>
+            <cffile action="upload" destination="#APPLICATION.UPLOAD#" filefield="Q7file" nameconflict="overwrite"/>
+            <cffile action="rename" source="#APPLICATION.UPLOAD##file.ServerFile#" destination="#APPLICATION.UPLOAD#Question7.#file.ClientFileExt#"attributes="normal">
             <cfset FORM.q7filename = 'Question7.#file.ClientFileExt#'>
         </cfif>
 
@@ -183,14 +183,16 @@
                 9. Cultural activities <strong> #FORM.Q9_explain# </strong><br /><br /></p>
                 --';
             
-            email=CreateObject("component","cfc.email");
+            email=CreateObject("component","extensions.components.email");
         
             email.send_mail(
                 email_from='CSB Summer Work Travel<support@csb-usa.com>',
                 email_to='support@csb-usa.com',
                 email_subject=FORM.LastName & ', ' & FORM.FirstName & ' - CSB Monthly Evaluation ' & FORM.evaluation,
                 email_cc=FORM.email,
-                email_message=vEmailContent
+                email_message=vEmailContent,
+				email_file=APPLICATION.UPLOAD & FORM.q6filename,
+				email_file2=APPLICATION.UPLOAD & FORM.q7filename
             );												
         </cfscript>
   
@@ -434,7 +436,7 @@ a:active {
   </tr>
     <tr>
     <td valign="middle">&nbsp;</td>
-    <td colspan="2"><cfinput type="file" name="Q6file" size= "20"></td>
+    <td colspan="2"><input type="file" name="Q6file"></td>
     </tr>
 </table>
 </td>
@@ -464,7 +466,7 @@ a:active {
   </tr>
     <tr>
     <td valign="middle">&nbsp;</td>
-    <td colspan="2"><cfinput type="file" name="Q7file" size= "20"><br /></td>
+    <td colspan="2"><input type="file" name="Q7file"><br /></td>
     </tr>
 </table>
 </td>
