@@ -112,9 +112,12 @@ td {
 </style>
 <link rel="stylesheet" media="all" type="text/css"href="../linked/css/baseStyle.css" />
  <Cfset season = 9>
+ <cfif not isDefined('url.userid')>
+ 	<cfset url.userid = #client.userid#>
+ </cfif>
  <cfscript>
 // Get User Info
-		qGetUserInfo = APPLICATION.CFC.USER.getUserByID(userID=client.userID);
+		qGetUserInfo = APPLICATION.CFC.USER.getUserByID(userID=url.userID);
 		FORM.SSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetUserInfo.SSN, displayType='user');
 		 // This will set if SSN needs to be updated
 		vUpdateUserSSN = 0;
@@ -221,14 +224,14 @@ td {
                         relationship = '#form.relationship#',
                         howLong = '#form.howLong#',
                         email = '#form.email#',
-                        referencefor = #client.userid#
+                        referencefor = #url.userid#
                     where refID = #url.edit#
             </Cfquery>
           `
         <cfelse>
             <cfquery datasource="MySQL">
                 insert into smg_user_references(firstname, lastname, address, address2, city, state, zip, phone, relationship, howLong, email, referencefor)
-                values('#form.firstname#','#form.lastname#', '#form.address#', '#form.address2#', '#form.city#', '#form.state#', '#form.zip#', '#form.phone#', '#form.relationship#','#form.howLong#', '#form.email#', #client.userid#)
+                values('#form.firstname#','#form.lastname#', '#form.address#', '#form.address2#', '#form.city#', '#form.state#', '#form.zip#', '#form.phone#', '#form.relationship#','#form.howLong#', '#form.email#', #url.userid#)
             </cfquery>
               <Cfquery name="refID" datasource="mysql">
                 select max(refid) as newID
@@ -239,9 +242,9 @@ td {
          <!----Check if this account should be reviewed more then likely this will not happen here, but depending on the order of people submitting things, we have to check. ---->
 			<Cfscript>
                     //Check if paperwork is complete for season
-                    get_paperwork = APPLICATION.CFC.udf.allpaperworkCompleted(userid=client.userid);
+                    get_paperwork = APPLICATION.CFC.udf.allpaperworkCompleted(userid=url.userid);
 					//Get User Info
-                    qGetUserInfo = APPLICATION.CFC.user.getUserByID(userid=client.userid);
+                    qGetUserInfo = APPLICATION.CFC.user.getUserByID(userid=url.userid);
          </cfscript>
         
 		 <cfif val(get_paperwork.reviewAcct)>
@@ -272,14 +275,14 @@ td {
 							 
                               
                             <cfinvokeargument name="email_from" value="""#client.companyshort# Support"" <#client.emailfrom#>">
-                            <cfinvokeargument name="email_subject" value="CBC Authorization for #client.name#">
+                            <cfinvokeargument name="email_subject" value="CBC Authorization for #qGetUserInfo.firstname#">
                             <cfinvokeargument name="email_message" value="#programEmailMessage#">
                           
                         </cfinvoke>
              </cfif>
             
         
-        <cflocation url="repRefs.cfm?curdoc=repRefs">
+        <cflocation url="repRefs.cfm?curdoc=repRefs&userid=#url.userid#">
 <Cfelse>
 
 
@@ -303,7 +306,7 @@ td {
         select *
         from smg_users_paperwork
         where seasonid = #season#
-        and userid = #client.userid# 
+        and userid = #url.userid# 
             <Cfif client.companyid gt 5>
             and fk_companyid = #client.companyid#
             </Cfif>
@@ -321,7 +324,7 @@ td {
                 select uar.advisorid, u.email
                 from user_access_rights uar
                 LEFT JOIN smg_users u on u.userid = uar.advisorid
-                where uar.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+                where uar.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.userid#">
 			</cfquery>
 <cfif qGetRegionalAdviser.recordcount eq 0>
 	<Cfset qGetRegionalAdviser.email = ''>
@@ -347,7 +350,7 @@ td {
 <cfquery name="qreferences" datasource="MySQL">
 select *
 from smg_user_references
-where referencefor = #client.userid#
+where referencefor = #url.userid#
 </cfquery>
 
 <cfoutput>
@@ -386,7 +389,7 @@ where referencefor = #client.userid#
 <cfif remainingref lte 0>
 <cfsavecontent variable="programEmailMessage">
                 <cfoutput>				
-                References and work experience have been submitted for #client.name# (#client.userid#)
+                References and work experience have been submitted for #client.name# (#url.userid#)
                 <br><br>
                <a href="#client.exits_url#/nsmg/index.cfm?curdoc=user_info&userid=#userid#">View and Submit</a>
                 
@@ -403,9 +406,13 @@ where referencefor = #client.userid#
                     <cfinvokeargument name="email_message" value="#programEmailMessage#">
                  </cfinvoke>       
 <p>No additional references are required.
-    <SCRIPT LANGUAGE="JavaScript"><!--
-			setTimeout('self.close()',2000);
-			//--></SCRIPT>
+	
+	<!----Close the window if all was filled out, removed so they could be edited. 
+	<SCRIPT LANGUAGE="JavaScript"><!--
+	setTimeout('self.close()',2000);
+	//-->
+	</SCRIPT>
+	---->
 <cfelse>
 #remainingref# additional reference(s) are required.</p>
 </cfif>
@@ -413,7 +420,7 @@ where referencefor = #client.userid#
 <p><span class="redtext">* Required fields </span></p>
 
 <cfif remainingref gt 0>
-<form method="post" action="repRefs.cfm?curdoc=repRefs<Cfif isDefined('url.edit')>&edit=#url.edit#</cfif>">
+<form method="post" action="repRefs.cfm?curdoc=repRefs&userid=#url.userid#<Cfif isDefined('url.edit')>&edit=#url.edit#</cfif>">
 
 <input type="hidden" name="insert" />
 <div class="border">
