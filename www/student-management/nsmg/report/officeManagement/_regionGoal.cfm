@@ -114,6 +114,8 @@
                 LEFT JOIN
                     smg_users_allocation a ON a.userID = u.userID
                     AND
+                    	a.regionID = r.regionID
+                    AND
                         a.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">
                 WHERE
                     uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
@@ -384,7 +386,6 @@
                             vGreatLakesSummaryPlaced += stGetStatisticsPerRegion.totalPlaced;
                             vGreatLakesSummaryPending += stGetStatisticsPerRegion.totalPending;
                             vGreatLakesSummaryUnplaced += stGetStatisticsPerRegion.totalUnplaced;
-                            vGreatLakesSummaryAllocation += VAL(qGetResults.allocation);
                             vGreatLakesSummaryPlacement = vGreatLakesSummaryPlaced + vGreatLakesSummaryPending;
                             vGreatLakesSummaryAllocation += VAL(qGetResults.allocation);
                             
@@ -565,7 +566,6 @@
 							vGreatLakesSummaryPlaced += stGetStatisticsPerRegion.totalPlaced;
 							vGreatLakesSummaryPending += stGetStatisticsPerRegion.totalPending;
 							vGreatLakesSummaryUnplaced += stGetStatisticsPerRegion.totalUnplaced;
-							vGreatLakesSummaryAllocation += VAL(qGetResults.allocation);
 							vGreatLakesSummaryPlacement = vGreatLakesSummaryPlaced + vGreatLakesSummaryPending;
 							vGreatLakesSummaryAllocation += VAL(qGetResults.allocation);
 							
@@ -575,7 +575,7 @@
 							
 						}
 					</cfscript>
-                    
+
                     <!--- Do not display Great Lakes Regions --->
                     <cfif NOT listFind(vGreatLakesRegionIDList, qGetResults.regionID)>
                         

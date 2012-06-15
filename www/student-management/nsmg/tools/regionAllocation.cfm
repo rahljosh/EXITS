@@ -51,8 +51,10 @@
         	user_access_rights uar ON uar.userID = u.userID
       	INNER JOIN
         	smg_regions r ON r.regionID = uar.regionID
-       	LEFT JOIN
+       	LEFT OUTER JOIN
         	smg_users_allocation a ON a.userID = u.userID
+            AND	
+            	r.regionID = a.regionID
             AND
             	a.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">
       	WHERE
@@ -64,31 +66,29 @@
       	AND
         	r.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
       	GROUP BY
-        	r.regionName
+        	r.regionID
       	ORDER BY
-        	r.regionName
+        	r.regionName            
     </cfquery>
-
+    
 	<!--- To update the records if update was selected --->
     <cfif VAL(FORM.submitted)>
     
         <cfloop query="qGetResults">     	
             
-            <cfif VAL(FORM[qGetResults.userID & '_allocationID'])>
+            <cfif VAL(FORM[qGetResults.regionID & '_allocationID'])>
             
                 <cfquery name="updateAllocations" datasource="MySql">
                     UPDATE 	
                         smg_users_allocation
                     SET 
-                        januaryAllocation = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM[qGetResults.userID & '_januaryAllocation'])#">,
-                        augustAllocation = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM[qGetResults.userID & '_augustAllocation'])#">
+                        januaryAllocation = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM[qGetResults.regionID & '_januaryAllocation'])#">,
+                        augustAllocation = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM[qGetResults.regionID & '_augustAllocation'])#">
                     WHERE 
-                        userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.userid#">
-                    AND 
-                        seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">
+                        ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM[qGetResults.regionID & '_allocationID']#">
                  </cfquery>
                  
-            <cfelseif VAL(FORM[qGetResults.userID & '_januaryAllocation']) OR VAL(FORM[qGetResults.userID & '_augustAllocation'])>
+            <cfelseif VAL(FORM[qGetResults.regionID & '_januaryAllocation']) OR VAL(FORM[qGetResults.regionID & '_augustAllocation'])>
             
                 <cfquery name="addAllocations" datasource="MySql">
                     INSERT INTO smg_users_allocation
@@ -105,8 +105,8 @@
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.userID#">, 
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">,
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.regionID#">,
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM[qGetResults.userID & '_januaryAllocation'])#">,
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM[qGetResults.userID & '_augustAllocation'])#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM[qGetResults.regionID & '_januaryAllocation'])#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM[qGetResults.regionID & '_augustAllocation'])#">,
                             <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                         )
                  </cfquery>
@@ -193,16 +193,16 @@
                 <td>January Allocation</td>
             </tr>
             <cfloop query="qGetResults">
-                <input type="hidden" name="#qGetResults.userID#_allocationID" value="#qGetResults.ID#">
+                <input type="hidden" name="#qGetResults.regionID#_allocationID" value="#qGetResults.ID#">
                 <tr bgcolor="#iif(currentrow MOD 2 ,DE("ffffe6") ,DE("white") )#">
                     <td>#qGetResults.regionName# (###qGetResults.regionID#)</td>
                     <td>#qGetResults.firstName# #qGetResults.lastName# ###qGetResults.userID#</td>
-                    <td><input type="text" class="smallField" name="#qGetResults.userID#_augustAllocation" value="#qGetResults.augustAllocation#"></td>
-                    <td><input type="text" class="smallField" name="#qGetResults.userID#_januaryAllocation" value="#qGetResults.januaryAllocation#"></td>
+                    <td><input type="text" class="smallField" name="#qGetResults.regionID#_augustAllocation" value="#qGetResults.augustAllocation#"></td>
+                    <td><input type="text" class="smallField" name="#qGetResults.regionID#_januaryAllocation" value="#qGetResults.januaryAllocation#"></td>
                 </tr>
         	</cfloop>
         </table>
-        
+
 		<cfif listFind("1,2,3,4", CLIENT.userType)>
             <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
                 <tr>
