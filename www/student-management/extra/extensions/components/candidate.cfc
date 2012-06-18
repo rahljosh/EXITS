@@ -896,8 +896,7 @@
             SELECT 
                 <!--- Host Company Specific --->
                 eh.hostCompanyID,
-                eh.name AS hostCompanyName,            
-                eh.authenticationType,
+                eh.name AS hostCompanyName,
                 eh.authentication_secretaryOfState,
                 eh.authentication_departmentOfLabor,
                 eh.authentication_googleEarth,

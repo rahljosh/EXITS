@@ -93,8 +93,10 @@
                 ec.intrep, 
                 ec.wat_placement,
                 ehc.hostCompanyID,
+                ehc.authentication_secretaryOfState,
+                ehc.authentication_departmentOfLabor,
+                ehc.authentication_googleEarth,
                 ehc.name,
-                ehc.authenticationType, 
                 ehc.EIN, 
                 ehc.workmensCompensation,
                 ecpc.jobID AS jobTitleID,  
@@ -413,7 +415,11 @@
 	                            <td class="style1">#DateFormat(qTotalPerAgent.selfConfirmationDate, 'mm/dd/yyyy')#</td>
                             </cfif>
                             <td class="style1">#qTotalPerAgent.selfConfirmationName#</td>
-                            <td class="style1">#qTotalPerAgent.authenticationType#</td>
+                            <td class="style1">
+                            	<cfif VAL(qTotalPerAgent.authentication_secretaryOfState)>Secretary of State<br /></cfif>
+                                <cfif VAL(qTotalPerAgent.authentication_departmentOfLabor)>Deparment of Labor<br /></cfif>
+                                <cfif VAL(qTotalPerAgent.authentication_googleEarth)>Google Earth<br /></cfif>
+                            </td>
                             <td class="style1">#qTotalPerAgent.EIN#</td>
                             <td class="style1">
                             	<cfif ListFind("0,1", qTotalPerAgent.workmensCompensation)>
