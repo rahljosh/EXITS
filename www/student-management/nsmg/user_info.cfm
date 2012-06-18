@@ -940,10 +940,25 @@
                                 	transtype = <cfqueryparam cfsqltype="cf_sql_varchar" value="secondVisit">
                                	AND
                                 	companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.globalCompanyList#" list="yes"> )
-                            </cfquery>	
-                            <strong>Supervising Payments:</strong> <Cfif super_payments.recordcount is 0>$0.00<cfelse>#LSCurrencyFormat(super_payments.amount, 'local')#</cfif><br>
-                            <strong>Placement Payments:</strong> <Cfif place_payments.recordcount is 0>$0.00<cfelse>#LSCurrencyFormat(place_payments.amount, 'local')#</cfif><br>
-                            <strong>Second Visit Payments:</strong> <Cfif second_payments.recordcount is 0>$0.00<cfelse>#LSCurrencyFormat(second_payments.amount, 'local')#</cfif><br>
+                            </cfquery>
+                            <cfquery name="trip_payments" datasource="#APPLICATION.DSN#">
+                            	SELECT
+                                	amount
+                               	FROM
+                                	smg_rep_payments
+                              	WHERE
+                                	agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userid#">
+                              	AND
+                                	transtype = <cfqueryparam cfsqltype="cf_sql_varchar" value="trip">
+                               	AND
+                                	companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.globalCompanyList#" list="yes"> )
+                            </cfquery>
+                            <strong>Supervising Payments:</strong>#LSCurrencyFormat(super_payments.amount, 'local')#<br>
+                            <strong>Placement Payments:</strong>#LSCurrencyFormat(place_payments.amount, 'local')#<br>
+                            <strong>Second Visit Payments:</strong>#LSCurrencyFormat(second_payments.amount, 'local')#<br>
+                            <cfif trip_payments.recordCount NEQ 0>
+                            	<strong>Trip Payments:</strong>#LSCurrencyFormat(trip_payments.amount, 'local')#<br>
+                           	</cfif>
                             <font size = -2><a href="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=paymentReport&userID=#rep_info.userid#">view details</a></font>
                             <cfif CLIENT.usertype lte 4> - <font size = -2><a href="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=selectPayment&user=#rep_info.userid#">make payment</a></cfif>
                         </td>
