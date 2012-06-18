@@ -149,9 +149,24 @@ where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.stuid#">
                 
 					<!--- restrict view of report until the supervising rep approves it.
 					(we're intentionally not including the other checks to only allow SR, RA, etc. to view like on the progress report list) --->
-                    <cfif (pr_sr_approved_date EQ '' and fk_sr_user NEQ client.userid) OR (client.usertype eq 8 and pr_ny_approved_date EQ '')>
-                        Pending
+                    <cfif ( NOT LEN(pr_sr_approved_date) AND fk_sr_user NEQ CLIENT.userid ) OR ( CLIENT.usertype eq 8 AND NOT LEN(pr_ny_approved_date) )>
+                        
+                        <cfif listFind("1,2,3,4", CLIENT.userType)>
+                        
+							<!--- Progress Reports --->
+                            <cfif fk_reportType eq 1>
+                                <a href="javascript:document.theForm_#pr_id#.submit();">View</a>
+                            <!--- Second Visit --->
+                            <cfelse>
+                                <a href="../index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#get_progress_reports.pr_id#" target="_blank">View</a>
+                            </cfif>
+                            
+                        <cfelse>
+                         	Pending  
+                        </cfif>
+                        
                     <cfelse>
+                    
                     	<!--- Progress Reports --->
                        	<cfif fk_reportType eq 1>
                        		<a href="javascript:document.theForm_#pr_id#.submit();">View</a>
@@ -159,6 +174,7 @@ where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.stuid#">
 						<cfelse>
                        		<a href="../index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#get_progress_reports.pr_id#" target="_blank">View</a>
                        	</cfif>
+                        
                     </cfif>
                 </td>
                 <td>
@@ -247,7 +263,7 @@ where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.stuid#">
        				<input type="image" value="close window" src="../pics/close.png"  onClick="javascript:window.close()">
         		</Td>
                 <Td>
-					<cfif client.usertype lte 4>
+					<cfif CLIENT.usertype lte 4>
                     <cfoutput>
                     <Form method="post" action="received_progress_reports.cfm?stuid=#url.stuid#"><input type="image" src="../pics/2visit.png" />
                     <input type="hidden" name="addReport" />
