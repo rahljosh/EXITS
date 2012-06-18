@@ -928,9 +928,22 @@
                                 where agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userid#">
                                 and transtype = 'placement'
                                 AND companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.globalCompanyList#" list="yes">)
-                            </Cfquery>		
+                            </Cfquery>
+                            <cfquery name="second_payments" datasource="#APPLICATION.DSN#">
+                            	SELECT
+                                	sum(amount) AS amount
+                               	FROM
+                                	smg_rep_payments
+                              	WHERE
+                                	agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userid#">
+                              	AND
+                                	transtype = <cfqueryparam cfsqltype="cf_sql_varchar" value="secondVisit">
+                               	AND
+                                	companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.globalCompanyList#" list="yes"> )
+                            </cfquery>	
                             <strong>Supervising Payments:</strong> <Cfif super_payments.recordcount is 0>$0.00<cfelse>#LSCurrencyFormat(super_payments.amount, 'local')#</cfif><br>
                             <strong>Placement Payments:</strong> <Cfif place_payments.recordcount is 0>$0.00<cfelse>#LSCurrencyFormat(place_payments.amount, 'local')#</cfif><br>
+                            <strong>Second Visit Payments:</strong> <Cfif second_payments.recordcount is 0>$0.00<cfelse>#LSCurrencyFormat(second_payments.amount, 'local')#</cfif><br>
                             <font size = -2><a href="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=paymentReport&userID=#rep_info.userid#">view details</a></font>
                             <cfif CLIENT.usertype lte 4> - <font size = -2><a href="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=selectPayment&user=#rep_info.userid#">make payment</a></cfif>
                         </td>
