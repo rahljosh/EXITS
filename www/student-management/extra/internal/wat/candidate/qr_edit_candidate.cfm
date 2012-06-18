@@ -28,18 +28,25 @@
 <cfparam name="FORM.selfConfirmationMethod" default="">
 <cfparam name="FORM.selfEmailConfirmationDate" default="">
 <cfparam name="FORM.selfPhoneConfirmationDate" default="">
+<cfparam name="FORM.cancelStatus" default="">
 <!--- Program Information --->
 <cfparam name="FORM.wat_participation" default="">
 <cfparam name="FORM.wat_participation_info" default="">
 <!--- Host Company --->
+<cfparam name="FORM.authentication_secretaryOfState" default="0">
+<cfparam name="FORM.authentication_departmentOfLabor" default="0">
+<cfparam name="FORM.authentication_googleEarth" default="0">
 <cfparam name="FORM.authenticationType" default="">
 <cfparam name="FORM.EIN" default="">
 <cfparam name="FORM.workmensCompensation" default="">
 <cfparam name="FORM.WCDateExpried" default="">
+<cfparam name="FORM.hostCompanyID" default="0">
+<cfparam name="FORM.candCompID" default="0">
 <!--- End of Host Company --->
 <cfparam name="FORM.selfConfirmationDate" default="">
 <cfparam name="FORM.selfFindJobOffer" default="">
 <cfparam name="FORM.selfConfirmationNotes" default="">
+<cfparam name="FORM.isSecondary" default="0">
 <!--- Transfer ---->
 <cfparam name="FORM.isTransfer" default="0">
 <cfparam name="FORM.dateTransferConfirmed" default="">
@@ -50,6 +57,27 @@
 <cfparam name="FORM.englishAssessment" default="">
 <cfparam name="FORM.englishAssessmentDate" default="">
 <cfparam name="FORM.englishAssessmentComment" default="">
+<!--- Secondary Placement Information --->
+<cfscript>
+	qGetCandidate = APPLICATION.CFC.CANDIDATE.getCandidateByID(uniqueID=URL.uniqueID);
+	qGetAllPlacements = APPLICATION.CFC.CANDIDATE.getCandidatePlacementInformation(candidateID=qGetCandidate.candidateID, displayAll="1");
+</cfscript>
+<cfloop query="qGetAllPlacements">
+	<cfif qGetAllPlacements.isSecondary EQ "1">
+        <cfparam name="FORM.selfJobOfferStatus_#qGetAllPlacements.candCompID#" default="Pending">
+        <cfparam name="FORM.selfConfirmationName_#qGetAllPlacements.candCompID#" default="">
+        <cfparam name="FORM.selfConfirmationMethod_#qGetAllPlacements.candCompID#" default="">
+        <cfparam name="FORM.selfPhoneConfirmationDate_#qGetAllPlacements.candCompID#" default="">
+        <cfparam name="FORM.cancelStatus_#qGetAllPlacements.candCompID#" default="">
+        <cfparam name="FORM.authentication_secretaryOfState_#qGetAllPlacements.candCompID#" default="0">
+        <cfparam name="FORM.authentication_departmentOfLabor_#qGetAllPlacements.candCompID#" default="0">
+        <cfparam name="FORM.authentication_googleEarth_#qGetAllPlacements.candCompID#" default="0">
+        <cfparam name="FORM.EIN_#qGetAllPlacements.candCompID#" default="">
+        <cfparam name="FORM.workmensCompensation_#qGetAllPlacements.candCompID#" default="0">
+        <cfparam name="FORM.WCDateExpried_#qGetAllPlacements.candCompID#" default="">
+        <cfparam name="FORM.selfFindJobOffer_#qGetAllPlacements.candCompID#" default="">
+    </cfif>
+</cfloop>
 
 <cfquery name="qGetCandidateInfo" datasource="#APPLICATION.DSN.Source#">
     SELECT 
@@ -151,6 +179,58 @@
     
 </cfif>
 
+<!--- UPDATE ALL SECONDARY PLACEMENTS --->
+<cfloop query="qGetAllPlacements">
+	<cfif qGetAllPlacements.isSecondary EQ "1">
+    
+    	<!--- REMOVE SECONDARY PLACEMENT --->
+    	<cfif FORM['cancelStatus_#qGetAllPlacements.candCompID#'] EQ "1">
+        
+    		<cfquery datasource="#APPLICATION.DSN.Source#">
+            	UPDATE
+                	extra_candidate_place_company
+               	SET
+                	status = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+              	WHERE
+                	candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetAllPlacements.candCompID#">
+            </cfquery>
+            
+        <!--- UPDATE SECONDARY PLACEMENT --->
+        <cfelse>
+        	
+            <cfquery datasource="#APPLICATION.DSN.Source#">
+            	UPDATE 
+                    extra_hostCompany
+                SET 
+                    EIN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['EIN_#qGetAllPlacements.candCompID#']#">,
+                    authentication_secretaryOfState = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM['authentication_secretaryOfState_#qGetAllPlacements.candCompID#']#">,
+                    authentication_departmentOfLabor = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM['authentication_departmentOfLabor_#qGetAllPlacements.candCompID#']#">,
+                    authentication_googleEarth = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM['authentication_googleEarth_#qGetAllPlacements.candCompID#']#">,
+                    workmensCompensation = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM['workmensCompensation_#qGetAllPlacements.candCompID#']#" null="#NOT IsNumeric(FORM['workmensCompensation_#qGetAllPlacements.candCompID#'])#">,
+                    WCDateExpired = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM['WCDateExpired_#qGetAllPlacements.candCompID#']#" null="#NOT IsDate(FORM['WCDateExpired_#qGetAllPlacements.candCompID#'])#">
+                WHERE
+                    hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetAllPlacements.hostCompanyID#">
+            </cfquery>
+            
+            <cfquery datasource="#APPLICATION.DSN.Source#">
+            	UPDATE 
+                    extra_candidate_place_company
+                SET 
+                    selfConfirmationName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['selfConfirmationName_#qGetAllPlacements.candCompID#']#">,
+                    selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['selfJobOfferStatus_#qGetAllPlacements.candCompID#']#">,
+                    selfPhoneConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM['selfPhoneConfirmationDate_#qGetAllPlacements.candCompID#']#">,
+                    selfConfirmationNotes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['selfConfirmationNotes_#qGetAllPlacements.candCompID#']#">,
+                    selfFindJobOffer = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['selfFindJobOffer_#qGetAllPlacements.candCompID#']#">
+                WHERE 
+                    candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetAllPlacements.candCompID#">
+            </cfquery>
+            
+        </cfif>
+        
+    </cfif>
+    
+</cfloop>
+<!--- END OF UPDATE ALL SECONDARY PLACEMENTS --->
 
 <!---- HOST COMPANY INFORMATION ---->
 <cfif VAL(FORM.hostcompanyID)>
@@ -168,20 +248,42 @@
         </cfquery> 
 
 	</cfif>
-    
-	<!--- Update authenticationType on Host Company Table --->
-    <cfif LEN(FORM.authenticationType)>
-    
+       
+   	<!--- Update authentication_secretaryOfState on Host Company Table ---> 
+    <cfif LEN(FORM.authentication_secretaryOfState)>
         <cfquery datasource="#APPLICATION.DSN.Source#">
-            UPDATE 
+            UPDATE
                 extra_hostCompany
-            SET 
-                authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.authenticationType#">
+            SET
+                authentication_secretaryOfState = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.authentication_secretaryOfState#">
             WHERE
-                hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">
-        </cfquery> 
-
-	</cfif>
+                hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">	
+        </cfquery>
+   	</cfif>
+    
+    <!--- Update authentication_departmentOfLabor on Host Company Table --->
+    <cfif LEN(FORM.authentication_departmentOfLabor)>
+        <cfquery datasource="#APPLICATION.DSN.Source#">
+            UPDATE
+                extra_hostCompany
+            SET
+                authentication_departmentOfLabor = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.authentication_departmentOfLabor#">
+            WHERE
+                hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">	
+        </cfquery>
+   	</cfif>
+    
+    <!--- Update authentication_googleEarth on Host Company Table --->
+    <cfif LEN(FORM.authentication_googleEarth)>
+        <cfquery datasource="#APPLICATION.DSN.Source#">
+            UPDATE
+                extra_hostCompany
+            SET
+                authentication_googleEarth = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.authentication_googleEarth#">
+            WHERE
+                hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">	
+        </cfquery>
+   	</cfif>
     
 	<!--- Update workmensCompensation on Host Company Table --->
     <cfif LEN(FORM.workmensCompensation)>
@@ -210,25 +312,36 @@
         </cfquery> 
 
 	</cfif>
-    	
-	<!--- New Host Company --->
-    <cfif qGetCandidateInfo.hostCompanyID NEQ FORM.hostcompanyID>
         
-        <!--- Set old records to inactive --->
-        <cfquery datasource="#APPLICATION.DSN.Source#">
-            UPDATE
-                extra_candidate_place_company
-            SET
-                status = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-            WHERE
-                candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.candidateID#">
-        </cfquery>
+  	<cfscript>
+		hostCompanies = valueList(qGetAllPlacements.hostCompanyID);
+	</cfscript>
+     
+   	<!--- New Host Company --->   
+   	<cfif NOT ListFind(hostCompanies, FORM.hostCompanyID)>    
         
-        <cfscript>
-			// Add user and time stamp to reason_host
-			FORM.reason_host = FORM.reason_host & '<br /> Added by ' & CLIENT.firstName & ' ' & CLIENT.lastName & ' on ' & DateFormat(now(), 'mm/dd/yyyy') & ' at ' & TimeFormat(now(), 'hh:mm tt');		
-		</cfscript>
+        <!--- Set previous company to inactive if this is not a secondary placement --->
+        <cfif NOT VAL(isSecondary)>
         
+			<!--- Set old records to inactive --->
+            <cfquery datasource="#APPLICATION.DSN.Source#">
+                UPDATE
+                    extra_candidate_place_company
+                SET
+                    status = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                WHERE
+                    candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.candidateID#">
+              	AND
+                	isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+            </cfquery>
+            
+      	</cfif>
+            
+		<cfscript>
+            // Add user and time stamp to reason_host
+            FORM.reason_host = FORM.reason_host & '<br /> Added by ' & CLIENT.firstName & ' ' & CLIENT.lastName & ' on ' & DateFormat(now(), 'mm/dd/yyyy') & ' at ' & TimeFormat(now(), 'hh:mm tt');		
+        </cfscript>
+         
 		<!--- New Host Company Information --->
         <cfquery datasource="#APPLICATION.DSN.Source#">
             INSERT INTO 
@@ -250,6 +363,7 @@
                 selfPhoneConfirmationDate,
                 selfFindJobOffer,
                 selfConfirmationNotes,
+                isSecondary,
                 isTransfer,
                 dateTransferConfirmed,
                 isTransferJobOfferReceived,
@@ -274,6 +388,7 @@
                 <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfPhoneConfirmationDate#" null="#NOT IsDate(FORM.selfPhoneConfirmationDate)#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfFindJobOffer#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationNotes#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isSecondary)#">,
                 <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransfer)#">,
                 <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dateTransferConfirmed#" null="#NOT IsDate(FORM.dateTransferConfirmed)#">,
                 <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransferJobOfferReceived)#">,
@@ -292,14 +407,13 @@
                 jobID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.jobID#">,
                 startdate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.program_startdate#" null="#NOT IsDate(FORM.program_startdate)#">,
                 enddate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.program_enddate#" null="#NOT IsDate(FORM.program_enddate)#">,
-                status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
                 selfConfirmationName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationName#">,
                 selfConfirmationMethod = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationMethod#">,
                 selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfJobOfferStatus#">,
                 selfConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfConfirmationDate#" null="#NOT IsDate(FORM.selfConfirmationDate)#">,
                 selfEmailConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfEmailConfirmationDate#" null="#NOT IsDate(FORM.selfEmailConfirmationDate)#">,
                 selfPhoneConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfPhoneConfirmationDate#" null="#NOT IsDate(FORM.selfPhoneConfirmationDate)#">,
-                selfFindJobOffer = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfFindJobOffer#">,     
+                selfFindJobOffer = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfFindJobOffer#">,
                 selfConfirmationNotes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationNotes#">,                
 				isTransfer = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransfer)#">, 
                 dateTransferConfirmed = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dateTransferConfirmed#" null="#NOT IsDate(FORM.dateTransferConfirmed)#">,
@@ -307,7 +421,7 @@
                 isTransferHousingAddressReceived = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransferHousingAddressReceived)#">,                
                 isTransferSevisUpdated = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransferSevisUpdated)#">
             WHERE 
-                candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCurrentPlacement.candcompid)#">
+                candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCurrentPlacement.candCompID#">
         </cfquery>
 	
     </cfif>
@@ -402,7 +516,9 @@
     UPDATE 
     	extra_candidates
     SET 
-        hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">,
+    	<cfif NOT VAL(FORM.isSecondary)>
+        	hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">,
+       	</cfif>
         firstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.firstname#">, 
         lastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.lastname#">, 
         middlename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.middlename#">,

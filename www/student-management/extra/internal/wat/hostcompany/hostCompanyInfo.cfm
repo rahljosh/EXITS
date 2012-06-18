@@ -55,6 +55,10 @@
     <!--- Other Information --->    
     <cfparam name="FORM.personJobOfferName" default="">
     <cfparam name="FORM.personJobOfferTitle" default="">
+    <cfparam name="FORM.authentication_secretaryOfState" default="0">
+    <cfparam name="FORM.authentication_departmentOfLabor" default="0">
+    <cfparam name="FORM.authentication_googleEarth" default="0">
+    <cfparam name="FORM.authentication_secretaryOfStateExpiration" default="">
     <cfparam name="FORM.authenticationType" default="">
     <cfparam name="FORM.EIN" default="">
 	<cfparam name="FORM.workmensCompensation" default="">
@@ -102,7 +106,10 @@
             eh.homepage,
             eh.personJobOfferName,
             eh.personJobOfferTitle,
-            eh.authenticationType,
+            eh.authentication_secretaryOfState,
+            eh.authentication_departmentOfLabor,
+            eh.authentication_googleEarth,
+            eh.authentication_secretaryOfStateExpiration,
             eh.EIN,
             eh.workmensCompensation,
             eh.WCDateExpired,
@@ -209,7 +216,31 @@
       	WHERE
         	ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.state)#">
     </cfquery>
-
+    
+    <cfquery name="qGetActivePrograms" datasource="MySql">
+    	SELECT
+        	p.programID,
+            p.startDate,
+            p.programName,
+            j.numberPositions
+      	FROM
+        	smg_programs p
+      	INNER JOIN
+    		smg_companies c ON c.companyid = p.companyid
+       	LEFT OUTER JOIN
+        	extra_j1_positions j ON j.programID = p.programID
+            AND
+            	j.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
+      	WHERE
+            dateDiff(p.endDate,NOW()) >= <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+        AND
+            p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        AND
+            p.is_deleted = <cfqueryparam cfsqltype="cf_sql_integet" value="0">
+        AND
+            p.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+    </cfquery>
+    
     
     <!--- FORM Submitted --->
     <cfif FORM.submitted>
@@ -345,7 +376,10 @@
                         <!--- Other Information --->
                         personJobOfferName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.personJobOfferName#">,
                         personJobOfferTitle = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.personJobOfferTitle#">,
-                        authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.authenticationType#">,
+                        authentication_secretaryOfState = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_secretaryOfState)#">,
+                        authentication_departmentOfLabor = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_departmentOfLabor)#">,
+                        authentication_googleEarth = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_googleEarth)#">,
+                        authentication_secretaryOfStateExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_secretaryOfStateExpiration#">,
                         EIN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">,
                         workmensCompensation = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workmensCompensation#" null="#NOT IsNumeric(FORM.workmensCompensation)#">,
                         WCDateExpired = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.WCDateExpired#" null="#NOT IsDate(FORM.WCDateExpired)#">,
@@ -365,6 +399,60 @@
                     WHERE
                         hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">
                 </cfquery>
+                
+                <cfset ind = 0>
+                
+                <!--- Update/Insert J1 Positions --->
+                <cfloop query="qGetActivePrograms">
+                	
+                    <cfset ind += 1>
+                    
+                    <cfquery name="qCheckRecords" datasource="MySql">
+                    	SELECT
+                        	*
+                       	FROM
+                        	extra_j1_positions
+                       	WHERE
+                            hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
+                        AND
+                            programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetActivePrograms.programID#">
+                    </cfquery>
+                    
+                    <cfscript>
+						number = evaluate("##FORM.numberPositions_" & ind & "##");
+					</cfscript>
+                    
+                    <cfif qCheckRecords.recordCount>
+                    	<cfquery datasource="MySql">
+                        	UPDATE
+                            	extra_j1_positions
+                           	SET
+                            	numberPositions = <cfqueryparam cfsqltype="cf_sql_integer" value="#number#">
+                          	WHERE
+                                hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
+                            AND
+                                programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetActivePrograms.programID#">
+                        </cfquery>
+                   	<cfelse>
+                    	<cfquery datasource="MySql">
+                        	INSERT INTO
+                            	extra_j1_positions
+                           		(
+                                	hostID,
+                                    programID,
+                                    numberPositions
+                                )
+                          	VALUES
+                            	(
+                                	<cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">,
+                                    <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetActivePrograms.programID#">,
+                                    <cfqueryparam cfsqltype="cf_sql_integer" value="#number#">
+                                )
+                        </cfquery>
+                    </cfif>
+                    
+                </cfloop>
+                <!--- End Update / Insert J1 Positions --->
                 
             <cfelse>
 
@@ -405,7 +493,10 @@
                         <!--- Other Information --->
                         personJobOfferName,
                         personJobOfferTitle,
-                        authenticationType,
+                        authentication_secretaryOfState,
+                        authentication_departmentOfLabor,
+                        authentication_googleEarth,
+                        authentication_secretaryOfStateExpiration,
                         EIN,
                         workmensCompensation,
                         WCDateExpired,
@@ -460,7 +551,10 @@
 						<!--- Other Information --->
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.personJobOfferName#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.personJobOfferTitle#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.authenticationType#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_secretaryOfState)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_departmentOfLabor)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_googleEarth)#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_secretaryOfStateExpiration#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workmensCompensation#" null="#NOT IsNumeric(FORM.workmensCompensation)#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.WCDateExpired#" null="#NOT IsDate(FORM.WCDateExpired)#">,
@@ -535,8 +629,10 @@
 			FORM.supervisor_email = qGetHostCompanyInfo.supervisor_email;
 			// Other Information
 			FORM.personJobOfferName = qGetHostCompanyInfo.personJobOfferName;
-			FORM.personJobOfferTitle = qGetHostCompanyInfo.personJobOfferTitle;
-			FORM.authenticationType = qGetHostCompanyInfo.authenticationType;
+			FORM.authentication_secretaryOfState = qGetHostCompanyInfo.authentication_secretaryOfState;
+			FORM.authentication_departmentOfLabor = qGetHostCompanyInfo.authentication_departmentOfLabor;
+			FORM.authentication_googleEarth = qGetHostCompanyInfo.authentication_googleEarth;
+			FORM.authentication_secretaryOfStateExpiration = qGetHostCompanyInfo.authentication_secretaryOfStateExpiration;
 			FORM.EIN = qGetHostCompanyInfo.EIN;
 			FORM.workmensCompensation = qGetHostCompanyInfo.workmensCompensation;
 			FORM.WCDateExpired = qGetHostCompanyInfo.WCDateExpired;
@@ -585,7 +681,10 @@
 
 </cfsilent>
 
-<script language="JavaScript"> 
+<script language="javascript" src="../linked/js/ajaxUpload.js"></script>
+
+<script language="JavaScript">
+
 	$(document).ready(function() {
 		// $(".formField").attr("disabled","disabled");
 		
@@ -988,6 +1087,22 @@
 	// Error handler for the asynchronous functions. 
 	var myErrorHandler = function(statusCode, statusMsg) { 
 		alert('Status: ' + statusCode + ', ' + statusMsg); 
+	}
+	
+	$().ready(function() {
+					   var hostCompanyID = $('#hostCompanyID').val();
+					   new AjaxUpload('business_license_upload', {
+										action: '../wat/hostCompany/imageUploadPrint.cfm?hostCompanyID='+hostCompanyID,
+										name: 'image'
+									  });
+					   });
+	
+	var printBusinessLicense = function() {
+		var hostCompanyID = $('#hostCompanyID').val();
+		var printURL = document.URL;
+		printURL = printURL.substring(0, printURL.indexOf("/index.cfm"));
+		printURL += "/hostcompany/imageUploadPrint.cfm?hostCompanyID=" + hostCompanyID + "&option=print";
+		window.open(printURL, 300, 400);
 	}
 	
 </script>
@@ -1420,18 +1535,79 @@
                                                 <input type="text" name="personJobOfferTitle" id="personJobOfferTitle" value="#FORM.personJobOfferTitle#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
+                                        
+                                        <cfset ind = 0>
+                                        
+                                        <!--- J1 Positions --->
+                                        <cfloop query="qGetActivePrograms">
+                                        	<cfset ind += 1>
+                                        	<tr>
+                                            	<td class="style1" align="right"><strong>J1 Positions - #qGetActivePrograms.programName#:</strong></td>
+                                                <td class="style1" bordercolor="##FFFFFF">
+                                                    <select name="numberPositions_#ind#" id="numberPositions_#ind#" class="style1 editPage">
+                                                        <cfloop from="0" to="100" index="j">
+                                                            <option value="#j#" <cfif qGetActivePrograms.numberPositions EQ '#j#'>selected</cfif>>#j#</option>
+                                                        </cfloop>
+                                                    </select>
+                                                    <span class="readOnly">#qGetActivePrograms.numberPositions#</span>
+                                                </td>
+                                            </tr>
+                                        </cfloop>
+                                        <!--- End J1 Positions --->
+                                        
+                                        <!--- Authentication --->
                                         <tr>
-                                            <td class="style1" align="right"><strong>Authentication:</strong></td>
-                                            <td class="style1" bordercolor="##FFFFFF">
-                                                <span class="readOnly">#FORM.authenticationType#</span>
-                                                <select name="authenticationType" id="authenticationType" class="style1 editPage"> 
-                                                    <option value="" <cfif NOT LEN(FORM.authenticationType)>selected</cfif> ></option>
-                                                    <option value="Secretary of State website" <cfif FORM.authenticationType EQ 'Secretary of State website'>selected</cfif> >Secretary of State website</option>
-                                                    <option value="US Department of Labor website" <cfif FORM.authenticationType EQ 'US Department of Labor website'>selected</cfif> >US Department of Labor website</option>
-                                                    <option value="Google Earth" <cfif FORM.authenticationType EQ 'Google Earth'>selected</cfif> >Google Earth</option>
-                                                </select>
-                                            </td>	                                                    
-                                        </tr>
+                                        
+                                        	<td class="style1" colspan="2">
+            
+                                                <table width="100%" cellpadding="3" cellspacing="3" align="center" style="border:1px solid ##C7CFDC; background-color:##F7F7F7;">
+                                                	
+                                                    <tr>
+                                                    	<td colspan="2">
+                                                        	<strong><center>Authentication</center></strong>
+                                                        </td>
+                                                    </tr>
+                                                
+                                             		<tr>
+                                                        <td class="style1" align="right" width="30%"><label for="authentication_secretaryOfState"><strong>Secretary of State:</strong></label></td>
+                                                        <td class="style1" width="70%">
+                                                            <input type="checkbox" name="authentication_secretaryOfState" id="authentication_secretaryOfState" value="1" class="formField" disabled <cfif VAL(FORM.authentication_secretaryOfState)> checked </cfif> /> 
+                                                            <span class="editPage">
+                                                            	Expiration: <input type="text" name="authentication_secretaryOfStateExpiration" id="authentication_secretaryOfStateExpiration" value="#DateFormat(authentication_secretaryOfStateExpiration, 'mm/dd/yyyy')#" class="style1 datePicker editPage" />
+                                                            	<input type="image" src="../pics/arrowUp.jpg" class="editPage" value="Upload" name="business_license_upload" id="business_license_upload" style="float:right; padding-right:25px;" />										
+                                                          	</span>
+                                                            <span class="readOnly">
+                                                            	<cfif FORM.authentication_secretaryOfStateExpiration NEQ "">
+                                                                	Expiration: 
+                                                                	<cfif  FORM.authentication_secretaryOfStateExpiration LT NOW()>
+                                                                    	<span style="color:red;">#DateFormat(FORM.authentication_secretaryOfStateExpiration, "mm/dd/yyyy")#</span>
+                                                                    <cfelse>
+                                                                		#DateFormat(FORM.authentication_secretaryOfStateExpiration, "mm/dd/yyyy")#
+                                                              		</cfif>
+																</cfif>
+                                                           	</span>
+                                                            	<img class="readOnly" src="../pics/Print30x30.png" alt="print" onclick="printBusinessLicense();" style="float:right; padding-right:25px;" />
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="style1" align="right"><label for="authentication_departmentOfLabor"><strong>Department of Labor:</strong></label></td>
+                                                        <td class="style1">
+                                                            <input type="checkbox" name="authentication_departmentOfLabor" id="authentication_departmentOfLabor" value="1" class="formField" disabled <cfif VAL(FORM.authentication_departmentOfLabor)> checked </cfif> />
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="style1" align="right"><label for="authentication_googleEarth"><strong>Google Earth:</strong></label></td>
+                                                        <td class="style1">
+                                                            <input type="checkbox" name="authentication_googleEarth" id="authentication_googleEarth" value="1" class="formField" disabled <cfif VAL(FORM.authentication_googleEarth)> checked </cfif> />
+                                                        </td>
+                                                    </tr>
+                                                    
+                                                </table>
+                                              
+                                         	</td>
+                                           
+                                      	</tr>
+                                        
                                         <tr>
                                             <td class="style1" align="right"><strong>EIN:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">

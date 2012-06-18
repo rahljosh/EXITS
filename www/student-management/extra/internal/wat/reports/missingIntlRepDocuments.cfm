@@ -33,17 +33,18 @@
                 u.companyID, 
                 u.businessname,
 				<!--- Documents Control --->
+                watDocNotarizedFinancialStatementExpiration,
                 watDocBusinessLicense,
                 watDocEnglishBusinessLicense,
-                watDocBankruptcyDisclosure,
+                watDocBankruptcyDisclosureExpiration,
                 watDocWrittenReference1,
                 watDocWrittenReference2,
                 watDocWrittenReference3,
                 watDocPreviousExperience,
                 watDocOriginalCBC,
                 watDocEnglishCBC,
-                watDocOriginalAdvertisingMaterial,
-                watDocEnglishAdvertisingMaterial,
+                watDocOriginalAdvertisingMaterialExpiration,
+                watDocEnglishAdvertisingMaterialExpiration,
                 watDocLetterNotEngageThirdParties
             FROM 
                 smg_users u
@@ -66,12 +67,18 @@
 			</cfif>
             
             AND (
+                	u.watDocNotarizedFinancialStatementExpiration IS NULL
+               	OR
+                	u.watDocNotarizedFinancialStatementExpiration < <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+              	OR
                     u.watDocBusinessLicense = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
                 OR
                     u.watDocEnglishBusinessLicense = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
                 OR 
-                    u.watDocBankruptcyDisclosure = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
-                OR 
+                    u.watDocBankruptcyDisclosureExpiration IS NULL
+               	OR
+                	u.watDocBankruptcyDisclosureExpiration < <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+              	OR
                     u.watDocWrittenReference1 = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
                 OR 
                     u.watDocWrittenReference2 = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
@@ -84,10 +91,14 @@
                 OR 
                     u.watDocEnglishCBC = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
                 OR 
-                    u.watDocOriginalAdvertisingMaterial = <cfqueryparam cfsqltype="cf_sql_integer" value="0">   
-                OR
-                	u.watDocEnglishAdvertisingMaterial = <cfqueryparam cfsqltype="cf_sql_integer" value="0">  
-                OR
+                	u.watDocOriginalAdvertisingMaterialExpiration IS NULL
+               	OR
+                	u.watDocOriginalAdvertisingMaterialExpiration <  <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+              	OR
+                	u.watDocEnglishAdvertisingMaterialExpiration IS NULL
+               	OR
+                	u.watDocEnglishAdvertisingMaterialExpiration < <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+              	OR
                 	u.watDocLetterNotEngageThirdParties = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
 				)                    
             ORDER BY 
@@ -182,17 +193,38 @@
                 <tr <cfif qGetResults.currentrow mod 2>bgcolor="##E4E4E4"</cfif>>
                     <td valign="top" class="style1">#qGetResults.businessname#</td>
                     <td valign="top" class="style1" style="color:##CC0000">
+                    	<cfif qGetResults.watDocNotarizedFinancialStatementExpiration LT NOW()>- Notarized Recent Financial Statement
+                        	<cfif qGetResults.watDocNotarizedFinancialStatementExpiration NEQ "">
+                            	(Expired: #DateFormat(qGetResults.watDocNotarizedFinancialStatementExpiration,"mm/dd/yyyy")#)
+							</cfif>
+                            <br />
+						</cfif>
                         <cfif NOT VAL(qGetResults.watDocBusinessLicense)>- Original business license<br /></cfif>
                         <cfif NOT VAL(qGetResults.watDocEnglishBusinessLicense)>- English business license<br /></cfif>
-						<cfif NOT VAL(qGetResults.watDocBankruptcyDisclosure)>- Disclosure of any previous bankruptcy and of any pending legal actions<br /></cfif>
+                        <cfif qGetResults.watDocBankruptcyDisclosureExpiration LT NOW()>- Disclosure of any previous bankruptcy and of any pending legal actions
+                        	<cfif qGetResults.watDocBankruptcyDisclosureExpiration NEQ "">
+                            	(Expired: #DateFormat(qGetResults.watDocBankruptcyDisclosureExpiration,"mm/dd/yyyy")#)
+							</cfif>
+                            <br />
+						</cfif>
 						<cfif NOT VAL(qGetResults.watDocWrittenReference1)>- Written references from current business associates or partner organizations 1<br /></cfif>
 						<cfif NOT VAL(qGetResults.watDocWrittenReference2)>- Written references from current business associates or partner organizations 2<br /></cfif>
                         <cfif NOT VAL(qGetResults.watDocWrittenReference3)>- Written references from current business associates or partner organizations 3<br /></cfif>
 						<cfif NOT VAL(qGetResults.watDocPreviousExperience)>- Summary of previous experience conducting J-1 exchange visitor program activities<br /></cfif>
                         <cfif NOT VAL(qGetResults.watDocOriginalCBC)>- Original criminal background check<br /></cfif>
 						<cfif NOT VAL(qGetResults.watDocEnglishCBC)>- English criminal background check<br /></cfif>
-                        <cfif NOT VAL(qGetResults.watDocOriginalAdvertisingMaterial)>- Original sponsor-approved advertising materials<br /></cfif>
-						<cfif NOT VAL(qGetResults.watDocEnglishAdvertisingMaterial)>- English sponsor-approved advertising materials<br /></cfif>
+                        <cfif qGetResults.watDocOriginalAdvertisingMaterialExpiration LT NOW()>- Original sponsor-approved advertising materials
+                        	<cfif qGetResults.watDocOriginalAdvertisingMaterialExpiration NEQ "">
+                            	(Expired: #DateFormat(qGetResults.watDocOriginalAdvertisingMaterialExpiration,"mm/dd/yyyy")#)
+							</cfif>
+                            <br />
+						</cfif>
+                        <cfif qGetResults.watDocEnglishAdvertisingMaterialExpiration LT NOW()>- English sponsor-approved advertising materials
+                        	<cfif qGetResults.watDocEnglishAdvertisingMaterialExpiration NEQ "">
+                            	(Expired: #DateFormat(qGetResults.watDocEnglishAdvertisingMaterialExpiration,"mm/dd/yyyy")#)
+							</cfif>
+                            <br />
+						</cfif>
 						<cfif NOT VAL(qGetResults.watDocLetterNotEngageThirdParties)>- Letter confirming that the organization will not engage in cooperation with third parties<br /></cfif>
                     </td>
                 </tr>

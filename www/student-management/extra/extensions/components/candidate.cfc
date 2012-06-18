@@ -886,6 +886,8 @@
 
 	<cffunction name="getCandidatePlacementInformation" access="public" returntype="query" output="false" hint="Gets host company information for a candidate">
     	<cfargument name="candidateID" required="yes" hint="candidateID is required">
+        <cfargument name="displayAll" default="0" hint="displayAll is not required">
+        <cfargument name="candCompID" default="0" hint="candCompID is not required">
         <cfargument name="placementStatus" default="1" hint="Gets active placement by default">
 
         <cfquery 
@@ -896,6 +898,9 @@
                 eh.hostCompanyID,
                 eh.name AS hostCompanyName,            
                 eh.authenticationType,
+                eh.authentication_secretaryOfState,
+                eh.authentication_departmentOfLabor,
+                eh.authentication_googleEarth,
                 eh.EIN,
                 eh.workmensCompensation,
                 eh.WCDateExpired,
@@ -916,6 +921,7 @@
                 ecpc.selfConfirmationNotes,
                 ecpc.reason_host,
                 ecpc.isTransfer,
+                ecpc.isSecondary,
                 ecpc.isTransferHousingAddressReceived,
                 ecpc.isTransferJobOfferReceived,
                 ecpc.isTransferSevisUpdated,
@@ -934,6 +940,14 @@
             <cfif LEN(ARGUMENTS.placementStatus)>
                 AND 	
                     ecpc.status = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.placementStatus)#">
+            </cfif>
+            <cfif ARGUMENTS.displayAll EQ 0>
+                AND
+                    ecpc.isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+          	</cfif>
+            <cfif ARGUMENTS.candCompID NEQ 0>
+            	AND
+                	ecpc.candCompID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candCompID#">
             </cfif>
             
             ORDER BY

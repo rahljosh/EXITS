@@ -8,7 +8,8 @@
     <cfparam name="FORM.userID" default="0">
     <cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.submitted" default="0">
-    <Cfparam name="FORM.orderBy" default="businessname">
+    <cfparam name="FORM.orderBy" default="businessname">
+    <cfparam name="FORM.placeType" default="replacement">
         
     <cfquery name="qGetIntlRepList" datasource="MySql">
         SELECT 
@@ -38,9 +39,9 @@
                 ecpc.isTransferHousingAddressReceived, 
                 ecpc.isTransferJobOfferReceived, 
                 ecpc.isTransferSevisUpdated,
-                ecpc.dateTransferConfirmed,
                 ecpc.selfConfirmationName,
                 ecpc.selfConfirmationMethod,
+                ecpc.selfJobOfferStatus,
                 ec.firstname, 
                 ec.lastname, 
                 ec.email, 
@@ -61,8 +62,16 @@
                 smg_users u on u.userid = ec.intrep
             LEFT JOIN 
                 smg_programs p on p.programid = ec.programid
-            WHERE 
-                ecpc.isTransfer = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
+            WHERE
+            	<cfif FORM.placeType EQ "replacement">
+                	ecpc.isTransfer = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+               	<cfelseif FORM.placeType EQ "secondary">
+                	ecpc.isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+              	<cfelse>
+                	( ecpc.isTransfer = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                    OR
+                    ecpc.isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> )
+              	</cfif>
     		AND
             	ecpc.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
                 
@@ -78,15 +87,17 @@
                     u.userid =  <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userid#">
             </Cfif>
                 
-            AND 
+            AND
                 (
                     ecpc.isTransferHousingAddressReceived = <cfqueryparam cfsqltype="cf_sql_bit" value="0">  
                 OR 
                     ecpc.isTransferJobOfferReceived = <cfqueryparam cfsqltype="cf_sql_bit" value="0">  
                 OR 
-                    ecpc.isTransferSevisUpdated = <cfqueryparam cfsqltype="cf_sql_bit" value="0">  
-                OR
-                    ecpc.dateTransferConfirmed IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                    ecpc.isTransferSevisUpdated = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+               	OR
+                	ecpc.selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="Pending">
+               	OR
+                	ecpc.selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
                 )
             
             ORDER BY 
@@ -115,7 +126,7 @@
         <table width="95%" cellpadding="4" cellspacing="0" border="0" align="center">
             <tr valign="middle" height="24">
                 <td valign="middle" bgcolor="##E4E4E4" class="title1" colspan=2>
-                    <font size="2" face="Verdana, Arial, Helvetica, sans-serif">&nbsp; Missing Documents -> Missing Transfer Documents</font>
+                    <font size="2" face="Verdana, Arial, Helvetica, sans-serif">&nbsp; Missing Documents -> Missing Replacement/Secondary Documents</font>
                 </td>
             </tr>
             <tr valign="middle" height="24">
@@ -152,6 +163,16 @@
                         <option value="lastName" <cfif FORM.orderBy EQ 'lastName'> selected </cfif> >Last Name</option>
                         <option value="firstName" <cfif FORM.orderBy EQ 'firstName'> selected </cfif> >First Name</option>
                         <option value="hostCompanyName" <cfif FORM.orderBy EQ 'hostCompanyName'> selected </cfif> >Placement Information</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td valign="middle" align="right" class="style1"><b>Placement Type:</b></td>
+                <td> 
+                    <select name="placeType" class="style1">
+                    	<option value="all" <cfif FORM.placeType EQ 'all'> selected </cfif> >All</option>
+                        <option value="replacement" <cfif FORM.placeType EQ 'replacement'> selected </cfif> >Replacement</option>
+                        <option value="secondary" <cfif FORM.placeType EQ 'secondary'> selected </cfif> >Secondary</option>
                     </select>
                 </td>
             </tr>
@@ -217,7 +238,7 @@
                             <cfif NOT VAL(qGetMissingDocs.isTransferHousingAddressReceived)><font color="##CC0000">Housing Address</font><br /></cfif>
                             <cfif NOT VAL(qGetMissingDocs.isTransferJobOfferReceived)><font color="##CC0000">Job Offer</font><br /></cfif>
                             <cfif NOT VAL(qGetMissingDocs.isTransferSevisUpdated)><font color="##CC0000">SEVIS Update</font><br /></cfif>
-                            <cfif NOT isDate(qGetMissingDocs.dateTransferConfirmed)><font color="##CC0000">Confirmation Date</font><br /></cfif>
+                           	<cfif qGetMissingDocs.selfJobOfferStatus EQ "" OR qGetMissingDocs.selfJobOfferStatus EQ "Pending"><font color="##CC0000">Placement Vetting</font><br /></cfif>
                         </td>
                     </tr>
                 </cfloop>
@@ -269,14 +290,14 @@
                     </style>
                     
                     <img src="../../pics/black_pixel.gif" width="100%" height="2">
-                    <strong><font size="4" face="Verdana, Arial, Helvetica, sans-serif" >Missing Documents Report</font></strong><br>                
+                    <strong><font size="4" face="Verdana, Arial, Helvetica, sans-serif" >Missing Documents Report</font></strong><br>
                     
                     <!--- Include Report --->
                     #reportContent#
                 </cfdocument>
             </cfcase>
         
-            <cfdefaultcase>    
+            <cfdefaultcase>
                 <div align="center" class="style1">
                     Print results will replace the menu options and take a bit longer to generate. <br />
                     Onscreen will allow you to change criteria with out clicking your back button.

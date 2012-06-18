@@ -27,6 +27,14 @@
 	ORDER BY candcompid ASC
 </cfquery>
 
+<script type="text/javascript">
+	var openWindow = function(url, setHeight, setWidth) { 
+		newwindow = window.open(url, 'Application', 'height=' + setHeight + ', width=' + setWidth + ', location=no, scrollbars=yes, menubar=no, toolbars=no, resizable=yes'); 
+		if(window.focus) {
+			newwindow.focus()
+		}
+	}
+</script>
 
 <cfoutput query="get_candidate_info">
 
@@ -51,6 +59,7 @@
 					<td class="style2" bgcolor="8FB6C9">Start Date</td>
 					<td class="style2" bgcolor="8FB6C9">End Date</td>
 					<td class="style2" bgcolor="8FB6C9">Status</td>
+                    <td class="style2" bgcolor="8FB6C9">Placement Vetting</td>
 				</tr>
 				<cfif host_history.recordcount EQ '0'>
 				<tr><td colspan="6" align="center" class="style1">There is no Host Company History for this student.</td></tr>
@@ -58,11 +67,20 @@
 					<cfloop query="host_history">
 						<tr bgcolor="#iif(host_history.currentrow MOD 2 ,DE("ffffff") ,DE("F7F7F7") )#">
 							<td align="left" class="style5">#DateFormat(placement_date, 'mm/dd/yyyy')#</td>
-							<td align="left" class="style5"><cfif hostcompanyid EQ ''>Unassigned<cfelse>#name# (###hostcompanyid#)</cfif></td>
+							<td align="left" class="style5">
+								<cfif hostcompanyid EQ ''>
+                                	Unassigned
+								<cfelse>
+                                	<a href="../index.cfm?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#hostcompanyid#" target="_blank">#name# (###hostcompanyid#)</a>
+								</cfif>
+                          	</td>
 							<td align="left" class="style5">#reason_host#</td>
 							<td align="left" class="style5">#DateFormat(startdate, 'mm/dd/yyyy')#</td>
 							<td align="left" class="style5">#DateFormat(enddate, 'mm/dd/yyyy')#</td>
 							<td align="left" class="style5"><CFif status EQ 1>Active<CFelse>Inactive</CFif></td>
+                            <td align="left" class="style5">
+                            	<a href="javascript:openWindow('../candidate/placementVettingPrint.cfm?uniqueid=#URL.unqid#&candCompID=#candCompID#', 800, 900);" class="style5">View</a>
+                           	</td>
 						</tr>
 					</cfloop>
 				</cfif>
