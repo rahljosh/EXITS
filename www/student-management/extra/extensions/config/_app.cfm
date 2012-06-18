@@ -212,6 +212,9 @@
 	// Host Company Logo
 	APPLICATION.PATH.hostLogo = APPLICATION.PATH.UploadDocumentRoot & 'web-hostlogo/';
 
+	// Business License
+	APPLICATION.PATH.businessLicense = APPLICATION.PATH.UploadDocumentRoot & 'business-license/';
+
 	// Candidate Picture
 	APPLICATION.PATH.uploadCandidatePicture = APPLICATION.PATH.UploadDocumentRoot & 'web-candidates/';
 	

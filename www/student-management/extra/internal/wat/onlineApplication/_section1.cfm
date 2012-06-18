@@ -661,6 +661,10 @@
                     <input type="hidden" name="email" id="email" value="#FORM.email#" class="largeField" maxlength="100" />
 	                <p class="note">Click on Update Login to update your email address.</p>
                 </cfif>
+                <p class="note" style="color:red;">
+                    <u>Attention:</u> CSB will use this Email for all official communication with the participant during the program.<br /> 
+                    The email must be <u>correct</u> and up-to-date. If the Email changes prior or during the program, you must notify CSB immediately by providing the new information.
+                </p>
             </cfif>            
         </div>
 		

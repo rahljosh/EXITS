@@ -182,7 +182,7 @@
             
                 <table width="98%" cellpadding="3" cellspacing="0" align="center" style="margin-top:20px; margin-bottom:20px; border:1px solid ##4F8EA4"> 
                     <tr style="font-weight:bold;">
-                        <td colspan="4" style="font-weight:bold; font-size: 12px;">#qGetStates.statename#: #qGetNumState.recordCount#</td>
+                        <td colspan="4" style="font-weight:bold; font-size: 11px;">#qGetStates.statename#: #qGetNumState.recordCount#</td>
                     </tr>
                     
                     <cfloop query="qGetCities">
@@ -199,7 +199,7 @@
                         </cfquery>
                         
                         <tr style="font-weight:bold;">
-                            <td colspan="4" style="font-weight:bold; font-size: 8.5px; font-family:Verdana, Geneva, sans-serif;">&nbsp;&nbsp&nbsp;&nbsp;&nbsp;#qGetCities.city#: #qGetNumCity.recordCount#</td>
+                            <td colspan="4" style="font-weight:bold; font-size: 8px; font-family:Verdana, Geneva, sans-serif;">&nbsp;&nbsp&nbsp;&nbsp;&nbsp;#qGetCities.city#: #qGetNumCity.recordCount#</td>
                         </tr>
                         
                         <tr style="background-color:##4F8EA4; color:##FFF; padding:5px; font-weight:bold; font-size: 9px;">

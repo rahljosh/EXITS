@@ -30,7 +30,7 @@
 <!--- Ajax Call to the Component --->
 <cfajaxproxy cfc="extra.extensions.components.candidate" jsclassname="candidate">
 
-<script language="javascript">
+<script type="text/javascript">
 	// Function to find the index in an array of the first entry with a specific value. 
 	// It is used to get the index of a column in the column list. 
 	Array.prototype.findIdx = function(value){ 
@@ -39,7 +39,7 @@
 				return i; 
 			} 
 		} 
-	} 
+	}
 	
 	// Bring the list when the page is ready
 	// $(document).ready(function() {
@@ -65,7 +65,7 @@
 		
 		// This time, pass the intlRep ID to the getCandidateList CFC function. 
 		c.getMonthlyEvaluationList(intlRep,programID,evaluationID);
-	} 
+	}
 
 	// Callback function to handle the results returned by the getCandidateList function and populate the table. 
 	var populateCandidateList = function(verList) { 
@@ -108,6 +108,7 @@
 				tableHeader += '<td width="100px" class="listTitle style2" align="center">Evaluation 3</td>';
 				tableHeader += '<td width="100px" class="listTitle style2" align="center">Evaluation 4</td>';
 			}
+			tableHeader +=  '<td width="100px" class="listTitle style2" align="center">Cultural Activity</td>';
 		tableHeader += '</tr>';
 		
 		// Append Table Header to HTML
@@ -164,70 +165,71 @@
 				if ( (evaluationID == 1) || (evaluationID == 5) ) {
 					// Month 1
 					if (tempDate.setDate(cIn.getDate() + 25) <= now) {
-						tableBody += '<td align="center" class="style5" style="background-color:red;"><a href="javascript:setEvaluationReceived(' + candidateID + ',1);" class="style4">[Set as Received]</a></td>';
+						tableBody += '<td align="center" class="style5" style="background-color:red;"><a href="javascript:setEvaluationReceived(' + candidateID + ',1);" class="style4">Received</a></td>';
 					} else {
-						tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',1);" class="style4">[Set as Received]</a></td>';
+						tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',1);" class="style4">Received</a></td>';
 					}
 				} else if ( (evaluationID == 2) || (evaluationID == 6) ) {
 					// Month 2
 					if (tempDate.setDate(cIn.getDate() + 55) <= now) {
-						tableBody += '<td align="center" class="style5" style="background-color:red;"><a href="javascript:setEvaluationReceived(' + candidateID + ',2);" class="style4">[Set as Received]</a></td>';
+						tableBody += '<td align="center" class="style5" style="background-color:red;"><a href="javascript:setEvaluationReceived(' + candidateID + ',2);" class="style4">Received</a></td>';
 					} else {
-						tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',2);" class="style4">[Set as Received]</a></td>';
+						tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',2);" class="style4">Received</a></td>';
 					}
 				} else if ( (evaluationID == 3) || (evaluationID == 7) ) {
 					// Month 2
 					if (tempDate.setDate(cIn.getDate() + 85) <= now) {
-						tableBody += '<td align="center" class="style5" style="background-color:red;"><a href="javascript:setEvaluationReceived(' + candidateID + ',3);" class="style4">[Set as Received]</a></td>';
+						tableBody += '<td align="center" class="style5" style="background-color:red;"><a href="javascript:setEvaluationReceived(' + candidateID + ',3);" class="style4">Received</a></td>';
 					} else {
-						tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',3);" class="style4">[Set as Received]</a></td>';
+						tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',3);" class="style4">Received</a></td>';
 					}
 				} else if ( (evaluationID == 4) || (evaluationID == 8) ) {
 					// Month 2
 					if (tempDate.setDate(cIn.getDate() + 115) <= now) {
-						tableBody += '<td align="center" class="style5" style="background-color:red;"><a href="javascript:setEvaluationReceived(' + candidateID + ',4);" class="style4">[Set as Received]</a></td>';
+						tableBody += '<td align="center" class="style5" style="background-color:red;"><a href="javascript:setEvaluationReceived(' + candidateID + ',4);" class="style4">Received</a></td>';
 					} else {
-						tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',4);" class="style4">[Set as Received]</a></td>';
+						tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',4);" class="style4">Received</a></td>';
 					}
 				} else { 
 					// Display All Evaluations
 					if ( evaluation1 == '' ) {
 						if (tempDate.setDate(cIn.getDate() + 25) <= now) {
-							tableBody += '<td align="center" class="style5" style="background-color:red;"><a href="javascript:setEvaluationReceived(' + candidateID + ',1);" class="style4">[Set as Received]</a></td>';
+							tableBody += '<td align="center" class="style5" style="background-color:red;"><a href="javascript:setEvaluationReceived(' + candidateID + ',1);" class="style4">Received</a></td>';
 						} else {
-							tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',1);" class="style4">[Set as Received]</a></td>';
+							tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',1);" class="style4">Received</a></td>';
 						}
 					} else {
 						tableBody += '<td align="center" class="style5">' + evaluation1 + '</td>';
 					}
 					if ( evaluation2 == '' ) {
 						if (tempDate.setDate(cIn.getDate() + 55) <= now) {
-							tableBody += '<td align="center" class="style5" style="background-color:red;"><a href="javascript:setEvaluationReceived(' + candidateID + ',2);" class="style4">[Set as Received]</a></td>';
+							tableBody += '<td align="center" class="style5" style="background-color:red;"><a href="javascript:setEvaluationReceived(' + candidateID + ',2);" class="style4">Received</a></td>';
 						} else {
-							tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',2);" class="style4">[Set as Received]</a></td>';
+							tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',2);" class="style4">Received</a></td>';
 						}
 					} else {
 						tableBody += '<td align="center" class="style5">' + evaluation2 + '</td>';
 					}
 					if ( evaluation3 == '' ) {
 						if (tempDate.setDate(cIn.getDate() + 85) <= now) {
-							tableBody += '<td align="center" class="style5" style="background-color:red;"><a href="javascript:setEvaluationReceived(' + candidateID + ',3);" class="style4">[Set as Received]</a></td>';
+							tableBody += '<td align="center" class="style5" style="background-color:red;"><a href="javascript:setEvaluationReceived(' + candidateID + ',3);" class="style4">Received</a></td>';
 						} else {
-							tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',3);" class="style4">[Set as Received]</a></td>';
+							tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',3);" class="style4">Received</a></td>';
 						}
 					} else {
 						tableBody += '<td align="center" class="style5">' + evaluation3 + '</td>';
 					}
 					if ( evaluation4 == '' ) {
 						if (tempDate.setDate(cIn.getDate() + 115) <= now) {
-							tableBody += '<td align="center" class="style5" style="background-color:red;"><a href="javascript:setEvaluationReceived(' + candidateID + ',4);" class="style4">[Set as Received]</a></td>';
+							tableBody += '<td align="center" class="style5" style="background-color:red;"><a href="javascript:setEvaluationReceived(' + candidateID + ',4);" class="style4">Received</a></td>';
 						} else {
-							tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',4);" class="style4">[Set as Received]</a></td>';
+							tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',4);" class="style4">Received</a></td>';
 						}
 					} else {
 						tableBody += '<td align="center" class="style5">' + evaluation4 + '</td>';
 					}
 				}
+			tableBody += '<td align="center" class="style5"><a href="" onClick="javascript:culturalActivityPopup(\'' + uniqueID + '\')" class="style4 jQueryModal">Add</a>';
 			tableBody += '</tr>';
 			// Append table rows
 			$("#candidateList").append(tableBody);
@@ -235,7 +237,19 @@
 		
 	}
 	// --- END OF CANDIDATE LIST --- //
-
+	
+	var culturalActivityPopup = function(unqID) {
+		var url = "candidate/culturalActivityReport.cfm?uniqueID=" + unqID;
+		$(".jQueryModal").colorbox( {
+			width:"50%", 
+			height:"60%", 
+			iframe:true,
+			overlayClose:false,
+			escKey:false,
+			href:url,
+			onClosed:function(){}
+		});	
+	}
 	
 	// --- START OF VERICATION RECEIVED --- //
 	var setEvaluationReceived = function(candidateID, evaluationID) {

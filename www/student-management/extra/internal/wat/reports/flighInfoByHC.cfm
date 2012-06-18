@@ -11,6 +11,7 @@
     <cfparam name="FORM.getLastLeg" default="1">
 	<cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.submitted" default="0">
+    <cfparam name="FORM.email" default="">
 
     <cfscript>
 		// Get Program List
@@ -42,7 +43,8 @@
         <cfquery name="qGetHostCompany" datasource="MySQL">
             SELECT 
                 ehc.hostCompanyID,
-                ehc.name
+                ehc.name,
+                ehc.email
             FROM 
             	extra_hostcompany ehc    
 			INNER JOIN
@@ -247,6 +249,12 @@
             </td>            
         </tr>
         <tr>
+        	<td align="right" class="style1"><b>Email Host Company: </b></td>
+            <td class="style1">
+            	<input type="checkbox" name="email" id="email" <cfif FORM.email EQ 'on'>checked</cfif> />
+            </td>
+        </tr>
+        <tr>
             <td colspan="2" align="center"><br />
                 <input type="submit" value="Generate Report" class="style1" /><br />
             </td>
@@ -274,82 +282,105 @@
                 
                 totalPerHostCompanyWalkInPlacements = filterGetAllCandidates(placementType='Walk-In', hostCompanyID=qGetHostCompany.hostCompanyID).recordCount;
             </cfscript>
+            
+            <cfsavecontent variable="currentHCReportContent">
 
-            <table width="98%" cellpadding="4" cellspacing="0" align="center" style="margin-top:10px; margin-bottom:20px; border:1px solid ##4F8EA4; line-height:15px;"> 
-                <tr>
-                    <td colspan="12">
-                        <strong>#qGetHostCompany.name# - Total candidates: #qTotalPerHostCompany.recordCount#</strong> 
-                        (
-                            #totalPerHostCompanyCSBPlacements# CSB; &nbsp; 
-                            #totalPerHostCompanySelfPlacements# Self; &nbsp; 
-                            #totalPerHostCompanyWalkInPlacements# Walk-In 
-                        )
-                    </td>
-                </tr>
-                <tr style="font-weight:bold;">
-                    <td width="5%" align="left" bgcolor="##4F8EA4" class="tableTitleView">ID</Td>
-                    <td width="15%" align="left" bgcolor="##4F8EA4" class="tableTitleView">Last Name</Td>
-                    <td width="15%" align="left" bgcolor="##4F8EA4" class="tableTitleView">First Name</Td>
-                    <td width="15%" align="left" bgcolor="##4F8EA4" class="tableTitleView">Country</td>
-                    <td width="20%" align="left" bgcolor="##4F8EA4" class="tableTitleView">Intl. Rep.</td>
-                    <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">#FORM.flightType# Date</td>
-                    <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">#FORM.flightType# Airport</td>
-                    <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">#FORM.flightType# Time / Flight ##</td>
-                </tr>
-                <cfloop query="qTotalPerHostCompany">
-                	<cfscript>
-						// Get Flight Information
-						qGetFlightInfo = APPLICATION.CFC.FLIGHTINFORMATION.getFlightInformationByCandidateID(candidateID=qTotalPerHostCompany.candidateID, flightType=FORM.flightType, getLastLeg=FORM.getLastLeg);
-					</cfscript>
-                    <tr <cfif qTotalPerHostCompany.currentRow mod 2>bgcolor="##E4E4E4"</cfif> >
-                        <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.candidateID#</a></td>
-                        <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.lastname#</a></td>
-                        <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.firstname#</a></td>
-                        <td class="style1">#qTotalPerHostCompany.countryname#</td>
-                        <td class="style1">#qTotalPerHostCompany.businessName#</td>                        
-                        <td colspan="3" class="style1">
-                        	
-                            <table width="100%" cellpadding="0" cellspacing="0">
-                            	<cfif qGetFlightInfo.recordCount>
-                                
-	                                <cfloop query="qGetFlightInfo"> 
-                                        <tr>
-                                            <td width="40%" class="style1">
-												<cfif qGetFlightInfo.isOvernightFlight EQ 1>
-                                                    #DateFormat(DateAdd("d", 1, qGetFlightInfo.departDate), 'mm/dd/yyyy')# 
-                                                <cfelse>
-                                                    #qGetFlightInfo.departDate#
-                                                </cfif>
-                                            </td>
-                                            <td width="30%" class="style1">
-                                                #qGetFlightInfo.arriveAirportCode#
-                                            </td>
-                                            <td width="30%" class="style1">
-                                                #qGetFlightInfo.arriveTime# / #qGetFlightInfo.flightNumber#
-                                            </td>
-                                         </tr>  
-    								</cfloop>
-                                         
-                                <cfelseif qTotalPerHostCompany.wat_placement EQ 'CSB-Placement' AND DateAdd("d", -14, qTotalPerHostCompany.startDate) LTE now()>
-                                	<tr>
-                                    	<td colspan="3" class="style1" style="color:##F00; font-weight:bold;">
-		                                    Alert Arrival Missing - Program Start Date: #DateFormat(qTotalPerHostCompany.startDate, 'mm/dd/yy')#                                                           
-										</td>
-									</tr>                                                                                    
-                                <cfelse>
-                                	<tr>
-                                    	<td colspan="3" class="style1">
-		                                    n/a
-										</td>
-									</tr>                                                                                    
-                                </cfif>  
-							</table>  
-                                                              
+                <table width="98%" cellpadding="4" cellspacing="0" align="center" style="margin-top:10px; margin-bottom:20px; border:1px solid ##4F8EA4; line-height:15px;"> 
+                    <tr>
+                        <td colspan="12">
+                            <strong>#qGetHostCompany.name# - Total candidates: #qTotalPerHostCompany.recordCount#</strong> 
+                            (
+                                #totalPerHostCompanyCSBPlacements# CSB; &nbsp; 
+                                #totalPerHostCompanySelfPlacements# Self; &nbsp; 
+                                #totalPerHostCompanyWalkInPlacements# Walk-In 
+                            )
                         </td>
                     </tr>
-                </cfloop>
-
-            </table>
+                    <tr style="font-weight:bold;">
+                        <td width="5%" align="left" bgcolor="##4F8EA4" class="tableTitleView">ID</Td>
+                        <td width="15%" align="left" bgcolor="##4F8EA4" class="tableTitleView">Last Name</Td>
+                        <td width="15%" align="left" bgcolor="##4F8EA4" class="tableTitleView">First Name</Td>
+                        <td width="15%" align="left" bgcolor="##4F8EA4" class="tableTitleView">Country</td>
+                        <td width="20%" align="left" bgcolor="##4F8EA4" class="tableTitleView">Intl. Rep.</td>
+                        <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">#FORM.flightType# Date</td>
+                        <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">#FORM.flightType# Airport</td>
+                        <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">#FORM.flightType# Time / Flight ##</td>
+                    </tr>
+                    <cfloop query="qTotalPerHostCompany">
+                        <cfscript>
+                            // Get Flight Information
+                            qGetFlightInfo = APPLICATION.CFC.FLIGHTINFORMATION.getFlightInformationByCandidateID(candidateID=qTotalPerHostCompany.candidateID, flightType=FORM.flightType, getLastLeg=FORM.getLastLeg);
+                        </cfscript>
+                        <tr <cfif qTotalPerHostCompany.currentRow mod 2>bgcolor="##E4E4E4"</cfif> >
+                            <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.candidateID#</a></td>
+                            <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.lastname#</a></td>
+                            <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.firstname#</a></td>
+                            <td class="style1">#qTotalPerHostCompany.countryname#</td>
+                            <td class="style1">#qTotalPerHostCompany.businessName#</td>                        
+                            <td colspan="3" class="style1">
+                                
+                                <table width="100%" cellpadding="0" cellspacing="0">
+                                    <cfif qGetFlightInfo.recordCount>
+                                    
+                                        <cfloop query="qGetFlightInfo"> 
+                                            <tr>
+                                                <td width="40%" class="style1">
+                                                    <cfif qGetFlightInfo.isOvernightFlight EQ 1>
+                                                        #DateFormat(DateAdd("d", 1, qGetFlightInfo.departDate), 'mm/dd/yyyy')# 
+                                                    <cfelse>
+                                                        #qGetFlightInfo.departDate#
+                                                    </cfif>
+                                                </td>
+                                                <td width="30%" class="style1">
+                                                    #qGetFlightInfo.arriveAirportCode#
+                                                </td>
+                                                <td width="30%" class="style1">
+                                                    #qGetFlightInfo.arriveTime# / #qGetFlightInfo.flightNumber#
+                                                </td>
+                                             </tr>  
+                                        </cfloop>
+                                             
+                                    <cfelseif qTotalPerHostCompany.wat_placement EQ 'CSB-Placement' AND DateAdd("d", -14, qTotalPerHostCompany.startDate) LTE now() AND FORM.flightType EQ 'arrival'>
+                                        <tr>
+                                            <td colspan="3" class="style1" style="color:##F00; font-weight:bold; font-size:9px;">
+                                                Alert Arrival Missing (CSB-Placement) - Program Start Date: #DateFormat(qTotalPerHostCompany.startDate, 'mm/dd/yy')#
+                                            </td>
+                                        </tr>
+                                    <cfelseif qTotalPerHostCompany.wat_placement EQ 'Self-Placement' AND DateAdd("d", -14, qTotalPerHostCompany.startDate) LTE now() AND FORM.flightType EQ 'arrival'>                                      <tr>
+                                            <td colspan="3" class="style1" style="color:##F90; font-weight:bold; font-size:9px;">
+                                                Alert Arrival Missing (Self-Placement) - Program Start Date: #DateFormat(qTotalPerHostCompany.startDate, 'mm/dd/yy')#
+                                            </td>
+                                        </tr>                                            
+                                    <cfelse>
+                                        <tr>
+                                            <td colspan="3" class="style1">
+                                                n/a
+                                            </td>
+                                        </tr>                                                                                    
+                                    </cfif> 
+                                    
+                                </table>  
+                                                                  
+                            </td>
+                        </tr>
+                    </cfloop>
+    
+                </table>
+                
+          	</cfsavecontent>
+            
+            #currentHCReportContent#
+            
+            <cfif FORM.email EQ 'on'>
+            	<cfscript>
+					APPLICATION.CFC.EMAIL.sendEmail(
+						emailTo=qGetHostCompany.email,
+						emailMessage=currentHCReportContent,
+						emailSubject='Flight Report Information',
+						companyID=CLIENT.companyID,
+						footerType='emailRegular');
+				</cfscript>
+          	</cfif>
          
 		</cfloop>
             

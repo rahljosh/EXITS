@@ -201,44 +201,63 @@
                         rowColor = '';
                     }
                 </cfscript>
-                <tr>
-                    <td class="style1" bgcolor="#rowColor#">#APPLICATION.CSB[setSponsor].programNumber#</td>
-                    <td class="style1" bgcolor="#rowColor#">CSB Summer Work Travel Program</td>
-                    <td class="style1" bgcolor="#rowColor#"><a href="?curdoc=candidate/candidate_info&uniqueid=#qGetStudents.uniqueID#" class="style4">#qGetStudents.lastname#</a></td>
-                    <td class="style1" bgcolor="#rowColor#"><a href="?curdoc=candidate/candidate_info&uniqueid=#qGetStudents.uniqueID#" class="style4">#qGetStudents.firstname#</a></td>
-                    <td class="style1" bgcolor="#rowColor#">#qGetStudents.ds2019#</td>
-                    <td class="style1" bgcolor="#rowColor#">#qGetStudents.name#</td>
-                    <td class="style1" bgcolor="#rowColor#">#qGetStudents.hostcompany_city#</td>
-                    <td class="style1" bgcolor="#rowColor#">#qGetStudents.hostcompany_state#</td>
-                    <td class="style1" bgcolor="#rowColor#" align="center"><cfif LEN(qGetStudents.wat_participation)>#qGetStudents.wat_participation#<cfelse>0</cfif></td>
-                    <td class="style1" bgcolor="#rowColor#" align="center">
-                        <cfif qGetStudents.wat_placement EQ 'Walk-In'>
-    
-                            <cfquery name="qInitialEmployment" datasource="MySQL">
-                                SELECT 
-                                    placement_date
-                                FROM 
-                                    extra_candidate_place_company
-                                WHERE
-                                    candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.candidateID#">
-                                AND
-                                    status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">                            
-                                <!--- Exclude Seeking Employment --->
-                                AND
-                                    hostCompanyID != <cfqueryparam cfsqltype="cf_sql_integer" value="195">
-                            </cfquery>
-                            
-                            <cfif IsDate(qGetStudents.startDate) AND IsDate(qInitialEmployment.placement_date)>
-                                #DateDiff("d", qGetStudents.startDate, qInitialEmployment.placement_date)#
+                
+                <cfquery name="qGetHistory" datasource="MySql">
+                	SELECT
+                    	ecpc.status,
+                        ec.name,
+                        ec.city,
+                        s.stateName as state
+                  	FROM
+                    	extra_candidate_place_company ecpc
+                   	INNER JOIN
+                    	extra_hostCompany ec ON ec.hostCompanyID = ecpc.hostCompanyID
+                   	INNER JOIN
+                    	smg_states s ON s.ID = ec.state
+                   	WHERE
+                    	ecpc.candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.candidateID#">
+                </cfquery>
+                
+                <cfloop query="qGetHistory">
+                    <tr>
+                        <td class="style1" bgcolor="#rowColor#">#APPLICATION.CSB[setSponsor].programNumber#</td>
+                        <td class="style1" bgcolor="#rowColor#">CSB Summer Work Travel Program</td>
+                        <td class="style1" bgcolor="#rowColor#"><a href="?curdoc=candidate/candidate_info&uniqueid=#qGetStudents.uniqueID#" class="style4">#qGetStudents.lastname#</a></td>
+                        <td class="style1" bgcolor="#rowColor#"><a href="?curdoc=candidate/candidate_info&uniqueid=#qGetStudents.uniqueID#" class="style4">#qGetStudents.firstname#</a></td>
+                        <td class="style1" bgcolor="#rowColor#">#qGetStudents.ds2019#</td>
+                        <td class="style1" bgcolor="#rowColor#">#qGetHistory.name# <cfif qGetHistory.status EQ 1>(Active)<cfelse>(Inactive)</cfif></td>
+                        <td class="style1" bgcolor="#rowColor#">#qGetHistory.city#</td>
+                        <td class="style1" bgcolor="#rowColor#">#qGetHistory.state#</td>
+                        <td class="style1" bgcolor="#rowColor#" align="center"><cfif LEN(qGetStudents.wat_participation)>#qGetStudents.wat_participation#<cfelse>0</cfif></td>
+                        <td class="style1" bgcolor="#rowColor#" align="center">
+                            <cfif qGetStudents.wat_placement EQ 'Walk-In'>
+        
+                                <cfquery name="qInitialEmployment" datasource="MySQL">
+                                    SELECT 
+                                        placement_date
+                                    FROM 
+                                        extra_candidate_place_company
+                                    WHERE
+                                        candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.candidateID#">
+                                    AND
+                                        status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">                            
+                                    <!--- Exclude Seeking Employment --->
+                                    AND
+                                        hostCompanyID != <cfqueryparam cfsqltype="cf_sql_integer" value="195">
+                                </cfquery>
+                                
+                                <cfif IsDate(qGetStudents.startDate) AND IsDate(qInitialEmployment.placement_date)>
+                                    #DateDiff("d", qGetStudents.startDate, qInitialEmployment.placement_date)#
+                                <cfelse>
+                                    n/a
+                                </cfif>
+                                        
                             <cfelse>
-                                n/a
-                            </cfif>
-                                    
-                        <cfelse>
-                            0
-                        </cfif> 
-                    </td>
-                </tr>
+                                0
+                            </cfif> 
+                        </td>
+                    </tr>
+               	</cfloop>
             </cfloop>
             <cfif NOT VAL(qGetStudents.recordCount)>
                 <tr>

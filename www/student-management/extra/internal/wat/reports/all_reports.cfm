@@ -21,7 +21,7 @@
                         
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/ds2019_verification_wt" class="style4">- DS-2019 Verification Report</a></p>
                         
-                        <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/selfPlacementConfirmation" class="style4">- Self Placement Confirmation</a></p>
+                        <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/selfPlacementConfirmation" class="style4">- Self Placement Vetting</a></p>
                         
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/flightInfoByIntlRep" class="style4">- Flight Information</a></p>
                         
@@ -54,7 +54,7 @@
                         
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/flighInfoByHC" class="style4">- Flight Information</a></p>
                         
-                        <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/hostCompanySelfPlacementConfirmation" class="style4">- Self Placement Confirmation</a></p>
+                        <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/hostCompanySelfPlacementConfirmation" class="style4">- Self Placement Vetting</a></p>
  	               </td>
                 </tr>
             </table>
@@ -79,11 +79,13 @@
                         
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/missing_documents_wt"  class="style4">- Missing Documents</a></p>
 						
-                        <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/missing_transfer_docs"  class="style4">- Missing Transfer Documents</a></p>
+                        <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/missing_transfer_docs"  class="style4">- Missing Replacement/Secondary Documents</a></p>
                         
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/unplaced_students_wt" class="style4">- List of Unplaced Candidates</a></p>
                         
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/list_students_work_study_wt" class="style4">- List of Candidates for DOS</a></p>
+                        
+                        <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/list_foreign_entity" class="style4">- List of Foreign Entities for DOS</a></p>
                         
                         <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/candidatesByStateAndCity" class="style4">- Candidates by State and City</a></p>
                         

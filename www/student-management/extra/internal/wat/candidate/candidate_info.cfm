@@ -19,13 +19,20 @@
     <cfparam name="FORM.candidateID" default="0">
     <cfparam name="FORM.jobID" default="0">
     <cfparam name="FORM.hostCompanyID" default="0">
-
+    <cfparam name="FORM.candCompID" default="0">
+    <cfparam name="FORM.cancelStatus" default="">
+    
+    <cfajaxproxy cfc="extra.extensions.components.hostCompany" jsclassname="HCComponent">
+    
     <cfscript>
+		
 		// Get Candidate Information
 		qGetCandidate = APPLICATION.CFC.CANDIDATE.getCandidateByID(uniqueID=URL.uniqueID);
 		
-		// Get Placement Information
 		qCandidatePlaceCompany = APPLICATION.CFC.CANDIDATE.getCandidatePlacementInformation(candidateID=qGetCandidate.candidateID);
+		
+		// Get All Placement Information (Primary and Secondary)
+		qGetAllPlacements = APPLICATION.CFC.CANDIDATE.getCandidatePlacementInformation(candidateID=qGetCandidate.candidateID, displayAll="1");
 		
 		// List of Countries
 		qGetCountryList = APPLICATION.CFC.LOOKUPTABLES.getCountry();
@@ -194,6 +201,14 @@
 		// Display Transfer Information
 		displayTransferInfo();
 		
+		// Only display cancel placement option if this is a secondary placement
+		<cfoutput>var #toScript(qCandidatePlaceCompany.isSecondary, "secondary")#;</cfoutput>
+		if (secondary == 0) {
+			$(".cancelSecondaryPlacement").attr("style", "display:none");
+		} else {
+			$(".cancelSecondaryPlacement").removeAttr("style");
+		}
+		
 		// Pop Up Application 
 		$('.popUpOnlineApplication').popupWindow({ 
 			height:600, 
@@ -226,7 +241,6 @@
 			
 	});
 
-
 	// Jquery Masks 
 	jQuery(function($){
 		// SSN
@@ -252,7 +266,6 @@
 		}
 	}
 	
-	
 	var displayTransferInfo = function() { 
 		// Get Transfer Info
 		getTransferValue = $("#isTransfer").val();
@@ -260,6 +273,11 @@
 			// Display All Transfer Information
 			$("#trReasonInfo").fadeIn("fast");
 			$(".trTransferInfo").fadeIn("fast");
+			$(".notReplacement").fadeOut("fast");
+			
+			// Do not display option to add secondary placement
+			$("#secondPlacement option:eq(0)").attr("selected", "selected");
+			$("#secondPlacement").fadeOut("fast");
 			
 			// Fade Out is this a transfer answer
 			// $("#readOnlyTransfer").fadeOut("fast");
@@ -267,10 +285,16 @@
 		} else {
 			// Hide Transfer Information
 			$(".trTransferInfo").fadeOut("fast");
+			$(".notReplacement").fadeIn("fast");
+			
+			// Display option to add secondary placement
+			if ($(".trTransferInfo").css("display") != "none") {
+				$("#secondPlacement").fadeIn("fast");
+			}
 			
 			// Fade Out is this a transfer answer
 			// $("#readOnlyTransfer").fadeOut("fast");
-		}	
+		}
 		
 		// Display/Hide Self Placemet Info
 		displaySelfPlacementInfo();
@@ -280,17 +304,20 @@
 	var displaySelfPlacementInfo = function(vHideReadOnly) { 
 		// Get Placement Info
 		getHostID = $("#hostCompanyID").val();
-		// Get Program Option
-		getProgramOption = $("#wat_placement").val();
 		// Get Transfer Info - Do not display self placement if it's a transfer
 		getTransferValue = $("#isTransfer").val();
 		
-		if ( getHostID > 0 && getProgramOption == 'Self-Placement' && getTransferValue == 0) {
+		if ( getHostID > 0) {
 			$(".selfPlacementInfo").fadeIn("fast");
 
 			// Fade out read only values
 			if ( vHideReadOnly == 1 ) {
 				$(".selfPlacementReadOnly").fadeOut("fast");
+			}
+			
+			// Don't display email confirmation if this is a replacement
+			if (getTransferValue == 1) {
+				$("#emailConfirmationRow").fadeOut("fast");
 			}
 
 		} else {
@@ -314,6 +341,77 @@
 		}
 	}
 	
+	// This variable is used to prevent using the saved fields to 
+	// populate the form if data has not yet been saved to them.
+	var haveChanged = 0;
+	
+	// This function responds to placement selections
+	var respondToNewPlacement = function() {
+		if ($("#isTransfer").val() == 1) {
+			savePlacementData();
+			$(".selfPlacementField").val("");
+			$(".hostCheckBox").attr("checked", false);
+			haveChanged++;
+		} else {
+			if ($("#isSecondary").val() == 1) {
+				savePlacementData();
+				$(".selfPlacementField").val("");
+				$(".hostCheckBox").attr("checked", false);
+				$(".trTransferInfo").fadeIn("fast");
+				$(".notReplacement").fadeOut("fast");
+				haveChanged++;
+			} else if (haveChanged){
+				restorePlacementData();
+				$(".trTransferInfo").fadeOut("fast");
+				$(".notReplacement").fadeIn("fast");
+			}
+		}
+	}
+	
+	// This function saves the placement vetting form information
+	var savePlacementData = function() {
+		$("#savedJobOfferStatus").val($("#selfJobOfferStatus").val());
+		$("#savedName").val($("#selfConfirmationName").val());
+		if ($("#authentication_secretaryOfState").is(":checked")) {
+			$("#savedSecretaryOfState").val("1");
+		} else {
+			$("#savedSecretaryOfState").val("0");
+		}
+		if ($("#authentication_departmentOfLabor").is(":checked")) {
+			$("#savedDepartmentOfLabor").val("1");
+		} else {
+			$("#savedDepartmentOfLabor").val("0");
+		}
+		if ($("#authentication_googleEarth").is(":checked")) {
+			$("#savedGoogleEarth").val("1");
+		} else {
+			$("#savedGoogleEarth").val("0");
+		}
+		$("#savedEIN").val($("#EIN").val());
+		$("#savedWC").val($("#workmensCompensation").val());
+		$("#savedEmailConfirmation").val($("#selfEmailConfirmationDate").val());
+		$("#savedPhoneConfirmation").val($("#selfPhoneConfirmationDate").val());
+		$("#savedJobFound").val($("#selfFindJobOffer").val());
+		$("#savedNotes").val($("#selfConfirmationNotes").val());
+	}
+	
+	// This function restores the placement vetting form information
+	var restorePlacementData = function() {
+		$("#selfJobOfferStatus").val($("#savedJobOfferStatus").val());
+		$("#selfConfirmationName").val($("#savedName").val());
+		if($("#savedSecretaryOfState").val() == "1")
+			$("#authentication_secretaryOfState").attr("checked", "true");
+		if($("#savedDepartmentOfLabor").val() == "1")
+			$("#authentication_departmentOfLabor").attr("checked", "true");
+		if($("#savedGoogleEarth").val() == "1")
+			$("#authentication_googleEarth").attr("checked", "true");
+		$("#EIN").val($("#savedEIN").val());
+		$("#workmensCompensation").val($("#savedWC").val());
+		$("#selfEmailConfirmationDate").val($("#savedEmailConfirmation").val());
+		$("#selfPhoneConfirmationDate").val($("#savedPhoneConfirmation").val());
+		$("#selfFindJobOffer").val($("#savedJobFound").val());
+		$("#selfConfirmationNotes").val($("#savedNotes").val());
+	}
 	
 	var displayProgramReason = function(currentProgramID, selectedProgramID) { 
 		if ( currentProgramID > '0' && currentProgramID != selectedProgramID && $("#program_history").css("display") == "none" ) {
@@ -333,7 +431,7 @@
 			$("#reason_host").val("");
 			$(".transferField").val("");
 			$(".transferCheckBox").removeAttr("checked");
-			$(".selfPlacementField").val("");
+			$(".cancelSecondaryPlacement").attr("style", "display:none");
 			
 			// Set Focus
 			$("#reason_host").focus();
@@ -343,6 +441,8 @@
 			
 		} else if (currentHostPlaceID == selectedHostID) {
 			$(".trReasonInfo").fadeOut("fast");
+			$(".secondPlacement").fadeOut("fast");
+			$(".cancelSecondaryPlacement").removeAttr("style");
 		}
 	}
 	
@@ -369,7 +469,7 @@
 <!--- candidate does not exist --->
 <cfif NOT VAL(qGetCandidate.recordcount)>
 	The candidate ID you are looking for was not found. This could be for a number of reasons.<br /><br />
-	<ul>
+   	<ul>
 		<li>the candidate record was deleted or renumbered
 		<li>the link you are following is out of date
 		<li>you do not have proper access rights to view the candidate
@@ -383,6 +483,19 @@
 <cfform name="CandidateInfo" method="post" action="?curdoc=candidate/qr_edit_candidate&uniqueid=#qGetCandidate.uniqueid#" onsubmit="return checkHistory();">
 <input type="hidden" name="candidateID" value="#qGetCandidate.candidateID#">
 <input type="hidden" name="submitted" value="1">
+
+<!--- These hidden fields are to save the placement vetting information --->
+<input type="hidden" id="savedJobOfferStatus">
+<input type="hidden" id="savedName">
+<input type="hidden" id="savedSecretaryOfState">
+<input type="hidden" id="savedDepartmentOfLabor">
+<input type="hidden" id="savedGoogleEarth">
+<input type="hidden" id="savedEIN">
+<input type="hidden" id="savedWC">
+<input type="hidden" id="savedEmailConfirmation">
+<input type="hidden" id="savedPhoneConfirmation">
+<input type="hidden" id="savedJobFound">
+<input type="hidden" id="savedNotes">
 
 <!--- TABLE HOLDER --->
 <table width="100%" height="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="##CCCCCC" bgcolor="##F4F4F4">
@@ -672,9 +785,10 @@
                                                         <td class="style1" align="right"><strong>Email:</strong></td>
                                                         <td class="style1" colspan="3">
                                                         	<span class="readOnly">#qGetCandidate.email#</span>
-                                                            <input type="text" class="style1 editPage xLargeField" name="email" value="#qGetCandidate.email#" maxlength="100">
+                                                            <input type="text" class="style1 editPage xLargeField" name="email" id="email" value="#qGetCandidate.email#" maxlength="100">
                                                         </td>
                                                     </tr>
+                                                    
                                                     <!--- Online App Field - Skype ID --->
                                                     <tr>
                                                         <td class="style1" align="right"><strong>#qGetQuestionsSection1.displayField[3]#:</strong></td>
@@ -728,7 +842,7 @@
                                             <td class="style1">
                                             	<span class="readOnly">#DateFormat(qGetCandidate.englishAssessmentDate, 'mm/dd/yyyy')#</span>
                                                 <input type="text" name="englishAssessmentDate" class="datePicker style1 editPage" value="#DateFormat(qGetCandidate.englishAssessmentDate, 'mm/dd/yyyy')#">
-                                                <font size="1">(mm/dd/yyyy)</font>
+                                                <cfif NOT LEN(qGetCandidate.englishAssessmentDate)><font size="1">(mm/dd/yyyy)</font></cfif>
                                             </td>
                                         </tr>
                                         <!--- Office View Only --->
@@ -763,7 +877,7 @@
                                             <td class="style1" width="70%">
                                             	<span class="readOnly">#dateFormat(qGetCandidate.wat_vacation_start, 'mm/dd/yyyy')#</span>
                                                 <input type="text" name="wat_vacation_start" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.wat_vacation_start, 'mm/dd/yyyy')#" maxlength="10">
-                                                <font size="1">(mm/dd/yyyy)</font>
+                                                <cfif NOT LEN(qGetCandidate.wat_vacation_start)><font size="1">(mm/dd/yyyy)</font></cfif>
                                             </td>
                                         </tr>
                                         <tr>
@@ -771,7 +885,7 @@
                                         	<td class="style1">	
                                             	<span class="readOnly">#dateFormat(qGetCandidate.wat_vacation_end, 'mm/dd/yyyy')#</span>
                                                 <input type="text" name="wat_vacation_end" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.wat_vacation_end, 'mm/dd/yyyy')#" maxlength="10"> 
-                                                <font size="1">(mm/dd/yyyy)</font>
+                                                <cfif NOT LEN(qGetCandidate.wat_vacation_end)><font size="1">(mm/dd/yyyy)</font></cfif>
                                         	</td>
                                         </tr>
                                     </table>	
@@ -870,8 +984,6 @@
                                                 <label for="wat_doc_orientation">Orientation Sign Off</label>
                                             </td>
                                             <td class="style1">
-                                                <input type="checkbox" name="wat_doc_job_offer_employer" id="wat_doc_job_offer_employer" value="1" class="formField" disabled <cfif VAL(qGetCandidate.wat_doc_job_offer_employer)> checked </cfif> >
-                                                <label for="wat_doc_job_offer_employer">Job Offer Agreement Employer</label>
                                             </td>
                                         </tr>
                                         <tr>
@@ -970,6 +1082,171 @@
                                         </tr>
                                     </table>
                    
+                                </td>
+                            </tr>
+                        </table> 
+
+						<br />
+                        
+                        <!--- PROGRAM INFO --->
+                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+                                <td bordercolor="##FFFFFF">
+                        
+                                    <table width="100%" cellpadding="4" cellspacing="0" border="0">
+                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
+                                        	<td class="style2" bgcolor="##8FB6C9" colspan="4">
+                                            	&nbsp;:: Program Information &nbsp;
+                                                <!--- Office View Only --->  
+                                            	<cfif ListFind("1,2,3,4", CLIENT.userType)>    
+                                                	<span style="float:right; padding-right:20px;">
+                                                    	<a href="javascript:openWindow('candidate/candidate_program_history.cfm?unqid=#uniqueid#', 400, 600);" class="style2">[ History ]</a>
+                                                    </span>
+                                            	</cfif>
+                                            </td>
+                                        </tr>						
+                                        <tr>
+                                        	<td class="style1" align="right" width="30%"><strong>Program:</strong></td>
+                                            <td class="style1" width="70%">
+                                                <span class="readOnly">#qGetProgramInfo.programName#</span>
+                                                <select name="programid" class="style1 editPage xLargeField" onChange="displayProgramReason(#VAL(qGetCandidate.programid)#, this.value);">
+                                                    <option value="0">Unassigned</option>
+                                                    <cfloop query="program">
+                                                        <option value="#program.programid#" <cfif qGetCandidate.programid EQ program.programid> selected </cfif> >#program.programname#</option>
+                                                    </cfloop>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr id="program_history" bgcolor="##FFBD9D" class="hiddenField">
+                                        	<td class="style1" align="right"><strong>Reason:</strong></td>
+                                        	<td class="style1"><input type="text" name="reason" id="reason" class="style1 xLargeField"></td>
+                                        </tr>
+                                        <tr>
+                                        	<!--- Placement--->
+                                        	<td class="style1" align="right"><strong>Option:</strong></td>
+                                        	<td class="style1">
+												<span class="readOnly">#qGetCandidate.wat_placement#</span>
+                                                <select name="wat_placement" id="wat_placement" onChange="displaySelfPlacementInfo(1);" class="style1 editPage xLargeField">
+                                                    <option value="">Select....</option>
+                                                    <option value="Self-Placement" <cfif qGetCandidate.wat_placement EQ 'Self-Placement'>selected="selected"</cfif>>Self-Placement</option>
+                                                    <option value="CSB-Placement" <cfif qGetCandidate.wat_placement EQ 'CSB-Placement'>selected="selected"</cfif>>CSB-Placement</option>
+                                                    <option value="Walk-In" <cfif qGetCandidate.wat_placement EQ 'Walk-In'>selected="selected"</cfif>>Walk-In</option>
+                                                </select>
+	                                        </td>
+                                        </tr>		
+                                        <tr>
+                                        	<td class="style1" align="right"><strong>Number of Participation in the Program:</strong>
+                                            <td class="style1">
+                                        		<span class="readOnly">#qGetCandidate.wat_participation#</span>
+                                                <select name="wat_participation" class="style1 editPage smallField">
+                                                	<cfloop from="0" to="15" index="i">
+                                                    	<option value="#i#" <cfif qGetCandidate.wat_participation EQ i> selected </cfif> >#i#</option>                                                    
+                                                    </cfloop>
+                                 				</select>               
+	                                        </td>
+                                        </tr>   
+                                        <tr>
+                                        	<td class="style1" align="right"><strong>Year(s) and sponsor(s) of previous participation:</strong>
+                                            <td class="style1">
+                                            	<div class="readOnly">#APPLICATION.CFC.UDF.TextAreaOutput(qGetCandidate.wat_participation_info)#</div>
+                                                <textarea name="wat_participation_info" id="wat_participation_info" class="style1 editPage mediumTextArea">#qGetCandidate.wat_participation_info#</textarea>          
+	                                        </td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" align="right"><strong>Requested Placement:</strong>
+                                            <td class="style1">
+                                                <span class="readOnly">
+                                                	<!--- Office View Only --->
+                                                    <cfif ListFind("1,2,3,4", CLIENT.userType)>
+	                                                    <a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qRequestedPlacement.hostCompanyID#" class="style4"><strong>#qRequestedPlacement.name#</strong></a>
+                                                    <cfelse>
+                                                    	#qRequestedPlacement.name#
+                                                    </cfif>
+                                                </span>
+                                                <select name="requested_placement" class="style1 editPage xLargeField">
+                                                    <option value="0"></option>
+                                                    <cfloop query="qHostCompanyList">
+                                                    	<option value="#qHostCompanyList.hostCompanyID#" <cfif qGetCandidate.requested_placement EQ qHostCompanyList.hostCompanyID>selected</cfif>> 
+															<cfif LEN(qHostCompanyList.name) GT 40>
+                                                                #Left(qHostCompanyList.name, 52)#...
+                                                            <cfelse>
+                                                                #qHostCompanyList.name#
+                                                            </cfif>
+                                                        </option>
+                                                    </cfloop>
+                                                </select>
+ 	                                       </td>
+                                        </tr>			
+                                        <tr>
+	                                        <td class="style1" align="right"><strong>Comments:</strong></td>
+    	                                    <td class="style1">
+        	                                	<span class="readOnly">#qGetCandidate.change_requested_comment#</span>
+            		                            <textarea name="change_requested_comment" class="style1 editPage largeTextArea">#qGetCandidate.change_requested_comment#</textarea>
+                    	                    </td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" align="right"><strong>Start Date:</strong></td>
+                                        	<td class="style1">
+                                            	<span class="readOnly">#dateFormat(qGetCandidate.startdate, 'mm/dd/yyyy')#</span>
+                                            	<input type="text" class="style1 datePicker editPage" name="program_startdate" value="#dateFormat(qGetCandidate.startdate, 'mm/dd/yyyy')#" maxlength="10"> 
+                                                <cfif NOT LEN(qGetCandidate.startdate)><font size="1">(mm/dd/yyyy)</font></cfif>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right"><strong>End Date:</strong></td>
+                                            <td class="style1">
+                                                <span class="readOnly">#dateFormat(qGetCandidate.enddate, 'mm/dd/yyyy')#</span>
+                                                <input type="text" class="style1 datePicker editPage" name="program_enddate" value="#dateFormat(qGetCandidate.enddate, 'mm/dd/yyyy')#" maxlength="10"> 
+                                                <cfif NOT LEN(qGetCandidate.enddate)><font size="1">(mm/dd/yyyy)</font></cfif>
+                                            </td>
+                                        </tr>
+                                    </table>
+                        
+                                </td>
+                            </tr>
+                        </table> 
+
+						<br />
+                        
+                        <!--- DS2019 Form --->
+                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+                                <td bordercolor="##FFFFFF">
+                        
+                                    <table width="100%" cellpadding=3 cellspacing="0" border="0">
+                                    	<tr bgcolor="##C2D1EF">
+                                    		<td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Form DS-2019</td>
+                                    	</tr>	
+                                        <tr>
+                                            <td class="style1" width="30%" align="right"><strong>Sponsor:</strong></td>
+                                            <td class="style1" width="70%">
+                                                <cfif LEN(qGetProgramInfo.extra_sponsor)>
+                                                    #qGetProgramInfo.extra_sponsor#
+                                                <cfelse>
+                                                    n/a
+                                                </cfif>	
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right"><strong>Verification Report:</strong></td>
+                                            <td class="style1">
+                                            	<span class="readOnly"><cfif LEN(qGetCandidate.verification_received)> Received on #dateFormat(qGetCandidate.verification_received, 'mm/dd/yyyy')# <cfelse>N/A</cfif> </span>
+                                                <input type="text" name="verification_received" id="verification_received" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.verification_received, 'mm/dd/yyyy')#" maxlength="10">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right"><strong>Number:</strong></td>
+                                            <td class="style1">
+                                            	<span class="readOnly">#qGetCandidate.ds2019#</span>
+                                                <input type="text" name="ds2019" class="style1 editPage mediumField" value="#qGetCandidate.ds2019#" maxlength="20">
+                                            </td>
+                                        </tr>
+                                        <tr>	
+                                        	<td class="style1" align="right"><strong>Accepts SEVIS Fee:</strong></td>
+                                            <td class="style1">#YesNoFormat(VAL(qGetIntlRepInfo.extra_accepts_sevis_fee))#</td>
+                                        </tr>
+                                    </table>
+                        
                                 </td>
                             </tr>
                         </table> 
@@ -1079,6 +1356,25 @@
                                                     bindonload="true" /> 
                                             </td>
                                         </tr>
+                                        <tr class="notReplacement">
+                                        	<td class="style1" align="right" width="30%">
+                                            	<label for="wat_doc_job_offer_employer"><strong>Job Offer Agreement Employer:</strong></label>
+                                           	</td>
+                                            <td class="style1" align="left" width="70%">
+                                                <input type="checkbox" name="wat_doc_job_offer_employer" id="wat_doc_job_offer_employer" value="1" class="formField" disabled <cfif VAL(qGetCandidate.wat_doc_job_offer_employer)> checked </cfif> > 
+                                            </td>
+                                        </tr>
+                                        <tr class="editPage">
+                                        	<td class="style1 cancelSecondaryPlacement" align="right" width="30%">
+                                            	<label for="wat_doc_job_offer_employer"><strong>Cancel Placement?</strong></label>
+                                           	</td>
+                                            <td class="style1 cancelSecondaryPlacement" align="left" width="70%">
+                                                <select name="cancelStatus" id="cancelStatus" class="style1 smallField" style="font-size:10px; vertical-align:middle;">
+                                                	<option value="0"> No </option>
+                                                    <option value="1"> Yes </option>
+                                                </select> 
+                                            </td>
+                                        </tr>
                                         
                                         <!--- Change Placement --->
                                         <tr id="hostCompanyChangeReason" class="hiddenField trReasonInfo">
@@ -1097,27 +1393,36 @@
                                         </tr>
                                         
                                         <tr id="trReasonInfo" class="hiddenField trReasonInfo">
-                                        	<td class="style1" align="right" width="30%"><strong>Is this a transfer?</strong></td>
+                                        	<td class="style1" align="right" width="30%"><strong>Is this a replacement?</strong></td>
                                             <td class="style1" width="70%">
-												<cfif LEN(qCandidatePlaceCompany.isTransfer)>
-                                                	<span id="readOnlyTransfer" class="readOnly">#YesNoFormat(VAL(qCandidatePlaceCompany.isTransfer))#</span>
-                                                </cfif>
-                                                <select name="isTransfer" id="isTransfer" class="style1 editPage transferField smallField" onChange="displayTransferInfo();">
+                                            	<span class="readOnly"><cfif qCandidatePlaceCompany.isTransfer EQ 1>Yes<cfelse>No</cfif></span>
+                                                <select name="isTransfer" id="isTransfer" class="style1 editPage transferField smallField" onChange="displayTransferInfo(); respondToNewPlacement();">
                                                 	<option value=""> </option>
                                                     <option value="1" <cfif qCandidatePlaceCompany.isTransfer EQ 1> selected </cfif> > Yes </option>
                                                     <option value="0" <cfif qCandidatePlaceCompany.isTransfer EQ 0> selected </cfif> > No </option>
                                                 </select>
                                             </td>
                                         </tr>
-                                        
-                                        <!--- Transfer Info --->
-                                        <tr class="hiddenField trTransferInfo">
-                                            <td class="style1" align="right" width="30%"><strong>Confirmation Date:</strong></td>
+                                        <tr id="secondPlacement" class="hiddenField trReasonInfo" style="display:none;">
+                                        	<td class="style1" align="right" width="30%"><strong>Is this a secondary placement?</strong></td>
                                             <td class="style1" width="70%">
-	                                            <span class="readOnly">#DateFormat(qCandidatePlaceCompany.dateTransferConfirmed, 'mm/dd/yyyy')#</span>
-                                                <input type="text"name="dateTransferConfirmed" id="dateTransferConfirmed" value="#DateFormat(qCandidatePlaceCompany.dateTransferConfirmed, 'mm/dd/yyyy')#" class="style1 datePicker editPage transferField">
+                                                <select name="isSecondary" id="isSecondary" class="style1 editPage transferField smallField" onChange="respondToNewPlacement();">
+                                                	<option value=""> </option>
+                                                    <option value="1" <cfif qCandidatePlaceCompany.isSecondary EQ 1> selected </cfif> > Yes </option>
+                                                    <option value="0" <cfif qCandidatePlaceCompany.isSecondary EQ 0> selected </cfif> > No </option>
+                                                </select>
                                             </td>
                                         </tr>
+                                        
+                                        <!--- Transfer Info --->
+                                        <cfif LEN(qCandidatePlaceCompany.dateTransferConfirmed)>
+                                        	<tr class="readOnly">
+                                           		<td class="style1" align="right" width="30%"><strong>Confirmation Date:</strong></td>
+                                                <td class="style1" width="70%">
+                                                    <span class="readOnly">#DateFormat(qCandidatePlaceCompany.dateTransferConfirmed, 'mm/dd/yyyy')#</span>
+                                                </td>
+                                            </tr>
+                                        </cfif>
                                         <tr class="hiddenField trTransferInfo">
                                         	<td colspan="2">
                                             	
@@ -1141,11 +1446,17 @@
                                             </td>
 										</tr> 
                                         <!--- End of Transfer Info ---> 
-
                                     
-                                        <!--- Only for Self Placement with Active Placement Information --->
                                         <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF" class="hiddenField selfPlacementInfo">
-                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Self Placement Confirmation</td>
+                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">
+                                            	&nbsp;:: Placement Vetting
+                                            	<!--- Office View Only ---> 
+                                            	<cfif ListFind("1,2,3,4", CLIENT.userType)>
+		                                            <span class="readOnly" style="float:right; padding-right:20px;">
+                                                    	<a href="javascript:openWindow('candidate/placementVettingPrint.cfm?uniqueid=#qGetCandidate.uniqueid#&candCompID=#qCandidatePlaceCompany.candCompID#', 800, 900);" class="style2">[ Print ]</a>
+                                                    </span>
+        										</cfif>
+                                          	</td>
                                         </tr>
                                         <tr class="hiddenField selfPlacementInfo">
                                             <td class="style1" align="right"><strong>Job Offer Status:</strong></td>
@@ -1160,16 +1471,6 @@
                                             </td>
                                         </tr>
                                         	
-										<!--- Show Old Self Placement Field --->
-                                        <tr class="hiddenField selfPlacementInfo">
-                                            <td class="style1" align="right"><strong>Date:</strong></td>
-                                            <td class="style1" colspan="3">
-                                                <span class="readOnly selfPlacementReadOnly">#DateFormat(qCandidatePlaceCompany.selfConfirmationDate, 'mm/dd/yyyy')#</span>
-                                                <input type="text" name="selfConfirmationDate" id="selfConfirmationDate" class="style1 datePicker editPage selfPlacementField" value="#DateFormat(qCandidatePlaceCompany.selfConfirmationDate, 'mm/dd/yyyy')#" maxlength="10">
-                                                <font size="1">(mm/dd/yyyy)</font>
-                                            </td>
-                                        </tr>
-                                    
                                         <tr class="hiddenField selfPlacementInfo">
                                             <td class="style1" align="right"><strong>Name:</strong></td>
                                             <td class="style1">
@@ -1178,31 +1479,44 @@
                                             </td>
                                         </tr>
                                         
+                                        <!--- Authentication --->
                                         <tr class="hiddenField selfPlacementInfo">
-                                            <td class="style1" align="right"><strong>Method:</strong></td>
-                                            <td class="style1">
-                                                <span class="readOnly selfPlacementReadOnly">#qCandidatePlaceCompany.selfConfirmationMethod#</span>
-                                                <select name="selfConfirmationMethod" id="selfConfirmationMethod" class="style1 editPage selfPlacementField smallField"> 
-                                                    <option value=""></option>
-                                                    <option value="Email" <cfif qCandidatePlaceCompany.selfConfirmationMethod EQ 'Email'>selected</cfif> >Email</option>
-                                                    <option value="Phone" <cfif qCandidatePlaceCompany.selfConfirmationMethod EQ 'Phone'>selected</cfif> >Phone</option>
-                                                    <option value="Fax" <cfif qCandidatePlaceCompany.selfConfirmationMethod EQ 'Fax'>selected</cfif> >Fax</option>
-                                                </select>
-                                            </td>
-                                        </tr>
                                         
-                                        <tr class="hiddenField selfPlacementInfo">
-                                            <td class="style1" align="right"><strong>Authentication:</strong></td>
-                                            <td class="style1">
-                                                <span class="readOnly selfPlacementReadOnly">#qCandidatePlaceCompany.authenticationType#</span>
-                                                <select name="authenticationType" id="authenticationType" class="style1 editPage selfPlacementField xLargeField"> 
-                                                    <option value="" <cfif NOT LEN(qCandidatePlaceCompany.authenticationType)>selected</cfif> ></option>
-                                                    <option value="Secretary of State website" <cfif qCandidatePlaceCompany.authenticationType EQ 'Secretary of State website'>selected</cfif> >Secretary of State website</option>
-                                                    <option value="US Department of Labor website" <cfif qCandidatePlaceCompany.authenticationType EQ 'US Department of Labor website'>selected</cfif> >US Department of Labor website</option>
-                                                    <option value="Google Earth" <cfif qCandidatePlaceCompany.authenticationType EQ 'Google Earth'>selected</cfif> >Google Earth</option>
-                                                </select>
+                                        	<td class="style1" colspan="2">
+            
+                                                <table width="100%" cellpadding="3" cellspacing="3" align="center" style="border:1px solid ##C7CFDC; background-color:##F7F7F7;">
+                                                	
+                                                    <tr class="hiddenField selfPlacementInfo">
+                                                    	<td colspan="2">
+                                                        	<strong><center>Authentication</center></strong>
+                                                        </td>
+                                                    </tr>
+                                                
+                                             		<tr class="hiddenField selfPlacementInfo">
+                                                        <td class="style1" align="right" width="30%"><label for="authentication_secretaryOfState"><strong>Secretary of State:</strong></label></td>
+                                                        <td class="style1" width="70%">
+                                                            <input type="checkbox" name="authentication_secretaryOfState" id="authentication_secretaryOfState" value="1" class="formField hostCheckBox" disabled <cfif VAL(qCandidatePlaceCompany.authentication_secretaryOfState)> checked </cfif> />
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="hiddenField selfPlacementInfo">
+                                                        <td class="style1" align="right"><label for="authentication_departmentOfLabor"><strong>Department of Labor:</strong></label></td>
+                                                        <td class="style1">
+                                                            <input type="checkbox" name="authentication_departmentOfLabor" id="authentication_departmentOfLabor" value="1" class="formField hostCheckBox" disabled <cfif VAL(qCandidatePlaceCompany.authentication_departmentOfLabor)> checked </cfif> />
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="hiddenField selfPlacementInfo">
+                                                        <td class="style1" align="right"><label for="authentication_googleEarth"><strong>Google Earth:</strong></label></td>
+                                                        <td class="style1">
+                                                            <input type="checkbox" name="authentication_googleEarth" id="authentication_googleEarth" value="1" class="formField hostCheckBox" disabled <cfif VAL(qCandidatePlaceCompany.authentication_googleEarth)> checked </cfif> />
+                                                        </td>
+                                                    </tr>
+                                                    
+                                                </table>
+                                           	
                                             </td>
-                                        </tr>
+                                            
+                                      	</tr>
+                                        
                                         <tr class="hiddenField selfPlacementInfo">
                                             <td class="style1" align="right"><strong>EIN:</strong></td>
                                             <td class="style1">
@@ -1244,27 +1558,29 @@
                                             </td>
                                         </tr>
                                         
-                                        <tr class="hiddenField selfPlacementInfo">
+                                        <!--- Only display if this is not a replacement --->
+                                        <tr class="hiddenField selfPlacementInfo" id="emailConfirmationRow">
                                             <td class="style1" align="right"><strong>Email Confirmation:</strong></td>
                                             <td class="style1" colspan="3">
                                                 <span class="readOnly selfPlacementReadOnly">#DateFormat(qCandidatePlaceCompany.selfEmailConfirmationDate, 'mm/dd/yyyy')#</span>
                                                 <input type="text" name="selfEmailConfirmationDate" id="selfEmailConfirmationDate" class="style1 datePicker editPage selfPlacementField" value="#DateFormat(qCandidatePlaceCompany.selfEmailConfirmationDate, 'mm/dd/yyyy')#" maxlength="10">
-                                                <font size="1">(mm/dd/yyyy)</font>
+                                                <cfif NOT LEN(qCandidatePlaceCompany.selfEmailConfirmationDate)><font size="1">(mm/dd/yyyy)</font></cfif>
                                             </td>
                                         </tr>
+                                            
                                         <tr class="hiddenField selfPlacementInfo">
                                             <td class="style1" align="right"><strong>Phone Confirmation:</strong></td>
                                             <td class="style1" colspan="3">
                                                 <span class="readOnly selfPlacementReadOnly">#DateFormat(qCandidatePlaceCompany.selfPhoneConfirmationDate, 'mm/dd/yyyy')#</span>
                                                 <input type="text" name="selfPhoneConfirmationDate" id="selfPhoneConfirmationDate" class="style1 datePicker editPage selfPlacementField" value="#DateFormat(qCandidatePlaceCompany.selfPhoneConfirmationDate, 'mm/dd/yyyy')#" maxlength="10">
-                                                <font size="1">(mm/dd/yyyy)</font>
+                                                <cfif NOT LEN(qCandidatePlaceCompany.selfPhoneConfirmationDate)><font size="1">(mm/dd/yyyy)</font></cfif>
                                             </td>
                                         </tr>
 
 										<!--- Office View Only --->
                                         <cfif ListFind("1,2,3,4", CLIENT.userType)>
                                            
-                                            <tr class="hiddenField selfPlacementInfo">
+                                            <tr class="hiddenField notReplacement">
                                                 <td class="style1" align="right"><strong>Job Found:</strong></td>
                                                 <td class="style1">
                                                     <span class="readOnly selfPlacementReadOnly">
@@ -1296,172 +1612,200 @@
                         </table> 
 
 						<br />
-
-						<!--- PROGRAM INFO --->
-                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
-                            <tr>
-                                <td bordercolor="##FFFFFF">
                         
-                                    <table width="100%" cellpadding="4" cellspacing="0" border="0">
-                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
-                                        	<td class="style2" bgcolor="##8FB6C9" colspan="4">
-                                            	&nbsp;:: Program Information &nbsp;
-                                                <!--- Office View Only --->  
-                                            	<cfif ListFind("1,2,3,4", CLIENT.userType)>    
-                                                	<span style="float:right; padding-right:20px;">
-                                                    	<a href="javascript:openWindow('candidate/candidate_program_history.cfm?unqid=#uniqueid#', 400, 600);" class="style2">[ History ]</a>
-                                                    </span>
-                                            	</cfif>
-                                            </td>
-                                        </tr>						
-                                        <tr>
-                                        	<td class="style1" align="right" width="30%"><strong>Program:</strong></td>
-                                            <td class="style1" width="70%">
-                                                <span class="readOnly">#qGetProgramInfo.programName#</span>
-                                                <select name="programid" class="style1 editPage xLargeField" onChange="displayProgramReason(#VAL(qGetCandidate.programid)#, this.value);">
-                                                    <option value="0">Unassigned</option>
-                                                    <cfloop query="program">
-                                                        <option value="#program.programid#" <cfif qGetCandidate.programid EQ program.programid> selected </cfif> >#program.programname#</option>
-                                                    </cfloop>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr id="program_history" bgcolor="##FFBD9D" class="hiddenField">
-                                        	<td class="style1" align="right"><strong>Reason:</strong></td>
-                                        	<td class="style1"><input type="text" name="reason" id="reason" class="style1 xLargeField"></td>
-                                        </tr>
-                                        <tr>
-                                        	<!--- Placement--->
-                                        	<td class="style1" align="right"><strong>Option:</strong></td>
-                                        	<td class="style1">
-												<span class="readOnly">#qGetCandidate.wat_placement#</span>
-                                                <select name="wat_placement" id="wat_placement" onChange="displaySelfPlacementInfo(1);" class="style1 editPage xLargeField">
-                                                    <option value="">Select....</option>
-                                                    <option value="Self-Placement" <cfif qGetCandidate.wat_placement EQ 'Self-Placement'>selected="selected"</cfif>>Self-Placement</option>
-                                                    <option value="CSB-Placement" <cfif qGetCandidate.wat_placement EQ 'CSB-Placement'>selected="selected"</cfif>>CSB-Placement</option>
-                                                    <option value="Walk-In" <cfif qGetCandidate.wat_placement EQ 'Walk-In'>selected="selected"</cfif>>Walk-In</option>
-                                                </select>
-	                                        </td>
-                                        </tr>		
-                                        <tr>
-                                        	<td class="style1" align="right"><strong>Number of Participation in the Program:</strong>
-                                            <td class="style1">
-                                        		<span class="readOnly">#qGetCandidate.wat_participation#</span>
-                                                <select name="wat_participation" class="style1 editPage smallField">
-                                                	<cfloop from="0" to="15" index="i">
-                                                    	<option value="#i#" <cfif qGetCandidate.wat_participation EQ i> selected </cfif> >#i#</option>                                                    
-                                                    </cfloop>
-                                 				</select>               
-	                                        </td>
-                                        </tr>   
-                                        <tr>
-                                        	<td class="style1" align="right"><strong>Year(s) and sponsor(s) of previous participation:</strong>
-                                            <td class="style1">
-                                            	<div class="readOnly">#APPLICATION.CFC.UDF.TextAreaOutput(qGetCandidate.wat_participation_info)#</div>
-                                                <textarea name="wat_participation_info" id="wat_participation_info" class="style1 editPage mediumTextArea">#qGetCandidate.wat_participation_info#</textarea>          
-	                                        </td>
-                                        </tr>
-                                        <tr>
-                                        	<td class="style1" align="right"><strong>Requested Placement:</strong>
-                                            <td class="style1">
-                                                <span class="readOnly">
-                                                	<!--- Office View Only --->
-                                                    <cfif ListFind("1,2,3,4", CLIENT.userType)>
-	                                                    <a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qRequestedPlacement.hostCompanyID#" class="style4"><strong>#qRequestedPlacement.name#</strong></a>
-                                                    <cfelse>
-                                                    	#qRequestedPlacement.name#
-                                                    </cfif>
-                                                </span>
-                                                <select name="requested_placement" class="style1 editPage xLargeField">
-                                                    <option value="0"></option>
-                                                    <cfloop query="qHostCompanyList">
-                                                    	<option value="#qHostCompanyList.hostCompanyID#" <cfif qGetCandidate.requested_placement EQ qHostCompanyList.hostCompanyID>selected</cfif>> 
-															<cfif LEN(qHostCompanyList.name) GT 40>
-                                                                #Left(qHostCompanyList.name, 52)#...
+                        <!--- SHOW ALL SECONDARY PLACEMENTS --->
+                        <cfloop query="qGetAllPlacements">
+                        
+                        	<cfif qGetAllPlacements.isSecondary EQ "1">
+                            
+                            	<table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##75B1EC">
+                            		<tr>
+                                    	<td bordercolor="##FFFFFF">
+                                        	 <table width="100%" cellpadding="4" cellspacing="0" border="0" bgcolor="##FFFFFF">
+                                                <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
+                                                    <td colspan="2" class="style2" bgcolor="##8FB6C9">
+                                                    	&nbsp;:: Secondary Placement Information
+                                                        <!--- Office View Only ---> 
+														<cfif ListFind("1,2,3,4", CLIENT.userType)>
+                                                            <span class="readOnly" style="float:right; padding-right:20px;">
+                                                                <a href="javascript:openWindow('candidate/placementVettingPrint.cfm?uniqueid=#qGetCandidate.uniqueid#&candCompID=#qGetAllPlacements.candCompID#', 800, 900);" class="style2">[ Print ]</a>
+                                                            </span>
+                                                        </cfif>
+                                                    </td>
+                                              	</tr>
+                                              	<tr>
+                                        			<td class="style1" align="right" width="30%"><strong>Company Name:</strong></td>
+                                                    <td class="style1" align="left" width="70%">
+                                                        <span>
+                                                            <!--- Office View Only --->
+                                                            <cfif ListFind("1,2,3,4", CLIENT.userType)>
+                                                                <a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qGetAllPlacements.hostCompanyID#" class="style4" target="_blank"><strong>#qGetAllPlacements.hostCompanyName#</strong></a>
                                                             <cfelse>
-                                                                #qHostCompanyList.name#
+                                                                #qGetAllPlacements.hostCompanyName#
                                                             </cfif>
-                                                        </option>
-                                                    </cfloop>
-                                                </select>
- 	                                       </td>
-                                        </tr>			
-                                        <tr>
-	                                        <td class="style1" align="right"><strong>Comments:</strong></td>
-    	                                    <td class="style1">
-        	                                	<span class="readOnly">#qGetCandidate.change_requested_comment#</span>
-            		                            <textarea name="change_requested_comment" class="style1 editPage largeTextArea">#qGetCandidate.change_requested_comment#</textarea>
-                    	                    </td>
-                                        </tr>
-                                        <tr>
-                                        	<td class="style1" align="right"><strong>Start Date:</strong></td>
-                                        	<td class="style1">
-                                            	<span class="readOnly">#dateFormat(qGetCandidate.startdate, 'mm/dd/yyyy')#</span>
-                                            	<input type="text" class="style1 datePicker editPage" name="program_startdate" value="#dateFormat(qGetCandidate.startdate, 'mm/dd/yyyy')#" maxlength="10"> 
-                                                <font size="1">(mm/dd/yyyy)</font>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="style1" align="right"><strong>End Date:</strong></td>
-                                            <td class="style1">
-                                                <span class="readOnly">#dateFormat(qGetCandidate.enddate, 'mm/dd/yyyy')#</span>
-                                                <input type="text" class="style1 datePicker editPage" name="program_enddate" value="#dateFormat(qGetCandidate.enddate, 'mm/dd/yyyy')#" maxlength="10"> 
-                                                <font size="1">(mm/dd/yyyy)</font>
-                                            </td>
-                                        </tr>
-                                    </table>
-                        
-                                </td>
-                            </tr>
-                        </table> 
+                                                        </span>
+                                                   	</td>
+                                               	</tr>
+                                                 <tr>
+                                                    <td class="style1" align="right" width="30%"><strong>Job Title:</strong></td>
+                                                    <td class="style1" align="left" width="70%">
+                                                        <span>#qGetAllPlacements.jobTitle#</span>
+                                                    </td>
+                                                </tr>
+                                                <tr class="editPage">
+                                                    <td class="style1" align="right" width="30%">
+                                                        <label for="wat_doc_job_offer_employer"><strong>Cancel Placement?</strong></label>
+                                                    </td>
+                                                    <td class="style1" align="left" width="70%">
+                                                        <select name="cancelStatus_#qGetAllPlacements.candCompID#" id="cancelStatus_#qGetAllPlacements.candCompID#" class="style1 smallField" style="font-size:10px; vertical-align:middle;">
+                                                            <option value="0"> No </option>
+                                                            <option value="1"> Yes </option>
+                                                        </select> 
+                                                    </td>
+                                                </tr>
+                                                <tr class="readOnly">
+                                                    <td class="style1" align="right"><strong>Placement Date:</strong></td>
+                                                    <td class="style1" align="left">
+                                                        #dateFormat(qGetAllPlacements.placement_date, 'mm/dd/yyyy')#
+                                                    </td>
+                                                </tr>
+                                                <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF" class="hiddenField selfPlacementInfo">
+                                                    <td colspan="2" class="style2" bgcolor="##8FB6C9">
+                                                        &nbsp;:: Placement Vetting
+                                                   	</td>
+                                               	</tr>
+                                                <tr class="hiddenField selfPlacementInfo">
+                                                    <td class="style1" align="right"><strong>Job Offer Status:</strong></td>
+                                                    <td class="style1">
+                                                        <span class="readOnly selfPlacementReadOnly">#qGetAllPlacements.selfJobOfferStatus#</span>
+                                                        <select name="selfJobOfferStatus_#qGetAllPlacements.candCompID#" id="selfJobOfferStatus_#qGetAllPlacements.candCompID#" class="style1 editPage selfPlacementField mediumField"> 
+                                                            <option value="" <cfif NOT LEN(qGetAllPlacements.selfJobOfferStatus)>selected</cfif> ></option>
+                                                            <option value="Pending" <cfif qGetAllPlacements.selfJobOfferStatus EQ 'Pending'>selected</cfif> >Pending</option>
+                                                            <option value="Confirmed" <cfif qGetAllPlacements.selfJobOfferStatus EQ 'Confirmed'>selected</cfif> >Confirmed</option>
+                                                            <option value="Rejected" <cfif qGetAllPlacements.selfJobOfferStatus EQ 'Rejected'>selected</cfif> >Rejected</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr class="hiddenField selfPlacementInfo">
+                                                    <td class="style1" align="right"><strong>Name:</strong></td>
+                                                    <td class="style1">
+                                                        <span class="readOnly selfPlacementReadOnly">#qGetAllPlacements.selfConfirmationName#</span>
+                                                        <input type="text" name="selfConfirmationName_#qGetAllPlacements.candCompID#" id="selfConfirmationName_#qGetAllPlacements.candCompID#" value="#qGetAllPlacements.selfConfirmationName#" class="style1 editPage selfPlacementField xLargeField">
+                                                    </td>
+                                                </tr>
+                                                <tr class="hiddenField selfPlacementInfo">
+                                                    <td class="style1" colspan="2">
+                                                        <table width="100%" cellpadding="3" cellspacing="3" align="center" style="border:1px solid ##C7CFDC; background-color:##F7F7F7;">
+                                                            <tr class="hiddenField selfPlacementInfo">
+                                                                <td colspan="2">
+                                                                    <strong><center>Authentication</center></strong>
+                                                                </td>
+                                                            </tr>
+                                                            <tr class="hiddenField selfPlacementInfo">
+                                                                <td class="style1" align="right" width="30%"><label for="authentication_secretaryOfState_#qGetAllPlacements.candCompID#"><strong>Secretary of State:</strong></label></td>
+                                                                <td class="style1" width="70%">
+                                                                    <input type="checkbox" name="authentication_secretaryOfState_#qGetAllPlacements.candCompID#" id="authentication_secretaryOfState_#qGetAllPlacements.candCompID#" value="1" class="formField hostCheckBox" disabled <cfif VAL(qGetAllPlacements.authentication_secretaryOfState)> checked </cfif> />
+                                                                </td>
+                                                            </tr>
+                                                            <tr class="hiddenField selfPlacementInfo">
+                                                                <td class="style1" align="right"><label for="authentication_departmentOfLabor_#qGetAllPlacements.candCompID#"><strong>Department of Labor:</strong></label></td>
+                                                                <td class="style1">
+                                                                    <input type="checkbox" name="authentication_departmentOfLabor_#qGetAllPlacements.candCompID#" id="authentication_departmentOfLabor_#qGetAllPlacements.candCompID#" value="1" class="formField hostCheckBox" disabled <cfif VAL(qGetAllPlacements.authentication_departmentOfLabor)> checked </cfif> />
+                                                                </td>
+                                                            </tr>
+                                                            <tr class="hiddenField selfPlacementInfo">
+                                                                <td class="style1" align="right"><label for="authentication_googleEarth_#qGetAllPlacements.candCompID#"><strong>Google Earth:</strong></label></td>
+                                                                <td class="style1">
+                                                                    <input type="checkbox" name="authentication_googleEarth_#qGetAllPlacements.candCompID#" id="authentication_googleEarth_#qGetAllPlacements.candCompID#" value="1" class="formField hostCheckBox" disabled <cfif VAL(qGetAllPlacements.authentication_googleEarth)> checked </cfif> />
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                <tr class="hiddenField selfPlacementInfo">
+                                                    <td class="style1" align="right"><strong>EIN:</strong></td>
+                                                    <td class="style1">
+                                                        <span class="readOnly selfPlacementReadOnly">#qGetAllPlacements.EIN#</span>
+                                                        <input type="text" name="EIN_#qGetAllPlacements.candCompID#" id="EIN_#qGetAllPlacements.candCompID#" value="#qGetAllPlacements.EIN#" class="style1 editPage selfPlacementField mediumField">
+                                                    </td>
+                                                </tr>
+                                                <tr class="hiddenField selfPlacementInfo">
+                                                    <td class="style1" align="right"><strong>Workmen's Compensation:</strong></td>
+                                                    <td class="style1">
+                                                        <span class="readOnly selfPlacementReadOnly">
+                                                            <cfif qGetAllPlacements.workmensCompensation EQ 0>
+                                                                No
+                                                            <cfelseif qGetAllPlacements.workmensCompensation EQ 1>
+                                                                Yes
+                                                            <cfelseif qGetAllPlacements.workmensCompensation EQ 2>
+                                                                N/A
+                                                            </cfif>
+                                                        </span>
+                                                        <select name="workmensCompensation_#qGetAllPlacements.candCompID#" id="workmensCompensation_#qGetAllPlacements.candCompID#" class="style1 editPage selfPlacementField smallField"> 
+                                                            <option value="" <cfif NOT LEN(qGetAllPlacements.workmensCompensation)>selected</cfif> ></option>
+                                                            <option value="0" <cfif qGetAllPlacements.workmensCompensation EQ 0>selected</cfif> >No</option>
+                                                            <option value="1" <cfif qGetAllPlacements.workmensCompensation EQ 1>selected</cfif> >Yes</option>                                                    
+                                                            <option value="2" <cfif qGetAllPlacements.workmensCompensation EQ 2>selected</cfif> >N/A</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="style1" align="right"><strong>WC Expiration Date:</strong></td>
+                                                    <td class="style1" bordercolor="##FFFFFF">
+                                                        <span class="readOnly selfPlacementReadOnly">
+                                                            <cfif IsDate(qGetAllPlacements.WCDateExpired) AND qGetAllPlacements.WCDateExpired GT NOW()>
+                                                                #DateFormat(qGetAllPlacements.WCDateExpired, 'mm/dd/yyyy')#
+                                                            <cfelse>
+                                                                Workmen's compensation is missing.
+                                                            </cfif>
+                                                        </span>
+                                                            <input type="text" name="WCDateExpired_#qGetAllPlacements.candCompID#" id="WCDateExpired_#qGetAllPlacements.candCompID#" value="#DateFormat(qGetAllPlacements.WCDateExpired, 'mm/dd/yyyy')#" class="style1 datePicker editPage selfPlacementField" maxlength="10">
+                                                    </td>
+                                                </tr>
+                                                <tr class="hiddenField selfPlacementInfo">
+                                                    <td class="style1" align="right"><strong>Phone Confirmation:</strong></td>
+                                                    <td class="style1" colspan="3">
+                                                        <span class="readOnly selfPlacementReadOnly">#DateFormat(qGetAllPlacements.selfPhoneConfirmationDate, 'mm/dd/yyyy')#</span>
+                                                        <input type="text" name="selfPhoneConfirmationDate_#qGetAllPlacements.candCompID#" id="selfPhoneConfirmationDate_#qGetAllPlacements.candCompID#" class="style1 datePicker editPage selfPlacementField" value="#DateFormat(qGetAllPlacements.selfPhoneConfirmationDate, 'mm/dd/yyyy')#" maxlength="10">
+                                                        <cfif NOT LEN(qGetAllPlacements.selfPhoneConfirmationDate)><font size="1">(mm/dd/yyyy)</font></cfif>
+                                                    </td>
+                                                </tr>
+                                                <cfif ListFind("1,2,3,4", CLIENT.userType)>
+                                                    <tr class="hiddenField notReplacement">
+                                                        <td class="style1" align="right"><strong>Job Found:</strong></td>
+                                                        <td class="style1">
+                                                            <span class="readOnly selfPlacementReadOnly">
+                                                                #qGetAllPlacements.selfFindJobOffer#
+                                                            </span>
+                                                            <select name="selfFindJobOffer_#qGetAllPlacements.candCompID#" id="selfFindJobOffer_#qGetAllPlacements.candCompID#" class="style1 editPage selfPlacementField xLargeField"> 
+                                                                <option value="" <cfif NOT LEN(qGetAllPlacements.selfFindJobOffer)>selected</cfif> ></option>
+                                                                <option value="International Representative" <cfif qGetAllPlacements.selfFindJobOffer EQ 'International Representative'>selected</cfif> >International Representative</option>
+                                                                <option value="Employment Agency" <cfif qGetAllPlacements.selfFindJobOffer EQ 'Employment Agency'>selected</cfif> >Employment Agency</option>                                                    
+                                                                <option value="Directly with the Employer" <cfif qGetAllPlacements.selfFindJobOffer EQ 'Directly with the Employer'>selected</cfif> >Directly with the Employer</option>
+                                                                <option value="Internet" <cfif qGetAllPlacements.selfFindJobOffer EQ 'Internet'>selected</cfif> >Internet</option>
+                                                                <option value="Other" <cfif qGetAllPlacements.selfFindJobOffer EQ 'Other'>selected</cfif> >Other</option>
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                               	</cfif>
+                                                <tr class="hiddenField selfPlacementInfo">
+                                           			<td class="style1" align="right"><strong>Notes:</strong></td>
+                                                    <td class="style1" colspan="3">
+                                                        <span class="readOnly selfPlacementReadOnly">#qGetAllPlacements.selfConfirmationNotes#</span>
+                                                        <textarea name="selfConfirmationNotes_#qGetAllPlacements.candCompID#" id="selfConfirmationNotes_#qGetAllPlacements.candCompID#" class="style1 editPage selfPlacementField largeTextArea">#qGetAllPlacements.selfConfirmationNotes#</textarea>
+                                                    </td>
+                                                </tr>
+                                          	</table>
+                                        </td>
+                                    </tr>
+                               	</table>
+                                
+                                <br />
+                            
+                            </cfif>
+                            
+                        </cfloop>
 
-						<br />
-                        
-						<!--- DS2019 Form --->
-                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
-                            <tr>
-                                <td bordercolor="##FFFFFF">
-                        
-                                    <table width="100%" cellpadding=3 cellspacing="0" border="0">
-                                    	<tr bgcolor="##C2D1EF">
-                                    		<td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Form DS-2019</td>
-                                    	</tr>	
-                                        <tr>
-                                            <td class="style1" width="30%" align="right"><strong>Sponsor:</strong></td>
-                                            <td class="style1" width="70%">
-                                                <cfif LEN(qGetProgramInfo.extra_sponsor)>
-                                                    #qGetProgramInfo.extra_sponsor#
-                                                <cfelse>
-                                                    n/a
-                                                </cfif>	
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="style1" align="right"><strong>Verification Report:</strong></td>
-                                            <td class="style1">
-                                            	<span class="readOnly"><cfif LEN(qGetCandidate.verification_received)> Received on #dateFormat(qGetCandidate.verification_received, 'mm/dd/yyyy')# <cfelse>N/A</cfif> </span>
-                                                <input type="text" name="verification_received" id="verification_received" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.verification_received, 'mm/dd/yyyy')#" maxlength="10">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="style1" align="right"><strong>Number:</strong></td>
-                                            <td class="style1">
-                                            	<span class="readOnly">#qGetCandidate.ds2019#</span>
-                                                <input type="text" name="ds2019" class="style1 editPage mediumField" value="#qGetCandidate.ds2019#" maxlength="20">
-                                            </td>
-                                        </tr>
-                                        <tr>	
-                                        	<td class="style1" align="right"><strong>Accepts SEVIS Fee:</strong></td>
-                                            <td class="style1">#YesNoFormat(VAL(qGetIntlRepInfo.extra_accepts_sevis_fee))#</td>
-                                        </tr>
-                                    </table>
-                        
-                                </td>
-                            </tr>
-                        </table> 
-
-						<br />
-                        
 						<!---- Arrival Verification --->
                         <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
                             <tr>
@@ -1476,7 +1820,7 @@
                                         	<td class="style1" width="70%">
                                                 <span class="readOnly">#dateFormat(qGetCandidate.watDateCheckedIn, 'mm/dd/yyyy')#</span>
                                                 <input type="text" name="watDateCheckedIn" id="watDateCheckedIn" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.watDateCheckedIn, 'mm/dd/yyyy')#" maxlength="10">
-                                        		<font size="1">(mm/dd/yyyy)</font>
+                                        		<cfif NOT LEN(qGetCandidate.watDateCheckedIn)><font size="1">(mm/dd/yyyy)</font></cfif>
                                             </td>
                                         </tr>
                                         <tr>
