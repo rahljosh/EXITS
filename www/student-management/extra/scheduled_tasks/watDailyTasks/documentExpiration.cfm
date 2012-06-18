@@ -1,6 +1,6 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		watDocumentExpiration.cfm
+	File:		watDailyDocumentExpiration.cfm
 	Author:		James Griffiths
 	Date:		June 18, 2012
 	Desc:		Scheduled Task: Removes documents if they have expired.
@@ -50,4 +50,6 @@
         	hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#hostCompanyID#">
     </cfquery>
 </cfoutput>
+
+<p>Complete</p>
 
