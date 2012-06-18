@@ -184,7 +184,7 @@ where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.stuid#">
                         <cfswitch expression="#get_progress_reports.pr_month_of_report#">
                         
                             <cfcase value="9,10,11,12,2,3,4,5,6">
-                                #MonthAsString(get_progress_reports.pr_month_of_report-1)# - Progress Report
+                                #MonthAsString(get_progress_reports.pr_month_of_report)# - Progress Report
                             </cfcase>
                             
                             <cfcase value="1">
