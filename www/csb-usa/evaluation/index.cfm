@@ -25,6 +25,9 @@
     <cfparam name="FORM.q6filename" default="">
     <cfparam name="FORM.q7filename" default="">
 	<cfparam name="FORM.evaluation" default="">
+    <cfparam name="FORM.pic1file" default="">
+    <cfparam name="FORM.pic2file" default="">
+    <cfparam name="FORM.pic3file" default="">
     
     <cfparam name="URL.uniqueID" default="">
     <cfparam name="URL.evaluation" default="">
@@ -161,6 +164,24 @@
             <cffile action="rename" source="#APPLICATION.UPLOAD##file.ServerFile#" destination="#APPLICATION.UPLOAD#Question7.#file.ClientFileExt#"attributes="normal">
             <cfset FORM.q7filename = 'Question7.#file.ClientFileExt#'>
         </cfif>
+        
+        <cfif LEN(FORM.pic1file)>
+            <cffile action="upload" destination="#APPLICATION.UPLOAD#" filefield="pic1file" nameconflict="overwrite"/>
+            <cffile action="rename" source="#APPLICATION.UPLOAD##file.ServerFile#" destination="#APPLICATION.UPLOAD#pic1file.#file.ClientFileExt#"attributes="normal">
+            <cfset FORM.pic1file = 'pic1file.#file.ClientFileExt#'>
+        </cfif>
+        
+        <cfif LEN(FORM.pic2file)>
+            <cffile action="upload" destination="#APPLICATION.UPLOAD#" filefield="pic2file" nameconflict="overwrite"/>
+            <cffile action="rename" source="#APPLICATION.UPLOAD##file.ServerFile#" destination="#APPLICATION.UPLOAD#pic2file.#file.ClientFileExt#"attributes="normal">
+            <cfset FORM.pic2file = 'pic2file.#file.ClientFileExt#'>
+        </cfif>
+        
+        <cfif LEN(FORM.pic3file)>
+            <cffile action="upload" destination="#APPLICATION.UPLOAD#" filefield="pic3file" nameconflict="overwrite"/>
+            <cffile action="rename" source="#APPLICATION.UPLOAD##file.ServerFile#" destination="#APPLICATION.UPLOAD#pic3file.#file.ClientFileExt#"attributes="normal">
+            <cfset FORM.pic3file = 'pic3file.#file.ClientFileExt#'>
+        </cfif>
 
         <cfscript>
             vEmailContent = '<h3> CSB - Mandatory Evaluation #FORM.evaluation# - #dateformat(Now(),'mm/dd/yyyy')#.</h3>
@@ -188,10 +209,19 @@
 			// Set up the upload files (will send an empty string if there is no file).
 			file6 = '';
 			file7 = '';
+			pic1 = '';
+			pic2 = '';
+			pic3 = '';
 			if (LEN(FORM.Q6file))
 				file6 = APPLICATION.UPLOAD & FORM.q6filename;
 			if (LEN(FORM.Q7file))
 				file7 = APPLICATION.UPLOAD & FORM.q7filename;
+			if (LEN(FORM.pic1file))
+				pic1 = APPLICATION.UPLOAD & FORM.pic1file;
+			if (LEN(FORM.pic2file))
+				pic2 = APPLICATION.UPLOAD & FORM.pic2file;
+			if (LEN(FORM.pic3file))
+				pic3 = APPLICATION.UPLOAD & FORM.pic3file;
 			
 			// Send the email
 			email.send_mail(
@@ -201,6 +231,9 @@
 				email_cc=FORM.email,
 				email_file=file6,
 				email_file2=file7,
+				email_file3=pic1,
+				email_file4=pic2,
+				email_file5=pic3,
 				email_message=vEmailContent
 			);
 			
@@ -528,6 +561,14 @@ a:active {
     
       
   </tr>
+   <tr>
+    <td valign="middle">&nbsp;</td>
+    <td colspan="2">
+    	<input type="file" name="pic1file"><br />
+        <input type="file" name="pic2file"><br />
+        <input type="file" name="pic3file">
+  	</td>
+    </tr>
 </table>
 </td>
   </tr>

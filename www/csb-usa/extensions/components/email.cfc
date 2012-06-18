@@ -25,6 +25,8 @@
 		<cfargument name="email_file" type="string" required="false" default="" hint="optional attachment">
 		<cfargument name="email_file2" type="string" required="false" default="" hint="optional attachment">        
 		<cfargument name="email_file3" type="string" required="false" default="" hint="optional attachment">
+        <cfargument name="email_file4" type="string" required="false" default="" hint="optional attachment">
+        <cfargument name="email_file5" type="string" required="false" default="" hint="optional attachment">
         <cfargument name="includeTemplate" type="numeric" default="1" hint="Set to 0 to not include header/footer">
 
 		<cfscript>
@@ -104,6 +106,12 @@
             </cfif>
             <cfif LEN(ARGUMENTS.email_file3)>
 				<cfmailparam disposition="attachment" file="#ARGUMENTS.email_file3#">                
+            </cfif>
+            <cfif LEN(ARGUMENTS.email_file4)>
+				<cfmailparam disposition="attachment" file="#ARGUMENTS.email_file4#">                
+            </cfif>
+            <cfif LEN(ARGUMENTS.email_file5)>
+				<cfmailparam disposition="attachment" file="#ARGUMENTS.email_file5#">                
             </cfif>
 			
             <!--- Email Body --->
