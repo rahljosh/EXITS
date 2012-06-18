@@ -897,7 +897,7 @@
                                             	<input type="checkbox" name="watDocBankruptcyDisclosureExpiration" id="watDocBankruptcyDisclosureExpiration" value="1" class="formField" disabled <cfif FORM.watDocBankruptcyDisclosureExpiration GTE NOW()> checked </cfif> >
                                             </td>
                                             <td class="style1">
-                                        		<label for="watDocBankruptcyDisclosure">Disclosure of any previous bankruptcy and of any pending legal actions<br />
+                                        		<label for="watDocBankruptcyDisclosureExpiration">Disclosure of any previous bankruptcy and of any pending legal actions<br />
                                           			&nbsp;&nbsp;Expiration Date: 
                                       				<span <cfif FORM.watDocBankruptcyDisclosureExpiration LT NOW()>style="color:red;"</cfif>>
                                         				#DateFormat(watDocBankruptcyDisclosureExpiration,"mm/dd/yyyy")#

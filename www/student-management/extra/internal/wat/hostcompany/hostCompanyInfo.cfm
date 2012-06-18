@@ -59,7 +59,6 @@
     <cfparam name="FORM.authentication_departmentOfLabor" default="0">
     <cfparam name="FORM.authentication_googleEarth" default="0">
     <cfparam name="FORM.authentication_secretaryOfStateExpiration" default="">
-    <cfparam name="FORM.authenticationType" default="">
     <cfparam name="FORM.EIN" default="">
 	<cfparam name="FORM.workmensCompensation" default="">
     <cfparam name="FORM.WCDateExpired" default="">
