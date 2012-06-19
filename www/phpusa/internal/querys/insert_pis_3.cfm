@@ -119,7 +119,7 @@
               	indoor = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.indoor1#">,
                	number = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.number_pets1#">
           	WHERE 
-            	animalid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.animal1#">
+            	animalid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.animal1#">
             </cfquery>
 		</cfif>
         
@@ -132,7 +132,7 @@
               	indoor = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.indoor1#">,
                	number = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.number_pets1#">
           	WHERE 
-            	animalid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.animal2#">
+            	animalid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.animal2#">
             </cfquery>
 		</cfif>
         
@@ -145,7 +145,7 @@
               	indoor = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.indoor1#">,
                	number = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.number_pets1#">
           	WHERE 
-            	animalid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.animal3#">
+            	animalid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.animal3#">
             </cfquery>
 		</cfif>
         
@@ -158,7 +158,7 @@
               	indoor = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.indoor1#">,
                	number = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.number_pets1#">
           	WHERE 
-            	animalid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.animal4#">
+            	animalid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.animal4#">
             </cfquery>
 		</cfif>
         
@@ -171,7 +171,7 @@
               	indoor = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.indoor1#">,
                	number = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.number_pets1#">
           	WHERE 
-            	animalid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.animal5#">
+            	animalid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.animal5#">
             </cfquery>
 		</cfif>
         

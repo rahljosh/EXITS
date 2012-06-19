@@ -400,9 +400,13 @@
                         </cfif>
                         
 						<!--- Smoke Information --->
-                        <cfif NOT  qGetHostFamily.acceptSmoking EQ 'yes'>
+                        <cfif qGetHostFamily.acceptSmoking EQ 'yes'>
                             <tr>
                                 <td colspan="2"><p style="margin:3px 0px 0px 0px;">The Host Family will accept a student who smokes.</p></td>       
+                            </tr>
+                       	<cfelse>
+                        	<tr>
+                                <td colspan="2"><p style="margin:3px 0px 0px 0px;">The Host Family will not accept a student who smokes.</p></td>       
                             </tr>
                         </cfif>      
                         
