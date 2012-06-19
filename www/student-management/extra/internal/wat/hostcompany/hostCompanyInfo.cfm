@@ -229,15 +229,15 @@
        	LEFT OUTER JOIN
         	extra_j1_positions j ON j.programID = p.programID
             AND
-            	j.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
+            	j.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.hostCompanyID)#">
       	WHERE
             dateDiff(p.endDate,NOW()) >= <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         AND
             p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND
-            p.is_deleted = <cfqueryparam cfsqltype="cf_sql_integet" value="0">
+            p.is_deleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         AND
-            p.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+            p.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">
     </cfquery>
     
     

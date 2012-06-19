@@ -307,7 +307,7 @@
 		// Get Transfer Info - Do not display self placement if it's a transfer
 		getTransferValue = $("#isTransfer").val();
 		
-		if ( getHostID > 0) {
+		if ( getHostID > 0 && getHostID != 195) {
 			$(".selfPlacementInfo").fadeIn("fast");
 
 			// Fade out read only values
@@ -431,7 +431,6 @@
 			$("#reason_host").val("");
 			$(".transferField").val("");
 			$(".transferCheckBox").removeAttr("checked");
-			$(".cancelSecondaryPlacement").attr("style", "display:none");
 			
 			// Set Focus
 			$("#reason_host").focus();
@@ -442,7 +441,6 @@
 		} else if (currentHostPlaceID == selectedHostID) {
 			$(".trReasonInfo").fadeOut("fast");
 			$(".secondPlacement").fadeOut("fast");
-			$(".cancelSecondaryPlacement").removeAttr("style");
 		}
 	}
 	
@@ -1028,65 +1026,6 @@
                         </table> 
 
 						<br />
-
-						<!--- INSURANCE INFO --->
-                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
-                            <tr>
-                                <td bordercolor="##FFFFFF">
-                        
-                                    <table width="100%" cellpadding="4" cellspacing="0" border="0">
-                                        <tr bgcolor="##C2D1EF">
-                                            <td colspan="3" class="style2" bgcolor="##8FB6C9">
-                                                &nbsp;:: Insurance &nbsp; &nbsp; &nbsp; &nbsp; 
-                                                <!--- Office View Only --->
-												<cfif ListFind("1,2,3,4", CLIENT.userType)>
-	                                                <span style="float:right; padding-right:20px;">
-                                                    	<a href="javascript:openWindow('insurance/insurance_mgmt.cfm?uniqueid=#uniqueid#', 500, 800);" class="style2">[ Insurance Management ]</a>
-                                                    </span>
-                                                </cfif>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="30%" class="style1" align="right">
-                                            	<strong>Policy Type:</strong>
-                                            </td>
-                                            <td width="70%" class="style1" align="left">
-                                                <cfif qGetIntlRepInfo.extra_insurance_typeid EQ 0>
-                                                    <font color="FF0000">Missing Policy Type</font>
-                                                <cfelse>
-                                                    #qGetIntlRepInfo.type#
-                                                </cfif>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="style1" align="right"><strong>Filed Date:</strong></td>
-                                            <td class="style1">
-                                                <cfif qGetIntlRepInfo.extra_insurance_typeid GT 1 AND qGetCandidate.insurance_date EQ ''>
-                                                    not insured yet
-                                                <cfelseif qGetCandidate.insurance_date NEQ ''>
-                                                    #dateFormat(qGetCandidate.insurance_date, 'mm/dd/yyyy')#
-                                                <cfelse>
-                                                    N/A
-                                                </cfif>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="style1" align="right"><strong>Cancel Date:</strong></td>
-                                            <td class="style1">
-                                                <cfif IsDate(qGetCandidate.insurance_cancel_date)>
-                                                    #dateFormat(qGetCandidate.insurance_cancel_date, 'mm/dd/yyyy')#
-                                                <cfelse>
-                                                    N/A
-                                                </cfif>
-                                            </td>
-                                        </tr>
-                                    </table>
-                   
-                                </td>
-                            </tr>
-                        </table> 
-
-						<br />
                         
                         <!--- PROGRAM INFO --->
                         <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
@@ -1208,45 +1147,59 @@
 
 						<br />
                         
-                        <!--- DS2019 Form --->
+                        <!--- INSURANCE INFO --->
                         <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
                             <tr>
                                 <td bordercolor="##FFFFFF">
                         
-                                    <table width="100%" cellpadding=3 cellspacing="0" border="0">
-                                    	<tr bgcolor="##C2D1EF">
-                                    		<td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Form DS-2019</td>
-                                    	</tr>	
+                                    <table width="100%" cellpadding="4" cellspacing="0" border="0">
+                                        <tr bgcolor="##C2D1EF">
+                                            <td colspan="3" class="style2" bgcolor="##8FB6C9">
+                                                &nbsp;:: Insurance &nbsp; &nbsp; &nbsp; &nbsp; 
+                                                <!--- Office View Only --->
+												<cfif ListFind("1,2,3,4", CLIENT.userType)>
+	                                                <span style="float:right; padding-right:20px;">
+                                                    	<a href="javascript:openWindow('insurance/insurance_mgmt.cfm?uniqueid=#uniqueid#', 500, 800);" class="style2">[ Insurance Management ]</a>
+                                                    </span>
+                                                </cfif>
+                                            </td>
+                                        </tr>
                                         <tr>
-                                            <td class="style1" width="30%" align="right"><strong>Sponsor:</strong></td>
-                                            <td class="style1" width="70%">
-                                                <cfif LEN(qGetProgramInfo.extra_sponsor)>
-                                                    #qGetProgramInfo.extra_sponsor#
+                                            <td width="30%" class="style1" align="right">
+                                            	<strong>Policy Type:</strong>
+                                            </td>
+                                            <td width="70%" class="style1" align="left">
+                                                <cfif qGetIntlRepInfo.extra_insurance_typeid EQ 0>
+                                                    <font color="FF0000">Missing Policy Type</font>
                                                 <cfelse>
-                                                    n/a
-                                                </cfif>	
+                                                    #qGetIntlRepInfo.type#
+                                                </cfif>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="style1" align="right"><strong>Verification Report:</strong></td>
+                                            <td class="style1" align="right"><strong>Filed Date:</strong></td>
                                             <td class="style1">
-                                            	<span class="readOnly"><cfif LEN(qGetCandidate.verification_received)> Received on #dateFormat(qGetCandidate.verification_received, 'mm/dd/yyyy')# <cfelse>N/A</cfif> </span>
-                                                <input type="text" name="verification_received" id="verification_received" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.verification_received, 'mm/dd/yyyy')#" maxlength="10">
+                                                <cfif qGetIntlRepInfo.extra_insurance_typeid GT 1 AND qGetCandidate.insurance_date EQ ''>
+                                                    not insured yet
+                                                <cfelseif qGetCandidate.insurance_date NEQ ''>
+                                                    #dateFormat(qGetCandidate.insurance_date, 'mm/dd/yyyy')#
+                                                <cfelse>
+                                                    N/A
+                                                </cfif>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="style1" align="right"><strong>Number:</strong></td>
+                                            <td class="style1" align="right"><strong>Cancel Date:</strong></td>
                                             <td class="style1">
-                                            	<span class="readOnly">#qGetCandidate.ds2019#</span>
-                                                <input type="text" name="ds2019" class="style1 editPage mediumField" value="#qGetCandidate.ds2019#" maxlength="20">
+                                                <cfif IsDate(qGetCandidate.insurance_cancel_date)>
+                                                    #dateFormat(qGetCandidate.insurance_cancel_date, 'mm/dd/yyyy')#
+                                                <cfelse>
+                                                    N/A
+                                                </cfif>
                                             </td>
-                                        </tr>
-                                        <tr>	
-                                        	<td class="style1" align="right"><strong>Accepts SEVIS Fee:</strong></td>
-                                            <td class="style1">#YesNoFormat(VAL(qGetIntlRepInfo.extra_accepts_sevis_fee))#</td>
                                         </tr>
                                     </table>
-                        
+                   
                                 </td>
                             </tr>
                         </table> 
@@ -1328,7 +1281,7 @@
                                                 <select name="hostCompanyID" id="hostCompanyID" class="style1 editPage xLargeField" onChange="displayHostReason(#VAL(qCandidatePlaceCompany.hostCompanyID)#, this.value); displaySelfPlacementInfo(1);"> 
 	                                                <option value="0">Unplaced</option>
                                                     <cfloop query="qHostCompanyList">
-                                                    	<option value="#qHostCompanyList.hostCompanyID#" <cfif qCandidatePlaceCompany.hostCompanyID EQ qHostCompanyList.hostCompanyID>selected</cfif> > 
+                                                    	<option value="#qHostCompanyList.hostCompanyID#" <cfif qCandidatePlaceCompany.hostCompanyID EQ qHostCompanyList.hostCompanyID> selected </cfif> > 
 															<cfif LEN(qHostCompanyList.name) GT 55>
                                                                 #Left(qHostCompanyList.name, 52)#...
                                                             <cfelse>
@@ -1805,6 +1758,109 @@
                             </cfif>
                             
                         </cfloop>
+                        
+                        <!--- DS2019 Form --->
+                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+                                <td bordercolor="##FFFFFF">
+                        
+                                    <table width="100%" cellpadding=3 cellspacing="0" border="0">
+                                    	<tr bgcolor="##C2D1EF">
+                                    		<td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Form DS-2019</td>
+                                    	</tr>	
+                                        <tr>
+                                            <td class="style1" width="30%" align="right"><strong>Sponsor:</strong></td>
+                                            <td class="style1" width="70%">
+                                                <cfif LEN(qGetProgramInfo.extra_sponsor)>
+                                                    #qGetProgramInfo.extra_sponsor#
+                                                <cfelse>
+                                                    n/a
+                                                </cfif>	
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right"><strong>Verification Report:</strong></td>
+                                            <td class="style1">
+                                            	<span class="readOnly"><cfif LEN(qGetCandidate.verification_received)> Received on #dateFormat(qGetCandidate.verification_received, 'mm/dd/yyyy')# <cfelse>N/A</cfif> </span>
+                                                <input type="text" name="verification_received" id="verification_received" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.verification_received, 'mm/dd/yyyy')#" maxlength="10">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right"><strong>Number:</strong></td>
+                                            <td class="style1">
+                                            	<span class="readOnly">#qGetCandidate.ds2019#</span>
+                                                <input type="text" name="ds2019" class="style1 editPage mediumField" value="#qGetCandidate.ds2019#" maxlength="20">
+                                            </td>
+                                        </tr>
+                                        <tr>	
+                                        	<td class="style1" align="right"><strong>Accepts SEVIS Fee:</strong></td>
+                                            <td class="style1">#YesNoFormat(VAL(qGetIntlRepInfo.extra_accepts_sevis_fee))#</td>
+                                        </tr>
+                                    </table>
+                        
+                                </td>
+                            </tr>
+                        </table> 
+
+						<br />
+
+						<!---- Flight Information --->
+                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+                                <td bordercolor="##FFFFFF">
+                        
+                                    <table width="100%" cellpadding=3 cellspacing="0" border="0">
+                                        <tr bgcolor="##C2D1EF">
+                                        	<td colspan="4" class="style2" bgcolor="##8FB6C9">
+                                            	&nbsp;:: Flight Information
+                                                <span style="float:right; padding-right:20px;">
+                                                	<a href="onlineApplication/index.cfm?action=flightInfo&uniqueID=#qGetCandidate.uniqueID#&completeApplication=0" class="style2 popUpFlightInformation">[ Add/Edit ]</a>
+                                                </span>
+                                            </td>
+                                        </tr>	
+                                        <tr>
+                                        	<td class="style1" width="15%" align="right"><label for="verification_address"><strong>Arrival:</strong></label></td>
+                                            <td class="style1" width="85%">
+												<cfif qGetArrival.recordCount>
+	                                                <cfloop query="qGetArrival">
+                                                        Arrive on 
+                                                        <cfif qGetArrival.isOvernightFlight EQ 1>
+                                                            #DateFormat(DateAdd("d", 1, qGetArrival.departDate), 'mm/dd/yyyy')# 
+                                                        <cfelse>
+                                                            #qGetArrival.departDate#
+                                                        </cfif>
+                                                            at #qGetArrival.arriveTime#
+                                                        - Airport: #qGetArrival.arriveAirportCode# 
+                                                        - Flight Number: #qGetArrival.flightNumber# 
+                                                        <br />
+													</cfloop>                                                        
+                                                <cfelse>
+                                                	n/a
+                                                </cfif>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" align="right"><label for="verification_sevis"><strong>Departure:</strong></label></td>
+                                        	<td class="style1">
+												<cfif qGetDeparture.recordCount>
+                                                    <cfloop query="qGetDeparture">
+                                                        Depart on #qGetDeparture.departDate# at #qGetDeparture.departTime#
+                                                        - Airport: #qGetDeparture.departAirportCode# 
+                                                        - Flight Number: #qGetDeparture.flightNumber# 
+                                                        <br />
+                                                    </cfloop>    
+                                                <cfelse>
+                                                	n/a
+                                                </cfif>
+                                        	</td>
+                                        </tr>
+                        			</table>
+                                    
+                                </td>
+                            </tr>
+                        </table> 
+
+						<br />
 
 						<!---- Arrival Verification --->
                         <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
@@ -1878,64 +1934,6 @@
                                                 <input type="text" name="watDateEvaluation4" id="watDateEvaluation4" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.watDateEvaluation4, 'mm/dd/yyyy')#" maxlength="10">
                                         		<cfif NOT LEN(qGetcandidate.watDateEvaluation4)><font size="1">(mm/dd/yyyy)</font></cfif>
                                             </td>
-                                        </tr>
-                        			</table>
-                                    
-                                </td>
-                            </tr>
-                        </table> 
-
-						<br />
- 
- 						<!---- Flight Information --->
-                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
-                            <tr>
-                                <td bordercolor="##FFFFFF">
-                        
-                                    <table width="100%" cellpadding=3 cellspacing="0" border="0">
-                                        <tr bgcolor="##C2D1EF">
-                                        	<td colspan="4" class="style2" bgcolor="##8FB6C9">
-                                            	&nbsp;:: Flight Information
-                                                <span style="float:right; padding-right:20px;">
-                                                	<a href="onlineApplication/index.cfm?action=flightInfo&uniqueID=#qGetCandidate.uniqueID#&completeApplication=0" class="style2 popUpFlightInformation">[ Add/Edit ]</a>
-                                                </span>
-                                            </td>
-                                        </tr>	
-                                        <tr>
-                                        	<td class="style1" width="15%" align="right"><label for="verification_address"><strong>Arrival:</strong></label></td>
-                                            <td class="style1" width="85%">
-												<cfif qGetArrival.recordCount>
-	                                                <cfloop query="qGetArrival">
-                                                        Arrive on 
-                                                        <cfif qGetArrival.isOvernightFlight EQ 1>
-                                                            #DateFormat(DateAdd("d", 1, qGetArrival.departDate), 'mm/dd/yyyy')# 
-                                                        <cfelse>
-                                                            #qGetArrival.departDate#
-                                                        </cfif>
-                                                            at #qGetArrival.arriveTime#
-                                                        - Airport: #qGetArrival.arriveAirportCode# 
-                                                        - Flight Number: #qGetArrival.flightNumber# 
-                                                        <br />
-													</cfloop>                                                        
-                                                <cfelse>
-                                                	n/a
-                                                </cfif>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                        	<td class="style1" align="right"><label for="verification_sevis"><strong>Departure:</strong></label></td>
-                                        	<td class="style1">
-												<cfif qGetDeparture.recordCount>
-                                                    <cfloop query="qGetDeparture">
-                                                        Depart on #qGetDeparture.departDate# at #qGetDeparture.departTime#
-                                                        - Airport: #qGetDeparture.departAirportCode# 
-                                                        - Flight Number: #qGetDeparture.flightNumber# 
-                                                        <br />
-                                                    </cfloop>    
-                                                <cfelse>
-                                                	n/a
-                                                </cfif>
-                                        	</td>
                                         </tr>
                         			</table>
                                     
