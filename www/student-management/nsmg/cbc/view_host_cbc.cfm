@@ -27,31 +27,30 @@
     
 </cfsilent>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>EXITS - CBC Results</title>
-</head>
-<body>
-
 <cfoutput>
-
 
 <!--- Check if the results are stored in the database --->
 <cfif LEN(qGetBatchInfo.xml_received)>
-
-    <cfscript>
-		// Display Results		
-		APPLICATION.CFC.CBC.displayXMLResult(
-			companyID=qGetBatchInfo.companyID, 
-			responseXML=qGetBatchInfo.xml_received, 
-			userType=qGetBatchInfo.cbc_type,
-			hostID=qGetBatchInfo.hostID,
-			familyID=qGetBatchInfo.familyID,
-			dateProcessed=qGetBatchInfo.date_sent
-		);												   
-	</cfscript>
+	
+    <cftry>
+    
+		<cfscript>
+            // Display Results		
+            APPLICATION.CFC.CBC.displayXMLResult(
+                companyID=qGetBatchInfo.companyID, 
+                responseXML=qGetBatchInfo.xml_received, 
+                userType=qGetBatchInfo.cbc_type,
+                hostID=qGetBatchInfo.hostID,
+                familyID=qGetBatchInfo.familyID,
+                dateProcessed=qGetBatchInfo.date_sent
+            );												   
+        </cfscript>
+        
+        <cfcatch type="any">
+        	<p>It seems we have received an invalid XML file from backgroundchecks.com. Please check results for this host family at <a href="http://www.backgroundchecks.com/">http://www.backgroundchecks.com/</a></p>
+        </cfcatch>
+    
+    </cftry>
 
 <cfelse>
 	
@@ -100,6 +99,3 @@
 </cfif>
 
 </cfoutput>
-
-</body>
-</html>
