@@ -9,6 +9,8 @@
 
 ----- ------------------------------------------------------------------------- --->
 
+<cfajaxproxy cfc="extensions.components.cbc" jsclassname="CBC">
+
 <!--- Kill extra output --->
 <cfsilent>
 	
@@ -148,6 +150,14 @@
 <cfif isDefined('url.hostID')>
 	<cfset client.hostID = url.hostID>
 </cfif>
+
+<script type="text/javascript">
+	function getCBCFromUser(hostID, memberType) {
+		var cbc = new CBC();
+		cbc.transferUserToHostCBC(hostID, memberType);
+		window.location.reload();
+	}
+</script>
 
 <style type="text/css">
 div.scroll {
@@ -462,7 +472,12 @@ div.scroll2 {
 				</cfloop>
                 
                 <cfif qCheckCBCMother.recordCount>
-					<tr><td colspan="3" style="padding-left:20px;">Submitted for User #qCheckCBCMother.firstname# #qCheckCBCMother.lastname# (###qCheckCBCMother.userid#).</td></tr>                
+					<tr>
+                    	<td colspan="3" style="padding-left:20px;">
+                        	Submitted for User #qCheckCBCMother.firstname# #qCheckCBCMother.lastname# (###qCheckCBCMother.userid#).
+                            <input type="button" onclick="getCBCFromUser(#family_info.hostID#, 'mother')" value="Transfer CBC" style="font-size:10px" />
+                       	</td>
+                  	</tr>                
                 </cfif>
                 
 				<cfloop query="qCheckCBCMother">
@@ -514,7 +529,12 @@ div.scroll2 {
 				</cfloop>
 
                 <cfif qCheckCBCFather.recordCount>
-					<tr><td colspan="3" style="padding-left:20px;">Submitted for User #qCheckCBCFather.firstname# #qCheckCBCFather.lastname# (###qCheckCBCFather.userid#).</td></tr>                
+					<tr>
+                    	<td colspan="3" style="padding-left:20px;">
+                        	Submitted for User #qCheckCBCFather.firstname# #qCheckCBCFather.lastname# (###qCheckCBCFather.userid#).
+                    		<input type="button" onclick="getCBCFromUser(#family_info.hostID#, 'father')" value="Transfer CBC" style="font-size:10px" />
+                       	</td>
+                 	</tr>                
                 </cfif>
                 
 				<cfloop query="qCheckCBCFather">
