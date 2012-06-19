@@ -135,54 +135,63 @@
             </ul>
         </td>
         <td>
-            <!---
             <ul class="mainList">
                 <li onclick="loadSelectedReport('studentRelocationReport');">Relocation Report</li>
                 <ul>
                     <li>Generate a list of all relocation in your region</li>
                     <li>Filter by: date relocated, reason, program</li>
 				</ul>
-            </ul>  
-			--->
+            </ul> 
         </td>
-        <td class="right">
-        	<!---
+        <td class="right"> 
             <ul class="mainList">
                 <li onclick="loadSelectedReport('studentDoublePlacementPaperworkByRegion');">Double Placement Paperwork By Region</li>
                 <ul>
                     <li>Generate a list of all students in your region and double placement paperwork HQ has not received</li>
-                    <li>Filter by: Rep (place vs super), program, date placed, missing/received/all, on screen/excel</li>
+                    <li>Filter by: Rep (place vs super), program, region, date placed, missing/non-compliant/all, on screen/excel</li>
 				</ul>
             </ul> 
-			---> 
         </td>
 	</tr>  	
     
-    <!---
     <tr>
         <td class="lastRow">
             <ul class="mainList">
-                <li onclick="loadSelectedReport('studentProgressReports');">Progress Reports MISSING</li>
+                <li onclick="loadSelectedReport('studentProgressReports');">Progress Reports</li>
                 <ul>
-                    <li>Generate a report of missing/completed and approved/non progress reports</li>
-                    <li>Filter by: program, month, missing/complete/all, approval status</li>
+                    <li>Generate a report of missing/approved/not approved progress reports</li>
+                    <li>Filter by: program, region, month, and status (missing, approved, not approved)</li>
 				</ul>
             </ul>  
         </td>
         <td class="lastRow">
+        	<ul class="mainList">
+                <li onclick="loadSelectedReport('userSecondVisitCompliance');">Second Visit Compliance</li>
+                <ul>
+                    <li>Generate a list of 2nd visit reports with completion and compliance status</li>
+                    <li>Filter by: program, date placed, approval and completion status</li>
+				</ul>
+            </ul>
+        	<!---
             <ul class="mainList">
                 <li onclick="loadSelectedReport('studentSecondVisitReport');">Second Visit Reports MISSING</li>
                 <ul>
                     <li>Generate a list of 2nd visit reports with completion and compliance status</li>
                     <li>Filter by: program, date placed, approval and completion status</li>
 				</ul>
-            </ul>  
+            </ul>
+			---> 
         </td>
         <td class="lastRow right">
-            
+            <ul class="mainList">
+                <li onclick="loadSelectedReport('studentDoublePlacementPaperworkByRep');">Double Placement Paperwork By Representative</li>
+                <ul>
+                    <li>Generate a list of all students per Representative and double placement paperwork HQ has not received</li>
+                    <li>Filter by: Program, Region, missing/non-compliant/all, date placed, on screen/excel</li>
+				</ul>
+            </ul>
         </td>
 	</tr> 
-	--->
 </table>    
 
     
@@ -208,7 +217,6 @@
             </ul>  
         </td>
         <td class="lastRow">
-        	<!---
             <ul class="mainList">
                 <li onclick="loadSelectedReport('hostFamilySpreadsheet');">Host Family Spreadsheet</li>
                 <ul>
@@ -216,7 +224,6 @@
                     <li>Filter by: state, active/inactive, currently hosting</li>
 				</ul>
             </ul> 
-			---> 
         </td>
 	</tr> 
 </table>
@@ -255,13 +262,7 @@
 	</tr>  
     <tr>
         <td class="lastRow">
-            <ul class="mainList">
-                <li onclick="loadSelectedReport('userSecondVisitCompliance');">Second Visit Reports Completed</li>
-                <ul>
-                    <li>Generate a list of 2nd visit reports with completion and compliance status</li>
-                    <li>Filter by: program, date placed, approval and completion status</li>
-				</ul>
-            </ul>  
+            
         </td>
         <td class="lastRow">
             <!---
