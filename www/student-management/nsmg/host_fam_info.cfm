@@ -152,9 +152,9 @@
 </cfif>
 
 <script type="text/javascript">
-	function getCBCFromUser(hostID, memberType) {
+	function getCBCFromUser(hostID, userID, memberType) {
 		var cbc = new CBC();
-		cbc.transferUserToHostCBC(hostID, memberType);
+		cbc.transferUserToHostCBC(hostID, userID, memberType);
 		window.location.reload();
 	}
 </script>
@@ -475,7 +475,9 @@ div.scroll2 {
 					<tr>
                     	<td colspan="3" style="padding-left:20px;">
                         	Submitted for User #qCheckCBCMother.firstname# #qCheckCBCMother.lastname# (###qCheckCBCMother.userid#).
-                            <input type="button" onclick="getCBCFromUser(#family_info.hostID#, 'mother')" value="Transfer CBC" style="font-size:10px" />
+                            <cfif ListFind("1,2,3,4", CLIENT.userType)>
+                            	<input type="button" onclick="getCBCFromUser(#family_info.hostID#,#qCheckCBCMother.userID#, 'mother')" value="Transfer CBC" style="font-size:10px" />
+                          	</cfif>
                        	</td>
                   	</tr>                
                 </cfif>
@@ -532,7 +534,7 @@ div.scroll2 {
 					<tr>
                     	<td colspan="3" style="padding-left:20px;">
                         	Submitted for User #qCheckCBCFather.firstname# #qCheckCBCFather.lastname# (###qCheckCBCFather.userid#).
-                    		<input type="button" onclick="getCBCFromUser(#family_info.hostID#, 'father')" value="Transfer CBC" style="font-size:10px" />
+                    		<input type="button" onclick="getCBCFromUser(#family_info.hostID#,#qCheckCBCFather.userID#, 'father')" value="Transfer CBC" style="font-size:10px" />
                        	</td>
                  	</tr>                
                 </cfif>
