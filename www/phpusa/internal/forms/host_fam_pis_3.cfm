@@ -135,13 +135,22 @@ where hostid = #CLIENT.hostID#
 			<tr bgcolor="e2efc7">
 				<td colspan="2" bgcolor="C2D1EF">Students choice to attend with host family?</td>
 				<td bgcolor="C2D1EF"><cfif #family_info.churchfam# is 'yes'><cfinput type=radio name="churchfam" value="yes" checked>Yes <cfinput type=radio name="churchfam" value="no">No<cfelse><cfinput type=radio name="churchfam" value="yes">Yes <cfinput type=radio name="churchfam" value="no" checked>No</cfif></td></tr>
+          	<tr bgcolor="e2efc7">
+				<td align="left" colspan="2" bgcolor="C2D1EF">Would you be willing to host a student who smokes?</td>
+				<td bgcolor="C2D1EF">
+					<cfif #family_info.acceptsmoking# is 'yes'>
+                    	<cfinput type="radio" name=stu_smoke value="yes" checked>Yes 
+                  		<cfinput type="radio" name=stu_smoke value="no">No
+					<cfelse>
+                    	<cfinput type="radio" name=stu_smoke value="yes">Yes
+                        <cfinput type="radio" name=stu_smoke value="no" checked>No
+					</cfif>
+             	</td>
+          	</tr>
 			<!----
 			<tr bgcolor="e2efc7">
 				<td colspan="2">Will family transport to Student's church?</td>
 				<td><cfif #family_info.churchtrans# is 'yes'><cfinput type=radio name="churchtrans" value="yes" checked>Yes <cfinput type=radio name="churchtrans" value="no">No<cfelse><cfinput type=radio name="churchtrans" value="yes">Yes <cfinput type=radio name="churchtrans" value="no" checked>No</cfif></td></tr>
-			<Tr bgcolor="e2efc7">
-				<td align="left" colspan="2">Would you be willing to host a student who smokes?</td>
-				<td><cfif #family_info.acceptsmoking# is 'yes'><cfinput type="radio" name=stu_smoke value="yes" checked>Yes <cfinput type="radio" name=stu_smoke value="no">No<cfelse><cfinput type="radio" name=stu_smoke value="yes">Yes <cfinput type="radio" name=stu_smoke value="no" checked>No</cfif></td></tr>
 			<Tr bgcolor="e2efc7">
 				<td align="left" colspan="3">Under what conditions?<br><textarea cols="50" rows="4" name="smoke_conditions" wrap="VIRTUAL">#family_info.smokeconditions#</textarea></td></tr>
 ---->
