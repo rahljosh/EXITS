@@ -42,7 +42,7 @@
 	
     
     <!--- List of Student Management Reports --->
-    <cfcase value="studentByRegion,studentFlightInformation,studentHelpCommunityService,studentPlacementPaperworkByRegion">
+    <cfcase value="studentByRegion,studentFlightInformation,studentHelpCommunityService,studentPlacementPaperworkByRegion,studentRelocationReport,studentProgressReports,userSecondVisitCompliance,studentDoublePlacementPaperworkByRegion,studentDoublePlacementPaperworkByRep">
 
         <cfinclude template="studentManagement/_#action#.cfm" />
 
@@ -58,7 +58,7 @@
     
     
     <!--- List of Representative Management Reports --->
-    <cfcase value="userAreaRepPaperwork,userCBCAuthorization,userComplianceMileageReport,userPendingStudentMissingSecondVisitRep,userRegionalHierarchy,userSecondVisitCompliance,userTrainingListByRegion,userTrainingNonCompliant">
+    <cfcase value="userAreaRepPaperwork,userCBCAuthorization,userComplianceMileageReport,userPendingStudentMissingSecondVisitRep,userRegionalHierarchy,userTrainingListByRegion,userTrainingNonCompliant">
 
         <cfinclude template="representativeManagement/_#action#.cfm" />
 

@@ -110,7 +110,8 @@
         AND 
             s.host_fam_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">	
         AND
-            s.regionassigned IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> ) 
+            s.regionassigned IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> )
+      	<cfif 
 
         ORDER BY         
           businessName,
