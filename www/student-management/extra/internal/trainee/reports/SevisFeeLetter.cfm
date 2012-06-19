@@ -1,4 +1,4 @@
-<cfdocument format="pdf" orientation="portrait" backgroundvisible="yes" overwrite="no" fontembed="yes" margintop="0.5" marginbottom="0.5">
+<cfdocument format="pdf" orientation="portrait" backgroundvisible="yes" overwrite="no" fontembed="yes" margintop="0.5" marginbottom="0.5" scale="99">
 
     <cfquery name="get_candidate" datasource="MySql">
         SELECT *, <!---- smg_countrylist.countryname ---->
@@ -130,7 +130,6 @@
         <p align="center" class="style1">
             www.isetraining.com
         </p>
-        
   	</cfoutput>
     
 </cfdocument>
