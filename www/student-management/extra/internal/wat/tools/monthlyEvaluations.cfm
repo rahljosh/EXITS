@@ -89,6 +89,7 @@
 			tableHeader += '<td class="listTitle style2">Program <br /> Start Date</td>';
 			tableHeader += '<td class="listTitle style2">Program <br /> End Date</td>';
 			tableHeader += '<td class="listTitle style2">Check-in Date</td>';
+			tableHeader +=  '<td width="100px" class="listTitle style2" align="center">Cultural Activity</td>';
 			if ( (evaluationID == 1) || (evaluationID == 5) ) {
 				// Month 1
 				tableHeader += '<td class="listTitle style2" align="center">Evaluation 1</td>';
@@ -108,7 +109,6 @@
 				tableHeader += '<td width="100px" class="listTitle style2" align="center">Evaluation 3</td>';
 				tableHeader += '<td width="100px" class="listTitle style2" align="center">Evaluation 4</td>';
 			}
-			tableHeader +=  '<td width="100px" class="listTitle style2" align="center">Cultural Activity</td>';
 		tableHeader += '</tr>';
 		
 		// Append Table Header to HTML
@@ -162,6 +162,7 @@
 				tableBody += '<td class="style5">' + startDate + '</td>';
 				tableBody += '<td class="style5">' + endDate + '</td>';
 				tableBody += '<td class="style5">' + checkIn + '</td>';
+				tableBody += '<td align="center" class="style5"><a href="" onClick="javascript:culturalActivityPopup(\'' + uniqueID + '\')" class="style4 jQueryModal">Add</a>';
 				if ( (evaluationID == 1) || (evaluationID == 5) ) {
 					// Month 1
 					if (tempDate.setDate(cIn.getDate() + 25) <= now) {
@@ -229,7 +230,6 @@
 						tableBody += '<td align="center" class="style5">' + evaluation4 + '</td>';
 					}
 				}
-			tableBody += '<td align="center" class="style5"><a href="" onClick="javascript:culturalActivityPopup(\'' + uniqueID + '\')" class="style4 jQueryModal">Add</a>';
 			tableBody += '</tr>';
 			// Append table rows
 			$("#candidateList").append(tableBody);
