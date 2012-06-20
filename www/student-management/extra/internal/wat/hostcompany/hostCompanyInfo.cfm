@@ -628,6 +628,7 @@
 			FORM.supervisor_email = qGetHostCompanyInfo.supervisor_email;
 			// Other Information
 			FORM.personJobOfferName = qGetHostCompanyInfo.personJobOfferName;
+			FORM.personJobOfferTitle = qGetHostCompanyInfo.personJobOfferTitle;
 			FORM.authentication_secretaryOfState = qGetHostCompanyInfo.authentication_secretaryOfState;
 			FORM.authentication_departmentOfLabor = qGetHostCompanyInfo.authentication_departmentOfLabor;
 			FORM.authentication_googleEarth = qGetHostCompanyInfo.authentication_googleEarth;
