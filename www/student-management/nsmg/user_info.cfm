@@ -895,7 +895,9 @@
                                     <td align="center" valign="top"><a href="delete_cbc.cfm?type=user&id=#requestid#&userid=#url.userid#"><img src="pics/deletex.gif" border=0/></a></td>
                                 </cfif>
                                 <td>
-                                    <input type="button" onclick="getCBCFromHost(#userID#,#check_hosts.cbcfamid#)" value="Transfer CBC" style="font-size:10px" />
+                                	<cfif ListFind("1,2,3,4",CLIENT.userType)>
+                                    	<input type="button" onclick="getCBCFromHost(#userID#,#check_hosts.cbcfamid#)" value="Transfer CBC" style="font-size:10px" />
+                                  	</cfif>
                                 </td>
                             </tr>
                         </cfloop>		
