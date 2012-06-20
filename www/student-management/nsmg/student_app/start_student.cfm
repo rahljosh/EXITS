@@ -44,10 +44,7 @@
 		remainingDays = 90;
 		
 		// Get Canada Area Choice
-		qGetCanadaAreaChoiceList = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(
-			applicationID=APPLICATION.CONSTANTS.type.publicHighSchool,
-			fieldKey='canadaAreaChoice'
-		);
+		qGetCanadaAreaChoiceList = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='canadaAreaChoice');
 	</cfscript>
 
 	<!--- Queries --->

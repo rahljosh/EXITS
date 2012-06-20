@@ -161,11 +161,7 @@ and sc.fk_companyid = #client.companyid#
 
 <cfscript>
 	// Get List of Canada Districts
-	qGetESIDistrictChoice = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(
-		applicationID=APPLICATION.CONSTANTS.type.publicHighSchool,
-		fieldKey='ESIDistrictChoice',
-		sortBy='sortOrder'
-	);
+	qGetESIDistrictChoice = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='ESIDistrictChoice',sortBy='sortOrder');
 </cfscript>
 
 <Cfquery name="districtClosed" datasource="#application.dsn#">

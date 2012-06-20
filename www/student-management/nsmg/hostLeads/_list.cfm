@@ -43,10 +43,7 @@
 		qGetStates = APPLICATION.CFC.LOOKUPTABLES.getState();
 
 		// Get List of Status
-		qGetStatus = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(
-			applicationID=APPLICATION.CONSTANTS.type.hostFamilyLead,
-			fieldKey='hostLeadStatus'
-		);
+		qGetStatus = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='hostLeadStatus');
 	</cfscript>	
 
 	<!--- Ajax Call to the Component --->

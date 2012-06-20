@@ -35,10 +35,7 @@
 		);
 		
 		// Get List of Status
-		qGetStatus = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(
-			applicationID=APPLICATION.CONSTANTS.type.hostFamilyLead,
-			fieldKey='hostLeadStatus'
-		);
+		qGetStatus = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='hostLeadStatus');
 	</cfscript>	
     
 	<cfscript>
@@ -221,7 +218,6 @@
 			<cfscript>
                 // Get History
                 qGetHostLeadHistory = APPLICATION.CFC.LOOKUPTABLES.getApplicationHistory(
-                    applicationID=APPLICATION.CONSTANTS.type.hostFamilyLead,
                     foreignTable='smg_host_lead',
                     foreignID=qGetHostLeadsReport.ID,
                     enteredByID=FORM.followUpID

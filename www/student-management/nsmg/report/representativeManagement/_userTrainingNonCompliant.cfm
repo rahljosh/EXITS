@@ -80,7 +80,7 @@
         
         	<cfscript>
 				qGetResults = APPLICATION.CFC.USER.reportTrainingNonCompliance(regionID=qGetRegions.regionID,trainingIDList=FORM.trainingID,userID=CLIENT.userID,userType=CLIENT.userType);
-				qGetTrainingInfo = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(applicationID=7,fieldKey='smgUsersTraining',fieldID=FORM.trainingID);
+				qGetTrainingInfo = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='smgUsersTraining',fieldID=FORM.trainingID);
 			</cfscript>
 			
 			<cfoutput query="qGetResults">
@@ -137,7 +137,7 @@
     
     	<cfscript>
 			qGetResults = APPLICATION.CFC.USER.reportTrainingNonCompliance(regionID=qGetRegions.regionID,trainingIDList=FORM.trainingID,userID=CLIENT.userID,userType=CLIENT.userType);
-			qGetTrainingInfo = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(applicationID=7,fieldKey='smgUsersTraining',fieldID=FORM.trainingID);
+			qGetTrainingInfo = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='smgUsersTraining',fieldID=FORM.trainingID);
 		</cfscript>
         
         <cfquery name="qTotalInRegion" dbtype="query">

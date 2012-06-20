@@ -29,7 +29,7 @@
         qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(uniqueID=URL.unqID);
         
         // Get Category List
-        qGetVirtualFolderCategoryList = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(applicationID=APPLICATION.CONSTANTS.type.publicHighSchool,fieldKey='virtualFolderCategory', sortBy='name');
+        qGetVirtualFolderCategoryList = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='virtualFolderCategory', sortBy='name');
     
         // Get Folder Path 
         currentDirectory = "#APPLICATION.PATH.onlineApp.virtualFolder##qGetStudentInfo.studentid#";
@@ -179,8 +179,6 @@
                         smg_virtualfolder vf
                     LEFT OUTER JOIN
                         applicationLookUp alk ON alk.fieldID = vf.categoryID
-                            AND
-                                alk.applicationID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CONSTANTS.type.publicHighSchool#">
                             AND 
                                 alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="virtualFolderCategory">
                     WHERE 

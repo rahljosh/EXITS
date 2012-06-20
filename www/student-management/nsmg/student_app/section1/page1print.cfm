@@ -21,11 +21,7 @@
 
 <cfscript>
 	// Get Canada Area Choice
-	qGetSelectedCanadaAreaChoice = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(
-		applicationID=APPLICATION.CONSTANTS.type.publicHighSchool,
-		fieldKey='canadaAreaChoice',
-		fieldID=get_student_info.app_canada_area
-	);
+	qGetSelectedCanadaAreaChoice = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='canadaAreaChoice',fieldID=get_student_info.app_canada_area);
 </cfscript>
 
 <cfquery name="get_intrep" datasource="MySql">

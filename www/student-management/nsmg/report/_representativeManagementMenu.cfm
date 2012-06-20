@@ -29,7 +29,7 @@
 		);
 		
 		// Get Training Options
-		qGetTrainingOptions = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(applicationID=7,fieldKey='smgUsersTraining');
+		qGetTrainingOptions = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='smgUsersTraining');
 	</cfscript>
 	
 </cfsilent>

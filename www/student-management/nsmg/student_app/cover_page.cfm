@@ -28,11 +28,7 @@
 		qGetIntlRep = APPLICATION.CFC.USER.getUserByID(userID=qGetStudentInfo.intrep);
 		
 		// Get Canada Area Choice
-		qGetSelectedCanadaAreaChoice = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(
-			applicationID=APPLICATION.CONSTANTS.type.publicHighSchool,
-			fieldKey='canadaAreaChoice',
-			fieldID=qGetStudentInfo.app_canada_area
-		);
+		qGetSelectedCanadaAreaChoice = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='canadaAreaChoice', fieldID=qGetStudentInfo.app_canada_area);
 	</cfscript>
     
     <cfquery name="qGetApplicationProgram" datasource="MySQL">
