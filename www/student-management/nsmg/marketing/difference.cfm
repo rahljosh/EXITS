@@ -145,7 +145,7 @@ where userid = #client.userid#
   <div class="header"><table width="570" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td width="121" rowspan="2"><a href="http://www.case-usa.org"><img src="images/#companyImage#_md_02.jpg" width="121" height="107" /></a></td>
-    <td width="491" height="85"><h1>Perhaps Together, We CAN Make a Difference in the World...</h1></td>
+    <td width="491" height="85"><h1>Together, We CAN Make a Difference in the World...</h1></td>
   </tr>
   <tr>
     <td><a href="http://www.case-usa.org"><img src="images/#companyImage#_md_04.jpg" width="449" height="26" /></a></td>
@@ -158,7 +158,7 @@ where userid = #client.userid#
     <table width="570" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td width="228" rowspan="2"><img src="images/md_08.png" width="219" height="231" /></td>
-    <td width="342" height="123"><br /><p>#companyInfo.companyname# (#companyInfo.companyshort_nocolor#) is a non-profit, educational and cultural organization founded in 1988 on the belief that international student exchange promotes understanding, respect and goodwill among people of all nations. #companyInfo.companyshort_nocolor# brings foreign teens together with US volunteer host families. Our program grants students, host families and entire communities the ability to discover and value other cultures, which ultimately increases international harmony and creates lasting friendships.</p><br /></td>
+    <td width="342" height="123"><br /><p>#companyInfo.companyname# (#companyInfo.companyshort_nocolor#) is a non-profit, educational and cultural organization founded in 1982 on the belief that international student exchange promotes understanding, respect and goodwill among people of all nations. #companyInfo.companyshort_nocolor# brings foreign teens together with US volunteer host families. Our program grants students, host families and entire communities the ability to discover and value other cultures, which ultimately increases international harmony and creates lasting friendships.</p><br /></td>
   </tr>
   <tr>
     <td class="info"> <p>If you are interested in learning more about student exchange, please visit our website <strong>#companyInfo.url#</strong> or contact <strong>#repInfo.firstname# #repInfo.lastname#</strong> at <strong>#repInfo.phone#</strong> or email <strong>#repInfo.email#</strong>.</p>
