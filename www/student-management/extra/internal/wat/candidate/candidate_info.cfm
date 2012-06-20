@@ -247,7 +247,7 @@
 		$("#SSN").mask("***-**-9999");
 		
 		$("#usPhone").mask("9-999-999-9999");
-	});	
+	});
 
 
 	var populateDate = function(dateValue) { 
@@ -351,6 +351,7 @@
 			savePlacementData();
 			$(".selfPlacementField").val("");
 			$(".hostCheckBox").attr("checked", false);
+			restoreTempPlacementData();
 			haveChanged++;
 		} else {
 			if ($("#isSecondary").val() == 1) {
@@ -359,6 +360,7 @@
 				$(".hostCheckBox").attr("checked", false);
 				$(".trTransferInfo").fadeIn("fast");
 				$(".notReplacement").fadeOut("fast");
+				restoreTempPlacementData();
 				haveChanged++;
 			} else if (haveChanged){
 				restorePlacementData();
@@ -372,23 +374,6 @@
 	var savePlacementData = function() {
 		$("#savedJobOfferStatus").val($("#selfJobOfferStatus").val());
 		$("#savedName").val($("#selfConfirmationName").val());
-		if ($("#authentication_secretaryOfState").is(":checked")) {
-			$("#savedSecretaryOfState").val("1");
-		} else {
-			$("#savedSecretaryOfState").val("0");
-		}
-		if ($("#authentication_departmentOfLabor").is(":checked")) {
-			$("#savedDepartmentOfLabor").val("1");
-		} else {
-			$("#savedDepartmentOfLabor").val("0");
-		}
-		if ($("#authentication_googleEarth").is(":checked")) {
-			$("#savedGoogleEarth").val("1");
-		} else {
-			$("#savedGoogleEarth").val("0");
-		}
-		$("#savedEIN").val($("#EIN").val());
-		$("#savedWC").val($("#workmensCompensation").val());
 		$("#savedEmailConfirmation").val($("#selfEmailConfirmationDate").val());
 		$("#savedPhoneConfirmation").val($("#selfPhoneConfirmationDate").val());
 		$("#savedJobFound").val($("#selfFindJobOffer").val());
@@ -399,14 +384,6 @@
 	var restorePlacementData = function() {
 		$("#selfJobOfferStatus").val($("#savedJobOfferStatus").val());
 		$("#selfConfirmationName").val($("#savedName").val());
-		if($("#savedSecretaryOfState").val() == "1")
-			$("#authentication_secretaryOfState").attr("checked", "true");
-		if($("#savedDepartmentOfLabor").val() == "1")
-			$("#authentication_departmentOfLabor").attr("checked", "true");
-		if($("#savedGoogleEarth").val() == "1")
-			$("#authentication_googleEarth").attr("checked", "true");
-		$("#EIN").val($("#savedEIN").val());
-		$("#workmensCompensation").val($("#savedWC").val());
 		$("#selfEmailConfirmationDate").val($("#savedEmailConfirmation").val());
 		$("#selfPhoneConfirmationDate").val($("#savedPhoneConfirmation").val());
 		$("#selfFindJobOffer").val($("#savedJobFound").val());
@@ -442,8 +419,51 @@
 			$(".trReasonInfo").fadeOut("fast");
 			$(".secondPlacement").fadeOut("fast");
 		}
+		
+		// Set Company Info - first create a host company object to use its functions
+		var selectedHC = new HCComponent();
+		// Setting a callback handler for the proxy automatically makes the proxy's calls asynchronous. 
+		selectedHC.setCallbackHandler(setCompanyInfo); 
+		selectedHC.setErrorHandler(getCompanyInfoError);
+		selectedHC.getHostCompanyInfo(selectedHostID);
 	}
 	
+	var setCompanyInfo = function(companyInfo) {
+		var hasCompany = companyInfo.HASCOMPANY;
+		if (hasCompany == 1) {
+			var authSecretaryOfState = companyInfo.AUTHENTICATIONSECRETARYOFSTATE;
+			var authDepartmentOfLabor = companyInfo.AUTHENTICATIONDEPARTMENTOFLABOR;
+			var authGoogleEarth = companyInfo.AUTHENTICATIONGOOGLEEARTH;
+			var authEIN = companyInfo.EIN;
+			var authWC = companyInfo.WC;
+			var authWCE = companyInfo.WCE;
+			
+			if (authSecretaryOfState == 1)
+				$("#authentication_secretaryOfState").attr("checked", "checked");
+			else
+				$("#authentication_secretaryOfState").removeAttr("checked");
+				
+			if (authDepartmentOfLabor == 1)
+				$("#authentication_departmentOfLabor").attr("checked", "checked");
+			else
+				$("#authentication_departmentOfLabor").removeAttr("checked");
+				
+			if (authGoogleEarth == 1)
+				$("#authentication_googleEarth").attr("checked", "checked");
+			else
+				$("#authentication_googleEarth").removeAttr("checked");
+				
+			$("#EIN").val(authEIN);
+			$("#workmensCompensation").val(authWC);
+			$("#WCDateExpired").val(authWCE);
+		} else {
+			getCompanyInfoError();
+		}
+	}
+	
+	var getCompanyInfoError = function() {
+		alert("Could not retrieve company information");
+	}
 	
 	// Check History
 	var checkHistory = function() {
@@ -485,11 +505,6 @@
 <!--- These hidden fields are to save the placement vetting information --->
 <input type="hidden" id="savedJobOfferStatus">
 <input type="hidden" id="savedName">
-<input type="hidden" id="savedSecretaryOfState">
-<input type="hidden" id="savedDepartmentOfLabor">
-<input type="hidden" id="savedGoogleEarth">
-<input type="hidden" id="savedEIN">
-<input type="hidden" id="savedWC">
 <input type="hidden" id="savedEmailConfirmation">
 <input type="hidden" id="savedPhoneConfirmation">
 <input type="hidden" id="savedJobFound">
@@ -1278,7 +1293,7 @@
                                                     </cfif>
                                                 </span>
                                                 
-                                                <select name="hostCompanyID" id="hostCompanyID" class="style1 editPage xLargeField" onChange="displayHostReason(#VAL(qCandidatePlaceCompany.hostCompanyID)#, this.value); displaySelfPlacementInfo(1);"> 
+                                                <select name="hostCompanyID" id="hostCompanyID" class="style1 editPage xLargeField" onChange="displayHostReason(#VAL(qCandidatePlaceCompany.hostCompanyID)#, this.value); displaySelfPlacementInfo(1);">
 	                                                <option value="0">Unplaced</option>
                                                     <cfloop query="qHostCompanyList">
                                                     	<option value="#qHostCompanyList.hostCompanyID#" <cfif qCandidatePlaceCompany.hostCompanyID EQ qHostCompanyList.hostCompanyID> selected </cfif> > 
@@ -1350,9 +1365,8 @@
                                             <td class="style1" width="70%">
                                             	<span class="readOnly"><cfif qCandidatePlaceCompany.isTransfer EQ 1>Yes<cfelse>No</cfif></span>
                                                 <select name="isTransfer" id="isTransfer" class="style1 editPage transferField smallField" onChange="displayTransferInfo(); respondToNewPlacement();">
-                                                	<option value=""> </option>
-                                                    <option value="1" <cfif qCandidatePlaceCompany.isTransfer EQ 1> selected </cfif> > Yes </option>
                                                     <option value="0" <cfif qCandidatePlaceCompany.isTransfer EQ 0> selected </cfif> > No </option>
+                                                    <option value="1" <cfif qCandidatePlaceCompany.isTransfer EQ 1> selected </cfif> > Yes </option>
                                                 </select>
                                             </td>
                                         </tr>
@@ -1360,9 +1374,8 @@
                                         	<td class="style1" align="right" width="30%"><strong>Is this a secondary placement?</strong></td>
                                             <td class="style1" width="70%">
                                                 <select name="isSecondary" id="isSecondary" class="style1 editPage transferField smallField" onChange="respondToNewPlacement();">
-                                                	<option value=""> </option>
-                                                    <option value="1" <cfif qCandidatePlaceCompany.isSecondary EQ 1> selected </cfif> > Yes </option>
                                                     <option value="0" <cfif qCandidatePlaceCompany.isSecondary EQ 0> selected </cfif> > No </option>
+                                                    <option value="1" <cfif qCandidatePlaceCompany.isSecondary EQ 1> selected </cfif> > Yes </option>
                                                 </select>
                                             </td>
                                         </tr>

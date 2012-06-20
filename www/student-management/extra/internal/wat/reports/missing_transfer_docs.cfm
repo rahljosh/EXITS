@@ -42,6 +42,7 @@
                 ecpc.selfConfirmationName,
                 ecpc.selfConfirmationMethod,
                 ecpc.selfJobOfferStatus,
+                ecpc.placement_date,
                 ec.firstname, 
                 ec.lastname, 
                 ec.email, 
@@ -97,7 +98,9 @@
                	OR
                 	ecpc.selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="Pending">
                	OR
-                	ecpc.selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                	( ecpc.selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                    	AND
+                        	ecpc.placement_date > <cfqueryparam cfsqltype="cf_sql_date" value="#CreateDate(2012,6,18)#"> )
                 )
             
             ORDER BY 
@@ -207,7 +210,8 @@
                     <td align="left" class="style1">ID</td>
                     <td align="left" class="style1">Last Name</td>
                     <td align="left" class="style1">First Name</td>
-                    <td align="left" class="style1">Placement Information</td>  
+                    <td align="left" class="style1">Placement Information</td>
+                    <td align="left" class="style1">Placement Date</td>
                     <td align="left" class="style1" width="130">Missing Transfer Docs</td>	  
                 </tr>
         
@@ -235,10 +239,15 @@
                         	<a href="mailto:#qGetMissingDocs.hostCompanyemail#" class="style4">#qGetMissingDocs.hostCompanyName#</a> 
                         </td>
                         <td valign="top" class="style1">
+                        	#DateFormat(qGetMissingDocs.placement_date,'mm/dd/yyyy')#
+                        </td>
+                        <td valign="top" class="style1">
                             <cfif NOT VAL(qGetMissingDocs.isTransferHousingAddressReceived)><font color="##CC0000">Housing Address</font><br /></cfif>
                             <cfif NOT VAL(qGetMissingDocs.isTransferJobOfferReceived)><font color="##CC0000">Job Offer</font><br /></cfif>
                             <cfif NOT VAL(qGetMissingDocs.isTransferSevisUpdated)><font color="##CC0000">SEVIS Update</font><br /></cfif>
-                           	<cfif qGetMissingDocs.selfJobOfferStatus EQ "" OR qGetMissingDocs.selfJobOfferStatus EQ "Pending"><font color="##CC0000">Placement Vetting</font><br /></cfif>
+                           	<cfif (qGetMissingDocs.selfJobOfferStatus EQ "" OR qGetMissingDocs.selfJobOfferStatus EQ "Pending") AND qGetMissingDocs.placement_date GT CreateDate(2012,6,18)>
+                                <font color="##CC0000">Placement Vetting</font><br />
+							</cfif>
                         </td>
                     </tr>
                 </cfloop>

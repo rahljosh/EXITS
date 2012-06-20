@@ -61,5 +61,41 @@
 		</cfscript>
         
 	</cffunction>
+    
+    <cffunction name="getHostCompanyInfo" access="remote" returntype="struct" hint="Gets Host Company Info based on Host Company ID in struct Format">
+    	<cfargument name="hostCompanyID" type="numeric" required="yes">
+        
+        <cfquery name="qGetHCInfo" datasource="MySql">
+        	SELECT
+            	*
+          	FROM
+            	extra_hostcompany
+           	WHERE
+            	hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostCompanyID#">
+        </cfquery>
+        
+        <cfscript>
+			result = StructNew();
+			result.hasCompany = 0;
+			result.authenticationSecretaryOfState = 0;
+			result.authenticationDepartmentOfLabor = 0;
+			result.authenticationGoogleEarth = 0;
+			result.EIN = "";
+			result.WC = 0;
+			result.WCE = "";
+			
+			if (qGetHCInfo.recordCount) {
+				result.hasCompany = 1;
+				result.authenticationSecretaryOfState = qGetHCInfo.authentication_secretaryOfState;
+				result.authenticationDepartmentOfLabor = qGetHCInfo.authentication_departmentOfLabor;
+				result.authenticationGoogleEarth = qGetHCInfo.authentication_googleEarth;
+				result.EIN = qGetHCInfo.EIN;
+				result.WC = qGetHCInfo.workmenscompensation;
+				result.WCE = DateFormat(qGetHCInfo.WCDateExpired, 'mm/dd/yyyy');
+			}
+			return result;
+		</cfscript>
+        
+    </cffunction>
 
 </cfcomponent>
