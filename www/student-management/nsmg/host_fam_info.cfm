@@ -495,11 +495,11 @@ div.scroll2 {
                        	<cfif client.usertype lte 4 and client.companyid eq 10>
                             <td align="center" valign="top"><a href="delete_cbc.cfm?type=host&id=#requestid#&userid=#url.hostid#"><img src="pics/deletex.gif" border=0/></a></td>
                        	</cfif>
-                       	<cfif ListFind("1,2,3,4", CLIENT.userType)>
-                            <td>
+                         <td>
+                            <cfif ListFind("1,2,3,4", CLIENT.userType)>
                                 <input type="button" onclick="getCBCFromUser(#family_info.hostID#, #cbcid#,'mother')" value="Transfer CBC" style="font-size:10px" />
-                            </td>
-                      	</cfif>
+                         	</cfif>
+                 		</td>
 					</tr>
 				</cfloop>
                 
@@ -555,12 +555,11 @@ div.scroll2 {
                         <cfif client.usertype lte 4 and client.companyid eq 10>
                             <td align="center" valign="top"><a href="delete_cbc.cfm?type=host&id=#requestid#&userid=#url.hostid#"><img src="pics/deletex.gif" border=0/></td>
                         </cfif>
-                        
-                    <cfif ListFind("1,2,3,4", CLIENT.userType)>
                         <td>
-                            <input type="button" onclick="getCBCFromUser(#family_info.hostID#, #cbcid#, 'father')" value="Transfer CBC" style="font-size:10px" />
+                        	<cfif ListFind("1,2,3,4", CLIENT.userType)>
+                         		<input type="button" onclick="getCBCFromUser(#family_info.hostID#, #cbcid#, 'father')" value="Transfer CBC" style="font-size:10px" />
+                            </cfif>
                         </td>
-                    </cfif>
                     </tr>
 				</cfloop>				
 			</cfif>
