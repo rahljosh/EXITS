@@ -118,7 +118,7 @@
     
 	<!--- CROSS DATA - check if was submitted under a user --->
     <cfquery name="qCheckCBCMother" datasource="#application.dsn#">
-        SELECT DISTINCT u.userid, u.ssn, firstname, lastname, cbc.cbcid, cbc.requestid, date_authorized, date_sent, date_expired, smg_seasons.season,cbc.batchid
+        SELECT DISTINCT u.userid, u.ssn, firstname, lastname, cbc.cbcid, cbc.requestid, date_authorized, date_sent, date_expired, smg_seasons.season,cbc.batchid, cbc.cbcid
         FROM smg_users u
         INNER JOIN smg_users_cbc cbc ON cbc.userid = u.userid
         LEFT JOIN smg_seasons ON smg_seasons.seasonid = cbc.seasonid
@@ -129,7 +129,7 @@
     
     <cfquery name="qCheckCBCFather" datasource="#application.dsn#">
         SELECT DISTINCT u.userid, u.ssn, u.firstname, u.lastname, cbc.cbcid, cbc.requestid, date_authorized, date_sent, date_expired, batchid,
-            smg_seasons.season
+            smg_seasons.season, cbc.cbcid
         FROM smg_users u
         INNER JOIN smg_users_cbc cbc ON cbc.userid = u.userid
         LEFT JOIN smg_seasons ON smg_seasons.seasonid = cbc.seasonid
@@ -152,9 +152,9 @@
 </cfif>
 
 <script type="text/javascript">
-	function getCBCFromUser(hostID, userID, memberType) {
+	function getCBCFromUser(hostID, cbcid, memberType) {
 		var cbc = new CBC();
-		cbc.transferUserToHostCBC(hostID, userID, memberType);
+		cbc.transferUserToHostCBC(hostID, cbcid, memberType);
 		window.location.reload();
 	}
 </script>
@@ -437,7 +437,7 @@ div.scroll2 {
 				<td align="center" valign="top"><b>Date Submitted</b> <br><font size="-2">mm/dd/yyyy</font></td>
                 <td align="center" valign="top"><b>Expiration Date</b> <br><font size="-2">mm/dd/yyyy</font></td>		
 				<td align="center" valign="top"><b>View</b></td>
-                 <cfif client.usertype lte 4> <td align="left" valign="top"><b>Notes</b></td></cfif>
+                 <cfif client.usertype lte 4> <td align="left" valign="top" colspan="2"><b>Notes</b></td></cfif>
                 <cfif client.usertype lte 4 and client.companyid eq 10><td align="center" valign="top"><b>Delete</b></td></cfif>
 			</tr>				
 			<cfif qGetCBCMother.recordcount EQ '0' AND qCheckCBCMother.recordcount EQ '0' AND qGetCBCFather.recordcount EQ '0' AND qCheckCBCFather.recordcount EQ '0'>
@@ -464,7 +464,7 @@ div.scroll2 {
                           </cfif>
                         </cfif>
                 	</td>
-                    <cfif client.usertype lte 4><td align="left" valign="top"><cfif isDefined('notes')>#notes#</cfif></td></cfif>
+                    <cfif client.usertype lte 4><td align="left" valign="top" colspan="2"><cfif isDefined('notes')>#notes#</cfif></td></cfif>
 					<cfif client.usertype lte 4 and client.companyid eq 10>
                     	<td align="center" valign="top"><a href="delete_cbc.cfm?type=host&id=#requestid#&userid=#url.hostid#"><img src="pics/deletex.gif" border=0/></a></td>
                     </cfif>
@@ -475,9 +475,6 @@ div.scroll2 {
 					<tr>
                     	<td colspan="3" style="padding-left:20px;">
                         	Submitted for User #qCheckCBCMother.firstname# #qCheckCBCMother.lastname# (###qCheckCBCMother.userid#).
-                            <cfif ListFind("1,2,3,4", CLIENT.userType)>
-                            	<input type="button" onclick="getCBCFromUser(#family_info.hostID#,#qCheckCBCMother.userID#, 'mother')" value="Transfer CBC" style="font-size:10px" />
-                          	</cfif>
                        	</td>
                   	</tr>                
                 </cfif>
@@ -494,11 +491,15 @@ div.scroll2 {
                             <cfelse>
                                 #requestid#
                           </cfif>
-                       </td>
-                   <cfif client.usertype lte 4><td align="left" valign="top"><cfif isDefined('notes')>#notes#</cfif></td></cfif>
-                       <cfif client.usertype lte 4 and client.companyid eq 10>
+                       	</td>
+                       	<cfif client.usertype lte 4 and client.companyid eq 10>
                             <td align="center" valign="top"><a href="delete_cbc.cfm?type=host&id=#requestid#&userid=#url.hostid#"><img src="pics/deletex.gif" border=0/></a></td>
-                       </cfif>
+                       	</cfif>
+                       	<cfif ListFind("1,2,3,4", CLIENT.userType)>
+                            <td>
+                                <input type="button" onclick="getCBCFromUser(#family_info.hostID#, #cbcid#,'mother')" value="Transfer CBC" style="font-size:10px" />
+                            </td>
+                      	</cfif>
 					</tr>
 				</cfloop>
                 
@@ -534,7 +535,6 @@ div.scroll2 {
 					<tr>
                     	<td colspan="3" style="padding-left:20px;">
                         	Submitted for User #qCheckCBCFather.firstname# #qCheckCBCFather.lastname# (###qCheckCBCFather.userid#).
-                    		<input type="button" onclick="getCBCFromUser(#family_info.hostID#,#qCheckCBCFather.userID#, 'father')" value="Transfer CBC" style="font-size:10px" />
                        	</td>
                  	</tr>                
                 </cfif>
@@ -552,10 +552,15 @@ div.scroll2 {
                                 #requestid#
                           </cfif>
                         </td>
-                    <cfif client.usertype lte 4><td align="left" valign="top"><cfif isDefined('notes')>#notes#</cfif></td></cfif>
                         <cfif client.usertype lte 4 and client.companyid eq 10>
                             <td align="center" valign="top"><a href="delete_cbc.cfm?type=host&id=#requestid#&userid=#url.hostid#"><img src="pics/deletex.gif" border=0/></td>
                         </cfif>
+                        
+                    <cfif ListFind("1,2,3,4", CLIENT.userType)>
+                        <td>
+                            <input type="button" onclick="getCBCFromUser(#family_info.hostID#, #cbcid#, 'father')" value="Transfer CBC" style="font-size:10px" />
+                        </td>
+                    </cfif>
                     </tr>
 				</cfloop>				
 			</cfif>

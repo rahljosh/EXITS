@@ -45,81 +45,126 @@
 		
 	</cffunction>
 
-	<!--- This function is used to transfer user CBC to host CBC if they have the same ssn or name --->
-	<cffunction name="transferUserToHostCBC" access="remote" returntype="void">
-    	<cfargument name="hostID" type="numeric" required="yes" />
-        <cfargument name="userID" type="numeric" required="yes" />
-        <cfargument name="memberType" type="string" required="yes" hint="mother or father" />
-                    
-        <cfquery name="qCheckForUser" datasource="#APPLICATION.DSN#">
-            SELECT
-                *
-            FROM
-                smg_users_cbc cbc
-            LEFT JOIN
-                smg_seasons ss ON ss.seasonID = cbc.seasonID
-            WHERE
-            	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
-            ORDER BY
-                date_sent DESC
+	<!--- This function is used to transfer host CBC to user CBC --->
+	<cffunction name="transferHostToUserCBC" access="remote" returntype="void">
+    	<cfargument name="userID" type="numeric" required="yes" />
+        <cfargument name="cbcID" type="numeric" required="yes" />
+        
+        <cfquery name="qGetCBC" datasource="MySql">
+        	SELECT
+            	*
+          	FROM
+            	smg_hosts_cbc
+           	WHERE
+            	cbcfamid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.cbcID#">
+           	AND
+            	requestID NOT IN ( SELECT requestID FROM smg_users_cbc WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#"> )
         </cfquery>
         
-        <cfif VAL(qCheckForUser.recordCount)>
-            
-            <cfquery name="qCheckHostCBC" datasource="#APPLICATION.DSN#">
-                SELECT
-                    requestID
-                FROM
-                    smg_hosts_cbc
-                WHERE
-                    requestID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qCheckForUser.requestID#">
+        <cfif VAL(qGetCBC.recordCount)>
+        	
+            <cfquery datasource="MySql">
+            	INSERT INTO
+                    smg_users_cbc (
+                        userID,
+                        seasonID,
+                        companyID,
+                        batchID,
+                        requestID,
+                        date_authorized,
+                        date_sent,
+                        date_expired,
+                        xml_received,
+                        notes,
+                        isReRun,
+                        flagcbc,
+                        dateCreated,
+                        dateUpdated,
+                        date_approved 
+                        )
+                VALUES (
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCBC.seasonID#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCBC.companyID#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCBC.batchID#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCBC.requestID#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCBC.date_authorized#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCBC.date_sent#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCBC.date_expired#">,
+                    <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#qGetCBC.xml_received#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCBC.notes#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCBC.isReRun#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCBC.flagcbc#">,
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#qGetCBC.dateCreated#">,
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#qGetCBC.dateUpdated#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCBC.date_approved#"> 
+                    )
             </cfquery>
             
-            <cfif NOT VAL(qCheckHostCBC.recordCount)>
-            
-                <cfquery datasource="#APPLICATION.DSN#">
-                    INSERT INTO
-                        smg_hosts_cbc (
-                            hostID,
-                            seasonID,
-                            companyID,
-                            batchID,
-                            cbc_type,
-                            requestID,
-                            date_authorized,
-                            date_sent,
-                            date_expired,
-                            xml_received,
-                            notes,
-                            isReRun,
-                            flagcbc,
-                            dateCreated,
-                            dateUpdated,
-                            date_approved 
-                            )
-                    VALUES (
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#qCheckForUser.seasonID#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#qCheckForUser.companyID#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#qCheckForUser.batchID#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.memberType#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#qCheckForUser.requestID#">,
-                        <cfqueryparam cfsqltype="cf_sql_date" value="#qCheckForUser.date_authorized#">,
-                        <cfqueryparam cfsqltype="cf_sql_date" value="#qCheckForUser.date_sent#">,
-                        <cfqueryparam cfsqltype="cf_sql_date" value="#qCheckForUser.date_expired#">,
-                        <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#qCheckForUser.xml_received#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#qCheckForUser.notes#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#qCheckForUser.isReRun#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#qCheckForUser.flagcbc#">,
-                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#qCheckForUser.dateCreated#">,
-                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#qCheckForUser.dateUpdated#">,
-                        <cfqueryparam cfsqltype="cf_sql_date" value="#qCheckForUser.date_approved#"> 
-                        )
-                </cfquery>
-            
-            </cfif>
-            
         </cfif>
+       
+    </cffunction>
+
+	<!--- This function is used to transfer user CBC to host CBC --->
+	<cffunction name="transferUserToHostCBC" access="remote" returntype="void">
+    	<cfargument name="hostID" type="numeric" required="yes" />
+        <cfargument name="cbcID" type="numeric" required="yes" />
+        <cfargument name="memberType" type="string" required="yes" hint="mother or father" />
+      	
+        <cfquery name="qGetCBC" datasource="MySql">
+        	SELECT
+            	*
+           	FROM
+            	smg_users_cbc
+          	WHERE
+            	cbcid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.cbcID#">
+           	AND
+            	requestID NOT IN ( SELECT requestID FROM smg_hosts_cbc WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#"> )
+        </cfquery>
+       	
+        <cfif VAL(qGetCBC.recordCount)>
+        	
+            <cfquery datasource="MySql">
+            	INSERT INTO
+                    smg_hosts_cbc (
+                        hostID,
+                        seasonID,
+                        companyID,
+                        batchID,
+                        cbc_type,
+                        requestID,
+                        date_authorized,
+                        date_sent,
+                        date_expired,
+                        xml_received,
+                        notes,
+                        isReRun,
+                        flagcbc,
+                        dateCreated,
+                        dateUpdated,
+                        date_approved 
+                        )
+          		 VALUES (
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCBC.seasonID#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCBC.companyID#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCBC.batchID#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.memberType#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCBC.requestID#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCBC.date_authorized#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCBC.date_sent#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCBC.date_expired#">,
+                    <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#qGetCBC.xml_received#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCBC.notes#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCBC.isReRun#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCBC.flagcbc#">,
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#qGetCBC.dateCreated#">,
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#qGetCBC.dateUpdated#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCBC.date_approved#"> 
+                    )
+            </cfquery>
+            
+        </cfif>  
         
     </cffunction>
 

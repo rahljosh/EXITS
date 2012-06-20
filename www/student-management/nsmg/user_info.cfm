@@ -9,6 +9,8 @@
 
 ----- ------------------------------------------------------------------------- --->
 
+<cfajaxproxy cfc="extensions.components.cbc" jsclassname="CBC">
+
 <!--- CHECK RIGHTS --->
 <cfinclude template="check_rights.cfm">
 
@@ -295,6 +297,12 @@
 			   escKey:false
 		});
 	});
+
+	function getCBCFromHost(userID, cbcID) {
+		var cbc = new CBC();
+		cbc.transferHostToUserCBC(userID, cbcID);
+		window.location.reload();
+	}
 
 	// Display WebExForm
 	function displayTrainingForm() {
@@ -819,7 +827,7 @@
                 </cfquery>
                             
                 <cfquery name="check_hosts" datasource="#APPLICATION.DSN#">
-                    SELECT DISTINCT h.hostid, familylastname, h.fatherssn, h.motherssn, date_sent, date_expired, smg_seasons.season, requestid, cbc.batchid
+                    SELECT DISTINCT h.hostid, familylastname, h.fatherssn, h.motherssn, date_sent, date_expired, smg_seasons.season, requestid, cbc.batchid, cbc.cbcfamid
                     FROM smg_hosts h
                     INNER JOIN smg_hosts_cbc cbc ON h.hostid = cbc.hostid
                     LEFT JOIN smg_seasons ON smg_seasons.seasonid = cbc.seasonid
@@ -851,7 +859,7 @@
                         <td align="center" valign="top"><b>Date Submitted</b> <br><font size="-2">mm/dd/yyyy</font></td>
                         <td align="center" valign="top"><b>Expiration Date</b> <br><font size="-2">mm/dd/yyyy</font></td>		
                         <td align="center" valign="top"><b>View</b></td>
-                        <td align="left" valign="top"><b>Notes</b></td>
+                        <td align="left" valign="top" colspan="2"><b>Notes</b></td>
                         <cfif client.usertype lte 4 and client.companyid eq 10><td align="center" valign="top"><strong>Delete</strong></td></cfif>
                     </tr>				
                     <cfif get_cbc_user.recordcount EQ '0'>
@@ -863,7 +871,7 @@
                             <td align="center" style="line-height:20px;"><cfif NOT isDate(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
                             <td align="center" style="line-height:20px;"><cfif NOT isDate(date_expired)>processing<cfelse>#DateFormat(date_expired, 'mm/dd/yyyy')#</cfif></td>
                             <td align="center" style="line-height:20px;"><cfif NOT LEN(requestID)>processing<cfelseif flagcbc EQ 1>On Hold Contact Compliance<cfelse><cfif CLIENT.usertype lte 4><a href="cbc/view_user_cbc.cfm?userID=#get_cbc_user.userID#&cbcID=#get_cbc_user.cbcID#&file=batch_#get_cbc_user.batchid#_user_#get_cbc_user.userid#_rec.xml" target="_blank"><!----#requestid#---->View </a></cfif></cfif></td>
-                            <td>
+                            <td colspan="2">
 								<cfif client.usertype lte 4>
                                 	#notes#
                             	<cfelse>
@@ -886,6 +894,9 @@
                                 <cfif client.usertype lte 4 and client.companyid eq 10>
                                     <td align="center" valign="top"><a href="delete_cbc.cfm?type=user&id=#requestid#&userid=#url.userid#"><img src="pics/deletex.gif" border=0/></a></td>
                                 </cfif>
+                                <td>
+                                    <input type="button" onclick="getCBCFromHost(#userID#,#check_hosts.cbcfamid#)" value="Transfer CBC" style="font-size:10px" />
+                                </td>
                             </tr>
                         </cfloop>		
 					</cfif>                        		
