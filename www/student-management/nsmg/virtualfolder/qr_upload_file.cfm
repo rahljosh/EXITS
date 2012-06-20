@@ -19,11 +19,7 @@
         qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(uniqueID=FORM.unqID);
 
 		// Get Status
-		qGetCategory = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(
-			applicationID=APPLICATION.CONSTANTS.type.publicHighSchool,
-			fieldKey='virtualFolderCategory',
-			fieldID=FORM.category
-		);
+		qGetCategory = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='virtualFolderCategory', fieldID=FORM.category);
 		
         // Get Folder Path 
         currentDirectory = "#APPLICATION.PATH.onlineApp.virtualFolder##qGetStudentInfo.studentid#";

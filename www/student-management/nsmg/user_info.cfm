@@ -29,7 +29,7 @@
     
     <cfscript>
 		// Get Training Options
-		qGetTrainingOptions = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(applicationID=7,fieldKey='smgUsersTraining');
+		qGetTrainingOptions = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='smgUsersTraining');
 	
 		// Get Training records for this user
 		qGetTraining = APPLICATION.CFC.USER.getTraining(userID=URL.userid);

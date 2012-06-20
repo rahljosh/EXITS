@@ -34,7 +34,7 @@
 		qGetRegions = APPLICATION.CFC.REGION.getUserRegions(companyID=CLIENT.companyID, userID=CLIENT.userID, userType=CLIENT.userType);
 
 		// Get Training Options
-		qGetTrainingOptions = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(applicationID=7,fieldKey='smgUsersTraining');
+		qGetTrainingOptions = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='smgUsersTraining');
 		
 		// Programs
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(dateActive=1);
@@ -312,7 +312,7 @@
                 qGetRegions = APPLICATION.CFC.REGION.getRegionsByList(regionIDList=FORM.regionID, companyID=CLIENT.companyID);
 				
 				// Get Selected Training
-				qGetTrainingInfo = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(applicationID=7,fieldKey='smgUsersTraining',fieldID=FORM.trainingID);
+				qGetTrainingInfo = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='smgUsersTraining',fieldID=FORM.trainingID);
             </cfscript>
         
             <table class="report" align="center">	

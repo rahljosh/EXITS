@@ -31,12 +31,7 @@
 <!----Get all Regions---->
 <cfscript>
 	// Get List of Canada Districts
-	qGetESIDistrictChoice = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(
-		applicationID=APPLICATION.CONSTANTS.type.publicHighSchool,
-		fieldKey='ESIDistrictChoice',
-		sortBy='sortOrder',
-		isActive=''
-	);
+	qGetESIDistrictChoice = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='ESIDistrictChoice',sortBy='sortOrder',isActive='');
 </cfscript>
 
 <cfset closedList = ''>

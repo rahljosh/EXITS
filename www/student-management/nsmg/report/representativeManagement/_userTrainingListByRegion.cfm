@@ -33,7 +33,7 @@
 		}
 		
 		// Get Training Options
-		qGetTrainingOptions = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(applicationID=7,fieldKey='smgUsersTraining');
+		qGetTrainingOptions = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='smgUsersTraining');
 	</cfscript>
 
     <!--- FORM Submitted --->
@@ -243,8 +243,7 @@
 						qGetResults = APPLICATION.CFC.USER.reportTrainingNonCompliance(
 							regionID=qGetRegions.regionID,trainingID=FORM.trainingID,userID=CLIENT.userID,userType=CLIENT.userType);
 						
-						qGetTrainingInfo = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(
-							applicationID=7,fieldKey='smgUsersTraining',fieldID=FORM.trainingID);
+						qGetTrainingInfo = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='smgUsersTraining',fieldID=FORM.trainingID);
 					}
                 </cfscript>
                 
@@ -406,10 +405,10 @@
                         regionID=qGetRegions.regionID,trainingIDList=FORM.trainingID,userID=CLIENT.userID,userType=CLIENT.userType,programID=FORM.programID);
                 } else {
                     qGetResults = APPLICATION.CFC.USER.reportTrainingNonCompliance(
-                        regionID=qGetRegions.regionID,trainingID=FORM.trainingID,userID=CLIENT.userID,userType=CLIENT.userType);
                     
-                    qGetTrainingInfo = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(
-                        applicationID=7,fieldKey='smgUsersTraining',fieldID=FORM.trainingID);
+					regionID=qGetRegions.regionID,trainingID=FORM.trainingID,userID=CLIENT.userID,userType=CLIENT.userType);
+                    
+                    qGetTrainingInfo = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='smgUsersTraining',fieldID=FORM.trainingID);
                 }
             </cfscript>
             

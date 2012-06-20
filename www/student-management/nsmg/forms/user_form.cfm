@@ -553,7 +553,6 @@
 					vActions = vActions & "Updated by: #qGetEnteredBy.firstName# #qGetEnteredBy.lastName# (###qGetEnteredBy.userID#) <br /> #CHR(13)#";
 
 					APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
-						applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,
 						foreignTable='smg_users',
 						foreignID=URL.userID,
 						enteredByID=CLIENT.userID,
@@ -579,7 +578,6 @@
 					vActions = vActions & "Updated by: #qGetEnteredBy.firstName# #qGetEnteredBy.lastName# (###qGetEnteredBy.userID#) <br /> #CHR(13)#";
 
 					APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
-						applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,
 						foreignTable='smg_users',
 						foreignID=URL.userID,
 						enteredByID=CLIENT.userID,
