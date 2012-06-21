@@ -1633,6 +1633,23 @@
                                                         #dateFormat(qGetAllPlacements.placement_date, 'mm/dd/yyyy')#
                                                     </td>
                                                 </tr>
+                                                <tr>
+                                                	<td colspan="2">
+                                                    	<table cellpadding="0" cellspacing="0" width="100%">
+                                                        	<tr>
+                                                            	<td width="33%" class="style1" align="center">
+                                                                	<input type="checkbox" value="1" name="newJobOffer_#qGetAllPlacements.candCompID#" id="cancelStatus_#qGetAllPlacements.candCompID#" class="formField" <cfif qGetAllPlacements.isTransferJobOfferReceived EQ 1>checked</cfif> > New Job Offer
+                                                                </td>
+                                                                <td width="33%" class="style1" align="center">
+                                                                	<input type="checkbox" value="1" name="newHousingAddress_#qGetAllPlacements.candCompID#" id="cancelStatus_#qGetAllPlacements.candCompID#" class="formField" <cfif qGetAllPlacements.isTransferHousingAddressReceived EQ 1>checked</cfif> > New Housing Address
+                                                                </td>
+                                                                <td width="33%" class="style1" align="center">
+                                                                	<input type="checkbox" value="1" name="sevisUpdated_#qGetAllPlacements.candCompID#" id="cancelStatus_#qGetAllPlacements.candCompID#" class="formField" <cfif qGetAllPlacements.isTransferSevisUpdated EQ 1>checked</cfif> > SEVIS Updated
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                  	</td>
+                                                </tr>
                                                 <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF" class="hiddenField selfPlacementInfo">
                                                     <td colspan="2" class="style2" bgcolor="##8FB6C9">
                                                         &nbsp;:: Placement Vetting
