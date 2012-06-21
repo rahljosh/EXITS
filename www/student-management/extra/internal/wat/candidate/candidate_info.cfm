@@ -351,7 +351,6 @@
 			savePlacementData();
 			$(".selfPlacementField").val("");
 			$(".hostCheckBox").attr("checked", false);
-			restoreTempPlacementData();
 			haveChanged++;
 		} else {
 			if ($("#isSecondary").val() == 1) {
@@ -360,7 +359,6 @@
 				$(".hostCheckBox").attr("checked", false);
 				$(".trTransferInfo").fadeIn("fast");
 				$(".notReplacement").fadeOut("fast");
-				restoreTempPlacementData();
 				haveChanged++;
 			} else if (haveChanged){
 				restorePlacementData();
@@ -1461,19 +1459,19 @@
                                              		<tr class="hiddenField selfPlacementInfo">
                                                         <td class="style1" align="right" width="30%"><label for="authentication_secretaryOfState"><strong>Secretary of State:</strong></label></td>
                                                         <td class="style1" width="70%">
-                                                            <input type="checkbox" name="authentication_secretaryOfState" id="authentication_secretaryOfState" value="1" class="formField hostCheckBox" disabled <cfif VAL(qCandidatePlaceCompany.authentication_secretaryOfState)> checked </cfif> />
+                                                            <input type="checkbox" name="authentication_secretaryOfState" id="authentication_secretaryOfState" value="1" class="formField" disabled <cfif VAL(qCandidatePlaceCompany.authentication_secretaryOfState)> checked </cfif> />
                                                         </td>
                                                     </tr>
                                                     <tr class="hiddenField selfPlacementInfo">
                                                         <td class="style1" align="right"><label for="authentication_departmentOfLabor"><strong>Department of Labor:</strong></label></td>
                                                         <td class="style1">
-                                                            <input type="checkbox" name="authentication_departmentOfLabor" id="authentication_departmentOfLabor" value="1" class="formField hostCheckBox" disabled <cfif VAL(qCandidatePlaceCompany.authentication_departmentOfLabor)> checked </cfif> />
+                                                            <input type="checkbox" name="authentication_departmentOfLabor" id="authentication_departmentOfLabor" value="1" class="formField" disabled <cfif VAL(qCandidatePlaceCompany.authentication_departmentOfLabor)> checked </cfif> />
                                                         </td>
                                                     </tr>
                                                     <tr class="hiddenField selfPlacementInfo">
                                                         <td class="style1" align="right"><label for="authentication_googleEarth"><strong>Google Earth:</strong></label></td>
                                                         <td class="style1">
-                                                            <input type="checkbox" name="authentication_googleEarth" id="authentication_googleEarth" value="1" class="formField hostCheckBox" disabled <cfif VAL(qCandidatePlaceCompany.authentication_googleEarth)> checked </cfif> />
+                                                            <input type="checkbox" name="authentication_googleEarth" id="authentication_googleEarth" value="1" class="formField" disabled <cfif VAL(qCandidatePlaceCompany.authentication_googleEarth)> checked </cfif> />
                                                         </td>
                                                     </tr>
                                                     
@@ -1487,7 +1485,7 @@
                                             <td class="style1" align="right"><strong>EIN:</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly selfPlacementReadOnly">#qCandidatePlaceCompany.EIN#</span>
-                                                <input type="text" name="EIN" id="EIN" value="#qCandidatePlaceCompany.EIN#" class="style1 editPage selfPlacementField mediumField">
+                                                <input type="text" name="EIN" id="EIN" value="#qCandidatePlaceCompany.EIN#" class="style1 editPage mediumField">
                                             </td>
                                         </tr>
                                         <tr class="hiddenField selfPlacementInfo">
@@ -1502,7 +1500,7 @@
                                                         N/A
                                                     </cfif>
                                                 </span>
-                                                <select name="workmensCompensation" id="workmensCompensation" class="style1 editPage selfPlacementField smallField"> 
+                                                <select name="workmensCompensation" id="workmensCompensation" class="style1 editPage smallField"> 
                                                     <option value="" <cfif NOT LEN(qCandidatePlaceCompany.workmensCompensation)>selected</cfif> ></option>
                                                     <option value="0" <cfif qCandidatePlaceCompany.workmensCompensation EQ 0>selected</cfif> >No</option>
                                                     <option value="1" <cfif qCandidatePlaceCompany.workmensCompensation EQ 1>selected</cfif> >Yes</option>                                                    
@@ -1520,7 +1518,7 @@
                                                     	Workmen's compensation is missing.
                                                  	</cfif>
                                              	</span>
-                                                	<input type="text" name="WCDateExpired" id="WCDateExpired" value="#DateFormat(qCandidatePlaceCompany.WCDateExpired, 'mm/dd/yyyy')#" class="style1 datePicker editPage selfPlacementField" maxlength="10">
+                                                	<input type="text" name="WCDateExpired" id="WCDateExpired" value="#DateFormat(qCandidatePlaceCompany.WCDateExpired, 'mm/dd/yyyy')#" class="style1 datePicker editPage" maxlength="10">
                                             </td>
                                         </tr>
                                         
