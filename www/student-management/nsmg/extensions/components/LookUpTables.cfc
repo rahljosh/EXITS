@@ -36,7 +36,6 @@
         	datasource="#APPLICATION.DSN#">
                 SELECT 
                 	ID,
-                    applicationID,
                     fieldKey,
                     fieldID,
                     name,
