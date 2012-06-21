@@ -75,6 +75,9 @@
         <cfparam name="FORM.workmensCompensation_#qGetAllPlacements.candCompID#" default="0">
         <cfparam name="FORM.WCDateExpried_#qGetAllPlacements.candCompID#" default="">
         <cfparam name="FORM.selfFindJobOffer_#qGetAllPlacements.candCompID#" default="">
+        <cfparam name="FORM.newJobOffer_#qGetAllPlacements.candCompID#" default="">
+        <cfparam name="FORM.newHousingAddress_#qGetAllPlacements.candCompID#" default="">
+        <cfparam name="FORM.sevisUpdated_#qGetAllPlacements.candCompID#" default="">
     </cfif>
 </cfloop>
 
@@ -219,7 +222,10 @@
                     selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['selfJobOfferStatus_#qGetAllPlacements.candCompID#']#">,
                     selfPhoneConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM['selfPhoneConfirmationDate_#qGetAllPlacements.candCompID#']#">,
                     selfConfirmationNotes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['selfConfirmationNotes_#qGetAllPlacements.candCompID#']#">,
-                    selfFindJobOffer = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['selfFindJobOffer_#qGetAllPlacements.candCompID#']#">
+                    selfFindJobOffer = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['selfFindJobOffer_#qGetAllPlacements.candCompID#']#">,
+                    isTransferJobOfferReceived = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM['newJobOffer_#qGetAllPlacements.candCompID#'])#">,
+                	isTransferHousingAddressReceived = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM['newHousingAddress_#qGetAllPlacements.candCompID#'])#">,                
+                	isTransferSevisUpdated = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM['sevisUpdated_#qGetAllPlacements.candCompID#'])#">
                 WHERE 
                     candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetAllPlacements.candCompID#">
             </cfquery>
