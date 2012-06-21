@@ -45,7 +45,7 @@
         AND
             ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         AND
-            ec.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            ec.active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         AND    
             ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
         AND
@@ -53,7 +53,7 @@
        	AND
         	CURDATE() >= DATE_ADD(watDateCheckedIn, INTERVAL 20 DAY)
       	AND
-        	CURDATE() < DATE_ADD(watDateCheckedIn, INTERVAL 45 DAY)
+        	CURDATE() < DATE_ADD(watDateCheckedIn, INTERVAL 55 DAY)
         ORDER BY
             ec.lastName,
             ec.firstName
@@ -74,7 +74,7 @@
     </p>
     
     <p style="font-weight:bold; text-decoration:underline; font-size:16px; text-align:center;">
-        <a href="http://www.csb-usa.com/evaluation?evaluation={evaluationID}&uniqueID={uniqueID}">Take Evaluation</a>
+        Please click to access the evaluation form: <a href="http://www.csb-usa.com/evaluation?evaluation={evaluationID}&uniqueID={uniqueID}">Take Evaluation</a>
     </p>
     
     <p style="color:red;">
