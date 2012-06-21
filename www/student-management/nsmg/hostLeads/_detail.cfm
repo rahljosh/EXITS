@@ -66,6 +66,7 @@
 		
 		// Get History
 		qGetHostLeadHistory = APPLICATION.CFC.LOOKUPTABLES.getApplicationHistory(
+			applicationID=APPLICATION.CONSTANTS.type.hostFamilyLead,
 			foreignTable='smg_host_lead',
 			foreignID=qGetHostLead.ID
 		);
@@ -125,6 +126,7 @@
 
 				// Get History
 				qGetHostLeadHistory = APPLICATION.CFC.LOOKUPTABLES.getApplicationHistory(
+					applicationID=APPLICATION.CONSTANTS.type.hostFamilyLead,
 					foreignTable='smg_host_lead',
 					foreignID=qGetHostLead.ID
 				);
