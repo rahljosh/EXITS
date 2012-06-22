@@ -15,7 +15,7 @@
 <cfinclude template="../querys/get_company.cfm">
 
 <cfquery name="get_candidates" datasource="MySql"> 
-	SELECT DISTINCT	c.candidateid, c.lastname, c.firstname, c.verification_received, c.active, c.cancel_date, c.startdate, c.enddate,
+	SELECT DISTINCT	c.candidateid, c.lastname, c.firstname, c.verification_received, c.cancel_date, c.startdate, c.enddate,
 		u.businessname,
 		p.programname, p.programid
 	FROM extra_candidates c 

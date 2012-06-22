@@ -31,16 +31,6 @@
 	LEFT JOIN smg_programs ON smg_programs.programid = extra_candidates.programid 
 	LEFT JOIN smg_users ON smg_users.userid = extra_candidates.intrep 	
 	WHERE extra_candidates.companyid = '#client.companyid#' 
-	
-		<!--- <cfif url.status EQ 1>
-			AND extra_candidates.active = '1'
-		<cfelseif url.status EQ 0>
-			AND extra_candidates.active = '0'
-			AND extra_candidates.cancel_date IS NULL
-		<cfelseif url.status EQ 'canceled'>
-			AND extra_candidates.active = '0'
-			AND extra_candidates.cancel_date IS NOT NULL
-		</cfif>	--->
 		
 		<cfif url.status EQ 'canceled'>
 			AND extra_candidates.status = 'canceled'

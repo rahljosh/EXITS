@@ -48,35 +48,6 @@
 	<cfset form.doc_sponsor_letter = '1'>
 </cfif>  
 
-
-
-
-
-
-
-<!----
-<cfif form.email NEQ ''>
-	<cfquery name="check_username" datasource="MySql">
-		SELECT email
-		FROM extra_candidates
-		WHERE email = '#form.email#'
-        and active = 1
-	</cfquery>
-	<cfif check_username.recordcount NEQ '0'><br>
-		<table border=0 cellpadding=4 cellspacing=0 class="section" align="center" width=90%>
-			<tr><th background="images/back_menu2.gif" class="title1">EXITS - Error Message</th>
-			</tr>
-			<cfoutput>
-			<tr><td class="style1">Sorry, the e-mail address <b>#form.email#</b> is being used by another account.</td></tr>
-			<tr><td class="style1">Please click on the "back" button below and enter a new e-mail address.</td></tr>
-			<tr><td align="center"><input name="back" type="image" src="../pics/back.gif" align="middle" border=0 onClick="history.back()"></div><br></td></tr>
-			</cfoutput>
-		</table>
-		<cfabort>
-	</cfif>
-</cfif>
----->
-
 	<!--- CREATE UNIQUE ID ---->
 	<cfset form.uniqueid = createuuid()>
 	

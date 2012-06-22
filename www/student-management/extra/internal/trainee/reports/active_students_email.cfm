@@ -21,7 +21,7 @@
     WHERE
     	companyid = 7 
     AND
-    	active = 1
+    	status = 1
     AND     
     	enddate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d', -28, now())#">
 </cfquery>

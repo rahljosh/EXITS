@@ -36,11 +36,10 @@
 	WHERE <!----verification_received is null
 		AND ----> 
 		extra_candidates.companyid = 9<!----#client.companyid# ---->
-		<!----AND extra_candidates.active = '1' ---->
 		AND extra_candidates.programid = #url.program# 
 		AND extra_candidates.intrep = #url.intrep#
 		AND extra_candidates.h2b_i129_filled = 0
-		AND extra_candidates.active = 1
+		AND extra_candidates.status = 1
 		<!---AND onhold_approved <= '4'--->
 	ORDER BY extra_candidates.lastname
 </cfquery>

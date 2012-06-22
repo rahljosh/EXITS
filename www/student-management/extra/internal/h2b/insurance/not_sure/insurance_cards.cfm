@@ -55,7 +55,7 @@
 	LEFT JOIN extra_candidate_place_company place ON ec.candidateid = place.candidateid
 	LEFT JOIN extra_hostcompany hcompany ON place.hostcompanyid = hcompany.hostcompanyid
 	LEFT JOIN smg_states states ON states.id = hcompany.state
-	WHERE ec.active = '1'
+	WHERE ec.status = '1'
 		AND place.status = '1'
 		<cfif form.intrep NEQ 0>
 			AND ec.intrep = '#form.intrep#'

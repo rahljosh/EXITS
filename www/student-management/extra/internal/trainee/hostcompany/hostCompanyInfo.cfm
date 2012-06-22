@@ -147,8 +147,7 @@
         	ec.candidateid, 
             ec.uniqueid, 
             ec.firstname, 
-            ec.lastname, 
-            ec.active, 
+            ec.lastname,
             ec.startDate,
             ec.enddate,
             p.programname            
@@ -171,8 +170,7 @@
         	ec.candidateid, 
             ec.uniqueid, 
             ec.firstname, 
-            ec.lastname, 
-            ec.active, 
+            ec.lastname,
             ec.startDate,
             ec.enddate,
             p.programname            

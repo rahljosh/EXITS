@@ -160,18 +160,6 @@
 		<meta http-equiv="refresh" content="1;url=index.cfm?curdoc=reports/unplaced_students_wt_flashpaper&program=#FORM.program#">
 	<cfelse>
 
-<!--- <cfquery name="get_wat_placement" datasource="mysql">
-	SELECT wat_placement, count(wat_placement) AS total
-	FROM extra_candidates
-	WHERE active = 1 
-	AND companyid = 8
-	AND hostcompanyid = 0
-	AND status = 1
-	AND active = 1
-	GROUP BY wat_placement
-</cfquery> --->
-
-
 <div class="style1"><strong>&nbsp; &nbsp; CSB-Placement:</strong> #qGetCandidates.recordcount#</div>	
 <div class="style1"><strong>&nbsp; &nbsp; Self-Placement:</strong> #qGetCandidatesSelf.recordcount#</div>
 <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>

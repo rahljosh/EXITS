@@ -42,12 +42,6 @@
 		}
 		// End -->
     </script>
-       <!----   <cfquery name="get_host_company" datasource="MySql">
-			SELECT name, hostcompanyid
-            FROM extra_hostcompany
-			WHERE active = 1 
-			Order by name
-        </cfquery>---->
       </font>
        
          <!---
@@ -100,15 +94,6 @@
 		<meta http-equiv="refresh" content="1;url=index.cfm?curdoc=reports/unplaced_candidates_programflashpaper&program=#form.program#">
 		
 	<cfelse>
-<!----
-<cfquery name="get_wat_placement" datasource="mysql">
-	SELECT wat_placement, count(wat_placement) AS total
-	FROM extra_candidates
-	WHERE active = 1 
-	AND companyid = 8
-	AND hostcompanyid = 0
-	GROUP BY wat_placement
-</cfquery>
 
 <cfloop query="get_wat_placement">
 <strong><font size="2" face="Verdana, Arial, Helvetica, sans-serif" >Students #wat_placement#:  #total# </font></strong>

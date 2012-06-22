@@ -24,10 +24,6 @@
             companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         AND 
         	name != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-        <!---
-        AND
-        	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        --->
 		ORDER BY 
         	name
     </cfquery>

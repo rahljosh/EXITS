@@ -66,11 +66,6 @@ and c.programid = #form.program# ---->
         </cfquery>
 		
 		<cfquery name="get_int_rep" datasource="MySql">
-		<!--- 	SELECT smg_users.businessname, smg_users.userid
-            FROM smg_users
-			LEFT JOIN user_Access_rights on smg_users.userid = user_access_rights.userid
-			where  user_access_rights.usertype =8 and smg_users.active=1
-			Order by businessname --->
 			SELECT userid, firstname, lastname, businessname, uniqueid,
 				smg_countrylist.countryname
 			FROM smg_users
@@ -81,14 +76,6 @@ and c.programid = #form.program# ---->
         </cfquery>
 		
       </font>
-       
-         <!----
-            <select name="companyid">
-			<option></option>
-            <cfloop query="get_host_company">
-              <option value="#hostcompanyid#" <cfif IsDefined('form.companyid')><cfif get_host_company.hostcompanyid eq #form.companyid#> selected</cfif></cfif>> #get_host_company.name# </option>
-            </cfloop>
-          </select>--->
 		  
 		  <select name="intrep">
 				<option></option>

@@ -119,7 +119,6 @@ OR form.get_confirmation NEQ form.confirmation_received >---->
 				<!----earliestarrival =<cfif form.earliestarrival NEQ ''>#CreateODBCDate(form.earliestarrival)#<cfelse>NULL</cfif>, 
 				latestarrival =<cfif form.latestarrival NEQ ''>#CreateODBCDate(form.latestarrival)#<cfelse>NULL</cfif>,--->
 				<cfif cancel_date eq ''>
-				<cfif IsDefined('form.active')>active = 1,</cfif>
 				cancel_date = NULL,
 				<cfelse>
 				cancel_date = #CreateODBCDate(form.cancel_date)#,

@@ -10,8 +10,7 @@
   WHERE <!----extra_candidates.hostcompanyid = #form.companyid#
   AND ----->extra_candidates.programid = #form.program#
   AND extra_candidates.intrep = #form.intrep#
-AND extra_candidates.active = 1
-and extra_candidates.status = 1
+  AND extra_candidates.status = 1
 
 
 </cfquery>
@@ -42,21 +41,8 @@ and extra_candidates.status = 1
 		}
 		// End -->
     </script>
-        <!----  <cfquery name="get_host_company" datasource="MySql">
-			SELECT name, hostcompanyid
-            FROM extra_hostcompany
-			WHERE active = 1
-			Order by name
-        </cfquery>---->
 		
-		  <cfquery name="get_int_rep" datasource="MySql">
-			<!----SELECT smg_users.businessname, smg_users.userid, smg_users.companyid
-            FROM smg_users
-			LEFT JOIN user_Access_rights on smg_users.userid = user_access_rights.userid
-			where  user_access_rights.usertype =8 and smg_users.active=1
-			
-			Order by businessname ----->
-			
+		  <cfquery name="get_int_rep" datasource="MySql">			
 			SELECT userid, firstname, lastname, businessname, uniqueid,
 				smg_countrylist.countryname
 			FROM smg_users

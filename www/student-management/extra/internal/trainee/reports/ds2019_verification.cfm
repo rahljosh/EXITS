@@ -38,7 +38,7 @@
     AND 
     	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="7">
     AND 
-    	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+    	status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
     AND 
     	intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.intrep#">
     AND 

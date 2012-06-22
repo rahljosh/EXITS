@@ -72,7 +72,7 @@
 			<!--- Get names, addresses from our database --->
 	
     <cfquery name="get_candidates" datasource="MySql"> 
-				SELECT 	s.candidateid, s.lastname, s.firstname, s.home_city, s.home_zip, s.entrydate, s.active, s.hostcompanyid,
+				SELECT 	s.candidateid, s.lastname, s.firstname, s.home_city, s.home_zip, s.entrydate, s.hostcompanyid, s.status,
 						p.programname, p.programid, 
 						u.businessname, u.userid,
 					<!--- r.regionid, r.regionname,---->
@@ -86,33 +86,12 @@
 				<!---LEFT JOIN smg_regions r ON s.regionassigned = r.regionid--->
 						WHERE s.companyid = #client.companyid# 
 						AND s.candidateid between '#form.id1#' AND '#form.id2#'
-						AND s.active = 1
+						AND s.status = 1
 						<!---<cfif form.programid is 0><cfelse>AND s.programid = '#form.programid#'</cfif>--->
                         <cfif form.programid2 NEQ 0>AND s.programid = #form.programid#</cfif>
 				ORDER BY s.candidateid
 			</cfquery>
 
-            
-            		
-	<!---- <cfquery name="get_students" datasource="MySql"> 
-				SELECT 	s.studentid, s.familylastname, s.firstname, s.city, s.zip, s.dateapplication, s.active,
-						p.programname, p.programid, 
-						u.businessname, u.userid,
-						r.regionid, r.regionname,
-						c.companyshort, c.companyid
-				FROM smg_students s
-				INNER JOIN smg_programs p ON s.programid = p.programid
-				INNER JOIN smg_users u ON s.intrep = u.userid
-				INNER JOIN smg_companies c ON s.companyid = c.companyid
-				LEFT JOIN smg_regions r ON s.regionassigned = r.regionid
-				WHERE   s.companyid = #session.companyid# 
-						AND s.studentid between '#form.id1#' AND '#form.id2#'
-						AND s.active = '1'				
-						<cfif form.programid is 0><cfelse>AND s.programid = '#form.programid#'</cfif>	
-				ORDER BY s.studentid
-			</cfquery> ---->
-						
-			<!--- The table consists has five columns, two lablels and two spacers, interchanged. To identify where to place each, we need to maintain a column counter. --->
 			<cfset col=1>
 			<cfoutput query="get_candidates">
 				

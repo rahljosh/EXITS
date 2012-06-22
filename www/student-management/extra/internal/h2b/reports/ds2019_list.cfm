@@ -9,7 +9,7 @@
 	INNER JOIN smg_users ON extra_candidates.intrep = smg_users.userid 
 	WHERE ds2019 = ''
 		AND verification_received IS null 
-		AND extra_candidates.active = '1'
+		AND extra_candidates.status = '1'
 		<!---AND onhold_approved <= '4' --->
 		AND	( <cfloop list=#form.programid# index='prog'>
 			programid = #prog# 
@@ -19,23 +19,6 @@
 	ORDER BY businessname
 </cfquery>
 
-<!--- nsmg 
-<cfquery name="get_agent_list" datasource="MYSQL">
-	SELECT DISTINCT	intrep, businessname, count(studentid) as total_student
-	FROM smg_students 
-	INNER JOIN smg_users ON smg_students.intrep = smg_users.userid 
-	WHERE ds2019_no = ''
-		AND verification_received IS null 
-		AND smg_students.active = '1'
-		AND onhold_approved <= '4'
-		AND	( <cfloop list=#form.programid# index='prog'>
-			programid = #prog# 
-			<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-			</cfloop> )
-	GROUP BY intrep
-	ORDER BY businessname
-</cfquery>
---->
 <cfquery name="get_program" datasource="MYSQL">
 	SELECT	DISTINCT 
 		p.programid, p.programname, 
