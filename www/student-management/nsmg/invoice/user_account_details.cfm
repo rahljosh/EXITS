@@ -897,7 +897,7 @@ GROUP BY
 
 
 	<tr>
-		<Td></Td><td>Payment Ref</td><td>Payment Type</td><td>Date Applied</td><td>Amount</td>
+		<Td></Td><td>Payment Ref</td><td>Payment Type</td><td>Date Received</td><td>Amount</td>
 	</tr>
 	
 <Cfquery name="payments_received" datasource="mysql">
@@ -947,7 +947,7 @@ GROUP BY
             and sch.companyid != 14
         </cfif>
     GROUP BY 
-        sp.paymentref            
+        sp.paymentref, sp.date       
     ORDER BY            
         sp.date DESC		
 </Cfquery>
@@ -958,14 +958,16 @@ GROUP BY
 	from smg_payment_received spr
 	right join smg_payment_charges spc on spc.paymentid = spr.paymentid
 	right join smg_charges sc on sc.chargeid = spc.chargeid
-	where paymentref = '#paymentref#' and spr.agentid = #url.userid# and paymenttype = '#paymenttype#'
+	where paymentref = '#paymentref#'
+    and spr.agentid = #url.userid# 
+    and paymenttype = '#paymenttype#'
+    and spr.date = #payments_received.date#
 	<cfif client.companyid EQ 10 OR client.companyid EQ 14>
 		and sc.companyid = #client.companyid#
 	</cfif>
-	group by agentid
 	</cfquery>
 
-	<cfloop query=totals>
+	<cfloop query="totals">
 		<cfquery name="agent_details" datasource="mysql">
 		select businessname
 		from smg_users
@@ -973,7 +975,7 @@ GROUP BY
 		</cfquery>
 	
 		<Tr <cfif payments_received.currentrow mod 2>bgcolor="ededed"</cfif>>
-			<td>#payments_received.currentrow#</td><td><a class=nav_bar href="" onClick="javascript: win=window.open('invoice/payment_details.cfm?ref=#paymentref#&userid=#url.userid#', 'Payment_Details', 'height=395, width=602, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">#paymentref#</a></td><td>#paymenttype#</td><td>#DateFormat(date, 'mm-dd-yyyy')#</td><td>#LSCurrencyFormat(payment_total, 'local')#</td><cfif form.view is 'all'><td></td></cfif>
+			<td>#payments_received.currentrow#</td><td><a class=nav_bar href="" onClick="javascript: win=window.open('invoice/payment_details.cfm?ref=#paymentref#&userid=#url.userid#&dateRec=#DateFormat(date, 'yyyy-mm-dd')#', 'Payment_Details', 'height=395, width=602, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">#paymentref#</a></td><td>#paymenttype#</td><td>#DateFormat(date, 'mm-dd-yyyy')#</td><td>#LSCurrencyFormat(payment_total, 'local')#</td><cfif form.view is 'all'><td></td></cfif>
 		</Tr>
 	</cfloop>
 </cfoutput>
