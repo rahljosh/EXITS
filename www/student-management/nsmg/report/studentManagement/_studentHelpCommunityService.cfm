@@ -30,6 +30,9 @@
 		param name="FORM.minHours" default=0;
 		param name="FORM.maxHours" default=21;
 		param name="FORM.outputType" default="onScreen";
+		
+		// Set Report Title To Keep Consistency
+		vReportTitle = "Student Management - Help Community Service";
 	</cfscript>	
 
     <!--- FORM Submitted --->
@@ -90,7 +93,7 @@
         <form action="report/index.cfm?action=studentHelpCommunityService" name="helpCommunityService" id="helpCommunityService" method="post" target="blank">
             <input type="hidden" name="submitted" value="1" />
             <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable" align="center">
-                <tr><th colspan="2">Student Management - Help Community Service</th></tr>
+                <tr><th colspan="2">#vReportTitle#</th></tr>
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Program: <span class="required">*</span></td>
                     <td>
@@ -220,7 +223,7 @@
         
         <table width="98%" cellpadding="4" cellspacing="0" align="center" border="1">
             <tr>
-                <th colspan="5">Student Management - Help Community Service</th>            
+                <th colspan="5">#vReportTitle#</th>            
             </tr>
             <tr style="font-weight:bold;">
                 <td>Region</td>
@@ -261,7 +264,7 @@
             <!--- Include Report Header --->   
             <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                 <tr>
-                    <th>Student Management - Help Community Service</th>            
+                    <th>#vReportTitle#</th>            
                 </tr>
                 <tr>
                     <td class="center">

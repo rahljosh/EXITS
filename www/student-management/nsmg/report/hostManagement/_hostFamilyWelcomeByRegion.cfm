@@ -31,6 +31,9 @@
 		param name="FORM.reportBy" default="placeRepID";
 		param name="FORM.outputType" default="onScreen";
 
+		// Set Report Title To Keep Consistency
+		vReportTitle = "Host Family Management - Welcome Host Family";
+
 		// Get Programs
 		qGetPrograms = APPLICATION.CFC.PROGRAM.getPrograms(programIDList=FORM.programID);
 	</cfscript>	
@@ -152,7 +155,7 @@
         <form action="report/index.cfm?action=hostFamilyWelcomeByRegion" name="welcomeFamily" id="welcomeFamily" method="post" target="blank">
             <input type="hidden" name="submitted" value="1" />
             <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable" align="center">
-                <tr><th colspan="2">Host Family Management - Welcome Host Family</th></tr>
+                <tr><th colspan="2">#vReportTitle#</th></tr>
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Program: <span class="required">*</span></td>
                     <td>
@@ -233,7 +236,7 @@
         
         <table width="98%" cellpadding="4" cellspacing="0" align="center" border="1">
             <tr>
-                <th colspan="10">Host Family Management - Welcome Host Family</th>            
+                <th colspan="10">#vReportTitle#</th>            
             </tr>
             <tr style="font-weight:bold;">
                 <td>Region</td>
@@ -302,7 +305,7 @@
             <!--- Include Report Header --->   
             <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                 <tr>
-                    <th>Host Family Management - Welcome Host Family</th>            
+                    <th>#vReportTitle#</th>            
                 </tr>
                 <tr>
                     <td class="center">

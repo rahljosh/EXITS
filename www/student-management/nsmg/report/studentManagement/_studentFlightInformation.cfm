@@ -28,7 +28,10 @@
 		param name="FORM.dateFrom" default="";
 		param name="FORM.dateTo" default="";	
 		param name="FORM.outputType" default="onScreen";
-		
+
+		// Set Report Title To Keep Consistency
+		vReportTitle = "Student Management - Flight Information";
+
 		// set to 1 if this is a report of missing flight information
 		vMissingReport = 1;
 
@@ -215,7 +218,7 @@
         <form action="report/index.cfm?action=studentFlightInformation" name="flightInformation" id="flightInformation" method="post" target="blank">
             <input type="hidden" name="submitted" value="1" />
             <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable" align="center">
-                <tr><th colspan="2">Student Management - Flight Information</th></tr>
+                <tr><th colspan="2">#vReportTitle#</th></tr>
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Program: <span class="required">*</span></td>
                     <td>
@@ -323,7 +326,7 @@
         
         <table width="98%" cellpadding="4" cellspacing="0" align="center" border="1">
             <tr>
-                <th colspan="10">Student Management - Student Flight Information</th>            
+                <th colspan="10">#vReportTitle#</th>            
             </tr>
             <tr style="font-weight:bold;">
                 <td>Region</td>
@@ -422,7 +425,7 @@
             <!--- Include Report Header --->    
             <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                 <tr>
-                    <th>Student Management - Flight Information</th>            
+                    <th>#vReportTitle#</th>            
                 </tr>
                 <tr>
                     <td class="center">

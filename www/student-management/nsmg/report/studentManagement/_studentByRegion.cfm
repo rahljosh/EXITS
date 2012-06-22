@@ -32,6 +32,9 @@
 		param name="FORM.outputType" default="onScreen";
 		param name="FORM.summary" default="0";
 
+		// Set Report Title To Keep Consistency
+		vReportTitle = "Student Management - Student By Region";
+
 		// Get Programs
 		qGetPrograms = APPLICATION.CFC.PROGRAM.getPrograms(programIDList=FORM.programID);
 	</cfscript>	
@@ -205,7 +208,7 @@
         <form action="report/index.cfm?action=studentByRegion" name="studentListByRegion" id="studentListByRegion" method="post" target="blank">
             <input type="hidden" name="submitted" value="1" />
             <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable" align="center">
-                <tr><th colspan="2">Student Management - Student By Region</th></tr>
+                <tr><th colspan="2">#vReportTitle#</th></tr>
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Program: <span class="required">*</span></td>
                     <td>
@@ -334,7 +337,7 @@
         
         <table width="98%" cellpadding="4" cellspacing="0" align="center" border="1">
             <tr>
-                <th colspan="16">Student Management - Student List By Region</th>            
+                <th colspan="16">#vReportTitle#</th>            
             </tr>
             <tr style="font-weight:bold;">
                 <td>Region</td>
@@ -446,7 +449,7 @@
             <!--- Include Report Header --->   
             <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                 <tr>
-                    <th>Student Management - Student By Region</th>            
+                    <th>#vReportTitle#</th>            
                 </tr>
                 <tr>
                     <td class="center">
