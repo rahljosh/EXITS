@@ -24,7 +24,7 @@
 <cfquery name="verification_dates" datasource="MySql">
 	SELECT ec.verification_received
 	FROM extra_candidates ec 
-	WHERE ec.active = '1'
+	WHERE ec.status = '1'
 		AND ec.companyid = '#client.companyid#'
 		AND ec.verification_received IS NOT NULL
 	GROUP BY ec.verification_received

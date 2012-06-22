@@ -32,7 +32,6 @@
   WHERE <!----extra_candidates.hostcompanyid = #form.companyid#
   AND ----->extra_candidates.programid = #url.program#
   AND extra_candidates.intrep = #url.intrep#
-AND extra_candidates.active = 1
 and extra_candidates.status = 1
 
 

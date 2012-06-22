@@ -17,7 +17,7 @@
 	SELECT DISTINCT	userid, intrep, businessname, count(candidateid) as total_candidate
 	FROM extra_candidates
 	INNER JOIN smg_users ON extra_candidates.intrep = smg_users.userid 
-	WHERE extra_candidates.active = '1'
+	WHERE extra_candidates.status = '1'
 		AND ds2019 = ''
 		AND birth_country != '232' AND residence_country != '232' AND citizen_country != '232'
 		AND verification_received IS NOT NULL
@@ -73,7 +73,7 @@
 	<cfquery name="get_candidates" datasource="MYSQL">
 		SELECT candidateid, firstname, lastname
 		FROM extra_candidates
-		WHERE active = '1'
+		WHERE status = '1'
 			AND ds2019 = ''
 			AND birth_country != '232' AND residence_country != '232' AND citizen_country != '232'
 			AND verification_received IS NOT NULL

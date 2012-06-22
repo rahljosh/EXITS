@@ -21,11 +21,10 @@
 	WHERE <!----verification_received is null
 		AND ----> 
 		extra_candidates.companyid = 9<!----#client.companyid# ---->
-		<!----AND extra_candidates.active = '1' ---->
 		AND extra_candidates.programid = #form.program# 
 		AND extra_candidates.intrep = #form.intrep#
 		AND extra_candidates.h2b_i129_filled = 0
-		AND extra_candidates.active = 1
+		AND extra_candidates.status = 1
 		<!---AND onhold_approved <= '4'--->
 	ORDER BY extra_candidates.lastname
 </cfquery>
@@ -57,11 +56,6 @@
 		// End -->
     </script>
           <cfquery name="get_int_rep" datasource="MySql">
-			<!--- SELECT smg_users.businessname, smg_users.userid
-            FROM smg_users
-			LEFT JOIN user_Access_rights on smg_users.userid = user_access_rights.userid
-			where  user_access_rights.usertype =8 and smg_users.active=1
-			Order by businessname --->
 			SELECT userid, firstname, lastname, businessname, uniqueid,
 				smg_countrylist.countryname
 			FROM smg_users

@@ -9,7 +9,7 @@
 	FROM extra_candidates
 	INNER JOIN smg_users ON extra_candidates.intrep = smg_users.userid 
 	WHERE verification_received IS NOT NULL
-		AND extra_candidates.active = '1'
+		AND extra_candidates.status = '1'
 		AND	( <cfloop list=#form.programid# index='prog'>
 			programid = #prog# 
 			<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>

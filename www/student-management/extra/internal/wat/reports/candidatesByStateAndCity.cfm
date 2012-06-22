@@ -67,7 +67,7 @@
        	LEFT OUTER JOIN
         	extra_jobs ej ON ej.ID = ecpc.jobID
       	WHERE
-        	c.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        	c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
 		<cfif FORM.programID GT 0>
         	AND
             	c.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">

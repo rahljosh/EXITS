@@ -62,7 +62,7 @@ where hostcompanyid = 0
 <cfquery name="get_wat_placement" datasource="mysql">
 	SELECT wat_placement, count(wat_placement) AS total
 	FROM extra_candidates
-	WHERE active = 1 
+	WHERE status = 1 
 	AND companyid = 8
 	AND hostcompanyid = 0
 	AND status = 1

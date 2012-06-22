@@ -1,34 +1,3 @@
-<!-----------<cfif session.usertype LTE '4'>
-
-<cfif NOT IsDefined('url.active')>
-	<cfset url.active = '1'>
-</cfif>
------------------------------------>
-<!------<Cfquery name="programs" datasource="MySQL">
-	SELECT programid, programname, type, startdate, enddate, insurance_startdate, insurance_enddate, smg_programs.companyid, programfee,
-			application_fee, insurance_w_deduct, insurance_wo_deduct, blank, hold, smg_programs.tripid, smg_programs.active,
-			smg_companies.companyshort,
-			smg_program_type.programtype,
-			smg_incentive_trip.trip_place, smg_incentive_trip.trip_year,
-	<!----		smg_seasons.season,
-			smg.season as smgseason ---->
-			
-
-
-	FROM smg_programs
-	INNER JOIN smg_companies ON smg_companies.companyid = smg_programs.companyid
-	LEFT JOIN smg_program_type ON smg_program_type.programtypeid = smg_programs.type
-<!-----	LEFT JOIN smg_incentive_trip ON smg_incentive_trip.tripid = smg_programs.tripid
-	LEFT JOIN smg_seasons ON smg_seasons.seasonid = smg_programs.seasonid
-	LEFT JOIN smg_seasons smg ON smg.seasonid = smg_programs.smgseasonid
-	WHERE smg_programs.active = <cfqueryparam value="#url.active#" cfsqltype="cf_sql_integer">
-	<cfif session.companyid NEQ 5>
-		AND smg_programs.companyid = #session.companyid#
-	</cfif>
-	ORDER BY smg_companies.companyshort          ------------>
-</Cfquery>
-------------->
-
 <style type="text/css">
 
 body,td,th {
@@ -121,28 +90,3 @@ body,td,th {
 	</tr>
 </table>
 </form>
-<!------------
-<cfelse>
-You do not have sufficient rights to edit programs.
-</cfif>----------->
-
-<!--- TURN PROGRAMS TO INACTIVE 
-<cfquery name="get_program" datasource="MYSQL">
-	SELECT	*
-	FROM smg_programs p
-	LEFT JOIN smg_program_type ON type = programtypeid
-	INNER JOIN smg_companies c ON p.companyid = c.companyid
-	WHERE enddate < '#DateFormat(now(), 'yyyy-mm-dd')#'
-	ORDER BY companyshort, programname
-</cfquery>
-<cfoutput query="get_program">
-	<cfquery name="update" datasource="MySql">
-		UPDATE smg_programs 
-		SET active = '0'
-		WHERE programid = '#get_program.programid#'
-		LIMIT 1
-	</cfquery>
-</cfoutput>
----->
-
-<!-----<cfinclude template="../footer.cfm"> --->

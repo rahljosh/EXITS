@@ -10,8 +10,7 @@
   WHERE <!----extra_candidates.hostcompanyid = #form.companyid#
   AND ----->extra_candidates.programid = #form.program#
   AND extra_candidates.hostcompanyid = #form.companyid#
-AND extra_candidates.active = 1
-and extra_candidates.status = 1
+  AND extra_candidates.status = 1
 
 
 
@@ -46,8 +45,8 @@ and extra_candidates.status = 1
           <cfquery name="get_host_company" datasource="MySql">
 			SELECT name, hostcompanyid, companyid
             FROM extra_hostcompany
-			WHERE <!-----active = 1
-			AND ----> companyid = 9
+			WHERE
+            	companyid = 9
 			Order by name
         </cfquery>
 		

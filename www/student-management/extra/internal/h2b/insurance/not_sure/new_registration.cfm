@@ -24,7 +24,7 @@
   INNER JOIN smg_users u 		ON ec.intrep = u.userid
   INNER JOIN smg_programs p 	ON ec.programid = p.programid
   LEFT JOIN smg_countrylist c 	ON ec.residence_country = c.countryid
-  WHERE ec.active = '1' 
+  WHERE ec.status = '1' 
 		AND ec.insurance_date IS NULL
 		AND u.insurance_typeid != '1'
 		<cfif form.intrep NEQ 0>AND ec.intrep = '#form.intrep#'</cfif>

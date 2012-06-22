@@ -44,8 +44,6 @@
             ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
         AND
             ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-        AND
-            ec.active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         AND    
             ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
         AND

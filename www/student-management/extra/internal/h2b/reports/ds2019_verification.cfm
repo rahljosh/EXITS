@@ -21,7 +21,7 @@
 	LEFT JOIN smg_countrylist citizen ON extra_candidates.citizen_country = citizen.countryid
 	WHERE verification_received is null
 		AND companyid = #client.companyid# 
-		AND active = '1' 
+		AND status = '1' 
 		AND programid = #url.program# 
 		AND intrep = #url.intrep#
 		<!---AND onhold_approved <= '4'--->

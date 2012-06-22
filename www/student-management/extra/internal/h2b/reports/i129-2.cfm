@@ -8,26 +8,22 @@
 	resident.countryname as countryresident,
 	citizen.countryname as countrycitizen,
 	passcountry.countryname as passportcountry
-	<!----
-	birth_country as countrybirth,
-	residence_country as countryresident,
-	citizen_country as countrycitizen ---->
 	FROM 	extra_candidates
 	LEFT JOIN extra_hostcompany ON extra_candidates.requested_placement = extra_hostcompany.hostcompanyid
 	LEFT JOIN smg_countrylist birth ON extra_candidates.birth_country = birth.countryid
 	LEFT JOIN smg_countrylist resident ON extra_candidates.residence_country = resident.countryid
 	LEFT JOIN smg_countrylist citizen ON extra_candidates.citizen_country = citizen.countryid
 	LEFT JOIN smg_countrylist passcountry ON extra_candidates.passport_country = passcountry.countryid
-	WHERE <!----verification_received is null
-		AND ----> 
-		extra_candidates.companyid = 9<!----#client.companyid# ---->
-		<!----AND extra_candidates.active = '1' ---->
-		AND extra_candidates.programid = #form.program# 
-		AND extra_candidates.intrep = #form.intrep#
-		AND extra_candidates.h2b_i129_filled = 0
-
-		<!---AND onhold_approved <= '4'--->
-	ORDER BY extra_candidates.lastname
+	WHERE
+		extra_candidates.companyid = 9
+	AND 
+    	extra_candidates.programid = #form.program# 
+	AND 
+    	extra_candidates.intrep = #form.intrep#
+	AND 
+    	extra_candidates.h2b_i129_filled = 0
+	ORDER BY 
+    	extra_candidates.lastname
 </cfquery>
 <cfinclude template="../querys/get_company_short.cfm">
 </cfif>

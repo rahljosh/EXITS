@@ -31,7 +31,6 @@ SELECT *, smg_countrylist.countryname
   INNER JOIN smg_countrylist ON smg_countrylist.countryid = extra_candidates.home_country
   WHERE extra_candidates.programid = #url.program#
   AND extra_candidates.hostcompanyid = #url.hostcompanyid#
-AND extra_candidates.active = 1
 and extra_candidates.status = 1
 
 

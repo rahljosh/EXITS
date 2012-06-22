@@ -25,10 +25,6 @@
             companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         AND 
         	name != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-        <!---
-        AND
-        	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        --->
 		ORDER BY 
         	name
     </cfquery>
@@ -75,9 +71,6 @@
                 smg_states airportS ON eh.arrivalAirportState = airportS.ID
             WHERE 
                 1 = 1
-                <!--- 
-				eh.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-				--->
 			<cfif VAL(FORM.hostcompanyID)> 
                 AND
                     eh.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               

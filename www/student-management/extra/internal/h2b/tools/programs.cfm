@@ -99,31 +99,6 @@
 	</tr>
 </table>
 </form>
-<!------------
-<cfelse>
-You do not have sufficient rights to edit programs.
-</cfif>----------->
-
-<!--- TURN PROGRAMS TO INACTIVE 
-<cfquery name="get_program" datasource="MYSQL">
-	SELECT	*
-	FROM smg_programs p
-	LEFT JOIN smg_program_type ON type = programtypeid
-	INNER JOIN smg_companies c ON p.companyid = c.companyid
-	WHERE enddate < '#DateFormat(now(), 'yyyy-mm-dd')#'
-	ORDER BY companyshort, programname
-</cfquery>
-<cfoutput query="get_program">
-	<cfquery name="update" datasource="MySql">
-		UPDATE smg_programs 
-		SET active = '0'
-		WHERE programid = '#get_program.programid#'
-		LIMIT 1
-	</cfquery>
-</cfoutput>
----->
-
-<!-----<cfinclude template="../footer.cfm"> --->
 
 </body>
 </html>

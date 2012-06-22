@@ -138,7 +138,7 @@
     	1 = 1
 	<cfif FORM.studentStatus IS NOT "All">
     	AND
-        	ec.active = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentStatus#">
+        	ec.status = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentStatus#">
     </cfif>
     <cfif VAL(FORM.userID)>
         AND

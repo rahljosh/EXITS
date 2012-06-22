@@ -74,24 +74,24 @@ INNER JOIN extra_candidates ON smg_programs.programid = extra_candidates.program
 
 
 <cfquery name="get_currenttrainee9" datasource="MySql">
-SELECT extra_candidates.candidateid, extra_candidates.uniqueid, extra_candidates.firstname, extra_candidates.lastname, extra_candidates.active, smg_programs.programname, extra_candidates.enddate
+SELECT extra_candidates.candidateid, extra_candidates.uniqueid, extra_candidates.firstname, extra_candidates.lastname, smg_programs.programname, extra_candidates.enddate
 FROM extra_candidates
 LEFT JOIN smg_programs ON smg_programs.programid = extra_candidates.programid
 WHERE smg_programs.enddate > #now()#
 AND extra_candidates.hostcompanyid = #url.hostcompanyid#
 AND smg_programs.active = 1
-AND extra_candidates.active = 1
+AND extra_candidates.status = 1
 ORDER BY smg_programs.programid
 </cfquery>
 
 <cfquery name="get_upcomingtrainee" datasource="MySql">
-SELECT extra_candidates.firstname, extra_candidates.lastname, extra_candidates.active, smg_programs.programname, extra_candidates.startdate
+SELECT extra_candidates.firstname, extra_candidates.lastname, smg_programs.programname, extra_candidates.startdate
 FROM extra_candidates
 INNER JOIN smg_programs ON smg_programs.programid = extra_candidates.programid
 WHERE smg_programs.startdate > #now()#
 AND smg_programs.companyid = #client.companyid#
-AND smg_programs.active = 1
-AND extra_candidates.active = 1
+AND smg_programs.status = 1
+AND extra_candidates.status = 1
 ORDER BY smg_programs.programid
 </cfquery>
   

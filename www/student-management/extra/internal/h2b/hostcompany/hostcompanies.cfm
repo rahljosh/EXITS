@@ -10,38 +10,6 @@
 <table width="100%" height="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="#CCCCCC" bgcolor="#FFFFFF">
   <tr>
     <td bordercolor="#FFFFFF">
-		<!---<cftry>--->
-
-<!--- 
-<cfquery name="students" datasource="mysql">
-		SELECT s.firstname, s.familylastname, s.sex, s.country, s.studentid, s.uniqueid,
-			s.programid, smg_countrylist.countryname, smg_programs.programname,
-			u.businessname,
-			sc.schoolname
-		FROM smg_students s
-		LEFT JOIN smg_countrylist ON smg_countrylist.countryid = s.country  
-		LEFT JOIN smg_programs ON smg_programs.programid = s.programid 
-		LEFT JOIN smg_users u on u.userid = s.intrep 
-		LEFT JOIN php_schools sc ON sc.schoolid = s.schoolid
-		WHERE s.companyid = '#client.companyid#' 
-			<cfif url.status EQ 'active'>
-				AND s.active = '1'
-			<cfelseif url.status EQ 'inactive'>
-				AND s.active = '0' 
-				AND s.canceldate IS NULL
-			<cfelseif url.status EQ 'cancelled'>
-				AND s.active = '0' 
-				AND s.canceldate IS NOT NULL
-			</cfif>
-			<cfif url.placed EQ 'no'>
-				AND s.hostid = '0'
-			<cfelseif url.placed EQ 'yes'>
-				AND s.hostid != '0'	
-			</cfif>
-		ORDER BY '#url.order#' 
-</cfquery>
- --->
-
 
 <cfquery name="hostcompanies" datasource="MySql">
 	SELECT extra_hostcompany.hostcompanyid, extra_hostcompany.name, extra_hostcompany.phone, extra_hostcompany.supervisor, extra_hostcompany.city, extra_hostcompany.state, extra_hostcompany.business_typeid, extra_typebusiness.business_type as typebusiness, smg_states.state as s

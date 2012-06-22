@@ -19,18 +19,6 @@
 	WHERE insutypeid = '14' OR insutypeid = '6'
 </cfquery>
 
-<!--- <cfquery name="verification_dates" datasource="MySql">
-	SELECT ec.verification_received
-	FROM extra_candidates ec 
-	INNER JOIN smg_users u ON ec.intrep = u.userid
-	WHERE ec.active = '1'
-		AND ec.companyid = '#client.companyid#'
-		AND ec.verification_received IS NOT NULL
-		AND u.extra_insurance_typeid = '14'
-	GROUP BY ec.verification_received
-	ORDER BY ec.verification_received DESC
-</cfquery> --->
-
 <cfquery name="get_pending" datasource="MySql">
 	SELECT h.transtype, count(h.candidateid) as total  
 	FROM extra_insurance_history h

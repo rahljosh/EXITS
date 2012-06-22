@@ -584,7 +584,6 @@
         
 		<cfif isDate(FORM.cancel_date) AND FORM.status EQ 'canceled'>
         	cancel_date = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.cancel_date#">,
-            active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
             cancel_reason = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cancel_reason#">,
         <cfelse>
         	cancel_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,

@@ -65,7 +65,7 @@
 
 
 	<cfquery name="get_candidates" datasource="MySql"> 
-				SELECT 	s.candidateid, s.lastname, s.firstname, s.home_city, s.home_zip, s.entrydate, s.active,
+				SELECT 	s.candidateid, s.lastname, s.firstname, s.home_city, s.home_zip, s.entrydate,
 						p.programname, p.programid, 
 						u.businessname, u.userid,
 					<!---	r.regionid, r.regionname,---->
@@ -77,33 +77,11 @@
 				<!---LEFT JOIN smg_regions r ON s.regionassigned = r.regionid--->
 						WHERE s.companyid = #client.companyid# 
 						AND (s.entrydate between #CreateODBCDateTime(form.date1)# and #CreateODBCDateTime(DateAdd('d', 1, form.date2))#) 
-						AND s.active = '1'
+						AND s.status = '1'
 						<!---<cfif form.programid is 0><cfelse>AND s.programid = '#form.programid#'</cfif>--->
                         <cfif form.programid NEQ 0>AND s.programid = #form.programid#</cfif>
 				ORDER BY s.lastname, s.firstname
 			</cfquery>
-
-
-
-
-
-<!----			<cfquery name="get_students" datasource="MySql"> 
-				SELECT 	s.studentid, s.familylastname, s.firstname, s.city, s.zip, s.dateapplication, s.active,
-						p.programname, p.programid, 
-						u.businessname, u.userid,
-						r.regionid, r.regionname,
-						c.companyshort, c.companyid
-				FROM smg_students s
-				INNER JOIN smg_programs p ON s.programid = p.programid 
-				INNER JOIN smg_users u ON s.intrep = u.userid
-				INNER JOIN smg_companies c ON s.companyid = c.companyid
-				LEFT JOIN smg_regions r ON s.regionassigned = r.regionid
-						WHERE s.companyid = #client.companyid# 
-						AND (s.dateapplication between #CreateODBCDateTime(form.date1)# and #CreateODBCDateTime(DateAdd('d', 1, form.date2))#) 
-						AND s.active = '1'
-						<cfif form.programid is 0><cfelse>AND s.programid = '#form.programid#'</cfif>
-				ORDER BY s.familylastname, s.firstname
-			</cfquery>---->
 						
 			<!---
 						The table consists has five columns,

@@ -24,10 +24,6 @@
             companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         AND 
         	name != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-        <!---
-        AND
-        	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        --->
 		ORDER BY 
         	name
     </cfquery>
@@ -52,9 +48,6 @@
                         ec.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
             WHERE 
                 1 = 1
-                <!--- 
-				ehc.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-				--->
 			<cfif VAL(FORM.hostcompanyID)> 
                 AND
                     ehc.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               

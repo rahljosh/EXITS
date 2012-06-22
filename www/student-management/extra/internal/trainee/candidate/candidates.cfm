@@ -11,7 +11,6 @@
         UPDATE  
              extra_candidates        
         SET
-             active = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
              status = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                
         WHERE
             companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
