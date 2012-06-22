@@ -78,6 +78,7 @@
         <cfparam name="FORM.newJobOffer_#qGetAllPlacements.candCompID#" default="">
         <cfparam name="FORM.newHousingAddress_#qGetAllPlacements.candCompID#" default="">
         <cfparam name="FORM.sevisUpdated_#qGetAllPlacements.candCompID#" default="">
+        <cfparam name="FORM.jobID_#qGetAllPlacements.candCompID#" default="">
     </cfif>
 </cfloop>
 
@@ -203,7 +204,7 @@
             <cfquery datasource="#APPLICATION.DSN.Source#">
             	UPDATE 
                     extra_hostCompany
-                SET 
+                SET
                     EIN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['EIN_#qGetAllPlacements.candCompID#']#">,
                     authentication_secretaryOfState = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM['authentication_secretaryOfState_#qGetAllPlacements.candCompID#']#">,
                     authentication_departmentOfLabor = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM['authentication_departmentOfLabor_#qGetAllPlacements.candCompID#']#">,
@@ -218,6 +219,7 @@
             	UPDATE 
                     extra_candidate_place_company
                 SET 
+                	jobID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM['jobID_#qGetAllPlacements.candCompID#']#">, 
                     selfConfirmationName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['selfConfirmationName_#qGetAllPlacements.candCompID#']#">,
                     selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['selfJobOfferStatus_#qGetAllPlacements.candCompID#']#">,
                     selfPhoneConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM['selfPhoneConfirmationDate_#qGetAllPlacements.candCompID#']#">,
