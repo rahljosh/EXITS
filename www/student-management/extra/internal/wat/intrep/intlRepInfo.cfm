@@ -412,12 +412,16 @@
                         <!--- Documents Control --->
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocBusinessLicense#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocEnglishBusinessLicense#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.watDocEnglishBusinessLicenseExpiration#">
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocEnglishBusinessLicenseExpiration#">,
                         <cfif FORM.watDocNotarizedFinancialStatementExpiration NEQ "">
                         	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateDate(YEAR(NOW()),11,31)#">,
+                       	<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                       	</cfif>
                         <cfif FORM.watDocBankruptcyDisclosureExpiration NEQ "">
                         	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateDate(YEAR(NOW()),11,31)#">,
+                       	<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                       	</cfif>
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocWrittenReference1#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocWrittenReference2#">,
@@ -427,9 +431,13 @@
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocEnglishCBC#">,
                         <cfif FORM.watDocOriginalAdvertisingMaterialExpiration NEQ "">
                         	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateDate(YEAR(NOW()),11,31)#">,
+                       	<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                       	</cfif>
                         <cfif FORM.watDocEnglishAdvertisingMaterialExpiration NEQ "">
                         	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateDate(YEAR(NOW()),11,31)#">,
+                       	<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                       	</cfif>
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocLetterNotEngageThirdParties#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">,
