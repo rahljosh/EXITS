@@ -26,6 +26,7 @@
 		param name="FORM.outputType" default="onScreen";
 		param name="FORM.dateFrom" default="";
 		param name="FORM.dateTo" default="";
+		param name="FORM.sendEmail" default=0;
 		param name="FORM.submitted" default=0;
 
 		// Set Report Title To Keep Consistency
@@ -242,6 +243,14 @@
                             <option value="Excel">Excel Spreadsheet</option>
                         </select>
                     </td>		
+                </tr>
+                <tr class="on">
+                    <td class="subTitleRightNoBorder">Send as email to Regional Manager:</td>
+                    <td>
+                        <input type="radio" name="sendEmail" id="sendEmailSPNo" value="0" checked="checked"> <label for="sendEmailSPNo">No</label>  
+                        <input type="radio" name="sendEmail" id="sendEmailSPYes" value="1"> <label for="sendEmailSPYes">Yes</label>
+                        <br /><font size="-2">Available only on screen option</font>
+                    </td>
                 </tr>
                 <tr class="on">
                     <td>&nbsp;</td>
@@ -640,7 +649,44 @@
             <cfoutput>
             
                 <!--- Display Report --->
-                #reportBody#             
+                #reportBody#
+                
+                <!--- Email Regional Manager --->        
+            	<cfif VAL(FORM.sendEmail) AND qGetStudentsInRegion.recordcount AND IsValid("email", qGetRegionalManager.email) AND IsValid("email", CLIENT.email)>
+                
+            		<cfsavecontent variable="emailBody">
+                    	<html>
+                            <head>
+                                <title>#qGetStudentsInRegion.regionName# - Missing Double Placement Paperwork Report</title>
+                            </head>
+                            <body>                 
+                                
+                                <!--- Display Report Header --->
+                                #reportHeader#	
+                                                  
+                                <!--- Display Report --->
+                                #reportBody#
+    
+                       		</body>
+                    	</html>
+                	</cfsavecontent>
+        
+                    <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                        <cfinvokeargument name="email_to" value="#qGetRegionalManager.email#">
+                        <cfinvokeargument name="email_cc" value="#CLIENT.email#">
+                        <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
+                        <cfinvokeargument name="email_subject" value="#CLIENT.companyshort# - Missing Double Placement Paperwork Report">
+                        <cfinvokeargument name="email_message" value="#emailBody#">
+                    </cfinvoke>
+                
+                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                        <tr>
+                            <th class="left">*** Report emailed to #qGetRegionalManager.firstName# #qGetRegionalManager.lastName# at #qGetRegionalManager.email# ***</th>
+                        </tr>              
+                    </table>
+                
+				</cfif>   
+                <!--- Email Regional Manager --->               
     
             </cfoutput>
     

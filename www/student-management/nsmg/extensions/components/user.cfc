@@ -262,6 +262,49 @@
 	<!--- End of Auto Suggest --->
 
 
+	<!--- Remote --->
+	<cffunction name="getIntlRepRemote" access="remote" returnFormat="json" output="false" hint="Gets a list of Intl. Reps. assigned to a candidate">
+		<cfargument name="programID" default="" hint="Get Intl. Reps. Based on a list of program ids">
+        
+        <cfscript>
+			// Check if it's an array (function is sending an array)
+			if ( IsArray(ARGUMENTS.programID) ) {
+				ARGUMENTS.programID = ArrayToList(ARGUMENTS.programID);
+			} else if ( ARGUMENTS.programID EQ 'NULL' ) {
+				ARGUMENTS.programID = '';	
+			}
+		</cfscript>
+        
+        <cfquery 
+			name="qGetIntlRepRemote" 
+			datasource="#APPLICATION.DSN#">
+                SELECT
+					u.userID,
+                    u.businessName
+                FROM 
+                    smg_users u
+                INNER JOIN
+                	smg_students s ON s.intRep = u.userID
+                WHERE
+                    s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                AND
+                	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                <cfif LEN(ARGUMENTS.programID)>
+                	AND	
+                    	s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#" list="yes"> )
+                </cfif>
+                GROUP BY
+                	u.userID
+                ORDER BY
+                	u.businessName
+		</cfquery>
+
+        <cfscript>
+			return SerializeJson(qGetIntlRepRemote,true);
+		</cfscript>
+	</cffunction>
+    
+
 	<cffunction name="getFacilitators" access="public" returntype="query" output="false" hint="Gets a list of facilitators assigned to a region">
         <cfargument name="isActive" default="1" hint="isActive is not required">
 

@@ -327,7 +327,105 @@
 		   
 		<cfreturn qGetAvailableDoublePlacement>
 	</cffunction>
+    
+    <!--- ------------------------------------------------------------------------- ----
 		
+		Languages
+	
+	----- ------------------------------------------------------------------------- --->
+	
+    <cffunction name="addLanguage" access="remote" returntype="void" hint="Adds a language to the language table with the input student id, language id, and primary / secondary">
+    	<cfargument name="studentID" type="numeric" required="yes" hint="The student ID for this secondary language">    
+		<cfargument name="languageID" type="numeric" required="yes" hint="The field ID of the language to be added">
+        <cfargument name="isPrimary" type="numeric" required="yes" hint="1 for primary, 0 for secondary">
+        
+        <cfquery name="qFindLanguage" datasource="MySql">
+        	SELECT
+            	languageID
+           	FROM
+            	smg_student_app_language
+           	WHERE
+            	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
+          	AND
+            	languageID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.languageID#">
+        </cfquery>
+        
+        <cfif NOT VAL(qFindLanguage.recordCount)>
+        
+            <cfquery datasource="MySql">
+                INSERT INTO
+                    smg_student_app_language (
+                        studentID,
+                        languageID,
+                        isPrimary,
+                        dateCreated )
+                VALUES
+                    (
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.languageID#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isPrimary#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#"> )
+            </cfquery>
+            
+      	</cfif>
+    
+    </cffunction>
+    
+    <cffunction name="removeLanguage" access="remote" returntype="string" hint="removes a language from the language table vased on the id">
+    	<cfargument name="ID" required="yes" hint="The table ID of the language to be removed">
+        
+        <cfquery name="qGetStudent" datasource="MySql">
+        	SELECT
+            	studentID
+           	FROM
+            	smg_student_app_language
+           	WHERE
+            	ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
+        </cfquery>
+        
+        <cfquery datasource="MySql">
+        	DELETE FROM
+            	smg_student_app_language
+          	WHERE
+            	ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
+        </cfquery>
+        
+        <cfreturn qGetStudent.studentID>
+    
+    </cffunction>
+    
+    <cffunction name="getSecondaryLanguagesAsStruct" access="remote" returntype="any" returnFormat="JSON" hint="gets all secondary languages of a student">
+    	<cfargument name="studentID" type="numeric" required="yes">
+        
+        <cfquery name="qGetSecondaryLanguages" datasource="MySql">
+        	SELECT
+                l.ID,
+                alk.name
+          	FROM
+            	smg_student_app_language l
+          	LEFT OUTER JOIN
+    			applicationLookUp alk ON alk.fieldID = l.languageID
+       			AND
+          			alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="language">
+           	WHERE
+            	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
+           	AND
+            	isPrimary = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+          	ORDER BY
+            	name ASC
+        </cfquery>
+        
+        <cfscript>
+			return #SerializeJson(qGetSecondaryLanguages,true)#;
+		</cfscript>
+        
+    </cffunction>
+        
+  	<!--- ------------------------------------------------------------------------- ----
+		
+		End of Languages
+	
+	----- ------------------------------------------------------------------------- --->
 
 	<!--- ------------------------------------------------------------------------- ----
 		
@@ -4916,9 +5014,9 @@
                         s.arearepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
                 </cfif>
 
-                <cfif VAL(ARGUMENTS.isActive)>
+                <cfif LEN(ARGUMENTS.isActive)>
                     AND 
-                        s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                        s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.isActive#">
                 </cfif>
                 
                 <cfif VAL(ARGUMENTS.regionID)>                    
