@@ -120,13 +120,13 @@ function NextPage() {
 				<cfif ListFind("14,15,16", get_student_info.app_indicated_program)>     
                     <!--- Canada Application --->       	
                     Pupils enrolled in kindergarten through grade 12 are required to have written proof on file at their
-                    public or nonpublic school that they have been immunized against DPT (diphtheria, pertussis, tetanus), poliomyelitis, measles,
+                    public or nonpublic school that they have been immunized against DTaP (diphtheria, pertussis, tetanus), poliomyelitis, measles,
                     mumps, rubella, hepatitis B and varicella. Failure to do so is cause for exclusion from school. Required immunizations may
                     vary from school to school.
                 <cfelse>
                     <!--- USA - Public High School --->
                     Pupils enrolled in kindergarten through grade 12 (in the United States) are required to have written proof on file at their
-                    public or nonpublic school that they have been immunized against DPT (diphtheria, pertussis, tetanus), poliomyelitis, measles,
+                    public or nonpublic school that they have been immunized against DTaP (diphtheria, pertussis, tetanus), poliomyelitis, measles,
                     mumps, rubella, hepatitis B and varicella. Failure to do so is cause for exclusion from school. Required immunizations may
                     vary from state to state.
                 </cfif>	
@@ -135,7 +135,7 @@ function NextPage() {
     </tr>
 	<tr><td>&nbsp;</td></tr>
 	<tr><td><b>MINIMUM IMMUNIZATION REQUIREMENTS:</b></td></tr>
-	<tr><td>Five or more doses of DPT, DT (Pediatric), TD (Adult) vaccine or a combination thereof.</td></tr>
+	<tr><td>Five or more doses of DTaP, DT (Pediatric), TD (Adult) vaccine or a combination thereof.</td></tr>
 	<tr><td>Three or more doses of trivalent oral polio vaccine (TOPV).</td></tr>
 	<tr><td>Two doses measles vaccine.</td></tr>
 	<tr><td>Two doses mumps vaccine.</td></tr>
@@ -147,20 +147,20 @@ function NextPage() {
 
 <table width="670" border=1 cellpadding=3 cellspacing=0  bordercolor="CCCCCC" align="center">
 	<tr><td align="center"><b>IMMUNIZATIONS</b></td><td colspan="6" align="center"><b>DATES (mm/dd/yyyy)</b></td></tr>
-	<!--- DPT/DT --->
-	<cfif get_dpt.recordcount EQ 0> <!--- DPT/DT has not been entered --->
-		<cfinput type="hidden" name="new_dpt" value="DPT/DT">
+	<!--- DTaP/DT --->
+	<cfif get_dpt.recordcount EQ 0> <!--- DTaP/DT has not been entered --->
+		<cfinput type="hidden" name="new_dpt" value="DTaP/DT">
 	<cfelse>
 		<cfinput type="hidden" name="upd_dpt" value="#get_dpt.vaccineid#">
 	</cfif>
 	<tr>
-		<td align="center" width="130" valign="top"><b>DPT/DT</b></td>
-		<td align="center" width="90" valign="top"><cfinput type="text" name="dpt1" size="11" value="#DateFormat(get_dpt.shot1, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 1st DPT/DT shot" onchange="DataChanged();"><br> <small>1st </small></td>
-		<td align="center" width="90" valign="top"><cfinput type="text" name="dpt2" size="11" value="#DateFormat(get_dpt.shot2, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 2ndt DPT/DT shot"  onchange="DataChanged();"><br> <small>2nd </small></td>
-		<td align="center" width="90" valign="top"><cfinput type="text" name="dpt3" size="11" value="#DateFormat(get_dpt.shot3, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 3rd DPT/DT shot"  onchange="DataChanged();"><br> <small>3rd </small></td>
-		<td align="center" width="90" valign="top"><cfinput type="text" name="dpt4" size="11" value="#DateFormat(get_dpt.shot4, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 4th DPT/DT shot"  onchange="DataChanged();"><br> <small>4th </small></td>
-		<td align="center" width="90" valign="top"><cfinput type="text" name="dpt5" size="11" value="#DateFormat(get_dpt.shot5, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 5th DPT/DT shot"  onchange="DataChanged();"><br> <small>5th </small></td>
-		<td align="center" width="90" valign="top"><cfinput type="text" name="dpt_booster" size="11" value="#DateFormat(get_dpt.booster, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 6th DPT/DT shot"  onchange="DataChanged();"><br> <small>6th <br> Booster, if required </small></td>				
+		<td align="center" width="130" valign="top"><b>DTaP/DT</b></td>
+		<td align="center" width="90" valign="top"><cfinput type="text" name="dpt1" size="11" value="#DateFormat(get_dpt.shot1, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 1st DTaP/DT shot" onchange="DataChanged();"><br> <small>1st </small></td>
+		<td align="center" width="90" valign="top"><cfinput type="text" name="dpt2" size="11" value="#DateFormat(get_dpt.shot2, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 2ndt DTaP/DT shot"  onchange="DataChanged();"><br> <small>2nd </small></td>
+		<td align="center" width="90" valign="top"><cfinput type="text" name="dpt3" size="11" value="#DateFormat(get_dpt.shot3, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 3rd DTaP/DT shot"  onchange="DataChanged();"><br> <small>3rd </small></td>
+		<td align="center" width="90" valign="top"><cfinput type="text" name="dpt4" size="11" value="#DateFormat(get_dpt.shot4, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 4th DTaP/DT shot"  onchange="DataChanged();"><br> <small>4th </small></td>
+		<td align="center" width="90" valign="top"><cfinput type="text" name="dpt5" size="11" value="#DateFormat(get_dpt.shot5, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 5th DTaP/DT shot"  onchange="DataChanged();"><br> <small>5th </small></td>
+		<td align="center" width="90" valign="top"><cfinput type="text" name="dpt_booster" size="11" value="#DateFormat(get_dpt.booster, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 6th DTaP/DT shot"  onchange="DataChanged();"><br> <small>6th <br> Booster, if required </small></td>				
 	</tr>
 	
 	<!--- TOPV --->
