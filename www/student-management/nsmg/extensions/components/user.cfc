@@ -98,6 +98,22 @@
 	</cffunction>
 
 
+	<cffunction name="isOfficeUser" access="public" returntype="boolean" output="No" hint="Returns true or false">
+        <cfargument name="userType" type="numeric" default="#VAL(CLIENT.userType)#" required="no" hint="Usertype is not required" />
+        
+		<cfscript>
+			// Check if current logged in User is office user
+			if ( listFind("1,2,3,4", ARGUMENTS.userType) ) {
+				// Office User
+				return true;  
+			} else {
+				// Not an office user
+				return false;	
+			}
+		</cfscript>
+	</cffunction>
+
+
 	<cffunction name="setUserRoles" access="public" returntype="void" output="false" hint="Set SESSION user roles">
     	<cfargument name="userID" type="numeric" hint="userID is required">
               
