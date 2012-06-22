@@ -65,6 +65,7 @@ SELECT sc.invoiceid, spc.*, SUM(amountapplied) AS amountapplied, spr.date_applie
 	LEFT JOIN smg_payment_received spr ON spr.paymentid = spc.paymentid
 	where spr.paymentref  = '#url.ref#'
 	AND agentid = '#url.userid#'
+    AND spr.date = '#url.dateRec#'
 	</cfquery>
 	<cfset amount_received = amount_received + payment_details_applied.amountapplied>
 <!--- </Cfloop> --->
@@ -74,6 +75,7 @@ SELECT sc.invoiceid, spc.*, SUM(amountapplied) AS amountapplied, spr.date_applie
 	FROM smg_payment_received
 	WHERE paymentref = '#url.ref#' 
 		 AND agentid = '#url.userid#'
+         AND date = '#url.dateRec#'
 	GROUP BY agentid, paymentref, paymenttype
 	<!--- WHERE paymentref = <cfqueryparam value="#url.ref#" cfsqltype="cf_sql_integer"> 
 		 AND agentid = <cfqueryparam value="#url.userid#" cfsqltype="cf_sql_integer"> --->
@@ -124,18 +126,19 @@ WHERE userid = #url.userid#
 			where companyid = #companyid#
 		</cfquery>
 		<cfquery name="get_charge_payments" datasource="MySQL">
-			select sc.invoiceid, sum(spc.amountapplied) as amountapplied, spr.date_applied AS date, spr.paymenttype, sc.companyid
+			select sc.invoiceid, sum(spc.amountapplied) as amountapplied, spr.date_applied AS dateApplied, spr.paymenttype, sc.companyid
 			from smg_payment_charges spc
 			LEFT JOIN smg_charges sc ON sc.chargeid = spc.chargeid
 			LEFT JOIN smg_payment_received spr ON spr.paymentid = spc.paymentid
 			where paymentref = '#url.ref#'
 			and sc.agentid = #url.userid#
+            and spr.date = '#url.dateRec#'
 			GROUP BY spc.paymentid, sc.invoiceid
 		</cfquery>
 		
 		<cfloop query="get_charge_payments">
 			<tr bgcolor="<cfif currentrow mod 2 EQ 0>white<cfelse>##D9D8E2</cfif>">
-				<td>#DateFormat(date, 'mm/dd/yyyy')#</td>
+				<td>#DateFormat(dateApplied, 'mm/dd/yyyy')#</td>
 				<td>#paymenttype#</td>
 				<td>#LSCurrencyFormat(get_charge_payments.amountapplied, 'local')#</td>
 				<td>#get_charge_payments.companyid#</td>

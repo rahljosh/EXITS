@@ -41,6 +41,7 @@
 	FROM smg_payment_received
 	WHERE paymentref = <cfqueryparam value="#url.ref#" cfsqltype="cf_sql_integer"> 
 		AND agentid = '#client.userid#'
+        AND date = '#url.dateRec#'
 </cfquery>
 
 <cfif payment_Details.recordcount is 0> 
@@ -60,14 +61,13 @@
 	where paymentid = #paymentid#
 	</cfquery>
 	<cfset amount_received = amount_received + payment_details_applied.amountapplied>
-</Cfloop>
 
-<Cfquery name="total_sum" datasource="MySQL">
-	SELECT sum(totalreceived) as totalreceived
-	FROM smg_payment_received
-	WHERE paymentref = <cfqueryparam value="#url.ref#" cfsqltype="cf_sql_integer"> 
-		 AND agentid = '#client.userid#'
-</Cfquery>
+    <Cfquery name="total_sum" datasource="MySQL">
+        SELECT sum(totalreceived) as totalreceived
+        FROM smg_payment_received
+        WHERE paymentid = #paymentid# 
+    </Cfquery>
+</Cfloop>
 
 <table cellpadding="4" cellspacing="0" class="thin-border" width="530">
 	<th><div class="application_section_header">Payment Details</div></th>
