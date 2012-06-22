@@ -66,7 +66,6 @@
 	tableTitle="Reports - Menu"
 />
 
-
 <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
     <tr>
     	<td align="center">

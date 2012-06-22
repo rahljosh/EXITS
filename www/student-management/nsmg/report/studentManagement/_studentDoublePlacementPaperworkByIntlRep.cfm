@@ -21,9 +21,11 @@
 	
     <cfscript>	
 		// Param FORM Variables
-		param name="FORM.programID" default=0;	
+		param name="FORM.programID" default=0;
+		param name="FORM.intlRepID" default=0;
 		param name="FORM.regionID" default="";
 		param name="FORM.paperworkID" default="";
+		param name="FORM.representativeID" default=0;
 		param name="FORM.dateFrom" default="";
 		param name="FORM.dateTo" default="";
 		param name="FORM.outputType" default="onScreen";
@@ -151,6 +153,10 @@
                 	AND
                     	s.datePlaced <= <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dateTo#">
                 </cfif>
+                <cfif FORM.representativeID NEQ 0>
+                	AND
+                    	s.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.representativeID#">
+                </cfif>
                 ORDER BY         
                   businessName,
                   regionName,          
@@ -167,20 +173,52 @@
 <!--- FORM NOT submitted --->
 <cfif NOT VAL(FORM.Submitted)>
 	
+    <!--- Set up the AJAX proxy --->
+    <cfajaxproxy cfc="nsmg.extensions.components.user" jsclassname="USER" />
+    
     <!--- Call the basescript again so it works when ajax loads this page --->
     <script type="text/javascript" src="linked/js/basescript.js "></script> <!-- BaseScript -->
     
+    <script type="text/javascript">
+		Array.prototype.findIdx = function(value){ 
+			for (var i=0; i < this.length; i++) { 
+				if (this[i] == value) { 
+					return i; 
+				} 
+			} 
+		}
+		
+		$(document).ready(function() {
+			populateRepresentatives();						 
+		});
+		
+		function populateRepresentatives() {
+			var vProgramList = $("#programID").val();
+			var u = new USER();
+			var result = u.getIntlRepRemote(vProgramList);
+			var numRows = result.ROWCOUNT;
+			var input = "<option value='0'>All - Total of  " + numRows + " intl. reps </option>";
+			for (var i=0; i<numRows; i++) {
+				input += "<option value='" + result.DATA.USERID[i] + "'>" + result.DATA.BUSINESSNAME[i] + "</option>";
+			}
+			$("#representativeID").html(input);
+		}
+		
+	</script>
+    
 	<cfoutput>
 	
-        <form action="report/index.cfm?action=studentDoublePlacementPaperworkByIntlRep" name="studentDoublePlacementPaperworkByIntlRep" id="studentDoublePlacementPaperworkByIntlRep" method="post" target="blank">
+        <cfform action="report/index.cfm?action=studentDoublePlacementPaperworkByIntlRep" name="studentDoublePlacementPaperworkByIntlRep" id="studentDoublePlacementPaperworkByIntlRep" method="post" target="blank">
             <input type="hidden" name="submitted" value="1" />
             <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable" align="center">
                 <tr><th colspan="2">#vReportTitle#</th></tr>
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Program: <span class="required">*</span></td>
                     <td>
-                        <select name="programID" id="programID" class="xLargeField" multiple size="6" required>
-                            <cfloop query="qGetProgramList"><option value="#qGetProgramList.programID#">#qGetProgramList.programName#</option></cfloop>
+                    	<select name="programID" id="programID" required multiple size="6" onChange="populateRepresentatives();">
+                        	<cfloop query="qGetProgramList">
+                            	<option value="#qGetProgramList.programID#">#qGetProgramList.programName#</option>
+                            </cfloop>
                         </select>
                     </td>
                 </tr>
@@ -190,12 +228,18 @@
                         <select name="regionID" id="regionID" class="xLargeField" multiple size="6" required>
                             <cfloop query="qGetRegionList">
                             	<option value="#qGetRegionList.regionID#">
-                                	<cfif CLIENT.companyID EQ 5>#qGetRegionList.companyShort# -</cfif> 
+                                	<cfif CLIENT.companyID EQ 5>#qGetRegionList.companyShort# - </cfif> 
                                     #qGetRegionList.regionname#
                                 </option>
                             </cfloop>
                         </select>
                     </td>		
+                </tr>
+                <tr class="on">
+                	<td class="subTitleRightNoBorder">Intl. Representative: <span class="required">*</span></td>
+                    <td>
+                    	<select name='representativeID' id='representativeID' class="xLargeField"></select>
+                    </td>
                 </tr>
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Paperwork: <span class="required">*</span></td>
@@ -225,6 +269,14 @@
                     </td>		
                 </tr>
                 <tr class="on">
+                    <td class="subTitleRightNoBorder">Send as email to Intl. Representative:</td>
+                    <td>
+                        <input type="radio" name="sendEmail" id="sendEmailSPNo" value="0" checked="checked"> <label for="sendEmailSPNo">No</label>  
+                        <input type="radio" name="sendEmail" id="sendEmailSPYes" value="1"> <label for="sendEmailSPYes">Yes</label>
+                        <br /><font size="-2">Available only on screen option</font>
+                    </td>
+                </tr>
+                <tr class="on">
                     <td>&nbsp;</td>
                     <td class="required noteAlert">* Required Fields</td>
                 </tr>
@@ -239,7 +291,7 @@
                 </tr>
             </table>
         
-        </form>
+        </cfform>
 
 	</cfoutput>
 
@@ -582,11 +634,6 @@
                             <title>#qGetResults.businessName# - Missing Double Placement Paperwork Report</title>
                         </head>
                         <body>
-                            
-                            <!--- Include CSS on the body of email --->
-                            <style type="text/css">
-                                <cfinclude template="../linked/css/baseStyle.css">
-                            </style>                    
                 
                             <p>	
                                 Dear #qGetResults.businessName#,
@@ -622,8 +669,7 @@
                     </tr>              
                 </table>
                     
-            </cfif>   
-            <!--- Email Intl. Representatives --->              
+            </cfif>            
         
         </cfoutput>
     
