@@ -1601,6 +1601,7 @@
                                         			<td class="style1" align="right" width="30%"><strong>Company Name:</strong></td>
                                                     <td class="style1" align="left" width="70%">
                                                         <span>
+                                                        	<input type="hidden" name="hostCompanyID_#qGetAllPlacements.candCompID#" id="hostCompanyID_#qGetAllPlacements.candCompID#" value="#qGetAllPlacements.hostCompanyID#" />
                                                             <!--- Office View Only --->
                                                             <cfif ListFind("1,2,3,4", CLIENT.userType)>
                                                                 <a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qGetAllPlacements.hostCompanyID#" class="style4" target="_blank"><strong>#qGetAllPlacements.hostCompanyName#</strong></a>
@@ -1614,6 +1615,16 @@
                                                     <td class="style1" align="right" width="30%"><strong>Job Title:</strong></td>
                                                     <td class="style1" align="left" width="70%">
                                                         <span>#qGetAllPlacements.jobTitle#</span>
+                                                        <cfselect 
+                                                            name="jobID_#qGetAllPlacements.candCompID#"
+                                                            id="jobID_#qGetAllPlacements.candCompID#"
+                                                            class="style1 editPage xLargeField"
+                                                            multiple="no"
+                                                            value="ID"
+                                                            display="title"
+                                                            selected="#qGetAllPlacements.jobID#"
+                                                            bind="cfc:extra.extensions.components.hostCompany.getJobTitle({hostCompanyID_#qGetAllPlacements.candCompID#})"
+                                                            bindonload="true" /> 
                                                     </td>
                                                 </tr>
                                                 <tr class="editPage">
