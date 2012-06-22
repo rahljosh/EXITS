@@ -6,7 +6,7 @@
 <cftransaction action="begin" isolation="serializable">
 	<cftry>
 
-	<!--- NEW DPT-DT --->
+	<!--- NEW DTaP-DT --->
 	<cfif IsDefined('form.new_dpt')>
 		<cfquery name="insert_dpt" datasource="MySql">
 			INSERT INTO smg_student_app_shots (studentid, vaccine, shot1, shot2, shot3, shot4, shot5, booster)
@@ -19,7 +19,7 @@
 					<cfif form.dpt_booster is ''>null<cfelse>#CreateODBCDate(form.dpt_booster)#</cfif>	)
 		</cfquery>
 	</cfif>
-	<!--- UPDATE DPT-DT --->
+	<!--- UPDATE DTaP-DT --->
 	<cfif IsDefined('form.upd_dpt')>
 		<cfquery name="update_dpt" datasource="MySql">
 			UPDATE smg_student_app_shots

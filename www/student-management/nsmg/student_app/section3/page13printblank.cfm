@@ -55,13 +55,13 @@
 				<cfif ListFind("14,15,16", get_student_info.app_indicated_program)>     
                     <!--- Canada Application --->       	
                     Pupils enrolled in kindergarten through grade 12 are required to have written proof on file at their
-                    public or nonpublic school that they have been immunized against DPT (diphtheria, pertussis, tetanus), poliomyelitis, measles,
+                    public or nonpublic school that they have been immunized against DTaP (diphtheria, pertussis, tetanus), poliomyelitis, measles,
                     mumps, rubella, hepatitis B and varicella. Failure to do so is cause for exclusion from school. Required immunizations may
                     vary from school to school.
                 <cfelse>
                     <!--- USA - Public High School --->
                     Pupils enrolled in kindergarten through grade 12 (in the United States) are required to have written proof on file at their
-                    public or nonpublic school that they have been immunized against DPT (diphtheria, pertussis, tetanus), poliomyelitis, measles,
+                    public or nonpublic school that they have been immunized against DTaP (diphtheria, pertussis, tetanus), poliomyelitis, measles,
                     mumps, rubella, hepatitis B and varicella. Failure to do so is cause for exclusion from school. Required immunizations may
                     vary from state to state.
                 </cfif>	
@@ -70,7 +70,7 @@
     </tr>
 	<tr><td>&nbsp;</td></tr>
 	<tr><td><b>MINIMUM IMMUNIZATION REQUIREMENTS:</b></td></tr>
-	<tr><td>Five or more doses of DPT, DT (Pediatric), TD (Adult) vaccine or a combination thereof.</td></tr>
+	<tr><td>Five or more doses of DTaP, DT (Pediatric), TD (Adult) vaccine or a combination thereof.</td></tr>
 	<tr><td>Three or more doses of trivalent oral polio vaccine (TOPV).</td></tr>
 	<tr><td>Two doses measles vaccine.</td></tr>
 	<tr><td>Two doses mumps vaccine.</td></tr>
@@ -82,9 +82,9 @@
 
 <table width="670" border=1 cellpadding=3 cellspacing=0  bordercolor="CCCCCC" align="center">
 	<tr><td align="center"><b>IMMUNIZATIONS</b></td><td colspan="6" align="center"><b>DATES (mm/dd/yyyy)</b></td></tr>
-	<!--- DPT/DT --->
+	<!--- DTaP/DT --->
 	<tr>
-		<td align="center" width="130" valign="top"><b>DPT/DT</b></td>
+		<td align="center" width="130" valign="top"><b>DTaP/DT</b></td>
 		<td align="center" width="90" valign="top"><br> <small>1st </small></td>
 		<td align="center" width="90" valign="top"><br> <small>2nd </small></td>
 		<td align="center" width="90" valign="top"><br> <small>3rd </small></td>
