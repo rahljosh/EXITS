@@ -31,6 +31,9 @@
 		param name="FORM.outputType" default="onScreen";
 		param name="FORM.sendEmail" default=0;	
 
+		// Set Report Title To Keep Consistency
+		vReportTitle = "Student Management - Placement Paperwork by Region";
+
 		// Get Programs
 		qGetPrograms = APPLICATION.CFC.PROGRAM.getPrograms(programIDList=FORM.programID);
 	</cfscript>	
@@ -71,7 +74,8 @@
                     sh.isWelcomeFamily,
                     sh.isActive AS isActivePlacement,
                     sh.datePlaced,
-                    sh.doc_full_host_app_date,
+                    sh.doc_host_app_page1_date,
+                    sh.doc_host_app_page2_date,
                     sh.doc_letter_rec_date, 
                     sh.doc_rules_rec_date, 
                     sh.doc_rules_sign_date,
@@ -203,7 +207,9 @@
                 <cfif FORM.compliantOption EQ 'Missing'>
                     AND 
                         (
-                            sh.doc_full_host_app_date IS NULL 
+                            sh.doc_host_app_page1_date IS NULL 
+                        OR 
+                            sh.doc_host_app_page2_date IS NULL 
                         OR 
                             sh.doc_letter_rec_date IS NULL 
                         OR 
@@ -313,7 +319,7 @@
         <form action="report/index.cfm?action=studentPlacementPaperworkByRegion" name="placementPaperworkByRegion" id="placementPaperworkByRegion" method="post" target="blank">
             <input type="hidden" name="submitted" value="1" />
             <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable" align="center">
-                <tr><th colspan="2">Student Management - Placement Paperwork by Region</th></tr>
+                <tr><th colspan="2">#vReportTitle#</th></tr>
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Program: <span class="required">*</span></td>
                     <td>
@@ -451,7 +457,7 @@
         
         <table width="98%" cellpadding="4" cellspacing="0" align="center" border="1">
             <tr>
-                <th colspan="12">Student Management - Placement Paperwork by Region</th>            
+                <th colspan="12">#vReportTitle#</th>            
             </tr>
             <tr style="font-weight:bold;">
                 <td>Region</td>
@@ -517,14 +523,19 @@
 						
 					}
 	
-					// Host Application Received
-					if ( NOT isDate(qGetResults.doc_full_host_app_date) ) {
-						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Host Family <br />", " <br />");
+					// Host Family Application p.1
+					if ( NOT isDate(qGetResults.doc_host_app_page1_date) ) {
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Host Family Application p.1 <br />", " <br />");
 					}
-					
-					// Host Family Letter Received
+
+					// Host Family Application p.2
+					if ( NOT isDate(qGetResults.doc_host_app_page2_date) ) {
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Host Family Application p.2 <br />", " <br />");
+					}
+
+					// Host Family Letter p.3
 					if ( NOT isDate(qGetResults.doc_letter_rec_date) ) {
-						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "HF Letter <br />", " <br />");
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Host Family Letter p.3 <br />", " <br />");
 					}
 					
 					// Host Family Rules Form
@@ -708,7 +719,7 @@
                 <!--- Run Report --->
                 <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                     <tr>
-                        <th>Student Management - Placement Paperwork by Region</th>            
+                        <th>#vReportTitle#</th>            
                     </tr>
                     <tr>
                         <td class="center">
@@ -738,14 +749,14 @@
         </cfoutput>
                 
 		<!--- Loop Regions ---> 
-        <cfloop query="qGetRegions">
+        <cfloop list="#FORM.regionID#" index="currentRegionID">
     
             <!--- Save Report in a Variable --->
             <cfsavecontent variable="reportBody">
         
                 <cfscript>
                     // Get Regional Manager
-                    qGetRegionalManager = APPLICATION.CFC.USER.getRegionalManager(regionID=qGetRegions.regionID);
+                    qGetRegionalManager = APPLICATION.CFC.USER.getRegionalManager(regionID=currentRegionID);
                 </cfscript>
         
                 <cfquery name="qGetStudentsInRegion" dbtype="query">
@@ -852,12 +863,17 @@
 									
                                 }
 
-                                // Host Application Received
-                                if ( NOT isDate(qGetStudentsInRegion.doc_full_host_app_date) ) {
-                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Host Family &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                // Host App Page 1
+                                if ( NOT isDate(qGetStudentsInRegion.doc_host_app_page1_date) ) {
+                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Host App Page 1 &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+
+                                // Host App Page 2
+                                if ( NOT isDate(qGetStudentsInRegion.doc_host_app_page2_date) ) {
+                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Host App Page 2 &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 								
-                                // Host Family Letter Received
+                                // Host Family Letter
                                 if ( NOT isDate(qGetStudentsInRegion.doc_letter_rec_date) ) {
                                     vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "HF Letter &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }

@@ -25,7 +25,10 @@
 		param name="FORM.programID" default=0;	
 		param name="FORM.regionID" default=0;
 		param name="FORM.type" default=0;
-
+		
+		// Set Report Title To Keep Consistency
+		vReportTitle = "Host Family Management - CBC Authorization";
+		
 		// Get Programs
 		qGetPrograms = APPLICATION.CFC.PROGRAM.getPrograms(programIDList=FORM.programID);
 	</cfscript>	
@@ -147,10 +150,10 @@
 
 	<cfoutput>
 
-        <form action="report/index.cfm?action=hostFamilyCBCAuthorizationNotReceived" name="hostFamilyCBCAuthorizationNotReceived" id="hostFamilyCBCAuthorizationNotReceived" method="post" target="blank">
+        <form action="report/index.cfm?action=hostFamilyCBCAuthorization" name="hostFamilyCBCAuthorization" id="hostFamilyCBCAuthorization" method="post" target="blank">
             <input type="hidden" name="submitted" value="1" />
             <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable" align="center">
-                <tr><th colspan="2">Host Family Management - CBC Authorization</th></tr>
+                <tr><th colspan="2">#vReportTitle#</th></tr>
                 <tr class="on">
                     <td class="subTitleRightNoBorder">User Type: <span class="required">*</span></td>
                     <td>
@@ -240,7 +243,7 @@
         <cfheader name="Content-Disposition" value="attachment; filename=studentListByRegion.xls"> 
         
         <table width="98%" cellpadding="4" cellspacing="0" align="center" border="1">
-            <tr><th colspan="9">Host Family Management - CBC Authorization</th></tr>
+            <tr><th colspan="9">#vReportTitle#</th></tr>
             <tr style="font-weight:bold;">
                 <td>Region</td>
                 <td>Student</td>
@@ -340,7 +343,7 @@
             <!--- Include Report Header --->   
             <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                 <tr>
-                    <th>Host Family Management - CBC Authorization</th>            
+                    <th>#vReportTitle#</th>            
                 </tr>
                 <tr>
                     <td class="center">

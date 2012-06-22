@@ -82,7 +82,7 @@
             	<div id="representativeManagementMenuButton" class="divButton reportButton">Representative Management</div>
             </a>
 			
-            <cfif ListFind("1,2,3,4", CLIENT.userType)>
+            <cfif APPLICATION.CFC.USER.isOfficeUser()>
                 <a href="javascript:showSelectedMenuOption('officeManagementMenu');" title="Click for Office Management Reports">
                     <div id="officeManagementMenuButton" class="divButton reportButton">Office Management</div>
                 </a>
@@ -136,15 +136,6 @@
         </td>
         <td>
             <ul class="mainList">
-                <li onclick="loadSelectedReport('studentRelocationReport');">Relocation Report</li>
-                <ul>
-                    <li>Generate a list of all relocation in your region</li>
-                    <li>Filter by: date relocated, reason, program</li>
-				</ul>
-            </ul> 
-        </td>
-        <td class="right"> 
-            <ul class="mainList">
                 <li onclick="loadSelectedReport('studentDoublePlacementPaperworkByRegion');">Double Placement Paperwork By Region</li>
                 <ul>
                     <li>Generate a list of all students in your region and double placement paperwork HQ has not received</li>
@@ -152,10 +143,19 @@
 				</ul>
             </ul> 
         </td>
+        <td class="right"> 
+            <ul class="mainList">
+                <li onclick="loadSelectedReport('studentDoublePlacementPaperworkByIntlRep');">Double Placement Paperwork By Intl. Representative</li>
+                <ul>
+                    <li>Generate a list of all students per Intl. Representative and double placement paperwork HQ has not received</li>
+                    <li>Filter by: Program, Region, missing/non-compliant/all, date placed, on screen/excel</li>
+				</ul>
+            </ul>
+        </td>
 	</tr>  	
     
     <tr>
-        <td class="lastRow">
+        <td>
             <ul class="mainList">
                 <li onclick="loadSelectedReport('studentProgressReports');">Progress Reports</li>
                 <ul>
@@ -164,32 +164,23 @@
 				</ul>
             </ul>  
         </td>
-        <td class="lastRow">
+        <td>
         	<ul class="mainList">
-                <li onclick="loadSelectedReport('userSecondVisitCompliance');">Second Visit Compliance</li>
+                <li onclick="loadSelectedReport('studentSecondVisitRepCompliance');">2<sup>nd</sup> Visit Representative Compliance</li>
                 <ul>
-                    <li>Generate a list of 2nd visit reports with completion and compliance status</li>
+                    <li>Generate a list of 2<sup>nd</sup> visit reports with completion and compliance status</li>
                     <li>Filter by: program, date placed, approval and completion status</li>
 				</ul>
             </ul>
-        	<!---
-            <ul class="mainList">
-                <li onclick="loadSelectedReport('studentSecondVisitReport');">Second Visit Reports MISSING</li>
-                <ul>
-                    <li>Generate a list of 2nd visit reports with completion and compliance status</li>
-                    <li>Filter by: program, date placed, approval and completion status</li>
-				</ul>
-            </ul>
-			---> 
         </td>
-        <td class="lastRow right">
+        <td class="right">
             <ul class="mainList">
-                <li onclick="loadSelectedReport('studentDoublePlacementPaperworkByRep');">Double Placement Paperwork By Representative</li>
+                <li onclick="loadSelectedReport('studentRelocation');">Relocation</li>
                 <ul>
-                    <li>Generate a list of all students per Representative and double placement paperwork HQ has not received</li>
-                    <li>Filter by: Program, Region, missing/non-compliant/all, date placed, on screen/excel</li>
+                    <li>Generate a list of all relocation in your region</li>
+                    <li>Filter by: date relocated, reason, program</li>
 				</ul>
-            </ul>
+            </ul> 
         </td>
 	</tr> 
 </table>    
@@ -207,7 +198,7 @@
 				</ul>
             </ul>  
         </td>
-        <td class="lastRow right">
+        <td class="lastRow">
             <ul class="mainList">
                 <li onclick="loadSelectedReport('hostFamilyWelcomeByRegion');">Welcome Host Family</li>
                 <ul>
@@ -216,9 +207,9 @@
 				</ul>
             </ul>  
         </td>
-        <td class="lastRow">
+        <td class="lastRow right">
             <ul class="mainList">
-                <li onclick="loadSelectedReport('hostFamilySpreadsheet');">Host Family Spreadsheet</li>
+                <li onclick="loadSelectedReport('hostFamilyList');">Host Family List</li>
                 <ul>
                     <li>Generate a list of all HFs in your region</li>
                     <li>Filter by: state, active/inactive, currently hosting</li>
@@ -233,6 +224,15 @@
 <table id="representativeManagementMenu" class="reportMenuTable menuOption displayNone">
     <tr>
         <td>
+            <ul class="mainList">
+                <li onclick="loadSelectedReport('userRegionalHierarchy');">Regional Hierarchy Report</li>
+                <ul>
+                    <li>Generate a list of all representativea in your region</li>
+                    <li>Filter by: date, name, city,state, etc</li>
+				</ul>
+            </ul>  
+        </td>
+        <td>
 			<ul class="mainList">
                 <li onclick="loadSelectedReport('userAreaRepPaperwork');">Missing Area Representative Paperwork</li>
                 <ul>
@@ -241,48 +241,31 @@
 				</ul>
             </ul>  
         </td>
-        <td>
+        <td class="right">
             <ul class="mainList">
-                <li onclick="loadSelectedReport('userComplianceMileageReport');">Mileage Report</li>
+                <li onclick="loadSelectedReport('userComplianceMileageReport');">Compliance Mileage Report</li>
                 <ul>
                     <li>Generate a list of students and the distance between their supervising rep and HF</li>
                     <li>Filter by: program, compliant/non-compliant </li>
 				</ul>
             </ul>  
         </td>
-        <td class="right">
-            <ul class="mainList">
-                <li onclick="loadSelectedReport('userRegionalHierarchy');">Hierarchy Report</li>
-                <ul>
-                    <li>Generate a list of all representativea in your region</li>
-                    <li>Filter by: date, name, city,state, etc</li>
-				</ul>
-            </ul>  
-        </td>
 	</tr>  
     <tr>
         <td class="lastRow">
-            
-        </td>
-        <td class="lastRow">
-            <!---
             <ul class="mainList">
-                <li onclick="loadSelectedReport('userPendingStudentMissingSecondVisitRep');">Second Visit Assigned</li>
-                <ul>
-                    <li>Generate a list of 2nd visit reps assigned by student</li>
-                    <li>Filter by: program, compliant/non-compliant </li>
-				</ul>
-            </ul>
-			--->  
-        </td>
-        <td class="lastRow right">
-            <ul class="mainList">
-                <li onclick="loadSelectedReport('userTrainingListByRegion');">Trainings (DOS test + AR Webex trainings)</li>
+                <li onclick="loadSelectedReport('userTrainingList');">User Training List</li>
                 <ul>
                     <li>Generate a list of reps and the trainings they have completed</li>
                     <li>Filter by: program, training, missing/complete/all</li>
 				</ul>
             </ul>
+        </td>
+        <td class="lastRow">&nbsp;
+        	
+        </td>
+        <td class="lastRow right">&nbsp;
+        	
         </td>
 	</tr>   
 </table> 
@@ -291,7 +274,7 @@
 <!--- Office Management Menu --->
 <table id="officeManagementMenu" class="reportMenuTable menuOption displayNone">
     <tr>
-        <td>
+        <td class="lastRow">
 			<ul class="mainList">
                 <li onclick="loadSelectedReport('regionGoal');">Region Goal</li>
                 <ul>
@@ -300,11 +283,17 @@
 				</ul>
             </ul>
         </td>
-        <td>
-
+        <td class="lastRow">
+			<ul class="mainList">
+                <li onclick="loadSelectedReport('complianceCheckPlacementPaperwork');">Compliance Check Placement Paperwork</li>
+                <ul>
+                    <li>Generate a list of all students in your region and paperwork compaliance has not checked</li>
+                    <li>Filter by: Region</li>
+				</ul>
+            </ul>
         </td>
-        <td>
-
+        <td class="lastRow right">&nbsp;
+			
         </td>
 	</tr>   
 </table> 
@@ -313,21 +302,10 @@
 <!--- Load Report Here --->
 <table id="loadReportTable" class="reportMenuTable displayNone">
     <tr>
-    	<td colspan="3" id="loadReport">
-        
-        </td>
+    	<td colspan="3" id="loadReport"></td>
     </tr>
 </table>
 
-<!---
-<table width="100%" border="0" cellpadding="4" cellspacing="0" id="loadReportTable" class="section displayNone">
-    <tr>
-    	<td colspan="3" id="loadReport">
-        
-        </td>
-    </tr>
-</table>
---->
 
 <!--- Table Footer --->
 <gui:tableFooter />

@@ -326,3 +326,49 @@
     <gui:pageFooter />	
     
 </cfif>        
+
+<!---
+
+
+       		<!--- Active Users Authorization Not Received --->
+            <form action="report/index.cfm?action=usersCBCAuthorizationNotReceived" name="usersCBCAuthorizationNotReceived" id="usersCBCAuthorizationNotReceived" method="post" target="blank">
+                
+                <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable" align="center">
+                    <tr><th colspan="2">Active Users Authorization Not Received</th></tr>
+                    <tr class="on">
+                        <td class="subTitleRightNoBorder">User Type: <span class="required">*</span></td>
+                        <td>
+                            <select name="type" id="type" class="xLargeField" required>
+                                <option value="0">Office</option>
+                                <option value="1">Reps</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr class="on">
+                        <td class="subTitleRightNoBorder">Region: <span class="required">*</span></td>
+                        <td>
+                            <select name="regionID" id="regionID" class="xLargeField" multiple size="6" required>
+                                <cfloop query="qGetRegionList"><option value="#qGetRegionList.regionID#">#qGetRegionList.regionname#</option></cfloop>
+                            </select>
+                        </td>		
+                    </tr>
+                    <tr class="on">
+                        <td class="subTitleRightNoBorder">Output Type: <span class="required">*</span></td>
+                        <td>
+                            <select name="outputType" class="xLargeField">
+                                <option value="onScreen">On Screen</option>
+                                <option value="Excel">Excel Spreadsheet</option>
+                            </select>
+                        </td>		
+                    </tr>
+                    <tr class="on">
+                        <td>&nbsp;</td>
+                        <td class="required noteAlert">* Required Fields</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2"><input type="image" src="pics/view.gif" align="center" border="0"></th>
+                    </tr>
+                </table>
+            </form>
+			
+--->			

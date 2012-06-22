@@ -42,7 +42,7 @@
 	
     
     <!--- List of Student Management Reports --->
-    <cfcase value="studentByRegion,studentFlightInformation,studentHelpCommunityService,studentPlacementPaperworkByRegion,studentRelocationReport,studentProgressReports,userSecondVisitCompliance,studentDoublePlacementPaperworkByRegion,studentDoublePlacementPaperworkByRep">
+    <cfcase value="studentByRegion,studentFlightInformation,studentHelpCommunityService,studentPlacementPaperworkByRegion,studentRelocation,studentProgressReports,studentSecondVisitRepCompliance,studentDoublePlacementPaperworkByRegion,studentDoublePlacementPaperworkByIntlRep">
 
         <cfinclude template="studentManagement/_#action#.cfm" />
 
@@ -50,7 +50,7 @@
     
     
     <!--- List of Host Family Management Reports --->
-    <cfcase value="hostFamilyCBCAuthorization,hostFamilySpreadsheet,hostFamilyWelcomeByRegion">
+    <cfcase value="hostFamilyCBCAuthorization,hostFamilyList,hostFamilyWelcomeByRegion">
 
         <cfinclude template="hostManagement/_#action#.cfm" />
 
@@ -58,7 +58,7 @@
     
     
     <!--- List of Representative Management Reports --->
-    <cfcase value="userAreaRepPaperwork,userCBCAuthorization,userComplianceMileageReport,userPendingStudentMissingSecondVisitRep,userRegionalHierarchy,userTrainingListByRegion,userTrainingNonCompliant">
+    <cfcase value="userRegionalHierarchy,userAreaRepPaperwork,userComplianceMileageReport,userTrainingList">
 
         <cfinclude template="representativeManagement/_#action#.cfm" />
 
@@ -66,7 +66,7 @@
 
 
     <!--- List of Office Management Reports --->
-    <cfcase value="regionGoal">
+    <cfcase value="regionGoal,complianceCheckPlacementPaperwork">
 
         <cfinclude template="officeManagement/_#action#.cfm" />
 

@@ -27,7 +27,10 @@
 		param name="FORM.regionID" default=0;
 		param name="FORM.goalPeriod" default="";
 		param name="FORM.outputType" default="onScreen";
-		
+
+		// Set Report Title To Keep Consistency
+		vReportTitle = "Office Management - Region Goal";
+
 		// Set Program Types
 		if ( FORM.goalPeriod EQ 'January' ) {
 			 // 12 Month - 2nd Semester
@@ -229,7 +232,7 @@
         <form action="report/index.cfm?action=regionGoal" name="regionGoal" id="regionGoal" method="post" target="blank">
             <input type="hidden" name="submitted" value="1" />
             <table width="50%" cellpadding="8" cellspacing="0" class="blueThemeReportTable" align="center">
-                <tr><th colspan="2">Office Management - Region Goal</th></tr>
+                <tr><th colspan="2">#vReportTitle#</th></tr>
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Season: <span class="required">*</span></td>
                     <td>
@@ -318,7 +321,7 @@
         <cfheader name="Content-Disposition" value="attachment; filename=regionGoal.xls">
 
         <table width="98%" cellpadding="4" cellspacing="0" align="center" border="1">
-            <tr><th colspan="10">Office Management - Region Goal</th></tr>
+            <tr><th colspan="10">#vReportTitle#</th></tr>
             <tr style="font-weight:bold;">
                 <td>Company</td>
                 <td>Region</td>
@@ -492,7 +495,7 @@
 		<!--- Include Report Header --->   
         <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
             <tr>
-                <th>Office Management - Region Goal</th>            
+                <th>#vReportTitle#</th>            
             </tr>
         </table>
         

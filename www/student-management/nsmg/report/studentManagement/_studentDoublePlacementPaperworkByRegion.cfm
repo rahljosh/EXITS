@@ -28,6 +28,9 @@
 		param name="FORM.dateTo" default="";
 		param name="FORM.submitted" default=0;
 
+		// Set Report Title To Keep Consistency
+		vReportTitle = "Student Management - Double Placement Paperwork by Region";
+
 		// Get Programs
 		qGetPrograms = APPLICATION.CFC.PROGRAM.getPrograms(programIDList=FORM.programID);
 	</cfscript>
@@ -182,7 +185,7 @@
         <form action="report/index.cfm?action=studentDoublePlacementPaperworkByRegion" name="studentDoublePlacementPaperworkByRegion" id="studentDoublePlacementPaperworkByRegion" method="post" target="blank">
             <input type="hidden" name="submitted" value="1" />
             <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable" align="center">
-                <tr><th colspan="2">Student Management - Double Placement Paperwork by Region</th></tr>
+                <tr><th colspan="2">#vReportTitle#</th></tr>
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Program: <span class="required">*</span></td>
                     <td>
@@ -292,7 +295,7 @@
         
         <table width="98%" cellpadding="4" cellspacing="0" align="center" border="1">
             <tr>
-                <th colspan="12">Placement Reports - Double Placement Paperwork by Region</th>            
+                <th colspan="12">#vReportTitle#</th>            
             </tr>
             <tr style="font-weight:bold;">
                 <td>Region</td>
@@ -441,7 +444,7 @@
                 <!--- Run Report --->
                 <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                     <tr>
-                        <th>Placement Reports - Double Placement Paperwork by Region</th>            
+                        <th>#vReportTitle#</th>            
                     </tr>
                     <tr>
                         <td class="center">

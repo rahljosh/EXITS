@@ -94,7 +94,7 @@
         <form action="report/index.cfm?action=userRegionalHierarchy" name="userRegionalHierarchy" id="userRegionalHierarchy" method="post" target="blank">
             <input type="hidden" name="submitted" value="1" />
             <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable" align="center">
-                <tr><th colspan="2">Regional Hierarchy Report</th></tr>
+                <tr><th colspan="2">Representative Management - Regional Hierarchy Report</th></tr>
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Region: <span class="required">*</span></td>
                     <td>

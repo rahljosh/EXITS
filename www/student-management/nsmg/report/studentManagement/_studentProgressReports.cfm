@@ -26,6 +26,9 @@
 		param name="FORM.status" default="approved";
 		param name="FORM.outputType" default="onScreen";
 
+		// Set Report Title To Keep Consistency
+		vReportTitle = "Student Management - Progress Report";
+
 		// Get Programs
 		qGetPrograms = APPLICATION.CFC.PROGRAM.getPrograms(programIDList=FORM.programID);
 		
@@ -163,7 +166,7 @@
         <form action="report/index.cfm?action=studentProgressReports" name="studentProgressReports" id="studentProgressReports" method="post" target="blank">
             <input type="hidden" name="submitted" value="1" />
             <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable" align="center">
-                <tr><th colspan="2">Student Management - Progress Report</th></tr>
+                <tr><th colspan="2">#vReportTitle#</th></tr>
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Program: <span class="required">*</span></td>
                     <td>
@@ -267,7 +270,7 @@
          
       	 <table width="98%" cellpadding="4" cellspacing="0" align="center" border="1">
       		<tr>
-                <th colspan="5">Student Management - Student Progress Reports</th>            
+                <th colspan="5">#vReportTitle#</th>            
             </tr>
             <tr style="font-weight:bold;">
                 <td>Region</td>
@@ -403,7 +406,7 @@
 			<!--- Run Report --->
             <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                 <tr>
-                    <th>Student Management - Progress Report</th>            
+                    <th>#vReportTitle#</th>            
                 </tr>
                 <tr>
                     <td class="center">
