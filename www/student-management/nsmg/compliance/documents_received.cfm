@@ -141,7 +141,8 @@
             s.familyLastName,
 			sh.placeRepID,
             sh.datePlaced,
-            sh.doc_full_host_app_date,
+            sh.doc_host_app_page1_date,
+            sh.doc_host_app_page2_date,
             sh.doc_letter_rec_date, 
             sh.doc_rules_rec_date, 
             sh.doc_photos_rec_date, 
@@ -177,7 +178,9 @@
 
         AND 
         	(
-                sh.doc_full_host_app_date BETWEEN #CreateODBCDate(FORM.date1)# AND #CreateODBCDate(FORM.date2)#
+                sh.doc_host_app_page1_date BETWEEN #CreateODBCDate(FORM.date1)# AND #CreateODBCDate(FORM.date2)#
+            OR 
+				sh.doc_host_app_page2_date BETWEEN #CreateODBCDate(FORM.date1)# AND #CreateODBCDate(FORM.date2)#
             OR 
                 sh.doc_letter_rec_date BETWEEN #CreateODBCDate(FORM.date1)# AND #CreateODBCDate(FORM.date2)# 
             OR 
@@ -246,8 +249,9 @@
 						<td>#firstname# #familylastname#</td>
 						<td>#DateFormat(datePlaced, 'mm/dd/yyyy')#</td>
 						<td align="left"><i><font size="-2">
-							<cfif doc_full_host_app_date GTE CreateODBCDate(FORM.date1) AND doc_full_host_app_date LTE CreateODBCDate(FORM.date2)>Host Family &nbsp; #DateFormat(doc_full_host_app_date,'mm/dd/yyyy')# &nbsp;</cfif>
-							<cfif doc_letter_rec_date GTE CreateODBCDate(FORM.date1) AND doc_letter_rec_date LTE CreateODBCDate(FORM.date2)> -  &nbsp; HF Letter &nbsp; #DateFormat(doc_letter_rec_date,'mm/dd/yyyy')# &nbsp;</cfif>
+                            <cfif doc_host_app_page1_date GTE CreateODBCDate(FORM.date1) AND doc_host_app_page1_date LTE CreateODBCDate(FORM.date2)>HF Application P.1 &nbsp; #DateFormat(doc_host_app_page1_date,'mm/dd/yyyy')# &nbsp;</cfif>
+                            <cfif doc_host_app_page2_date GTE CreateODBCDate(FORM.date1) AND doc_host_app_page2_date LTE CreateODBCDate(FORM.date2)>HF Application P.2 &nbsp; #DateFormat(doc_host_app_page2_date,'mm/dd/yyyy')# &nbsp;</cfif>
+							<cfif doc_letter_rec_date GTE CreateODBCDate(FORM.date1) AND doc_letter_rec_date LTE CreateODBCDate(FORM.date2)> -  &nbsp; HF Letter P.3 &nbsp; #DateFormat(doc_letter_rec_date,'mm/dd/yyyy')# &nbsp;</cfif>
 							<cfif doc_rules_rec_date GTE CreateODBCDate(FORM.date1) AND doc_rules_rec_date LTE CreateODBCDate(FORM.date2)> -  &nbsp; HF Rules &nbsp; #DateFormat(doc_rules_rec_date,'mm/dd/yyyy')# &nbsp;</cfif>
 							<cfif doc_photos_rec_date GTE CreateODBCDate(FORM.date1) AND doc_photos_rec_date LTE CreateODBCDate(FORM.date2)> -  &nbsp; HF Photos &nbsp; #DateFormat(doc_photos_rec_date,'mm/dd/yyyy')# &nbsp;</cfif>
 							<cfif doc_school_accept_date GTE CreateODBCDate(FORM.date1) AND doc_school_accept_date LTE CreateODBCDate(FORM.date2)> -  &nbsp; School Acceptance &nbsp; #DateFormat(doc_school_accept_date,'mm/dd/yyyy')# &nbsp;</cfif>

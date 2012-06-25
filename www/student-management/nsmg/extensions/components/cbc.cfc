@@ -335,6 +335,8 @@
                         smg_host_children shc ON shc.hostID = cbc.hostID
                             AND
                                 shc.childID = cbc.familyID
+                            AND
+                            	shc.liveAtHome = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
                     WHERE 
                         cbc.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">             	
                     ORDER BY 
@@ -1933,6 +1935,7 @@
         <cfargument name="secondVisitRepID" type="any" default="" hint="secondVisitRepID is not required, it must not be missing before approval by headquarters">
         <cfargument name="schoolAcceptanceDate" type="any" default="" hint="schoolAcceptanceDate is not required">
         <cfargument name="crossDataUserCBC" type="numeric" default="0" hint="cross data CBC with users">
+        <cfargument name="representativeDistanceInMiles" type="string" default="" hint="representativeDistanceInMiles is not required">
          
 		<cfscript>
 			// Placements can only be approved with a valid CBC, 2nd Visit Rep and school acceptance
@@ -2036,16 +2039,26 @@
 				}
 			
 			}
-			
+
+			/***************************************************************************************
+				Block if rep lives more than 120 miles away
+			***************************************************************************************/
+			if ( ARGUMENTS.representativeDistanceInMiles GT 120 ) {
+				vIsOutOfCompliance = 1;
+				vOtherMessage = vOtherMessage & "<p>Supervising Representative is #ARGUMENTS.representativeDistanceInMiles# mi away from Host Family</p>";
+			}
+
 			/***************************************************************************************
 				Check Double Placement Language - Make sure kids do not speak the same language 
 			***************************************************************************************/
+			/*
 			vIsDoublePlacementCompliant = APPLICATION.CFC.STUDENT.checkDoublePlacementCompliance(studentID=ARGUMENTS.studentID,doublePlacementID=ARGUMENTS.doublePlacementID);
 			
 			if ( NOT VAL(vIsDoublePlacementCompliant) ) {
 				vIsOutOfCompliance = 1;
-				vOtherMessage = vOtherMessage & "<p>Double Placement Non Compliant - Both students speak the same language</p>";
+				vOtherMessage = vOtherMessage & "<p>Double Placement Non Compliant - It seems both students speak the same language</p>";
 			}
+			*/
         </cfscript>
 
 		<cfif VAL(vIsOutOfCompliance)>
@@ -2055,7 +2068,7 @@
                 
                     <div style="color:##F00">
                     
-                        <p>You can only approve a placement when CBCs, 2nd Visit Representative and School Acceptance Form are compliant. <br /> Please see below:</p>
+                        <p>You can only approve a placement when placement is compliant. <br /> Please see below:</p>
                         
                         <!--- Display Missing CBC --->
                         #vMissingMessage#
@@ -2063,7 +2076,7 @@
                         <!--- Display Expired CBC --->
                         #vExpiredMessage#
 						
-                        <!--- Second Visit Rep and School Acceptance --->
+                        <!--- Second Visit Rep / School Acceptance / 120 Miles / Double Placement Same Language --->
                         #vOtherMessage#
                         
                     </div>
