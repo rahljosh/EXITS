@@ -1,4 +1,4 @@
-<cfdocument format="pdf" orientation="portrait" backgroundvisible="yes" overwrite="no" fontembed="yes">
+<cfdocument format="pdf" orientation="portrait" backgroundvisible="yes" overwrite="no" fontembed="yes" margintop="0.5" marginbottom="0.5" scale="99">
 
 <cfquery name="qGetCandidateInfo" datasource="MySql">
 	SELECT 
@@ -67,7 +67,6 @@
         <br /><br />
     
         <span class="style3">http://www.ssa.gov/employer/hiring.htm</span>
-        <br />
         <br />
         <br />
         <br />
