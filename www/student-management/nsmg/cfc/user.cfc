@@ -218,8 +218,6 @@
         
         <!--- these are currently used only in the header & menu. --->
 		<cfset CLIENT.levels = get_access.recordcount>  <!--- the number of access records the user has. --->
-		<cfset CLIENT.compliance = qAuthenticateUser.compliance>
-		<cfset CLIENT.invoice_access = qAuthenticateUser.invoice_access>
         
         <!--- these are set from the default access record.  These are also set in forms/change_access_level.cfm. --->
         <cfset CLIENT.companyid = get_default_access.companyid>
