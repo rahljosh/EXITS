@@ -184,10 +184,12 @@
                             <td align="right" class="right">Phone Confirmation:</td>
                             <td align="left" class="left">#DateFormat(qCandidatePlaceCompany.selfPhoneConfirmationDate, 'mm/dd/yyyy')#</td>
                         </tr>
-                        <tr>
-                            <td align="right" class="right">Job Found:</td>
-                            <td align="left" class="left">#qCandidatePlaceCompany.selfFindJobOffer#</td>
-                        </tr>
+                        <cfif qCandidatePlaceCompany.isTransfer EQ 0 AND qCandidatePlaceCompany.isSecondary EQ 0>   
+                            <tr>
+                                <td align="right" class="right">Job Found:</td>
+                                <td align="left" class="left">#qCandidatePlaceCompany.selfFindJobOffer#</td>
+                            </tr>
+                        </cfif>
                         <tr>
                             <td align="center" class="right" colspan="2">Notes:</td>
                         </tr>
