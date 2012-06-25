@@ -16,8 +16,6 @@
 		// Host Family Application
 		allowedUsers = '1,510,12313,7203,1077,17071';
 		
-		tripsAllowedUsers = "1,12313,11620,14900,510,16718"; // allow certain users to see trips - josh, hause, stacy, brendan, Marcus, Tal Stanecky
-		
         // Get Company Info
         qGetCompany = APPCFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
     </cfscript>
@@ -300,7 +298,7 @@
                     <a href="index.cfm?curdoc=students">Students</a>
                     <ul>
                         <li><a href="index.cfm?curdoc=app_process/apps_received">Received</a></li>
-						<cfif ListFind(tripsAllowedUsers, CLIENT.userID)> 
+						<cfif APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID,role="mpdTrips")>
                                 <li><a href="index.cfm?curdoc=tours/mpdtours">Trips</a></li>
                         </cfif>
                     </ul>
@@ -334,7 +332,7 @@
                 </li>
                 
                 <!--- Invoice Access --->
-                <cfif CLIENT.invoice_Access EQ 1>
+                <cfif APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID,role="invoiceEdit")>
                     <li>
                         <a href="index.cfm?curdoc=invoice/invoice_index&Requesttimeout=300">Invoicing</a>
                         <ul>
@@ -355,7 +353,7 @@
                 
                 <li>
                 	<a href="index.cfm?curdoc=reports/index">Reports</a>
-					<cfif LISTFIND("1,2,3,4", CLIENT.userType)>
+					<cfif APPLICATION.CFC.USER.isOfficeUser()>
 						<ul>
 							<li><a href="index.cfm?curdoc=reports/constantContactMenu">Constant Contact</a></li>
 						</ul>
@@ -368,7 +366,7 @@
                     <a href="##">Tools</a>                
                     <ul>
                         <!--- Compliance Access --->
-                        <cfif VAL(CLIENT.compliance)>    
+                        <cfif APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID,role="runCBC")>   
                             <li><a href="index.cfm?curdoc=cbc/cbc_menu">CBC Batch</a></li>
                             <li><a href="index.cfm?curdoc=cbc/combine_hosts">Combining Hosts</a></li>   
                             <li><a href="index.cfm?curdoc=compliance/combine_schools">Combining Schools</a></li>

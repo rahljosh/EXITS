@@ -146,10 +146,10 @@
 				// Check if user has roles
 				if ( VAL(qGetUserRoles.userID[i]) ) {
 					// Set Roles
-					SESSION.ROLES[qGetUserRoles.name[i]] = 1;
+					SESSION.ROLES[qGetUserRoles.name[i]] = true;
 				} else {
 					// Set Not Allowed
-					SESSION.ROLES[qGetUserRoles.name[i]] = 0;
+					SESSION.ROLES[qGetUserRoles.name[i]] = false;
 				}
 				
 			}
@@ -158,7 +158,7 @@
 	</cffunction>
     
     
-	<cffunction name="hasUserRoleAccess" access="public" returntype="numeric" output="false" hint="Returns 1/0 depeding on user access">
+	<cffunction name="hasUserRoleAccess" access="public" returntype="boolean" output="false" hint="Returns 1/0 depeding on user access">
 	    <cfargument name="userID" type="numeric" hint="userID is required">
     	<cfargument name="role" type="string" hint="role is required">
 		
@@ -181,7 +181,7 @@
 				return SESSION.ROLES[ARGUMENTS.role];
 			} catch (Any e) {
 				// Error
-				return 0;
+				return false;	
 			}
 		</cfscript>
 		
@@ -222,6 +222,7 @@
                         AND          
                             uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
                     <cfelseif VAL(ARGUMENTS.companyID)>
+
                         AND          
                             uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
                     </cfif>
