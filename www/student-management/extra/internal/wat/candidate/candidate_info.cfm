@@ -306,6 +306,8 @@
 		getHostID = $("#hostCompanyID").val();
 		// Get Transfer Info - Do not display self placement if it's a transfer
 		getTransferValue = $("#isTransfer").val();
+		// Get Secondary Info
+		getSecondaryValue = $("#secondPlacement").val();
 		
 		if ( getHostID > 0 && getHostID != 195) {
 			$(".selfPlacementInfo").fadeIn("fast");
@@ -359,11 +361,15 @@
 				$(".hostCheckBox").attr("checked", false);
 				$(".trTransferInfo").fadeIn("fast");
 				$(".notReplacement").fadeOut("fast");
+				$("#emailConfirmationRow").fadeOut("fast");
 				haveChanged++;
 			} else if (haveChanged){
 				restorePlacementData();
 				$(".trTransferInfo").fadeOut("fast");
 				$(".notReplacement").fadeIn("fast");
+				$("#emailConfirmationRow").fadeIn("fast");
+			} else {
+				$("#emailConfirmationRow").fadeIn("fast");
 			}
 		}
 	}
@@ -1542,7 +1548,7 @@
                                         </tr>
 
 										<!--- Office View Only --->
-                                        <cfif ListFind("1,2,3,4", CLIENT.userType)>
+                                        <cfif ListFind("1,2,3,4", CLIENT.userType) AND qCandidatePlaceCompany.isTransfer EQ 0>
                                            
                                             <tr class="hiddenField notReplacement">
                                                 <td class="style1" align="right"><strong>Job Found:</strong></td>
@@ -1762,24 +1768,6 @@
                                                         <cfif NOT LEN(qGetAllPlacements.selfPhoneConfirmationDate)><font size="1">(mm/dd/yyyy)</font></cfif>
                                                     </td>
                                                 </tr>
-                                                <cfif ListFind("1,2,3,4", CLIENT.userType)>
-                                                    <tr class="hiddenField notReplacement">
-                                                        <td class="style1" align="right"><strong>Job Found:</strong></td>
-                                                        <td class="style1">
-                                                            <span class="readOnly selfPlacementReadOnly">
-                                                                #qGetAllPlacements.selfFindJobOffer#
-                                                            </span>
-                                                            <select name="selfFindJobOffer_#qGetAllPlacements.candCompID#" id="selfFindJobOffer_#qGetAllPlacements.candCompID#" class="style1 editPage selfPlacementField xLargeField"> 
-                                                                <option value="" <cfif NOT LEN(qGetAllPlacements.selfFindJobOffer)>selected</cfif> ></option>
-                                                                <option value="International Representative" <cfif qGetAllPlacements.selfFindJobOffer EQ 'International Representative'>selected</cfif> >International Representative</option>
-                                                                <option value="Employment Agency" <cfif qGetAllPlacements.selfFindJobOffer EQ 'Employment Agency'>selected</cfif> >Employment Agency</option>                                                    
-                                                                <option value="Directly with the Employer" <cfif qGetAllPlacements.selfFindJobOffer EQ 'Directly with the Employer'>selected</cfif> >Directly with the Employer</option>
-                                                                <option value="Internet" <cfif qGetAllPlacements.selfFindJobOffer EQ 'Internet'>selected</cfif> >Internet</option>
-                                                                <option value="Other" <cfif qGetAllPlacements.selfFindJobOffer EQ 'Other'>selected</cfif> >Other</option>
-                                                            </select>
-                                                        </td>
-                                                    </tr>
-                                               	</cfif>
                                                 <tr class="hiddenField selfPlacementInfo">
                                            			<td class="style1" align="right"><strong>Notes:</strong></td>
                                                     <td class="style1" colspan="3">

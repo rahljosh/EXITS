@@ -174,10 +174,12 @@
                                 </cfif>
                             </td>
                         </tr>
-                        <tr>
-                            <td align="right" class="right">Email Confirmation:</td>
-                            <td align="left" class="left">#DateFormat(qCandidatePlaceCompany.selfEmailConfirmationDate, 'mm/dd/yyyy')#</td>
-                        </tr>
+						<cfif qCandidatePlaceCompany.isTransfer EQ 0 AND qCandidatePlaceCompany.isSecondary EQ 0>                        
+                            <tr>
+                                <td align="right" class="right">Email Confirmation:</td>
+                                <td align="left" class="left">#DateFormat(qCandidatePlaceCompany.selfEmailConfirmationDate, 'mm/dd/yyyy')#</td>
+                            </tr>
+                      	</cfif>
                         <tr>
                             <td align="right" class="right">Phone Confirmation:</td>
                             <td align="left" class="left">#DateFormat(qCandidatePlaceCompany.selfPhoneConfirmationDate, 'mm/dd/yyyy')#</td>
