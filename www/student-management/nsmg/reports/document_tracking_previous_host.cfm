@@ -174,7 +174,8 @@
             s.areaRepID,
             s.placeRepID,
             sh.datePlaced,
-            sh.doc_full_host_app_date,
+            sh.doc_host_app_page1_date,
+            sh.doc_host_app_page2_date,
             sh.doc_letter_rec_date, 
             sh.doc_rules_rec_date,
             sh.doc_rules_sign_date, 
@@ -249,7 +250,9 @@
         </cfif>       
         AND 
             (
-                sh.doc_full_host_app_date IS NULL 
+                sh.doc_host_app_page1_date IS NULL 
+            OR 
+                sh.doc_host_app_page2_date IS NULL 
             OR 
                 sh.doc_letter_rec_date IS NULL 
             OR 
@@ -472,14 +475,19 @@
 									
                                 }
 								
-                                // Host Application Received
-                                if ( NOT isDate(qGetStudentsByRep.doc_full_host_app_date) ) {
-                                    missingDocumentsList = ListAppend(missingDocumentsList, "Host Family &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                // Host Family Application p.1
+                                if ( NOT isDate(qGetStudentsByRep.doc_host_app_page1_date) ) {
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "Host Family Application p.1 &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
-								
-                                // Host Family Letter Received
+
+                                // Host Family Application p.2
+                                if ( NOT isDate(qGetStudentsByRep.doc_host_app_page2_date) ) {
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "Host Family Application p.2 &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+
+                                // Host Family Letter p.3
                                 if ( NOT isDate(qGetStudentsByRep.doc_letter_rec_date) ) {
-                                    missingDocumentsList = ListAppend(missingDocumentsList, "HF Letter &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "Host Family Letter p.3 &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 								
                                 // Host Family Rules Form

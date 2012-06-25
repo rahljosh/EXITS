@@ -259,7 +259,9 @@
 			
 			// Check for Placement Paperwork
 			if ( 				
-					isDate(qGetPlacementHistoryList.doc_full_host_app_date) 
+					isDate(qGetPlacementHistoryList.doc_host_app_page1_date) 
+				AND 
+					isDate(qGetPlacementHistoryList.doc_host_app_page2_date) 
 				AND 
 					isDate(qGetPlacementHistoryList.doc_letter_rec_date)
 				AND 
@@ -586,7 +588,7 @@
                     <cfscript>
                         // Get Actions History
                         qGetActionsHistory = APPLICATION.CFC.LOOKUPTABLES.getApplicationHistory(
-                            applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,
+							applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,
                             foreignTable='smg_hostHistory',
                             foreignID=qGetPlacementHistoryList.historyID,
                             sortBy='dateCreated',

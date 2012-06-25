@@ -1335,7 +1335,7 @@
 					}
 
 					if ( VAL(ARGUMENTS.changePlacementReasonID) ) {						
-						vActions = vActions & "Reason: #APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(applicationID=1,fieldKey='changePlacementReason',fieldID=ARGUMENTS.changePlacementReasonID).name# <br /> #CHR(13)#";
+						vActions = vActions & "Reason: #APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='changePlacementReason',fieldID=ARGUMENTS.changePlacementReasonID).name# <br /> #CHR(13)#";
 					}
 					
 					if ( LEN(ARGUMENTS.changePlacementExplanation) ) {
@@ -2165,26 +2165,36 @@
 					h.doc_single_ref_check2,
                     h.doc_single_parents_sign_date,
                     h.doc_single_student_sign_date,
-                    <!--- Placement Paperwork --->
-                    h.doc_full_host_app_date,
+                    <!--- Page 1 --->
+                    h.doc_host_app_page1_date,
+                    <!--- Page 2 --->
+                    h.doc_host_app_page2_date,
+                    <!--- Page 3 - Letter --->                    
                     h.doc_letter_rec_date,
-                    h.doc_rules_rec_date,
-                    h.doc_rules_sign_date,
+                    <!--- Page 4,5,6 - Photos --->
                     h.doc_photos_rec_date,
                     h.doc_bedroom_photo,
                     h.doc_bathroom_photo,
                     h.doc_kitchen_photo,
                     h.doc_living_room_photo,
                     h.doc_outside_photo,
+                    <!--- Page 7 - HF Rules ---> 
+                    h.doc_rules_rec_date,
+                    h.doc_rules_sign_date,
+                    <!--- Page 8 - School & Community Profile --->
                     h.doc_school_profile_rec,
+                    <!--- Page 9 - Income Verification ---> 
+                    h.doc_income_ver_date,
+                    <!--- Page 10 - Confidential HF Visit --->
                     h.doc_conf_host_rec,
                     h.doc_date_of_visit,
+                    <!--- Page 11 - Reference 1 ---> 
                     h.doc_ref_form_1,
                     h.doc_ref_check1,
+                    <!--- Page 12 - Reference 2 --->
                     h.doc_ref_form_2,
                     h.doc_ref_check2,
                     h.doc_host_orientation,
-                    h.doc_income_ver_date,
                     <!--- Arrival Compliance --->
                     h.doc_school_accept_date,
                     h.doc_school_sign_date,
@@ -2307,15 +2317,16 @@
                     compliance_single_ref_form_2,
 					doc_single_ref_check2,
 					compliance_single_ref_check2,
-                    <!--- Placement Paperwork --->
-                    doc_full_host_app_date,
-                    compliance_full_host_app_date,
+                    <!--- Page 1 --->
+                    doc_host_app_page1_date,
+                    compliance_host_app_page1_date,
+                    <!--- Page 2 --->
+                    doc_host_app_page2_date,
+                    compliance_host_app_page2_date,
+                    <!--- Page 3 - Letter --->
                     doc_letter_rec_date,
                     compliance_letter_rec_date,
-                    doc_rules_rec_date,
-                    compliance_rules_rec_date,
-                    doc_rules_sign_date,
-                    compliance_rules_sign_date,
+                    <!--- Page 4,5,6 - Photos --->
                     doc_photos_rec_date,
                     compliance_photos_rec_date,
                     doc_bedroom_photo,
@@ -2328,22 +2339,32 @@
                     compliance_living_room_photo,
                     doc_outside_photo,
                     compliance_outside_photo,
+                    <!--- Page 7 - HF Rules ---> 
+                    doc_rules_rec_date,
+                    compliance_rules_rec_date,
+                    doc_rules_sign_date,
+                    compliance_rules_sign_date,
+                    <!--- Page 8 - School & Community Profile ---> 
                     doc_school_profile_rec,
                     compliance_school_profile_rec,
+                    <!--- Page 9 - Income Verification ---> 
+                    doc_income_ver_date,
+                    compliance_income_ver_date,
+                    <!--- Page 10 - Confidential HF Visit ---> 
                     doc_conf_host_rec,
                     compliance_conf_host_rec,
                     doc_date_of_visit,
                     compliance_date_of_visit,
+                    <!--- Page 11 - Reference 1 ---> 
                     doc_ref_form_1,
                     compliance_ref_form_1,
                     doc_ref_check1,
                     compliance_ref_check1,
+                    <!--- Page 12 - Reference 2 --->
                     doc_ref_form_2,
                     compliance_ref_form_2,
                     doc_ref_check2,
                     compliance_ref_check2,
-                    doc_income_ver_date,
-                    compliance_income_ver_date,
                     <!--- Arrival Compliance --->
                     doc_school_accept_date,
                     compliance_school_accept_date,
@@ -2356,9 +2377,6 @@
                     compliance_host_arrival_orientation,
                     doc_class_schedule,
                     compliance_class_schedule,
-                    <!--- Compliance --->
-                    dateComplianceReviewed,
-                    complianceNotes,
                     actions,
                     dateOfChange,
                     dateCreated,
@@ -2480,14 +2498,16 @@
         <cfargument name="compliance_single_ref_check2" default="" hint="compliance_single_ref_check2 is not required">
         <!--- Placement Paperwork --->
         <cfargument name="dateRelocated" default="" hint="dateRelocated is not required">
-        <cfargument name="doc_full_host_app_date" default="" hint="doc_full_host_app_date is not required">
-        <cfargument name="compliance_full_host_app_date" default="" hint="compliance_full_host_app_date is not required">
+        <!--- Page 1 --->
+        <cfargument name="doc_host_app_page1_date" default="" hint="doc_host_app_page1_date is not required">
+        <cfargument name="compliance_host_app_page1_date" default="" hint="compliance_host_app_page1_date is not required">
+        <!--- Page 2 --->
+        <cfargument name="doc_host_app_page2_date" default="" hint="doc_host_app_page2_date is not required">
+        <cfargument name="compliance_host_app_page2_date" default="" hint="compliance_host_app_page2_date is not required">
+        <!--- Page 3 - Letter --->
         <cfargument name="doc_letter_rec_date" default="" hint="doc_letter_rec_date is not required">
         <cfargument name="compliance_letter_rec_date" default="" hint="compliance_letter_rec_date is not required">
-        <cfargument name="doc_rules_rec_date" default="" hint="doc_rules_rec_date is not required">
-        <cfargument name="compliance_rules_rec_date" default="" hint="compliance_rules_rec_date is not required">
-        <cfargument name="doc_rules_sign_date" default="" hint="doc_rules_sign_date is not required">
-        <cfargument name="compliance_rules_sign_date" default="" hint="compliance_rules_sign_date is not required">
+        <!--- Page 4,5,6 - Photos --->
         <cfargument name="doc_photos_rec_date" default="" hint="doc_photos_rec_date is not required">
         <cfargument name="compliance_photos_rec_date" default="" hint="compliance_photos_rec_date is not required">
         <cfargument name="doc_bedroom_photo" default="" hint="doc_bedroom_photo is not required">
@@ -2500,22 +2520,32 @@
         <cfargument name="compliance_living_room_photo" default="" hint="compliance_living_room_photo is not required">
         <cfargument name="doc_outside_photo" default="" hint="doc_outside_photo is not required">
         <cfargument name="compliance_outside_photo" default="" hint="compliance_outside_photo is not required">
+        <!--- Page 7 - HF Rules --->
+        <cfargument name="doc_rules_rec_date" default="" hint="doc_rules_rec_date is not required">
+        <cfargument name="compliance_rules_rec_date" default="" hint="compliance_rules_rec_date is not required">
+        <cfargument name="doc_rules_sign_date" default="" hint="doc_rules_sign_date is not required">
+        <cfargument name="compliance_rules_sign_date" default="" hint="compliance_rules_sign_date is not required">
+        <!--- Page 8 - School & Community Profile --->
         <cfargument name="doc_school_profile_rec" default="" hint="doc_school_profile_rec is not required">
         <cfargument name="compliance_school_profile_rec" default="" hint="compliance_school_profile_rec is not required">
+        <!--- Page 9 - Income Verification --->
+        <cfargument name="doc_income_ver_date" default="" hint="doc_income_ver_date is not required">
+        <cfargument name="compliance_income_ver_date" default="" hint="compliance_income_ver_date is not required">
+        <!--- Page 10 - Confidential HF Visit ---> 
         <cfargument name="doc_conf_host_rec" default="" hint="doc_conf_host_rec is not required">
         <cfargument name="compliance_conf_host_rec" default="" hint="compliance_conf_host_rec is not required">
         <cfargument name="doc_date_of_visit" default="" hint="doc_date_of_visit is not required">
         <cfargument name="compliance_date_of_visit" default="" hint="compliance_date_of_visit is not required">
+        <!--- Page 11 - Reference 1 --->
         <cfargument name="doc_ref_form_1" default="" hint="doc_ref_form_1 is not required">
         <cfargument name="compliance_ref_form_1" default="" hint="compliance_ref_form_1 is not required">
         <cfargument name="doc_ref_check1" default="" hint="doc_ref_check1 is not required">
         <cfargument name="compliance_ref_check1" default="" hint="compliance_ref_check1 is not required">
+        <!--- Page 12 - Reference 2 --->
         <cfargument name="doc_ref_form_2" default="" hint="doc_ref_form_2 is not required">
         <cfargument name="compliance_ref_form_2" default="" hint="compliance_ref_form_2 is not required">
         <cfargument name="doc_ref_check2" default="" hint="doc_ref_check2 is not required">
         <cfargument name="compliance_ref_check2" default="" hint="compliance_ref_check2 is not required">
-        <cfargument name="doc_income_ver_date" default="" hint="doc_income_ver_date is not required">
-        <cfargument name="compliance_income_ver_date" default="" hint="compliance_income_ver_date is not required">
         <!--- Arrival Compliance --->
         <cfargument name="doc_school_accept_date" default="" hint="doc_school_accept_date is not required">
         <cfargument name="compliance_school_accept_date" default="" hint="compliance_school_accept_date is not required">
@@ -2528,9 +2558,6 @@
         <cfargument name="compliance_host_arrival_orientation" default="" hint="compliance_host_arrival_orientation is not required">
         <cfargument name="doc_class_schedule" default="" hint="doc_class_schedule is not required">    
         <cfargument name="compliance_class_schedule" default="" hint="compliance_class_schedule is not required">    
-        <!--- Compliance --->
-        <cfargument name="dateComplianceReviewed" default="" hint="dateComplianceReviewed is not required">
-        <cfargument name="complianceNotes" default="" hint="complianceNotes is not required">
 
         <!--- Update Host History Documents --->
         <cfquery 
@@ -2557,14 +2584,16 @@
                     <!--- Waiting to be Pushed Live - 04/11/2012 - Marcus Melo
 					dateRelocated = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateRelocated#" null="#NOT IsDate(ARGUMENTS.dateRelocated)#">,
 					--->
-                    doc_full_host_app_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_full_host_app_date#" null="#NOT IsDate(ARGUMENTS.doc_full_host_app_date)#">,
-                    compliance_full_host_app_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_full_host_app_date#" null="#NOT IsDate(ARGUMENTS.compliance_full_host_app_date)#">,
+                    <!--- Page 1 --->
+                    doc_host_app_page1_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_host_app_page1_date#" null="#NOT IsDate(ARGUMENTS.doc_host_app_page1_date)#">,
+                    compliance_host_app_page1_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_host_app_page1_date#" null="#NOT IsDate(ARGUMENTS.compliance_host_app_page1_date)#">,
+                    <!--- Page 2 --->
+                    doc_host_app_page2_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_host_app_page2_date#" null="#NOT IsDate(ARGUMENTS.doc_host_app_page2_date)#">,
+                    compliance_host_app_page2_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_host_app_page2_date#" null="#NOT IsDate(ARGUMENTS.compliance_host_app_page2_date)#">,
+                    <!--- Page 3 - Letter --->
                     doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_letter_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_letter_rec_date)#">,
                     compliance_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_letter_rec_date#" null="#NOT IsDate(ARGUMENTS.compliance_letter_rec_date)#">,
-                    doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_rules_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_rules_rec_date)#">,
-                    compliance_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_rules_rec_date#" null="#NOT IsDate(ARGUMENTS.compliance_rules_rec_date)#">,
-                    doc_rules_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_rules_sign_date#" null="#NOT IsDate(ARGUMENTS.doc_rules_sign_date)#">,
-                    compliance_rules_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_rules_sign_date#" null="#NOT IsDate(ARGUMENTS.compliance_rules_sign_date)#">,
+                    <!--- Page 4,5,6 - Photos --->
                     doc_photos_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_photos_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_photos_rec_date)#">,
                     compliance_photos_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_photos_rec_date#" null="#NOT IsDate(ARGUMENTS.compliance_photos_rec_date)#">,
                     doc_bedroom_photo = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_bedroom_photo#" null="#NOT IsDate(ARGUMENTS.doc_bedroom_photo)#">,
@@ -2577,32 +2606,37 @@
                     compliance_living_room_photo = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_living_room_photo#" null="#NOT IsDate(ARGUMENTS.compliance_living_room_photo)#">,
                     doc_outside_photo = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_outside_photo#" null="#NOT IsDate(ARGUMENTS.doc_outside_photo)#">,
                     compliance_outside_photo = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_outside_photo#" null="#NOT IsDate(ARGUMENTS.compliance_outside_photo)#">,                    
+                    <!--- Page 7 - HF Rules --->
+                    doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_rules_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_rules_rec_date)#">,
+                    compliance_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_rules_rec_date#" null="#NOT IsDate(ARGUMENTS.compliance_rules_rec_date)#">,
+                    doc_rules_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_rules_sign_date#" null="#NOT IsDate(ARGUMENTS.doc_rules_sign_date)#">,
+                    compliance_rules_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_rules_sign_date#" null="#NOT IsDate(ARGUMENTS.compliance_rules_sign_date)#">,
+                    <!--- Page 8 - School & Community Profile --->
                     doc_school_profile_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_profile_rec#" null="#NOT IsDate(ARGUMENTS.doc_school_profile_rec)#">,
                     compliance_school_profile_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_school_profile_rec#" null="#NOT IsDate(ARGUMENTS.compliance_school_profile_rec)#">,
+					<!--- Page 9 - Income Verification ---> 
+                    doc_income_ver_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_income_ver_date#" null="#NOT IsDate(ARGUMENTS.doc_income_ver_date)#">,
+                    compliance_income_ver_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_income_ver_date#" null="#NOT IsDate(ARGUMENTS.compliance_income_ver_date)#">,
+					<!--- Page 10 - Confidential HF Visit --->
                     doc_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_conf_host_rec#" null="#NOT IsDate(ARGUMENTS.doc_conf_host_rec)#">,
                     compliance_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_conf_host_rec#" null="#NOT IsDate(ARGUMENTS.compliance_conf_host_rec)#">,
                     doc_date_of_visit = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_date_of_visit#" null="#NOT IsDate(ARGUMENTS.doc_date_of_visit)#">,
                     compliance_date_of_visit = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_date_of_visit#" null="#NOT IsDate(ARGUMENTS.compliance_date_of_visit)#">,
+                    <!--- Page 11 - Reference 1 --->
                     doc_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_form_1#" null="#NOT IsDate(ARGUMENTS.doc_ref_form_1)#">,
                     compliance_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_ref_form_1#" null="#NOT IsDate(ARGUMENTS.compliance_ref_form_1)#">,
                     doc_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_check1#" null="#NOT IsDate(ARGUMENTS.doc_ref_check1)#">,
                     compliance_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_ref_check1#" null="#NOT IsDate(ARGUMENTS.compliance_ref_check1)#">,
+                    <!--- Page 12 - Reference 2 ---> 
                     doc_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_form_2#" null="#NOT IsDate(ARGUMENTS.doc_ref_form_2)#">,
                     compliance_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_ref_form_2#" null="#NOT IsDate(ARGUMENTS.compliance_ref_form_2)#">,
                     doc_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_check2#" null="#NOT IsDate(ARGUMENTS.doc_ref_check2)#">,
                     compliance_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_ref_check2#" null="#NOT IsDate(ARGUMENTS.compliance_ref_check2)#">,
-                    doc_income_ver_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_income_ver_date#" null="#NOT IsDate(ARGUMENTS.doc_income_ver_date)#">,
-                    compliance_income_ver_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_income_ver_date#" null="#NOT IsDate(ARGUMENTS.compliance_income_ver_date)#">,
                     <!--- Arrival Compliance --->
                     doc_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_accept_date#" null="#NOT IsDate(ARGUMENTS.doc_school_accept_date)#">,
                     compliance_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_school_accept_date#" null="#NOT IsDate(ARGUMENTS.compliance_school_accept_date)#">,
                     doc_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_sign_date#" null="#NOT IsDate(ARGUMENTS.doc_school_sign_date)#">,
                     compliance_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_school_sign_date#" null="#NOT IsDate(ARGUMENTS.compliance_school_sign_date)#">,
-                    <!--- Compliance --->
-                    <cfif VAL(CLIENT.compliance)>
-                        dateComplianceReviewed = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateComplianceReviewed#" null="#NOT IsDate(ARGUMENTS.dateComplianceReviewed)#">,
-                        complianceNotes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.complianceNotes#">,
-                    </cfif>
 					<!--- Arrival Orientation --->
                     stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.stu_arrival_orientation#" null="#NOT IsDate(ARGUMENTS.stu_arrival_orientation)#">,
                     compliance_stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_stu_arrival_orientation#" null="#NOT IsDate(ARGUMENTS.compliance_stu_arrival_orientation)#">,
@@ -2629,26 +2663,6 @@
                 SELECT 
                     s.studentID,
                     sh.hostID,
-                    sh.doc_full_host_app_date,
-                    sh.doc_letter_rec_date,
-                    sh.doc_rules_rec_date,
-                    sh.doc_rules_sign_date,
-                    sh.doc_photos_rec_date,
-                    sh.doc_bedroom_photo,
-                    sh.doc_bathroom_photo,
-                    sh.doc_kitchen_photo,
-                    sh.doc_living_room_photo,
-                    sh.doc_outside_photo,
-                    sh.doc_school_profile_rec,
-                    sh.doc_conf_host_rec,
-                    sh.doc_date_of_visit,
-                    sh.doc_ref_form_1,
-                    sh.doc_ref_check1,
-                    sh.doc_ref_form_2,
-                    sh.doc_ref_check2,
-                    sh.doc_income_ver_date,
-                    sh.doc_school_accept_date,
-                    sh.doc_school_sign_date,
                     <!--- Single Person Placement Paperwork --->
                     sh.doc_single_place_auth,
                     sh.doc_single_ref_form_1,
@@ -2656,7 +2670,39 @@
                     sh.doc_single_ref_form_2,
                     sh.doc_single_ref_check2,
                     sh.doc_single_parents_sign_date,
-                    sh.doc_single_student_sign_date
+                    sh.doc_single_student_sign_date,
+                    <!--- Page 1 --->
+                    sh.doc_host_app_page1_date,
+                    <!--- Page 2 --->
+                    sh.doc_host_app_page2_date,
+                    <!--- Page 3 - Letter --->
+                    sh.doc_letter_rec_date,
+                    <!--- Page 4,5,6 - Photos --->
+                    sh.doc_photos_rec_date,
+                    sh.doc_bedroom_photo,
+                    sh.doc_bathroom_photo,
+                    sh.doc_kitchen_photo,
+                    sh.doc_living_room_photo,
+                    sh.doc_outside_photo,
+                    <!--- Page 7 - HF Rules --->
+                    sh.doc_rules_rec_date,
+                    sh.doc_rules_sign_date,
+                    <!--- Page 8 - School & Community Profile --->
+                    sh.doc_school_profile_rec,
+                    <!--- Page 9 - Income Verification ---> 
+                    sh.doc_income_ver_date,
+                    <!--- Page 10 - Confidential HF Visit --->
+                    sh.doc_conf_host_rec,
+                    sh.doc_date_of_visit,
+                    <!--- Page 11 - Reference 1 ---> 
+                    sh.doc_ref_form_1,
+                    sh.doc_ref_check1,
+                    <!--- Page 12 - Reference 2 --->
+                    sh.doc_ref_form_2,
+                    sh.doc_ref_check2,
+                    <!--- Arrival Compliance --->
+                    sh.doc_school_accept_date,
+                    sh.doc_school_sign_date
                 FROM 
                 	smg_students s
                 INNER JOIN
@@ -2757,14 +2803,19 @@
 				
 				// Check PaperWork
 
-				// Host Application Received
-				if ( NOT isDate(qCheckPlacementPaperwork.doc_full_host_app_date) OR qCheckPlacementPaperwork.doc_full_host_app_date GT setDeadline ) {
-					returnMessage = returnMessage & 'Host Application has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_full_host_app_date, 'mm/dd/yyyy')#. <br />'; 	
+				// Host Family Application p.1
+				if ( NOT isDate(qCheckPlacementPaperwork.doc_host_app_page1_date) OR qCheckPlacementPaperwork.doc_host_app_page1_date GT setDeadline ) {
+					returnMessage = returnMessage & 'Host Family Application p.1 has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_host_app_page1_date, 'mm/dd/yyyy')#. <br />'; 	
+				}
+
+				// Host Family Application p.2
+				if ( NOT isDate(qCheckPlacementPaperwork.doc_host_app_page2_date) OR qCheckPlacementPaperwork.doc_host_app_page2_date GT setDeadline ) {
+					returnMessage = returnMessage & 'Host Family Application p.2 has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_host_app_page2_date, 'mm/dd/yyyy')#. <br />'; 	
 				}
 
 				// Host Family Letter Received
 				if ( NOT isDate(qCheckPlacementPaperwork.doc_letter_rec_date) OR qCheckPlacementPaperwork.doc_letter_rec_date GT setDeadline ) {
-					returnMessage = returnMessage & 'Host Family Letter has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_letter_rec_date, 'mm/dd/yyyy')#. <br />'; 	
+					returnMessage = returnMessage & 'Host Family Letter p.3 has not been received or received after deadline - Date Received: #DateFormat(qCheckPlacementPaperwork.doc_letter_rec_date, 'mm/dd/yyyy')#. <br />'; 	
 				}
 
 				// Host Family Rules Form

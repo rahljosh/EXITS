@@ -67,8 +67,9 @@
                             <td align="left">
                                 <i>
                                     <font size="-2">
-                                        <cfif NOT isDate(qGetStudentsByRep.doc_full_host_app_date)>Host Family &nbsp; &nbsp;</cfif>
-                                        <cfif NOT isDate(qGetStudentsByRep.doc_letter_rec_date)>HF Letter &nbsp; &nbsp;</cfif>
+                                        <cfif NOT isDate(qGetStudentsByRep.doc_host_app_page1_date)>Host Family Application p.1 &nbsp; &nbsp;</cfif>
+                                        <cfif NOT isDate(qGetStudentsByRep.doc_host_app_page2_date)>Host Family Application p.2 &nbsp; &nbsp;</cfif>
+                                        <cfif NOT isDate(qGetStudentsByRep.doc_letter_rec_date)>Host Family Letter p.3 &nbsp; &nbsp;</cfif>
                                         <cfif NOT isDate(qGetStudentsByRep.doc_rules_rec_date)>HF Rules &nbsp; &nbsp;</cfif>
 										<cfif NOT isDate(qGetStudentsByRep.doc_rules_sign_date)>HF Rules Date Signed &nbsp; &nbsp;</cfif>
 										<cfif NOT isDate(qGetStudentsByRep.doc_photos_rec_date)>HF Photos &nbsp; &nbsp;</cfif>
