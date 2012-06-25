@@ -108,7 +108,7 @@
     <cfparam name="FORM.doublePlacementIDList" default="">
     <!--- Compliance Log --->
     <cfparam name="FORM.complianceLogNotes" default="">
-    <cfparam name="FORM.complianceLogIsResolved" default="1">
+    <cfparam name="FORM.complianceLogIsResolved" default="0">
     <!--- Second Visit Date Compliance --->
     <cfparam name="FORM.secondVisitDateCompliance" default="">
 	<!--- CBC Compliance --->
