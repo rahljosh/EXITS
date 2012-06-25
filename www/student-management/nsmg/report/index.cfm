@@ -66,7 +66,7 @@
 
 
     <!--- List of Office Management Reports --->
-    <cfcase value="regionGoal,complianceCheckPlacementPaperwork">
+    <cfcase value="officeRegionGoal,officeComplianceCheckPaperwork">
 
         <cfinclude template="officeManagement/_#action#.cfm" />
 
