@@ -5,6 +5,7 @@
     
     <!--- Param FORM variables --->
 	<cfparam name="FORM.programID" default="0">
+    <cfparam name="FORM.placementType" default="all">
     <cfparam name="FORM.userID" default="0">
 	<cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.submitted" default="0">
@@ -246,7 +247,17 @@
             </select>
         </td>
     </tr>
-    <Tr>
+    <tr>
+    	<td valign="middle" align="right" class="style1"><b>Placement:</b></td>
+        <td>
+        	<select name="placementType" class="style1">
+            	<option value="all">All</option>
+                <option value="primary" <cfif FORM.placementType eq 'primary'>selected</cfif>>Primary Placements</option>
+                <option value="secondary" <cfif FORM.placementType eq 'secondary'>selected</cfif>>Secondary Placements</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
         <td align="right" class="style1"><b>Format: </b></td>
         <td  class="style1"> 
             <input type="radio" name="printOption" id="printOption1" value="1" <cfif FORM.printOption EQ 1> checked </cfif> > <label for="printOption1">Onscreen (View Only)</label>
@@ -318,7 +329,7 @@
         		
             <table width="99%" cellpadding="4" cellspacing=0 align="center">
                     <tr>
-                        <td colspan="8">
+                        <td colspan="14">
                             <small>
                                 <strong>#qGetIntlReps.businessname# - Total candidates: #qTotalPerAgent.recordCount#</strong> 
                                 (
@@ -334,31 +345,61 @@
                     </tr>
                 <cfif ListFind("2,3", FORM.printOption)>
                     <tr>
-                        <td colspan=8><img src="../../pics/black_pixel.gif" width="100%" height="2"></td>
+                        <td colspan="14"><img src="../../pics/black_pixel.gif" width="100%" height="2"></td>
                     </tr>
 				</cfif>
                 <tr>
-                    <Th align="left" class="#tableTitleClass#">ID</Th>
-                    <Th align="left" class="#tableTitleClass#">Last Name</Th>
-                    <Th align="left" class="#tableTitleClass#">First Name</Th>
-                    <th align="left" class="#tableTitleClass#">Gender</th>
-                    <th align="left" class="#tableTitleClass#">E-mail</th>
-                    <th align="left" class="#tableTitleClass#">Start Date</th>
-                    <th align="left" class="#tableTitleClass#">End Date</th>
-                    <th align="left" class="#tableTitleClass#">Placement Information</th>
-                    <th align="left" class="#tableTitleClass#">Job Title</th>
-                    <th align="left" class="#tableTitleClass#">City</th>
-                    <th align="left" class="#tableTitleClass#">State</th>
-                    <th align="left" class="#tableTitleClass#">DS-2019</th>
-                    <th align="left" class="#tableTitleClass#">Option</th>
-                    <th align="left" class="#tableTitleClass#">Intl. Rep.</th>
+                    <th align="left" class="#tableTitleClass#" width="4%">ID</Th>
+                    <th align="left" class="#tableTitleClass#" width="8%">Last Name</Th>
+                    <th align="left" class="#tableTitleClass#" width="8%">First Name</Th>
+                    <th align="left" class="#tableTitleClass#" width="3%">Sex</th>
+                    <th align="left" class="#tableTitleClass#" width="7%">E-mail</th>
+                    <th align="left" class="#tableTitleClass#" width="5%">Start Date</th>
+                    <th align="left" class="#tableTitleClass#" width="5%">End Date</th>
+                    <th align="left" class="#tableTitleClass#" width="17%">Placement Information</th>
+                    <th align="left" class="#tableTitleClass#" width="8%">Job Title</th>
+                    <th align="left" class="#tableTitleClass#" width="4%">City</th>
+                    <th align="left" class="#tableTitleClass#" width="5%">State</th>
+                    <th align="left" class="#tableTitleClass#" width="8%">DS-2019</th>
+                    <th align="left" class="#tableTitleClass#" width="8%">Option</th>
+                    <th align="left" class="#tableTitleClass#" width="10%">Intl. Rep.</th>
                 </tr>
                 <cfif ListFind("2,3", FORM.printOption)>
                     <tr>
-                        <td colspan=8><img src="../../pics/black_pixel.gif" width="100%" height="2"></td>
+                        <td colspan="14"><img src="../../pics/black_pixel.gif" width="100%" height="2"></td>
                     </tr>
 				</cfif>
                 <cfloop query="qTotalPerAgent">
+                
+                	<cfquery name="qGetAllPlacements" datasource="MySql">
+                    	SELECT
+                        	ecpc.hostCompanyID,
+                            ecpc.jobID,
+                            h.name,
+                            h.city,
+                            s.state,
+                            ej.title AS jobTitle
+                       	FROM
+                        	extra_candidate_place_company ecpc
+                       	INNER JOIN
+                        	extra_hostCompany h ON h.hostCompanyID = ecpc.hostCompanyID
+                       	INNER JOIN
+                        	smg_states s ON s.id = h.state
+                      	LEFT JOIN
+                        	extra_jobs ej ON ej.ID = ecpc.jobID
+                       	WHERE
+                        	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qTotalPerAgent.candidateID#">
+                       	AND
+                        	status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                      	<cfif FORM.placementType EQ "primary">
+                        	AND
+                            	isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                     	<cfelseif FORM.placementType EQ "secondary">
+                        	AND
+                            	isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                       	</cfif>
+                    </cfquery>
+                
                     <tr <cfif qTotalPerAgent.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>                    
                         <td class="style1">
                         	<a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerAgent.uniqueID#" target="_blank" class="style4">
@@ -379,14 +420,28 @@
                         <td class="style1">#qTotalPerAgent.email#</td>
                         <td class="style1">#DateFormat(qTotalPerAgent.startdate, 'mm/dd/yyyy')#</td>
                         <td class="style1">#DateFormat(qTotalPerAgent.enddate, 'mm/dd/yyyy')#</td>
-                        <td class="style1">
-							<a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qTotalPerAgent.hostCompanyID#"  target="_blank" class="style4">
-	                        	#qTotalPerAgent.name#
-                        	</a>
+                        <td class="style1" colspan="4">
+                        	<table width="100%">
+                                <cfloop query="qGetAllPlacements">
+                                	<tr>
+                                        <td width="50%">
+                                        	<a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qGetAllPlacements.hostCompanyID#"  target="_blank" class="style4">
+                                            	#qGetAllPlacements.name#
+                                           	</a>
+                                      	</td>
+                                     	<td width="24%">
+                                        	#qGetAllPlacements.jobTitle#
+                                      	</td>
+                                        <td width="13">
+                                        	#qGetAllPlacements.city#
+                                     	</td>
+                                        <td width="13%">
+                                        	#qGetAllPlacements.state#
+                                      	</td>
+                                 	</tr>
+                                </cfloop>
+                          	</table>
                         </td>
-                        <td class="style1">#qTotalPerAgent.jobTitle#</td>
-                        <td class="style1">#qTotalPerAgent.city#</td>
-                        <td class="style1">#qTotalPerAgent.state#</td>
                         <td class="style1">#qTotalPerAgent.ds2019#</td>
                         <td class="style1">#qTotalPerAgent.wat_placement#</td>
                         <td class="style1">#qTotalPerAgent.businessname#</td>
