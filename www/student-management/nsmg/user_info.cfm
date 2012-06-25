@@ -732,37 +732,7 @@
                                             <td>#dateFormat(changedate, 'mm/dd/yyyy')#</td>
                                             </tr>
     
-                                            <cfif usertype EQ 4>
-                                            
-                                                <cfquery name="check_facilitator_assignment" datasource="#APPLICATION.DSN#">
-                                                    SELECT 
-                                                    	user_access_rights.userid, 
-                                                        user_access_rights.usertype, 
-                                                        smg_users.firstname, 
-                                                        smg_users.lastname
-                                                    FROM 
-                                                    	user_access_rights 
-                                                    INNER JOIN 
-                                                    	smg_users on user_access_rights.userid = smg_users.userid
-                                                    WHERE 
-                                                    	user_access_rights.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="4">
-                                                    AND 
-                                                    	regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#regionid#">
-                                                    AND 
-                                                    	smg_users.userid != <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userid#">
-                                                    AND
-                                                    	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                                                </cfquery>
-    
-                                                <cfloop query="check_facilitator_assignment">
-                                                    <tr bgcolor="#iif(region_company_access.currentRow MOD 2 ,DE("efefef") ,DE("ffffff") )#">
-                                                        <td>&nbsp;</td>
-                                                        <!---<td>&nbsp;</td>--->
-                                                        <td colspan="6"><em>#check_facilitator_assignment.firstname#  #check_facilitator_assignment.lastname# is also assigned as a Facilitator for this region.</em></td>
-                                                    </tr>
-                                                </cfloop>
-                                                
-                                            <cfelseif usertype EQ 5>
+                                            <cfif usertype EQ 5>
                                             
                                                 <cfquery name="check_manager_assignment" datasource="#APPLICATION.DSN#">
                                                     SELECT 
