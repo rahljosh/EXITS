@@ -1,11 +1,11 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		_regionGoal.cfm
+	File:		_officeRegionGoal.cfm
 	Author:		James Griffiths
 	Date:		May 17, 2012
 	Desc:		Goal Per Region
 				
-				#CGI.SCRIPT_NAME#?curdoc=report/index?action=regionGoal
+				#CGI.SCRIPT_NAME#?curdoc=report/index?action=officeRegionGoal
 				
 	Updated: 	06/14/2012 - Combing Great Lakes Region
 				06/14/2012 - Renaming report from Allocation to Goal		
@@ -229,7 +229,7 @@
 
 	<cfoutput>
 
-        <form action="report/index.cfm?action=regionGoal" name="regionGoal" id="regionGoal" method="post" target="blank">
+        <form action="report/index.cfm?action=officeRegionGoal" name="officeRegionGoal" id="officeRegionGoal" method="post" target="blank">
             <input type="hidden" name="submitted" value="1" />
             <table width="50%" cellpadding="8" cellspacing="0" class="blueThemeReportTable" align="center">
                 <tr><th colspan="2">#vReportTitle#</th></tr>
@@ -318,7 +318,7 @@
         <cfcontent type="application/msexcel">
         
         <!--- suggest default name for XLS file --->
-        <cfheader name="Content-Disposition" value="attachment; filename=regionGoal.xls">
+        <cfheader name="Content-Disposition" value="attachment; filename=officeRegionGoal.xls">
 
         <table width="98%" cellpadding="4" cellspacing="0" align="center" border="1">
             <tr><th colspan="10">#vReportTitle#</th></tr>
@@ -495,7 +495,7 @@
 		<!--- Include Report Header --->   
         <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
             <tr>
-                <th>#vReportTitle#</th>            
+                <th><cfoutput>#vReportTitle#</cfoutput></th>            
             </tr>
         </table>
         

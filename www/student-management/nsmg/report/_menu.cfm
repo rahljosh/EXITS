@@ -275,7 +275,7 @@
     <tr>
         <td class="lastRow">
 			<ul class="mainList">
-                <li onclick="loadSelectedReport('regionGoal');">Region Goal</li>
+                <li onclick="loadSelectedReport('officeRegionGoal');">Region Goal</li>
                 <ul>
                     <li>Generate a report of allocations by company and region</li>
                     <li>Filter by: season, August/January goals, region</li>
@@ -284,7 +284,7 @@
         </td>
         <td class="lastRow">
 			<ul class="mainList">
-                <li onclick="loadSelectedReport('complianceCheckPlacementPaperwork');">Compliance Check Placement Paperwork</li>
+                <li onclick="loadSelectedReport('officeComplianceCheckPaperwork');">Compliance Check Placement Paperwork</li>
                 <ul>
                     <li>Generate a list of all students in your region and paperwork compaliance has not checked</li>
                     <li>Filter by: Region</li>
