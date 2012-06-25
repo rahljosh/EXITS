@@ -116,8 +116,6 @@
         	ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 		AND
         	ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="7">
-        AND	
-        	ec.doc_midterm_evaluation IS NULL
         AND 
             ec.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vProgramList#" list="yes"> )
             
