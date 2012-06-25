@@ -354,7 +354,7 @@ ORDER BY businessname
 	
 	<cfoutput>
 		<script type="text/javascript">
-		window.open('../invoice/payment_details.cfm?ref=#form.pay_ref#&userid=#FORM.choseNAgent#', 'Payment_Details', 'location=no', 'scrollbars=yes', 'menubars=no', 'toolbars=no', 'resizable=yes', 'width=150', 'height=150');  
+		window.open('../invoice/payment_details.cfm?ref=#form.pay_ref#&userid=#FORM.choseNAgent#&dateRec=#DateFormat(form.date_received, 'yyyy-mm-dd')#', 'Payment_Details', 'location=no', 'scrollbars=yes', 'menubars=no', 'toolbars=no', 'resizable=yes', 'width=150', 'height=150');  
 		</script>
 	</cfoutput>
 	
