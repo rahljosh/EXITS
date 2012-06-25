@@ -621,8 +621,6 @@
                 	smg_users u ON u.userID = hl.areaRepID    
                 LEFT OUTER JOIN
                 	applicationLookUp alk ON alk.fieldID = hl.statusID 
-						AND
-                        	alk.applicationID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CONSTANTS.type.hostFamilyLead#">
                     	AND 
                             alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="hostLeadStatus">
                 WHERE
@@ -719,8 +717,6 @@
                 	smg_users u ON u.userID = hl.areaRepID    
                 LEFT OUTER JOIN
                 	applicationLookUp alk ON alk.fieldID = hl.statusID 
-						AND
-                        	alk.applicationID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CONSTANTS.type.hostFamilyLead#">
                     	AND 
                             alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="hostLeadStatus">
                 WHERE
@@ -827,8 +823,6 @@
                 	smg_users u ON u.userID = hl.areaRepID    
                 LEFT OUTER JOIN
                 	applicationLookUp alk ON alk.fieldID = hl.statusID 
-						AND
-                        	alk.applicationID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CONSTANTS.type.hostFamilyLead#">
                     	AND 
                             alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="hostLeadStatus">
                 WHERE
@@ -937,11 +931,7 @@
 			qGetEnterBy = APPLICATION.CFC.USER.getUserByID(userID=ARGUMENTS.enteredByID);
 			
 			// Get Status
-			qGetStatus = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(
-				applicationID=APPLICATION.CONSTANTS.type.hostFamilyLead,
-				fieldKey='hostLeadStatus',
-				fieldID=ARGUMENTS.statusID
-			);
+			qGetStatus = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='hostLeadStatus',fieldID=ARGUMENTS.statusID);
 		</cfscript>
         
         <cfsavecontent variable="emailNewHostLead">
@@ -1029,11 +1019,7 @@
 			// Status
 			if ( ARGUMENTS.statusID NEQ qGetHostLead.statusID ) {
 				// Get Status Information
-				qGetStatus = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(
-					applicationID=APPLICATION.CONSTANTS.type.hostFamilyLead,
-					fieldKey='hostLeadStatus',
-					fieldID=ARGUMENTS.statusID
-				);				
+				qGetStatus = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='hostLeadStatus',fieldID=ARGUMENTS.statusID);				
 				// Assign new statusID
 				vActions = vActions & "Status: #qGetStatus.name# <br /> #CHR(13)#";
 			}
@@ -1245,8 +1231,6 @@
                 	smg_users u ON u.userID = hl.areaRepID    
                 LEFT OUTER JOIN
                 	applicationLookUp alk ON alk.fieldID = hl.statusID 
-						AND
-                        	alk.applicationID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CONSTANTS.type.hostFamilyLead#">
                     	AND 
                             alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="hostLeadStatus">
                 WHERE
@@ -1537,8 +1521,6 @@
                 	smg_users u ON u.userID = hl.areaRepID    
                 LEFT OUTER JOIN
                 	applicationLookUp alk ON alk.fieldID = hl.statusID 
-						AND
-                        	alk.applicationID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CONSTANTS.type.hostFamilyLead#">
                     	AND 
                             alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="hostLeadStatus">
                 WHERE

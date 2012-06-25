@@ -55,15 +55,17 @@
 			vHostInCompliance = APPLICATION.CFC.CBC.checkHostFamilyCompliance(
 				hostID=qGetPlacementHistoryByID.hostID, 
 				studentID=qGetStudentInfo.studentID,
+				doublePlacementID=qGetPlacementHistoryByID.doublePlacementID,
 				secondVisitRepID=qGetPlacementHistoryByID.secondVisitRepID,
 				schoolAcceptanceDate=qGetPlacementHistoryByID.doc_school_accept_date,
-				crossDataUserCBC=1
+				crossDataUserCBC=1,
+				representativeDistanceInMiles=qGetPlacementHistoryByID.hfSupervisingDistance
 			);
 			
 		}
 		
 		// Get Training Options
-		qGetRelocationReason = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(applicationID=1,fieldKey='changePlacementReason');
+		qGetRelocationReason = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='changePlacementReason');
 		
 		// Get School Information
 		qGetSchoolInfo = APPLICATION.CFC.SCHOOL.getSchoolAndDatesInfo(schoolID=qGetPlacementHistoryByID.schoolID, seasonID=qGetProgramInfo.seasonID);

@@ -100,6 +100,7 @@
     	<cfargument name="foreignTable" hint="foreignTable is required. This is what defines a group of data">
         <cfargument name="foreignID" hint="foreignID is required">
         <cfargument name="enteredByID" default="" hint="enteredByID is not required">
+        <cfargument name="isResolved" default="" hint="isResolved is not required">
         <cfargument name="sortBy" type="string" default="dateCreated" hint="sortBy is not required">
         <cfargument name="sortOrder" type="string" default="DESC" hint="sortOrder is not required">
 
@@ -130,15 +131,20 @@
                 LEFT OUTER JOIN
                 	smg_users u ON u.userID = ah.enteredByID    
                 WHERE
-                    ah.applicationID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationID#">
+                    ah.applicationID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.applicationID)#">
                 AND 
 				    ah.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">
                 AND 
-                    ah.foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.foreignID#">
+                    ah.foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.foreignID)#">
                 
                 <cfif VAL(ARGUMENTS.enteredByID)>
                     AND 
-                        ah.enteredByID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.enteredByID#">
+                        ah.enteredByID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.enteredByID)#">
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.isResolved)>
+                    AND 
+                        ah.isResolved = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isResolved)#">
                 </cfif>
                 
                 ORDER BY
@@ -199,6 +205,23 @@
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#ARGUMENTS.dateCreated#">,
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#ARGUMENTS.dateUpdated#">
                 )        
+        </cfquery> 
+
+	</cffunction>
+
+
+	<cffunction name="updateApplicationHistory" access="public" returntype="void" output="false" hint="Updates isResolved value on applicationHistory">
+    	<cfargument name="ID" hint="ID is required">
+    	<cfargument name="isResolved" default="" hint="isResolved is not required">
+
+        <cfquery 
+        	datasource="#APPLICATION.DSN#">
+                UPDATE
+                    applicationHistory
+                SET
+                	isResolved = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isResolved)#">
+                WHERE
+                	ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
         </cfquery> 
 
 	</cffunction>
