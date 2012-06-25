@@ -7,6 +7,8 @@
 </head>
 <body>
 
+<cfajaxproxy cfc="extra.extensions.components.candidate" jsclassname="CANDIDATE">
+
 <cfif not IsDefined('url.unqid')>
 	<cfinclude template="../error_message.cfm">
 </cfif>
@@ -28,12 +30,23 @@
 </cfquery>
 
 <script type="text/javascript">
+	
 	var openWindow = function(url, setHeight, setWidth) { 
 		newwindow = window.open(url, 'Application', 'height=' + setHeight + ', width=' + setWidth + ', location=no, scrollbars=yes, menubar=no, toolbars=no, resizable=yes'); 
 		if(window.focus) {
 			newwindow.focus()
 		}
 	}
+	
+	var deleteHistory = function(candCompID) {
+		var choice = confirm("Are you sure you want to delete this record?");
+		if (choice) {
+			var c = new CANDIDATE();
+			c.removeCandidatePlacementInformation(candCompID);
+			window.location.reload();
+		}
+	}
+	
 </script>
 
 <cfoutput query="get_candidate_info">
@@ -60,6 +73,7 @@
 					<td class="style2" bgcolor="8FB6C9">End Date</td>
 					<td class="style2" bgcolor="8FB6C9">Status</td>
                     <td class="style2" bgcolor="8FB6C9">Placement Vetting</td>
+                    <td class="style2" bgcolor="8FB6C9">Delete</td>
 				</tr>
 				<cfif host_history.recordcount EQ '0'>
 				<tr><td colspan="6" align="center" class="style1">There is no Host Company History for this student.</td></tr>
@@ -81,6 +95,11 @@
                             <td align="left" class="style5">
                             	<a href="javascript:openWindow('../candidate/placementVettingPrint.cfm?uniqueid=#URL.unqid#&candCompID=#candCompID#', 800, 900);" class="style5">View</a>
                            	</td>
+                            <td align="left" class="style5">
+                            	<cfif status NEQ 1>
+                            		<input type="image" src="../../pics/deletex.gif" onClick="deleteHistory(#candCompID#)">
+                              	</cfif>
+                            </td>
 						</tr>
 					</cfloop>
 				</cfif>

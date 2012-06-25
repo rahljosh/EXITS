@@ -955,6 +955,18 @@
         
 		<cfreturn qGetCandidatePlacementInformation>
 	</cffunction>
+    
+    <cffunction name="removeCandidatePlacementInformation" access="remote" output="false" hint="deletes candidate placement record">
+    	<cfargument name="candCompID" required="yes" hint="deletes record based on this id">
+        
+        <cfquery name="qDeleteRecord" datasource="#APPLICATION.DSN.Source#">
+        	DELETE FROM
+            	extra_candidate_place_company
+          	WHERE
+            	candCompID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candCompID#">
+        </cfquery>
+    
+    </cffunction>
 
 
 	<!------------------------------------------------------------
