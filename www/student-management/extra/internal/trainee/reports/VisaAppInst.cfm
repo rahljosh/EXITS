@@ -1,4 +1,4 @@
-<cfdocument format="pdf" orientation="portrait" backgroundvisible="yes" overwrite="no" fontembed="yes" margintop="0.5" marginbottom="0.5">
+<cfdocument format="pdf" orientation="portrait" backgroundvisible="yes" overwrite="no" fontembed="yes" margintop="0.5" marginbottom="0.5" scale="99">
 
 <cfquery name="get_candidate" datasource="MySql">
 SELECT firstname, middlename, lastname, home_country, ds2019, extra_candidates.fieldstudyid, extra_candidates.subfieldid, extra_candidates.programid, smg_programs.programname, extra_sevis_sub_fieldstudy.subfield, extra_sevis_fieldstudy.fieldstudy, smg_countrylist.countryname
