@@ -155,8 +155,8 @@
                 smg_students s
             INNER JOIN
                 smg_programs p ON p.programID = s.programID
-                    AND
-                        p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', -16, now())#">
+                AND
+                	DATE_ADD(p.endDate, INTERVAL 9 MONTH) >= CURDATE()
             INNER JOIN 
                 smg_hosthistory h ON h.studentID = s.studentID
             WHERE 
@@ -177,8 +177,8 @@
                 smg_students s
             INNER JOIN
                 smg_programs p ON p.programID = s.programID
-                    AND
-                        p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', -16, now())#">
+                AND
+                	DATE_ADD(p.endDate, INTERVAL 9 MONTH) >= CURDATE()
             INNER JOIN
                 smg_hostHistoryTracking sht ON sht.studentID = s.studentID
                     AND
@@ -210,7 +210,7 @@
         INNER JOIN
         	smg_programs p ON p.programID = s.programID
                 AND
-                    p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', -16, now())#">
+                	DATE_ADD(p.endDate, INTERVAL 9 MONTH) >= CURDATE()
         WHERE 
         	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         AND	
@@ -235,8 +235,8 @@
                 smg_students s
             INNER JOIN
                 smg_programs p ON p.programID = s.programID
-                    AND
-                        p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', -16, now())#">
+                AND
+                	DATE_ADD(p.endDate, INTERVAL 9 MONTH) >= CURDATE()
             INNER JOIN 
                 smg_hosthistory h ON h.studentID = s.studentID
              WHERE 
@@ -257,8 +257,8 @@
                 smg_students s
             INNER JOIN
                 smg_programs p ON p.programID = s.programID
-                    AND
-                        p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', -16, now())#">
+                AND
+                	DATE_ADD(p.endDate, INTERVAL 9 MONTH) >= CURDATE()
             INNER JOIN
                 smg_hostHistoryTracking sht ON sht.studentID = s.studentID
                     AND
@@ -290,7 +290,7 @@
         INNER JOIN
         	smg_programs p ON p.programID = s.programID
                 AND
-                    p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', -16, now())#">
+                	DATE_ADD(p.endDate, INTERVAL 9 MONTH) >= CURDATE()
         WHERE 
         	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         AND	
@@ -315,8 +315,8 @@
                 smg_students s
             INNER JOIN
                 smg_programs p ON p.programID = s.programID
-                    AND
-                        p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', -16, now())#">
+                AND
+                	DATE_ADD(p.endDate, INTERVAL 9 MONTH) >= CURDATE()
             INNER JOIN 
                 smg_hosthistory h ON h.studentID = s.studentID
              WHERE 
@@ -337,8 +337,8 @@
                 smg_students s
             INNER JOIN
                 smg_programs p ON p.programID = s.programID
-                    AND
-                        p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', -16, now())#">
+                AND
+                	DATE_ADD(p.endDate, INTERVAL 9 MONTH) >= CURDATE()
             INNER JOIN
                 smg_hostHistoryTracking sht ON sht.studentID = s.studentID
                     AND
