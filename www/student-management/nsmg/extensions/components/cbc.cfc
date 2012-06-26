@@ -326,7 +326,24 @@
                                 THEN 
                                     CAST(CONCAT('Member - ', shc.name, ' ', shc.lastName, ' - ', FLOOR(DATEDIFF(CURRENT_DATE,birthdate)/365), ' years old') AS CHAR)
                             END
-                        ) AS fullName                    
+                        ) AS fullName,
+                        (
+                            CASE 
+                                WHEN 
+                                    cbc_type = 'father' 
+                                THEN 
+                                    CONCAT(h.fatherFirstName, ' ', h.fatherLastName)
+                                WHEN 	
+                                    cbc_type = 'mother' 
+                                THEN 
+                                    CONCAT(h.motherFirstName, ' ', h.motherLastName)
+                                WHEN 	
+                                    cbc_type = 'member' 
+                                THEN 
+                                    CAST(CONCAT(shc.name, ' ', shc.lastName, ' - ', FLOOR(DATEDIFF(CURRENT_DATE,birthdate)/365), ' years old') AS CHAR)
+                            END
+                        ) AS shortName,                        
+						shc.liveAtHome                                            
                     FROM 
                         smg_hosts_cbc cbc
                     INNER JOIN
@@ -335,13 +352,24 @@
                         smg_host_children shc ON shc.hostID = cbc.hostID
                             AND
                                 shc.childID = cbc.familyID
-                            AND
-                            	shc.liveAtHome = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
                     WHERE 
                         cbc.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">             	
                     ORDER BY 
                         cbc.date_sent DESC
 				) AS tmpTable
+                WHERE             
+             		shortName != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                <!--- Do Not Include Members that no longer live at home --->  
+                AND
+                (
+                        familyID = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
+                    OR 
+                        ( 	
+                            familyID != <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
+                        AND 
+                            liveAtHome = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
+                        )    
+				)                                    
                 GROUP BY                    
                     fullName     
 				ORDER BY
