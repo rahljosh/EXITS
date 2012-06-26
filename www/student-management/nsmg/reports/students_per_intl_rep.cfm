@@ -42,7 +42,21 @@
             h.familylastname as hostfamily,
             english.name as englishcamp, 
             fac.firstName as facFirstName,
-            fac.lastName as facLastName
+            fac.lastName as facLastName,
+            (
+                CASE 
+                	<!--- August Programs --->
+                    WHEN 
+                        p.type IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,3,5,25" list="yes"> )
+                    THEN 
+                        ssd.year_begins
+                    <!--- January Programs --->
+                    WHEN 	
+                        p.type IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="2,4,24,26" list="yes"> )
+                    THEN 
+                        ssd.semester_begins
+                END
+            ) AS schoolStartDate
         FROM 
             smg_students s
         INNER JOIN 
@@ -59,6 +73,10 @@
             smg_aypcamps english ON s.aypenglish = english.campid
         LEFT OUTER JOIN
             smg_users fac ON fac.userID = r.regionFacilitator
+        LEFT OUTER JOIN
+            smg_school_dates ssd ON ssd.schoolID = s.schoolID
+            AND	
+                ssd.seasonID = p.seasonID
         WHERE
             s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> )
             
@@ -172,19 +190,6 @@
             WHERE 	
                 intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentList.intrep#">
          </cfquery>
-         
-        <cfquery name="qSchoolDates" datasource="MySQL">
-            SELECT 
-                year_begins
-            FROM 
-                smg_school_dates
-            INNER JOIN 
-                smg_programs p ON p.seasonid = smg_school_dates.seasonid
-            WHERE 
-                schoolid = <cfqueryparam value="#qGetStudentList.schoolid#" cfsqltype="cf_sql_integer">
-            AND 
-                p.programid = <cfqueryparam value="#qGetStudentList.programid#" cfsqltype="cf_sql_integer">
-         </cfquery>
     
 		<table width="98%" cellpadding="3" cellspacing="0" align="center" style="border:1px solid ##999;">	
 			<tr>
@@ -212,18 +217,18 @@
             
 			<cfoutput>					
                 <tr bgcolor="###iif(qGetStudentList.currentrow MOD 2 ,DE("EDEDED") ,DE("FFFFFF") )#">
-                    <td align="center">#studentid#</td>
-                    <td>#firstname# #familylastname#</td>
-                    <td align="center">#sex#</td>
-                    <td align="center">#DateFormat(DOB, 'mm/dd/yy')#</td>
-                    <td>#countryname#</td>
+                    <td align="center">#qGetStudentList.studentid#</td>
+                    <td>#qGetStudentList.firstname# #qGetStudentList.familylastname#</td>
+                    <td align="center">#qGetStudentList.sex#</td>
+                    <td align="center">#DateFormat(qGetStudentList.DOB, 'mm/dd/yy')#</td>
+                    <td>#qGetStudentList.countryname#</td>
                     <cfif FORM.status is 1>
-                    <td>#hostfamily#</td>	
+                        <td>#qGetStudentList.hostfamily#</td>	
                     <cfelse>
-                    <td>#regionname#</td>	
+                        <td>#qGetStudentList.regionname#</td>	
                     </cfif>		
-                    <td>#facFirstName# #facLastName#</td>			
-                    <td>#DateFormat(qSchoolDates.year_begins, 'mm/dd/yy')#</td>
+                    <td>#qGetStudentList.facFirstName# #qGetStudentList.facLastName#</td>			
+                    <td>#DateFormat(qGetStudentList.schoolStartDate, 'mm/dd/yy')#</td>
                     <td>#DateFormat(dateapplication, 'mm/dd/yy')#</td>
 				</tr>							
 			</cfoutput>	
@@ -255,10 +260,11 @@
                 <td style="border-bottom:1px solid #999; font-weight:bold;">Facilitator</td>
                 <td style="border-bottom:1px solid #999; font-weight:bold;">Arrival to Camp</td>
                 <td style="border-bottom:1px solid #999; font-weight:bold;">Time</td>
-                <td style="border-bottom:1px solid #999; font-weight:bold;">Flight Info</td>                
+                <td style="border-bottom:1px solid #999; font-weight:bold;">Flight Info</td>    
                 <td style="border-bottom:1px solid #999; font-weight:bold;">Departure to Host</td>
                 <td style="border-bottom:1px solid #999; font-weight:bold;">Time</td>
-                <td style="border-bottom:1px solid #999; font-weight:bold;">Flight Info</td>                
+                <td style="border-bottom:1px solid #999; font-weight:bold;">Flight Info</td> 
+                <td style="border-bottom:1px solid #999; font-weight:bold;">School Start Date</td>                  
                 <td style="border-bottom:1px solid #999; font-weight:bold;">Pre-AYP Camp</td>
             </tr>
     
@@ -337,6 +343,7 @@
                                Flight #qGetDepartureFromCamp.flight_number#
                             </cfif>
                         </td>
+                        <td style="border-bottom:1px solid ##999; vertical-align:top;">#DateFormat(qGetStudentList.schoolStartDate, 'mm/dd/yy')#</td>
                         <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.englishcamp#</td>
                     </tr>							
                 </cfoutput>	
