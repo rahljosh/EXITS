@@ -59,6 +59,9 @@
 
 	// Store the initialized Program object in the Application scope
 	APPLICATION.CFC.Program = CreateCFC("program").Init();
+	
+	// Store the initialized Tour object in the Application scope
+	APPLICATION.CFC.Tour = CreateCFC("tour").Init();
 
 	// Store the initialized Progress Report object in the Application scope
 	APPLICATION.CFC.ProgressReport = CreateCFC("progressReport").Init();

@@ -79,7 +79,9 @@
             h.phone as hostPhone,
             h.email as hostEmail, 
             h.city as hostCity, 
-            h.state as hostState
+            h.state as hostState,
+            h.address as hostAddress,
+            h.zip as hostZip
         FROM 
         	student_tours st
         INNER JOIN
@@ -650,8 +652,8 @@
                 <span class="greyTextBlock">Host Phone</span>
                 <span class="bigLabelBlock">#qGetRegistrationInfo.hostPhone#</span>
 
-                <span class="greyTextBlock">Host City &nbsp; / &nbsp; State</span>
-                <span class="bigLabelBlock">#qGetRegistrationInfo.hostCity# &nbsp; / &nbsp; #qGetRegistrationInfo.hostState#</span>
+                <span class="greyTextBlock">Host Address</span>
+                <span class="bigLabelBlock">#qGetRegistrationInfo.hostAddress#<br /> #qGetRegistrationInfo.hostCity#, #qGetRegistrationInfo.hostState# #qGetRegistrationInfo.hostZip#</span>
                 
                 <span class="greyTextBlock">Host Email Address</span>
                 <span class="bigLabelBlock">#qGetRegistrationInfo.hostEmail#</span>

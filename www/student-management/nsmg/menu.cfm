@@ -153,6 +153,9 @@
             
                 <li>
                     <a href="index.cfm?curdoc=tours/mpdtours">Students</a>
+                    <ul>
+                    	<li><a href="index.cfm?curdoc=report/MPDReports/index">Reports</a></li>
+                    </ul>
                 </li>
                 
                 <li>
@@ -299,7 +302,12 @@
                     <ul>
                         <li><a href="index.cfm?curdoc=app_process/apps_received">Received</a></li>
 						<cfif APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID,role="mpdTrips")>
-                                <li><a href="index.cfm?curdoc=tours/mpdtours">Trips</a></li>
+                                <li>
+                                	<a href="index.cfm?curdoc=tours/mpdtours">Trips</a>
+                                    <ul>
+                                        <li><a href="index.cfm?curdoc=report/MPDReports/index">Reports</a></li>
+                                    </ul>
+                                </li>
                         </cfif>
                     </ul>
                 </li>
