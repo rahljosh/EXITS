@@ -51,7 +51,7 @@
 		} 
 		
 		// Get Training Options
-		qGetRelocationReason = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(applicationID=1,fieldKey='changePlacementReason');
+		qGetRelocationReason = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='changePlacementReason');
 
 		// FORM Submitted - Update Info
 		if ( listLen(FORM.subAction) GT 1 ) {

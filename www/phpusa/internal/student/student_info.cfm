@@ -23,7 +23,7 @@
     
     <cfscript>
 		// Get Training Options
-		qGetReturnOptions = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(applicationID=2,fieldKey='PHPReturnOptions');
+		qGetReturnOptions = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='PHPReturnOptions');
 	</cfscript>
     
     <!--- Get Student Info by UniqueID --->
