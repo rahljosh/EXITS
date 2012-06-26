@@ -118,6 +118,10 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 
 <body>
 <cfoutput>
+<Cfset username = listGetAt(repInfo.email, 1, "@")>
+<Cfset domain = listGetAt(repInfo.email, 2, "@")>
+
+
 <div class="container">
   <table width="450" height="650" border="1" cellpadding="0" cellspacing="0">
     <tr>
@@ -132,7 +136,7 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
         High School Students. Participants enjoy and <br />
         learn from the experience by <br />
         bringing the world <br />
-        to your back door!</p><h3>#repInfo.firstname# #repInfo.lastname#<br />#repInfo.phone#</h3><br /><h5>#repInfo.email#</h5>
+        to your back door!</p><h3>#repInfo.firstname# #repInfo.lastname#<br />#repInfo.phone#</h3><br /><h5>#username#@<Cfif len(repInfo.email) gt 25><br /></cfif>#domain#</h5>
       	<cfif ListFind("10", CLIENT.companyid) >
      	 <img src="images/print/10_BookmarkLG_07.png" width="836" height="144" />
         <cfelse>
@@ -157,7 +161,7 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
         High School Students. Participants enjoy and <br />
         learn from the experience by <br />
         bringing the world <br />
-        to your back door!</p><h3>#repInfo.firstname# #repInfo.lastname#<br />#repInfo.phone#</h3><br /><h5>#repInfo.email#</h5>
+        to your back door!</p><h3>#repInfo.firstname# #repInfo.lastname#<br />#repInfo.phone#</h3><br /><h5>#username#@<Cfif len(repInfo.email) gt 25><br /></cfif>#domain#</h5>
       	<cfif ListFind("10", CLIENT.companyid) >
      	 <img src="images/print/10_BookmarkLG_07.png" width="836" height="144" />
         <cfelse>
@@ -182,7 +186,7 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
         High School Students. Participants enjoy and <br />
         learn from the experience by <br />
         bringing the world <br />
-        to your back door!</p><h3>#repInfo.firstname# #repInfo.lastname#<br />#repInfo.phone#</h3><br /><h5>#repInfo.email#</h5>
+        to your back door!</p><h3>#repInfo.firstname# #repInfo.lastname#<br />#repInfo.phone#</h3><br /><h5>#username#@<Cfif len(repInfo.email) gt 25><br /></cfif>#domain#</h5>
        	<cfif ListFind("10", CLIENT.companyid) >
      	 <img src="images/print/10_BookmarkLG_07.png" width="836" height="144" />
         <cfelse>

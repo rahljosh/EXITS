@@ -102,6 +102,11 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 
 <body>
 <cfoutput>
+
+<Cfset username = listGetAt(repInfo.email, 1, "@")>
+<Cfset domain = listGetAt(repInfo.email, 2, "@")>
+
+
 <div id="menu"><table width="425" border="0" cellspacing="0">
   <tr>
     <td><a href="BMsave.cfm? filetype=pdf"><img src="images/save.png" height="20" alt="save icon" border="0" /></a></td>
@@ -112,15 +117,15 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
   <table width="450" height="650" border="1" cellpadding="0" cellspacing="0" align="left">
     <tr>
       <td width="150"><img src="images/Bookmark_03.png" width="148" height="136" /><br /><img src="images/Bookmark_05.png" width="149" height="55" />
-      <p>Enrich your life Hosting International High School Students. Participants enjoy and learn from the experience by bringing the world to your back door!</p><h3>#repInfo.firstname# #repInfo.lastname#<br />#repInfo.phone#</h3><h5>#repInfo.email#</h5>
+      <p>Enrich your life Hosting International High School Students. Participants enjoy and learn from the experience by bringing the world to your back door!</p><h3>#repInfo.firstname# #repInfo.lastname#<br />#repInfo.phone#</h3><h5>#username#@<Cfif len(repInfo.email) gt 25><br /></cfif>#domain#</h5>
       <img src="images/Bookmark_07.png" width="150" height="20" /><br />
       <img src="images/Bookmark_08.png" /></td>
       <td width="150"><img src="images/Bookmark_03.png" width="148" height="136" /><br /><img src="images/Bookmark_05.png" width="149" height="55" />
-      <p>Enrich your life Hosting International High School Students. Participants enjoy and learn from the experience by bringing the world to your back door!</p><h3>#repInfo.firstname# #repInfo.lastname#<br />#repInfo.phone#</h3><h5>#repInfo.email#</h5>
+      <p>Enrich your life Hosting International High School Students. Participants enjoy and learn from the experience by bringing the world to your back door!</p><h3>#repInfo.firstname# #repInfo.lastname#<br />#repInfo.phone#</h3><h5>#username#@<Cfif len(repInfo.email) gt 25><br /></Cfif>#domain#</h5>
       <img src="images/Bookmark_07.png" width="150" height="20" /><br />
       <img src="images/Bookmark_08.png" /></td>
       <td width="150"><img src="images/Bookmark_03.png" width="148" height="136" /><br /><img src="images/Bookmark_05.png" width="149" height="55" />
-      <p>Enrich your life Hosting International High School Students. Participants enjoy and learn from the experience by bringing the world to your back door!</p><h3>#repInfo.firstname# #repInfo.lastname#<br />#repInfo.phone#</h3><h5>#repInfo.email#</h5>
+      <p>Enrich your life Hosting International High School Students. Participants enjoy and learn from the experience by bringing the world to your back door!</p><h3>#repInfo.firstname# #repInfo.lastname#<br />#repInfo.phone#</h3><h5>#username#@<Cfif len(repInfo.email) gt 25><br /></Cfif>#domain#</h5>
       <img src="images/Bookmark_07.png" width="150" height="20" /><br />
       <img src="images/Bookmark_08.png" /></td>
     </tr>
