@@ -71,9 +71,11 @@ function CheckFields() {
 	
 	function addSecondaryLanguage(studentID) {
 		var languageID = $("#secondaryLanguage").val();
-		var student = new STUDENT();
-		student.addLanguage(studentID, languageID, 0);
-		getSecondaryLanguages(studentID);
+		if (languageID != 0) {
+			var student = new STUDENT();
+			student.addLanguage(studentID, languageID, 0);
+			getSecondaryLanguages(studentID);
+		}
 	}
 	
 	function removeSecondaryLanguage(ID) {
@@ -182,6 +184,7 @@ function CheckFields() {
     <tr>
     	<td style="vertical-align:top;">
             <select name="languageID" id="languageID">
+            	<option value="0">Please Select</option>
             	<cfloop query="qGetLanguageList">
                 	<option value="#fieldID#"<cfif qGetPrimaryLanguage.languageID EQ fieldID>selected</cfif>>#name#</option>
                	</cfloop>
@@ -191,6 +194,7 @@ function CheckFields() {
         <td>
         	<div id="secondaryPlacementDiv"></div>
             <select name="secondaryLanguage" id="secondaryLanguage">
+            <option value="0">Please Select</option>
                 <cfloop query="qGetLanguageList">
                     <option value="#fieldID#">#name#</option>
                 </cfloop>
