@@ -201,8 +201,8 @@
         within 10 (ten) days of receiving the evaluation notification.
     </p>
     
-    <p style="font-weight:bold; text-decoration:underline; font-size:16px; text-align:center;">
-        Please click to access the evaluation form: <a href="http://www.csb-usa.com/evaluation?evaluation={evaluationID}&uniqueID={uniqueID}">Take Evaluation</a>
+    <p style="font-weight:bold; font-size:16px; text-align:center;">
+        Please click to access the evaluation form: <u><a href="http://www.csb-usa.com/evaluation?evaluation={evaluationID}&uniqueID={uniqueID}">Take Evaluation</a></u>
     </p>
     
     <p style="color:red;">

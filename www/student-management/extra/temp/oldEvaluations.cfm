@@ -65,14 +65,14 @@
         in the United States. During your program, you will receive monthly evaluations by e-mail, as required by the US Department of State. 
         These evaluations are mandatory and crucial for your experience.
     </p>
-    
+
     <p>
         <strong>The CSB monthly evaluation consists of</strong> 9 (nine) questions that require your answer. You must <strong><u>answer in full</u></strong> 
         within 10 (ten) days of receiving the evaluation notification.
     </p>
     
-    <p style="font-weight:bold; text-decoration:underline; font-size:16px; text-align:center;">
-        Please click to access the evaluation form: <a href="http://www.csb-usa.com/evaluation?evaluation={evaluationID}&uniqueID={uniqueID}">Take Evaluation</a>
+    <p style="font-weight:bold; font-size:16px; text-align:center;">
+        Please click to access the evaluation form: <u><a href="http://www.csb-usa.com/evaluation?evaluation={evaluationID}&uniqueID={uniqueID}">Take Evaluation</a></u>
     </p>
     
     <p style="color:red;">
