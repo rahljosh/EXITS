@@ -143,7 +143,7 @@
                             BETWEEN 
                                 <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.placedDateFrom#"> 	
                             AND
-                                <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.placedDateTo#"> 	
+                                <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d', 1, FORM.placedDateTo)#"> 	
                     </cfif>
                 INNER JOIN
                     smg_programs p on p.programID = s.programID
