@@ -30,6 +30,47 @@
 		WHERE studentid = '#form.studentid#'
 		LIMIT 1
 	</cfquery>
+    
+    <cfquery name="qGetPrimaryLanguage" datasource="MySql">
+    	SELECT
+        	*
+      	FROM
+        	smg_student_app_language
+      	WHERE
+        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentid#">
+       	AND
+        	isPrimary = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+    </cfquery>
+    
+    <!--- Update Primary Language --->
+    <cfif (qGetPrimaryLanguage.recordCount)>
+    	<cfquery datasource="MySql">
+        	UPDATE
+            	smg_student_app_language
+          	SET
+                languageID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.languageID#">,
+                dateUpdated = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#NOW()#">
+           	WHERE
+            	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentid#">
+            AND
+                isPrimary = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        </cfquery>
+    <!--- Insert Primary Language --->
+    <cfelse>
+    	<cfquery datasource="MySql">
+        	INSERT INTO
+            	smg_student_app_language
+               		( studentID,
+                    languageID,
+                    isPrimary,
+                    dateCreated )
+           	VALUES
+            	( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.languageID#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
+                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#NOW()#"> )
+        </cfquery>
+    </cfif>
 
 	<html>
 	<head>

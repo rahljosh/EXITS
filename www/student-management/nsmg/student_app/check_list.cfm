@@ -117,6 +117,20 @@
         WHERE 
             studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentID#">
     </cfquery>
+    
+    <cfquery name="smg_student_app_language" datasource="MySql">
+    	SELECT
+        	ID,
+            studentID,
+            languageID,
+            isPrimary
+     	FROM
+        	smg_student_app_language
+      	WHERE
+        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentID#">
+      	AND
+        	isPrimary = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+    </cfquery>
 
     <cfquery name="check_guarantee" datasource="MySQL">
         SELECT app_region_guarantee
@@ -155,8 +169,8 @@
                 fieldid, 
                 field_label, 
                 required, 
-                section, 
-                page, 
+                section,
+                page,
                 field_order, 
                 field_name, 
                 table_located 
@@ -344,9 +358,26 @@
 			<cfset countRed = countRed + 1>		 
 		<cfelseif NOT LEN(Evaluate(get_field)) AND NOT VAL(required)>
 			<tr><td><font color="0000FF">#field_label#</font><br></td></tr>
-			<cfset count3 = 1>		
+			<cfset count3 = 1>	
 		</cfif>
 	</cfloop>
+    <cfquery name="qGetSecondaryLanguages" datasource="MySql">
+    	SELECT
+        	ID,
+            studentID,
+            languageID,
+            isPrimary
+     	FROM
+        	smg_student_app_language
+      	WHERE
+        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentID#">
+      	AND
+        	isPrimary = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+    </cfquery>
+    <cfif NOT VAL(qGetSecondaryLanguages.recordCount)>
+    	<tr><td><font color="0000FF">Secondary Language</font><br></td></tr>
+		<cfset count3 = 1>	
+    </cfif>
     
 	<cfif NOT VAL(count3)>
     	<tr><td><font color="0000FF">Complete</font><br></td></tr>
@@ -698,7 +729,7 @@
     <cfif CLIENT.companyID EQ 14 OR ListFind("14,15,16", smg_students.app_indicated_program)> 
 		<tr><td><font color="0000FF">This page does not apply to your program</font><br></td></tr>
     <cfelseif smg_student_app_state_requested.state1 GT 0 or smg_student_app_state_requested.state2 GT 0 or smg_student_app_state_requested.state3 GT 0>
-    	<tr><td>You've requested a state preference, therefor a region preference is not available. </td></tr>
+    	<tr><td>You've requested a state preference, therefore a region preference is not available. </td></tr>
     <cfelse>    
 		<cfif (DateFormat(now(), 'mm') EQ 4 OR dateFormat(now(), 'mm') EQ 5) AND (get_student_info.app_indicated_program EQ 1 OR get_student_info.app_indicated_program EQ '2')> 
             <tr><td><font color="0000FF">This page is not available in April or May.</font><br></td></tr> 

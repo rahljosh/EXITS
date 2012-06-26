@@ -9,6 +9,9 @@
 
 <cftry>
 
+<!--- This enables easy use of the functions in the student.cfc file through javascript --->
+<cfajaxproxy cfc="nsmg.extensions.components.student" jsclassname="STUDENT">
+
 <!--- relocate users if they try to access the edit page without permission --->
 <cfinclude template="../querys/get_latest_status.cfm">
 
@@ -21,8 +24,18 @@
 	<cflocation url="?curdoc=section1/page3print&id=1&p=3" addtoken="no">
 </cfif>
 
+<cfscript>
+	 qGetLanguageList = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='language');
+</cfscript>
+
+<cfinclude template="../querys/get_student_info.cfm">
+
+<cfscript>
+	FORM.studentID = get_student_info.studentID;
+</cfscript>
+
 <script type="text/javascript">
-<!--
+
 function CheckLink()
 {
   if (document.page3.CheckChanged.value != 0)
@@ -52,19 +65,80 @@ function CheckFields() {
       return false;
    } 
 }
-function NextPage() {
-	document.page3.action = '?curdoc=section1/qr_page3&next';
+	function NextPage() {
+		document.page3.action = '?curdoc=section1/qr_page3&next';
 	}
-//-->
+	
+	function addSecondaryLanguage(studentID) {
+		var languageID = $("#secondaryLanguage").val();
+		var student = new STUDENT();
+		student.addLanguage(studentID, languageID, 0);
+		getSecondaryLanguages(studentID);
+	}
+	
+	function removeSecondaryLanguage(ID) {
+		var student = new STUDENT();
+		var studentID = student.removeLanguage(ID);
+		getSecondaryLanguages(studentID);
+	}
+	
+	function getSecondaryLanguages(studentID) {
+		var student = new STUDENT();
+		var inLanguage = student.getSecondaryLanguagesAsStruct(studentID);
+		var numRows = inLanguage.ROWCOUNT;
+		var languages = "<table>";
+		for (var i=0; i<numRows; i++) {
+			var tempID = inLanguage.DATA.ID[i];
+			languages += "<tr><td>" + inLanguage.DATA.NAME[i] + "</td><td><input type='button' value='Remove' style='font-size:9px;' onClick='removeSecondaryLanguage(" + tempID + ");' /></td></tr>";
+		}
+		languages += "</table>";
+		$("#secondaryPlacementDiv").html(languages);
+	}
+	
 </script>
-
-<cfinclude template="../querys/get_student_info.cfm">
 
 <cfquery name="get_interests" datasource="MySQL">
 	SELECT interestID, interest
 	FROM smg_interests
 	WHERE student_app = 'yes'
 	ORDER BY interest
+</cfquery>
+
+<cfquery name="qGetLanguages" datasource="MySql">
+	SELECT
+        l.ID,
+        l.studentID,
+        l.languageID,
+        l.isPrimary,
+        alk.name
+	FROM
+    	smg_student_app_language l
+ 	LEFT OUTER JOIN
+    	applicationLookUp alk ON alk.fieldID = l.languageID
+       	AND
+          	alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="language">
+  	WHERE
+      	l.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentID#">
+</cfquery>
+
+<cfquery name="qGetPrimaryLanguage" dbtype="query">
+	SELECT
+    	*
+   	FROM
+    	qGetLanguages
+   	WHERE
+    	isPrimary = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+</cfquery>
+
+<cfquery name="qGetSecondaryLangauges" dbtype="query">
+	SELECT
+    	*
+   	FROM
+    	qGetLanguages
+   	WHERE
+    	isPrimary = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+  	ORDER BY
+    	name ASC
 </cfquery>
 
 <!--- HEADER OF TABLE --->
@@ -82,7 +156,7 @@ function NextPage() {
 
 <cfoutput query="get_student_info">
 
-<cfinput type="hidden" name="studentid" value="#studentid#">
+<cfinput type="hidden" name="studentid" id="studentID" value="#studentid#">
 <cfinput type="hidden" name="CheckChanged" value="0">
 
 <div class="section"><br>
@@ -98,6 +172,35 @@ function NextPage() {
 	<tr><td colspan="8"><cfinput type="text" name="app_other_interest" size="45" value="#app_other_interest#" onchange="DataChanged();"></td></tr>
 	<tr><td>&nbsp;</td></tr>
 </table>
+
+<table width="670" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+    	<td width="48%"><em>Please choose your primary language:</em></td>
+        <td width="4%">&nbsp;</td>
+        <td width="48%"><em>Do you speak any secondary languages?</em></td>
+  	</tr>
+    <tr>
+    	<td style="vertical-align:top;">
+            <select name="languageID" id="languageID">
+            	<cfloop query="qGetLanguageList">
+                	<option value="#fieldID#"<cfif qGetPrimaryLanguage.languageID EQ fieldID>selected</cfif>>#name#</option>
+               	</cfloop>
+            </select>
+      	</td>
+        <td></td>
+        <td>
+        	<div id="secondaryPlacementDiv"></div>
+            <select name="secondaryLanguage" id="secondaryLanguage">
+                <cfloop query="qGetLanguageList">
+                    <option value="#fieldID#">#name#</option>
+                </cfloop>
+            </select>
+            <input type="button" value="Add" style="font-size:10px;" onClick="addSecondaryLanguage(#studentID#);" />
+      	</td>
+    </tr>
+</table>
+
+<br />
 
 <table width="670" border=0 cellpadding=0 cellspacing=0 align="center">
 	<tr><td><em>Please list any other specific interests, hobbies and activities and any awards or commendations:</em></td></tr>
@@ -250,6 +353,10 @@ function NextPage() {
 
 </cfoutput>
 </cfform>
+
+<script type="text/javascript">
+	window.onload = getSecondaryLanguages($("#studentID").val());
+</script>
 
 <!--- FOOTER OF TABLE --->
 <cfinclude template="../footer_table.cfm">
