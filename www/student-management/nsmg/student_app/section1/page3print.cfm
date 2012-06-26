@@ -26,6 +26,43 @@
 	ORDER BY interest
 </cfquery>
 
+<cfquery name="qGetLanguages" datasource="MySql">
+	SELECT
+        l.ID,
+        l.studentID,
+        l.languageID,
+        l.isPrimary,
+        alk.name
+	FROM
+    	smg_student_app_language l
+ 	LEFT OUTER JOIN
+    	applicationLookUp alk ON alk.fieldID = l.languageID
+       	AND
+          	alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="language">
+  	WHERE
+      	l.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentID#">
+</cfquery>
+
+<cfquery name="qGetPrimaryLanguage" dbtype="query">
+	SELECT
+    	*
+   	FROM
+    	qGetLanguages
+   	WHERE
+    	isPrimary = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+</cfquery>
+
+<cfquery name="qGetSecondaryLangauges" dbtype="query">
+	SELECT
+    	*
+   	FROM
+    	qGetLanguages
+   	WHERE
+    	isPrimary = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+  	ORDER BY
+    	name ASC
+</cfquery>
+
 <cfoutput query="get_student_info">
 
 <cfif not IsDefined('url.curdoc')>
@@ -58,6 +95,27 @@
 	<tr><td colspan="8">#app_other_interest#<br><img src="#path#pics/line.gif" width="660" height="1" border="0" align="absmiddle"></td></tr>
 	<tr><td>&nbsp;</td></tr>
 </table>
+
+<table width="660" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+    	<td width="48%"><em>Please choose your primary language:</em></td>
+        <td width="4%">&nbsp;</td>
+        <td width="48%"><em>Do you speak any secondary languages?</em></td>
+  	</tr>
+    <tr>
+    	<td style="vertical-align:top;">
+        	#qGetPrimaryLanguage.name#
+      	</td>
+        <td></td>
+        <td>
+        	<cfloop query="qGetSecondaryLangauges">
+            	#qGetSecondaryLangauges.name#
+                <br />
+            </cfloop>
+      	</td>
+    </tr>
+</table>
+<br />
 
 <table width="660" border=0 cellpadding=0 cellspacing=0 align="center">
 <tr><td><em>Please list any other specific interests, hobbies and activities and any awards or commendations:</em></td></tr>

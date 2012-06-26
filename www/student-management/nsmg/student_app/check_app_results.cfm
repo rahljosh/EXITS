@@ -29,7 +29,7 @@ body {font:Arial, Helvetica, sans-serif;}
 		<div align="center"><a href="../../index.cfm">Return to Application Status</a></div>
 		<cfelse>
 		<br>
-		Unfortunatly there are #client.missingitems# missing items on your application that need to be filled out before you can 
+		Unfortunately there are #client.missingitems# missing items on your application that need to be filled out before you can 
 		submit your application.<br><br>
 		Once you have filled out these items, please submit your application for processing again. 
 		<br><br>
