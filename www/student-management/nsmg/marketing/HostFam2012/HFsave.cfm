@@ -213,6 +213,9 @@ h1 {
 
 <body>
 <cfoutput>
+<Cfset username = listGetAt(repInfo.email, 1, "@")>
+<Cfset domain = listGetAt(repInfo.email, 2, "@")>
+<p>&nbsp;</p>
 <div class="container">
   <div class="header"><!-- end .header -->
   <cfif client.companyid lte 6 OR client.companyid eq 12>
@@ -236,7 +239,7 @@ h1 {
           <br />
           <strong>#repInfo.firstname# #repInfo.lastname#</strong><br />
           P: #repInfo.phone#<br />
-           #repInfo.email#<br />
+           #username#@<Cfif len(repInfo.email) gt 25><br /></cfif>#domain#<br />
           </div>
         <div class="rdbottom"></div>
     </div></div></div>

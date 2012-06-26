@@ -216,6 +216,9 @@ h1 {
 
 <body>
 <cfoutput>
+<Cfset username = listGetAt(repInfo.email, 1, "@")>
+<Cfset domain = listGetAt(repInfo.email, 2, "@")>
+<p>&nbsp;</p>
 <div id="menu"><table width="275" border="0" cellspacing="5">
   <tr>
     <td><a href="HFsave.cfm? filetype=pdf"><img src="../images/save.png" height="20" alt="save icon" border="0" /></a></td>
@@ -245,7 +248,7 @@ h1 {
           <br />
           <strong>#repInfo.firstname# #repInfo.lastname#</strong><br />
           P: #repInfo.phone#<br />
-           #repInfo.email#<br />
+           #username#@<Cfif len(repInfo.email) gt 25><br /></cfif>#domain#<br />
           </div>
         <div class="rdbottom"></div>
       </div></div></div>
