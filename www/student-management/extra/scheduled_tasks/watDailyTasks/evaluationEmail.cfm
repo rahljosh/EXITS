@@ -202,7 +202,8 @@
     </p>
     
     <p style="font-weight:bold; font-size:16px; text-align:center;">
-        Please click to access the evaluation form: <u><a href="http://www.csb-usa.com/evaluation?evaluation={evaluationID}&uniqueID={uniqueID}">Take Evaluation</a></u>
+        <u><a href="http://www.csb-usa.com/evaluation?evaluation={evaluationID}&uniqueID={uniqueID}">Take Evaluation</a></u>
+        <span style="font-size:10px;">(You must click on "Take Evaluation" to open the online form.)</span>
     </p>
     
     <p style="color:red;">
