@@ -51,6 +51,8 @@
 	<cfabort>
 </cfif>
 
+<cfinvoke component="//nsmg/extensions/components/program" method="addHistory" studentID="#FORM.studentID#" programID="#FORM.internalProgram#" reason="Changed in app">
+
 <cftransaction action="begin" isolation="serializable">
 
 	<cfquery name="update_student" datasource="MySql">
@@ -110,7 +112,7 @@
         	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentid#">
 		LIMIT 1
 	</cfquery>
-	
+    
 	<html>
 	<head>
 	<script language="JavaScript">
@@ -124,7 +126,7 @@
 	-->
 	</script>
 	</head>
-	</html> 		
+	</html>		
 		
 </cftransaction>
 
@@ -132,5 +134,4 @@
 	<cfinclude template="../email_error.cfm">
 </cfcatch> 
 </cftry>
-
 <!--- <cflocation url="?curdoc=section1/page1&id=1&p=1" addtoken="no"> --->
