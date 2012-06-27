@@ -173,11 +173,22 @@
         <cfargument name="foreignID" hint="foreignID is required">
         <cfargument name="enteredByID" default="0" hint="enteredByID is not required">
         <cfargument name="actions" default="n/a" hint="actions is not required">
+        <cfargument name="formatActionsText" default="0" hint="Set to 1 to replace CHR(13) with <br /> CHR(13)">
         <cfargument name="comments" default="n/a" hint="comments is not required">
         <cfargument name="isResolved" default="0" hint="isResolved is not required">
         <cfargument name="dateCreated" default="#now()#" hint="dateCreated is not required">
         <cfargument name="dateUpdated" default="#now()#" hint="dateCreated is not required">
-
+		
+        <cfscript>
+			if ( VAL(ARGUMENTS.formatActionsText) ) {
+				// Format Text
+				vActionsText =  ReplaceNoCase(ARGUMENTS.actions, CHR(13), "<br /> #CHR(13)#", "All");
+			} else {
+				// Do not Format text
+				vActionsText = ARGUMENTS.actions;
+			}
+		</cfscript>
+        
         <cfquery 
         	datasource="#APPLICATION.DSN#">
                 INSERT
@@ -199,7 +210,7 @@
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.foreignID)#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.enteredByID)#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.actions#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#vActionsText#">,
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.comments#">,
                     <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isResolved)#">,
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#ARGUMENTS.dateCreated#">,

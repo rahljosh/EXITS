@@ -255,6 +255,7 @@
 						foreignID=qGetPlacementHistoryByID.historyID,
 						enteredByID=CLIENT.userID,
 						actions=FORM.complianceLogNotes,
+						formatActionsText=1,
 						isResolved=FORM.complianceLogIsResolved
 					);			
 				
@@ -1505,7 +1506,7 @@
                     
                     <table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center">                         
                         <cfloop query="qGetComplianceHistory">                    
-                            <tr class="<cfif FORM[qGetComplianceHistory.ID & '_complianceLogIsResolved'] EQ 1>mouseOverColor<cfelse>attention</cfif>" > 
+                            <tr class="<cfif FORM[qGetComplianceHistory.ID & '_complianceLogIsResolved'] EQ 1>mouseOverColor<cfelse>attention</cfif>"> 
                                 <td width="5%">&nbsp;</td>
                                 <td width="20%">#DateFormat(qGetComplianceHistory.dateCreated, 'mm/dd/yy')# at #TimeFormat(qGetComplianceHistory.dateCreated, 'hh:mm tt')# EST</td>
                                 <td width="50%">#qGetComplianceHistory.actions#</td>
