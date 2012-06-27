@@ -124,7 +124,20 @@ where smg_users.userid = #url.userid#
 	
 	
 	<td  valign="top" class="thin-border-left-bottom-right">
-		Student Management Group<br>
+        <cfswitch expression="#CLIENT.companyID#">
+            <cfcase value="8,9">
+                CSB International, INC.
+            </cfcase>
+            <cfcase value="10">
+                CASE
+            </cfcase>
+            <cfcase value="14">
+                ESI
+            </cfcase>
+            <cfdefaultcase>
+                ISE
+            </cfdefaultcase>
+        </cfswitch><br>
 		119 Cooper St.<br>
 		Babylon, NY 11702<br>
 	</td>
