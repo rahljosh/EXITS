@@ -167,7 +167,7 @@ Refund Details
 </cfoutput></font></td>
 			</tr>
 	<tr>
-		<td>Company</td><td>ID</td><td>Date Applied</td><td>Type</td><td>Description</td><td>Student</td><td>Inv.</td><td>Amount</td>
+		<td>Company</td><td>Credit Note</td><td>Date Applied</td><td>Type</td><td>Description</td><td>Student</td><td>Inv.</td><td>Amount</td>
 	</tr>
 	
 
