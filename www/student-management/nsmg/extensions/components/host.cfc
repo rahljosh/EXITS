@@ -333,7 +333,9 @@
                 	smg_hosts
                 WHERE 
                 	 active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-
+				AND
+                	isNotQualifiedToHost = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                    
                 <cfif LEN(ARGUMENTS.regionID)>
                     AND
                         regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
@@ -347,6 +349,7 @@
         </cfquery>
         
         <cfscript>
+			// Return List
 			return ValueList(qLookupHostFamily.displayHostFamily);		
         </cfscript>
 
