@@ -22,6 +22,7 @@ table.nav_bar {  background-color: #ffffff; border: 1px solid #000000; }
 	<link rel="stylesheet" href="../smg.css" type="text/css">
 </head>
 
+<cfparam name="linkSSL" default="s">
 
 <!----
 
@@ -57,10 +58,25 @@ where smg_users.userid = #url.userid#
 			<div class="page-break">
 <table align="center" >
 <Tr>
-<td><img src="../pics/ise_banner.jpg" align="Center"></Td>
+    <td>
+    	<cfswitch expression="#CLIENT.companyID#">
+        	<cfcase value="8,9">
+            	<img src="http#linkSSL#://www.student-management.com/nsmg/pics/logos/csb_banner.jpg" width="640" height="114" align="center"/>
+            </cfcase>
+            <cfcase value="10">
+            	<img src="http#linkSSL#://case.exitsapplication.com/nsmg/pics/case_banner.jpg" width="665" height="113" align="center" />
+            </cfcase>
+            <cfcase value="14">
+            	<img src="http#linkSSL#://es.exitsapplication.com/nsmg/pics/esiBanner.jpg" width="665" height="80" align="center" />
+            </cfcase>
+            <cfdefaultcase>
+    			<img src="../pics/ise_banner.jpg" align="Center">
+            </cfdefaultcase>
+        </cfswitch>
+    </Td>
 </Tr>
 <tr>
-	<td align="center"><h1>Refund Receipt</h1></td>
+	<td align="center"><h1>Refund Receipt gfsfgsdfgds</h1></td>
 </tr>
 </table>
 <br>
