@@ -1124,8 +1124,14 @@
                             <td>&nbsp;</td>
                             <td><label>Date of 2<sup>nd</sup> Visit</label></td>
                             <td>
-                            	<span class="readOnly displayNone">#DateFormat(qGetSecondVisitReport.dateOfVisit, 'mm/dd/yyyy')#</span>
-                            	<input type="text" name="dateOfVisit" id="dateOfVisit" class="datePicker editPage displayNone" value="#DateFormat(qGetSecondVisitReport.dateOfVisit, 'mm/dd/yyyy')#" disabled="disabled">
+                            	<!--- Only display date of visit if report is approved by NY --->
+                            	<cfif NOT isDate(qGetSecondVisitReport.pr_ny_approved_date)>
+                                    <span class="readOnly displayNone">&nbsp;</span>
+                                    <input type="text" name="dateOfVisit" id="dateOfVisit" class="datePicker editPage displayNone" value="" disabled="disabled">
+                                <cfelse>
+                                    <span class="readOnly displayNone">#DateFormat(qGetSecondVisitReport.dateOfVisit, 'mm/dd/yyyy')#</span>
+                                    <input type="text" name="dateOfVisit" id="dateOfVisit" class="datePicker editPage displayNone" value="#DateFormat(qGetSecondVisitReport.dateOfVisit, 'mm/dd/yyyy')#" disabled="disabled">
+                                </cfif>
                             </td>
                             <td>
                             	<span class="readOnly displayNone">#DateFormat(qGetSecondVisitReport.dateCompliance, 'mm/dd/yyyy')#</span>
