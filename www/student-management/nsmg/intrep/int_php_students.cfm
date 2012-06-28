@@ -71,7 +71,7 @@
 		<td width=26 background="pics/header_background.gif"><img src="pics/students.gif"></td>
 		<td background="pics/header_background.gif"><h2>Private High School Students </td>
 		<td background="pics/header_background.gif" align="right"><cfoutput>
-			<font size=-1>[ <a href="?curdoc=intrep/int_students">Public High School</a> ] &nbsp; &middot; &nbsp;
+			<font size=-1>[ <a href="?curdoc=intrep/studentList">Public High School</a> ] &nbsp; &middot; &nbsp;
 			[ 
 			<cfif URL.placed is "yes"><span class="edit_link_selected"><cfelse><span class="edit_link"></cfif>	<cfif IsDefined('get_user_region.usertype') AND get_user_region.usertype is '9'><cfelse><a href="?curdoc=intrep/int_php_students&placed=yes">placed</a></span> &middot; </cfif> 			
 			<cfif URL.placed is "no"><span class="edit_link_selected"><cfelse><span class="edit_link"></cfif>    <a href="?curdoc=intrep/int_php_students&placed=no">unplaced</a></span>  
