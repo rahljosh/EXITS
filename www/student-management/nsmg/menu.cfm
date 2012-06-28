@@ -37,11 +37,12 @@
             <ul id="MenuBar1" class="MenuBarHorizontal">
             
                 <li>
-                    <a href="index.cfm?curdoc=intrep/int_students">Students</a>
+                    <a href="index.cfm?curdoc=intrep/studentList">Students</a>
                     <ul>
-                        <li><a href="index.cfm?curdoc=intrep/int_students&status=unplaced">Unplaced</a></li>
-                        <li><a href="index.cfm?curdoc=intrep/int_students&status=placed">Placed</a></li>
-                        <li><a href="index.cfm?curdoc=intrep/int_students&status=all">All</a></li>
+                        <li><a href="index.cfm?curdoc=intrep/studentList&status=unplaced">Unplaced</a></li>
+                        <li><a href="index.cfm?curdoc=intrep/studentList&status=pending">Pending</a></li>
+                        <li><a href="index.cfm?curdoc=intrep/studentList&status=placed">Placed</a></li>
+                        <li><a href="index.cfm?curdoc=intrep/studentList&status=all">All</a></li>
                         <li><a href="index.cfm?curdoc=intrep/int_php_students">Private High School</a></li>
                     </ul>
                 </li>
@@ -93,11 +94,12 @@
             <ul id="MenuBar1" class="MenuBarHorizontal">
             
                 <li>
-                    <a href="index.cfm?curdoc=intrep/int_students">Students</a>
+                    <a href="index.cfm?curdoc=intrep/studentList">Students</a>
                     <ul>
-                        <li><a href="index.cfm?curdoc=intrep/int_students&placed=no">Unplaced</a></li>
-                        <li><a href="index.cfm?curdoc=intrep/int_students&placed=yes">Placed</a></li>
-                        <li><a href="index.cfm?curdoc=intrep/int_students&placed=all">All</a></li>
+                        <li><a href="index.cfm?curdoc=intrep/studentList&placed=no">Unplaced</a></li>
+                        <li><a href="index.cfm?curdoc=intrep/studentList&status=pending">Pending</a></li>
+                        <li><a href="index.cfm?curdoc=intrep/studentList&placed=yes">Placed</a></li>
+                        <li><a href="index.cfm?curdoc=intrep/studentList&placed=all">All</a></li>
                     </ul>
                 </li>
                 
@@ -256,8 +258,8 @@
                 <!--- Reports For Managers --->
                 <!---
 				<cfif listFind("5", CLIENT.userType)>
-                    <li><a href="index.cfm?curdoc=report/index">New Reports</a></li>
-    			</cfif>
+					<li><a href="index.cfm?curdoc=report/index">New Reports</a></li>
+				</cfif>
 				--->
                 
                 <li><a href="index.cfm?curdoc=support">Support</a></li>
