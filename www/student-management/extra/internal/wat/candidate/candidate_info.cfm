@@ -424,6 +424,11 @@
 			$(".secondPlacement").fadeOut("fast");
 		}
 		
+		if (selectedHostID == 195)
+			$("#newJobOffer").fadeOut("fast");
+		else
+			$("#newJobOffer").fadeIn("fast");
+		
 		// Set Company Info - first create a host company object to use its functions
 		var selectedHC = new HCComponent();
 		// Setting a callback handler for the proxy automatically makes the proxy's calls asynchronous. 
@@ -1395,13 +1400,15 @@
                                         </cfif>
                                         <tr class="hiddenField trTransferInfo">
                                         	<td colspan="2">
-                                            	
                                                 <table cellpadding="0" cellspacing="0" width="100%">
                                                     <tr class="hiddenField trTransferInfo">
-                                                        <td width="33%" class="style1" align="center">
-                                                            <input type="checkbox" name="isTransferJobOfferReceived" id="isTransferJobOfferReceived" value="1" class="formField transferCheckBox" disabled <cfif qCandidatePlaceCompany.isTransferJobOfferReceived EQ 1>checked</cfif> > 
-                                                            <label for="isTransferJobOfferReceived">New Job Offer</label> 
-                                                        </td>
+                                                    	<!--- Do not show the new job offer box if the student is seeking employment --->
+                                                  		<cfif qCandidatePlaceCompany.hostCompanyID NEQ 195>
+                                                            <td width="33%" class="style1" align="center" id="newJobOffer">
+                                                                <input type="checkbox" name="isTransferJobOfferReceived" id="isTransferJobOfferReceived" value="1" class="formField transferCheckBox" disabled <cfif qCandidatePlaceCompany.isTransferJobOfferReceived EQ 1>checked</cfif> > 
+                                                                <label for="isTransferJobOfferReceived">New Job Offer</label> 
+                                                            </td>
+                                                       	</cfif>
                                                         <td width="33%" class="style1" align="center">
                                                             <input type="checkbox" name="isTransferHousingAddressReceived" id="isTransferHousingAddressReceived" value="1" class="formField transferCheckBox" disabled <cfif qCandidatePlaceCompany.isTransferHousingAddressReceived EQ 1>checked</cfif> > 
                                                             <label for="isTransferHousingAddressReceived">New Housing Address</label> 
@@ -1654,9 +1661,12 @@
                                                 	<td colspan="2">
                                                     	<table cellpadding="0" cellspacing="0" width="100%">
                                                         	<tr>
-                                                            	<td width="33%" class="style1" align="center">
-                                                                	<input type="checkbox" value="1" name="newJobOffer_#qGetAllPlacements.candCompID#" id="cancelStatus_#qGetAllPlacements.candCompID#" class="formField" <cfif qGetAllPlacements.isTransferJobOfferReceived EQ 1>checked</cfif> > New Job Offer
-                                                                </td>
+                                                            	<!--- Do not show the new job offer box if the student is seeking employment --->
+                                                            	<cfif qGetAllPlacements.hostCompanyID NEQ 195>
+                                                                    <td width="33%" class="style1" align="center">
+                                                                        <input type="checkbox" value="1" name="newJobOffer_#qGetAllPlacements.candCompID#" id="cancelStatus_#qGetAllPlacements.candCompID#" class="formField" <cfif qGetAllPlacements.isTransferJobOfferReceived EQ 1>checked</cfif> > New Job Offer
+                                                                    </td>
+                                                               	</cfif>
                                                                 <td width="33%" class="style1" align="center">
                                                                 	<input type="checkbox" value="1" name="newHousingAddress_#qGetAllPlacements.candCompID#" id="cancelStatus_#qGetAllPlacements.candCompID#" class="formField" <cfif qGetAllPlacements.isTransferHousingAddressReceived EQ 1>checked</cfif> > New Housing Address
                                                                 </td>
