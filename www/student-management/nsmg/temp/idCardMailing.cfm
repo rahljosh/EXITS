@@ -446,9 +446,9 @@
                                         <td>&middot;</td>
                                         <td>Policy: #qGetInsuranceInfo.policycode#</td>
                                         <td>&middot;</td>
-                                        <td>(727) 894 7282</td>
+                                        <td>1-800-251-1712</td>
                                         <td>&middot;</td>
-                                        <td>www.esecutive.com</td>
+                                        <td>www.esecutive.com/MyInsurance</td>
                                     </tr>
                                 </table>
             
