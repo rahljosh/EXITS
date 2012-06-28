@@ -1935,7 +1935,13 @@
                                         	<td class="style1" width="70%">
                                                 <span class="readOnly">#dateFormat(qGetCandidate.watDateEvaluation1, 'mm/dd/yyyy')#</span>
                                                 <input type="text" name="watDateEvaluation1" id="watDateEvaluation1" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.watDateEvaluation1, 'mm/dd/yyyy')#" maxlength="10">
-                                        		<cfif NOT LEN(qGetcandidate.watDateEvaluation1)><font size="1">(mm/dd/yyyy)</font></cfif>
+                                        		<cfif NOT LEN(qGetcandidate.watDateEvaluation1)>
+                                                	<font size="1">
+                                                    	<a href="../wat/candidate/sendEvaluation.cfm?candidateID=#qGetCandidate.candidateID#&EvaluationID=1">
+                                                        	[ Send Evaluation ]
+                                                       	</a>
+                                                  	</font>
+												</cfif>
                                             </td>
                                         </tr>
                                         <tr>
@@ -1943,7 +1949,13 @@
                                         	<td class="style1">
                                                 <span class="readOnly">#dateFormat(qGetCandidate.watDateEvaluation2, 'mm/dd/yyyy')#</span>
                                                 <input type="text" name="watDateEvaluation2" id="watDateEvaluation2" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.watDateEvaluation2, 'mm/dd/yyyy')#" maxlength="10">
-                                        		<cfif NOT LEN(qGetcandidate.watDateEvaluation2)><font size="1">(mm/dd/yyyy)</font></cfif>
+                                        		<cfif NOT LEN(qGetcandidate.watDateEvaluation2)>
+                                                	<font size="1">
+                                                    	<a href="../wat/candidate/sendEvaluation.cfm?candidateID=#qGetCandidate.candidateID#&EvaluationID=2">
+                                                        	[ Send Evaluation ]
+                                                       	</a>
+                                                  	</font>
+												</cfif>
                                             </td>
                                         </tr>
                                         <tr>
@@ -1951,7 +1963,13 @@
                                         	<td class="style1" width="70%">
                                                 <span class="readOnly">#dateFormat(qGetCandidate.watDateEvaluation3, 'mm/dd/yyyy')#</span>
                                                 <input type="text" name="watDateEvaluation3" id="watDateEvaluation3" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.watDateEvaluation3, 'mm/dd/yyyy')#" maxlength="10">
-                                        		<cfif NOT LEN(qGetcandidate.watDateEvaluation3)><font size="1">(mm/dd/yyyy)</font></cfif>
+                                        		<cfif NOT LEN(qGetcandidate.watDateEvaluation3)>
+                                                	<font size="1">
+                                                    	<a href="../wat/candidate/sendEvaluation.cfm?candidateID=#qGetCandidate.candidateID#&EvaluationID=3">
+                                                        	[ Send Evaluation ]
+                                                       	</a>
+                                                  	</font>
+												</cfif>
                                             </td>
                                         </tr>
                                         <tr>
@@ -1959,7 +1977,13 @@
                                         	<td class="style1" width="70%">
                                                 <span class="readOnly">#dateFormat(qGetCandidate.watDateEvaluation4, 'mm/dd/yyyy')#</span>
                                                 <input type="text" name="watDateEvaluation4" id="watDateEvaluation4" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.watDateEvaluation4, 'mm/dd/yyyy')#" maxlength="10">
-                                        		<cfif NOT LEN(qGetcandidate.watDateEvaluation4)><font size="1">(mm/dd/yyyy)</font></cfif>
+                                        		<cfif NOT LEN(qGetcandidate.watDateEvaluation4)>
+                                                	<font size="1">
+                                                    	<a href="../wat/candidate/sendEvaluation.cfm?candidateID=#qGetCandidate.candidateID#&EvaluationID=4">
+                                                        	[ Send Evaluation ]
+                                                       	</a>
+                                                  	</font>
+												</cfif>
                                             </td>
                                         </tr>
                         			</table>
