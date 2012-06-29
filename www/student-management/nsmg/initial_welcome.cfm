@@ -244,7 +244,7 @@
                     
                 <table width=100% cellpadding="4" cellspacing=0 border="0" class="section" >
                     <tr>
-                        <td  valign="top" width="100%"><br>
+                        <td  valign="top" width="100%">
                          
                             <img src="pics/tower_100.jpg" width=71 height=100 align="left">
                             <!---<img src="#CLIENT.exits_url#/nsmg/pics/clover.gif" width="75" align="left" >--->
@@ -355,8 +355,7 @@
           </td>
           <td align="right" valign="top" rowspan=2 class="rdPic">
                 <!--- Intl. Rep Pictures --->
-               <cfif (ListFind("5,6,7,9", CLIENT.userType)
-					 and ListFind("1,2,3,4,5,10,12", CLIENT.companyid)) >  
+               <cfif (ListFind("5,6,7,9", CLIENT.userType) AND ListFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, CLIENT.companyid)) >  
                 <cfif CLIENT.usertype EQ 8>
                     <cfset pic_num = RandRange(1,34)>
                     <img src="pics/intrep/#pic_num#.jpg"><br>
@@ -394,8 +393,7 @@
         <Td valign="top">
         
       	 
-    	 <cfif (ListFind("5,6,7,9", CLIENT.userType)
-					 and ListFind("1,2,3,4,5,10,12", CLIENT.companyid)) >
+    	 <cfif (ListFind("5,6,7,9", CLIENT.userType) AND ListFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, CLIENT.companyid)) >
                      <cfset tripcount = 7 - placed_students.Count>
                      <cfinclude template="slideshow/index.cfm">
          <table border=0>
@@ -479,8 +477,7 @@
 					<cfif APPLICATION.CFC.USER.isOfficeUser()>
                     	<td class="get_attention"><span class="get_attention"><b>::</b></span> Your Current Help Desk Tickets</td>
                     <!--- Field Users --->
-					 <cfelseif (ListFind("5,6,7,9", CLIENT.userType)
-					 and ListFind("1,2,3,4,5,10,12", CLIENT.companyid)) >
+					 <cfelseif (ListFind("5,6,7,9", CLIENT.userType) AND ListFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, CLIENT.companyid)) >
                     	<td class="get_attention"><span class="get_attention"><b>::</b></span> WebEx Calendar</td>
                     </cfif>
                 </tr>
@@ -488,9 +485,9 @@
                     <td style="line-height:20px;">
                     	<!----<a href="index.cfm?curdoc=forms/startHostApp">Start a Host App</a><br />---->
                         
-                        <cfif APPLICATION.CFC.USER.isOfficeUser()>
+                        <cfif APPLICATION.CFC.USER.isOfficeUser() AND ListFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, CLIENT.companyID)>
                             <a href="user/index.cfm?uniqueID=#CLIENT.uniqueID#&action=trainCasterLogin" target="_blank" title="Click Here to Take the DOS Test">
-                                <img src="pics/DOScertification.png" border="0" title="Click Here to Take the DOS Test" />
+                                <img src="pics/DOScertification.png" border="0" title="Click Here to Take the DOS Certification Test" />
                             </a><br />
                         </cfif>
                         
@@ -545,8 +542,7 @@
                             </table>
 						</td>
 					<!--- Field Users --->                        
-                    <cfelseif (ListFind("5,6,7,9", CLIENT.userType)
-					 and ListFind("1,2,3,4,5,10,12", CLIENT.companyid)) >
+                    <cfelseif (ListFind("5,6,7,9", CLIENT.userType) AND ListFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, CLIENT.companyid)) >
 						<td>
                             <table cellpadding="4" cellspacing="0" border="0">
                                 <tr>

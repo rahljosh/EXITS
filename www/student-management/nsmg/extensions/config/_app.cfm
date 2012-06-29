@@ -109,30 +109,35 @@
 		// DEVELOPMENT Server Settings	
 
 		// Getting error on querys/upload_logo.cfm. Getting full path including /query
-		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());	'
+		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());
 		// Base Path eg. C:\websites\smg\nsmg\
 		APPLICATION.PATH.base = 'C:/websites/www/student-management/nsmg/';
 		
-		APPLICATION.KEY.googleMapsAPI = 'ABQIAAAAiT0TfDoNFmmMRtOgGZNu_RQ7SAcFHxXg_-mJGkd4r8IEQsqs-RTA-mZLUkFOvNCYFwvV4y4wGdOOyg'; // URL: http://smg.local
+		// URL: http://smg.local
+		APPLICATION.KEY.googleMapsAPI = 'ABQIAAAAiT0TfDoNFmmMRtOgGZNu_RQ7SAcFHxXg_-mJGkd4r8IEQsqs-RTA-mZLUkFOvNCYFwvV4y4wGdOOyg'; 
 
 	} else {
 		// PRODUCTION Server Settings
 
 		// Getting error on querys/upload_logo.cfm. Getting full path including /query
-		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());	'
+		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());
 		// Base Path eg. C:\websites\smg\nsmg\
 		APPLICATION.PATH.base = 'C:/websites/student-management/nsmg/';
 
-		APPLICATION.KEY.googleMapsAPI = 'ABQIAAAAiT0TfDoNFmmMRtOgGZNu_RRLNEIHL1-VAyvTpFfu6UHsH4aa6RS5HJTmI0cZToeRuO_UU4JcIi2qaw'; // URL: http://exitsapplication.com
+		// URL: http://exitsapplication.com
+		APPLICATION.KEY.googleMapsAPI = 'ABQIAAAAiT0TfDoNFmmMRtOgGZNu_RRLNEIHL1-VAyvTpFfu6UHsH4aa6RS5HJTmI0cZToeRuO_UU4JcIi2qaw'; 
 
 	}
 
-	/* jQuery Latest Version 
-	http://code.jquery.com/jquery-latest.min.js / http://code.jquery.com/jquery.js / https://developers.google.com/speed/libraries/devguide */		
+	/*  jQuery Latest Version 
+		https://developers.google.com/speed/libraries/devguide
+		http://code.jquery.com/jquery-latest.min.js 
+		http://code.jquery.com/jquery.js 
+	*/		
 	APPLICATION.PATH.jQuery = 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js';	
 	APPLICATION.PATH.jQueryUI = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js';
-	APPLICATION.PATH.jQueryTheme = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/excite-bike/jquery-ui.css';
-	// 	APPLICATION.PATH.jQueryTheme = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/themes/redmond/jquery-ui.css';
+	APPLICATION.PATH.jQueryTheme = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/redmond/jquery-ui.css';
+	//APPLICATION.PATH.jQueryTheme = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/excite-bike/jquery-ui.css';
 
 	APPLICATION.PATH.pics = APPLICATION.PATH.base & "pics/"; 
 	APPLICATION.PATH.companyLogo = APPLICATION.PATH.base & "pics/logos/"; 
@@ -205,13 +210,7 @@
 	APPLICATION.CONSTANTS.projectHelpStatus[8] = "ny_rejected";
 	// ArrayAppend(APPLICATION.CONSTANTS.projectHelpStatus, "sr_approved");
 	
-	
-	// This stores list of Users IDs that have access to certain areas of the system
-	APPLICATION.AllowedIDs = StructNew();
-	
-	// List of User IDs allowed to access ISE USA Leads
-	APPLICATION.AllowedIDs.hostLeads = "8743,314,12431"; // 8743 - Robert Keegan / 314 - Budge Lamonica / 12431 - Gary Lubrat
-	
+		
 	// This stores list of Users IDs that DO NOT have access to certain areas of the system
 	APPLICATION.NotAllowedIDs = StructNew();	
 	

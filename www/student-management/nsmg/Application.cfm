@@ -27,7 +27,6 @@
 	<cfparam name="CLIENT.programManager" default="">
     <cfparam name="CLIENT.levels" default="0">
     <cfparam name="CLIENT.accesslevelname" default="">
-    <cfparam name="CLIENT.invoice_access" default="0">
 
 	<cfscript>
         // Create a function that let us create CFCs from any location
@@ -97,7 +96,7 @@
         
             <!--- allow user only on change password page. --->
             <cfif NOT (isDefined("URL.curdoc") AND  URL.curdoc EQ 'forms/change_password' OR  listFindNoCase("logout", URL.curdoc))>
-                <cflocation url="/nsmg/index.cfm?curdoc=forms/change_password" addtoken="no"><br />
+                <cflocation url="/nsmg/index.cfm?curdoc=forms/change_password" addtoken="no">
             </cfif>
         
         <!--- force agreement. --->
@@ -105,15 +104,13 @@
         
             <!--- allow user only on yearly agreement page. --->
             <cfif NOT (isDefined("URL.curdoc") AND listFindNoCase("forms/yearly_agreement,repRefs,displayRepAgreement,cbcAuthorization,employmentHistory,logout", URL.curdoc))>
-                <cflocation url="/nsmg/index.cfm?curdoc=forms/yearly_agreement&userid=#CLIENT.userid#" addtoken="no"><br />
+                <cflocation url="/nsmg/index.cfm?curdoc=forms/yearly_agreement&userid=#CLIENT.userid#" addtoken="no">
             </cfif>
          
         <cfelseif isDefined('CLIENT.needsSSN')>
+
 			<cfif NOT (isDefined("URL.curdoc") AND listFindNoCase("forms/verifyInfo, forms/verifyInfo2, logout", URL.curdoc))>
-            	
-                
-                	<cflocation url="/nsmg/index.cfm?curdoc=forms/verifyInfo" addtoken="no"><br />
-            
+                <cflocation url="/nsmg/index.cfm?curdoc=forms/verifyInfo" addtoken="no">
             </cfif>
 			
         </cfif>
