@@ -45,11 +45,14 @@
                     r.regional_guarantee,
                     c.team_id,
                     c.companyName,
-                    c.companyShort
+                    c.companyShort,
+                    CAST( CONCAT(u.firstName, ' ', u.lastName, ' (##', u.userID, ')' ) AS CHAR) AS facilitatorName
                 FROM 
                     smg_regions r
                 LEFT OUTER JOIN
                 	smg_companies c ON c.companyID = r.company
+                LEFT OUTER JOIN
+                	smg_users u ON u.userID = r.regionFacilitator
                 WHERE
                 	1 = 1
 				

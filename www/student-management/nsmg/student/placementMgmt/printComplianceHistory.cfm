@@ -21,6 +21,9 @@
 		// Get Student Information
 		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(uniqueID=URL.uniqueID);
 
+		// Get Region Assigned
+		qGetRegionAssigned = APPLICATION.CFC.REGION.getRegions(qGetStudentInfo.regionAssigned);
+
 		// Get Placement History List
 		qGetPlacementHistoryList = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=qGetStudentInfo.studentID);
 
@@ -52,7 +55,7 @@
 
 <cfoutput>
 	
-    <cfdocument format="flashpaper" orientation="landscape" backgroundvisible="yes" overwrite="no" fontembed="yes">
+    <cfdocument format="pdf" orientation="portrait" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.5" marginright="0.2" marginbottom="0.3" marginleft="0.2">
 	
 		<!--- Page Header --->
         <gui:pageHeader
@@ -60,16 +63,24 @@
             filePath="../../"
         />	
     
-            <table width="90%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+            <table width="95%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                 <tr>
-                    <th class="left" colspan="5">
-                        Compliance History
-                        &nbsp; - &nbsp; 
-                        Student: #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentid#)
-                        &nbsp; - &nbsp; 
-                        Host Family: #qGetHostInfo.familyLastName# (###qGetHostInfo.hostID#)
-                    </th>
-                </tr>      
+                    <th colspan="4">Compliance History</th>
+                </tr>   
+			</table>
+            
+			<table width="95%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">                       
+                <tr class="on">
+                    <td class="subTitleLeft" width="50%">Student: #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentid#)</td>
+                    <td class="subTitleLeft" width="50%">Host Family: #qGetHostInfo.familyLastName# (###qGetHostInfo.hostID#)</td>
+                </tr>  
+                <tr class="off">
+                    <td class="subTitleLeft" width="50%">Region: #qGetRegionAssigned.regionName# (###qGetRegionAssigned.regionID#)</td>
+                    <td class="subTitleLeft" width="50%">Facilitator: #qGetRegionAssigned.facilitatorName#</td>
+                </tr>  
+            </table>
+
+            <table width="95%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                 <tr class="on">
                     <td class="subTitleLeft" width="20%">Date</td>
                     <td class="subTitleLeft" width="50%">Comments</td>
@@ -78,23 +89,24 @@
                 </tr>  
                 <cfloop query="qGetComplianceHistory">                    
                     <tr class="#iif(qGetComplianceHistory.currentRow MOD 2 ,DE("off") ,DE("on") )#">
-                        <td class="subTitleLeft">#DateFormat(qGetComplianceHistory.dateCreated, 'mm/dd/yy')# at #TimeFormat(qGetComplianceHistory.dateCreated, 'hh:mm tt')# EST</td>
-                        <td class="subTitleLeft">#qGetComplianceHistory.actions#</td>
-                        <td class="subTitleLeft">#qGetComplianceHistory.enteredBy#</td>
-                        <td class="subTitleLeft">#YesNoFormat(qGetComplianceHistory.isResolved)#</td>
+                        <td>#DateFormat(qGetComplianceHistory.dateCreated, 'mm/dd/yy')# at #TimeFormat(qGetComplianceHistory.dateCreated, 'hh:mm tt')# EST</td>
+                        <td>#qGetComplianceHistory.actions#</td>
+                        <td>#qGetComplianceHistory.enteredBy#</td>
+                        <td>#YesNoFormat(qGetComplianceHistory.isResolved)#</td>
                     </tr>
                     <tr class="#iif(qGetComplianceHistory.currentRow MOD 2 ,DE("off") ,DE("on") )#">
                         <td  class="subTitleLeft" colspan="5" style="height:150px;" valign="top">Solution:</td>
                     </tr>
                 </cfloop> 
             </table>
-    
+            
         <!--- Page Footer --->
         <gui:pageFooter
-            footerType="application"
+            footerType="print"
             filePath="../../"
+            width="95%"
         />
-	
+        
     </cfdocument>
     
 </cfoutput>    
