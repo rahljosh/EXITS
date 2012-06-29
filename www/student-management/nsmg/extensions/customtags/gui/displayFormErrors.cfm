@@ -46,6 +46,11 @@
 	<cfparam name="ATTRIBUTES.Clear" 
     	type="boolean" 
         default="1" />
+
+    <cfparam 
+    	name="ATTRIBUTES.displayDataNotSavedMessage" 
+        type="boolean" 
+        default="1" />
     
 </cfsilent>
 
@@ -76,7 +81,7 @@
 					<table width="#ATTRIBUTES.width#" border="0" cellpadding="4" cellspacing="0" class="section formErrors" align="center">
                         <tr>
                             <td align="center">
-                                <div class="errors">
+                                <div class="errors">                                    
                                     <p><em>Oops... the following errors were encountered:</em></p>
                             
                                     <ol>
@@ -88,7 +93,10 @@
                 
                                     </ol>
                                     
-                                    <p>Data has <strong>NOT</strong> been saved.</p>
+                                    <cfif VAL(ATTRIBUTES.displayDataNotSavedMessage)>
+	                                    <p>Data has <strong>NOT</strong> been saved.</p>
+                                    </cfif>
+                                    
                                 </div>
                             </td>
                         </tr>                        
@@ -108,7 +116,7 @@
 				<!--- Error displayed on divOnly --->
                 <cfcase value="divOnly">
 
-                      <div class="errors">
+                      <div class="errors" style="width:#ATTRIBUTES.width#;">
                           <p><em>Oops... the following errors were encountered:</em></p>
                   
                           <ol>
@@ -120,7 +128,10 @@
       
                           </ol>
                           
-                          <p>Data has <strong>NOT</strong> been saved.</p>
+                          <cfif VAL(ATTRIBUTES.displayDataNotSavedMessage)>
+                              <p>Data has <strong>NOT</strong> been saved.</p>
+                          </cfif>
+                          
                       </div>
 
 					<cfscript>
@@ -149,7 +160,10 @@
     
                         </ol>
                         
-                        <p>Data has <strong>NOT</strong> been saved.</p>
+                        <cfif VAL(ATTRIBUTES.displayDataNotSavedMessage)>
+                        	<p>Data has <strong>NOT</strong> been saved.</p>
+                        </cfif>
+                        
                     </div>
                     
 					<cfscript>

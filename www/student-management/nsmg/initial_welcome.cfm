@@ -486,7 +486,7 @@
                     	<!----<a href="index.cfm?curdoc=forms/startHostApp">Start a Host App</a><br />---->
                         
                         <cfif APPLICATION.CFC.USER.isOfficeUser() AND ListFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, CLIENT.companyID)>
-                            <a href="user/index.cfm?uniqueID=#CLIENT.uniqueID#&action=trainCasterLogin" target="_blank" title="Click Here to Take the DOS Test">
+                            <a href="index.cfm?curdoc=user/index&uniqueID=#CLIENT.uniqueID#&action=trainCasterLogin" target="_blank" title="Click Here to Take the DOS Test">
                                 <img src="pics/DOScertification.png" border="0" title="Click Here to Take the DOS Certification Test" />
                             </a><br />
                         </cfif>
