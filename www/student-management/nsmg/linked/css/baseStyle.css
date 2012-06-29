@@ -640,6 +640,28 @@
 	text-align:center;
 }
 
+.blueThemeReportDocumentItemFooter {
+	font-size:7px;
+	text-align:center;
+}
+
+.blueThemeReportDocumentItemFooter .top {
+	height:2px;
+	margin:0 auto;
+	background-color:#3b5998; 
+}
+
+.blueThemeReportDocumentItemFooter span {
+	display:block;
+	padding:2px 0px 2px 0px;
+}
+
+.blueThemeReportDocumentItemFooter .bottom {
+	height:2px;
+	margin:0 auto;
+	background-color:#3b5998; 
+}
+
 /* End of Blue Theme Report */
 
 
