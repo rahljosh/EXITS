@@ -1418,7 +1418,7 @@
                             <td><label for="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementParentsDateSigned">Natural Family Date Signed</label></td>
                             <td>
                                 <span class="readOnly displayNone">#DateFormat(qGetDoublePlacementPaperworkHistory.doublePlacementParentsDateSigned, 'mm/dd/yyyy')#</span>
-                                <input type="text" name="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementParentsDateSigned" id="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementParentsDateSigned" class="datePicker editPage displayNone compliantField" value="#DateFormat(FORM[qGetDoublePlacementPaperworkHistory.ID & '_doublePlacementParentsDateSigned'], 'mm/dd/yyyy')#" onchange="displayNonCompliant('#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementParentsDateSigned');">
+                                <input type="text" name="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementParentsDateSigned" id="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementParentsDateSigned" class="datePicker editPage displayNone" value="#DateFormat(FORM[qGetDoublePlacementPaperworkHistory.ID & '_doublePlacementParentsDateSigned'], 'mm/dd/yyyy')#">
                             </td>
                             <td>
                             	<span class="readOnly displayNone">#DateFormat(qGetDoublePlacementPaperworkHistory.doublePlacementParentsDateCompliance, 'mm/dd/yyyy')#</span>
@@ -1433,7 +1433,7 @@
                             <td><label for="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementStudentDateSigned">Student Date Signed</label></td>
                             <td>
                                 <span class="readOnly displayNone">#DateFormat(qGetDoublePlacementPaperworkHistory.doublePlacementStudentDateSigned, 'mm/dd/yyyy')#</span>
-                                <input type="text" name="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementStudentDateSigned" id="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementStudentDateSigned" class="datePicker editPage displayNone compliantField" value="#DateFormat(FORM[qGetDoublePlacementPaperworkHistory.ID & '_doublePlacementStudentDateSigned'], 'mm/dd/yyyy')#" onchange="displayNonCompliant('#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementStudentDateSigned');">
+                                <input type="text" name="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementStudentDateSigned" id="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementStudentDateSigned" class="datePicker editPage displayNone" value="#DateFormat(FORM[qGetDoublePlacementPaperworkHistory.ID & '_doublePlacementStudentDateSigned'], 'mm/dd/yyyy')#">
                             </td>
                             <td>
                             	<span class="readOnly displayNone">#DateFormat(qGetDoublePlacementPaperworkHistory.doublePlacementStudentDateCompliance, 'mm/dd/yyyy')#</span>
@@ -1448,7 +1448,7 @@
                             <td><label for="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementHostFamilyDateSigned">Host Family Date Signed</label></td>
                             <td>
                                 <span class="readOnly displayNone">#DateFormat(qGetDoublePlacementPaperworkHistory.doublePlacementHostFamilyDateSigned, 'mm/dd/yyyy')#</span>
-                                <input type="text" name="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementHostFamilyDateSigned" id="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementHostFamilyDateSigned" class="datePicker editPage displayNone compliantField" value="#DateFormat(FORM[qGetDoublePlacementPaperworkHistory.ID & '_doublePlacementHostFamilyDateSigned'], 'mm/dd/yyyy')#" onchange="displayNonCompliant('#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementHostFamilyDateSigned');">
+                                <input type="text" name="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementHostFamilyDateSigned" id="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementHostFamilyDateSigned" class="datePicker editPage displayNone" value="#DateFormat(FORM[qGetDoublePlacementPaperworkHistory.ID & '_doublePlacementHostFamilyDateSigned'], 'mm/dd/yyyy')#">
                             </td>
                             <td>
                             	<span class="readOnly displayNone">#DateFormat(qGetDoublePlacementPaperworkHistory.doublePlacementHostFamilyDateCompliance, 'mm/dd/yyyy')#</span>
@@ -1467,7 +1467,12 @@
                     <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center"> 
                         <tr bgcolor="##edeff4">
                             <td class="reportTitleLeftClean" width="5%">&nbsp;</td>
-                            <td class="reportTitleLeftClean" width="95%">Compliance Notes</td>
+                            <td class="reportTitleLeftClean" width="85%">Compliance Notes</td>
+                            <td class="reportTitleLeftClean" width="10%">
+                            	<cfif qGetComplianceHistory.recordCount>
+	                                <a href="printcomplianceHistory.cfm?uniqueID=#qGetStudentInfo.uniqueID#" target="_blank" title="Click to Print Compliance Notes">[ Print ]</a>
+                            	</cfif>
+                            </td>
                         </tr>
                     </table>
     
