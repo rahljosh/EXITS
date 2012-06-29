@@ -281,7 +281,7 @@
                     <cfinclude template="welcome_includes/int_agent_apps.cfm">
                 <cfelseif CLIENT.usertype EQ 11>
                     <cfinclude template="welcome_includes/branch_apps.cfm">
-                <cfelseif CLIENT.usertype LTE 4>
+                <cfelseif APPLICATION.CFC.USER.isOfficeUser()>
                     <cfinclude template="welcome_includes/office_apps.cfm">
                 </cfif>
             </td>
@@ -475,8 +475,8 @@
                 <table cellpadding="2" cellspacing="4" width=100%>
                 <tr>
                     <td class="get_attention"><span class="get_attention"><b>::</b></span> Items Needing Attention</u></td>
-                    <!--- Office Users --->
-					<cfif CLIENT.usertype lte 4>
+					<!--- Office Users --->
+					<cfif APPLICATION.CFC.USER.isOfficeUser()>
                     	<td class="get_attention"><span class="get_attention"><b>::</b></span> Your Current Help Desk Tickets</td>
                     <!--- Field Users --->
 					 <cfelseif (ListFind("5,6,7,9", CLIENT.userType)
@@ -488,33 +488,42 @@
                     <td style="line-height:20px;">
                     	<!----<a href="index.cfm?curdoc=forms/startHostApp">Start a Host App</a><br />---->
                         
-                        	<a href="index.cfm?curdoc=forms/yearly_agreement">Please complete your annual area representative agreement and paperwork!<br /></a>
+                        <cfif APPLICATION.CFC.USER.isOfficeUser()>
+                            <a href="user/index.cfm?uniqueID=#CLIENT.uniqueID#&action=trainCasterLogin" target="_blank" title="Click Here to Take the DOS Test">
+                                <img src="pics/DOScertification.png" border="0" title="Click Here to Take the DOS Test" />
+                            </a><br />
+                        </cfif>
+                        
+                      	<a href="index.cfm?curdoc=forms/yearly_agreement">Please complete your annual area representative agreement and paperwork!<br /></a>
                         
                         <cfif client.usertype eq 15>
-                        <a href="index.cfm?curdoc=secondVisitReports">Online Reports</a><br>
+                            <a href="index.cfm?curdoc=secondVisitReports">Online Reports</a><br>
                         <cfelse>
-                        <a href="index.cfm?curdoc=progress_reports">Online Reports</a><br>
+                            <a href="index.cfm?curdoc=progress_reports">Online Reports</a><br>
                         </cfif>
                         
                         <cfif (CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12 or client.companyID eq 10) and client.usertype lte 7>
                         	<a href="index.cfm?curdoc=project_help">H.E.L.P. Community Service Hours</a><br>
                         </cfif>
+                        	
                         <cfif client.usertype lte 7>
-                        <a href="index.cfm?curdoc=pendingPlacementList">View Pending Placements</a><br />
+                            <a href="index.cfm?curdoc=pendingPlacementList">View Pending Placements</a><br />
                         </cfif>
-                        <cfif CLIENT.userType LTE 4 and (CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12 or client.companyid eq 10)>
+                        
+                        <cfif APPLICATION.CFC.USER.isOfficeUser() and (CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12 or client.companyid eq 10)>
                         	<a href="index.cfm?curdoc=calendar/index">WebEx Calendar</a> <br />
                         </cfif>
-                       <cfif client.companyid lte 5>
-                       2012 Placing Season Bonuses!<BR />
-                        <a href="uploadedfiles/pdf_docs/ISE/promotion/Pre-Ayp%20Bonus%202012.pdf" target="_blank">Pre-AYP</a> :: 
-                        <a href="uploadedfiles/pdf_docs/ISE/promotion/Early%20Placement%20Bonus%202012.pdf" target="_blank">Early Placement</a> :: 
-                        <a href="slideshow/pdfs/CASE/CEOBonus.pdf" target="_blank">CEO Placement Bonus</a>
-                   		</cfif>
+                        
+                       	<cfif client.companyid lte 5>
+                        	2012 Placing Season Bonuses!<BR />
+                           	<a href="uploadedfiles/pdf_docs/ISE/promotion/Pre-Ayp%20Bonus%202012.pdf" target="_blank">Pre-AYP</a> :: 
+                           	<a href="uploadedfiles/pdf_docs/ISE/promotion/Early%20Placement%20Bonus%202012.pdf" target="_blank">Early Placement</a> :: 
+                           	<a href="slideshow/pdfs/CASE/CEOBonus.pdf" target="_blank">CEO Placement Bonus</a>
+						</cfif>
                         
                     </td>
          			<!--- Office Users --->
-					<cfif CLIENT.usertype LTE 4>
+					<cfif APPLICATION.CFC.USER.isOfficeUser()>
 						<td>
                             <table cellpadding="4" cellspacing="0" border="0" width="100%">
                                 <tr>
@@ -648,7 +657,7 @@
                 <tr>
                 <td class="get_attention" width="50%">
                     	<span class="get_attention"><b>::</b></span> New Students <font size=-2>since #new_date#</font></u></td>
-                	<td  class="get_attention"><cfif client.usertype lte 4> <b>::</b> State & Region Availability</cfif></td>
+                	<td  class="get_attention"><cfif APPLICATION.CFC.USER.isOfficeUser()> <b>::</b> State & Region Availability</cfif></td>
                     
                 </tr>
                 <tr>
@@ -675,7 +684,7 @@
                         </cfif>
                     </td>
                       <td valign="top" align="Center">
-                   <Cfif client.usertype lte 4>
+                   <Cfif APPLICATION.CFC.USER.isOfficeUser()>
                     <table>
                 	<Tr>
                     	<Td>
