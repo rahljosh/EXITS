@@ -81,8 +81,9 @@
 
 
 	<cffunction name="getUserByID" access="public" returntype="query" output="false" hint="Gets a user by ID">
-    	<cfargument name="userID" type="any" hint="userID is required">
-              
+    	<cfargument name="userID" default="" hint="userID is required">
+    	<cfargument name="uniqueID" default="" hint="uniqueID is required">
+
         <cfquery 
 			name="qGetUserByID" 
 			datasource="#APPLICATION.dsn#">
@@ -91,7 +92,13 @@
                 FROM 
                     smg_users
                 WHERE	
-                    userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+					<cfif LEN(ARGUMENTS.userID)>                
+	                    userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+    				<cfelseif LEN(ARGUMENTS.uniqueID)>
+	                    uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.uniqueID#">
+                    <cfelse>
+                    	1 != 1
+                    </cfif>                                                   
 		</cfquery>
 		   
 		<cfreturn qGetUserByID>
@@ -1434,7 +1441,7 @@
     
 
 	<cffunction name="generateTraincasterLoginLink" access="public" returntype="string" output="No" hint="Generates a traincaster login link">
-    	<cfargument name="userID" type="numeric" hint="User ID is required">
+    	<cfargument name="uniqueID" type="string" hint="uniqueID is required">
 		
 		<cfscript>
 			/***************************************************************************************************
@@ -1460,7 +1467,7 @@
 			***************************************************************************************************/		
 		
 			// Get User Information
-            qGetUserInfo = getUserByID(userID=ARGUMENTS.userID);
+            qGetUserInfo = getUserByID(uniqueID=ARGUMENTS.uniqueID);
             
             var vTrainCasterURL = "http://doslocalcoordinatortraining.traincaster.com/app/clients/doslocalcoordinatortraining/Login.pm";
 			var vProgramSponsor = "";

@@ -12,10 +12,14 @@
 <!--- Kill extra output --->
 <cfsilent>
 	
-	<!--- Param local variables --->
-	<cfparam name="action" default="list">
-    <cfparam name="URL.uniqueID" default="" />
-    <cfparam name="URL.userID" default="0" />
+	<cfscript>
+		// Param local variables
+		param name="action" default="list";
+		
+		// Param URL variables
+		param name="URL.uniqueID" default="";
+		param name="URL.userID" default=0;
+	</cfscript>		
     
 </cfsilent>
 	
