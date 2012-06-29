@@ -42,6 +42,12 @@
         default="../"
 		/>
         
+	<cfparam 
+		name="ATTRIBUTES.width"
+		type="string"
+        default="100%"
+		/>
+        
 </cfsilent>
 
 <!--- 
@@ -92,6 +98,15 @@
             <!--- Print Footer --->
             <cfcase value="print">
             
+                <div align="center">
+                    <img src="#ATTRIBUTES.filePath#pics/logos/#ATTRIBUTES.companyID#_px.png" width="#ATTRIBUTES.width#" height="10" style="margin-top:20px;">
+                    
+                    <span style="display:block; font-size:9px; padding:2px 0px 2px 0px;">
+                    	#CLIENT.companyname# &nbsp; :: &nbsp; Printed on #dateformat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:ss:tt')# EST 
+                    </span>
+
+	                <img src="#ATTRIBUTES.filePath#pics/logos/#ATTRIBUTES.companyID#_px.png" width="#ATTRIBUTES.width#" height="1">
+                </div>
                 
             </cfcase>
 
