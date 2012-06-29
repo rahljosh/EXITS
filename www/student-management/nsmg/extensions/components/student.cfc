@@ -3111,11 +3111,11 @@
 			// Loop through query
             For ( i=1; i LTE qRemoteLookUpStudent.recordCount; i=i+1 ) {
 
-				vUserStruct = structNew();
-				vUserStruct.studentID = qRemoteLookUpStudent.studentID[i];
-				vUserStruct.displayName = qRemoteLookUpStudent.displayName[i];
+				vStudentStruct = structNew();
+				vStudentStruct.studentID = qRemoteLookUpStudent.studentID[i];
+				vStudentStruct.displayName = qRemoteLookUpStudent.displayName[i];
 				
-				ArrayAppend(vReturnArray,vUserStruct);
+				ArrayAppend(vReturnArray,vStudentStruct);
             }
 			
 			return vReturnArray;
