@@ -12,7 +12,7 @@
 
 	<cfscript>
         // Generate URL Login
-		vGenerateLogin = APPLICATION.CFC.UDF.generateTraincasterLoginLink(userID=VAL(URL.userID));
+		vGenerateLogin = APPLICATION.CFC.USER.generateTraincasterLoginLink(uniqueID=URL.uniqueID);
 		
 		// Login
 		location(vGenerateLogin, "no");

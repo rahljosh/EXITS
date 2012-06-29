@@ -213,6 +213,7 @@
       	<cflocation url="http://#cgi.server_name#">
       </Cfif>
 		<cfset CLIENT.userID = qAuthenticateUser.userID>
+        <cfset CLIENT.uniqueID = qAuthenticateUser.uniqueID>
 		<cfset CLIENT.name = qAuthenticateUser.firstname & ' ' & qAuthenticateUser.lastname>
         <cfset CLIENT.email = qAuthenticateUser.email>
         

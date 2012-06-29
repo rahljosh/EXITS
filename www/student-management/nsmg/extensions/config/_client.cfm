@@ -12,6 +12,7 @@
 <!--- Param Client Variables --->
 <cfparam name="CLIENT.companyID" default="0">
 <cfparam name="CLIENT.userID" default="0">
+<cfparam name="CLIENT.uniqueID" default="0">
 <cfparam name="CLIENT.studentID" default="0">  
 <cfparam name="CLIENT.regionID" default="0">  
 <cfparam name="CLIENT.name" default=""> 
