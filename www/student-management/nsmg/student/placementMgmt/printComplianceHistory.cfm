@@ -55,7 +55,7 @@
 
 <cfoutput>
 	
-    <cfdocument format="pdf" orientation="portrait" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.5" marginright="0.2" marginbottom="0.3" marginleft="0.2">
+    <cfdocument format="flashPaper" orientation="portrait" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
 	
 		<!--- Page Header --->
         <gui:pageHeader
@@ -99,13 +99,23 @@
                     </tr>
                 </cfloop> 
             </table>
-            
-        <!--- Page Footer --->
-        <gui:pageFooter
-            footerType="print"
-            filePath="../../"
-            width="95%"
-        />
+
+            <cfdocumentitem type="footer">  
+
+				<!--- Page Header --->
+                <gui:pageHeader
+                    headerType="applicationNoHeader"
+                    filePath="../../"
+                />	
+
+				<!--- Page Footer --->
+                <gui:pageFooter
+                    footerType="printDocumentItem"
+                    filePath="../../"
+                    width="95%"
+                />
+			
+            </cfdocumentitem>  
         
     </cfdocument>
     

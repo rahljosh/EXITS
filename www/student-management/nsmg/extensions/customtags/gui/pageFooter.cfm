@@ -98,14 +98,40 @@
             <!--- Print Footer --->
             <cfcase value="print">
             
-                <div align="center">
-                    <img src="#ATTRIBUTES.filePath#pics/logos/#ATTRIBUTES.companyID#_px.png" width="#ATTRIBUTES.width#" height="10" style="margin-top:20px;">
+                <div align="center" style="margin-top:15px;">
+                    <img src="#ATTRIBUTES.filePath#pics/logos/#ATTRIBUTES.companyID#_px.png" width="#ATTRIBUTES.width#" height="10">
                     
-                    <span style="display:block; font-size:9px; padding:2px 0px 2px 0px;">
-                    	#CLIENT.companyname# &nbsp; :: &nbsp; Printed on #dateformat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:ss:tt')# EST 
+                    <span style="display:block;">
+                    	Copyright &copy; #Year(now())# 
+                        &nbsp; :: &nbsp;
+                        #CLIENT.companyname# 
+                        &nbsp; :: &nbsp; 
+                        Printed on #dateformat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:ss:tt')# EST 
                     </span>
 
 	                <img src="#ATTRIBUTES.filePath#pics/logos/#ATTRIBUTES.companyID#_px.png" width="#ATTRIBUTES.width#" height="1">
+                </div>
+                
+            </cfcase>
+            
+            
+            <!--- Print Document Item Footer - Used for PDF or Flash Paper --->
+            <cfcase value="printDocumentItem">
+            	
+                <div class="blueThemeReportDocumentItemFooter">
+                	
+                    <div class="top" style="width:#ATTRIBUTES.width#;"></div>
+                    
+                    <span>
+                    	Copyright &copy; #Year(now())# 
+                        &nbsp; :: &nbsp;
+                        #CLIENT.companyname# 
+                        &nbsp; :: &nbsp; 
+                        Printed on #dateformat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:ss:tt')# EST 
+                    </span>
+                    
+                    <div class="bottom" style="width:#ATTRIBUTES.width#"></div>
+                
                 </div>
                 
             </cfcase>
