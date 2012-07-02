@@ -1471,15 +1471,16 @@
             
             var vTrainCasterURL = "http://doslocalcoordinatortraining.traincaster.com/app/clients/doslocalcoordinatortraining/Login.pm";
 			var vProgramSponsor = "";
-            
-			// ISE
-			if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) ) {
-				vProgramSponsor = "International Student Exchange";	
-				vTrainCasterPassword = "ZG2qK3vJgTHkhbSxQ6nxH273NKVS5T7Dwztm5k4B";
+            var vTrainCasterPassword = "";
+			
 			// CASE
-			} else {
+			if ( CLIENT.companyID EQ 10 ) {
 				vProgramSponsor = "CULTURAL ACADEMIC STUDENT EXCHANGE, INC.";
 				vTrainCasterPassword = "45RdPmWVrZtG6TCkSxVBbmkxPnqq2cr6Q3zJtSMp";
+			// ISE
+			} else if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) ) {
+				vProgramSponsor = "International Student Exchange";	
+				vTrainCasterPassword = "ZG2qK3vJgTHkhbSxQ6nxH273NKVS5T7Dwztm5k4B";
 			}
 			
             vUnixTimeStamp = int(now().getTime()/1000);
