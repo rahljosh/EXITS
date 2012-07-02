@@ -183,7 +183,7 @@
 </cfform>
 
 <cfif submitted>
-	
+
     <!--- OFFICE PEOPLE AND ABOVE --->
     <cfif ListFind("1,2,3,4", CLIENT.usertype)>
     
@@ -211,7 +211,15 @@
             	1=1			
 
 			<cfif assigned EQ 1>
-	        
+
+				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                    AND          
+                        c.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                <cfelse>
+                    AND          
+                        c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                </cfif>
+
 				<cfif listFirst(company_region) EQ 'company'>
                     AND 
                         uar.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#listLast(company_region)#">
