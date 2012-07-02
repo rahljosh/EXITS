@@ -713,7 +713,7 @@
                         
                     </cfswitch>
 					
-                    <!--- Include Current Assigned User --->
+                    <!--- Include Current Placing/Supervising representatives Assigned to student --->
                     <cfif LEN(ARGUMENTS.includeUserIDs)>
                     	OR
                             u.userID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.includeUserIDs#" list="yes"> )

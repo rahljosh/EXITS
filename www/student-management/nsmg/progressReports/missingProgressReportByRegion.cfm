@@ -114,7 +114,7 @@
                 qGetUserUnderAdv = APPLICATION.CFC.USER.getSupervisedUsers(userType=CLIENT.userType, userID=CLIENT.userID, regionID=FORM.regionID);
             	
                 // Store Users under Advisor on a list
-                vListOfAdvisorUsers = ValueList(qGetUserUnderAdv.userid, ',');
+                vListOfAdvisorUsers = ValueList(qGetUserUnderAdv.userID, ',');
 
             }
         </cfscript>
