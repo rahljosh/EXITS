@@ -27,7 +27,6 @@
     <cfparam name="FORM.selectedProgram" default="0">
     <cfparam name="FORM.reportType" default="2">
     <cfparam name="FORM.regionID" default="0">
-    <Cfparam name="FORM.rmonth" default="#DatePart('m', '#now()#')#">
     <cfparam name="FORM.cancelled" default="0">
     
 	<!--- Param Local Variables --->
@@ -118,11 +117,32 @@
 	<!---_Set the current year so when can set the correct start and end dates to figure if a report should be filled out---->
     <cfset year = DateFormat(now(), 'yyyy')>
 
-    <Cfquery name="DateRange" datasource="mysql">
-        SELECT seasonid, startDate, endDate
-        FROM smg_seasons
-        WHERE #now()# >= startdate and #now()# <= endDate
-    </cfquery>
+	<!--- July Reports --->
+	<cfif month(now()) EQ 7>
+    
+    	<cfscript>
+			// Return Query with July Dates
+			qGetSeasonDateRange = QueryNew("startDate,endDate");		
+			QueryAddRow(qGetSeasonDateRange);
+			QuerySetCell(qGetSeasonDateRange, "startDate", "#Year(now())#-#Month(now())#-1");
+			QuerySetCell(qGetSeasonDateRange, "endDate", "#Year(now())#-#Month(now())#-31");			
+		</cfscript>
+    
+    <cfelse>
+    	
+        <cfquery name="qGetSeasonDateRange" datasource="#APPLICATION.DSN#">
+            SELECT 
+                startDate, 
+                endDate
+            FROM 
+                smg_seasons
+            WHERE 
+                startdate <= CURRENT_DATE
+            AND 
+                endDate >= CURRENT_DATE
+        </cfquery>
+    
+    </cfif>
 
 	<Cfif isDefined('FORM.reportType')>
         <cfif FORM.reportType neq CLIENT.ReportType>
@@ -137,23 +157,6 @@
     <cfelse>
         <cfset enableReports = 'Yes'>
     </Cfif>
-    
-    <!----If a month is passed in from the form, use it for the month if its works with the current report type---->
-    
-    <Cfif FORM.rmonth neq 0 AND resetMonth eq 0>
-        <Cfset CLIENT.pr_rmonth = #FORM.rmonth#>
-    
-          <Cfloop from="#DateRange.startDate#" to="#DateRange.endDate#" index=i step="#CreateTimeSpan(31,0,0,0)#">
-                    <Cfif CLIENT.pr_rmonth eq "#DatePart('m', '#i#')#">
-                        <Cfset CLIENT.pr_rmonth = '#DatePart('m', '#i#')#'>
-                        <Cfset startDate = '#DateAdd("d", "-7", "#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01")#"'>
-                        <Cfset endDate = '#DateAdd("d", "21", "#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01")#"'>
-                        <cfset prevRepMonth = "#DatePart('m','#startDate#')#">
-                        <cfset repReqDate = '#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01'>
-                        <Cfset repDueDate = '#DateAdd("m", "0", "#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01")#"'>
-                   </Cfif>
-               </Cfloop>
-     </cfif>
     
     <!----All available Reports---->
     <cfquery name="reportTypes" datasource="#APPLICATION.DSN#">
@@ -437,12 +440,6 @@
             </tr>
             	
             	<cfoutput group="secondVisitRepID">
-                <!----
-          		<Cfset subSetOfKids = ''>
-                <Cfset subSetOfHosts = ''>
-                <Cfset secondSubSetOfKids = ''>
-                 <Cfset secondSubSetOfHosts = ''>
-			    ---->
 				<tr>
                     <td colspan=11 class="rep">#rep_firstname# #rep_lastname# (#secondVisitRepID#)</td>
                 <tr>
@@ -489,11 +486,14 @@
                 from smg_hosts
                 where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.hostid#">
                 </cfquery>
-               		<cfset isWithOriginal = 'no'>
+               		
+				<cfset isWithOriginal = 'no'>
+                    
 			   <cfif (checkHostHistoryOriginal.hostID eq hostName.hostid)>
                		<cfset isWithOriginal = 'yes'>
                </cfif>
-               <Cfif isWithOriginal is 'no' and hostHistory.datePlaced lt #dateRange.startdate#>
+               
+               <Cfif isWithOriginal is 'no' and hostHistory.datePlaced lt qGetSeasonDateRange.startdate>
                		<cfset isWithOriginal = 'yes'>
                </Cfif>
 			   
@@ -506,7 +506,7 @@
                     </cfquery>
                     <!----If no arrival info is on file, we set to August 1, the earliest to make sure---->
 					<Cfif arrivalInfo.recordcount eq 0 or arrivalInfo.dep_date eq ''>
-                    	<Cfset arrivalDate = '#DateRange.startDate#'>
+                    	<Cfset arrivalDate = '#qGetSeasonDateRange.startDate#'>
                    	<cfelse>
                     	<cfset arrivalDate = '#arrivalInfo.dep_Date#'>
                     </Cfif>
@@ -784,7 +784,7 @@
                                  	<tr  ><td colspan=3><td>#getprevhosts.familylastname# (#getprevhosts.hostid#)</td>
                                  </cfif>    
                                     <cfif qGetResults.secondvisitrepid neq indReports.fk_secondvisitrep>
-                                 	<td colspan=2>
+                                 	<tr  ><td colspan=2>
                                     <cfelse>
                               		<td>
                                     
@@ -827,7 +827,7 @@
                                        </tr>
                                    <Cfelse>
                                         <cfif qGetResults.secondvisitrepid eq fk_secondvisitrep>
-                                           <td>
+                                           <tr  ><td>
                                              <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#pr_id#"><img src="pics/buttons/greyedView.png" border=0 /></a>
                                             </td>
                                        </cfif>
