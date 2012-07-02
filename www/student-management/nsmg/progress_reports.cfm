@@ -72,21 +72,36 @@
         <cflocation url="index.cfm?curdoc=secondVisitReports" addtoken="no">
     </cfif>
 
-    <cfquery name="qGetSeasonDateRange" datasource="#APPLICATION.DSN#">
-        SELECT 
-        	seasonid, 
-            startDate, 
-            endDate
-        FROM 
-        	smg_seasons
-        WHERE 
-        	startdate <= CURRENT_DATE
-        AND 
-        	endDate >= CURRENT_DATE
-    </cfquery>
+	<!--- July Reports --->
+	<cfif month(now()) EQ 7>
+    
+    	<cfscript>
+			// Return Query with July Dates
+			qGetSeasonDateRange = QueryNew("startDate,endDate");		
+			QueryAddRow(qGetSeasonDateRange);
+			QuerySetCell(qGetSeasonDateRange, "startDate", "#Year(now())#-#Month(now())#-1");
+			QuerySetCell(qGetSeasonDateRange, "endDate", "#Year(now())#-#Month(now())#-31");			
+		</cfscript>
+    
+    <cfelse>
+    	
+        <!--- August to June Reports --->
+        <cfquery name="qGetSeasonDateRange" datasource="#APPLICATION.DSN#">
+            SELECT 
+                startDate, 
+                endDate
+            FROM 
+                smg_seasons
+            WHERE 
+                startdate <= CURRENT_DATE
+            AND 
+                endDate >= CURRENT_DATE
+        </cfquery>
+    
+    </cfif>
     
     <!--- Loop Through Months in a season | July needs to be included here --->
-    <cfloop from="#qGetSeasonDateRange.startDate#" to="#DateAdd("m", 1, qGetSeasonDateRange.endDate)#" index="i" step="#CreateTimeSpan(31,0,0,0)#">
+    <cfloop from="#qGetSeasonDateRange.startDate#" to="#DateAdd('m', 1, qGetSeasonDateRange.endDate)#" index="i" step="#CreateTimeSpan(31,0,0,0)#">
        	
         <cfif CLIENT.pr_rmonth EQ DatePart('m', i)>
         
