@@ -107,7 +107,7 @@
             <td><u>Year Ends</u></td>
         </tr>
         <cfif get_school_dates.recordcount is 0>
-            <tr><td colspan="8" align="center">There are no schoold dates for this school.</td></tr>
+            <tr><td colspan="8" align="center">There are no dates for this school.</td></tr>
         <cfelse>		
             <cfoutput query="get_school_dates">
                 <tr <cfif currentRow MOD 2 EQ 0>bgcolor="EAE8E8"</cfif>>
