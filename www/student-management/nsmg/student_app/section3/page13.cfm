@@ -135,7 +135,7 @@ function NextPage() {
     </tr>
 	<tr><td>&nbsp;</td></tr>
 	<tr><td><b>MINIMUM IMMUNIZATION REQUIREMENTS:</b></td></tr>
-	<tr><td>Five or more doses of DTaP, DT (Pediatric), TD (Adult) vaccine or a combination thereof.</td></tr>
+	<tr><td>Five or more doses of DTaP</td></tr>
 	<tr><td>Three or more doses of trivalent oral polio vaccine (TOPV).</td></tr>
 	<tr><td>Two doses measles vaccine.</td></tr>
 	<tr><td>Two doses mumps vaccine.</td></tr>
@@ -147,20 +147,20 @@ function NextPage() {
 
 <table width="670" border=1 cellpadding=3 cellspacing=0  bordercolor="CCCCCC" align="center">
 	<tr><td align="center"><b>IMMUNIZATIONS</b></td><td colspan="6" align="center"><b>DATES (mm/dd/yyyy)</b></td></tr>
-	<!--- DTaP/DT --->
-	<cfif get_dpt.recordcount EQ 0> <!--- DTaP/DT has not been entered --->
+	<!--- DTaP --->
+	<cfif get_dpt.recordcount EQ 0> <!--- DTaP has not been entered --->
 		<cfinput type="hidden" name="new_dpt" value="DTaP/DT">
 	<cfelse>
 		<cfinput type="hidden" name="upd_dpt" value="#get_dpt.vaccineid#">
 	</cfif>
 	<tr>
-		<td align="center" width="130" valign="top"><b>DTaP/DT</b></td>
-		<td align="center" width="90" valign="top"><cfinput type="text" name="dpt1" size="11" value="#DateFormat(get_dpt.shot1, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 1st DTaP/DT shot" onchange="DataChanged();"><br> <small>1st </small></td>
-		<td align="center" width="90" valign="top"><cfinput type="text" name="dpt2" size="11" value="#DateFormat(get_dpt.shot2, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 2ndt DTaP/DT shot"  onchange="DataChanged();"><br> <small>2nd </small></td>
-		<td align="center" width="90" valign="top"><cfinput type="text" name="dpt3" size="11" value="#DateFormat(get_dpt.shot3, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 3rd DTaP/DT shot"  onchange="DataChanged();"><br> <small>3rd </small></td>
-		<td align="center" width="90" valign="top"><cfinput type="text" name="dpt4" size="11" value="#DateFormat(get_dpt.shot4, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 4th DTaP/DT shot"  onchange="DataChanged();"><br> <small>4th </small></td>
-		<td align="center" width="90" valign="top"><cfinput type="text" name="dpt5" size="11" value="#DateFormat(get_dpt.shot5, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 5th DTaP/DT shot"  onchange="DataChanged();"><br> <small>5th </small></td>
-		<td align="center" width="90" valign="top"><cfinput type="text" name="dpt_booster" size="11" value="#DateFormat(get_dpt.booster, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 6th DTaP/DT shot"  onchange="DataChanged();"><br> <small>6th <br> Booster, if required </small></td>				
+		<td align="center" width="130" valign="top"><b>DTaP</b></td>
+		<td align="center" width="90" valign="top"><cfinput type="text" name="dpt1" size="11" value="#DateFormat(get_dpt.shot1, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 1st DTaP shot" onchange="DataChanged();"><br> <small>1st </small></td>
+		<td align="center" width="90" valign="top"><cfinput type="text" name="dpt2" size="11" value="#DateFormat(get_dpt.shot2, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 2ndt DTaP shot"  onchange="DataChanged();"><br> <small>2nd </small></td>
+		<td align="center" width="90" valign="top"><cfinput type="text" name="dpt3" size="11" value="#DateFormat(get_dpt.shot3, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 3rd DTaP shot"  onchange="DataChanged();"><br> <small>3rd </small></td>
+		<td align="center" width="90" valign="top"><cfinput type="text" name="dpt4" size="11" value="#DateFormat(get_dpt.shot4, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 4th DTaP shot"  onchange="DataChanged();"><br> <small>4th </small></td>
+		<td align="center" width="90" valign="top"><cfinput type="text" name="dpt5" size="11" value="#DateFormat(get_dpt.shot5, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 5th DTaP shot"  onchange="DataChanged();"><br> <small>5th </small></td>
+		<td align="center" width="90" valign="top"><cfinput type="text" name="dpt_booster" size="11" value="#DateFormat(get_dpt.booster, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 6th DTaP shot"  onchange="DataChanged();"><br> <small>6th <br> Booster, if required </small></td>				
 	</tr>
 	
 	<!--- TOPV --->

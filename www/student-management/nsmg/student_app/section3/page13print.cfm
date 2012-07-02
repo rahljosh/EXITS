@@ -124,9 +124,9 @@
 
 <table width="660" border=1 cellpadding=3 cellspacing=0  bordercolor="CCCCCC" align="center">
 	<tr><td align="center"><b>IMMUNIZATIONS</b></td><td colspan="6" align="center"><b>DATES (mm/dd/yyyy)</b></td></tr>
-	<!--- DTaP/DT --->
+	<!--- DTaP --->
 	<tr>
-		<td align="center" width="130" valign="top"><b>DTaP/DT</b></td>
+		<td align="center" width="130" valign="top"><b>DTaP</b></td>
 		<td align="center" width="90" valign="top">#DateFormat(get_dpt.shot1, 'mm/dd/yyyy')#<br> <small>1st </small></td>
 		<td align="center" width="90" valign="top">#DateFormat(get_dpt.shot2, 'mm/dd/yyyy')#<br> <small>2nd </small></td>
 		<td align="center" width="90" valign="top">#DateFormat(get_dpt.shot3, 'mm/dd/yyyy')#<br> <small>3rd </small></td>
