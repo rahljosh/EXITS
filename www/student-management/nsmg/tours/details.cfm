@@ -137,7 +137,7 @@
    
       <cfquery name="details" datasource="#application.dsn#">
         select st.studentid, st.tripid, st.cc, st.cc_year, st.cc_month, st.date, st.ip, st.verified, st.paid, 
-        st.flightinfo, st.nationality, st.med, st.person1,st.person2, st.person3, st.stunationality, st.refCode, st.permissionForm, st.billingAddress, st.billingCity, st.billingState, st.billingzip, stu.familylastname, stu.firstname, smg_tours.tour_name, stu.email, smg_hosts.email host_email
+        st.nationality, st.med, st.person1,st.person2, st.person3, st.stunationality, st.refCode, st.permissionForm, st.billingAddress, st.billingCity, st.billingState, st.billingzip, stu.familylastname, stu.firstname, smg_tours.tour_name, stu.email, smg_hosts.email host_email
         from student_tours st
         left join smg_students stu on stu.studentid = st.studentid
         left join smg_tours on smg_tours.tour_id = st.tripid
@@ -192,7 +192,7 @@
 
 <cfquery name="details" datasource="#application.dsn#">
 select st.studentid, st.tripid, st.cc, st.cc_year, st.cc_month, st.date, st.ip, st.verified, st.paid, 
-st.flightinfo, st.nationality, st.med, st.person1,st.person2, st.person3, st.stunationality, st.refCode, st.permissionForm, st.billingAddress, st.billingCity, st.billingState, st.billingzip, st.billingcountry, stu.familylastname, stu.firstname, stu.hostid, smg_tours.tour_name, stu.email, smg_hosts.email as host_email
+st.nationality, st.med, st.person1,st.person2, st.person3, st.stunationality, st.refCode, st.permissionForm, st.billingAddress, st.billingCity, st.billingState, st.billingzip, st.billingcountry, stu.familylastname, stu.firstname, stu.hostid, smg_tours.tour_name, stu.email, smg_hosts.email as host_email
 from student_tours st
 left join smg_students stu on stu.studentid = st.studentid
 left join smg_tours on smg_tours.tour_id = st.tripid

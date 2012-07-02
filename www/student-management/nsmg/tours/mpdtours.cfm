@@ -342,11 +342,42 @@
                     <td>Total</td>                   
                     <td>Transaction ID</td>
                     <td>Permission</td>
-                    <td>Flights</td>
+                    <td>Arrival Flight</td>
+                    <td>Departure Flight</td>
                     <td>On Hold</td>
                     <td>Company</td>
                 </tr>
                 <cfloop query="qGetResults" startrow="#startrow#" endrow="#endrow#">
+                
+                	<cfquery name="qGetArrivalFlight" datasource="#APPLICATION.DSN#">
+                    	SELECT
+                        	departDate
+                      	FROM
+                        	student_tours_flight_information
+                       	WHERE
+                        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.studentID#">
+                      	AND
+                        	tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.tripID#">
+                       	AND
+                        	flightType = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
+                      	ORDER BY
+                        	departDate
+                    </cfquery>
+                    
+                    <cfquery name="qGetDepartureFlight" datasource="#APPLICATION.DSN#">
+                    	SELECT
+                        	departDate
+                      	FROM
+                        	student_tours_flight_information
+                       	WHERE
+                        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.studentID#">
+                      	AND
+                        	tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.tripID#">
+                       	AND
+                        	flightType = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
+                      	ORDER BY
+                        	departDate
+                    </cfquery>
                 
 					<!--- Get Total Siblings --->
                     <cfquery name="qGetTotalSiblings" datasource="#APPLICATION.DSN#">
@@ -379,7 +410,8 @@
                         <td>#DollarFormat(qGetResults.amount)#</td>
                         <td>#qGetResults.authTransactionID#</td>
                         <td><cfif IsDate(qGetResults.permissionForm)>#DateFormat(qGetResults.permissionForm)#</cfif></td>
-                        <td><cfif LEN(qGetResults.flightInfo)>#DateFormat(qGetResults.flightInfo)#<cfelse>No</cfif></td>
+                        <td><cfif LEN(qGetArrivalFlight.departDate)>#DateFormat(qGetArrivalFlight.departDate)#<cfelse>No</cfif></td>
+                        <td><cfif LEN(qGetDepartureFlight.departDate)>#DateFormat(qGetDepartureFlight.departDate)#<cfelse>No</cfif></td>
                         <td><cfif IsDate(qGetResults.dateOnHold)>#DateFormat(qGetResults.dateOnHold)#</cfif></td>
                         <td>#qGetResults.companyshort_nocolor#</td>
                     </tr>

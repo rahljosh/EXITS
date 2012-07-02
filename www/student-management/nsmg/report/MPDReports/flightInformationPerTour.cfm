@@ -49,7 +49,6 @@
                 	st.tripID,
                 	st.email,
                     st.studentID,
-                    st.flightInfo,
                     ss.firstName,
                     ss.familyLastName,
                     tour.tour_name,
@@ -69,15 +68,23 @@
               	INNER JOIN
                 	smg_hosts h ON h.hostID = ss.hostID
                	WHERE
-                	tripID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.tourID#" list="yes"> )
+                	st.tripID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.tourID#" list="yes"> )
               	AND
                 	ss.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
               	<cfif FORM.flightStatus EQ "missing">
                     AND
-                        st.flightInfo IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                        ( 
+                        	st.studentID NOT IN ( SELECT studentID FROM student_tours_flight_information WHERE studentID = st.studentID AND tripID = st.tripID AND flightType = "arrival" )
+                     		OR
+                         	st.studentID NOT IN ( SELECT studentID FROM student_tours_flight_information WHERE studentID = st.studentID AND tripID = st.tripID AND flightType = "departure" )
+                     	)
               	<cfelseif FORM.flightStatus EQ "received">
                 	AND
-                        st.flightInfo IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                        ( 
+                        	st.studentID IN ( SELECT studentID FROM student_tours_flight_information WHERE studentID = st.studentID AND tripID = st.tripID AND flightType = "arrival" )
+                     		AND
+                         	st.studentID IN ( SELECT studentID FROM student_tours_flight_information WHERE studentID = st.studentID AND tripID = st.tripID AND flightType = "departure" )
+                     	)
                 </cfif>
               	ORDER BY
                 	familyLastName,
@@ -183,7 +190,7 @@
       	<cfoutput>
             <table width="98%" cellpadding="4" cellspacing="0" align="center" border="1">
                 <tr>
-                    <th colspan="6">#vReportTitle#</th>            
+                    <th colspan="7">#vReportTitle#</th>            
                 </tr>
                 <tr style="font-weight:bold;">
                     <td>Tour</td>
@@ -191,7 +198,8 @@
                     <td>Host Family</td>
                     <td>Host Family Address</td>
                     <td>Email</td>
-                    <td>Flight Information</td>
+                    <td>Arrival Flight</td>
+                    <td>Departure Flight</td>
                 </tr>
        	</cfoutput>
             
@@ -211,6 +219,36 @@
                 </cfquery>
                 
                 <cfoutput query="qGetStudentsPerTour" group="studentID">
+                
+                	<cfquery name="qGetArrivalFlight" datasource="#APPLICATION.DSN#">
+                    	SELECT
+                        	departDate
+                      	FROM
+                        	student_tours_flight_information
+                       	WHERE
+                        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentsPerTour.studentID#">
+                      	AND
+                        	tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentsPerTour.tripID#">
+                       	AND
+                        	flightType = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
+                      	ORDER BY
+                        	departDate
+                    </cfquery>
+                    
+                    <cfquery name="qGetDepartureFlight" datasource="#APPLICATION.DSN#">
+                    	SELECT
+                        	departDate
+                      	FROM
+                        	student_tours_flight_information
+                       	WHERE
+                        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentsPerTour.studentID#">
+                      	AND
+                        	tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentsPerTour.tripID#">
+                       	AND
+                        	flightType = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
+                      	ORDER BY
+                        	departDate
+                    </cfquery>
                 
                     <cfscript>
                         // Set Row Color
@@ -235,8 +273,15 @@
                         <td #vRowColor#>#address# #city#, #state# #zip#</td>
                         <td #vRowColor#>#email#</td>
                         <td #vRowColor# align="left">
-                            <cfif LEN(flightInfo)>
-                                #DateFormat(flightInfo, 'mm/dd/yyyy')#
+                            <cfif LEN(qGetArrivalFlight.departDate)>
+                                #DateFormat(qGetArrivalFlight.departDate, 'mm/dd/yyyy')#
+                            <cfelse>
+                                <span style="color:red;">Missing</span>
+                            </cfif>
+                        </td>
+                        <td #vRowColor# align="left">
+                            <cfif LEN(qGetDepartureFlight.departDate)>
+                                #DateFormat(qGetDepartureFlight.departDate, 'mm/dd/yyyy')#
                             <cfelse>
                                 <span style="color:red;">Missing</span>
                             </cfif>
@@ -298,21 +343,52 @@
             
                 <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                     <tr>
-                        <th class="left" width="20%">
-                        <th class="center" width="50%" colspan="3">#qGetStudentsPerTour.tour_name#</th>
-                        <th class="right" width="20%">Total of #totalPerTour# students</th>
+                        <th class="left" width="86%" colspan="5">#qGetStudentsPerTour.tour_name#</th>
+                        <th class="right" width="14%">Total of #totalPerTour# students</th>
                     </tr>
                     <tr>
                         <td class="subTitleLeft" width="20%">Student</td>
                         <td class="subTitleLeft" width="20%">Host Family</td>
-                        <td class="subTitleLeft" width="20%">Host Family Address</td>
-                        <td class="subTitleLeft" width="20%">Email</td>
-                        <td class="subTitleLeft" width="20%">Flight Information</td>
+                        <td class="subTitleLeft" width="24%">Host Family Address</td>
+                        <td class="subTitleLeft" width="16%">Email</td>
+                        <td class="subTitleLeft" width="10%">Arrival Flight</td>
+                        <td class="subTitleLeft" width="10%">Departure Flight</td>
                     </tr>
                     
        		</cfoutput>
             
                 <cfoutput query="qGetStudentsPerTour" group="studentID">
+                	
+                    <cfquery name="qGetArrivalFlight" datasource="#APPLICATION.DSN#">
+                    	SELECT
+                        	departDate
+                      	FROM
+                        	student_tours_flight_information
+                       	WHERE
+                        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentsPerTour.studentID#">
+                      	AND
+                        	tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentsPerTour.tripID#">
+                       	AND
+                        	flightType = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
+                      	ORDER BY
+                        	departDate
+                    </cfquery>
+                    
+                    <cfquery name="qGetDepartureFlight" datasource="#APPLICATION.DSN#">
+                    	SELECT
+                        	departDate
+                      	FROM
+                        	student_tours_flight_information
+                       	WHERE
+                        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentsPerTour.studentID#">
+                      	AND
+                        	tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentsPerTour.tripID#">
+                       	AND
+                        	flightType = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
+                      	ORDER BY
+                        	departDate
+                    </cfquery>
+                
                     <tr class="#iif(qGetStudentsPerTour.currentRow MOD 2 ,DE("off") ,DE("on") )#">
                         <td>
                             #firstName# #familyLastName# (###studentID#)
@@ -332,8 +408,15 @@
                             #email#
                         </td>
                         <td>
-                            <cfif LEN(flightInfo)>
-                                #DateFormat(flightInfo, 'mm/dd/yyyy')#
+                            <cfif LEN(qGetArrivalFlight.departDate)>
+                                #DateFormat(qGetArrivalFlight.departDate, 'mm/dd/yyyy')#
+                            <cfelse>
+                                <span style="color:red;">Missing</span>
+                            </cfif>
+                        </td>
+                        <td>
+                            <cfif LEN(qGetDepartureFlight.departDate)>
+                                #DateFormat(qGetDepartureFlight.departDate, 'mm/dd/yyyy')#
                             <cfelse>
                                 <span style="color:red;">Missing</span>
                             </cfif>
