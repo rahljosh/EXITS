@@ -141,9 +141,13 @@
                         <td><span class="title">Age:</span></td>
                         <td>#DateDiff('yyyy', qGetStudentFullInformation.dob, now())#</td>
                     </tr>
-                        <tr>
+                   	<tr>
                         <td><span class="title">Nationality:</span></td>
                         <td>#qGetRegistrationInfo.stunationality#</td>
+                    </tr>
+                    <tr>
+                        <td><span class="title">Date of Birth:</span></td>
+                        <td>#DateFormat(qGetRegistrationInfo.dob,"mm/dd/yyyy")#</td>
                     </tr>
                 </table>
     
@@ -305,6 +309,8 @@
                 All parties acknowledge that while on tour, <!---#SESSION.COMPANY.shortName#---> and MPD Tour America, Inc. 
                 or its representatives may take any action deemed necessary to protect student safety and well being, 
                 including medical treatment at the student's expense and transportaion home at student's expense.
+                <br />
+                &nbsp;&nbsp;<i>Please Sign Form</i>
             </td>
         </tr>
         <tr>

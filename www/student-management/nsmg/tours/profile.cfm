@@ -48,8 +48,7 @@
         	td.*,
         	st.id, 
             st.tripID,
-            st.med, 
-            st.flightinfo, 
+            st.med,
             st.date, 
             st.paid, 
             st.permissionForm,
@@ -100,6 +99,32 @@
             st.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#">
         AND	
             st.tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.tripID)#">
+    </cfquery>
+    
+    <cfquery name="qGetDepartureFlightInformation" datasource="#APPLICATION.DSN#">
+    	SELECT
+        	*
+       	FROM
+        	student_tours_flight_information
+       	WHERE 
+            studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#">
+        AND	
+            tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.tripID)#">
+       	AND
+        	flightType = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure">
+    </cfquery>
+    
+    <cfquery name="qGetArrivalFlightInformation" datasource="#APPLICATION.DSN#">
+    	SELECT
+        	*
+       	FROM
+        	student_tours_flight_information
+       	WHERE 
+            studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#">
+        AND	
+            tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.tripID)#">
+       	AND
+        	flightType = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival">
     </cfquery>
     
     <cfscript>
@@ -326,50 +351,6 @@
         
         </cfcase>
         
-        <!--- Flight Booked --->
-        <cfcase value="flightInfoBooked">
-
-            <cfquery datasource="#APPLICATION.DSN#">
-                UPDATE 
-                    student_tours
-                SET 
-                    flightInfo = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
-                WHERE 
-                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#">
-                AND	
-                    tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.tripID)#">
-            </cfquery>
-
-			<cfscript>
-                SESSION.pageMessages.Add("Flight information has been set as BOOKED");
-
-				Location("#CGI.SCRIPT_NAME#?curdoc=tours/profile&studentID=#FORM.studentID#&tripID=#FORM.tripID#", "no");
-            </cfscript>
-        
-        </cfcase>
-
-		<!--- Flight Not Booked --->
-        <cfcase value="flightInfoNotBooked">
-
-            <cfquery datasource="#APPLICATION.DSN#">
-                UPDATE 
-                    student_tours
-                SET 
-                    flightINfo = <cfqueryparam cfsqltype="cf_sql_date" null="yes">           
-                WHERE 
-                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#">
-                AND	
-                    tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.tripID)#">
-            </cfquery>
-
-			<cfscript>
-                SESSION.pageMessages.Add("Flight information has been set as NOT BOOKED");
-
-				Location("#CGI.SCRIPT_NAME#?curdoc=tours/profile&studentID=#FORM.studentID#&tripID=#FORM.tripID#", "no");
-            </cfscript>
-        
-        </cfcase>
-        
 		<!--- Payment Trip --->
         <cfcase value="payTrip">
 
@@ -507,12 +488,43 @@
                     AND	
                         tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.tripID)#">
                 </cfquery>
+                
+                <cfsavecontent variable="cancellationMessage">
+                	<cfoutput>
+                        <p>Dear #qGetRegistrationInfo.firstName# #qGetRegistrationInfo.familyLastName# (###qGetRegistrationInfo.studentID#),</p>
+                        
+                        <p>This email is to notify you that your trip #qGetRegistrationInfo.tour_name# has been cancelled.</p>
+                    
+                    	<p>The reason given for this cancellation is: #FORM.refundNotes#</p>
+                        
+                        <p>You have been refunded #NumberFormat(FORM.refundAmount,"$999.99")#</p>
+                        
+                        <p>If you have any questions that are not answerd please don't hesitate to contact us at info@mpdtoursamerica.com </p>
+                        
+                        <p>
+                            MPD Tour America, Inc.<br />
+                            9101 Shore Road ##203- Brooklyn, NY 11209<br />
+                            Email: info@mpdtoursamerica.com<br />
+                            TOLL FREE: 1-800-983-7780<br />
+                            Fax: 1-(718)-439-8565
+                        </p>
+                   	</cfoutput>
+                </cfsavecontent>
+                
+                <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                    <cfinvokeargument name="email_from" value="<info@mpdtoursamerica.com> (Trip Support)">
+                    <cfinvokeargument name="email_to" value="#FORM.emailAddress#">
+                    <cfinvokeargument name="email_cc" value="info@mpdtoursamerica.com,tal@iseusa.com,#qGetRegistrationInfo.hostEmail#">
+                    <cfinvokeargument name="email_bcc" value="trips@iseusa.com">
+                    <cfinvokeargument name="email_subject" value="#qGetRegistrationInfo.tour_name# Trip - Notice of Cancellation">
+                    <cfinvokeargument name="email_message" value="#cancellationMessage#">
+                </cfinvoke> 
     
                 <cfscript>
                     SESSION.pageMessages.Add("Trip has been canceled");
     
-                    Location("#CGI.SCRIPT_NAME#?curdoc=tours/profile&studentID=#FORM.studentID#&tripID=#FORM.tripID#", "no");
-                </cfscript>
+                    Location("#CGI.SCRIPT_NAME#?curdoc=tours/profile&studentID=#FORM.studentID#&tripID=#FORM.tripID#", "no");					
+                </cfscript>       
         	
             </cfif>
             
@@ -524,7 +536,7 @@
 
 <link rel="stylesheet" href="tours/trips.css" type="text/css"> <!-- trips -->
 
-<script language="javascript">
+<script type="text/javascript">
 	// Display Cancel Form
 	var displayCancelForm = function() { 
 		$("#cancelForm").fadeIn();	
@@ -533,6 +545,10 @@
 	// Display Payment Form
 	var displayPaymentForm = function() { 
 		$("#paymentForm").fadeIn();	
+	}
+	
+	var openFlights = function(studentID, tripID, viewType) {
+		window.open("tours/flightInfo.cfm?studentID=" + studentID + "&tripID=" + tripID + "&viewType=" + viewType, "Flight Information", "height=700, width=1100");
 	}
 </script>	
 		
@@ -560,8 +576,8 @@
         />
 
     <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%" style="padding-top:10px; padding-bottom:10px;">
-		<tr>
-        	<td width="170px" valign="top">
+		<tr>            
+        	<td width="170px" valign="top" <cfif IsDate(qGetRegistrationInfo.dateCanceled)>background="pics/canceled.jpg"</cfif>>
             	<img src="https://ise.exitsapplication.com/nsmg/uploadedfiles/web-students/#qGetRegistrationInfo.studentID#.jpg" height="150" style="margin-bottom:10px;"/> 
                 
                 <span class="greyTextBlock">DOB</span> 
@@ -571,7 +587,7 @@
 				<span class="bigLabelBlock">#qGetRegistrationInfo.sex#</span>
             </td>
             <!--- Student Information --->
-            <td valign="top">
+            <td valign="top" <cfif IsDate(qGetRegistrationInfo.dateCanceled)>background="pics/canceled.jpg"</cfif>>
             	<span class="greyTextBlock">Name</span>
                 <span class="bigLabelBlock">#qGetRegistrationInfo.firstname# #qGetRegistrationInfo.familylastname# (###qGetRegistrationInfo.studentID#)</span>
                 
@@ -645,7 +661,7 @@
                 </cfif>
             </td>
             <!--- Host Family --->
-            <td valign="top">
+            <td valign="top" <cfif IsDate(qGetRegistrationInfo.dateCanceled)>background="pics/canceled.jpg"</cfif>>
                 <span class="greyTextBlock">Host Family </span>
                 <span class="bigLabelBlock">#qGetRegistrationInfo.hostLast#</span>
                 
@@ -674,7 +690,7 @@
                 </span>
             </td>
             <!--- Trip Preferences --->
-        	<td valign="top">
+        	<td valign="top" <cfif IsDate(qGetRegistrationInfo.dateCanceled)>background="pics/canceled.jpg"</cfif>>
                 <span class="greyTextBlock">#qGetRegistrationInfo.firstname# Nationality </span>
                 <span class="bigLabelBlock">#qGetRegistrationInfo.stunationality#</span>
                 
@@ -693,8 +709,8 @@
                 </span>       
                 
                 <span class="greyTextBlock">Medical / Allergy Info</span>
-                <span class="bigLabel">#qGetRegistrationInfo.med#</span>
-            </td>
+                <span class="bigLabelBlock">#qGetRegistrationInfo.med#</span>
+            </td>            
 		</tr>
 	</table>
 
@@ -781,13 +797,15 @@
                         <td><h2>Hold</h2></td>
                         <td><h2>Payment</h2></td>
                         <td><h2>Permission</h2></td>
-                        <td><h2>Flights</h2></td>
+                        <td><h2>Arrival Flight</h2></td>
+                        <td><h2>Departure Flight</h2></td>
                     </tr>
                     <tr style="text-align:center;">
                         <td>#dateFormat(qGetRegistrationInfo.dateOnHold, 'mm/dd/yyyy')#</td>
                         <td>#dateFormat(qGetRegistrationInfo.paid, 'mm/dd/yyyy')#</td>
                         <td>#dateFormat(qGetRegistrationInfo.permissionForm, 'mm/dd/yyyy')#</td>
-                        <td>#dateFormat(qGetRegistrationInfo.flightInfo, 'mm/dd/yyyy')#</td>
+                        <td>#dateFormat(qGetArrivalFlightInformation.departDate, 'mm/dd/yyyy')#</td>
+                        <td>#dateFormat(qGetDepartureFlightInformation.departDate, 'mm/dd/yyyy')#</td>
                 	</tr>
                     <tr style="text-align:center;">
                         <!--- On Hold --->
@@ -856,24 +874,17 @@
                         </td>
                         <!--- Flights --->
                         <td>
-                            <cfif NOT LEN(qGetRegistrationInfo.flightInfo)>
-                            
-                                <form method="post" action="#CGI.SCRIPT_NAME#?curdoc=tours/profile">
-									<input type="hidden" name="action" value="flightInfoBooked">                                    
-                                    <input type="hidden" name="studentID" value="#FORM.studentID#" />
-                                    <input type="hidden" name="tripID" value="#FORM.tripID#" />
-                                    <input type="image" src="pics/buttons/notbooked_35.png" >
-                                </form>
-                                
+                            <cfif NOT LEN(qGetArrivalFlightInformation.departDate)>
+                            	<input type="image" src="pics/buttons/notbooked_35.png" onclick="openFlights(#studentID#,#tripID#,'arrival')" />                                
                             <cfelse>
-                            
-                                <form method="post" action="#CGI.SCRIPT_NAME#?curdoc=tours/profile">
-                                    <input type="hidden" name="action" value="flightInfoNotBooked">
-                                    <input type="hidden" name="studentID" value="#FORM.studentID#" />
-                                    <input type="hidden" name="tripID" value="#FORM.tripID#" />                                    
-                                    <input type="image" src="pics/buttons/booked_32.png" >
-                                </form>
-                                
+                            	<input type="image" src="pics/buttons/booked_32.png" onclick="openFlights(#studentID#,#tripID#,'arrival')" />                                
+                            </cfif>
+                        </td>
+                        <td>
+                            <cfif NOT LEN(qGetDepartureFlightInformation.departDate)>
+                            	<input type="image" src="pics/buttons/notbooked_35.png" onclick="openFlights(#studentID#,#tripID#,'departure')" />                                
+                            <cfelse>
+                            	<input type="image" src="pics/buttons/booked_32.png" onclick="openFlights(#studentID#,#tripID#,'departure')" />                                
                             </cfif>
                         </td>
                     </tr>
