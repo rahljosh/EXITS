@@ -117,32 +117,17 @@
 	<!---_Set the current year so when can set the correct start and end dates to figure if a report should be filled out---->
     <cfset year = DateFormat(now(), 'yyyy')>
 
-	<!--- July Reports --->
-	<cfif month(now()) EQ 7>
-    
-    	<cfscript>
-			// Return Query with July Dates
-			qGetSeasonDateRange = QueryNew("startDate,endDate");		
-			QueryAddRow(qGetSeasonDateRange);
-			QuerySetCell(qGetSeasonDateRange, "startDate", "#Year(now())#-#Month(now())#-1");
-			QuerySetCell(qGetSeasonDateRange, "endDate", "#Year(now())#-#Month(now())#-31");			
-		</cfscript>
-    
-    <cfelse>
-    	
-        <cfquery name="qGetSeasonDateRange" datasource="#APPLICATION.DSN#">
-            SELECT 
-                startDate, 
-                endDate
-            FROM 
-                smg_seasons
-            WHERE 
-                startdate <= CURRENT_DATE
-            AND 
-                endDate >= CURRENT_DATE
-        </cfquery>
-    
-    </cfif>
+    <cfquery name="qGetSeasonDateRange" datasource="#APPLICATION.DSN#">
+        SELECT 
+            startDate, 
+            DATE_ADD(endDate, INTERVAL 31 DAY) AS endDate <!--- add 1 month to include July dates --->
+        FROM 
+            smg_seasons
+        WHERE 
+            startdate <= CURRENT_DATE
+        AND 
+            DATE_ADD(endDate, INTERVAL 31 DAY) >= CURRENT_DATE
+    </cfquery>
 
 	<Cfif isDefined('FORM.reportType')>
         <cfif FORM.reportType neq CLIENT.ReportType>

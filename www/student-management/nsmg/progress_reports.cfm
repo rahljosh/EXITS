@@ -37,7 +37,7 @@
     <cfparam name="vIsPreviousReportApproved" default="0">
     
     <!--- Param URL Variables --->
-    <cfparam name="url.lastreport" default="">
+    <cfparam name="URL.lastreport" default="">
 
 	<cfscript>
 		// Get Regions
@@ -72,46 +72,29 @@
         <cflocation url="index.cfm?curdoc=secondVisitReports" addtoken="no">
     </cfif>
 
-	<!--- July Reports --->
-	<cfif month(now()) EQ 7>
-    
-    	<cfscript>
-			// Return Query with July Dates
-			qGetSeasonDateRange = QueryNew("startDate,endDate");		
-			QueryAddRow(qGetSeasonDateRange);
-			QuerySetCell(qGetSeasonDateRange, "startDate", "#Year(now())#-#Month(now())#-1");
-			QuerySetCell(qGetSeasonDateRange, "endDate", "#Year(now())#-#Month(now())#-31");			
-		</cfscript>
-    
-    <cfelse>
-    	
-        <!--- August to June Reports --->
-        <cfquery name="qGetSeasonDateRange" datasource="#APPLICATION.DSN#">
-            SELECT 
-                startDate, 
-                endDate
-            FROM 
-                smg_seasons
-            WHERE 
-                startdate <= CURRENT_DATE
-            AND 
-                endDate >= CURRENT_DATE
-        </cfquery>
-    
-    </cfif>
+	<!--- August to July Reports --->
+    <cfquery name="qGetSeasonDateRange" datasource="#APPLICATION.DSN#">
+        SELECT 
+            startDate, 
+            DATE_ADD(endDate, INTERVAL 31 DAY) AS endDate <!--- add 1 month to include July dates --->
+        FROM 
+            smg_seasons
+        WHERE 
+            startdate <= CURRENT_DATE
+        AND 
+            DATE_ADD(endDate, INTERVAL 31 DAY) >= CURRENT_DATE
+    </cfquery>
     
     <!--- Loop Through Months in a season | July needs to be included here --->
     <cfloop from="#qGetSeasonDateRange.startDate#" to="#DateAdd('m', 1, qGetSeasonDateRange.endDate)#" index="i" step="#CreateTimeSpan(31,0,0,0)#">
        	
         <cfif CLIENT.pr_rmonth EQ DatePart('m', i)>
-        
-            <cfset startDate = '#DateAdd("d", "-7", "#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01")#"'>
-            <cfset endDate = '#DateAdd("d", "21", "#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01")#"'>
-            <cfset vPreviousReportMonth = "#DatePart('m','#startDate#')#">
-            <cfset repReqDate = '#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01'>
-            <cfset repDueDate = '#DateAdd("m", "0", "#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01")#"'>
-                       
-         </cfif>
+            <cfset startDate = '#DateAdd("d", "-7", "#DatePart("yyyy", i)#-#DatePart("m", i)#-01")#"'>
+            <cfset endDate = '#DateAdd("d", "21", "#DatePart("yyyy", i)#-#DatePart("m", i)#-01")#"'>
+            <cfset vPreviousReportMonth = "#DatePart('m',startDate)#">
+            <cfset repReqDate = '#DatePart("yyyy", i)#-#DatePart("m", i)#-01'>
+            <cfset repDueDate = '#DateAdd("m", "0", "#DatePart("yyyy", i)#-#DatePart("m", i)#-01")#"'>
+		</cfif>
          
     </cfloop>
     
@@ -574,11 +557,11 @@
 					</cfif>
 					--->
                 
-                   	<tr bgcolor="#iif(vMyCurrentRow MOD 2 ,DE("eeeeee") ,DE("white") )#" <cfif url.lastReport eq #qGetResults.studentID#> class="rowStrike"</cfif> >
+                   	<tr bgcolor="#iif(vMyCurrentRow MOD 2 ,DE("eeeeee") ,DE("white") )#" <cfif URL.lastReport eq #qGetResults.studentID#> class="rowStrike"</cfif> >
                     
                         <td>
                         <!----indicate last viewed report---->
-						   <Cfif url.lastReport eq #qGetResults.studentID#>
+						   <Cfif URL.lastReport eq #qGetResults.studentID#>
                            &##10004;
                            <cfelse>
                            &nbsp;
@@ -599,7 +582,7 @@
                             <Cfif qGetResults.canceldate is not ''><span style="font-size:0.8em;"><em>Canceled: #DateFormat(qGetResults.canceldate, 'mm/dd/yyyy')#</em></span></Cfif>
                         </td>
                         <td>#yesNoFormat(qGetCurrentReport.recordCount)#</td>
-                        <td <cfif url.lastReport eq #qGetResults.studentID#> class="cellStrike"</cfif>>
+                        <td <cfif URL.lastReport eq #qGetResults.studentID#> class="cellStrike"</cfif>>
 
 							<cfif qGetCurrentReport.recordCount>
                             

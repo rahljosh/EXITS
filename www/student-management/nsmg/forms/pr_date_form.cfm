@@ -1,112 +1,136 @@
-<!--- Import CustomTag Used for Page Messages and Form Errors --->
-<cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		pr_date_form.cfm
+	Author:		Marcus Melo
+	Date:		July 3, 2012
+	Desc:		Add dates to progress reports
 
-<cfparam name="form.prdate_id" default="">
-<cfif form.prdate_id EQ "">
+	Updated:  	
+
+----- ------------------------------------------------------------------------- --->
+
+<cfsilent>
+
+	<!--- Import CustomTag Used for Page Messages and Form Errors --->
+    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
+
+    <cfparam name="FORM.submitted" default="0">
+	<cfparam name="FORM.prdate_id" default="">
+
+	<cfset field_list = 'prdate_date,prdate_comments,fk_prdate_type,fk_prdate_contact'>
+    <cfset errorMsg = ''>
+    
+</cfsilent>
+
+<cfif NOT LEN(FORM.prdate_id)>
 	<cfset new = true>
 <cfelse>
-	<cfif not isNumeric(form.prdate_id)>
+	<cfif not isNumeric(FORM.prdate_id)>
         a numeric prdate_id is required to edit a progress report date.
         <cfabort>
 	</cfif>
 	<cfset new = false>
 </cfif>
 
-<cfset field_list = 'prdate_date,prdate_comments,fk_prdate_type,fk_prdate_contact'>
-<cfset errorMsg = ''>
-
 <!--- Process Form Submission --->
+<cfif VAL(FORM.submitted)>
 
-<cfif isDefined("form.submitted")>
+    <cfquery name="qGetDateRange" datasource="mysql">
+        SELECT 
+            startDate, 
+            DATE_ADD(endDate, INTERVAL 31 DAY) AS endDate <!--- add 1 month to include July dates --->
+        FROM 
+            smg_seasons
+        WHERE 
+            startdate <= CURRENT_DATE
+        AND 
+            DATE_ADD(endDate, INTERVAL 31 DAY) >= CURRENT_DATE
+	</cfquery>
+        
+    <cfloop from="#qGetDateRange.startDate#" to="#qGetDateRange.endDate#" index="i" step="#CreateTimeSpan(31,0,0,0)#">
+   
+		<cfif client.pr_rmonth EQ DatePart('m', i)>
+			<cfset firstDate = '#DatePart("yyyy", i)#-#DatePart("m", i)#-01'>
+            <cfset lastDay = '#DateAdd("d", "31", "#DatePart("yyyy", i)#-#DatePart("m", i)#-01")#"'>
+            <cfset thisDay = '#DateFormat('#now()#', 'yyyy-mm-dd')#'>
+        </cfif>
 
-
-       <Cfquery name="DateRange" datasource="mysql">
-        SELECT seasonid, startDate, endDate
-        FROM smg_seasons
-        WHERE #now()# >= startdate and #now()# <= endDate
-        </cfquery>
-     	 <Cfloop from="#DateRange.startDate#" to="#DateRange.endDate#" index=i step="#CreateTimeSpan(31,0,0,0)#">
+	</cfloop>
        
-                <Cfif client.pr_rmonth eq "#DatePart('m', '#i#')#"  OR client.pr_rmonth eq 7>
-                    <Cfset firstDate = '#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01'>
-                    <Cfset lastDay = '#DateAdd("d", "31", "#DatePart("yyyy", "#i#")#-#DatePart("m", "#i#")#-01")#"'>
-                    <cfset thisDay = '#DateFormat('#now()#', 'yyyy-mm-dd')#'>
-                </Cfif>
-           </Cfloop>
-		<Cfif #thisDay# lt #lastDay#>
-        	<Cfset lastDay = #thisDay#>
-        </Cfif>
-	<cfif form.prdate_Date lt #lastDay# AND form.prdate_Date gt #firstDate#>
-    	<Cfset DateOk = 1>
-     <cfelse>
-     	<cfset DateOk = 0>
-     </cfif>
-     <!----
-			if (DateOk eq 0 ) {
-				SESSION.formErrors.Add("Date of contact must be between #DateFormat('#firstdate#', 'mm/dd/yyyy')# and #DateFormat('#lastDay#', 'mm/dd/yyyy')# .");
-			}
-		---->
 	<cfscript>
-			// Data Validation - Current Address
-			if ( NOT LEN(FORM.prdate_date) ) {
-				SESSION.formErrors.Add("Please enter your date of contact.");
-			}
+		// Data Validation
+		if ( NOT LEN(FORM.prdate_date) ) {
+			SESSION.formErrors.Add("Please enter your date of contact.");
+		}
+		
+		if ( isDate(FORM.prdate_date) AND ( FORM.prdate_date LT firstDate OR FORM.prdate_date GT lastDay ) ) {
+			SESSION.formErrors.Add("Contact date must be between #dateFormat(firstDate, 'mm/dd/yyyy')# and #dateFormat(lastDay, 'mm/dd/yyyy')#");
+		}
 
-			if ( NOT LEN(form.fk_prdate_type) ) {
-				SESSION.formErrors.Add("Please enter the type of contact you had.");
-			}
+		if ( NOT LEN(FORM.fk_prdate_type) ) {
+			SESSION.formErrors.Add("Please enter the type of contact you had.");
+		}
 
-			if ( NOT LEN(FORM.fk_prdate_contact) ) {
-				SESSION.formErrors.Add("Please select the Contact.");
-			}
-			if (  LEN(FORM.fk_prdate_contact) GT 200 ) {
-				SESSION.formErrors.Add("Please limit comments  to 200 characters or less.");
-			}
-	
-		</cfscript>	
-        <Cfoutput>
-       
-      	</Cfoutput>
-	  <!----	
-	<cfif not isDate(trim(form.prdate_date))>
-		<cfset errorMsg = "Please enter a valid Date.">
-	<cfelseif trim(form.fk_prdate_type) EQ ''>
-		<cfset errorMsg = "Please select the Type.">
-	<cfelseif trim(form.fk_prdate_contact) EQ ''>
-		<cfset errorMsg = "Please select the Contact.">
-	<cfelseif len(trim(form.prdate_comments)) GT 200>
-		<cfset errorMsg = "Please enter Comments 200 characters or less.">
-    <cfelse>
-	---->
+		if ( NOT LEN(FORM.fk_prdate_contact) ) {
+			SESSION.formErrors.Add("Please select the Contact.");
+		}
+		
+		if ( LEN(FORM.fk_prdate_contact) GT 200 ) {
+			SESSION.formErrors.Add("Please limit comments  to 200 characters or less.");
+		}
+	</cfscript>	
+
 	<!--- Check if there are no errors --->
     <cfif NOT SESSION.formErrors.length()>
+    
 		<cfif new>
+        
             <cfquery datasource="#application.dsn#">
-                INSERT INTO progress_report_dates (fk_progress_report, prdate_date, prdate_comments, fk_prdate_type, fk_prdate_contact)
-                VALUES (
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#form.pr_id#">,
-                <cfqueryparam cfsqltype="cf_sql_date" value="#form.prdate_date#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.prdate_comments#" null="#yesNoFormat(trim(form.prdate_comments) EQ '')#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_prdate_type#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_prdate_contact#">
+                INSERT INTO 
+               		progress_report_dates 
+				(
+                	fk_progress_report, 
+                    prdate_date, 
+                    prdate_comments, 
+                    fk_prdate_type, 
+                    fk_prdate_contact
+                )
+                VALUES 
+                (
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.prdate_date#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.prdate_comments#" null="#yesNoFormat(trim(FORM.prdate_comments) EQ '')#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_prdate_type#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_prdate_contact#">
                 )  
             </cfquery>
+            
 		<!--- edit --->
 		<cfelse>
+        
 			<cfquery datasource="#application.dsn#">
-				UPDATE progress_report_dates SET
-                prdate_date = <cfqueryparam cfsqltype="cf_sql_date" value="#form.prdate_date#">,
-                prdate_comments = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.prdate_comments#" null="#yesNoFormat(trim(form.prdate_comments) EQ '')#">,
-                fk_prdate_type = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_prdate_type#">,
-                fk_prdate_contact = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_prdate_contact#">
-				WHERE prdate_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.prdate_id#">
+				UPDATE 
+                	progress_report_dates 
+                SET
+                    prdate_date = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.prdate_date#">,
+                    prdate_comments = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.prdate_comments#" null="#yesNoFormat(trim(FORM.prdate_comments) EQ '')#">,
+                    fk_prdate_type = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_prdate_type#">,
+                    fk_prdate_contact = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_prdate_contact#">
+				WHERE 
+                	prdate_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.prdate_id#">
 			</cfquery>
+            
 		</cfif>
+        
         <form action="index.cfm?curdoc=progress_report_info" method="post" name="theForm" id="theForm">
-        <input type="hidden" name="pr_id" value="<cfoutput>#form.pr_id#</cfoutput>">
+            <input type="hidden" name="pr_id" value="<cfoutput>#FORM.pr_id#</cfoutput>">
         </form>
+        
         <script>
-        document.theForm.submit();
+			$(document).ready(function() {
+				// submit form
+				$("#theForm").submit();
+			});
         </script>
         
 	</cfif>
@@ -114,14 +138,14 @@
 <!--- add --->
 <cfelseif new>
 
-	<cfparam name="form.pr_id" default="">
-	<cfif not isNumeric(form.pr_id)>
+	<cfparam name="FORM.pr_id" default="">
+	<cfif not isNumeric(FORM.pr_id)>
         a numeric pr_id is required to add a new progress report date.
         <cfabort>
 	</cfif>
 
 	<cfloop list="#field_list#" index="counter">
-    	<cfset "form.#counter#" = "">
+    	<cfset "FORM.#counter#" = "">
 	</cfloop>
         
 <!--- edit --->
@@ -130,33 +154,16 @@
 	<cfquery name="get_record" datasource="#application.dsn#">
 		SELECT *
 		FROM progress_report_dates
-		WHERE prdate_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.prdate_id#">
+		WHERE prdate_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.prdate_id#">
 	</cfquery>
 	<cfloop list="#field_list#" index="counter">
-    	<cfset "form.#counter#" = evaluate("get_record.#counter#")>
+    	<cfset "FORM.#counter#" = evaluate("get_record.#counter#")>
 	</cfloop>
     
     <!--- pr_id is passed in for a new date, but set it for edit. --->
-    <cfset form.pr_id = get_record.fk_progress_report>
+    <cfset FORM.pr_id = get_record.fk_progress_report>
 
 </cfif>
-<!----
-<cfif errorMsg NEQ ''>
-	<script language="JavaScript">
-        alert('<cfoutput>#errorMsg#</cfoutput>');
-    </script>
-</cfif>
-
-<script type="text/javascript">
-function checkForm() {
-	if (document.my_form.fk_prdate_type.value.length == 0) {alert("Please select the Type."); return false; }
-	if (document.my_form.fk_prdate_contact.value.length == 0) {alert("Please select the Contact."); return false; }
-	return true;
-}
-</script>
----->
-<!--- this table is so the form is not 100% width. --->
-
 
 <table align="center">
 
@@ -176,8 +183,8 @@ function checkForm() {
 
 <cfform action="index.cfm?curdoc=forms/pr_date_form" method="post" name="my_form" onSubmit="return checkForm();">
 <input type="hidden" name="submitted" value="1">
-<cfinput type="hidden" name="prdate_id" value="#form.prdate_id#">
-<cfinput type="hidden" name="pr_id" value="#form.pr_id#">
+<cfinput type="hidden" name="prdate_id" value="#FORM.prdate_id#">
+<cfinput type="hidden" name="pr_id" value="#FORM.pr_id#">
 
 <table width="100%" border=0 cellpadding=4 cellspacing=0 class="section">
 
@@ -190,14 +197,14 @@ function checkForm() {
         	<gui:displayFormErrors 
             formErrors="#SESSION.formErrors.GetCollection()#"
             messageType="divOnly"
-            width="98%"
+            width="90%"
             />
         </td>
     </tr>
     <tr>
     
     	<td class="label">Date: <span class="redtext">*</span></td>
-        <td><cfinput type="text" name="prdate_date" value="#dateFormat(form.prdate_date, 'mm/dd/yyyy')#" class="datePicker" size="10" maxlength="10" mask="99/99/9999" > mm/dd/yyyy</td>
+        <td><cfinput type="text" name="prdate_date" value="#dateFormat(FORM.prdate_date, 'mm/dd/yyyy')#" class="datePicker" size="10" maxlength="10" mask="99/99/9999" > mm/dd/yyyy</td>
     </tr>
     <tr>
     	<td class="label">Type: <span class="redtext">*</span></td>
@@ -207,7 +214,7 @@ function checkForm() {
                 FROM prdate_types
                 ORDER BY prdate_type_id
             </cfquery>
-            <cfselect name="fk_prdate_type" query="get_types" value="prdate_type_id" display="prdate_type_name" selected="#form.fk_prdate_type#" queryPosition="below">
+            <cfselect name="fk_prdate_type" query="get_types" value="prdate_type_id" display="prdate_type_name" selected="#FORM.fk_prdate_type#" queryPosition="below">
                 <option></option>
             </cfselect>
         </td>
@@ -220,14 +227,14 @@ function checkForm() {
                 FROM prdate_contacts
                 ORDER BY prdate_contact_id
             </cfquery>
-            <cfselect name="fk_prdate_contact" query="get_contacts" value="prdate_contact_id" display="prdate_contact_name" selected="#form.fk_prdate_contact#" queryPosition="below">
+            <cfselect name="fk_prdate_contact" query="get_contacts" value="prdate_contact_id" display="prdate_contact_name" selected="#FORM.fk_prdate_contact#" queryPosition="below">
                 <option></option>
             </cfselect>
         </td>
     </tr>
     <tr>
     	<td class="label">Comments:</td>
-        <td><cftextarea name="prdate_comments" value="#form.prdate_comments#" cols="35" rows="6" maxlength="200" validate="maxlength" message="Please enter Comments 200 characters or less." /></td>
+        <td><cftextarea name="prdate_comments" value="#FORM.prdate_comments#" cols="35" rows="6" maxlength="200" validate="maxlength" message="Please enter Comments 200 characters or less." /></td>
     </tr>
 </table>
 
@@ -254,4 +261,3 @@ function checkForm() {
     </td>
   </tr>
 </table>
-<!--- this table is so the form is not 100% width. --->
