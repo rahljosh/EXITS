@@ -606,14 +606,15 @@
 	<cffunction name="getSupervisedUsers" access="public" returntype="query" output="false" hint="Gets a list of supervised users">
         <cfargument name="usertype" type="numeric" hint="usertype is required">
         <cfargument name="userID" type="numeric" hint="userID is required">
-        <cfargument name="regionID" type="numeric" hint="regionID is required">
+        <cfargument name="regionID" default="0" hint="regionID is not required">
+        <cfargument name="regionIDList" default="" hint="List of Region IDs">
         <cfargument name="is2ndVisitIncluded" default="0" type="numeric" hint="is2ndVisitIncluded is not required">
         <cfargument name="includeUserIDs" default="" hint="area reps will be able to see themselves and current assigned users on the list">
         
         <!--- Office Users --->
         <cfif ListFind("1,2,3,4", ARGUMENTS.userType)>
             
-            <!--- Get all users for a specific region --->  
+            <!--- Get all users for a specific region --->
             <cfquery 
                 name="qGetSupervisedUsers" 
                 datasource="#APPLICATION.dsn#">
@@ -627,6 +628,14 @@
                     	u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                     AND 
                     	uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
+           			<cfif VAL(ARGUMENTS.regionID)>
+                        AND
+                            uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
+                	</cfif>
+					<cfif LEN(ARGUMENTS.regionIDList)>
+                        AND
+                           uar.regionid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionIDList#" list="yes"> )
+                	</cfif>
                     AND
                     	u.accountCreationVerified != <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                     <!---
@@ -667,18 +676,15 @@
                     	u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                     AND
                     	u.accountCreationVerified != <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                    <!---
-					AND
-						u.dateAccountVerified IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
-					--->						
-                    
-					<cfif ListLen(ARGUMENTS.regionID) EQ 1>
-                        AND 
-                            uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
-                    <cfelse>
-                        AND 
-                            uar.regionid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#"> )
-                    </cfif>
+                                            
+					<cfif VAL(ARGUMENTS.regionID)>
+                        AND
+                            uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
+                	</cfif>
+					<cfif LEN(ARGUMENTS.regionIDList)>
+                        AND
+                           uar.regionid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionIDList#" list="yes"> )
+                	</cfif>
                         
                     <cfswitch expression="#ARGUMENTS.userType#">
                     	
@@ -1238,6 +1244,7 @@
                     u.lastName,
                     u.email,
                     u.dateCreated,
+                    uar.advisorID,
                     DATE_ADD(u.dateCreated, INTERVAL 30 DAY) AS trainingDeadline,
                     r.regionID,
                     r.regionName,
@@ -1259,8 +1266,12 @@
                         
                         <!--- Advisor --->
                         <cfif ARGUMENTS.userType EQ 6 AND VAL(ARGUMENTS.userID)>
-                            AND 
-                                uar.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                            AND
+                            	(
+                                	uar.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                                OR
+                                    u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                              	)
 						</cfif>
                 INNER JOIN
                     smg_regions r ON r.regionID = uar.regionID   

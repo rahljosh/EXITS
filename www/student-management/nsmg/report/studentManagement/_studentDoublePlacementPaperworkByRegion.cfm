@@ -34,6 +34,19 @@
 
 		// Get Programs
 		qGetPrograms = APPLICATION.CFC.PROGRAM.getPrograms(programIDList=FORM.programID);
+		
+		// Get List of Users Under Advisor and the Advisor self
+		vListOfAdvisorUsers = "";
+		if ( CLIENT.usertype EQ 6 ) {
+   			
+			
+			// Get Available Reps
+			qGetUserUnderAdv = APPLICATION.CFC.USER.getSupervisedUsers(userType=CLIENT.userType, userID=CLIENT.userID, regionIDList=FORM.regionID);
+		   
+			// Store Users under Advisor on a list
+			vListOfAdvisorUsers = ValueList(qGetUserUnderAdv.userID);
+
+		}
 	</cfscript>
     
      <!--- FORM Submitted --->
@@ -162,6 +175,15 @@
                 <cfif isDate(FORM.dateTo)>
                 	AND
                     	s.datePlaced <= <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dateTo#">
+                </cfif>
+                <!--- Regional Advisors --->
+				<cfif LEN(vListOfAdvisorUsers)>
+                    AND
+                        (
+                            s.areaRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
+                        OR
+                            s.placeRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
+                        )
                 </cfif>
                 ORDER BY   
                     repName,          

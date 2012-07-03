@@ -26,6 +26,7 @@
 		param name="FORM.seasonID" default=0;
 		param name="FORM.statusID" default="";
 		param name="FORM.outputType" default="";
+		
 	</cfscript>
 
     <!--- FORM Submitted --->
@@ -39,6 +40,18 @@
                 // Set Page Message
                 SESSION.formErrors.Add("You must select at least one region");
             }
+			
+			// Get List of Users Under Advisor and the Advisor self
+			vListOfAdvisorUsers = "";
+			if ( CLIENT.usertype EQ 6 ) {
+				
+				// Get Available Reps
+				qGetUserUnderAdv = APPLICATION.CFC.USER.getSupervisedUsers(userType=CLIENT.userType, userID=CLIENT.userID, regionIDList=FORM.regionID);
+			   
+				// Store Users under Advisor on a list
+				vListOfAdvisorUsers = ValueList(qGetUserUnderAdv.userID);
+	
+			}
 		</cfscript>
     	
         <!--- No Errors Found --->
@@ -46,7 +59,7 @@
 
             <cfquery name="qGetResults" datasource="#APPLICATION.DSN#">
                 SELECT DISTINCT 
-                    u.userid, 
+                    u.userid,
                     u.firstname, 
                     u.lastname,
                     uar.regionID,
@@ -99,6 +112,15 @@
                         OR 
                             pw.ar_training IS NULL
                     )
+              	<!--- Regional Advisors --->
+               	<cfif CLIENT.userType EQ 6>
+                	AND 
+                        (
+                            uar.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+                        OR
+                            u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                        )
+              	</cfif>
                 ORDER BY
                     u.lastname
             </cfquery>
