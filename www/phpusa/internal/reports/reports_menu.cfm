@@ -181,7 +181,7 @@
 					<tr>
 						<td align="right">Program :</td>
 						<td>
-                        	<cfselect name="programID" multiple size="5" style="width:16%">
+                        	<cfselect name="programID" multiple size="5">
 								<cfloop query="get_programs">
                                 	<option value="#programid#">#programname#</option>
                                	</cfloop>
@@ -191,7 +191,7 @@
                     <tr>
 						<td align="right">Intl. Rep :</td>
 						<td>
-                        	<cfselect name="repID" style="width:60%">
+                        	<cfselect name="repID">
 								<option value="0">All</option>
 								<cfloop query="get_php_intl_reps">
                                 	<option value="#userid#">#businessname#</option>
@@ -202,7 +202,7 @@
                     <tr>
 						<td align="right">School :</td>
 						<td>
-                        	<cfselect name="schoolID" style="width:60%">
+                        	<cfselect name="schoolID">
 								<option value="0">All</option>
 								<cfloop query="qGetPHPSchools">
                                 	<option value="#schoolid#">#schoolname#</option>
@@ -213,7 +213,7 @@
                     <tr>
 						<td align="right">Order By :</td>
 						<td>
-                        	<cfselect name="orderBy" style="width:20%">
+                        	<cfselect name="orderBy">
 								<option value="1">Intl. Rep</option>
                                 <option value="2">School</option>
                                 <option value="3">Student</option>
