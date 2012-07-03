@@ -181,7 +181,7 @@
 					<tr>
 						<td align="right">Program :</td>
 						<td>
-                        	<cfselect name="programID" multiple size="5">
+                        	<cfselect name="programID" multiple size="5" style="width:16%">
 								<cfloop query="get_programs">
                                 	<option value="#programid#">#programname#</option>
                                	</cfloop>
@@ -191,23 +191,35 @@
                     <tr>
 						<td align="right">Intl. Rep :</td>
 						<td>
-                        	<cfselect name="repID">
+                        	<cfselect name="repID" style="width:60%">
 								<option value="0">All</option>
-								<cfloop query="get_php_intl_reps"><option value="#userid#">#businessname#</option></cfloop>
+								<cfloop query="get_php_intl_reps">
+                                	<option value="#userid#">#businessname#</option>
+                               	</cfloop>
 							</cfselect>
 						</td>
 					</tr>
                     <tr>
 						<td align="right">School :</td>
 						<td>
-                        	<cfselect name="schoolID">
+                        	<cfselect name="schoolID" style="width:60%">
 								<option value="0">All</option>
 								<cfloop query="qGetPHPSchools">
                                 	<option value="#schoolid#">#schoolname#</option>
                               	</cfloop>
 							</cfselect>
 						</td>
-					</tr>							
+					</tr>
+                    <tr>
+						<td align="right">Order By :</td>
+						<td>
+                        	<cfselect name="orderBy" style="width:20%">
+								<option value="1">Intl. Rep</option>
+                                <option value="2">School</option>
+                                <option value="3">Student</option>
+							</cfselect>
+						</td>
+					</tr>						
 					<tr><td colspan="2" align="center" bgcolor="##C4CDE7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
 				</table>
 				</cfform>
