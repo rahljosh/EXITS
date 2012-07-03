@@ -262,6 +262,11 @@
 				</cfif>
 				--->
                 
+                <!--- Reports For Advisors --->
+                <cfif CLIENT.userType EQ 6>
+                	<li><a href="index.cfm?curdoc=report/index">New Reports</a></li>
+                </cfif>
+                
                 <li><a href="index.cfm?curdoc=support">Support</a></li>
                 
                 <!--- Webmail | Only Office and Managers have email account --->

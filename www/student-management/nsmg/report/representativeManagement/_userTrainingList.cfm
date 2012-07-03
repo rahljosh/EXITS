@@ -34,6 +34,18 @@
 		
 		// Get Training Options
 		qGetTrainingOptions = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='smgUsersTraining');
+		
+		// Get List of Users Under Advisor and the Advisor self
+		vListOfAdvisorUsers = "";
+		if ( CLIENT.usertype EQ 6 ) {
+			
+			// Get Available Reps
+			qGetUserUnderAdv = APPLICATION.CFC.USER.getSupervisedUsers(userType=CLIENT.userType, userID=CLIENT.userID, regionIDList=FORM.regionID);
+		   
+			// Store Users under Advisor on a list
+			vListOfAdvisorUsers = ValueList(qGetUserUnderAdv.userID);
+
+		}
 	</cfscript>
 
     <!--- FORM Submitted --->
@@ -274,7 +286,7 @@
                             FROM
                                 smg_users_training t
                             INNER JOIN
-                                applicationLookup al ON al.fieldID = t.training_id AND al.applicationID = 7
+                                applicationLookup al ON al.fieldID = t.training_id
                             WHERE
                                 t.training_id IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.trainingID#"> )
                             AND
@@ -355,8 +367,6 @@
                                             applicationLookup 
                                         WHERE
                                             fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
-                                        AND
-                                            applicationID = <cfqueryparam cfsqltype="cf_sql_integer" value="7">
                                     </cfquery>
                                     #qGetMissing.name# is required
                                     <br />
@@ -460,7 +470,7 @@
                         FROM
                             smg_users_training t
                         INNER JOIN
-                            applicationLookup al ON al.fieldID = t.training_id AND al.applicationID = 7
+                            applicationLookup al ON al.fieldID = t.training_id
                         WHERE
                             t.training_id IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.trainingID#"> )
                         AND
@@ -547,8 +557,6 @@
                                         applicationLookup 
                                     WHERE
                                         fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
-                                    AND
-                                        applicationID = <cfqueryparam cfsqltype="cf_sql_integer" value="7">
                                 </cfquery>
                                 <span style="color:##F00;">#qGetMissing.name# is required</span>
                                 <br />

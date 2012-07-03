@@ -30,6 +30,18 @@
 		
 		// Set Report Title To Keep Consistency
 		vReportTitle = "Host Family Management - Host Family List";
+		
+		// Get List of Users Under Advisor and the Advisor self
+		vListOfAdvisorUsers = "";
+		if ( CLIENT.usertype EQ 6 ) {
+			
+			// Get Available Reps
+			qGetUserUnderAdv = APPLICATION.CFC.USER.getSupervisedUsers(userType=CLIENT.userType, userID=CLIENT.userID, regionIDList=FORM.regionID);
+		   
+			// Store Users under Advisor on a list
+			vListOfAdvisorUsers = ValueList(qGetUserUnderAdv.userID);
+
+		}
 	</cfscript>
     
     <cfquery name="qGetStateList" datasource="#APPLICATION.DSN#">
@@ -100,6 +112,23 @@
                             	active=<cfqueryparam cfsqltype="cf_sql_integer" value="1">
                             )
               	</cfif>
+                <!--- Regional Advisors --->
+				<cfif LEN(vListOfAdvisorUsers)>
+                	AND
+                    	h.hostID IN 
+                        	( 
+                        	SELECT 
+                            	hostID 
+                           	FROM 
+                            	smg_students 
+                           	WHERE 
+                            	( 
+                            		areaRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> ) 
+                                OR 
+                                	placeRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> ) 
+                              	)
+                        	)
+				</cfif>
                 GROUP BY
                 	h.hostID
               	ORDER BY

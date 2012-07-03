@@ -33,6 +33,19 @@
 		
 		// Set Report Title To Keep Consistency
 		vReportTitle = "Student Management - Help Community Service";
+		
+		// Get List of Users Under Advisor and the Advisor self
+		vListOfAdvisorUsers = "";
+		if ( CLIENT.usertype EQ 6 ) {
+   			
+			
+			// Get Available Reps
+			qGetUserUnderAdv = APPLICATION.CFC.USER.getSupervisedUsers(userType=CLIENT.userType, userID=CLIENT.userID, regionIDList=FORM.regionID);
+		   
+			// Store Users under Advisor on a list
+			vListOfAdvisorUsers = ValueList(qGetUserUnderAdv.userID);
+
+		}
 	</cfscript>	
 
     <!--- FORM Submitted --->
@@ -234,6 +247,24 @@
             </tr>      
             
             <cfoutput query="qGetStudents">
+            
+            	<cfquery name="qGetStudentsUnderAdvisor" dbtype="query">
+                    SELECT
+                        *
+                    FROM
+                        qGetStudents
+                    WHERE
+                        1 = 1
+                    <!--- Regional Advisors --->
+                    <cfif LEN(vListOfAdvisorUsers)>
+                        AND
+                            (
+                                s.areaRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
+                            OR
+                                s.placeRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
+                            )
+                    </cfif>           
+                </cfquery>
                 
                 <cfscript>
                     // Set Row Color
@@ -245,11 +276,11 @@
                 </cfscript>
             
                 <tr>
-                    <td #vRowColor#>#qGetStudents.regionName#</td>
-                    <td #vRowColor#>#qGetStudents.rep_firstName# #qGetStudents.rep_lastName# ###qGetStudents.areaRepID#</td>
-                    <td #vRowColor#>#qGetStudents.firstName# #qGetStudents.familyLastName# ###qGetStudents.studentID#</td>
-                    <td #vRowColor#>#qGetStudents.programName#</td>
-                    <td #vRowColor#>#qGetStudents.hours#</td>
+                    <td #vRowColor#>#qGetStudentsUnderAdvisor.regionName#</td>
+                    <td #vRowColor#>#qGetStudentsUnderAdvisor.rep_firstName# #qGetStudents.rep_lastName# ###qGetStudents.areaRepID#</td>
+                    <td #vRowColor#>#qGetStudentsUnderAdvisor.firstName# #qGetStudents.familyLastName# ###qGetStudents.studentID#</td>
+                    <td #vRowColor#>#qGetStudentsUnderAdvisor.programName#</td>
+                    <td #vRowColor#>#qGetStudentsUnderAdvisor.hours#</td>
                 </tr>
                 
             </cfoutput>
@@ -300,7 +331,16 @@
                 FROM
                     qGetStudents
                 WHERE
-                    regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#currentRegionID#">            
+                    regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#currentRegionID#"> 
+              	<!--- Regional Advisors --->
+				<cfif LEN(vListOfAdvisorUsers)>
+                    AND
+                        (
+                            s.areaRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
+                        OR
+                            s.placeRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
+                        )
+                </cfif>           
             </cfquery>
             
             <cfif qGetStudentsInRegion.recordCount>

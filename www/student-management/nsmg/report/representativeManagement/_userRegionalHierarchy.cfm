@@ -28,6 +28,18 @@
 		param name="FORM.includeViewOnly" default="";
 		param name="FORM.includeStudents" default="";
 		param name="FORM.sort" default="lastName";
+		
+		// Get List of Users Under Advisor and the Advisor self
+		vListOfAdvisorUsers = "";
+		if ( CLIENT.usertype EQ 6 ) {
+			
+			// Get Available Reps
+			qGetUserUnderAdv = APPLICATION.CFC.USER.getSupervisedUsers(userType=CLIENT.userType, userID=CLIENT.userID, regionIDList=FORM.regionID);
+		   
+			// Store Users under Advisor on a list
+			vListOfAdvisorUsers = ValueList(qGetUserUnderAdv.userID);
+
+		}
 	</cfscript>	
 
     <!--- FORM Submitted --->
@@ -71,6 +83,15 @@
                     <cfif FORM.endDate NEQ "">
                         AND
                             u.dateAccountVerified <= <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.endDate#">
+                    </cfif>
+                    <!--- Regional Advisors --->
+					<cfif CLIENT.userType EQ 6>
+                        AND 
+                            (
+                                uar.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+                            OR
+                                u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                            )
                     </cfif>
                 GROUP BY
                     u.userID
@@ -138,17 +159,20 @@
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Options:</td>
                     <td>
-                    	<input type="checkbox" name="includeViewOnly" id="includeViewOnly" /> 
-                    	<label for="includeViewOnly">Include Users With View Only Access</label> 
-                    </td>
-                </tr>                                             
-                <tr class="on">
-                    <td class="subTitleRightNoBorder">&nbsp;</td>
-                    <td>
                     	<input type="checkbox" name="includeStudents" id="includeStudents" /> 
                     	<label for="includeStudents">Include Students</label>
                     </td>
-                </tr>                                             
+                </tr>
+                <!--- This option is not available for regional advisors --->
+                <cfif CLIENT.userType NEQ 6>                                            
+                    <tr class="on">
+                        <td class="subTitleRightNoBorder">&nbsp;</td>
+                        <td>
+                            <input type="checkbox" name="includeViewOnly" id="includeViewOnly" /> 
+                            <label for="includeViewOnly">Include Users With View Only Access</label> 
+                        </td>
+                    </tr>  
+               	</cfif>                                           
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Output Type: <span class="required">*</span></td>
                     <td>
@@ -372,6 +396,10 @@
                             uar.usertype = 6 
                         AND 
                             u.active = 1
+                      	<cfif CLIENT.userType EQ 6>
+                        	AND
+                            	u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                      	</cfif>
                     GROUP BY
                         u.userID
                     ORDER BY
@@ -388,6 +416,11 @@
                         <cfif VAL(qGetDirector.userID)> 
                             AND
                                 qGetRepsByRegion.userID != #qGetDirector.userID#
+                        </cfif>
+                        <!--- Don't return anything for a regional advisor --->
+						<cfif CLIENT.userType EQ 6>
+                            AND
+                                0 = 1
                         </cfif>
                 </cfquery>
                 
@@ -599,6 +632,11 @@
                             uar.usertype = 9
                             AND
                                 uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#currentRegionID#">
+                           	<!--- Don't return anything for a regional advisor --->
+							<cfif CLIENT.userType EQ 6>
+                            	AND
+                                	0 = 1
+                           	</cfif>
                     </cfquery>
             
                     <cfloop query="qGetUsersWithView">
@@ -721,6 +759,15 @@
                         AND
                             u.dateAccountVerified <= <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.endDate#">
                     </cfif>
+                    <!--- Regional Advisors --->
+					<cfif CLIENT.userType EQ 6>
+                        AND 
+                            (
+                                uar.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+                            OR
+                                u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                            )
+                    </cfif>
                 GROUP BY
                     u.userID
                 ORDER BY
@@ -752,6 +799,10 @@
                         uar.usertype = 6 
                     AND 
                         u.active = 1
+                 	<cfif CLIENT.userType EQ 6>
+                        AND
+                            u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                    </cfif>
                 GROUP BY
                     u.userID
                 ORDER BY
@@ -810,104 +861,109 @@
                 vCurrentRow = 1;			
             </cfscript>
             
-            <cfquery name="qGetRepsWithoutAdvisor" dbtype="query">
-                SELECT
-                    *
-                FROM
-                    qGetRepsByRegion
-                WHERE
-                    qGetRepsByRegion.advisorID = 0
-                    <cfif VAL(qGetDirector.userID)> 
-                        AND
-                            qGetRepsByRegion.userID != #qGetDirector.userID#
-                    </cfif>
-            </cfquery>
+            <!--- Regional Advisors --->
+        	<cfif CLIENT.userType NEQ 6>
             
-            <cfoutput>
-                <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#"><td colspan="5"><strong>Representatives Directly Under #qGetDirector.firstName# #qGetDirector.middleName# #qGetDirector.lastName#</strong></td></tr>
-            </cfoutput>
+                <cfquery name="qGetRepsWithoutAdvisor" dbtype="query">
+                    SELECT
+                        *
+                    FROM
+                        qGetRepsByRegion
+                    WHERE
+                        qGetRepsByRegion.advisorID = 0
+                        <cfif VAL(qGetDirector.userID)> 
+                            AND
+                                qGetRepsByRegion.userID != #qGetDirector.userID#
+                        </cfif>
+                </cfquery>
             
-            <!--- Display Reps directly under the manager --->
-            <cfif qGetRepsWithoutAdvisor.recordCount GT 0>
+				<cfoutput>
+                    <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#"><td colspan="5"><strong>Representatives Directly Under #qGetDirector.firstName# #qGetDirector.middleName# #qGetDirector.lastName#</strong></td></tr>
+                </cfoutput>
             
-                <cfoutput query="qGetRepsWithoutAdvisor">
+				<!--- Display Reps directly under the manager --->
+                <cfif qGetRepsWithoutAdvisor.recordCount GT 0>
                 
-                    <cfscript>
-                        vCurrentRow++ ;			
-                    </cfscript>
+                    <cfoutput query="qGetRepsWithoutAdvisor">
                     
-                    <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
-                        <td>&nbsp;&nbsp;#qGetRepsWithoutAdvisor.firstName# #qGetRepsWithoutAdvisor.middleName# #qGetRepsWithoutAdvisor.lastName# ###qGetRepsWithoutAdvisor.userID#</td>
-                        <td>#qGetRepsWithoutAdvisor.address# #qGetRepsWithoutAdvisor.address2# #qGetRepsWithoutAdvisor.city#<cfif VAL("#qGetRepsWithoutAdvisor.state#")>, </cfif>#qGetRepsWithoutAdvisor.state# #qGetRepsWithoutAdvisor.zip#</td>
-                        <td>#qGetRepsWithoutAdvisor.email#</td>
-                        <td>#qGetRepsWithoutAdvisor.phone#</td>
-                        <td>#qGetRepsWithoutAdvisor.fax#</td>
-                    </tr>
-                    
-                    <!--- Show students under each rep --->
-                    <cfif FORM.includeStudents EQ "on">
-                    
-                        <cfquery name="qGetStudents" datasource="#APPLICATION.DSN#">
-                            SELECT
-                                s.firstName,
-                                s.middleName,
-                                s.familyLastName,
-                                h.familyLastName AS hostFamily
-                            FROM
-                                smg_students s
-                            INNER JOIN
-                                smg_hosts h ON h.hostID = s.hostID
-                            WHERE
-                                s.areaRepID = "#qGetRepsWithoutAdvisor.userID#"
-                            ORDER BY
-                                s.familyLastName
-                        </cfquery>
+                        <cfscript>
+                            vCurrentRow++ ;			
+                        </cfscript>
                         
-                        <cfif qGetStudents.recordCount>
+                        <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
+                            <td>&nbsp;&nbsp;#qGetRepsWithoutAdvisor.firstName# #qGetRepsWithoutAdvisor.middleName# #qGetRepsWithoutAdvisor.lastName# ###qGetRepsWithoutAdvisor.userID#</td>
+                            <td>#qGetRepsWithoutAdvisor.address# #qGetRepsWithoutAdvisor.address2# #qGetRepsWithoutAdvisor.city#<cfif VAL("#qGetRepsWithoutAdvisor.state#")>, </cfif>#qGetRepsWithoutAdvisor.state# #qGetRepsWithoutAdvisor.zip#</td>
+                            <td>#qGetRepsWithoutAdvisor.email#</td>
+                            <td>#qGetRepsWithoutAdvisor.phone#</td>
+                            <td>#qGetRepsWithoutAdvisor.fax#</td>
+                        </tr>
                         
-                            <cfscript>
-                                vCurrentRow++ ;			
-                            </cfscript>
+                        <!--- Show students under each rep --->
+                        <cfif FORM.includeStudents EQ "on">
+                        
+                            <cfquery name="qGetStudents" datasource="#APPLICATION.DSN#">
+                                SELECT
+                                    s.firstName,
+                                    s.middleName,
+                                    s.familyLastName,
+                                    h.familyLastName AS hostFamily
+                                FROM
+                                    smg_students s
+                                INNER JOIN
+                                    smg_hosts h ON h.hostID = s.hostID
+                                WHERE
+                                    s.areaRepID = "#qGetRepsWithoutAdvisor.userID#"
+                                ORDER BY
+                                    s.familyLastName
+                            </cfquery>
                             
-                            <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
-                                <td><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Student Name</strong></td>
-                                <td><strong>Student Host Family</strong></td>
-                                <td colspan="3"></td>
-                            </tr>
+                            <cfif qGetStudents.recordCount>
+                            
+                                <cfscript>
+                                    vCurrentRow++ ;			
+                                </cfscript>
+                                
+                                <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
+                                    <td><strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Student Name</strong></td>
+                                    <td><strong>Student Host Family</strong></td>
+                                    <td colspan="3"></td>
+                                </tr>
+                                
+                            </cfif>
+                            
+                            <cfloop query="qGetStudents">
+                            
+                                <cfscript>
+                                    vCurrentRow++ ;			
+                                </cfscript>
+                                
+                                <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
+                                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#qGetStudents.firstName# #qGetStudents.middleName# #qGetStudents.familyLastName#</td>
+                                    <td colspan="4">#qGetStudents.hostFamily#</td>
+                                </tr>
+                                
+                            </cfloop>
                             
                         </cfif>
                         
-                        <cfloop query="qGetStudents">
-                        
-                            <cfscript>
-                                vCurrentRow++ ;			
-                            </cfscript>
-                            
-                            <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
-                                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#qGetStudents.firstName# #qGetStudents.middleName# #qGetStudents.familyLastName#</td>
-                                <td colspan="4">#qGetStudents.hostFamily#</td>
-                            </tr>
-                            
-                        </cfloop>
-                        
-                    </cfif>
-                    
-                </cfoutput>
-             
-            <!--- If there are no reps directly under the manager --->     
-            <cfelse>
+                    </cfoutput>
+                 
+                <!--- If there are no reps directly under the manager --->     
+                <cfelse>
             
-                <cfoutput>
-                
-                    <cfscript>
-                        vCurrentRow++ ;			
-                    </cfscript>
+					<cfoutput>
                     
-                    <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#"><td colspan="5">&nbsp;&nbsp;No Representatives Under This Advisor</td></tr>
+                        <cfscript>
+                            vCurrentRow++ ;			
+                        </cfscript>
+                        
+                        <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#"><td colspan="5">&nbsp;&nbsp;No Representatives Under This Advisor</td></tr>
+                        
+                    </cfoutput>
                     
-                </cfoutput>
+                </cfif>
                 
-            </cfif>
+          	</cfif>
             
             <!--- Go through each advisor --->
             <cfoutput query="qGetAdvisors">
@@ -1006,7 +1062,7 @@
             </cfoutput>
             
             <!--- Include users that have view privileges in this region --->
-            <cfif isDefined('FORM.includeViewOnly')>
+            <cfif isDefined('FORM.includeViewOnly') AND CLIENT.userType NEQ 6>
                 
                 <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#"><td colspan="5"><strong>Users That Have View Privileges In This Region</strong></td></tr>
     

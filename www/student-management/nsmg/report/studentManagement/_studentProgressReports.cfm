@@ -96,7 +96,7 @@
 				if ( CLIENT.usertype EQ 6 ) {
 			
 					// Get Available Reps
-					qGetUserUnderAdv = APPLICATION.CFC.USER.getSupervisedUsers(userType=CLIENT.userType, userID=CLIENT.userID, regionID=FORM.regionID);
+					qGetUserUnderAdv = APPLICATION.CFC.USER.getSupervisedUsers(userType=CLIENT.userType, userID=CLIENT.userID, regionIDList=FORM.regionID);
 					
 					// Store Users under Advisor on a list
 					vListOfAdvisorUsers = ValueList(qGetUserUnderAdv.userid, ',');
@@ -134,8 +134,12 @@
 
                 <!--- Regional Advisors --->
                 <cfif LEN(vListOfAdvisorUsers)>
-                    AND 
-                        s.arearepid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
+                    AND
+                        (
+                       		s.areaRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
+                        OR
+                     		s.placeRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
+                        )
                 </cfif>		
 
                 <!--- Area Reps --->                 

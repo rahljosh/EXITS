@@ -31,6 +31,18 @@
 		
 		// Get Programs
 		qGetPrograms = APPLICATION.CFC.PROGRAM.getPrograms(programIDList=FORM.programID);
+		
+		// Get List of Users Under Advisor and the Advisor self
+		vListOfAdvisorUsers = "";
+		if ( CLIENT.usertype EQ 6 ) {
+			
+			// Get Available Reps
+			qGetUserUnderAdv = APPLICATION.CFC.USER.getSupervisedUsers(userType=CLIENT.userType, userID=CLIENT.userID, regionIDList=FORM.regionID);
+		   
+			// Store Users under Advisor on a list
+			vListOfAdvisorUsers = ValueList(qGetUserUnderAdv.userID);
+
+		}
 	</cfscript>	
 
     <!--- FORM Submitted --->
@@ -129,6 +141,15 @@
                         AND 
                             ( h.hostid NOT IN (SELECT hostid FROM smg_hosts_cbc WHERE cbc_type = 'father') OR h.hostid NOT IN (SELECT hostid FROM smg_hosts_cbc WHERE cbc_type = 'mother') )
                     </cfif>
+					<!--- Regional Advisors --->
+                    <cfif LEN(vListOfAdvisorUsers)>
+                        AND
+                            (
+                                s.areaRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
+                            OR
+                                s.placeRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
+                            )
+                    </cfif> 
                 GROUP BY
                     studentName
                 ORDER BY   

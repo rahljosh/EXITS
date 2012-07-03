@@ -40,6 +40,19 @@
 		
 		// Get Regions
 		qGetRegions = APPLICATION.CFC.REGION.getRegions(regionIDList=FORM.regionID);
+		
+		// Get List of Users Under Advisor and the Advisor self
+		vListOfAdvisorUsers = "";
+		if ( CLIENT.usertype EQ 6 ) {
+   			
+			
+			// Get Available Reps
+			qGetUserUnderAdv = APPLICATION.CFC.USER.getSupervisedUsers(userType=CLIENT.userType, userID=CLIENT.userID, regionIDList=FORM.regionID);
+		   
+			// Store Users under Advisor on a list
+			vListOfAdvisorUsers = ValueList(qGetUserUnderAdv.userID);
+
+		}
 	</cfscript>
 
     <!--- FORM Submitted --->
@@ -195,6 +208,16 @@
                                 s.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#"> 
                             )
                     </cfif>	
+                    
+                    <!--- Regional Advisors --->
+					<cfif LEN(vListOfAdvisorUsers)>
+                        AND
+                            (
+                                s.areaRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
+                            OR
+                                s.placeRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
+                            )
+                    </cfif>
                         
                 ORDER BY 
                     s.familyLastName
