@@ -12,6 +12,7 @@
 	
     <!--- Param Form Variables ---->
     <cfparam name="FORM.programID" default="0">
+    <cfparam name="FORM.orderBy" default="0">
     <cfparam name="FORM.repID" default="0">
     <cfparam name="FORM.schoolID" default="0">
     
@@ -126,8 +127,19 @@
                     AND
                         sc.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.schoolID#">
                 </cfif>
-                ORDER BY 
-                    familylastname
+                ORDER BY
+                	<cfif FORM.orderBy EQ 1>
+                    	u.businessName,
+                        s.familyLastName,
+                        s.firstName
+                    <cfelseif FORM.orderBy EQ 2>
+                    	sc.schoolName,
+                        s.familyLastName,
+                        s.firstName
+                    <cfelse>
+                    	s.familyLastName,
+                        s.firstName
+                    </cfif>
             </cfquery>
         
             <cfloop query="qGetStudents">
