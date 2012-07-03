@@ -334,11 +334,17 @@
                 <select name="intlRep" id="intlRep" onchange="getCandidateList();">
                     <option value="">All</option>
                     <cfloop query="qIntlRep">
-                        <option value="#qIntlRep.userID#" <cfif CLIENT.userID EQ qIntlRep.UserID> selected </cfif> >#qIntlRep.businessName#</option>
+                        <option value="#qIntlRep.userID#" <cfif CLIENT.userID EQ qIntlRep.UserID> selected </cfif> >
+                        	<cfif LEN(qIntlRep.businessName) GT 50>
+                        		#MID(qIntlRep.businessName,1,50)#...
+                           	<cfelse>
+                            	#qIntlRep.businessName#
+                          	</cfif>
+                      	</option>
                     </cfloop>
                 </select>
-                &nbsp;
-				&nbsp;	
+            </td>
+            <td class="formTitle">	
                 Program:
                 <select name="programID" id="programID">
                     <option value="">All</option>
@@ -346,8 +352,8 @@
                     	<option value="#programID#">#programname#</option>
                     </cfloop>
                 </select>
-                &nbsp;
-				&nbsp;	
+            </td>
+            <td class="formTitle">	
                 Evaluation:
                 <select name="evaluationID" id="evaluationID">
                     <option value="1">Month 1</option>
@@ -355,19 +361,21 @@
                     <option value="3">Month 3</option>
                     <option value="4">Month 4</option>
                 </select>
-                &nbsp;
-                &nbsp;
+            </td>
+            <td class="formTitle">
                 Show:
                 <select name="reportType" id="reportType">
                 	<option value="0">All</option>
                     <option value="1">Warning</option>
                     <option value="2">Non-Compliant</option>
                 </select>
-                <br />
-                <br />
-                <center><input name="send" type="submit" value="Submit" onclick="getCandidateList();" /></center>
-            </td>                
-        </tr>   
+           	</td>              
+        </tr>
+        <tr>
+        	<td class="formTitle" colspan="4">
+        		<center><input name="send" type="submit" value="Submit" onclick="getCandidateList();" /></center>
+           	</td>
+        </tr>  
     </table>
 
     <!--- Candidate List --->
