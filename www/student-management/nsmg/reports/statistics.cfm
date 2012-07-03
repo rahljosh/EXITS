@@ -5,6 +5,16 @@
     <cfparam name="FORM.continent" default="0">
     <cfparam name="FORM.inactive" default="0">
 	
+    <cfscript>
+		vTotal = 0;
+		vTotalMale = 0;
+		vTotalFemale = 0;
+		
+		vTotalPlaced = 0;
+		vTotalPlacedFemale = 0;
+		vTotalPlacedMale = 0;
+	</cfscript>
+    
     <!-----Company Information----->
     <cfinclude template="../querys/get_company_short.cfm">
 
@@ -56,32 +66,30 @@
     
     <cfquery name="qGetStudentsInProgram" datasource="MySQL">
         SELECT	 
-        	studentID,
-            sex,
-            hostID,
-            host_fam_approved
+        	s.studentID,
+            s.sex,
+            s.hostID,
+            s.host_fam_approved
         FROM 	
-        	smg_students
+        	smg_students s
         <cfif FORM.continent NEQ 0>
         	INNER JOIN 
-            	smg_countrylist c ON countryresident = c.countryid 
+            	smg_countrylist c ON s.countryresident = c.countryid 
                 AND 
                     c.continent = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.continent#">
 		</cfif>
+        INNER JOIN 
+        	smg_regions r ON r.regionID = s.regionAssigned
         WHERE 
-        	onhold_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
+            s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND 
-            canceldate IS NULL
-        AND 
-            active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        AND 
-          	programid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)
+          	s.programid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)
 		<cfif CLIENT.companyID EQ 5>
             AND	
-                companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+                s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
         <cfelse>
 	        AND	
-    	        companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+    	        s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         </cfif>
     </cfquery>
     
@@ -143,17 +151,17 @@
     </tr>
     <tr>
         <td>&nbsp;</td>
-        <TD width="8%" align="center">Total</td>
-        <TD width="8%" align="center">Female</td>
-        <TD  width="8%" align="center">Male</td>
+        <td width="8%" align="center">Total</td>
+        <td width="8%" align="center">Female</td>
+        <td  width="8%" align="center">Male</td>
         <td width="1%"></td>
-        <TD width="8%" align="center">Total</td>
-        <TD width="8%" align="center">Female</td>
-        <TD width="8%" align="center">Male</td>
+        <td width="8%" align="center">Total</td>
+        <td width="8%" align="center">Female</td>
+        <td width="8%" align="center">Male</td>
         <td width="1%"></td>
-        <TD width="8%" align="center">Total</td>
-        <TD width="8%" align="center">Female</td>
-        <TD width="8%" align="center">Male</td>
+        <td width="8%" align="center">Total</td>
+        <td width="8%" align="center">Female</td>
+        <td width="8%" align="center">Male</td>
     </tr>
     
     <cfloop query="qGetRegion">
@@ -173,8 +181,6 @@
             </cfif>
             WHERE 
                 regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegion.regionid#">
-            AND 
-                onhold_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
             AND  
                 active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
             AND 
@@ -201,8 +207,6 @@
             AND 
                 Hostid != <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
             AND 
-                onhold_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
-            AND 
                 active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
             AND 
               programid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)
@@ -211,6 +215,16 @@
                     date_host_fam_approved <= #CreateODBCDate(FORM.date_host_fam_approved)#
             </cfif>
         </cfquery>
+        
+		<cfscript>
+            vTotal = vTotal + VAL(qGetStudentAssignedRegion.assigned_students);
+            vTotalFemale = vTotalFemale + VAL(qGetStudentAssignedRegion.assigned_female);
+			vTotalMale = vTotalMale + VAL(qGetStudentAssignedRegion.assigned_male);            
+            
+            vTotalPlaced = vTotalPlaced + VAL(qGetPlacedStudentsRegion.placed_student);
+            vTotalPlacedFemale = vTotalPlacedFemale + VAL(qGetPlacedStudentsRegion.placed_female);
+			vTotalPlacedMale = vTotalPlacedMale + VAL(qGetPlacedStudentsRegion.placed_male);
+		</cfscript>
 
         <tr bgcolor="#iif(qGetRegion.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
             <td align="left">            	
@@ -227,7 +241,7 @@
             <td align="right">#numberformat(qGetPlacedStudentsRegion.placed_female)#</td>
             <td align="right">#numberformat(qGetPlacedStudentsRegion.placed_male)#</td>
             <td></td>
-            <TD align="right">
+            <td align="right">
 				<cfif numberformat(qGetStudentAssignedRegion.assigned_students) EQ 0>
                     N/A
                 <cfelse>
@@ -238,7 +252,7 @@
                     </cfif>
                 </cfif>
             </td>
-            <TD align="right">
+            <td align="right">
 				<cfif numberformat(qGetStudentAssignedRegion.assigned_female) EQ 0>
                     N/A
                 <cfelse>
@@ -249,7 +263,7 @@
                     </cfif>
                 </cfif>
             </td>
-            <TD align="right">
+            <td align="right">
 				<cfif numberformat(qGetStudentAssignedRegion.assigned_male) EQ 0>
                     N/A
                 <cfelse>
@@ -282,8 +296,8 @@
             regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         AND	
             companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-        AND 
-            onhold_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
+        AND
+        	app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
         AND 
             canceldate IS NULL
         AND 
@@ -316,9 +330,9 @@
         AND 
             host_fam_approved < <cfqueryparam cfsqltype="cf_sql_integer" value="5">	
         AND 
-            Hostid != <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
-        AND 
-            onhold_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
+            hostid != <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
+        AND
+        	app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
         AND 
             canceldate IS NULL
         AND 
@@ -339,42 +353,91 @@
         <td align="right">#numberformat(qGetStudentsUnassignedPlaced.placed_female)#</td>
         <td align="right">#numberformat(qGetStudentsUnassignedPlaced.placed_male)#</td>
         <td></td>
-        <TD align="right">
-			<cfif numberformat(qGetStudentsUnassigned.assigned_students) EQ 0>
-                N/A
+        <td align="right">
+			<cfif VAL(qGetStudentsUnassigned.assigned_students) AND VAL(qGetStudentsUnassignedPlaced.placed_student)>
+                #numberformat((qGetStudentsUnassignedPlaced.placed_student/qGetStudentsUnassigned.assigned_students)*100,"___.__")#
+            <cfelseif qGetStudentsUnassignedPlaced.placed_student EQ 0>
+                0%
             <cfelse>
-                <cfif numberformat(qGetStudentsUnassignedPlaced.placed_student) EQ 0>
-                    0%
-                <cfelse>
-                    #numberformat(evaluate((qGetStudentsUnassignedPlaced.placed_student/qGetStudentsUnassigned.assigned_students)*100),"___.__")#
-                </cfif>
+                N/A
             </cfif>
         </td>
-        <TD align="right">
-			<cfif numberformat(qGetStudentsUnassigned.assigned_female) EQ 0>
-                N/A
+        <td align="right">
+			<cfif VAL(qGetStudentsUnassigned.assigned_female) AND VAL(qGetStudentsUnassignedPlaced.placed_female)>
+                #numberformat((qGetStudentsUnassignedPlaced.placed_female/qGetStudentsUnassigned.assigned_female)*100,"___.__")#
+            <cfelseif qGetStudentsUnassignedPlaced.placed_female EQ 0>
+                0%
             <cfelse>
-                <cfif numberformat(qGetStudentsUnassignedPlaced.placed_female) EQ 0>
-                    0%
-                <cfelse>
-                    #numberformat(evaluate((qGetStudentsUnassignedPlaced.placed_female/qGetStudentsUnassigned.assigned_female)*100),"___.__")#
-                </cfif>
+                N/A
             </cfif>
         </td>
-        <TD align="right">
-			<cfif numberformat(qGetStudentsUnassigned.assigned_male) EQ 0>
-                N/A
+        <td align="right">
+			<cfif VAL(qGetStudentsUnassigned.assigned_male) AND VAL(qGetStudentsUnassignedPlaced.placed_male)>
+                #numberformat((qGetStudentsUnassignedPlaced.placed_male/qGetStudentsUnassigned.assigned_male)*100,"___.__")#
+            <cfelseif qGetStudentsUnassignedPlaced.placed_male EQ 0>
+                0%
             <cfelse>
-                <cfif numberformat(qGetStudentsUnassignedPlaced.placed_male) EQ 0>
-                    0%
-                <cfelse>
-                    #numberformat(evaluate((qGetStudentsUnassignedPlaced.placed_male/qGetStudentsUnassigned.assigned_male)*100),"___.__")#
-                </cfif>
+                N/A
             </cfif>
         </td>
     </tr>
 </table>
     
 <br />
+
+<table align="center" width="90%" cellpadding=2 cellspacing="0" border="1">
+    <tr>
+        <td>Summary</td>
+        <td width="8%" align="center">Total</td>
+        <td width="8%" align="center">Female</td>
+        <td width="8%" align="center">Male</td>
+        <td width="1%"></td>
+        <td width="8%" align="center">Total</td>
+        <td width="8%" align="center">Female</td>
+        <td width="8%" align="center">Male</td>
+        <td width="1%"></td>
+        <td width="8%" align="center">Total</td>
+        <td width="8%" align="center">Female</td>
+        <td width="8%" align="center">Male</td>
+    </tr>
+        <tr bgcolor="##ededed">
+            <td align="left">&nbsp;</td> 
+            <td align="right">#numberformat(vTotal)#</td>
+            <td align="right">#numberformat(vTotalFemale)#</td>
+            <td align="right">#numberformat(vTotalMale)#</td>
+            <td></td>
+            <td align="right">#numberformat(vTotalPlaced)#</td>
+            <td align="right">#numberformat(vTotalPlacedFemale)#</td>
+            <td align="right">#numberformat(vTotalPlacedMale)#</td>
+            <td></td>
+            <td align="right">
+				<cfif VAL(vTotal) AND VAL(vTotalPlaced)>
+					#numberformat((vTotalPlaced/vTotal)*100,"___.__")#
+                <cfelseif vTotalPlaced EQ 0>
+                	0%
+                <cfelse>
+                	N/A
+                </cfif>
+            </td>
+            <td align="right">
+				<cfif VAL(vTotalFemale) AND VAL(vTotalPlacedFemale)>
+					#numberformat((vTotalPlacedFemale/vTotalFemale)*100,"___.__")#
+                <cfelseif vTotalPlaced EQ 0>
+                	0%
+                <cfelse>
+                	N/A
+                </cfif>
+            </td>
+            <td align="right">
+				<cfif VAL(vTotalMale) AND VAL(vTotalPlacedMale)>
+					#numberformat((vTotalPlacedMale/vTotalMale)*100,"___.__")#
+                <cfelseif vTotalPlaced EQ 0>
+                	0%
+                <cfelse>
+                	N/A
+                </cfif>
+            </td>
+        </tr>
+</table>
 
 </cfoutput>

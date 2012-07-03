@@ -89,41 +89,41 @@
 
 			 <cfquery name="qGetResults" datasource="#APPLICATION.DSN#">
                 SELECT DISTINCT
-                    u.userID,
-                    u.firstName,
-                    u.lastName,
                     r.regionID,
                     r.regionName,
                     r.company,
+                    c.companyName,
+                    c.companyShort,                    
+                    u.userID,
+                    u.firstName,
+                    u.lastName,
                     <cfif FORM.goalPeriod EQ 'August'>
                     	a.augustAllocation AS allocation,
                    	<cfelse>
                     	a.januaryAllocation AS allocation,
                   	</cfif>
                     a.ID,
-                    a.seasonID,
-                    c.companyName,
-                    c.companyShort
+                    a.seasonID
                 FROM
-                    smg_users u
-                INNER JOIN
-                    user_access_rights uar ON uar.userID = u.userID
-                INNER JOIN
-                    smg_regions r ON r.regionID = uar.regionID
-                    AND
-                        r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )
+                    smg_regions r 
                 INNER JOIN
                 	smg_companies c ON c.companyID = r.company
-                LEFT JOIN
+                LEFT OUTER JOIN
+                    user_access_rights uar ON r.regionID = uar.regionID
+                    AND
+                    	uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
+                LEFT OUTER JOIN
+					smg_users u ON uar.userID = u.userID
+					AND
+                    	u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">                        
+                LEFT OUTER JOIN
                     smg_users_allocation a ON a.userID = u.userID
                     AND
                     	a.regionID = r.regionID
                     AND
                         a.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">
                 WHERE
-                    uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
-                AND
-                    u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                	r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )                
                 ORDER BY
                     c.companyShort,
                     r.regionName
@@ -405,7 +405,7 @@
                         <tr>
                             <td bgcolor="#setRowColor(vCurrentRow)#">#qGetResults.companyShort#</td>
                             <td bgcolor="#setRowColor(vCurrentRow)#">#qGetResults.regionName#</td>
-                            <td bgcolor="#setRowColor(vCurrentRow)#">#qGetResults.firstName# #qGetResults.lastName#</td>                        
+                            <td bgcolor="#setRowColor(vCurrentRow)#"><cfif VAL(qGetResults.userID)>#qGetResults.firstName# #qGetResults.lastName#<cfelse><span class="attention">Not Assigned</span></cfif></td>                        
                             <td bgcolor="#setRowColor(vCurrentRow)#">#stGetStatisticsPerRegion.totalStudents#</td>
                             <td bgcolor="#setRowColor(vCurrentRow)#">#stGetStatisticsPerRegion.totalPlaced#</td>
                             <td bgcolor="#setRowColor(vCurrentRow)#">#stGetStatisticsPerRegion.totalPending#</td>
@@ -425,7 +425,7 @@
                         <tr>
                         	<td bgcolor="#setRowColor(vCurrentRow)#">#qGetResults.companyShort#</td>
                             <td bgcolor="#setRowColor(vCurrentRow)#">Great Lakes</td>
-                            <td bgcolor="#setRowColor(vCurrentRow)#">#qGetResults.firstName# #qGetResults.lastName#</td>
+                            <td bgcolor="#setRowColor(vCurrentRow)#"><cfif VAL(qGetResults.userID)>#qGetResults.firstName# #qGetResults.lastName#<cfelse><span class="attention">Not Assigned</span></cfif></td>
                             <td bgcolor="#setRowColor(vCurrentRow)#">#vGreatLakesSummaryAssigned#</td>
                             <td bgcolor="#setRowColor(vCurrentRow)#">#vGreatLakesSummaryPlaced#</td>
                             <td bgcolor="#setRowColor(vCurrentRow)#">#vGreatLakesSummaryPending#</td>
@@ -584,7 +584,7 @@
                         
                         <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
                             <td>#qGetResults.regionName#</td>
-                            <td>#qGetResults.firstName# #qGetResults.lastName#</td>                        
+                            <td><cfif VAL(qGetResults.userID)>#qGetResults.firstName# #qGetResults.lastName#<cfelse><span class="attention">Not Assigned</span></cfif></td>                        
                             <td class="center">#stGetStatisticsPerRegion.totalStudents#</td>
                             <td class="center">#stGetStatisticsPerRegion.totalPlaced#</td>
                             <td class="center">#stGetStatisticsPerRegion.totalPending#</td>
@@ -603,7 +603,7 @@
 						</cfscript>
                         <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
                             <td>Great Lakes</td>
-                            <td>#qGetResults.firstName# #qGetResults.lastName#</td>
+                            <td><cfif VAL(qGetResults.userID)>#qGetResults.firstName# #qGetResults.lastName#<cfelse><span class="attention">Not Assigned</span></cfif></td>
                             <td class="center">#vGreatLakesSummaryAssigned#</td>
                             <td class="center">#vGreatLakesSummaryPlaced#</td>
                             <td class="center">#vGreatLakesSummaryPending#</td>
@@ -634,15 +634,15 @@
 					}				
 				</cfscript>
                 
-                <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
-                    <td class="subTitleLeft" colspan="2">Total</td>
-                    <td class="subTitleCenter">#vDivisionSummaryAssigned#</td>
-                    <td class="subTitleCenter">#vDivisionSummaryPlaced#</td>
-                    <td class="subTitleCenter">#vDivisionSummaryPending#</td>
-                    <td class="subTitleCenter">#vDivisionSummaryUnplaced#</td>
-                    <td class="subTitleCenter">#vDivisionSummaryPlacement#</td>
-                    <td class="subTitleCenter">#vDivisionSummaryAllocation#</td>
-                    <td class="subTitleCenter">#NumberFormat(vDivisionSummaryPercentage, '___.__')#%</td>
+                <tr>
+                    <th class="left" colspan="2">Total</td>
+                    <th>#vDivisionSummaryAssigned#</th>
+                    <th>#vDivisionSummaryPlaced#</th>
+                    <th>#vDivisionSummaryPending#</th>
+                    <th>#vDivisionSummaryUnplaced#</th>
+                    <th>#vDivisionSummaryPlacement#</th>
+                    <th>#vDivisionSummaryAllocation#</th>
+                    <th>#NumberFormat(vDivisionSummaryPercentage, '___.__')#%</th>
                 </tr>
             </table>
             
@@ -667,15 +667,15 @@
                         <td class="subTitleCenter" width="10%">Goal</td>
                         <td class="subTitleCenter" width="10%">Percentage</td>
                     </tr>
-                    <tr class="on">
-                        <td colspan="2">n/a</td>
-                        <td class="subTitleCenter">#vSummaryAssigned#</td>
-                        <td class="subTitleCenter">#vSummaryPlaced#</td>
-                        <td class="subTitleCenter">#vSummaryPending#</td>
-                        <td class="subTitleCenter">#vSummaryUnplaced#</td>
-                        <td class="subTitleCenter">#vSummaryPlacement#</td>
-                        <td class="subTitleCenter">#vSummaryAllocation#</td>
-                        <td class="subTitleCenter">#NumberFormat(vSummaryPercentage, '___.__')#%</td>
+                    <tr>
+                        <th class="left" colspan="2">&nbsp;</td>
+                        <th class="subTitleCenter">#vSummaryAssigned#</th>
+                        <th class="subTitleCenter">#vSummaryPlaced#</th>
+                        <th class="subTitleCenter">#vSummaryPending#</th>
+                        <th class="subTitleCenter">#vSummaryUnplaced#</th>
+                        <th class="subTitleCenter">#vSummaryPlacement#</th>
+                        <th class="subTitleCenter">#vSummaryAllocation#</th>
+                        <th class="subTitleCenter">#NumberFormat(vSummaryPercentage, '___.__')#%</th>
                     </tr>
                 </table>
 			</cfoutput>
