@@ -1306,7 +1306,8 @@
 	<cffunction name="getMonthlyEvaluationList" access="remote" returnFormat="json" output="false" hint="Returns verification report list in Json format">
     	<cfargument name="intRep" default="0" hint="International Representative is not required">
         <cfargument name="programID" default="0" hint="programID is not required">
-        <cfargument name="evaluationID" default="" hint="1-4: evaluation1 - evaluation4 respectively, 5-8: evaluation1 - evaluation4 without compliance respectively.">
+        <cfargument name="evaluationID" default="" hint="1-4: evaluation1 - evaluation4 respectively">
+        <cfargument name="reportType" default="" hint="0: all, 1: warning, 2: non-compliant">
         
         <cfquery 
 			name="qGetMonthlyEvaluationList" 
@@ -1362,54 +1363,58 @@
                 
                 	<cfcase value="1">
                     	AND
-                        	ec.watDateEvaluation1 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes"> 
+                        	ec.watDateEvaluation1 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                      	<cfif ARGUMENTS.reportType EQ 1>
+                        	AND
+                        		ec.watDateCheckedIn <=  <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-25,NOW())#"> 
+                         	AND
+                            	ec.watDateCheckedIn >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-29,NOW())#"> 
+                        <cfelseif ARGUMENTS.reportType EQ 2>
+                        	AND
+                        		ec.watDateCheckedIn <=  <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-30,NOW())#">
+                        </cfif>
                     </cfcase>
                     
                     <cfcase value="2">
                     	AND
-                        	ec.watDateEvaluation2 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes"> 
+                        	ec.watDateEvaluation2 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                      	<cfif ARGUMENTS.reportType EQ 1>
+                        	AND
+                        		ec.watDateCheckedIn <=  <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-55,NOW())#"> 
+                         	AND
+                            	ec.watDateCheckedIn >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-59,NOW())#"> 
+                        <cfelseif ARGUMENTS.reportType EQ 2>
+                        	AND
+                        		ec.watDateCheckedIn <=  <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-60,NOW())#">
+                        </cfif>
                     </cfcase>
                     
                     <cfcase value="3">
                     	AND
-                        	ec.watDateEvaluation3 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes"> 
+                        	ec.watDateEvaluation3 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                       	<cfif ARGUMENTS.reportType EQ 1>
+                        	AND
+                        		ec.watDateCheckedIn <=  <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-85,NOW())#"> 
+                         	AND
+                            	ec.watDateCheckedIn >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-89,NOW())#"> 
+                        <cfelseif ARGUMENTS.reportType EQ 2>
+                        	AND
+                        		ec.watDateCheckedIn <=  <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-90,NOW())#">
+                        </cfif> 
                     </cfcase>
                     
                     <cfcase value="4">
                     	AND
-                        	ec.watDateEvaluation4 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes"> 
-                    </cfcase>
-                    
-                    <!--- Evaluation 1 - Non-Compliant - 40 days after checkin date --->
-                    <cfcase value="5">
-                    	AND
-                        	ec.watDateEvaluation1 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
-                      	AND
-                        	ec.watDateCheckedIn <=  <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-40,NOW())#"> 
-                    </cfcase>
-                    
-                    <!--- Evaluation 2 - Non-Compliant - 70 days after checkin date --->
-                    <cfcase value="6">
-                    	AND
-                        	ec.watDateEvaluation2 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
-                      	AND
-                        	ec.watDateCheckedIn <=  <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-70,NOW())#"> 
-                    </cfcase>
-                    
-                    <!--- Evaluation 3 - Non-Compliant - 100 days after checkin date --->
-                    <cfcase value="7">
-                    	AND
-                        	ec.watDateEvaluation3 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
-                      	AND
-                        	ec.watDateCheckedIn <=  <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-100,NOW())#">
-                    </cfcase>
-                    
-                    <!--- Evaluation 4 - Non-Compliant - 130 days after checkin date --->
-                    <cfcase value="8">
-                    	AND
                         	ec.watDateEvaluation4 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
-                      	AND
-                        	ec.watDateCheckedIn <=  <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-130,NOW())#"> 
+                      	<cfif ARGUMENTS.reportType EQ 1>
+                        	AND
+                        		ec.watDateCheckedIn <=  <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-115,NOW())#"> 
+                         	AND
+                            	ec.watDateCheckedIn >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-119,NOW())#"> 
+                        <cfelseif ARGUMENTS.reportType EQ 2>
+                        	AND
+                        		ec.watDateCheckedIn <=  <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-120,NOW())#">
+                        </cfif>
                     </cfcase>
                     
                     <cfdefaultcase>
@@ -1417,13 +1422,11 @@
                             (
                                 ec.watDateEvaluation1 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes"> 
                             OR
-                                ec.watDateEvaluation2 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes"> 
-                            <!--- Going live in June 2012 ---
+                                ec.watDateEvaluation2 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
                             OR
                                 ec.watDateEvaluation3 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes"> 
                             OR
-                                ec.watDateEvaluation4 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes"> 
-							--->
+                                ec.watDateEvaluation4 IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
                             )               
                     </cfdefaultcase>
                 
