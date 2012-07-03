@@ -14,6 +14,8 @@
 
 <cfinclude template="../querys/get_php_intl_reps.cfm">
 
+<cfinclude template="../querys/get_php_school_info.cfm">
+
 <cfoutput>
 <br />
 <Table class="nav_bar" cellpadding=3 cellspacing="0" width="90%" align="center">
@@ -159,6 +161,50 @@
 						<td align="right">Program :</td>
 						<td><cfselect name="programid" multiple size="5">
 								<cfloop query="get_programs"><option value="#programid#">#programname#</option></cfloop>
+							</cfselect>
+						</td>
+					</tr>							
+					<tr><td colspan="2" align="center" bgcolor="##C4CDE7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
+				</table>
+				</cfform>
+			</td>
+		</tr>
+	</table><br>
+    
+    <!--- ROW 4 - 1 box --->
+	<table cellpadding=3 cellspacing="0" align="center" width="100%">
+		<tr>
+			<td width="50%" valign="top" align="center">
+				<cfform action="reports/invoice_report.cfm" method="POST" target="blank">
+				<Table cellpadding=3 cellspacing="0" width="50%">
+					<tr><th colspan="2" bgcolor="##C4CDE7">Invoice Report</th></tr>
+					<tr>
+						<td align="right">Program :</td>
+						<td>
+                        	<cfselect name="programID" multiple size="5">
+								<cfloop query="get_programs">
+                                	<option value="#programid#">#programname#</option>
+                               	</cfloop>
+							</cfselect>
+						</td>
+					</tr>
+                    <tr>
+						<td align="right">Intl. Rep :</td>
+						<td>
+                        	<cfselect name="repID">
+								<option value="0">All</option>
+								<cfloop query="get_php_intl_reps"><option value="#userid#">#businessname#</option></cfloop>
+							</cfselect>
+						</td>
+					</tr>
+                    <tr>
+						<td align="right">School :</td>
+						<td>
+                        	<cfselect name="schoolID">
+								<option value="0">All</option>
+								<cfloop query="qGetPHPSchools">
+                                	<option value="#schoolid#">#schoolname#</option>
+                              	</cfloop>
 							</cfselect>
 						</td>
 					</tr>							
