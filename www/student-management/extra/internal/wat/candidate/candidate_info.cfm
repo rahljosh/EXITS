@@ -424,10 +424,16 @@
 			$(".secondPlacement").fadeOut("fast");
 		}
 		
-		if (selectedHostID == 195)
+		if (selectedHostID == 195) {
 			$("#newJobOffer").fadeOut("fast");
-		else
-			$("#newJobOffer").fadeIn("fast");
+		} else {
+			if ($("#newJobOffer").length == 0) {
+				$("#tempNewJobOffer").html('<input type="checkbox" name="isTransferJobOfferReceived" id="isTransferJobOfferReceived" value="1" class="formField transferCheckBox"><label for="isTransferJobOfferReceived">New Job Offer</label>')
+				$("#tempNewJobOffer").attr("id","newJobOffer");
+			} else {
+				$("#newJobOffer").fadeIn("fast");
+			}
+		}
 		
 		// Set Company Info - first create a host company object to use its functions
 		var selectedHC = new HCComponent();
@@ -1402,13 +1408,27 @@
                                         	<td colspan="2">
                                                 <table cellpadding="0" cellspacing="0" width="100%">
                                                     <tr class="hiddenField trTransferInfo">
-                                                    	<!--- Do not show the new job offer box if the student is seeking employment --->
-                                                  		<cfif qCandidatePlaceCompany.hostCompanyID NEQ 195>
-                                                            <td width="33%" class="style1" align="center" id="newJobOffer">
-                                                                <input type="checkbox" name="isTransferJobOfferReceived" id="isTransferJobOfferReceived" value="1" class="formField transferCheckBox" disabled <cfif qCandidatePlaceCompany.isTransferJobOfferReceived EQ 1>checked</cfif> > 
-                                                                <label for="isTransferJobOfferReceived">New Job Offer</label> 
-                                                            </td>
+                                                    
+														<!--- Do not show the new job offer box if the student is seeking employment --->
+                                                        <cfif FORM.hostCompanyID EQ 0>
+                                                        	<cfif qCandidatePlaceCompany.hostCompanyID NEQ 195>
+                                                                <td width="33%" class="style1" align="center" id="newJobOffer">
+                                                                    <input type="checkbox" name="isTransferJobOfferReceived" id="isTransferJobOfferReceived" value="1" class="formField transferCheckBox" disabled <cfif qCandidatePlaceCompany.isTransferJobOfferReceived EQ 1>checked</cfif> > 
+                                                                    <label for="isTransferJobOfferReceived">New Job Offer</label> 
+                                                                </td>
+                                                            </cfif>
+                                                      	<cfelse>
+                                                        	<cfif FORM.hostCompanyID NEQ 195>
+                                                            	<td width="33%" class="style1" align="center" id="newJobOffer">
+                                                                    <input type="checkbox" name="isTransferJobOfferReceived" id="isTransferJobOfferReceived" value="1" class="formField transferCheckBox" disabled <cfif qCandidatePlaceCompany.isTransferJobOfferReceived EQ 1>checked</cfif> > 
+                                                                    <label for="isTransferJobOfferReceived">New Job Offer</label> 
+                                                                </td>
+                                                            </cfif>
                                                        	</cfif>
+														<cfif (FORM.hostCompanyID EQ 0 AND qCandidatePlaceCompany.hostCompanyID EQ 195) OR (FORM.hostCompanyID EQ 195)>
+                                                            <td width="33%" class="style1" align="center" id="tempNewJobOffer">&nbsp;</td>
+                                                        </cfif>
+                                                    	
                                                         <td width="33%" class="style1" align="center">
                                                             <input type="checkbox" name="isTransferHousingAddressReceived" id="isTransferHousingAddressReceived" value="1" class="formField transferCheckBox" disabled <cfif qCandidatePlaceCompany.isTransferHousingAddressReceived EQ 1>checked</cfif> > 
                                                             <label for="isTransferHousingAddressReceived">New Housing Address</label> 
@@ -1945,7 +1965,7 @@
                                         	<td class="style1" width="70%">
                                                 <span class="readOnly">#dateFormat(qGetCandidate.watDateEvaluation1, 'mm/dd/yyyy')#</span>
                                                 <input type="text" name="watDateEvaluation1" id="watDateEvaluation1" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.watDateEvaluation1, 'mm/dd/yyyy')#" maxlength="10">
-                                        		<cfif NOT LEN(qGetcandidate.watDateEvaluation1)>
+                                        		<cfif NOT LEN(qGetcandidate.watDateEvaluation1) AND ListFind("1,2,3,4",CLIENT.userType)>
                                                 	<font size="1">
                                                     	<a href="../wat/candidate/sendEvaluation.cfm?candidateID=#qGetCandidate.candidateID#&EvaluationID=1">
                                                         	[ Send Evaluation ]
@@ -1959,7 +1979,7 @@
                                         	<td class="style1">
                                                 <span class="readOnly">#dateFormat(qGetCandidate.watDateEvaluation2, 'mm/dd/yyyy')#</span>
                                                 <input type="text" name="watDateEvaluation2" id="watDateEvaluation2" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.watDateEvaluation2, 'mm/dd/yyyy')#" maxlength="10">
-                                        		<cfif NOT LEN(qGetcandidate.watDateEvaluation2)>
+                                        		<cfif NOT LEN(qGetcandidate.watDateEvaluation2) AND ListFind("1,2,3,4",CLIENT.userType)>
                                                 	<font size="1">
                                                     	<a href="../wat/candidate/sendEvaluation.cfm?candidateID=#qGetCandidate.candidateID#&EvaluationID=2">
                                                         	[ Send Evaluation ]
@@ -1973,7 +1993,7 @@
                                         	<td class="style1" width="70%">
                                                 <span class="readOnly">#dateFormat(qGetCandidate.watDateEvaluation3, 'mm/dd/yyyy')#</span>
                                                 <input type="text" name="watDateEvaluation3" id="watDateEvaluation3" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.watDateEvaluation3, 'mm/dd/yyyy')#" maxlength="10">
-                                        		<cfif NOT LEN(qGetcandidate.watDateEvaluation3)>
+                                        		<cfif NOT LEN(qGetcandidate.watDateEvaluation3) AND ListFind("1,2,3,4",CLIENT.userType)>
                                                 	<font size="1">
                                                     	<a href="../wat/candidate/sendEvaluation.cfm?candidateID=#qGetCandidate.candidateID#&EvaluationID=3">
                                                         	[ Send Evaluation ]
@@ -1987,7 +2007,7 @@
                                         	<td class="style1" width="70%">
                                                 <span class="readOnly">#dateFormat(qGetCandidate.watDateEvaluation4, 'mm/dd/yyyy')#</span>
                                                 <input type="text" name="watDateEvaluation4" id="watDateEvaluation4" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.watDateEvaluation4, 'mm/dd/yyyy')#" maxlength="10">
-                                        		<cfif NOT LEN(qGetcandidate.watDateEvaluation4)>
+                                        		<cfif NOT LEN(qGetcandidate.watDateEvaluation4) AND ListFind("1,2,3,4",CLIENT.userType)>
                                                 	<font size="1">
                                                     	<a href="../wat/candidate/sendEvaluation.cfm?candidateID=#qGetCandidate.candidateID#&EvaluationID=4">
                                                         	[ Send Evaluation ]
