@@ -291,8 +291,14 @@
 				</ul>
             </ul>
         </td>
-        <td class="lastRow right">&nbsp;
-			
+        <td class="lastRow right">
+			<ul class="mainList">
+                <li onclick="loadSelectedReport('dosCertification');">DOS Certification</li>
+                <ul>
+                    <li>Generate a list of all users who have or have not taken the DOS Certification</li>
+                    <li>Filter by: Region</li>
+				</ul>
+            </ul>
         </td>
 	</tr>   
 </table> 
