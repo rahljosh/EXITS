@@ -140,8 +140,8 @@
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Description:</td>
                     <td>
-                        This report will provide you with a list of all users in the specified region who have or have not taken the DOS certification test.
-                        It will show the date as Missing for any user who has not taken the test since the previous July 1'st.
+                        This report will show a list of all users and their DOS Certification test date in the specified region.
+                        It will show the date as Missing for any user who has not taken the test since the previous July 1st.
                     </td>		
                 </tr>
                 <tr>
