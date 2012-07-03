@@ -156,6 +156,8 @@
                     php.datePlaced,
                     php.dateApproved,
                     php.datePISEmailed,
+                    php.dateInvoiceReceived,
+                    php.dateInvoicePaid,
                     php.doc_evaluation2, 
                     php.doc_evaluation4, 
                     php.doc_evaluation6,
@@ -1637,6 +1639,8 @@
         <!--- Placement Paperwork --->
         <cfargument name="school_acceptance" default="" hint="school_acceptance is not required">
         <cfargument name="original_school_acceptance" default="" hint="original_school_acceptance is not required">
+        <cfargument name="dateInvoiceReceived" default="" hint="dateInvoiceReceived is not required">
+        <cfargument name="dateInvoicePaid" default="" hint="dateInvoicePaid is not required">
         <cfargument name="sevis_fee_paid" default="" hint="sevis_fee_paid is not required">
         <cfargument name="i20received" default="" hint="i20received is not required">
         <cfargument name="hf_placement" default="" hint="hf_placement is not required">
@@ -1657,6 +1661,8 @@
                     <!--- Placement Paperwork --->
                     school_acceptance = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.school_acceptance#" null="#NOT IsDate(ARGUMENTS.school_acceptance)#">,
                     original_school_acceptance = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.original_school_acceptance#" null="#NOT IsDate(ARGUMENTS.original_school_acceptance)#">,
+                    dateInvoiceReceived = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateInvoiceReceived#" null="#NOT IsDate(ARGUMENTS.dateInvoiceReceived)#">,
+                    dateInvoicePaid = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateInvoicePaid#" null="#NOT IsDate(ARGUMENTS.dateInvoicePaid)#">,
                     sevis_fee_paid = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.sevis_fee_paid#" null="#NOT IsDate(ARGUMENTS.sevis_fee_paid)#">,
                     i20received = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.i20received#" null="#NOT IsDate(ARGUMENTS.i20received)#">,
                     hf_placement = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.hf_placement#" null="#NOT IsDate(ARGUMENTS.hf_placement)#">,

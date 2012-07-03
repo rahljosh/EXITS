@@ -20,6 +20,8 @@
     <!--- Placement Paperwork --->
     <cfparam name="FORM.school_acceptance" default="">
     <cfparam name="FORM.original_school_acceptance" default="">
+    <cfparam name="FORM.dateInvoiceReceived" default="">
+    <cfparam name="FORM.dateInvoicePaid" default="">
     <cfparam name="FORM.sevis_fee_paid" default="">
     <cfparam name="FORM.i20received" default="">
     <cfparam name="FORM.hf_placement" default="">
@@ -43,6 +45,8 @@
 				// Placement Paperwork
 				school_acceptance = FORM.school_acceptance,
 				original_school_acceptance = FORM.original_school_acceptance,
+				dateInvoiceReceived = FORM.dateInvoiceReceived,
+				dateInvoicePaid = FORm.dateInvoicePaid,
 				sevis_fee_paid = FORM.sevis_fee_paid,
 				i20received = FORM.i20received,
 				hf_placement = FORM.hf_placement,
@@ -69,6 +73,8 @@
 			// Placement Paperwork
 			FORM.school_acceptance = qGetStudentInfo.school_acceptance;
 			FORM.original_school_acceptance = qGetStudentInfo.original_school_acceptance;
+			FORM.dateInvoiceReceived = qGetStudentInfo.dateInvoiceReceived;
+			FORM.dateInvoicePaid = qGetStudentInfo.dateInvoicePaid;
 			FORM.sevis_fee_paid = qGetStudentInfo.sevis_fee_paid;
 			FORM.i20received = qGetStudentInfo.i20received;
 			FORM.hf_placement = qGetStudentInfo.hf_placement;
@@ -208,6 +214,30 @@
                         <td>
                             <span class="readOnly displayNone">#DateFormat(FORM.doc_letter_rec_date, 'mm/dd/yyyy')#</span>
                             <input type="text" name="school_acceptance" id="school_acceptance" class="datePicker editPage displayNone" value="#DateFormat(FORM.school_acceptance, 'mm/dd/yyyy')#">
+                        </td>
+                    </tr>
+                    
+                    <!--- Invoice Received --->
+                    <tr>
+                        <td class="paperworkLeftColumn">
+                            <input type="checkbox" name="dateInvoiceReceivedCheckBox" id="dateInvoiceReceivedCheckBox" class="editPage displayNone" onclick="setTodayDate(this.id, 'dateInvoiceReceived');" <cfif isDate(FORM.dateInvoiceReceived)>checked</cfif> >
+						</td>
+                        <td><label for="dateInvoiceReceivedCheckBox">Invoice Received</label></td>
+                        <td>
+                            <span class="readOnly displayNone">#DateFormat(FORM.dateInvoiceReceived, 'mm/dd/yyyy')#</span>
+                            <input type="text" name="dateInvoiceReceived" id="dateInvoiceReceived" class="datePicker editPage displayNone" value="#DateFormat(FORM.dateInvoiceReceived, 'mm/dd/yyyy')#">
+                        </td>
+                    </tr>
+                    
+                    <!--- Invoice Paid --->
+                    <tr>
+                        <td class="paperworkLeftColumn">
+                            <input type="checkbox" name="dateInvoicePaidCheckBox" id="dateInvoicePaidCheckBox" class="editPage displayNone" onclick="setTodayDate(this.id, 'dateInvoicePaid');" <cfif isDate(FORM.dateInvoicePaid)>checked</cfif> >
+						</td>
+                        <td><label for="dateInvoicePaidCheckBox">Invoice Paid</label></td>
+                        <td>
+                            <span class="readOnly displayNone">#DateFormat(FORM.dateInvoicePaid, 'mm/dd/yyyy')#</span>
+                            <input type="text" name="dateInvoicePaid" id="dateInvoicePaid" class="datePicker editPage displayNone" value="#DateFormat(FORM.dateInvoicePaid, 'mm/dd/yyyy')#">
                         </td>
                     </tr>
                     
