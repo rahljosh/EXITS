@@ -59,13 +59,13 @@
        
 	<cfscript>
 		// Data Validation
-		if ( NOT LEN(FORM.prdate_date) ) {
+		if ( NOT isDate(FORM.prdate_date) ) {
 			SESSION.formErrors.Add("Please enter your date of contact.");
 		}
 		
-		if ( isDate(FORM.prdate_date) AND ( FORM.prdate_date LT firstDate OR FORM.prdate_date GT lastDay ) ) {
-			SESSION.formErrors.Add("Contact date must be between #dateFormat(firstDate, 'mm/dd/yyyy')# and #dateFormat(lastDay, 'mm/dd/yyyy')#");
-		}
+		//if ( isDate(FORM.prdate_date) AND ( FORM.prdate_date LT firstDate OR FORM.prdate_date GT lastDay ) ) {
+		//	SESSION.formErrors.Add("Contact date must be between #dateFormat(firstDate, 'mm/dd/yyyy')# and #dateFormat(lastDay, 'mm/dd/yyyy')#");
+		//}
 
 		if ( NOT LEN(FORM.fk_prdate_type) ) {
 			SESSION.formErrors.Add("Please enter the type of contact you had.");
