@@ -1169,28 +1169,37 @@
                              </table>   
                     </Td>
                     <Td>
-                        	
-                            <cfif accountCreationVerified eq 0>
-                            	<cfif val(disableReasonid.id)>
+                        
+                        <cfif accountCreationVerified eq 0>
+                        
+							<cfif val(disableReasonid.id)>
                                 Disabled: #dateFormat(disableReason.date, 'mm/dd/yyyy')# for:<br />
                                 #disableReason.reason#<br />
-                                
                                 <hr width=50% align="center" />
-                                </cfif>
-                               
-								<cfif client.usertype lte 4>	
-                                 <a href="tools/enableAccount.cfm?userid=#url.userid#" class="jQueryModal"><img src="pics/buttons/activate.png"border=0/></a>
-                                 <cfif val(disableReasonid.id)><div align="right"><a href="javascript:displayDisableHistory();"><font color="##999999"><em>history</em></font></a> </div>  </cfif>
-                              </cfif>
-                            <Cfelse>
-                            	<cfif client.usertype lte 4>
-                               
-                            	<a href="tools/disableAccount.cfm?userid=#url.userid#" class="jQueryModal"><img src="pics/buttons/disable.png" border=0/></a><br />
-                               <cfif val(disableReasonid.id)> <div align="right"><a href="javascript:displayDisableHistory();"><font color="##999999"><em>history</em></font></a></div>
-                            	</cfif>
-                                </cfif>
-                            </cfif><br />
+                            </cfif>
+                        
+							<cfif listFind("1,2,3,4", CLIENT.userType)>	
+                                <a href="tools/enableAccount.cfm?userid=#url.userid#" class="jQueryModal"><img src="pics/buttons/activate.png"border=0/></a>
+                                
+                                <cfif val(disableReasonid.id)><div align="right"><a href="javascript:displayDisableHistory();">
+                                    <font color="##999999"><em>history</em></font></a> </div>  
+								</cfif>
                             
+							</cfif>
+                        
+                        <!--- Commenting out disabled button - 07/05/2012 - as per Brian Hause Request --->
+                        <!---
+						<cfelse>
+                            
+							<cfif listFind("1,2,3,4", CLIENT.userType)>	
+                                <a href="tools/disableAccount.cfm?userid=#url.userid#" class="jQueryModal"><img src="pics/buttons/disable.png" border=0/></a><br />
+                                
+                                <cfif val(disableReasonid.id)> <div align="right"><a href="javascript:displayDisableHistory();">
+                                    <font color="##999999"><em>history</em></font></a></div>
+                                </cfif>
+                            </cfif>
+                         --->   
+						</cfif>
                     </td>                            
                   </Tr>
                   <tr>
