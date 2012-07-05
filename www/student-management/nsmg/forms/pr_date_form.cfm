@@ -16,26 +16,36 @@
 
     <cfparam name="FORM.submitted" default="0">
 	<cfparam name="FORM.prdate_id" default="">
+	
+    <!--- Param LOCAL Variables --->
+    <cfparam name="vSetStartDate" default="">
+    <cfparam name="vSetEndDate" default="">
+    <cfparam name="vSetDueDate" default="">
 
-	<cfset field_list = 'prdate_date,prdate_comments,fk_prdate_type,fk_prdate_contact'>
-    <cfset errorMsg = ''>
+    <cfscript>
+		field_list = 'prdate_date,prdate_comments,fk_prdate_type,fk_prdate_contact';
+	</cfscript>
     
-</cfsilent>
-
-<cfif NOT LEN(FORM.prdate_id)>
-	<cfset new = true>
-<cfelse>
-	<cfif not isNumeric(FORM.prdate_id)>
-        a numeric prdate_id is required to edit a progress report date.
-        <cfabort>
-	</cfif>
-	<cfset new = false>
-</cfif>
-
-<!--- Process Form Submission --->
-<cfif VAL(FORM.submitted)>
-
-    <cfquery name="qGetDateRange" datasource="mysql">
+    <cfquery name="qGetContactType" datasource="#application.dsn#">
+        SELECT 
+        	*
+        FROM 
+        	prdate_types
+        ORDER BY 
+        	prdate_type_id
+    </cfquery>
+    
+    <cfquery name="qGetContacts" datasource="#application.dsn#">
+        SELECT 
+        	*
+        FROM 
+        	prdate_contacts
+        ORDER BY 
+        	prdate_contact_id
+    </cfquery>
+    
+	<!--- August to July Reports --->
+    <cfquery name="qGetSeasonDateRange" datasource="#APPLICATION.DSN#">
         SELECT 
             startDate, 
             DATE_ADD(endDate, INTERVAL 31 DAY) AS endDate <!--- add 1 month to include July dates --->
@@ -45,27 +55,49 @@
             startdate <= CURRENT_DATE
         AND 
             DATE_ADD(endDate, INTERVAL 31 DAY) >= CURRENT_DATE
-	</cfquery>
-        
-    <cfloop from="#qGetDateRange.startDate#" to="#qGetDateRange.endDate#" index="i" step="#CreateTimeSpan(31,0,0,0)#">
-   
-		<cfif client.pr_rmonth EQ DatePart('m', i)>
-			<cfset firstDate = '#DatePart("yyyy", i)#-#DatePart("m", i)#-01'>
-            <cfset lastDay = '#DateAdd("d", "31", "#DatePart("yyyy", i)#-#DatePart("m", i)#-01")#"'>
-            <cfset thisDay = '#DateFormat('#now()#', 'yyyy-mm-dd')#'>
-        </cfif>
+    </cfquery>
+    
+    <!--- Loop Through Months in a season | July needs to be included here --->
+    <cfloop from="#qGetSeasonDateRange.startDate#" to="#qGetSeasonDateRange.endDate#" index="i" step="#CreateTimeSpan(31,0,0,0)#">
+       	
+        <cfif CLIENT.pr_rmonth EQ DatePart('m', i)>
+            <cfset vSetStartDate =  DateAdd('m', -1, DatePart("yyyy", i) & '-' & DatePart("m", i) & '-01')>
+            <cfset vSetEndDate = CreateDate(year(vSetStartDate), month(vSetStartDate), DaysInMonth(vSetStartDate))>
+            <cfset vSetDueDate = CreateDate(DatePart("yyyy", i), DatePart("m", i), '01')>
+		</cfif>
+         
+    </cfloop>
 
-	</cfloop>
-       
+</cfsilent>
+
+<cfif NOT LEN(FORM.prdate_id)>
+
+	<cfset new = true>
+    
+<cfelse>
+
+	<cfif not isNumeric(FORM.prdate_id) OR NOT IsNumeric(CLIENT.pr_rmonth)>
+        Error: a numeric prdate_id is required to edit a progress report date. <br />
+		Please try again.       
+        <cfabort>
+	</cfif>
+    
+	<cfset new = false>
+    
+</cfif>
+
+<!--- Process Form Submission --->
+<cfif VAL(FORM.submitted)>
+
 	<cfscript>
 		// Data Validation
 		if ( NOT isDate(FORM.prdate_date) ) {
 			SESSION.formErrors.Add("Please enter your date of contact.");
 		}
 		
-		//if ( isDate(FORM.prdate_date) AND ( FORM.prdate_date LT firstDate OR FORM.prdate_date GT lastDay ) ) {
-		//	SESSION.formErrors.Add("Contact date must be between #dateFormat(firstDate, 'mm/dd/yyyy')# and #dateFormat(lastDay, 'mm/dd/yyyy')#");
-		//}
+		if ( isDate(FORM.prdate_date) AND ( FORM.prdate_date LT vSetStartDate OR FORM.prdate_date GT vSetEndDate ) ) {
+			SESSION.formErrors.Add("Contact date must be between #dateFormat(vSetStartDate, 'mm/dd/yyyy')# and #dateFormat(vSetEndDate, 'mm/dd/yyyy')#");
+		}
 
 		if ( NOT LEN(FORM.fk_prdate_type) ) {
 			SESSION.formErrors.Add("Please enter the type of contact you had.");
@@ -165,99 +197,76 @@
 
 </cfif>
 
-<table align="center">
+<!--- Table Header --->
+<gui:tableHeader
+	imageName="current_items.gif"
+	tableTitle="Contact Date"
+	width="40%"
+/>    
 
-  <tr>
-    <td>
-
-<!--- header of the table --->
-<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
-
-<tr valign=middle height=24>
-	<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
-	<td width=26 background="pics/header_background.gif"><img src="pics/current_items.gif"></td>
-	<td background="pics/header_background.gif"><h2>Contact Date</h2></td>
-	<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
-	</tr>
-</table>
+<cfoutput>
 
 <cfform action="index.cfm?curdoc=forms/pr_date_form" method="post" name="my_form" onSubmit="return checkForm();">
-<input type="hidden" name="submitted" value="1">
-<cfinput type="hidden" name="prdate_id" value="#FORM.prdate_id#">
-<cfinput type="hidden" name="pr_id" value="#FORM.pr_id#">
+    <input type="hidden" name="submitted" value="1">
+    <cfinput type="hidden" name="prdate_id" value="#FORM.prdate_id#">
+    <cfinput type="hidden" name="pr_id" value="#FORM.pr_id#">
 
-<table width="100%" border=0 cellpadding=4 cellspacing=0 class="section">
-
-    <tr><td>
-
-<span class="redtext">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Required fields</span>
-<table border=0 cellpadding=4 cellspacing=0>
-    <tr>
-    	<td colspan=4 align="left"><!--- Form Errors --->
-        	<gui:displayFormErrors 
-            formErrors="#SESSION.formErrors.GetCollection()#"
-            messageType="divOnly"
-            width="90%"
-            />
-        </td>
-    </tr>
-    <tr>
+    <table width="40%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
+        <tr>
+            <td colspan="2" align="center">
+                <h2>The <strong>#DateFormat(vSetDueDate, 'mmmm')#</strong> report is for contact durring the month of <strong>#DateFormat(vSetStartDate, 'mmmm')#</strong>.</h2>
+            </td>
+        </tr>        
+        <tr>
+            <td colspan="2" align="left">
+                <!--- Form Errors --->
+                <gui:displayFormErrors 
+                    formErrors="#SESSION.formErrors.GetCollection()#"
+                    messageType="divOnly"
+                    width="90%" />
+            </td>
+        </tr>
+        <tr>
+            <td class="label">Date: <span class="redtext">*</span></td>
+            <td><cfinput type="text" name="prdate_date" value="#dateFormat(FORM.prdate_date, 'mm/dd/yyyy')#" class="datePicker" size="10" maxlength="10" mask="99/99/9999" > mm/dd/yyyy</td>
+        </tr>
+        <tr>
+            <td class="label">Type: <span class="redtext">*</span></td>
+            <td>
+                <cfselect name="fk_prdate_type" query="qGetContactType" value="prdate_type_id" display="prdate_type_name" selected="#FORM.fk_prdate_type#" queryPosition="below">
+                    <option></option>
+                </cfselect>
+            </td>
+        </tr>
+        <tr>
+            <td class="label">Contact: <span class="redtext">*</span></td>
+            <td>
+                <cfselect name="fk_prdate_contact" query="qGetContacts" value="prdate_contact_id" display="prdate_contact_name" selected="#FORM.fk_prdate_contact#" queryPosition="below">
+                    <option></option>
+                </cfselect>
+            </td>
+        </tr>
+        <tr>
+            <td class="label">Comments:</td>
+            <td><cftextarea name="prdate_comments" value="#FORM.prdate_comments#" cols="35" rows="6" maxlength="200" validate="maxlength" message="Please enter Comments 200 characters or less." /></td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td><span class="redtext">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Required fields</span></td>
+        </tr>
+    </table>
     
-    	<td class="label">Date: <span class="redtext">*</span></td>
-        <td><cfinput type="text" name="prdate_date" value="#dateFormat(FORM.prdate_date, 'mm/dd/yyyy')#" class="datePicker" size="10" maxlength="10" mask="99/99/9999" > mm/dd/yyyy</td>
-    </tr>
-    <tr>
-    	<td class="label">Type: <span class="redtext">*</span></td>
-        <td>
-            <cfquery name="get_types" datasource="#application.dsn#">
-                SELECT *
-                FROM prdate_types
-                ORDER BY prdate_type_id
-            </cfquery>
-            <cfselect name="fk_prdate_type" query="get_types" value="prdate_type_id" display="prdate_type_name" selected="#FORM.fk_prdate_type#" queryPosition="below">
-                <option></option>
-            </cfselect>
-        </td>
-    </tr>
-    <tr>
-    	<td class="label">Contact: <span class="redtext">*</span></td>
-        <td>
-            <cfquery name="get_contacts" datasource="#application.dsn#">
-                SELECT *
-                FROM prdate_contacts
-                ORDER BY prdate_contact_id
-            </cfquery>
-            <cfselect name="fk_prdate_contact" query="get_contacts" value="prdate_contact_id" display="prdate_contact_name" selected="#FORM.fk_prdate_contact#" queryPosition="below">
-                <option></option>
-            </cfselect>
-        </td>
-    </tr>
-    <tr>
-    	<td class="label">Comments:</td>
-        <td><cftextarea name="prdate_comments" value="#FORM.prdate_comments#" cols="35" rows="6" maxlength="200" validate="maxlength" message="Please enter Comments 200 characters or less." /></td>
-    </tr>
-</table>
-
-	</td>
-	</tr>
-</table>
-
-<table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
-	<tr>
-		<td align="right"><input name="Submit" type="image" src="pics/submit.gif" border=0></td>
-	</tr>
-</table>
+    <table border="0" cellpadding="4" cellspacing="0" width="40%" class="section" align="center">
+        <tr>
+            <td align="center"><input name="Submit" type="image" src="pics/submit.gif" border="0"></td>
+        </tr>
+    </table>
 
 </cfform>
 
-<table width=100% cellpadding=0 cellspacing=0 border=0>
-	<tr valign=bottom >
-		<td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td>
-		<td width=100% background="pics/header_background_footer.gif"></td>
-		<td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td>
-	</tr>
-</table>
+</cfoutput>
 
-    </td>
-  </tr>
-</table>
+<!--- Table Footer --->
+<gui:tableFooter 
+	width="40%"
+/>

@@ -29,10 +29,10 @@
     <cfparam name="FORM.cancelled" default="0">
     
     <!--- Param LOCAL Variables --->
-    <cfparam name="startDate" default="">
-    <cfparam name="endDate" default="">
-    <cfparam name="repDueDate" default="">
-    <cfparam name="vPreviousReportMonth" default="">
+    <cfparam name="vSetStartDate" default="">
+    <cfparam name="vSetEndDate" default="">
+    <cfparam name="vSetDueDate" default="">
+    <cfparam name="vSetPreviousReportMonth" default="">
     <cfparam name="vIsStudentInCountry" default="1">
     <cfparam name="vIsPreviousReportApproved" default="0">
     
@@ -84,16 +84,17 @@
         AND 
             DATE_ADD(endDate, INTERVAL 31 DAY) >= CURRENT_DATE
     </cfquery>
-    
+
     <!--- Loop Through Months in a season | July needs to be included here --->
     <cfloop from="#qGetSeasonDateRange.startDate#" to="#DateAdd('m', 1, qGetSeasonDateRange.endDate)#" index="i" step="#CreateTimeSpan(31,0,0,0)#">
        	
         <cfif CLIENT.pr_rmonth EQ DatePart('m', i)>
-            <cfset startDate = '#DateAdd("d", "-7", "#DatePart("yyyy", i)#-#DatePart("m", i)#-01")#"'>
-            <cfset endDate = '#DateAdd("d", "21", "#DatePart("yyyy", i)#-#DatePart("m", i)#-01")#"'>
-            <cfset vPreviousReportMonth = "#DatePart('m',startDate)#">
-            <cfset repReqDate = '#DatePart("yyyy", i)#-#DatePart("m", i)#-01'>
-            <cfset repDueDate = '#DateAdd("m", "0", "#DatePart("yyyy", i)#-#DatePart("m", i)#-01")#"'>
+
+            <cfset vSetStartDate =  DateAdd('m', -1, DatePart("yyyy", i) & '-' & DatePart("m", i) & '-01')>
+            <cfset vSetEndDate = CreateDate(year(vSetStartDate), month(vSetStartDate), DaysInMonth(vSetStartDate))>
+            <cfset vSetDueDate = CreateDate(DatePart("yyyy", i), DatePart("m", i), '01')>
+            <cfset vSetPreviousReportMonth = DatePart('m',vSetStartDate)>
+            
 		</cfif>
          
     </cfloop>
@@ -174,7 +175,6 @@
 	background-repeat: no-repeat;
 	background-position: center center;	
 	}
-	
 	-->
 </style>
 
@@ -218,20 +218,11 @@
                         </cfloop>
                     </select>                        
                 </td>
-                <!----
-                <td>
-                    Status<br />
-                    <select name="cancelled" class="mediumField">
-                        <option value="0" <cfif CLIENT.pr_cancelled EQ 0>selected</cfif>>Active</option>
-                        <option value="1" <cfif CLIENT.pr_cancelled EQ 1>selected</cfif>>Cancelled</option>
-                    </select>            
-                </td>
-				---->
             </tr>
             <tr>
                 <td colspan="5" align="center" style="border-top:1px solid ##ccc">
-                    The <strong>#DateFormat('#endDate#', 'mmmm')#</strong> report is for contact durring the month of <strong>#DateFormat('#startDate#', 'mmmm')#</strong> 
-                    and due on <strong>#DateFormat('#repDueDate#','mmm. d, yyyy')#</strong>. 
+                    The <strong>#monthAsString(CLIENT.pr_rmonth)#</strong> report is for contact durring the month of <strong>#DateFormat(vSetStartDate, 'mmmm')#</strong> 
+                    and due on <strong>#DateFormat(vSetDueDate,'mmm. d, yyyy')#</strong>. 
                 </td>
             </tr>
         </table>
@@ -451,7 +442,7 @@
                         AND 
                         	fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.studentID#">
                         AND 
-                        	pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vPreviousReportMonth)#">
+                        	pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vSetPreviousReportMonth)#">
                     </cfquery>
                     
                     <cfscript>
@@ -557,7 +548,7 @@
 					</cfif>
 					--->
                 
-                   	<tr bgcolor="#iif(vMyCurrentRow MOD 2 ,DE("eeeeee") ,DE("white") )#" <cfif URL.lastReport eq #qGetResults.studentID#> class="rowStrike"</cfif> >
+                   	<tr bgcolor="#iif(vMyCurrentRow MOD 2 ,DE("eeeeee") ,DE("white") )#" <cfif URL.lastReport eq qGetResults.studentID> class="rowStrike"</cfif> >
                     
                         <td>
                         <!----indicate last viewed report---->
