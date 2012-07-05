@@ -1639,7 +1639,7 @@
                 
                 <cfif isDate(ARGUMENTS.dateTo)>
                 	AND
-                    	hl.dateCreated <= <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateTo#">
+                    	hl.dateCreated <= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',1,ARGUMENTS.dateTo)#">
                 </cfif>
                 
                 <cfif LEN(ARGUMENTS.isAdWords)>
