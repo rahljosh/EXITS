@@ -42,43 +42,56 @@
         
         	<cfquery name="qGetResults" datasource="#APPLICATION.DSN#">
             	SELECT
-                	u.*,
-                    uar.*,
-                    r.*,
-                    t.*,
+                	u.userID,
+                    u.firstName,
+                    u.lastName,
+                    r.regionID,
+                    r.regionName,
+                    t.date_trained,
                     ut.userType AS userTypeName
                	FROM
                 	smg_users u
                	INNER JOIN
                 	user_access_rights uar ON uar.userID = u.userID
+                    AND
+                        uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> )
                	INNER JOIN
                 	smg_regions r ON r.regionID = uar.regionID
               	INNER JOIN
-                	smg_userType ut ON ut.userTypeID = u.userType
-               	LEFT JOIN
+                	smg_userType ut ON ut.userTypeID = uar.userType
+               	LEFT OUTER JOIN
                 	smg_users_training t ON t.user_id = u.userID
-                    	AND
-                        	t.training_ID = 2
+                    	AND	
+                        	t.company_ID = uar.companyID
+                        AND
+                        	t.training_ID = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
                    		AND
-							<cfif Month(Now()) GTE 7>
+							<cfif ListFind("7,8,9,10,11,12", Month(Now()))>
                                 t.date_trained > <cfqueryparam cfsqltype="cf_sql_date" value="#CreateDate(Year(Now()),7,1)#">
                             <cfelse>
+                            	<!--- Set deadline to 07/01 of previous year --->
                             	t.date_trained > <cfqueryparam cfsqltype="cf_sql_date" value="#CreateDate(Year(Now())-1,7,1)#">
                             </cfif>
               	WHERE
-                	u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-              	AND
-                	r.regionID IN( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> )
-              	<cfif FORM.completed EQ "completed">
+                <!--- Get Active and Fully Enabled --->
+                    u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                AND
+                    accountCreationVerified > <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                AND
+                    u.dateAccountVerified IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">  
+              	
+				<cfif FORM.completed EQ "completed">
                 	AND
                     	t.ID IS NOT NULL
                 <cfelseif FORM.completed EQ "notCompleted">
                 	AND
                     	t.ID IS NULL
                 </cfif>
+                
                 GROUP BY
                 	u.userID
                	ORDER BY
+                	uar.userType,
                 	u.lastName,
                     u.firstName
             </cfquery>
@@ -115,7 +128,7 @@
                     </td>		
                 </tr>
                 <tr class="on">
-                    <td class="subTitleRightNoBorder">Completed: <span class="required">*</span></td>
+                    <td class="subTitleRightNoBorder">Option: <span class="required">*</span></td>
                     <td>
                         <select name="completed" id="completed" class="xLargeField" required>
                             <option value="all">All</option>
@@ -253,16 +266,7 @@
                 </tr>
             </table>
             
-            <cfloop list="#FORM.regionID#" index="regionID">
-            	
-                <cfquery name="qGetResultsInRegion" dbtype="query">
-                    SELECT
-                        *
-                    FROM
-                        qGetResults
-                  	WHERE
-                    	regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#regionID#">
-                </cfquery>
+            <cfloop list="#FORM.regionID#" index="iRegionID">
                 
                 <!--- This query is used to make sure we always display the name of the region even if there are not any records there --->
                 <cfquery name="qGetRegion" datasource="#APPLICATION.DSN#">
@@ -271,7 +275,16 @@
                    	FROM
                     	smg_regions
                   	WHERE
-                    	regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#regionID#">
+                    	regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#iRegionID#">
+                </cfquery>
+            	
+                <cfquery name="qGetResultsInRegion" dbtype="query">
+                    SELECT
+                        *
+                    FROM
+                        qGetResults
+                  	WHERE
+                    	regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#iRegionID#">
                 </cfquery>
                 
                 <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
@@ -304,6 +317,12 @@
                     	</tr>
                         
                     </cfloop>
+                    
+                    <cfif NOT VAL(qGetResultsInRegion.recordcount)>
+                        <tr class="off">
+                        	<td colspan="5">No records found</td>
+                        </tr>
+                    </cfif>
                     
              	</table>
                 
