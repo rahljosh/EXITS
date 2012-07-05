@@ -445,7 +445,7 @@ function OpenLetter(url) {
         <tr height=24>
             <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
             <td width=26 background="pics/header_background.gif"><img src="pics/current_items.gif"></td>
-            <td background="pics/header_background.gif"><h2> Report</h2></td> 
+            <td background="pics/header_background.gif"><h2>#monthAsString(CLIENT.pr_rmonth)# Progress Report <br /></h2></td> 
             <td background="pics/header_background.gif" align="right"><a href="index.cfm?curdoc=progress_reports&lastReport=#get_student.studentid####get_student.studentid#">Back to Progress Reports</a>
       
             <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
