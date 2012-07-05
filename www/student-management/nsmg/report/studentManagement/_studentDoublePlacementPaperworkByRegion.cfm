@@ -174,7 +174,7 @@
                 </cfif>
                 <cfif isDate(FORM.dateTo)>
                 	AND
-                    	s.datePlaced <= <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dateTo#">
+                    	s.datePlaced <= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',1,FORM.dateTo)#">
                 </cfif>
                 <!--- Regional Advisors --->
 				<cfif LEN(vListOfAdvisorUsers)>
