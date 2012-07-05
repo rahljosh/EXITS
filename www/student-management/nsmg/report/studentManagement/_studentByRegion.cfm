@@ -180,7 +180,7 @@
                             BETWEEN 
                                 <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dateFrom#">
                             AND
-                                <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dateTo#">
+                                <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d', 1, FORM.dateTo)#">
                         </cfif>
                         
                     </cfcase>

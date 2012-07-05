@@ -82,7 +82,7 @@
                     </cfif>
                     <cfif FORM.endDate NEQ "">
                         AND
-                            u.dateAccountVerified <= <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.endDate#">
+                            u.dateAccountVerified <= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',1,FORM.endDate)#">
                     </cfif>
                     <!--- Regional Advisors --->
 					<cfif CLIENT.userType EQ 6>
