@@ -1,80 +1,157 @@
-<!--- PS: Any changes made here should be also be made in the bulk progress report printing file --->
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		progress_report_info.cfm
+	Author:		Marcus Melo
+	Date:		July 5, 2012
+	Desc:		
 
-<cfparam name="form.pr_action" default="">
-<cfparam name="client.pr_rmonth" default="">
-<cfset questionList = ''>
-<Cfset form.pr_rmonth = #client.pr_rmonth#>
+	Updated:  	
 
-<cfswitch expression="#form.pr_action#">
-<!--- delete contact date. --->
-<cfcase value="delete_date">
-    <cfquery datasource="#application.dsn#">
-        DELETE FROM progress_report_dates
-        WHERE prdate_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.prdate_id#">
-    </cfquery> 
-</cfcase>
-<!----Save Report---->
-<cfcase value="save">
-<cfoutput>
-    <cfloop list = '#form.FinalQuestionList#' index='i'>
-   
+----- ------------------------------------------------------------------------- --->
+
+<cfsilent>
+
+	<!--- PS: Any changes made here should be also be made in the bulk progress report printing file --->
+
+    <!--- Param LOCAL Variables --->
+    <cfparam name="vSetStartDate" default="">
+    <cfparam name="vSetEndDate" default="">
+    <cfparam name="vSetDueDate" default="">
+
+    <cfparam name="FORM.pr_action" default="">
+    <cfparam name="CLIENT.pr_rmonth" default="">
+    
+    <cfset questionList = ''>
+    <cfset FORM.pr_rmonth = CLIENT.pr_rmonth>
+
+</cfsilent>
+
+<!--- August to July Reports --->
+<cfquery name="qGetSeasonDateRange" datasource="#APPLICATION.DSN#">
+	SELECT 
+		startDate, 
+		DATE_ADD(endDate, INTERVAL 31 DAY) AS endDate <!--- add 1 month to include July dates --->
+	FROM 
+		smg_seasons
+	WHERE 
+		startdate <= CURRENT_DATE
+	AND 
+		DATE_ADD(endDate, INTERVAL 31 DAY) >= CURRENT_DATE
+</cfquery>
+
+<!--- Loop Through Months in a season | July needs to be included here --->
+<cfloop from="#qGetSeasonDateRange.startDate#" to="#qGetSeasonDateRange.endDate#" index="i" step="#CreateTimeSpan(31,0,0,0)#">
+	
+	<cfif CLIENT.pr_rmonth EQ DatePart('m', i)>
+		<cfset vSetStartDate =  DateAdd('m', -1, DatePart("yyyy", i) & '-' & DatePart("m", i) & '-01')>
+		<cfset vSetEndDate = CreateDate(year(vSetStartDate), month(vSetStartDate), DaysInMonth(vSetStartDate))>
+		<cfset vSetDueDate = CreateDate(DatePart("yyyy", i), DatePart("m", i), '01')>
+	</cfif>
+	 
+</cfloop>
+
+<cfswitch expression="#FORM.pr_action#">
+
+	<!--- delete contact date. --->
+    <cfcase value="delete_date">
+    
         <cfquery datasource="#application.dsn#">
-            UPDATE x_pr_questions SET
-            x_pr_question_response = <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.x_pr_question_response' & '#i#')#" >
-            WHERE x_pr_question_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
+            DELETE FROM 
+            	progress_report_dates
+            WHERE 
+            	prdate_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.prdate_id#">
+        </cfquery> 
+        	
+	</cfcase>
+
+	<!----Save Report---->
+    <cfcase value="save">
+    
+        <cfloop list = '#FORM.FinalQuestionList#' index='i'>
+            <cfquery datasource="#application.dsn#">
+                UPDATE 
+                	x_pr_questions 
+                SET
+                	x_pr_question_response = <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.x_pr_question_response' & '#i#')#" >
+                WHERE 
+                	x_pr_question_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
+            </cfquery>
+        </cfloop>
+        
+    </cfcase>
+
+	<!--- approve report --->
+    <cfcase value="approve">
+    
+        <cfquery name="get_report" datasource="#application.dsn#">
+            SELECT 
+            	*
+            FROM 
+            	progress_reports
+            WHERE 
+            	pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
         </cfquery>
-    </cfloop>
-</cfoutput>
-</cfcase>
-
-<!--- approve report --->
-<cfcase value="approve">
-
-    <cfquery name="get_report" datasource="#application.dsn#">
-        SELECT *
-        FROM progress_reports
-        WHERE pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.pr_id#">
-    </cfquery>
-    <cfset approve_field = ''>
-	<!--- in case the user has multiple approval levels, check them in order and just do the first one. --->
-	<!--- supervising rep --->
-	<cfif CLIENT.userid EQ get_report.fk_sr_user and get_report.pr_sr_approved_date EQ ''>
-    	<cfset approve_field = 'pr_sr_approved_date'>
-    <!--- regional advisor --->
-    <cfelseif CLIENT.userid EQ get_report.fk_ra_user and get_report.pr_ra_approved_date EQ ''>
-    	<cfset approve_field = 'pr_ra_approved_date'>
-    <!--- regional director --->
-    <cfelseif CLIENT.userid EQ get_report.fk_rd_user and get_report.pr_rd_approved_date EQ ''>
-    	<cfset approve_field = 'pr_rd_approved_date'>
-    <!--- facilitator OR any office user --->
-    <cfelseif get_report.pr_ny_approved_date EQ '' AND (CLIENT.userid EQ get_report.fk_ny_user OR CLIENT.userType LTE 4)>
-    	<cfset approve_field = 'pr_ny_approved_date'>
-    </cfif>
-    <cfif approve_field NEQ ''>
+        
+        <cfset approve_field = ''>
+        
+        <!--- in case the user has multiple approval levels, check them in order and just do the first one. --->
+        <!--- supervising rep --->
+        <cfif CLIENT.userid EQ get_report.fk_sr_user and get_report.pr_sr_approved_date EQ ''>
+            <cfset approve_field = 'pr_sr_approved_date'>
+        <!--- regional advisor --->
+        <cfelseif CLIENT.userid EQ get_report.fk_ra_user and get_report.pr_ra_approved_date EQ ''>
+            <cfset approve_field = 'pr_ra_approved_date'>
+        <!--- regional director --->
+        <cfelseif CLIENT.userid EQ get_report.fk_rd_user and get_report.pr_rd_approved_date EQ ''>
+            <cfset approve_field = 'pr_rd_approved_date'>
+        <!--- facilitator OR any office user --->
+        <cfelseif get_report.pr_ny_approved_date EQ '' AND (CLIENT.userid EQ get_report.fk_ny_user OR CLIENT.userType LTE 4)>
+            <cfset approve_field = 'pr_ny_approved_date'>
+        </cfif>
+        
+        <cfif approve_field NEQ ''>
+        
+            <cfquery datasource="#application.dsn#">
+                UPDATE 
+                	progress_reports 
+                SET
+                    #approve_field# = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
+                    pr_rejected_date = NULL
+                WHERE 
+                	pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
+            </cfquery>
+            
+        </cfif>
+        
+    </cfcase>
+    
+	<!--- delete report. --->
+    <cfcase value="delete_report">
+    
         <cfquery datasource="#application.dsn#">
-            UPDATE progress_reports SET
-            #approve_field# = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
-            pr_rejected_date = NULL
-            WHERE pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.pr_id#">
+            DELETE FROM 
+            	progress_report_dates
+            WHERE 
+            	fk_progress_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
         </cfquery>
-    </cfif>
-</cfcase>
-<!--- delete report. --->
-<cfcase value="delete_report">
-    <cfquery datasource="#application.dsn#">
-        DELETE FROM progress_report_dates
-        WHERE fk_progress_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.pr_id#">
-    </cfquery>
-    <cfquery datasource="#application.dsn#">
-        DELETE FROM x_pr_questions
-        WHERE fk_progress_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.pr_id#">
-    </cfquery>
-    <cfquery datasource="#application.dsn#">
-        DELETE FROM progress_reports
-        WHERE pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.pr_id#">
-    </cfquery>
-    <cflocation url="index.cfm?curdoc=progress_reports" addtoken="no">
-</cfcase>
+        
+        <cfquery datasource="#application.dsn#">
+            DELETE FROM 
+            	x_pr_questions
+            WHERE 
+            	fk_progress_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
+        </cfquery>
+        
+        <cfquery datasource="#application.dsn#">
+            DELETE FROM 
+            	progress_reports
+            WHERE 
+            	pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
+        </cfquery>
+        
+        <cflocation url="index.cfm?curdoc=progress_reports" addtoken="no">
+    </cfcase>
+    
 </cfswitch>
 
 <SCRIPT>
@@ -100,14 +177,14 @@ function OpenLetter(url) {
  
 
 <!--- view or print --->
-<cfparam name="form.report_mode" default="view">
+<cfparam name="FORM.report_mode" default="view">
 
-<cfif form.report_mode EQ 'print'>
+<cfif FORM.report_mode EQ 'print'>
 	<link rel="stylesheet" href="smg.css" type="text/css">
 </cfif>
 
-<cfparam name="form.pr_id" default="">
-<cfif not isNumeric(form.pr_id)>
+<cfparam name="FORM.pr_id" default="">
+<cfif not isNumeric(FORM.pr_id)>
     a numeric pr_id is required to view a progress report.
     <cfabort>
 </cfif>
@@ -115,21 +192,21 @@ function OpenLetter(url) {
 <cfquery name="get_report" datasource="#application.dsn#">
     SELECT *
     FROM progress_reports
-    WHERE pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.pr_id#">
+    WHERE pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
 </cfquery>
 <cfquery name="get_dates" datasource="#application.dsn#">
     SELECT progress_report_dates.*, prdate_types.prdate_type_name, prdate_contacts.prdate_contact_name
     FROM progress_report_dates
     INNER JOIN prdate_types ON progress_report_dates.fk_prdate_type = prdate_types.prdate_type_id
     INNER JOIN prdate_contacts ON progress_report_dates.fk_prdate_contact = prdate_contacts.prdate_contact_id
-    WHERE progress_report_dates.fk_progress_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.pr_id#">
+    WHERE progress_report_dates.fk_progress_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
     ORDER BY progress_report_dates.prdate_date
 </cfquery>
 
 <Cfif get_report.pr_month_of_report eq 1>
 	<cfset perviousMonthsReport = 12>
 <cfelse>
-	<cfset perviousMonthsReport = #get_report.pr_month_of_report# - 1>
+	<cfset perviousMonthsReport = get_report.pr_month_of_report - 1>
 </Cfif>
 
 <cfquery name="get_previousDates" datasource="#application.dsn#">
@@ -143,29 +220,32 @@ function OpenLetter(url) {
     ORDER BY progress_report_dates.prdate_date
 </cfquery>
 
-
 <cfquery name="get_questions" datasource="#application.dsn#">
     SELECT x_pr_questions.x_pr_question_id, x_pr_questions.x_pr_question_response, smg_prquestions.text, smg_prquestions.required
     FROM x_pr_questions
     INNER JOIN smg_prquestions ON x_pr_questions.fk_prquestion = smg_prquestions.id
-    WHERE x_pr_questions.fk_progress_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.pr_id#">
+    WHERE x_pr_questions.fk_progress_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
     ORDER BY smg_prquestions.id
 </cfquery>
+
 <cfquery name="get_student" datasource="#application.dsn#">
 	SELECT studentid, firstname, familylastname, companyid
 	FROM smg_students
 	WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_student#">
 </cfquery>
+
 <cfquery name="get_program" datasource="#application.dsn#">
     SELECT programid, programname
     FROM smg_programs
     WHERE programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_program#">
 </cfquery>
+
 <cfquery name="get_rep" datasource="#application.dsn#">
     SELECT userid, firstname, lastname
     FROM smg_users
     WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_sr_user#">
 </cfquery>
+
 <cfif get_report.fk_pr_user NEQ ''>
     <cfquery name="get_place_rep" datasource="#application.dsn#">
         SELECT userid, firstname, lastname
@@ -177,6 +257,7 @@ function OpenLetter(url) {
     <cfset get_place_rep.lastname = 'Recorded'>
     <cfset get_place_rep.userid = ''>
 </cfif>
+
 <cfif get_report.fk_ra_user NEQ ''>
 	<cfquery name="get_advisor_for_rep" datasource="#application.dsn#">
 		SELECT userid, firstname, lastname
@@ -184,21 +265,25 @@ function OpenLetter(url) {
 		WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_ra_user#">
 	</cfquery>
 </cfif>
+
 <cfquery name="get_regional_director" datasource="#application.dsn#">
     SELECT userid, firstname, lastname
     FROM smg_users
     WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_rd_user#">
 </cfquery>
+
 <cfquery name="get_facilitator" datasource="#application.dsn#">
     SELECT userid, firstname, lastname
     FROM smg_users
     WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_ny_user#">
 </cfquery>
+
 <cfquery name="get_host_family" datasource="#application.dsn#">
     SELECT hostid, familylastname, fatherfirstname, motherfirstname
     FROM smg_hosts
     WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_host#">
 </cfquery>
+
 <cfquery name="get_international_rep" datasource="#application.dsn#">
     SELECT userid, businessname
     FROM smg_users
@@ -261,7 +346,7 @@ function OpenLetter(url) {
 	<Cfset show_save = 1>
 </cfif>
 <!----toggle Edit/save function---->
-<cfif form.pr_action is 'save'>
+<cfif FORM.pr_action is 'save'>
 	<cfset allow_save = 0>
 
 </cfif>
@@ -348,7 +433,7 @@ function OpenLetter(url) {
 
 <cfoutput>
 
-<cfif form.report_mode EQ 'view'>
+<cfif FORM.report_mode EQ 'view'>
 
 	<!--- this table is so the form is not 100% width. --->
     <table align="center">
@@ -387,76 +472,30 @@ function OpenLetter(url) {
 
 <center>
 <br />
+
 <h2>
-
-<cfif form.report_mode EQ 'print'>
-	<!--- the image isn't working on the PDF so put company name instead of image. --->
-	<cfif isDefined("form.pdf")>
-        <cfquery name="get_company" datasource="#application.dsn#">
-            SELECT companyname
-            FROM smg_companies
-            WHERE companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student.companyid#">
-        </cfquery>
-        #get_company.companyname#<br />
-    <cfelse>
-    	<img src="pics/logos/#get_student.companyid#.gif" align="left">
+	<cfif FORM.report_mode EQ 'print'>
+        
+		<!--- the image isn't working on the PDF so put company name instead of image. --->
+        <cfif isDefined("FORM.pdf")>
+            #CLIENT.companyname#<br />
+        <cfelse>
+            <img src="pics/logos/#get_student.companyid#.gif" align="left">
+        </cfif>
+        
+		#monthAsString(CLIENT.pr_rmonth)# Progress Report <br />
     </cfif>
-    Student Progress Report<br />
-</cfif>
-
-Student: #get_student.firstname# #get_student.familylastname# (#get_student.studentid#)<br>
-
-<cfswitch expression="#get_report.pr_month_of_report#">
-
-<cfcase value="9">
-   
-    <font size=-1>Due Sept 1st - includes information from Aug 1 through Aug 31</font>
-</cfcase>
-<cfcase value="10">
-   
-    <font size=-1>Due Oct 1st - includes information from Sept 1 through Sept 30</font>
-</cfcase>
-<cfcase value="11">
-   
-    <font size=-1>Due Nov 1st - includes information from Oct 1 through Oct 31</font>
-</cfcase>
-<cfcase value="12">
     
-    <font size=-1>Due Dec 1st - includes information from Nov 1 through Nov 30</font>
-</cfcase>
-<cfcase value="1">
+    Student: #get_student.firstname# #get_student.familylastname# (#get_student.studentid#)<br>
     
-    <font size=-1>Due Jan 1st - includes information from Dec 1 through Dec 31</font>
-</cfcase>
-<cfcase value="2">
-  
-    <font size=-1>Due Feb 1st - includes information from Jan 1 through Jan 31</font>
-</cfcase>
-<cfcase value="3">
-  
-    <font size=-1>Due Mar 1st - includes information from Feb 1 through Feb 28</font>
-</cfcase>
-<cfcase value="4">
-   
-    <font size=-1>Due April 1st - includes information from Mar 1 through Mar 31</font>
-</cfcase>
-<cfcase value="5">
-
-    <font size=-1>Due May 1st - includes information from Apr 1 through Apr 30</font>
-</cfcase>
-<cfcase value="6">
- 
-    <font size=-1>Due June 1st - includes information from May 1 through May  31</font>
-</cfcase>
-
-</cfswitch>
-    
+    <font size=-1>Due #monthAsString(CLIENT.pr_rmonth)# 1st - includes information from #DateFormat(vSetStartDate, 'mmm d')# through #DateFormat(vSetEndDate, 'mmm d')#</font>
 </h2>
+
 <br />
 
 <table cellpadding="2" cellspacing="0">
 
-<cfif form.report_mode EQ 'view' and client.usertype lt 8>
+<cfif FORM.report_mode EQ 'view' and CLIENT.usertype lt 8>
       <tr>
         <th bgcolor="cccccc" colspan="2">Status</th>
       </tr>
@@ -570,7 +609,7 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
     </td>
   </tr>
 
-<cfif form.report_mode EQ 'view'>
+<cfif FORM.report_mode EQ 'view'>
   <tr>
     <td colspan="2"><font size=-2>Each report must show monthly contact, including at least one bi-monthly In Person contact for both Host Family and Student.</font></td>
   </tr>
@@ -606,19 +645,20 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
         <table cellpadding="0" cellspacing="0" width="100%">
           <tr>
             <th> Contact for this Report</th>
-		<cfif allow_edit and form.report_mode EQ 'view'>
+		<cfif allow_edit and FORM.report_mode EQ 'view'>
             <td width="1">
 		        <!--- add contact date. --->
                 <form action="index.cfm?curdoc=forms/pr_date_form" method="post">
-                <input type="hidden" name="pr_id" value="#form.pr_id#">
-                <input name="Submit" type="image" src="pics/buttons/new23x23.png" alt="Add Contact Date" border=0>
+                    <input type="hidden" name="pr_id" value="#FORM.pr_id#">
+                    <input type="hidden" name="pr_rmonth" value="#FORM.pr_rmonth#">
+                    <input name="Submit" type="image" src="pics/buttons/new23x23.png" alt="Add Contact Date" border=0>
                 </form>
             </td>
 		</cfif>
           </tr>
         </table>
       </tr>
-    <cfif form.report_mode EQ 'view'>
+    <cfif FORM.report_mode EQ 'view'>
   <tr>
     <td colspan="2"><font size=-2>Each report must show monthly contact, including at least one bi-monthly In Person contact for both Host Family and Student.</font></td>
   </tr>
@@ -631,7 +671,7 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
     <cfelse>
         <table width="100%" cellpadding="3" cellspacing="0">
             <tr align="left">
-				<cfif allow_edit and form.report_mode EQ 'view'>
+				<cfif allow_edit and FORM.report_mode EQ 'view'>
                     <th>&nbsp;</th>
                     <th>&nbsp;</th>
                 </cfif>
@@ -643,13 +683,13 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
         <cfloop query="get_dates">
         
           <tr bgcolor="#iif(currentRow MOD 2 ,DE("ffffe6") ,DE("white") )#">
-			<cfif allow_edit and form.report_mode EQ 'view'>
+			<cfif allow_edit and FORM.report_mode EQ 'view'>
                 <td>
                 	<!--- delete contact date. --->
                     <form action="index.cfm?curdoc=progress_report_info" method="post" onclick="return confirm('Are you sure you want to delete this Contact Date?')">
                     <input type="hidden" name="pr_action" value="delete_date">
                     <input type="hidden" name="prdate_id" value="#prdate_id#">
-                    <input type="hidden" name="pr_id" value="#form.pr_id#">
+                    <input type="hidden" name="pr_id" value="#FORM.pr_id#">
                     <input name="Submit" type="image" src="pics/buttons/trash23x23.png" alt="Delete Contact Date" border=0>
                     </form>
                 </td>
@@ -690,7 +730,7 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
         <cfset questionList = #ListAppend(questionList, #x_pr_question_id#)#>
           <tr>
             <td>
-            	<cfif allow_edit and form.report_mode EQ 'view'>
+            	<cfif allow_edit and FORM.report_mode EQ 'view'>
 			        <!--- edit question.
                     <form action="index.cfm?curdoc=forms/pr_question_form" method="post">
                     <input type="hidden" name="x_pr_question_id" value="#x_pr_question_id#">
@@ -742,7 +782,7 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
 
 </center>
 
-<cfif form.report_mode EQ 'view'>
+<cfif FORM.report_mode EQ 'view'>
 
 	<!----End of Sizing Table---->
     </td>
@@ -809,7 +849,7 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
                 <cfif allow_save>
                     
                     <input type="hidden" name="pr_action" value="save">
-                    <input type="hidden" name="pr_id" value="#form.pr_id#">
+                    <input type="hidden" name="pr_id" value="#FORM.pr_id#">
                     <input name="Submit" type="image" src="pics/buttons/save50x58.png" alt="Approve Report" border=0>
                     
                 <cfelse>
@@ -827,7 +867,7 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
             <cfif not allow_save>
                 <form action="index.cfm?curdoc=progress_report_info" method="post" >
                 <input type="hidden" name="pr_action" value="edit">
-                <input type="hidden" name="pr_id" value="#form.pr_id#">
+                <input type="hidden" name="pr_id" value="#FORM.pr_id#">
                 <input name="Submit" type="image" src="pics/buttons/edit50x50.png" alt="Approve Report" border=0>
                 
             <cfelse>
@@ -848,7 +888,7 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
             <cfif allow_approve>
                 <form action="index.cfm?curdoc=progress_report_info" method="post" onclick="return confirm('Are you sure you want to approve this report?  You will no longer be able to edit this report after approval.')">
                 <input type="hidden" name="pr_action" value="approve">
-                <input type="hidden" name="pr_id" value="#form.pr_id#">
+                <input type="hidden" name="pr_id" value="#FORM.pr_id#">
                 <input name="Submit" type="image" src="pics/buttons/approve50x50.png" alt="Approve Report" border=0>
                 </form>
             <cfelse>
@@ -864,7 +904,7 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
             <cfif not allow_save>
 				<cfif allow_reject>
                     <form action="index.cfm?curdoc=forms/pr_reject" method="post">
-                    <input type="hidden" name="pr_id" value="#form.pr_id#">
+                    <input type="hidden" name="pr_id" value="#FORM.pr_id#">
                     <input name="Submit" type="image" src="pics/buttons/reject50x50.png" alt="Reject Report" border=0>
                     </form>
                 <cfelse>
@@ -881,7 +921,7 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
             <cfif allow_delete>
                 <form action="index.cfm?curdoc=progress_report_info" method="post" onclick="return confirm('Are you sure you want to delete this report?')">
                 <input type="hidden" name="pr_action" value="delete_report">
-                <input type="hidden" name="pr_id" value="#form.pr_id#">
+                <input type="hidden" name="pr_id" value="#FORM.pr_id#">
                 <input name="Submit" type="image" src="pics/buttons/deleteFolder50x55.png" alt="Delete Report" border=0>
                 </form>
             <cfelse>
@@ -895,21 +935,21 @@ Student: #get_student.firstname# #get_student.familylastname# (#get_student.stud
               <td>
                 <!--- print --->
                 <form action="progress_report_info.cfm" method="post" target="_blank">
-                <input type="hidden" name="pr_id" value="#form.pr_id#">
+                <input type="hidden" name="pr_id" value="#FORM.pr_id#">
                 <input type="hidden" name="report_mode" value="print">
                 <input name="Submit" type="image" src="pics/buttons/Print50x50.png" alt="Print Report" border=0>
                 </form>
-                <!---<A href="progress_report_info.cfm?pr_id=#form.pr_id#&report_mode=print" title="Print Report" target="_blank"><img src="pics/printer.gif" border=0 align="absmiddle"> Print</A>--->
+                <!---<A href="progress_report_info.cfm?pr_id=#FORM.pr_id#&report_mode=print" title="Print Report" target="_blank"><img src="pics/printer.gif" border=0 align="absmiddle"> Print</A>--->
               </td>
             <cfif CLIENT.usertype LTE 4>
                 
                 <td>
                     <!--- email --->
                     <form action="index.cfm?curdoc=forms/pr_email" method="post">
-                    <input type="hidden" name="pr_id" value="#form.pr_id#">
+                    <input type="hidden" name="pr_id" value="#FORM.pr_id#">
                     <input name="Submit" type="image" src="pics/buttons/email50x50.png" alt="Email Report" border=0>
                     </form>
-                    <!---<a href="javascript:OpenLetter('../nsmg/reports/email_progress_report.cfm?number=#form.pr_id#');" title="Email Progress Report"><img src="pics/email.gif" border="0" align="absmiddle"> Email</a>--->
+                    <!---<a href="javascript:OpenLetter('../nsmg/reports/email_progress_report.cfm?number=#FORM.pr_id#');" title="Email Progress Report"><img src="pics/email.gif" border="0" align="absmiddle"> Email</a>--->
                 </td>
             </cfif>
         </cfif>
