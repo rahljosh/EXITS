@@ -1,3 +1,16 @@
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		officeProgramStatistics.cfm
+	Author:		Marcus Melo
+	Date:		July 3, 2012
+	Desc:		Program Statistics
+				
+				#CGI.SCRIPT_NAME#?curdoc=report/index?action=officeProgramStatistics
+				
+	Updated: 			
+				
+----- ------------------------------------------------------------------------- --->
+
 <!--- Kill Extra Output --->
 <cfsilent>
 
@@ -114,7 +127,6 @@
 	<cfabort>
 </cfif>
 
-<!--- <cfif not isDefined('url.graphics')><cfset url.graphics = 'no'></cfif> --->
 <cfoutput>
 <span class="application_section_header">#companyshort.companyshort# Program Statistics</span><br />
 
@@ -125,15 +137,28 @@
             <cfloop query="qGetProgram">
             	&nbsp &nbsp <b>(#ProgramID#) &nbsp #programname# &nbsp (#programtype#)</b><br />
             </cfloop>
+            
             <cfif FORM.continent NEQ 0>
-            	&nbsp &nbsp Continent: &nbsp; <b>#FORM.continent#</b><br />
+            	&nbsp &nbsp 
+                Continent: &nbsp; <b>#FORM.continent#</b><br />
 			</cfif>
+            
             <cfif isDate(FORM.date_host_fam_approved)>
-            	&nbsp &nbsp Students placed by <b>#DateFormat(FORM.date_host_fam_approved, 'mm/dd/yyyy')#</b><br />
+            	&nbsp &nbsp 
+                Students placed by <b>#DateFormat(FORM.date_host_fam_approved, 'mm/dd/yyyy')#</b><br />
 			</cfif>
-            &nbsp &nbsp Active Students in Program(s) : &nbsp #qGetStudentsInProgram.recordCount#<br />
-            &nbsp &nbsp Placed : &nbsp #qGetPlacedStudents.recordCount# (#numberformat(evaluate((qGetPlacedStudents.recordCount/qGetStudentsInProgram.recordCount)*100),"___.__")#%) &nbsp;  <font size="-2" color="FF6633"> ( Approved Placements Only )</font><br />
-            &nbsp &nbsp Unplaced : &nbsp #qGetStudentsInProgram.recordCount - qGetPlacedStudents.recordCount# (#numberformat(evaluate(((qGetStudentsInProgram.recordCount - qGetPlacedStudents.recordCount)/qGetStudentsInProgram.recordCount)*100),"___.__")#%)<br />
+            
+            <cfif VAL(qGetStudentsInProgram.recordCount)>
+                &nbsp &nbsp 
+                
+                Active Students in Program(s) : &nbsp #qGetStudentsInProgram.recordCount#<br />
+                &nbsp &nbsp 
+                
+                Placed : &nbsp #qGetPlacedStudents.recordCount# (#numberformat((qGetPlacedStudents.recordCount/qGetStudentsInProgram.recordCount)*100,"___.__")#%) &nbsp;  <font size="-2" color="FF6633"> ( Approved Placements Only )</font><br />
+                &nbsp &nbsp 
+                
+                Unplaced : &nbsp #qGetStudentsInProgram.recordCount - qGetPlacedStudents.recordCount# (#numberformat(((qGetStudentsInProgram.recordCount - qGetPlacedStudents.recordCount)/qGetStudentsInProgram.recordCount)*100,"___.__")#%)<br />
+			</cfif>
     	</td>
 	</tr>
 </table>
