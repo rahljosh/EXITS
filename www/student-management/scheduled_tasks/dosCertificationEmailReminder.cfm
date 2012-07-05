@@ -13,6 +13,9 @@
 <!--- Kill Extra Output --->
 <cfsilent>
 	
+    <!--- Do not run task - New procedure in place --->
+    <cfabort>
+    
     <cfsetting requesttimeout="9999">
     
     <cfscript>
