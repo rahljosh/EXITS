@@ -223,18 +223,23 @@
         	received = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
     </cfquery>
     
-    <cfquery name="qGetSevisDates" datasource="#APPLICATION.DSN#">
+    <cfquery name="qGetSevisHistory" datasource="#APPLICATION.DSN#">
         SELECT 
-        	start_date, 
-            end_date
+        	his.start_date, 
+            his.end_date,
+            his.school_name,
+            his.hostID,
+            host.familyLastName
         FROM 
-        	smg_sevis_history
+        	smg_sevis_history his
+      	LEFT OUTER JOIN
+        	smg_hosts host ON host.hostID = his.hostID
         WHERE 
-        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
+        	his.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
         AND
-        	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+        	his.isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         ORDER BY 
-        	historyid DESC 
+        	his.historyid DESC 
     </cfquery>
     
     <!----Date of last phone contact---->
@@ -533,7 +538,7 @@
 				<a href="" onClick="javascript: win=window.open('virtualfolder/list_vfolder.cfm?unqid=#qGetStudentInfo.uniqueid#', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><cfif VAL(getVirtualFolder.recordcount)><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Virtual Folder</a>		
 				<a href="" onClick="javascript: win=window.open('forms/received_progress_reports.cfm?stuid=#qGetStudentInfo.studentID#', 'Reports', 'height=450, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A>  
                 <a href="student/index.cfm?action=flightInformation&uniqueID=#qGetStudentInfo.uniqueID#&programID=#qGetStudentInfo.programID#" class="jQueryModal">Flight Information</a>
-                <a href="" onClick="javascript: win=window.open('tours/trips.cfm', 'Settings', 'height=450, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Student Trips</a>
+                <a href="" onClick="javascript: win=window.open('tours/trips.cfm', 'Settings', 'height=450, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Student Trips</a>
 			</div>
 		</div>
 		</td>
@@ -945,12 +950,20 @@
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
-					<td>Start Date: &nbsp; <cfif qGetSevisDates.start_date NEQ ''>#DateFormat(qGetSevisDates.start_date, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
+					<td>Start Date: &nbsp; <cfif qGetSevisHistory.start_date NEQ ''>#DateFormat(qGetSevisHistory.start_date, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
-					<td>End Date: &nbsp; <cfif qGetSevisDates.end_date NEQ ''>#DateFormat(qGetSevisDates.end_date, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
-				</tr>				
+					<td>End Date: &nbsp; <cfif qGetSevisHistory.end_date NEQ ''>#DateFormat(qGetSevisHistory.end_date, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
+				</tr>
+                <tr>
+                	<td>&nbsp;</td>
+                    <td>Host Family: &nbsp; <cfif qGetSevisHistory.hostID NEQ 0>#qGetSevisHistory.familyLastName# ###qGetSevisHistory.hostID#<cfelse>#CLIENT.companyName#</cfif></td>
+                </tr>
+                <tr>
+                	<td>&nbsp;</td>
+                    <td>School: &nbsp; <cfif qGetSevisHistory.school_name NEQ ''>#qGetSevisHistory.school_name#<cfelse>n/a</cfif></td>
+                </tr>				
 			</table>
 		</td>
 		<td width="2%" valign="top">&nbsp;</td>
