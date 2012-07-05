@@ -1478,6 +1478,7 @@
         <cfargument name="statusID" type="string" default="" hint="statusID is not required">
         <cfargument name="dateFrom" type="string" default="" hint="dateFrom is not required">
         <cfargument name="dateTo" type="string" default="" hint="dateTo is not required">
+        <cfargument name="isAdWords" type="any" default="" hint="isAdWords is not required">
         
         <cfquery 
 			name="qGetHostLeadFollowUpReport" 
@@ -1500,6 +1501,7 @@
                     hl.hearAboutUs,
                     hl.hearAboutUsDetail,
                     hl.isListSubscriber,
+                    hl.isAdWords,
                     DATE_FORMAT(hl.dateCreated, '%m/%e/%Y') as dateCreated,
                     DATE_FORMAT(hl.dateLastLoggedIn, '%m/%e/%Y') as dateLastLoggedIn,
                     <!--- Follow Up Representative --->
@@ -1547,6 +1549,11 @@
                             hl.dateLastLoggedIn IS NOT NULL	
                         )
                 </cfif>
+                
+                <cfif LEN(ARGUMENTS.isAdWords)>
+                	AND
+                    	hl.isAdWords = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isAdWords#">
+                </cfif>
 
 				<cfif CLIENT.companyID NEQ 5>
                     AND
@@ -1574,7 +1581,84 @@
 		</cfquery>
 		   
 		<cfreturn qGetHostLeadFollowUpReport>
-	</cffunction>    
+	</cffunction>
+    
+    
+    <cffunction name="getHostLeadsList" access="public" returntype="query" output="false" hint="Gets host leads report">
+        <cfargument name="dateFrom" type="string" default="" hint="dateFrom is not required">
+        <cfargument name="dateTo" type="string" default="" hint="dateTo is not required">
+        <cfargument name="isAdWords" type="any" default="" hint="isAdWords is not required">
+        
+        <cfquery 
+			name="qGetHostLeadFollowUpReport" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+					hl.ID,
+                    hl.hashID,
+                    hl.statusID,
+                    hl.followUpID,
+                    hl.regionID,
+                    hl.areaRepID,
+                    hl.firstName,
+                    hl.lastName,
+                    hl.address,
+                    hl.address2,
+                    hl.city,
+                    hl.zipCode,
+                    hl.phone,
+                    hl.email,
+                    hl.hearAboutUs,
+                    hl.hearAboutUsDetail,
+                    hl.isListSubscriber,
+                    hl.isAdWords,
+                    DATE_FORMAT(hl.dateCreated, '%m/%e/%Y') as dateCreated,
+                    DATE_FORMAT(hl.dateLastLoggedIn, '%m/%e/%Y') as dateLastLoggedIn,
+                    st.state,
+                    r.regionName AS regionAssigned,
+                    CONCAT(u.firstName, ' ', u.lastName) AS areaRepAssigned,
+                    alk.name AS statusAssigned
+                FROM 
+                    smg_host_lead hl    
+                LEFT OUTER JOIN
+                	smg_states st ON st.id = hl.stateID
+                LEFT OUTER JOIN
+                	smg_regions r ON r.regionID = hl.regionID
+                LEFT OUTER JOIN
+                	smg_users u ON u.userID = hl.areaRepID    
+                LEFT OUTER JOIN
+                	applicationLookUp alk ON alk.fieldID = hl.statusID 
+                    	AND 
+                            alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="hostLeadStatus">
+                WHERE
+                	hl.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+
+                <cfif isDate(ARGUMENTS.dateFrom)>
+                	AND 
+                        hl.dateCreated >= <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateFrom#">
+                </cfif>
+                
+                <cfif isDate(ARGUMENTS.dateTo)>
+                	AND
+                    	hl.dateCreated <= <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateTo#">
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.isAdWords)>
+                	AND
+                    	hl.isAdWords = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isAdWords#">
+                </cfif>
+
+				<cfif CLIENT.companyID NEQ 5>
+                    AND
+                        r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                </cfif>
+                
+                ORDER BY
+                    hl.dateCreated DESC,
+                    hl.lastName
+		</cfquery>
+        
+        <cfreturn qGetHostLeadFollowUpReport>
+	</cffunction>   
 
 	<!--- ------------------------------------------------------------------------- ----
 		

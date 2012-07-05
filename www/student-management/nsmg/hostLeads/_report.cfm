@@ -61,7 +61,6 @@
                 
                 // Get Report
                 qGetHostLeadsReport = APPLICATION.CFC.HOST.getHostLeadFollowUpReport( 
-                	followUpID=FORM.followUpID,
 					regionID=FORM.regionID,
 					statusID=FORM.statusID,
                     dateFrom=FORM.dateFrom,
@@ -177,7 +176,35 @@
 			
 			</td>
 
-			<td width="50%" valign="top">&nbsp;
+			<td width="50%" valign="top">
+            
+            	<form action="index.cfm?curdoc=hostLeads/index&action=leadList" method="post">
+					
+					<table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
+						<tr><th colspan="2" bgcolor="##e2efc7">Host Lead List</th></tr>
+						<tr><td colspan="2">Including Period Below (Received Date)</td></tr>
+						<tr>
+							<td>From:</td>
+							<td><input type="text" name="dateFrom" value="#DateFormat(FORM.dateFrom, 'mm/dd/yyyy')#" size="7" maxlength="10" class="datePicker"> mm-dd-yyyy</td>
+						</tr>
+						<tr>
+							<td>To: </td>
+							<td><input type="text" name="dateTo" value="#DateFormat(FORM.dateTo, 'mm/dd/yyyy')#" size="7" maxlength="10" class="datePicker"> mm-dd-yyyy</td>
+						</tr>
+                        <tr>
+                        	<td>Google Adwords Leads: </td>
+                        	<td>
+                            	<select name="adwords" id="adwords" class="smallField">
+									<option value="">All</option>
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
+								</select>
+                            </td>
+                        </tr>
+						<tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
+					</table>
+					
+				</form>
 				
 			</td>
 			
