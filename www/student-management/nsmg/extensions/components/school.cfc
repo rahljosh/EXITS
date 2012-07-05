@@ -221,7 +221,7 @@
             </cfquery>
             
             <!--- Sent out Notification --->
-            <cfif qGetApprovedStudents.recordCount EQ 5>
+            <cfif qGetApprovedStudents.recordCount GTE 5>
 
 				<!--- Email Template --->
                 <cfsavecontent variable="vEmailSchoolNotification">
@@ -266,7 +266,13 @@
                                             <td>#qGetStudentsAssignedToSchool.studentInformation#</td>
                                             <td>#qGetStudentsAssignedToSchool.programName#</td>
                                             <td>#qGetStudentsAssignedToSchool.regionName#</td>
-                                            <td>#DateFormat(qGetStudentsAssignedToSchool.datePlaced, 'mm/dd/yyyy')#</td>
+                                            <td>
+                                            	<cfif isDate(qGetStudentsAssignedToSchool.datePlaced)>
+                                                	#DateFormat(qGetStudentsAssignedToSchool.datePlaced, 'mm/dd/yyyy')#
+                                                <cfelse>
+                                                	n/a
+                                                </cfif>
+                                            </td>
                                             <td>
                                             	<cfif listFind("1,2,3,4", qGetStudentsAssignedToSchool.host_fam_approved)>
                                                 	Approved
@@ -283,7 +289,7 @@
                      </cfoutput>                
                 </cfsavecontent>
                 
-                <!--- Email Placing Representative and Regional Manager --->
+                <!--- Email Compliance --->
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
                 	<cfinvokeargument name="email_from" value="#CLIENT.support_email#">
                     <cfinvokeargument name="email_to" value="#vEmailTo#">

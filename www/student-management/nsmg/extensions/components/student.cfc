@@ -1906,18 +1906,22 @@
 	            	WHERE
     					studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
 			</cfquery>
-            
-			<cfscript>
-				// Send Out School Notification when school reaches 5 students
+
+        </cfif>
+        
+        <cfscript>
+			// Send Out School Notification when school reaches 5 students | New Placement or School Update
+			if ( ARGUMENTS.placementStatus EQ 'Unplaced' OR VAL(vHasSchoolIDChanged) ) {
+				
 				APPLICATION.CFC.SCHOOL.complianceSchoolNotification(	
 					studentID=ARGUMENTS.studentID, 
 					schoolID=ARGUMENTS.schoolID, 
 					startDate=qGetStudentInfo.startDate, 
 					endDate=qGetStudentInfo.endDate
 				);
-			</cfscript>
-
-        </cfif>
+				
+			}
+		</cfscript>
         
 	</cffunction>
 
