@@ -22,7 +22,7 @@
 <cfquery name="get_dpt" datasource="MySql">
 	SELECT vaccineid, studentid, vaccine, disease, shot1, shot2, shot3, shot4, shot5, booster
 	FROM smg_student_app_shots
-	WHERE vaccine = 'dpt/dt' AND studentid = '#get_student_info.studentid#'
+	WHERE vaccine = 'DTaP' AND studentid = '#get_student_info.studentid#'
 </cfquery>
 
 <cfquery name="get_topv" datasource="MySql">

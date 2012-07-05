@@ -50,7 +50,7 @@ function NextPage() {
 <cfquery name="get_dpt" datasource="MySql">
 	SELECT vaccineid, studentid, vaccine, disease, shot1, shot2, shot3, shot4, shot5, booster
 	FROM smg_student_app_shots
-	WHERE vaccine = 'dpt/dt' AND studentid = '#get_student_info.studentid#'
+	WHERE vaccine = 'DTaP' AND studentid = '#get_student_info.studentid#'
 </cfquery>
 
 <cfquery name="get_topv" datasource="MySql">
@@ -149,7 +149,7 @@ function NextPage() {
 	<tr><td align="center"><b>IMMUNIZATIONS</b></td><td colspan="6" align="center"><b>DATES (mm/dd/yyyy)</b></td></tr>
 	<!--- DTaP --->
 	<cfif get_dpt.recordcount EQ 0> <!--- DTaP has not been entered --->
-		<cfinput type="hidden" name="new_dpt" value="DTaP/DT">
+		<cfinput type="hidden" name="new_dpt" value="DTaP">
 	<cfelse>
 		<cfinput type="hidden" name="upd_dpt" value="#get_dpt.vaccineid#">
 	</cfif>

@@ -4,7 +4,7 @@
 </cfif>
 
 <cftransaction action="begin" isolation="serializable">
-	<cftry>
+	
 
 	<!--- NEW DTaP-DT --->
 	<cfif IsDefined('form.new_dpt')>
@@ -186,8 +186,4 @@
 	</head>
 	</html>
 
-	<cfcatch type="any">
-		<cfinclude template="../email_error.cfm">
-	</cfcatch>
-	</cftry>
 </cftransaction>
