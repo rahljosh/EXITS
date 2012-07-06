@@ -81,11 +81,11 @@
                 ec.intrep, 
                 ec.wat_placement,
                 ec.email,
-                ecpc.jobID AS jobTitleID,
+                ecpc.jobID AS jobTitleID,  
                 ej.title AS jobTitle,
-                ehc.name, 
-                ehc.city,
-                ss.state,                
+                ehc.name AS hostCompanyName, 
+                ehc.city AS hostCompanyCity,
+                ss.state AS hostCompanyState,                
                 u.businessName
             FROM
                 extra_candidates ec
@@ -95,6 +95,10 @@
                 	ec.hostcompanyid = ecpc.hostCompanyID
 				AND 
                     ecpc.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+               	<cfif FORM.placementType EQ "primary">
+                	AND
+                    	ecpc.isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                </cfif>
             LEFT JOIN
             	extra_jobs ej ON ej.id = ecpc.jobID
             LEFT JOIN 
@@ -371,34 +375,38 @@
 				</cfif>
                 <cfloop query="qTotalPerAgent">
                 
-                	<cfquery name="qGetAllPlacements" datasource="MySql">
-                    	SELECT
-                        	ecpc.hostCompanyID,
-                            ecpc.jobID,
-                            h.name,
-                            h.city,
-                            s.state,
-                            ej.title AS jobTitle
-                       	FROM
-                        	extra_candidate_place_company ecpc
-                       	INNER JOIN
-                        	extra_hostCompany h ON h.hostCompanyID = ecpc.hostCompanyID
-                       	INNER JOIN
-                        	smg_states s ON s.id = h.state
-                      	LEFT JOIN
-                        	extra_jobs ej ON ej.ID = ecpc.jobID
-                       	WHERE
-                        	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qTotalPerAgent.candidateID#">
-                       	AND
-                        	status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                      	<cfif FORM.placementType EQ "primary">
-                        	AND
-                            	isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-                     	<cfelseif FORM.placementType EQ "secondary">
-                        	AND
-                            	isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                       	</cfif>
-                    </cfquery>
+                	<cfif FORM.placementType NEQ "primary">
+                
+                        <cfquery name="qGetAllPlacements" datasource="MySql">
+                            SELECT
+                                ecpc.hostCompanyID,
+                                ecpc.jobID,
+                                h.name,
+                                h.city,
+                                s.state,
+                                ej.title AS jobTitle
+                            FROM
+                                extra_candidate_place_company ecpc
+                            INNER JOIN
+                                extra_hostCompany h ON h.hostCompanyID = ecpc.hostCompanyID
+                            INNER JOIN
+                                smg_states s ON s.id = h.state
+                            LEFT JOIN
+                                extra_jobs ej ON ej.ID = ecpc.jobID
+                            WHERE
+                                candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qTotalPerAgent.candidateID#">
+                            AND
+                                status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                            <cfif FORM.placementType EQ "primary">
+                                AND
+                                    isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                            <cfelseif FORM.placementType EQ "secondary">
+                                AND
+                                    isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                            </cfif>
+                        </cfquery>
+                	
+                    </cfif>
                 
                     <tr <cfif qTotalPerAgent.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>                    
                         <td class="style1">
@@ -422,24 +430,43 @@
                         <td class="style1">#DateFormat(qTotalPerAgent.enddate, 'mm/dd/yyyy')#</td>
                         <td class="style1" colspan="4">
                         	<table width="100%">
-                                <cfloop query="qGetAllPlacements">
+                            	<cfif FORM.placementType NEQ "primary">
+                                    <cfloop query="qGetAllPlacements">
+                                        <tr>
+                                            <td width="50%">
+                                                <a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qGetAllPlacements.hostCompanyID#"  target="_blank" class="style4">
+                                                    #qGetAllPlacements.name#
+                                                </a>
+                                            </td>
+                                            <td width="24%">
+                                                #qGetAllPlacements.jobTitle#
+                                            </td>
+                                            <td width="13">
+                                                #qGetAllPlacements.city#
+                                            </td>
+                                            <td width="13%">
+                                                #qGetAllPlacements.state#
+                                            </td>
+                                        </tr>
+                                    </cfloop>
+                               	<cfelse>
                                 	<tr>
                                         <td width="50%">
-                                        	<a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qGetAllPlacements.hostCompanyID#"  target="_blank" class="style4">
-                                            	#qGetAllPlacements.name#
-                                           	</a>
-                                      	</td>
-                                     	<td width="24%">
-                                        	#qGetAllPlacements.jobTitle#
-                                      	</td>
+                                            <a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qTotalPerAgent.hostCompanyID#"  target="_blank" class="style4">
+                                                #qTotalPerAgent.hostCompanyName#
+                                            </a>
+                                        </td>
+                                        <td width="24%">
+                                            #qTotalPerAgent.jobTitle#
+                                        </td>
                                         <td width="13">
-                                        	#qGetAllPlacements.city#
-                                     	</td>
+                                            #qTotalPerAgent.hostCompanyCity#
+                                        </td>
                                         <td width="13%">
-                                        	#qGetAllPlacements.state#
-                                      	</td>
-                                 	</tr>
-                                </cfloop>
+                                            #qTotalPerAgent.hostCompanyState# 
+                                        </td>
+                                    </tr>
+                               	</cfif>
                           	</table>
                         </td>
                         <td class="style1">#qTotalPerAgent.ds2019#</td>
