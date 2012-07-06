@@ -140,11 +140,13 @@ where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.stuid#">
                 <th>Rejected</th>
             </cfif>
         </tr>
+        
         <cfoutput query="get_progress_reports">
             <tr bgcolor="#iif(currentRow MOD 2 ,DE("ffffe6") ,DE("white") )#">
                 <td>
                     <form action="../index.cfm?curdoc=progress_report_info" method="post" name="theForm_#pr_id#" id="theForm_#pr_id#" target="_blank">
                         <input type="hidden" name="pr_id" value="#pr_id#">
+                        <input type="hidden" name="pr_rmonth" value="#get_progress_reports.pr_month_of_report#" />
                     </form>
                 
 					<!--- restrict view of report until the supervising rep approves it.
@@ -290,7 +292,7 @@ where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.stuid#">
         
         <cfoutput>
         <Form method="post" action="received_progress_reports.cfm?stuid=#url.stuid#">
-        <input type="hidden" name="addReportNow" />
+        <input type="hidden" name="addReportNow" />        
         <table>
         	<Tr>
             	<Td>Second Visit Rep ID:</Td><td> <input type="text" name="secondVisitRepID" size=5/></td>
