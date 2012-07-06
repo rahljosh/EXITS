@@ -19,13 +19,12 @@
     <cfparam name="vSetDueDate" default="">
 
     <cfparam name="FORM.pr_action" default="">
+    <cfparam name="FORM.pr_rmonth" default="">
     <cfparam name="CLIENT.pr_rmonth" default="">
     
     <cfscript>
 		if ( VAL(FORM.pr_rmonth) ) {
 			CLIENT.pr_rmonth = FORM.pr_rmonth;
-		} else {
-			FORM.pr_rmonth = CLIENT.pr_rmonth;
 		}
 		
 		questionList = '';
