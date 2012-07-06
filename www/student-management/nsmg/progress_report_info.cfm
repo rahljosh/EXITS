@@ -21,8 +21,15 @@
     <cfparam name="FORM.pr_action" default="">
     <cfparam name="CLIENT.pr_rmonth" default="">
     
-    <cfset questionList = ''>
-    <cfset FORM.pr_rmonth = CLIENT.pr_rmonth>
+    <cfscript>
+		if ( VAL(FORM.pr_rmonth) ) {
+			CLIENT.pr_rmonth = FORM.pr_rmonth;
+		} else {
+			FORM.pr_rmonth = CLIENT.pr_rmonth;
+		}
+		
+		questionList = '';
+	</cfscript>
 
 </cfsilent>
 
@@ -194,6 +201,11 @@ function OpenLetter(url) {
     FROM progress_reports
     WHERE pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
 </cfquery>
+
+<cfif NOT VAL(CLIENT.pr_rmonth)>
+	<cfset CLIENT.pr_rmonth = get_report.pr_month_of_report>
+</cfif>
+
 <cfquery name="get_dates" datasource="#application.dsn#">
     SELECT progress_report_dates.*, prdate_types.prdate_type_name, prdate_contacts.prdate_contact_name
     FROM progress_report_dates
