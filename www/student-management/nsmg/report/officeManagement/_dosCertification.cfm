@@ -55,6 +55,8 @@
                 	user_access_rights uar ON uar.userID = u.userID
                     AND
                         uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> )
+                    AND
+                    	uar.userType IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,6,7" list="yes"> )
                	INNER JOIN
                 	smg_regions r ON r.regionID = uar.regionID
               	INNER JOIN
@@ -64,6 +66,8 @@
                         AND
                         	t.training_ID = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
                    		AND
+                        	t.has_passed = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                        AND
 							<cfif ListFind("7,8,9,10,11,12", Month(Now()))>
                                 t.date_trained > <cfqueryparam cfsqltype="cf_sql_date" value="#CreateDate(Year(Now()),06,30)#">
                             <cfelse>
@@ -210,7 +214,7 @@
                     <td>First Name</td>
                     <td>Last Name</td>
                     <td>User Type</td>
-                    <td>Date of Test</td>
+                    <td>Date</td>
                 </tr>
                 
                 <cfscript>
@@ -310,7 +314,7 @@
                         <td class="subTitleLeft" width="15%">First Name</td>
                         <td class="subTitleLeft" width="15%">Last Name</td>
                         <td class="subTitleLeft" width="40%">User Type</td>
-                        <td class="subTitleLeft" width="20%">Date of Test</td>
+                        <td class="subTitleLeft" width="20%">Date</td>
                   	</tr>
                   
                     <cfloop query="qGetResultsInRegion">
