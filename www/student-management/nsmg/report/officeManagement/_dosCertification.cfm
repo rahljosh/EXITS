@@ -61,17 +61,24 @@
                 	smg_userType ut ON ut.userTypeID = uar.userType
                	LEFT OUTER JOIN
                 	smg_users_training t ON t.user_id = u.userID
-                    	AND	
-                        	t.company_ID = uar.companyID
                         AND
                         	t.training_ID = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
                    		AND
 							<cfif ListFind("7,8,9,10,11,12", Month(Now()))>
-                                t.date_trained > <cfqueryparam cfsqltype="cf_sql_date" value="#CreateDate(Year(Now()),7,1)#">
+                                t.date_trained > <cfqueryparam cfsqltype="cf_sql_date" value="#CreateDate(Year(Now()),06,30)#">
                             <cfelse>
                             	<!--- Set deadline to 07/01 of previous year --->
-                            	t.date_trained > <cfqueryparam cfsqltype="cf_sql_date" value="#CreateDate(Year(Now())-1,7,1)#">
+                            	t.date_trained > <cfqueryparam cfsqltype="cf_sql_date" value="#CreateDate(Year(Now())-1,6,30)#">
                             </cfif>
+
+						<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                            AND          
+                                t.company_ID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                        <cfelse>
+                            AND          
+                                t.company_ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                        </cfif>
+                            
               	WHERE
                 <!--- Get Active and Fully Enabled --->
                     u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
@@ -95,7 +102,7 @@
                 	u.lastName,
                     u.firstName
             </cfquery>
-        
+                    
         </cfif>
     
     </cfif>
@@ -271,9 +278,12 @@
                 <!--- This query is used to make sure we always display the name of the region even if there are not any records there --->
                 <cfquery name="qGetRegion" datasource="#APPLICATION.DSN#">
                 	SELECT
-                    	*
+                    	r.regionID,
+                        r.regionName
                    	FROM
-                    	smg_regions
+                    	smg_regions r
+                    INNER JOIN
+                    	smg_companies c ON c.companyID = r.company
                   	WHERE
                     	regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#iRegionID#">
                 </cfquery>
@@ -289,8 +299,11 @@
                 
                 <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                 	<tr>
-                    	<th class="left" colspan="4">#qGetRegion.regionName#</th>
-                        <th class="right">#qGetResultsInRegion.recordCount# Total Users</th>
+                    	<th class="left" colspan="4">
+                        	<cfif CLIENT.companyID EQ 5>#qGetRegionList.companyShort# -</cfif>
+                        	#qGetRegion.regionName#                        
+                        </th>
+                        <th class="right">#qGetResultsInRegion.recordCount# Users</th>
                     </tr>
                     <tr class="on">
                         <td class="subTitleLeft" width="10%">ID</td>
@@ -328,10 +341,15 @@
                 
             </cfloop>
             
+            <!--- Total --->
+            <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                <tr>
+                    <th class="left" colspan="4">Total</th>
+                    <th class="right">#qGetResults.recordcount#</th>
+                </tr>
+            </table>
+                                    
       	</cfoutput>
-        
-        <br />
-        <br />
         
   	</cfif>
 
