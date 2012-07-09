@@ -199,9 +199,12 @@
 				ArrayAppend(Errors.Messages, "Please select a program.");
 			}
 			
+			// Not requiring Canada Area
+			/***
 			if ( ListFind(canadaIDList, FORM.app_indicated_program) AND NOT VAL(FORM.app_canada_area) ) {
 				ArrayAppend(Errors.Messages, "Please select an area in Canada.");
 			}
+			***/
 		</cfscript>
     
 		<!--- Check if there are no errors --->
