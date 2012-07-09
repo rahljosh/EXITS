@@ -365,8 +365,9 @@
                         // Set Total Placed and Percentage
                         vCurrentRowPlacecement = stGetStatisticsPerRegion.totalPlaced + stGetStatisticsPerRegion.totalPending;
                         
-                        if ( VAL(qGetResults.allocation) ) {
-                            vCurrentRowPercentage = ( vCurrentRowPlacecement / qGetResults.allocation ) * 100;
+                        if ( VAL(stGetStatisticsPerRegion.totalStudents) ) { //VAL(qGetResults.allocation)
+                            vCurrentRowPercentage = ( vCurrentRowPlacecement / stGetStatisticsPerRegion.totalStudents ) * 100;
+							//vCurrentRowPercentage = ( vCurrentRowPlacecement / qGetResults.allocation ) * 100;
                         }
                             
                         // Calculate Division Summary
@@ -392,8 +393,9 @@
                             vGreatLakesSummaryPlacement = vGreatLakesSummaryPlaced + vGreatLakesSummaryPending;
                             vGreatLakesSummaryAllocation += VAL(qGetResults.allocation);
                             
-                            if ( VAL(vGreatLakesSummaryAllocation) ) {
-                                vGreatLakesSummaryPercentage = ( vGreatLakesSummaryPlacement / vGreatLakesSummaryAllocation ) * 100;
+                            if ( VAL(vGreatLakesSummaryAssigned) ) { //
+                                vGreatLakesSummaryPercentage = ( vGreatLakesSummaryPlacement / vGreatLakesSummaryAssigned ) * 100;
+								// vGreatLakesSummaryPercentage = ( vGreatLakesSummaryPlacement / vGreatLakesSummaryAllocation ) * 100;
                             }
                             
                         }
@@ -445,14 +447,16 @@
 
                     vDivisionSummaryPlacement = vDivisionSummaryPlaced + vDivisionSummaryPending;
                     
-                    if ( VAL(vDivisionSummaryAllocation) ) {
-                        vDivisionSummaryPercentage = ( vDivisionSummaryPlacement / vDivisionSummaryAllocation ) * 100;
+                    if ( VAL(vDivisionSummaryAssigned) ) { // VAL(vDivisionSummaryAllocation)
+                        vDivisionSummaryPercentage = ( vDivisionSummaryPlacement / vDivisionSummaryAssigned ) * 100;
+						//vDivisionSummaryPercentage = ( vDivisionSummaryPlacement / vDivisionSummaryAllocation ) * 100;
                     }		
                     
                     vSummaryPlacement = vSummaryPlaced + vSummaryPending;
                     
-                    if ( VAL(vSummaryAllocation) ) {
-                        vSummaryPercentage = ( vSummaryPlacement / vSummaryAllocation ) * 100;
+                    if ( VAL(vDivisionSummaryAssigned) ) { // VAL(vSummaryAllocation)
+						vSummaryPercentage = ( vSummaryPlacement / vDivisionSummaryAssigned ) * 100;
+                        //vSummaryPercentage = ( vSummaryPlacement / vSummaryAllocation ) * 100;
                     }				
                 </cfscript>
                 
@@ -545,8 +549,9 @@
 						// Set Total Placed and Percentage
 						vCurrentRowPlacecement = stGetStatisticsPerRegion.totalPlaced + stGetStatisticsPerRegion.totalPending;
 						
-						if ( VAL(qGetResults.allocation) ) {
-							vCurrentRowPercentage = ( vCurrentRowPlacecement / qGetResults.allocation ) * 100;
+						if ( VAL(stGetStatisticsPerRegion.totalStudents) ) { // VAL(qGetResults.allocation)
+							vCurrentRowPercentage = ( vCurrentRowPlacecement / stGetStatisticsPerRegion.totalStudents ) * 100;
+							//vCurrentRowPercentage = ( vCurrentRowPlacecement / qGetResults.allocation ) * 100;
 						}
 							
 						// Calculate Division Summary
@@ -572,8 +577,9 @@
 							vGreatLakesSummaryPlacement = vGreatLakesSummaryPlaced + vGreatLakesSummaryPending;
 							vGreatLakesSummaryAllocation += VAL(qGetResults.allocation);
 							
-							if ( VAL(vGreatLakesSummaryAllocation) ) {
-								vGreatLakesSummaryPercentage = ( vGreatLakesSummaryPlacement / vGreatLakesSummaryAllocation ) * 100;
+							if ( VAL(vGreatLakesSummaryAssigned) ) { // VAL(vGreatLakesSummaryAllocation)
+								vGreatLakesSummaryPercentage = ( vGreatLakesSummaryPlacement / vGreatLakesSummaryAssigned ) * 100;
+								// vGreatLakesSummaryPercentage = ( vGreatLakesSummaryPlacement / vGreatLakesSummaryAllocation ) * 100;
 							}
 							
 						}
@@ -623,14 +629,16 @@
 					
 					vDivisionSummaryPlacement = vDivisionSummaryPlaced + vDivisionSummaryPending;
 					
-					if ( VAL(vDivisionSummaryAllocation) ) {
-						vDivisionSummaryPercentage = ( vDivisionSummaryPlacement / vDivisionSummaryAllocation ) * 100;
+					if ( VAL(vDivisionSummaryAssigned) ) { // VAL(vDivisionSummaryAllocation)					
+						vDivisionSummaryPercentage = ( vDivisionSummaryPlacement / vDivisionSummaryAssigned ) * 100;
+						//vDivisionSummaryPercentage = ( vDivisionSummaryPlacement / vDivisionSummaryAllocation ) * 100;						
 					}		
 					
 					vSummaryPlacement = vSummaryPlaced + vSummaryPending;
 					
-					if ( VAL(vSummaryAllocation) ) {
-						vSummaryPercentage = ( vSummaryPlacement / vSummaryAllocation ) * 100;
+					if ( VAL(vSummaryAssigned) ) { // VAL(vSummaryAllocation)
+						vSummaryPercentage = ( vSummaryPlacement / vSummaryAssigned ) * 100;
+						//vSummaryPercentage = ( vSummaryPlacement / vSummaryAllocation ) * 100;
 					}				
 				</cfscript>
                 
