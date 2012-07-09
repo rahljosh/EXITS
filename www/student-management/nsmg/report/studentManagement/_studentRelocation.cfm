@@ -318,156 +318,166 @@
     <!--- On Screen Report --->
     <cfelse>
     
-        <cfoutput>
-        
-			<!--- Run Report --->
-            <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                <tr>
-                    <th>#vReportTitle#</th>            
-                </tr>
-                <tr>
-                    <td class="center">
-                        Program(s) included in this report: <br />
-                        <cfloop query="qGetPrograms">
-                            #qGetPrograms.programName# <br />
-                        </cfloop>
-                        
-                        <cfif isDate(FORM.placedDateFrom) AND isDate(FORM.placedDateTo)>
-                            Placed From #FORM.placedDateFrom# to #FORM.placedDateTo# <br />
-                        </cfif>
-                    </td>
-                </tr>
-            </table><br />
-            
-        </cfoutput>
-                
-		<!--- Loop Regions ---> 
-        <cfloop query="qGetRegions">
-        
-			<cfscript>
-                // Get Regional Manager
-               	qGetRegionalManager = APPLICATION.CFC.USER.getRegionalManager(regionID=qGetRegions.regionID);
-            </cfscript>
+    	<cfdocument format="flashpaper" orientation="landscape" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
     
-            <cfquery name="qGetStudentsInRegion" dbtype="query">
-                SELECT
-                    *
-                FROM
-                    qGetResults
-                WHERE
-                    regionAssigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegions.regionID#">               
-            </cfquery>
+			<!--- Page Header --->
+            <gui:pageHeader
+                headerType="applicationNoHeader"
+                filePath="../"
+            />
+    
+			<cfoutput>
             
-            <!--- Only display if there are records in this region --->
-            <cfif VAL(qGetStudentsInRegion.recordCount)>
-            
-				<cfoutput>
-                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                        <tr>
-                            <th class="left" colspan="3">#qGetRegions.regionName# Region - #qGetRegionalManager.firstName# #qGetRegionalManager.lastName# (###qGetRegionalManager.userID#)</th>
-                            <th class="right">#qGetStudentsInRegion.recordCount#</th>
-                        </tr>      
-                        <tr class="on">
-                            <td class="subTitleLeft" width="20%">Student</td>
-                            <td class="subTitleLeft" width="20%">Host Family</td>
-                            <td class="subTitleLeft" width="20%">Date Of Change</td>
-                            <td class="subTitleLeft" width="40%">Reason</td>
-                        </tr>  
-                </cfoutput>
-                
-                <cfscript>
-					// Set Current Row
-					vCurrentRow = 0;			
-				</cfscript>
-                
-                <cfoutput query="qGetStudentsInRegion">      
-                        
-					<cfscript>
-						vCurrentRow++;
-					</cfscript>
-                    
-                    <cfquery name="qGetPrevHF" datasource="#APPLICATION.DSN#">
-                    	SELECT 
-                        	hist.hostid, 
-                            hist.reason, 
-                            hist.dateofchange, 
-                            h.familylastname,
-							u.firstname, 
-                            u.lastname, 
-                            u.userid
-						FROM 
-                        	smg_hosthistory hist
-                        LEFT JOIN 
-                        	smg_hosts h ON hist.hostid = h.hostid
-                        LEFT JOIN 
-                        	smg_users u ON hist.changedby = u.userid
-						WHERE 
-                        	hist.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentsInRegion.studentid#">
-						AND 
-                        	isRelocation = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-						ORDER BY 
-                        	hist.dateofchange DESC, 
-                            hist.historyid DESC
-                    </cfquery>
-                    
-                    <cfquery name="qGetCurrentHF" datasource="#APPLICATION.DSN#">
-                 		SELECT 
-                            h.familylastname,
-                            s.hostid
-						FROM 
-                        	smg_students s
-						LEFT JOIN 
-                        	smg_hosts h ON s.hostid = h.hostid
-						WHERE 
-                        	s.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentsInRegion.studentid#">
-                    </cfquery>
-                        
-                    <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
-                        <td>#qGetStudentsInRegion.firstName# #qGetStudentsInRegion.familyLastName# (###qGetStudentsInRegion.studentID#)</td>
-                        <td colspan="3">
-                        	<table width="100%">
-                            	<cfscript>
-									i = 0;
-								</cfscript>
-								<cfloop query="qGetPrevHF">
-									<cfscript>
-										i++;
-									</cfscript>
-                                    <tr>
-                                    	<td width="25%">
-											PREVIOUS #i#: #qGetPrevHF.familyLastName#
-                                       	</td>
-                                        <td width="25%">
-                                        	#DateFormat(qGetPrevHF.dateOfChange, "mm/dd/yyyy")# By #qGetPrevHF.firstName# #qGetPrevHF.lastName# (###qGetPrevHF.userID#)
-                                        </td>
-                                        <td width="50%">
-                                        	#qGetPrevHF.reason#
-                                  		</td>
-                                   	</tr> 
-								</cfloop>
-                                <tr>
-                                	<td colspan="3">
-                                    	<cfif VAL(qGetCurrentHF.recordCount)>
-                                            CURRENT: #qGetCurrentHF.familyLastName#
-                                        <cfelse>
-                                            CURRENT: THIS STUDENT IS CURRENTLY UNPLACED
-                                        </cfif>
-                                    </td>
-                                </tr>
-                            </table>
-                       	</td>
+                <!--- Run Report --->
+                <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                    <tr>
+                        <th>#vReportTitle#</th>            
                     </tr>
+                    <tr>
+                        <td class="center">
+                            Program(s) included in this report: <br />
+                            <cfloop query="qGetPrograms">
+                                #qGetPrograms.programName# <br />
+                            </cfloop>
+                            
+                            <cfif isDate(FORM.placedDateFrom) AND isDate(FORM.placedDateTo)>
+                                Placed From #FORM.placedDateFrom# to #FORM.placedDateTo# <br />
+                            </cfif>
+                        </td>
+                    </tr>
+                </table><br />
+                
+            </cfoutput>
+                    
+            <!--- Loop Regions ---> 
+            <cfloop query="qGetRegions">
             
-                </cfoutput>
+                <cfscript>
+                    // Get Regional Manager
+                    qGetRegionalManager = APPLICATION.CFC.USER.getRegionalManager(regionID=qGetRegions.regionID);
+                </cfscript>
+        
+                <cfquery name="qGetStudentsInRegion" dbtype="query">
+                    SELECT
+                        *
+                    FROM
+                        qGetResults
+                    WHERE
+                        regionAssigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegions.regionID#">               
+                </cfquery>
                 
-                <cfoutput>
-                	</table>
-              	</cfoutput>
+                <!--- Only display if there are records in this region --->
+                <cfif VAL(qGetStudentsInRegion.recordCount)>
                 
-          	</cfif>
-    
-        </cfloop>
-    
+                    <cfoutput>
+                        <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                            <tr>
+                                <th class="left" colspan="3">#qGetRegions.regionName# Region - #qGetRegionalManager.firstName# #qGetRegionalManager.lastName# (###qGetRegionalManager.userID#)</th>
+                                <th class="right">#qGetStudentsInRegion.recordCount#</th>
+                            </tr>      
+                            <tr class="on">
+                                <td class="subTitleLeft" width="20%" style="font-size:9px">Student</td>
+                                <td class="subTitleLeft" width="20%" style="font-size:9px">Host Family</td>
+                                <td class="subTitleLeft" width="20%" style="font-size:9px">Date Of Change</td>
+                                <td class="subTitleLeft" width="40%" style="font-size:9px">Reason</td>
+                            </tr>  
+                    </cfoutput>
+                    
+                    <cfscript>
+                        // Set Current Row
+                        vCurrentRow = 0;			
+                    </cfscript>
+                    
+                    <cfoutput query="qGetStudentsInRegion">      
+                            
+                        <cfscript>
+                            vCurrentRow++;
+                        </cfscript>
+                        
+                        <cfquery name="qGetPrevHF" datasource="#APPLICATION.DSN#">
+                            SELECT 
+                                hist.hostid, 
+                                hist.reason, 
+                                hist.dateofchange, 
+                                h.familylastname,
+                                u.firstname, 
+                                u.lastname, 
+                                u.userid
+                            FROM 
+                                smg_hosthistory hist
+                            LEFT JOIN 
+                                smg_hosts h ON hist.hostid = h.hostid
+                            LEFT JOIN 
+                                smg_users u ON hist.changedby = u.userid
+                            WHERE 
+                                hist.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentsInRegion.studentid#">
+                            AND 
+                                isRelocation = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                            ORDER BY 
+                                hist.dateofchange DESC, 
+                                hist.historyid DESC
+                        </cfquery>
+                        
+                        <cfquery name="qGetCurrentHF" datasource="#APPLICATION.DSN#">
+                            SELECT 
+                                h.familylastname,
+                                s.hostid
+                            FROM 
+                                smg_students s
+                            LEFT JOIN 
+                                smg_hosts h ON s.hostid = h.hostid
+                            WHERE 
+                                s.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentsInRegion.studentid#">
+                        </cfquery>
+                            
+                        <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
+                            <td style="font-size:9px">#qGetStudentsInRegion.firstName# #qGetStudentsInRegion.familyLastName# (###qGetStudentsInRegion.studentID#)</td>
+                            <td colspan="3" style="font-size:9px">
+                                <table width="100%">
+                                    <cfscript>
+                                        i = 0;
+                                    </cfscript>
+                                    <cfloop query="qGetPrevHF">
+                                        <cfscript>
+                                            i++;
+                                        </cfscript>
+                                        <tr>
+                                            <td width="25%" style="font-size:9px">
+                                                PREVIOUS #i#: #qGetPrevHF.familyLastName#
+                                            </td>
+                                            <td width="25%" style="font-size:9px">
+                                                #DateFormat(qGetPrevHF.dateOfChange, "mm/dd/yyyy")# By #qGetPrevHF.firstName# #qGetPrevHF.lastName# (###qGetPrevHF.userID#)
+                                            </td>
+                                            <td width="50%" style="font-size:9px">
+                                                #qGetPrevHF.reason#
+                                            </td>
+                                        </tr> 
+                                    </cfloop>
+                                    <tr>
+                                        <td colspan="3" style="font-size:9px">
+                                            <cfif VAL(qGetCurrentHF.recordCount)>
+                                                CURRENT: #qGetCurrentHF.familyLastName#
+                                            <cfelse>
+                                                CURRENT: THIS STUDENT IS CURRENTLY UNPLACED
+                                            </cfif>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                
+                    </cfoutput>
+                    
+                    <cfoutput>
+                        </table>
+                    </cfoutput>
+                    
+                </cfif>
+        
+            </cfloop>
+            
+      	</cfdocument>
+        
     </cfif>
     
     <!--- Page Header --->

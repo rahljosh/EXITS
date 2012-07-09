@@ -306,64 +306,74 @@
     <!--- On Screen Report --->
     <cfelse>
     
-        <cfoutput>
-            
-            <!--- Include Report Header --->   
-            <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                <tr>
-                	<th width="12%"></th>
-                    <th width="76%" align="center" colspan="3">#vReportTitle#</th>
-               		<th width="12%">Total of #qGetResults.recordCount# records</th>
-                </tr>
-            
-				<!--- No Records Found --->
-                <cfif NOT VAL(qGetResults.recordCount)>
-               		<tr class="on">
-                      	<td class="subTitleCenter" colspan="5">No records found</td>
-                  	</tr>      
-                    </table>
-                    <cfabort>
-                </cfif>
+    	<cfdocument format="flashpaper" orientation="portrait" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
+    
+    		<!--- Page Header --->
+            <gui:pageHeader
+                headerType="applicationNoHeader"
+                filePath="../"
+            />
+    
+			<cfoutput>
                 
-                <tr class="on">
-                    <td class="subTitleLeft">ID</td>
-                    <td class="subTitleLeft" width="25%">Host Family</td>
-                    <td class="subTitleLeft" width="26%">Address</td>
-                    <td class="subTitleLeft" width="25%">Email</td>
-                    <td class="subTitleLeft">Phone</td>
-                </tr>
-        
-				<cfscript>
-                    vCurrentRow=0;
-                </cfscript>
-        
-                <cfloop query="qGetResults">
+                <!--- Include Report Header --->   
+                <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                    <tr>
+                        <th width="15%"></th>
+                        <th width="70%" align="center" colspan="3">#vReportTitle#</th>
+                        <th width="15%">Total of #qGetResults.recordCount# records</th>
+                    </tr>
                 
-                    <cfscript>
-                        vCurrentRow++;
-                    </cfscript>
+                    <!--- No Records Found --->
+                    <cfif NOT VAL(qGetResults.recordCount)>
+                        <tr class="on">
+                            <td class="subTitleCenter" colspan="5">No records found</td>
+                        </tr>      
+                        </table>
+                        <cfabort>
+                    </cfif>
                     
-                    <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
-                        <td>###qGetResults.hostID#</td>
-                        <td>
-                        	#qGetResults.familyLastname#
-                             - 
-                            #qGetResults.fatherFirstName#
-                            <cfif LEN(qGetResults.fatherFirstName) AND LEN(qGetResults.motherFirstName)>
-                            	 & 
-                          	</cfif>
-                            #qGetResults.motherFirstname#
-                       	</td>
-                        <td>#qGetResults.address# #qGetResults.city#, #qGetResults.state#</td>
-                        <td>#qGetResults.email#</td>
-                        <td>#qGetResults.phone#</td>
-                    </tr>	
-                
-                </cfloop>
-        
-        	</table>
-        
-      	</cfoutput>
+                    <tr class="on">
+                        <td class="subTitleLeft" width="10%" style="font-size:9px">ID</td>
+                        <td class="subTitleLeft" width="25%" style="font-size:9px">Host Family</td>
+                        <td class="subTitleLeft" width="25%" style="font-size:9px">Address</td>
+                        <td class="subTitleLeft" width="25%" style="font-size:9px">Email</td>
+                        <td class="subTitleLeft" width="15%" style="font-size:9px">Phone</td>
+                    </tr>
+            
+                    <cfscript>
+                        vCurrentRow=0;
+                    </cfscript>
+            
+                    <cfloop query="qGetResults">
+                    
+                        <cfscript>
+                            vCurrentRow++;
+                        </cfscript>
+                        
+                        <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
+                            <td style="font-size:9px">###qGetResults.hostID#</td>
+                            <td style="font-size:9px">
+                                #qGetResults.familyLastname#
+                                 - 
+                                #qGetResults.fatherFirstName#
+                                <cfif LEN(qGetResults.fatherFirstName) AND LEN(qGetResults.motherFirstName)>
+                                     & 
+                                </cfif>
+                                #qGetResults.motherFirstname#
+                            </td>
+                            <td style="font-size:9px">#qGetResults.address# #qGetResults.city#, #qGetResults.state#</td>
+                            <td style="font-size:9px">#qGetResults.email#</td>
+                            <td style="font-size:9px">#qGetResults.phone#</td>
+                        </tr>	
+                    
+                    </cfloop>
+            
+                </table>
+            
+            </cfoutput>
+            
+      	</cfdocument>
         
   	</cfif>
     

@@ -278,93 +278,103 @@
     <!--- On Screen Report --->
     <cfelse>
     
-        <cfoutput>
-            
-            <!--- Include Report Header --->   
-            <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                <tr>
-                    <th>Representative Management - Missing Area Representative Paperwork</th>            
-                </tr>
-                <tr>
-                    <td class="center"><strong>Total Number of Representatives in this report:</strong> #qGetResults.recordcount# <br /></td>
-                </tr>         
-            </table>
-            
-            <!--- No Records Found --->
-            <cfif NOT VAL(qGetResults.recordCount)>
+    	<cfdocument format="flashpaper" orientation="portrait" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
+    
+    		<!--- Page Header --->
+            <gui:pageHeader
+                headerType="applicationNoHeader"
+                filePath="../"
+            />
+    
+			<cfoutput>
+                
+                <!--- Include Report Header --->   
                 <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                    <tr class="on">
-                        <td class="subTitleCenter">No records found</td>
-                    </tr>      
+                    <tr>
+                        <th>Representative Management - Missing Area Representative Paperwork</th>            
+                    </tr>
+                    <tr>
+                        <td class="center"><strong>Total Number of Representatives in this report:</strong> #qGetResults.recordcount# <br /></td>
+                    </tr>         
                 </table>
-                <cfabort>
-            </cfif>
-        </cfoutput>
-        
-        <cfquery name="qGetRegions" datasource="#APPLICATION.DSN#">
-            SELECT
-                regionID,
-                regionName
-            FROM
-                smg_regions
-            WHERE
-                regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> )
-        </cfquery>
-        
-        <cfoutput query="qGetRegions">
+                
+                <!--- No Records Found --->
+                <cfif NOT VAL(qGetResults.recordCount)>
+                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                        <tr class="on">
+                            <td class="subTitleCenter">No records found</td>
+                        </tr>      
+                    </table>
+                    <cfabort>
+                </cfif>
+            </cfoutput>
             
-            <cfquery name="qGetRepsInRegion" dbtype="query">
+            <cfquery name="qGetRegions" datasource="#APPLICATION.DSN#">
                 SELECT
-                    *
+                    regionID,
+                    regionName
                 FROM
-                    qGetResults
+                    smg_regions
                 WHERE
-                    qGetResults.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#regionID#">
-                ORDER BY
-                    qGetResults.lastName
+                    regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> )
             </cfquery>
             
-            <cfscript>
-                vCurrentRow = 0;
-            </cfscript>
-    
-            <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                <tr>
-                    <th class="left">
-                        #regionName# Region
-                    </th>
-                    <th class="right">
-                        #qGetRepsInRegion.recordCount#
-                    </th>
-                </tr>      
-                <tr>
-                    <td class="subTitleLeft" width="20%">Representative</td>		
-                    <td class="subTitleLeft" width="80%">Missing Paperwork</td>
-                </tr>
+            <cfoutput query="qGetRegions">
                 
-                <cfloop query="qGetRepsInRegion">
+                <cfquery name="qGetRepsInRegion" dbtype="query">
+                    SELECT
+                        *
+                    FROM
+                        qGetResults
+                    WHERE
+                        qGetResults.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#regionID#">
+                    ORDER BY
+                        qGetResults.lastName
+                </cfquery>
                 
-                    <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
-                        <td>#qGetRepsInRegion.firstname# #qGetRepsInRegion.lastname# (###qGetRepsInRegion.userID#)</td>                         
-                        <td>
-                            <cfif NOT LEN(ar_info_sheet)>AR Info Sheet &nbsp; &nbsp; </cfif>
-                            <cfif NOT LEN(ar_ref_quest1)>AR Ref Quest. 1 &nbsp; &nbsp; </cfif>
-                            <cfif NOT LEN(ar_ref_quest2)>AR Ref Quest. 2 &nbsp; &nbsp; </cfif>
-                            <cfif NOT LEN(ar_cbc_auth_form)>CBC Authorization Form &nbsp; &nbsp; </cfif>
-                            <cfif NOT LEN(ar_agreement)>AR Agreement &nbsp; &nbsp; </cfif>
-                            <cfif NOT LEN(ar_training)>AR Training Form &nbsp; &nbsp; </cfif>
-                        </td>
+                <cfscript>
+                    vCurrentRow = 0;
+                </cfscript>
+        
+                <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                    <tr>
+                        <th class="left">
+                            #regionName# Region
+                        </th>
+                        <th class="right">
+                            #qGetRepsInRegion.recordCount#
+                        </th>
+                    </tr>      
+                    <tr>
+                        <td class="subTitleLeft" width="20%" style="font-size:9px">Representative</td>		
+                        <td class="subTitleLeft" width="80%" style="font-size:9px">Missing Paperwork</td>
                     </tr>
                     
-                    <cfscript>
-                        vCurrentRow++;
-                    </cfscript>
-            
-                </cfloop>
+                    <cfloop query="qGetRepsInRegion">
+                    
+                        <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
+                            <td style="font-size:9px">#qGetRepsInRegion.firstname# #qGetRepsInRegion.lastname# (###qGetRepsInRegion.userID#)</td>                         
+                            <td style="font-size:9px">
+                                <cfif NOT LEN(ar_info_sheet)>AR Info Sheet &nbsp; &nbsp; </cfif>
+                                <cfif NOT LEN(ar_ref_quest1)>AR Ref Quest. 1 &nbsp; &nbsp; </cfif>
+                                <cfif NOT LEN(ar_ref_quest2)>AR Ref Quest. 2 &nbsp; &nbsp; </cfif>
+                                <cfif NOT LEN(ar_cbc_auth_form)>CBC Authorization Form &nbsp; &nbsp; </cfif>
+                                <cfif NOT LEN(ar_agreement)>AR Agreement &nbsp; &nbsp; </cfif>
+                                <cfif NOT LEN(ar_training)>AR Training Form &nbsp; &nbsp; </cfif>
+                            </td>
+                        </tr>
+                        
+                        <cfscript>
+                            vCurrentRow++;
+                        </cfscript>
                 
-            </table>
-              
-        </cfoutput>
+                    </cfloop>
+                    
+                </table>
+                  
+            </cfoutput>
+            
+      	</cfdocument>
         
     </cfif>
 

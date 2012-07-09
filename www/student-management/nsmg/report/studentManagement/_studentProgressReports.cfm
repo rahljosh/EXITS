@@ -405,209 +405,223 @@
     <!--- On Screen Report --->
     <cfelse>
     
-        <cfoutput>
-        
-			<!--- Run Report --->
-            <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                <tr>
-                    <th>#vReportTitle#</th>            
-                </tr>
-                <tr>
-                    <td class="center">
-                        Program(s) included in this report: <br />
-                        <cfloop query="qGetPrograms">
-                            #qGetPrograms.programName# <br />
-                        </cfloop>
-                    </td>
-                </tr>
-            </table><br />
+        <cfsavecontent variable="report">
+    
+    		<!--- Page Header --->
+            <gui:pageHeader
+                headerType="applicationNoHeader"
+                filePath="../"
+            />
+    
+			<cfoutput>
             
-        </cfoutput>
-        
-        <cfscript>
-			vCurrentRow = 0;
-		</cfscript>
+                <!--- Run Report --->
+                <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                    <tr>
+                        <th>#vReportTitle#</th>            
+                    </tr>
+                    <tr>
+                        <td class="center">
+                            Program(s) included in this report: <br />
+                            <cfloop query="qGetPrograms">
+                                #qGetPrograms.programName# <br />
+                            </cfloop>
+                        </td>
+                    </tr>
+                </table><br />
                 
-		<!--- Loop Regions ---> 
-        <cfloop query="qGetRegions">
-        
-        	<cfscript>
-				vCurrentRow = 0;
-			</cfscript>
+            </cfoutput>
         
 			<cfscript>
-                // Get Regional Manager
-               	qGetRegionalManager = APPLICATION.CFC.USER.getRegionalManager(regionID=qGetRegions.regionID);
-				
-				// Set the current row to 0 
-				vCurrentRow = 0;
+                vCurrentRow = 0;
             </cfscript>
-    
-            <cfquery name="qGetStudentsInRegion" dbtype="query">
-                SELECT
-                    *
-                FROM
-                    qGetResults
-                WHERE
-                    regionAssigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegions.regionID#">               
-            </cfquery>
+                
+			<!--- Loop Regions ---> 
+            <cfloop query="qGetRegions">
             
-            <!--- DETERMINE HOW MANY STUDENTS WILL BE DISPLAYED --->
-            <cfscript>
-				vStudentCount = 0;
-			</cfscript>
-            <cfloop query="qGetStudentsInRegion">
-            	<cfscript>
-					vMonthCount = 0;
-				</cfscript>
-            	<cfloop list="#FORM.monthID#" index="i">
-                	<cfquery name="qGetmonthID" datasource="#APPLICATION.DSN#">
-                        SELECT DISTINCT 
-                            fk_student,
-                            pr_ny_approved_date 
-                        FROM
-                            progress_reports 
-                        WHERE 
-                            fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentsInRegion.studentid#">
-                        AND 
-                            pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
-                    </cfquery>
-                    <cfscript>
-						if ( FORM.status EQ "missing") {
-							if ( NOT VAL(qGetmonthID.recordCount) )
-								vMonthCount++;
-						} else if (FORM.status EQ "approved") {
-							if ( VAL(qGetmonthID.recordCount) AND (qGetMonthID.pr_ny_approved_date NEQ "") )
-								vMonthCount++;
-						} else {
-							if ( VAL(qGetmonthID.recordCount) AND (qGetMonthID.pr_ny_approved_date EQ "") )
-								vMonthCount++;
-						}
-					</cfscript>
-                </cfloop>
                 <cfscript>
-					if (vMonthCount > 0)
-                    	vStudentCount++;
-				</cfscript>
-            </cfloop>
-            <!------>
+                    vCurrentRow = 0;
+                </cfscript>
             
-            <!--- Only display if there are records in this region --->
-            <cfif VAL(qGetStudentsInRegion.recordCount)>
-            
-				<cfoutput>
-                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                        <tr>
-                            <th class="left" colspan="3">#qGetRegions.regionName# Region - #qGetRegionalManager.firstName# #qGetRegionalManager.lastName# (###qGetRegionalManager.userID#)</th>
-                            <th class="right"><span id="qGetRegions.regionID"></span> #vStudentCount# Students</th>
-                        </tr>      
-                        <tr class="on">
-                            <td class="subTitleLeft" width="20%">Supervising Representative</td>
-                            <td class="subTitleLeft" width="20%">Student</td>
-                            <td class="subTitleLeft" width="20%">Program</td>
-                            <td class="subTitleLeft" width="40%">
-								<cfif FORM.status EQ "missing">
-                                	Missing Report(s)
-								<cfelseif FORM.status EQ "notApproved">
-                                	Completed Report(s) - awaiting approval
-								<cfelse>
-									Completed Report(s) - approved
-								</cfif>
-                          	</td>
-                        </tr>  
-                </cfoutput>
+                <cfscript>
+                    // Get Regional Manager
+                    qGetRegionalManager = APPLICATION.CFC.USER.getRegionalManager(regionID=qGetRegions.regionID);
+                    
+                    // Set the current row to 0 
+                    vCurrentRow = 0;
+                </cfscript>
+        
+                <cfquery name="qGetStudentsInRegion" dbtype="query">
+                    SELECT
+                        *
+                    FROM
+                        qGetResults
+                    WHERE
+                        regionAssigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegions.regionID#">               
+                </cfquery>
                 
-                <cfoutput query="qGetStudentsInRegion">      
-                        
-                  	<cfscript>
-						// This will store a list of missing reports
-						vMissingReportsList = '';
-	
-						// J1 Private Program - select which reports are required
-						if ( qGetStudentsInRegion.type EQ 5 ) {
-							
-							if ( Month(qGetStudentsInRegion.enddate) EQ 6 AND DateDiff("m", qGetStudentsInRegion.startdate, qGetStudentsInRegion.enddate) EQ 10 ) {
-								// 10 Month Program
-								FORM.prtype5 = FORM.prtype1;
-							} else if ( Month(qGetStudentsInRegion.enddate) EQ 6 AND DateDiff("m", qGetStudentsInRegion.startdate, qGetStudentsInRegion.enddate) EQ 5) {
-								// 2nd Semester Program
-								FORM.prtype5 = FORM.prtype4;
-							} else if ( Month(qGetStudentsInRegion.enddate) EQ 12 ) {
-								// 12 Month Program
-								FORM.prtype5 = FORM.prtype2; 
-							} else if ( Month(qGetStudentsInRegion.enddate) EQ 1 ) {
-								// 1st Semester Program
-								FORM.prtype5 = FORM.prtype3;
-							}
-							
-						}
-					</cfscript>
-				
-					<cfloop list="#FORM.monthID#" index="i">
-						
-						<cfquery name="qGetmonthID" datasource="#APPLICATION.DSN#">
-							SELECT DISTINCT 
-								fk_student,
+                <!--- DETERMINE HOW MANY STUDENTS WILL BE DISPLAYED --->
+                <cfscript>
+                    vStudentCount = 0;
+                </cfscript>
+                <cfloop query="qGetStudentsInRegion">
+                    <cfscript>
+                        vMonthCount = 0;
+                    </cfscript>
+                    <cfloop list="#FORM.monthID#" index="i">
+                        <cfquery name="qGetmonthID" datasource="#APPLICATION.DSN#">
+                            SELECT DISTINCT 
+                                fk_student,
                                 pr_ny_approved_date 
-							FROM
-								progress_reports 
-							WHERE 
-								fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentsInRegion.studentid#">
-							AND 
-								pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
-						</cfquery>
-						
-						<cfscript>
-						
-							if ( FORM.status EQ "missing") {
-								if ( NOT VAL(qGetmonthID.recordCount) AND (ListLast(FORM.monthID) NEQ i) ) {
-								vMissingReportsList = vMissingReportsList & MonthAsString(i) & ", &nbsp;";	
-								} else if ( NOT VAL(qGetmonthID.recordCount) ) {
-									vMissingReportsList = vMissingReportsList & MonthAsString(i);
-								}
-							} else if (FORM.status EQ "approved") {
-								if ( VAL(qGetmonthID.recordCount) AND (qGetMonthID.pr_ny_approved_date NEQ "") )
-									if ( VAL(qGetmonthID.recordCount) AND (ListLast(FORM.monthID) NEQ i) ) {
-									vMissingReportsList = vMissingReportsList & MonthAsString(i) & ", &nbsp;";	
-									} else if ( VAL(qGetmonthID.recordCount) ) {
-										vMissingReportsList = vMissingReportsList & MonthAsString(i);
-									}
-							} else {
-								if ( VAL(qGetmonthID.recordCount) AND (qGetMonthID.pr_ny_approved_date EQ "") )
-									if ( VAL(qGetmonthID.recordCount) AND (ListLast(FORM.monthID) NEQ i) ) {
-									vMissingReportsList = vMissingReportsList & MonthAsString(i) & ", &nbsp;";	
-									} else if ( VAL(qGetmonthID.recordCount) ) {
-										vMissingReportsList = vMissingReportsList & MonthAsString(i);
-									}
-							}							
-						</cfscript>
-						
-					</cfloop>
-                      
-                   	<cfif LEN(vMissingReportsList)>  
+                            FROM
+                                progress_reports 
+                            WHERE 
+                                fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentsInRegion.studentid#">
+                            AND 
+                                pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
+                        </cfquery>
+                        <cfscript>
+                            if ( FORM.status EQ "missing") {
+                                if ( NOT VAL(qGetmonthID.recordCount) )
+                                    vMonthCount++;
+                            } else if (FORM.status EQ "approved") {
+                                if ( VAL(qGetmonthID.recordCount) AND (qGetMonthID.pr_ny_approved_date NEQ "") )
+                                    vMonthCount++;
+                            } else {
+                                if ( VAL(qGetmonthID.recordCount) AND (qGetMonthID.pr_ny_approved_date EQ "") )
+                                    vMonthCount++;
+                            }
+                        </cfscript>
+                    </cfloop>
+                    <cfscript>
+                        if (vMonthCount > 0)
+                            vStudentCount++;
+                    </cfscript>
+                </cfloop>
+                <!------>
+            
+				<!--- Only display if there are records in this region --->
+                <cfif VAL(qGetStudentsInRegion.recordCount)>
+                
+                    <cfoutput>
+                        <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                            <tr>
+                                <th class="left" colspan="3">#qGetRegions.regionName# Region - #qGetRegionalManager.firstName# #qGetRegionalManager.lastName# (###qGetRegionalManager.userID#)</th>
+                                <th class="right"><span id="qGetRegions.regionID"></span> #vStudentCount# Students</th>
+                            </tr>      
+                            <tr class="on">
+                                <td class="subTitleLeft" width="20%" style="font-size:9px">Supervising Representative</td>
+                                <td class="subTitleLeft" width="20%" style="font-size:9px">Student</td>
+                                <td class="subTitleLeft" width="20%" style="font-size:9px">Program</td>
+                                <td class="subTitleLeft" width="40%" style="font-size:9px">
+                                    <cfif FORM.status EQ "missing">
+                                        Missing Report(s)
+                                    <cfelseif FORM.status EQ "notApproved">
+                                        Completed Report(s) - awaiting approval
+                                    <cfelse>
+                                        Completed Report(s) - approved
+                                    </cfif>
+                                </td>
+                            </tr>  
+                    </cfoutput>
                     
-                    	<cfscript>
-							vCurrentRow++;
-						</cfscript>
-                      
-                        <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
-                            <td>#qGetStudentsInRegion.userFirstName# #qGetStudentsInRegion.userLastName# (###qGetStudentsInRegion.userID#)</td>
-                            <td>#qGetStudentsInRegion.firstname# #qGetStudentsInRegion.familylastname# (###qGetStudentsInRegion.studentID#)</td>
-                            <td>#qGetStudentsInRegion.programname#</td>
-                            <td>#vMissingReportsList#</td>
-                        </tr>
+                    <cfoutput query="qGetStudentsInRegion">      
+                            
+                        <cfscript>
+                            // This will store a list of missing reports
+                            vMissingReportsList = '';
+        
+                            // J1 Private Program - select which reports are required
+                            if ( qGetStudentsInRegion.type EQ 5 ) {
                                 
-          			</cfif>
+                                if ( Month(qGetStudentsInRegion.enddate) EQ 6 AND DateDiff("m", qGetStudentsInRegion.startdate, qGetStudentsInRegion.enddate) EQ 10 ) {
+                                    // 10 Month Program
+                                    FORM.prtype5 = FORM.prtype1;
+                                } else if ( Month(qGetStudentsInRegion.enddate) EQ 6 AND DateDiff("m", qGetStudentsInRegion.startdate, qGetStudentsInRegion.enddate) EQ 5) {
+                                    // 2nd Semester Program
+                                    FORM.prtype5 = FORM.prtype4;
+                                } else if ( Month(qGetStudentsInRegion.enddate) EQ 12 ) {
+                                    // 12 Month Program
+                                    FORM.prtype5 = FORM.prtype2; 
+                                } else if ( Month(qGetStudentsInRegion.enddate) EQ 1 ) {
+                                    // 1st Semester Program
+                                    FORM.prtype5 = FORM.prtype3;
+                                }
+                                
+                            }
+                        </cfscript>
                     
-                </cfoutput>
-                
-                <cfoutput>
-                	</table>
-              	</cfoutput>
-                
-          	</cfif>
+                        <cfloop list="#FORM.monthID#" index="i">
+                            
+                            <cfquery name="qGetmonthID" datasource="#APPLICATION.DSN#">
+                                SELECT DISTINCT 
+                                    fk_student,
+                                    pr_ny_approved_date 
+                                FROM
+                                    progress_reports 
+                                WHERE 
+                                    fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentsInRegion.studentid#">
+                                AND 
+                                    pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
+                            </cfquery>
+                            
+                            <cfscript>
+                            
+                                if ( FORM.status EQ "missing") {
+                                    if ( NOT VAL(qGetmonthID.recordCount) AND (ListLast(FORM.monthID) NEQ i) ) {
+                                    vMissingReportsList = vMissingReportsList & MonthAsString(i) & ", &nbsp;";	
+                                    } else if ( NOT VAL(qGetmonthID.recordCount) ) {
+                                        vMissingReportsList = vMissingReportsList & MonthAsString(i);
+                                    }
+                                } else if (FORM.status EQ "approved") {
+                                    if ( VAL(qGetmonthID.recordCount) AND (qGetMonthID.pr_ny_approved_date NEQ "") )
+                                        if ( VAL(qGetmonthID.recordCount) AND (ListLast(FORM.monthID) NEQ i) ) {
+                                        vMissingReportsList = vMissingReportsList & MonthAsString(i) & ", &nbsp;";	
+                                        } else if ( VAL(qGetmonthID.recordCount) ) {
+                                            vMissingReportsList = vMissingReportsList & MonthAsString(i);
+                                        }
+                                } else {
+                                    if ( VAL(qGetmonthID.recordCount) AND (qGetMonthID.pr_ny_approved_date EQ "") )
+                                        if ( VAL(qGetmonthID.recordCount) AND (ListLast(FORM.monthID) NEQ i) ) {
+                                        vMissingReportsList = vMissingReportsList & MonthAsString(i) & ", &nbsp;";	
+                                        } else if ( VAL(qGetmonthID.recordCount) ) {
+                                            vMissingReportsList = vMissingReportsList & MonthAsString(i);
+                                        }
+                                }							
+                            </cfscript>
+                            
+                        </cfloop>
+                          
+                        <cfif LEN(vMissingReportsList)>  
+                        
+                            <cfscript>
+                                vCurrentRow++;
+                            </cfscript>
+                          
+                            <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
+                                <td style="font-size:9px">#qGetStudentsInRegion.userFirstName# #qGetStudentsInRegion.userLastName# (###qGetStudentsInRegion.userID#)</td>
+                                <td style="font-size:9px">#qGetStudentsInRegion.firstname# #qGetStudentsInRegion.familylastname# (###qGetStudentsInRegion.studentID#)</td>
+                                <td style="font-size:9px">#qGetStudentsInRegion.programname#</td>
+                                <td style="font-size:9px">#vMissingReportsList#</td>
+                            </tr>
+                                    
+                        </cfif>
+                        
+                    </cfoutput>
+                    
+                    <cfoutput>
+                        </table>
+                    </cfoutput>
+                    
+                </cfif>
     
-        </cfloop>
+        	</cfloop>
+            
+      	</cfsavecontent>
+        
+        <cfdocument format="flashpaper" orientation="portrait" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
+        	<cfoutput>#report#</cfoutput>
+        </cfdocument>
     
     </cfif>
     

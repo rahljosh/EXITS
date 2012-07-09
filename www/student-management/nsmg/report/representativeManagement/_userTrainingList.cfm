@@ -387,191 +387,201 @@
     <!--- On Screen Report --->
     <cfelse>
     
-    	<cfoutput>
-            <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                <tr>
-                    <th width="33%"></th>
-                    <th class="center" width="34%"><cfif FORM.compliance EQ '0'>Training Report<cfelse>Non-Compliance Report</cfif></th>
-                    <th class="right" width="33%">#vTotalReps# Total Representatives</th>
-                </tr>
-                <tr>
-					<cfif FORM.compliance EQ '0'>
-                        <td class="center" colspan="3">
-                            Program(s) included in this report: <br />
-                            <cfloop query="qGetPrograms">
-                                #qGetPrograms.programName# <br />
-                            </cfloop>
-                        </td>
-                   	</cfif>
-                </tr>
-            </table>
-        </cfoutput>
-        
-        <cfloop query="qGetRegions">
-                   
-			<cfscript>
-                if (FORM.compliance EQ 0) {
-                    qGetResults = APPLICATION.CFC.USER.reportTrainingByRegion(
-                        regionID=qGetRegions.regionID,trainingIDList=FORM.trainingID,userID=CLIENT.userID,userType=CLIENT.userType,programID=FORM.programID);
-                } else {
-                    qGetResults = APPLICATION.CFC.USER.reportTrainingNonCompliance(
-                    
-					regionID=qGetRegions.regionID,trainingID=FORM.trainingID,userID=CLIENT.userID,userType=CLIENT.userType);
-                    
-                    qGetTrainingInfo = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='smgUsersTraining',fieldID=FORM.trainingID);
-                }
-            </cfscript>
-            
-            <cfquery name="qTotalInRegion" dbtype="query">
-                SELECT DISTINCT
-                    userID
-                FROM 
-                    qGetResults
-            </cfquery>
-            
-            <cfoutput>
-            
+    	<cfdocument format="flashpaper" orientation="portrait" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
+    
+    		<!--- Page Header --->
+            <gui:pageHeader
+                headerType="applicationNoHeader"
+                filePath="../"
+            />
+    
+			<cfoutput>
                 <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                     <tr>
-                        <th class="left" colspan="2">#qGetResults.regionName# Region</th>
-                        <th class="right">#qTotalInRegion.recordCount# Representatives</th>
+                        <th width="33%"></th>
+                        <th class="center" width="34%"><cfif FORM.compliance EQ '0'>Training Report<cfelse>Non-Compliance Report</cfif></th>
+                        <th class="right" width="33%">#vTotalReps# Total Representatives</th>
                     </tr>
                     <tr>
-                        <td class="subTitleLeft" width="40%">Representative</td>
-                        <td class="subTitleLeft" width="20%">Status</td>
-                        <td class="subTitleLeft" width="40%">Training</td>
+                        <cfif FORM.compliance EQ '0'>
+                            <td class="center" colspan="3">
+                                Program(s) included in this report: <br />
+                                <cfloop query="qGetPrograms">
+                                    #qGetPrograms.programName# <br />
+                                </cfloop>
+                            </td>
+                        </cfif>
                     </tr>
+                </table>
             </cfoutput>
-                    
-            <cfscript>
-                vCurrentRow = 0;
-            </cfscript>
             
-            <cfoutput query="qGetResults" group="userID">
-                
-                 <cfscript>
-                    if (vCurrentRow MOD 2)
-                        vClass = "class='off'";
-                    else
-                        vClass = "class='on'";
-                    vCurrentRow++;
+            <cfloop query="qGetRegions">
+                       
+                <cfscript>
+                    if (FORM.compliance EQ 0) {
+                        qGetResults = APPLICATION.CFC.USER.reportTrainingByRegion(
+                            regionID=qGetRegions.regionID,trainingIDList=FORM.trainingID,userID=CLIENT.userID,userType=CLIENT.userType,programID=FORM.programID);
+                    } else {
+                        qGetResults = APPLICATION.CFC.USER.reportTrainingNonCompliance(
+                        
+                        regionID=qGetRegions.regionID,trainingID=FORM.trainingID,userID=CLIENT.userID,userType=CLIENT.userType);
+                        
+                        qGetTrainingInfo = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='smgUsersTraining',fieldID=FORM.trainingID);
+                    }
                 </cfscript>
                 
-                <tr #vClass#>
-                    <td>#qGetResults.firstName# #qGetResults.lastName# (###qGetResults.userID#)</td>
+                <cfquery name="qTotalInRegion" dbtype="query">
+                    SELECT DISTINCT
+                        userID
+                    FROM 
+                        qGetResults
+                </cfquery>
                 
-                    <cfquery name="qGetTraining" datasource="#APPLICATION.DSN#">
-                        SELECT
-                            t.date_trained,
-                            t.has_passed,
-                            t.score,
-                            t.training_id,
-                            al.name
-                        FROM
-                            smg_users_training t
-                        INNER JOIN
-                            applicationLookup al ON al.fieldID = t.training_id
-                        WHERE
-                            t.training_id IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.trainingID#"> )
-                        AND
-                            t.user_id = #qGetResults.userID#
-                        ORDER BY
-                            date_trained DESC
-                    </cfquery>
+                <cfoutput>
                 
-                    <td>
-                        <cfloop list="#FORM.trainingID#" index="i">
-    
-                            <cfquery name="qGetThisTraining" dbtype="query">
-                                SELECT
-                                    *
-                                FROM
-                                    qGetTraining
-                                WHERE
-                                    training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
-                            </cfquery>
-                            
-                            <cfif qGetThisTraining.recordCount>
-                                <cfloop query="qGetThisTraining">
-                                    <cfif LEN(qGetThisTraining.date_trained)>
-                                        <cfif i EQ 2 AND NOT VAL(qGetThisTraining.has_passed)>
-                                            <span style="color:##F00;">Failed</span>
-                                        <cfelse>
-                                            <cfif DateAdd("yyyy", 1, qGetThisTraining.date_trained) LTE now()>
-                                                <span style="color:##F00;">Expired</span>
+                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                        <tr>
+                            <th class="left" colspan="2">#qGetResults.regionName# Region</th>
+                            <th class="right">#qTotalInRegion.recordCount# Representatives</th>
+                        </tr>
+                        <tr>
+                            <td class="subTitleLeft" width="40%" style="font-size:9px">Representative</td>
+                            <td class="subTitleLeft" width="20%" style="font-size:9px">Status</td>
+                            <td class="subTitleLeft" width="40%" style="font-size:9px">Training</td>
+                        </tr>
+                </cfoutput>
+                        
+                <cfscript>
+                    vCurrentRow = 0;
+                </cfscript>
+                
+                <cfoutput query="qGetResults" group="userID">
+                    
+                     <cfscript>
+                        if (vCurrentRow MOD 2)
+                            vClass = "class='off'";
+                        else
+                            vClass = "class='on'";
+                        vCurrentRow++;
+                    </cfscript>
+                    
+                    <tr #vClass#>
+                        <td style="font-size:9px">#qGetResults.firstName# #qGetResults.lastName# (###qGetResults.userID#)</td>
+                    
+                        <cfquery name="qGetTraining" datasource="#APPLICATION.DSN#">
+                            SELECT
+                                t.date_trained,
+                                t.has_passed,
+                                t.score,
+                                t.training_id,
+                                al.name
+                            FROM
+                                smg_users_training t
+                            INNER JOIN
+                                applicationLookup al ON al.fieldID = t.training_id
+                            WHERE
+                                t.training_id IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.trainingID#"> )
+                            AND
+                                t.user_id = #qGetResults.userID#
+                            ORDER BY
+                                date_trained DESC
+                        </cfquery>
+                    
+                        <td style="font-size:9px">
+                            <cfloop list="#FORM.trainingID#" index="i">
+        
+                                <cfquery name="qGetThisTraining" dbtype="query">
+                                    SELECT
+                                        *
+                                    FROM
+                                        qGetTraining
+                                    WHERE
+                                        training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
+                                </cfquery>
+                                
+                                <cfif qGetThisTraining.recordCount>
+                                    <cfloop query="qGetThisTraining">
+                                        <cfif LEN(qGetThisTraining.date_trained)>
+                                            <cfif i EQ 2 AND NOT VAL(qGetThisTraining.has_passed)>
+                                                <span style="color:##F00;">Failed</span>
                                             <cfelse>
-                                                <span style="color:##00F;">Approved</span> 
+                                                <cfif DateAdd("yyyy", 1, qGetThisTraining.date_trained) LTE now()>
+                                                    <span style="color:##F00;">Expired</span>
+                                                <cfelse>
+                                                    <span style="color:##00F;">Approved</span> 
+                                                </cfif>
                                             </cfif>
-                                        </cfif>
-                                    <cfelse>
-                                        <span style="color:##F00;">Missing</span>
-                                    </cfif>
-                                    <br />
-                                </cfloop>
-                            <cfelse>
-                                <span style="color:##F00;">Missing</span>
-                                <br />
-                            </cfif>
-                        
-                        </cfloop>
-                    </td>
-                    <td>
-                        <cfloop list="#FORM.trainingID#" index="i">
-                        
-                            <cfquery name="qGetThisTraining" dbtype="query">
-                                SELECT
-                                    *
-                                FROM
-                                    qGetTraining
-                                WHERE
-                                    training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
-                            </cfquery>
-                            
-                            <cfif qGetThisTraining.recordCount>
-                                <cfloop query="qGetThisTraining">
-                                    <cfif LEN(qGetThisTraining.date_trained)>
-                                    	<cfif i EQ 2 AND NOT VAL(qGetThisTraining.has_passed)>
-                                            <span style="color:##F00;">
                                         <cfelse>
-                                            <cfif DateAdd("yyyy", 1, qGetThisTraining.date_trained) LTE now()>
+                                            <span style="color:##F00;">Missing</span>
+                                        </cfif>
+                                        <br />
+                                    </cfloop>
+                                <cfelse>
+                                    <span style="color:##F00;">Missing</span>
+                                    <br />
+                                </cfif>
+                            
+                            </cfloop>
+                        </td>
+                        <td style="font-size:9px">
+                            <cfloop list="#FORM.trainingID#" index="i">
+                            
+                                <cfquery name="qGetThisTraining" dbtype="query">
+                                    SELECT
+                                        *
+                                    FROM
+                                        qGetTraining
+                                    WHERE
+                                        training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
+                                </cfquery>
+                                
+                                <cfif qGetThisTraining.recordCount>
+                                    <cfloop query="qGetThisTraining">
+                                        <cfif LEN(qGetThisTraining.date_trained)>
+                                            <cfif i EQ 2 AND NOT VAL(qGetThisTraining.has_passed)>
                                                 <span style="color:##F00;">
                                             <cfelse>
-                                                <span style="color:##00F;"> 
+                                                <cfif DateAdd("yyyy", 1, qGetThisTraining.date_trained) LTE now()>
+                                                    <span style="color:##F00;">
+                                                <cfelse>
+                                                    <span style="color:##00F;"> 
+                                                </cfif>
                                             </cfif>
+                                            Date: #DateFormat(qGetThisTraining.date_trained, 'mm/dd/yyyy')# - #qGetThisTraining.name# 
+                                            <cfif LEN(qGetThisTraining.score) AND i EQ 2> 
+                                                - Score: #qGetThisTraining.score#
+                                            </cfif>
+                                            </span>
+                                        <cfelse>
+                                            <span style="color:##F00;">#qGetThisTraining.name# is required</span>
                                         </cfif>
-                                        Date: #DateFormat(qGetThisTraining.date_trained, 'mm/dd/yyyy')# - #qGetThisTraining.name# 
-                                        <cfif LEN(qGetThisTraining.score) AND i EQ 2> 
-                                            - Score: #qGetThisTraining.score#
-                                        </cfif>
-                                        </span>
-                                   	<cfelse>
-                                        <span style="color:##F00;">#qGetThisTraining.name# is required</span>
-                                    </cfif>
+                                        <br />
+                                    </cfloop>
+                                <cfelse>
+                                    <cfquery name="qGetMissing" datasource="#APPLICATION.DSN#">
+                                        SELECT
+                                            name
+                                        FROM 
+                                            applicationLookup 
+                                        WHERE
+                                            fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
+                                    </cfquery>
+                                    <span style="color:##F00;">#qGetMissing.name# is required</span>
                                     <br />
-                                </cfloop>
-                            <cfelse>
-                                <cfquery name="qGetMissing" datasource="#APPLICATION.DSN#">
-                                    SELECT
-                                        name
-                                    FROM 
-                                        applicationLookup 
-                                    WHERE
-                                        fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
-                                </cfquery>
-                                <span style="color:##F00;">#qGetMissing.name# is required</span>
-                                <br />
-                            </cfif>
-                            
-                        </cfloop>
-                    </td>
+                                </cfif>
+                                
+                            </cfloop>
+                        </td>
+                        
+                    </tr>
                     
-                </tr>
+                </cfoutput>
                 
-            </cfoutput>
+            </cfloop>
+                    
+            </table>
             
-        </cfloop>
-                
-    	</table>
+      	</cfdocument>
             
     </cfif>
 

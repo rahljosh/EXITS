@@ -826,11 +826,11 @@
                             </th>
                         </tr>      
                         <tr class="on">
-                            <td class="subTitleLeft" width="20%">Student</td>
-                            <td class="subTitleLeft" width="10%">Program</td>
-                            <td class="subTitleLeft" width="15%">Host Family</td>
-                            <td class="subTitleCenter" width="10%">Date Placed</td>
-                            <td class="subTitleLeft" width="45%">Missing Documents</td>
+                            <td class="subTitleLeft" width="20%" style="font-size:9px">Student</td>
+                            <td class="subTitleLeft" width="10%" style="font-size:9px">Program</td>
+                            <td class="subTitleLeft" width="15%" style="font-size:9px">Host Family</td>
+                            <td class="subTitleCenter" width="10%" style="font-size:9px">Date Placed</td>
+                            <td class="subTitleLeft" width="45%" style="font-size:9px">Missing Documents</td>
                         </tr>      
                         
                         <cfscript>
@@ -1009,7 +1009,7 @@
                             </cfscript>
                             
                             <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
-                                <td>
+                                <td style="font-size:9px">
                                     #qGetStudentsInRegion.studentName#
                                     <cfif VAL(qGetStudentsInRegion.active)>
                                         <span class="note">(Active)</span>
@@ -1019,8 +1019,8 @@
                                         <span class="note">(Inactive)</span>
                                     </cfif>
                                 </td>
-                                <td>#qGetStudentsInRegion.programName#</td>
-                                <td>
+                                <td style="font-size:9px">#qGetStudentsInRegion.programName#</td>
+                                <td style="font-size:9px">
                                     #qGetStudentsInRegion.hostFamilyLastName# ###qGetStudentsInRegion.hostID# 
                                     <span class="note">
                                         (
@@ -1042,8 +1042,8 @@
                                         )
                                     </span>                            
                                 </td>
-                                <td class="center">#DateFormat(qGetStudentsInRegion.datePlaced, 'mm/dd/yy')#</td>
-                                <td>
+                                <td class="center" style="font-size:9px">#DateFormat(qGetStudentsInRegion.datePlaced, 'mm/dd/yy')#</td>
+                                <td style="font-size:9px">
                                     <cfif VAL(vIsCompliant)>
                                         compliant
                                     <cfelse>
@@ -1063,6 +1063,19 @@
             </cfsavecontent>
             
             <cfoutput>
+            
+            	<cfdocument format="flashpaper" orientation="landscape" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
+    
+					<!--- Page Header --->
+                    <gui:pageHeader
+                        headerType="applicationNoHeader"
+                        filePath="../"
+                    />
+                    
+                    #reportHeader#
+                    #reportBody# 
+                
+                </cfdocument>
             
                 <!--- Display Report --->
                 #reportBody#

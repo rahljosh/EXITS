@@ -466,253 +466,263 @@
     
     <!--- On Screen Report --->
     <cfelse>
+    
+    	<cfdocument format="flashpaper" orientation="landscape" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
+    
+    		<!--- Page Header --->
+            <gui:pageHeader
+                headerType="applicationNoHeader"
+                filePath="../"
+            />
 
-		<cfoutput>
-        
-            <!--- Store Report Header in a Variable --->
-            <cfsavecontent variable="reportHeader">
-                
-                <!--- Run Report --->
-                <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                    <tr>
-                        <th>#vReportTitle#</th>            
-                    </tr>
-                    <tr>
-                        <td class="center">
-                            Program(s) included in this report: <br />
-                            <cfloop query="qGetPrograms">
-                                #qGetPrograms.programName# <br />
-                            </cfloop>
-                        </td>
-                    </tr>
-                </table>
-                
-                <br />
+			<cfoutput>
             
-            </cfsavecontent>
-        
-            <!--- Display Report Header --->
-            #reportHeader#
-        
-        </cfoutput>
-        
-        <!--- Loop Regions ---> 
-        <cfloop list="#FORM.regionID#" index="currentRegionID">
-    
-            <!--- Save Report in a Variable --->
-            <cfsavecontent variable="reportBody">
-        
-                <cfscript>
-                    // Get Regional Manager
-                    qGetRegionalManager = APPLICATION.CFC.USER.getRegionalManager(regionID=currentRegionID);
-                </cfscript>
-        
-                <cfquery name="qGetStudentsInRegion" dbtype="query">
-                    SELECT
-                        *
-                    FROM
-                        qGetResults
-                    WHERE
-                        regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#currentRegionID#">               
-                </cfquery>
-                
-                <cfoutput>
-                         
+                <!--- Store Report Header in a Variable --->
+                <cfsavecontent variable="reportHeader">
+                    
+                    <!--- Run Report --->
                     <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                         <tr>
-                            <th class="left">
-                                #qGetStudentsInRegion.regionName#
-                                &nbsp; - &nbsp; 
-                                Facilitator - #qGetStudentsInRegion.facilitatorName#
-                            </th>
-                        </tr>      
+                            <th>#vReportTitle#</th>            
+                        </tr>
+                        <tr>
+                            <td class="center">
+                                Program(s) included in this report: <br />
+                                <cfloop query="qGetPrograms">
+                                    #qGetPrograms.programName# <br />
+                                </cfloop>
+                            </td>
+                        </tr>
                     </table>
+                    
+                    <br />
                 
-                </cfoutput>
-                
-                <cfoutput query="qGetStudentsInRegion" group="#FORM.reportBy#">
-    
-                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                        <tr>
-                            <th class="left" colspan="7">
-                                <cfif FORM.reportBy EQ 'placeRepID'>
-                                    Placing
-                                <cfelseif FORM.reportBy EQ 'areaRepID'>
-                                    Supervising
-                                </cfif>
-                                Representative #qGetStudentsInRegion.repName#
-                            </th>
-                        </tr>      
-                        <tr class="on">
-                            <td class="subTitleLeft" width="20%">Student</td>
-                            <td class="subTitleLeft" width="10%">Program</td>
-                            <td class="subTitleLeft" width="15%">Host Family</td>
-                            <td class="subTitleLeft" width="20%">Double Placement</td>
-                            <td class="subTitleCenter" width="10%">Date Placed</td>
-                            <td class="subTitleLeft" width="25%">Missing Documents</td>
-                        </tr>      
-                        
-                        <cfscript>
-                            // Set Current Row
-                            vCurrentRow = 0;			
-                        </cfscript>
-                        
-                        <!--- Loop Through Query --->
-                        <cfoutput>
+                </cfsavecontent>
+            
+                <!--- Display Report Header --->
+                #reportHeader#
+            
+            </cfoutput>
+        
+			<!--- Loop Regions ---> 
+            <cfloop list="#FORM.regionID#" index="currentRegionID">
+        
+                <!--- Save Report in a Variable --->
+                <cfsavecontent variable="reportBody">
+            
+                    <cfscript>
+                        // Get Regional Manager
+                        qGetRegionalManager = APPLICATION.CFC.USER.getRegionalManager(regionID=currentRegionID);
+                    </cfscript>
+            
+                    <cfquery name="qGetStudentsInRegion" dbtype="query">
+                        SELECT
+                            *
+                        FROM
+                            qGetResults
+                        WHERE
+                            regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#currentRegionID#">               
+                    </cfquery>
+                    
+                    <cfoutput>
+                             
+                        <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                            <tr>
+                                <th class="left">
+                                    #qGetStudentsInRegion.regionName#
+                                    &nbsp; - &nbsp; 
+                                    Facilitator - #qGetStudentsInRegion.facilitatorName#
+                                </th>
+                            </tr>      
+                        </table>
+                    
+                    </cfoutput>
+                    
+                    <cfoutput query="qGetStudentsInRegion" group="#FORM.reportBy#">
+        
+                        <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                            <tr>
+                                <th class="left" colspan="7">
+                                    <cfif FORM.reportBy EQ 'placeRepID'>
+                                        Placing
+                                    <cfelseif FORM.reportBy EQ 'areaRepID'>
+                                        Supervising
+                                    </cfif>
+                                    Representative #qGetStudentsInRegion.repName#
+                                </th>
+                            </tr>      
+                            <tr class="on">
+                                <td class="subTitleLeft" width="20%" style="font-size:9px">Student</td>
+                                <td class="subTitleLeft" width="10%" style="font-size:9px">Program</td>
+                                <td class="subTitleLeft" width="15%" style="font-size:9px">Host Family</td>
+                                <td class="subTitleLeft" width="20%" style="font-size:9px">Double Placement</td>
+                                <td class="subTitleCenter" width="10%" style="font-size:9px">Date Placed</td>
+                                <td class="subTitleLeft" width="25%" style="font-size:9px">Missing Documents</td>
+                            </tr>      
                             
                             <cfscript>
-                                // Increase Current Row
-                                vCurrentRow ++;
-                                
-                                // Set Variable to Handle Missing Documents
-                                vMissingDocumentsMessage = '';
-                                vOutOfComplianceDocuments = '';
-                                vIsCompliant = 0;
-        
-                                // Display Missing
-                                if ( FORM.paperworkID EQ 'missing' ) {
-                                
-                                    // Host Family Date Signed
-                                    if ( NOT isDate(qGetStudentsInRegion.doublePlacementHostFamilyDateSigned) ) {
-                                        vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Host Family Date Signed <br />", " <br />");
-                                    } 
-                                    
-                                    // Student Date Signed
-                                    if ( VAL(qGetStudentsInRegion.isRelocation) AND NOT isDate(qGetStudentsInRegion.doublePlacementStudentDateSigned) ) {
-                                        vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Student Date Signed <br />", " <br />");
-                                    } 
-                                    
-                                // Display Both
-                                } else { 
-                                
-                                    // Host Family Date Signed
-                                    if ( NOT isDate(qGetStudentsInRegion.doublePlacementHostFamilyDateSigned) ) {
-                                        vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Host Family Date Signed <br />", " <br />");
-                                    } else if ( isDate(qGetStudentsInRegion.doublePlacementHostFamilyDateSigned) AND qGetStudentsInRegion.doublePlacementHostFamilyDateSigned GT qGetStudentsInRegion.datePlaced ) {
-                                        vOutOfComplianceDocuments = ListAppend(vOutOfComplianceDocuments, "Host Family Date Signed is Non-compliant <br />", " <br />");
-                                    }
-                                    
-                                    // Student Date Signed
-                                    if ( VAL(qGetStudentsInRegion.isRelocation) AND NOT isDate(qGetStudentsInRegion.doublePlacementStudentDateSigned) ) {
-                                        vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Student Date Signed <br />", " <br />");
-                                    } else if ( VAL(qGetStudentsInRegion.isRelocation) AND isDate(qGetStudentsInRegion.doublePlacementStudentDateSigned) AND qGetStudentsInRegion.doublePlacementStudentDateSigned GT qGetStudentsInRegion.datePlaced ) {
-                                        vOutOfComplianceDocuments = ListAppend(vOutOfComplianceDocuments, "Student Date Signed is Non-compliant <br />", " <br />");
-                                    }
-                                    
-                                }
-        
-                                // Check if is compliant
-                                if ( NOT LEN(vMissingDocumentsMessage) AND NOT LEN(vOutOfComplianceDocuments) ) {
-                                    vIsCompliant = 1;
-                                }
+                                // Set Current Row
+                                vCurrentRow = 0;			
                             </cfscript>
                             
-                            <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
-                                <td>
-                                    #qGetStudentsInRegion.studentName#
-                                    <cfif VAL(qGetStudentsInRegion.active)>
-                                        <span class="note">(Active)</span>
-                                    <cfelseif isDate(qGetStudentsInRegion.cancelDate)>
-                                        <span class="noteAlert">(Cancelled)</span>
-                                    </cfif>
-                                </td>
-                                <td>#qGetStudentsInRegion.programName#</td>
-                                <td>
-                                    #qGetStudentsInRegion.hostFamilyLastName#
-                                    <span class="note">
-                                        (
-                                            <cfif VAL(qGetStudentsInRegion.isWelcomeFamily)>
-                                                Welcome
-                                            <cfelse>
-                                                Permanent
-                                            </cfif>
-                                            -
-                                            <cfif VAL(qGetStudentsInRegion.isActivePlacement)>
-                                                Current
-                                            <cfelse>
-                                                Previous
-                                            </cfif>
-    
-                                            <cfif VAL(qGetStudentsInRegion.isRelocation)>
-                                                - Relocation
-                                            </cfif>
-                                            
-                                        )
-                                    </span>                            
-                                </td>
-                                <td>
-                                    #qGetStudentsInRegion.doublePlacementStudentName#
-                                    <cfif VAL(qGetStudentsInRegion.isActivePlacement) AND VAL(qGetStudentsInRegion.isActiveDoublePlacement)>
-                                        <span class="note">(Current)</span>
-                                    <cfelse>
-                                        <span class="note">(Previous)</span>
-                                    </cfif>
-                                </td>
-                                <td class="center">#DateFormat(qGetStudentsInRegion.datePlaced, 'mm/dd/yy')#</td>
-                                <td>
-                                    <cfif VAL(vIsCompliant)>
-                                        compliant
-                                    <cfelse>
-                                        #vMissingDocumentsMessage#
-                                        
-                                        #vOutOfComplianceDocuments#
-                                    </cfif>
-                                </td>
-                            </tr>
-            
-                        </cfoutput>
-                    
-                    </table>
-            
-                </cfoutput>
-            
-            </cfsavecontent>
-            
-            <cfoutput>
-            
-                <!--- Display Report --->
-                #reportBody#
-                
-                <!--- Email Regional Manager --->        
-            	<cfif VAL(FORM.sendEmail) AND qGetStudentsInRegion.recordcount AND IsValid("email", qGetRegionalManager.email) AND IsValid("email", CLIENT.email)>
-                
-            		<cfsavecontent variable="emailBody">
-                    	<html>
-                            <head>
-                                <title>#qGetStudentsInRegion.regionName# - Missing Double Placement Paperwork Report</title>
-                            </head>
-                            <body>                 
+                            <!--- Loop Through Query --->
+                            <cfoutput>
                                 
-                                <!--- Display Report Header --->
-                                #reportHeader#	
-                                                  
-                                <!--- Display Report --->
-                                #reportBody#
-    
-                       		</body>
-                    	</html>
-                	</cfsavecontent>
+                                <cfscript>
+                                    // Increase Current Row
+                                    vCurrentRow ++;
+                                    
+                                    // Set Variable to Handle Missing Documents
+                                    vMissingDocumentsMessage = '';
+                                    vOutOfComplianceDocuments = '';
+                                    vIsCompliant = 0;
+            
+                                    // Display Missing
+                                    if ( FORM.paperworkID EQ 'missing' ) {
+                                    
+                                        // Host Family Date Signed
+                                        if ( NOT isDate(qGetStudentsInRegion.doublePlacementHostFamilyDateSigned) ) {
+                                            vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Host Family Date Signed <br />", " <br />");
+                                        } 
+                                        
+                                        // Student Date Signed
+                                        if ( VAL(qGetStudentsInRegion.isRelocation) AND NOT isDate(qGetStudentsInRegion.doublePlacementStudentDateSigned) ) {
+                                            vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Student Date Signed <br />", " <br />");
+                                        } 
+                                        
+                                    // Display Both
+                                    } else { 
+                                    
+                                        // Host Family Date Signed
+                                        if ( NOT isDate(qGetStudentsInRegion.doublePlacementHostFamilyDateSigned) ) {
+                                            vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Host Family Date Signed <br />", " <br />");
+                                        } else if ( isDate(qGetStudentsInRegion.doublePlacementHostFamilyDateSigned) AND qGetStudentsInRegion.doublePlacementHostFamilyDateSigned GT qGetStudentsInRegion.datePlaced ) {
+                                            vOutOfComplianceDocuments = ListAppend(vOutOfComplianceDocuments, "Host Family Date Signed is Non-compliant <br />", " <br />");
+                                        }
+                                        
+                                        // Student Date Signed
+                                        if ( VAL(qGetStudentsInRegion.isRelocation) AND NOT isDate(qGetStudentsInRegion.doublePlacementStudentDateSigned) ) {
+                                            vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Student Date Signed <br />", " <br />");
+                                        } else if ( VAL(qGetStudentsInRegion.isRelocation) AND isDate(qGetStudentsInRegion.doublePlacementStudentDateSigned) AND qGetStudentsInRegion.doublePlacementStudentDateSigned GT qGetStudentsInRegion.datePlaced ) {
+                                            vOutOfComplianceDocuments = ListAppend(vOutOfComplianceDocuments, "Student Date Signed is Non-compliant <br />", " <br />");
+                                        }
+                                        
+                                    }
+            
+                                    // Check if is compliant
+                                    if ( NOT LEN(vMissingDocumentsMessage) AND NOT LEN(vOutOfComplianceDocuments) ) {
+                                        vIsCompliant = 1;
+                                    }
+                                </cfscript>
+                                
+                                <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
+                                    <td style="font-size:9px">
+                                        #qGetStudentsInRegion.studentName#
+                                        <cfif VAL(qGetStudentsInRegion.active)>
+                                            <span class="note">(Active)</span>
+                                        <cfelseif isDate(qGetStudentsInRegion.cancelDate)>
+                                            <span class="noteAlert">(Cancelled)</span>
+                                        </cfif>
+                                    </td>
+                                    <td style="font-size:9px">#qGetStudentsInRegion.programName#</td>
+                                    <td style="font-size:9px">
+                                        #qGetStudentsInRegion.hostFamilyLastName#
+                                        <span class="note">
+                                            (
+                                                <cfif VAL(qGetStudentsInRegion.isWelcomeFamily)>
+                                                    Welcome
+                                                <cfelse>
+                                                    Permanent
+                                                </cfif>
+                                                -
+                                                <cfif VAL(qGetStudentsInRegion.isActivePlacement)>
+                                                    Current
+                                                <cfelse>
+                                                    Previous
+                                                </cfif>
         
-                    <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                        <cfinvokeargument name="email_to" value="#qGetRegionalManager.email#">
-                        <cfinvokeargument name="email_cc" value="#CLIENT.email#">
-                        <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
-                        <cfinvokeargument name="email_subject" value="#CLIENT.companyshort# - Missing Double Placement Paperwork Report">
-                        <cfinvokeargument name="email_message" value="#emailBody#">
-                    </cfinvoke>
+                                                <cfif VAL(qGetStudentsInRegion.isRelocation)>
+                                                    - Relocation
+                                                </cfif>
+                                                
+                                            )
+                                        </span>                            
+                                    </td>
+                                    <td style="font-size:9px">
+                                        #qGetStudentsInRegion.doublePlacementStudentName#
+                                        <cfif VAL(qGetStudentsInRegion.isActivePlacement) AND VAL(qGetStudentsInRegion.isActiveDoublePlacement)>
+                                            <span class="note">(Current)</span>
+                                        <cfelse>
+                                            <span class="note">(Previous)</span>
+                                        </cfif>
+                                    </td>
+                                    <td class="center" style="font-size:9px">#DateFormat(qGetStudentsInRegion.datePlaced, 'mm/dd/yy')#</td>
+                                    <td style="font-size:9px">
+                                        <cfif VAL(vIsCompliant)>
+                                            compliant
+                                        <cfelse>
+                                            #vMissingDocumentsMessage#
+                                            
+                                            #vOutOfComplianceDocuments#
+                                        </cfif>
+                                    </td>
+                                </tr>
                 
-                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                        <tr>
-                            <th class="left">*** Report emailed to #qGetRegionalManager.firstName# #qGetRegionalManager.lastName# at #qGetRegionalManager.email# ***</th>
-                        </tr>              
-                    </table>
+                            </cfoutput>
+                        
+                        </table>
                 
-				</cfif>   
-                <!--- Email Regional Manager --->               
-    
-            </cfoutput>
-    
-        </cfloop>
+                    </cfoutput>
+                
+                </cfsavecontent>
+                
+                <cfoutput>
+                
+                    <!--- Display Report --->
+                    #reportBody#
+                    
+                    <!--- Email Regional Manager --->        
+                    <cfif VAL(FORM.sendEmail) AND qGetStudentsInRegion.recordcount AND IsValid("email", qGetRegionalManager.email) AND IsValid("email", CLIENT.email)>
+                    
+                        <cfsavecontent variable="emailBody">
+                            <html>
+                                <head>
+                                    <title>#qGetStudentsInRegion.regionName# - Missing Double Placement Paperwork Report</title>
+                                </head>
+                                <body>                 
+                                    
+                                    <!--- Display Report Header --->
+                                    #reportHeader#	
+                                                      
+                                    <!--- Display Report --->
+                                    #reportBody#
+        
+                                </body>
+                            </html>
+                        </cfsavecontent>
+            
+                        <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                            <cfinvokeargument name="email_to" value="#qGetRegionalManager.email#">
+                            <cfinvokeargument name="email_cc" value="#CLIENT.email#">
+                            <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
+                            <cfinvokeargument name="email_subject" value="#CLIENT.companyshort# - Missing Double Placement Paperwork Report">
+                            <cfinvokeargument name="email_message" value="#emailBody#">
+                        </cfinvoke>
+                    
+                        <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                            <tr>
+                                <th class="left">*** Report emailed to #qGetRegionalManager.firstName# #qGetRegionalManager.lastName# at #qGetRegionalManager.email# ***</th>
+                            </tr>              
+                        </table>
+                    
+                    </cfif>   
+                    <!--- Email Regional Manager --->               
+        
+                </cfoutput>
+        
+            </cfloop>
+            
+       	</cfdocument>
 
 	</cfif>
 
