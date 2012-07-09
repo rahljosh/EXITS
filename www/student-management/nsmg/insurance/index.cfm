@@ -85,6 +85,7 @@
                 <tr>
                     <td width="50%" valign="top" align="left">
                         <form action="insurance/newTransactionProgramID.cfm" method="POST">
+                            <input type="hidden" name="option" value="basedOnFlight" />
                             <table class="nav_bar" cellpadding="6" cellspacing="0" align="left" width="98%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Enroll Students - Based on Flight Arrival Information</th></tr>
                                 <tr align="left">
@@ -108,6 +109,14 @@
                                         </select>
                                     </td>
                                 </tr>
+                                <tr align="left">
+                                    <td>Arrival From :</td>
+                                    <td><input type="text" name="arrivalFrom" id="arrivalFrom" class="datePicker" /> (optional)</td>
+                                </tr>
+                                <tr align="left">
+                                    <td>Arrival To :</td>
+                                    <td><input type="text" name="arrivalTo" id="arrivalTo" class="datePicker" /> (optional)</td>
+                                </tr>
                                 <tr>
                                     <td colspan="2">
                                         Start Date: Arrival Date <br />
@@ -120,7 +129,7 @@
                     </td>
                     <td width="50%" valign="top" align="right">
                         <form action="insurance/newTransactionProgramID.cfm" method="POST">
-                        	<input type="hidden" name="noFlight" value="1" />
+                            <input type="hidden" name="option" value="basedOnGivenDate" />
                             <table class="nav_bar" cellpadding="6" cellspacing="0" align="right" width="98%">
                                 <tr><th colspan="2" bgcolor="##e2efc7">Enroll Students - Based on Given Start Date</th></tr>
                                 <tr align="left">

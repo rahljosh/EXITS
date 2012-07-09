@@ -167,12 +167,14 @@
 
 
 	<!--- Enroll Students --->
-	<cffunction name="getStudentsToInsure" access="public" returntype="query" output="false" hint="Returns students with flight info that needs to be insure">
+	<cffunction name="getStudentsToInsureBasedOnFlightInformation" access="public" returntype="query" output="false" hint="Returns students with flight info that needs to be insure">
         <cfargument name="programID" hint="List of program IDs. Required.">
         <cfargument name="PolicyID" hint="Policy ID required">
-
+		<cfargument name="arrivalFrom" default="" hint="Arrival From is not required">
+        <cfargument name="arrivalTo" default="" hint="Arrival To is not required">
+        
         <cfquery 
-        	name="qGetStudentsToInsure" 
+        	name="qGetStudentsToInsureBasedOnFlightInformation" 
             datasource="#APPLICATION.dsn#">
                 SELECT DISTINCT
                     s.studentID, 
@@ -220,19 +222,30 @@
                     fi.flight_type IN ( <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival,preAypArrival" list="yes"> )
                 AND
                     ib.studentID IS NULL
+                
+                <cfif isDate(ARGUMENTS.arrivalFrom)>
+                	AND
+                    	fi.dep_date >= <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.arrivalFrom#">
+                </cfif>
+                
+                <cfif isDate(ARGUMENTS.arrivalTo)>
+                	AND
+                    	fi.dep_date <= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d', 1, ARGUMENTS.arrivalTo)#">
+                </cfif>    
+                    
                 GROUP BY 
                     fi.studentID
                 ORDER BY 
                     u.businessname, 
                     s.firstname
         </cfquery>
-    
-		<cfreturn qGetStudentsToInsure>
+    	
+		<cfreturn qGetStudentsToInsureBasedOnFlightInformation>
 	</cffunction>
 
 
 	<!--- Insure Students --->
-	<cffunction name="getStudentsToInsureNoFlight" access="public" returntype="query" output="false" hint="Returns students with flight info that needs to be insure">
+	<cffunction name="getStudentsToInsureBasedOnGivenStartDate" access="public" returntype="query" output="false" hint="Returns students with flight info that needs to be insure">
         <cfargument name="programID" hint="List of program IDs. Required.">
         <cfargument name="PolicyID" hint="Policy ID required">
         <cfargument name="startDate" default="" hint="Start Date is not required">
@@ -247,7 +260,7 @@
 		</cfscript>
 
         <cfquery 
-        	name="qGetStudentsToInsureNoFlight" 
+        	name="qGetStudentsToInsureBasedOnGivenStartDate" 
             datasource="#APPLICATION.dsn#">
                 SELECT DISTINCT
                     s.studentID, 
@@ -288,7 +301,7 @@
                     s.firstName        
 		</cfquery>
     
-		<cfreturn qGetStudentsToInsureNoFlight>
+		<cfreturn qGetStudentsToInsureBasedOnGivenStartDate>
 	</cffunction>
 
 	
