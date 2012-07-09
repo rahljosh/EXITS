@@ -26,14 +26,15 @@
             sc.schoolID,
             p.programID,
             p.programName,
-            (SELECT SUM(amount) FROM php_school_payments WHERE studentID = s.studentID AND schoolID = sc.schoolID AND programID = p.programID) AS totalAmount
+            (
+            	SELECT SUM(amount) FROM php_school_payments WHERE studentID = s.studentID AND schoolID = sc.schoolID AND programID = p.programID AND isDeleted = 0) AS totalAmount
       	FROM
         	php_students_in_program s
        	INNER JOIN
         	smg_students smg ON smg.studentID = s.studentID
-      	LEFT JOIN
+      	INNER JOIN
         	smg_programs p ON p.programID = s.programID
-       	LEFT JOIN
+       	INNER JOIN
         	php_schools sc ON sc.schoolID = s.schoolID
       	WHERE
         	1 = 1
