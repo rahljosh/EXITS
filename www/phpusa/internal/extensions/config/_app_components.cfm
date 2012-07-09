@@ -48,4 +48,7 @@
 
 	// Store the initialized student object in the Application scope
 	APPLICATION.CFC.user = CreateCFC("user").Init();
+	
+	// Store the initialized student object in the Application scope
+	APPLICATION.CFC.payments = CreateCFC("payments").Init();
 </cfscript>
