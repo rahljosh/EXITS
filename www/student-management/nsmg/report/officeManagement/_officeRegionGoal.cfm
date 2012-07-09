@@ -495,200 +495,210 @@
     
     <!--- On Screen Report --->
     <cfelse>
-            
-		<!--- Include Report Header --->   
-        <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-            <tr>
-                <th><cfoutput>#vReportTitle#</cfoutput></th>            
-            </tr>
-        </table>
-        
-		<cfoutput query="qGetResults" group="companyShort">
     
-            <cfscript>
-                vCurrentRow = 0;
-				
-				// Set Division Summary
-				vDivisionSummaryAssigned = 0;
-				vDivisionSummaryPlaced = 0;
-				vDivisionSummaryPending = 0;
-				vDivisionSummaryUnplaced = 0;
-				vDivisionSummaryPlacement = 0;
-				vDivisionSummaryAllocation = 0;
-				vDivisionSummaryPercentage = 0;
-            </cfscript>
+    	<cfdocument format="flashpaper" orientation="landscape" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
+    
+			<!--- Page Header --->
+            <gui:pageHeader
+                headerType="applicationNoHeader"
+                filePath="../"
+            />
             
+			<!--- Include Report Header --->   
             <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                 <tr>
-                    <th class="left" colspan="9">#qGetResults.companyShort#</th>
-                </tr>      
-                <tr>
-                    <td class="subTitleLeft" width="15%">Region</td>	
-                    <td class="subTitleLeft" width="15%">Regional Manager</td>
-                    <td class="subTitleCenter" width="10%">Total Assigned</td>
-                    <td class="subTitleCenter" width="10%">Placed</td>
-                    <td class="subTitleCenter" width="10%">Pending</td>
-                    <td class="subTitleCenter" width="10%">Unplaced</td>
-                    <td class="subTitleCenter" width="10%">Total Placements</td>
-                    <td class="subTitleCenter" width="10%">Goal</td>
-                    <td class="subTitleCenter" width="10%">Percentage</td>
-                </tr>
-
-                <cfoutput>
-
-                    <cfscript>
-						// Increase Current Row
-                        vCurrentRow ++;
-                        
-						vCurrentRowPlacecement = 0;
-						vCurrentRowPercentage = 0;
-						
-						// Get Statistics Per Region
-						stGetStatisticsPerRegion = getStatisticsPerRegion(regionID=qGetResults.regionID);
-	
-						// Set Total Placed and Percentage
-						vCurrentRowPlacecement = stGetStatisticsPerRegion.totalPlaced + stGetStatisticsPerRegion.totalPending;
-						
-						if ( VAL(stGetStatisticsPerRegion.totalStudents) ) { // VAL(qGetResults.allocation)
-							vCurrentRowPercentage = ( vCurrentRowPlacecement / stGetStatisticsPerRegion.totalStudents ) * 100;
-							//vCurrentRowPercentage = ( vCurrentRowPlacecement / qGetResults.allocation ) * 100;
-						}
-							
-						// Calculate Division Summary
-						vDivisionSummaryAssigned += stGetStatisticsPerRegion.totalStudents;
-						vDivisionSummaryPlaced += stGetStatisticsPerRegion.totalPlaced;
-						vDivisionSummaryPending += stGetStatisticsPerRegion.totalPending;
-						vDivisionSummaryUnplaced += stGetStatisticsPerRegion.totalUnplaced;
-						vDivisionSummaryAllocation += VAL(qGetResults.allocation);
-						
-						// Calculate Summary
-						vSummaryAssigned += stGetStatisticsPerRegion.totalStudents;
-						vSummaryPlaced += stGetStatisticsPerRegion.totalPlaced;
-						vSummaryPending += stGetStatisticsPerRegion.totalPending;
-						vSummaryUnplaced += stGetStatisticsPerRegion.totalUnplaced;
-						vSummaryAllocation += VAL(qGetResults.allocation);
-
-						// Great Lakes Region - Calculate Total
-						if ( listFind(vGreatLakesRegionIDList, qGetResults.regionID) ) {
-							vGreatLakesSummaryAssigned += stGetStatisticsPerRegion.totalStudents;
-							vGreatLakesSummaryPlaced += stGetStatisticsPerRegion.totalPlaced;
-							vGreatLakesSummaryPending += stGetStatisticsPerRegion.totalPending;
-							vGreatLakesSummaryUnplaced += stGetStatisticsPerRegion.totalUnplaced;
-							vGreatLakesSummaryPlacement = vGreatLakesSummaryPlaced + vGreatLakesSummaryPending;
-							vGreatLakesSummaryAllocation += VAL(qGetResults.allocation);
-							
-							if ( VAL(vGreatLakesSummaryAssigned) ) { // VAL(vGreatLakesSummaryAllocation)
-								vGreatLakesSummaryPercentage = ( vGreatLakesSummaryPlacement / vGreatLakesSummaryAssigned ) * 100;
-								// vGreatLakesSummaryPercentage = ( vGreatLakesSummaryPlacement / vGreatLakesSummaryAllocation ) * 100;
-							}
-							
-						}
-					</cfscript>
-
-                    <!--- Do not display Great Lakes Regions --->
-                    <cfif NOT listFind(vGreatLakesRegionIDList, qGetResults.regionID)>
-                        
-                        <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
-                            <td>#qGetResults.regionName#</td>
-                            <td><cfif VAL(qGetResults.userID)>#qGetResults.firstName# #qGetResults.lastName#<cfelse><span class="attention">Not Assigned</span></cfif></td>                        
-                            <td class="center">#stGetStatisticsPerRegion.totalStudents#</td>
-                            <td class="center">#stGetStatisticsPerRegion.totalPlaced#</td>
-                            <td class="center">#stGetStatisticsPerRegion.totalPending#</td>
-                            <td class="center">#stGetStatisticsPerRegion.totalUnplaced#</td>
-                            <td class="center">#vCurrentRowPlacecement#</td>
-                            <td class="center">#qGetResults.allocation#</td>
-                            <td class="center">#NumberFormat(vCurrentRowPercentage, '___.__')#%</td>
-                        </tr>
-                    
-					<!--- Display Total for Great Lakes --->
-                    <cfelseif qGetResults.regionID EQ ListLast(vGreatLakesRegionIDList)>
-                    
-                    	<cfscript>
-							// Increase Current Row
-							vCurrentRow ++;
-						</cfscript>
-                        <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
-                            <td>Great Lakes</td>
-                            <td><cfif VAL(qGetResults.userID)>#qGetResults.firstName# #qGetResults.lastName#<cfelse><span class="attention">Not Assigned</span></cfif></td>
-                            <td class="center">#vGreatLakesSummaryAssigned#</td>
-                            <td class="center">#vGreatLakesSummaryPlaced#</td>
-                            <td class="center">#vGreatLakesSummaryPending#</td>
-                            <td class="center">#vGreatLakesSummaryUnplaced#</td>
-                            <td class="center">#vGreatLakesSummaryPlacement#</td>
-                            <td class="center">#vGreatLakesSummaryAllocation#</td>
-                            <td class="center">#NumberFormat(vGreatLakesSummaryPercentage, '___.__')#% </td>
-                        </tr> 
-                        
-                    </cfif>
-                    
-                </cfoutput>
-                
-                <cfscript>
-					// Increase Current Row
-					vCurrentRow ++;
-					
-					vDivisionSummaryPlacement = vDivisionSummaryPlaced + vDivisionSummaryPending;
-					
-					if ( VAL(vDivisionSummaryAssigned) ) { // VAL(vDivisionSummaryAllocation)					
-						vDivisionSummaryPercentage = ( vDivisionSummaryPlacement / vDivisionSummaryAssigned ) * 100;
-						//vDivisionSummaryPercentage = ( vDivisionSummaryPlacement / vDivisionSummaryAllocation ) * 100;						
-					}		
-					
-					vSummaryPlacement = vSummaryPlaced + vSummaryPending;
-					
-					if ( VAL(vSummaryAssigned) ) { // VAL(vSummaryAllocation)
-						vSummaryPercentage = ( vSummaryPlacement / vSummaryAssigned ) * 100;
-						//vSummaryPercentage = ( vSummaryPlacement / vSummaryAllocation ) * 100;
-					}				
-				</cfscript>
-                
-                <tr>
-                    <th class="left" colspan="2">Total</td>
-                    <th>#vDivisionSummaryAssigned#</th>
-                    <th>#vDivisionSummaryPlaced#</th>
-                    <th>#vDivisionSummaryPending#</th>
-                    <th>#vDivisionSummaryUnplaced#</th>
-                    <th>#vDivisionSummaryPlacement#</th>
-                    <th>#vDivisionSummaryAllocation#</th>
-                    <th>#NumberFormat(vDivisionSummaryPercentage, '___.__')#%</th>
+                    <th><cfoutput>#vReportTitle#</cfoutput></th>            
                 </tr>
             </table>
             
-		</cfoutput>
+            <cfoutput query="qGetResults" group="companyShort">
         
-        <!--- ISE - Display Total Divisions --->
-		<cfif CLIENT.companyID EQ 5>
-
-			<cfoutput>
+                <cfscript>
+                    vCurrentRow = 0;
+                    
+                    // Set Division Summary
+                    vDivisionSummaryAssigned = 0;
+                    vDivisionSummaryPlaced = 0;
+                    vDivisionSummaryPending = 0;
+                    vDivisionSummaryUnplaced = 0;
+                    vDivisionSummaryPlacement = 0;
+                    vDivisionSummaryAllocation = 0;
+                    vDivisionSummaryPercentage = 0;
+                </cfscript>
+                
                 <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                     <tr>
-                        <th class="left" colspan="9">Total Divisions</th>
+                        <th class="left" colspan="9">#qGetResults.companyShort#</th>
                     </tr>      
                     <tr>
-                        <td class="subTitleLeft" width="15%">Region</td>	
-                        <td class="subTitleLeft" width="15%">Regional Manager</td>
-                        <td class="subTitleCenter" width="10%">Total Assigned</td>
-                        <td class="subTitleCenter" width="10%">Placed</td>
-                        <td class="subTitleCenter" width="10%">Pending</td>
-                        <td class="subTitleCenter" width="10%">Unplaced</td>
-                        <td class="subTitleCenter" width="10%">Total Placements</td>
-                        <td class="subTitleCenter" width="10%">Goal</td>
-                        <td class="subTitleCenter" width="10%">Percentage</td>
+                        <td class="subTitleLeft" width="15%" style="font-size:9px">Region</td>	
+                        <td class="subTitleLeft" width="15%" style="font-size:9px">Regional Manager</td>
+                        <td class="subTitleCenter" width="10%" style="font-size:9px">Total Assigned</td>
+                        <td class="subTitleCenter" width="10%" style="font-size:9px">Placed</td>
+                        <td class="subTitleCenter" width="10%" style="font-size:9px">Pending</td>
+                        <td class="subTitleCenter" width="10%" style="font-size:9px">Unplaced</td>
+                        <td class="subTitleCenter" width="10%" style="font-size:9px">Total Placements</td>
+                        <td class="subTitleCenter" width="10%" style="font-size:9px">Goal</td>
+                        <td class="subTitleCenter" width="10%" style="font-size:9px">Percentage</td>
                     </tr>
+    
+                    <cfoutput>
+    
+                        <cfscript>
+                            // Increase Current Row
+                            vCurrentRow ++;
+                            
+                            vCurrentRowPlacecement = 0;
+                            vCurrentRowPercentage = 0;
+                            
+                            // Get Statistics Per Region
+                            stGetStatisticsPerRegion = getStatisticsPerRegion(regionID=qGetResults.regionID);
+        
+                            // Set Total Placed and Percentage
+                            vCurrentRowPlacecement = stGetStatisticsPerRegion.totalPlaced + stGetStatisticsPerRegion.totalPending;
+                            
+                            if ( VAL(stGetStatisticsPerRegion.totalStudents) ) { // VAL(qGetResults.allocation)
+                                vCurrentRowPercentage = ( vCurrentRowPlacecement / stGetStatisticsPerRegion.totalStudents ) * 100;
+                                //vCurrentRowPercentage = ( vCurrentRowPlacecement / qGetResults.allocation ) * 100;
+                            }
+                                
+                            // Calculate Division Summary
+                            vDivisionSummaryAssigned += stGetStatisticsPerRegion.totalStudents;
+                            vDivisionSummaryPlaced += stGetStatisticsPerRegion.totalPlaced;
+                            vDivisionSummaryPending += stGetStatisticsPerRegion.totalPending;
+                            vDivisionSummaryUnplaced += stGetStatisticsPerRegion.totalUnplaced;
+                            vDivisionSummaryAllocation += VAL(qGetResults.allocation);
+                            
+                            // Calculate Summary
+                            vSummaryAssigned += stGetStatisticsPerRegion.totalStudents;
+                            vSummaryPlaced += stGetStatisticsPerRegion.totalPlaced;
+                            vSummaryPending += stGetStatisticsPerRegion.totalPending;
+                            vSummaryUnplaced += stGetStatisticsPerRegion.totalUnplaced;
+                            vSummaryAllocation += VAL(qGetResults.allocation);
+    
+                            // Great Lakes Region - Calculate Total
+                            if ( listFind(vGreatLakesRegionIDList, qGetResults.regionID) ) {
+                                vGreatLakesSummaryAssigned += stGetStatisticsPerRegion.totalStudents;
+                                vGreatLakesSummaryPlaced += stGetStatisticsPerRegion.totalPlaced;
+                                vGreatLakesSummaryPending += stGetStatisticsPerRegion.totalPending;
+                                vGreatLakesSummaryUnplaced += stGetStatisticsPerRegion.totalUnplaced;
+                                vGreatLakesSummaryPlacement = vGreatLakesSummaryPlaced + vGreatLakesSummaryPending;
+                                vGreatLakesSummaryAllocation += VAL(qGetResults.allocation);
+                                
+                                if ( VAL(vGreatLakesSummaryAssigned) ) { // VAL(vGreatLakesSummaryAllocation)
+                                    vGreatLakesSummaryPercentage = ( vGreatLakesSummaryPlacement / vGreatLakesSummaryAssigned ) * 100;
+                                    // vGreatLakesSummaryPercentage = ( vGreatLakesSummaryPlacement / vGreatLakesSummaryAllocation ) * 100;
+                                }
+                                
+                            }
+                        </cfscript>
+    
+                        <!--- Do not display Great Lakes Regions --->
+                        <cfif NOT listFind(vGreatLakesRegionIDList, qGetResults.regionID)>
+                            
+                            <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
+                                <td style="font-size:9px">#qGetResults.regionName#</td>
+                                <td style="font-size:9px"><cfif VAL(qGetResults.userID)>#qGetResults.firstName# #qGetResults.lastName#<cfelse><span class="attention">Not Assigned</span></cfif></td>                        
+                                <td class="center" style="font-size:9px">#stGetStatisticsPerRegion.totalStudents#</td>
+                                <td class="center" style="font-size:9px">#stGetStatisticsPerRegion.totalPlaced#</td>
+                                <td class="center" style="font-size:9px">#stGetStatisticsPerRegion.totalPending#</td>
+                                <td class="center" style="font-size:9px">#stGetStatisticsPerRegion.totalUnplaced#</td>
+                                <td class="center" style="font-size:9px">#vCurrentRowPlacecement#</td>
+                                <td class="center" style="font-size:9px">#qGetResults.allocation#</td>
+                                <td class="center" style="font-size:9px">#NumberFormat(vCurrentRowPercentage, '___.__')#%</td>
+                            </tr>
+                        
+                        <!--- Display Total for Great Lakes --->
+                        <cfelseif qGetResults.regionID EQ ListLast(vGreatLakesRegionIDList)>
+                        
+                            <cfscript>
+                                // Increase Current Row
+                                vCurrentRow ++;
+                            </cfscript>
+                            <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
+                                <td>Great Lakes</td>
+                                <td><cfif VAL(qGetResults.userID)>#qGetResults.firstName# #qGetResults.lastName#<cfelse><span class="attention">Not Assigned</span></cfif></td>
+                                <td class="center" style="font-size:9px">#vGreatLakesSummaryAssigned#</td>
+                                <td class="center" style="font-size:9px">#vGreatLakesSummaryPlaced#</td>
+                                <td class="center" style="font-size:9px">#vGreatLakesSummaryPending#</td>
+                                <td class="center" style="font-size:9px">#vGreatLakesSummaryUnplaced#</td>
+                                <td class="center" style="font-size:9px">#vGreatLakesSummaryPlacement#</td>
+                                <td class="center" style="font-size:9px">#vGreatLakesSummaryAllocation#</td>
+                                <td class="center" style="font-size:9px">#NumberFormat(vGreatLakesSummaryPercentage, '___.__')#% </td>
+                            </tr> 
+                            
+                        </cfif>
+                        
+                    </cfoutput>
+                    
+                    <cfscript>
+                        // Increase Current Row
+                        vCurrentRow ++;
+                        
+                        vDivisionSummaryPlacement = vDivisionSummaryPlaced + vDivisionSummaryPending;
+                        
+                        if ( VAL(vDivisionSummaryAssigned) ) { // VAL(vDivisionSummaryAllocation)					
+                            vDivisionSummaryPercentage = ( vDivisionSummaryPlacement / vDivisionSummaryAssigned ) * 100;
+                            //vDivisionSummaryPercentage = ( vDivisionSummaryPlacement / vDivisionSummaryAllocation ) * 100;						
+                        }		
+                        
+                        vSummaryPlacement = vSummaryPlaced + vSummaryPending;
+                        
+                        if ( VAL(vSummaryAssigned) ) { // VAL(vSummaryAllocation)
+                            vSummaryPercentage = ( vSummaryPlacement / vSummaryAssigned ) * 100;
+                            //vSummaryPercentage = ( vSummaryPlacement / vSummaryAllocation ) * 100;
+                        }				
+                    </cfscript>
+                    
                     <tr>
-                        <th class="left" colspan="2">&nbsp;</td>
-                        <th class="subTitleCenter">#vSummaryAssigned#</th>
-                        <th class="subTitleCenter">#vSummaryPlaced#</th>
-                        <th class="subTitleCenter">#vSummaryPending#</th>
-                        <th class="subTitleCenter">#vSummaryUnplaced#</th>
-                        <th class="subTitleCenter">#vSummaryPlacement#</th>
-                        <th class="subTitleCenter">#vSummaryAllocation#</th>
-                        <th class="subTitleCenter">#NumberFormat(vSummaryPercentage, '___.__')#%</th>
+                        <th class="left" colspan="2" style="font-size:9px">Total</td>
+                        <th style="font-size:9px">#vDivisionSummaryAssigned#</th>
+                        <th style="font-size:9px">#vDivisionSummaryPlaced#</th>
+                        <th style="font-size:9px">#vDivisionSummaryPending#</th>
+                        <th style="font-size:9px">#vDivisionSummaryUnplaced#</th>
+                        <th style="font-size:9px">#vDivisionSummaryPlacement#</th>
+                        <th style="font-size:9px">#vDivisionSummaryAllocation#</th>
+                        <th style="font-size:9px">#NumberFormat(vDivisionSummaryPercentage, '___.__')#%</th>
                     </tr>
                 </table>
-			</cfoutput>
+                
+            </cfoutput>
             
-        </cfif>
+            <!--- ISE - Display Total Divisions --->
+            <cfif CLIENT.companyID EQ 5>
+    
+                <cfoutput>
+                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                        <tr>
+                            <th class="left" colspan="9">Total Divisions</th>
+                        </tr>      
+                        <tr>
+                            <td class="subTitleLeft" width="15%" style="font-size:9px">Region</td>	
+                            <td class="subTitleLeft" width="15%" style="font-size:9px">Regional Manager</td>
+                            <td class="subTitleCenter" width="10%" style="font-size:9px">Total Assigned</td>
+                            <td class="subTitleCenter" width="10%" style="font-size:9px">Placed</td>
+                            <td class="subTitleCenter" width="10%" style="font-size:9px">Pending</td>
+                            <td class="subTitleCenter" width="10%" style="font-size:9px">Unplaced</td>
+                            <td class="subTitleCenter" width="10%" style="font-size:9px">Total Placements</td>
+                            <td class="subTitleCenter" width="10%" style="font-size:9px">Goal</td>
+                            <td class="subTitleCenter" width="10%" style="font-size:9px">Percentage</td>
+                        </tr>
+                        <tr>
+                            <th class="left" colspan="2" style="font-size:9px">&nbsp;</td>
+                            <th class="subTitleCenter" style="font-size:9px">#vSummaryAssigned#</th>
+                            <th class="subTitleCenter" style="font-size:9px">#vSummaryPlaced#</th>
+                            <th class="subTitleCenter" style="font-size:9px">#vSummaryPending#</th>
+                            <th class="subTitleCenter" style="font-size:9px">#vSummaryUnplaced#</th>
+                            <th class="subTitleCenter" style="font-size:9px">#vSummaryPlacement#</th>
+                            <th class="subTitleCenter" style="font-size:9px">#vSummaryAllocation#</th>
+                            <th class="subTitleCenter" style="font-size:9px">#NumberFormat(vSummaryPercentage, '___.__')#%</th>
+                        </tr>
+                    </table>
+                </cfoutput>
+                
+            </cfif>
+            
+      	</cfdocument>
                                     
     </cfif>
 

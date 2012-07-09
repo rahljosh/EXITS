@@ -290,111 +290,121 @@
     <!--- On Screen Report --->
     <cfelse>
     
-        <cfoutput>
-            
-            <!--- Include Report Header --->   
-            <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                <tr>
-                    <th>#vReportTitle#</th>            
-                </tr>
-                <tr>
-                    <td class="center">
-                        <strong>Program(s) included in this report: </strong> <br />
-                        <cfloop query="qGetPrograms">
-                            #qGetPrograms.programName# <br />
-                        </cfloop>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="center"><strong>Total of #qGetStudents.recordCount# students in this report</strong></td>
-                </tr>
-            </table>
-            
-            <!--- No Records Found --->
-            <cfif NOT VAL(qGetStudents.recordCount)>
-                <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                    <tr class="on">
-                        <td class="subTitleCenter">No records found</td>
-                    </tr>      
-                </table>
-                <cfabort>
-            </cfif>
-            
-        </cfoutput>
-        
-        <!--- Loop Regions ---> 
-        <cfloop list="#FORM.regionID#" index="currentRegionID">
+    	<cfdocument format="flashpaper" orientation="portrait" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
     
-            <cfquery name="qGetStudentsInRegion" dbtype="query">
-                SELECT
-                    *
-                FROM
-                    qGetStudents
-                WHERE
-                    regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#currentRegionID#"> 
-              	<!--- Regional Advisors --->
-				<cfif LEN(vListOfAdvisorUsers)>
-                    AND
-                        (
-                            s.areaRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
-                        OR
-                            s.placeRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
-                        )
-                </cfif>           
-            </cfquery>
-            
-            <cfif qGetStudentsInRegion.recordCount>
-            
-                <cfoutput>
-                    
-                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif ListGetAt(FORM.regionID, 1) NEQ currentRegionID>style="margin-top:30px;"</cfif>>
-                        <tr>
-                            <th class="left">#qGetStudentsInRegion.regionName# Region</th>
-                            <th class="right note">Total of #qGetStudentsInRegion.recordCount# records</th>
+			<!--- Page Header --->
+            <gui:pageHeader
+                headerType="applicationNoHeader"
+                filePath="../"
+            />
+    
+			<cfoutput>
+                
+                <!--- Include Report Header --->   
+                <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                    <tr>
+                        <th>#vReportTitle#</th>            
+                    </tr>
+                    <tr>
+                        <td class="center">
+                            <strong>Program(s) included in this report: </strong> <br />
+                            <cfloop query="qGetPrograms">
+                                #qGetPrograms.programName# <br />
+                            </cfloop>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="center"><strong>Total of #qGetStudents.recordCount# students in this report</strong></td>
+                    </tr>
+                </table>
+                
+                <!--- No Records Found --->
+                <cfif NOT VAL(qGetStudents.recordCount)>
+                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                        <tr class="on">
+                            <td class="subTitleCenter">No records found</td>
                         </tr>      
                     </table>
-				
-				</cfoutput>                    
-
-                <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">      
-                	<tr class="on">
-                    	<td class="subTitleLeft" width="30%">Area Representative</td>
-                        <td class="subTitleLeft" width="30%">Student</td>
-                        <td class="subTitleLeft" width="20%">Program</td>
-                        <td class="subTitleLeft" width="20%">Hours</td>
-                    </tr>
+                    <cfabort>
+                </cfif>
+                
+            </cfoutput>
             
-					<cfscript>
-                        // Set Current Row
-                        vCurrentRow = 0;			
-                    </cfscript>
-            
-					<cfoutput query="qGetStudentsInRegion" group="rep_lastName">
+            <!--- Loop Regions ---> 
+            <cfloop list="#FORM.regionID#" index="currentRegionID">
         
-                        <!--- Loop Through Query --->
-                        <cfoutput>
-        
-                            <cfscript>
-                                // Set Current Row
-                                vCurrentRow ++;			
-                            </cfscript>
-                            
-                            <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
-                                <td>#qGetStudentsInRegion.rep_firstName# #qGetStudentsInRegion.rep_lastName# ###qGetStudentsInRegion.areaRepID#</td>
-                                <td>#qGetStudentsInRegion.firstName# #qGetStudentsInRegion.familyLastName# ###qGetStudentsInRegion.studentID#</td>
-                                <td>#qGetStudentsInRegion.programName#</td>
-                                <td>#qGetStudentsInRegion.hours#</td>
-                            </tr>
+                <cfquery name="qGetStudentsInRegion" dbtype="query">
+                    SELECT
+                        *
+                    FROM
+                        qGetStudents
+                    WHERE
+                        regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#currentRegionID#"> 
+                    <!--- Regional Advisors --->
+                    <cfif LEN(vListOfAdvisorUsers)>
+                        AND
+                            (
+                                s.areaRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
+                            OR
+                                s.placeRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
+                            )
+                    </cfif>           
+                </cfquery>
+                
+                <cfif qGetStudentsInRegion.recordCount>
+                
+                    <cfoutput>
+                        
+                        <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif ListGetAt(FORM.regionID, 1) NEQ currentRegionID>style="margin-top:30px;"</cfif>>
+                            <tr>
+                                <th class="left">#qGetStudentsInRegion.regionName# Region</th>
+                                <th class="right note">Total of #qGetStudentsInRegion.recordCount# records</th>
+                            </tr>      
+                        </table>
+                    
+                    </cfoutput>                    
+    
+                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">      
+                        <tr class="on">
+                            <td class="subTitleLeft" width="30%" style="font-size:9px">Area Representative</td>
+                            <td class="subTitleLeft" width="30%" style="font-size:9px">Student</td>
+                            <td class="subTitleLeft" width="20%" style="font-size:9px">Program</td>
+                            <td class="subTitleLeft" width="20%" style="font-size:9px">Hours</td>
+                        </tr>
+                
+                        <cfscript>
+                            // Set Current Row
+                            vCurrentRow = 0;			
+                        </cfscript>
+                
+                        <cfoutput query="qGetStudentsInRegion" group="rep_lastName">
             
+                            <!--- Loop Through Query --->
+                            <cfoutput>
+            
+                                <cfscript>
+                                    // Set Current Row
+                                    vCurrentRow ++;			
+                                </cfscript>
+                                
+                                <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
+                                    <td style="font-size:9px">#qGetStudentsInRegion.rep_firstName# #qGetStudentsInRegion.rep_lastName# ###qGetStudentsInRegion.areaRepID#</td>
+                                    <td style="font-size:9px">#qGetStudentsInRegion.firstName# #qGetStudentsInRegion.familyLastName# ###qGetStudentsInRegion.studentID#</td>
+                                    <td style="font-size:9px">#qGetStudentsInRegion.programName#</td>
+                                    <td style="font-size:9px">#qGetStudentsInRegion.hours#</td>
+                                </tr>
+                
+                            </cfoutput>
+                        
                         </cfoutput>
                     
-                    </cfoutput>
+                    </table>
+        
+                </cfif>
                 
-            	</table>
-    
-    		</cfif>
+            </cfloop>
             
-        </cfloop>
+       	</cfdocument>
     
     </cfif>
     

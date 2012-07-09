@@ -269,92 +269,102 @@
     <!--- On Screen Report --->
     <cfelse>
     
-    	<cfoutput>
+    	<cfdocument format="flashpaper" orientation="landscape" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
     
-            <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                <tr>
-                    <th>#vReportTitle#</th>            
-                </tr>
-            </table>
-            
-            <cfloop list="#FORM.regionID#" index="iRegionID">
-                
-                <!--- This query is used to make sure we always display the name of the region even if there are not any records there --->
-                <cfquery name="qGetRegion" datasource="#APPLICATION.DSN#">
-                	SELECT
-                    	r.regionID,
-                        r.regionName
-                   	FROM
-                    	smg_regions r
-                    INNER JOIN
-                    	smg_companies c ON c.companyID = r.company
-                  	WHERE
-                    	regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#iRegionID#">
-                </cfquery>
-            	
-                <cfquery name="qGetResultsInRegion" dbtype="query">
-                    SELECT
-                        *
-                    FROM
-                        qGetResults
-                  	WHERE
-                    	regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#iRegionID#">
-                </cfquery>
-                
-                <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                	<tr>
-                    	<th class="left" colspan="4">
-                        	<cfif CLIENT.companyID EQ 5>#qGetRegionList.companyShort# -</cfif>
-                        	#qGetRegion.regionName#                        
-                        </th>
-                        <th class="right">#qGetResultsInRegion.recordCount# Users</th>
-                    </tr>
-                    <tr class="on">
-                        <td class="subTitleLeft" width="10%">ID</td>
-                        <td class="subTitleLeft" width="15%">First Name</td>
-                        <td class="subTitleLeft" width="15%">Last Name</td>
-                        <td class="subTitleLeft" width="40%">User Type</td>
-                        <td class="subTitleLeft" width="20%">Date</td>
-                  	</tr>
-                  
-                    <cfloop query="qGetResultsInRegion">
-                    	
-                        <tr class="#iif(qGetResultsInRegion.currentRow MOD 2 ,DE("off") ,DE("on") )#">
-                        	<td>#userID#</td>
-                            <td>#firstName#</td>
-                            <td>#lastName#</td>
-                            <td>#userTypeName#</td>
-                            <td>
-                            	<cfif IsDate(date_trained)>
-                                	#DateFormat(date_trained,"mm/dd/yyyy")#
-                               	<cfelse>
-                                	<span style="color:red;">Missing</span>
-                               	</cfif>
-                          	</td>
-                    	</tr>
-                        
-                    </cfloop>
-                    
-                    <cfif NOT VAL(qGetResultsInRegion.recordcount)>
-                        <tr class="off">
-                        	<td colspan="5">No records found</td>
-                        </tr>
-                    </cfif>
-                    
-             	</table>
-                
-            </cfloop>
-            
-            <!--- Total --->
-            <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                <tr>
-                    <th class="left" colspan="4">Total</th>
-                    <th class="right">#qGetResults.recordcount#</th>
-                </tr>
-            </table>
-                                    
-      	</cfoutput>
+			<!--- Page Header --->
+            <gui:pageHeader
+                headerType="applicationNoHeader"
+                filePath="../"
+            />
+    
+			<cfoutput>
         
-  	</cfif>
+                <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                    <tr>
+                        <th>#vReportTitle#</th>            
+                    </tr>
+                </table>
+                
+                <cfloop list="#FORM.regionID#" index="iRegionID">
+                    
+                    <!--- This query is used to make sure we always display the name of the region even if there are not any records there --->
+                    <cfquery name="qGetRegion" datasource="#APPLICATION.DSN#">
+                        SELECT
+                            r.regionID,
+                            r.regionName
+                        FROM
+                            smg_regions r
+                        INNER JOIN
+                            smg_companies c ON c.companyID = r.company
+                        WHERE
+                            regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#iRegionID#">
+                    </cfquery>
+                    
+                    <cfquery name="qGetResultsInRegion" dbtype="query">
+                        SELECT
+                            *
+                        FROM
+                            qGetResults
+                        WHERE
+                            regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#iRegionID#">
+                    </cfquery>
+                    
+                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                        <tr>
+                            <th class="left" colspan="4">
+                                <cfif CLIENT.companyID EQ 5>#qGetRegionList.companyShort# -</cfif>
+                                #qGetRegion.regionName#                        
+                            </th>
+                            <th class="right">#qGetResultsInRegion.recordCount# Users</th>
+                        </tr>
+                        <tr class="on">
+                            <td class="subTitleLeft" width="10%" style="font-size:9px">ID</td>
+                            <td class="subTitleLeft" width="15%" style="font-size:9px">First Name</td>
+                            <td class="subTitleLeft" width="15%" style="font-size:9px">Last Name</td>
+                            <td class="subTitleLeft" width="40%" style="font-size:9px">User Type</td>
+                            <td class="subTitleLeft" width="20%" style="font-size:9px">Date</td>
+                        </tr>
+                      
+                        <cfloop query="qGetResultsInRegion">
+                            
+                            <tr class="#iif(qGetResultsInRegion.currentRow MOD 2 ,DE("off") ,DE("on") )#">
+                                <td style="font-size:9px">#userID#</td>
+                                <td style="font-size:9px">#firstName#</td>
+                                <td style="font-size:9px">#lastName#</td>
+                                <td style="font-size:9px">#userTypeName#</td>
+                                <td style="font-size:9px">
+                                    <cfif IsDate(date_trained)>
+                                        #DateFormat(date_trained,"mm/dd/yyyy")#
+                                    <cfelse>
+                                        <span style="color:red;">Missing</span>
+                                    </cfif>
+                                </td>
+                            </tr>
+                            
+                        </cfloop>
+                        
+                        <cfif NOT VAL(qGetResultsInRegion.recordcount)>
+                            <tr class="off">
+                                <td colspan="5">No records found</td>
+                            </tr>
+                        </cfif>
+                        
+                    </table>
+                    
+                </cfloop>
+                
+                <!--- Total --->
+                <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                    <tr>
+                        <th class="left" colspan="4">Total</th>
+                        <th class="right">#qGetResults.recordcount#</th>
+                    </tr>
+                </table>
+                                        
+            </cfoutput>
+            
+      	</cfdocument>
+            
+	</cfif>
 
 </cfif>

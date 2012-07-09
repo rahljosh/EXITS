@@ -346,124 +346,140 @@
     <!--- On Screen Report --->
     <cfelse>
     
-        <cfoutput>
-            
-            <!--- Include Report Header --->   
-            <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                <tr>
-                    <th>Representative Management - Compliance Mileage Report</th>            
-                </tr>
-                <tr>
-                    <td class="center"><strong>Total Number of Students in this report:</strong> #qGetResults.recordcount# <br /></td>
-                </tr>
-                <tr>
-                    <td class="center">
-                        Program(s) included in this report: <br />
-                        <cfloop query="qGetPrograms">
-                            #qGetPrograms.programName# <br />
-                        </cfloop>
-                    </td>
-                </tr>            
-            </table>
-            
-            <!--- No Records Found --->
-            <cfif NOT VAL(qGetResults.recordCount)>
+    	<cfdocument format="flashpaper" orientation="portrait" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
+    
+    		<!--- Page Header --->
+            <gui:pageHeader
+                headerType="applicationNoHeader"
+                filePath="../"
+            />
+    
+			<cfoutput>
+                
+                <!--- Include Report Header --->   
                 <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                    <tr class="on">
-                        <td class="subTitleCenter">No records found</td>
-                    </tr>      
+                    <tr>
+                        <th>Representative Management - Compliance Mileage Report</th>            
+                    </tr>
+                    <tr>
+                        <td class="center" style="font-size:9px"><strong>Total Number of Students in this report:</strong> #qGetResults.recordcount# <br /></td>
+                    </tr>
+                    <tr>
+                        <td class="center" style="font-size:9px">
+                            Program(s) included in this report: <br />
+                            <cfloop query="qGetPrograms">
+                                #qGetPrograms.programName# <br />
+                            </cfloop>
+                        </td>
+                    </tr>            
                 </table>
-                <cfabort>
-            </cfif>
-            
-        </cfoutput>
-            
-        <cfoutput query="qGetResults" group="regionID">
-    
-            <cfscript>
-                // Set Current Row used to display light blue color on the table
-                vCurrentRow = 0;
-            </cfscript>
-    
-            <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                <tr>
-                    <th class="left" colspan="5">
-                        #qGetResults.regionName# Region
-                    </th>
-                </tr>      
-                <tr>
-                    <td class="subTitleLeft" width="28%">Student</td>
-                    <td class="subTitleLeft" width="28%">Supervising Representative</td>		            
-                    <td class="subTitleLeft" width="28%">Host Family</td>				
-                    <td class="subTitleCenter" width="16%">Google Shortest Driving Distance</td>
-                </tr>      
-    
-            <cfoutput>
-                            
-                <cfscript>
-                    vCurrentRow++;
                 
-                    vUpdateTable = 0;
-                    
-                    // Check if we have recorded distance in the database from Google driving directions
-                    if ( VAL(qGetResults.hfSupervisingDistance) ) {
-    
-                        vGoogleDistance = qGetResults.hfSupervisingDistance;
-    
-                    } else {
-                    
-                        // New Method
-                        vGoogleDistance = APPLICATION.CFC.UDF.calculateAddressDistance(origin=qGetResults.hostAddress,destination=qGetResults.supervisingAddress);
-                        vUpdateTable = 1;
-                        
-                    }
-                    
-                    vSetColorCode = '';
-                    
-                    if ( VAL(vGoogleDistance) GT 120 ) {
-                        vSetColorCode = 'alert';	
-                    } else if ( VAL(vGoogleDistance) GTE 100 ) {
-                        vSetColorCode = 'attention';	
-                    }
-                </cfscript>
-                                            
-                <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
-                    <td>
-                        #qGetResults.firstname# #qGetResults.familylastname# (###qGetResults.studentID#)
-                        <cfif VAL(qGetResults.active)>
-                            <span class="note">(Active)</span>
-                        <cfelseif isDate(qGetResults.cancelDate)>
-                            <span class="noteAlert">(Cancelled)</span>
-                        </cfif>
-                    </td>
-                    <td>
-                        #qGetResults.supervisingFirstName# #qGetResults.supervisingLastName# (###qGetResults.userID#)
-                        <span class="note">#qGetResults.supervisingAddress#</span>
-                    </td>     
-                    <td>
-                        #qGetResults.hostlastname# (###qGetResults.hostid#)
-                        <span class="note">#qGetResults.hostAddress#</span>
-                    </td>                           
-                    <td class="center #vSetColorCode#">#vGoogleDistance# mi</td>
-                </tr>
-                
-                <cfscript>
-                    // Update Distance in the database
-                    if ( VAL(vUpdateTable) AND IsNumeric(vGoogleDistance) ) {
-                    
-                        APPLICATION.CFC.STUDENT.updateHostSupervisingDistance(
-                            historyID=qGetResults.historyID	,
-                            distanceInMiles=vGoogleDistance												  																	  
-                        );
-                        
-                    }
-                </cfscript>
+                <!--- No Records Found --->
+                <cfif NOT VAL(qGetResults.recordCount)>
+                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                        <tr class="on">
+                            <td class="subTitleCenter" style="font-size:9px">No records found</td>
+                        </tr>      
+                    </table>
+                    <cfabort>
+                </cfif>
                 
             </cfoutput>
                 
-            </table>		
+            <cfoutput query="qGetResults" group="regionID">
         
-        </cfoutput>
+                <cfscript>
+                    // Set Current Row used to display light blue color on the table
+                    vCurrentRow = 0;
+                </cfscript>
+        
+                <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                    <tr>
+                        <th class="left" colspan="5">
+                            #qGetResults.regionName# Region
+                        </th>
+                    </tr>      
+                    <tr>
+                        <td class="subTitleLeft" width="28%" style="font-size:9px">Student</td>
+                        <td class="subTitleLeft" width="28%" style="font-size:9px">Supervising Representative</td>		            
+                        <td class="subTitleLeft" width="28%" style="font-size:9px">Host Family</td>				
+                        <td class="subTitleCenter" width="16%" style="font-size:9px">Google Shortest Driving Distance</td>
+                    </tr>      
+        
+                <cfoutput>
+                                
+                    <cfscript>
+                        vCurrentRow++;
+                    
+                        vUpdateTable = 0;
+                        
+                        // Check if we have recorded distance in the database from Google driving directions
+                        if ( VAL(qGetResults.hfSupervisingDistance) ) {
+        
+                            vGoogleDistance = qGetResults.hfSupervisingDistance;
+        
+                        } else {
+                        
+                            // New Method
+                            vGoogleDistance = APPLICATION.CFC.UDF.calculateAddressDistance(origin=qGetResults.hostAddress,destination=qGetResults.supervisingAddress);
+                            vUpdateTable = 1;
+                            
+                        }
+                        
+                        vSetColorCode = '';
+                        
+                        if ( VAL(vGoogleDistance) GT 120 ) {
+                            vSetColorCode = 'alert';	
+                        } else if ( VAL(vGoogleDistance) GTE 100 ) {
+                            vSetColorCode = 'attention';	
+                        }
+                    </cfscript>
+                                                
+                    <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
+                        <td style="font-size:9px">
+                            #qGetResults.firstname# #qGetResults.familylastname# (###qGetResults.studentID#)
+                            <cfif VAL(qGetResults.active)>
+                                <span class="note">(Active)</span>
+                            <cfelseif isDate(qGetResults.cancelDate)>
+                                <span class="noteAlert">(Cancelled)</span>
+                            </cfif>
+                        </td>
+                        <td style="font-size:9px">
+                            #qGetResults.supervisingFirstName# #qGetResults.supervisingLastName# (###qGetResults.userID#)
+                            <span class="note">#qGetResults.supervisingAddress#</span>
+                        </td>     
+                        <td style="font-size:9px">
+                            #qGetResults.hostlastname# (###qGetResults.hostid#)
+                            <span class="note">#qGetResults.hostAddress#</span>
+                        </td>                           
+                        <td class="center">
+                        	<table width="95%">
+                            	<tr>
+                                	<td class="center #vSetColorCode#" style="font-size:9px">#vGoogleDistance# mi</td>
+                               	</tr>
+                          	</table>
+                      	</td>
+                    </tr>
+                    
+                    <cfscript>
+                        // Update Distance in the database
+                        if ( VAL(vUpdateTable) AND IsNumeric(vGoogleDistance) ) {
+                        
+                            APPLICATION.CFC.STUDENT.updateHostSupervisingDistance(
+                                historyID=qGetResults.historyID	,
+                                distanceInMiles=vGoogleDistance												  																	  
+                            );
+                            
+                        }
+                    </cfscript>
+                    
+                </cfoutput>
+                    
+                </table>		
+            
+            </cfoutput>
+            
+      	</cfdocument>
     
     </cfif>
     

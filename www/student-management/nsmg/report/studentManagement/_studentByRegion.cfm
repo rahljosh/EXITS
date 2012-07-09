@@ -467,191 +467,201 @@
     <!--- On Screen Report --->
     <cfelse>
     
-        <cfoutput>
-            
-            <!--- Include Report Header --->   
-            <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                <tr>
-                    <th>#vReportTitle#</th>            
-                </tr>
-                <tr>
-                    <td class="center">
-                        <strong>Program(s) included in this report: </strong> <br />
-                        <cfloop query="qGetPrograms">
-                            #qGetPrograms.programName# <br />
-                        </cfloop>
-                        
-                        <strong>Student Status:</strong> #FORM.studentStatus# <br />
-                        <strong>Placement Status:</strong> #FORM.placementStatus# <br />
-                        
-                        <cfif FORM.placementStatus EQ 'Placed' AND ( isDate(FORM.dateFrom) OR isDate(FORM.dateTo) )>
-                            <strong>Placed from</strong> #FORM.dateFrom# <strong>to</strong> #FORM.dateTo#
-                        </cfif>
-                    </td>
-                </tr>
-            </table>
-            
-            <!--- No Records Found --->
-            <cfif NOT VAL(qGetResults.recordCount)>
+    	 <cfdocument format="flashpaper" orientation="landscape" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
+    
+    		<!--- Page Header --->
+            <gui:pageHeader
+                headerType="applicationNoHeader"
+                filePath="../"
+            />
+    		
+			<cfoutput>
+                
+                <!--- Include Report Header --->   
                 <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                    <tr class="on">
-                        <td class="subTitleCenter">No records found</td>
-                    </tr>      
+                    <tr>
+                        <th>#vReportTitle#</th>            
+                    </tr>
+                    <tr>
+                        <td class="center">
+                            <strong>Program(s) included in this report: </strong> <br />
+                            <cfloop query="qGetPrograms">
+                                #qGetPrograms.programName# <br />
+                            </cfloop>
+                            
+                            <strong>Student Status:</strong> #FORM.studentStatus# <br />
+                            <strong>Placement Status:</strong> #FORM.placementStatus# <br />
+                            
+                            <cfif FORM.placementStatus EQ 'Placed' AND ( isDate(FORM.dateFrom) OR isDate(FORM.dateTo) )>
+                                <strong>Placed from</strong> #FORM.dateFrom# <strong>to</strong> #FORM.dateTo#
+                            </cfif>
+                        </td>
+                    </tr>
                 </table>
-                <cfabort>
-            </cfif>
-            
-        </cfoutput>
-        
-        <!--- Loop Regions ---> 
-        <cfloop list="#FORM.regionID#" index="currentRegionID">
-    
-            <cfscript>
-                // Get Regional Manager
-                qGetRegionalManager = APPLICATION.CFC.USER.getRegionalManager(regionID=currentRegionID);
-            </cfscript>
-    
-            <cfquery name="qGetStudentsInRegion" dbtype="query">
-                SELECT
-                    *
-                FROM
-                    qGetResults
-                WHERE
-                    regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#currentRegionID#">               
-            </cfquery>
-            
-            <cfif qGetStudentsInRegion.recordCount>
-            
-                <cfoutput>
-                    
-                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif ListGetAt(FORM.regionID, 1) NEQ currentRegionID>style="margin-top:30px;"</cfif>>
-                        <tr>
-                            <th class="left">
-                                #qGetStudentsInRegion.regionName#
-                                &nbsp; - &nbsp;
-                                <cfif FORM.summary NEQ '1'>
-                                	Facilitator - #qGetStudentsInRegion.facilitatorName#
-                               	<cfelse>
-                                	#qGetStudentsInRegion.company#
-                                </cfif>
-                            </th>
-                            <th class="right note">
-                                Total of #qGetStudentsInRegion.recordCount# records
-                            </th>
+                
+                <!--- No Records Found --->
+                <cfif NOT VAL(qGetResults.recordCount)>
+                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                        <tr class="on">
+                            <td class="subTitleCenter">No records found</td>
                         </tr>      
                     </table>
+                    <cfabort>
+                </cfif>
                 
-                </cfoutput>
+            </cfoutput>
             
-            </cfif>
-            
-            <cfif FORM.summary NEQ '1'>
-            
-				<cfoutput query="qGetStudentsInRegion" group="#FORM.reportBy#">
+            <!--- Loop Regions ---> 
+            <cfloop list="#FORM.regionID#" index="currentRegionID">
         
-                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                        <tr>
-                            <th class="left" colspan="9">
-                                <cfif FORM.reportBy EQ 'placeRepID'>
-                                    Placing
-                                <cfelseif FORM.reportBy EQ 'areaRepID'>
-                                    Supervising
-                                </cfif>
-                                Representative #qGetStudentsInRegion.repName#
-                            </th>
-                        </tr>      
-                        <tr class="on">
-                            <td class="subTitleLeft" width="15%">Student</td>
-                            <td class="subTitleLeft" width="6%">Gender</td>
-                            <td class="subTitleLeft" width="8%">Country</td>
-                            <td class="subTitleLeft" width="10%">Program</td>
-                            <td class="subTitleLeft" width="15%">Host Family</td>
-                            <td class="subTitleLeft" width="8%">HF Phone</td>
-                            <td class="subTitleLeft" width="15%">HF City / State</td>
-                            <td class="subTitleLeft" width="15%">School</td>
-                            <td class="subTitleCenter" width="8%">Date Placed</td>
-                        </tr>      
-                        
-                        <cfscript>
-                            // Set Current Row
-                            vCurrentRow = 0;			
-                        </cfscript>
-                        
-                        <!--- Loop Through Query --->
-                        <cfoutput>
+                <cfscript>
+                    // Get Regional Manager
+                    qGetRegionalManager = APPLICATION.CFC.USER.getRegionalManager(regionID=currentRegionID);
+                </cfscript>
         
+                <cfquery name="qGetStudentsInRegion" dbtype="query">
+                    SELECT
+                        *
+                    FROM
+                        qGetResults
+                    WHERE
+                        regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#currentRegionID#">               
+                </cfquery>
+                
+                <cfif qGetStudentsInRegion.recordCount>
+                
+                    <cfoutput>
+                        
+                        <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif ListGetAt(FORM.regionID, 1) NEQ currentRegionID>style="margin-top:30px;"</cfif>>
+                            <tr>
+                                <th class="left">
+                                    #qGetStudentsInRegion.regionName#
+                                    &nbsp; - &nbsp;
+                                    <cfif FORM.summary NEQ '1'>
+                                        Facilitator - #qGetStudentsInRegion.facilitatorName#
+                                    <cfelse>
+                                        #qGetStudentsInRegion.company#
+                                    </cfif>
+                                </th>
+                                <th class="right note">
+                                    Total of #qGetStudentsInRegion.recordCount# records
+                                </th>
+                            </tr>      
+                        </table>
+                    
+                    </cfoutput>
+                
+                </cfif>
+                
+                <cfif FORM.summary NEQ '1'>
+                
+                    <cfoutput query="qGetStudentsInRegion" group="#FORM.reportBy#">
+            
+                        <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                            <tr>
+                                <th class="left" colspan="9">
+                                    <cfif FORM.reportBy EQ 'placeRepID'>
+                                        Placing
+                                    <cfelseif FORM.reportBy EQ 'areaRepID'>
+                                        Supervising
+                                    </cfif>
+                                    Representative #qGetStudentsInRegion.repName#
+                                </th>
+                            </tr>      
+                            <tr class="on">
+                                <td class="subTitleLeft" width="15%" style="font-size:9px">Student</td>
+                                <td class="subTitleLeft" width="6%" style="font-size:9px">Gender</td>
+                                <td class="subTitleLeft" width="8%" style="font-size:9px">Country</td>
+                                <td class="subTitleLeft" width="10%" style="font-size:9px">Program</td>
+                                <td class="subTitleLeft" width="15%" style="font-size:9px">Host Family</td>
+                                <td class="subTitleLeft" width="8%" style="font-size:9px">HF Phone</td>
+                                <td class="subTitleLeft" width="15%" style="font-size:9px">HF City / State</td>
+                                <td class="subTitleLeft" width="15%" style="font-size:9px">School</td>
+                                <td class="subTitleCenter" width="8%" style="font-size:9px">Date Placed</td>
+                            </tr>      
+                            
                             <cfscript>
                                 // Set Current Row
-                                vCurrentRow ++;			
+                                vCurrentRow = 0;			
                             </cfscript>
                             
-                            <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
-                                <td>
-                                    #qGetStudentsInRegion.studentName#
-                                    <cfif VAL(qGetStudentsInRegion.active)>
-                                        <span class="note">(Active)</span>
-                                    <cfelseif isDate(qGetStudentsInRegion.cancelDate)>
-                                        <span class="noteAlert">(Cancelled)</span>
-                                    <cfelse>
-                                        <span class="noteAlert">Inactive</span>
-                                    </cfif>
-                                </td>
-                                <td>#qGetStudentsInRegion.sex#</td>
-                                <td>#qGetStudentsInRegion.countryName#</td>
-                                <td>#qGetStudentsInRegion.programName#</td>
-                                <td>
-                                    <cfif VAL(qGetStudentsInRegion.hostID)>
-                                        #qGetStudentsInRegion.hostFamilyLastName# ###qGetStudentsInRegion.hostID#
-                                        
-                                        <span class="note">
-                                            (
-                                                <cfif VAL(qGetStudentsInRegion.isWelcomeFamily)>
-                                                    Welcome
-                                                <cfelse>
-                                                    Permanent
-                                                </cfif>
-                                                -
-                                                <cfif VAL(qGetStudentsInRegion.isActivePlacement)>
-                                                    Current
-                                                <cfelse>
-                                                    Previous
-                                                </cfif>
+                            <!--- Loop Through Query --->
+                            <cfoutput>
             
-                                                <cfif VAL(qGetStudentsInRegion.isRelocation)>
-                                                    - Relocation
-                                                </cfif>
-                                                
-                                            )
-                                        </span> 
-                                    </cfif>                                                         
-                                </td>
-                                <td>#qGetStudentsInRegion.hostPhone#</td>
-                                <td>#qGetStudentsInRegion.hostAddress#</td>
-                                <td>
-                                    <cfif VAL(qGetStudentsInRegion.schoolID)>
-                                        #qGetStudentsInRegion.schoolName# ###qGetStudentsInRegion.schoolID#
-                                    </cfif>
-                                </td>
-                                <td class="center">
-                                    <cfif listFind("1,2,3,4", qGetStudentsInRegion.host_fam_approved)>
-                                        #DateFormat(qGetStudentsInRegion.datePlaced, 'mm/dd/yy')#
-                                    <cfelseif VAL(qGetStudentsInRegion.hostID) AND listFind("5,6,7", qGetStudentsInRegion.host_fam_approved) >
-                                        Pending
-                                    <cfelse>
-                                        n/a
-                                    </cfif>
-                                </td>
-                            </tr>
-            
-                        </cfoutput>
-                    
-                    </table>
-            
-                </cfoutput>
+                                <cfscript>
+                                    // Set Current Row
+                                    vCurrentRow ++;			
+                                </cfscript>
+                                
+                                <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
+                                    <td style="font-size:9px">
+                                        #qGetStudentsInRegion.studentName#
+                                        <cfif VAL(qGetStudentsInRegion.active)>
+                                            <span class="note">(Active)</span>
+                                        <cfelseif isDate(qGetStudentsInRegion.cancelDate)>
+                                            <span class="noteAlert">(Cancelled)</span>
+                                        <cfelse>
+                                            <span class="noteAlert">Inactive</span>
+                                        </cfif>
+                                    </td>
+                                    <td style="font-size:9px">#qGetStudentsInRegion.sex#</td>
+                                    <td style="font-size:9px">#qGetStudentsInRegion.countryName#</td>
+                                    <td style="font-size:9px">#qGetStudentsInRegion.programName#</td>
+                                    <td style="font-size:9px">
+                                        <cfif VAL(qGetStudentsInRegion.hostID)>
+                                            #qGetStudentsInRegion.hostFamilyLastName# ###qGetStudentsInRegion.hostID#
+                                            
+                                            <span class="note">
+                                                (
+                                                    <cfif VAL(qGetStudentsInRegion.isWelcomeFamily)>
+                                                        Welcome
+                                                    <cfelse>
+                                                        Permanent
+                                                    </cfif>
+                                                    -
+                                                    <cfif VAL(qGetStudentsInRegion.isActivePlacement)>
+                                                        Current
+                                                    <cfelse>
+                                                        Previous
+                                                    </cfif>
                 
-          	</cfif>
-    
-        </cfloop>
+                                                    <cfif VAL(qGetStudentsInRegion.isRelocation)>
+                                                        - Relocation
+                                                    </cfif>
+                                                    
+                                                )
+                                            </span> 
+                                        </cfif>                                                         
+                                    </td>
+                                    <td style="font-size:9px">#qGetStudentsInRegion.hostPhone#</td>
+                                    <td style="font-size:9px">#qGetStudentsInRegion.hostAddress#</td>
+                                    <td style="font-size:9px">
+                                        <cfif VAL(qGetStudentsInRegion.schoolID)>
+                                            #qGetStudentsInRegion.schoolName# ###qGetStudentsInRegion.schoolID#
+                                        </cfif>
+                                    </td>
+                                    <td class="center" style="font-size:9px">
+                                        <cfif listFind("1,2,3,4", qGetStudentsInRegion.host_fam_approved)>
+                                            #DateFormat(qGetStudentsInRegion.datePlaced, 'mm/dd/yy')#
+                                        <cfelseif VAL(qGetStudentsInRegion.hostID) AND listFind("5,6,7", qGetStudentsInRegion.host_fam_approved) >
+                                            Pending
+                                        <cfelse>
+                                            n/a
+                                        </cfif>
+                                    </td>
+                                </tr>
+                
+                            </cfoutput>
+                        
+                        </table>
+                
+                    </cfoutput>
+                    
+                </cfif>
+        
+ 			</cfloop> 
+        
+        </cfdocument>
     
     </cfif>
     

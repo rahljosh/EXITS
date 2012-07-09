@@ -482,218 +482,228 @@
     <!--- On Screen Report --->
     <cfelse>
     
-        <cfoutput>
-        
-            <!--- Store Report Header in a Variable --->
-            <cfsavecontent variable="reportHeader">
-                
-                <!--- Run Report --->
-                <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                    <tr>
-                        <th>#vReportTitle#</th>            
-                    </tr>
-                    <tr>
-                        <td class="center">
-                            Program(s) included in this report: <br />
-                            <cfloop query="qGetPrograms">
-                                #qGetPrograms.programName# <br />
-                            </cfloop>
-                        </td>
-                    </tr>
-                </table>
-                
-                <br />
+    	<cfdocument format="flashpaper" orientation="landscape" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
+    
+			<!--- Page Header --->
+            <gui:pageHeader
+                headerType="applicationNoHeader"
+                filePath="../"
+            />
+    
+			<cfoutput>
             
-            </cfsavecontent>
-        
-            <!--- Display Report Header --->
-            #reportHeader#
-        
-        </cfoutput>
-    
-        <cfoutput query="qGetResults" group="userID">
-            
-            <!--- Save Report in a Variable --->
-            <cfsavecontent variable="reportBody">
-        
-                <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                    <tr>
-                        <th class="left" colspan="8">#qGetResults.businessName#</th>
-                    </tr>      
-                    <tr class="on">
-                        <td class="subTitleLeft" width="15%">Student</td>
-                        <td class="subTitleLeft" width="8%">Program</td>
-                        <td class="subTitleLeft" width="8%">Region</td>
-                        <td class="subTitleLeft" width="10%">Facilitator</td>
-                        <td class="subTitleLeft" width="12%">Host Family</td>
-                        <td class="subTitleLeft" width="15%">Double Placement</td>
-                        <td class="subTitleCenter" width="7%">Date Placed</td>
-                        <td class="subTitleLeft" width="25%">Missing Documents</td>
-                    </tr>      
+                <!--- Store Report Header in a Variable --->
+                <cfsavecontent variable="reportHeader">
                     
-                    <cfscript>
-                        // Set Current Row
-                        vCurrentRow = 0;			
-                    </cfscript>
-                    
-                    <!--- Loop Through Query --->
-                    <cfoutput>
-                        
-                        <cfscript>
-                            // Increase Current Row
-                            vCurrentRow ++;
-                            
-                            // Set Variable to Handle Missing Documents
-                            vMissingDocumentsMessage = '';
-                            vOutOfComplianceDocuments = '';
-                            vIsCompliant = 0;
-    
-                            // Display Missing
-                            if ( FORM.paperworkID EQ 'missing' ) {
-                            
-                                // Natural Family Date Signed
-                                if ( NOT isDate(qGetResults.doublePlacementParentsDateSigned) ) {
-                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Natural Family Date Signed <br />", " <br />");
-                                } 
-                                
-                                // Student Date Signed
-                                if ( NOT isDate(qGetResults.doublePlacementStudentDateSigned) ) {
-                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Student Date Signed <br />", " <br />");
-                                } 
-    
-                            // Display Both
-                            } else { 
-                            
-                                // Natural Family Date Signed
-                                if ( NOT isDate(qGetResults.doublePlacementParentsDateSigned) ) {
-                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Natural Family Date Signed <br />", " <br />");
-                                } else if ( isDate(qGetResults.doublePlacementStudentDateSigned) AND qGetResults.doublePlacementParentsDateSigned GT qGetResults.datePlaced ) {
-                                    vOutOfComplianceDocuments = ListAppend(vOutOfComplianceDocuments, "Natural Family Date Signed is Non-compliant <br />", " <br />");
-                                }
-                                
-                                // Student Date Signed
-                                if ( NOT isDate(qGetResults.doublePlacementStudentDateSigned) ) {
-                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Student Date Signed <br />", " <br />");
-                                } else if ( isDate(qGetResults.doublePlacementStudentDateSigned) AND qGetResults.doublePlacementStudentDateSigned GT qGetResults.datePlaced ) {
-                                    vOutOfComplianceDocuments = ListAppend(vOutOfComplianceDocuments, "Student Date Signed is Non-compliant <br />", " <br />");
-                                }
-                                
-                            }
-    
-                            // Check if is compliant
-                            if ( NOT LEN(vMissingDocumentsMessage) AND NOT LEN(vOutOfComplianceDocuments) ) {
-                                vIsCompliant = 1;
-                            }
-                        </cfscript>
-                        
-                        <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
-                            <td>
-                                #qGetResults.studentName#
-                                <cfif VAL(qGetResults.active)>
-                                    <span class="note">(Active)</span>
-                                <cfelseif isDate(qGetResults.cancelDate)>
-                                    <span class="noteAlert">(Cancelled)</span>
-                                </cfif>
-                            </td>
-                            <td>#qGetResults.programName#</td>
-                            <td>#qGetResults.regionName#</td>
-                            <td><a href="mailto:#qGetResults.facilitatorEmail#" title="Email #qGetResults.facilitatorName#">#qGetResults.facilitatorName#</a></td>
-                            <td>
-                                #qGetResults.hostFamilyLastName#
-    
-                                <span class="note">
-                                    (
-                                        <cfif VAL(qGetResults.isWelcomeFamily)>
-                                            Welcome
-                                        <cfelse>
-                                            Permanent
-                                        </cfif>
-                                        -
-                                        <cfif VAL(qGetResults.isActivePlacement)>
-                                            Current
-                                        <cfelse>
-                                            Previous
-                                        </cfif>
-                                    )
-                                </span>                            
-                                
-                            </td>
-                            <td>
-                                #qGetResults.doublePlacementStudentName#
-                                <cfif VAL(qGetResults.isActivePlacement) AND VAL(qGetResults.isActiveDoublePlacement)>
-                                    <span class="note">(Current)</span>
-                                <cfelse>
-                                    <span class="note">(Previous)</span>
-                                </cfif>
-                            </td>
-                            <td class="center">#DateFormat(qGetResults.datePlaced, 'mm/dd/yy')#</td>
-                            <td>
-                                <cfif VAL(vIsCompliant)>
-                                    compliant
-                                <cfelse>
-                                    #vMissingDocumentsMessage#
-                                    
-                                    #vOutOfComplianceDocuments#
-                                </cfif>
+                    <!--- Run Report --->
+                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                        <tr>
+                            <th>#vReportTitle#</th>            
+                        </tr>
+                        <tr>
+                            <td class="center">
+                                Program(s) included in this report: <br />
+                                <cfloop query="qGetPrograms">
+                                    #qGetPrograms.programName# <br />
+                                </cfloop>
                             </td>
                         </tr>
-        
-                    </cfoutput>
-                
-                </table>
-        
-            </cfsavecontent>
-        
-            <!--- Display Report --->
-            #reportBody#
-    
-            <!--- Email Intl. Representatives --->        
-            <cfif VAL(FORM.sendEmail) AND qGetResults.recordcount AND IsValid("email", qGetResults.intRepEmail) AND IsValid("email", CLIENT.email)>
-                
-                 <cfsavecontent variable="emailBody">
-                    <html>
-                        <head>
-                            <title>#qGetResults.businessName# - Missing Double Placement Paperwork Report</title>
-                        </head>
-                        <body>
-                
-                            <p>	
-                                Dear #qGetResults.businessName#,
-                            </p>
-                            
-                            <p>            	
-                                Please find a list of missing documents for the corresponding students below.   	
-                                These documents have not been received by our office at this current time. Please send them to the appropriate facilitator ASAP. 
-                                If you are missing any of the requested documents or have any questions regarding these students, please contact the appropriate facilitator.
-                            </p>                 
-                            
-                            <!--- Display Report Header --->
-                            #reportHeader#	
-                                              
-                            <!--- Display Report --->
-                            #reportBody#
-    
-                       </body>
-                    </html>
-                </cfsavecontent>
-        
-                <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                    <cfinvokeargument name="email_to" value="#qGetResults.intRepEmail#">
-                    <cfinvokeargument name="email_cc" value="#CLIENT.email#">
-                    <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
-                    <cfinvokeargument name="email_subject" value="#CLIENT.companyshort# - Missing Double Placement Paperwork Report">
-                    <cfinvokeargument name="email_message" value="#emailBody#">
-                </cfinvoke>
-                
-                <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
-                    <tr>
-                        <th class="left">*** Report emailed to #qGetResults.intRepEmail# ***</th>
-                    </tr>              
-                </table>
+                    </table>
                     
-            </cfif>            
+                    <br />
+                
+                </cfsavecontent>
+            
+                <!--- Display Report Header --->
+                #reportHeader#
+            
+            </cfoutput>
         
-        </cfoutput>
+            <cfoutput query="qGetResults" group="userID">
+                
+                <!--- Save Report in a Variable --->
+                <cfsavecontent variable="reportBody">
+            
+                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                        <tr>
+                            <th class="left" colspan="8">#qGetResults.businessName#</th>
+                        </tr>      
+                        <tr class="on">
+                            <td class="subTitleLeft" width="15%" style="font-size:9px">Student</td>
+                            <td class="subTitleLeft" width="8%" style="font-size:9px">Program</td>
+                            <td class="subTitleLeft" width="8%" style="font-size:9px">Region</td>
+                            <td class="subTitleLeft" width="10%" style="font-size:9px">Facilitator</td>
+                            <td class="subTitleLeft" width="12%" style="font-size:9px">Host Family</td>
+                            <td class="subTitleLeft" width="15%" style="font-size:9px">Double Placement</td>
+                            <td class="subTitleCenter" width="7%" style="font-size:9px">Date Placed</td>
+                            <td class="subTitleLeft" width="25%" style="font-size:9px">Missing Documents</td>
+                        </tr>      
+                        
+                        <cfscript>
+                            // Set Current Row
+                            vCurrentRow = 0;			
+                        </cfscript>
+                        
+                        <!--- Loop Through Query --->
+                        <cfoutput>
+                            
+                            <cfscript>
+                                // Increase Current Row
+                                vCurrentRow ++;
+                                
+                                // Set Variable to Handle Missing Documents
+                                vMissingDocumentsMessage = '';
+                                vOutOfComplianceDocuments = '';
+                                vIsCompliant = 0;
+        
+                                // Display Missing
+                                if ( FORM.paperworkID EQ 'missing' ) {
+                                
+                                    // Natural Family Date Signed
+                                    if ( NOT isDate(qGetResults.doublePlacementParentsDateSigned) ) {
+                                        vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Natural Family Date Signed <br />", " <br />");
+                                    } 
+                                    
+                                    // Student Date Signed
+                                    if ( NOT isDate(qGetResults.doublePlacementStudentDateSigned) ) {
+                                        vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Student Date Signed <br />", " <br />");
+                                    } 
+        
+                                // Display Both
+                                } else { 
+                                
+                                    // Natural Family Date Signed
+                                    if ( NOT isDate(qGetResults.doublePlacementParentsDateSigned) ) {
+                                        vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Natural Family Date Signed <br />", " <br />");
+                                    } else if ( isDate(qGetResults.doublePlacementStudentDateSigned) AND qGetResults.doublePlacementParentsDateSigned GT qGetResults.datePlaced ) {
+                                        vOutOfComplianceDocuments = ListAppend(vOutOfComplianceDocuments, "Natural Family Date Signed is Non-compliant <br />", " <br />");
+                                    }
+                                    
+                                    // Student Date Signed
+                                    if ( NOT isDate(qGetResults.doublePlacementStudentDateSigned) ) {
+                                        vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Missing Student Date Signed <br />", " <br />");
+                                    } else if ( isDate(qGetResults.doublePlacementStudentDateSigned) AND qGetResults.doublePlacementStudentDateSigned GT qGetResults.datePlaced ) {
+                                        vOutOfComplianceDocuments = ListAppend(vOutOfComplianceDocuments, "Student Date Signed is Non-compliant <br />", " <br />");
+                                    }
+                                    
+                                }
+        
+                                // Check if is compliant
+                                if ( NOT LEN(vMissingDocumentsMessage) AND NOT LEN(vOutOfComplianceDocuments) ) {
+                                    vIsCompliant = 1;
+                                }
+                            </cfscript>
+                            
+                            <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
+                                <td style="font-size:9px">
+                                    #qGetResults.studentName#
+                                    <cfif VAL(qGetResults.active)>
+                                        <span class="note">(Active)</span>
+                                    <cfelseif isDate(qGetResults.cancelDate)>
+                                        <span class="noteAlert">(Cancelled)</span>
+                                    </cfif>
+                                </td>
+                                <td style="font-size:9px">#qGetResults.programName#</td>
+                                <td style="font-size:9px">#qGetResults.regionName#</td>
+                                <td style="font-size:9px"><a href="mailto:#qGetResults.facilitatorEmail#" title="Email #qGetResults.facilitatorName#">#qGetResults.facilitatorName#</a></td>
+                                <td style="font-size:9px">
+                                    #qGetResults.hostFamilyLastName#
+        
+                                    <span class="note">
+                                        (
+                                            <cfif VAL(qGetResults.isWelcomeFamily)>
+                                                Welcome
+                                            <cfelse>
+                                                Permanent
+                                            </cfif>
+                                            -
+                                            <cfif VAL(qGetResults.isActivePlacement)>
+                                                Current
+                                            <cfelse>
+                                                Previous
+                                            </cfif>
+                                        )
+                                    </span>                            
+                                    
+                                </td>
+                                <td style="font-size:9px">
+                                    #qGetResults.doublePlacementStudentName#
+                                    <cfif VAL(qGetResults.isActivePlacement) AND VAL(qGetResults.isActiveDoublePlacement)>
+                                        <span class="note">(Current)</span>
+                                    <cfelse>
+                                        <span class="note">(Previous)</span>
+                                    </cfif>
+                                </td>
+                                <td class="center" style="font-size:9px">#DateFormat(qGetResults.datePlaced, 'mm/dd/yy')#</td>
+                                <td style="font-size:9px">
+                                    <cfif VAL(vIsCompliant)>
+                                        compliant
+                                    <cfelse>
+                                        #vMissingDocumentsMessage#
+                                        
+                                        #vOutOfComplianceDocuments#
+                                    </cfif>
+                                </td>
+                            </tr>
+            
+                        </cfoutput>
+                    
+                    </table>
+            
+                </cfsavecontent>
+            
+                <!--- Display Report --->
+                #reportBody#
+        
+                <!--- Email Intl. Representatives --->        
+                <cfif VAL(FORM.sendEmail) AND qGetResults.recordcount AND IsValid("email", qGetResults.intRepEmail) AND IsValid("email", CLIENT.email)>
+                    
+                     <cfsavecontent variable="emailBody">
+                        <html>
+                            <head>
+                                <title>#qGetResults.businessName# - Missing Double Placement Paperwork Report</title>
+                            </head>
+                            <body>
+                    
+                                <p>	
+                                    Dear #qGetResults.businessName#,
+                                </p>
+                                
+                                <p>            	
+                                    Please find a list of missing documents for the corresponding students below.   	
+                                    These documents have not been received by our office at this current time. Please send them to the appropriate facilitator ASAP. 
+                                    If you are missing any of the requested documents or have any questions regarding these students, please contact the appropriate facilitator.
+                                </p>                 
+                                
+                                <!--- Display Report Header --->
+                                #reportHeader#	
+                                                  
+                                <!--- Display Report --->
+                                #reportBody#
+        
+                           </body>
+                        </html>
+                    </cfsavecontent>
+            
+                    <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                        <cfinvokeargument name="email_to" value="#qGetResults.intRepEmail#">
+                        <cfinvokeargument name="email_cc" value="#CLIENT.email#">
+                        <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
+                        <cfinvokeargument name="email_subject" value="#CLIENT.companyshort# - Missing Double Placement Paperwork Report">
+                        <cfinvokeargument name="email_message" value="#emailBody#">
+                    </cfinvoke>
+                    
+                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                        <tr>
+                            <th class="left">*** Report emailed to #qGetResults.intRepEmail# ***</th>
+                        </tr>              
+                    </table>
+                        
+                </cfif>            
+            
+            </cfoutput>
+            
+     	</cfdocument>
     
     </cfif>
     
