@@ -61,14 +61,10 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                 You will then see the date converted to DD-MMM-YY. 
                 When this is takes place, your dates are correct.
             </td>
-            <td colspan="3" style="font-size:18pt; font-weight:bold; text-align:center; border:none;">
-                Batch Cancelation Sheet
-            </td>
+            <td colspan="3" style="font-size:18pt; font-weight:bold; text-align:center; border:none;">Batch Cancelation Sheet</td>
             <td style="border:none;">&nbsp;</td>
             <td style="border:none;">&nbsp;</td>
-            <td style="text-align:right; border:none;">
-                BatchCancel
-            </td>
+            <td style="text-align:right; border:none;">BatchCancel</td>
         </tr>
         <tr>
             <td colspan="4" style="background-color:##CCCCCC; border:none;">&nbsp;</td>

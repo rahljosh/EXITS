@@ -18,8 +18,10 @@
     <!--- Param variables --->
     <cfparam name="FORM.programID" default="0">
     <cfparam name="FORM.policyID" default="0">
-    <cfparam name="FORM.noFlight" default="0">
+    <cfparam name="FORM.option" default="">
     <cfparam name="FORM.startDate" default="">
+    <cfparam name="FORM.arrivalFrom" default="">
+    <cfparam name="FORM.arrivalTo" default="">
 	
     <cfscript>
 		// Create Structure to store errors
@@ -36,7 +38,7 @@
 			ArrayAppend(Errors.Messages, "Please select a policy type");
 		}
 
-		if ( FORM.noFlight AND NOT IsDate(FORM.startDate) ) {
+		if ( FORM.option EQ 'basedOnGivenDate' AND NOT IsDate(FORM.startDate) ) {
 			ArrayAppend(Errors.Messages, "Please enter a valid start date");
 		}
 		
@@ -52,24 +54,24 @@
 		}
 
 		// Get Students with flight information
-		if ( NOT VAL(FORM.noFlight) ) {
+		if ( FORM.option EQ 'basedOnFlight' ) {
 		
 			// Get Students that needs to be insured
-			qGetStudents = APPCFC.INSURANCE.getStudentsToInsure(programID=FORM.programID, policyID=FORM.policyID);
+			qGetStudents = APPLICATION.CFC.INSURANCE.getStudentsToInsureBasedOnFlightInformation(programID=FORM.programID, policyID=FORM.policyID, arrivalFrom=FORM.arrivalFrom, arrivalTo=FORM.arrivalTo);
 
 		// Get Students with no flight information
 		} else {
 
 			// Get Students that needs to be insured
-			qGetStudents = APPCFC.INSURANCE.getStudentsToInsureNoFlight(programID=FORM.programID, policyID=FORM.policyID, startDate=FORM.startDate);
+			qGetStudents = APPLICATION.CFC.INSURANCE.getStudentsToInsureBasedOnGivenStartDate(programID=FORM.programID, policyID=FORM.policyID, startDate=FORM.startDate);
 
 		}
 
 		// Get Company Short
-		companyShort = APPCFC.COMPANY.getCompanies(companyID=CLIENT.companyID).companyShort_noColor;
+		companyShort = APPLICATION.CFC.COMPANY.getCompanies(companyID=CLIENT.companyID).companyShort_noColor;
 		
 		// Get Policy Type
-		policyName = APPCFC.INSURANCE.getInsurancePolicies(insuTypeID=FORM.policyID).shortType;
+		policyName = APPLICATION.CFC.INSURANCE.getInsurancePolicies(insuTypeID=FORM.policyID).shortType;
 	
 		// Set XLS File Name
 		XLSFileName = '#companyShort#_#policyName#_#DateFormat(now(),'mm-dd-yyyy')#_#TimeFormat(now(),'hh-mm-ss-tt')#.xls';
@@ -154,7 +156,7 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
 	
 				<cfscript>
 					// Update Insurace Record and Insert History
-					APPCFC.INSURANCE.insertInsuranceHistory(
+					APPLICATION.CFC.INSURANCE.insertInsuranceHistory(
 						studentID=qGetStudents.studentID,
 						type="N",
 						startDate=qGetStudents.dep_date,
