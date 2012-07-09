@@ -119,7 +119,7 @@ where programid = #get_student_info.programid#
 								<td><em>Additional Programs</em></td>
 							</tr>
 							<tr>
-								<td>#assignedProgram.programname# - #app_programs.app_program# <cfif LEN(qGetSelectedCanadaAreaChoice.name)> - #qGetSelectedCanadaAreaChoice.name#</cfif> <br><img src="#path#pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
+								<td>#assignedProgram.programname# - #app_programs.app_program# <cfif LEN(qGetSelectedCanadaAreaChoice.name)> - #qGetSelectedCanadaAreaChoice.name# <cfelse>To be Defined</cfif> <br><img src="#path#pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
 								<td><cfif app_other_programs.recordcount EQ '0'>None<cfelse>
                                 <cfloop list="#get_student_info.app_additional_program#" index=i>
                                 <cfquery name="app_other_programs" datasource="MySQL">
