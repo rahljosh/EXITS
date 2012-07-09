@@ -287,7 +287,7 @@
                 <tr class="canadaAreaDiv" style="display:none">
 					<td valign="top">
                         <select name="app_canada_area" id="app_canada_area" class="large">
-                            <option value="0"></option>
+                            <option value="0">To be Defined</option>
                             <cfloop query="qGetCanadaAreaChoiceList">
                                 <option value="#qGetCanadaAreaChoiceList.fieldID#" <cfif qGetCanadaAreaChoiceList.fieldID EQ get_student_info.app_canada_area> selected="selected" </cfif> >#qGetCanadaAreaChoiceList.name#</option>
                             </cfloop>
