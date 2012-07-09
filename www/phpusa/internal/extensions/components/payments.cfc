@@ -61,10 +61,12 @@
     	<cfargument name="ID" type="numeric" required="yes">
         
         <cfquery datasource="#APPLICATION.DSN#">
-        	DELETE FROM
+        	UPDATE
             	php_school_payments
-           	WHERE
-            	ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
+			SET
+            	isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        	WHERE
+         		ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
         </cfquery>
     
     </cffunction>

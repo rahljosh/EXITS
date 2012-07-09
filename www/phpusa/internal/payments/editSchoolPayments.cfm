@@ -36,7 +36,7 @@
        	FROM
         	php_school_payments
        	WHERE
-        	1 = 1
+        	isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
        	<cfif VAL(URL.studentID)>
         	AND
         		studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.studentID#">
