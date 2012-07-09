@@ -44,6 +44,14 @@
                 <li><a href="index.cfm?curdoc=invoice/invoice_index">Invoicing</a></li>
             </cfif>
             
+            <cfif CLIENT.userType EQ 1 OR ListFind("7630,17306",CLIENT.userID)>
+            	<li><a>Payments</a>
+                	<ul>
+                    	<li><a href="index.cfm?curdoc=payments/schoolPayments">School Payments</a></li>
+                    </ul>
+               	</li>
+            </cfif>
+            
             <li><a href="index.cfm?curdoc=pdf_docs/docs_forms">PDF Docs</a></li>
             
             <li><a href="index.cfm?curdoc=reports/reports_menu">Reports</a>
