@@ -583,7 +583,7 @@
             <td>&nbsp;</td>
             <td>
                 <select name="app_indicated_program" id="app_indicated_program" onchange="displayCanada();">
-                    <option value="0"></option>
+                    <option value="0">To Be Defined</option>
                     <cfloop query="qAppPrograms">
                         <option value="#qAppPrograms.app_programID#" <cfif qAppPrograms.app_programID EQ FORM.app_indicated_program> selected="selected" </cfif> >#qAppPrograms.app_program#</option>
                     </cfloop>
