@@ -21,13 +21,17 @@
     <cfparam name="URL.sortOrder" default="ASC">
 
     <!--- Param FORM Variables --->
+    <cfparam name="FORM.preAypCamp" default="0">
     <cfparam name="FORM.regionID" default="#CLIENT.regionID#">
     <cfparam name="FORM.userType" default="#CLIENT.userType#">
 	
     <cfscript>
 		// Get Regions
 		qGetRegionList = APPLICATION.CFC.REGION.getUserRegions(companyID=CLIENT.companyID, userID=CLIENT.userID, usertype=FORM.userType);
-	
+
+		// Get AYP English Camps
+		qAYPEnglishCamps = APPCFC.SCHOOL.getAYPCamps(campType='english');	
+
         // make sure we have a valid sortOrder value
 		if ( NOT ListFind("ASC,DESC", URL.sortOrder) ) {
 			URL.sortOrder = "ASC";				  
@@ -127,11 +131,13 @@
         	smg_companies c ON c.companyID = s.companyID            
 		INNER JOIN
         	smg_regions r ON r.regionID = s.regionAssigned
-        INNER JOIN user_access_rights uar ON s.placeRepID = uar.userid
+        INNER JOIN user_access_rights uar ON s.placeRepID = uar.userID
             AND 
                 s.regionassigned = uar.regionID
         LEFT JOIN 
-            smg_users advisor ON uar.advisorID = advisor.userid
+            smg_users advisor ON uar.advisorID = advisor.userID
+        LEFT OUTER JOIN 
+            smg_aypcamps english ON s.aypenglish = english.campID
         WHERE 
         	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND 
@@ -143,6 +149,15 @@
 		<cfelse>        	
             AND
                 s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        </cfif>
+        
+        <!--- Pre-AYP Filter --->
+		<cfif FORM.preAypCamp EQ 'All'>
+            AND 
+                s.aypenglish = english.campID 
+        <cfelseif VAL(FORM.preAypCamp)>
+            AND 
+                s.aypenglish = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.preAypCamp#">
         </cfif>
         
         <cfswitch expression="#FORM.userType#">
@@ -263,7 +278,8 @@
                 studentLastName
             </cfdefaultcase>
 
-        </cfswitch>  
+        </cfswitch>
+
 	</cfquery>
     
 </cfsilent>   
@@ -283,13 +299,19 @@
 			escKey:false, 
 			onClosed:function(){ window.location.reload(); }
 		});	
+		
+		// Submit preAypCamp form when option changes
+		$("#preAypCamp").change(function() {
+			$("#studentFilterForm").submit();
+		});
+		
+		// Submit regionSelectForm form when option changes
+		$("#regionSelectForm").change(function() {
+			$("#regionSelectForm").submit();
+		});
 
 	});
 	
-	// Submit Form
-	var submitForm = function() { 
-		$("#selectRegionForm").submit();
-	}
 	// End -->
 </script> 	
 
@@ -301,23 +323,41 @@
         tableTitle="Pending Placements"
         width="100%"
     />    
-
+	
+    <!--- Office Users - PreAyp Filter --->
+    <cfif APPLICATION.CFC.USER.isOfficeUser()>
+		<table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">        
+            <tr>
+                <td>                      
+					<form name="studentFilterForm" id="studentFilterForm" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
+                    	Pre-AYP Camp: &nbsp; 
+                      	<select name="preAypCamp" id="preAypCamp" class="largeField">
+							<option value="0" <cfif FORM.preAypCamp EQ 0> selected="selected" </cfif> ></option>
+                            <option value="All" <cfif FORM.preAypCamp EQ 'All'> selected="selected" </cfif> >All Pre-AYP Camps</option>
+                            <cfloop query="qAYPEnglishCamps">
+                                <option value="#qAYPEnglishCamps.campID#" <cfif FORM.preAypCamp EQ qAYPEnglishCamps.campID> selected="selected" </cfif> >#qAYPEnglishCamps.name#</option>
+                            </cfloop>
+                      	</select>
+					</form>	
+                </td>
+            </tr>
+		</table>            
 	<!--- Field Viewing - REGIONS DROP DOWN LIST --->
-    <cfif NOT listFind("1,2,3,4", FORM.userType) AND qGetRegionList.recordcount GT 1>
-          <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">        
-              <tr>
-                  <td>                      
-                      <form name="selectRegionForm" id="selectRegionForm" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
-                          You have access to multiple regions filter by Region: &nbsp; 
-                          <select name="regionID" id="regionID" onChange="submitForm();" class="xLargeField">
-                              <cfloop query="qGetRegionList">
-                                  <option value="#qGetRegionList.regionID#" <cfif FORM.regionID EQ qGetRegionList.regionID>selected</cfif>>#qGetRegionList.regionname# - #qGetRegionList.userAccessLevel#</option>
-                              </cfloop>
-                          </select>
-                      </form>	
-                  </td>
-              </tr>
-          </table>            
+    <cfelseif NOT listFind("1,2,3,4", FORM.userType) AND qGetRegionList.recordcount GT 1>
+		<table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">        
+			<tr>
+				<td>                      
+					<form name="regionSelectForm" id="regionSelectForm" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
+						You have access to multiple regions filter by Region: &nbsp; 
+                        <select name="regionID" id="regionID" class="xLargeField">
+                            <cfloop query="qGetRegionList">
+                                <option value="#qGetRegionList.regionID#" <cfif FORM.regionID EQ qGetRegionList.regionID>selected</cfif>>#qGetRegionList.regionname# - #qGetRegionList.userAccessLevel#</option>
+                            </cfloop>
+                        </select>
+                    </form>	
+                </td>
+            </tr>
+        </table>            
     </cfif> 
     
     <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
@@ -365,150 +405,166 @@
         <cfloop query="qGetPendingHosts">
         
 			<cfscript>
-	           	// Reset Class Notification
-				// vSetClassNotification = '';
+				// Set Default Value
+				vTimeOnPending = 'n/a';
+
+				// Reset Class Notification
 				vSetClassNotification = "attention";
-			</cfscript>        
-        
-            <tr bgcolor="#iif(qGetPendingHosts.currentRow MOD 2 ,DE("eeeeee") ,DE("white") )#">
-                <td class="sectionHeader" ><a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">#qGetPendingHosts.studentid#</a></td>
-                <td class="sectionHeader"><a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">#qGetPendingHosts.studentLastName#</a></td>
-                <td class="sectionHeader"><a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">#qGetPendingHosts.studentFirstName#</a></td>
-                <td class="sectionHeader">
-                    <cfif CLIENT.companyID EQ 5>
-                        #qGetPendingHosts.companyShort# - 
-                    </cfif>
-                    #qGetPendingHosts.regionname#
-                </td>
-                <td class="sectionHeader">#qGetPendingHosts.programname#</td>
-                <td class="sectionHeader">
-                    <a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">
-                        #APPLICATION.CFC.HOST.displayHostFamilyName(
-                            hostID=qGetPendingHosts.hostID,
-                            fatherFirstName=qGetPendingHosts.fatherFirstName,
-                            fatherLastName=qGetPendingHosts.fatherLastName,
-                            motherFirstName=qGetPendingHosts.motherFirstName,
-                            motherLastName=qGetPendingHosts.motherLastName,
-                            familyLastName=qGetPendingHosts.hostFamilyLastName
-
-                        )#
-                    </a>            
-                </td>
-                <td class="sectionHeader">#qGetPendingHosts.placementAction#</td>
-                <td class="sectionHeader">
+			
+                // Only check paperwork for placements pending HQ approval
+                if ( qGetPendingHosts.host_fam_approved EQ 5 OR APPLICATION.CFC.USER.isOfficeUser() ) {
                 
-                    <!--- Only check paperwork for placements pending HQ approval --->
-                    <cfif qGetPendingHosts.host_fam_approved EQ 5 OR ListFind("1,2,3,4", CLIENT.usertype)>
+                    // Check if we have CBC and School Acceptance in order to allow PIS to be emailed out
+                    vDisplayEmailLink = 0;
                     
-                        <cfscript>
-                            // Check if we have CBC and School Acceptance in order to allow PIS to be emailed out
-                            vDisplayEmailLink = 0;
-							
-							if ( CLIENT.userID NEQ 1956 ) {
-							
-								// Check if Host Family is in compliance
-								vHostInCompliance = APPLICATION.CFC.CBC.checkHostFamilyCompliance(
-														hostID=qGetPendingHosts.hostID, 
-														studentID=qGetPendingHosts.studentID,
-														schoolAcceptanceDate = qGetPendingHosts.doc_school_accept_date
-													);
-								
-								if ( NOT LEN(vHostInCompliance) ) {
-									vDisplayEmailLink = 1;
-								}
-							
-							}
-                        </cfscript>
+					// Do not check compliance for Wayne Brewer - Page will load quicker
+                    if ( CLIENT.userID NEQ 1956 ) { 
+                    
+                        // Check if Host Family is in compliance
+                        vHostInCompliance = APPLICATION.CFC.CBC.checkHostFamilyCompliance(
+                                                hostID=qGetPendingHosts.hostID, 
+                                                studentID=qGetPendingHosts.studentID,
+                                                schoolAcceptanceDate = qGetPendingHosts.doc_school_accept_date
+                                            );
                         
-                        <cfif NOT isDate(qGetPendingHosts.datePISEmailed) AND VAL(vDisplayEmailLink) AND ListFind("1,2,3,4", CLIENT.userType)>
-                            <a href="reports/placementInfoSheet.cfm?uniqueID=#qGetPendingHosts.uniqueID#&closeModal=1" class="jQueryModalPL">[Click to Email]</a>
-                        <cfelseif NOT VAL(vDisplayEmailLink) AND CLIENT.userID NEQ 1956>
-                            waiting on CBC <br /> and/or school acceptance
-                        <cfelseif isDate(qGetPendingHosts.datePISEmailed)>
-                            #DateFormat(qGetPendingHosts.datePISEmailed, 'mm/dd/yyyy')#
-                            <cfset vSetClassNotification = "attentionGreen">
-						<cfelse>
-                        	n/a
-						</cfif>
+                        if ( NOT LEN(vHostInCompliance) ) {
+                            vDisplayEmailLink = 1;
+                        }
                     
-                    <cfelse>
-                        n/a
-                    </cfif>
-                </td>
-                <td class="sectionHeader">
-                	
-                    <cfswitch expression="#qGetPendingHosts.host_fam_approved#">
-						
-						<!--- Pending HQ Approval --->
-                        <cfcase value="5">
-                        	
-                            <cfif listFind("1,2,3,4", FORM.userType)>
-                            	<a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">[Click to Approve]</a>
-                           	<cfelse>
-                           		(Pending HQ Approval)
-                            </cfif>
-                            
-                        </cfcase>                    
-
-						<!--- Pending Regional Manager Approval --->
-                        <cfcase value="6">
-
-                            <cfif listFind("1,2,3,4", FORM.userType)>
-                            	<a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL" style="display:block;">[Click to Approve]</a>
-                           	</cfif>
-                            
-                            <cfif FORM.userType EQ 5>
-                            	<a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">[Click to Approve]</a>
-                           	<cfelse>
-                           		(Pending RM Approval)
-                            </cfif>
-                            
-                        </cfcase>                    
-                    	
-                        <!--- Pending Regional Advisor Approval --->
-                        <cfcase value="7">
-
-                            <cfif listFind("1,2,3,4,5", FORM.userType)>
-                            	<a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL" style="display:block;">[Click to Approve]</a>
-                           	</cfif>
-                            
-                            <cfif CLIENT.userID EQ qGetPendingHosts.advisorID>
-                            	<a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">[Click to Approve]</a>
-                           	<cfelseif VAL(qGetPendingHosts.advisorID)>
-								(Pending RA Approval)
-							<cfelse>
-                           		(Pending RM Approval)
-                            </cfif>
-                            
-                        </cfcase>                    
+                    }
+                
+                    if ( NOT isDate(qGetPendingHosts.datePISEmailed) AND VAL(vDisplayEmailLink) AND APPLICATION.CFC.USER.isOfficeUser() ) {
+                        
+                        vTimeOnPending = '<a href="reports/placementInfoSheet.cfm?uniqueID=#qGetPendingHosts.uniqueID#&closeModal=1" class="jQueryModalPL">[Click to Email]</a>';
+                        
+                    } else if ( NOT VAL(vDisplayEmailLink) AND CLIENT.userID NEQ 1956 ) { // Wayne
                     
-                    	<!--- Pending Area Representative Approval --->
-                        <cfcase value="10">
-
-                            <cfif listFind("1,2,3,4,5,6", FORM.userType)>
-                            	<a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL" style="display:block;">[Click to Approve]</a>
-                           	</cfif>
-                        	
-                            <cfif CLIENT.userID EQ qGetPendingHosts.placeRepID>
-                            	<a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">[Click to Approve]</a>
-                           	<cfelse>
-                           		(Pending AR Approval)
-                            </cfif>
+                        vTimeOnPending = 'waiting on CBC <br /> and/or school acceptance';
+                        
+                    } else if ( isDate(qGetPendingHosts.datePISEmailed) ) {
+                        
+						vSetClassNotification = "attentionGreen";
+                        vTimeOnPending = '#DateFormat(qGetPendingHosts.datePISEmailed, 'mm/dd/yyyy')#';
+                        
+                        
+                    }
+				
+				}
+				
+				// Set Default Value
+				vDisplayStudent = true;
+				
+				// If selecting Pre-AYP display only students that are pending documents
+				if ( FORM.preAypCamp NEQ 0 AND vSetClassNotification EQ 'attentionGreen' ) {
+					vDisplayStudent = false;
+				}
+            </cfscript>
+        	
+            <cfif vDisplayStudent>
+            
+                <tr bgcolor="#iif(qGetPendingHosts.currentRow MOD 2 ,DE("eeeeee") ,DE("white") )#">
+                    <td class="sectionHeader" ><a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">#qGetPendingHosts.studentid#</a></td>
+                    <td class="sectionHeader"><a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">#qGetPendingHosts.studentLastName#</a></td>
+                    <td class="sectionHeader"><a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">#qGetPendingHosts.studentFirstName#</a></td>
+                    <td class="sectionHeader">
+                        <cfif CLIENT.companyID EQ 5>
+                            #qGetPendingHosts.companyShort# - 
+                        </cfif>
+                        #qGetPendingHosts.regionname#
+                    </td>
+                    <td class="sectionHeader">#qGetPendingHosts.programname#</td>
+                    <td class="sectionHeader">
+                        <a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">
+                            #APPLICATION.CFC.HOST.displayHostFamilyName(
+                                hostID=qGetPendingHosts.hostID,
+                                fatherFirstName=qGetPendingHosts.fatherFirstName,
+                                fatherLastName=qGetPendingHosts.fatherLastName,
+                                motherFirstName=qGetPendingHosts.motherFirstName,
+                                motherLastName=qGetPendingHosts.motherLastName,
+                                familyLastName=qGetPendingHosts.hostFamilyLastName
+    
+                            )#
+                        </a>            
+                    </td>
+                    <td class="sectionHeader">#qGetPendingHosts.placementAction#</td>
+                    <td class="sectionHeader">#vTimeOnPending#</td>
+                    <td class="sectionHeader">
+                        
+                        <cfswitch expression="#qGetPendingHosts.host_fam_approved#">
                             
-                        </cfcase>                    
-						
-                        <!--- Rejected --->
-                        <cfcase value="99">
-                        	Rejected
-                            <cfset vSetClassNotification = "rejected">
-                        </cfcase>                    
+                            <!--- Pending HQ Approval --->
+                            <cfcase value="5">
+                                
+                                <cfif listFind("1,2,3,4", FORM.userType)>
+                                    <a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">[Click to Approve]</a>
+                                <cfelse>
+                                    (Pending HQ Approval)
+                                </cfif>
+                                
+                            </cfcase>                    
+    
+                            <!--- Pending Regional Manager Approval --->
+                            <cfcase value="6">
+    
+                                <cfif listFind("1,2,3,4", FORM.userType)>
+                                    <a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL" style="display:block;">[Click to Approve]</a>
+                                </cfif>
+                                
+                                <cfif FORM.userType EQ 5>
+                                    <a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">[Click to Approve]</a>
+                                <cfelse>
+                                    (Pending RM Approval)
+                                </cfif>
+                                
+                            </cfcase>                    
+                            
+                            <!--- Pending Regional Advisor Approval --->
+                            <cfcase value="7">
+    
+                                <cfif listFind("1,2,3,4,5", FORM.userType)>
+                                    <a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL" style="display:block;">[Click to Approve]</a>
+                                </cfif>
+                                
+                                <cfif CLIENT.userID EQ qGetPendingHosts.advisorID>
+                                    <a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">[Click to Approve]</a>
+                                <cfelseif VAL(qGetPendingHosts.advisorID)>
+                                    (Pending RA Approval)
+                                <cfelse>
+                                    (Pending RM Approval)
+                                </cfif>
+                                
+                            </cfcase>                    
+                        
+                            <!--- Pending Area Representative Approval --->
+                            <cfcase value="10">
+    
+                                <cfif listFind("1,2,3,4,5,6", FORM.userType)>
+                                    <a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL" style="display:block;">[Click to Approve]</a>
+                                </cfif>
+                                
+                                <cfif CLIENT.userID EQ qGetPendingHosts.placeRepID>
+                                    <a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">[Click to Approve]</a>
+                                <cfelse>
+                                    (Pending AR Approval)
+                                </cfif>
+                                
+                            </cfcase>                    
+                            
+                            <!--- Rejected --->
+                            <cfcase value="99">
+                                Rejected
+                                <cfset vSetClassNotification = "rejected">
+                            </cfcase>                    
+    
+                        </cfswitch>
+                    </td>
+                    <td class="sectionHeader #vSetClassNotification#" align="center">	
+                        #APPLICATION.CFC.UDF.calculateTimePassed(dateStarted=qGetPendingHosts.date_host_fam_approved, dateEnded=now())#    
+                    </td>
+                </tr>
 
-                    </cfswitch>
-                </td>
-                <td class="sectionHeader #vSetClassNotification#" align="center">	
-                    #APPLICATION.CFC.UDF.calculateTimePassed(dateStarted=qGetPendingHosts.date_host_fam_approved, dateEnded=now())#    
-                </td>
-            </tr>
+			</cfif>
+                
         </cfloop>
         
     </table>
