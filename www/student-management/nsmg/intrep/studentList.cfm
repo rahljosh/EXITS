@@ -45,6 +45,7 @@
             s.host_fam_approved, 
             sh.hostID, 
             sh.datePlaced,
+            sh.datePISEmailed,
             r.regionname,
             rg.regionname as r_guarantee,
             c.countryName,
@@ -274,8 +275,12 @@
                 </td>
                 <td width="10%">#qGetStudents.programname#</td>
                 <cfif URL.status NEQ "unplaced">
-                    <td width="10%"><cfif VAL(qGetStudents.hostID)>#qGetStudents.hostlastname#</cfif></td>
-                    <td width="10%"><cfif VAL(qGetStudents.hostID)>#DateFormat(datePlaced, 'mm/dd/yy')#</cfif></td>
+                    <td width="10%">
+						<cfif VAL(qGetStudents.hostID) AND isDate(qGetStudents.datePISEmailed)>#qGetStudents.hostlastname#</cfif>
+                    </td>
+                    <td width="10%">
+						<cfif VAL(qGetStudents.hostID) AND isDate(qGetStudents.datePISEmailed)>#DateFormat(qGetStudents.datePlaced, 'mm/dd/yy')#</cfif>
+					</td>
                 </cfif>
                 <cfif VAL(qGetStudents.master_account)>
                     <td width="12%">#qGetStudents.officeName#</td>
