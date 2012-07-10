@@ -29,7 +29,7 @@
 		param name="FORM.noHours" default=0;		
 		param name="FORM.minHours" default=0;
 		param name="FORM.maxHours" default=21;
-		param name="FORM.outputType" default="onScreen";
+		param name="FORM.outputType" default="flashPaper";
 		
 		// Set Report Title To Keep Consistency
 		vReportTitle = "Student Management - Help Community Service";
@@ -180,6 +180,7 @@
                     <td class="subTitleRightNoBorder">Output Type: <span class="required">*</span></td>
                     <td>
                         <select name="outputType" id="outputTypeStudentListByRegion" class="xLargeField">
+                        	<option value="flashPaper">FlashPaper</option>
                             <option value="onScreen">On Screen</option>
                             <option value="Excel">Excel Spreadsheet</option>
                         </select>
@@ -290,13 +291,7 @@
     <!--- On Screen Report --->
     <cfelse>
     
-    	<cfdocument format="flashpaper" orientation="portrait" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
-    
-			<!--- Page Header --->
-            <gui:pageHeader
-                headerType="applicationNoHeader"
-                filePath="../"
-            />
+    	<cfsavecontent variable="report">
     
 			<cfoutput>
                 
@@ -404,7 +399,27 @@
                 
             </cfloop>
             
-       	</cfdocument>
+       	</cfsavecontent>
+        
+        <cfif FORM.outputType EQ "flashPaper">
+    
+   			<cfdocument format="flashpaper" orientation="portrait" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
+    
+				<!--- Page Header --->
+                <gui:pageHeader
+                    headerType="applicationNoHeader"
+                    filePath="../"
+                />
+                
+                <cfoutput>#report#</cfoutput>
+                
+          	</cfdocument>
+            
+       	<cfelse>
+        
+        	<cfoutput>#report#</cfoutput>
+            
+        </cfif>
     
     </cfif>
     

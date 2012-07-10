@@ -28,6 +28,7 @@
 		param name="FORM.includeViewOnly" default="";
 		param name="FORM.includeStudents" default="";
 		param name="FORM.sort" default="lastName";
+		param name="FORM.outputType" default="flashPaper";
 		
 		// Get List of Users Under Advisor and the Advisor self
 		vListOfAdvisorUsers = "";
@@ -177,6 +178,7 @@
                     <td class="subTitleRightNoBorder">Output Type: <span class="required">*</span></td>
                     <td>
                         <select name="outputType" class="xLargeField">
+                        	<option value="flashPaper">FlashPaper</option>
                             <option value="onScreen">On Screen</option>
                             <option value="Excel">Excel Spreadsheet</option>
                         </select>
@@ -226,7 +228,7 @@
         <!--- Report Header Information --->
         <cfsavecontent variable="reportHeader">
         
-            <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+            <table width="95%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                 <tr>
                     <th>Representative Management - Regional Hierarchy Report</th>            
                 </tr>
@@ -245,7 +247,7 @@
             <!--- Include Report Header --->
             #reportHeader#
             
-            <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+            <table width="95%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                 <tr class="on">
                     <td class="subTitleCenter">
                         <p>You must select Region information. Please close this window and try again.</p>
@@ -683,13 +685,7 @@
     <!--- On Screen Report --->
     <cfelse>
     
-    	<cfdocument format="flashpaper" orientation="landscape" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
-    
-    		<!--- Page Header --->
-            <gui:pageHeader
-                headerType="applicationNoHeader"
-                filePath="../"
-            />
+    	<cfsavecontent variable="report">
     
 			<cfoutput>
                 
@@ -698,7 +694,7 @@
                 
                 <!--- No Records Found --->
                 <cfif NOT VAL(qGetResults.recordCount)>
-                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                    <table width="95%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                         <tr class="on">
                             <td class="subTitleCenter">No records found</td>
                         </tr>      
@@ -819,41 +815,41 @@
                 
                 <cfoutput>
                 
-                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif ListGetAt(FORM.regionID, 1) NEQ currentRegionID>style="margin-top:30px;"</cfif>>
+                    <table width="95%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif ListGetAt(FORM.regionID, 1) NEQ currentRegionID>style="margin-top:30px"</cfif>>
                         <tr>
-                            <th class="left" width="20%">
+                            <th class="left" width="20%" style="font-size:10px">
                                 #qGetRegion.regionName#
                             </th>
-                            <th class="left" valign="top" width="15%">
+                            <th class="left" valign="top" width="15%" style="font-size:10px">
                                 Facilitator: #qGetFacilitator.firstName# #qGetFacilitator.middleName# #qGetFacilitator.lastName#
                                 <br />
                                 #qGetFacilitator.address# #qGetFacilitator.address2# <br /> #qGetFacilitator.city# <cfif VAL(#qGetFacilitator.state#)>,</cfif> #qGetFacilitator.state# #qGetFacilitator.zip#
                             </th>
-                            <th class="left" valign="top" width="15%">
+                            <th class="left" valign="top" width="15%" style="font-size:10px">
                                 P: #qGetFacilitator.phone#
                                 <br />
                                 F: #qGetFacilitator.fax#
                                 <br />
                                 E: #qGetFacilitator.email#
                             </th>
-                            <th class="left" valign="top" width="15%">
+                            <th class="left" valign="top" width="15%" style="font-size:10px">
                                 Director: #qGetDirector.firstName# #qGetDirector.middleName# #qGetDirector.lastName#
                                 <br />
                                 #qGetDirector.address# #qGetDirector.address2# <br /> #qGetDirector.city# <cfif VAL(#qGetDirector.state#)>,</cfif> #qGetDirector.state# #qGetDirector.zip#
                             </th>
-                            <th class="left" valign="top" width="15%">
+                            <th class="left" valign="top" width="15%" style="font-size:10px">
                                 P: #qGetDirector.phone#
                                 <br />
                                 F: #qGetDirector.fax#
                                 <br />
                                 E: #qGetDirector.email#
                             </th>
-                            <th class="right note" width="20%">
+                            <th class="right note" width="20%" style="font-size:10px">
                                 Total of #qGetRepsByRegion.recordCount# records
                             </th>
                         </tr>      
                     </table>
-                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">    
+                    <table width="95%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">    
                         <tr class="on">
                             <td class="subTitleLeft" width="20%" style="font-size:9px">Representative</td>
                             <td class="subTitleLeft" width="20%" style="font-size:9px">Address</td>
@@ -1123,8 +1119,28 @@
                 
             </cfloop>
             
-      	</cfdocument>
+      	</cfsavecontent>
+        
+        <cfif FORM.outputType EQ "flashPaper">
     
+   			<cfdocument format="flashpaper" orientation="landscape" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
+    
+				<!--- Page Header --->
+                <gui:pageHeader
+                    headerType="applicationNoHeader"
+                    filePath="../"
+                />
+                
+                <cfoutput>#report#</cfoutput>
+                
+          	</cfdocument>
+            
+       	<cfelse>
+        
+        	<cfoutput>#report#</cfoutput>
+            
+        </cfif>
+        
     </cfif>
     
     <!--- Page Footer --->

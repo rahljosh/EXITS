@@ -29,7 +29,7 @@
 		param name="FORM.dateFrom" default="";
 		param name="FORM.dateTo" default="";
 		param name="FORM.reportBy" default="placeRepID";
-		param name="FORM.outputType" default="onScreen";
+		param name="FORM.outputType" default="flashPaper";
 		param name="FORM.summary" default="0";
 
 		// Set Report Title To Keep Consistency
@@ -296,6 +296,7 @@
                     <td class="subTitleRightNoBorder">Output Type: <span class="required">*</span></td>
                     <td>
                         <select name="outputType" id="outputType" class="xLargeField">
+                        	<option value="flashPaper">FlashPaper</option>
                             <option value="onScreen">On Screen</option>
                             <option value="Excel">Excel Spreadsheet</option>
                         </select>
@@ -467,14 +468,8 @@
     <!--- On Screen Report --->
     <cfelse>
     
-    	 <cfdocument format="flashpaper" orientation="landscape" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
+    	<cfsavecontent variable="report">
     
-    		<!--- Page Header --->
-            <gui:pageHeader
-                headerType="applicationNoHeader"
-                filePath="../"
-            />
-    		
 			<cfoutput>
                 
                 <!--- Include Report Header --->   
@@ -661,11 +656,31 @@
         
  			</cfloop> 
         
-        </cfdocument>
+        </cfsavecontent>
+        
+        <cfif FORM.outputType EQ "flashPaper">
+    
+   			<cfdocument format="flashpaper" orientation="landscape" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
+    
+				<!--- Page Header --->
+                <gui:pageHeader
+                    headerType="applicationNoHeader"
+                    filePath="../"
+                />
+                
+                <cfoutput>#report#</cfoutput>
+                
+          	</cfdocument>
+            
+       	<cfelse>
+        
+        	<cfoutput>#report#</cfoutput>
+            
+        </cfif>
     
     </cfif>
     
-    <!--- Page Header --->
+    <!--- Page Footer --->
     <gui:pageFooter />	
     
 </cfif>    
