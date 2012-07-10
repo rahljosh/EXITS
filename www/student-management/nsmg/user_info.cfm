@@ -358,15 +358,15 @@
 <cfoutput query="rep_info">
 <cfif not val(accountCreationVerified)>
 	<cfif get_paperwork.reviewAcct eq 1>
-    <div class="alert">
-    <h1>Account Review Required - Account appears ready for manual reveiw. </h1>
-    <em>Please review references and run CBC.  When everything looks fine, approve the CBC through Paperwork menu to activate account.</em> </div>
-    <br />
+        <div class="alert">
+        <h1>Account Review Required - Account appears ready for manual reveiw. </h1>
+        <em>Please review references and run CBC.  When everything looks fine, approve the CBC through Paperwork menu to activate account.</em> </div>
+        <br />
     <cfelseif get_paperwork.areaRepOK eq 0 or get_paperwork.arearepOk is ''>
-    <div class="alert">
-    <h1>Account Not Active </h1>
-    <em>Please review items missing in the paperwork section.</em> </div>
-    <br />
+        <div class="alert">
+        <h1>Account Not Enabled</h1>
+        <em>Please review items missing in the paperwork section.</em> </div>
+        <br />
     </cfif>
 </cfif>
 

@@ -35,10 +35,8 @@
 		// Set new default value
 		new = true;
 
-
 		// Set Display SSN - Sets to 1 if user has access to compliance
 		vDisplaySSN = APPLICATION.CFC.USER.hasLoggedInUserComplianceAccess(userID=CLIENT.userID);
-
 
 		// Set Display SSN
 		vDisplaySSN = 0;
@@ -336,12 +334,10 @@
                     	drivers_license, 
                         dob, 
                         sex, 
-                        
                         <!--- SSN --->
                     	<cfif VAL(vUpdateSSN)>
                             ssn,
 						</cfif>
-                        
                         phone, 
                         phone_ext, 
                         work_phone, 
@@ -397,12 +393,10 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.drivers_license#" null="#yesNoFormat(trim(FORM.drivers_license) EQ '')#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dob#" null="#yesNoFormat(trim(FORM.dob) EQ '')#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sex#" null="#yesNoFormat(trim(FORM.sex) EQ '')#">,
-                        
 						<!--- SSN --->
                         <cfif VAL(vUpdateSSN)>
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.SSN#">,
                         </cfif>
-                        
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#" null="#yesNoFormat(trim(FORM.phone) EQ '')#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone_ext#" null="#yesNoFormat(trim(FORM.phone_ext) EQ '')#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.work_phone#" null="#yesNoFormat(trim(FORM.work_phone) EQ '')#">,
@@ -610,12 +604,10 @@
                     drivers_license = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.drivers_license#" null="#yesNoFormat(trim(FORM.drivers_license) EQ '')#">,
                     dob = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dob#" null="#yesNoFormat(trim(FORM.dob) EQ '')#">,
                     sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sex#" null="#yesNoFormat(trim(FORM.sex) EQ '')#">,
-                    
 					<!--- SSN --->
                     <cfif VAL(vUpdateSSN)>
                         SSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.SSN#">,
                     </cfif>
-                    
                     phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#" null="#yesNoFormat(trim(FORM.phone) EQ '')#">,
                     phone_ext = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone_ext#" null="#yesNoFormat(trim(FORM.phone_ext) EQ '')#">,
                     work_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.work_phone#" null="#yesNoFormat(trim(FORM.work_phone) EQ '')#">,
@@ -1014,7 +1006,6 @@ function CopyEmail() {
                     		<cfinput type="text" name="phone" value="#FORM.phone#" size="20" maxlength="25">
                     	<cfelse>
 							<cfinput type="text" name="phone" value="#FORM.phone#" size="14" maxlength="14" mask="(999) 999-9999"> <!--- validate="telephone" message="Please enter a valid Home Phone." --->
-							#FORM.phone#
                         </cfif>
                         &nbsp; Ext. <cfinput type="text" name="phone_ext" value="#FORM.phone_ext#" size="5" maxlength="11">
                     </td>
@@ -1024,12 +1015,11 @@ function CopyEmail() {
 					<td>
 						<!---- Int. Reps ---->
                         <cfif FORM.usertype EQ 8>
-                            <cfinput type="text" name="work_phone" value="#FORM.work_phone#" size="20" maxlength="25">
+                    		<cfinput type="text" name="work_phone" value="#FORM.work_phone#" size="20" maxlength="25">
                     	<cfelse>
-							<cfinput type="text" name="work_phone" value="#FORM.work_phone#" size="14" maxlength="14" mask="(999) 999-9999"> <!--- validate="telephone" message="Please enter a valid Work Phone." --->
-							#FORM.work_phone#
+							<cfinput type="text" name="work_phone" value="#FORM.work_phone#" size="14" maxlength="14" mask="(999) 999-9999"> <!--- validate="telephone" message="Please enter a valid Home Phone." --->
                         </cfif>
-                    	&nbsp; Ext. <cfinput type="text" name="work_ext" value="#FORM.work_ext#" size="5" maxlength="11">
+                        &nbsp; Ext. <input type="text" name="work_ext" value="#FORM.work_ext#" size="5" maxlength="11">
                     </td>
 				</tr>
 				  	<tr>
@@ -1040,7 +1030,6 @@ function CopyEmail() {
                             <cfinput type="text" name="cell_phone" value="#FORM.cell_phone#" size="20" maxlength="25">
                     	<cfelse>
 							<cfinput type="text" name="cell_phone" value="#FORM.cell_phone#" size="14" maxlength="14" mask="(999) 999-9999"> <!--- validate="telephone" message="Please enter a valid Cell Phone." --->
-							#FORM.cell_phone#
                         </cfif>
                     </td>
 				</tr>
