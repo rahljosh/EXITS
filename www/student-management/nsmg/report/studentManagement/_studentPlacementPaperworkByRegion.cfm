@@ -28,7 +28,7 @@
 		param name="FORM.placedDateTo" default="";
 		param name="FORM.compliantOption" default="";
 		param name="FORM.reportBy" default="placeRepID";
-		param name="FORM.outputType" default="onScreen";
+		param name="FORM.outputType" default="flashPaper";
 		param name="FORM.sendEmail" default=0;	
 
 		// Set Report Title To Keep Consistency
@@ -416,6 +416,7 @@
                     <td class="subTitleRightNoBorder">Output Type: <span class="required">*</span></td>
                     <td>
                         <select name="outputType" id="outputType" class="xLargeField">
+                        	<option value="flashPaper">FlashPaper</option>
                             <option value="onScreen">On Screen</option>
                             <option value="Excel">Excel Spreadsheet</option>
                         </select>
@@ -739,7 +740,7 @@
             <cfsavecontent variable="reportHeader">
                 
                 <!--- Run Report --->
-                <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                <table width="95%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                     <tr>
                         <th>#vReportTitle#</th>            
                     </tr>
@@ -800,7 +801,7 @@
 						}
 					</cfscript>
                     
-                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="#vTableClass#">
+                    <table width="95%" cellpadding="4" cellspacing="0" align="center" class="#vTableClass#">
                         <tr>
                             <th class="left">
                                 #qGetStudentsInRegion.regionName#
@@ -814,7 +815,7 @@
                 
                 <cfoutput query="qGetStudentsInRegion" group="#FORM.reportBy#">
     
-                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                    <table width="95%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                         <tr>
                             <th class="left" colspan="7">
                                 <cfif FORM.reportBy EQ 'placeRepID'>
@@ -1064,21 +1065,31 @@
             
             <cfoutput>
             
-            	<cfdocument format="flashpaper" orientation="landscape" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
+            	<cfif FORM.outputType EQ "flashPaper">
     
-					<!--- Page Header --->
-                    <gui:pageHeader
-                        headerType="applicationNoHeader"
-                        filePath="../"
-                    />
-                    
-                    #reportHeader#
-                    #reportBody# 
-                
-                </cfdocument>
+                    <cfdocument format="flashpaper" orientation="landscape" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
             
-                <!--- Display Report --->
-                #reportBody#
+                        <!--- Page Header --->
+                        <gui:pageHeader
+                            headerType="applicationNoHeader"
+                            filePath="../"
+                        />
+                        
+                        <cfoutput>
+                        	#reportHeader#
+                    		#reportBody#
+						</cfoutput>
+                        
+                    </cfdocument>
+                    
+                <cfelse>
+                
+                    <cfoutput>
+                    	#reportHeader#
+                    	#reportBody# 
+					</cfoutput>
+                    
+                </cfif>
         
                 <!--- Email Regional Manager --->        
                 <cfif VAL(FORM.sendEmail) AND qGetStudentsInRegion.recordcount AND IsValid("email", qGetRegionalManager.email) AND IsValid("email", CLIENT.email)>

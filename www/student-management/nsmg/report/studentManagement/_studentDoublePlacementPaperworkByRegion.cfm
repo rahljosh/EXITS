@@ -23,7 +23,7 @@
 		param name="FORM.regionID" default="";
 		param name="FORM.paperworkID" default="";
 		param name="FORM.reportBy" default="place";
-		param name="FORM.outputType" default="onScreen";
+		param name="FORM.outputType" default="flashPaper";
 		param name="FORM.dateFrom" default="";
 		param name="FORM.dateTo" default="";
 		param name="FORM.sendEmail" default=0;
@@ -261,6 +261,7 @@
                     <td class="subTitleRightNoBorder">Output Type: <span class="required">*</span></td>
                     <td>
                         <select name="outputType" id="outputType" class="xLargeField">
+                        	<option value="flashPaper">FlashPaper</option>
                             <option value="onScreen">On Screen</option>
                             <option value="Excel">Excel Spreadsheet</option>
                         </select>
@@ -467,21 +468,15 @@
     <!--- On Screen Report --->
     <cfelse>
     
-    	<cfdocument format="flashpaper" orientation="landscape" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
+    	<cfsavecontent variable="report">
     
-    		<!--- Page Header --->
-            <gui:pageHeader
-                headerType="applicationNoHeader"
-                filePath="../"
-            />
-
 			<cfoutput>
             
                 <!--- Store Report Header in a Variable --->
                 <cfsavecontent variable="reportHeader">
                     
                     <!--- Run Report --->
-                    <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                    <table width="95%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                         <tr>
                             <th>#vReportTitle#</th>            
                         </tr>
@@ -526,7 +521,7 @@
                     
                     <cfoutput>
                              
-                        <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                        <table width="95%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                             <tr>
                                 <th class="left">
                                     #qGetStudentsInRegion.regionName#
@@ -540,7 +535,7 @@
                     
                     <cfoutput query="qGetStudentsInRegion" group="#FORM.reportBy#">
         
-                        <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                        <table width="95%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                             <tr>
                                 <th class="left" colspan="7">
                                     <cfif FORM.reportBy EQ 'placeRepID'>
@@ -722,7 +717,27 @@
         
             </cfloop>
             
-       	</cfdocument>
+       	</cfsavecontent>
+        
+        <cfif FORM.outputType EQ "flashPaper">
+    
+   			<cfdocument format="flashpaper" orientation="landscape" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
+    
+				<!--- Page Header --->
+                <gui:pageHeader
+                    headerType="applicationNoHeader"
+                    filePath="../"
+                />
+                
+                <cfoutput>#report#</cfoutput>
+                
+          	</cfdocument>
+            
+       	<cfelse>
+        
+        	<cfoutput>#report#</cfoutput>
+            
+        </cfif>
 
 	</cfif>
 

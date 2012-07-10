@@ -24,7 +24,7 @@
 		param name="FORM.regionID" default="";
 		param name="FORM.monthID" default="";
 		param name="FORM.status" default="approved";
-		param name="FORM.outputType" default="onScreen";
+		param name="FORM.outputType" default="flashPaper";
 
 		// Set Report Title To Keep Consistency
 		vReportTitle = "Student Management - Progress Report";
@@ -219,6 +219,7 @@
                     <td class="subTitleRightNoBorder">Output Type: <span class="required">*</span></td>
                     <td>
                         <select name="outputType" id="outputType" class="xLargeField">
+                        	<option value="flashPaper">FlashPaper</option>
                             <option value="onScreen">On Screen</option>
                             <option value="Excel">Excel Spreadsheet</option>
                         </select>
@@ -618,10 +619,14 @@
         	</cfloop>
             
       	</cfsavecontent>
-        
-        <cfdocument format="flashpaper" orientation="portrait" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
-        	<cfoutput>#report#</cfoutput>
-        </cfdocument>
+		
+		<cfif FORM.outputType EQ "flashPaper">
+    		<cfdocument format="flashpaper" orientation="portrait" backgroundvisible="yes" overwrite="yes" fontembed="yes" margintop="0.3" marginright="0.2" marginbottom="0.3" marginleft="0.2">
+        		<cfoutput>#report#</cfoutput>
+        	</cfdocument>    
+   		<cfelse>
+			<cfoutput>#report#</cfoutput>                    
+   		</cfif>
     
     </cfif>
     
