@@ -17,6 +17,23 @@
 	<!--- Import CustomTag --->
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 	
+	<cfscript>
+		// rebuilt QueryString and remove sortBy and sortOrder
+		vCurrentURL = CGI.SCRIPT_NAME & "?" & CGI.QUERY_STRING;
+			
+		// Clean Up Current Option
+		if ( ListContainsNoCase(vCurrentURL, "includeInactivePrograms", "&") ) {
+			vCurrentURL = ListDeleteAt(vCurrentURL, ListContainsNoCase(vCurrentURL, "includeInactivePrograms", "&"), "&");
+		}
+
+		// Build URL to display All/Active Programs
+		if ( VAL(URL.includeInactivePrograms) ) {
+			vSetAllProgramsLink = '<a href="#vCurrentURL#">[ Show Active Programs Only ]</a>';
+		} else {		
+			vSetAllProgramsLink = '<a href="#vCurrentURL#&includeInactivePrograms=1">[ Show All Programs ]</a>';
+		}
+	</cfscript>
+    
 </cfsilent>
 
 <script type="text/javascript">
@@ -50,7 +67,7 @@
 		$(".menuOption").fadeOut();
 
 		// Load Report
-		$("#loadReport").load("report/index.cfm?action=" + action);
+		$("#loadReport").load("report/index.cfm?action=" + action + "&includeInactivePrograms=<cfoutput>#URL.includeInactivePrograms#</cfoutput>");
 		
 		// Display Report
 		$("#loadReportTable").fadeIn();
@@ -64,6 +81,7 @@
 <gui:tableHeader
 	imageName="docs.gif"
 	tableTitle="Reports - Menu"
+    tableRightTitle="#vSetAllProgramsLink#"    
 />
 
 <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">

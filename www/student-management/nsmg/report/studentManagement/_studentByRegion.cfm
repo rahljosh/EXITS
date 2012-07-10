@@ -50,6 +50,14 @@
 			vListOfAdvisorUsers = ValueList(qGetUserUnderAdv.userID);
 
 		}
+		
+		if ( NOT VAL(URL.includeInactivePrograms) ) {
+			// Get Active Programs
+			qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(dateActive=1);
+		} else {
+			// Get All Programs
+			qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms();
+		}
 	</cfscript>	
 	
     <!--- FORM Submitted --->

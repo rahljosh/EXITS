@@ -11,13 +11,19 @@
 
 <!--- Kill extra output --->
 <cfsilent>
-
+	
     <cfscript>
 		// Param Variables
 		param name="action" default="menu";
-
-		// Get Programs
-		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(dateActive=1);
+		param name="URL.includeInactivePrograms" default="";		
+		
+		if ( NOT VAL(URL.includeInactivePrograms) ) {
+			// Get Active Programs
+			qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(dateActive=1);
+		} else {
+			// Get All Programs
+			qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms();
+		}
 		
 		// Get Facilitators
 		qGetFacilitatorList = APPLICATION.CFC.USER.getFacilitators();
@@ -80,4 +86,3 @@
     </cfdefaultcase>
 
 </cfswitch>
-
