@@ -112,7 +112,7 @@
                         <cfif VAL(FORM.displayOutOfCompliance)>
                         AND
                             (
-                                hfSupervisingDistance >= <cfqueryparam cfsqltype="cf_sql_integer" value="100">
+                                hfSupervisingDistance >= <cfqueryparam cfsqltype="cf_sql_integer" value="120">
                              OR
                                 hfSupervisingDistance = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                             )
@@ -212,7 +212,7 @@
                     <td class="subTitleRightNoBorder">Description:</td>
                     <td>
                 		This report will generate a list of students and the distance, in miles, between their HF and Supervising rep. 
-                        Any distance over 100 miles, will be highlighted in red, noting that it is non-compliant
+                        Any distance over 120 miles, will be highlighted in red, noting that it is non-compliant
                     </td>		
                 </tr>
                 <tr>
