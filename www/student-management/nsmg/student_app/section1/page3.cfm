@@ -91,10 +91,10 @@ function CheckFields() {
 		var languages = "<table>";
 		for (var i=0; i<numRows; i++) {
 			var tempID = inLanguage.DATA.ID[i];
-			languages += "<tr><td>" + inLanguage.DATA.NAME[i] + "</td><td><input type='button' value='Remove' style='font-size:9px;' onClick='removeSecondaryLanguage(" + tempID + ");' /></td></tr>";
+			languages += "<tr><td>" + inLanguage.DATA.NAME[i] + "</td><td><input type='image' src='pics/delete.gif' style='font-size:9px;' onClick='removeSecondaryLanguage(" + tempID + ");' /></td></tr>";
 		}
 		languages += "</table>";
-		$("#secondaryPlacementDiv").html(languages);
+		$("#secondaryLanguageDiv").html(languages);
 	}
 	
 </script>
@@ -192,14 +192,13 @@ function CheckFields() {
       	</td>
         <td></td>
         <td>
-        	<div id="secondaryPlacementDiv"></div>
-            <select name="secondaryLanguage" id="secondaryLanguage">
+        	<div id="secondaryLanguageDiv"></div>
+            <select name="secondaryLanguage" id="secondaryLanguage" onChange="addSecondaryLanguage(#studentID#);">
             <option value="0">Please Select</option>
                 <cfloop query="qGetLanguageList">
                     <option value="#fieldID#">#name#</option>
                 </cfloop>
             </select>
-            <input type="button" value="Add" style="font-size:10px;" onClick="addSecondaryLanguage(#studentID#);" />
       	</td>
     </tr>
 </table>
