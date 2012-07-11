@@ -41,7 +41,7 @@
 	</cfscript>
 
     <!--- Field Viewing --->
-    <cfif NOT listFind("1,2,3,4", FORM.userType)>
+    <cfif NOT APPLICATION.CFC.USER.isOfficeUser()>
         
 		<!--- Get Usertype From Selected Region --->
         <cfquery name="qGetUserTypeByRegion" datasource="#APPLICATION.DSN#"> 
@@ -343,7 +343,7 @@
             </tr>
 		</table>            
 	<!--- Field Viewing - REGIONS DROP DOWN LIST --->
-    <cfelseif NOT listFind("1,2,3,4", FORM.userType) AND qGetRegionList.recordcount GT 1>
+    <cfelseif NOT APPLICATION.CFC.USER.isOfficeUser() AND qGetRegionList.recordcount GT 1>
 		<table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">        
 			<tr>
 				<td>                      
@@ -495,7 +495,7 @@
                             <!--- Pending HQ Approval --->
                             <cfcase value="5">
                                 
-                                <cfif listFind("1,2,3,4", FORM.userType)>
+                                <cfif APPLICATION.CFC.USER.isOfficeUser()>
                                     <a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">[Click to Approve]</a>
                                 <cfelse>
                                     (Pending HQ Approval)
@@ -506,7 +506,7 @@
                             <!--- Pending Regional Manager Approval --->
                             <cfcase value="6">
     
-                                <cfif listFind("1,2,3,4", FORM.userType)>
+                                <cfif APPLICATION.CFC.USER.isOfficeUser()>
                                     <a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL" style="display:block;">[Click to Approve]</a>
                                 </cfif>
                                 
