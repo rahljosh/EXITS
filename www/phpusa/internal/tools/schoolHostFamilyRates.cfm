@@ -14,16 +14,32 @@
 	<cfscript>
 		// The value to order the list by.
 		param name="URL.order" default="schoolName";
+		param name="FORM.submitted" default=0;
 		
 		// Gets all schools that are active and orders them based on what was selected on the page (the default is by schoolName).
 		qGetSchools = APPLICATION.CFC.School.getSchools(order=URL.order,active=1);
 	</cfscript>
     
+    <cfif VAL(FORM.submitted)>
+        <cfloop query="qGetSchools">
+            <cfset value=FORM["val_#schoolID#"]>
+            <cfquery name="qUpdateRates" datasource="#APPLICATION.DSN#">
+                UPDATE
+                    php_schools
+                SET
+                    hostFamilyRate = <cfqueryparam cfsqltype="cf_sql_float" value="#NumberFormat(value,'9.99')#">
+                WHERE
+                    schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#schoolID#">
+            </cfquery>
+       </cfloop>
+       <cflocation url="?curdoc=tools/schoolHostFamilyRates&order=#URL.order#">
+ 	</cfif>
+    
 </cfsilent>
 
 <script type="text/javascript">
 	
-	var storeRates = function() {
+	/*var storeRates = function() {
 		
 		var s = new SCHOOL();
 		var inputs = $(".value").get();
@@ -37,13 +53,14 @@
 		});
 		
 		window.location.reload();
-	}
+	}*/
 	
 </script>
 
 <cfoutput>
 
-	<form name="schoolHostFamilyRates" id="schoolHostFamilyRates">
+	<form name="schoolHostFamilyRates" id="schoolHostFamilyRates" method="post">
+    	<input type="hidden" name="submitted" value="1" />
 
         <table width="98%" align="center" cellpadding="2" bgcolor="##e9ecf1" border=0 cellpadding=0 cellspacing=0>
             <tr>
