@@ -47,6 +47,13 @@
                     OR
                         placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
                     )
+              	UNION
+                    SELECT DISTINCT
+                        hostID
+                    FROM
+                        smg_hosts
+                    WHERE
+                        arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
            	</cfquery>
         	<cfif VAL(qCheckHosts.recordCount)>
 				<cfset vGrantAccess = 1>
@@ -68,6 +75,13 @@
                 OR 
                     placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
                 )
+          	UNION
+            	SELECT DISTINCT
+                	hostID
+               	FROM
+                	smg_hosts
+              	WHERE
+                	arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
         </cfquery>
         <cfif VAL(qCheckHosts.recordCount)>
             <cfset vGrantAccess = 1>
