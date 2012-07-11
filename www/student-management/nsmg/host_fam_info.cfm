@@ -17,6 +17,9 @@
     <!--- Param URL Variables --->
     <cfparam name="url.hostID" default="">
     
+    <!--- CHECK RIGHTS --->
+	<cfinclude template="check_rights_host.cfm">
+	
 	<cfscript>
         // Get Host Mother CBC
         qGetCBCMother = APPLICATION.CFC.CBC.getCBCHostByID(
@@ -36,6 +39,12 @@
             cbcType='member',
 			sortBy='familyID'
         );
+		
+		qGetHostEligibility = APPLICATION.CFC.LOOKUPTABLES.getApplicationHistory(
+			applicationID=7,
+			foreignTable='smg_hosts',
+			foreignID=hostID
+		);
     </cfscript>
 
 
@@ -156,6 +165,15 @@
 		var cbc = new CBC();
 		cbc.transferUserToHostCBC(hostID, cbcid, memberType);
 		window.location.reload();
+	}
+	
+	function showEligibilityNotes() {
+		var qualified = $("#notQualified").is(':checked');
+		if (qualified) {
+			$("#qualifiedNotesTr").html("<td style='vertical-align:top;'>Explanation: <textArea name='qualifiedNotes' id='qualifiedNotes' style='width:70%;' /></td>");
+		} else {
+			$("#qualifiedNotesTr").html("");
+		}
 	}
 </script>
 
@@ -301,6 +319,74 @@ div.scroll2 {
 	<!--- BOTTOM OF A TABLE --->
 	<table width=100% cellpadding=0 cellspacing=0 border=0>
 		<tr valign="bottom"><td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td><td width=100% background="pics/header_background_footer.gif"></td><td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td></tr>
+	</table>
+    
+    <br />
+    
+    <!--- HEADER OF TABLE --- Host Eligibility --->
+	<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
+		<tr valign=middle height=24>
+			<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
+            <td width=26 background="pics/header_background.gif"><img src="pics/family.gif"></td>
+			<td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Host Eligibility</h2></td>
+            <td background="pics/header_background.gif" width=16><a href="index.cfm?curdoc=forms/host_fam_eligibility_form&hostID=#family_info.hostID#">Edit</a></td>
+			<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
+      	</tr>
+	</table>
+	<!--- BODY OF TABLE --->
+    <table width="100%" align="left" cellpadding=8 class="section">
+		<cfif family_info.isNotQualifiedToHost EQ 0>
+            <tr>
+                <td>
+                    <input type="checkbox" disabled="disabled" /> Not Qualified
+                </td>
+            </tr>
+        <cfelse>
+        	<tr>
+                <td>
+                	<input type="checkbox" checked="checked" disabled="disabled" /> <span style="color:red;"><b>Not Qualified</b></span>
+               	</td>
+          	</tr>
+            <tr>
+            	<td width="30%">
+                	<u>Entered By</u>
+                </td>
+                <td width="20%">
+                	<u>Date</u>
+                </td>
+                <td width="50%">
+                	<u>Explanation</u>
+                </td>
+           	</tr>
+            <cfloop query="qGetHostEligibility">
+                <tr>
+                    <td>
+                        #qGetHostEligibility.enteredBy#
+                    </td>
+                    <td>
+                        #DateFormat(dateupdated,'mm/dd/yyyy')#
+                    </td>
+                    <td>
+                        #comments#
+                    </td>
+                </tr>
+          	</cfloop>
+    	</cfif>
+        <tr id="qualifiedNotesTr">
+        </tr>
+    </table>
+	<!--- BOTTOM OF A TABLE --->
+	<table width=100% cellpadding=0 cellspacing=0 border=0>
+		<tr valign="bottom">
+        	<td width=9 valign="top" height=12>
+            	<img src="pics/footer_leftcap.gif" >
+           	</td>
+            <td width=100% background="pics/header_background_footer.gif">
+            </td>
+            <td width=9 valign="top">
+            	<img src="pics/footer_rightcap.gif">
+           	</td>
+     	</tr>
 	</table>
     
 </td></tr>

@@ -77,4 +77,6 @@
 
 	// Store the initialized User object in the Application scope
 	APPLICATION.CFC.User = CreateCFC("user").Init();
+	
+	// Store the initialized Email object in the Application scope
 </cfscript>
