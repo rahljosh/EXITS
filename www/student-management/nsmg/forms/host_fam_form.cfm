@@ -15,9 +15,6 @@
 
     <!--- Param URL Variables --->
     <cfparam name="URL.hostID" default="">
-    
-	<!--- Ajax Call to the Component --->
-    <cfajaxproxy cfc="nsmg.extensions.components.udf" jsclassname="UDFComponent">
 
 	<!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
@@ -522,188 +519,9 @@
 	   	$("#motherSSN").mask("***-**-9999");
 	});	
 	//-->
-	
-	// Function to find the index in an array of the first entry with a specific value. 
-	// It is used to get the index of a column in the column list. 
-	Array.prototype.findIdx = function(value){ 
-		for (var i=0; i < this.length; i++) { 
-			if (this[i] == value) { 
-				return i; 
-			} 
-		} 
-	} 
-
-	// Create an instance of the proxy. 
-	var udf = new UDFComponent();
-
-	// Use an asynchronous call to get the student details. The function is called when the user selects a student. 
-	var verifyAddress = function() { 
-		
-		// Check required Fields
-		var errorMessage = "";
-		if($("#familyLastName").val() == ''){
-			errorMessage = (errorMessage + 'Please enter a family name. \n')
-		}
-		if($("#address").val() == ''){
-			errorMessage = (errorMessage + 'Please enter the Address. \n')
-		}
-		if($("#city").val() == ''){
-			errorMessage = (errorMessage + 'Please enter the City. \n')
-		}
-		if($("#state").val() == ''){
-			errorMessage = (errorMessage + 'Please select the State. \n')
-		}
-		if($("#zip").val() == ''){
-			errorMessage = (errorMessage + 'Please enter the Zip. \n')
-		}
-		if($("#regionid").val() == ''){
-			errorMessage = (errorMessage + 'Please enter a region. \n')
-		}
-		if(($("#phone").val() == '') && ($("#father_cell").val() == '') && ($("mother_cell").val() == '')) {
-			errorMessage = (errorMessage + 'Please enter at least one phone number. \n')
-		}
-		if (errorMessage != "") {
-			alert(errorMessage);
-		} else {
-			// FORM Variables
-			var address = $("#address").val();
-			var city = $("#city").val();
-			var state = $("#state").val();
-			var zip = $("#zip").val();
-	
-			// Setting a callback handler for the proxy automatically makes the proxy's calls asynchronous. 
-			udf.setCallbackHandler(checkAddress); 
-			udf.setErrorHandler(myErrorHandler); 
-			udf.addressLookup(address,city,state,zip,"232");
-		}
-	} 
-
-	// Callback function to handle the results returned by the getHostLeadList function and populate the table. 
-	var checkAddress = function(googleResponse) { 
-
-		var isAddressVerified = googleResponse.ISVERIFIED;
-		var inputState = googleResponse.INPUTSTATE;
-
-		if ( isAddressVerified == 1 ) {
-		
-			// Get Data Back	
-			var streetAddress = googleResponse.ADDRESS;
-			var city = googleResponse.CITY;
-			var state = googleResponse.STATE;
-			var zip = googleResponse.ZIP;
-			zip = zip.substring('zip='.length);
-			var verifiedStateID = googleResponse.VERIFIEDSTATEID;
-			
-			if ((streetAddress == $("#address").val()) && (city == $("#city").val()) && (state == $("#state").val()) && (zip == $("#zip").val()))
-			{
-				$("#hostFamilyInfo").submit();
-			} else {
-				$(function() {
-					$( "#dialog:ui-dialog" ).dialog( "destroy" );
-					$( "#dialog-approveAddress-confirm" ).empty();
-					$( "#dialog-approveAddress-confirm" ).append(
-						"<table width='100%'>" +
-							"<tr width='100%'><td width='50%'>Verified Address:</td><td width='50%'>Input Address:</td></tr>" +
-							"<tr><td>" + streetAddress + "</td><td>" + $("#address").val() + "</td></tr>" +
-							"<tr><td>" + city + ", " + state + " " + zip + "</td><td>" + $("#city").val() + ", " + $("#state").val() + " " + $("#zip").val() + "</td></tr>" +
-						"</table>");
-					$( "#dialog-approveAddress-confirm").dialog({
-						resizable: false,
-						height:230,
-						width:400,
-						modal: true,
-						buttons: {
-							"Use verified": function() {
-								$( this ).dialog( "close" );
-								$("#address").val(streetAddress);
-								$("#city").val(city);
-								$("#state").val(state);
-								$("#zip").val(zip);
-								$("#hostFamilyInfo").submit();
-							},
-							"Use input": function() {
-								$( this ).dialog( "close" );
-								$("#hostFamilyInfo").submit();
-							},
-							"Go back": function() {
-								$( this ).dialog( "close" );
-							}
-						}
-					});
-				});
-			}
-		} else {
-			$(function() {
-				$( "#dialog:ui-dialog" ).dialog( "destroy" );
-				$( "#dialog-canNotVerify-confirm" ).empty();
-				$( "#dialog-canNotVerify-confirm" ).append("We could not verify the following address:<br />" + $("#address").val() + "<br />" + $("#city").val() + ", " + $("#state").val() + " " + $("#zip").val());
-				$( "#dialog-canNotVerify-confirm").dialog({
-					resizable: false,
-					height:230,
-					width:400,
-					modal: true,
-					buttons: {
-						"Use anyway": function() {
-							$( this ).dialog( "close" );
-							$("#hostFamilyInfo").submit();
-						},
-						"Go back": function() {
-							$( this ).dialog( "close" );
-						}
-					}
-				});
-			});
-		}	
-	}
-	
-	var getLocationByZip = function() { 
-		
-		var zip = $("#zip").val();
-
-		if (zip.length == 5) {
-			udf.setCallbackHandler(checkZip); 
-			udf.setErrorHandler(myErrorHandler); 
-			udf.zipCodeLookUp(zip);
-		} else {
-			alert("Please verify your zip code");
-		}
-	} 
-
-	// Callback function to handle the results returned by the getHostLeadList function and populate the table. 
-	var checkZip = function(googleResponse) { 
-
-		var isAddressVerified = googleResponse.ISVERIFIED;
-
-		if ( isAddressVerified == 1 ) {	
-			var city = googleResponse.CITY;
-			var state = googleResponse.STATE;
-			
-			$("#city").val(city);
-			$("#state").val(state);
-		} else {
-			alert("Please verify your zip code");
-		}
-
-	}
-
-	// Error handler for the asynchronous functions. 
-	var myErrorHandler = function(statusCode, statusMsg) { 
-		alert('Status: ' + statusCode + ', ' + statusMsg); 
-	}
 </script>
 
 <cfoutput>
-
-	<!--- Modal Dialogs --->
-    
-	<!--- Approve Address - Modal Dialog Box --->
-    <div id="dialog-approveAddress-confirm" title="Do you want to approve this address?" class="displayNone"> 
-        <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span></p> 
-    </div>
-    <!--- Can Not Verify Address - Modal Dialog Box --->
-    <div id="dialog-canNotVerify-confirm" title="We could not verify this address." class="displayNone"> 
-        <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span></p> 
-    </div>
 
 	<!--- address lookup turned on. --->
     <cfif VAL(APPLICATION.address_lookup)>
@@ -741,7 +559,7 @@
         width="95%"
         />
 
-    <form name="hostFamilyInfo" id="hostFamilyInfo" action="#CGI.SCRIPT_NAME#?curdoc=forms/host_fam_form" method="post">
+    <form name="hostFamilyInfo" action="#CGI.SCRIPT_NAME#?curdoc=forms/host_fam_form" method="post">
         <input type="hidden" name="submitted" value="1">
         <input type="hidden" name="hostID" value="#FORM.hostID#">
         <input type="hidden" name="lookup_success" value="#FORM.lookup_success#"> <!--- this gets set to 1 by the javascript lookup function on success. --->
@@ -758,43 +576,99 @@
                     <input type="text" name="familyLastName" id="familyLastName" value="#FORM.familyLastName#" size="20" class="largeField" <cfif NOT VAL(qGetHostFamilyInfo.recordCount)>onblur="copyFamilyLastName();"</cfif> >
                 </td>
             </tr>
-            <tr>
-                <td class="zip">Zip: <span class="redtext">*</span></td>
-                <td><input type="text" id="zip" name="zip" value="#FORM.zip#" class="smallField" maxlength="5" onblur="getLocationByZip();"></td>
-            </tr>
-            <tr>
-                <td class="label">Address: <span class="redtext">*</span></td>
-                <td>
-                    <input type="text" id="address" name="address" value="#FORM.address#" size="40" class="largeField">
-                    <font size="1">NO PO BOXES</font>
-                </td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><input type="text" id="address2" name="address2" value="#FORM.address2#" size="40" class="largeField"></td>
-            </tr>
-            <tr>			 
-                <td class="label">City <span class="redtext">*</span></td>
-                <td><input type="text" id="city" name="city" value="#FORM.city#" size="20" class="largeField"></td>
-            </tr>
-            <tr>
-                <td class="label">State: <span class="redtext">*</span></td>
-                <td>
-                    <select id="state" name="state" class="largeField">
-                        <option value="0"></option>
-                        <cfloop query="qGetStateList">
-                            <option value="#qGetStateList.state#" <cfif FORM.state EQ qGetStateList.state> selected="selected" </cfif> >#qGetStateList.stateName#</option>
-                        </cfloop>
-                    </select>
-                </td>
-            </tr>
+			
+			<!--- address lookup - auto version. --->
+            <cfif APPLICATION.address_lookup EQ 2>
+                <tr>
+                    <td class="label">Lookup Address: <span class="redtext">*</span></td>
+                    <td>
+                        Enter at least the street address and zip code and click "Lookup".<br />
+                        Address, City, State, and Zip will be automatically filled in.<br />
+                        Address line 2 should be manually entered if needed.<br />
+                        <textarea name="lookup_address" rows="2" cols="30" value="#FORM.lookup_address#" /><br />
+                        <input type="button" value="Lookup" onClick="showLocation();" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">Address:</td>
+                    <td><input type="text" name="address" value="#FORM.address#" size="40" class="largeField" readonly="readonly"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="text" name="address2" value="#FORM.address2#" size="40" class="largeField"></td>
+                </tr>
+                <tr>			 
+                    <td class="label">City</td>
+                    <td><input type="text" name="city" value="#FORM.city#" size="20" class="largeField" readonly="readonly"></td>
+                </tr>
+                <tr>
+                    <td class="label">State:</td>
+                    <td><input type="text" name="state" value="#FORM.state#" size="2" maxlength="2" readonly="readonly"></td>
+                </tr>
+                <tr>
+                    <td class="zip">Zip:</td>
+                    <td><input type="text" name="zip" value="#FORM.zip#" class="smallField" maxlength="5" readonly="readonly"></td>
+                </tr>
+            
+			<!--- Regular Address --->
+			<cfelse>
+                <tr>
+                    <td class="label">Address: <span class="redtext">*</span></td>
+                    <td>
+                        <input type="text" name="address" value="#FORM.address#" size="40" class="largeField">
+                        <font size="1">NO PO BOXES</font>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="text" name="address2" value="#FORM.address2#" size="40" class="largeField"></td>
+                </tr>
+                <tr>			 
+                    <td class="label">City <span class="redtext">*</span></td>
+                    <td><input type="text" name="city" value="#FORM.city#" size="20" class="largeField"></td>
+                </tr>
+                <tr>
+                    <td class="label">State: <span class="redtext">*</span></td>
+                    <td>
+                        <select name="state" class="largeField">
+                            <option value="0"></option>
+                            <cfloop query="qGetStateList">
+                            	<option value="#qGetStateList.state#" <cfif FORM.state EQ qGetStateList.state> selected="selected" </cfif> >#qGetStateList.stateName#</option>
+                            </cfloop>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="zip">Zip: <span class="redtext">*</span></td>
+                    <td><input type="text" name="zip" value="#FORM.zip#" class="smallField" maxlength="10"></td>
+                </tr>
+                
+                <!--- address lookup - simple version. --->
+                <cfif APPLICATION.address_lookup EQ 1>
+                    <tr>
+                        <td class="label">Lookup Address: <span class="redtext">*</span></td>
+                        <td>
+                        	<font size="1">
+                                Enter Address, City, State, and Zip and click "Lookup".<br />
+                                Verify the address displayed below, and make any corrections on the form if necessary.<br />
+                                Address line 2 will not be included below.<br />
+                                If you have trouble submitting an address, <a href="mailto:#APPLICATION.support_email#?subject=Address Lookup">send it to us</a>.<br />
+                                <input type="button" value="Lookup" onClick="showLocation();" /><br />
+                                <textarea name="lookup_address" readonly="readonly" rows="2" cols="30">Lookup address will be displayed here.</textarea>
+                        	</font>
+                    	</td>
+                    </tr>
+                </cfif>
+                
+            </cfif>
+            
             <tr>
                 <td class="label">Phone: <span class="redtext">+</span></td>
-                <td><input type="text" id="phone" name="phone" id="phone" value="#FORM.phone#" class="largeField" maxlength="14"></td>
+                <td><input type="text" name="phone" id="phone" value="#FORM.phone#" class="largeField" maxlength="14"></td>
             </tr>
             <tr>
                 <td class="label">Email:</td>
-                <td><input type="text" id="email" name="email" value="#FORM.email#" class="xLargeField" maxlength="200"></td>
+                <td><input type="text" name="email" value="#FORM.email#" class="xLargeField" maxlength="200"></td>
             </tr>
         </table>
 		
@@ -833,7 +707,7 @@
             </tr>
             <tr>
                 <td class="label">Cell Phone: <span class="redtext">+</span></td>
-                <td><input type="text" id="father_cell" name="father_cell" id="father_cell" value="#FORM.father_cell#" class="largeField" maxlength="14"></td>
+                <td><input type="text" name="father_cell" id="father_cell" value="#FORM.father_cell#" class="largeField" maxlength="14"></td>
             </tr>
         </table>
 
@@ -872,7 +746,7 @@
             </tr>
             <tr>
                 <td class="label">Cell Phone: <span class="redtext">+</span></td>
-                <td><input type="text" id="mother_cell" name="mother_cell" id="mother_cell" value="#FORM.mother_cell#" class="largeField" maxlength="14"></td>
+                <td><input type="text" name="mother_cell" id="mother_cell" value="#FORM.mother_cell#" class="largeField" maxlength="14"></td>
             </tr>
 		</table> 		
 
@@ -886,7 +760,7 @@
                 <tr>
                     <td class="label">Region: <span class="redtext">*</span></td>
                     <td> 
-                        <select id="regionid" name="regionid" class="largeField">
+                        <select name="regionid" class="largeField">
                             <option value="">Select Region</option>
                             <cfloop query="qGetRegionList">
                                 <option value="#qGetRegionList.regionid#" <cfif FORM.regionid EQ qGetRegionList.regionid>selected</cfif>>#qGetRegionList.regionname#</option>
@@ -913,8 +787,8 @@
                    <input name="Submit_start" type="image" value="ehost" src="pics/buttons_ehost.png" alt="Start E-App" border="0" /> 
                 </cfif>
                 </td>
-                <td align="Center">
-                   <img src="pics/buttons_SUBMIT.png" style="cursor:pointer" onclick="javascript:verifyAddress();" />
+                <td align="Center">   
+                   <input name="Submit_start" type="image" value="paper" src="pics/buttons_SUBMIT.png" alt="Submit Paper Application" border="0" />
                 </td>
             </tr>
         </table>
