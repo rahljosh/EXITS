@@ -24,24 +24,17 @@
 <script type="text/javascript">
 	
 	var storeRates = function() {
+		
 		var s = new SCHOOL();
 		var inputs = $(".value").get();
-		var error = 0;
+		var schoolID = "";
+		var amount = "";
 		
 		$(".value").each(function(i) {
-			var schoolID = $(this).attr("id").substring(4);
-			var amount = $(this).val();
-			var success = s.updateHostFamilyRates(schoolID, amount);
-			if (!success) {
-				error++;
-			}
+			schoolID = $(this).attr("id").substring(4);
+			amount = $(this).val();
+			s.updateHostFamilyRates(schoolID, amount);
 		});
-		
-		if(error) {
-			alert("There were " + error + " errors when attempting to update.");
-		} else {
-			alert("Successfully updated.");
-		}
 		
 		window.location.reload();
 	}
