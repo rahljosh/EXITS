@@ -118,7 +118,8 @@
 		tuition_notes = '#FORM.tuition_notes#',
 		contact = '#FORM.contact#',
 		focus_gender = '#FORM.focus_gender#',
-		misc_notes = '#FORM.notes#' 
+		misc_notes = '#FORM.notes#',
+        hostFamilyRate = <cfqueryparam cfsqltype="cf_sql_float" value="#NumberFormat(FORM.hostFamilyRate,'9.99')#">
 	WHERE schoolid = <cfqueryparam value="#FORM.schoolid#" cfsqltype="cf_sql_integer">
 	LIMIT 1
 </cfquery>

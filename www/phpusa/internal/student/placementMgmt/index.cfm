@@ -306,12 +306,17 @@
             </table>
             
             <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section" align="center"> 
-                <tr bgcolor="##edeff4">                    
-                    <td class="reportTitleLeftClean" width="20%">School</td>
-                    <td class="reportTitleLeftClean" width="20%">Host Family</td>
-                    <td class="reportTitleLeftClean" width="20%">Placing Rep.</td>
-                    <td class="reportTitleLeftClean" width="20%">Supervising Rep.</td>
-                    <td class="reportTitleLeftClean" width="20%">Double Placement</td>
+                <tr bgcolor="##edeff4">
+                    <td class="reportTitleLeftClean" width="17%">School</td>
+                    <td class="reportTitleLeftClean" width="17%">Host Family</td>
+                    <td class="reportTitleLeftClean" width="17%">Placing Rep.</td>
+                    <td class="reportTitleLeftClean" width="17%">Supervising Rep.</td>
+                    <td class="reportTitleLeftClean" width="17%">Double Placement</td>
+                  	<cfif ListFind("1,2,3",CLIENT.userType)>
+                        <td class="reportTitleLeftClean" width="15%">Amount Owed</td>
+                   	<cfelse>
+						<td class="reportTitleLeftClean" width="15%"></td>
+					</cfif>
                 </tr>
 			</table>
             
@@ -328,30 +333,50 @@
                 </cfscript>
 
                 <tr bgcolor="##FFFFFF">
-                    <td width="20%" <cfif qGetPlacementHistory.hasSchoolIDChanged> class="placementMgmtChanged" </cfif> >
+                    <td width="17%" <cfif qGetPlacementHistory.hasSchoolIDChanged> class="placementMgmtChanged" </cfif> >
 						<cfif VAL(qGetPlacementHistory.schoolID)>                            
                             #qGetPlacementHistory.schoolName# (###qGetPlacementHistory.schoolID#)
                         </cfif>
                     </td>
-                    <td width="20%" <cfif qGetPlacementHistory.hasHostIDChanged> class="placementMgmtChanged" </cfif> >
+                    <td width="17%" <cfif qGetPlacementHistory.hasHostIDChanged> class="placementMgmtChanged" </cfif> >
                         <cfif VAL(qGetPlacementHistory.hostID)>
                             #qGetPlacementHistory.familyLastName# (###qGetPlacementHistory.hostID#)
                         </cfif>
                     </td>
-                    <td width="20%" <cfif qGetPlacementHistory.hasPlaceRepIDChanged> class="placementMgmtChanged" </cfif> >
+                    <td width="17%" <cfif qGetPlacementHistory.hasPlaceRepIDChanged> class="placementMgmtChanged" </cfif> >
                         <cfif VAL(qGetPlacementHistory.placeRepID)>
                             #qGetPlacementHistory.placeFirstName# #qGetPlacementHistory.placeLastName# (###qGetPlacementHistory.placeRepID#)
                         </cfif>
                     </td>
-                    <td width="20%" <cfif qGetPlacementHistory.hasAreaRepIDChanged> class="placementMgmtChanged" </cfif> >
+                    <td width="17%" <cfif qGetPlacementHistory.hasAreaRepIDChanged> class="placementMgmtChanged" </cfif> >
                         <cfif VAL(qGetPlacementHistory.areaRepID)>
                             #qGetPlacementHistory.areaFirstName# #qGetPlacementHistory.areaLastName# (###qGetPlacementHistory.areaRepID#)
                         </cfif>
                     </td>
-                    <td width="20%" <cfif qGetPlacementHistory.hasDoublePlacementIDChanged> class="placementMgmtChanged" </cfif> >
+                    <td width="17%" <cfif qGetPlacementHistory.hasDoublePlacementIDChanged> class="placementMgmtChanged" </cfif> >
 						<cfif VAL(qGetPlacementHistory.doublePlacementID)>
                             #qGetPlacementHistory.doublePlacementFirstName# #qGetPlacementHistory.doublePlacementLastName# (###qGetPlacementHistory.doublePlacementID#)
                         </cfif>
+                    </td>
+                    <td width="15%" <cfif qGetPlacementHistory.hasHostIDChanged> class="placementMgmtChanged" </cfif> >
+                    	<cfif ListFind("1,2,3",CLIENT.userType)>
+							<cfif qGetPlacementHistory.isRelocation EQ 1>
+                                <cfscript>										
+                                    if (DatePart('d',NOW()) GTE 15) {
+                                        date = CreateDate(DatePart('yyyy',NOW()),DatePart('m',NOW()),15);
+                                    } else {
+                                        date = CreateDate(DatePart('yyyy',NOW()),DatePart('m',NOW())-1,15);
+                                    }
+                                    days = DateDiff('d',date,qGetPlacementHistory.datePlaced);
+                                    if (days GTE 0) {
+                                        amountOwed = DecimalFormat(qGetPlacementHistory.hostFamilyRate - ((days/30)*qGetPlacementHistory.hostFamilyRate));
+                                    } else {
+                                        amountOwed = qGetPlacementHistory.hostFamilyRate;
+                                    }
+                                </cfscript>
+                                $#amountOwed#
+                            </cfif>
+                       	</cfif>
                     </td>
                 </tr>
                 
@@ -413,11 +438,15 @@
                     <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section" align="center"> 
                         <tr bgcolor="###iif(qGetPlacementHistory.currentrow MOD 2 ,DE("FFFFFF") ,DE("edeff4") )#">
                             <td class="reportTitleLeftClean" width="17%">School</td>
-                            <td class="reportTitleLeftClean" width="15%">Host Family</td>
+                            <td class="reportTitleLeftClean" width="17%">Host Family</td>
                             <td class="reportTitleLeftClean" width="17%">Placing Rep.</td>
                             <td class="reportTitleLeftClean" width="17%">Supervising Rep.</td>
-                            <td class="reportTitleLeftClean" width="17%">2<sup>nd</sup> Rep.</td>
                             <td class="reportTitleLeftClean" width="17%">Double Placement</td>
+                            <cfif ListFind("1,2,3",CLIENT.userType)>
+                                <td class="reportTitleLeftClean" width="15%">Amount Owed</td>
+                            <cfelse>
+                                <td class="reportTitleLeftClean" width="15%"></td>
+                            </cfif>
                         </tr>
     				</table>
                     
@@ -439,7 +468,7 @@
                                     #qGetPlacementHistory.schoolName# (###qGetPlacementHistory.schoolID#)
                                 </cfif>
                             </td>
-                            <td width="15%" <cfif qGetPlacementHistory.hasHostIDChanged> class="placementMgmtChanged" </cfif> >
+                            <td width="17%" <cfif qGetPlacementHistory.hasHostIDChanged> class="placementMgmtChanged" </cfif> >
                                 <cfif VAL(qGetPlacementHistory.hostID)>
                                     #qGetPlacementHistory.familyLastName# (###qGetPlacementHistory.hostID#)
                                 </cfif>
@@ -458,6 +487,33 @@
                                 <cfif VAL(qGetPlacementHistory.doublePlacementID)>
                                     #qGetPlacementHistory.doublePlacementFirstName# #qGetPlacementHistory.doublePlacementLastName# (###qGetPlacementHistory.doublePlacementID#)
                                 </cfif>
+                            </td>
+                            <td width="15%" <cfif qGetPlacementHistory.hasHostIDChanged> class="placementMgmtChanged" </cfif> >
+                            	<cfif ListFind("1,2,3",CLIENT.userType)>
+									<cfif qGetPlacementHistory.isRelocation[1] EQ 1>
+                                        <cfscript>										
+                                            if (DatePart('d',NOW()) GTE 15) {
+                                                date = CreateDate(DatePart('yyyy',NOW()),DatePart('m',NOW()),15);
+                                            } else {
+                                                date = CreateDate(DatePart('yyyy',NOW()),DatePart('m',NOW())-1,15);
+                                            }
+                                            days = DateDiff('d',date,qGetPlacementHistory.datePlaced[currentrow-1]);
+                                            if (days GTE 0) {
+                                                daysNotHere = DateDiff('d',date,qGetPlacementHistory.datePlaced);
+                                                if (daysNotHere GTE 0) {
+                                                    amountOwed = DecimalFormat(((days-daysNotHere)/30)*qGetPlacementHistory.hostFamilyRate);
+                                                } else {
+                                                    amountOwed = DecimalFormat((days/30)*qGetPlacementHistory.hostFamilyRate);
+                                                }
+                                            } else {
+                                                amountOwed = 0;
+                                            }
+                                        </cfscript>
+                                        <cfif amountOwed NEQ 0>
+                                            $#amountOwed#
+                                        </cfif>                                    
+                                    </cfif>
+                               	</cfif>
                             </td>
                         </tr>
                         

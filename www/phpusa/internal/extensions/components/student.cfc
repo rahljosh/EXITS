@@ -1529,6 +1529,7 @@
                     host.familyLastName,
                     <!--- School --->
                     school.schoolName,
+                    school.hostFamilyRate,
                     <!--- Place Rep --->
                     place.firstName AS placeFirstName, 
                     place.lastName AS placeLastName,

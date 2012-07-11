@@ -180,6 +180,22 @@
 				</td>
 			</tr>
 			<cfif client.usertype neq 12>
+            <cfif (CLIENT.userType EQ 1) OR (ListFind("7630,17427",CLIENT.userID)) OR (APPLICATION.isServerLocal AND CLIENT.userID EQ 17306)>
+            	<tr>
+                	<td>Host Family Monthly Rate:</td>
+                    <td><input type="text" name="hostFamilyRate" value="#get_school.hostFamilyRate#" size="10" /></td>
+                </tr>
+            <cfelseif ListFind("1,2,3",CLIENT.userType)>
+            	<tr>
+                	<td>Host Family Monthly Rate:</td>
+                    <td>
+                    	<input type="hidden" name="hostFamilyRate" value="#get_school.hostFamilyRate#" size="10" />
+                        #get_school.hostFamilyRate#
+                  	</td>
+                </tr>
+          	<cfelse>
+            	<input type="hidden" name="hostFamilyRate" value="#get_school.hostFamilyRate#" size="10" />
+            </cfif>
 			<tr>
 				<td>Non-Refundable Deposit: </td>
 				<td><input type="text" name="nonref_deposit" value="#get_school.nonref_deposit#" size=10></td>
