@@ -666,43 +666,88 @@
         
     </cffunction>
 
-
-    <cffunction name="addressLookup" access="remote" returnFormat="json" output="false" hint="empty for no accurate match">
+	<cffunction name="addressLookup" access="remote" returnFormat="json" output="false" hint="empty for no accurate match">
 		<cfargument name="address" type="string" required="yes">
         <cfargument name="city" type="string" required="yes">
         <cfargument name="state" type="string" required="yes">
         <cfargument name="zip" type="string" required="yes">
+        <cfargument name="country" type="string" required="yes">
         
-        <cfhttp result="geo" url="https://maps.google.com/maps/geo?q=#address#%20#city#%20#state#%20#zip#&output=xml&oe=utf8\&sensor=false&key=#APPLICATION.KEY.googleMapsAPI#" resolveurl="yes" />
+        <cfscript>
+			vGetCountryCode = APPLICATION.CFC.LookupTables.getCountry(countryID=ARGUMENTS.country).countryCode;
+		</cfscript>
+        
+        <cfhttp result="geo" url="https://maps.google.com/maps/geo?q=#address#%20#city#%20#state#%20#zip#%20#vGetCountryCode#&output=xml&oe=utf8\&sensor=false&key=#APPLICATION.KEY.googleMapsAPI#" resolveurl="yes" />
        	
 		<cfscript>
-            locationXML = xmlParse(geo.filecontent);
-		
 			// Set return structure that will store query + verify information
 			stResult = StructNew();
-			
 			stResult.isVerified = 0;
+			stResult.inputState = state;
+      	</cfscript>
+        
+        <cftry>
+        	<cfscript>
 			
-			// Create Query
-            qAddress = QueryNew("Address, City, State, Zip");
-			
-            if ( locationXML.kml.Response.Status.code.XmlText EQ 200 AND listFind("8,9", locationXML.kml.Response.Placemark.AddressDetails.XmlAttributes.Accuracy) ) {
+				locationXML = xmlParse(geo.filecontent);
+				stResult.inputCountry = vGetCountryCode;
+				stResult.verifiedStateID = locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.AdministrativeAreaName.XmlText;
+				stResult.address = "";
+				stResult.state = "";
+				stResult.city = "";
+				stResult.zip = "";
+				stResult.country = "";
 				
-				stResult.isVerified = 1;
+				if ( locationXML.kml.Response.Status.code.XmlText EQ 200 AND listFind("8,9", locationXML.kml.Response.Placemark.AddressDetails.XmlAttributes.Accuracy) ) {
 				
-                QueryAddRow(qAddress);
-                QuerySetCell(qAddress, "address", ListGetAt(locationXML.kml.Response.Placemark.address.XmlText, 1));
-                QuerySetCell(qAddress, "city", locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.Locality.LocalityName.XmlText );
-                QuerySetCell(qAddress, "state", locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.AdministrativeAreaName.XmlText );
-                QuerySetCell(qAddress, "zip", locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.Locality.PostalCode.PostalCodeNumber.XmlText );
-				
-            }
-			
-			// Add structure to query
-			stResult.QUERY = qAddress;
-			
+					stResult.isVerified = 1;
+					
+					stResult.address = ListGetAt(locationXML.kml.Response.Placemark.address.XmlText, 1);
+					stResult.country = locationXML.kml.Response.Placemark.AddressDetails.Country.CountryNameCode.XmlText;
+					stResult.state = locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.AdministrativeAreaName.XmlText;
+					
+					if ( StructKeyExists(locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea, "SubAdministrativeArea") ) {
+						if ( StructKeyExists(locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea, "Locality") ) {
+							stResult.city = locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.LocalityName.XmlText;
+							if ( StructKeyExists(locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality, "DependentLocality") ) {
+								stResult.zip = "zip=" & locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.DependentLocality.PostalCode.PostalCodeNumber.XmlText;
+							} else {
+								stResult.zip = "zip=" & locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.PostalCode.PostalCodeNumber.XmlText;
+							}
+						} else if ( StructKeyExists(locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea, "DependentLocality") ) {
+							stResult.city = locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.DependentLocality.DependentLocalityName.XmlText;
+							stResult.zip = "zip=" & locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.DependentLocality.PostalCode.PostalCodeNumber.XmlText;
+						} else {
+							stResult.isVerified = 0;
+						}
+					} else {
+						if ( StructKeyExists(locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea, "Locality") ) {
+							stResult.city = locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.Locality.LocalityName.XmlText;
+							if ( StructKeyExists(locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.Locality, "DependentLocality") ) {
+								stResult.zip = "zip=" & locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.Locality.DependentLocality.PostalCode.PostalCodeNumber.XmlText;
+							} else {
+								stResult.zip = "zip=" & locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.Locality.PostalCode.PostalCodeNumber.XmlText;
+							}
+						} else if ( StructKeyExists(locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea, "DependentLocality") ) {
+							stResult.city = locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.DependentLocality.DependentLocalityName.XmlText;
+							stResult.zip = "zip=" & locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.DependentLocality.PostalCode.PostalCodeNumber.XmlText;
+						} else {
+							stResult.isVerified = 0;
+						}
+					}
+				} else {
+					stResult.isVerified = 0;
+				}
+			</cfscript>
+            <cfcatch type="any">
+                <cfscript>
+                    stResult.isVerified = 0;
+                </cfscript>
+            </cfcatch>
+        </cftry>
+        <cfscript>
 			return stResult;
-        </cfscript>
+	   	</cfscript>
             
 	</cffunction>
     
@@ -714,28 +759,53 @@
        	
 		<cfscript>
             locationXML = xmlParse(geo.filecontent);
-		
+			
 			// Set return structure that will store query + verify information
 			stResult = StructNew();
 			
 			stResult.isVerified = 0;
+			stResult.city = "";
+			stResult.state = "";
+			stResult.zip = "";
 			
-			// Create Query
-            qAddress = QueryNew("City, State");
-			
-            if ( locationXML.kml.Response.Status.code.XmlText EQ 200 AND listFind("5", locationXML.kml.Response.Placemark.AddressDetails.XmlAttributes.Accuracy) ) {
-				
-				stResult.isVerified = 1;
-				
-                QueryAddRow(qAddress);
-                QuerySetCell(qAddress, "city", locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.Locality.LocalityName.XmlText );
-                QuerySetCell(qAddress, "state", locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.AdministrativeAreaName.XmlText );
-				
-            }
-			
-			// Add structure to query
-			stResult.QUERY = qAddress;
-			
+			// Wrap it up with a try/catch just in case we haven't account for all possibilities
+			try {
+
+				if ( locationXML.kml.Response.Status.code.XmlText EQ 200 AND listFind("5", locationXML.kml.Response.Placemark.AddressDetails.XmlAttributes.Accuracy) ) {
+					
+					stResult.isVerified = 1;
+					stResult.state = locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.AdministrativeAreaName.XmlText;
+					// Json is returning 7734 for zip 07734
+					// stResult.zip = zip;
+					stResult.zip = "zip=" & zip;
+					
+					if ( StructKeyExists(locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea, "SubAdministrativeArea") ) {
+						
+						if ( StructKeyExists(locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea, "Locality") ) {
+							stResult.city = locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.Locality.LocalityName.XmlText;
+						} else if ( StructKeyExists(locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea, "DependentLocality") ) {
+							stResult.city = locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.SubAdministrativeArea.DependentLocality.DependentLocalityName.XmlText;
+						} else {
+							stResult.isVerified = 0;
+						}
+						
+					} else {
+						
+						if ( StructKeyExists(locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea, "Locality") ) {
+							stResult.city = locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.Locality.LocalityName.XmlText;
+						} else if ( StructKeyExists(locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea, "DependentLocality") ) {
+							stResult.city = locationXML.kml.Response.Placemark.AddressDetails.Country.AdministrativeArea.DependentLocality.DependentLocalityName.XmlText;
+						} else {
+							stResult.isVerified = 0;
+						}
+						
+					}
+				}
+
+			} catch( Any e ) {
+				stResult.isVerified = 0;
+			}        
+
 			return stResult;
         </cfscript>
             

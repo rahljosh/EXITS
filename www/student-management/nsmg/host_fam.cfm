@@ -154,7 +154,7 @@
                 </cfquery>
                 <cfif hosts_under_reps.recordcount NEQ 0>	
 					<!--- we're inside a loop so need listAppend. --->
-                    <cfset hostlist = listAppend(hostlist, valueList(hosts_under_reps.hostid))>>
+                    <cfset hostlist = listAppend(hostlist, valueList(hosts_under_reps.hostid))>
                 </cfif>
             </cfloop>
         <!--- AREA REP - STUDENTS VIEW --->
@@ -173,7 +173,7 @@
             </cfquery>
 			<cfset hostlist = valueList(host_under_area.hostid)>
         </cfif>
-    
+  
         <cfquery name="getResults" datasource="#application.dsn#">
             SELECT DISTINCT h.familylastname, h.fatherfirstname, h.motherfirstname, h.hostid, h.city, h.state
             FROM smg_hosts h
@@ -216,9 +216,9 @@
 			<cfset endrow = getResults.recordCount>
 		</cfif>
 		<cfset urlVariables = "submitted=1&regionid=#regionid#&keyword=#urlEncodedFormat(keyword)#&hosting=#hosting#&active=#active#&orderby=#orderby#&recordsToShow=#recordsToShow#">
-    
+  
         <cfoutput>
-    
+
         <table border=0 cellpadding=4 cellspacing=0 class="section" width=100%>
             <tr align="center">
                 <td>
