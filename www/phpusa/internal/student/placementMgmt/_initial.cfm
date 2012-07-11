@@ -329,7 +329,8 @@
             ps.schoolname, 
             ps.city,
             ps.state,
-            ps.zip, 
+            ps.zip,
+            ps.hostFamilyRate,
             psd.year_begins, 
             psd.semester_begins, 
             psd.semester_ends, 
@@ -861,7 +862,8 @@
                                     familyLastName=qGetHostInfo.familyLastName 
                                 )# <br />  
                                        
-                                #qGetHostInfo.city#, #qGetHostInfo.State# #qGetHostInfo.zip# 
+                                #qGetHostInfo.city#, #qGetHostInfo.State# #qGetHostInfo.zip#
+                                
                             </cfif>	
                 		
                         </div>

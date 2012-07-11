@@ -26,6 +26,8 @@
 	
 	<cffunction name="getSchools" access="public" returntype="query" output="false" hint="Gets a list of schools, if schoolID is passed gets a school by ID">
     	<cfargument name="schoolID" default="" hint="schoolID is not required">
+        <cfargument name="order" default="schoolName" hint="order is not required">
+        <cfargument name="active" default="" hint="active is not required - nothing for all, 0 for inactive, 1 for active.">
               
         <cfquery 
 			name="qGetSchools" 
@@ -54,6 +56,7 @@
                     p.tuition_12months,
                     p.nonRef_deposit,
                     p.refund_plan,
+                    p.hostFamilyRate,
                     p.focus_gender,
                     p.contact,
                     p.contact_title,
@@ -98,12 +101,18 @@
                     php_schools p
                 LEFT OUTER JOIN
                 	smg_states s ON s.ID = p.state
+               	WHERE
+                	1 = 1
 				<cfif LEN(ARGUMENTS.schoolID)>                	
-                	WHERE
+                	AND
                     	schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.schoolID)#">
-                </cfif>    
+                </cfif>
+                <cfif LEN(ARGUMENTS.active)>
+                	AND
+                    	active = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.active)#">
+                </cfif>   
                 ORDER BY 
-                    schoolName
+                    #ARGUMENTS.order#
 		</cfquery>
 		   
 		<cfreturn qGetSchools>
@@ -248,6 +257,32 @@
         		   
 		<cfreturn qReturnDates>
 	</cffunction>
+	
+    
+    <cffunction name="updateHostFamilyRates" access="remote" returntype="string" returnFormat="json" hint="Updates the host family rate for an input school - returns 1 for success, 0 otherwise.">
+    	<cfargument name="schoolID" required="yes">
+        <cfargument name="hostFamilyRate" required="yes">
+        
+        <cftry>
+        
+            <cfquery datasource="#APPLICATION.DSN#">
+                UPDATE
+                    php_schools
+                SET
+                    hostFamilyRate = <cfqueryparam cfsqltype="cf_sql_float" value="#NumberFormat(ARGUMENTS.hostFamilyRate,'9.99')#">
+               	WHERE
+                    schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.schoolID#">
+            </cfquery>
+            
+            <cfreturn "1">
+            
+            <cfcatch type="any">
+            	<cfreturn "0">
+            </cfcatch>
+            
+     	</cftry>
+    
+    </cffunction>
 
     
 </cfcomponent>

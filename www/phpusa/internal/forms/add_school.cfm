@@ -66,9 +66,17 @@ underline{border-bottom: 1px}
 					</select> 
 				</td>
 			</tr>
+            <cfif (CLIENT.userType EQ 1) OR (ListFind("7630,17427",CLIENT.userID)) OR (APPLICATION.isServerLocal AND CLIENT.userID EQ 17306)>
+            	<tr>
+                	<td>Host Family Monthly Rate:</td>
+                    <td><input type="text" name="hostFamilyRate" value="" size="10" /></td>
+                </tr>
+           	<cfelse>
+            	<input type="hidden" name="hostFamilyRate" value="" size="10" />
+            </cfif>
 			<tr>
 				<td>Non-Refundable Deposit: </td>
-				<td><input type="text" name="nonref_deposit" value="#schools.nonref_deposit#" size=10></td>
+				<td><input type="text" name="nonref_deposit" value="" size=10></td>
 			</tr>
 
 			<tr>
