@@ -14,6 +14,8 @@
 
 	<cfsetting requesttimeout="9999">
     
+    <cfparam name="URL.test" default="0">
+    
     <!--- Arrival Information --->
 	<cfquery name="qStudentsMissingArrival" datasource="mysql">
 		SELECT DISTINCT 
@@ -25,6 +27,7 @@
             s.host_fam_approved, 
             s.dateplaced,
             s.aypEnglish,
+            s.hostID,
 			p.programname, 
 			h.familylastname, 
             h.fatherlastname, 
@@ -38,7 +41,7 @@
         	smg_students s
 		INNER JOIN 
         	smg_programs p ON s.programid = p.programid
-		INNER JOIN 
+		LEFT OUTER JOIN
         	smg_hosts h ON s.hostid = h.hostid
 		LEFT OUTER JOIN
         	smg_schools sc ON sc.schoolID = s.schoolID        
@@ -66,10 +69,6 @@
                     regularArrival.isCompleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> 
         WHERE 
 			s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-        AND 
-            s.hostid != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-        AND 
-            s.host_fam_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
 
 		<cfif CLIENT.userType EQ 8>
             <!--- Intl Rep --->
@@ -83,12 +82,20 @@
                 s.branchID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
         </cfif>    
         
-		<cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyid)>
+        <!--- Canada Students are not placed --->  
+        <cfif APPLICATION.SETTINGS.COMPANYLIST.Canada NEQ CLIENT.companyID>
+			AND 
+				s.hostid != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+			AND 
+				s.host_fam_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
+		</cfif>		
+        
+		<cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
             AND
                 s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
         <cfelse>
             AND
-                s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         </cfif>
         
 		AND 
@@ -177,12 +184,12 @@
                 s.branchID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
         </cfif>    
         
-		<cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyid)>
+		<cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
             AND
                 s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
         <cfelse>
             AND
-                s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         </cfif>
         
 		AND 
@@ -237,7 +244,7 @@
         AND
             p.enddate > now()
         AND
-            s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="6">
+            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="6">
          
 		<cfif CLIENT.userType EQ 8>
             <!--- Intl Rep --->
@@ -270,70 +277,75 @@
         	s.familylastname
 	</cfquery>
 
-	<cfquery name="qPHPStudentsMissingDeparture" datasource="mysql">
-		SELECT DISTINCT 
-        	s.studentID, 
-            s.uniqueID, 
-            s.firstname, 
-            s.familylastname, 
-            s.host_fam_approved, 
-			p.programname, 
-			h.familylastname, 
-            h.fatherlastname, 
-            h.motherlastname, 
-            h.state,
-            php.programID,
-            php.dateplaced,           
-            sc.schoolName
-		FROM 
-        	smg_students s
-		INNER JOIN 
-        	php_students_in_program php on php.studentID = s.studentID
-		INNER JOIN 
-        	smg_hosts h ON php.hostid = h.hostid
-        INNER JOIN 
-        	smg_programs p ON php.programid = p.programid
-		LEFT OUTER JOIN
-        	php_schools sc ON sc.schoolID = php.schoolID        
-		WHERE 
-            s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        AND 
-            p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        AND
-            p.enddate > now()
-        AND
-            s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="6">
-			
-		<cfif CLIENT.userType EQ 8>
-            <!--- Intl Rep --->
-            AND
-                s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">            
-        <cfelseif CLIENT.userType EQ 11>
-            <!--- Branch --->
-            AND
-                s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.parentCompany#">
-            AND    
-                s.branchID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
-        </cfif>    
+	<!--- Do Not Display For Canada --->
+    <cfif APPLICATION.SETTINGS.COMPANYLIST.Canada NEQ CLIENT.companyID>
 
-        AND 
-            s.studentID NOT IN (
-            						SELECT 
-                                  		studentID 
-                                    FROM 
-                                    	smg_flight_info 
-                                    WHERE 
-                                    	flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure"> 
-                                    AND 
-                                    	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
-                                    AND 
-                                    	isCompleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> 
-									AND
-                                    	programID = php.programID                                        
-								)	
-        ORDER BY 
-        	s.familylastname
-	</cfquery>
+        <cfquery name="qPHPStudentsMissingDeparture" datasource="mysql">
+            SELECT DISTINCT 
+                s.studentID, 
+                s.uniqueID, 
+                s.firstname, 
+                s.familylastname, 
+                s.host_fam_approved, 
+                p.programname, 
+                h.familylastname, 
+                h.fatherlastname, 
+                h.motherlastname, 
+                h.state,
+                php.programID,
+                php.dateplaced,           
+                sc.schoolName
+            FROM 
+                smg_students s
+            INNER JOIN 
+                php_students_in_program php on php.studentID = s.studentID
+            INNER JOIN 
+                smg_hosts h ON php.hostid = h.hostid
+            INNER JOIN 
+                smg_programs p ON php.programid = p.programid
+            LEFT OUTER JOIN
+                php_schools sc ON sc.schoolID = php.schoolID        
+            WHERE 
+                s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            AND 
+                p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            AND
+                p.enddate > now()
+            AND
+                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="6">
+                
+            <cfif CLIENT.userType EQ 8>
+                <!--- Intl Rep --->
+                AND
+                    s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">            
+            <cfelseif CLIENT.userType EQ 11>
+                <!--- Branch --->
+                AND
+                    s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.parentCompany#">
+                AND    
+                    s.branchID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+            </cfif>    
+    
+            AND 
+                s.studentID NOT IN (
+                                        SELECT 
+                                            studentID 
+                                        FROM 
+                                            smg_flight_info 
+                                        WHERE 
+                                            flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="departure"> 
+                                        AND 
+                                            isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
+                                        AND 
+                                            isCompleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> 
+                                        AND
+                                            programID = php.programID                                        
+                                    )	
+            ORDER BY 
+                s.familylastname
+        </cfquery>
+
+	</cfif>
 
 </cfsilent>
 
@@ -415,15 +427,19 @@
                         <td>	
                             <cfif qStudentsMissingArrival.host_fam_approved LTE 4> 
                                 #DateFormat(qStudentsMissingArrival.dateplaced, 'mm/dd/yy')#
+                            <cfelseif APPLICATION.SETTINGS.COMPANYLIST.Canada EQ CLIENT.companyID>
+								n/a
                             <cfelse> 
                                 Pending Approval 
                             </cfif>
                         </td>
                         <td>
-                            <cfif qStudentsMissingArrival.fatherlastname EQ qStudentsMissingArrival.motherlastname>
+                            <cfif VAL(qStudentsMissingArrival.hostID) AND qStudentsMissingArrival.fatherlastname EQ qStudentsMissingArrival.motherlastname>
                                 #qStudentsMissingArrival.fatherlastname# (#qStudentsMissingArrival.state#) 
-                            <cfelse>
+                            <cfelseif VAL(qStudentsMissingArrival.hostID)>
                                 #qStudentsMissingArrival.familylastname# (#qStudentsMissingArrival.state#) 
+                            <cfelse>
+                            	n/a
                             </cfif>
                         </td>
                         <td>#qStudentsMissingArrival.schoolName#</td>
@@ -455,7 +471,7 @@
                 </cfloop>
 				<cfif NOT VAL(qStudentsMissingArrival.recordcount)>
                     <tr>
-                    	<td colspan="6" align="center" bgcolor="##FFFFE6">                    
+                    	<td colspan="7" align="center" bgcolor="##FFFFE6">                    
 		                    You currently have no active students placed in the United States.
 						</td>
 					</tr>                                                    
@@ -498,7 +514,7 @@
                         <td>	
                             <cfif qStudentsMissingDeparture.host_fam_approved LTE 4> 
                                 #DateFormat(qStudentsMissingDeparture.dateplaced, 'mm/dd/yy')#
-                            <cfelse> 
+							<cfelse> 
                                 Pending Approval 
                             </cfif>
                         </td>
@@ -526,7 +542,7 @@
                 </cfloop>
                 <cfif NOT VAL(qStudentsMissingDeparture.recordcount)>
                     <tr>
-                        <td colspan="6" align="center" bgcolor="##FFFFE6">                    
+                        <td colspan="7" align="center" bgcolor="##FFFFE6">                    
                             You currently have no active students placed in the United States.
                         </td>
                     </tr>                                                    
@@ -538,122 +554,131 @@
 
 <br /><br />
 
-<!--- PHP Missing Arrival Information --->
-<table width="100%" cellspacing="0" cellpadding="3" style="border:1px solid ##999">
-	<tr>
-        <th bgcolor="##E2EFC7" style="border-bottom:1px solid ##999">
-    	    <span class="get_attention"><b>:: </b></span>
-            Private School Students Missing Flight Arrival Information - Total of #qPHPStudentsMissingArrival.recordCount# students
-        </th>
-    </tr>    
-	<tr>
-		<td valign="top" align="center" style="padding-top:10px; padding-bottom:10px;">
-            <table width="100%" align="center" cellspacing="0" cellpadding="3">
-                <tr bgcolor="##E2EFC7" style="font-weight:bold;">
-                    <td width="20%">Student Name (ID)</td>
-                    <td width="12%">Program</td>
-                    <td width="10%">Placed On</td>
-                    <td width="12%">Host Family</td>                    
-                    <td width="14%">School</td>                    
-                    <td width="10%">Pre-AYP Camp</td>
-                    <td width="22%">Actions</td>
-                </tr>
-                <cfloop query="qPHPStudentsMissingArrival">
-                    <tr bgcolor="###iif(qPHPStudentsMissingArrival.currentrow MOD 2 ,DE("FFFFE6") ,DE("FFFFFF") )#">
-                        <td>
-                            <a href="index.cfm?curdoc=intrep/int_student_info&unqid=#qPHPStudentsMissingArrival.uniqueID#">
-                                #qPHPStudentsMissingArrival.firstname# #qPHPStudentsMissingArrival.familylastname# (###qPHPStudentsMissingArrival.studentID#)
-                            </a>
-                        </td>
-                        <td>#qPHPStudentsMissingArrival.programname#</td>
-                        <td>#DateFormat(qPHPStudentsMissingArrival.dateplaced, 'mm/dd/yy')#</td>
-                        <td>
-                            <cfif qPHPStudentsMissingArrival.fatherlastname EQ qPHPStudentsMissingArrival.motherlastname>
-                                #qPHPStudentsMissingArrival.fatherlastname# (#qPHPStudentsMissingArrival.state#) 
-                            <cfelse>
-                                #qPHPStudentsMissingArrival.familylastname# (#qPHPStudentsMissingArrival.state#) 
-                            </cfif>
-                        </td>
-                        <td>#qPHPStudentsMissingArrival.schoolName#</td>
-                        <td>n/a</td>
-                        <td style="font-weight:bold;">
-                            <a href="student/index.cfm?action=flightInformation&uniqueID=#qPHPStudentsMissingArrival.uniqueID#&programID=#qPHPStudentsMissingArrival.programID#" class="jQueryModal">
-                                [ Submit Arrival ]
-                            </a>
-                        </td>
+<!--- Do Not Display For Canada --->
+<cfif APPLICATION.SETTINGS.COMPANYLIST.Canada NEQ CLIENT.companyID>
+
+	<!--- PHP Missing Arrival Information --->
+    <table width="100%" cellspacing="0" cellpadding="3" style="border:1px solid ##999">
+        <tr>
+            <th bgcolor="##E2EFC7" style="border-bottom:1px solid ##999">
+                <span class="get_attention"><b>:: </b></span>
+                Private School Students Missing Flight Arrival Information - Total of #qPHPStudentsMissingArrival.recordCount# students
+            </th>
+        </tr>    
+        <tr>
+            <td valign="top" align="center" style="padding-top:10px; padding-bottom:10px;">
+                <table width="100%" align="center" cellspacing="0" cellpadding="3">
+                    <tr bgcolor="##E2EFC7" style="font-weight:bold;">
+                        <td width="20%">Student Name (ID)</td>
+                        <td width="12%">Program</td>
+                        <td width="10%">Placed On</td>
+                        <td width="12%">Host Family</td>                    
+                        <td width="14%">School</td>                    
+                        <td width="10%">Pre-AYP Camp</td>
+                        <td width="22%">Actions</td>
                     </tr>
-                </cfloop>
-                <cfif NOT VAL(qPHPStudentsMissingArrival.recordcount)>
-                    <tr>
-                        <td colspan="6" align="center" bgcolor="##FFFFE6">                    
-                            You currently have no active students placed in the United States.
-                        </td>
-                    </tr>                                                    
-                </cfif>
-            </table>
-		</td>
-	</tr>
-</table>
-
-<br /><br />
+                    <cfloop query="qPHPStudentsMissingArrival">
+                        <tr bgcolor="###iif(qPHPStudentsMissingArrival.currentrow MOD 2 ,DE("FFFFE6") ,DE("FFFFFF") )#">
+                            <td>
+                                <a href="index.cfm?curdoc=intrep/int_student_info&unqid=#qPHPStudentsMissingArrival.uniqueID#">
+                                    #qPHPStudentsMissingArrival.firstname# #qPHPStudentsMissingArrival.familylastname# (###qPHPStudentsMissingArrival.studentID#)
+                                </a>
+                            </td>
+                            <td>#qPHPStudentsMissingArrival.programname#</td>
+                            <td>#DateFormat(qPHPStudentsMissingArrival.dateplaced, 'mm/dd/yy')#</td>
+                            <td>
+                                <cfif qPHPStudentsMissingArrival.fatherlastname EQ qPHPStudentsMissingArrival.motherlastname>
+                                    #qPHPStudentsMissingArrival.fatherlastname# (#qPHPStudentsMissingArrival.state#) 
+                                <cfelse>
+                                    #qPHPStudentsMissingArrival.familylastname# (#qPHPStudentsMissingArrival.state#) 
+                                </cfif>
+                            </td>
+                            <td>#qPHPStudentsMissingArrival.schoolName#</td>
+                            <td>n/a</td>
+                            <td style="font-weight:bold;">
+                                <a href="student/index.cfm?action=flightInformation&uniqueID=#qPHPStudentsMissingArrival.uniqueID#&programID=#qPHPStudentsMissingArrival.programID#" class="jQueryModal">
+                                    [ Submit Arrival ]
+                                </a>
+                            </td>
+                        </tr>
+                    </cfloop>
+                    <cfif NOT VAL(qPHPStudentsMissingArrival.recordcount)>
+                        <tr>
+                            <td colspan="7" align="center" bgcolor="##FFFFE6">                    
+                                You currently have no active students placed in the United States.
+                            </td>
+                        </tr>                                                    
+                    </cfif>
+                </table>
+            </td>
+        </tr>
+    </table>
     
-<!--- PHP Missing Departure Information --->
-<table width="100%" cellspacing="0" cellpadding="3" style="border:1px solid ##999">
-	<tr>
-        <th bgcolor="##E2EFC7" style="border-bottom:1px solid ##999">
-    	    <span class="get_attention"><b>:: </b></span>
-            Private School Students Missing Flight Departure Information - Total of #qPHPStudentsMissingDeparture.recordCount# students
-        </th>
-    </tr>    
-	<tr>
-		<td valign="top" align="center" style="padding-top:10px; padding-bottom:10px;">
-            <table width="100%" align="center" cellspacing="0" cellpadding="3">
-                <tr bgcolor="##E2EFC7" style="font-weight:bold;">
-                    <td width="20%">Student Name (ID)</td>
-                    <td width="12%">Program</td>
-                    <td width="10%">Placed On</td>
-                    <td width="12%">Host Family</td>                    
-                    <td width="14%">School</td>                    
-                    <td width="10%">Pre-AYP Camp</td>
-                    <td width="22%">Actions</td>
-                </tr>
-                <cfloop query="qPHPStudentsMissingDeparture">
-                    <tr bgcolor="###iif(qPHPStudentsMissingDeparture.currentrow MOD 2 ,DE("FFFFE6") ,DE("FFFFFF") )#">
-                        <td>
-                            <a href="index.cfm?curdoc=intrep/int_student_info&unqid=#qPHPStudentsMissingDeparture.uniqueID#">
-                                #qPHPStudentsMissingDeparture.firstname# #qPHPStudentsMissingDeparture.familylastname# (###qPHPStudentsMissingDeparture.studentID#)
-                            </a>
-                        </td>
-                        <td>#qPHPStudentsMissingDeparture.programname#</td>
-                        <td>#DateFormat(qPHPStudentsMissingDeparture.dateplaced, 'mm/dd/yy')#</td>
-                        <td>
-                            <cfif qPHPStudentsMissingDeparture.fatherlastname EQ qPHPStudentsMissingDeparture.motherlastname>
-                                #qPHPStudentsMissingDeparture.fatherlastname# (#qPHPStudentsMissingDeparture.state#) 
-                            <cfelse>
-                                #qPHPStudentsMissingDeparture.familylastname# (#qPHPStudentsMissingDeparture.state#) 
-                            </cfif>
-                        </td>
-                        <td>#qPHPStudentsMissingDeparture.schoolName#</td>
-                        <td>n/a</td>
-                        <td style="font-weight:bold;">
-                            <a href="student/index.cfm?action=flightInformation&uniqueID=#qPHPStudentsMissingDeparture.uniqueID#&programID=#qPHPStudentsMissingDeparture.programID#" class="jQueryModal">
-                                [ Submit Departure ]
-                            </a>
-                        </td>
+    <br /><br />
+        
+    <!--- PHP Missing Departure Information --->
+    <table width="100%" cellspacing="0" cellpadding="3" style="border:1px solid ##999">
+        <tr>
+            <th bgcolor="##E2EFC7" style="border-bottom:1px solid ##999">
+                <span class="get_attention"><b>:: </b></span>
+                Private School Students Missing Flight Departure Information - Total of #qPHPStudentsMissingDeparture.recordCount# students
+            </th>
+        </tr>    
+        <tr>
+            <td valign="top" align="center" style="padding-top:10px; padding-bottom:10px;">
+                <table width="100%" align="center" cellspacing="0" cellpadding="3">
+                    <tr bgcolor="##E2EFC7" style="font-weight:bold;">
+                        <td width="20%">Student Name (ID)</td>
+                        <td width="12%">Program</td>
+                        <td width="10%">Placed On</td>
+                        <td width="12%">Host Family</td>                    
+                        <td width="14%">School</td>                    
+                        <td width="10%">Pre-AYP Camp</td>
+                        <td width="22%">Actions</td>
                     </tr>
-                </cfloop>
-                <cfif NOT VAL(qPHPStudentsMissingDeparture.recordcount)>
-                    <tr>
-                        <td colspan="6" align="center" bgcolor="##FFFFE6">                    
-                            You currently have no active students placed in the United States.
-                        </td>
-                    </tr>                                                    
-                </cfif>
-            </table>
-		</td>
-	</tr>
-</table>
+                    <cfloop query="qPHPStudentsMissingDeparture">
+                        <tr bgcolor="###iif(qPHPStudentsMissingDeparture.currentrow MOD 2 ,DE("FFFFE6") ,DE("FFFFFF") )#">
+                            <td>
+                                <a href="index.cfm?curdoc=intrep/int_student_info&unqid=#qPHPStudentsMissingDeparture.uniqueID#">
+                                    #qPHPStudentsMissingDeparture.firstname# #qPHPStudentsMissingDeparture.familylastname# (###qPHPStudentsMissingDeparture.studentID#)
+                                </a>
+                            </td>
+                            <td>#qPHPStudentsMissingDeparture.programname#</td>
+                            <td>#DateFormat(qPHPStudentsMissingDeparture.dateplaced, 'mm/dd/yy')#</td>
+                            <td>
+                                <cfif qPHPStudentsMissingDeparture.fatherlastname EQ qPHPStudentsMissingDeparture.motherlastname>
+                                    #qPHPStudentsMissingDeparture.fatherlastname# (#qPHPStudentsMissingDeparture.state#) 
+                                <cfelse>
+                                    #qPHPStudentsMissingDeparture.familylastname# (#qPHPStudentsMissingDeparture.state#) 
+                                </cfif>
+                            </td>
+                            <td>#qPHPStudentsMissingDeparture.schoolName#</td>
+                            <td>n/a</td>
+                            <td style="font-weight:bold;">
+                                <a href="student/index.cfm?action=flightInformation&uniqueID=#qPHPStudentsMissingDeparture.uniqueID#&programID=#qPHPStudentsMissingDeparture.programID#" class="jQueryModal">
+                                    [ Submit Departure ]
+                                </a>
+                            </td>
+                        </tr>
+                    </cfloop>
+                    <cfif NOT VAL(qPHPStudentsMissingDeparture.recordcount)>
+                        <tr>
+                            <td colspan="7" align="center" bgcolor="##FFFFE6">                    
+                                You currently have no active students placed in the United States.
+                            </td>
+                        </tr>                                                    
+                    </cfif>
+                </table>
+            </td>
+        </tr>
+    </table>
+    
+    <br />
 
-<br />
+</cfif>
 
 </cfoutput>
+
+<cfif val(url.test)>
+	<cfdump var="#qStudentsMissingArrival#">
+</cfif>
