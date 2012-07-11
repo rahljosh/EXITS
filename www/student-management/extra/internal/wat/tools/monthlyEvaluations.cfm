@@ -76,6 +76,7 @@
 		
 		// Get selected evaluation
 		var evaluationID = $("#evaluationID").val();
+		var reportType = $("#reportType").val();
 		
 		// Create Table Header
 		var tableHeader = '';		
@@ -86,6 +87,9 @@
 			tableHeader += '<td class="listTitle style2">DS-2019</td>';
 			tableHeader += '<td class="listTitle style2">Host Company</td>';
 			tableHeader += '<td class="listTitle style2">Email</td>';
+			if (reportType == 1 || reportType == 2) {
+				tableHeader += '<td class="listTitle style2">Phone</td>';
+			}
 			tableHeader += '<td class="listTitle style2">Intl. Rep.</td>';
 			tableHeader += '<td class="listTitle style2">Program <br /> Start Date</td>';
 			tableHeader += '<td class="listTitle style2">Program <br /> End Date</td>';
@@ -125,6 +129,7 @@
 			var ds2019 = verList.DATA[i][verList.COLUMNS.findIdx('DS2019')];
 			var hostCompanyName = verList.DATA[i][verList.COLUMNS.findIdx('HOSTCOMPANYNAME')];
 			var email = verList.DATA[i][verList.COLUMNS.findIdx('EMAIL')];
+			var phone = verList.DATA[i][verList.COLUMNS.findIdx('PHONE')];
 			var businessName = verList.DATA[i][verList.COLUMNS.findIdx('BUSINESSNAME')];
 			var startDate = verList.DATA[i][verList.COLUMNS.findIdx('STARTDATE')];
 			var endDate = verList.DATA[i][verList.COLUMNS.findIdx('ENDDATE')];
@@ -174,6 +179,9 @@
 				tableBody += '<td class="style5">' + ds2019 + '</td>';
 				tableBody += '<td class="style5">' + hostCompanyName + '</td>';
 				tableBody += '<td class="style5"><a href="mailto:' + email + '" class="style4">' + email + '</a></td>';
+				if (reportType == 1 || reportType == 2) {
+					tableBody += '<td class="style5">' + phone + '</td>';
+				}
 				tableBody += '<td class="style5">' + businessName + '</td>';
 				tableBody += '<td class="style5">' + startDate + '</td>';
 				tableBody += '<td class="style5">' + endDate + '</td>';

@@ -1319,6 +1319,7 @@
                     ec.middleName,
                     ec.lastName,
                     ec.email,
+                    ec.us_phone AS phone,
                     ec.ds2019,
                     DATE_FORMAT(ec.watDateCheckedIn, '%m/%e/%Y') AS checkInDate,
                     ec.watDateCheckedIn,
