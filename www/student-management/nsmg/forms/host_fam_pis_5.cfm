@@ -1,4 +1,13 @@
-<cfinclude template="../querys/get_local.cfm">
+<cfquery name="qGetHostLocation" datasource="MySQL">
+	SELECT 
+    	city,
+        state,
+        zip
+	FROM 
+    	smg_hosts
+	WHERE 
+    	hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">
+</cfquery>
 
 <cfquery name="get_host_school" datasource="MySQL">
 	select hostid, smg_hosts.schoolid 
@@ -9,7 +18,7 @@
 
 <cfquery name="get_schools" datasource="MySQL">
 	select schoolid, schoolname from smg_schools
-	where (state = "#local.state#")
+	where (state = "#qGetHostLocation.state#")
 	order by Schoolname
 </cfquery>
 
@@ -30,7 +39,7 @@
 		<table border=0 cellpadding=4 cellspacing=0 align="left">
 			<tr><td colspan="2"> 
 			<cfif get_Schools.recordcount is '0'>
-				We do not have any schools in <Cfoutput>#local.city# #local.state#</Cfoutput> in our database.  
+				We do not have any schools in <Cfoutput>#qGetHostLocation.city# #qGetHostLocation.state#</Cfoutput> in our database.  
 				Please add the following information for the school that the student will be attending to, just click on next.</td></tr>
 			<cfelse>
 				The following schools are in your state, if the student will be attending a school from the list, please select it.  

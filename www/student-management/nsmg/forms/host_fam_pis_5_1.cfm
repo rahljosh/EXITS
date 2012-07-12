@@ -2,7 +2,16 @@
 	<CFSET form.school = "0">
 </cfif>
 
-<cfinclude template="../querys/get_local.cfm">
+<cfquery name="qGetHostLocation" datasource="MySQL">
+	SELECT 
+    	city,
+        state,
+        zip
+	FROM 
+    	smg_hosts
+	WHERE 
+    	hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">
+</cfquery>
 
 <cfquery name="get_host_school" datasource="MySQL">
 	select *
@@ -76,7 +85,7 @@
 					<option>
 					<cfloop query = states>
 						<cfif form.school EQ '0'>
-							<option value="#state#" <Cfif local.state EQ state>selected</cfif>>#state#</option> <!--- host state for new schools --->
+							<option value="#state#" <Cfif qGetHostLocation.state EQ state>selected</cfif>>#state#</option> <!--- host state for new schools --->
 						<cfelse>
 							<option value="#state#" <Cfif get_host_school.state EQ state >selected</cfif>>#state#</option> <!--- school's state --->
 						</cfif>

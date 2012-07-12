@@ -1,8 +1,19 @@
-<cfinclude template="../querys/get_local.cfm">
 <cfinclude template="../querys/family_info.cfm">
 
+<cfquery name="qGetHostLocation" datasource="MySQL">
+	SELECT 
+    	city,
+        state,
+        zip
+	FROM 
+    	smg_hosts
+	WHERE 
+    	hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">
+</cfquery>
+
 <cfform action="?curdoc=querys/insert_community_info_pis" method="post">
-<cfoutput query="local">
+
+<cfoutput query="qGetHostLocation">
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
 	<tr valign=middle height=24>
 		<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
@@ -16,7 +27,7 @@
 <table width="100%" border=0 cellpadding=4 cellspacing=0 class="section">
 	<tr><td width="80%" valign="top">
 		<table border=0 cellpadding=4 cellspacing=0 align="left" width="100%">
-			<tr><td colspan="2"><h3>#city# #state#, #zip#</h3></td></tr>
+			<tr><td colspan="2"><h3>#qGetHostLocation.city# #qGetHostLocation.state#, #qGetHostLocation.zip#</h3></td></tr>
 			<tr><Td width="20%" align="right">Region: </Td>
 				<td> 
 				<cfselect name="region" required="yes" message="Region must be selected.">
@@ -46,10 +57,10 @@
 			</tr>
 			<tr><td colspan="2">Would you describe the community as:</td></tr>
 			<tr><td colspan="2">
-				<cfif #family_info.community# is 'Urban'><cfinput type="radio" name="community" value="Urban" checked><cfelse><cfinput type="radio" name="community" value="Urban"> </cfif>Urban
-				<cfif #family_info.community# is 'suburban'><cfinput type="radio" name="community" value="suburban" checked><cfelse><cfinput type="radio" name="community" value="suburban"></cfif>Suburban
-				<cfif #family_info.community# is 'small'><cfinput type="radio" name="community" value="small" checked><cfelse><cfinput type="radio" name="community" value="small"></cfif>Small Town
-				<cfif #family_info.community# is 'rural'><cfinput type="radio" name="community" value="rural" checked><cfelse><cfinput type="radio" name="community" value="rural"></cfif>Rural
+				<cfif family_info.community is 'Urban'><cfinput type="radio" name="community" value="Urban" checked><cfelse><cfinput type="radio" name="community" value="Urban"> </cfif>Urban
+				<cfif family_info.community is 'suburban'><cfinput type="radio" name="community" value="suburban" checked><cfelse><cfinput type="radio" name="community" value="suburban"></cfif>Suburban
+				<cfif family_info.community is 'small'><cfinput type="radio" name="community" value="small" checked><cfelse><cfinput type="radio" name="community" value="small"></cfif>Small Town
+				<cfif family_info.community is 'rural'><cfinput type="radio" name="community" value="rural" checked><cfelse><cfinput type="radio" name="community" value="rural"></cfif>Rural
 				</td></tr>
 			<tr><td class="label">Closest City:</td><td class="form_text"><cfinput type="text" name="near_city" size=20 value="#family_info.nearbigcity#"></td></tr>
 			<tr><td class="label">Distance:</td><td class="form_text"> <cfinput name="near_city_dist" size=3 type="text" value="#family_info.near_City_dist#">miles</td></tr>
@@ -59,8 +70,8 @@
 				<cfinclude template="../querys/states.cfm">
 				<select name="airport_state">
 				<option>
-					<cfloop query = states>
-						<option value="#state#" <Cfif family_info.airport_state is #state#>selected</cfif>>#State#</option>
+					<cfloop query="states">
+						<option value="#states.state#" <Cfif family_info.airport_state is states.state>selected</cfif>>#states.state#</option>
 					</cfloop>
 				</select></td></tr>
 			<tr bgcolor="e2efc7"><td colspan="2">Points of interest in the community:</td></tr>
