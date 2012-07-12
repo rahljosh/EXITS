@@ -28,3 +28,4 @@
 <cfparam name="CLIENT.displayHostLeadPopUp" default="0">
 <cfparam name="CLIENT.DSFormName" default="DS-2019">
 <cfparam name="CLIENT.exits_url" default="https://ise.exitsapplication.com">
+<cfparam name="CLIENT.support_email" default="support@student-management.com"> 

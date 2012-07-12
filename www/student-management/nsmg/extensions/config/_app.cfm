@@ -216,4 +216,17 @@
 	
 	// Apex Fundation / WIZANTIANA as per Brian Hause 02/02/11
 	APPLICATION.NotAllowedIDs.submitApplication = "8217,12172";
+	
+	
+	/************************************************************
+		STUDENT ONLINE APPLICATION
+	************************************************************/
+	
+	// List of User IDs that are not allowed to submit Online Applications
+	// Dream I - 03/23/2010 removed DreamI 10/29/2010
+	APPLICATION.submitAppNotAllowed = "0"; 
+	
+	// List of User IDs that are not allowed to view the Student and Host Family Profile
+	// Current Intl. Rep: STB
+	APPLICATION.displayProfileNotAllowed = "19";
 </cfscript>

@@ -1,6 +1,10 @@
 <cftry>
 
-<cfif NOT IsDefined('url.unqid') OR url.unqid EQ ''>
+<!--- Param URL Variables --->
+<cfparam name="URL.unqID" default="">
+<cfparam name="URL.curdoc" default="">
+
+<cfif NOT LEN(url.unqid)>
 	<cfinclude template="nsmg/student_app/error_message.cfm">
 </cfif>
 
@@ -25,7 +29,7 @@
 		WHERE 
         	s.uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#url.unqid#">
 	</cfquery>
-	<cfset client.studentid = '#get_student_info.studentid#'>
+	<cfset CLIENT.studentid = '#get_student_info.studentid#'>
 	<title>EXITS Online Application <cfoutput query="get_student_info"> - #firstname# #familylastname# (###studentid#)</cfoutput></title>
 </head>
 
@@ -175,9 +179,6 @@ function launchRemote() {
 		<cfinclude template="nsmg/student_app/section4/page21print.cfm">
 	</td></tr>		
 </table>
-
-</body>
-</html>
 
 <cfcatch type="any">
 	<cfinclude template="nsmg/student_app/error_message.cfm">

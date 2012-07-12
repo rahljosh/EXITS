@@ -1,6 +1,6 @@
 <cftry>
 
-<cfif IsDefined('url.curdoc') OR IsDefined('url.path')>
+<cfif LEN(URL.curdoc) OR IsDefined('url.path')>
 	<cfset path = "">
 <cfelse>
 	<cfset path = "../">
@@ -23,11 +23,11 @@
 	-->
 	</style>	
 </head>
-<body <cfif not IsDefined('url.curdoc')>onLoad="print()"</cfif>>
+<body <cfif NOT LEN(URL.curdoc)>onLoad="print()"</cfif>>
 
 <cfoutput>
 
-<cfif not IsDefined('url.curdoc')>
+<cfif NOT LEN(URL.curdoc)>
 <table align="center" width=90% cellpadding=0 cellspacing=0  border=0 > 
 <tr><td>&nbsp;</td></tr>
 <tr><td>
@@ -39,7 +39,7 @@
 		<td width="8" class="tableside"><img src="#path#pics/p_topleft.gif" width="8"></td>
 		<td width="26" class="tablecenter"><img src="#path#pics/students.gif"></td>
 		<td class="tablecenter"><h2>Page [20] - Regional Choice </h2></td>
-		<cfif IsDefined('url.curdoc')>
+		<cfif LEN(URL.curdoc)>
 		<td align="right" class="tablecenter"><a href="" onClick="javascript: win=window.open('section4/page20printblank.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;"><img src="pics/printhispage.gif" border="0" alt="Click here to print this page"></img></A>&nbsp; &nbsp;</td>
 		</cfif>
 		<td width="42" class="tableside"><img src="#path#pics/p_topright.gif" width="42"></td>
@@ -133,7 +133,7 @@
 	</tr>
 </table>
 
-<cfif not IsDefined('url.curdoc')>
+<cfif NOT LEN(URL.curdoc)>
 </td></tr>
 </table>
 </cfif>

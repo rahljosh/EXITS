@@ -1,8 +1,8 @@
 <cfapplication 
-	name="smg" 
+	name="EXITS" 
     clientmanagement="yes"
     sessionmanagement="yes"
-    sessiontimeout="#CreateTimeSpan( 0, 12, 0, 0 )#">    
+    sessiontimeout="#CreateTimeSpan(0,10,0,0)#">    
     
 	<!---<CFQUERY name="selectdb" datasource="MySQL" >
         USE smg

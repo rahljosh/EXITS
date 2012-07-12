@@ -1,32 +1,50 @@
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		_index.cfm
+	Author:		Marcus Melo
+	Date:		July 12, 2012
+	Desc:		
+
+	Updated:	
+				
+----- ------------------------------------------------------------------------- --->
+
+<!--- Kill Extra Output --->
+<cfsilent>
+	
+    <!--- Default Page --->
+    <cfparam name="URL.curdoc" default="initial_welcome">
+
+	<cfscript>
+        if ( isDefined("URL.s") ) {
+            Location("verify.cfm?s=#url.s#", "no");
+        }
+    
+        if ( NOT LEN(URL.curdoc) ) {
+            URL.curdoc = "initial_welcome";
+        }
+        
+        if ( IsDefined("URL.user") ) {
+            CLIENT.usertype = URL.user;
+        }
+    </cfscript>
+
+</cfsilent>
+
 <link rel="shortcut icon" href="pics/favicon.ico" type="image/x-icon" />
 
-<cfif isdefined("url.s")>
-	<cflocation url="verify.cfm?s=#url.s#" addtoken="no">
-</cfif>
-
-<CFIF not isdefined("url.curdoc")>
-	<CFSET url.curdoc = "initial_welcome">
-</cfif>
-
-<!--- OPENING FROM PHP - AXIS --->
-<cfif IsDefined('url.user')>
-	<cfset client.usertype = '#url.user#'>
-</cfif>
- 
 <cfinclude template="header.cfm">
-<html>
-<body background="pics/development.jpg">
+
 <table align="center" width=90% cellpadding=0 cellspacing=0  border=0 > 
 	<tr>
 		<td>
-		<Cfif #right(url.curdoc,4)# is '.cfr'>
-			<cfinclude template="#url.curdoc#">
-		<cfelse>
-			<cfinclude template="#url.curdoc#.cfm">	
-		</Cfif>
+			<Cfif right(url.curdoc,4) is '.cfr'>
+                <cfinclude template="#url.curdoc#">
+            <cfelse>
+                <cfinclude template="#url.curdoc#.cfm">	
+            </Cfif>
 		</td>
 	</tr>
 </table>
-</body>
-</html>
+
 <cfinclude template="footer.cfm">
