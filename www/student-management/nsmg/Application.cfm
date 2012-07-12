@@ -11,6 +11,7 @@
     <!--- Param URL variable --->
 	<cfparam name="URL.init" default="0">
     <cfparam name="URL.init2" default="0">
+    <cfparam name="URL.CURDOC" default="">
 	
 	<!--- Param Client Variables --->
 	<cfparam name="CLIENT.companyID" default="0">
@@ -87,7 +88,7 @@
         <cfif isDefined("CLIENT.verify_info")>
         
             <!--- allow user only on user info and user form. --->
-            <cfif NOT (isDefined("URL.curdoc") AND listFindNoCase("user_info,forms/user_form", URL.curdoc))>
+            <cfif NOT ( LEN(URL.curdoc) AND listFindNoCase("user_info,forms/user_form", URL.curdoc) )>
                 <cflocation url="/nsmg/index.cfm?curdoc=user_info&userid=#CLIENT.userid#" addtoken="no">
             </cfif>
             
@@ -95,7 +96,7 @@
         <cfelseif isDefined("CLIENT.change_password")>
         
             <!--- allow user only on change password page. --->
-            <cfif NOT (isDefined("URL.curdoc") AND  URL.curdoc EQ 'forms/change_password' OR  listFindNoCase("logout", URL.curdoc))>
+            <cfif NOT ( LEN(URL.curdoc) AND  URL.curdoc EQ 'forms/change_password' OR  listFindNoCase("logout", URL.curdoc) )>
                 <cflocation url="/nsmg/index.cfm?curdoc=forms/change_password" addtoken="no">
             </cfif>
         
@@ -103,13 +104,13 @@
         <cfelseif isDefined("CLIENT.agreement_needed")>
         
             <!--- allow user only on yearly agreement page. --->
-            <cfif NOT (isDefined("URL.curdoc") AND listFindNoCase("forms/yearly_agreement,repRefs,displayRepAgreement,cbcAuthorization,employmentHistory,logout", URL.curdoc))>
+            <cfif NOT ( LEN(URL.curdoc) AND listFindNoCase("forms/yearly_agreement,repRefs,displayRepAgreement,cbcAuthorization,employmentHistory,logout", URL.curdoc) )>
                 <cflocation url="/nsmg/index.cfm?curdoc=forms/yearly_agreement&userid=#CLIENT.userid#" addtoken="no">
             </cfif>
          
         <cfelseif isDefined('CLIENT.needsSSN')>
 
-			<cfif NOT (isDefined("URL.curdoc") AND listFindNoCase("forms/verifyInfo, forms/verifyInfo2, logout", URL.curdoc))>
+			<cfif NOT ( LEN(URL.curdoc) AND listFindNoCase("forms/verifyInfo, forms/verifyInfo2, logout", URL.curdoc) )>
                 <cflocation url="/nsmg/index.cfm?curdoc=forms/verifyInfo" addtoken="no">
             </cfif>
 			
