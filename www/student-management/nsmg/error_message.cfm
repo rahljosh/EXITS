@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<cfif IsDefined('url.curdoc') OR IsDefined('url.path')>
+<cfif LEN(URL.curdoc) OR IsDefined('url.path')>
 	<cfset path = "">
 <cfelseif IsDefined('url.exits_app')>
 	<cfset path = "nsmg/student_app/">
