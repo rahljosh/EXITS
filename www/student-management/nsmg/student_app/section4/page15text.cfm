@@ -39,7 +39,7 @@
 		}
 		
 		// Set up image path
-		if ( IsDefined('url.curdoc') OR IsDefined('url.path') ) {
+		if ( LEN(URL.curdoc) OR IsDefined('url.path') ) {
 			path = "";
 		} else if ( IsDefined('url.exits_app') )  {
 			path = "nsmg/student_app/";

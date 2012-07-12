@@ -179,7 +179,7 @@
 		  <cfif isDefined('CLIENT.rep_filling_app')>
                     [<a class="item1" href="../index.cfm">Home</a>]
                 <cfelse>
-                    [ <a class="item1" href="?curdoc=initial_welcome">Home</a> ]  [ <a href="logout.cfm">Logout</a> ]
+                    [ <a class="item1" href="?curdoc=initial_welcome">Home</a> ]  [ <a href="../logout.cfm">Logout</a> ]
                 </cfif>
                 
                 <br>

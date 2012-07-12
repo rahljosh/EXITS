@@ -46,14 +46,20 @@
             </cfquery>
         
         </cfif>        
-
-		<cfif NOT VAL(CLIENT.companyID) AND VAL(qGetCompany.recordcount)>
-			<cfset CLIENT.companyid = qGetCompany.companyid>
-            <cfset CLIENT.companyname = qGetCompany.companyname>
-        <cfelseif NOT VAL(CLIENT.companyID)>
-            <cfset CLIENT.companyid = 0>
-            <cfset CLIENT.companyname = 'EXIT Group'>
-        </cfif>
+		
+        <cfscript>
+			if ( NOT VAL(CLIENT.companyID) AND VAL(qGetCompany.recordcount) ) {
+				
+				CLIENT.companyid = qGetCompany.companyid;
+				CLIENT.companyname = qGetCompany.companyname;
+				
+			} else if ( NOT VAL(CLIENT.companyID) ) {
+				
+				CLIENT.companyid = 0;
+				CLIENT.companyname = 'EXIT Group';
+				
+			}		
+		</cfscript>
         
         <!----If error code SI-102, company information is wrong---->
         <cfquery name="submitting_info" datasource="#APPLICATION.dsn#">
@@ -68,8 +74,11 @@
         </cfquery>
 
         <cfif NOT VAL(submitting_info.recordcount)>
-            Error during login. Please try again shortly.
-            <cfoutput>#CGI.server_name#</cfoutput>
+            
+            <cfoutput>
+            	<p>Error during login. Please try again shortly.</p>                
+            	#CGI.server_name#
+			</cfoutput>
             <cfabort>
         </cfif>
         	
@@ -89,28 +98,35 @@
         
 		<!--- student login --->
         <cfquery name="qAuhenticateStudent" datasource="#APPLICATION.dsn#">
-            SELECT studentID, firstname, familylastname
-            FROM smg_students
-            WHERE email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(username)#">
-            and password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(password)#">
-            and active = 1
+            SELECT 
+            	studentID, 
+                firstname, 
+                familylastname
+            FROM 
+            	smg_students
+            WHERE 
+            	email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(username)#">
+            AND 
+            	password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(password)#">
+            AND 
+            	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         </cfquery>
         
         <cfif VAL(qAuhenticateStudent.recordcount)>
             <cfset CLIENT.studentID = qAuhenticateStudent.studentID>
             <cfset CLIENT.usertype = 10>
             <cfset CLIENT.userID = 0>
-            <cfset CLIENT.name = '#qAuhenticateStudent.firstname# #qAuhenticateStudent.familylastname#'>
+            <cfset CLIENT.name = "#qAuhenticateStudent.firstname# #qAuhenticateStudent.familylastname#">
 			
 			<!--- Check if server is local, if it is do not redirect to SSL --->
             <cfif APPLICATION.IsServerLocal>
 				
-                <cflocation url="/nsmg/student_app/login.cfm" addtoken="no">
+                <cflocation url="/nsmg/student_app/index.cfm" addtoken="no">
             
             <!--- Production / Force SSL --->    
             <cfelse>
             	
-                <cflocation url="#CLIENT.exits_url#/nsmg/student_app/login.cfm" addtoken="no">
+                <cflocation url="#CLIENT.exits_url#/nsmg/student_app/index.cfm" addtoken="no">
             	
             </cfif>
 		
