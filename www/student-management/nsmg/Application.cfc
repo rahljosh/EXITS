@@ -237,50 +237,70 @@
 		<!--- Define arguments. --->
 		<cfargument name="Exception" type="any" required="true" />
 		<cfargument name="EventName" type="string" required="false" default="" />
-
-		<!---
+		
+        <!--- Production --->
  		<cfif NOT APPLICATION.isServerLocal>
+			
+            <cfscript>
+				// Set Error ID
+				vErrorID = "#CLIENT.userID#-#dateformat(now(),'mmddyyyy')#-#timeformat(now(),'hhmmss')#";
+			</cfscript>
+            
+            <!--- Email Error Message --->
+            <cfmail to="#APPLICATION.EMAIL.Errors#" from="#APPLICATION.EMAIL.Errors#" subject="EXITS - System Error - ID: #vErrorID#" type="HTML">
+                <p>An error occurred on #DateFormat( Now(), "mmm d, yyyy" )# at #TimeFormat( Now(), "hh:mm TT" )#</p>
+				
+				<p>Error ID = #vErrorID#</p>
 
-            <cfmail to="#APPLICATION.EMAIL.Errors#" from="#APPLICATION.EMAIL.Errors#" subject="EXITS: Error On Page" type="HTML">
-                <p>
-                An error occurred on
-                #DateFormat( Now(), "mmm d, yyyy" )# at
-                #TimeFormat( Now(), "hh:mm TT" )#
-                </p>
-                
-                <h3>Error:</h3>
-                <cfdump var="#ARGUMENTS.Exception#">
-                <br><br>
+				<p>Error Event: #ARGUMENTS.EventName#</p>
+            	
+                <h3>Error details:</h3>
+                <p><cfdump var="#ARGUMENTS.Exception#"></p>
                 
                 <h3>SESSION:</h3>
-                <cfdump var="#SESSION#">
-                <br><br>
+                <p><cfdump var="#SESSION#"></p>
                 
                 <h3>FORM:</h3>
-                <cfdump var="#FORM#">
-                <br><br>
+                <p><cfdump var="#FORM#"></p>
                 
                 <h3>URL:</h3>
-                <cfdump var="#URL#"> 
-                <br><br>
-                
+                <p><cfdump var="#URL#"></p>
+
+                <h3>CGI:</h3>
+                <p><cfdump var="#CGI#"></p>
             </cfmail>
             
-            <cfset GetPageContext().GetOut().ClearBuffer() />
-            
-			<!--- Redirect to error page
-            <cflocation url="" addtoken="no" />
-            --->
+            <cfscript>
+				GetPageContext().GetOut().ClearBuffer();
+			
+				// Current Path to root errorMessage.cfm file
+				vPath = "";
+				
+				// Set List Path (C:\Websites\www\student-management\nsmg\student_app\index.cfm)
+				vListPath = CF_TEMPLATE_PATH;
+				
+				// Get Root Position
+				vListRootAt = ListFindNoCase(vListPath, "nsmg", "\");
+				
+				// Calculate How Many levels we are far from the root | last element is the page itself, do not count it.
+				vTotalExtraLevels = (ListLen(vListPath, "\") - 1) - vListRootAt;
+				
+				// Add Extra Root levels
+				For ( i=1;i LTE vTotalExtraLevels; i=i+1) {
+					vPath = vPath & "../";	
+				}
+				
+				// Redirect to error page
+				location ("#vPath#errorMessage.cfm", "no");
+			</cfscript>
             
         <cfelse>
-
+			
+            <!--- Development - Display Error Message --->
  			<cfdump var="#ARGUMENTS.Exception#">
                        
         </cfif>
- 		--->
-        
-        <cfdump var="#ARGUMENTS.Exception#">
-        
+
 		<!--- Return out. --->
 		<cfreturn />
 	</cffunction>
