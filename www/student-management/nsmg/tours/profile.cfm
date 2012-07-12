@@ -536,7 +536,24 @@
 
 <link rel="stylesheet" href="tours/trips.css" type="text/css"> <!-- trips -->
 
+<script type="text/javascript" src="../nsmg/student_info.js"></script>
+
 <script type="text/javascript">
+
+	$(document).ready(function() {
+							   
+		$(".jQueryModalPL").colorbox( {
+			width:"60%", 
+			height:"90%", 
+			iframe:true,
+			overlayClose:false,
+			escKey:false, 
+			onClosed:function(){ window.location.reload(); }
+		});
+		
+	});
+	
+	
 	// Display Cancel Form
 	var displayCancelForm = function() { 
 		$("#cancelForm").fadeIn();	
@@ -875,16 +892,24 @@
                         <!--- Flights --->
                         <td>
                             <cfif NOT LEN(qGetArrivalFlightInformation.departDate)>
-                            	<input type="image" src="pics/buttons/notbooked_35.png" onclick="openFlights(#studentID#,#tripID#,'arrival')" />                                
+                            	<a href="tours/flightInfo.cfm?studentID=#studentID#&tripID=#tripID#&viewType=arrival" class="jQueryModalPL">
+                                	<img src="pics/buttons/notbooked_35.png" style="border:none;" />
+                              	</a>                      
                             <cfelse>
-                            	<input type="image" src="pics/buttons/booked_32.png" onclick="openFlights(#studentID#,#tripID#,'arrival')" />                                
+                            	<a href="tours/flightInfo.cfm?studentID=#studentID#&tripID=#tripID#&viewType=arrival" class="jQueryModalPL">
+                                	<img src="pics/buttons/booked_32.png" style="border:none;" />
+                              	</a>                               
                             </cfif>
                         </td>
                         <td>
                             <cfif NOT LEN(qGetDepartureFlightInformation.departDate)>
-                            	<input type="image" src="pics/buttons/notbooked_35.png" onclick="openFlights(#studentID#,#tripID#,'departure')" />                                
+                            	<a href="tours/flightInfo.cfm?studentID=#studentID#&tripID=#tripID#&viewType=departure" class="jQueryModalPL">
+                                	<img src="pics/buttons/notbooked_35.png" style="border:none;" />
+                              	</a>                                 
                             <cfelse>
-                            	<input type="image" src="pics/buttons/booked_32.png" onclick="openFlights(#studentID#,#tripID#,'departure')" />                                
+                            	<a href="tours/flightInfo.cfm?studentID=#studentID#&tripID=#tripID#&viewType=departure" class="jQueryModalPL">
+                                	<img src="pics/buttons/booked_32.png" style="border:none;" />
+                              	</a>                               
                             </cfif>
                         </td>
                     </tr>

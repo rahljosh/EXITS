@@ -40,7 +40,7 @@
         FROM 
             smg_tours
         WHERE
-     		isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+     		tour_status IN ( <cfqueryparam cfsqltype="cf_sql_varchar" value="active,full" list="yes"> )
         ORDER BY 
             tour_name
     </cfquery>
@@ -81,7 +81,7 @@
                     AND
                         sFemale.sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="female">
             WHERE
-                t.isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                t.tour_status IN ( <cfqueryparam cfsqltype="cf_sql_varchar" value="active,full" list="yes"> )
                 
             GROUP BY
                 t.tour_ID
@@ -114,7 +114,7 @@
                     AND
                         hFemale.childID IN ( SELECT siblingID FROM student_tours_siblings WHERE paid IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes"> )
             WHERE
-                t.isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                t.tour_status IN ( <cfqueryparam cfsqltype="cf_sql_varchar" value="active,full" list="yes"> )
                         
             GROUP BY
                 t.tour_ID
