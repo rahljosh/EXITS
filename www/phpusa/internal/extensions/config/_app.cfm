@@ -74,7 +74,7 @@
 		// Getting error on querys/upload_logo.cfm. Getting full path including /query
 		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());	'
 		APPLICATION.PATH.base = "C:/websites/www/student-management/nsmg/";
-		APPLICATION.PATH.SmgURL = "http://ise.local/nsmg/";
+		APPLICATION.PATH.SmgURL = "http://smg.local/nsmg/";
 		
 	} else {
 		// PRODUCTION Server Settings
@@ -91,7 +91,7 @@
 		// Getting error on querys/upload_logo.cfm. Getting full path including /query
 		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());	'
 		APPLICATION.PATH.base = "C:/websites/student-management/nsmg/";
-		APPLICATION.PATH.SmgURL = "http://ise.exitsapplication.com/nsmg/";
+		APPLICATION.PATH.SmgURL = "https://ise.exitsapplication.com/nsmg/";
 	}
 
 
