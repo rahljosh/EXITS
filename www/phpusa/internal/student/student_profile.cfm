@@ -152,22 +152,22 @@ where php_students_in_program.studentid = #get_student_unqid.studentid#
 		<tr><td align="center" width="360">
 				<cfdirectory directory="#APPLICATION.PATH.onlineApp.studentLetter#" name="stuletter" filter="#studentid#.*">
 				<cfif Right(stuletter.name, 3) EQ 'jpg' OR Right(stuletter.name, 3) EQ 'gif'>
-					<a href="javascript:OpenApp('http://www.student-management.com/nsmg/student_app/print_letter_profile.cfm?studentid=#studentid#&letter=students');">Students Letter</a>
+					<a href="javascript:OpenApp('https://ise.exitsapplication.com/nsmg/student_app/print_letter_profile.cfm?studentid=#studentid#&letter=students');">Students Letter</a>
 				<cfelseif stuletter.recordcount>
 					<a href="http://www.student-management.com/nsmg/uploadedfiles/letters/students/#stuletter.name#">Students Letter</a>
 				<cfelseif app_current_status NEQ 0>
-					<a href="javascript:OpenApp('http://www.student-management.com/nsmg/student_app/section1/page5print.cfm?studentid=#studentid#');">Students Letter</a>
+					<a href="javascript:OpenApp('https://ise.exitsapplication.com/nsmg/student_app/section1/page5print.cfm?studentid=#studentid#');">Students Letter</a>
 				<cfelse>
 					Students Letter n/a					
 				</cfif>
 				&nbsp - &nbsp
 				<cfdirectory directory="#APPLICATION.PATH.onlineApp.parentLetter#" name="paletter" filter="#studentid#.*">
 				<cfif Right(paletter.name, 3) EQ 'jpg' OR Right(paletter.name, 3) EQ 'gif'>
-					<a href="javascript:OpenApp('http://www.student-management.com/nsmg/student_app/print_letter_profile.cfm?studentid=#studentid#&letter=parents');">Parents Letter</a>
+					<a href="javascript:OpenApp('https://ise.exitsapplication.com/nsmg/student_app/print_letter_profile.cfm?studentid=#studentid#&letter=parents');">Parents Letter</a>
 				<cfelseif paletter.recordcount>
 					<a href="http://www.student-management.com/nsmg/uploadedfiles/letters/parents/#paletter.name#">Students Letter</a>
 				<cfelseif app_current_status NEQ 0>
-					<a href="javascript:OpenApp('http://www.student-management.com/nsmg/student_app/section1/page6print.cfm?studentid=#studentid#');">Parents Letter</a>
+					<a href="javascript:OpenApp('https://ise.exitsapplication.com/nsmg/student_app/section1/page6print.cfm?studentid=#studentid#');">Parents Letter</a>
 				<cfelse>
 					Parents Letter n/a
 				</cfif>
