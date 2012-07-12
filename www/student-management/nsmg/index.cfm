@@ -16,6 +16,10 @@
     <cfparam name="URL.curdoc" default="initial_welcome">
     
     <cfscript>
+		if ( NOT LEN(URL.curdoc) ) {
+			URL.curdoc = "initial_welcome";
+		}
+		
 		// MPD Tour Users
 		if ( CLIENT.userID EQ 15103 AND URL.curdoc EQ 'initial_welcome' ) {
 			URL.curdoc = "tours/mpdtours";										  
