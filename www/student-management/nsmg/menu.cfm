@@ -155,17 +155,15 @@
             
                 <li>
                     <a href="index.cfm?curdoc=tours/mpdtours">Students</a>
-                    <ul>
-                    	<li><a href="index.cfm?curdoc=report/MPDReports/index">Reports</a></li>
-                    </ul>
-                </li>
+              	</li>
                 
                 <li>
-                    <a href="##">Tools</a>
-                    <ul>
-                        <li><a href="index.cfm?curdoc=tools/student-tours/index">Student Tours</a></li>
-                    </ul>
+                    <a href="index.cfm?curdoc=tours/student-tours/index">Tours</a>
                 </li>
+                
+              	<li>
+                	<a href="index.cfm?curdoc=tours/MPDReports/index">Reports</a>
+               	</li>
             
                 <li><a href="index.cfm?curdoc=user_info&userID=#CLIENT.userID#">My Info</a></li>
                 
@@ -303,14 +301,6 @@
                     <a href="index.cfm?curdoc=students">Students</a>
                     <ul>
                         <li><a href="index.cfm?curdoc=app_process/apps_received">Received</a></li>
-						<cfif APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID,role="mpdTrips")>
-                                <li>
-                                	<a href="index.cfm?curdoc=tours/mpdtours">Trips</a>
-                                    <ul>
-                                        <li><a href="index.cfm?curdoc=report/MPDReports/index">Reports</a></li>
-                                    </ul>
-                                </li>
-                        </cfif>
                     </ul>
                 </li>
                 
@@ -338,6 +328,17 @@
                     <a href="index.cfm?curdoc=users">Users</a>
                     <ul>
                         <li><a href="index.cfm?curdoc=user_info&userID=#CLIENT.userID#">My Information</a></li>
+                    </ul>
+                </li>
+                
+                <li>
+                	<a href="##">MPD Tours</a>
+                	<ul>
+                    	<cfif APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID,role="mpdTrips")>
+                     		<li><a href="index.cfm?curdoc=tours/mpdtours">Students</a></li>
+                        	<li><a href="index.cfm?curdoc=tours/MPDReports/index">Reports</a></li>
+                        </cfif>
+                        <li><a href="index.cfm?curdoc=tours/student-tours/index">Tours</a></li>
                     </ul>
                 </li>
                 
@@ -426,8 +427,6 @@
                         </li>
                         
                         <li><a href="index.cfm?curdoc=forms/update_alerts">System Messages</a></li>
-    
-                        <li><a href="index.cfm?curdoc=tools/student-tours/index">Student Tours</a></li>
     
                         <li><a href="index.cfm?curdoc=tools/smg_welcome_pictures">Welcome Pictures</a></li>
                     </ul>

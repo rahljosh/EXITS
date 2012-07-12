@@ -79,10 +79,15 @@
                	</tr>
                 <tr>
                 	<td align="right">Overnight Flight:</td>
-                    <td><select id="overnightFlightID" class="newForm"><option value="0">No</option><option value="1">Yes</option></select></td>
+                    <td>
+                    	<select id="overnightFlightID" class="newForm">
+                        	<option value="0">No</option>
+                            <option value="1">Yes</option>
+                      	</select>
+                  	</td>
                	</tr>
                 <tr>
-                	<td colspan=2 align="center"><br /><input type="button" value="Submit" onClick="submitNewFlight()">&nbsp;<input type="button" value="Cancel" onclick="closeSection()"</td>
+                	<td colspan=2 align="center"><br /><input type="button" value="Submit" onClick="submitNewFlight()" />&nbsp;<input type="button" value="Cancel" onclick="closeSection()" /></td>
                 </tr>
           	</table>
      	</form>
@@ -100,14 +105,6 @@
     
     <br />
     
-    <table align="center">
-    	<tr>
-        	<td>
-    			<input type="image" src="../pics/close.png" align="middle" onclick="done()" />
-           	</td>
-      	</tr>
-  	</table>
-    
     <!--- Page Footer --->
     <gui:pageFooter footerType="application" />
     
@@ -119,17 +116,12 @@
 		loadFlights();
 	});
 	
-	var done = function() {
-		window.opener.location.reload();
-		window.close();
-	}
-	
 	var loadFlights = function() {
 		var t = new TOUR();
 		if ('<cfoutput>#URL.viewType#</cfoutput>' == 'arrival') {
 			var arrivals = t.getFlights(<cfoutput>#URL.studentID#</cfoutput>,<cfoutput>#URL.tripID#</cfoutput>, 'arrival');
-			var arrivalList = "<table align='center' width='99%' bordercolor='#C0C0C0' valign='top' cellpadding='3' cellspacing='1' style='border:1px solid #CCC'>";
-			arrivalList += "<tr><th colspan='10' bgcolor='#3b5998' style='color:white;'> A R R I V A L &nbsp;&nbsp; I N F O R M A T I O N </th></tr>";
+			var arrivalList = "<table align='center' width='99%' bordercolor='#C0C0C0' valign='top' cellpadding='3' cellspacing='1' style='border:1px solid #3b5998'>";
+			arrivalList += "<tr><th colspan='10' bgcolor='#3b5998' style='color:#FFF;'> A R R I V A L &nbsp;&nbsp; I N F O R M A T I O N </th></tr>";
 			arrivalList += "<tr bgcolor='#3b5998' style='color:white;'><th width='8%'>Date</th><th width='14%'>Departure City</th><th width='12%'>Departure Airport Code</th>";
 			arrivalList += "<th width='14%'>Arrival City</th><th width='12%'>Arrival Airport Code</th><th width='10%'>Flight Number</th><th width='8%'>Departure Time</th>";
 			arrivalList += "<th width='8%'>Arrival Time</th><th width='5%'>Overnight Flight</th><th width='9%'>Actions</th></tr>";
@@ -144,7 +136,11 @@
 				else
 					overnight = 'No';
 				
-				arrivalList += "<tr align='center' bgcolor='#D5DCE5'>";
+				if (i%2) {
+					arrivalList += "<tr align='center' bgcolor='#ffffff'>";
+				} else {
+					arrivalList += "<tr align='center' bgcolor='#ffffe6'>";
+				}
 				arrivalList += "<td>" + date + "</td>";
 				arrivalList += "<td>" + arrivals.DATA.DEPARTCITY[i] + "</td>";
 				arrivalList += "<td>" + arrivals.DATA.DEPARTAIRPORTCODE[i] + "</td>";
@@ -163,7 +159,7 @@
 			$("#arrivalSection").html(arrivalList);
 		} else {
 			var departures = t.getFlights(<cfoutput>#URL.studentID#</cfoutput>,<cfoutput>#URL.tripID#</cfoutput>, 'departure');
-			var departureList = "<table align='center' width='99%' bordercolor='#C0C0C0' valign='top' cellpadding='3' cellspacing='1' style='border:1px solid #CCC'>";
+			var departureList = "<table align='center' width='99%' bordercolor='#C0C0C0' valign='top' cellpadding='3' cellspacing='1' style='border:1px solid #3b5998'>";
 			departureList += "<tr><th colspan='10' bgcolor='#3b5998' style='color:white;'> D E P A R T U R E &nbsp;&nbsp; I N F O R M A T I O N </th></tr>";
 			departureList += "<tr bgcolor='#3b5998' style='color:white;'><th width='8%'>Date</th><th width='14%'>Departure City</th><th width='12%'>Departure Airport Code</th>";
 			departureList += "<th width='14%'>Arrival City</th><th width='12%'>Arrival Airport Code</th><th width='10%'>Flight Number</th><th width='8%'>Departure Time</th>";
@@ -179,7 +175,11 @@
 				else
 					overnight = 'No';
 				
-				departureList += "<tr align='center' bgcolor='#D5DCE5'>";
+				if (i%2) {
+					departureList += "<tr align='center' bgcolor='#ffffff'>";
+				} else {
+					departureList += "<tr align='center' bgcolor='#ffffe6'>";
+				}
 				departureList += "<td>" + date + "</td>";
 				departureList += "<td>" + departures.DATA.DEPARTCITY[i] + "</td>";
 				departureList += "<td>" + departures.DATA.DEPARTAIRPORTCODE[i] + "</td>";
@@ -220,6 +220,7 @@
 		$("#newFlightDiv").removeAttr("style");
 		$(".newForm").val("");
 		$("#typeID").val(type);
+		$("#overnightFlightID").val('0');
 		window.scrollTo(0,0);
 	}
 	

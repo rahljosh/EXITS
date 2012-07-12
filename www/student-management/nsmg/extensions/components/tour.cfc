@@ -20,7 +20,7 @@
            	FROM
             	smg_tours
            	WHERE
-            	isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            	tour_status = <cfqueryparam cfsqltype="cf_sql_varchar" value="active">
            	ORDER BY
             	tour_name
         </cfquery>
