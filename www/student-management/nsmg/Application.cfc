@@ -238,7 +238,7 @@
 		<cfargument name="Exception" type="any" required="true" />
 		<cfargument name="EventName" type="string" required="false" default="" />
 		
-        <!--- Production --->
+        <!--- Production - Email Error Message - Display HTML Error --->
  		<cfif NOT APPLICATION.isServerLocal>
 			
             <cfscript>
@@ -246,28 +246,41 @@
 				vErrorID = "#CLIENT.userID#-#dateformat(now(),'mmddyyyy')#-#timeformat(now(),'hhmmss')#";
 			</cfscript>
             
-            <!--- Email Error Message --->
-            <cfmail to="#APPLICATION.EMAIL.Errors#" from="#APPLICATION.EMAIL.Errors#" subject="EXITS - System Error - ID: #vErrorID#" type="HTML">
-                <p>An error occurred on #DateFormat( Now(), "mmm d, yyyy" )# at #TimeFormat( Now(), "hh:mm TT" )#</p>
-				
-				<p>Error ID = #vErrorID#</p>
-
-				<p>Error Event: #ARGUMENTS.EventName#</p>
-            	
-                <h3>Error details:</h3>
-                <p><cfdump var="#ARGUMENTS.Exception#"></p>
-                
-                <h3>SESSION:</h3>
-                <p><cfdump var="#SESSION#"></p>
-                
-                <h3>FORM:</h3>
-                <p><cfdump var="#FORM#"></p>
-                
-                <h3>URL:</h3>
-                <p><cfdump var="#URL#"></p>
-
-                <h3>CGI:</h3>
-                <p><cfdump var="#CGI#"></p>
+            <!--- Email Error Message | Send out emails using Gmail --->
+            <cfmail 
+            	to="#APPLICATION.EMAIL.Errors#"
+                from="#APPLICATION.EMAIL.Errors# (EXITS - Error Notification)" 
+                subject="EXITS - Error Notification - ID: #vErrorID#" 
+                type="HTML" 
+                port="587"
+                useTLS="yes"
+                server="smtp.gmail.com"
+                username="errors@student-management.com"
+                password="errors123">
+                    <p>An error occurred on #DateFormat( Now(), "mmm d, yyyy" )# at #TimeFormat( Now(), "hh:mm TT" )#</p>
+                    
+                    <p>Error ID = #vErrorID#</p>
+                    
+                    <p>User: #CLIENT.firstName# #CLIENT.lastName# (###CLIENT.userID#)</p>
+    
+                    <p>Error Event: #ARGUMENTS.EventName#</p>
+                    
+                    <h3>Error details:</h3>
+                    <p><cfdump var="#ARGUMENTS.Exception#"></p>
+                    
+                    <h3>SESSION:</h3>
+                    <p><cfdump var="#SESSION#"></p>
+                    
+                    <h3>FORM:</h3>
+                    <p><cfdump var="#FORM#"></p>
+                    
+                    <h3>URL:</h3>
+                    <p><cfdump var="#URL#"></p>
+                    
+                    <!---
+					<h3>CGI:</h3>
+					<p><cfdump var="#CGI#"></p>
+					--->
             </cfmail>
             
             <cfscript>

@@ -16,6 +16,8 @@
 <cfparam name="CLIENT.studentID" default="0">  
 <cfparam name="CLIENT.regionID" default="0">  
 <cfparam name="CLIENT.name" default=""> 
+<cfparam name="CLIENT.firstName" default="">
+<cfparam name="CLIENT.lastName" default="">
 <cfparam name="CLIENT.userType" default="0">   
 <cfparam name="CLIENT.companyName" default=""> 
 <cfparam name="CLIENT.companyShort" default=""> 
