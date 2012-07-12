@@ -233,7 +233,7 @@
                     <table width="100%" cellpadding="2">
                         <tr><td width="135" valign="top">
                             <cfif dStudentPicture.recordcount>
-                                <img src="https://ise.exitsapplication.com/nsmg/uploadedfiles/web-students/#dStudentPicture.name#" width="135" height="200">
+                                <img src="#APPLICATION.PATH.SmgURL#uploadedfiles/web-students/#dStudentPicture.name#" width="135" height="200">
                             <cfelse>
                                 <img src="pics/no_stupicture.jpg" width="135">
                             </cfif>
@@ -287,12 +287,12 @@
                                     <tr>
                                         <td align="center">
                                             <cfif ListFind("1,2,3,4", CLIENT.usertype)>
-                                                <a href="javascript:OpenApp('http://www.student-management.com/nsmg/student_app/index.cfm?curdoc=section1&unqid=#uniqueid#&userType=#CLIENT.usertype#&id=1');"><img src="pics/exits.jpg" border="0"></a>
+                                                <a href="javascript:OpenApp('#APPLICATION.PATH.SmgURL#student_app/index.cfm?curdoc=section1&unqid=#uniqueid#&userType=#CLIENT.usertype#&id=1');"><img src="pics/exits.jpg" border="0"></a>
                                             <cfelse>
-                                                <a href="javascript:OpenApp('http://www.student-management.com/nsmg/student_app/print_application.cfm?user=#CLIENT.userid#&unqid=#uniqueid#&userType=#CLIENT.usertype#&exits_app');"><img src="pics/exits.jpg" border="0"></a>
+                                                <a href="javascript:OpenApp('#APPLICATION.PATH.SmgURL#student_app/print_application.cfm?user=#CLIENT.userid#&unqid=#uniqueid#&userType=#CLIENT.usertype#&exits_app');"><img src="pics/exits.jpg" border="0"></a>
                                             </cfif>
-                                            <br><a href="javascript:OpenSmallW('http://www.student-management.com/nsmg/student_app/section4/page22print.cfm?user=#CLIENT.userid#&unqid=#uniqueid#&userType=#CLIENT.usertype#');"><img src="pics/attached-files.gif" border="0"></a>	
-                                            <br><a href="javascript:SendEmail('http://www.student-management.com/nsmg/student_app/email_form.cfm?userid=#CLIENT.userid#&unqid=#uniqueid#&companyShort=php');"><img src="pics/send-email.gif" border="0"></a>	
+                                            <br><a href="javascript:OpenSmallW('#APPLICATION.PATH.SmgURL#student_app/section4/page22print.cfm?user=#CLIENT.userid#&unqid=#uniqueid#&userType=#CLIENT.usertype#');"><img src="pics/attached-files.gif" border="0"></a>	
+                                            <br><a href="javascript:SendEmail('#APPLICATION.PATH.SmgURL#student_app/email_form.cfm?userid=#CLIENT.userid#&unqid=#uniqueid#&companyShort=php');"><img src="pics/send-email.gif" border="0"></a>	
                                         </td>
                                     </tr>
                                     <cfelse>
