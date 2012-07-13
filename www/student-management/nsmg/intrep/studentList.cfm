@@ -38,7 +38,7 @@
             s.programID, 
             s.dateapplication, 
             s.regionguar,
-            s.companyid, 
+            s.companyID, 
             s.state_guarantee, 
             s.uniqueid, 
             s.branchID, 
@@ -55,7 +55,8 @@
             office.businessname as officeName, 
             <!--- Used for EF Central Office --->
             office.master_account,
-            p.programname
+            p.programname,
+            camp.name AS campName
         FROM 
         	smg_students s
 		LEFT OUTER JOIN
@@ -64,32 +65,34 @@
             	sh.isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
             AND	
             	sh.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-        LEFT JOIN 
+		LEFT OUTER JOIN
         	smg_programs p ON s.programID = p.programID
-        LEFT JOIN 
+		LEFT OUTER JOIN
         	smg_regions r ON s.regionassigned = r.regionID
-        LEFT JOIN 
+		LEFT OUTER JOIN
         	smg_countrylist c ON c.countryID = s.countryresident
-        LEFT JOIN 
+		LEFT OUTER JOIN
         	smg_regions rg on s.regionalguarantee = rg.regionID
-        LEFT JOIN 
+		LEFT OUTER JOIN
         	smg_states st ON s.state_guarantee = st.id
-        LEFT JOIN 
+		LEFT OUTER JOIN
         	smg_hosts h ON sh.hostID = h.hostID
-        LEFT JOIN 
+		LEFT OUTER JOIN
         	smg_users branch ON s.branchID = branch.userID
-        LEFT JOIN 
+		LEFT OUTER JOIN
         	smg_users office ON s.intrep = office.userID
+		LEFT OUTER JOIN
+            smg_aypcamps camp ON s.aypenglish = camp.campID
         WHERE 
         	<!--- SHOW ONLY APPS APPROVED APPS --->
 	        s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
 		
-		<cfif listFind("1,2,3,4,5", CLIENT.companyid)>
+		<cfif listFind("1,2,3,4,5", CLIENT.companyID)>
         	AND
-            	s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> ) 
+            	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> ) 
         <cfelse>
         	AND
-            	s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+            	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         </cfif>
         
         <cfswitch expression="#URL.status#">
@@ -162,7 +165,7 @@
         ORDER BY 
         	<cfswitch expression="#URL.sortBy#">
             
-				<cfcase value="studentid,familyLastName,firstname,sex,countryName,regionName,programName,hostlastname,datePlaced,companyShort,branchName,officeName">
+				<cfcase value="studentid,familyLastName,firstname,sex,countryName,regionName,programName,hostlastname,datePlaced,companyShort,branchName,officeName,campName">
 					#URL.sortBy# #URL.sortOrder#               
                 </cfcase>            
             
@@ -231,6 +234,7 @@
 		<td width="10%"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='countryName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Country">Country</a></td>
 		<td width="10%"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='regionName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Region">Region</a></td>
 		<td width="10%"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='programName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Program">Program</a></td>
+        <td width="10%"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='campName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Program">Pre-Ayp Camp</a></td>
 		<cfif URL.status NEQ "unplaced">
 			<td width="10%"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='hostLastName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Family">Family</a></td>
 			<td width="10%"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='datePlaced',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Placement Date">Placement Date</a></td>
@@ -274,6 +278,7 @@
                     </cfif>
                 </td>
                 <td width="10%">#qGetStudents.programname#</td>
+                <td width="10%">#qGetStudents.campName#</td>
                 <cfif URL.status NEQ "unplaced">
                     <td width="10%">
 						<cfif VAL(qGetStudents.hostID) AND isDate(qGetStudents.datePISEmailed)>#qGetStudents.hostlastname#</cfif>
