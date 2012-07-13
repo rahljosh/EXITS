@@ -77,6 +77,9 @@
 	APPLICATION.EMAIL.CASESchoolNotification = 'jana@case-usa.org;support@student-management.com';
 	APPLICATION.EMAIL.PHPContact = 'luke@phpusa.com';
 	
+	/*********************************************
+		Replace this with a SESSION.emailSupport
+	*********************************************/
 	if ( VAL(qCompanyInfo.recordCount) ) {
 		
 		APPLICATION.EMAIL.support = qCompanyInfo.support_email;

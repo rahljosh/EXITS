@@ -8,11 +8,24 @@
 
 ----- ------------------------------------------------------------------------- --->
 
+<cfquery name="qCompanyInfo" datasource="#APPLICATION.DSN#">
+	SELECT
+    	companyID,
+        support_email,
+        projectManager,
+        url_ref
+	FROM
+    	smg_companies
+	WHERE
+    	url_ref = <cfqueryparam cfsqltype="cf_sql_varchar" value="#CGI.http_host#">
+</cfquery>
+
 <cfscript>
 	// CLEAR SESSION SCOPE - Use only when we switch to Application.cfc
-	// StructClear(SESSION);
-
+	StructClear(SESSION);
+	
 	// Param SESSION Variables
+	param name="SESSION.emailSupport" default='support@student-management.com';	
 	param name="SESSION.started" default=now();	
 	param name="SESSION.expires" default=DateAdd('h', 12, now());	
 
@@ -34,4 +47,11 @@
 	
 	// Set User Roles
 	APPLICATION.CFC.USER.setUserRoles(userID=CLIENT.userID);	
+
+	// Set Email Support According to Company
+	if ( VAL(qCompanyInfo.recordCount) ) {
+		
+		SESSION.emailSupport = qCompanyInfo.support_email;
+		
+	}
 </cfscript>
