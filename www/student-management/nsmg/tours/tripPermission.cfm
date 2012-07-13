@@ -88,6 +88,17 @@
             uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentFullInformation.regionAssigned#">
 	</cfquery>
     
+ 	<cfquery name="qGetTrip" datasource="#APPLICATION.DSN#">
+    	SELECT
+        	*
+      	FROM
+        	student_tours
+       	WHERE
+        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentFullInformation.studentID#">
+      	AND
+        	tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegistrationInfo.tour_id#">
+    </cfquery>
+    
 </cfsilent>
 
 <style type="text/css">
@@ -158,7 +169,7 @@
                 <table>
                     <tr>
                         <td width="100" valign="top"><span class="title">Cell Phone:</span></td>
-                        <td><cfif LEN(qGetStudentFullInformation.cell_phone)><em>None on File</em><cfelse> #qGetStudentFullInformation.cell_phone#</cfif></td>
+                        <td>#qGetTrip.cell_phone#</td>
                     </tr>
                     <tr>
                         <td valign="top"><span class="title">Email: </span></td>

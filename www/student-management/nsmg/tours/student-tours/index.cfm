@@ -81,7 +81,7 @@
 	<cfloop query="qGetTourList">
         <table width="100%" align="center" cellpadding="3" cellspacing="2" class="section">
             <tr <cfif qGetTourList.packetfile is ''>bgcolor="##FFCCCC"</cfif>>
-                <td width="120"><img src="#CLIENT.exits_url#/nsmg/uploadedfiles/student-tours/#tour_img2#.jpg" width="100px" height="100px" /></td>
+                <td width="120"><img src="../nsmg/uploadedfiles/student-tours/EastCoast33.jpg" width="100px" height="100px" /></td>
                 <td>
                     <b><u>#qGetTourList.tour_name#</u></b> <br />
                     <b>Status:</b> #qGetTourList.tour_status#<br />
