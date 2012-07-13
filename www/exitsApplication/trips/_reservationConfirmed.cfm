@@ -24,11 +24,12 @@
             st.person1,
             st.person2,
             st.person3,
-            st.med            
+            st.med,
+            st.cell_phone           
         FROM 
         	student_tours st
         WHERE 
-     		active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+     		st.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         AND
             st.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#"> 
         AND
@@ -91,10 +92,10 @@
             <td class="tripFormTitle" width="30%">Trip:</td>
             <td class="tripFormField" width="70%">#APPLICATION.CFC.UDF.TextAreaTripOutput(qGetTourDetails.tour_name)#</td>
         </tr>
-        <tr>
+       	<tr>
             <td class="tripFormTitle">Total Cost:</td>
             <td class="tripFormField">
-                #LSCurrencyFormat(vTotalDue)#
+              	#LSCurrencyFormat(vTotalDue)#
                 <em class="tripNotesRight">#LSCurrencyFormat(qGetTourDetails.tour_price)# Per person - Does not include your round trip airline ticket</em>
             </td>
         </tr>
@@ -125,7 +126,11 @@
         <tr>
             <td class="tripFormTitle">Country Of Birth:</td>
             <td class="tripFormField">#qGetStudentInfo.countryname#</td>
-        </tr> 
+        </tr>
+        <tr class="blueRow">
+        	<td class="tripFormTitle">Cell Phone:</td>
+            <td class="tripFormField">#qGetRegistrationDetails.cell_phone#</td>
+        </tr>
         <tr class="blueRow">
             <td class="tripFormTitle">Email Address:</td>
             <td class="tripFormField">#qGetRegistrationDetails.email#</td>

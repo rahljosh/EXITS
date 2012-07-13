@@ -87,6 +87,17 @@
             uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentFullInformation.regionAssigned#">
 	</cfquery>
     
+    <cfquery name="qGetTrip" datasource="#APPLICATION.DSN.Source#">
+    	SELECT
+        	*
+      	FROM
+        	student_tours
+       	WHERE
+        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentFullInformation.studentID#">
+      	AND
+        	tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetTourDetails.tour_id#">
+    </cfquery>
+    
 </cfsilent>
 
 <style type="text/css">
@@ -144,6 +155,10 @@
                         <td><span class="title">Nationality:</span></td>
                         <td>#qGetRegistrationDetails.stunationality#</td>
                     </tr>
+                    <tr>
+                        <td><span class="title">Date of Birth:</span></td>
+                        <td>#DateFormat(qGetStudentFullInformation.dob,"mm/dd/yyyy")#</td>
+                    </tr>
                 </table>
     
             </td>
@@ -153,7 +168,7 @@
                 <table>
                     <tr>
                         <td width="100" valign="top"><span class="title">Cell Phone:</span></td>
-                        <td><cfif LEN(qGetStudentFullInformation.cell_phone)><em>None on File</em><cfelse> #qGetStudentFullInformation.cell_phone#</cfif></td>
+                        <td><cfif LEN(qGetTrip.cell_phone)><em>None on File</em><cfelse> #qGetTrip.cell_phone#</cfif></td>
                     </tr>
                     <tr>
                         <td valign="top"><span class="title">Email: </span></td>
@@ -304,6 +319,8 @@
                 All parties acknowledge that while on tour, #SESSION.COMPANY.shortName# and MPD Tour America, Inc. 
                 or its representatives may take any action deemed necessary to protect student safety and well being, 
                 including medical treatment at the student's expense and transportaion home at student's expense.
+                <br />
+                &nbsp;&nbsp;<i>Please Sign Form</i>
             </td>
         </tr>
         <tr>

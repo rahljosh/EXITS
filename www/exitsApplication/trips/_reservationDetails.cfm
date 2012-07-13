@@ -25,7 +25,8 @@
             st.person2,
             st.person3,
             st.med,  
-            st.paid,          
+            st.paid,
+            st.cell_phone,         
             ap.authTransactionID, 
             ap.amount,  
             ap.dateUpdated        
@@ -127,6 +128,10 @@
             <td class="tripFormField">#qGetStudentInfo.countryname#</td>
         </tr> 
         <tr class="blueRow">
+            <td class="tripFormTitle">Cell Phone:</td>
+            <td class="tripFormField">#qGetRegistrationDetails.cell_phone#</td>
+        </tr>
+        <tr>
             <td class="tripFormTitle">Email Address:</td>
             <td class="tripFormField">#qGetRegistrationDetails.email#</td>
         </tr> 
