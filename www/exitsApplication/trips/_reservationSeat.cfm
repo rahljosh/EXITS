@@ -178,12 +178,13 @@
         
         <cfif NOT SESSION.formErrors.length()>
 
-			<!--- Update Email Address --->
+			<!--- Update Email Address and Cell Phone --->
             <cfquery datasource="#APPLICATION.DSN.Source#">
                 UPDATE
                     student_tours
                 SET
-                    email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emailAddress#"> 
+                    email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emailAddress#">,
+                    cell_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cell_phone#">
                 WHERE
                     ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentPendingRegistration.ID)#"> 
             </cfquery>
@@ -337,16 +338,20 @@
                 <tr>
                     <td class="tripFormTitle">Country Of Birth:</td>
                     <td class="tripFormField">#qGetStudentInfo.countryname#</td>
-                </tr> 
+                </tr>
                 <tr class="blueRow">
+                	<td class="tripFormTitle">Cell Phone: </td>
+                    <td class="tripFormField"><input type="text" name="cell_phone" id="cell_phone" value="#FORM.cell_phone#" class="mediumField" /></td>
+                </tr> 
+                <tr>
                     <td class="tripFormTitle">Email Address: <span class="required">*</span></td>
                     <td class="tripFormField"><input type="text" name="emailAddress" id="emailAddress" value="#FORM.emailAddress#" class="largeField" maxlength="100" /></td>
                 </tr> 
-                <tr>
+                <tr class="blueRow">
                     <td class="tripFormTitle">Confirm Email Address: <span class="required">*</span></td>
                     <td class="tripFormField"><input type="text" name="confirmEmailAddress" id="confirmEmailAddress" value="#FORM.confirmEmailAddress#" class="largeField" maxlength="100" /></td>
                 </tr> 
-                <tr class="blueRow">
+                <tr>
                     <td>&nbsp;</td>
                     <td><span class="required">* Required Fields</span></td>
                 </tr>  

@@ -39,6 +39,7 @@
     <!--- Book Tour --->
     <cfparam name="FORM.emailAddress" default="">
     <cfparam name="FORM.confirmEmailAddress" default="">
+    <cfparam name="FORM.cell_phone" default="">
 	<!--- Credit Card Information --->
     <cfparam name="FORM.totalDue" default="">
     <cfparam name="FORM.paymentMethodID" default="1">
@@ -110,6 +111,8 @@
             tour_date,
             totalSpots,
             tour_status,
+            tour_img1,
+            tour_img2,
             spotLimit,
             extraMaleSpot,
             extraFemaleSpot,
@@ -123,6 +126,8 @@
                 t.tour_date,
                 t.totalSpots,
                 t.tour_status,
+                t.tour_img1,
+                t.tour_img2,
                 t.spotLimit,
                 t.extraMaleSpot,
                 t.extraFemaleSpot,                
@@ -149,6 +154,8 @@
                 t.tour_date,
                 t.totalSpots,
                 t.tour_status,
+                t.tour_img1,
+                t.tour_img2,
                 t.spotLimit,
                 t.extraMaleSpot,
                 t.extraFemaleSpot,                
