@@ -98,31 +98,26 @@
 				THIS.OnSessionStart();
 			}
 
-
 			// Set up Application Shot Names
 			AppCFC = APPLICATION.CFC;
 			AppEmail = APPLICATION.EMAIL;
 			AppPath = APPLICATION.PATH;
 			Constants = APPLICATION.Constants;
 
-
 			// Include Config Settings 
 			include "nsmg/extensions/config/_client.cfm";				
-
-
-			// Session has Expired - Go to login page
-			if ( findNoCase("nsmg", CGI.PATH_TRANSLATED) AND NOT VAL(CLIENT.userType) AND ( NOT VAL(CLIENT.userID) OR NOT VAL(CLIENT.studentID) ) ) {
-				Location("http://#cgi.http_host#/", "no");
-			}
-
 
 			// If referer is PHP - login student to view the online application
 			if( FindNoCase("phpusa.com", CGI.HTTP_REFERER) OR FindNoCase("php.local", CGI.HTTP_REFERER) ) {
 				// Login as Student
 				CLIENT.userType = 10; // Student
 			}
-
 			
+			// Session has Expired - Go to login page
+			if ( findNoCase("nsmg", getBaseTemplatePath()) AND NOT VAL(CLIENT.userType) AND ( NOT VAL(CLIENT.userID) OR NOT VAL(CLIENT.studentID) ) ) {
+				Location("http://#cgi.http_host#/", "no");
+			}
+
 			// Always allow logout.
 			if ( NOT findNoCase("nsmg/logout.cfm", getBaseTemplatePath()) ) {
 				
@@ -131,7 +126,7 @@
 					
 					// allow user only on user info and user form.
 					if ( NOT ( LEN(URL.curdoc) AND listFindNoCase("user_info,forms/user_form", URL.curdoc)) ) {
-						Location("nsmg/index.cfm?curdoc=user_info&userid=#CLIENT.userid#", "no");
+						Location("index.cfm?curdoc=user_info&userid=#CLIENT.userid#", "no");
 					}
 				
 				// Force change password
@@ -139,7 +134,7 @@
 					
 					// allow user only on change password page.
 					if ( NOT ( LEN(URL.curdoc) AND  URL.curdoc EQ 'forms/change_password' OR  listFindNoCase("logout", URL.curdoc)) ) {
-						Location("nsmg/index.cfm?curdoc=forms/change_password", "no");
+						Location("index.cfm?curdoc=forms/change_password", "no");
 					}
 				
 				// Force agreement on PRODUCTION.
@@ -147,20 +142,19 @@
 					
 					// allow user only on yearly agreement page. 
 					if ( NOT ( LEN(URL.curdoc) AND listFindNoCase("forms/yearly_agreement,repRefs,displayRepAgreement,cbcAuthorization,employmentHistory,logout", URL.curdoc)) ) {
-						Location("nsmg/index.cfm?curdoc=forms/yearly_agreement&userid=#CLIENT.userid#", "no");
+						Location("index.cfm?curdoc=forms/yearly_agreement&userid=#CLIENT.userid#", "no");
 					}
 				
 				// Force SSN on PRODUCTION.
 				} else if ( isDefined('CLIENT.needsSSN') AND NOT APPLICATION.IsServerLocal ) {
 					
 					if ( NOT ( LEN(URL.curdoc) AND listFindNoCase("forms/verifyInfo, forms/verifyInfo2, logout", URL.curdoc)) ) {
-						Location("nsmg/index.cfm?curdoc=forms/verifyInfo", "no");
+						Location("index.cfm?curdoc=forms/verifyInfo", "no");
 					}
 					
 				}
 				
 			}
-
 			
 			/************************************************************************************************************************
 				if "resume login" is used login is not run.  Automatically logout if not the same day, so change password and verify info can be checked when they login again.
@@ -170,7 +164,6 @@
 				// don't do a cflocation because we'll get an infinite loop.
 				include "nsmg/logout.cfm";
 			}
-
 			
 			// Insert Track
 			include "nsmg/includes/trackman.cfm";
