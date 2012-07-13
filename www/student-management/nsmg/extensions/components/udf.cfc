@@ -82,6 +82,62 @@
 	</cffunction>
 
 
+	<cffunction name="setSessionEmailVariables" access="public" returntype="void" output="false" hint="Set SESSION email variables">
+              
+        <cfquery name="qCompanyInfo" datasource="#APPLICATION.DSN#">
+            SELECT
+                companyID,
+                support_email,
+                projectManager,
+                url_ref
+            FROM
+                smg_companies
+            WHERE
+                url_ref = <cfqueryparam cfsqltype="cf_sql_varchar" value="#CGI.http_host#">
+        </cfquery>
+        
+        <cfscript>
+			// Set SESSION.ROLES
+			SESSION.EMAIL = StructNew();
+			
+			// Set Email Support According to Company
+			if ( VAL(qCompanyInfo.recordCount) ) {
+				SESSION.EMAIL.support = qCompanyInfo.support_email;
+			} else {
+				SESSION.EMAIL.support = 'support@student-management.com';
+			}
+		</cfscript>
+		
+	</cffunction>
+    
+    
+	<cffunction name="getSessionEmail" access="public" returntype="string" output="false" hint="Gets session email">
+    	<cfargument name="emailType" type="string" hint="emailType is required">
+		
+        <cfscript>
+			try {
+				// Check if emails do not exist
+				if ( StructIsEmpty(SESSION.EMAIL) ) {
+					// Set Emails
+					setSessionEmailVariables();
+				}
+			} catch (Any e) {
+				// Set Emails
+				setSessionEmailVariables();
+			}
+			
+			try {
+				// Get Email Access
+				return SESSION.EMAIL[ARGUMENTS.emailType];
+			} catch (Any e) {
+				// Error
+				return 'support@student-management.com';
+			}
+		</cfscript>
+		
+	</cffunction>
+
+
 	<!--- This hashes the given ID for security reasons --->
 	<cffunction name="HashID" access="public" returntype="string" output="no" hint="Hashes the given ID for security reasons. To be used for documents only.">
 		<cfargument name="ID" type="numeric" required="yes" />
@@ -96,16 +152,19 @@
 
 
 	<!---
-		Determines if the site is local or if the site is live. This is
-		determined by checking the server name. 
+		Determines if the site is local or if the site is live. This is determined by checking the server name. 
 	--->
 	<cffunction name="IsServerLocal" access="public" returntype="boolean" output="No" hint="Determines if the current server is local">
+		
 		<cfscript>
 			// Check for local servers
 			if (	
-				FindNoCase("dev.student-management.com", CGI.http_host) OR 
-				FindNoCase("developer", server.ColdFusion.ProductLevel) OR
-				FindNoCase("119cooper", CGI.http_host) OR
+				FindNoCase("dev.student-management.com", CGI.http_host) 
+			OR 
+				FindNoCase("developer", server.ColdFusion.ProductLevel) 
+			OR
+				FindNoCase("119cooper", CGI.http_host) 
+			OR
 				FindNoCase("111cooper", CGI.http_host)
 			){
 				return(true);
@@ -113,6 +172,7 @@
 				return(false);
 			}
 		</cfscript>
+        
 	</cffunction>
 
 
@@ -262,6 +322,54 @@
 			return(vReturnSSN);
         </cfscript>
 		   
+	</cffunction>
+
+
+	<!--- Returns a formatted phone number --->
+	<cffunction name="formatPhoneNumber" access="public" returntype="string" output="no" hint="Returns a formatted phone number">
+		<cfargument name="countryCode" type="string" default="" />
+        <cfargument name="areaCode" type="string" default="" />
+        <cfargument name="prefix" type="string" default="" />
+        <cfargument name="number" type="string" default="" />
+		
+        <cfscript>
+			var vPhoneNumber = '';
+			
+			// Remove dashes entered by the user since we use them to define the groups
+			
+			if ( LEN(ARGUMENTS.number) ) {
+				vPhoneNumber = ListPrepend(vPhoneNumber, ReplaceNoCase(ARGUMENTS.number, '-', ''), "-"); 
+			}
+			
+			if ( LEN(ARGUMENTS.prefix) ) {
+				vPhoneNumber = ListPrepend(vPhoneNumber, ReplaceNoCase(ARGUMENTS.prefix, '-', ''), "-"); 
+			}
+
+			if ( LEN(ARGUMENTS.areaCode) ) {
+				vPhoneNumber = ListPrepend(vPhoneNumber, ReplaceNoCase(ARGUMENTS.areaCode, '-', ''), "-"); 
+			}
+
+			if ( LEN(ARGUMENTS.countryCode) ) {
+				vPhoneNumber = ListPrepend(vPhoneNumber, ReplaceNoCase(ARGUMENTS.countryCode, '-', ''), "-"); 
+			}
+			
+			return vPhoneNumber;
+		</cfscript>
+
+			<!---
+			Code:
+			<cfset phone= "1-612.555.1212">
+			<!--- First lets ditch the dashes --->
+			<cfset phone = REReplace(phone,"\D","","ALL")>
+			<cfoutput>Dashless number: #phone#<BR></cfoutput>
+			<cfset four = Right(phone,4)>
+			<cfset prefix = Left(Right(phone,7),3)>
+			<cfset areacode = Left(Right(phone,10),3)>
+			<cfoutput>Number Nice: (#areacode#) #prefix#-#four#</cfoutput>
+			Yields:
+			Dashless number: 16125551212
+			Number Nice: (612) 555-1212
+			--->			
 	</cffunction>
 
 
@@ -1015,6 +1123,7 @@
             <cfelse>
                 <cfset areaRepOk = 0>
             </cfif>
+            
         	<!--- set if area rep account needs to be reviewed---->
              <cfif checkAgreement.ar_info_sheet is not '' 
                 AND checkAgreement.ar_cbc_auth_form is not '' 
@@ -1031,8 +1140,7 @@
             <cfif checkAgreement.ar_info_sheet is not '' 
                 AND checkAgreement.ar_cbc_auth_form is not '' 
                 AND cbcCheck.date_approved is ''
-                AND checkAgreement.ar_agreement is not ''
-                >
+                AND checkAgreement.ar_agreement is not ''>
                 <cfset secondRepReviewAcct = 1>
             <cfelse>
                 <cfset secondRepReviewAcct = 0>
