@@ -79,9 +79,6 @@
           <td><cfselect name="tour_status">
           <option value="Active">Active</option>
           <option value="Inactive">Inactive</option>
-		  <option value="Full">Full</option>
-		  <option value="Male Full">Male Full</option>
-		  <option value="Female Full">Female Full</option>
 		  <option value="Cancelled">Cancelled</option>
           </cfselect></td>
         </tr>

@@ -71,6 +71,7 @@
             s.firstname, 
             s.familylastname, 
             s.dob,
+            s.cell_phone,
             s.sex, 
             h.local_air_code, 
             h.major_air_code, 
@@ -389,6 +390,17 @@
                         authTransactionID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.referencePaid#">
                     WHERE
                         ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetRegistrationInfo.applicationPaymentID)#">
+                </cfquery>
+                
+                <cfquery datasource="#APPLICATION.DSN#">
+                	UPDATE
+                    	student_tours_siblings
+                   	SET
+                    	paid = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                   	WHERE
+                        fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#">
+                    AND
+                        tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.tripID)#">
                 </cfquery>
 
                 <!--- Email to Student --->    

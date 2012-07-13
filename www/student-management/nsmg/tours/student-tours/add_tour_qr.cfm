@@ -1,12 +1,6 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Add New Welcome Picture</title>
-</head>
-
-<body>
-
+<cfif NOT DirectoryExists("#APPPATH.UPLOADEDFILES#student-tours")>
+	<cfdirectory directory="#APPPATH.UPLOADEDFILES#student-tours" action="create">
+</cfif>
 
 <cfset directory = '#AppPath.uploadedFiles#student-tours'>
 	
@@ -15,14 +9,12 @@
 
 	<!--- file type --->
 	<cfif cffile.clientfileext NEQ 'jpg'>  
-		<cffile action = "delete" file = "#directory#\#cffile.serverfile#">
+		<cffile action = "delete" file = "#directory#">
 		<cfoutput>
-		<script language="JavaScript">
-		<!-- 
-		alert("Please upload a jpg image. EXITS does not accept #cffile.clientfileext# files.");
-			location.replace("?curdoc=tours/student-tours\index");
-		-->
-		</script>
+			<script language="JavaScript">
+            	alert("Please upload a jpg image. EXITS does not accept #cffile.clientfileext# files.");
+                location.replace("?curdoc=tours/student-tours\index");
+            </script>
 		</cfoutput>
 	</cfif>
 
@@ -46,9 +38,7 @@
 		</cfif>
 	</cfif>
 	
-	<!----<cffile	action="rename" source="#directory#/#CFFILE.ServerFile#" destination="#directory#/#newpictureid#.#cffile.clientfileext#">
-	
-	Upload File 2---->
+	<!--- Upload File 2 --->
 	<cffile action="upload" destination="#directory#" fileField="file_upload2" nameConflict="overwrite">
 
 	<!--- file type 2 --->
@@ -83,17 +73,38 @@
 			<cffile action="rename" source="#directory#/new#filename2#.#file.ServerFileExt#" destination="#directory#/#filename2#.#file.ServerFileExt#" attributes="normal">
 		</cfif>
 	</cfif>
-
-
-	<!----<cffile	action="rename" source="#directory#/#CFFILE.ServerFile#" destination="#directory#/#newpictureid#.#cffile.clientfileext#"> --->
 	
 <cfquery name="add_tour" datasource="MySQL">
 	INSERT smg_tours
-		(tour_name, tour_date, tour_price, tour_description, tour_flights, tour_payment, tour_include, tour_notinclude,
-		 tour_cancelfee, tour_status, tour_img1, tour_img2)
+		(
+        	tour_name, 
+            tour_date, 
+            tour_price, 
+            tour_description, 
+            tour_flights, 
+            tour_payment, 
+            tour_include, 
+            tour_notinclude,
+		 	tour_cancelfee, 
+            tour_status, 
+            tour_img1, 
+            tour_img2
+  		)
 	VALUES 
-		('#form.tour_name#', '#form.tour_date#', '#form.tour_price#', '#form.tour_description#', '#form.tour_flights#', '#form.tour_payment#',
-		'#form.tour_include#', '#form.tour_notinclude#', '#form.tour_cancelfee#', '#form.tour_status#', '#filename#', '#filename2#')
+		(
+        	<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.tour_name#">,
+            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.tour_date#">,
+            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.tour_price#">,
+            <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.tour_description#">,
+            <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.tour_flights#">,
+            <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.tour_payment#">,
+            <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.tour_include#">,
+            <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.tour_notinclude#">,
+            <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.tour_cancelfee#">,
+            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.tour_status#">,
+            <cfqueryparam cfsqltype="cf_sql_varchar" value="#filename#">,
+            <cfqueryparam cfsqltype="cf_sql_varchar" value="#filename2#">
+  		)
 </cfquery>	
 
 <cflocation url="?curdoc=tours/student-tours/index" addtoken="no">
