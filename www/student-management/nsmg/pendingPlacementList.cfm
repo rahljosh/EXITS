@@ -26,8 +26,19 @@
     <cfparam name="FORM.userType" default="#CLIENT.userType#">
 	
     <cfscript>
+		// Create User Object
+		oCBC = createObject("component","nsmg.extensions.components.cbc");
+		// Create User Object
+		oHost = createObject("component","nsmg.extensions.components.host");
+		// Create Region Object
+		oRegion = createObject("component","nsmg.extensions.components.region");
+		// Create UDF Object
+		oUDF = createObject("component","nsmg.extensions.components.udf");
+		// Create User Object
+		oUser = createObject("component","nsmg.extensions.components.user");
+	
 		// Get Regions
-		qGetRegionList = APPLICATION.CFC.REGION.getUserRegions(companyID=CLIENT.companyID, userID=CLIENT.userID, usertype=FORM.userType);
+		qGetRegionList = oRegion.getUserRegions(companyID=CLIENT.companyID, userID=CLIENT.userID, usertype=FORM.userType);
 
 		// Get AYP English Camps
 		qAYPEnglishCamps = APPCFC.SCHOOL.getAYPCamps(campType='english');	
@@ -41,18 +52,18 @@
 	</cfscript>
 
     <!--- Field Viewing --->
-    <cfif NOT APPLICATION.CFC.USER.isOfficeUser()>
+    <cfif NOT oUser.isOfficeUser()>
         
 		<!--- Get Usertype From Selected Region --->
         <cfquery name="qGetUserTypeByRegion" datasource="#APPLICATION.DSN#"> 
             SELECT 
                 uar.regionID, 
                 uar.usertype, 
-                u.usertype AS user_access
+                oUser.usertype AS user_access
             FROM 
                 user_access_rights uar
             INNER JOIN 
-                smg_usertype u ON  u.usertypeid = uar.usertype
+                smg_usertype u ON  oUser.usertypeid = uar.usertype
             WHERE 
                 userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
             AND 
@@ -325,7 +336,7 @@
     />    
 	
     <!--- Office Users - PreAyp Filter --->
-    <cfif APPLICATION.CFC.USER.isOfficeUser()>
+    <cfif oUser.isOfficeUser()>
 		<table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">        
             <tr>
                 <td>                      
@@ -343,7 +354,7 @@
             </tr>
 		</table>            
 	<!--- Field Viewing - REGIONS DROP DOWN LIST --->
-    <cfelseif NOT APPLICATION.CFC.USER.isOfficeUser() AND qGetRegionList.recordcount GT 1>
+    <cfelseif NOT oUser.isOfficeUser() AND qGetRegionList.recordcount GT 1>
 		<table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">        
 			<tr>
 				<td>                      
@@ -390,16 +401,16 @@
             </td>
         </tr>
         <tr style="font-weight:bold;">
-            <td class="sectionHeader"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='studentID',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Student ID">Student ID</a></td>
-            <td class="sectionHeader"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='studentLastName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Last Name">Last Name</a></td>
-            <td class="sectionHeader"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='studentFirstName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By First Name">First Name</a></td>
-            <td class="sectionHeader"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='regionName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Region">Region</a></td>
-            <td class="sectionHeader"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='programName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Program">Program</a></td>
-            <td class="sectionHeader"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='hostFamilyLastName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Host Family">Host Family</a></td>
-            <td class="sectionHeader" width="30%"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='placementAction',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Reason">Reason</a></td>
-            <td class="sectionHeader"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='datePISEmailed',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Date PIS Emailed">Date PIS Emailed</a></td>
+            <td class="sectionHeader"><a href="#oUDF.buildSortURL(columnName='studentID',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Student ID">Student ID</a></td>
+            <td class="sectionHeader"><a href="#oUDF.buildSortURL(columnName='studentLastName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Last Name">Last Name</a></td>
+            <td class="sectionHeader"><a href="#oUDF.buildSortURL(columnName='studentFirstName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By First Name">First Name</a></td>
+            <td class="sectionHeader"><a href="#oUDF.buildSortURL(columnName='regionName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Region">Region</a></td>
+            <td class="sectionHeader"><a href="#oUDF.buildSortURL(columnName='programName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Program">Program</a></td>
+            <td class="sectionHeader"><a href="#oUDF.buildSortURL(columnName='hostFamilyLastName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Host Family">Host Family</a></td>
+            <td class="sectionHeader" width="30%"><a href="#oUDF.buildSortURL(columnName='placementAction',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Reason">Reason</a></td>
+            <td class="sectionHeader"><a href="#oUDF.buildSortURL(columnName='datePISEmailed',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Date PIS Emailed">Date PIS Emailed</a></td>
 	        <td class="sectionHeader">Actions</td>
-            <td class="sectionHeader" align="center"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='timeOnPending',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Time on pending..">Time on Pending</a></td>
+            <td class="sectionHeader" align="center"><a href="#oUDF.buildSortURL(columnName='timeOnPending',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Time on pending..">Time on Pending</a></td>
         </tr>
         
         <cfloop query="qGetPendingHosts">
@@ -412,7 +423,7 @@
 				vSetClassNotification = "attention";
 			
                 // Only check paperwork for placements pending HQ approval
-                if ( qGetPendingHosts.host_fam_approved EQ 5 OR APPLICATION.CFC.USER.isOfficeUser() ) {
+                if ( qGetPendingHosts.host_fam_approved EQ 5 OR oUser.isOfficeUser() ) {
                 
                     // Check if we have CBC and School Acceptance in order to allow PIS to be emailed out
                     vDisplayEmailLink = 0;
@@ -421,7 +432,7 @@
                     if ( CLIENT.userID NEQ 1956 ) { 
                     
                         // Check if Host Family is in compliance
-                        vHostInCompliance = APPLICATION.CFC.CBC.checkHostFamilyCompliance(
+                        vHostInCompliance = oCBC.checkHostFamilyCompliance(
                                                 hostID=qGetPendingHosts.hostID, 
                                                 studentID=qGetPendingHosts.studentID,
                                                 schoolAcceptanceDate = qGetPendingHosts.doc_school_accept_date
@@ -433,7 +444,7 @@
                     
                     }
                 
-                    if ( NOT isDate(qGetPendingHosts.datePISEmailed) AND VAL(vDisplayEmailLink) AND APPLICATION.CFC.USER.isOfficeUser() ) {
+                    if ( NOT isDate(qGetPendingHosts.datePISEmailed) AND VAL(vDisplayEmailLink) AND oUser.isOfficeUser() ) {
                         
                         vTimeOnPending = '<a href="reports/placementInfoSheet.cfm?uniqueID=#qGetPendingHosts.uniqueID#&closeModal=1" class="jQueryModalPL">[Click to Email]</a>';
                         
@@ -475,7 +486,7 @@
                     <td class="sectionHeader">#qGetPendingHosts.programname#</td>
                     <td class="sectionHeader">
                         <a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">
-                            #APPLICATION.CFC.HOST.displayHostFamilyName(
+                            #oHost.displayHostFamilyName(
                                 hostID=qGetPendingHosts.hostID,
                                 fatherFirstName=qGetPendingHosts.fatherFirstName,
                                 fatherLastName=qGetPendingHosts.fatherLastName,
@@ -495,7 +506,7 @@
                             <!--- Pending HQ Approval --->
                             <cfcase value="5">
                                 
-                                <cfif APPLICATION.CFC.USER.isOfficeUser()>
+                                <cfif oUser.isOfficeUser()>
                                     <a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL">[Click to Approve]</a>
                                 <cfelse>
                                     (Pending HQ Approval)
@@ -506,7 +517,7 @@
                             <!--- Pending Regional Manager Approval --->
                             <cfcase value="6">
     
-                                <cfif APPLICATION.CFC.USER.isOfficeUser()>
+                                <cfif oUser.isOfficeUser()>
                                     <a href="student/placementMgmt/index.cfm?uniqueID=#qGetPendingHosts.uniqueID#" class="jQueryModalPL" style="display:block;">[Click to Approve]</a>
                                 </cfif>
                                 
@@ -559,7 +570,7 @@
                         </cfswitch>
                     </td>
                     <td class="sectionHeader #vSetClassNotification#" align="center">	
-                        #APPLICATION.CFC.UDF.calculateTimePassed(dateStarted=qGetPendingHosts.date_host_fam_approved, dateEnded=now())#    
+                        #oUDF.calculateTimePassed(dateStarted=qGetPendingHosts.date_host_fam_approved, dateEnded=now())#    
                     </td>
                 </tr>
 
