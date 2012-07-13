@@ -82,7 +82,7 @@
                 </tr>
             </table> <br />
 			
-            <p>Do not worry, an email has been submitted to the support folks and we will try to fix it ASAP.</p>
+            <p>Do not worry, an email has been submitted to the support folks and they will fix it as soon as possible.</p>
             
             <p>
             	If you would like to specify more information that you feel would help, please follow this link or reference the ID number in an email to:

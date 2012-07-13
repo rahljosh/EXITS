@@ -74,19 +74,19 @@
         
 		<cfscript>
 			// Restart Application and Session Scopes
-			if ( isNumeric(URL.init) ) {
+			if ( VAL(URL.init) ) {
 				// StructClear(APPLICATION.CFC);		
 				THIS.OnApplicationStart();
 				THIS.OnSessionStart();
 			}
 			
 			// Restart Application Scopes
-			if ( isNumeric(URL.initApp) ) {
+			if ( VAL(URL.initApp) ) {
 				THIS.OnApplicationStart();
 			}
 			
 			// Restart Session Scopes
-			if ( isNumeric(URL.initSession) ) {
+			if ( VAL(URL.initSession) ) {
 				THIS.OnSessionStart();
 			}
 
@@ -100,6 +100,13 @@
 
 			// Include Config Settings 
 			include "extensions/config/_index.cfm";				
+
+
+			// If referer is PHP - login student to view the online application
+			if( FindNoCase("phpusa.com", CGI.HTTP_REFERER) OR FindNoCase("php.local", CGI.HTTP_REFERER) ) {
+				// Login as Student
+				CLIENT.userType = 10; // Student
+			}
 
 
 			// Session has Expired - Go to login page
@@ -244,14 +251,23 @@
 			
             <cfscript>
 				// Set Error ID
-				vErrorID = "#CLIENT.userID#-#dateformat(now(),'mmddyyyy')#-#timeformat(now(),'hhmmss')#";
+				if ( VAL(CLIENT.userID) ) {
+					vErrorID = "#CLIENT.userID#-#dateformat(now(),'mm-dd-yyyy')#-#timeformat(now(),'hh-mm-ss')#";
+					vLoggedInName = "<p>User: #CLIENT.name# (###CLIENT.userID#)</p>";
+				} else if ( VAL(CLIENT.studentID) ) {
+					vErrorID = "#CLIENT.studentID#-#dateformat(now(),'mm-dd-yyyy')#-#timeformat(now(),'hh-mm-ss')#";
+					vLoggedInName = "<p>Student: #CLIENT.name# (###CLIENT.studentID#)</p>";
+				} else {
+					vErrorID = "00-#dateformat(now(),'mm-dd-yyyy')#-#timeformat(now(),'hh-mm-ss')#";
+					vLoggedInName = "<p>unknown</p>";
+				}
 			</cfscript>
             
             <!--- Email Error Message | Send out emails using Gmail --->
             <cfmail 
             	to="#APPLICATION.EMAIL.Errors#"
-                from="#APPLICATION.EMAIL.Errors# (EXITS - Error Notification)" 
-                subject="EXITS - Error Notification - ID: #vErrorID#" 
+                from="#APPLICATION.EMAIL.Errors# (EXITS Errors)" 
+                subject="Error Notification - ID: #vErrorID#" 
                 type="HTML" 
                 port="587"
                 useTLS="yes"
@@ -262,7 +278,7 @@
                     
                     <p>Error ID = #vErrorID#</p>
                     
-                    <p>User: #CLIENT.firstName# #CLIENT.lastName# (###CLIENT.userID#)</p>
+                    #vLoggedInName#
     
                     <p>Error Event: #ARGUMENTS.EventName#</p>
                     
