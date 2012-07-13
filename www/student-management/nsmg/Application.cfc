@@ -74,19 +74,19 @@
         
 		<cfscript>
 			// Restart Application and Session Scopes
-			if ( VAL(URL.init) ) {
+			if ( isNumeric(URL.init) ) {
 				// StructClear(APPLICATION.CFC);		
 				THIS.OnApplicationStart();
 				THIS.OnSessionStart();
 			}
 			
 			// Restart Application Scopes
-			if ( VAL(URL.initApp) ) {
+			if ( isNumeric(URL.initApp) ) {
 				THIS.OnApplicationStart();
 			}
 			
 			// Restart Session Scopes
-			if ( VAL(URL.initSession) ) {
+			if ( isNumeric(URL.initSession) ) {
 				THIS.OnSessionStart();
 			}
 
