@@ -331,16 +331,16 @@
                     </ul>
                 </li>
                 
-                <li>
-                	<a href="##">MPD Tours</a>
-                	<ul>
-                    	<cfif APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID,role="mpdTrips")>
-                     		<li><a href="index.cfm?curdoc=tours/mpdtours">Students</a></li>
-                        	<li><a href="index.cfm?curdoc=tours/MPDReports/index">Reports</a></li>
-                        </cfif>
-                        <li><a href="index.cfm?curdoc=tours/student-tours/index">Tours</a></li>
-                    </ul>
-                </li>
+                <cfif APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID, role="mpdTrips")>
+                    <li>
+                        <a href="index.cfm?curdoc=tours/mpdtours">MPD Tours</a>
+                        <ul>
+                            <li><a href="index.cfm?curdoc=tours/mpdtours">Students</a></li>
+                            <li><a href="index.cfm?curdoc=tours/student-tours/index">Tours</a></li>
+                            <li><a href="index.cfm?curdoc=tours/MPDReports/index">Reports</a></li>
+                        </ul>
+                    </li>
+                </cfif>
                 
                 <!--- Invoice Access --->
                 <cfif APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID,role="invoiceEdit")>
