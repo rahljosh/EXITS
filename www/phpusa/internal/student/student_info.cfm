@@ -26,7 +26,7 @@
 		qGetReturnOptions = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='PHPReturnOptions');
 	</cfscript>
     
-    <!--- Get Student Info by UniqueID --->
+    <!--- Get Student Info by uniqueID --->
     <cfinclude template="../querys/get_student_unqid.cfm">
     
     <cfinclude template="../querys/get_programs.cfm">
@@ -133,28 +133,9 @@
 
 	<!--// 
 	// open online application 
-	function OpenApp(url) {
-		newwindow=window.open(url, 'OpenApp', 'height=580, width=790, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); 
-		if (window.focus) {newwindow.focus()}
-	}
-	
-	// Send online applications 
-	function SendEmail(url) {
-		newwindow=window.open(url, 'SendEmail', 'height=410, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=no'); 
-		if (window.focus) {newwindow.focus()}
-	}
-	
-	// opens small pop up in a defined format
-	var newwindow;
-	function OpenSmallW(url) {
-		newwindow=window.open(url, 'OpenSmalW', 'height=300, width=400, location=no, scrollbars=yes, menubar=no, toolbars=no, resizable=yes'); 
-		if (window.focus) {newwindow.focus()}
-	}
-	
-	// Open Program History
-	function OpenHistory(url) {
-		newwindow=window.open(url, 'OpenHistory', 'height=300, width=500, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); 
-		if (window.focus) {newwindow.focus()}
+	function openWindow(vUrl, vWindowName, vHeight, vWidth) {
+		var MyWindow = window.open ('', vWindowName, "height=" + vHeight + ", width=" + vWidth + " , location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes");
+		MyWindow.location.href = vUrl;		
 	}
 	
 	var currentTime = new Date()
@@ -183,7 +164,7 @@
 
 <!--- student does not exist --->
 <cfif get_student_unqid.recordcount EQ 0>
-	The student ID you are looking for, <cfoutput>#get_student_unqid.studentid#</cfoutput>, was not found. This could be for a number of reasons.<br><br>
+	The student ID you are looking for, <cfoutput>#get_student_unqid.studentid#</cfoutput>, was not found. This could be for a number of reasons.<br /><br />
 	<ul>
 		<li>the student record was deleted or renumbered
 		<li>the link you are following is out of date
@@ -243,7 +224,7 @@
                 <td valign="top">
                     <table width="100%" cellpadding="2">
                         <tr><td align="center" colspan="2"><h2>#firstname# #middlename# #familylastname# (#studentid#)</h2></td></tr>
-                        <tr><td align="center" colspan="2"><font size=-1><span class="edit_link">[ <cfif ListFind("1,2,3,4", CLIENT.usertype)><a href="index.cfm?curdoc=student/student_form1&unqid=#uniqueid#">edit</a> &middot; </cfif> <a href='student/student_profile.cfm?unqid=#get_student_unqid.uniqueid#'>profile</a> ]</span></font></td></tr>
+                        <tr><td align="center" colspan="2"><font size=-1><span class="edit_link">[ <cfif ListFind("1,2,3,4", CLIENT.usertype)><a href="index.cfm?curdoc=student/student_form1&unqid=#uniqueID#">edit</a> &middot; </cfif> <a href='student/student_profile.cfm?unqid=#get_student_unqid.uniqueID#'>profile</a> ]</span></font></td></tr>
                         <tr><td align="center" colspan="2"><cfif dob EQ ''>n/a<cfelse>#dateformat (dob, 'mm/dd/yyyy')# - #datediff('yyyy',dob,now())# year old #sex# </cfif></td></tr> 
                         <cfif listFind("1,2,3,4", CLIENT.userType)>
                             <tr>
@@ -284,24 +265,26 @@
                                 <!--- EXITS ONLINE APPLICATION --->
                                 <table width="50%" cellpadding="2" align="center">
                                     <cfif app_current_status NEQ 0>
-                                    <tr>
-                                        <td align="center">
-                                            <cfif ListFind("1,2,3,4", CLIENT.usertype)>
-                                                <a href="javascript:OpenApp('#APPLICATION.PATH.SmgURL#student_app/index.cfm?curdoc=section1&unqid=#uniqueid#&userType=#CLIENT.usertype#&id=1');"><img src="pics/exits.jpg" border="0"></a>
-                                            <cfelse>
-                                                <a href="javascript:OpenApp('#APPLICATION.PATH.SmgURL#student_app/print_application.cfm?user=#CLIENT.userid#&unqid=#uniqueid#&userType=#CLIENT.usertype#&exits_app');"><img src="pics/exits.jpg" border="0"></a>
-                                            </cfif>
-                                            <br><a href="javascript:OpenSmallW('#APPLICATION.PATH.SmgURL#student_app/section4/page22print.cfm?user=#CLIENT.userid#&unqid=#uniqueid#&userType=#CLIENT.usertype#');"><img src="pics/attached-files.gif" border="0"></a>	
-                                            <br><a href="javascript:SendEmail('#APPLICATION.PATH.SmgURL#student_app/email_form.cfm?userid=#CLIENT.userid#&unqid=#uniqueid#&companyShort=php');"><img src="pics/send-email.gif" border="0"></a>	
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <td align="center">
+                                                <cfif ListFind("1,2,3,4", CLIENT.usertype)>
+                                                    <a href="javascript:openWindow('#APPLICATION.PATH.SmgURL#student_app/index.cfm?curdoc=section1&unqid=#uniqueID#&id=1', 'exitsApplication', '600', '800');"><img src="pics/exits.jpg" border="0"></a>
+                                                <cfelse>
+                                                    <a href="javascript:openWindow('#APPLICATION.PATH.SmgURL#student_app/print_application.cfm?unqid=#uniqueID#', 'exitsApplication', '600', '800');"><img src="pics/exits.jpg" border="0"></a>
+                                                </cfif>
+                                                <br />
+                                                <a href="javascript:openWindow('#APPLICATION.PATH.SmgURL#student_app/section4/page22print.cfm?unqid=#uniqueID#', 'exitsAttachedFiles', '500', '600');"><img src="pics/attached-files.gif" border="0"></a>
+                                                <br />
+                                                <a href="javascript:openWindow('#APPLICATION.PATH.SmgURL#student_app/email_form.cfm?userid=#CLIENT.userid#&unqid=#uniqueID#&companyShort=php', 'exitsEmailApplication', '400', '500');"><img src="pics/send-email.gif" border="0"></a>
+                                            </td>
+                                        </tr>
                                     <cfelse>
-                                    <tr><td align="right">&nbsp;</td></tr>
-                                    </cfif>														
+                                    	<tr><td align="right">&nbsp;</td></tr>
+                                    </cfif>		
                                 </table>
-                        </td>
-                    </tr>
-                </table>								
+                        	</td>
+                    	</tr>
+                	</table>								
                 </td>
             </tr>
           </table>
@@ -312,19 +295,19 @@
                         <!----
                         <a href="javascript: win=window.open('forms/received_progress_reports.cfm?stuid=#CLIENT.studentid#', 'Reports', 'height=450, width=610, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A>  
                         ---->
-                        <a href="student/placementMgmt/index.cfm?uniqueID=#get_student_unqid.uniqueid#&assignedID=#get_student_unqid.assignedID#" class="jQueryModal">Placement Management</a>
-                        <a href="" onClick="javascript: win=window.open('student/evaluations.cfm?unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#', 'Settings', 'height=320, width=650, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Evaluations / Grades</a> 
-                        <a href="" onClick="javascript: win=window.open('forms/received_progress_reports.cfm?unqid=#get_student_unqid.uniqueid#', 'Reports', 'height=450, width=610, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A>  
-                        <a href="" onClick="javascript: win=window.open('http://www.student-management.com/nsmg/virtualfolder/list_vfolder.cfm?unqid=#get_student_unqid.uniqueid#', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Virtual Folder</a>						
+                        <a href="student/placementMgmt/index.cfm?uniqueID=#get_student_unqid.uniqueID#&assignedID=#get_student_unqid.assignedID#" class="jQueryModal">Placement Management</a>
+                        <a href="" onClick="javascript: win=window.open('student/evaluations.cfm?unqid=#get_student_unqid.uniqueID#&assignedid=#get_student_unqid.assignedid#', 'Settings', 'height=320, width=650, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Evaluations / Grades</a> 
+                        <a href="" onClick="javascript: win=window.open('forms/received_progress_reports.cfm?unqid=#get_student_unqid.uniqueID#', 'Reports', 'height=450, width=610, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A>  
+                        <a href="" onClick="javascript: win=window.open('http://www.student-management.com/nsmg/virtualfolder/list_vfolder.cfm?unqid=#get_student_unqid.uniqueID#', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Virtual Folder</a>						
                         <!--- Flight Information --->
-                        <a href="student/index.cfm?action=flightInformation&uniqueID=#get_student_unqid.uniqueid#&programID=#get_student_unqid.programID#" class="jQueryModal">Flight Information</a>
-                        <a href="" onClick="javascript: win=window.open('student/missing_documents.cfm?unqid=#get_student_unqid.uniqueid#', 'Settings', 'height=450, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Missing Documents</A>
-                        <a href="" onClick="javascript: win=window.open('forms/notes.cfm?unqid=#get_student_unqid.uniqueid#', 'Settings', 'height=420, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Notes</a> 				
+                        <a href="student/index.cfm?action=flightInformation&uniqueID=#get_student_unqid.uniqueID#&programID=#get_student_unqid.programID#" class="jQueryModal">Flight Information</a>
+                        <a href="" onClick="javascript: win=window.open('student/missing_documents.cfm?unqid=#get_student_unqid.uniqueID#', 'Settings', 'height=450, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Missing Documents</A>
+                        <a href="" onClick="javascript: win=window.open('forms/notes.cfm?unqid=#get_student_unqid.uniqueID#', 'Settings', 'height=420, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Notes</a> 				
                     </div>
                 </div>
             </td>
         </tr>
-    </table><br>
+    </table><br />
     
     <!--- PROGRAM / REGION --->
     <table width="770" border=0 cellpadding=0 cellspacing=0 align="center">	
@@ -335,7 +318,7 @@
                         <td colspan="2">
                             <span class="get_attention"><b>:: </b>Program 
                             <cfif ListFind("1,2,3,4", CLIENT.usertype)> &nbsp; &nbsp;
-                                [ <font size="-3"> <a href="javascript:OpenHistory('student/program_management.cfm?unqid=#uniqueid#');">Program Management</a> ]</font>
+                                [ <font size="-3"> <a href="javascript:openWindow('student/program_management.cfm?unqid=#uniqueID#', 'programHistory', '300', '500');">Program Management</a> ]</font>
                             </cfif>
                             </span>
                         </td>
@@ -371,7 +354,7 @@
                         <td align="left">
                             <cfif get_programs_assigned.recordcount GT 1>
                                 <cfloop query="get_programs_assigned">
-                                    #programname# <cfif active>&nbsp;(active)</cfif><br>
+                                    #programname# <cfif active>&nbsp;(active)</cfif><br />
                                 </cfloop>
                             <cfelse>
                                 n/a
@@ -391,7 +374,7 @@
                 <table cellpadding="2" width="100%" bgcolor=##ffffff class=box>
                     <tr bgcolor="##C2D1EF"><td colspan="3"><span class="get_attention"><b>:: </b>High School</span></td></tr>
                     <cfif schoolid eq 0>
-                        <tr><td colspan=2 align="center">School is not assigned. Please go to the placement management to place this student.<br><br><br><br></td></tr>
+                        <tr><td colspan=2 align="center">School is not assigned. Please go to the placement management to place this student.<br /><br /><br /><br /></td></tr>
                     <cfelse>
                         <cfquery name="school_info" datasource="mysql">
                             SELECT schools.schoolid, schools.schoolname, schools.address, schools.city,  schools.zip, schools.phone, schools.email, schools.website,
@@ -400,7 +383,7 @@
                             LEFT JOIN smg_states states ON states.id = schools.state 
                             WHERE schoolid = '#schoolid#'
                         </cfquery>
-                        <tr><td><a href="index.cfm?curdoc=forms/view_school&sc=#school_info.schoolid#" target="_blank">#school_info.schoolname# (###school_info.schoolid#)</a><br>#school_info.address#<br>#school_info.city# #school_info.statename#, #school_info.zip#</td></tr>
+                        <tr><td><a href="index.cfm?curdoc=forms/view_school&sc=#school_info.schoolid#" target="_blank">#school_info.schoolname# (###school_info.schoolid#)</a><br />#school_info.address#<br />#school_info.city# #school_info.statename#, #school_info.zip#</td></tr>
                         <tr><td>Website: <cfif school_info.website is not ''><a href="http://#school_info.website#" target="blank">#school_info.website#</a><cfelse>n/a</cfif></td></tr>
                         <tr>
                             <td colspan="2">
@@ -416,7 +399,7 @@
                 </table>	
             </td>	
         </tr>
-    </table><br>
+    </table><br />
     
     <table width="770" border=0 cellpadding=0 cellspacing=0 align="center">	
         <tr>
@@ -468,23 +451,23 @@
                 <table cellpadding="2" width="100%" bgcolor=##ffffff class=box>
                     <tr bgcolor="##C2D1EF"><td colspan="3"><span class="get_attention"><b>:: </b>Host Family</span></td></tr>
                     <Cfif get_student_unqid.hostid EQ 0>
-                        <tr><td>Host Family is not assigned. Please go to the placement management to place this student.<br><br><br><br></td></tr>
+                        <tr><td>Host Family is not assigned. Please go to the placement management to place this student.<br /><br /><br /><br /></td></tr>
                     <cfelse>
                         <cfquery name="host_info" datasource="mysql">
                             SELECT hostid, familylastname, fatherfirstname, motherfirstname, address, address2, city, state,zip
                             FROM smg_hosts
                             WHERE hostid = '#get_student_unqid.hostid#'
                         </cfquery>
-                        <tr><td><a href="index.cfm?curdoc=host_fam_info&hostid=#host_info.hostid#" target="_blank">#host_info.fatherfirstname# <cfif host_info.fatherfirstname is not ''>&</cfif> #host_info.motherfirstname# #host_info.familylastname# (###host_info.hostid#)</a><br>
-                                #host_info.address#<br>
-                                <cfif address2 is not ''>#host_info.address2#<br></cfif>
+                        <tr><td><a href="index.cfm?curdoc=host_fam_info&hostid=#host_info.hostid#" target="_blank">#host_info.fatherfirstname# <cfif host_info.fatherfirstname is not ''>&</cfif> #host_info.motherfirstname# #host_info.familylastname# (###host_info.hostid#)</a><br />
+                                #host_info.address#<br />
+                                <cfif address2 is not ''>#host_info.address2#<br /></cfif>
                                 #host_info.city# #host_info.state#, #host_info.zip#
                         </td></tr>
                     </Cfif>
                 </table>
             </td>
         </tr>
-    </table><br>
+    </table><br />
 
     <table width="770" border=0 cellpadding=0 cellspacing=0 align="center">	
         <tr>
@@ -502,27 +485,27 @@
                         <td><input type="text" name="Reason_canceled" size="30" value="#cancelreason#" <cfif edit EQ 'no'>readonly</cfif>></td>
                     </tr>
                 </table>	
-                <br>
+                <br />
                 <!---Letters--->
                 <table cellpadding="2" width="100%" bgcolor=##ffffff class=box>
                     <tr bgcolor="##C2D1EF"><td colspan="2"><span class="get_attention"><b>:: </b>Letters &nbsp; &nbsp; [  <font size=-3>printing tips</font> ]</span></td></tr>
                     <tr>
-                        <td width="50%">: : <a href="reports/letter_app_cover.cfm?unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#" target="_blank">Application Cover Letter</a></td>
-                        <td width="50%">: : <a href="reports/letter_acceptance.cfm?unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#" target="_blank">Acceptance</a></td>
+                        <td width="50%">: : <a href="reports/letter_app_cover.cfm?unqid=#get_student_unqid.uniqueID#&assignedid=#get_student_unqid.assignedid#" target="_blank">Application Cover Letter</a></td>
+                        <td width="50%">: : <a href="reports/letter_acceptance.cfm?unqid=#get_student_unqid.uniqueID#&assignedid=#get_student_unqid.assignedid#" target="_blank">Acceptance</a></td>
                     </tr>
                     <tr>
                         <td width="50%">
                             <cfif VAL(get_student_unqid.hostID)>
-                                : : <a href="student/index.cfm?action=placementInfoSheetDay&uniqueID=#get_student_unqid.uniqueid#&assignedID=#get_student_unqid.assignedID#" class="jQueryModal">Placement Day</a>
+                                : : <a href="student/index.cfm?action=placementInfoSheetDay&uniqueID=#get_student_unqid.uniqueID#&assignedID=#get_student_unqid.assignedID#" class="jQueryModal">Placement Day</a>
                             <cfelse>
-                                : : <a href="student/index.cfm?action=placementInfoSheetBoard&uniqueID=#get_student_unqid.uniqueid#&assignedID=#get_student_unqid.assignedID#" class="jQueryModal">Placement Board</a>
+                                : : <a href="student/index.cfm?action=placementInfoSheetBoard&uniqueID=#get_student_unqid.uniqueID#&assignedID=#get_student_unqid.assignedID#" class="jQueryModal">Placement Board</a>
                             </cfif>
                         </td>
                         <td width="50%">: : <a href="student/index.cfm?action=printFlightInformation&uniqueID=#get_student_unqid.uniqueID#&programID=#get_student_unqid.programID#">Flight Information</a></td>
                     </tr>
                     <tr>
-                        <td width="50%">: : <a href="reports/letter_hf_welcome.cfm?unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#" target="_blank">Host Family Welcome Letter</a></td>
-                        <td width="50%">: : <a href="reports/letter_student_arrival.cfm?unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#" target="_blank">Student Arrival Letter</a></td>
+                        <td width="50%">: : <a href="reports/letter_hf_welcome.cfm?unqid=#get_student_unqid.uniqueID#&assignedid=#get_student_unqid.assignedid#" target="_blank">Host Family Welcome Letter</a></td>
+                        <td width="50%">: : <a href="reports/letter_student_arrival.cfm?unqid=#get_student_unqid.uniqueID#&assignedid=#get_student_unqid.assignedid#" target="_blank">Student Arrival Letter</a></td>
                     </tr>
                     <tr>
                     	<cfif #get_student_unqid.return_student# EQ 1 AND #get_student_unqid.active# EQ 1 AND #get_student_unqid.canceledBy# EQ 0>
@@ -562,7 +545,7 @@
                     <tr>
                         <Td valign="top">Notes:</Td><td> <textarea cols="20" rows="3" name="i20note" <cfif edit EQ 'no'>readonly</cfif>>#i20note#</textarea></Td>
                 </table>
-                <br>
+                <br />
             <!----Flight Info Form---->
                 <table cellpadding="2" width="100%" bgcolor=##ffffff class=box>
                     <tr bgcolor="##C2D1EF"><td colspan="3"><span class="get_attention"><b>:: </b>Flight Info</span></td></tr>				
@@ -594,7 +577,7 @@
                 </table>
             </td>	
         </tr>
-    </table><br>
+    </table><br />
     
     <table width="770" border=0 cellpadding=0 cellspacing=0 align="center">	
         <tr>
@@ -602,7 +585,7 @@
             <td width="2%" valign="top">&nbsp;</td>
             <td width="49%" valign="top"></td>	
         </tr>
-    </table><br>
+    </table><br />
 </div>
 
 <!--- UPDATE BUTTON --->
@@ -620,7 +603,7 @@
 <cfif ListFind("1,2,3,4", CLIENT.usertype) AND edit EQ 'no'>
     <table width="100%" border=0 cellpadding=0 cellspacing=0 align="center" class="section">	
     <tr><td align="center">
-        <form action="?curdoc=student/student_info&unqid=#get_student_unqid.uniqueid#&assignedid=#get_student_unqid.assignedid#" method="post">&nbsp;
+        <form action="?curdoc=student/student_info&unqid=#get_student_unqid.uniqueID#&assignedid=#get_student_unqid.assignedid#" method="post">&nbsp;
             <input type="hidden" name="edit" value="yes"><input name="Submit" type="image" src="pics/edit.gif" alt="Edit"  border=0>
         </form>
     </td></tr>
