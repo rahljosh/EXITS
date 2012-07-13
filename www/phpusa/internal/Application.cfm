@@ -1,5 +1,5 @@
 <cfapplication 
-	name="phpusa" 
+	name="EXITS" 
     clientmanagement="yes"
     sessionmanagement="yes"
     sessiontimeout="#CreateTimeSpan( 0, 12, 0, 0 )#">

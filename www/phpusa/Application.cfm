@@ -1,3 +1,3 @@
-<cfapplication name="phpusa" clientmanagement="yes">
+<cfapplication name="EXITS" clientmanagement="yes">
 
 <cfparam name="application.dsn" default="MySQL">
