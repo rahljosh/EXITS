@@ -1,5 +1,5 @@
 <cfapplication 
-	name="EXITS" 
+	name="PHPUSA" 
     clientmanagement="yes"
     sessionmanagement="yes"
     sessiontimeout="#CreateTimeSpan( 0, 12, 0, 0 )#">
