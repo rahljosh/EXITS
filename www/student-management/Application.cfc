@@ -14,7 +14,7 @@
 		
 		// Create a function that let us create CFCs from any location
 		function CreateCFC(strCFCName){
-			return(CreateObject("component", ("extensions.components." & ARGUMENTS.strCFCName)));
+			return(CreateObject("component", ("nsmg.extensions.components." & ARGUMENTS.strCFCName)));
 		}
 	</cfscript>
 
@@ -36,7 +36,7 @@
 			
             <cfscript>
 				// Include Application Settings
-				include "extensions/config/_app_index.cfm";				
+				include "nsmg/extensions/config/_app_index.cfm";				
 			</cfscript>
  
 		<!--- Return out. --->
@@ -50,7 +50,15 @@
 		returntype="void"
 		output="false"
 		hint="Fires when the session is first created.">
- 
+ 		
+        <cfscript>
+			// Include Config Settings 
+			include "nsmg/extensions/config/_client.cfm";				
+		
+			// Include Session Settings 
+			include "nsmg/extensions/config/_session.cfm";				
+		</cfscript>	
+        
 		<!--- Return out. --->
 		<cfreturn />
 	</cffunction>
@@ -99,7 +107,13 @@
 
 
 			// Include Config Settings 
-			include "extensions/config/_index.cfm";				
+			include "nsmg/extensions/config/_client.cfm";				
+
+
+			// Session has Expired - Go to login page
+			if ( findNoCase("nsmg", CGI.PATH_TRANSLATED) AND NOT VAL(CLIENT.userType) AND ( NOT VAL(CLIENT.userID) OR NOT VAL(CLIENT.studentID) ) ) {
+				Location("http://#cgi.http_host#/", "no");
+			}
 
 
 			// If referer is PHP - login student to view the online application
@@ -108,22 +122,16 @@
 				CLIENT.userType = 10; // Student
 			}
 
-
-			// Session has Expired - Go to login page
-			if ( NOT VAL(CLIENT.userType) AND ( NOT VAL(CLIENT.userID) OR NOT VAL(CLIENT.studentID) ) ) {
-				Location("http://#cgi.http_host#/", "no");
-			}
-
 			
 			// Always allow logout.
-			if ( NOT findNoCase("/logout.cfm", getBaseTemplatePath()) ) {
+			if ( NOT findNoCase("nsmg/logout.cfm", getBaseTemplatePath()) ) {
 				
 				// Force verify user information.
 				if ( isDefined("CLIENT.verify_info") ) {
 					
 					// allow user only on user info and user form.
 					if ( NOT ( LEN(URL.curdoc) AND listFindNoCase("user_info,forms/user_form", URL.curdoc)) ) {
-						Location("/nsmg/index.cfm?curdoc=user_info&userid=#CLIENT.userid#", "no");
+						Location("nsmg/index.cfm?curdoc=user_info&userid=#CLIENT.userid#", "no");
 					}
 				
 				// Force change password
@@ -131,7 +139,7 @@
 					
 					// allow user only on change password page.
 					if ( NOT ( LEN(URL.curdoc) AND  URL.curdoc EQ 'forms/change_password' OR  listFindNoCase("logout", URL.curdoc)) ) {
-						Location("/nsmg/index.cfm?curdoc=forms/change_password", "no");
+						Location("nsmg/index.cfm?curdoc=forms/change_password", "no");
 					}
 				
 				// Force agreement on PRODUCTION.
@@ -139,14 +147,14 @@
 					
 					// allow user only on yearly agreement page. 
 					if ( NOT ( LEN(URL.curdoc) AND listFindNoCase("forms/yearly_agreement,repRefs,displayRepAgreement,cbcAuthorization,employmentHistory,logout", URL.curdoc)) ) {
-						Location("/nsmg/index.cfm?curdoc=forms/yearly_agreement&userid=#CLIENT.userid#", "no");
+						Location("nsmg/index.cfm?curdoc=forms/yearly_agreement&userid=#CLIENT.userid#", "no");
 					}
 				
 				// Force SSN on PRODUCTION.
 				} else if ( isDefined('CLIENT.needsSSN') AND NOT APPLICATION.IsServerLocal ) {
 					
 					if ( NOT ( LEN(URL.curdoc) AND listFindNoCase("forms/verifyInfo, forms/verifyInfo2, logout", URL.curdoc)) ) {
-						Location("/nsmg/index.cfm?curdoc=forms/verifyInfo", "no");
+						Location("nsmg/index.cfm?curdoc=forms/verifyInfo", "no");
 					}
 					
 				}
@@ -160,12 +168,12 @@
 			************************************************************************************************************************/
 			if ( isDefined("CLIENT.thislogin") AND CLIENT.thislogin NEQ dateFormat(now(), 'mm/dd/yyyy') ) {
 				// don't do a cflocation because we'll get an infinite loop.
-				include "/nsmg/logout.cfm";
+				include "nsmg/logout.cfm";
 			}
 
 			
 			// Insert Track
-			include "includes/trackman.cfm";
+			include "nsmg/includes/trackman.cfm";
 		</cfscript>
 
 
@@ -241,11 +249,11 @@
 		returntype="void"
 		output="true"
 		hint="Fires when an exception occures that is not caught by a try/catch.">
- 
+ 		
 		<!--- Define arguments. --->
 		<cfargument name="Exception" type="any" required="true" />
 		<cfargument name="EventName" type="string" required="false" default="" />
-		
+
         <!--- Production - Email Error Message - Display HTML Error --->
  		<cfif NOT APPLICATION.isServerLocal>
 			
