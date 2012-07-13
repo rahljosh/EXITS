@@ -652,7 +652,7 @@
                                 Enter Address, City, State, and Zip and click "Lookup".<br />
                                 Verify the address displayed below, and make any corrections on the form if necessary.<br />
                                 Address line 2 will not be included below.<br />
-                                If you have trouble submitting an address, <a href="mailto:#APPLICATION.support_email#?subject=Address Lookup">send it to us</a>.<br />
+                                If you have trouble submitting an address, <a href="mailto:#APPLICATION.CFC.UDF.getSessionEmail(emailType='support')#?subject=Address Lookup">send it to us</a>.<br />
                                 <input type="button" value="Lookup" onClick="showLocation();" /><br />
                                 <textarea name="lookup_address" readonly="readonly" rows="2" cols="30">Lookup address will be displayed here.</textarea>
                         	</font>

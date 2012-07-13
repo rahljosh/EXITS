@@ -8,30 +8,21 @@
 
 ----- ------------------------------------------------------------------------- --->
 
-<cfquery name="qCompanyInfo" datasource="#APPLICATION.DSN#">
-	SELECT
-    	companyID,
-        support_email,
-        projectManager,
-        url_ref
-	FROM
-    	smg_companies
-	WHERE
-    	url_ref = <cfqueryparam cfsqltype="cf_sql_varchar" value="#CGI.http_host#">
-</cfquery>
-
 <cfscript>
 	// CLEAR SESSION SCOPE - Use only when we switch to Application.cfc
 	StructClear(SESSION);
 	
 	// Param SESSION Variables
-	param name="SESSION.emailSupport" default='support@student-management.com';	
 	param name="SESSION.started" default=now();	
 	param name="SESSION.expires" default=DateAdd('h', 12, now());	
 
-	// These are arrays and cannot be stored in CLIENT variables
-	param name="SESSION.pageMessages" default='';	
-	param name="SESSION.formErrors" default='';	
+	// Param SESSION Struct Variables
+	param name="SESSION.EMAIL" default="struct";	
+	param name="SESSION.ROLES" default="struct";	
+
+	// Param SESSION Array Variables
+	param name="SESSION.pageMessages" default="array";	
+	param name="SESSION.formErrors" default="array";	
 	
 	// Check if we have a valid object
 	if ( NOT IsObject(SESSION.pageMessages) ) {
@@ -47,11 +38,7 @@
 	
 	// Set User Roles
 	APPLICATION.CFC.USER.setUserRoles(userID=CLIENT.userID);	
-
-	// Set Email Support According to Company
-	if ( VAL(qCompanyInfo.recordCount) ) {
-		
-		SESSION.emailSupport = qCompanyInfo.support_email;
-		
-	}
+	
+	// Set Email Variables
+	APPLICATION.CFC.UDF.setSessionEmailVariables();
 </cfscript>

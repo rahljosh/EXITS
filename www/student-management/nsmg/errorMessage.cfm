@@ -86,7 +86,7 @@
             
             <p>
             	If you would like to specify more information that you feel would help, please follow this link or reference the ID number in an email to:
-	            <a href="mailto:#APPLICATION.EMAIL.support#?subject=ErrorID: #vErrorID#">#APPLICATION.EMAIL.support#</a>
+	            <a href="mailto:#APPLICATION.CFC.UDF.getSessionEmail(emailType='support')#?subject=ErrorID: #vErrorID#">#APPLICATION.CFC.UDF.getSessionEmail(emailType='support')#</a>
             </p>
             
             <p>You may or may not receive an email asking about more information or status update of the issue, depending on what the error is.</p>

@@ -81,16 +81,9 @@
 		Replace this with a SESSION.emailSupport
 	*********************************************/
 	if ( VAL(qCompanyInfo.recordCount) ) {
-		
 		APPLICATION.EMAIL.support = qCompanyInfo.support_email;
-		// Phase Out this variable
-		APPLICATION.support_email = qCompanyInfo.support_email;
-		
 	} else {
-
 		APPLICATION.EMAIL.support = 'support@student-management.com';
-		// Phase Out this variable
-		APPLICATION.support_email =  'support@student-management.com';
 	}
 
 
