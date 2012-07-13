@@ -11,7 +11,6 @@
 
 <cfscript>
 	/***** Create APPLICATION.CFC structure *****/
-	
 	try {	
 		
 		if ( NOT IsStruct(APPLICATION.CFC) ) {
