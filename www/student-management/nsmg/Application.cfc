@@ -70,6 +70,7 @@
         <cfparam name="URL.initApp" default="0">
         <cfparam name="URL.initSession" default="0">
         <cfparam name="URL.curdoc" default="">
+        <cfparam name="URL.userType" default="">
         
 		<cfscript>
 			// Restart Application and Session Scopes
@@ -100,12 +101,6 @@
 			// Include Config Settings 
 			include "extensions/config/_index.cfm";				
 
-
-			// If referer is PHP - login user so the student application can be displayed
-			if( FindNoCase("php", CGI.HTTP_REFERER) AND VAL(URL.userType) ) {
-				// Set Up Lowest UserType
-				CLIENT.userType = 15; // 2nd Visit
-			}
 
 			// Session has Expired - Go to login page
 			if ( NOT VAL(CLIENT.userType) AND ( NOT VAL(CLIENT.userID) OR NOT VAL(CLIENT.studentID) ) ) {
