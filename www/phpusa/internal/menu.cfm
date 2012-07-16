@@ -48,6 +48,7 @@
             	<li><a>Payments</a>
                 	<ul>
                     	<li><a href="index.cfm?curdoc=payments/schoolPayments">School Payments</a></li>
+                        <!---<li><a href="index.cfm?curdoc=payments/repPayments">Representative Payments</a></li>--->
                     </ul>
                	</li>
             </cfif>
