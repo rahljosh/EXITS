@@ -227,12 +227,11 @@ Order by birthdate
 			<tr><td align="center" width="360">
 				<!--- ONLINE APPLICATION ---->
 				<cfif get_student_info.app_current_status NEQ 0>
-                
                     <cfdirectory directory="#AppPath.onlineApp.studentLetter#" name="stuletter" filter="#get_student_info.studentID#.*">
 					<cfif ListFind("jpg,gif", LCase(Right(stuletter.name, 3)))>
                         <a href="javascript:OpenApp('student_app/print_letter_profile.cfm?studentID=#get_student_info.studentID#&letter=students');">Student's Letter</a>
                     <cfelseif stuletter.recordcount>
-                        <a href="uploadedfiles/letters/students/#get_student_info.studentid#.pdf" target="_blank">Student's Letter</a>
+                        <a href="../uploadedfiles/letters/students/#get_student_info.studentid#.pdf" target="_blank">Student's Letter</a>
                     <cfelseif get_student_info.app_current_status NEQ 0>
                         <a href="javascript:OpenApp('section1/page5print.cfm');">Student's Letter</a>
                     <cfelse>
