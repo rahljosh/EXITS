@@ -119,7 +119,7 @@
                 FROM 
                     smg_insurance_batch 
                 WHERE
-                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
+                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
                 AND  
                     type IN ( <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.type#" list="yes"> )                       
                 GROUP BY            
@@ -194,7 +194,7 @@
                         AND
                             s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                         AND 
-                            s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)   
+                            s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )   
                         <cfif CLIENT.companyID EQ 5>
                             AND          
                                 s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
