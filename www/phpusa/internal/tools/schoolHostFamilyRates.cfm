@@ -23,11 +23,13 @@
     <cfif VAL(FORM.submitted)>
         <cfloop query="qGetSchools">
             <cfset value=FORM["val_#schoolID#"]>
+            <cfset payment=FORM["pay_#schoolID#"]>
             <cfquery name="qUpdateRates" datasource="#APPLICATION.DSN#">
                 UPDATE
                     php_schools
                 SET
-                    hostFamilyRate = <cfqueryparam cfsqltype="cf_sql_float" value="#NumberFormat(value,'9.99')#">
+                	hostFamilyRate = <cfqueryparam cfsqltype="cf_sql_float" value="#NumberFormat(value,'9.99')#">,
+                    payHost = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(payment)#">
                 WHERE
                     schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#schoolID#">
             </cfquery>
@@ -39,21 +41,24 @@
 
 <script type="text/javascript">
 	
-	/*var storeRates = function() {
-		
-		var s = new SCHOOL();
-		var inputs = $(".value").get();
-		var schoolID = "";
-		var amount = "";
-		
-		$(".value").each(function(i) {
-			schoolID = $(this).attr("id").substring(4);
-			amount = $(this).val();
-			s.updateHostFamilyRates(schoolID, amount);
-		});
-		
-		window.location.reload();
-	}*/
+	var displayRate = function(elem) {
+		var number = $(elem).attr('id').substring(4);
+		var visible = '#visible_' + number;
+		var inputBox = '#Xval_' + number;
+		var hiddenInputBox = '#val_' + number;
+		if ($(elem).val() == 0) {
+			$(visible).attr('style','display:none');
+			$(inputBox).val('0.00');
+			$(hiddenInputBox).val('0.00');
+		} else {
+			$(visible).removeAttr('style');
+		}
+	}
+	
+	var updateHidden = function(elem) {
+		var number = $(elem).attr('id').substring(5);
+		$("#val_"+number).val($(elem).val());
+	}
 	
 </script>
 
@@ -84,7 +89,8 @@
                 <th background="images/back_menu2.gif" align="left" width="15%"><a href="?curdoc=tools/schoolHostFamilyRates&order=address">Address</a></th>
                 <th background="images/back_menu2.gif" align="left" width="10%"><a href="?curdoc=tools/schoolHostFamilyRates&order=city">City</a></th>
                 <th background="images/back_menu2.gif" align="left" width="25%"><a href="?curdoc=tools/schoolHostFamilyRates&order=stateName">State</a></th>
-                <th background="images/back_menu2.gif" align="center" width="25%">Monthly Rate</th>
+                <th background="images/back_menu2.gif" align="center" width="15%">Monthly Rate</th>
+                <th background="images/back_menu2.gif" align="center" width="10%">Does PHP Pay</th>
             </tr>
             
             <cfloop query="qGetSchools">
@@ -95,7 +101,18 @@
                     <td class="style1">#address#</td>
                     <td class="style1">#city#</td>
                     <td class="style1">#stateName#</td>
-                    <td class="style1" align="center"><input type="text" name="val_#schoolID#" id="val_#schoolID#" class="value" value="#hostFamilyRate#" style="height:15px; width:100px; text-align:right" /></td>
+                    <td class="style1" align="center">
+                        <input type="hidden" name="val_#schoolID#" id="val_#schoolID#" class="value" value="#hostFamilyRate#" />
+                        <span id="visible_#schoolID#" <cfif NOT VAL(qGetSchools.payHost)>style="display:none;"</cfif>>
+                            <input type="text" name="Xval_#schoolID#" id="Xval_#schoolID#" class="value" value="#hostFamilyRate#" style="height:15px; width:100px; text-align:right;" onchange="updateHidden(this);" />
+                        </span>
+                  	</td>
+                    <td class="style1" align="center">
+                    	<select name="pay_#schoolID#" id="pay_#schoolID#" class="pay" onchange="displayRate(this);">
+                        	<option value="0"<cfif NOT VAL(qGetSchools.payHost)>selected="selected"</cfif>>No</option>
+                            <option value="1"<cfif VAL(qGetSchools.payHost)>selected="selected"</cfif>>Yes</option>
+                      	</select>
+                 	</td>
                 </tr>
             
             </cfloop>

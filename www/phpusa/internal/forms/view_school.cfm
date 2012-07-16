@@ -1,31 +1,39 @@
 <HEAD>
 <!----Script to show diff fields---->			
 <script type="text/javascript">
-<!--
-function changeDiv(the_div,the_change)
-{
-  var the_style = getStyleObject(the_div);
-  if (the_style != false)
-  {
-	the_style.display = the_change;
-  }
-}
-function hideAll()
-{
-  changeDiv("1","none");
-  changeDiv("2","none");
 
-}
-function getStyleObject(objectId) {
-  if (document.getElementById && document.getElementById(objectId)) {
-	return document.getElementById(objectId).style;
-  } else if (document.all && document.all(objectId)) {
-	return document.all(objectId).style;
-  } else {
-	return false;
-  }
-}
-// -->
+	function changeDiv(the_div,the_change) {
+	  var the_style = getStyleObject(the_div);
+	  if (the_style != false)
+	  {
+		the_style.display = the_change;
+	  }
+	}
+
+	function hideAll() {
+	  changeDiv("1","none");
+	  changeDiv("2","none");
+	}
+	
+	function getStyleObject(objectId) {
+	  if (document.getElementById && document.getElementById(objectId)) {
+		return document.getElementById(objectId).style;
+	  } else if (document.all && document.all(objectId)) {
+		return document.all(objectId).style;
+	  } else {
+		return false;
+	  }
+	}
+
+	var setPayAsYes = function() {
+		$("#hostFamilyRate").removeAttr("readOnly");
+	}
+	
+	var setPayAsNo = function() {
+		$("#hostFamilyRate").val("0.00");
+		$("#hostFamilyRate").attr("readOnly", "readOnly");
+	}
+	
 </script>
 </head>
 

@@ -180,48 +180,51 @@
 				</td>
 			</tr>
 			<cfif client.usertype neq 12>
-            <cfif (CLIENT.userType EQ 1) OR (ListFind("7630,17427",CLIENT.userID)) OR (APPLICATION.isServerLocal AND CLIENT.userID EQ 17306)>
-            	<tr>
-                	<td>Host Family Monthly Rate:</td>
-                    <td><input type="text" name="hostFamilyRate" value="#get_school.hostFamilyRate#" size="10" /></td>
+                <tr>
+                    <td>Non-Refundable Deposit: </td>
+                    <td><input type="text" name="nonref_deposit" value="#get_school.nonref_deposit#" size=10></td>
                 </tr>
-            <cfelseif ListFind("1,2,3",CLIENT.userType)>
-            	<tr>
-                	<td>Host Family Monthly Rate:</td>
+                <tr>
+                    <td>Offers Refund Plan: </td>
                     <td>
-                    	<input type="hidden" name="hostFamilyRate" value="#get_school.hostFamilyRate#" size="10" />
-                        #get_school.hostFamilyRate#
-                  	</td>
+                        <cfif get_school.refund_plan EQ '0'><cfinput type="radio" name="refund_plan" value="0" checked="yes">No <cfelse><cfinput type="radio" name="refund_plan" value="0">No</cfif>
+                        <cfif get_school.refund_plan EQ '1'><cfinput type="radio" name="refund_plan" value="1" checked="yes">Yes <cfelse><cfinput type="radio" name="refund_plan" value="1">Yes</cfif> &nbsp;
+                    </td>
                 </tr>
-          	<cfelse>
-            	<input type="hidden" name="hostFamilyRate" value="#get_school.hostFamilyRate#" size="10" />
-            </cfif>
-			<tr>
-				<td>Non-Refundable Deposit: </td>
-				<td><input type="text" name="nonref_deposit" value="#get_school.nonref_deposit#" size=10></td>
-			</tr>
-			<tr>
-				<td>Offers Refund Plan: </td>
-				<td>
-					<cfif get_school.refund_plan EQ '0'><cfinput type="radio" name="refund_plan" value="0" checked="yes">No <cfelse><cfinput type="radio" name="refund_plan" value="0">No</cfif>
-					<cfif get_school.refund_plan EQ '1'><cfinput type="radio" name="refund_plan" value="1" checked="yes">Yes <cfelse><cfinput type="radio" name="refund_plan" value="1">Yes</cfif> &nbsp;
-				</td>
-			</tr>
-			<tr>
-				<td>Tuition Notes: </td>
-				<td><textarea name="tuition_notes" cols="30" rows="4">#get_school.tuition_notes#</textarea></td>
-			</tr>					
-			<tr>
-				<td colspan=2>Misc. Notes & Information </td>
-			</tr>
-			<tr>
-				<td colspan=2>
-				<textarea cols="35" rows="6" name="notes">#get_school.misc_notes#</textarea>
-				</td>
-			</tr>		
-			<tr>
-				<td colspan=3>PHP Pays Host Family: <input type="radio" value=1 name="payhost" <cfif get_school.payhost eq 1>checked</cfif>>Yes <input type="radio" value=0 name="payhost" <cfif get_school.payhost eq 0>checked</cfif>>No  </td>
-			</tr>
+                <tr>
+                    <td>Tuition Notes: </td>
+                    <td><textarea name="tuition_notes" cols="30" rows="4">#get_school.tuition_notes#</textarea></td>
+                </tr>					
+                <tr>
+                    <td colspan=2>Misc. Notes & Information </td>
+                </tr>
+                <tr>
+                    <td colspan=2>
+                    <textarea cols="35" rows="6" name="notes">#get_school.misc_notes#</textarea>
+                    </td>
+                </tr>		
+                <tr>
+                    <td colspan=3>PHP Pays Host Family: 
+                    	<input type="radio" value=1 name="payhost" onchange="setPayAsYes();" <cfif get_school.payhost eq 1>checked</cfif>>Yes 
+                        <input type="radio" value=0 name="payhost" onchange="setPayAsNo();" <cfif get_school.payhost eq 0>checked</cfif>>No  
+                 	</td>
+                </tr>
+				<cfif (CLIENT.userType EQ 1) OR (ListFind("7630,17427",CLIENT.userID)) OR (APPLICATION.isServerLocal AND CLIENT.userID EQ 17306)>
+                    <tr>
+                        <td>Host Family Monthly Rate:</td>
+                        <td><input type="text" name="hostFamilyRate" id="hostFamilyRate" value="#get_school.hostFamilyRate#" size="10" <cfif get_school.payHost EQ 0>readonly="readonly"</cfif> /></td>
+                    </tr>
+                <cfelseif ListFind("1,2,3",CLIENT.userType)>
+                    <tr>
+                        <td>Host Family Monthly Rate:</td>
+                        <td>
+                            <input type="hidden" name="hostFamilyRate" id="hostFamilyRate" value="#get_school.hostFamilyRate#" size="10" />
+                            #get_school.hostFamilyRate#
+                        </td>
+                    </tr>
+                <cfelse>
+                    <input type="hidden" name="hostFamilyRate" id="hostFamilyRate" value="#get_school.hostFamilyRate#" size="10" <cfif get_school.payHost EQ 0>readonly="readonly"</cfif> />
+                </cfif>
 			</cfif>
 		</table>
 	
