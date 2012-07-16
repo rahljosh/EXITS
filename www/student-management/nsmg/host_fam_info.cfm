@@ -329,7 +329,11 @@ div.scroll2 {
 			<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
             <td width=26 background="pics/header_background.gif"><img src="pics/family.gif"></td>
 			<td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Host Eligibility</h2></td>
-            <td background="pics/header_background.gif" width=16><a href="index.cfm?curdoc=forms/host_fam_eligibility_form&hostID=#family_info.hostID#">Edit</a></td>
+            <td background="pics/header_background.gif" width=16>
+            	<cfif APPLICATION.CFC.USER.isOfficeUser()>
+                	<a href="index.cfm?curdoc=forms/host_fam_eligibility_form&hostID=#family_info.hostID#">Edit</a>
+              	</cfif>
+          	</td>
 			<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
       	</tr>
 	</table>
