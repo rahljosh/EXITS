@@ -319,7 +319,6 @@
             </ul>
         </td>
 	</tr>   
-    <cfif CLIENT.userID EQ 510>
     <tr>
         <td class="lastRow">&nbsp;
 			
@@ -337,7 +336,6 @@
             </ul>
         </td>
 	</tr> 
-    </cfif>  
 </table> 
 
 
