@@ -1,8 +1,14 @@
 
 <Cfquery name="repInfo" datasource="MySQL">
-select firstname, lastname, email, phone
-from smg_users
-where userid = #client.userid#
+	SELECT 
+    	firstname, 
+        lastname, 
+        email, 
+        phone
+	FROM
+    	smg_users
+	WHERE
+    	userid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#client.userid#">
 </cfquery>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -103,34 +109,100 @@ a:hover, a:active, a:focus { /* this group of selectors will give a keyboard nav
 <body>
 <cfoutput>
 
-<Cfset username = listGetAt(repInfo.email, 1, "@")>
-<Cfset domain = listGetAt(repInfo.email, 2, "@")>
+<cfset username = listGetAt(repInfo.email, 1, "@")>
+<cfset domain = listGetAt(repInfo.email, 2, "@")>
 
-
-<div id="menu"><table width="425" border="0" cellspacing="0">
-  <tr>
-    <td><a href="BMsave.cfm? filetype=pdf"><img src="images/save.png" height="20" alt="save icon" border="0" /></a></td>
-    </tr>
-</table>
+<div id="menu">
+	<table width="425" border="0" cellspacing="0">
+        <tr>
+	        <td><a href="BMsave.cfm? filetype=pdf"><img src="images/save.png" height="20" alt="save icon" border="0" /></a></td>
+        </tr>
+    </table>
 </div>
+
 <div class="container">
-  <table width="450" height="650" border="1" cellpadding="0" cellspacing="0" align="left">
-    <tr>
-      <td width="150"><img src="images/Bookmark_03.png" width="148" height="136" /><br /><img src="images/Bookmark_05.png" width="149" height="55" />
-      <p>Enrich your life Hosting International High School Students. Participants enjoy and learn from the experience by bringing the world to your back door!</p><h3>#repInfo.firstname# #repInfo.lastname#<br />#repInfo.phone#</h3><h5>#username#@<Cfif len(repInfo.email) gt 25><br /></cfif>#domain#</h5>
-      <img src="images/Bookmark_07.png" width="150" height="20" /><br />
-      <img src="images/Bookmark_08.png" /></td>
-      <td width="150"><img src="images/Bookmark_03.png" width="148" height="136" /><br /><img src="images/Bookmark_05.png" width="149" height="55" />
-      <p>Enrich your life Hosting International High School Students. Participants enjoy and learn from the experience by bringing the world to your back door!</p><h3>#repInfo.firstname# #repInfo.lastname#<br />#repInfo.phone#</h3><h5>#username#@<Cfif len(repInfo.email) gt 25><br /></Cfif>#domain#</h5>
-      <img src="images/Bookmark_07.png" width="150" height="20" /><br />
-      <img src="images/Bookmark_08.png" /></td>
-      <td width="150"><img src="images/Bookmark_03.png" width="148" height="136" /><br /><img src="images/Bookmark_05.png" width="149" height="55" />
-      <p>Enrich your life Hosting International High School Students. Participants enjoy and learn from the experience by bringing the world to your back door!</p><h3>#repInfo.firstname# #repInfo.lastname#<br />#repInfo.phone#</h3><h5>#username#@<Cfif len(repInfo.email) gt 25><br /></Cfif>#domain#</h5>
-      <img src="images/Bookmark_07.png" width="150" height="20" /><br />
-      <img src="images/Bookmark_08.png" /></td>
-    </tr>
-  </table>
-<!-- end .container --></div>
+    <table width="450" height="650" border="1" cellpadding="0" cellspacing="0" align="left">
+        <tr>
+            <td width="150">
+                <img src="images/Bookmark_03.png" width="148" height="136" />
+                
+                <br />
+                
+                <cfif CLIENT.companyID EQ 10>
+                    <img src="images/10_bookmark_05.png" width="149" height="55" />
+                <cfelse>
+                    <img src="images/1_Bookmark_05.png" width="149" height="55" />
+                </cfif>
+                
+                <p>Enrich your life Hosting International High School Students. Participants enjoy and learn from the experience by bringing the world to your back door!</p>
+                <h3>#repInfo.firstname# #repInfo.lastname#<br />#repInfo.phone#</h3><h5>#username#@<Cfif len(repInfo.email) GT 25><br /></cfif>#domain#</h5>
+
+				<cfif CLIENT.companyID EQ 10 >
+                	<img src="images/10_bookmark_07.png" width="150" height="20" /><br />
+                <cfelse>
+                	<img src="images/1_bookmark_07.png" width="150" height="20" /><br />
+                </cfif>
+
+				<cfif CLIENT.companyID EQ 10 >
+                	<img src="images/10_bookmark_08.png" />
+                <cfelse>
+                	<img src="images/1_bookmark_08.png" />
+                </cfif>
+            </td>
+            <td width="150">
+            	<img src="images/Bookmark_03.png" width="148" height="136" />
+                <br />
+                
+                <cfif CLIENT.companyID EQ 10>
+                    <img src="images/10_bookmark_05.png" width="149" height="55" />
+                <cfelse>
+                    <img src="images/1_Bookmark_05.png" width="149" height="55" />
+                </cfif>
+                
+	            <p>Enrich your life Hosting International High School Students. Participants enjoy and learn from the experience by bringing the world to your back door!</p><h3>#repInfo.firstname# #repInfo.lastname#<br />#repInfo.phone#</h3><h5>#username#@<Cfif len(repInfo.email) gt 25><br /></Cfif>#domain#</h5>
+
+				<cfif CLIENT.companyID EQ 10 >
+                	<img src="images/10_bookmark_07.png" width="150" height="20" /><br />
+                <cfelse>
+                	<img src="images/1_bookmark_07.png" width="150" height="20" /><br />
+                </cfif>
+
+				<cfif CLIENT.companyID EQ 10 >
+                	<img src="images/10_bookmark_08.png" />
+                <cfelse>
+                	<img src="images/1_bookmark_08.png" />
+                </cfif>
+            </td>
+            <td width="150">
+            	<img src="images/Bookmark_03.png" width="148" height="136" />
+                <br />
+                
+                <cfif CLIENT.companyID EQ 10>
+                    <img src="images/10_bookmark_05.png" width="149" height="55" />
+                <cfelse>
+                    <img src="images/1_Bookmark_05.png" width="149" height="55" />
+                </cfif>
+                
+	            <p>Enrich your life Hosting International High School Students. Participants enjoy and learn from the experience by bringing the world to your back door!</p><h3>#repInfo.firstname# #repInfo.lastname#<br />#repInfo.phone#</h3><h5>#username#@<Cfif len(repInfo.email) gt 25><br /></Cfif>#domain#</h5>
+
+				<cfif CLIENT.companyID EQ 10 >
+                	<img src="images/10_bookmark_07.png" width="150" height="20" /><br />
+                <cfelse>
+                	<img src="images/1_bookmark_07.png" width="150" height="20" /><br />
+                </cfif>
+
+				<cfif CLIENT.companyID EQ 10 >
+                	<img src="images/10_bookmark_08.png" />
+                <cfelse>
+                	<img src="images/1_bookmark_08.png" />
+                </cfif>
+            </td>
+        </tr>
+    </table>
+<!-- end .container -->
+</div>
+
 </cfoutput>
+
 </body>
 </html>
