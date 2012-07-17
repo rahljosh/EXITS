@@ -104,7 +104,12 @@
             from="support@case-usa.org" <!--- #APPLICATION.EMAIL.support# --->
             to="#APPLICATION.EMAIL.cbcCaseNotifications#" 
             subject="Scheduled CBC #userType# Issues"
-            type="html">
+            type="html" 
+            port="587"
+            useTLS="yes"
+            server="smtp.gmail.com"
+            username="support@student-management.com"
+            password="support123">
                 <table width="70%" cellpadding="2" style="margin-top:20px; margin-bottom:20px; border:1px solid ##CCCCCC">
                     <tr>
                         <td>
