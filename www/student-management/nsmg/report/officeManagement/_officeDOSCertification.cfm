@@ -1,11 +1,11 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		_dosCertification.cfm
+	File:		_officeDOSCertification.cfm
 	Author:		James Griffiths	
 	Date:		July 3, 2012
 	Desc:		Shows users that have/not taken the DOS test
 				
-				#CGI.SCRIPT_NAME#?curdoc=report/index?action=dosCertification
+				#CGI.SCRIPT_NAME#?curdoc=report/index?action=officeDOSCertification
 				
 	Updated: 		
 				
@@ -121,7 +121,7 @@
     
     <cfoutput>
     	
-        <form action="report/index.cfm?action=dosCertification" name="dosCertification" id="dosCertification" method="post" target="blank">
+        <form action="report/index.cfm?action=officeDOSCertification" name="officeDOSCertification" id="officeDOSCertification" method="post" target="blank">
             <input type="hidden" name="submitted" value="1" />
             <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable" align="center">
                 <tr><th colspan="2">#vReportTitle#</th></tr>
