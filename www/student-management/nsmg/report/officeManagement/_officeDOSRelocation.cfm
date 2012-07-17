@@ -1,0 +1,419 @@
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		_officeDOSRelocation.cfm
+	Author:		Marcus Melo
+	Date:		July 16, 2012
+	Desc:		DOS Relocation Report
+				
+				#CGI.SCRIPT_NAME#?curdoc=report/index?action=officeDOSRelocation
+				
+	Updated: 			
+				
+----- ------------------------------------------------------------------------- --->
+
+<!--- Kill Extra Output --->
+<cfsilent>
+
+	<!--- Import CustomTag --->
+    <cfimport taglib="../../extensions/customTags/gui/" prefix="gui" />	
+	
+    <cfscript>	
+		// Param FORM Variables
+		param name="FORM.submitted" default=0;
+		param name="FORM.programID" default=0;	
+		param name="FORM.studentStatus" default="All";
+		param name="FORM.outputType" default="excel";
+
+		// Set Report Title To Keep Consistency
+		vReportTitle = "Office Management - DOS Relocation";
+
+		// Get Programs
+		qGetPrograms = APPLICATION.CFC.PROGRAM.getPrograms(programIDList=FORM.programID);
+	</cfscript>	
+
+    <!--- FORM Submitted --->
+    <cfif VAL(FORM.submitted)>
+
+        <cfscript>
+			// Data Validation
+			
+            // Program
+            if ( NOT VAL(FORM.programID) ) {
+                // Set Page Message
+                SESSION.formErrors.Add("You must select at least one program");
+            }
+		</cfscript>
+
+        <!--- No Errors Found --->
+        <cfif NOT SESSION.formErrors.length()>
+        	
+            <!--- Get Students that have relocated --->
+            <cfquery name="qGetResults" datasource="#APPLICATION.DSN#">
+                SELECT 
+                    s.studentID
+                FROM 
+                	smg_hosthistory hist
+                INNER JOIN 
+                	smg_students s ON s.studentID = hist.studentID
+					AND 
+	                	s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )   
+                        
+					<!--- Student Status --->
+                    <cfswitch expression="#FORM.studentStatus#">
+                        
+                        <cfcase value="Active">
+                            AND
+                                s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">                            
+                        </cfcase>
+                        
+                        <cfcase value="Inactive">
+                            AND
+                                s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
+                            AND
+                                s.cancelDate IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">                                               
+                        </cfcase>
+            
+                        <cfcase value="Canceled">
+                            AND
+                                s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
+                            AND
+                                s.cancelDate IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">                                               
+                        </cfcase>
+                    
+                    </cfswitch>
+
+					<cfif CLIENT.companyID EQ 5>
+                        AND
+                            s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                    <cfelse>        	
+                        AND
+                            s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                    </cfif>
+                INNER JOIN 
+                	smg_companies c ON c.companyID = s.companyID
+                INNER JOIN 
+                	smg_countrylist cl on cl.countryID = s.countryResident
+                INNER JOIN 
+                	smg_hosts h ON h.hostID = hist.hostID
+                INNER JOIN 
+                	smg_schools sch on sch.schoolID = s.schoolID
+                INNER JOIN  
+                	smg_users u ON u.userID = hist.areaRepID
+                LEFT OUTER JOIN
+                	applicationLookUp alup ON alup.fieldID = hist.changePlacementReasonID
+                    AND
+                    	fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="changePlacementReason">                             
+                WHERE 
+                	hist.isRelocation = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                ORDER BY
+                	s.familyLastName,
+                    s.firstName
+            </cfquery>
+
+		</cfif> <!--- NOT SESSION.formErrors.length() ---->
+
+	</cfif> <!--- FORM Submitted --->
+    
+</cfsilent>
+
+<!--- FORM NOT submitted --->
+<cfif NOT VAL(FORM.Submitted)>
+
+    <!--- Call the basescript again so it works when ajax loads this page --->
+    <script type="text/javascript" src="linked/js/basescript.js "></script> <!-- BaseScript -->
+
+	<cfoutput>
+
+        <form action="report/index.cfm?action=officeDOSRelocation" name="officeDOSRelocation" id="officeDOSRelocation" method="post" target="blank">
+            <input type="hidden" name="submitted" value="1" />
+            <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable" align="center">
+                <tr><th colspan="2">#vReportTitle#</th></tr>
+                <tr class="on">
+                    <td class="subTitleRightNoBorder">Program: <span class="required">*</span></td>
+                    <td>
+                        <select name="programID" id="programID" class="xLargeField" multiple size="6" required>
+                            <cfloop query="qGetProgramList"><option value="#qGetProgramList.programID#">#qGetProgramList.programName#</option></cfloop>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="on">
+                    <td class="subTitleRightNoBorder">Student Status: <span class="required">*</span></td>
+                    <td>
+                        <select name="studentStatus" id="studentStatus" class="xLargeField" required>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                            <option value="Canceled">Canceled</option>
+                            <option value="All" selected="selected">All</option>
+                        </select>
+                    </td>		
+                </tr>
+                <tr class="on">
+                    <td class="subTitleRightNoBorder">Output Type: <span class="required">*</span></td>
+                    <td>
+                        <select name="outputType" id="outputType" class="xLargeField">
+							<option value="Excel">Excel Spreadsheet</option>
+                        </select>
+                    </td>		
+                </tr>
+                <tr class="on">
+                    <td>&nbsp;</td>
+                    <td class="required noteAlert">* Required Fields</td>
+                </tr>
+                <tr class="on">
+                    <td class="subTitleRightNoBorder">Description:</td>
+                    <td>This report generates the Deparment of State Annual Change of Placement Report</td>		
+                </tr>
+                <tr>
+                    <th colspan="2" align="center"><input type="image" src="pics/view.gif" align="center" border="0"> </th>
+                </tr>
+            </table>
+        </form>            
+
+	</cfoutput>
+
+<cfelse>    
+    
+	<!--- Page Header --->
+    <gui:pageHeader
+        headerType="applicationNoHeader"
+    />	
+
+    <!--- FORM Submitted with errors --->
+    <cfif SESSION.formErrors.length()> 
+       
+        <!--- Form Errors --->
+        <gui:displayFormErrors 
+            formErrors="#SESSION.formErrors.GetCollection()#"
+            messageType="tableSection"
+            width="100%"
+            />	
+            
+        <cfabort>            
+    </cfif>
+    
+    <!---
+    <!--- set content type --->
+    <cfcontent type="application/msexcel">
+    
+    <!--- suggest default name for XLS file --->
+    <cfheader name="Content-Disposition" value="attachment; filename=student_relocation_report.xls">
+    --->
+    
+    <table width="98%" cellpadding="4" cellspacing="0" align="center" border="1">
+        <tr>
+            <th colspan="29">DEPARTMENT OF STATE ANNUAL CHANGE OF PLACEMENT REPORT</th>            
+        </tr>
+        <tr style="font-weight:bold;">
+            <td>Program Number</td>
+            <td>Program Name</td>
+            <td>Participant's Last Name</td>
+            <td>Participant's First Name</td>
+            <td>Home Country</td>
+            <td>SEVIS ID#</td>
+            <td>SEVIS Status</td>
+            <td>Host Family Number</td>
+            <td>Date Student Joined Host family</td>
+            <td>Host Father Last Name</td>
+            <td>Host Father First Name</td>
+            <td>Host Mother Last Name</td>
+            <td>Host Mother First Name</td>            
+            <td>Welcome, Permanent, or Temporarily Host Family?</td>
+            <td>Street Address</td>
+            <td>City</td>
+            <td>State</td>
+            <td>ZIP</td>
+            <td>School Number</td>
+            <td>School Name</td>
+            <td>Street Address</td>
+            <td>City</td>
+            <td>State</td>
+            <td>ZIP</td>
+            <td>Local Coordinator First Name</td>
+            <td>Local Coordinator Last Name</td>
+            <td>Local Coordinator Zip</td>
+            <td>Change of Home Code</td>
+            <td>Brief Narrative Descriptikon Explaining Reason for Change in Home or School or Where Student was Between Entry and and Placement in First Home</td>
+        </tr>
+
+        <cfscript>
+            vCurrentRow = 0;
+        </cfscript>
+        
+        <!--- Loop Results ---> 
+        <cfoutput query="qGetResults">
+
+            <!--- Get Student Placement History --->
+            <cfquery name="qGetStudentPlacementHistory" datasource="#APPLICATION.DSN#">
+                SELECT 
+                    s.studentID,
+                    s.firstname AS studentFirstName, 
+                    s.familylastname AS studentLastName, 
+                    s.ds2019_no,
+                    s.aypEnglish,
+                    <!--- Host History --->
+                    hist.historyID,
+                    hist.changePlacementExplanation,
+                    hist.dateRelocated,
+                    hist.isRelocation,
+                    hist.isWelcomeFamily,
+                    hist.dateCreated,
+                    <!--- Change Placement Reason --->
+                    alup.name AS changePlacementReason,
+                    alup.description AS changeOfHomeCode,
+                    <!--- Company Info --->
+                    c.companyName,
+                    c.iap_auth,
+                    <!--- Country of Citizenship --->
+                    cl.countryName,
+                    <!--- Host Family --->
+                    h.hostID,
+                    h.fatherLastName,
+                    h.fatherFirstName,
+                    h.motherLastName,
+                    h.motherFirstName,
+                    h.address AS hostAddress,
+                    h.city AS hostCity,
+                    h.state AS hostState,
+                    h.zip AS hostZipCode,
+                    <!--- School --->
+                    sch.schoolID,
+                    sch.schoolName,
+                    sch.address AS schoolAddress,
+                    sch.city AS schoolCity,
+                    sch.state AS schoolState,
+                    sch.zip AS schoolZipCode,
+                    <!--- Supervising Representative --->
+                    u.userID,
+                    u.lastName AS supervisingLastName,
+                    u.firstName AS supervisingFirstName,
+                    u.zip AS supervisingZipCode,
+                    (
+                        SELECT 
+                            dep_date 
+                        FROM 
+                            smg_flight_info 
+                        WHERE 
+                            studentID = s.studentID 
+                        AND 
+                            flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="preAypArrival"> 
+                        AND
+                            assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                        AND 
+                            isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                        ORDER BY 
+                            dep_date ASC,
+                            dep_time ASC
+                        LIMIT 1                            
+                    ) AS preAYPdateArrived,                    
+                    (
+                        SELECT 
+                            dep_date 
+                        FROM 
+                            smg_flight_info 
+                        WHERE 
+                            studentID = s.studentID 
+                        AND 
+                            flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival"> 
+                        AND
+                            assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                        AND 
+                            isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                        ORDER BY 
+                            dep_date ASC,
+                            dep_time ASC
+                        LIMIT 1                            
+                    ) AS dateArrived
+                FROM 
+                    smg_hosthistory hist
+                INNER JOIN 
+                    smg_students s ON s.studentID = hist.studentID
+                INNER JOIN 
+                    smg_companies c ON c.companyID = s.companyID
+                INNER JOIN 
+                    smg_countrylist cl on cl.countryID = s.countryResident
+                INNER JOIN 
+                    smg_hosts h ON h.hostID = hist.hostID
+                INNER JOIN  
+                    smg_schools sch on sch.schoolID = s.schoolID
+                INNER JOIN  
+                    smg_users u ON u.userID = hist.areaRepID
+                LEFT OUTER JOIN
+                    applicationLookUp alup ON alup.fieldID = hist.changePlacementReasonID
+                    AND
+                        fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="changePlacementReason">                             
+                WHERE
+                	hist.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.studentID#">
+                AND
+                	hist.datePlaced IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                ORDER BY
+                    hist.datePlaced
+            </cfquery>           
+            
+            <cfscript>
+				// List of HostID and SchoolID
+				vHostIDList = ValueList(qGetStudentPlacementHistory.hostID);
+				vSchoolIDList = ValueList(qGetStudentPlacementHistory.schoolID);	
+				
+				// Check if it's a PRE-AYP student
+				// aypEnglish
+			</cfscript>
+            
+            <cfloop query="qGetStudentPlacementHistory">
+            
+                <cfscript>
+                    vCurrentRow++;
+                    if ( vCurrentRow MOD 2 ) {
+                        vRowColor = 'bgcolor="##E6E6E6"';
+                    } else {
+                        vRowColor = 'bgcolor="##FFFFFF"';
+                    }
+                </cfscript>
+                
+                <tr>
+                    <td #vRowColor#>#qGetStudentPlacementHistory.iap_auth#</td>
+                    <td #vRowColor#>#qGetStudentPlacementHistory.companyName#</td>
+                    <td #vRowColor#>#qGetStudentPlacementHistory.studentLastName#</td>
+                    <td #vRowColor#>#qGetStudentPlacementHistory.studentFirstName#</td>
+                    <td #vRowColor#>#qGetStudentPlacementHistory.countryName#</td>
+                    <td #vRowColor#>#qGetStudentPlacementHistory.ds2019_no#</td>
+                    <td #vRowColor#>Active</td>
+                    <td #vRowColor#></td> <!--- Host Number --->
+                    <td #vRowColor#>#DateFormat(qGetStudentPlacementHistory.dateRelocated, 'mm/dd/yyyy')#</td>
+                    <td #vRowColor#>#qGetStudentPlacementHistory.fatherLastName#</td>
+                    <td #vRowColor#>#qGetStudentPlacementHistory.fatherFirstName#</td>
+                    <td #vRowColor#>#qGetStudentPlacementHistory.motherLastName#</td>
+                    <td #vRowColor#>#qGetStudentPlacementHistory.motherFirstName#</td>            
+                    <td #vRowColor#>
+                        <cfif VAL(qGetStudentPlacementHistory.isWelcomeFamily)>
+                            Welcome
+                        <cfelse>
+                            Permanent
+                        </cfif>
+                    </td>
+                    <td #vRowColor#>#qGetStudentPlacementHistory.hostAddress#</td>
+                    <td #vRowColor#>#qGetStudentPlacementHistory.hostCity#</td>
+                    <td #vRowColor#>#qGetStudentPlacementHistory.hostState#</td>
+                    <td #vRowColor#>#qGetStudentPlacementHistory.hostZipCode#</td>
+                    <td #vRowColor#></td> <!--- School Number --->
+                    <td #vRowColor#>#qGetStudentPlacementHistory.schoolName#</td>
+                    <td #vRowColor#>#qGetStudentPlacementHistory.schoolAddress#</td>
+                    <td #vRowColor#>#qGetStudentPlacementHistory.schoolCity#</td>
+                    <td #vRowColor#>#qGetStudentPlacementHistory.schoolState#</td>
+                    <td #vRowColor#>#qGetStudentPlacementHistory.schoolZipCode#</td>
+                    <td #vRowColor#>#qGetStudentPlacementHistory.supervisingLastName#</td>
+                    <td #vRowColor#>#qGetStudentPlacementHistory.supervisingFirstName#</td>
+                    <td #vRowColor#>#qGetStudentPlacementHistory.supervisingZipCode#</td>
+                    <td #vRowColor#>#qGetStudentPlacementHistory.changeOfHomeCode#</td>
+                    <td #vRowColor#>#qGetStudentPlacementHistory.changePlacementExplanation#</td>
+                </tr>
+    
+            </cfloop>
+
+        </cfoutput>                
+        
+    </table>
+    
+    <!--- Page Header --->
+    <gui:pageFooter />	
+    
+</cfif>

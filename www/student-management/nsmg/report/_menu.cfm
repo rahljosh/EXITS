@@ -291,7 +291,7 @@
 <!--- Office Management Menu --->
 <table id="officeManagementMenu" class="reportMenuTable menuOption displayNone">
     <tr>
-        <td class="lastRow">
+        <td>
 			<ul class="mainList">
                 <li onclick="loadSelectedReport('officeRegionGoal');">Region Goal</li>
                 <ul>
@@ -300,7 +300,7 @@
 				</ul>
             </ul>
         </td>
-        <td class="lastRow">
+        <td>
 			<ul class="mainList">
                 <li onclick="loadSelectedReport('officeComplianceCheckPaperwork');">Compliance Check Placement Paperwork</li>
                 <ul>
@@ -309,9 +309,9 @@
 				</ul>
             </ul>
         </td>
-        <td class="lastRow right">
+        <td class="right">
 			<ul class="mainList">
-                <li onclick="loadSelectedReport('dosCertification');">DOS Certification</li>
+                <li onclick="loadSelectedReport('officeDOSCertification');">DOS Certification</li>
                 <ul>
                     <li>Generate a list of all users who have or have not taken the DOS Certification</li>
                     <li>Filter by: Region</li>
@@ -319,6 +319,25 @@
             </ul>
         </td>
 	</tr>   
+    <cfif CLIENT.userID EQ 510>
+    <tr>
+        <td class="lastRow">&nbsp;
+			
+        </td>
+        <td class="lastRow">&nbsp;
+			
+        </td>
+        <td class="lastRow right">
+			<ul class="mainList">
+                <li onclick="loadSelectedReport('officeDOSRelocation');">DOS Relocation</li>
+                <ul>
+                    <li>Generate the Deparment of State Annual Change of Placement Report</li>
+                    <li>Filter by: Program, Region</li>
+				</ul>
+            </ul>
+        </td>
+	</tr> 
+    </cfif>  
 </table> 
 
 
