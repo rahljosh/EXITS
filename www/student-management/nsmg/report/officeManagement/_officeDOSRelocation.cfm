@@ -17,6 +17,8 @@
 	<!--- Import CustomTag --->
     <cfimport taglib="../../extensions/customTags/gui/" prefix="gui" />	
 	
+    <cfsetting requesttimeout="9999">
+    
     <cfscript>	
 		// Param FORM Variables
 		param name="FORM.submitted" default=0;
@@ -105,6 +107,10 @@
                     	fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="changePlacementReason">                             
                 WHERE 
                 	hist.isRelocation = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                AND
+                	hist.assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+				GROUP BY
+                	s.studentID  
                 ORDER BY
                 	s.familyLastName,
                     s.firstName
@@ -191,13 +197,11 @@
         <cfabort>            
     </cfif>
     
-    <!---
     <!--- set content type --->
     <cfcontent type="application/msexcel">
     
     <!--- suggest default name for XLS file --->
-    <cfheader name="Content-Disposition" value="attachment; filename=student_relocation_report.xls">
-    --->
+    <cfheader name="Content-Disposition" value="attachment; filename=DOS-Relocation-Report.xls">
     
     <table width="98%" cellpadding="4" cellspacing="0" align="center" border="1">
         <tr>
@@ -253,6 +257,8 @@
                     <!--- Host History --->
                     hist.historyID,
                     hist.changePlacementExplanation,
+                    hist.datePlaced,
+                    hist.datePlacedEnded,
                     hist.dateRelocated,
                     hist.isRelocation,
                     hist.isWelcomeFamily,
@@ -345,18 +351,26 @@
                 	hist.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.studentID#">
                 AND
                 	hist.datePlaced IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                AND
+                	hist.assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                GROUP BY
+                	hist.studentID,
+                    hist.hostID,
+                    hist.schoolID
                 ORDER BY
-                    hist.datePlaced
+                    hist.historyID
             </cfquery>           
             
             <cfscript>
-				// List of HostID and SchoolID
-				vHostIDList = ValueList(qGetStudentPlacementHistory.hostID);
-				vSchoolIDList = ValueList(qGetStudentPlacementHistory.schoolID);	
+				// Set local variables
+				vHostCount = 0;
+				vHostNumber = "";
+				vPreviousHostID = "";
 				
-				// Check if it's a PRE-AYP student
-				// aypEnglish
-			</cfscript>
+				vSchoolCount = 0;
+				vSchoolNumber = "";
+				vPreviousSchoolID = "";
+			</cfscript>			
             
             <cfloop query="qGetStudentPlacementHistory">
             
@@ -367,6 +381,38 @@
                     } else {
                         vRowColor = 'bgcolor="##FFFFFF"';
                     }
+					
+					// Pre-AYP Student
+					if ( VAL(qGetStudentPlacementHistory.aypEnglish) ) {
+						vSetArrivalDate = qGetStudentPlacementHistory.preAYPdateArrived;
+					// Not Pre-AYP
+					} else {
+						vSetArrivalDate = qGetStudentPlacementHistory.dateArrived;
+					}
+					
+					// Placement period before arrival - set host number to 0
+					if ( isDate(qGetStudentPlacementHistory.datePlacedEnded) AND qGetStudentPlacementHistory.datePlacedEnded LT vSetArrivalDate) {
+					
+						vHostNumber = 0;
+					
+					// Placement period after arrival - count hosts
+					} else {
+					
+						// Count Hosts
+						if ( vPreviousHostID NEQ qGetStudentPlacementHistory.hostID ) {
+							  vHostCount ++;
+						}
+						vHostNumber = vHostCount;
+
+					}
+					
+					// Count Schools
+					if ( vPreviousSchoolID NEQ qGetStudentPlacementHistory.schoolID ) {
+						vSchoolCount ++;
+					}
+					
+					vPreviousHostID = qGetStudentPlacementHistory.hostID;
+					vPreviousSchoolID = qGetStudentPlacementHistory.schoolID;
                 </cfscript>
                 
                 <tr>
@@ -377,8 +423,16 @@
                     <td #vRowColor#>#qGetStudentPlacementHistory.countryName#</td>
                     <td #vRowColor#>#qGetStudentPlacementHistory.ds2019_no#</td>
                     <td #vRowColor#>Active</td>
-                    <td #vRowColor#></td> <!--- Host Number --->
-                    <td #vRowColor#>#DateFormat(qGetStudentPlacementHistory.dateRelocated, 'mm/dd/yyyy')#</td>
+                    <td #vRowColor#>#vHostNumber#</td>
+                    <td #vRowColor#>
+                    	<!--- Date Relocation --->
+						<cfif isDate(qGetStudentPlacementHistory.dateRelocated)>
+                        	#DateFormat(qGetStudentPlacementHistory.dateRelocated, 'mm/dd/yyyy')#
+                        <!--- Arrival to HF --->
+						<cfelse>
+                        	#DateFormat(qGetStudentPlacementHistory.dateArrived, 'mm/dd/yyyy')#
+                        </cfif>
+                    </td>
                     <td #vRowColor#>#qGetStudentPlacementHistory.fatherLastName#</td>
                     <td #vRowColor#>#qGetStudentPlacementHistory.fatherFirstName#</td>
                     <td #vRowColor#>#qGetStudentPlacementHistory.motherLastName#</td>
@@ -394,7 +448,7 @@
                     <td #vRowColor#>#qGetStudentPlacementHistory.hostCity#</td>
                     <td #vRowColor#>#qGetStudentPlacementHistory.hostState#</td>
                     <td #vRowColor#>#qGetStudentPlacementHistory.hostZipCode#</td>
-                    <td #vRowColor#></td> <!--- School Number --->
+                    <td #vRowColor#>#vSchoolCount#</td>
                     <td #vRowColor#>#qGetStudentPlacementHistory.schoolName#</td>
                     <td #vRowColor#>#qGetStudentPlacementHistory.schoolAddress#</td>
                     <td #vRowColor#>#qGetStudentPlacementHistory.schoolCity#</td>
@@ -404,7 +458,12 @@
                     <td #vRowColor#>#qGetStudentPlacementHistory.supervisingFirstName#</td>
                     <td #vRowColor#>#qGetStudentPlacementHistory.supervisingZipCode#</td>
                     <td #vRowColor#>#qGetStudentPlacementHistory.changeOfHomeCode#</td>
-                    <td #vRowColor#>#qGetStudentPlacementHistory.changePlacementExplanation#</td>
+                    <td #vRowColor#>
+                    	#qGetStudentPlacementHistory.changePlacementExplanation#
+                        <cfif VAL(qGetStudentPlacementHistory.aypEnglish) AND NOT isDate(qGetStudentPlacementHistory.dateRelocated)>
+                        	Student was attending an English/Orientation camp approved by ISE
+                        </cfif>
+                    </td>
                 </tr>
     
             </cfloop>
