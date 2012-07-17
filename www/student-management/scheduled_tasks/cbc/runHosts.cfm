@@ -108,7 +108,12 @@
                     from="#APPLICATION.EMAIL.support#"
                     to="#APPLICATION.EMAIL.cbcNotifications#"
                     subject="Scheduled CBC Host #userType# Issues"
-                    type="html">
+                    type="html" 
+                    port="587"
+                    useTLS="yes"
+                    server="smtp.gmail.com"
+                    username="support@iseusa.com"
+                    password="support123">
                         <table width="70%" cellpadding="2" style="margin-top:20px; margin-bottom:20px; border:1px solid ##CCCCCC">
                             <tr>
                                 <td>
