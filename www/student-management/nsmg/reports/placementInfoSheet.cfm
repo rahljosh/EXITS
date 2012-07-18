@@ -459,9 +459,6 @@
                                         <td>
                             				<cfset maxwords = 1>
                                             #REReplace(qGetHostChildren.name,"^(#RepeatString('[^ ]* ',maxwords)#).*","\1")#
-											<Cfif shared is 'yes'>
-                                            	<img src="https://ise.exitsapplication.com/nsmg/pics/share.jpg" height="20" border="0"/>
-											</Cfif>
                             			</td>
                                         <td align="center">
 											<cfif IsDate(qGetHostChildren.birthdate)>
@@ -475,6 +472,21 @@
                                         <td align="center">#qGetHostChildren.membertype#</td>
                                     </tr>
                                 </cfloop>
+                                <cfquery name="qGetShareChildren" dbtype="query">
+                                	SELECT
+                                    	*
+                                   	FROM
+                                    	qGetHostChildren
+                                   	WHERE
+                                    	roomShareWith = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#">
+                                </cfquery>
+                                <tr>
+                                	<td colspan="5">
+                                    	<cfif VAL(qGetShareChildren.recordCount)>
+                                    		#qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# is sharing a room with #qGetShareChildren.name#.
+                                      	</cfif>
+                                    </td>
+                                </tr>
                             </table>
                             
                         </td>

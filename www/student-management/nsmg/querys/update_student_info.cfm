@@ -153,33 +153,12 @@
 
 </cfif>
 
+<cfscript>
+	APPLICATION.CFC.PROGRAM.addHistory(studentID=qStudentInfo.studentID,programID= FORM.program,reason=FORM.program_reason);
+</cfscript>
+
 <!--- PROGRAM UPDATED --->
 <cfif qStudentInfo.programID NEQ FORM.program>
-
-	<!--- INSERT PROGRAM HISTORY --->
-    <cfquery name="program_history" datasource="#APPLICATION.DSN#">
-		INSERT INTO 
-        	smg_programhistory
-		(
-        	studentID, 
-            programID, 
-            reason, 
-            changedby,  
-            date
-        )
-		VALUES
-        (
-            <cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentID#">, 
-            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.program#">, 
-        	<cfif VAL(qStudentInfo.programID)>
-            	<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.program_reason#">, 
-            <cfelse>
-            	<cfqueryparam cfsqltype="cf_sql_varchar" value="Student was unassigned">, 
-            </cfif>
-           	<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">,
-            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDateTime(now())#"> 
-        )
-	</cfquery>
     
 	<!--- EMAIL FINANCE DEPARTMENT ONLY IF PREVIOUS PROGRAM IS VALID --->
     <cfif VAL(qStudentInfo.programID)>
