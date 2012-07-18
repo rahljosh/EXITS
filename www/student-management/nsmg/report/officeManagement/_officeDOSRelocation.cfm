@@ -110,7 +110,6 @@
                     s.ds2019_no,
                     s.aypEnglish,
                     <!--- Host History --->
-                    hist.historyID,
                     hist.changePlacementExplanation,
                     hist.datePlaced,
                     hist.datePlacedEnded,
@@ -195,7 +194,7 @@
                 INNER JOIN 
                     smg_hosts h ON h.hostID = hist.hostID
                 INNER JOIN  
-                    smg_schools sch on sch.schoolID = s.schoolID
+                    smg_schools sch on sch.schoolID = hist.schoolID
                 INNER JOIN  
                     smg_users u ON u.userID = hist.areaRepID
                 LEFT OUTER JOIN
@@ -211,7 +210,8 @@
                 GROUP BY
                 	hist.studentID,
                     hist.hostID,
-                    hist.schoolID
+                    hist.schoolID,
+                    hist.areaRepID
                 ORDER BY
                 	s.familyLastName,
                     s.firstName,
