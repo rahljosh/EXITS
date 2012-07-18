@@ -50,17 +50,17 @@
         <cfif NOT SESSION.formErrors.length()>
         	
             <!--- Get Students that have relocated --->
-            <cfquery name="qGetResults" datasource="#APPLICATION.DSN#">
+            <cfquery name="qGetStudentIDList" datasource="#APPLICATION.DSN#">
                 SELECT 
                     s.studentID
                 FROM 
-                	smg_hosthistory hist
+                    smg_hosthistory h
                 INNER JOIN 
-                	smg_students s ON s.studentID = hist.studentID
-					AND 
-	                	s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )   
+                    smg_students s ON s.studentID = h.studentID
+                    AND 
+                        s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )   
                         
-					<!--- Student Status --->
+                    <!--- Student Status --->
                     <cfswitch expression="#FORM.studentStatus#">
                         
                         <cfcase value="Active">
@@ -83,39 +83,141 @@
                         </cfcase>
                     
                     </cfswitch>
-
-					<cfif CLIENT.companyID EQ 5>
+    
+                    <cfif CLIENT.companyID EQ 5>
                         AND
                             s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
                     <cfelse>        	
                         AND
                             s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
                     </cfif>
-                INNER JOIN 
-                	smg_companies c ON c.companyID = s.companyID
-                INNER JOIN 
-                	smg_countrylist cl on cl.countryID = s.countryResident
-                INNER JOIN 
-                	smg_hosts h ON h.hostID = hist.hostID
-                INNER JOIN 
-                	smg_schools sch on sch.schoolID = s.schoolID
-                INNER JOIN  
-                	smg_users u ON u.userID = hist.areaRepID
-                LEFT OUTER JOIN
-                	applicationLookUp alup ON alup.fieldID = hist.changePlacementReasonID
-                    AND
-                    	fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="changePlacementReason">                             
                 WHERE 
-                	hist.isRelocation = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                    h.isRelocation = <cfqueryparam cfsqltype="cf_sql_bit" value="1">                    
                 AND
-                	hist.assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-				GROUP BY
-                	s.studentID  
+                    h.assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+				AND
+                	h.datePlaced IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">                    
+                GROUP BY
+                    s.studentID              
+ 			</cfquery>          
+
+            <!--- Get all placement history for students that have relocated --->
+            <cfquery name="qGetResults" datasource="#APPLICATION.DSN#">
+                SELECT 
+                    s.studentID,
+                    s.firstname AS studentFirstName, 
+                    s.familylastname AS studentLastName, 
+                    s.ds2019_no,
+                    s.aypEnglish,
+                    <!--- Host History --->
+                    hist.historyID,
+                    hist.changePlacementExplanation,
+                    hist.datePlaced,
+                    hist.datePlacedEnded,
+                    hist.dateRelocated,
+                    hist.isRelocation,
+                    hist.isWelcomeFamily,
+                    hist.dateCreated,
+                    <!--- Change Placement Reason --->
+                    alup.name AS changePlacementReason,
+                    alup.description AS changeOfHomeCode,
+                    <!--- Company Info --->
+                    c.companyName,
+                    c.iap_auth,
+                    <!--- Country of Citizenship --->
+                    cl.countryName,
+                    <!--- Host Family --->
+                    h.hostID,
+                    h.fatherLastName,
+                    h.fatherFirstName,
+                    h.motherLastName,
+                    h.motherFirstName,
+                    h.address AS hostAddress,
+                    h.city AS hostCity,
+                    h.state AS hostState,
+                    h.zip AS hostZipCode,
+                    <!--- School --->
+                    sch.schoolID,
+                    sch.schoolName,
+                    sch.address AS schoolAddress,
+                    sch.city AS schoolCity,
+                    sch.state AS schoolState,
+                    sch.zip AS schoolZipCode,
+                    <!--- Supervising Representative --->
+                    u.userID,
+                    u.lastName AS supervisingLastName,
+                    u.firstName AS supervisingFirstName,
+                    u.zip AS supervisingZipCode,
+                    (
+                        SELECT 
+                            dep_date 
+                        FROM 
+                            smg_flight_info 
+                        WHERE 
+                            studentID = s.studentID 
+                        AND 
+                            flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="preAypArrival"> 
+                        AND
+                            assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                        AND 
+                            isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                        ORDER BY 
+                            dep_date ASC,
+                            dep_time ASC
+                        LIMIT 1                            
+                    ) AS preAYPdateArrived,                    
+                    (
+                        SELECT 
+                            dep_date 
+                        FROM 
+                            smg_flight_info 
+                        WHERE 
+                            studentID = s.studentID 
+                        AND 
+                            flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival"> 
+                        AND
+                            assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                        AND 
+                            isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                        ORDER BY 
+                            dep_date ASC,
+                            dep_time ASC
+                        LIMIT 1                            
+                    ) AS dateArrived
+                FROM 
+                    smg_hosthistory hist
+                INNER JOIN 
+                    smg_students s ON s.studentID = hist.studentID
+                INNER JOIN 
+                    smg_companies c ON c.companyID = s.companyID
+                INNER JOIN 
+                    smg_countrylist cl on cl.countryID = s.countryResident
+                INNER JOIN 
+                    smg_hosts h ON h.hostID = hist.hostID
+                INNER JOIN  
+                    smg_schools sch on sch.schoolID = s.schoolID
+                INNER JOIN  
+                    smg_users u ON u.userID = hist.areaRepID
+                LEFT OUTER JOIN
+                    applicationLookUp alup ON alup.fieldID = hist.changePlacementReasonID
+                    AND
+                        fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="changePlacementReason">                             
+                WHERE                	
+                	hist.studentID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ValueList(qGetStudentIDList.studentID)#" list="yes"> )
+                AND
+                	hist.datePlaced IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                AND
+                	hist.assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                
+                GROUP BY
+                	hist.studentID,
+                    hist.hostID,
+                    hist.schoolID
                 ORDER BY
                 	s.familyLastName,
-                    s.firstName
+                    s.firstName,
+                    hist.historyID
             </cfquery>
-
+	
 		</cfif> <!--- NOT SESSION.formErrors.length() ---->
 
 	</cfif> <!--- FORM Submitted --->
@@ -240,233 +342,123 @@
         </tr>
 
         <cfscript>
-            vCurrentRow = 0;
+			vPreviousStudentID = 0;
+			// Set local variables
+			vHostCount = 0;
+			vHostNumber = "";
+			vPreviousHostID = "";
+			
+			vSchoolCount = 0;
+			vSchoolNumber = "";
+			vPreviousSchoolID = "";
         </cfscript>
         
         <!--- Loop Results ---> 
         <cfoutput query="qGetResults">
 
-            <!--- Get Student Placement History --->
-            <cfquery name="qGetStudentPlacementHistory" datasource="#APPLICATION.DSN#">
-                SELECT 
-                    s.studentID,
-                    s.firstname AS studentFirstName, 
-                    s.familylastname AS studentLastName, 
-                    s.ds2019_no,
-                    s.aypEnglish,
-                    <!--- Host History --->
-                    hist.historyID,
-                    hist.changePlacementExplanation,
-                    hist.datePlaced,
-                    hist.datePlacedEnded,
-                    hist.dateRelocated,
-                    hist.isRelocation,
-                    hist.isWelcomeFamily,
-                    hist.dateCreated,
-                    <!--- Change Placement Reason --->
-                    alup.name AS changePlacementReason,
-                    alup.description AS changeOfHomeCode,
-                    <!--- Company Info --->
-                    c.companyName,
-                    c.iap_auth,
-                    <!--- Country of Citizenship --->
-                    cl.countryName,
-                    <!--- Host Family --->
-                    h.hostID,
-                    h.fatherLastName,
-                    h.fatherFirstName,
-                    h.motherLastName,
-                    h.motherFirstName,
-                    h.address AS hostAddress,
-                    h.city AS hostCity,
-                    h.state AS hostState,
-                    h.zip AS hostZipCode,
-                    <!--- School --->
-                    sch.schoolID,
-                    sch.schoolName,
-                    sch.address AS schoolAddress,
-                    sch.city AS schoolCity,
-                    sch.state AS schoolState,
-                    sch.zip AS schoolZipCode,
-                    <!--- Supervising Representative --->
-                    u.userID,
-                    u.lastName AS supervisingLastName,
-                    u.firstName AS supervisingFirstName,
-                    u.zip AS supervisingZipCode,
-                    (
-                        SELECT 
-                            dep_date 
-                        FROM 
-                            smg_flight_info 
-                        WHERE 
-                            studentID = s.studentID 
-                        AND 
-                            flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="preAypArrival"> 
-                        AND
-                            assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-                        AND 
-                            isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                        ORDER BY 
-                            dep_date ASC,
-                            dep_time ASC
-                        LIMIT 1                            
-                    ) AS preAYPdateArrived,                    
-                    (
-                        SELECT 
-                            dep_date 
-                        FROM 
-                            smg_flight_info 
-                        WHERE 
-                            studentID = s.studentID 
-                        AND 
-                            flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival"> 
-                        AND
-                            assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-                        AND 
-                            isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                        ORDER BY 
-                            dep_date ASC,
-                            dep_time ASC
-                        LIMIT 1                            
-                    ) AS dateArrived
-                FROM 
-                    smg_hosthistory hist
-                INNER JOIN 
-                    smg_students s ON s.studentID = hist.studentID
-                INNER JOIN 
-                    smg_companies c ON c.companyID = s.companyID
-                INNER JOIN 
-                    smg_countrylist cl on cl.countryID = s.countryResident
-                INNER JOIN 
-                    smg_hosts h ON h.hostID = hist.hostID
-                INNER JOIN  
-                    smg_schools sch on sch.schoolID = s.schoolID
-                INNER JOIN  
-                    smg_users u ON u.userID = hist.areaRepID
-                LEFT OUTER JOIN
-                    applicationLookUp alup ON alup.fieldID = hist.changePlacementReasonID
-                    AND
-                        fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="changePlacementReason">                             
-                WHERE
-                	hist.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.studentID#">
-                AND
-                	hist.datePlaced IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
-                AND
-                	hist.assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                GROUP BY
-                	hist.studentID,
-                    hist.hostID,
-                    hist.schoolID
-                ORDER BY
-                    hist.historyID
-            </cfquery>           
-            
             <cfscript>
-				// Set local variables
-				vHostCount = 0;
-				vHostNumber = "";
-				vPreviousHostID = "";
-				
-				vSchoolCount = 0;
-				vSchoolNumber = "";
-				vPreviousSchoolID = "";
-			</cfscript>			
-            
-            <cfloop query="qGetStudentPlacementHistory">
-            
-                <cfscript>
-                    vCurrentRow++;
-                    if ( vCurrentRow MOD 2 ) {
-                        vRowColor = 'bgcolor="##E6E6E6"';
-                    } else {
-                        vRowColor = 'bgcolor="##FFFFFF"';
-                    }
-					
-					// Pre-AYP Student
-					if ( VAL(qGetStudentPlacementHistory.aypEnglish) ) {
-						vSetArrivalDate = qGetStudentPlacementHistory.preAYPdateArrived;
-					// Not Pre-AYP
-					} else {
-						vSetArrivalDate = qGetStudentPlacementHistory.dateArrived;
-					}
-					
-					// Placement period before arrival - set host number to 0
-					if ( isDate(qGetStudentPlacementHistory.datePlacedEnded) AND qGetStudentPlacementHistory.datePlacedEnded LT vSetArrivalDate) {
-					
-						vHostNumber = 0;
-					
-					// Placement period after arrival - count hosts
-					} else {
-					
-						// Count Hosts
-						if ( vPreviousHostID NEQ qGetStudentPlacementHistory.hostID ) {
-							  vHostCount ++;
-						}
-						vHostNumber = vHostCount;
+                if ( qGetResults.currentRow MOD 2 ) {
+                    vRowColor = 'bgcolor="##E6E6E6"';
+                } else {
+                    vRowColor = 'bgcolor="##FFFFFF"';
+                }
 
-					}
+				if ( vPreviousStudentID NEQ qGetResults.studentID ) {
+					// Reset Variables for each student
+					vHostCount = 0;
+					vHostNumber = "";
+					vPreviousHostID = "";
 					
-					// Count Schools
-					if ( vPreviousSchoolID NEQ qGetStudentPlacementHistory.schoolID ) {
-						vSchoolCount ++;
-					}
-					
-					vPreviousHostID = qGetStudentPlacementHistory.hostID;
-					vPreviousSchoolID = qGetStudentPlacementHistory.schoolID;
-                </cfscript>
+					vSchoolCount = 0;
+					vSchoolNumber = "";
+					vPreviousSchoolID = "";
+				}
                 
-                <tr>
-                    <td #vRowColor#>#qGetStudentPlacementHistory.iap_auth#</td>
-                    <td #vRowColor#>#qGetStudentPlacementHistory.companyName#</td>
-                    <td #vRowColor#>#qGetStudentPlacementHistory.studentLastName#</td>
-                    <td #vRowColor#>#qGetStudentPlacementHistory.studentFirstName#</td>
-                    <td #vRowColor#>#qGetStudentPlacementHistory.countryName#</td>
-                    <td #vRowColor#>#qGetStudentPlacementHistory.ds2019_no#</td>
-                    <td #vRowColor#>Active</td>
-                    <td #vRowColor#>#vHostNumber#</td>
-                    <td #vRowColor#>
-                    	<!--- Date Relocation --->
-						<cfif isDate(qGetStudentPlacementHistory.dateRelocated)>
-                        	#DateFormat(qGetStudentPlacementHistory.dateRelocated, 'mm/dd/yyyy')#
-                        <!--- Arrival to HF --->
-						<cfelse>
-                        	#DateFormat(qGetStudentPlacementHistory.dateArrived, 'mm/dd/yyyy')#
-                        </cfif>
-                    </td>
-                    <td #vRowColor#>#qGetStudentPlacementHistory.fatherLastName#</td>
-                    <td #vRowColor#>#qGetStudentPlacementHistory.fatherFirstName#</td>
-                    <td #vRowColor#>#qGetStudentPlacementHistory.motherLastName#</td>
-                    <td #vRowColor#>#qGetStudentPlacementHistory.motherFirstName#</td>            
-                    <td #vRowColor#>
-                        <cfif VAL(qGetStudentPlacementHistory.isWelcomeFamily)>
-                            Welcome
-                        <cfelse>
-                            Permanent
-                        </cfif>
-                    </td>
-                    <td #vRowColor#>#qGetStudentPlacementHistory.hostAddress#</td>
-                    <td #vRowColor#>#qGetStudentPlacementHistory.hostCity#</td>
-                    <td #vRowColor#>#qGetStudentPlacementHistory.hostState#</td>
-                    <td #vRowColor#>#qGetStudentPlacementHistory.hostZipCode#</td>
-                    <td #vRowColor#>#vSchoolCount#</td>
-                    <td #vRowColor#>#qGetStudentPlacementHistory.schoolName#</td>
-                    <td #vRowColor#>#qGetStudentPlacementHistory.schoolAddress#</td>
-                    <td #vRowColor#>#qGetStudentPlacementHistory.schoolCity#</td>
-                    <td #vRowColor#>#qGetStudentPlacementHistory.schoolState#</td>
-                    <td #vRowColor#>#qGetStudentPlacementHistory.schoolZipCode#</td>
-                    <td #vRowColor#>#qGetStudentPlacementHistory.supervisingLastName#</td>
-                    <td #vRowColor#>#qGetStudentPlacementHistory.supervisingFirstName#</td>
-                    <td #vRowColor#>#qGetStudentPlacementHistory.supervisingZipCode#</td>
-                    <td #vRowColor#>#qGetStudentPlacementHistory.changeOfHomeCode#</td>
-                    <td #vRowColor#>
-                    	#qGetStudentPlacementHistory.changePlacementExplanation#
-                        <cfif VAL(qGetStudentPlacementHistory.aypEnglish) AND NOT isDate(qGetStudentPlacementHistory.dateRelocated)>
-                        	Student was attending an English/Orientation camp approved by ISE
-                        </cfif>
-                    </td>
-                </tr>
-    
-            </cfloop>
+                // Pre-AYP Student
+                if ( VAL(qGetResults.aypEnglish) ) {
+                    vSetArrivalDate = qGetResults.preAYPdateArrived;
+                // Not Pre-AYP
+                } else {
+                    vSetArrivalDate = qGetResults.dateArrived;
+                }
+                
+                // Placement period before arrival - set host number to 0
+                if ( isDate(qGetResults.datePlacedEnded) AND qGetResults.datePlacedEnded LT vSetArrivalDate) {
+                
+                    vHostNumber = 0;
+                
+                // Placement period after arrival - count hosts
+                } else {
+                
+                    // Count Hosts
+                    if ( vPreviousHostID NEQ qGetResults.hostID ) {
+                          vHostCount ++;
+                    }
+                    vHostNumber = vHostCount;
+
+                }
+                
+                // Count Schools
+                if ( vPreviousSchoolID NEQ qGetResults.schoolID ) {
+                    vSchoolCount ++;
+                }
+                
+				// Set Previous Data
+				vPreviousStudentID = qGetResults.studentID;
+				vPreviousHostID = qGetResults.hostID;
+                vPreviousSchoolID = qGetResults.schoolID;
+            </cfscript>
+            
+            <tr>
+                <td #vRowColor#>#qGetResults.iap_auth#</td>
+                <td #vRowColor#>#qGetResults.companyName#</td>
+                <td #vRowColor#>#qGetResults.studentLastName#</td>
+                <td #vRowColor#>#qGetResults.studentFirstName#</td>
+                <td #vRowColor#>#qGetResults.countryName#</td>
+                <td #vRowColor#>#qGetResults.ds2019_no#</td>
+                <td #vRowColor#>Active</td>
+                <td #vRowColor#>#vHostNumber#</td>
+                <td #vRowColor#>
+                    <!--- Date Relocation --->
+                    <cfif isDate(qGetResults.dateRelocated)>
+                        #DateFormat(qGetResults.dateRelocated, 'mm/dd/yyyy')#
+                    <!--- Arrival to HF --->
+                    <cfelse>
+                        #DateFormat(qGetResults.dateArrived, 'mm/dd/yyyy')#
+                    </cfif>
+                </td>
+                <td #vRowColor#>#qGetResults.fatherLastName#</td>
+                <td #vRowColor#>#qGetResults.fatherFirstName#</td>
+                <td #vRowColor#>#qGetResults.motherLastName#</td>
+                <td #vRowColor#>#qGetResults.motherFirstName#</td>            
+                <td #vRowColor#>
+                    <cfif VAL(qGetResults.isWelcomeFamily)>
+                        Welcome
+                    <cfelse>
+                        Permanent
+                    </cfif>
+                </td>
+                <td #vRowColor#>#qGetResults.hostAddress#</td>
+                <td #vRowColor#>#qGetResults.hostCity#</td>
+                <td #vRowColor#>#qGetResults.hostState#</td>
+                <td #vRowColor#>#qGetResults.hostZipCode#</td>
+                <td #vRowColor#>#vSchoolCount#</td>
+                <td #vRowColor#>#qGetResults.schoolName#</td>
+                <td #vRowColor#>#qGetResults.schoolAddress#</td>
+                <td #vRowColor#>#qGetResults.schoolCity#</td>
+                <td #vRowColor#>#qGetResults.schoolState#</td>
+                <td #vRowColor#>#qGetResults.schoolZipCode#</td>
+                <td #vRowColor#>#qGetResults.supervisingLastName#</td>
+                <td #vRowColor#>#qGetResults.supervisingFirstName#</td>
+                <td #vRowColor#>#qGetResults.supervisingZipCode#</td>
+                <td #vRowColor#>#qGetResults.changeOfHomeCode#</td>
+                <td #vRowColor#>
+                    #qGetResults.changePlacementExplanation#
+                    <cfif VAL(qGetResults.aypEnglish) AND NOT isDate(qGetResults.dateRelocated)>
+                        Student was attending an English/Orientation camp approved by ISE
+                    </cfif>
+                </td>
+            </tr>
 
         </cfoutput>                
         
