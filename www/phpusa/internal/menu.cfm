@@ -78,6 +78,7 @@
                     <li><a href="index.cfm?curdoc=forms/update_alerts">System Messages</a></li>
        				<cfif (CLIENT.userType EQ 1) OR (ListFind("7630,17427",CLIENT.userID)) OR (APPLICATION.isServerLocal AND CLIENT.userID EQ 17306)>
                     	<li><a href="index.cfm?curdoc=tools/schoolHostFamilyRates">School Host Family Rates</a></li>
+                        <li><a href="index.cfm?curdoc=tools/representativeRates">Representative Rates</a></li>
                     </cfif>
                 </ul>
             </li>

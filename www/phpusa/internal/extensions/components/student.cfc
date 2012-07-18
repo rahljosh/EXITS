@@ -1527,6 +1527,8 @@
                     h.dateUpdated,
                     <!--- Host Family --->
                     host.familyLastName,
+                    host.fatherFirstName,
+                    host.motherFirstName,
                     <!--- School --->
                     school.schoolName,
                     school.hostFamilyRate,

@@ -340,6 +340,11 @@
                     </td>
                     <td width="17%" <cfif qGetPlacementHistory.hasHostIDChanged> class="placementMgmtChanged" </cfif> >
                         <cfif VAL(qGetPlacementHistory.hostID)>
+                            #qGetPlacementHistory.fatherFirstName#
+                            <cfif LEN(qGetPlacementHistory.fatherFirstName) AND LEN(qGetPlacementHistory.motherFirstName)>
+                            	&
+                          	</cfif>
+                            #qGetPlacementHistory.motherFirstName#
                             #qGetPlacementHistory.familyLastName# (###qGetPlacementHistory.hostID#)
                         </cfif>
                     </td>
@@ -434,7 +439,7 @@
                             </th>
                         </tr>
                     </table>
-                
+                    
                     <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section" align="center"> 
                         <tr bgcolor="###iif(qGetPlacementHistory.currentrow MOD 2 ,DE("FFFFFF") ,DE("edeff4") )#">
                             <td class="reportTitleLeftClean" width="17%">School</td>
@@ -470,6 +475,11 @@
                             </td>
                             <td width="17%" <cfif qGetPlacementHistory.hasHostIDChanged> class="placementMgmtChanged" </cfif> >
                                 <cfif VAL(qGetPlacementHistory.hostID)>
+                                	#qGetPlacementHistory.fatherFirstName#
+									<cfif LEN(qGetPlacementHistory.fatherFirstName) AND LEN(qGetPlacementHistory.motherFirstName)>
+                                        &
+                                    </cfif>
+                                    #qGetPlacementHistory.motherFirstName#
                                     #qGetPlacementHistory.familyLastName# (###qGetPlacementHistory.hostID#)
                                 </cfif>
                             </td>
