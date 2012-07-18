@@ -121,7 +121,7 @@
        		smg_programhistory
 		(
         	studentID, 
-            programID, 
+            programID,
             reason, 
             changedby,  
             date

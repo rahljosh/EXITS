@@ -20,23 +20,68 @@
 .normRegistrationHeader { BACKGROUND-IMAGE: url(pics/norm-backimage.gif); BACKGROUND-REPEAT: repeat-x }
 .redLine { BACKGROUND-POSITION: left 50%; BACKGROUND-IMAGE: url(pics/orange_gradiant.gif); BACKGROUND-REPEAT: repeat-x; BACKGROUND-COLOR: #ff7e0d }
 </style>
+
 </head>
 
 <body>
 	
 <cfquery name="userinfo" datasource="mysql">
-	SELECT u.firstname, u.lastname, u.username, u.city, u.state, u.zip, u.country, u.dob,
-		u.email, u.userid, u.usertype, u.address, u.address2,  u.password, smg_countrylist.countryname, smg_states.state as st,
-	 	u.lastchange,u.lastLogin, u.datecreated, u.occupation, u.businessname, u.emergency_phone,u.emergency_contact,
-		u.phone, u.phone_ext, u.cell_phone, u.work_phone, u.work_ext, u.fax, u.whocreated, 
-		u.billing_company, u.billing_contact, u.billing_address, 
-		u.php_contact_name, u.php_contact_phone, u.php_contact_email,
-		u.billing_address2, u.billing_city, u.active, u.billing_country, u.billing_zip, u.billing_phone, u.billing_fax, 
-		u.billing_email, php_billing_email
-	FROM smg_users u
-	LEFT JOIN smg_countrylist ON smg_countrylist.countryid = u.country  
-	LEFT JOIN smg_states ON smg_states.id = u.state  
-	WHERE userid = '#url.id#'
+	SELECT 
+    	u.firstname, 
+        u.lastname, 
+        u.username, 
+        u.city, 
+        u.state, 
+        u.zip, 
+        u.country, 
+        u.dob,
+		u.email, 
+        u.userid, 
+        u.usertype, 
+        u.address, 
+        u.address2,  
+        u.password, 
+        smg_countrylist.countryname, 
+        smg_states.state as st,
+	 	u.lastchange,
+        u.lastLogin, 
+        u.datecreated, 
+        u.occupation, 
+        u.businessname, 
+        u.emergency_phone,
+        u.emergency_contact,
+		u.phone, 
+        u.phone_ext, 
+        u.cell_phone, 
+        u.work_phone, 
+        u.work_ext, 
+        u.fax, 
+        u.whocreated, 
+		u.billing_company, 
+        u.billing_contact, 
+        u.billing_address, 
+		u.php_contact_name, 
+        u.php_contact_phone, 
+        u.php_contact_email,
+		u.billing_address2, 
+        u.billing_city, 
+        u.active, 
+        u.billing_country, 
+        u.billing_zip, 
+        u.billing_phone, 
+        u.billing_fax, 
+		u.billing_email, 
+        php_billing_email,
+        u.php_payRep,
+        u.php_repRate
+	FROM 
+    	smg_users u
+	LEFT JOIN 
+    	smg_countrylist ON smg_countrylist.countryid = u.country  
+	LEFT JOIN 
+    	smg_states ON smg_states.id = u.state  
+	WHERE 
+    	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.id#">
 </cfquery>
 
 <cfquery name="get_countrylist" datasource="MySql">
@@ -339,6 +384,53 @@
 				</tr>
 			</table>
 			<!--- End of Address details --->
+            
+            <cfif (CLIENT.userType EQ 1) OR (ListFind("7630,17427",CLIENT.userID)) OR (APPLICATION.isServerLocal AND CLIENT.userID EQ 17306)>
+				<!--- Payment details --->
+                <table cellspacing="0" cellpadding="3" width="100%" border="0">
+                    <tr>
+                        <td class="groupTopLeft">&nbsp;</td>
+                        <td class="groupCaption" nowrap="true">Payment Details</td>
+                        <td class="groupTop" width="95%">&nbsp;</td>
+                        <td class="groupTopRight">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="groupLeft">&nbsp;</td>
+                        <td colspan="2">
+                            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                <tr>
+                                    <td>
+                                        <TABLE cellSpacing="0" cellPadding="0" width="100%" border="0">
+                                            <!--- Does PHP Pay --->
+                                            <tr vAlign="middle" height="30">
+                                                <td><span id="lblTitle" class="normalLabel">PHP Pays Representative:</span>&nbsp;</td>
+                                                <td id="input">
+                                                    <input type="radio" name="php_payRep" value="1" <cfif userinfo.php_payRep EQ 1>checked="checked"</cfif> />Yes
+                                                    <input type="radio" name="php_payRep" value="0" onclick="$('##php_repRate').val('0.00');" <cfif userinfo.php_payRep EQ 0>checked="checked"</cfif> />No
+                                                </td>
+                                                <td height="1" colspan="2"><IMG height=1 src="spacer.gif" width=20></td>
+                                            </tr>
+                                            <!--- Representative Rate --->
+                                            <tr vAlign="middle" height="30">
+                                                <TD id="label"><span id="lblTitle" class="normalLabel">Representative Monthly Rate:</span></TD>
+                                                <TD id="input"><input name="php_repRate" type="text" maxlength="150" id="php_repRate" value="#userinfo.php_repRate#"></TD>
+                                                <TD width="20"><IMG height=1 src="spacer.gif" width=20></TD>
+                                                <TD class="helpmsg"><IMG height=1 src="spacer.gif"></TD>
+                                            </TR>
+                                        </TABLE>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td class="groupRight">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="groupBottomLeft"><img height=5 src='spacer.gif' width=1 ></td><td class="groupBottom" colspan="2"><img height=1 src='spacer.gif' width=1 ></td><td class="groupBottomRight"><img height=1 src='spacer.gif' width=1 ></td>
+                    </tr>
+                </table>
+                <!--- End of Payment details --->
+         	</cfif>
+            
 			<!--- Account Details --->
 			<table cellspacing="0" cellpadding="3" width="100%" border="0">
 				<tr>
@@ -401,7 +493,7 @@
 											</TD>
 											<TD><IMG height=1 src="spacer.gif" width=1></TD>
 										</TR>
-										<!----Confirm Passoword---->
+										<!----Confirm Password---->
 										<TR vAlign="middle" height="30">
 											<TD align="center"><LABEL id="lblConfirmPwdInd" class="reqField">*</LABEL></TD>
 											<TD><span id="lblConfirmPwd" class="normalLabel">Confirm password:</span></TD>

@@ -62,70 +62,74 @@
 	
 </script>
 
-<cfoutput>
+<cfif (CLIENT.userType EQ 1) OR (ListFind("7630,17427",CLIENT.userID)) OR (APPLICATION.isServerLocal AND CLIENT.userID EQ 17306)>
 
-	<form name="schoolHostFamilyRates" id="schoolHostFamilyRates" method="post">
-    	<input type="hidden" name="submitted" value="1" />
-
-        <table width="98%" align="center" cellpadding="2" bgcolor="##e9ecf1" border=0 cellpadding=0 cellspacing=0>
-            <tr>
-                <th>&nbsp;</th>
-            </tr>
-            <tr>
-                <th width="25%"></th>
-                <th width="50%" style="font-size:14px;">School Host Family Rates<span style="font-size:12px;"> - #qGetSchools.recordCount# Schools</span></th>
-                <th width="25%" align="center"><input type="image" src="pics/submit.gif" onClick="storeRates(); return false;" /></th>
-            </tr>
-            <tr>
-                <th>&nbsp;</th>
-            </tr>
-        </table>
-        
-        <table width="98%" align="center" cellpadding="2" bgcolor="##e9ecf1" border=0 cellpadding=0 cellspacing=0>
-                    
-            <tr>
-                <th background="images/back_menu2.gif" align="left" width="5%"><a href="?curdoc=tools/schoolHostFamilyRates&order=schoolID">ID</a></th>
-                <th background="images/back_menu2.gif" align="left" width="20%"><a href="?curdoc=tools/schoolHostFamilyRates&order=schoolName">School Name</a></th>
-                <th background="images/back_menu2.gif" align="left" width="15%"><a href="?curdoc=tools/schoolHostFamilyRates&order=address">Address</a></th>
-                <th background="images/back_menu2.gif" align="left" width="10%"><a href="?curdoc=tools/schoolHostFamilyRates&order=city">City</a></th>
-                <th background="images/back_menu2.gif" align="left" width="25%"><a href="?curdoc=tools/schoolHostFamilyRates&order=stateName">State</a></th>
-                <th background="images/back_menu2.gif" align="center" width="15%">Monthly Rate</th>
-                <th background="images/back_menu2.gif" align="center" width="10%">Does PHP Pay</th>
-            </tr>
-            
-            <cfloop query="qGetSchools">
-            
-                <tr bgcolor="#iif(currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
-                    <td class="style1"><a href="?curdoc=forms/view_school&sc=#schoolID#">#schoolID#</a></td>
-                    <td class="style1"><a href="?curdoc=forms/view_school&sc=#schoolID#">#schoolName#</a></td>
-                    <td class="style1">#address#</td>
-                    <td class="style1">#city#</td>
-                    <td class="style1">#stateName#</td>
-                    <td class="style1" align="center">
-                        <input type="hidden" name="val_#schoolID#" id="val_#schoolID#" class="value" value="#hostFamilyRate#" />
-                        <span id="visible_#schoolID#" <cfif NOT VAL(qGetSchools.payHost)>style="display:none;"</cfif>>
-                            <input type="text" name="Xval_#schoolID#" id="Xval_#schoolID#" class="value" value="#hostFamilyRate#" style="height:15px; width:100px; text-align:right;" onchange="updateHidden(this);" />
-                        </span>
-                  	</td>
-                    <td class="style1" align="center">
-                    	<select name="pay_#schoolID#" id="pay_#schoolID#" class="pay" onchange="displayRate(this);">
-                        	<option value="0"<cfif NOT VAL(qGetSchools.payHost)>selected="selected"</cfif>>No</option>
-                            <option value="1"<cfif VAL(qGetSchools.payHost)>selected="selected"</cfif>>Yes</option>
-                      	</select>
-                 	</td>
-                </tr>
-            
-            </cfloop>
-            
-            <cfset lastRow = #qGetSchools.recordCount# + 1>
-            
-            <tr bgcolor="#iif(lastRow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
-                <td class="style1" colspan="5"></td>
-                <td class="style1" align="center"><input type="image" src="pics/submit.gif" onClick="storeRates(); return false;"/></td>
-            </tr>
-            
-        </table>
-        
-  	</form>
-    
-</cfoutput>
+	<cfoutput>
+	
+		<form name="schoolHostFamilyRates" id="schoolHostFamilyRates" method="post">
+			<input type="hidden" name="submitted" value="1" />
+	
+			<table width="98%" align="center" cellpadding="2" bgcolor="##e9ecf1" border=0 cellpadding=0 cellspacing=0>
+				<tr>
+					<th>&nbsp;</th>
+				</tr>
+				<tr>
+					<th width="25%"></th>
+					<th width="50%" style="font-size:14px;">School Host Family Rates<span style="font-size:12px;"> - #qGetSchools.recordCount# Schools</span></th>
+					<th width="25%" align="center"><input type="image" src="pics/submit.gif" onClick="storeRates(); return false;" /></th>
+				</tr>
+				<tr>
+					<th>&nbsp;</th>
+				</tr>
+			</table>
+			
+			<table width="98%" align="center" cellpadding="2" bgcolor="##e9ecf1" border=0 cellpadding=0 cellspacing=0>
+						
+				<tr>
+					<th background="images/back_menu2.gif" align="left" width="5%"><a href="?curdoc=tools/schoolHostFamilyRates&order=schoolID">ID</a></th>
+					<th background="images/back_menu2.gif" align="left" width="20%"><a href="?curdoc=tools/schoolHostFamilyRates&order=schoolName">School Name</a></th>
+					<th background="images/back_menu2.gif" align="left" width="15%"><a href="?curdoc=tools/schoolHostFamilyRates&order=address">Address</a></th>
+					<th background="images/back_menu2.gif" align="left" width="10%"><a href="?curdoc=tools/schoolHostFamilyRates&order=city">City</a></th>
+					<th background="images/back_menu2.gif" align="left" width="25%"><a href="?curdoc=tools/schoolHostFamilyRates&order=stateName">State</a></th>
+					<th background="images/back_menu2.gif" align="center" width="15%">Monthly Rate</th>
+					<th background="images/back_menu2.gif" align="center" width="10%">Does PHP Pay</th>
+				</tr>
+				
+				<cfloop query="qGetSchools">
+				
+					<tr bgcolor="#iif(currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
+						<td class="style1"><a href="?curdoc=forms/view_school&sc=#schoolID#">#schoolID#</a></td>
+						<td class="style1"><a href="?curdoc=forms/view_school&sc=#schoolID#">#schoolName#</a></td>
+						<td class="style1">#address#</td>
+						<td class="style1">#city#</td>
+						<td class="style1">#stateName#</td>
+						<td class="style1" align="center">
+							<input type="hidden" name="val_#schoolID#" id="val_#schoolID#" class="value" value="#hostFamilyRate#" />
+							<span id="visible_#schoolID#" <cfif NOT VAL(qGetSchools.payHost)>style="display:none;"</cfif>>
+								<input type="text" name="Xval_#schoolID#" id="Xval_#schoolID#" class="value" value="#hostFamilyRate#" style="height:15px; width:100px; text-align:right;" onchange="updateHidden(this);" />
+							</span>
+						</td>
+						<td class="style1" align="center">
+							<select name="pay_#schoolID#" id="pay_#schoolID#" class="pay" onchange="displayRate(this);">
+								<option value="0"<cfif NOT VAL(qGetSchools.payHost)>selected="selected"</cfif>>No</option>
+								<option value="1"<cfif VAL(qGetSchools.payHost)>selected="selected"</cfif>>Yes</option>
+							</select>
+						</td>
+					</tr>
+				
+				</cfloop>
+				
+				<cfset lastRow = #qGetSchools.recordCount# + 1>
+				
+				<tr bgcolor="#iif(lastRow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
+					<td class="style1" colspan="5"></td>
+					<td class="style1" align="center"><input type="image" src="pics/submit.gif" onClick="storeRates(); return false;"/></td>
+				</tr>
+				
+			</table>
+			
+		</form>
+		
+	</cfoutput>
+	
+</cfif>
