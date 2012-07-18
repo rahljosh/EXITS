@@ -27,68 +27,68 @@
 		vAllowedDivisionChangeList = "8731,8743,12313,12431,16718,12389";  // Bill, Bob, Brian Hause, Gary, Tal and Merri	
 		
 		// Get Student Information 
-		qGetStudentInfo = AppCFC.STUDENT.getStudentByID(studentID=studentID); 
+		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=VAL(studentID)); 
 
 		// Get Super Rep
-		qGetSuperRep = APPCFC.USER.getUserByID(userID=VAL(qGetStudentInfo.arearepid));
+		qGetSuperRep = APPLICATION.CFC.USER.getUserByID(userID=VAL(qGetStudentInfo.arearepid));
 
 		// Get Place Rep
-		qGetPlaceRep = APPCFC.USER.getUserByID(userID=VAL(qGetStudentInfo.placerepid));
+		qGetPlaceRep = APPLICATION.CFC.USER.getUserByID(userID=VAL(qGetStudentInfo.placerepid));
 
 		// Get Super Rep
-		qEnteredBy = APPCFC.USER.getUserByID(userID=VAL(qGetStudentInfo.entered_by));
+		qEnteredBy = APPLICATION.CFC.USER.getUserByID(userID=VAL(qGetStudentInfo.entered_by));
 		
 		// Get 2nd Visit Rep
-		qGet2ndVisitRep = APPCFC.USER.getUserByID(userID=VAL(qGetStudentInfo.secondVisitRepID));
+		qGet2ndVisitRep = APPLICATION.CFC.USER.getUserByID(userID=VAL(qGetStudentInfo.secondVisitRepID));
 		
 		// Get Student Company Assigned
-		qAssignedCompany = AppCFC.COMPANY.getCompanyByID(companyID=qGetStudentInfo.companyID);
+		qAssignedCompany = APPLICATION.CFC.COMPANY.getCompanyByID(companyID=qGetStudentInfo.companyID);
 
 		// Get Student Region Assigned
-		qRegionAssigned = AppCFC.REGION.getRegions(regionID=qGetStudentInfo.regionAssigned);
+		qRegionAssigned = APPLICATION.CFC.REGION.getRegions(regionID=qGetStudentInfo.regionAssigned);
 		
 		// Insurance Information
-		qInsuranceHistory = AppCFC.INSURANCE.getInsuranceHistoryByStudent(studentID=qGetStudentInfo.studentID, type='N,R,EX,X');
+		qInsuranceHistory = APPLICATION.CFC.INSURANCE.getInsuranceHistoryByStudent(studentID=qGetStudentInfo.studentID, type='N,R,EX,X');
 		
 		// Get Private Schools Prices
-		qPrivateSchools = APPCFC.SCHOOL.getPrivateSchools();
+		qPrivateSchools = APPLICATION.CFC.SCHOOL.getPrivateSchools();
 		
 		// Get IFF Schools
-		qIFFSchools = APPCFC.SCHOOL.getIFFSchools();
+		qIFFSchools = APPLICATION.CFC.SCHOOL.getIFFSchools();
 		
 		// Get AYP English Camps
-		qAYPEnglishCamps = APPCFC.SCHOOL.getAYPCamps(campType='english');
+		qAYPEnglishCamps = APPLICATION.CFC.SCHOOL.getAYPCamps(campType='english');
 
 		// Get AYP Orientation Camps
-		qAYPOrientationCamps = APPCFC.SCHOOL.getAYPCamps(campType='orientation');
+		qAYPOrientationCamps = APPLICATION.CFC.SCHOOL.getAYPCamps(campType='orientation');
 
 		// Get Intl. Rep List
-		qIntRepsList = APPCFC.USER.getUsers(usertype=8);
+		qIntRepsList = APPLICATION.CFC.USER.getUsers(usertype=8);
 
 		// Check User Compliance Access
-		qUserCompliance = APPCFC.USER.getUserByID(userID=CLIENT.userid);
+		qUserCompliance = APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userid);
 
 		// Get Company Information
-		qCompanyShort = AppCFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
+		qCompanyShort = APPLICATION.CFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
 		
 		// Get a list of regions for this companyID
-		qRegions = AppCFC.REGION.getRegions(companyID=CLIENT.companyID);
+		qRegions = APPLICATION.CFC.REGION.getRegions(companyID=CLIENT.companyID);
 		
 		// Get Available teams
-		qAvailableTeams = AppCFC.COMPANY.getCompanies(website=CLIENT.company_submitting);
+		qAvailableTeams = APPLICATION.CFC.COMPANY.getCompanies(website=CLIENT.company_submitting);
 
 		// Virtual Folder Directory
 		virtualDirectory = "#AppPath.onlineApp.virtualFolder##qGetStudentInfo.studentID#";
 		
 		// Get Facilitator for this Region
-		qFacilitator = APPCFC.USER.getUserByID(userID=VAL(qRegionAssigned.regionfacilitator));
+		qFacilitator = APPLICATION.CFC.USER.getUserByID(userID=VAL(qRegionAssigned.regionfacilitator));
 		//Get available programs
 		if ( CLIENT.companyid eq 13 OR client.companyid eq 14){
-			qGetActivePrograms = APPCFC.PROGRAM.getPrograms(companyid=client.companyid,isActive=1);
+			qGetActivePrograms = APPLICATION.CFC.PROGRAM.getPrograms(companyid=client.companyid,isActive=1);
 		}
 		else
 			{
-			qGetActivePrograms = APPCFC.PROGRAM.getPrograms(isActive=1);
+			qGetActivePrograms = APPLICATION.CFC.PROGRAM.getPrograms(isActive=1);
 		}
 			
 			
@@ -123,7 +123,7 @@
     <cfquery name="qGetActivePrograms" datasource="#APPLICATION.DSN#">
         SELECT 
         	programname, 
-            programid, 
+            programID, 
             enddate,
             seasonID
         FROM 
@@ -135,7 +135,7 @@
         AND 
         	enddate > #currentDate#
         OR
-        	programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.programid#">
+        	programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.programID#">
         ORDER BY
         	programname
     </cfquery>
@@ -146,7 +146,7 @@
         FROM 
         	qGetActivePrograms
         WHERE 
-			programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.programid#">
+			programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.programID)#">
     </cfquery>
   
     <!----Ins. Policy Code---->
@@ -182,12 +182,12 @@
     <cfquery name="qCheckForExpiredProgram" datasource="#APPLICATION.DSN#">
         SELECT 
         	smg_students.studentID, 
-            smg_students.programid, 
+            smg_students.programID, 
             smg_programs.programname
         FROM 
         	smg_programs 
         INNER JOIN 
-        	smg_students ON smg_programs.programid = smg_students.programid
+        	smg_students ON smg_programs.programID = smg_students.programID
         WHERE 
         	smg_programs.enddate <= #currentDate# 
         AND 
@@ -439,7 +439,7 @@
 
 <cfoutput query="qGetStudentInfo">
 
-<cfform name="studentForm" method="post" action="querys/update_student_info.cfm" onSubmit="return formValidation(#qGetStudentInfo.regionassigned#, #qGetStudentInfo.programid#);">
+<cfform name="studentForm" method="post" action="querys/update_student_info.cfm" onSubmit="return formValidation(#qGetStudentInfo.regionassigned#, #qGetStudentInfo.programID#);">
 <input type="hidden" name="studentID" value="#qGetStudentInfo.studentID#">
 
 <div class="section"><br />
@@ -661,12 +661,12 @@
 					<td>		
 						<cfif qCheckForExpiredProgram.recordcount EQ 1>
 							#qCheckForExpiredProgram.programname#
-							<input type="hidden" name="program" value="#qCheckForExpiredProgram.programid#">
+							<input type="hidden" name="program" value="#qCheckForExpiredProgram.programID#">
 						<cfelse>
 							<select name="program" id="program" onchange="displayProgramReason(#qGetStudentInfo.programID#, this.value);" <cfif FORM.edit EQ 'no'>disabled</cfif>>
                                 <option value="0">Unassigned</option>
                                 <cfloop query="qGetActivePrograms">
-                                	<option value="#programid#" <cfif qGetStudentInfo.programid EQ programid> selected </cfif>>#programname#</option>
+                                	<option value="#programID#" <cfif qGetStudentInfo.programID EQ programID> selected </cfif>>#programname#</option>
                                 </cfloop>
                             </select>
 						</cfif>
