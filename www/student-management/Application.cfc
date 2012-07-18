@@ -249,81 +249,98 @@
 
         <!--- Production - Email Error Message - Display HTML Error --->
  		<cfif NOT APPLICATION.isServerLocal>
-			
-            <cfscript>
-				// Set Error ID
-				if ( VAL(CLIENT.userID) ) {
-					vErrorID = "#CLIENT.userID#-#dateformat(now(),'mm-dd-yyyy')#-#timeformat(now(),'hh-mm-ss')#";
-					vLoggedInName = "<p>User: #CLIENT.name# (###CLIENT.userID#)</p>";
-				} else if ( VAL(CLIENT.studentID) ) {
-					vErrorID = "#CLIENT.studentID#-#dateformat(now(),'mm-dd-yyyy')#-#timeformat(now(),'hh-mm-ss')#";
-					vLoggedInName = "<p>Student: #CLIENT.name# (###CLIENT.studentID#)</p>";
-				} else {
-					vErrorID = "00-#dateformat(now(),'mm-dd-yyyy')#-#timeformat(now(),'hh-mm-ss')#";
-					vLoggedInName = "<p>unknown</p>";
-				}
-			</cfscript>
+
+			<cfscript>
+                // Current Path to root errorMessage.cfm file
+                vPath = "";
+                
+                // Set List Path (C:\Websites\www\student-management\nsmg\student_app\index.cfm)
+                vListPath = CF_TEMPLATE_PATH;
+                
+                // Get Root Position
+                vListRootAt = ListFindNoCase(vListPath, "nsmg", "\");
+                
+                // Calculate How Many levels we are far from the root | last element is the page itself, do not count it.
+                vTotalExtraLevels = (ListLen(vListPath, "\") - 1) - vListRootAt;
+                
+                // Add Extra Root levels
+                For ( i=1;i LTE vTotalExtraLevels; i=i+1) {
+                    vPath = vPath & "../";	
+                }
+                
+                // Redirect to error page
+                location ("#vPath#errorMessage.cfm", "no");
+            </cfscript>
+
+            <cftry>
+
+				<cfscript>
+                    // Set Error ID
+                    if ( VAL(CLIENT.userID) ) {
+                        vErrorID = "#CLIENT.userID#-#dateformat(now(),'mm-dd-yyyy')#-#timeformat(now(),'hh-mm-ss')#";
+                        vLoggedInName = "<p>User: #CLIENT.name# (###CLIENT.userID#)</p>";
+                    } else if ( VAL(CLIENT.studentID) ) {
+                        vErrorID = "#CLIENT.studentID#-#dateformat(now(),'mm-dd-yyyy')#-#timeformat(now(),'hh-mm-ss')#";
+                        vLoggedInName = "<p>Student: #CLIENT.name# (###CLIENT.studentID#)</p>";
+                    } else {
+                        vErrorID = "00-#dateformat(now(),'mm-dd-yyyy')#-#timeformat(now(),'hh-mm-ss')#";
+                        vLoggedInName = "<p>unknown</p>";
+                    }
+                </cfscript>
             
-            <!--- Email Error Message | Send out emails using Gmail --->
-            <cfmail 
-            	to="#APPLICATION.EMAIL.Errors#"
-                from="#APPLICATION.EMAIL.Errors# (EXITS Errors)" 
-                subject="Error Notification - ID: #vErrorID#" 
-                type="HTML" 
-                port="587"
-                useTLS="yes"
-                server="smtp.gmail.com"
-                username="errors@student-management.com"
-                password="errors123">
-                    <p>An error occurred on #DateFormat( Now(), "mmm d, yyyy" )# at #TimeFormat( Now(), "hh:mm TT" )#</p>
-                    
-                    <p>Error ID = #vErrorID#</p>
-                    
-                    #vLoggedInName#
-    
-                    <p>Error Event: #ARGUMENTS.EventName#</p>
-                    
-                    <h3>Error details:</h3>
-                    <p><cfdump var="#ARGUMENTS.Exception#"></p>
-                    
-                    <h3>SESSION:</h3>
-                    <p><cfdump var="#SESSION#"></p>
-                    
-                    <h3>FORM:</h3>
-                    <p><cfdump var="#FORM#"></p>
-                    
-                    <h3>URL:</h3>
-                    <p><cfdump var="#URL#"></p>
-                    
-                    <!---
-					<h3>CGI:</h3>
-					<p><cfdump var="#CGI#"></p>
-					--->
-            </cfmail>
+				<!--- Email Error Message | Send out emails using Gmail --->
+                <cfmail 
+                    to="#APPLICATION.EMAIL.Errors#"
+                    from="#APPLICATION.EMAIL.Errors# (EXITS Errors)" 
+                    subject="Error Notification - ID: #vErrorID#" 
+                    type="HTML" 
+                    port="587"
+                    useTLS="yes"
+                    server="smtp.gmail.com"
+                    username="errors@student-management.com"
+                    password="errors123">
+                        <p>An error occurred on #DateFormat( Now(), "mmm d, yyyy" )# at #TimeFormat( Now(), "hh:mm TT" )#</p>
+                        
+                        <p>Error ID = #vErrorID#</p>
+                        
+                        #vLoggedInName#
+        
+                        <p>Error Event: #ARGUMENTS.EventName#</p>
+                        
+                        <h3>Error details:</h3>
+                        <p><cfdump var="#ARGUMENTS.Exception#"></p>
+                        
+                        <h3>SESSION:</h3>
+                        <p><cfdump var="#SESSION#"></p>
+                        
+                        <h3>FORM:</h3>
+                        <p><cfdump var="#FORM#"></p>
+                        
+                        <h3>URL:</h3>
+                        <p><cfdump var="#URL#"></p>
+                        
+						<!---
+						<h3>CGI:</h3>
+						<p><cfdump var="#CGI#"></p>
+						--->
+                </cfmail>
             
-            <cfscript>
-				GetPageContext().GetOut().ClearBuffer();
-			
-				// Current Path to root errorMessage.cfm file
-				vPath = "";
+				<cfscript>
+                    GetPageContext().GetOut().ClearBuffer();
+                
+                    // Redirect to error page
+                    location ("#vPath#errorMessage.cfm", "no");
+                </cfscript>
 				
-				// Set List Path (C:\Websites\www\student-management\nsmg\student_app\index.cfm)
-				vListPath = CF_TEMPLATE_PATH;
-				
-				// Get Root Position
-				vListRootAt = ListFindNoCase(vListPath, "nsmg", "\");
-				
-				// Calculate How Many levels we are far from the root | last element is the page itself, do not count it.
-				vTotalExtraLevels = (ListLen(vListPath, "\") - 1) - vListRootAt;
-				
-				// Add Extra Root levels
-				For ( i=1;i LTE vTotalExtraLevels; i=i+1) {
-					vPath = vPath & "../";	
-				}
-				
-				// Redirect to error page
-				location ("#vPath#errorMessage.cfm", "no");
-			</cfscript>
+                <!--- Could not send email --->
+                <cfcatch type="any">
+                    <cfscript>
+    	                // Redirect to error page
+	                    location ("#vPath#errorMessage.cfm", "no");
+                    </cfscript>
+                </cfcatch>
+
+			</cftry>            
             
         <cfelse>
 			
