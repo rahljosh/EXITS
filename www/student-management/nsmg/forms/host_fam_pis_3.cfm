@@ -1,41 +1,108 @@
 <script>
-function areYouSurePet() { 
-   if(confirm("You are about to delete the pet selected. You will not be able to recover this information. Click OK to continue")) { 
-     form.submit(); 
-        return true; 
-   } else { 
-        return false; 
-   } 
-} 
+
+	$(document).ready(function() {
+		$("#addPetRowButton").css('cursor','pointer');					   
+	});
+
+	function areYouSurePet() { 
+		if(confirm("You are about to delete the pet selected. You will not be able to recover this information. Click OK to continue")) { 
+			form.submit(); 
+			return true; 
+	   	} else { 
+			return false; 
+	   	} 
+	}
+	
+	function addPetRow(currentRow) {
+		var numberPets = $("#numberPets").val();
+		numberPets++;
+		$("#numberPets").val(numberPets);
+		var newRow = "<tr><td width='15%'><input type='hidden' name='animalID"+numberPets+"' value='0'>";
+		newRow += "<input type='text' name='animal"+numberPets+"' id='animal"+numberPets+"' size='10' onChange='updateNumber("+numberPets+")' /></td>";
+		newRow += "<td width='30%'><input type='radio' name='indoor"+numberPets+"' value='indoor'> Indoor </input>";
+		newRow += "<input type='radio' name='indoor"+numberPets+"' value='outdoor'> Outdoor </input>";
+		newRow += "<input type='radio' name='indoor"+numberPets+"' value='both'> Both </input></td>";
+		newRow += "<td><select name='number_pets"+numberPets+"' id='number_pets"+numberPets+"'><option id='zeroOption"+numberPets+"' value='0' selected='selected'></option>";
+		for (var x=1; x<11; x++) {
+			newRow += "<option value='"+x+"'>"+x+"</option>";	
+		}
+		newRow += "<option value='11'>10+</option></select></td></tr>";
+		$("#petTable").append(newRow);
+	}
+	
+	function updateNumber(i) {
+		if($("#animal"+i).val() == '') {
+			var html = $("#number_pets"+i).html();
+			$("#number_pets"+i).html("<option id='zeroOption"+i+"' value='0' selected='selected'></option>"+html);
+		} else {
+			$("#zeroOption"+i).remove();
+		}
+	}
+	
+	function validateForm() {
+		var errors = 0;
+		for (var i=1; i<=$("#numberPets").val(); i++) {
+			var name = 'indoor' + i;
+			if ( $("input[name="+name+"]:checked").length == 0 && $("#animal"+i).val() != "" ) {
+				errors++;
+			}
+		}
+		if (errors) {
+			 alert("Please choose where the pets are kept.");
+		} else {
+			$("#mainForm").submit();
+		}
+	}
+	
 </script>
 
 <cfquery name="get_host_religion" datasource="MySQL">
-select religion, religious_participation
-from smg_hosts
-where hostid = #client.hostid#
+	SELECT
+    	religion, 
+        religious_participation
+	FROM
+    	smg_hosts
+    WHERE
+        hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">
 </cfquery>
 
 <cfquery name="get_pets" datasource="MySQL">
-select *
-from smg_host_animals 
-where hostid = #client.hostid#
+	SELECT
+    	*
+	FROM
+    	smg_host_animals 
+	WHERE
+    	hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">
 </cfquery>
 
 <cfquery name="check_placed" datasource="MySQL">
-select studentid from smg_students
-where hostid = #client.hostid# and active = 1
+	SELECT
+    	studentID
+ 	FROM
+    	smg_students
+  	WHERE
+    	hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">
+  	AND
+    	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
 </cfquery>
 
 <cfquery name="get_kids" datasource="MySQL">
-select childid, name, shared
-from smg_host_children
-where hostid = #client.hostid#
-AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+	SELECT
+    	childid,
+        name,
+        shared
+	FROM
+    	smg_host_children
+	WHERE
+    	hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">
+  	AND
+    	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 </cfquery>
 
 <cfinclude template="../querys/family_info.cfm">
-<cfform action="querys/insert_pis_3.cfm" method="post">
+<cfform id="mainForm" action="querys/insert_pis_3.cfm" method="post">
 <cfoutput>
+	<input type="hidden" name="numberPets" id="numberPets" value="#get_pets.recordCount#" />
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
 	<tr valign=middle height=24>
 		<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
@@ -47,82 +114,122 @@ AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 </table>
 
 <table width="100%" border=0 cellpadding=4 cellspacing=0 class="section">
-<tr><td width="80%">
-		<table border=0 cellpadding=4 cellspacing=0 align="left">
-			<tr><td colspan="3">
-			<cfif get_kids.recordcount is 0> <!--- host family kids --->
-				<div class="get_Attention">Since you don't have any kids or other family memebers living at home, it is assumend the student will not be sharing a room.  If this is wrong, 
-											you will need to go to <a href="index.cfm?curdoc=forms/host_fam_mem_form&hostid=#client.hostid#&add=1">add a family member</a></div>
-			<cfelse> <!--- host family kids --->
-				<div class="get_Attention">The student may share a bedroom with one of the same sex and within a reasonable age difference, but must have his/her own bed.</div>
-			</cfif> <!--- host family kids --->
-			</td></tr>
-			<cfif check_placed.recordcount is 0> <!--- check placed --->
-				<cfquery name="check_share" datasource="MySQL">
-				select shared
-				from smg_host_children
-				where hostid = #client.hostid# and shared = 'yes'
-                AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-				</cfquery>
-			<tr><Td colspan="2">Will the student share a bedroom?</Td>
-				<td><cfif check_share.recordcount gt 0>
-					<cfinput type="Radio" name="share_room" value="yes" checked>Yes <cfinput type="Radio" name="share_room" value="no">No
-					<cfelse>
-					<cfinput type="Radio" name="share_room" value="yes" >Yes <cfinput type="Radio" name="share_room" value="no"checked>No
-					</cfif></td>
-			</tr>
-			<tr><td colspan="2">If so, with whom will they share the room?</td>
-				<Td><select name="kid_share"><option>
-					<cfloop query="get_kids">
-						<option value=#childid# <cfif shared is 'yes'>selected</cfif>>#name#</option>
-					</cfloop>
-					</select>
-				</td>
-			</tr>
-			<cfelse> <!--- check_placed.recordcount --->
-				<cfquery name="get_students_hosting_if_double" datasource="MySQL">
-				select studentid, firstname, familylastname from smg_students
-				where hostid = #client.hostid# and active = 1
-				</cfquery>
-				<cfset stulist =''>
-				<cfloop query="get_students_hosting_if_double">
-					<cfset stulist = ListAppend(stulist, #studentid#)>
-					<tr><td colspan="2">Will #firstname# #familylastname# share a bedroom? <input type="hidden" name="#studentid#_studentidsharing" value=#studentid#></td>
-						<td><!----Check if sharing with a host child---->
-							<Cfquery name="check_sharing" datasource="MySQL">
-							select shared, roomsharewith, childid
-							from smg_host_children
-							where roomsharewith = #studentid#
-                            AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-							</Cfquery>
-							<!----Check if sharing with a double placement---->
-							<Cfquery name="check_share_double" datasource="MySQL">
-							select double_place_share
-							from smg_students where studentid = #studentid#
-							</Cfquery>
-							<cfif check_share_double.double_place_share neq 0 or check_sharing.recordcount neq 0>
-								 <cfinput name="#studentid#_share_room" type="radio" value="yes" checked>Yes <cfinput type="Radio" name="#studentid#_share_room" value="no">No 
-							<cfelse>
-								<cfinput type="Radio" name="#studentid#_share_room" value="yes">Yes <cfinput type="Radio" name="#studentid#_share_room" value="no" checked>No
-							</cfif></td>
+	<tr>
+    	<td width="80%">
+			<table border=0 cellpadding=4 cellspacing=0 align="left">
+				<tr>
+                	<td colspan="3">
+                    	<div class="get_Attention">
+                        	<cfif get_kids.recordcount is 0>
+                            	Since you don't have any kids or other family members living at home, it is assumend the student will not be sharing a room.  If this is wrong, you will need to go to 
+                    			<a href="index.cfm?curdoc=forms/host_fam_mem_form&hostid=#client.hostid#&add=1">add a family member</a>
+                            <cfelse>
+                            	The student may share a bedroom with one of the same sex and within a reasonable age difference, but must have his/her own bed.
+                            </cfif>
+                        </div>
+					</td>
+              	</tr>
+				<cfif check_placed.recordcount is 0>
+                    <cfquery name="check_share" datasource="MySQL">
+                        SELECT
+                            *
+                        FROM
+                            smg_host_children
+                        WHERE
+                            hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">
+                        AND
+                            shared = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
+                        AND 
+                            isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                    </cfquery>
+                    <tr>
+                        <td colspan="2">Will the student share a bedroom?</td>
+                        <td>
+                            <select name="kid_share" id="kid_share">
+                                <option value="0" <cfif NOT VAL(check_share.recordCount)>selected="selected"</cfif>>No</option>
+                                <cfloop query="get_kids">
+                                    <option value='#childid#' <cfif shared is 'yes'>selected="selected"</cfif>>Yes, with #name#</option>
+                                </cfloop>
+                            </select>
+                    	</td>
 					</tr>
-					<tr><td colspan="2">If so, with whom will they share the room?</td>
-						<Td><select name="#studentid#_kid_share">
-							<option>
-							<cfloop query="get_kids">
-								<Cfif check_sharing.childid is childid><option value=#childid# selected>#name#<cfelse><option value=#childid#>#name#</cfif>
-							</cfloop>
+				<cfelse>
+                
+					<!--- check_placed.recordcount --->
+                    <cfquery name="get_students_hosting_if_double" datasource="MySQL">
+                        SELECT
+                            studentid,
+                            firstname,
+                            familylastname
+                        FROM
+                            smg_students
+                        WHERE
+                            hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">
+                        AND
+                            active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                    </cfquery>
+                    <cfquery name="check_share" datasource="MySQL">
+                        SELECT
+                            *
+                        FROM
+                            smg_host_children
+                        WHERE
+                            hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">
+                        AND
+                            shared = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
+                        AND 
+                            isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                    </cfquery>
+					<cfset stulist =''>
+					<cfloop query="get_students_hosting_if_double">
+						<cfset stulist = ListAppend(stulist, #studentid#)>
+						<tr>
+                    		<td colspan="2">
+                                Will #firstname# #familylastname# share a bedroom? 
+                                <input type="hidden" name="#studentid#_studentidsharing" value="#studentid#">
+                       		</td>
+							<td>
+								<!----Check if sharing with a host child---->
+                                <cfquery name="check_sharing" datasource="MySQL">
+                                    SELECT
+                                        shared,
+                                        roomsharewith,
+                                        childid
+                                    FROM
+                                        smg_host_children
+                                    WHERE
+                                        roomsharewith = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
+                                    AND 
+                                        isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                                </cfquery>
+								<!----Check if sharing with a double placement---->
+                                <cfquery name="check_share_double" datasource="MySQL">
+                                    SELECT
+                                        double_place_share
+                                    FROM
+                                        smg_students where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
+                                </cfquery>
+                        		<select name="#studentid#_kid_share">
+                            		<option value='no' <cfif NOT VAL(check_share.recordCount)>selected="selected"</cfif>>No</option>
+                                    <cfloop query="get_kids">
+                                    	<option value="#childID#" <cfif check_sharing.childID EQ childID>selected="selected"</cfif>>Yes, with #name#
+                                    </cfloop>
 								<cfif check_placed.recordcount gt 0>
-									<Cfquery name="check_double" datasource="MySQL">
-									select doubleplace, double_place_share
-									from smg_students
-									where studentid = #studentid#
-									</Cfquery>
+									<cfquery name="check_double" datasource="MySQL">
+										SELECT
+                                        	doubleplace, 
+                                            double_place_share
+										FROM
+                                        	smg_students
+										WHERE
+                                        	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
+									</cfquery>
 									<cfif check_double.doubleplace neq 0>
-									<option value=00 <cfif check_double.double_place_share gt 0>selected</cfif>>Double Place</option>
+										<option value=00 <cfif check_double.double_place_share gt 0>selected="selected"</cfif>>Double Place</option>
 									</cfif>
 								</cfif>
-							</select></td>
+							</select>
+                      	</td>
 					</tr>
 				</cfloop> <!--- get_students_hosting_if_double --->
 				<input type="hidden" name=stulist value=#stulist#></input>
@@ -155,44 +262,57 @@ AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 				<td align="left" colspan="3">Under what conditions?<br><textarea cols="50" rows="4" name="smoke_conditions" wrap="VIRTUAL">#family_info.smokeconditions#</textarea></td></tr>
 
 			<!--- PETS --->
-			<tr><td colspan="4">Please list any pets that you have:</td></tr>
-			<tr><Td align="center" width="15%">Type of animal</td><td align="Center" width="30%">Indoor, Outdoor, or Both</td><td>Number</td></tr>
-			<Cfif get_pets.recordcount is 0> <!--- new pets --->
-				<cfloop from="1" to="5" index="i">
-				<tr>
-					<Td><cfinput type="text" name="animal#i#" size=10></td>
-					<td align="center"><cfinput type="radio" name="indoor#i#" value="indoor"> Indoor 
-						<cfinput type="radio" name="indoor#i#" value="outdoor"> Outdoor <cfinput type="radio" name="indoor#i#" value="both">Both</td>
-					<td><select name="number_pets#i#"><option selected>
-						<cfloop from="1" to="10" index="x">
-						<option value="#x#">#x#
-						</cfloop>
-						<option value=11>10+
-						</select></td>
-				</tr>
-				</cfloop>
-			<cfelse> <!--- get_pets.recordcount --->
-			<input type="hidden" name="pets_exist">
-				<cfloop query="get_pets">
-				<tr>
-					<Td><input type="hidden" name="animal#get_pets.currentrow#" value=#animalid#><cfinput type="text" name="animaltype#get_pets.currentrow#" size=10 value="#animaltype#"></td>
-					<td><Cfif #indoor# is 'indoor'><cfinput type="radio" name="indoor#get_pets.currentrow#" value="indoor" checked> Indoor <cfinput type="radio" name="indoor#get_pets.currentrow#" value="outdoor"> Outdoor <cfinput type="radio" name="indoor#get_pets.currentrow#" value="both">Both
-						<cfelseif #indoor# is 'outdoor'><cfinput type="radio" name="indoor#get_pets.currentrow#" value="indoor"> Indoor <cfinput type="radio" name="indoor#get_pets.currentrow#" value="outdoor" checked> Outdoor <cfinput type="radio" name="indoor#get_pets.currentrow#" value="both">Both
-						<cfelseif #indoor# is 'both'><cfinput type="radio" name="indoor#get_pets.currentrow#" value="indoor"> Indoor <cfinput type="radio" name="indoor#get_pets.currentrow#" value="outdoor"> Outdoor <cfinput type="radio" name="indoor#get_pets.currentrow#" value="both" checked>Both
-						<cfelse><cfinput type="radio" name="indoor#get_pets.currentrow#" value="indoor"> Indoor <cfinput type="radio" name="indoor#get_pets.currentrow#" value="outdoor"> Outdoor <cfinput type="radio" name="indoor#get_pets.currentrow#" value="both">Both</cfif></td>
-					<td><select name="number_pets#get_pets.currentrow#"><option>		
-						<cfloop from="1" to="10" index="i">
-							<cfif #number# is #i#><option value="#i#" selected>#i#<cfelse><option value="#i#">#i#</cfif>
-						</cfloop>
-							<cfif #number# is 11><option value=11 selected>10+<cfelse><option value=11>10+</cfif>
-						</select>
-						&nbsp; &nbsp; &nbsp;
-						<a href="?curdoc=querys/delete_host_pet&petid=#animalid#" onClick="return areYouSurePet(this);"><img src="pics/deletex.gif" border="0" align="middle"></img></a>
-					</td>
-					<td align="left"></td>
-				</tr>
-				</cfloop> <!--- get_pets --->
-			</Cfif> <!--- get_pets.recordcount --->
+			<tr>
+            	<td colspan="3">Please list any pets that you have:</td>
+          	</tr>
+			<tr>
+            	<td align="center" width="15%">Type of animal</td>
+                <td align="Center" width="30%">Indoor, Outdoor, or Both</td>
+                <td>Number</td>
+          	</tr>
+            <tr>
+            	<td colspan="3">
+                	<table id="petTable" width="100%">
+                        <cfloop query="get_pets">
+                            <tr>
+                                <td width="15%">
+                                    <input type="hidden" name="animalID#get_pets.currentrow#" value='#animalid#'>
+                                    <input type="text" name="animal#get_pets.currentrow#" size=10 value="#animaltype#">
+                                </td>
+                                <td width="30%">
+                                    <input type="radio" name="indoor#get_pets.currentRow#" value="indoor" <cfif indoor EQ 'indoor'>checked="checked"</cfif> /> Indoor
+                                    <input type="radio" name="indoor#get_pets.currentRow#" value="outdoor" <cfif indoor EQ 'outdoor'>checked="checked"</cfif> /> Outdoor
+                                    <input type="radio" name="indoor#get_pets.currentRow#" value="both" <cfif indoor EQ 'both'>checked="checked"</cfif> /> Both
+                                </td>
+                                <td>
+                                    <select name="number_pets#get_pets.currentrow#">
+                                        <option id="zeroOption#get_pets.currentrow#" value="0"></option>	
+                                        <cfloop from="1" to="10" index="i">
+                                            <cfif #number# is #i#>
+                                                <option value="#i#" selected='selected'>#i#</option>
+                                            <cfelse>
+                                                <option value="#i#">#i#</option>
+                                            </cfif>
+                                        </cfloop>
+                                        <cfif #number# is 11>
+                                            <option value=11 selected='selected'>10+</option>
+                                        <cfelse>
+                                            <option value=11>10+</option>
+                                        </cfif>
+                                    </select>
+                                    &nbsp; &nbsp; &nbsp;
+                                    <a href="?curdoc=querys/delete_host_pet&petid=#animalid#" onClick="return areYouSurePet(this);"><img src="pics/deletex.gif" border="0" align="middle"></img></a>
+                                </td>
+                            </tr>
+                        </cfloop>
+                   	</table>
+               	</td>
+           	</tr>
+            <tr>
+            	<td></td>
+            	<td align="center"><img src="pics/plus.png" id="addPetRowButton" onclick="addPetRow()" /></td>
+                <td></td>
+            </tr>
 		</table>
 	</td>
 	<td width="20%" align="right" valign="top">
@@ -204,7 +324,7 @@ AND isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 </table>			
 
 <table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
-	<tr><td align="center"><input name="Submit" type="image" src="pics/next.gif" align="middle" border=0></td></tr>
+	<tr><td align="center"><img src="pics/next.gif" align="middle" border=0 onclick="validateForm()"></td></tr>
 </table>
 
 <table width=100% cellpadding=0 cellspacing=0 border=0>
