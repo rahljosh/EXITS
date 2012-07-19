@@ -10,7 +10,6 @@
 </cfquery>
 
 <cftransaction action="begin" isolation="serializable">
-<cftry>
 	
 	<cfif CLIENT.companyID EQ 14>
 
@@ -107,10 +106,5 @@
 	</script>
 	</head>
 	</html>	
-
-	<cfcatch type="any">
-		<cfinclude template="../email_error.cfm">
-	</cfcatch>
-</cftry>
 	
 </cftransaction>

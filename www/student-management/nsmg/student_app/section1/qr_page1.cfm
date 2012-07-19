@@ -1,5 +1,3 @@
-<cftry>
-
 <cfif not IsDefined('FORM.studentid')>
 	<cfinclude template="../error_message.cfm">
 	<cfabort>
@@ -129,9 +127,3 @@
 	</html>		
 		
 </cftransaction>
-
-<cfcatch type="any">
-	<cfinclude template="../email_error.cfm">
-</cfcatch> 
-</cftry>
-<!--- <cflocation url="?curdoc=section1/page1&id=1&p=1" addtoken="no"> --->

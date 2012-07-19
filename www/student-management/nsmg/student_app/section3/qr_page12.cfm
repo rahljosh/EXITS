@@ -4,7 +4,6 @@
 </cfif>
 
 <cftransaction action="begin" isolation="serializable">
-	<cftry>
 
 	<!--- UPDATE --->
 	<cfif IsDefined('form.healthid')>
@@ -88,9 +87,5 @@
 	</script>
 	</head>
 	</html>	
-	
-	<cfcatch type="any">
-		<cfinclude template="../email_error.cfm">
-	</cfcatch>
-	</cftry>
+    
 </cftransaction>

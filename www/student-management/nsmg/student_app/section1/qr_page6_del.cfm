@@ -1,7 +1,5 @@
 <cftransaction action="begin" isolation="serializable">
 
-<cftry>
-
 <cfquery name="delete_letter" datasource="mysql">
 	UPDATE smg_students
 	SET familyletter = ''
@@ -18,10 +16,5 @@ alert("You have successfully deleted the parent's letter.");
 </script>
 </head>
 </html>
-
-	<cfcatch type="any">
-		<cfinclude template="../email_error.cfm">
-	</cfcatch>
-</cftry>
 
 </cftransaction>

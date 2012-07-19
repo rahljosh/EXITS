@@ -4,7 +4,6 @@
 </cfif>
 
 <cftransaction action="begin" isolation="serializable">
-<cftry>
 	
 	<cfif IsDefined('form.region_select')>
 		<cfquery name="update_student" datasource="MySql">
@@ -34,8 +33,4 @@
 	</head>
 	</html>	
 	
-	<cfcatch type="any">
-		<cfinclude template="../email_error.cfm">
-	</cfcatch>
-</cftry>
 </cftransaction>

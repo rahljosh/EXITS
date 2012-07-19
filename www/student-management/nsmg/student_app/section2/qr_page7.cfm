@@ -4,7 +4,7 @@
 </cfif>
 
 <cftransaction action="begin" isolation="serializable">
-<cftry>
+
 	<cfquery name="update_student" datasource="MySql">
 		UPDATE smg_students
 		SET	app_school_name = <cfqueryparam value="#form.app_school_name#" cfsqltype="cf_sql_varchar">,
@@ -51,9 +51,5 @@
 	</script>
 	</head>
 	</html>	
-	
-	<cfcatch type="any">
-		<cfinclude template="../email_error.cfm">
-	</cfcatch>
-</cftry>
+    
 </cftransaction>

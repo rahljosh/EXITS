@@ -5,8 +5,6 @@
 
 <cftransaction action="begin" isolation="serializable">
 
-<cftry>
-
 	<cfset newletter = #Replace(form.letter,"#chr(10)#","<br>","all")#>
 	
 	<cfquery name="insert_typed_letter" datasource="mysql">
@@ -29,10 +27,5 @@
 	</script>
 	</head>
 	</html>
-		
-	<cfcatch type="any">
-		<cfinclude template="../email_error.cfm">
-	</cfcatch>
-</cftry>
 
 </cftransaction>

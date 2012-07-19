@@ -56,13 +56,6 @@
         <cfif IsDefined('form.have_asthma')><cfif form.have_asthma eq 1><cfset need_add_info = ListAppend(need_add_info, 'Asthma')></cfif></cfif> 
 <cfset client.need_add_info = '#need_add_info#'>
 
-
-
-
-
- 
-	<cftry>
-
 	<!--- UPDATE ROW --->
 	<cfif IsDefined('form.healthid')>
 		<cfquery name="update_questions" datasource="MySql">
@@ -156,8 +149,3 @@
 	</script>
 	</head>
 	</html>
-
-	<cfcatch type="any">
-		<cfinclude template="../email_error.cfm">
-	</cfcatch>
-	</cftry>
