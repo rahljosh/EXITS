@@ -25,7 +25,7 @@
             s.firstname, 
             s.familylastname, 
 			p.programname, 
-			h.familylastname, 
+			h.familylastname AS hostFamilyName, 
             h.fatherlastname, 
             h.motherlastname, 
             h.state,
@@ -37,10 +37,10 @@
         	smg_students s
 		INNER JOIN 
         	php_students_in_program php on php.studentid = s.studentid
-		INNER JOIN 
-        	smg_hosts h ON php.hostid = h.hostid
         INNER JOIN 
         	smg_programs p ON php.programid = p.programid
+		LEFT OUTER JOIN
+        	smg_hosts h ON php.hostid = h.hostid
 		LEFT OUTER JOIN
         	php_schools sc ON sc.schoolID = php.schoolID                   
 		WHERE
@@ -49,8 +49,6 @@
             p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND
             p.enddate > now()
-        AND
-            s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="6">
          
 		<cfif CLIENT.userType EQ 8>
             <!--- Intl Rep --->
@@ -77,7 +75,9 @@
                                     AND 
                                     	isCompleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> 
 									AND
-                                    	programID = php.programID                                        
+                                    	programID = php.programID 
+                                    AND
+                                    	assignedID = php.assignedID                                       
 								)	
         ORDER BY 
         	s.familylastname
@@ -90,7 +90,7 @@
             s.firstname, 
             s.familylastname, 
 			p.programname, 
-			h.familylastname, 
+			h.familylastname AS hostFamilyName, 
             h.fatherlastname, 
             h.motherlastname, 
             h.state,
@@ -102,10 +102,10 @@
         	smg_students s
 		INNER JOIN 
         	php_students_in_program php on php.studentid = s.studentid
-		INNER JOIN 
-        	smg_hosts h ON php.hostid = h.hostid
         INNER JOIN 
         	smg_programs p ON php.programid = p.programid
+		LEFT OUTER JOIN
+        	smg_hosts h ON php.hostid = h.hostid
 		LEFT OUTER JOIN
         	php_schools sc ON sc.schoolID = php.schoolID        
 		WHERE 
@@ -114,8 +114,6 @@
             p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND
             p.enddate > now()
-        AND
-            s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="6">
 			
 		<cfif CLIENT.userType EQ 8>
             <!--- Intl Rep --->
@@ -142,7 +140,9 @@
                                     AND 
                                     	isCompleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> 
 									AND
-                                    	programID = php.programID                                        
+                                    	programID = php.programID 
+									AND
+                                    	assignedID = php.assignedID                                                                               
 								)	
         ORDER BY 
         	s.familylastname
@@ -209,11 +209,11 @@
                                         <td>#qPHPStudentsMissingArrival.programname#</td>
                                         <td>#DateFormat(qPHPStudentsMissingArrival.dateplaced, 'mm/dd/yy')#</td>
                                         <td>
-                                            <cfif qPHPStudentsMissingArrival.fatherlastname EQ qPHPStudentsMissingArrival.motherlastname>
-                                                #qPHPStudentsMissingArrival.fatherlastname# (#qPHPStudentsMissingArrival.state#) 
+                                            <cfif LEN(qPHPStudentsMissingArrival.hostFamilyName)>
+                                                #qPHPStudentsMissingArrival.hostFamilyName# (#qPHPStudentsMissingArrival.state#) 
                                             <cfelse>
-                                                #qPHPStudentsMissingArrival.familylastname# (#qPHPStudentsMissingArrival.state#) 
-                                            </cfif>
+                                            	n/a
+											</cfif>
                                         </td>
                                         <td>#qPHPStudentsMissingDeparture.schoolName#</td>
                                         <td>n/a</td>
@@ -268,11 +268,11 @@
                                         <td>#qPHPStudentsMissingDeparture.programname#</td>
                                         <td>#DateFormat(qPHPStudentsMissingDeparture.dateplaced, 'mm/dd/yy')#</td>
                                         <td>
-                                            <cfif qPHPStudentsMissingDeparture.fatherlastname EQ qPHPStudentsMissingDeparture.motherlastname>
-                                                #qPHPStudentsMissingDeparture.fatherlastname# (#qPHPStudentsMissingDeparture.state#) 
+                                            <cfif LEN(qPHPStudentsMissingDeparture.hostFamilyName)>
+                                                #qPHPStudentsMissingDeparture.hostFamilyName# (#qPHPStudentsMissingDeparture.state#) 
                                             <cfelse>
-                                                #qPHPStudentsMissingDeparture.familylastname# (#qPHPStudentsMissingDeparture.state#) 
-                                            </cfif>
+                                            	n/a
+											</cfif>
                                         </td>
                                         <td>#qPHPStudentsMissingDeparture.schoolName#</td>
                                         <td>n/a</td>
