@@ -1,5 +1,8 @@
 <cfquery name="family_info" datasource="MySQL">
-select *
-from smg_hosts
-where hostid = #client.hostid#
+	SELECT
+    	*
+	FROM
+    	smg_hosts
+	WHERE
+    	hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.hostid)#">
 </cfquery>
