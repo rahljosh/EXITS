@@ -1,4 +1,3 @@
-<cfset CLIENT.hostID = #VAL(URL.hostID)#>
 <cfinclude template="../querys/family_info.cfm">
 
 <cfquery name="qGetHostLocation" datasource="MySQL">
