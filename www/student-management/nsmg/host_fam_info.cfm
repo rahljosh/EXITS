@@ -71,14 +71,14 @@
     <cfquery name="family_info" datasource="#application.dsn#">
         SELECT *
         FROM smg_hosts
-        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.hostID#">
+        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(url.hostID)#">
     </cfquery>
     
      <cfquery name="host_children" datasource="#application.dsn#">
         SELECT *
         FROM smg_host_children
         WHERE 
-        	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#family_info.hostID#">
+        	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.hostID)#">
         AND
         	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
         ORDER BY birthdate
@@ -95,7 +95,7 @@
         FROM smg_students
         INNER JOIN smg_programs p ON smg_students.programid = p.programid
         LEFT JOIN smg_countrylist c ON smg_students.countryresident = c.countryid
-        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#family_info.hostID#">
+        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.hostID)#">
         AND smg_students.active = 1
         ORDER BY familylastname
     </cfquery>
@@ -107,7 +107,7 @@
         INNER JOIN smg_hosthistory h ON smg_students.studentid = h.studentid
         INNER JOIN smg_programs p ON smg_students.programid = p.programid
         LEFT JOIN smg_countrylist c ON smg_students.countryresident = c.countryid
-        WHERE h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#family_info.hostID#">
+        WHERE h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.hostID)#">
         ORDER BY familylastname
     </cfquery>
     
@@ -115,14 +115,14 @@
     <cfquery name="get_region" datasource="#application.dsn#">
         SELECT regionid, regionname
         FROM smg_regions
-        WHERE regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#family_info.regionid#">
+        WHERE regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.regionid)#">
     </cfquery>
     
     <!--- SCHOOL ---->
     <cfquery name="get_school" datasource="#application.dsn#">
         SELECT schoolid, schoolname, address, city, state, begins, ends
         FROM smg_schools
-        WHERE schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#family_info.schoolid#">
+        WHERE schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.schoolid)#">
     </cfquery>
     
 	<!--- CROSS DATA - check if was submitted under a user --->
