@@ -267,23 +267,22 @@
                 For ( i=1;i LTE vTotalExtraLevels; i=i+1) {
                     vPath = vPath & "../";	
                 }
+				
+
+				// Set Error ID
+				if ( VAL(CLIENT.userID) ) {
+					vErrorID = "#CLIENT.userID#-#dateformat(now(),'mm-dd-yyyy')#-#timeformat(now(),'hh-mm-ss')#";
+					vLoggedInName = "<p>User: #CLIENT.name# (###CLIENT.userID#)</p>";
+				} else if ( VAL(CLIENT.studentID) ) {
+					vErrorID = "#CLIENT.studentID#-#dateformat(now(),'mm-dd-yyyy')#-#timeformat(now(),'hh-mm-ss')#";
+					vLoggedInName = "<p>Student: #CLIENT.name# (###CLIENT.studentID#)</p>";
+				} else {
+					vErrorID = "00-#dateformat(now(),'mm-dd-yyyy')#-#timeformat(now(),'hh-mm-ss')#";
+					vLoggedInName = "<p>unknown</p>";
+				}
             </cfscript>
 
             <cftry>
-
-				<cfscript>
-                    // Set Error ID
-                    if ( VAL(CLIENT.userID) ) {
-                        vErrorID = "#CLIENT.userID#-#dateformat(now(),'mm-dd-yyyy')#-#timeformat(now(),'hh-mm-ss')#";
-                        vLoggedInName = "<p>User: #CLIENT.name# (###CLIENT.userID#)</p>";
-                    } else if ( VAL(CLIENT.studentID) ) {
-                        vErrorID = "#CLIENT.studentID#-#dateformat(now(),'mm-dd-yyyy')#-#timeformat(now(),'hh-mm-ss')#";
-                        vLoggedInName = "<p>Student: #CLIENT.name# (###CLIENT.studentID#)</p>";
-                    } else {
-                        vErrorID = "00-#dateformat(now(),'mm-dd-yyyy')#-#timeformat(now(),'hh-mm-ss')#";
-                        vLoggedInName = "<p>unknown</p>";
-                    }
-                </cfscript>
             
 				<!--- Email Error Message | Send out emails using Gmail --->
                 <cfmail 
@@ -293,9 +292,9 @@
                     type="HTML" 
                     port="587"
                     useTLS="yes"
-                    server="#APPLICATION.SETTINGS.EMAIL.errorServer#"
-                    username="#APPLICATION.SETTINGS.EMAIL.errorUsername#"
-                    password="#APPLICATION.SETTINGS.EMAIL.errorPassword#">
+                    server="#APPLICATION.SETTINGS.EMAIL.ERRORS.server#"
+                    username="#APPLICATION.SETTINGS.EMAIL.ERRORS.username#"
+                    password="#APPLICATION.SETTINGS.EMAIL.ERRORS.password#">
                         <p>An error occurred on #DateFormat( Now(), "mmm d, yyyy" )# at #TimeFormat( Now(), "hh:mm TT" )#</p>
                         
                         <p>Error ID = #vErrorID#</p>
@@ -332,12 +331,14 @@
                     location ("#vPath#errorMessage.cfm", "no");
                 </cfscript>
 				
-                <!--- Could not send email --->
+                <!--- Could not send email for any reason --->
                 <cfcatch type="any">
+                
                     <cfscript>
     	                // Redirect to error page
 	                    location ("#vPath#errorMessage.cfm", "no");
                     </cfscript>
+                    
                 </cfcatch>
 
 			</cftry>            

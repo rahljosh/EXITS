@@ -45,12 +45,21 @@
 	APPLICATION.SETTINGS.COMPANYLIST.ESI = 14;
 	APPLICATION.SETTINGS.COMPANYLIST.All = "1,2,3,4,5,6,10,12,13,14";
 
-	// Email Settings - Use our gmail account to send out those emails
+	// Use our gmail accounts to send out some of the emails
 	APPLICATION.SETTINGS.EMAIL = StructNew();
-	APPLICATION.SETTINGS.EMAIL.errorServer = 'smtp.gmail.com';	
-	APPLICATION.SETTINGS.EMAIL.errorUsername = 'errors@student-management.com';	// 'support@student-management.com';	
-	APPLICATION.SETTINGS.EMAIL.errorPassword = 'errors123';	 // 'support123';	
-
+	
+	// Email Settings - Errors Account - Use our gmail account to send out those emails
+	APPLICATION.SETTINGS.EMAIL.ERRORS = StructNew();
+	APPLICATION.SETTINGS.EMAIL.ERRORS.server = 'smtp.gmail.com';	
+	APPLICATION.SETTINGS.EMAIL.ERRORS.username = 'errors@student-management.com';		
+	APPLICATION.SETTINGS.EMAIL.ERRORS.password = 'errors123';		
+	
+	// Email Settings - Support Account
+	APPLICATION.SETTINGS.EMAIL.SUPPORT = StructNew();
+	APPLICATION.SETTINGS.EMAIL.SUPPORT.server = 'smtp.gmail.com';	
+	APPLICATION.SETTINGS.EMAIL.SUPPORT.username = 'support@iseusa.com';		
+	APPLICATION.SETTINGS.EMAIL.SUPPORT.password = 'support123';	 
+	
 
 	/* 
 		this enables the address lookup. 
