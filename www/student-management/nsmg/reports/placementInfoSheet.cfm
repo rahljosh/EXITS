@@ -23,7 +23,7 @@
     <cfparam name="URL.historyID" default="0">
     <cfparam name="URL.printPage" default="0">
     <cfparam name="URL.closeModal" default="0">
-
+    
     <!--- Param FORM Variables --->    
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.report_mode" default="">
@@ -77,16 +77,16 @@
 		qGetAreaRep = APPLICATION.CFC.USER.getUserByID(userID=qGetPlacementHistory.areaRepID);
 		
 		// Host Family
-		qGetHostFamily = APPLICATION.CFC.HOST.getHosts(hostID=qGetPlacementHistory.hostID);
+		qGetHostFamily = APPLICATION.CFC.HOST.getHosts(hostID=VAL(qGetPlacementHistory.hostID));
 		
 		// Host Family Children
-		qGetHostChildren = APPLICATION.CFC.HOST.getHostMemberByID(hostID=qGetPlacementHistory.hostID);
+		qGetHostChildren = APPLICATION.CFC.HOST.getHostMemberByID(hostID=VAL(qGetPlacementHistory.hostID));
 		
 		// Host Family Pets
-		qGetHostPets = APPLICATION.CFC.HOST.getHostPets(hostID=qGetPlacementHistory.hostID);
+		qGetHostPets = APPLICATION.CFC.HOST.getHostPets(hostID=VAL(qGetPlacementHistory.hostID));
 		
 		// School
-		qGetSchool = APPLICATION.CFC.SCHOOL.getSchools(schoolID=qGetPlacementHistory.schoolID);
+		qGetSchool = APPLICATION.CFC.SCHOOL.getSchools(schoolID=VAL(qGetPlacementHistory.schoolID));
 						
 		// Get Host Interests
 		qGetHostInterests = APPLICATION.CFC.LOOKUPTABLES.getInterest(interestID=qGetHostFamily.interests,limit=6);
@@ -104,7 +104,7 @@
 
 		}
 	</cfscript>
-
+    
 	<!--- Update Date Placed | Update on both tables students and smg_hostHistory --->
     <cfif IsDate(FORM.NewDatePlaced)>
     	
@@ -134,7 +134,7 @@
         INNER JOIN 
         	smg_programs p ON p.seasonid = smg_school_dates.seasonid
         WHERE 
-        	schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetPlacementHistory.schoolID#">
+        	schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetPlacementHistory.schoolID)#">
         AND 
         	p.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.programid#">
     </cfquery>
@@ -862,4 +862,3 @@
 />
 
 </cfif>
-
