@@ -5,6 +5,7 @@
 	Date:		March, 30 2010
 	Desc:		Sets App-related  variables such as web address, webmaster 
 				email, company name, etc.
+				These are global variables
 
 	Updated:  	
 
@@ -23,9 +24,9 @@
 </cfquery>
 
 <cfscript>
+	// DNS
 	APPLICATION.DSN = 'MySQL';
 	
-
 	/***** Create APPLICATION.SETTINGS structure *****/
 	APPLICATION.SETTINGS = StructNew();		
 	
@@ -43,7 +44,14 @@
 	APPLICATION.SETTINGS.COMPANYLIST.Canada = 13;
 	APPLICATION.SETTINGS.COMPANYLIST.ESI = 14;
 	APPLICATION.SETTINGS.COMPANYLIST.All = "1,2,3,4,5,6,10,12,13,14";
-	
+
+	// Email Settings - Use our gmail account to send out those emails
+	APPLICATION.SETTINGS.EMAIL = StructNew();
+	APPLICATION.SETTINGS.EMAIL.errorServer = 'smtp.gmail.com';	
+	APPLICATION.SETTINGS.EMAIL.errorUsername = 'errors@student-management.com';	// 'support@student-management.com';	
+	APPLICATION.SETTINGS.EMAIL.errorPassword = 'errors123';	 // 'support123';	
+
+
 	/* 
 		this enables the address lookup. 
 		0=off, 
@@ -76,7 +84,7 @@
 	APPLICATION.EMAIL.ISESchoolNotification = 'megan@iseusa.com;support@iseusa.com';
 	APPLICATION.EMAIL.CASESchoolNotification = 'jana@case-usa.org;support@student-management.com';
 	APPLICATION.EMAIL.PHPContact = 'luke@phpusa.com';
-	
+
 	/*********************************************
 		Replace this with a SESSION.emailSupport
 	*********************************************/
