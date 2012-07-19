@@ -115,7 +115,7 @@
             UPDATE 
             	smg_host_animals
           	SET 
-            	animaltype = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.animaltype1#">,
+            	animaltype = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.animaltype1#">,
               	indoor = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.indoor1#">,
                	number = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.number_pets1#">
           	WHERE 
@@ -128,7 +128,7 @@
             UPDATE 
             	smg_host_animals
           	SET 
-            	animaltype = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.animaltype1#">,
+            	animaltype = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.animaltype1#">,
               	indoor = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.indoor1#">,
                	number = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.number_pets1#">
           	WHERE 
@@ -141,7 +141,7 @@
             UPDATE 
             	smg_host_animals
           	SET 
-            	animaltype = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.animaltype1#">,
+            	animaltype = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.animaltype1#">,
               	indoor = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.indoor1#">,
                	number = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.number_pets1#">
           	WHERE 
@@ -154,7 +154,7 @@
             UPDATE 
             	smg_host_animals
           	SET 
-            	animaltype = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.animaltype1#">,
+            	animaltype = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.animaltype1#">,
               	indoor = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.indoor1#">,
                	number = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.number_pets1#">
           	WHERE 
@@ -167,7 +167,7 @@
             UPDATE 
             	smg_host_animals
           	SET 
-            	animaltype = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.animaltype1#">,
+            	animaltype = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.animaltype1#">,
               	indoor = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.indoor1#">,
                	number = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.number_pets1#">
           	WHERE 

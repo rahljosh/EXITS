@@ -412,7 +412,7 @@
                                             </tr>
                                             <!--- Representative Rate --->
                                             <tr vAlign="middle" height="30">
-                                                <TD id="label"><span id="lblTitle" class="normalLabel">Representative Monthly Rate:</span></TD>
+                                                <TD id="label"><span id="lblTitle" class="normalLabel">Representative Rate:</span></TD>
                                                 <TD id="input"><input name="php_repRate" type="text" maxlength="150" id="php_repRate" value="#userinfo.php_repRate#"></TD>
                                                 <TD width="20"><IMG height=1 src="spacer.gif" width=20></TD>
                                                 <TD class="helpmsg"><IMG height=1 src="spacer.gif"></TD>

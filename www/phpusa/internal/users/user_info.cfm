@@ -269,12 +269,12 @@
                                                                                     <strong>PHP Pays Representative: </strong>
                                                                                     <cfif VAL(qGetUserInformation.php_payRep)>
                                                                                         Yes
+                                                                                        <br />
+                                                                                        <strong>Representative Rate: </strong>
+                                                                                        $#qGetUserInformation.php_repRate#
                                                                                     <cfelse>
                                                                                         No
                                                                                     </cfif>
-                                                                                    <br />
-                                                                                    <strong>Representative Monthly Rate: </strong>
-                                                                                    $#qGetUserInformation.php_repRate#
                                                                                 </div>
                                                                           	</cfif>
                                                                             

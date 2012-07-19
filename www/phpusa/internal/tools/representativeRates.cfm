@@ -108,7 +108,7 @@
                     <th background="images/back_menu2.gif" align="left" width="20%"><a href="?curdoc=tools/representativeRates&order=address">Address</a></th>
                     <th background="images/back_menu2.gif" align="left" width="15%"><a href="?curdoc=tools/representativeRates&order=city">City</a></th>
                     <th background="images/back_menu2.gif" align="left" width="15%"><a href="?curdoc=tools/representativeRates&order=state">State</a></th>
-                    <th background="images/back_menu2.gif" align="center" width="20%">Monthly Rate</th>
+                    <th background="images/back_menu2.gif" align="center" width="20%">Representative Rate</th>
                     <th background="images/back_menu2.gif" align="center" width="10%">Does PHP Pay</th>
                 </tr>
            
