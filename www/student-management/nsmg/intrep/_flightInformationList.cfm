@@ -14,8 +14,6 @@
 
 	<cfsetting requesttimeout="9999">
     
-    <cfparam name="URL.test" default="0">
-    
     <!--- Arrival Information --->
 	<cfquery name="qStudentsMissingArrival" datasource="mysql">
 		SELECT DISTINCT 
@@ -29,7 +27,7 @@
             s.aypEnglish,
             s.hostID,
 			p.programname, 
-			h.familylastname, 
+			h.familylastname AS hostFamilyName, 
             h.fatherlastname, 
             h.motherlastname, 
             h.state,
@@ -149,7 +147,7 @@
             s.host_fam_approved, 
             s.dateplaced,
 			p.programname, 
-			h.familylastname, 
+			h.familylastname AS hostFamilyName, 
             h.fatherlastname, 
             h.motherlastname, 
             h.state,
@@ -210,99 +208,99 @@
         ORDER BY 
         	s.familylastname
 	</cfquery>
-    
-    <!----PHP flight info---->
-	<cfquery name="qPHPStudentsMissingArrival" datasource="mysql">
-		SELECT DISTINCT 
-        	s.studentID, 
-            s.uniqueID, 
-            s.firstname, 
-            s.familylastname, 
-            s.host_fam_approved, 
-			p.programname, 
-			h.familylastname, 
-            h.fatherlastname, 
-            h.motherlastname, 
-            h.state,
-            php.programID,
-            php.dateplaced,
-            sc.schoolName            
-		FROM 
-        	smg_students s
-		INNER JOIN 
-        	php_students_in_program php on php.studentID = s.studentID
-		INNER JOIN 
-        	smg_hosts h ON php.hostid = h.hostid
-        INNER JOIN 
-        	smg_programs p ON php.programid = p.programid
-		LEFT OUTER JOIN
-        	php_schools sc ON sc.schoolID = php.schoolID        
-		WHERE
-            s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        AND 
-            p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        AND
-            p.enddate > now()
-        AND
-            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="6">
-         
-		<cfif CLIENT.userType EQ 8>
-            <!--- Intl Rep --->
-            AND
-                s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">            
-        <cfelseif CLIENT.userType EQ 11>
-            <!--- Branch --->
-            AND
-                s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.parentCompany#">
-            AND    
-                s.branchID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
-        </cfif>   
-
-        AND 
-            s.studentID NOT IN (
-            						SELECT 
-                                    	studentID 
-                                    FROM 
-                                    	smg_flight_info 
-                                    WHERE 
-                                    	flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival"> 
-                                    AND 
-                                    	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
-                                    AND 
-                                    	isCompleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> 
-									AND
-                                    	programID = php.programID                                        
-								)	
-        ORDER BY 
-        	s.familylastname
-	</cfquery>
 
 	<!--- Do Not Display For Canada --->
     <cfif APPLICATION.SETTINGS.COMPANYLIST.Canada NEQ CLIENT.companyID>
-
-        <cfquery name="qPHPStudentsMissingDeparture" datasource="mysql">
+    
+		<!----PHP flight info---->
+        <cfquery name="qPHPStudentsMissingArrival" datasource="mysql">
             SELECT DISTINCT 
-                s.studentID, 
-                s.uniqueID, 
+                s.studentid, 
+                s.uniqueid, 
                 s.firstname, 
                 s.familylastname, 
-                s.host_fam_approved, 
                 p.programname, 
-                h.familylastname, 
+                h.familylastname AS hostFamilyName, 
                 h.fatherlastname, 
                 h.motherlastname, 
                 h.state,
+                php.dateplaced,
+                php.assignedID,
                 php.programID,
-                php.dateplaced,           
-                sc.schoolName
+                sc.schoolName 
             FROM 
                 smg_students s
             INNER JOIN 
-                php_students_in_program php on php.studentID = s.studentID
-            INNER JOIN 
-                smg_hosts h ON php.hostid = h.hostid
+                php_students_in_program php on php.studentid = s.studentid
             INNER JOIN 
                 smg_programs p ON php.programid = p.programid
+            LEFT OUTER JOIN
+                smg_hosts h ON php.hostid = h.hostid
+            LEFT OUTER JOIN
+                php_schools sc ON sc.schoolID = php.schoolID                   
+            WHERE
+                s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            AND 
+                p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            AND
+                p.enddate > now()
+             
+            <cfif CLIENT.userType EQ 8>
+                <!--- Intl Rep --->
+                AND
+                    s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">            
+            <cfelseif CLIENT.userType EQ 11>
+                <!--- Branch --->
+                AND
+                    s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.parentCompany#">
+                AND    
+                    s.branchID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+            </cfif>   
+    
+            AND 
+                s.studentid NOT IN (
+                                        SELECT 
+                                            studentid 
+                                        FROM 
+                                            smg_flight_info 
+                                        WHERE 
+                                            flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival"> 
+                                        AND 
+                                            isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
+                                        AND 
+                                            isCompleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> 
+                                        AND
+                                            programID = php.programID 
+                                        AND
+                                            assignedID = php.assignedID                                       
+                                    )	
+            ORDER BY 
+                s.familylastname
+        </cfquery>
+
+        <cfquery name="qPHPStudentsMissingDeparture" datasource="mysql">
+            SELECT DISTINCT 
+                s.studentid, 
+                s.uniqueid, 
+                s.firstname, 
+                s.familylastname, 
+                p.programname, 
+                h.familylastname AS hostFamilyName, 
+                h.fatherlastname, 
+                h.motherlastname, 
+                h.state,
+                php.dateplaced,
+                php.assignedID,
+                php.programID,
+                sc.schoolName 
+            FROM 
+                smg_students s
+            INNER JOIN 
+                php_students_in_program php on php.studentid = s.studentid
+            INNER JOIN 
+                smg_programs p ON php.programid = p.programid
+            LEFT OUTER JOIN
+                smg_hosts h ON php.hostid = h.hostid
             LEFT OUTER JOIN
                 php_schools sc ON sc.schoolID = php.schoolID        
             WHERE 
@@ -311,8 +309,6 @@
                 p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
             AND
                 p.enddate > now()
-            AND
-                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="6">
                 
             <cfif CLIENT.userType EQ 8>
                 <!--- Intl Rep --->
@@ -327,9 +323,9 @@
             </cfif>    
     
             AND 
-                s.studentID NOT IN (
+                s.studentid NOT IN (
                                         SELECT 
-                                            studentID 
+                                            studentid 
                                         FROM 
                                             smg_flight_info 
                                         WHERE 
@@ -339,7 +335,9 @@
                                         AND 
                                             isCompleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> 
                                         AND
-                                            programID = php.programID                                        
+                                            programID = php.programID 
+                                        AND
+                                            assignedID = php.assignedID                                                                               
                                     )	
             ORDER BY 
                 s.familylastname
@@ -434,10 +432,8 @@
                             </cfif>
                         </td>
                         <td>
-                            <cfif VAL(qStudentsMissingArrival.hostID) AND qStudentsMissingArrival.fatherlastname EQ qStudentsMissingArrival.motherlastname>
-                                #qStudentsMissingArrival.fatherlastname# (#qStudentsMissingArrival.state#) 
-                            <cfelseif VAL(qStudentsMissingArrival.hostID)>
-                                #qStudentsMissingArrival.familylastname# (#qStudentsMissingArrival.state#) 
+                            <cfif LEN(qStudentsMissingArrival.hostFamilyName)>
+                                #qStudentsMissingArrival.hostFamilyName# (#qStudentsMissingArrival.state#) 
                             <cfelse>
                             	n/a
                             </cfif>
@@ -519,11 +515,11 @@
                             </cfif>
                         </td>
                         <td>
-                            <cfif qStudentsMissingDeparture.fatherlastname EQ qStudentsMissingDeparture.motherlastname>
-                                #qStudentsMissingDeparture.fatherlastname# (#qStudentsMissingDeparture.state#) 
+                            <cfif LEN(qStudentsMissingDeparture.hostFamilyName)>
+                                #qStudentsMissingDeparture.hostFamilyName# (#qStudentsMissingDeparture.state#) 
                             <cfelse>
-                                #qStudentsMissingDeparture.familylastname# (#qStudentsMissingDeparture.state#) 
-                            </cfif>
+                            	n/a
+							</cfif>
                         </td>
                         <td>#qStudentsMissingDeparture.schoolName#</td>
                         <td>
@@ -587,11 +583,11 @@
                             <td>#qPHPStudentsMissingArrival.programname#</td>
                             <td>#DateFormat(qPHPStudentsMissingArrival.dateplaced, 'mm/dd/yy')#</td>
                             <td>
-                                <cfif qPHPStudentsMissingArrival.fatherlastname EQ qPHPStudentsMissingArrival.motherlastname>
-                                    #qPHPStudentsMissingArrival.fatherlastname# (#qPHPStudentsMissingArrival.state#) 
+                                <cfif LEN(qPHPStudentsMissingArrival.hostFamilyName)>
+                                    #qPHPStudentsMissingArrival.hostFamilyName# (#qPHPStudentsMissingArrival.state#) 
                                 <cfelse>
-                                    #qPHPStudentsMissingArrival.familylastname# (#qPHPStudentsMissingArrival.state#) 
-                                </cfif>
+                                	n/a
+								</cfif>
                             </td>
                             <td>#qPHPStudentsMissingArrival.schoolName#</td>
                             <td>n/a</td>
@@ -646,11 +642,11 @@
                             <td>#qPHPStudentsMissingDeparture.programname#</td>
                             <td>#DateFormat(qPHPStudentsMissingDeparture.dateplaced, 'mm/dd/yy')#</td>
                             <td>
-                                <cfif qPHPStudentsMissingDeparture.fatherlastname EQ qPHPStudentsMissingDeparture.motherlastname>
-                                    #qPHPStudentsMissingDeparture.fatherlastname# (#qPHPStudentsMissingDeparture.state#) 
+                                <cfif LEN(qPHPStudentsMissingDeparture.hostFamilyName)>
+                                    #qPHPStudentsMissingDeparture.hostFamilyName# (#qPHPStudentsMissingDeparture.state#) 
                                 <cfelse>
-                                    #qPHPStudentsMissingDeparture.familylastname# (#qPHPStudentsMissingDeparture.state#) 
-                                </cfif>
+                                	n/a
+								</cfif>
                             </td>
                             <td>#qPHPStudentsMissingDeparture.schoolName#</td>
                             <td>n/a</td>
@@ -678,7 +674,3 @@
 </cfif>
 
 </cfoutput>
-
-<cfif val(url.test)>
-	<cfdump var="#qStudentsMissingArrival#">
-</cfif>
