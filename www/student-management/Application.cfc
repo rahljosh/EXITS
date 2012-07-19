@@ -267,9 +267,6 @@
                 For ( i=1;i LTE vTotalExtraLevels; i=i+1) {
                     vPath = vPath & "../";	
                 }
-                
-                // Redirect to error page
-                location ("#vPath#errorMessage.cfm", "no");
             </cfscript>
 
             <cftry>
@@ -296,9 +293,9 @@
                     type="HTML" 
                     port="587"
                     useTLS="yes"
-                    server="smtp.gmail.com"
-                    username="errors@student-management.com"
-                    password="errors123">
+                    server="#APPLICATION.SETTINGS.EMAIL.errorServer#"
+                    username="#APPLICATION.SETTINGS.EMAIL.errorUsername#"
+                    password="#APPLICATION.SETTINGS.EMAIL.errorPassword#">
                         <p>An error occurred on #DateFormat( Now(), "mmm d, yyyy" )# at #TimeFormat( Now(), "hh:mm TT" )#</p>
                         
                         <p>Error ID = #vErrorID#</p>
@@ -312,7 +309,10 @@
                         
                         <h3>SESSION:</h3>
                         <p><cfdump var="#SESSION#"></p>
-                        
+
+                        <h3>CLIENT:</h3>
+                        <p><cfdump var="#CLIENT#"></p>
+	                        
                         <h3>FORM:</h3>
                         <p><cfdump var="#FORM#"></p>
                         
