@@ -4,7 +4,6 @@
 </cfif>
 
 <cftransaction action="begin" isolation="serializable">
-	<cftry>
 
 	<!--- From Student to Intl. Rep. --->
 	<cfif form.latest_status LTE '2'>
@@ -43,10 +42,5 @@
 		</head>
 		</html> 		
 	</cfif>		
-
-	<cfcatch type="any">
-		<cfinclude template="email_error.cfm">
-	</cfcatch>
-	</cftry>
 
 </cftransaction>

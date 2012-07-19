@@ -4,7 +4,7 @@
 </cfif>
 
 <cftransaction action="begin" isolation="serializable">
-<cftry>
+
 	<cfquery name="update_student" datasource="MySql">
 		UPDATE smg_students
 		SET	<cfif IsDefined('form.app_interview_english_level')>app_interview_english_level = '#form.app_interview_english_level#',<cfelse>app_interview_english_level = null,</cfif> 
@@ -29,8 +29,4 @@
 	</head>
 	</html>	
 	
-	<cfcatch type="any">
-		<cfinclude template="../email_error.cfm">
-	</cfcatch>
-</cftry>
 </cftransaction>

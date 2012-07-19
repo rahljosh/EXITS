@@ -4,7 +4,6 @@
 </cfif>
 
 <cftransaction action="begin" isolation="serializable">
- 	<cftry> 
 
 		<cfloop From = "1" To = "#form.count#" Index = "x">
 			<cfquery name="update_checklist" datasource="MySQL">
@@ -32,11 +31,6 @@
 			</script>
 		</cfoutput>
 		</head>
-		</html> 		
-		
-	<cfcatch type="any">
-		<cfinclude template="../email_error.cfm">
-	</cfcatch>
-	</cftry>
+		</html> 
 
 </cftransaction>

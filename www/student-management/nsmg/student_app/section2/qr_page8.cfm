@@ -3,8 +3,6 @@
 	<cfabort>
 </cfif>
 
-<cftry>
-
 <cftransaction action="begin" isolation="serializable">
 		<!--- INSERT 9th SCHOOL YEAR --->
 		<cfif IsDefined('form.new_9class')>
@@ -225,8 +223,3 @@
 		</html>
 
 </cftransaction>
-
-	<cfcatch type="any">
-		<cfinclude template="../email_error.cfm">
-	</cfcatch>
-</cftry>

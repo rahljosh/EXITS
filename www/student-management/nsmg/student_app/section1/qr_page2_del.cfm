@@ -4,7 +4,6 @@
 </cfif>
 
 <cftransaction action="begin" isolation="serializable">
-	<cftry>
 	
 		<cfquery name="delete_sibling" datasource="MySql">
 			DELETE 
@@ -25,11 +24,4 @@
 		</head>
 		</html>
 
-	<cfcatch type="any">
-		<cfinclude template="../email_error.cfm">
-	</cfcatch>
-	</cftry>
-
 </cftransaction>
-
-<!--- <cflocation url="?curdoc=section1/page1&id=1&p=1" addtoken="no"> --->

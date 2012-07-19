@@ -7,8 +7,6 @@
 
 <body>
 
-<cftry>
-
 	<cfoutput>
 
 	<cfif NOT IsDefined('form.studentid') OR NOT IsDefined('form.status')>
@@ -55,11 +53,6 @@
 	</cfif>
 
 	</cfoutput>
-	
-<cfcatch type="any">
-	<cfinclude template="../email_error.cfm">
-</cfcatch>
-</cftry>	
 
 </body>
 </html>

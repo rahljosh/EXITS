@@ -164,11 +164,15 @@ and sc.fk_companyid = #client.companyid#
 	qGetESIDistrictChoice = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='ESIDistrictChoice',sortBy='sortOrder');
 </cfscript>
 
-<Cfquery name="districtClosed" datasource="#application.dsn#">
-select sc.fk_districtID
-from regionStateClosure sc 
-where  sc.fk_programid = #get_student_info.programID#
-and fk_companyid = #client.companyid#
+<cfquery name="districtClosed" datasource="#application.dsn#">
+	SELECT
+    	sc.fk_districtID
+   	FROM
+    	regionStateClosure sc
+   	WHERE
+    	sc.fk_programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.programID#">
+ 	AND
+    	sc.fk_companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
 </cfquery>
 
 <cfset disClosedList = ''>
