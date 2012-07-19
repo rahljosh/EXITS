@@ -235,6 +235,8 @@
                     intlRep.insurance_typeid,
                     <!--- Program --->
                     p.programName,
+                    p.startDate,
+                    p.endDate,
                     p.insurance_startdate,
                     <!--- Host Family --->
                     host.airport_city, 
