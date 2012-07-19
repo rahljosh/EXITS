@@ -30,7 +30,7 @@
         FROM 
         	smg_companies
         WHERE 
-        	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.companyid#">
+        	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.companyid)#">
     </Cfquery>
     
     <!-----Intl. Agent----->
@@ -45,7 +45,7 @@
         FROM 
         	smg_users 
         WHERE 
-        	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.intrep#">
+        	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.intrep)#">
     </cfquery>
     
     <!-----Program Name----->
@@ -58,7 +58,7 @@
         INNER JOIN 
         	smg_program_type ON type = programtypeid
         WHERE 
-        	programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.programid#">
+        	programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.programid)#">
     </cfquery>
 
 	<!--- Display only for ESI --->
@@ -84,7 +84,7 @@
                     AND 
                         opt3.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIDistrictChoice">
             WHERE 
-                appo.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentid#">
+                appo.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentid)#">
             AND
                 appo.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIDistrictChoice">
         </cfquery>
