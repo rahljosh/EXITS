@@ -7,10 +7,29 @@
 		<!--- INSERT 9th SCHOOL YEAR --->
 		<cfif IsDefined('form.new_9class')>
 			<cfquery name="Insert_Year" datasource="MySql">
-				INSERT INTO smg_student_app_school_year (studentid, beg_year, end_year, class_year)
-				VALUES ('#form.studentid#', 
-						<cfif form.new9_beg_year is ''>null,<cfelse>'#form.new9_beg_year#',</cfif>
-						<cfif form.new9_end_year is ''>null,<cfelse>'#form.new9_end_year#',</cfif> '#form.new_9class#')
+				INSERT INTO 
+                	smg_student_app_school_year 
+                    (
+                    	studentid, 
+                        beg_year, 
+                        end_year, 
+                        class_year
+                  	)
+				VALUES 
+                	(
+                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentid#">, 
+						<cfif form.new9_beg_year is '' OR NOT VAL(FORM.new9_beg_year)>
+                        	<cfqueryparam null="yes">,
+                      	<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.new9_beg_year#">,
+						</cfif>
+                        <cfif form.new9_end_year is '' OR NOT VAL(FORM.new9_end_year)>
+                        	<cfqueryparam null="yes">,
+                      	<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.new9_end_year#">,
+						</cfif>
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.new_9class#">
+                 	)
 			</cfquery>
 			<cfquery name="get_year" datasource="MySql">
 				SELECT max(yearid) as yearid FROM smg_student_app_school_year
@@ -32,11 +51,24 @@
 		<!--- UPDATE 9th YEAR --->
 		<cfif IsDefined('form.upd_9yearid')>
 			<cfquery name="update_year" datasource="MySql">
-				UPDATE smg_student_app_school_year
-				SET beg_year = <cfif form.upd9_beg_year is ''>null,<cfelse>#form.upd9_beg_year#,</cfif>
-					end_year = <cfif form.upd9_end_year is ''>null,<cfelse>#form.upd9_end_year#,</cfif>
-					class_year = '#upd_9class#'
-				WHERE yearid = '#upd_9yearid#'
+				UPDATE 
+                	smg_student_app_school_year
+				SET 
+                	beg_year = 
+                    	<cfif form.upd9_beg_year is '' OR NOT VAL(FORM.upd9_beg_year)>
+                        	<cfqueryparam null="yes">,
+                      	<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.upd9_beg_year#">,
+						</cfif>
+					end_year = 
+						<cfif form.upd9_end_year is '' OR NOT VAL(FORM.upd9_end_year)>
+                        	<cfqueryparam null="yes">,
+                      	<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.upd9_end_year#">,
+						</cfif>
+					class_year = <cfqueryparam cfsqltype="cf_sql_varchar" value="#upd_9class#">
+				WHERE 
+                	yearid = <cfqueryparam cfsqltype="cf_sql_integer" value="#upd_9yearid#">
 				LIMIT 1				
 			</cfquery>
 		</cfif>
@@ -57,11 +89,30 @@
 
 		<!--- INSERT 10th SCHOOL YEAR --->
 		<cfif IsDefined('form.new_10class')>
-			<cfquery name="Insert_Year" datasource="MySql">
-				INSERT INTO smg_student_app_school_year (studentid, beg_year, end_year, class_year)
-				VALUES ('#form.studentid#', 
-						<cfif form.new10_beg_year is ''>null,<cfelse>'#form.new10_beg_year#',</cfif>
-						<cfif form.new10_end_year is ''>null,<cfelse>'#form.new10_end_year#',</cfif> '#form.new_10class#')
+        	<cfquery name="Insert_Year" datasource="MySql">
+				INSERT INTO 
+                	smg_student_app_school_year 
+                    (
+                    	studentid, 
+                        beg_year, 
+                        end_year, 
+                        class_year
+                  	)
+				VALUES 
+                	(
+                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentid#">, 
+						<cfif form.new10_beg_year is '' OR NOT VAL(FORM.new10_beg_year)>
+                        	<cfqueryparam null="yes">,
+                      	<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.new10_beg_year#">,
+						</cfif>
+                        <cfif form.new10_end_year is '' OR NOT VAL(FORM.new10_end_year)>
+                        	<cfqueryparam null="yes">,
+                      	<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.new10_end_year#">,
+						</cfif>
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.new_10class#">
+                 	)
 			</cfquery>
 			<cfquery name="get_year" datasource="MySql">
 				SELECT max(yearid) as yearid FROM smg_student_app_school_year
@@ -82,12 +133,25 @@
 		</cfif>
 		<!--- UPDATE 10th YEAR --->
 		<cfif IsDefined('form.upd_10yearid')>
-			<cfquery name="update_year" datasource="MySql">
-				UPDATE smg_student_app_school_year
-				SET beg_year = <cfif form.upd10_beg_year is ''>null,<cfelse>#form.upd10_beg_year#,</cfif>
-					end_year = <cfif form.upd10_end_year is ''>null,<cfelse>#form.upd10_end_year#,</cfif>
-					class_year = '#upd_10class#'
-				WHERE yearid = '#upd_10yearid#'
+        	<cfquery name="update_year" datasource="MySql">
+				UPDATE 
+                	smg_student_app_school_year
+				SET 
+                	beg_year = 
+                    	<cfif form.upd10_beg_year is '' OR NOT VAL(FORM.upd10_beg_year)>
+                        	<cfqueryparam null="yes">,
+                      	<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.upd10_beg_year#">,
+						</cfif>
+					end_year = 
+						<cfif form.upd10_end_year is '' OR NOT VAL(FORM.upd10_end_year)>
+                        	<cfqueryparam null="yes">,
+                      	<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.upd10_end_year#">,
+						</cfif>
+					class_year = <cfqueryparam cfsqltype="cf_sql_varchar" value="#upd_10class#">
+				WHERE 
+                	yearid = <cfqueryparam cfsqltype="cf_sql_integer" value="#upd_10yearid#">
 				LIMIT 1				
 			</cfquery>
 		</cfif>
@@ -108,11 +172,30 @@
 
 		<!--- INSERT 11th SCHOOL YEAR --->
 		<cfif IsDefined('form.new_11class')>
-			<cfquery name="Insert_Year" datasource="MySql">
-				INSERT INTO smg_student_app_school_year (studentid, beg_year, end_year, class_year)
-				VALUES ('#form.studentid#', 
-						<cfif form.new11_beg_year is ''>null,<cfelse>'#form.new11_beg_year#',</cfif>
-						<cfif form.new11_end_year is ''>null,<cfelse>'#form.new11_end_year#',</cfif> '#form.new_11class#')
+        	<cfquery name="Insert_Year" datasource="MySql">
+				INSERT INTO 
+                	smg_student_app_school_year 
+                    (
+                    	studentid, 
+                        beg_year, 
+                        end_year, 
+                        class_year
+                  	)
+				VALUES 
+                	(
+                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentid#">, 
+						<cfif form.new11_beg_year is '' OR NOT VAL(FORM.new11_beg_year)>
+                        	<cfqueryparam null="yes">,
+                      	<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.new11_beg_year#">,
+						</cfif>
+                        <cfif form.new11_end_year is '' OR NOT VAL(FORM.new11_end_year)>
+                        	<cfqueryparam null="yes">,
+                      	<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.new11_end_year#">,
+						</cfif>
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.new_11class#">
+                 	)
 			</cfquery>
 			<cfquery name="get_year" datasource="MySql">
 				SELECT max(yearid) as yearid FROM smg_student_app_school_year
@@ -133,12 +216,25 @@
 		</cfif>
 		<!--- UPDATE 11th YEAR --->
 		<cfif IsDefined('form.upd_11yearid')>
-			<cfquery name="update_year" datasource="MySql">
-				UPDATE smg_student_app_school_year
-				SET beg_year = <cfif form.upd11_beg_year is ''>null,<cfelse>#form.upd11_beg_year#,</cfif>
-					end_year = <cfif form.upd11_end_year is ''>null,<cfelse>#form.upd11_end_year#,</cfif>
-					class_year = '#upd_11class#'
-				WHERE yearid = '#upd_11yearid#'
+        	<cfquery name="update_year" datasource="MySql">
+				UPDATE 
+                	smg_student_app_school_year
+				SET 
+                	beg_year = 
+                    	<cfif form.upd11_beg_year is '' OR NOT VAL(FORM.upd11_beg_year)>
+                        	<cfqueryparam null="yes">,
+                      	<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.upd11_beg_year#">,
+						</cfif>
+					end_year = 
+						<cfif form.upd11_end_year is '' OR NOT VAL(FORM.upd11_end_year)>
+                        	<cfqueryparam null="yes">,
+                      	<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.upd11_end_year#">,
+						</cfif>
+					class_year = <cfqueryparam cfsqltype="cf_sql_varchar" value="#upd_11class#">
+				WHERE 
+                	yearid = <cfqueryparam cfsqltype="cf_sql_integer" value="#upd_11yearid#">
 				LIMIT 1				
 			</cfquery>
 		</cfif>
@@ -159,11 +255,30 @@
 
 		<!--- INSERT 12th SCHOOL YEAR --->
 		<cfif IsDefined('form.new_12class')>
-			<cfquery name="Insert_Year" datasource="MySql">
-				INSERT INTO smg_student_app_school_year (studentid, beg_year, end_year, class_year)
-				VALUES ('#form.studentid#', 
-						<cfif form.new12_beg_year is ''>null,<cfelse>'#form.new12_beg_year#',</cfif>
-						<cfif form.new12_end_year is ''>null,<cfelse>'#form.new12_end_year#',</cfif> '#form.new_12class#')
+        	<cfquery name="Insert_Year" datasource="MySql">
+				INSERT INTO 
+                	smg_student_app_school_year 
+                    (
+                    	studentid, 
+                        beg_year, 
+                        end_year, 
+                        class_year
+                  	)
+				VALUES 
+                	(
+                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentid#">, 
+						<cfif form.new12_beg_year is '' OR NOT VAL(FORM.new12_beg_year)>
+                        	<cfqueryparam null="yes">,
+                      	<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.new12_beg_year#">,
+						</cfif>
+                        <cfif form.new12_end_year is '' OR NOT VAL(FORM.new12_end_year)>
+                        	<cfqueryparam null="yes">,
+                      	<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.new12_end_year#">,
+						</cfif>
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.new_12class#">
+                 	)
 			</cfquery>
 			<cfquery name="get_year" datasource="MySql">
 				SELECT max(yearid) as yearid FROM smg_student_app_school_year
@@ -184,12 +299,25 @@
 		</cfif>
 		<!--- UPDATE 12th YEAR --->
 		<cfif IsDefined('form.upd_12yearid')>
-			<cfquery name="update_year" datasource="MySql">
-				UPDATE smg_student_app_school_year
-				SET beg_year = <cfif form.upd12_beg_year is ''>null,<cfelse>#form.upd12_beg_year#,</cfif>
-					end_year = <cfif form.upd12_end_year is ''>null,<cfelse>#form.upd12_end_year#,</cfif>
-					class_year = '#upd_12class#'
-				WHERE yearid = '#upd_12yearid#'
+        	<cfquery name="update_year" datasource="MySql">
+				UPDATE 
+                	smg_student_app_school_year
+				SET 
+                	beg_year = 
+                    	<cfif form.upd12_beg_year is '' OR NOT VAL(FORM.upd12_beg_year)>
+                        	<cfqueryparam null="yes">,
+                      	<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.upd12_beg_year#">,
+						</cfif>
+					end_year = 
+						<cfif form.upd12_end_year is '' OR NOT VAL(FORM.upd12_end_year)>
+                        	<cfqueryparam null="yes">,
+                      	<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.upd12_end_year#">,
+						</cfif>
+					class_year = <cfqueryparam cfsqltype="cf_sql_varchar" value="#upd_12class#">
+				WHERE 
+                	yearid = <cfqueryparam cfsqltype="cf_sql_integer" value="#upd_12yearid#">
 				LIMIT 1				
 			</cfquery>
 		</cfif>
