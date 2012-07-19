@@ -1470,7 +1470,7 @@
                             <td class="reportTitleLeftClean" width="85%">Compliance Notes</td>
                             <td class="reportTitleLeftClean" width="10%">
                             	<cfif qGetComplianceHistory.recordCount>
-	                                <a href="printcomplianceHistory.cfm?uniqueID=#qGetStudentInfo.uniqueID#" target="_blank" title="Click to Print Compliance Notes">[ Print ]</a>
+	                                <a href="printcomplianceHistory.cfm?uniqueID=#qGetStudentInfo.uniqueID#&historyID=#qGetPlacementHistoryByID.historyID#" target="_blank" title="Click to Print Compliance Notes">[ Print ]</a>
                             	</cfif>
                             </td>
                         </tr>
