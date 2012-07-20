@@ -94,7 +94,7 @@
 </cfquery>
 	
 <cfscript>
-	qGetCurrentPlacement = APPLICATION.CFC.CANDIDATE.getCandidatePlacementInformation(candidateID=FORM.candidateID);
+	qGetCurrentPlacement = APPLICATION.CFC.CANDIDATE.getCandidatePlacementInformation(candidateID=qGetCandidateInfo.candidateID);
 
 	// SSN - Check if we need to update or not SSN
 	vUpdateSSN = 0;
