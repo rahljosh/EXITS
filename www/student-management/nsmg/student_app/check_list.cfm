@@ -27,7 +27,7 @@
         INNER JOIN 
             smg_users u ON u.userid = s.intrep
         WHERE 
-            studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentID#">
+            studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.studentID)#">
     </cfquery>
     
     <cfquery name="qIsStudentAccount" datasource="MySql">
@@ -36,7 +36,7 @@
         FROM 
             smg_student_app_status
         WHERE 
-            studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentID#">
+            studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.studentID)#">
 		AND	
         	status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">         
     </cfquery>
@@ -48,11 +48,11 @@
             birthdate, 
             sex, 
             liveathome, 
-            name 
+            name
         FROM 
         	smg_student_siblings
         WHERE 
-        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentID#">
+        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(smg_students.studentID)#">
         ORDER BY 
         	childid
     </cfquery>
@@ -66,7 +66,7 @@
         FROM 
         	smg_student_app_family_album
         WHERE 
-        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentID#">
+        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(smg_students.studentID)#">
     </cfquery>
     
     <cfquery name="smg_student_app_school_year" datasource="MySql">
@@ -79,7 +79,7 @@
         FROM 
         	smg_student_app_school_year
         WHERE 
-        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentID#">
+        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(smg_students.studentID)#">
     </cfquery>
     
     <cfquery name="smg_student_app_grades" datasource="MySql">
@@ -93,7 +93,7 @@
         INNER JOIN 
         	smg_student_app_school_year ON smg_student_app_school_year.yearid = smg_student_app_grades.yearid
         WHERE 
-        	smg_student_app_school_year.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentID#">
+        	smg_student_app_school_year.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(smg_students.studentID)#">
     </cfquery>
     
     <cfquery name="smg_student_app_health" datasource="MySql">
@@ -102,7 +102,7 @@
         FROM 
         	smg_student_app_health
         WHERE 
-        	studentID = <cfqueryparam value="#smg_students.studentID#" cfsqltype="cf_sql_integer">
+        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(smg_students.studentID)#">
     </cfquery>
     
     <cfquery name="smg_student_app_state_requested" datasource="MySql">
@@ -115,7 +115,7 @@
         FROM 
             smg_student_app_state_requested
         WHERE 
-            studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentID#">
+            studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(smg_students.studentID)#">
     </cfquery>
     
     <cfquery name="smg_student_app_language" datasource="MySql">
@@ -127,7 +127,7 @@
      	FROM
         	smg_student_app_language
       	WHERE
-        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentID#">
+        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(smg_students.studentID)#">
       	AND
         	isPrimary = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
     </cfquery>
@@ -135,7 +135,7 @@
     <cfquery name="check_guarantee" datasource="MySQL">
         SELECT app_region_guarantee
         FROM smg_students
-        WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value='#client.studentid#'>
+        WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value='#VAL(CLIENT.studentid)#'>
     </cfquery>
     
     <cfquery name="qESIDistrictChoice" datasource="MySql">
@@ -146,7 +146,7 @@
         FROM 
             smg_student_app_options
         WHERE 
-            studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentID#">
+            studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(smg_students.studentID)#">
         AND
             fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIDistrictChoice">
     </cfquery>
@@ -177,7 +177,7 @@
             FROM 
                 smg_student_app_field
             WHERE 
-                page = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetPages.page#">
+                page = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetPages.page)#">
             ORDER BY 
                 field_order
         </cfquery>
@@ -370,7 +370,7 @@
      	FROM
         	smg_student_app_language
       	WHERE
-        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_students.studentID#">
+        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(smg_students.studentID)#">
       	AND
         	isPrimary = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
     </cfquery>
@@ -587,7 +587,7 @@
 			<cfquery name="smg_student_app_shots" datasource="MySql">
 				SELECT vaccineid, studentID, vaccine, disease, shot1, shot2, shot3, shot4, shot5, booster  
 				FROM smg_student_app_shots
-				WHERE vaccine = '#page13.field_label#' AND studentID = <cfqueryparam value="#CLIENT.studentID#" cfsqltype="cf_sql_integer">
+				WHERE vaccine = '#page13.field_label#' AND studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.studentID)#">
 			</cfquery>
 		</cfif>
 		<cfset lastvaccine = page13.field_label>
@@ -748,13 +748,13 @@
                  <cfquery name="checkRegionFull" datasource="#application.dsn#">
                         select fk_regionID
                         from regionStateClosure sc
-                        where fk_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.programid#">
+                        where fk_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.programid)#">
                         <Cfif client.companyid lte 5 or client.companyid eq 12>
                         and sc.fk_companyid = 1
                         <Cfelse>
                         and sc.fk_companyid = #client.companyid#
                         </Cfif>
-                        and fk_regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.app_region_guarantee#">
+                        and fk_regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.app_region_guarantee)#">
                         </cfquery>
                   </cfif>
                     <cfif NOT LEN(Evaluate(get_field)) AND required EQ 1>
@@ -825,13 +825,13 @@
                         select sc.fk_stateID, s.statename
                         from regionStateClosure sc 
                         LEFT join smg_states s on s.id = sc.fk_stateID
-                        where  sc.fk_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.programid#">
+                        where  sc.fk_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.programid)#">
                         <cfif client.companyid lte 5 OR client.companyid eq 12>
                         and fk_companyid = 1
                         <cfelse>
-                        and fk_companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+                        and fk_companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyid)#">
                         </cfif>
-                        and fk_stateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_student_app_state_requested.state1#">
+                        and fk_stateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(smg_student_app_state_requested.state1)#">
                         
                         </Cfquery>
                         <Cfif val(statesClosedCheck1.recordcount)>
@@ -842,13 +842,13 @@
                         select sc.fk_stateID, s.statename
                         from regionStateClosure sc 
                         LEFT join smg_states s on s.id = sc.fk_stateID
-                        where  sc.fk_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.programid#">
+                        where  sc.fk_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.programid)#">
                         <cfif client.companyid lte 5 OR client.companyid eq 12>
                         and fk_companyid = 1
                         <cfelse>
-                        and fk_companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+                        and fk_companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyid)#">
                         </cfif>
-                        and fk_stateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_student_app_state_requested.state2#">
+                        and fk_stateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(smg_student_app_state_requested.state2)#">
                         
                         </Cfquery>
                         <Cfif val(statesClosedCheck2.recordcount)>
@@ -859,13 +859,13 @@
                         select sc.fk_stateID, s.statename
                         from regionStateClosure sc 
                         LEFT join smg_states s on s.id = sc.fk_stateID
-                        where  sc.fk_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.programid#">
+                        where  sc.fk_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.programid)#">
                         <cfif client.companyid lte 5 OR client.companyid eq 12>
                         and fk_companyid = 1
                         <cfelse>
-                        and fk_companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+                        and fk_companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyid)#">
                         </cfif>
-                        and fk_stateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#smg_student_app_state_requested.state3#">
+                        and fk_stateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(smg_student_app_state_requested.state3)#">
                         
                         </Cfquery>
                         <Cfif val(statesClosedCheck3.recordcount)>
