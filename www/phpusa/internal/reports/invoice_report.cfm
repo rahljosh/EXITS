@@ -89,24 +89,12 @@
                     s.familylastname,
                     smg_programs.programname,
                     u.businessname,
-                    h.hostid, 
-                    h.familylastname as hostlastname, 
-                    h.motherfirstname, 
-                    h.motherlastname, 
-                    h.fatherfirstname, 
-                    h.fatherlastname,
-                    h.address, 
-                    h.city, 
-                    h.zip, 
-                    h.state,
                     sc.schoolid, 
                     sc.schoolname
                 FROM 
                     smg_students s
                 INNER JOIN 
                     php_students_in_program p ON p.studentid = s.studentid
-                INNER JOIN 
-                    smg_hosts h ON h.hostid = p.hostid
                 INNER JOIN 
                     php_schools sc ON sc.schoolid = p.schoolid            
                 INNER JOIN 
@@ -127,6 +115,8 @@
                     AND
                         sc.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.schoolID#">
                 </cfif>
+                GROUP BY
+                	s.studentID
                 ORDER BY
                 	<cfif FORM.orderBy EQ 1>
                     	u.businessName,
