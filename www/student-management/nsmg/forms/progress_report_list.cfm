@@ -92,8 +92,6 @@ window.location.href = URL;
 <cfset datelimit = #DateFormat(DateAdd('m', -2, now()),'yyyy-mm-dd')#>
 
 
-
-
 <!----Students with Reports---->
 <cfquery name="students_in_region" datasource="MySQL">
 SELECT distinct smg_prquestion_details.report_number, 
@@ -108,14 +106,14 @@ INNER JOIN smg_prquestion_details ON  smg_prquestion_details.stuid = smg_student
 INNER JOIN smg_document_tracking on smg_document_tracking.report_number = smg_prquestion_details.report_number
 INNER JOIN user_access_rights on user_access_rights.userid = smg_students.arearepid
 INNER JOIN smg_programs on smg_programs.programid = smg_students.programid
-WHERE smg_students.regionassigned = <cfqueryparam value="#url.regionid#" cfsqltype="cf_sql_integer"> 
+WHERE smg_students.regionassigned = <cfqueryparam value="#VAL(url.regionid)#" cfsqltype="cf_sql_integer"> 
  <cfif url.cancelled eq 0>
  AND smg_students.active = 1 
  <cfelse>
  AND smg_students.canceldate >= '#datelimit#'
  </cfif>
-AND smg_prquestion_details.month_of_report = <cfqueryparam value="#url.rmonth#" cfsqltype="cf_sql_integer">
-AND user_access_rights.regionid = <cfqueryparam value="#url.regionid#" cfsqltype="cf_sql_integer">
+AND smg_prquestion_details.month_of_report = <cfqueryparam value="#VAL(url.rmonth)#" cfsqltype="cf_sql_integer">
+AND user_access_rights.regionid = <cfqueryparam value="#VAL(URL.regionid)#" cfsqltype="cf_sql_integer">
 AND smg_programs.progress_reports_active = 1
 
 order by advisorid, rep_last, ny_Accepted, familylastname
@@ -129,7 +127,7 @@ order by advisorid, rep_last, ny_Accepted, familylastname
 SELECT smg_students.studentid, smg_students.arearepid
 FROM smg_students
 INNER JOIN smg_programs on smg_programs.programid = smg_students.programid
-WHERE smg_students.regionassigned = <cfqueryparam value="#url.regionid#" cfsqltype="cf_sql_integer">
+WHERE smg_students.regionassigned = <cfqueryparam value="#VAL(url.regionid)#" cfsqltype="cf_sql_integer">
 AND smg_programs.hold = 0
 <!---and smg_students.active= 1 --->
 
