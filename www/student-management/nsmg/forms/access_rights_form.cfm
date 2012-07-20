@@ -45,6 +45,17 @@
 		// Stores errorMsgs
 		errorMsg = '';	
 	</cfscript>
+    
+    <cfquery name="qGetUser" datasource="#APPLICATION.DSN#">
+        SELECT
+            userID,
+            firstName,
+            lastName
+        FROM
+            smg_users
+        WHERE
+            userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
+    </cfquery>
 
 	<cfif ListFind("1,2,3,4", CLIENT.userType)>
     
@@ -524,6 +535,10 @@
                             
                             <p>Click "Submit" to add the following Company & Regional Access information.</p>
                             <table border=0 cellpadding=4 cellspacing=0>
+                            	<tr>
+                                	<td class="label">User:</td>
+                                    <td>#qGetUser.firstName# #qGetUser.lastName# (###qGetUser.userID#)</td>
+                                </tr>
                                 <tr>
                                     <td class="label">Program Manager:</td>
                                     <td>
@@ -554,6 +569,10 @@
     
                             <span class="redtext">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Required fields</span>
                             <table border=0 cellpadding=4 cellspacing=0>
+                            	<tr>
+                                	<td class="label">User:</td>
+                                    <td>#qGetUser.firstName# #qGetUser.lastName# (###qGetUser.userID#)</td>
+                                </tr>
                                 <tr>
                                     <td class="label">Program Manager:</td>
                                     <td>
