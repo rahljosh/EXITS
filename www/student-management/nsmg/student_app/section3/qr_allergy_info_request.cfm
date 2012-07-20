@@ -29,8 +29,10 @@ allergic_cigs = <cfif IsDefined('form.allergic_cigs')>1<cfelse>0</cfif>
 where studentid = #client.studentid#
 </cfquery>
 
-<cfif client.need_add_info is not ''>
-	<cflocation url="?curdoc=section3/additional_health_answers">
+<cfif isDefined('CLIENT.need_add_info')>
+	<cfif client.need_add_info is not ''>
+        <cflocation url="?curdoc=section3/additional_health_answers">
+    </cfif>
 </cfif>
 
 <script language="JavaScript">
