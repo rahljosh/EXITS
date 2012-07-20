@@ -202,7 +202,7 @@
                         AND
                             s.hostID != <cfqueryparam cfsqltype="cf_sql_bit" value="0">                            
                         AND 
-                            s.host_fam_approved ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )	
+                            s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )	
                     </cfcase>
                 
                 </cfswitch>
