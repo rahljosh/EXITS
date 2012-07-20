@@ -14,12 +14,15 @@ You indicated 'Other' as the method of transportation to school, but didn't fill
 </cfif>
 <cftransaction action="BEGIN" isolation="SERIALIZABLE">
 <cfquery name="insert_transportation" datasource="MySQL">
-update smg_hosts
-set schooltransportation = "#form.transportation#",
-	schooldistance = "#form.distance_school#",
-	schoolcosts = "#form.school_costs#",
-	other_trans = "#form.other_desc#"	
-where hostid = #client.hostid#
+	UPDATE
+    	smg_hosts
+  	SET
+    	schoolTransportation = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.transportation#">,
+		schooldistance = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.distance_school#">,
+		schoolcosts = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.school_costs#">,
+		other_trans = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.other_desc#">	
+	WHERE
+    	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.hostID)#">
 </cfquery>
 </cftransaction>
 <Cflocation url="index.cfm?curdoc=forms/host_fam_pis_7" addtoken="no">
