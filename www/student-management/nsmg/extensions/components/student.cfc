@@ -2384,6 +2384,7 @@
                     doc_class_schedule,
                     compliance_class_schedule,
                     actions,
+                    isActive,
                     dateOfChange,
                     dateCreated,
                     dateUpdated

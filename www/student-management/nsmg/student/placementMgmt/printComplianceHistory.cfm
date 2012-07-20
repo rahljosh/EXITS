@@ -63,16 +63,23 @@
             filePath="../../"
         />	
     
-            <table width="95%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+            <table width="100%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                 <tr>
                     <th colspan="4">Compliance History</th>
                 </tr>   
 			</table>
             
-			<table width="95%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">                       
+			<table width="100%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">                       
                 <tr class="on">
                     <td class="subTitleLeft" width="50%">Student: #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentid#)</td>
-                    <td class="subTitleLeft" width="50%">Host Family: #qGetHostInfo.familyLastName# (###qGetHostInfo.hostID#)</td>
+                    <td class="subTitleLeft" width="50%">
+						Host Family: #qGetHostInfo.familyLastName# (###qGetHostInfo.hostID#)
+						<cfif VAL(qGetPlacementHistoryByID.isActive)>
+							- Current Placement
+						<cfelse>
+							- Previous Placement
+						</cfif>
+					</td>
                 </tr>  
                 <tr class="off">
                     <td class="subTitleLeft" width="50%">Region: #qGetRegionAssigned.regionName# (###qGetRegionAssigned.regionID#)</td>
@@ -80,7 +87,7 @@
                 </tr>  
             </table>
 
-            <table width="95%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+            <table width="100%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                 <tr class="on">
                     <td class="subTitleLeft" width="20%">Date</td>
                     <td class="subTitleLeft" width="50%">Comments</td>
@@ -112,7 +119,7 @@
                 <gui:pageFooter
                     footerType="printDocumentItem"
                     filePath="../../"
-                    width="95%"
+                    width="100%"
                 />
 			
             </cfdocumentitem>  
