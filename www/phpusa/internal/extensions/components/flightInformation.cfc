@@ -457,6 +457,8 @@
 									</cfif>
                                 </td>
                             </tr>
+                        	
+                            <!--- 7/20/2012 - Luke Requested to be removed 
                         
 							<!--- Updated By --->
                             <cfif ARGUMENTS.sendEmailTo NEQ 'school'>
@@ -468,6 +470,8 @@
                                     </td>
                                 </tr>
 							</cfif>
+							
+							--->
 							
                             <!--- Today's Date --->
                         	<tr>
