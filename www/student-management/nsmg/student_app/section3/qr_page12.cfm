@@ -64,12 +64,15 @@
 	</cfif>
 	
 	<cfquery name="Update_Student" datasource="MySql">
-	UPDATE smg_students
-	SET	height = '#form.height#',
-		weight = '#form.weight#',
-		haircolor = '#form.haircolor#',
-		eyecolor = '#form.eyecolor#'
-	WHERE studentid = <cfqueryparam value="#form.studentid#" cfsqltype="cf_sql_integer">
+	UPDATE 
+    	smg_students
+	SET	
+    	height = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.height)#">,
+		weight = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.weight)#">,
+		haircolor = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.haircolor#">,
+		eyecolor = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.eyecolor#">
+	WHERE 
+    	studentid = <cfqueryparam value="#VAL(FORM.studentid)#" cfsqltype="cf_sql_integer">
 	LIMIT 1	
 	</cfquery>
 	
