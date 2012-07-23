@@ -262,15 +262,17 @@
 					</td>
 					<td valign="top" class="additionalProgramDiv" style="display:block;">
                          <table>
-                         
-						
-                        <cfloop query="qAppAddPrograms">
-                        	<Cfif app_programid neq 6 and app_programid neq 8>
-                        <tr>
-                            <Td><input type="checkbox" name="app_additional_program"  value="#app_programid#" <cfif ListFind(get_student_info.app_additional_program, app_programid)>checked</cfif>/></Td><td>#app_program#</td>
-                        </tr>
-                        	</Cfif>
-                        </cfloop>
+                         	<tr>
+                            	<td>
+                                	<select name="app_additional_program">
+                                    	<cfloop query="qAppAddPrograms">
+                                        	<cfif app_programid neq 6 and app_programid neq 8>
+                                        		<option value="#app_programID#" <cfif ListFind(get_student_info.app_additional_program, app_programid)>selected='selected'</cfif>>#app_program#</option>
+                                        	</cfif>
+                                        </cfloop>
+                                    </select>
+                                </td>
+                            </tr>
                       	</table>	
 					</td>
 				</tr>
