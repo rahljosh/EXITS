@@ -54,8 +54,10 @@
 <cftransaction action="begin" isolation="serializable">
 
 	<cfquery name="update_student" datasource="MySql">
-		UPDATE smg_students
-		SET	familylastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.ProperCase(APPLICATION.CFC.UDF.removeAccent(FORM.familylastname))#">,
+		UPDATE 
+        	smg_students
+		SET	
+        	familylastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.ProperCase(APPLICATION.CFC.UDF.removeAccent(FORM.familylastname))#">,
 			firstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.ProperCase(APPLICATION.CFC.UDF.removeAccent(FORM.firstName))#">,
 			middlename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.ProperCase(APPLICATION.CFC.UDF.removeAccent(FORM.middleName))#">,
 			app_indicated_program = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.app_indicated_program#">,  
