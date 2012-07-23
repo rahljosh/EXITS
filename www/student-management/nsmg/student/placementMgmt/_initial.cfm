@@ -489,6 +489,11 @@
 			// Set to 0 if could not retrieve it successfully
 			if ( NOT IsNumeric(vGoogleDistance) ) {
 				vGoogleDistance = 0;
+				// Set Page Message
+				SESSION.formErrors.Add("EXITS could not update the distance from HF to AR, please check if both addresses are correct.");
+			} else {
+				// Set Page Message
+				SESSION.pageMessages.Add("Distance from HF to AR has been updated. New distance is #vGoogleDistance# miles.");
 			}
 			
 			// Update Distance in the database
@@ -496,7 +501,7 @@
 				historyID=qGetPlacementHistoryByID.historyID,
 				distanceInMiles=vGoogleDistance
 			);
-			
+
 			// Reload page
 			location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");		
 
@@ -1118,19 +1123,19 @@
 
             <tr>
                 <td align="center" style="padding:10px 0px 10px 0px; color:##3b5998;">
-                    <p>Supervising Representative is <span #vSetColorCode#> #qGetPlacementHistoryByID.hfSupervisingDistance# mi </span> away from Host Family</p>
-					<!--- Recalculate Distance ---->
-                    <form name="recalculateDistance" id="recalculateDistance" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
-                        <input type="hidden" name="subAction" id="subAction" value="recalculateDistance" />
-                        <input type="hidden" name="studentID" id="studentID" value="#FORM.studentID#" /> 
-                        <input type="hidden" name="hostID" id="hostID" value="#FORM.hostID#" />  
-                        <input type="hidden" name="areaRepID" id="areaRepID" value="#FORM.areaRepID#" />                        
-                    </form>
-                    <a href="javascript:$('##recalculateDistance').submit();" title="Click here to recalculate distance from HF to AR">[ Recalculate Distance ]</a>
+                    <p>Supervising Representative is <span #vSetColorCode#> #qGetPlacementHistoryByID.hfSupervisingDistance# mi </span> away from Host Family</p>                    
                 </td>
             </tr>
             
     	</cfif>
+        
+		<!--- Recalculate Distance FORM ---->
+        <form name="recalculateDistance" id="recalculateDistance" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
+            <input type="hidden" name="subAction" id="subAction" value="recalculateDistance" />
+            <input type="hidden" name="studentID" id="studentID" value="#FORM.studentID#" /> 
+            <input type="hidden" name="hostID" id="hostID" value="#FORM.hostID#" />  
+            <input type="hidden" name="areaRepID" id="areaRepID" value="#FORM.areaRepID#" />                        
+        </form>
                                
         <tr>
             <td align="center">
@@ -1525,12 +1530,17 @@
                             <cfelseif VAL(qGetPlacementHistoryByID.areaRepID)>
                             
                                 #qGetAreaRepInfo.firstName# #qGetAreaRepInfo.lastName# (###qGetAreaRepInfo.userID#) <br />
-                                #qGetAreaRepInfo.city#, #qGetAreaRepInfo.state# #qGetAreaRepInfo.zip#
+                                #qGetAreaRepInfo.city#, #qGetAreaRepInfo.state# #qGetAreaRepInfo.zip# <br />
+								Distance to Host Family:
 								<cfif VAL(qGetPlacementHistoryByID.hfSupervisingDistance)>
-                                	 <br />
-                                	Distance to Host Family: #qGetPlacementHistoryByID.hfSupervisingDistance# miles
-                                </cfif>
-
+									#qGetPlacementHistoryByID.hfSupervisingDistance# miles
+                                <cfelse>
+                                	n/a
+								</cfif>
+                                
+                                <div class="placementMgmtLinks">
+	                                <a href="javascript:$('##recalculateDistance').submit();" title="Click here to recalculate distance from HF to AR">[ Recalculate Distance ]</a>
+								</div>
                             </cfif>
 						
                         </div>
