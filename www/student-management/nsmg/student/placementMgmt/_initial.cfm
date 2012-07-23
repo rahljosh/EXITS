@@ -46,13 +46,15 @@
 
     <cfscript>
 		// Set default value
-		vHostInCompliance = '';
+		vIsPlacementCompliant = '';
 		
-		// Check if is in compliance - Office users
-		if ( ListFind("1,2,3,4", CLIENT.userType) ) {
+		vIsDoublePlacementLanguageCompliant = '';
+		
+		// Check if placement is compliant - Office users
+		if ( APPLICATION.CFC.USER.isOfficeUser() ) {
 
 			// Check if Host Family is in compliance
-			vHostInCompliance = APPLICATION.CFC.CBC.checkHostFamilyCompliance(
+			vIsPlacementCompliant = APPLICATION.CFC.CBC.checkHostFamilyCompliance(
 				hostID=qGetPlacementHistoryByID.hostID, 
 				studentID=qGetStudentInfo.studentID,
 				doublePlacementID=qGetPlacementHistoryByID.doublePlacementID,
@@ -64,6 +66,11 @@
 			
 		}
 		
+		// Check if Double Placement is compliant - Office users
+		if ( APPLICATION.CFC.USER.isOfficeUser() AND VAL(qGetPlacementHistoryByID.doublePlacementID) ) {
+			vIsDoublePlacementLanguageCompliant = APPLICATION.CFC.STUDENT.checkDoublePlacementCompliant(studentID=qGetStudentInfo.studentID,doublePlacementID=qGetPlacementHistoryByID.doublePlacementID);	
+		}
+
 		// Get Training Options
 		qGetRelocationReason = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='changePlacementReason');
 		
@@ -89,11 +96,11 @@
 					SESSION.formErrors.Add("You must answer whether is a relocation or not");
 				}			
 				
-				/* Waiting to be Pushed Live - 04/11/2012 - Marcus Melo
-				if ( VAL(FORM.isRelocation) AND isDate(FORM.dateRelocated) AND FORM.dateRelocated LT now() ) {
+				/*** WAITING TO GO LIVE 
+				if ( VAL(FORM.isRelocation) AND isDate(FORM.dateRelocated) AND FORM.dateRelocated LT DateFormat(now(), 'mm/dd/yyyy') ) {
 					SESSION.formErrors.Add("Relocation date is out of compliance, please enter a new date");
 				}
-				*/
+				***/
 
 				if ( NOT VAL(FORM.changePlacementReasonID) ) {
 					SESSION.formErrors.Add("You must select a reason for changing host family");
@@ -315,20 +322,37 @@
 		
 		// APPROVE PLACEMENT
 		} else if ( FORM.subAction EQ 'approve' ) {
-		
-			// Approve Placement - Insert into history
-			APPLICATION.CFC.STUDENT.approvePlacement(
-				studentID = FORM.studentID,								 
-				changedBy = CLIENT.userID,								 
-				userType = CLIENT.userType
-			 );
-
-			// Set Page Message
-			SESSION.pageMessages.Add("Placement has been approved.");
 			
-			// Reload page
-			location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");		
-		
+			// Data Validation
+			/*** WAITING TO GO LIVE
+			if ( APPLICATION.CFC.USER.isOfficeUser() AND VAL(qGetPlacementHistoryByID.isRelocation) AND NOT IsDate(FORM.dateRelocated) ) {
+				SESSION.formErrors.Add("You must enter what date the student relocated to this new family");
+			}			
+			
+			if ( APPLICATION.CFC.USER.isOfficeUser() AND VAL(qGetPlacementHistoryByID.isRelocation) AND isDate(FORM.dateRelocated) AND FORM.dateRelocated LT DateFormat(now(), 'mm/dd/yyyy') ) {
+				SESSION.formErrors.Add("Relocation date is out of compliance, please enter a new date");
+			}
+			***/
+			
+			// Check if there are no errors
+			if ( NOT SESSION.formErrors.length() ) {				
+	
+				// Approve Placement - Insert into history
+				APPLICATION.CFC.STUDENT.approvePlacement(
+					studentID = FORM.studentID,								 
+					changedBy = CLIENT.userID,								 
+					userType = CLIENT.userType,
+					dateRelocated=FORM.dateRelocated
+				 );
+	
+				// Set Page Message
+				SESSION.pageMessages.Add("Placement has been approved.");
+				
+				// Reload page
+				location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");		
+			
+			}
+			
 		// SET FAMILY AS PERMANENT
 		} else if ( FORM.subAction EQ 'setFamilyAsPermanent' ) {
 
@@ -520,7 +544,12 @@
 				vDisplaySaveButton = 1;
 				$("#divAreaRepID").slideDown();
 			}
-			
+
+		// Display only if approving a placement
+		<cfelseif FORM.subAction EQ	'approve'>
+		
+			displayHiddenForm('approvePlacementForm','actionButtons');
+
 		// Display only if rejecting a placement
 		<cfelseif FORM.subAction EQ 'reject'>
 		
@@ -668,13 +697,13 @@
 	
 	var displayRelocationDate = function() {
 		
-		/* Waiting to be Pushed Live - 04/11/2012 - Marcus Melo
 		// Get Change Placement Reason ID Value		
 		vGetRelocationOption = $("input[name='isRelocation']:checked").val() ;
 		
 		// Used when relocation is hard coded
 		vCheckIsRelocationHiddenField = $("#isRelocation").val();
 		
+		/** WAITING TO GO LIVE
 		if ( vGetRelocationOption == 1 || vCheckIsRelocationHiddenField == 1 ) {
 			// Show Form
 			$(".relocationDateInput").fadeIn('fast');
@@ -682,7 +711,7 @@
 			// Hide Forms
 			$(".relocationDateInput").fadeOut('fast');
 		}
-		*/
+		**/
 		
 	}
 
@@ -935,10 +964,10 @@
                     <td align="center" style="padding-top:10px;">
 
 						<!--- Check if CBCs are in compliance with DOS --->											
-                        <cfif ListFind("1,2,3,4", CLIENT.userType) AND LEN(vHostInCompliance)>
+                        <cfif APPLICATION.CFC.USER.isOfficeUser() AND LEN(vIsPlacementCompliant)>
                             
                             <!--- Display Compliance --->
-                            #vHostInCompliance#
+                            #vIsPlacementCompliant#
 
 							<!--- Display Rejection Button --->
 							<cfif CLIENT.usertype LT qGetStudentInfo.host_fam_Approved>
@@ -955,7 +984,13 @@
                             
                             <span id="actionButtons" class="displayNone">
                             
-                                <a href="javascript:approvePlacement();"><img src="../../pics/approve.gif" border="0" alt="Approve Placement" /></a>
+                                <!--- Relocation date is required for office users --->
+                                <cfif APPLICATION.CFC.USER.isOfficeUser() AND VAL(qGetPlacementHistoryByID.isRelocation)>
+									<a href="javascript:displayHiddenForm('approvePlacementForm','actionButtons');"><img src="../../pics/approve.gif" border="0" alt="Approve Placement" /></a>    
+                                <cfelse>
+	                                <a href="javascript:approvePlacement();"><img src="../../pics/approve.gif" border="0" alt="Approve Placement" /></a>                                
+                                </cfif>
+
                                 &nbsp; &nbsp;
                                 <a href="javascript:displayHiddenForm('rejectPlacementForm','actionButtons');"><img src="../../pics/reject.gif" border="0" alt="Reject Placement" /></a>
                        
@@ -967,7 +1002,22 @@
                         <form name="approvePlacementForm" id="approvePlacementForm" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="displayNone">
                             <input type="hidden" name="subAction" id="subAction" value="approve" />
                             <input type="hidden" name="studentID" id="studentID" value="#FORM.studentID#" />
-                            <input type="image" name="submit" src="../../pics/approve.gif" alt="Approve Placement" />
+                            
+                            <table width="680px" border="0" cellpadding="4" cellspacing="0" class="" align="center">                            				
+                                <tr class="reportCenterTitle"> 
+                                    <th>APPROVE PLACEMENT</th>
+                                </tr>
+                                <tr>
+                                    <td class="placementMgmtInfo" align="center">
+                                        <!--- WAITING TO GO LIVE
+                                        <label class="reportTitleLeftClean" for="dateSetHostPermanent">Please enter a relocation date?</label>
+                                        <input type="text" name="dateRelocated" id="dateRelocated" class="datePicker" value="#DateFormat(FORM.dateRelocated, 'mm/dd/yyyy')#">
+										--->
+                                        <input type="image" name="submit" src="../../student_app/pics/submit.gif" alt="Approve Placement" style="display:block;" />  
+                                    </td>
+                                </tr>
+                            </table>
+                            
                         </form>
 
                         <!--- Reject Placement ---->
@@ -1018,8 +1068,17 @@
             
         </cfswitch>
 
+		<!--- Display Double Placement Language Compliant --->
+		<cfif LEN(vIsDoublePlacementLanguageCompliant)>
+            <tr>
+                <td align="center" style="padding:10px 0px 10px 0px; color:##F00;">
+                    #vIsDoublePlacementLanguageCompliant#
+                </td>
+            </tr>
+        </cfif> 
+
 		<!--- Display Distance in Miles --->
-        <cfif listFind("1,2,3,4", CLIENT.userType) AND vPlacementStatus NEQ 'unplaced' AND qGetPlacementHistoryByID.hfSupervisingDistance GTE 100>
+        <cfif APPLICATION.CFC.USER.isOfficeUser() AND vPlacementStatus NEQ 'unplaced' AND qGetPlacementHistoryByID.hfSupervisingDistance GTE 100>
             
 			<cfscript>
 				vSetColorCode = '';
@@ -1030,15 +1089,15 @@
 					vSetColorCode = 'class="attention"';	
 				}
 			</cfscript>
-            
+
             <tr>
                 <td align="center" style="padding:10px 0px 10px 0px; color:##3b5998;">
                     <p>Supervising Representative is <span #vSetColorCode#> #qGetPlacementHistoryByID.hfSupervisingDistance# mi </span> away from Host Family</p>
                 </td>
-            </tr> 
-                                   
+            </tr>
+            
     	</cfif>
-        
+                               
         <tr>
             <td align="center">
                 
@@ -1188,8 +1247,8 @@
                                     <label for="isRelocation1">Yes</label>
                                 </cfif>
 
+								<!--- WAITING TO GO LIVE
 								<!--- Relocation Date --->
-                                <!--- Waiting to be Pushed Live - 04/11/2012 - Marcus Melo
                                 <span class="relocationDateInput" style="display:none">Please enter a relocation date (if known):</span> 
                                 <input type="text" name="dateRelocated" id="dateRelocated" class="datePicker relocationDateInput displayNone" value="#DateFormat(FORM.dateRelocated, 'mm/dd/yyyy')#">
                                 --->

@@ -136,7 +136,7 @@
         WHERE 
         	schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetPlacementHistory.schoolID)#">
         AND 
-        	p.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.programid#">
+        	p.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.programid)#">
     </cfquery>
     
     <!---number kids at home---->
@@ -284,8 +284,7 @@
     </form>
     
 
-	<!----Only allow Josh-1, Brian-12313, Marcus-510, Bill-8731, Bob-8743, Gary-12431, Tal-16718, Merri-12389 to change the dates---->
-    <cfif IsDate(qGetPlacementHistory.datePlaced) AND listFind("1,12313,510,8731,8743,12431,16718,12389", CLIENT.userID)>		
+    <cfif IsDate(qGetPlacementHistory.datePlaced) AND APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID, role="datePlacedEdit")>		
 
         <form name="placementInfoSheet.cfm" method="post">
             <input type="hidden" name="submitted" value="1" />
