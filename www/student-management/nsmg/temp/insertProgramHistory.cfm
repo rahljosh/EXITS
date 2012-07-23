@@ -1,17 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Update Program History</title>
-</head>
-
-<body>
-
 <cfsetting requesttimeout="99999">
 
 <cfquery name="qGetStudents" datasource="MySql">
 	SELECT
-    	COUNT(s.studentID) AS number,
     	s.studentID,
         s.programID
 	FROM
@@ -26,8 +16,8 @@
         sph.studentID IS NULL
 </cfquery>
 
-<cfoutput>Number of students updated: #qGetStudents.number#<br />Students updated:<br /></cfoutput>
-<cfloop query="qGetStudents">
+<cfoutput>Number of students updated: #qGetStudents.recordCount#<br />Students updated:<br /></cfoutput>
+	<cfloop query="qGetStudents">
 	<cfoutput>#studentid#<br /></cfoutput>
   	<cfquery name="program_history" datasource="MySql">
         INSERT INTO smg_programhistory
@@ -48,5 +38,3 @@
             )
 	</cfquery>
 </cfloop>
-</body>
-</html>
