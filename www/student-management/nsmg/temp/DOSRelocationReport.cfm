@@ -1,6 +1,6 @@
 <cfquery name="students" datasource="#application.dsn#">
 select comp.companyshort,s.studentid, p.programname, s.programid, s.sevis_batchid,
-s.familylastname, s.firstname, s.ds2019_no, h.hostid, c.countryname, h.welcome_family,
+s.familylastname, s.firstname, s.ds2019_no, h.hostid, c.countryname, h.isWelcomeFamily,
 s.date_host_fam_approved,
  h.dateofchange, u.firstname as repfirst, u.lastname as replast, u.zip,
 sch.schoolid, sch.schoolname, sch.address as schooladdress, sch.address2 as schooladdress2, sch.city as schoolcity,
@@ -13,7 +13,7 @@ left join smg_users u on u.userid = s.placerepid
 left join smg_countrylist c on c.countryid = s.countryresident
 left join smg_schools sch on sch.schoolid = s.schoolid
 left join smg_companies comp on comp.companyid = s.companyid
-where relocation ='yes'
+where isRelocation ='yes'
 and (s.programid = 291  or s.programid = 311 or s.programid = 284)
 and h.dateofchange >= '2010-09-01'
 and (s.companyid < 5 or s.companyid = 12)
@@ -54,7 +54,7 @@ and (s.companyid < 5 or s.companyid = 12)
         <td>#hostinfo.fatherfirstname#</td>
         <td>#hostinfo.motherlastname#</td>
         <td>#hostinfo.motherfirstname#</td>
-        <td><cfif welcome_family eq 1>Welcome Family<cfelse>Permanent</cfif></td>
+        <td><cfif isWelcomeFamily eq 1>Welcome Family<cfelse>Permanent</cfif></td>
         <td>#hostinfo.address# #hostinfo.address2#</td>
         <Td>#hostinfo.city#</Td>
         <td>#hostinfo.state#</td>

@@ -331,12 +331,12 @@
                     location ("#vPath#errorMessage.cfm", "no");
                 </cfscript>
 				
-                <!--- Could not send email for any reason --->
+                <!--- Could not send email for any reason or errorMessage.cfm could not be found - redirect user to login page --->
                 <cfcatch type="any">
                 
                     <cfscript>
     	                // Redirect to error page
-	                    location ("#vPath#errorMessage.cfm", "no");
+	                    Location("http://#cgi.http_host#/", "no");
                     </cfscript>
                     
                 </cfcatch>

@@ -230,7 +230,7 @@
                 
                 <cfif isDate(ARGUMENTS.arrivalTo)>
                 	AND
-                    	fi.dep_date <= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d', 1, ARGUMENTS.arrivalTo)#">
+                    	fi.dep_date <= <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.arrivalTo#"> <!--- #DateAdd('d', 1, ARGUMENTS.arrivalTo)# --->
                 </cfif>    
                     
                 GROUP BY 
