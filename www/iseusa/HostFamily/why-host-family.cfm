@@ -40,7 +40,7 @@
 &#187; Want to share cultures<br />
 &#187; Speak English<br />
 &#187; Have full insurance </p>
-<p><a href="become-a-host-familyJW.cfm?page=/HostFamily/about-our-students" target="_self"><img src="images/hostFamily/learnMore.png" width="80" height="10" border="0" /></a></p>
+<p><a href="become-a-host-family.cfm?page=/HostFamily/about-our-students" target="_self"><img src="images/hostFamily/learnMore.png" width="80" height="10" border="0" /></a></p>
 
       <!--HF_boxOrg--><!--end HFsidebarR--></div><br />
       </div>
