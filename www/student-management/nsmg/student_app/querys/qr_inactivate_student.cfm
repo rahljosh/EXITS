@@ -21,7 +21,7 @@
 				SET active = '0',
 					canceldate = #CreateODBCDate(now())#,
 					cancelreason = 'EXITS Online canceled by Intl. Agent'
-				WHERE studentid = '#form.studentid#'
+				WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentid#">
 				LIMIT 1
 			</cfquery>
 		</cftransaction>

@@ -3,8 +3,10 @@
 <cfif isDefined('url.confirmed')>
 	<cfif url.confirmed is 'pdf'>
 		<cfquery name="delete_letter" datasource="mysql">
-		delete from smg_users letter
-		where studentid = #client.userid#	
+        	DELETE FROM
+            	smg_users letter
+          	WHERE
+            	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">	
 		</cfquery>
 	<cfelse>
 		<cffile action="delete" file='#AppPath.onlineApp.picture##client.studentid#.jpg'>

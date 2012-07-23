@@ -5,9 +5,13 @@
 </style>
 
 <cfquery name="users_bypass" datasource="mysql">
-    select userid, bypass_checklist
-    from smg_users
-    where userid = #client.userid#
+	SELECT
+    	userID,
+        bypass_checklist
+   	FROM
+    	smg_users
+   	WHERE
+    	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
 </cfquery>
 
 <cfif users_bypass.bypass_checklist eq 1>

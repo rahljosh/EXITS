@@ -63,7 +63,7 @@ body {font:Arial, Helvetica, sans-serif;}
 <cfquery name="org_info" datasource="mysql">
 select *
 from smg_companies
-where companyid = #client.org_code#
+where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.org_code#">
 </cfquery>
 
 <br>
