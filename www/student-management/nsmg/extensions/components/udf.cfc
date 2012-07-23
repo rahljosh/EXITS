@@ -774,6 +774,7 @@
         
     </cffunction>
 
+
 	<cffunction name="addressLookup" access="remote" returnFormat="json" output="false" hint="empty for no accurate match">
 		<cfargument name="address" type="string" required="yes">
         <cfargument name="city" type="string" required="yes">
@@ -918,8 +919,8 @@
         </cfscript>
             
 	</cffunction>
-    
-    
+
+
 	<!---Check if paperwork is complete for a specific user for a specific season to be allowed access---->
 	<cffunction name="paperworkCompleted" access="public" returntype="query">
     	<cfargument name="season" type="numeric" required="yes" default=9 hint="This should be what ever season you want to check on." />
