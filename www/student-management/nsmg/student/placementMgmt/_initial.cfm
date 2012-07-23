@@ -474,6 +474,32 @@
 
 			}
 
+		// RECALCULATE DISTANCE
+		} else if ( FORM.subAction EQ 'recalculateDistance' ) {
+
+			// Get Host Family Address
+			vHostAddress = APPLICATION.CFC.HOST.getCompleteHostAddress(hostID=FORM.hostID).completeAddress;
+
+			// Get Supervising Representative Address
+			vSupervisingRepAddress = APPLICATION.CFC.USER.getCompleteUserAddress(userID=FORM.areaRepID).completeAddress;
+
+			// Get Driving Distance From Google
+			vGoogleDistance = APPLICATION.CFC.UDF.calculateAddressDistance(origin=vHostAddress,destination=vSupervisingRepAddress);
+
+			// Set to 0 if could not retrieve it successfully
+			if ( NOT IsNumeric(vGoogleDistance) ) {
+				vGoogleDistance = 0;
+			}
+			
+			// Update Distance in the database
+			APPLICATION.CFC.STUDENT.updateHostSupervisingDistance(
+				historyID=qGetPlacementHistoryByID.historyID,
+				distanceInMiles=vGoogleDistance
+			);
+			
+			// Reload page
+			location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");		
+
 		// FORM NOT SUBMITTED
 		} else {
 			
@@ -1093,6 +1119,14 @@
             <tr>
                 <td align="center" style="padding:10px 0px 10px 0px; color:##3b5998;">
                     <p>Supervising Representative is <span #vSetColorCode#> #qGetPlacementHistoryByID.hfSupervisingDistance# mi </span> away from Host Family</p>
+					<!--- Recalculate Distance ---->
+                    <form name="recalculateDistance" id="recalculateDistance" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
+                        <input type="hidden" name="subAction" id="subAction" value="recalculateDistance" />
+                        <input type="hidden" name="studentID" id="studentID" value="#FORM.studentID#" /> 
+                        <input type="hidden" name="hostID" id="hostID" value="#FORM.hostID#" />  
+                        <input type="hidden" name="areaRepID" id="areaRepID" value="#FORM.areaRepID#" />                        
+                    </form>
+                    <a href="javascript:$('##recalculateDistance').submit();" title="Click here to recalculate distance from HF to AR">[ Recalculate Distance ]</a>
                 </td>
             </tr>
             
