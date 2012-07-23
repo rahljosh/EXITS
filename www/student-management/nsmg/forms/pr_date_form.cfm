@@ -5,7 +5,7 @@
 	Date:		July 3, 2012
 	Desc:		Add dates to progress reports
 
-	Updated:  	
+	Updated:	Updating query to loop through program start/end dates and not season	
 
 ----- ------------------------------------------------------------------------- --->
 
@@ -26,24 +26,27 @@
 		field_list = 'prdate_date,prdate_comments,fk_prdate_type,fk_prdate_contact';
 	</cfscript>
     
-    <cfquery name="qGetContactType" datasource="#application.dsn#">
+    <cfquery name="qGetContactType" datasource="#APPLICATION.DSN#">
         SELECT 
-        	*
+        	prdate_type_id,
+            prdate_type_name
         FROM 
         	prdate_types
         ORDER BY 
         	prdate_type_id
     </cfquery>
     
-    <cfquery name="qGetContacts" datasource="#application.dsn#">
+    <cfquery name="qGetContacts" datasource="#APPLICATION.DSN#">
         SELECT 
-        	*
+            prdate_contact_id,
+            prdate_contact_name
         FROM 
         	prdate_contacts
         ORDER BY 
         	prdate_contact_id
     </cfquery>
     
+    <!---
 	<!--- August to July Reports --->
     <cfquery name="qGetSeasonDateRange" datasource="#APPLICATION.DSN#">
         SELECT 
@@ -55,6 +58,22 @@
             startdate <= CURRENT_DATE
         AND 
             DATE_ADD(endDate, INTERVAL 31 DAY) >= CURRENT_DATE
+    </cfquery>
+    --->
+	
+    <!--- Use program start/end dates instead of season --->
+    <cfquery name="qGetSeasonDateRange" datasource="#APPLICATION.DSN#">
+        SELECT 
+            p.startDate,
+            DATE_ADD(p.endDate, INTERVAL 31 DAY) AS endDate
+        FROM
+        	smg_programs p
+        INNER JOIN
+        	smg_students s ON s.programID = p.programID
+        INNER JOIN
+        	progress_reports pr ON pr.fk_student = s.studentID
+        WHERE
+        	pr.pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.pr_id)#">          
     </cfquery>
     
     <!--- Loop Through Months in a season | July needs to be included here --->
@@ -117,7 +136,7 @@
     
 		<cfif new>
         
-            <cfquery datasource="#application.dsn#">
+            <cfquery datasource="#APPLICATION.DSN#">
                 INSERT INTO 
                		progress_report_dates 
 				(
@@ -140,7 +159,7 @@
 		<!--- edit --->
 		<cfelse>
         
-			<cfquery datasource="#application.dsn#">
+			<cfquery datasource="#APPLICATION.DSN#">
 				UPDATE 
                 	progress_report_dates 
                 SET
@@ -183,7 +202,7 @@
 <!--- edit --->
 <cfelseif not new>
 
-	<cfquery name="get_record" datasource="#application.dsn#">
+	<cfquery name="get_record" datasource="#APPLICATION.DSN#">
 		SELECT *
 		FROM progress_report_dates
 		WHERE prdate_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.prdate_id#">
