@@ -41,7 +41,13 @@
                 
                 <p><strong>#CLIENT.firstName# #CLIENT.lastName# (###CLIENT.userID#)</strong> has made an address change.</p>
                 
-                <p>Host Family: <strong>#FORM.familyname# (###family_info.hostid#)</strong>
+                <p>Host Family: 
+                <strong>
+                	#FORM.motherfirst#
+                    <cfif LEN(FORM.motherfirst) AND LEN(fatherfirst)>
+                    	&
+                  	</cfif>
+                    #FORM.fatherfirst# #FORM.familyname# (###family_info.hostid#)</strong>
                 
                 <p><strong>NEW ADDRESSS</strong></p>
                 #FORM.address#<br />
