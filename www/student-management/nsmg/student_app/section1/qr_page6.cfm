@@ -8,9 +8,12 @@
 	<cfset newletter = #Replace(form.familyletter,"#chr(10)#","<br>","all")#>
 	
 	<cfquery name="insert_typed_letter" datasource="mysql">
-		UPDATE smg_students
-			SET familyletter = <cfqueryparam value = "#newletter#" cfsqltype="cf_sql_longvarchar">
-		WHERE studentid = #client.studentid#
+		UPDATE
+        	smg_students
+		SET
+        	familyletter = <cfqueryparam value = "#newletter#" cfsqltype="cf_sql_longvarchar">
+		WHERE 
+        	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentid#">
 	</cfquery>
 
 	<html>
