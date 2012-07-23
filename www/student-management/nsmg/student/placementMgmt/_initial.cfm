@@ -478,10 +478,10 @@
 		} else if ( FORM.subAction EQ 'recalculateDistance' ) {
 
 			// Get Host Family Address
-			vHostAddress = APPLICATION.CFC.HOST.getCompleteHostAddress(hostID=FORM.hostID).completeAddress;
+			vHostAddress = APPLICATION.CFC.HOST.getCompleteHostAddress(hostID=qGetPlacementHistoryByID.hostID).completeAddress;
 
 			// Get Supervising Representative Address
-			vSupervisingRepAddress = APPLICATION.CFC.USER.getCompleteUserAddress(userID=FORM.areaRepID).completeAddress;
+			vSupervisingRepAddress = APPLICATION.CFC.USER.getCompleteUserAddress(userID=qGetPlacementHistoryByID.areaRepID).completeAddress;
 
 			// Get Driving Distance From Google
 			vGoogleDistance = APPLICATION.CFC.UDF.calculateAddressDistance(origin=vHostAddress,destination=vSupervisingRepAddress);
@@ -728,13 +728,14 @@
 	
 	var displayRelocationDate = function() {
 		
+		/** WAITING TO GO LIVE
+		
 		// Get Change Placement Reason ID Value		
 		vGetRelocationOption = $("input[name='isRelocation']:checked").val() ;
 		
 		// Used when relocation is hard coded
 		vCheckIsRelocationHiddenField = $("#isRelocation").val();
 		
-		/** WAITING TO GO LIVE
 		if ( vGetRelocationOption == 1 || vCheckIsRelocationHiddenField == 1 ) {
 			// Show Form
 			$(".relocationDateInput").fadeIn('fast');
@@ -1133,8 +1134,6 @@
         <form name="recalculateDistance" id="recalculateDistance" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
             <input type="hidden" name="subAction" id="subAction" value="recalculateDistance" />
             <input type="hidden" name="studentID" id="studentID" value="#FORM.studentID#" /> 
-            <input type="hidden" name="hostID" id="hostID" value="#FORM.hostID#" />  
-            <input type="hidden" name="areaRepID" id="areaRepID" value="#FORM.areaRepID#" />                        
         </form>
                                
         <tr>
