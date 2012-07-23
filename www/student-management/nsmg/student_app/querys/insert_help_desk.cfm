@@ -4,32 +4,59 @@
 	userid, firstname, lastname, email 
 	FROM smg_help_desk_section
 	LEFT JOIN smg_users ON assignedid = userid
-	WHERE sectionid = #form.section#
+	WHERE sectionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.section#">
 </cfquery>
 
 <cfquery name="get_support" datasource="MySql">
 	SELECT firstname, lastname, email
 	FROM smg_users
-	WHERE userid = #assigned_to.assignedid#
+	WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#assigned_to.assignedid#">
 </cfquery>
 
 <cfquery name="get_intrep" datasource="MySql">
 	SELECT intrep
 	FROM smg_students
-	WHERE studentid = '#client.studentid#'
+	WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentid#">
 </cfquery>
 
 <cfset newtext = #Replace(form.text,"#chr(10)#","<br>","all")#>
 
 <cfquery name="insert_help_desk" datasource="MySql">
-	INSERT INTO smg_help_desk
-		(title, category, section, priority, text, status, submitid, assignid, studentid, date)
-	VALUES ('#form.title#','#form.category#', '#form.section#',
-			<cfif form.category is 'suggestion' or form.category is 'question'>'low',
-			<cfelseif form.category is 'error' or form.category is 'request'>'medium',
-			<cfelseif form.category is 'problem'>'high',
-			<cfelseif form.category is 'student app'>'high',</cfif>
-			<cfqueryparam value="#newtext#" cfsqltype="cf_sql_longvarchar">, 'initial','#get_intrep.intrep#', '#assigned_to.assignedid#', '#client.studentid#', #CreateODBCDateTime(now())#)
+	INSERT INTO 
+    	smg_help_desk
+		(
+        	title,
+            category,
+            section,
+            priority,
+            text,
+            status,
+            submitid,
+            assignid,
+            studentid,
+            date
+      	)
+	VALUES 
+    	(
+        	<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.title#">,
+            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.category#">,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.section#">,
+            <cfif FORM.category IS 'suggestion' or FORM.category IS 'question'>
+            	'low',
+			<cfelseif FORM.category IS 'error' or FORM.category IS 'request'>
+            	'medium',
+			<cfelseif FORM.category IS 'problem'>
+            	'high',
+			<cfelseif FORM.category IS 'student app'>
+            	'high',
+			</cfif>
+			<cfqueryparam cfsqltype="cf_sql_longvarchar" value="#newtext#" >,
+            'initial',
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#get_intrep.intrep#">,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#assigned_to.assignedid#">,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentid#">,
+            <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(now())#)">
+     	)
 </cfquery>
 
 <cfquery name="retrive_helpdeskid" datasource="mysql">
@@ -38,8 +65,15 @@
 </cfquery>
 
 <cfquery name="insert_link" datasource="MySQL">
-	insert into smg_links (link)
-		values ('#CLIENT.exits_url#/nsmg/index.cfm?curdoc=helpdesk/help_desk_view&amp;helpdeskid=#retrive_helpdeskid.helpdeskid#')
+	INSERT INTO
+    	smg_links
+        (
+        	link
+       	)
+   	VALUES
+    	(
+        	<cfqueryparam cfsqltype="cf_sql_longvarchar" value="#CLIENT.exits_url#/nsmg/index.cfm?curdoc=helpdesk/help_desk_view&amp;helpdeskid=#retrive_helpdeskid.helpdeskid#">
+     	)
 </cfquery>
 
 <cfquery name="get_link_id" datasource="MySQL">

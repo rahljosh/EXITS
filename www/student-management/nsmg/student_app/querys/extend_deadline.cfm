@@ -5,7 +5,7 @@
 	<cfquery name="extend_deadline" datasource="MySQL">
 		UPDATE smg_students
 		SET application_expires = '#expiration_date#'
-		WHERE studentid = '#client.studentid#'
+		WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentid#">
 	</cfquery>
 	
 	<cflocation url="../index.cfm?curdoc=initial_welcome">

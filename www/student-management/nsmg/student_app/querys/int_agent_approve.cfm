@@ -1,9 +1,22 @@
 <meta http-equiv="refresh" content="3;url=close_window.cfm">
-<body onload="opener.location.reload()"> 
+<body onLoad="opener.location.reload()"> 
 <cfquery name="approve_appliation" datasource="MySQL">
-	insert into smg_student_app_status (studentid, status, reason, date)
-							values (#client.studentid#, 5, 'Application Approved by International Rep', #now()#)
-	</cfquery>
+	INSERT INTO
+    	smg_student_app_status
+        (
+        	studentID,
+            status,
+            reason,
+            date
+        )
+  	VALUES
+    	(
+        	<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentID#">,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="5">,
+            <cfqueryparam cfsqltype="cf_sql_varchar" value="Application Approved by International Rep">,
+            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#NOW()#">
+        )
+</cfquery>
 	
 	<table align="center">
 		<tr>

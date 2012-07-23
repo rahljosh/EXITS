@@ -19,7 +19,7 @@
 
 <cfquery name="delete_picture_description" datasource="MySQL">
 	DELETE from smg_student_app_family_album
-	WHERE studentid = '#url.studentid#'
+	WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.studentid#">
 		AND filename = '#picture#'
 	LIMIT 1
 </cfquery>

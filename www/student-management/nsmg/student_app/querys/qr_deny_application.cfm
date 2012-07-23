@@ -47,7 +47,7 @@
 				active = '0',
 				canceldate = #CreateODBCDate(now())#
 				--->
-			WHERE studentID = '#FORM.studentID#'
+			WHERE studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
 			LIMIT 1
 		</cfquery>
 	<cfelse>
@@ -58,7 +58,7 @@
             	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
                 app_current_status = '#newstatus#',
 				dateapplication = #CreateODBCDate(now())#
-			WHERE studentID = '#FORM.studentID#'
+			WHERE studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
 		</cfquery>
 	</cfif>
 	
@@ -72,7 +72,7 @@
 		FROM smg_students s
 		INNER JOIN smg_users u ON u.userid = s.branchid
 		LEFT JOIN smg_companies c ON c.companyid = s.companyid
-		WHERE studentID = '#FORM.studentID#'
+		WHERE studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
 	</cfquery>
 </cfif>
 
@@ -81,7 +81,7 @@
 	<cfquery name="check_branch" datasource="mysql">
 	select branchid 
 	from smg_students
-	where studentID = #FORM.studentID#
+	where studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
 	</cfquery>
 	
 <cfoutput>
@@ -92,7 +92,7 @@
 		u.businessname, u.email as intrepemail, u.phone
 		from smg_students s
 		inner join smg_users u on u.userid = s.intrep 
-		where studentID = #FORM.studentID#
+		where studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
 	</cfquery>
 		<!----Email CFC---->
         <cfsavecontent variable="email_message">
@@ -125,7 +125,7 @@
 			u.email as intrepemail, u.phone
 		FROM smg_students s
 		INNER JOIN smg_users u ON u.userid = s.branchid
-		WHERE studentID = #FORM.studentID#
+		WHERE studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
 	</cfquery>
 		<!----Email CFC---->
         <cfsavecontent variable="email_message">
@@ -164,7 +164,7 @@
 		FROM smg_students s
 		INNER JOIN smg_users u ON u.userid = s.intrep
 		LEFT JOIN smg_companies c ON c.companyid = s.companyid
-		WHERE studentID = '#FORM.studentID#'
+		WHERE studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
 	</cfquery>
 	
 	<cfquery name="get_current_user" datasource="MySql">
