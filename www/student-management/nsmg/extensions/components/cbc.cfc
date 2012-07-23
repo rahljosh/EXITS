@@ -2075,18 +2075,6 @@
 				vIsOutOfCompliance = 1;
 				vOtherMessage = vOtherMessage & "<p>Supervising Representative is #ARGUMENTS.representativeDistanceInMiles# mi away from Host Family</p>";
 			}
-
-			/***************************************************************************************
-				Check Double Placement Language - Make sure kids do not speak the same language 
-			***************************************************************************************/
-			/*
-			vIsDoublePlacementCompliant = APPLICATION.CFC.STUDENT.checkDoublePlacementCompliance(studentID=ARGUMENTS.studentID,doublePlacementID=ARGUMENTS.doublePlacementID);
-			
-			if ( NOT VAL(vIsDoublePlacementCompliant) ) {
-				vIsOutOfCompliance = 1;
-				vOtherMessage = vOtherMessage & "<p>Double Placement Non Compliant - It seems both students speak the same language</p>";
-			}
-			*/
         </cfscript>
 
 		<cfif VAL(vIsOutOfCompliance)>

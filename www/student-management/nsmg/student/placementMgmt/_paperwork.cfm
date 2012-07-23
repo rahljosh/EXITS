@@ -43,6 +43,7 @@
     <cfparam name="FORM.doc_single_student_sign_date" default="">
     <cfparam name="FORM.compliance_single_student_sign_date" default="">
     <!--- Placement Paperwork --->
+    <cfparam name="FORM.datePlaced" default="">
     <cfparam name="FORM.dateRelocated" default="">
     <!--- Page 1 --->
     <cfparam name="FORM.doc_host_app_page1_date" default="">
@@ -177,6 +178,7 @@
 				doc_single_ref_check2 = FORM.doc_single_ref_check2,
 				compliance_single_ref_check2 = FORM.compliance_single_ref_check2,
 				// Placement Paperwork
+				datePlaced = FORM.datePlaced,
 				dateRelocated = FORM.dateRelocated,
 				// Page 1
 				doc_host_app_page1_date = FORM.doc_host_app_page1_date,
@@ -243,7 +245,7 @@
 			/**********************************************
 				Compliance Check - Only Compliance Users
 			**********************************************/
-			if ( APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID,role="studentComplianceCheckList") ) {
+			if ( APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID, role="studentComplianceCheckList") ) {
 			
 				// Check if we have an entry for the compliance Log
 				if ( LEN(FORM.complianceLogNotes) ) {
@@ -332,6 +334,7 @@
 			FORM.compliance_single_ref_check2 = qGetPlacementHistoryByID.compliance_single_ref_check2;
 			
 			// Placement Paperwork
+			FORM.datePlaced = qGetPlacementHistoryByID.datePlaced;
 			FORM.dateRelocated = qGetPlacementHistoryByID.dateRelocated;
 			// Page 1
 			FORM.doc_host_app_page1_date = qGetPlacementHistoryByID.doc_host_app_page1_date;
@@ -479,7 +482,7 @@
 		
 		loopNonCompliant();		
 		
-		<cfif APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID,role="studentComplianceCheckList")>
+		<cfif APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID, role="studentComplianceCheckList")>
 			// Enable Compliance Check 
 			$(".complianceCheck").removeAttr('disabled'); 
 		<cfelse>
@@ -812,15 +815,46 @@
 
                     <!--- PIS Approved --->
                     <tr class="mouseOverColor"> 
-                        <td width="5%" class="paperworkLeftColumn"><input type="checkbox" name="datePlacedCheckBox" id="datePlacedCheckBox" class="editPage displayNone" <cfif isDate(qGetPlacementHistoryByID.datePlaced)>checked</cfif> disabled="disabled"></td>
+                        <td width="5%" class="paperworkLeftColumn">
+                        	<input type="checkbox" name="datePlacedCheckBox" id="datePlacedCheckBox" class="editPage displayNone" <cfif isDate(qGetPlacementHistoryByID.datePlaced)>checked</cfif> <cfif NOT isDate(FORM.datePlaced) OR NOT APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID, role="datePlacedEdit")>disabled="disabled"</cfif> >
+						</td>
                         <td width="40%"><label>Date Placed ( HQ Approval Date )</label></td>
                         <td width="45%">
                         	<span class="readOnly displayNone">#DateFormat(qGetPlacementHistoryByID.datePlaced, 'mm/dd/yyyy')#</span>
-                            <input type="text" name="datePlaced" id="datePlaced" class="datePicker editPage displayNone" value="#DateFormat(qGetPlacementHistoryByID.datePlaced, 'mm/dd/yyyy')#" disabled="disabled">
+							<cfif isDate(FORM.datePlaced) AND APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID, role="datePlacedEdit")>
+                                <input type="text" name="datePlaced" id="datePlaced" class="datePicker editPage displayNone" value="#DateFormat(FORM.datePlaced, 'mm/dd/yyyy')#">
+                            <cfelse>
+                                <input type="text" name="datePlacedReadOnly" id="datePlacedReadOnly" class="datePicker editPage displayNone" value="#DateFormat(FORM.datePlaced, 'mm/dd/yyyy')#" disabled="disabled">
+                                <input type="hidden" name="datePlaced" id="datePlaced" class="datePicker editPage displayNone" value="#DateFormat(FORM.datePlaced, 'mm/dd/yyyy')#">
+                            </cfif>
                         </td>
                         <td width="10%">&nbsp;</td>
                     </tr>
 
+                    <!--- Date Relocated --->
+                    <!--- WAITING TO GO LIVE
+					<cfif VAL(qGetPlacementHistoryByID.isRelocation)>
+                        <tr class="mouseOverColor">
+                            <td class="paperworkLeftColumn">                                
+                                <input type="checkbox" name="dateRelocatedCheckBox" id="dateRelocatedCheckBox" class="editPage displayNone" onclick="setTodayDate(this.id, 'dateRelocated');" <cfif isDate(FORM.dateRelocated)>checked</cfif> <cfif NOT APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID, role="dateRelocatedEdit")>disabled="disabled"</cfif> >
+                            </td>
+                            <td><label for="dateRelocatedCheckBox">Date Relocated</label></td>
+                            <td>
+                                <span class="readOnly displayNone">#DateFormat(FORM.dateRelocated, 'mm/dd/yyyy')#</span>
+                                <cfif APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID, role="dateRelocatedEdit")>
+	                                <input type="text" name="dateRelocated" id="dateRelocated" class="datePicker editPage displayNone" value="#DateFormat(FORM.dateRelocated, 'mm/dd/yyyy')#">
+                                <cfelse>
+	                                <input type="text" name="dateRelocatedReadOnly" id="dateRelocatedReadOnly" class="datePicker editPage displayNone" value="#DateFormat(FORM.dateRelocated, 'mm/dd/yyyy')#" disabled="disabled">
+	                                <input type="hidden" name="dateRelocated" id="dateRelocated" class="datePicker editPage displayNone" value="#DateFormat(FORM.dateRelocated, 'mm/dd/yyyy')#">
+                                </cfif>
+                            </td>
+                        </tr>
+                    </cfif>
+					--->
+                    
+                    <!--- WAITING TO GO LIVE - DELETE THIS --->
+                    <input type="hidden" name="dateRelocated" id="dateRelocated" class="datePicker editPage displayNone" value="#DateFormat(FORM.dateRelocated, 'mm/dd/yyyy')#">
+                    
                     <!--- PIS Sent to Intl. Representative --->
                     <tr class="mouseOverColor"> 
                         <td class="paperworkLeftColumn"><input type="checkbox" name="datePISEmailedCheckBox" id="datePISEmailed" class="editPage displayNone" <cfif isDate(qGetPlacementHistoryByID.datePISEmailed)>checked</cfif> disabled="disabled"></td>
@@ -830,22 +864,6 @@
                         	<input type="text" name="datePISEmailed" id="datePISEmailed" class="datePicker editPage displayNone" value="#DateFormat(qGetPlacementHistoryByID.datePISEmailed, 'mm/dd/yyyy')#" disabled="disabled">
                         </td>
                     </tr>
-                    
-                    <!--- Date Relocated --->
-                    <!--- Waiting to be Pushed Live - 04/11/2012 - Marcus Melo
-                    <cfif VAL(qGetPlacementHistoryByID.isRelocation)>
-                        <tr class="mouseOverColor">
-                            <td class="paperworkLeftColumn">
-                                <input type="checkbox" name="dateRelocatedCheckBox" id="dateRelocatedCheckBox" class="editPage displayNone" onclick="setTodayDate(this.id, 'dateRelocated');" <cfif isDate(FORM.dateRelocated)>checked</cfif> >
-                            </td>
-                            <td><label for="dateRelocatedCheckBox">Date Relocated</label></td>
-                            <td>
-                                <span class="readOnly displayNone">#DateFormat(FORM.dateRelocated, 'mm/dd/yyyy')#</span>
-                                <input type="text" name="dateRelocated" id="dateRelocated" class="datePicker editPage displayNone" value="#DateFormat(FORM.dateRelocated, 'mm/dd/yyyy')#">
-                            </td>
-                        </tr>
-                    </cfif>
-					--->
                     
                     <!--- Page 1 --->
                     <tr class="mouseOverColor"> 
@@ -1461,7 +1479,7 @@
                 </cfloop>                        
 				
                 <!--- Only Display for Compliance Users --->
-                <cfif APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID,role="studentComplianceCheckList")>
+                <cfif APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID, role="studentComplianceCheckList")>
                 
 					<!--- Compliance Section --->
                     <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center"> 

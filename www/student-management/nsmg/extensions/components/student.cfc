@@ -335,90 +335,122 @@
 		Languages
 	
 	----- ------------------------------------------------------------------------- --->
-	
+
+	<cffunction name="getStudentSpokenLanguages" access="public" returntype="query" output="false" hint="Returns a list of languages for a student">
+    	<cfargument name="studentID" hint="studentID is required">
+		<cfargument name="isPrimary" default="" hint="Set to 1 or 0 to get primary/secondary languages">
+        
+        <cfquery 
+        	name="qGetStudentSpokenLanguages"
+        	datasource="#APPLICATION.DSN#">
+                SELECT
+                    l.ID,
+                    l.studentID,
+                    l.languageID,
+                    alk.name
+                FROM
+                    smg_student_app_language l
+                LEFT OUTER JOIN
+                    applicationLookUp alk ON alk.fieldID = l.languageID
+                    AND
+                        alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="language">
+                WHERE
+                    l.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+                <cfif LEN(ARGUMENTS.isPrimary)>
+                    AND
+                        l.isPrimary = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.isPrimary)#">
+                </cfif>
+                ORDER BY
+                    alk.name
+        </cfquery> 
+
+		<cfreturn qGetStudentSpokenLanguages>
+	</cffunction>
+
+
     <cffunction name="addLanguage" access="remote" returntype="void" hint="Adds a language to the language table with the input student id, language id, and primary / secondary">
     	<cfargument name="studentID" type="numeric" required="yes" hint="The student ID for this secondary language">    
 		<cfargument name="languageID" type="numeric" required="yes" hint="The field ID of the language to be added">
         <cfargument name="isPrimary" type="numeric" required="yes" hint="1 for primary, 0 for secondary">
         
-        <cfquery name="qFindLanguage" datasource="MySql">
-        	SELECT
-            	languageID
-           	FROM
-            	smg_student_app_language
-           	WHERE
-            	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
-          	AND
-            	languageID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.languageID#">
+        <cfquery 
+        	name="qFindLanguage" 
+            datasource="#APPLICATION.DSN#">
+                SELECT
+                    languageID
+                FROM
+                    smg_student_app_language
+                WHERE
+                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
+                AND
+                    languageID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.languageID#">
         </cfquery>
         
         <cfif NOT VAL(qFindLanguage.recordCount)>
         
-            <cfquery datasource="MySql">
-                INSERT INTO
-                    smg_student_app_language (
-                        studentID,
-                        languageID,
-                        isPrimary,
-                        dateCreated )
-                VALUES
-                    (
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.languageID#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isPrimary#">,
-                        <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#"> )
+            <cfquery 
+            	datasource="#APPLICATION.DSN#">
+                    INSERT INTO
+                        smg_student_app_language 
+                        (
+                            studentID,
+                            languageID,
+                            isPrimary,
+                            dateCreated 
+                        )
+                    VALUES
+                        (
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.languageID#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isPrimary#">,
+                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#"> 
+                        )
             </cfquery>
             
       	</cfif>
     
     </cffunction>
     
-    <cffunction name="removeLanguage" access="remote" returntype="string" hint="removes a language from the language table vased on the id">
+    
+    <cffunction name="removeLanguage" access="remote" returntype="void" hint="removes a language from the language table based on the id">
     	<cfargument name="ID" required="yes" hint="The table ID of the language to be removed">
         
-        <cfquery name="qGetStudent" datasource="MySql">
-        	SELECT
-            	studentID
-           	FROM
-            	smg_student_app_language
-           	WHERE
-            	ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
+        <cfquery 
+        	datasource="#APPLICATION.DSN#">
+                DELETE FROM
+                    smg_student_app_language
+                WHERE
+                    ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
         </cfquery>
         
-        <cfquery datasource="MySql">
-        	DELETE FROM
-            	smg_student_app_language
-          	WHERE
-            	ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
-        </cfquery>
-        
-        <cfreturn qGetStudent.studentID>
-    
     </cffunction>
+    
     
     <cffunction name="getSecondaryLanguagesAsStruct" access="remote" returntype="any" returnFormat="JSON" hint="gets all secondary languages of a student">
     	<cfargument name="studentID" type="numeric" required="yes">
         
-        <cfquery name="qGetSecondaryLanguages" datasource="MySql">
-        	SELECT
-                l.ID,
-                alk.name
-          	FROM
-            	smg_student_app_language l
-          	LEFT OUTER JOIN
-    			applicationLookUp alk ON alk.fieldID = l.languageID
-       			AND
-          			alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="language">
-           	WHERE
-            	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
-           	AND
-            	isPrimary = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-          	ORDER BY
-            	name ASC
+        <cfquery 
+        	name="qGetSecondaryLanguages" 
+            datasource="#APPLICATION.DSN#">
+                SELECT
+                    l.ID,
+                    alk.name
+                FROM
+                    smg_student_app_language l
+                LEFT OUTER JOIN
+                    applicationLookUp alk ON alk.fieldID = l.languageID
+                    AND
+                        alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="language">
+                WHERE
+                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+                AND
+                    isPrimary = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                ORDER BY
+                    name ASC
         </cfquery>
         
         <cfscript>
-			return #SerializeJson(qGetSecondaryLanguages,true)#;
+			return SerializeJson(qGetSecondaryLanguages,true);
 		</cfscript>
         
     </cffunction>
@@ -880,6 +912,7 @@
         <cfargument name="changedBy" hint="changedBy is required">
         <cfargument name="userType" hint="userType is required">
         <cfargument name="reason" default="" hint="reason is not required">
+        <cfargument name="dateRelocated" default="" hint="dateRelocated is not required">
 
         <cfscript>
 			// Get Student Info
@@ -906,27 +939,26 @@
 				WHERE
                 	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
 		</cfquery>
+
+        		<cfscript>
+            // Get History ID
+            vHostHistoryID = getPlacementHistory(studentID=ARGUMENTS.studentID).historyID;
+        </cfscript>
         
-        <!--- Set Placement Date on the history if Approved by Headquarters - Only first time approval--->
-        <cfif VAL(vUpdateDatePlaced)>
-        	
-            <cfscript>
-				// Get History ID
-				vHostHistoryID = getPlacementHistory(studentID=ARGUMENTS.studentID).historyID;
-			</cfscript>
-            
-            <cfquery 
-                datasource="#APPLICATION.DSN#">
-                    UPDATE
-                        smg_hostHistory
-                    SET
-                        dateplaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-                    WHERE
-                        historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vHostHistoryID)#">
-            </cfquery>
-            
-        </cfif>
-        
+        <cfquery 
+            datasource="#APPLICATION.DSN#">
+                UPDATE
+                    smg_hostHistory
+                SET
+                    <!--- Set Placement Date on the history if Approved by Headquarters - Only first time approval--->
+                    <cfif VAL(vUpdateDatePlaced)>
+                        dateplaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                    </cfif>
+                    dateRelocated = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateRelocated#" null="#NOT IsDate(ARGUMENTS.dateRelocated)#">
+                WHERE
+                    historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vHostHistoryID)#">
+        </cfquery>
+
 		<cfscript>
             /*** Holding it for now as per Brian Hause request - 06/02/2011 ****/
             // Assign Pre-AYP English Camp based on host family state	
@@ -1333,7 +1365,8 @@
 					}
 	
 					if ( VAL(ARGUMENTS.isRelocation) ) {
-						vActions = vActions & "<strong>This is a relocation</strong> <br /> #CHR(13)#";
+						vActions = vActions & "<strong>This is a relocation</strong> <br /> #CHR(13)#"; 						
+						// <cfif isDate(ARGUMENTS.dateRelocated)>- Date: #dateFormat(ARGUMENTS.dateRelocated, 'mm/dd/yyyy')#</cfif>
 					}
 
 					if ( VAL(ARGUMENTS.changePlacementReasonID) ) {						
@@ -2384,7 +2417,7 @@
                     doc_class_schedule,
                     compliance_class_schedule,
                     actions,
-                    isActive,
+					isActive,
                     dateOfChange,
                     dateCreated,
                     dateUpdated
@@ -2504,6 +2537,7 @@
         <cfargument name="doc_single_ref_check2" default="" hint="doc_single_ref_check2 is not required">
         <cfargument name="compliance_single_ref_check2" default="" hint="compliance_single_ref_check2 is not required">
         <!--- Placement Paperwork --->
+        <cfargument name="datePlaced" default="" hint="datePlaced is not required">
         <cfargument name="dateRelocated" default="" hint="dateRelocated is not required">
         <!--- Page 1 --->
         <cfargument name="doc_host_app_page1_date" default="" hint="doc_host_app_page1_date is not required">
@@ -2588,9 +2622,8 @@
                     doc_single_student_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_single_student_sign_date#" null="#NOT IsDate(ARGUMENTS.doc_single_student_sign_date)#">,
                     compliance_single_student_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_single_student_sign_date#" null="#NOT IsDate(ARGUMENTS.compliance_single_student_sign_date)#">,
                     <!--- Placement Paperwork --->
-                    <!--- Waiting to be Pushed Live - 04/11/2012 - Marcus Melo
-					dateRelocated = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateRelocated#" null="#NOT IsDate(ARGUMENTS.dateRelocated)#">,
-					--->
+					datePlaced = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.datePlaced#" null="#NOT IsDate(ARGUMENTS.datePlaced)#">,
+                    dateRelocated = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateRelocated#" null="#NOT IsDate(ARGUMENTS.dateRelocated)#">,
                     <!--- Page 1 --->
                     doc_host_app_page1_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_host_app_page1_date#" null="#NOT IsDate(ARGUMENTS.doc_host_app_page1_date)#">,
                     compliance_host_app_page1_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_host_app_page1_date#" null="#NOT IsDate(ARGUMENTS.compliance_host_app_page1_date)#">,
@@ -2926,18 +2959,24 @@
 
 
 	<!--- Double Placement - Check Primary Language Spoken --->
-	<cffunction name="checkDoublePlacementCompliance" access="public" returntype="numeric" output="false" hint="Double placement is compliant by not having two students that speak the same language">
+	<cffunction name="checkDoublePlacementCompliant" access="public" returntype="string" output="false" hint="Double placement is compliant by not having two students that speak the same language">
     	<cfargument name="studentID" hint="studentID is required">
         <cfargument name="doublePlacementID" hint="doublePlacementID is required">
 		
         <cfscript>
 			// Set Local Variables
-			var vIsDoublePlacementCompliant = 1;	
+			var vReturnMessage = "";
 			
-			// Get Student Primary Language
-			qGetStudentPrimaryLanguage = getStudentPrimaryLanguage(studentID=ARGUMENTS.studentID);
+			// Get Student Spoken Languages from Student Applicaton (page 3)
+			qGetStudentSpokenLanguages = getStudentSpokenLanguages(studentID=ARGUMENTS.studentID);
 			
-			vStudentPrimaryLanguageIDList = ValueList(qGetStudentPrimaryLanguage.languageID);
+			// Query did not return results, Get Student Spoken Languages Based on Country
+			if ( NOT VAL(qGetStudentSpokenLanguages.recordCount) ) {
+				// Get Student Primary Language Based By Country
+				qGetStudentSpokenLanguages = getStudentPrimaryLanguageBasedOnCountry(studentID=ARGUMENTS.studentID);
+			}
+			
+			vStudentPrimaryLanguageIDList = ValueList(qGetStudentSpokenLanguages.languageID);
 		</cfscript>
         
         <cfif LEN(vStudentPrimaryLanguageIDList)>
@@ -2945,45 +2984,67 @@
             <cfquery 
                 name="qCheckDoublePlacementPrimaryLanguage"
                 datasource="#APPLICATION.DSN#">
-                    SELECT 
-                        clJN.countryID,
-                        clJN.languageID,
-                        alu.name
+                    SELECT
+                    	languageID
+                        name
                     FROM
-                        smg_countryLanguageJN clJN
-                    INNER JOIN
-                        applicationLookUp alu ON alu.fieldID = clJN.languageID
+                    (
+                    	<!--- Language based on Country --->
+                        SELECT 
+                            clJN.languageID,
+                            alk.name
+                        FROM
+                            smg_countryLanguageJN clJN
+                        INNER JOIN
+                            applicationLookUp alk ON alk.fieldID = clJN.languageID
+                                AND
+                                    fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="language">
+                        INNER JOIN	
+                             smg_students s ON clJN.countryID = s.countryResident
+                             AND
+                                s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlacementID)#">      
+                        
+                        UNION
+                        
+                        <!--- Language based on Student Application --->
+                        SELECT
+                            l.languageID,
+                            alk.name
+                        FROM
+                            smg_student_app_language l
+                        LEFT OUTER JOIN
+                            applicationLookUp alk ON alk.fieldID = l.languageID
                             AND
-                                fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="language">
-                    INNER JOIN	
-                         smg_students s ON clJN.countryID = s.countryResident
-                         AND
-                            s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlacementID)#">      
+                                alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="language">
+                        WHERE
+                            l.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlacementID)#"> 
+                    ) AS T
+                    
                     WHERE
-                        clJN.languageID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vStudentPrimaryLanguageIDList#" list="yes"> )                                 
+                        languageID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vStudentPrimaryLanguageIDList#" list="yes"> )                                 
             </cfquery> 
 		
         	<cfscript>
 				// Check if students speak the same language, if it does set as not compliant
 				if ( qCheckDoublePlacementPrimaryLanguage.recordCount) {
-					vIsDoublePlacementCompliant = 0;
+					vReturnMessage = "<p>Double Placement Non Compliant - It seems both students speak the same language.</p>";
 				}
 			</cfscript>
         
         </cfif>
         
         <cfscript>
-			return vIsDoublePlacementCompliant;
+			return vReturnMessage;
 		</cfscript>
 	</cffunction>
     
 
 	<!--- Primary Language --->
-	<cffunction name="getStudentPrimaryLanguage" access="public" returntype="query" output="false" hint="Gets the student primary language">
+	<cffunction name="getStudentPrimaryLanguageBasedOnCountry" access="public" returntype="query" output="false" hint="Gets the student primary language">
     	<cfargument name="studentID" hint="studentID is required">
         
         <cfquery 
-        	name="qGetStudentPrimaryLanguage"
+        	name="qGetStudentPrimaryLanguageBasedOnCountry"
         	datasource="#APPLICATION.DSN#">
                 SELECT 
                     clJN.countryID,
@@ -3002,7 +3063,7 @@
         </cfquery> 
 		
         <cfscript>
-			return qGetStudentPrimaryLanguage;
+			return qGetStudentPrimaryLanguageBasedOnCountry;
 		</cfscript>
 	</cffunction>
     
