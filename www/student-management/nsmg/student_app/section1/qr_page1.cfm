@@ -15,8 +15,8 @@
 <cfquery name="check_username" datasource="MySql">
 	SELECT email
 	FROM smg_students
-	WHERE email = '#FORM.email#'
-	AND studentid != '#FORM.studentid#'
+	WHERE email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">
+	AND studentid != <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#">
 </cfquery>
 
 <cfif check_username.recordcount NEQ '0'>

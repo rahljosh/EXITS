@@ -12,8 +12,12 @@
 <cfif isDefined('url.unqid')>
 	<!----Get student id  for office folks linking into the student app---->
 	<cfquery name="get_student_id" datasource="MySQL">
-	select studentid from smg_students
-	where uniqueid = '#url.unqid#'
+    	SELECT
+        	studentID
+      	FROM
+        	smg_students
+      	WHERE
+        	uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#URL.unqid#">
 	</cfquery>
 	<cfset client.studentid = #get_student_id.studentid#>
 </cfif>
@@ -40,7 +44,7 @@
 <cfquery name="qGetIntlRep" datasource="MySql">
 	SELECT userid, businessname
 	FROM smg_users 
-	WHERE userid = '#get_student_info.intrep#'
+	WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value='#VAL(get_student_info.intrep)#'>
 </cfquery>
 
 <cfquery name="qCountryList" datasource="MySQL">
@@ -244,7 +248,7 @@
                             <Cfquery name="qProgramName" datasource="#application.dsn#">
                             select programName 
                             from smg_programs
-                            where programid = #programid#
+                            where programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#programid#">
                             </cfquery>
                             #qProgramName.programName#<input type="hidden" name="internalProgram" value="#programID#">
                      <cfelse>
