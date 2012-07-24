@@ -4,5 +4,5 @@
 	from 
     	smg_students
 	where 
-    	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.studentid#">
+    	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.studentid)#">
 </cfquery>
