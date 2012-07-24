@@ -284,7 +284,11 @@
                     	<font style="font: 150%">#CLIENT.companyname#</font> <img src="pics/logos/#CLIENT.companyid#_header_icon.png"><br>
                         Program Manager is #CLIENT.programmanager#<br>
 						<cfif CLIENT.levels gt 1>
-                        	<a href="index.cfm?curdoc=forms/change_access_level" title="Change Access Level">#CLIENT.accesslevelname#</a>
+                        	#CLIENT.accesslevelname# [
+                            <a href="index.cfm?curdoc=forms/change_access_level">
+                            	 Change Access
+                    		</a>
+                            ]
                         <cfelse>
                         	#CLIENT.accesslevelname#
                         </cfif>

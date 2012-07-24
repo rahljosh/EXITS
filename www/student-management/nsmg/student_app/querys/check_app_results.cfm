@@ -21,13 +21,13 @@ body {font:Arial, Helvetica, sans-serif;}
 <cfquery name="get_intl_rep" datasource="MySql">
 	SELECT businessname
 	FROM smg_users
-	WHERE userid = <cfqueryparam value="#get_student_info.intrep#" cfsqltype="cf_sql_integer">
+	WHERE userid = <cfqueryparam value="#VAL(get_student_info.intrep)#" cfsqltype="cf_sql_integer">
 </cfquery>
 
 <cfquery name="get_branch" datasource="MySql">
 	SELECT businessname
 	FROM smg_users
-	WHERE userid = <cfqueryparam value="#get_student_info.branchid#" cfsqltype="cf_sql_integer">
+	WHERE userid = <cfqueryparam value="#VAL(get_student_info.branchid)#" cfsqltype="cf_sql_integer">
 </cfquery>
 
 <cfset newstatus = get_student_info.app_current_status>
@@ -63,7 +63,7 @@ body {font:Arial, Helvetica, sans-serif;}
 <cfquery name="org_info" datasource="mysql">
 select *
 from smg_companies
-where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.org_code#">
+where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(client.org_code)#">
 </cfquery>
 
 <br>
