@@ -274,8 +274,39 @@ td {
           
      <cfelse>
             <cfquery datasource="MySQL">
-                insert into smg_users_employment_history(occupation, employer, address, address2, city, state, zip, phone, daysWorked, hoursDay, current,  fk_userID, datesEmployed)
-                values('#form.occupation#','#form.employer#', '#form.address#', '#form.address2#', '#form.city#', '#form.state#', '#form.zip#', '#form.phone#', '#form.daysWorked#', '#form.hoursDay#', #form.current#, #client.userid#,'#datesEmployed#')
+            	INSERT INTO
+                	smg_users_employment_history
+                    (
+                    	occupation,
+                        employer,
+                        address,
+                        address2,
+                        city,
+                        state,
+                        zip,
+                        phone,
+                        daysWorked,
+                        hoursDay,
+                        current,
+                        fk_userID,
+                        datesEmployed
+                  	)
+              	VALUES
+                	(
+                    	<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.occupation#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.employer#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address2#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.state#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.daysWorked#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hoursDay#">,
+                        <cfqueryparam cfsqltype="cf_sql_tinyint" value="#FORM.current#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#datesEmployed#">
+                    )
             </cfquery>
               <Cfquery name="refID" datasource="mysql">
                 select max(employmentID) as newID
