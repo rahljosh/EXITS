@@ -27,7 +27,7 @@
 <cfquery name="get_intrep" datasource="MySql">
 	SELECT userid, businessname
 	FROM smg_users 
-	WHERE userid = '#get_student_info.intrep#'
+	WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value='#VAL(get_student_info.intrep)#'>
 </cfquery>
 
 <cfquery name="country_list" datasource="MySQL">
@@ -45,17 +45,17 @@
 <cfquery name="app_programs" datasource="MySQL">
 	SELECT app_programid, app_program 
 	FROM smg_student_app_programs
-	WHERE app_programid = '#get_student_info.app_indicated_program#'
+	WHERE app_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.app_indicated_program)#">
 </cfquery>
 <Cfquery name="assignedProgram" datasource="mysql">
 select programname
 from smg_programs
-where programid = #get_student_info.programid#
+where programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.programid)#">
 </cfquery>
 <cfquery name="app_other_programs" datasource="MySQL">
 	SELECT app_programid, app_program 
 	FROM smg_student_app_programs
-	WHERE app_programid = '#get_student_info.app_additional_program#'
+	WHERE app_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.app_additional_program)#">
 </cfquery> 
 
 <cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#client.studentid#.*">
