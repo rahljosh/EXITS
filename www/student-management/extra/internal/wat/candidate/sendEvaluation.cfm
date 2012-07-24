@@ -86,7 +86,7 @@
 			emailFrom=vEmailFrom,
 			emailTo=qEvaluation.email,
 			emailReplyTo=vEmailFrom,
-			emailSubject='CSB - 1 - Mandatory Summer Work Travel Evaluation',
+			emailSubject='CSB - ' & #URL.evaluationID# & ' - Mandatory Summer Work Travel Evaluation',
 			emailMessage=vEvaluationEmailBody,
 			footerType="emailNoInfo",
 			companyID=8
