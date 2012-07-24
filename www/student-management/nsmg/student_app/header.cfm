@@ -61,7 +61,7 @@
         FROM
         	smg_companies
         WHERE 
-        	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.org_code#">
+        	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.org_code)#">
     </cfquery> 
 
     <cfquery name="qGetLatestStatus" datasource="MySQL">
@@ -75,7 +75,7 @@
         FROM 
 	        smg_student_app_status
         WHERE 
-    	    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentID#">       
+    	    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.studentID)#">       
         ORDER BY 
 	        ID DESC    
     </cfquery>
@@ -89,7 +89,7 @@
         FROM 
         	smg_users
         WHERE 
-        	userid = <cfqueryparam value="#get_student_info.intrep#" cfsqltype="cf_sql_integer">
+        	userid = <cfqueryparam value="#VAL(get_student_info.intrep)#" cfsqltype="cf_sql_integer">
     </cfquery>
     
     <cfquery name="qGetBranch" datasource="MySql">
@@ -101,7 +101,7 @@
         FROM 
        		smg_users
         WHERE 
-        	userid = <cfqueryparam value="#get_student_info.branchid#" cfsqltype="cf_sql_integer">
+        	userid = <cfqueryparam value="#VAL(get_student_info.branchid)#" cfsqltype="cf_sql_integer">
     </cfquery>
 
     <cfquery name="qStudentIntlRepInfo" datasource="#application.dsn#">
@@ -117,9 +117,9 @@
         FROM smg_users 
         WHERE 
             <cfif NOT VAL(get_student_info.branchid)>
-                userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.intrep#">
+                userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.intrep)#">
             <cfelse>
-                userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.branchid#">
+                userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.branchid)#">
             </cfif>  
     </cfquery>
     
