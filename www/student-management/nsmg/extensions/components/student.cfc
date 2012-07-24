@@ -427,7 +427,7 @@
     
     
     <cffunction name="getSecondaryLanguagesAsStruct" access="remote" returntype="any" returnFormat="JSON" hint="gets all secondary languages of a student">
-    	<cfargument name="studentID" type="numeric" required="yes">
+    	<cfargument name="studentID" required="yes">
         
         <cfquery 
         	name="qGetSecondaryLanguages" 
