@@ -24,26 +24,42 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #9
 
 <!--- get agents --->
 <cfquery name="get_agents" datasource="MySQL">
-	SELECT userid, businessname, smg_users.email
-	FROM smg_users
-	INNER JOIN smg_students s ON s.intrep = smg_users.userid
-	INNER JOIN smg_hosts ON s.hostid = smg_hosts.hostid
-	<cfif form.preayp EQ 'all'>
+	SELECT
+    	u.userID,
+        u.businessName,
+        u.email
+  	FROM
+    	smg_users u
+ 	INNER JOIN
+    	smg_students s ON s.intrep = u.userid
+	INNER JOIN
+    	smg_hosts h ON h.hostid = s.hostid
+   	<cfif form.preayp EQ 'all'>
 		INNER JOIN smg_aypcamps camp ON (camp.campid = s.aypenglish OR camp.campid = s.ayporientation)
 	<cfelseif form.preayp EQ 'english'>
 		INNER JOIN smg_aypcamps camp ON camp.campid = s.aypenglish
 	<cfelseif form.preayp EQ 'orientation'>
 		INNER JOIN smg_aypcamps camp ON camp.campid = s.ayporientation
 	</cfif>
-	WHERE s.active = '1'
-		<cfif form.intrep is 0><cfelse>AND userid = '#form.intrep#'</cfif>
-		AND s.host_fam_approved < '5'
-		AND	( <cfloop list=#form.programid# index='prog'>
-			s.programid = #prog# 
-			<cfif prog is #ListLast(form.programid)#><Cfelse>or</cfif>
-		</cfloop> )
-	GROUP BY businessname
-	ORDER BY businessname
+    WHERE
+    	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+  	<cfif FORM.intrep IS NOT 0>
+    	AND
+        	u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.intrep)#">
+ 	</cfif>
+    AND
+    	(
+        	<cfloop list="#FORM.programID#" index="prog">
+            	s.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#prog#">
+                <cfif prog IS NOT #ListLast(FORM.programID)#>
+                	OR
+              	</cfif>
+         	</cfloop>
+      	)
+ 	GROUP BY
+    	u.businessName
+  	ORDER BY
+    	u.businessName
 </cfquery>
 
 <span class="application_section_header"><cfoutput>#companyshort.companyshort# - Missing Arrival Flight Information</cfoutput></span>
