@@ -1,38 +1,41 @@
-
-<Cfif isDefined('form.id_list')>
-<cfquery name="students" datasource="mysql">
-select studentid
-from smg_students
-where intrep = #client.userid#
-and studentid = #form.id_list#
-and active = 1
-and hostid != 0
-and host_fam_approved < 5
-<Cfif client.companyid neq 10>
-and (companyid = 1 or companyid = 2 or companyid = 3 or companyid = 4 or companyid = 12)
-<Cfelse>
-and companyid = 10
-</Cfif>
-</cfquery> 
-
-
+<cfif isDefined('FORM.id_list')>
+	<cfquery name="students" datasource="#APPLICATION.DSN#">
+    	SELECT
+        	studentID
+      	FROM
+        	smg_students
+      	WHERE
+        	intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+      	AND
+        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.id_list)#">
+      	AND
+        	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+      	AND
+        	hostID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+      	AND
+        	host_fam_approved < <cfqueryparam cfsqltype="cf_sql_integer" value="5">
+      	AND 
+        	companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,10,12" list="yes"> )    
+    </cfquery>
 <cfelse>
+	<cfquery name="students" datasource="MySql">
+    	SELECT
+        	studentID
+      	FROM
+        	smg_students
+      	WHERE
+        	intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+      	AND
+        	programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
+      	AND
+        	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+      	AND
+        	hostID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+       	AND
+        	companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,10,12" list="yes"> )
+  	</cfquery>
+</cfif>
 
-<cfquery name="students" datasource="mysql">
-select studentid
-from smg_students
-where intrep = #client.userid#
-and programid = #form.programid#
-and active = 1
-and hostid != 0
-and host_fam_approved < 5
-<Cfif client.companyid neq 10>
-and (companyid = 1 or companyid = 2 or companyid = 3 or companyid = 4 or companyid = 12)
-<Cfelse>
-and companyid = 10
-</Cfif>
-</cfquery> 
-</Cfif>
 <cfoutput>
 <Cfloop query="students">  
  <!----Start of Include------>
