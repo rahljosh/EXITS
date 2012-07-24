@@ -285,7 +285,7 @@
                         Program Manager is #CLIENT.programmanager#<br>
 						<cfif CLIENT.levels gt 1>
                         	#CLIENT.accesslevelname# [
-                            <a href="index.cfm?curdoc=forms/change_access_level">
+                            <a href="index.cfm?curdoc=forms/change_access_level" title="You have access to multiple regions, click here to change your access.">
                             	 Change Access
                     		</a>
                             ]
