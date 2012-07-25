@@ -477,7 +477,7 @@
                                    	FROM
                                     	qGetHostChildren
                                    	WHERE
-                                    	roomShareWith = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#">
+                                    	roomShareWith = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
                                 </cfquery>
                                 <tr>
                                 	<td colspan="5">
