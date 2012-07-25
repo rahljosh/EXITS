@@ -934,8 +934,8 @@
             	smg_users_cbc
             WHERE 
             	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
-            AND 
-            	seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.season)#">
+          	AND
+            	date_expired > <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
         </cfquery>
         
     	<!----Check Agreement---->
@@ -1085,6 +1085,12 @@
 			// This is the query that is returned
 			qAllPaperWork = QueryNew("paperworkid,userid,seasonid,ar_info_sheet,ar_ref_quest1,ar_ref_quest2,ar_cbcAuthReview,ar_cbc_auth_form,ar_agreement,ar_training,secondVisit,agreeSig,cbcSig, season, secondVisitRepOK, areaRepOK, reviewAcct, secondRepReviewAcct");
         </cfscript>
+        
+        <!--- Set Initial values --->
+        <cfset secondVisitRepOk = 0>
+        <cfset areaRepOk = 0>
+        <cfset reviewAcct = 0>
+        <cfset secondRepReviewAcct = 0>
      
 		<cfloop query="checkAgreement">
         	
@@ -1146,33 +1152,31 @@
             <cfelse>
                 <cfset secondRepReviewAcct = 0>
             </cfif>
-            
-			<cfscript>
-                 // Insert blank first row
-                QueryAddRow(qAllPaperWork);
-                QuerySetCell(qAllPaperWork, "paperworkid", checkAgreement.paperworkid);
-                QuerySetCell(qAllPaperWork, "userid", checkAgreement.userid);
-                QuerySetCell(qAllPaperWork, "seasonid", checkAgreement.seasonid);
-                QuerySetCell(qAllPaperWork, "ar_info_sheet", checkAgreement.ar_info_sheet);
-                QuerySetCell(qAllPaperWork, "ar_ref_quest1", checkAgreement.ar_ref_quest1);
-                QuerySetCell(qAllPaperWork, "ar_ref_quest2", checkAgreement.ar_ref_quest2);
-                QuerySetCell(qAllPaperWork, "ar_cbcAuthReview", cbcCheck.date_approved);
-                QuerySetCell(qAllPaperWork, "ar_cbc_auth_form", checkAgreement.ar_cbc_auth_form);
-                QuerySetCell(qAllPaperWork, "ar_agreement", checkAgreement.ar_agreement);
-                QuerySetCell(qAllPaperWork, "ar_training", checkAgreement.ar_training);
-                QuerySetCell(qAllPaperWork, "secondVisit", checkAgreement.secondVisit);
-                QuerySetCell(qAllPaperWork, "agreeSig", checkAgreement.agreeSig);
-                QuerySetCell(qAllPaperWork, "cbcSig", checkAgreement.cbcSig);
-                QuerySetCell(qAllPaperWork, "season", checkAgreement.season);
-				QuerySetCell(qAllPaperWork, "secondVisitRepOK", secondVisitRepOk);
-				QuerySetCell(qAllPaperWork, "areaRepOk", areaRepOk);
-				QuerySetCell(qAllPaperWork, "reviewAcct", reviewAcct);
-				QuerySetCell(qAllPaperWork, "secondRepReviewAcct", reviewAcct);
-            </cfscript>	
-					
+            	
 		</cfloop>   
          	
 		<cfscript>
+			 // Insert blank first row
+			QueryAddRow(qAllPaperWork);
+			QuerySetCell(qAllPaperWork, "paperworkid", checkAgreement.paperworkid);
+			QuerySetCell(qAllPaperWork, "userid", checkAgreement.userid);
+			QuerySetCell(qAllPaperWork, "seasonid", checkAgreement.seasonid);
+			QuerySetCell(qAllPaperWork, "ar_info_sheet", checkAgreement.ar_info_sheet);
+			QuerySetCell(qAllPaperWork, "ar_ref_quest1", checkAgreement.ar_ref_quest1);
+			QuerySetCell(qAllPaperWork, "ar_ref_quest2", checkAgreement.ar_ref_quest2);
+			QuerySetCell(qAllPaperWork, "ar_cbcAuthReview", cbcCheck.date_approved);
+			QuerySetCell(qAllPaperWork, "ar_cbc_auth_form", checkAgreement.ar_cbc_auth_form);
+			QuerySetCell(qAllPaperWork, "ar_agreement", checkAgreement.ar_agreement);
+			QuerySetCell(qAllPaperWork, "ar_training", checkAgreement.ar_training);
+			QuerySetCell(qAllPaperWork, "secondVisit", checkAgreement.secondVisit);
+			QuerySetCell(qAllPaperWork, "agreeSig", checkAgreement.agreeSig);
+			QuerySetCell(qAllPaperWork, "cbcSig", checkAgreement.cbcSig);
+			QuerySetCell(qAllPaperWork, "season", checkAgreement.season);
+			QuerySetCell(qAllPaperWork, "secondVisitRepOK", secondVisitRepOk);
+			QuerySetCell(qAllPaperWork, "areaRepOk", areaRepOk);
+			QuerySetCell(qAllPaperWork, "reviewAcct", reviewAcct);
+			QuerySetCell(qAllPaperWork, "secondRepReviewAcct", reviewAcct);
+
             return qAllPaperWork;
         </cfscript>	
         
