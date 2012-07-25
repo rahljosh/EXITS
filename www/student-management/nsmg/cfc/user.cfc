@@ -70,7 +70,7 @@
             FROM
             	smg_companies
             WHERE 
-            	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+            	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyid)#">
         </cfquery>
 
         <cfif NOT VAL(submitting_info.recordcount)>
@@ -162,7 +162,7 @@
             WHERE 
             	smg_companies.website =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#CLIENT.company_submitting#">
             AND 
-            	user_access_rights.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qAuthenticateUser.userID#">
+            	user_access_rights.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qAuthenticateUser.userID)#">
             ORDER 
             	BY user_access_rights.usertype
         </cfquery>
@@ -211,7 +211,7 @@
         	<cfquery name="disabledReasonid" datasource="#application.dsn#">
             select max(id) as maxid 
             from smg_accountDisabledHistory
-            where fk_userDisabled = <cfqueryparam cfsqltype="cf_sql_integer" value="#qAuthenticateUser.userID#">
+            where fk_userDisabled = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qAuthenticateUser.userID)#">
             </cfquery>
            
             <cfif val(disabledReasonid.maxid)>
@@ -249,7 +249,7 @@
         <cfquery name="qGetCompany" datasource="#APPLICATION.dsn#">
             SELECT companyname, team_id, pm_email, support_email, url, companyshort_nocolor, projectManager, financeEmail,website
             FROM smg_companies
-            WHERE companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+            WHERE companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyid)#">
         </cfquery>
         
         <cfset CLIENT.companyname = qGetCompany.companyname>
@@ -283,7 +283,7 @@
             FROM 
             	smg_usertype
             WHERE 
-            	usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.usertype#">
+            	usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.usertype)#">
         </cfquery>
         
         <cfset CLIENT.accesslevelname = get_usertype.usertype>
@@ -295,7 +295,7 @@
                 FROM 
                 	smg_regions
                 WHERE 
-                	regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionid#">
+                	regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.regionid)#">
             </cfquery>
             <cfset CLIENT.accesslevelname = "#CLIENT.accesslevelname# in #get_region.regionname#">
         </cfif>
@@ -323,7 +323,7 @@
             SET 
             	lastlogin = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
         	WHERE 
-            	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qAuthenticateUser.userID#">
+            	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qAuthenticateUser.userID)#">
         </cfquery>
 
 		<cfscript>
@@ -394,7 +394,7 @@
                         WHERE 
                             training_id = <cfqueryparam cfsqltype="cf_sql_numeric" value="6">
                         and 
-                            user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+                            user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userid)#">
                     </cfquery>
                    
                    <cfif CLIENT.companyid NEQ 14 AND NOT VAL(webexTraining.recordcount) AND CLIENT.regionID NEQ 16>
@@ -503,14 +503,14 @@
             FROM 
             	user_access_rights uar
             WHERE 
-                uar.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#userID#">
+                uar.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(userID)#">
                 
 			<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
                 AND          
-                    uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                    uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(APPLICATION.SETTINGS.COMPANYLIST.ISESMG)#" list="yes"> )
             <cfelse>
                 AND          
-                    uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                    uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#"> 
             </cfif>
 
             ORDER BY 
@@ -528,7 +528,7 @@
             <cfquery name="get_company_usertypes" dbtype="query">
                 SELECT usertype
                 FROM get_usertypes
-                WHERE (companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#"> OR usertype = 8)
+                WHERE (companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyid)#"> OR usertype = 8)
             </cfquery>
             
             <cfset usertype_list = valueList(get_company_usertypes.usertype)>
