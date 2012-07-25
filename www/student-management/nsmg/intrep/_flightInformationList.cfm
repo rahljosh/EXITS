@@ -84,8 +84,6 @@
         <cfif APPLICATION.SETTINGS.COMPANYLIST.Canada NEQ CLIENT.companyID>
 			AND 
 				s.hostid != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-			AND 
-				s.host_fam_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
 		</cfif>		
         
 		<cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
