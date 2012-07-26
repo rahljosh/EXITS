@@ -84,25 +84,16 @@
 
 	<cffunction name="setSessionEmailVariables" access="public" returntype="void" output="false" hint="Set SESSION email variables">
               
-        <cfquery name="qCompanyInfo" datasource="#APPLICATION.DSN#">
-            SELECT
-                companyID,
-                support_email,
-                projectManager,
-                url_ref
-            FROM
-                smg_companies
-            WHERE
-                url_ref = <cfqueryparam cfsqltype="cf_sql_varchar" value="#CGI.http_host#">
-        </cfquery>
-        
         <cfscript>
+			// Get Company Information
+			qGetCompanyInfo = APPLICATION.CFC.COMPANY.getCompanies(httpHost=CGI.http_host);
+		
 			// Set SESSION.ROLES
 			SESSION.EMAIL = StructNew();
 			
 			// Set Email Support According to Company
-			if ( VAL(qCompanyInfo.recordCount) ) {
-				SESSION.EMAIL.support = qCompanyInfo.support_email;
+			if ( VAL(qGetCompanyInfo.recordCount) ) {
+				SESSION.EMAIL.support = qGetCompanyInfo.support_email;
 			} else {
 				SESSION.EMAIL.support = 'support@student-management.com';
 			}

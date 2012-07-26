@@ -119,6 +119,79 @@
 			}
 		</cfscript>
 	</cffunction>
+    
+
+	<cffunction name="isRegionalManager" access="public" returntype="boolean" output="No" hint="Returns true or false">
+        <cfargument name="userType" type="numeric" default="#VAL(CLIENT.userType)#" required="no" hint="Usertype is not required" />
+        
+		<cfscript>
+			// Check if current logged in User is office user
+			if ( ARGUMENTS.userType EQ 5 ) {
+				// Regional Manager
+				return true;  
+			} else {
+				// Not a Regional Manager
+				return false;	
+			}
+		</cfscript>
+	</cffunction>
+
+
+    <!--- ------------------------------------------------------------------------- ----
+		START OF USER SESSION
+	----- ------------------------------------------------------------------------- --->
+
+	<cffunction name="setUserSession" access="public" returntype="void" output="false" hint="Set USER Session Variables">
+        <cfargument name="userID" default="#CLIENT.userID#" hint="User ID">
+
+        <cfscript>
+			// Get Candidate Information
+			qGetUserInfo = getUsers(userID=VAL(ARGUMENTS.userID));
+		
+			// New Struct
+			SESSION.USER = StructNew();
+			
+			// User Information
+			SESSION.USER.ID = qGetUserInfo.userID;
+			SESSION.USER.firstName = qGetUserInfo.firstName;
+			SESSION.USER.lastName = qGetUserInfo.lastName;
+			SESSION.USER.fullName = qGetUserInfo.firstName & " " & qGetUserInfo.lastName;
+			SESSION.USER.dateLastLoggedIn = qGetUserInfo.lastLogin;
+			SESSION.USER.email = qGetUserInfo.email;
+
+			// Path Information - set up upload files path
+			SESSION.USER.myUploadFolder = APPLICATION.PATH.users & ARGUMENTS.userID & "/";
+			// Make sure folder exists
+			APPLICATION.CFC.UDF.createFolder(getUserSession().myUploadFolder);
+			
+			// Relative Path
+			SESSION.USER.myRelativeUploadFolder = "uploadedfiles/users/#ARGUMENTS.userID#/";
+		</cfscript>
+		
+	</cffunction>
+
+
+	<cffunction name="getUserSession" access="public" returntype="struct" hint="Get user SESSION variables" output="no">
+
+        <cfscript>
+			try {
+				
+				// Check if USER structure exits
+				if ( StructIsEmpty(SESSION.USER) ) {
+					// Set Session
+					setUserSession();
+				}
+				
+			} catch (Any e) {
+				// Set Session
+				setUserSession();
+			}
+			
+			// Make Sure Structs are not empty
+			return SESSION.USER;
+		</cfscript>
+        
+	</cffunction>
 
 
 	<cffunction name="setUserRoles" access="public" returntype="void" output="false" hint="Set SESSION user roles">
@@ -141,6 +214,8 @@
                     	surJN.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
                 WHERE
                 	alup.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="userRole">	
+                AND
+                	alup.isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 		</cfquery>
         
         <cfscript>
@@ -194,124 +269,196 @@
 		
 	</cffunction>
 
+    <!--- ------------------------------------------------------------------------- ----
+		END OF USER SESSION
+	----- ------------------------------------------------------------------------- --->
 
-	<!--- Start of Auto Suggest --->
-    <cffunction name="remoteLookUpUser" access="remote" returnFormat="json" output="false" hint="Remote function to get users, returns an array">
-        <cfargument name="searchString" type="string" default="" hint="Search is not required">
-        <cfargument name="maxRows" type="numeric" required="false" default="30" hint="Max Rows is not required" />
-        <cfargument name="companyID" default="#CLIENT.companyID#" hint="CompanyID is not required">
-        
-        <cfscript>
-			var vReturnArray = arrayNew(1);
-		</cfscript>
-        
-        <!--- Do search --->
+
+	<cffunction name="getUserRoleByID" access="public" returntype="query" output="false" hint="Gets a list of user roles by ID">
+    	<cfargument name="userID" default="" hint="userID is required">
+    	<cfargument name="uniqueID" default="" hint="uniqueID is required">
+
         <cfquery 
-			name="qRemoteLookUpUser" 
+			name="qGetUserRoleByID" 
 			datasource="#APPLICATION.dsn#">
-                SELECT DISTINCT
-                	u.userID,
-                    (
-                        CASE                     
-                            WHEN 
-                                u.businessName != '' 
-                            THEN 
-                                CAST( CONCAT(u.lastName, ', ', u.firstName, ' (##', u.userID, ') - ', u.businessName ) AS CHAR) 
-                            ELSE
-                                CAST( CONCAT(u.lastName, ', ', u.firstName, ' (##', u.userID, ')' ) AS CHAR)                                    
-                        END
-                    ) AS displayName                      
-                FROM 
-                	smg_users u
-                INNER JOIN
-                	user_access_rights uar ON uar.userID = u.userID
-					<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
-                        AND          
-                            uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
-                    <cfelseif VAL(ARGUMENTS.companyID)>
-
-                        AND          
-                            uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
-                    </cfif>
-                WHERE 
-                   
-					<cfif IsNumeric(ARGUMENTS.searchString)>
-                    	u.userID LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
-                    <cfelse>
-                            u.lastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
-                        OR
-                            u.firstName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
-                        OR
-                            u.businessName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
-					</cfif>				
-                    
-                ORDER BY 
+                SELECT 
+                    u.useriD,
+                    u.firstName,
                     u.lastName,
-                    u.firstName
-				LIMIT 
-                	<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.maxRows#" />                 
+                    alup.name
+                FROM
+                	smg_users_role_JN surJN
+				INNER JOIN   
+                    smg_users u ON surJN.userid = u.userID
+                INNER JOIN
+                	applicationLookup alup on alup.fieldID = surJN.roleID                
+                	AND
+                    	alup.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="userRole">
+                WHERE	
+					<cfif LEN(ARGUMENTS.userID)>                
+	                    userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+    				<cfelseif LEN(ARGUMENTS.uniqueID)>
+	                    uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.uniqueID#">
+                    <cfelse>
+                    	1 != 1
+                    </cfif>                                                   
+		</cfquery>
+		   
+		<cfreturn qGetUserByID>
+	</cffunction>
+
+
+    <!--- ------------------------------------------------------------------------- ----
+		User Notifications
+	----- ------------------------------------------------------------------------- --->
+
+	<!--- Get Paperwork --->
+	<cffunction name="getPaperworkByID" access="public" returntype="query" output="false" hint="Gets paperwork by userID">
+    	<cfargument name="userID" default="" hint="userID is required">
+        <cfargument name="seasonID" default="" hint="userID is required">
+
+        <cfquery 
+			name="qGetPaperworkByID" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+                	sup.paperworkID,
+                    sup.userID,
+                    sup.seasonID,
+                    sup.fk_companyID,
+                    sup.ar_info_sheet,
+                    sup.ar_ref_quest1,
+                    sup.ar_ref_quest2,
+                    sup.ar_cbc_auth_form,
+                    sup.ar_cbcAuthReview,
+                    sup.ar_agreement,
+                    sup.ar_training,
+                    sup.secondVisit,
+                    sup.agreeSig,
+                    sup.cbcSig,
+                    ss.years,
+                    ss.paperworkStartDate,
+                    ss.paperworkEndDate
+                FROM 
+                    smg_users_paperwork sup
+                LEFT OUTER JOIN
+                	smg_seasons ss ON ss.seasonID = sup.seasonID
+                WHERE 
+                    sup.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+                AND
+                    sup.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+                
+				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
+                    AND          
+                        sup.fk_companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+                <cfelse>
+                    AND          
+                        sup.fk_companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                </cfif>
+                
+        </cfquery>
+		
+        <cfreturn qGetPaperworkByID>
+        
+	</cffunction>
+
+
+	<!--- Get References --->
+	<cffunction name="getReferencesByID" access="public" returntype="query" output="false" hint="Gets references by userID">
+    	<cfargument name="userID" default="" hint="userID is required">
+
+        <cfquery 
+			name="qGetReferencesByID" 
+			datasource="#APPLICATION.dsn#">
+                SELECT 
+                   refID,
+                   firstName,
+                   lastName,
+                   address,
+                   address2,
+                   city,
+                   state,
+                   zip,
+                   phone,
+                   email,
+                   relationship,
+                   howLong,
+                   referenceFor,
+                   season,
+                   approved
+                FROM 
+                    smg_user_references
+                WHERE 
+                    referenceFor = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
         </cfquery>
 
-		<cfscript>
-			// Loop through query
-            For ( i=1; i LTE qRemoteLookUpUser.recordCount; i=i+1 ) {
-
-				vUserStruct = structNew();
-				vUserStruct.userID = qRemoteLookUpUser.userID[i];
-				vUserStruct.displayName = qRemoteLookUpUser.displayName[i];
-				
-				ArrayAppend(vReturnArray,vUserStruct);
-            }
-			
-			return vReturnArray;
-        </cfscript>
-
-    </cffunction>
-	<!--- End of Auto Suggest --->
-
-
-	<!--- Remote --->
-	<cffunction name="getIntlRepRemote" access="remote" returnFormat="json" output="false" hint="Gets a list of Intl. Reps. assigned to a candidate">
-		<cfargument name="programID" default="" hint="Get Intl. Reps. Based on a list of program ids">
+        <cfreturn qGetReferencesByID>
         
-        <cfscript>
-			// Check if it's an array (function is sending an array)
-			if ( IsArray(ARGUMENTS.programID) ) {
-				ARGUMENTS.programID = ArrayToList(ARGUMENTS.programID);
-			} else if ( ARGUMENTS.programID EQ 'NULL' ) {
-				ARGUMENTS.programID = '';	
-			}
-		</cfscript>
-        
-        <cfquery 
-			name="qGetIntlRepRemote" 
-			datasource="#APPLICATION.DSN#">
-                SELECT
-					u.userID,
-                    u.businessName
-                FROM 
-                    smg_users u
-                INNER JOIN
-                	smg_students s ON s.intRep = u.userID
-                WHERE
-                    s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-                AND
-                	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                <cfif LEN(ARGUMENTS.programID)>
-                	AND	
-                    	s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#" list="yes"> )
-                </cfif>
-                GROUP BY
-                	u.userID
-                ORDER BY
-                	u.businessName
-		</cfquery>
-
-        <cfscript>
-			return SerializeJson(qGetIntlRepRemote,true);
-		</cfscript>
 	</cffunction>
     
+    
+	<!--- Get Employment History --->
+	<cffunction name="getEmploymentHistoryByID" access="public" returntype="query" output="false" hint="Gets references by ID">
+    	<cfargument name="userID" default="" hint="userID is required">
+
+        <cfquery 
+			name="qGetEmploymentHistoryByID" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+                	employmentID,
+                    fk_userID,
+                    occupation,
+                    employer,
+                    address,
+                    address2,
+                    city,
+                    state,
+                    zip,
+                    daysWorked,
+                    hoursDay,
+                    phone,
+                    current,
+                    datesEmployed
+                FROM 
+                    smg_users_employment_history
+                WHERE 
+                    fk_userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+        </cfquery>
+
+        <cfreturn qGetReferencesByID>
+        
+	</cffunction>
+
+
+	<cffunction name="userNotifications" access="public" returntype="struct" output="false" hint="Returns a struct with all user notification">
+    	<cfargument name="userID" default="" hint="userID is required">
+    	
+        <cfscript>
+			vGetSeasonID = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
+			
+			// Get Paperwork - This is per Season
+			qGetPaperwork = getPaperworkByID(userID=ARGUMENTS.userID, seasonID=vGetSeasonID);
+			
+			// Get References - Does not expire
+			qGetReferences = getReferencesByID(userID=ARGUMENTS.userID);
+			
+			// Get Employment History - Does not expire
+			qGetEmploymentHistory = getEmploymentHistoryByID(userID=ARGUMENTS.userID);
+			
+			writedump(qGetPaperwork);
+			
+			writedump(qGetReferences);
+			
+			writedump(qGetEmploymentHistory);
+			
+			abort;
+		</cfscript>
+
+    </cffunction>
+
+    <!--- ------------------------------------------------------------------------- ----
+		End of User Notifications
+	----- ------------------------------------------------------------------------- --->
+
 
 	<cffunction name="getFacilitators" access="public" returntype="query" output="false" hint="Gets a list of facilitators assigned to a region">
         <cfargument name="isActive" default="1" hint="isActive is not required">
@@ -772,9 +919,7 @@
 
 
 	<!--- ------------------------------------------------------------------------- ----
-		
 		Start of Payment Section
-	
 	----- ------------------------------------------------------------------------- --->
     
 	<cffunction name="getRepTotalPayments" access="public" returntype="query" output="false" hint="Gets reps total payment by program">
@@ -908,16 +1053,12 @@
 	</cffunction>
 
 	<!--- ------------------------------------------------------------------------- ----
-		
 		End of Payment Section
-	
 	----- ------------------------------------------------------------------------- --->
 
     
 	<!--- ------------------------------------------------------------------------- ----
-		
 		Start of User Training
-	
 	----- ------------------------------------------------------------------------- --->
     
 	<cffunction name="getTraining" access="public" returntype="query" output="false" hint="Gets a list of training records for a userID">
@@ -1640,17 +1781,14 @@
         </cfscript>
         
 	</cffunction>
+    
 	<!--- ------------------------------------------------------------------------- ----
-		
 		End of User Training
-	
 	----- ------------------------------------------------------------------------- --->
     
 
 	<!--- ------------------------------------------------------------------------- ----
-		
 		Start of Student Services Project
-	
 	----- ------------------------------------------------------------------------- --->
     
 	<cffunction name="getStudentServices" access="public" returntype="query" output="false" hint="Gets a list of problem records for a studentID">
@@ -1686,17 +1824,129 @@
 	</cffunction>
 
 	<!--- ------------------------------------------------------------------------- ----
-		
 		End of Student Services Project
-	
 	----- ------------------------------------------------------------------------- --->
 
     
 	<!--- ------------------------------------------------------------------------- ----
-		
 		Start of Remote Functions
-	
 	----- ------------------------------------------------------------------------- --->
+
+    <!--- Auto Suggest --->
+    <cffunction name="remoteLookUpUser" access="remote" returnFormat="json" output="false" hint="Remote function to get users, returns an array">
+        <cfargument name="searchString" type="string" default="" hint="Search is not required">
+        <cfargument name="maxRows" type="numeric" required="false" default="30" hint="Max Rows is not required" />
+        <cfargument name="companyID" default="#CLIENT.companyID#" hint="CompanyID is not required">
+        
+        <cfscript>
+			var vReturnArray = arrayNew(1);
+		</cfscript>
+        
+        <!--- Do search --->
+        <cfquery 
+			name="qRemoteLookUpUser" 
+			datasource="#APPLICATION.dsn#">
+                SELECT DISTINCT
+                	u.userID,
+                    (
+                        CASE                     
+                            WHEN 
+                                u.businessName != '' 
+                            THEN 
+                                CAST( CONCAT(u.lastName, ', ', u.firstName, ' (##', u.userID, ') - ', u.businessName ) AS CHAR) 
+                            ELSE
+                                CAST( CONCAT(u.lastName, ', ', u.firstName, ' (##', u.userID, ')' ) AS CHAR)                                    
+                        END
+                    ) AS displayName                      
+                FROM 
+                	smg_users u
+                INNER JOIN
+                	user_access_rights uar ON uar.userID = u.userID
+					<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
+                        AND          
+                            uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                    <cfelseif VAL(ARGUMENTS.companyID)>
+
+                        AND          
+                            uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                    </cfif>
+                WHERE 
+                   
+					<cfif IsNumeric(ARGUMENTS.searchString)>
+                    	u.userID LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+                    <cfelse>
+                            u.lastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+                        OR
+                            u.firstName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+                        OR
+                            u.businessName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+					</cfif>				
+                    
+                ORDER BY 
+                    u.lastName,
+                    u.firstName
+				LIMIT 
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.maxRows#" />                 
+        </cfquery>
+
+		<cfscript>
+			// Loop through query
+            For ( i=1; i LTE qRemoteLookUpUser.recordCount; i=i+1 ) {
+
+				vUserStruct = structNew();
+				vUserStruct.userID = qRemoteLookUpUser.userID[i];
+				vUserStruct.displayName = qRemoteLookUpUser.displayName[i];
+				
+				ArrayAppend(vReturnArray,vUserStruct);
+            }
+			
+			return vReturnArray;
+        </cfscript>
+
+    </cffunction>
+
+    
+	<cffunction name="getIntlRepRemote" access="remote" returnFormat="json" output="false" hint="Gets a list of Intl. Reps. assigned to a candidate">
+		<cfargument name="programID" default="" hint="Get Intl. Reps. Based on a list of program ids">
+        
+        <cfscript>
+			// Check if it's an array (function is sending an array)
+			if ( IsArray(ARGUMENTS.programID) ) {
+				ARGUMENTS.programID = ArrayToList(ARGUMENTS.programID);
+			} else if ( ARGUMENTS.programID EQ 'NULL' ) {
+				ARGUMENTS.programID = '';	
+			}
+		</cfscript>
+        
+        <cfquery 
+			name="qGetIntlRepRemote" 
+			datasource="#APPLICATION.DSN#">
+                SELECT
+					u.userID,
+                    u.businessName
+                FROM 
+                    smg_users u
+                INNER JOIN
+                	smg_students s ON s.intRep = u.userID
+                WHERE
+                    s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                AND
+                	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                <cfif LEN(ARGUMENTS.programID)>
+                	AND	
+                    	s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#" list="yes"> )
+                </cfif>
+                GROUP BY
+                	u.userID
+                ORDER BY
+                	u.businessName
+		</cfquery>
+
+        <cfscript>
+			return SerializeJson(qGetIntlRepRemote,true);
+		</cfscript>
+	</cffunction>    
+
 
     <cffunction name="getUsersAssignedToRegion" access="remote" returntype="query" output="false" hint="Gets a list of users assigned to a region">
     	<cfargument name="regionID" hint="regionID required">
@@ -1770,9 +2020,7 @@
 	</cffunction>
 
 	<!--- ------------------------------------------------------------------------- ----
-		
 		End of Remote Functions
-	
 	----- ------------------------------------------------------------------------- --->
     
 </cfcomponent>

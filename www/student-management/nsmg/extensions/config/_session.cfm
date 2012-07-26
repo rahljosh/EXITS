@@ -35,7 +35,10 @@
 		// Form Errors
 		SESSION.formErrors = CreateCFC("formErrors").Init();
 	}
-	
+
+	// Set USER SESSION Variables
+	APPLICATION.CFC.USER.setUserSession(userID=CLIENT.userID);
+
 	// Set User Roles
 	APPLICATION.CFC.USER.setUserRoles(userID=CLIENT.userID);	
 	
