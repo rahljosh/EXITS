@@ -34,7 +34,7 @@
 <!--- Include Header --->
 <cfinclude template="header.cfm">
 
-<table align="center" width="90%" cellpadding="0" cellspacing="0"  border="0"> 
+<table align="center" width="96%" cellpadding="0" cellspacing="0"  border="0"> 
 	<tr>
 		<td>
 			<cfif right(URL.curdoc,4) EQ '.cfr'>
