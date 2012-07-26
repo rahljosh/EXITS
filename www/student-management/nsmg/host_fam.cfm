@@ -1,5 +1,5 @@
 <cfparam name="submitted" default="0">
-<cfparam name="regionid" default="#client.regionid#">
+<cfparam name="FORM.regionid" default="0">
 <cfparam name="keyword" default="">
 <cfparam name="hosting" default="">
 <cfparam name="active" default="1">
@@ -33,9 +33,14 @@
                 ORDER BY regionname
             </cfquery>
             Region<br />
-			<cfselect NAME="regionid" query="list_regions" value="regionid" display="regionname" selected="#regionid#" queryPosition="below">
-				<option value="">All</option>
-			</cfselect>
+            <cfoutput>
+                <select NAME="regionid">
+                    <option value="" selected="selected">All</option>
+                    <cfloop query="list_regions">
+                        <option value="#regionID#" <cfif list_regions.regionID EQ FORM.regionID>selected="selected"</cfif>>#list_regions.regionName#</option>
+                    </cfloop>
+                </select>
+          	</cfoutput>
         </td>
 	</cfif>
         <td>
@@ -99,9 +104,19 @@
             <cfelseif hosting EQ 0>
                 LEFT JOIN smg_students s ON h.hostid = s.hostid
             </cfif>
-            WHERE h.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
-            <cfif regionid NEQ ''>
-                AND h.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#regionid#">
+            WHERE
+            	1 = 1
+           	<!--- Students under companies --->
+			<cfif CLIENT.companyID EQ 5>
+                AND
+                    h.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> ) 
+            <cfelse>
+                AND
+                    h.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+            </cfif>
+			<cfif VAL(regionID)>
+                AND 
+                    h.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.regionID#">
             </cfif>
             <cfif trim(keyword) NEQ ''>
                 AND (
@@ -111,6 +126,7 @@
                 	OR h.motherfirstname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
                 	OR h.city LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
                 	OR h.state LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
+                    OR h.email LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
                 )
             </cfif>
             <cfif hosting EQ 1>
@@ -177,9 +193,10 @@
         <cfquery name="getResults" datasource="#application.dsn#">
             SELECT DISTINCT h.familylastname, h.fatherfirstname, h.motherfirstname, h.hostid, h.city, h.state
             FROM smg_hosts h
-            WHERE h.active = 1
-			<!--- REGIONAL MANAGER SEES ALL FAMILIES ON THE REGION --->
-            AND h.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.regionid#">
+            WHERE 
+            	h.active = 1
+            AND 
+                h.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.regionid#">
             <cfif trim(keyword) NEQ ''>
                 AND (
                 	h.hostid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(keyword)#">
@@ -188,8 +205,11 @@
                 	OR h.motherfirstname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
                 	OR h.city LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
                 	OR h.state LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
+                    OR h.email LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
                 )
             </cfif>
+          	AND
+           		h.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
             <cfif listFind("6,7,9", client.usertype)>
 				<!--- if hostlist is null return 0 results. --->
                 <cfif hostlist EQ ''>
