@@ -83,47 +83,72 @@ function CheckDates(ckname, frname) {
 <cfinclude template="../check_rights.cfm">
 
 <cfquery name="get_rep" datasource="MySQL">
-	SELECT userid, firstname, lastname, active, accountCreationVerified
-	FROM smg_users
-	WHERE userid = <cfqueryparam value="#url.userid#" cfsqltype="cf_sql_integer" maxlength="6">
+	SELECT
+    	userid,
+        firstname,
+        lastname,
+        active,
+        accountCreationVerified
+	FROM
+    	smg_users
+	WHERE
+    	userid = <cfqueryparam value="#url.userid#" cfsqltype="cf_sql_integer" maxlength="6">
 </cfquery>
 
-		<Cfscript>
-            //Check if paperwork is complete for season
-			get_paperwork = APPLICATION.CFC.udf.allpaperworkCompleted(userid=url.userid);
-			// Get User CBC
-		qGetCBCUser = APPCFC.CBC.getCBCUserByID(userID=url.userid,cbcType='user');
-		</cfscript>
+<cfscript>
+	//Check if paperwork is complete for season
+	get_paperwork = APPLICATION.CFC.udf.allpaperworkCompleted(userid=url.userid);
+	// Get User CBC
+	qGetCBCUser = APPCFC.CBC.getCBCUserByID(userID=url.userid,cbcType='user');
+</cfscript>
         
- <cfquery name="currentSeasonStatus" dbtype="query">
- select *
- from get_paperwork 
- where seasonid = 9
- </cfquery>
+<cfquery name="currentSeasonStatus" dbtype="query">
+	SELECT
+    	*
+  	FROM
+    	get_paperwork
+  	WHERE
+    	seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="9">
+</cfquery>
 
 <cfquery name="used_seasons" datasource="MySQL">
-	SELECT p.seasonid
-	FROM smg_users_paperwork p
-	WHERE userid = <cfqueryparam value="#url.userid#" cfsqltype="cf_sql_integer" maxlength="6">
+	SELECT
+    	p.seasonid
+	FROM
+    	smg_users_paperwork p
+	WHERE
+    	userid = <cfqueryparam value="#url.userid#" cfsqltype="cf_sql_integer" maxlength="6">
     <cfif client.companyid eq 10>
-    and fk_companyid = 10
+    	AND
+        	fk_companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="10">
     </cfif>
-	GROUP BY p.seasonid
+	GROUP BY
+    	p.seasonid
 </cfquery>
 <cfset season_list = ValueList(used_seasons.seasonid)>
 
 <cfquery name="get_seasons" datasource="MySql">
-	SELECT seasonid, season
-	FROM smg_seasons
-	WHERE active = '1'
+	SELECT
+    	seasonid,
+        season
+	FROM
+    	smg_seasons
+	WHERE
+    	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
 	<!--- REMAINING SEASONS --->
 	<cfif get_paperwork.recordcount>		
-		AND ( <cfloop list="#season_list#" index="season">
-			 seasonid != '#season#'
-			 <cfif season NEQ #ListLast(season_list)#>AND</cfif>
-		  </cfloop> )
+		AND
+        	( 
+        		<cfloop list="#season_list#" index="seasonIndex">
+			 		seasonid != <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(seasonIndex)#">
+			 		<cfif seasonIndex NEQ #ListLast(season_list)#>
+                    	AND
+					</cfif>
+		  		</cfloop>
+         	)
 	</cfif>
-	ORDER BY season
+	ORDER BY
+    	season
 </cfquery>
 
     <cfquery name="user_compliance" datasource="#application.dsn#">
