@@ -359,7 +359,7 @@
 <cfif not val(accountCreationVerified)>
 	<cfif get_paperwork.reviewAcct eq 1>
         <div class="alert">
-        <h1>Account Review Required - Account appears ready for manual reveiw. </h1>
+        <h1>Account Review Required - Account appears ready for manual review. </h1>
         <em>Please review references and run CBC.  When everything looks fine, approve the CBC through Paperwork menu to activate account.</em> </div>
         <br />
     <cfelseif get_paperwork.areaRepOK eq 0 or get_paperwork.arearepOk is ''>
