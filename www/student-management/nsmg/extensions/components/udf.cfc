@@ -924,19 +924,7 @@
 	<!---Check if paperwork is complete for a specific user for a specific season to be allowed access---->
 	<cffunction name="paperworkCompleted" access="public" returntype="query">
     	<cfargument name="season" type="numeric" required="yes" default=9 hint="This should be what ever season you want to check on." />
-        <cfargument name="userid" type="numeric" required="yes" default="" hint="Pass in user id you want to check on">
-        
-        <!----check CBC has been approved---->
-        <cfquery name="cbcCheck" datasource="#APPLICATION.DSN#">
-            SELECT 
-            	date_approved
-            FROM 
-            	smg_users_cbc
-            WHERE 
-            	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
-          	AND
-            	date_expired > <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
-        </cfquery>
+        <cfargument name="userID" type="numeric" required="yes" default="" hint="Pass in user id you want to check on">
         
     	<!----Check Agreement---->
         <cfquery name="checkAgreement" datasource="#APPLICATION.DSN#">
@@ -947,9 +935,9 @@
             FROM 
             	smg_users_paperwork
             WHERE 
-            	userid =  <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
+            	userID =  <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
             AND 
-            	seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.season)#">
+            	seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.season)#">
         </cfquery>
         
         <!----Check Refrences---->
@@ -959,7 +947,7 @@
             FROM 
             	smg_user_references
             WHERE 
-            	referencefor = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
+            	referencefor = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
         </cfquery>
         
         <!----Check Employmenthistory---->
@@ -969,7 +957,7 @@
             FROM 
             	smg_users_employment_history
             WHERE 
-            	fk_userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
+            	fk_userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
         </cfquery>  
         
         <cfquery name="prevExperience" datasource="#APPLICATION.DSN#">
@@ -979,7 +967,7 @@
             FROM 
                 smg_users
             WHERE 
-                userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
+                userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
         </cfquery>
         
         <!----Check AR Training Sign off Form---->
@@ -995,7 +983,7 @@
             FROM 
                 smg_users
             WHERE 
-                userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
+                userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
         </cfquery>
         
 		<cfif employHistory.recordcount GTE 1 AND (prevExperience.prevOrgAffiliation EQ 0 OR (prevExperience.prevOrgAffiliation EQ 1 AND prevExperience.prevAffiliationName NEQ '') )>
@@ -1038,16 +1026,16 @@
     
     
   <!---Get paperwork  for a specific user for all  seasons on record ---->
-	<cffunction name="allpaperworkCompleted" access="public" returntype="query">
-        <cfargument name="userid" type="numeric" required="yes" default="" hint="Pass in user id you want to check on">
-        <cfargument name="seasonid" type="numeric" required="no" default="0" hint="if you want just of a specific season not passed in returns all seasons">
+	<cffunction name="allPaperworkCompleted" access="public" returntype="query">
+        <cfargument name="userID" type="numeric" required="yes" default="" hint="Pass in user id you want to check on">
+        <cfargument name="seasonID" type="numeric" required="no" default="0" hint="if you want just of a specific season not passed in returns all seasons">
         
-    	<!----Check Agreement---->
-        <cfquery name="checkAgreement" datasource="#APPLICATION.DSN#">
+    	<!--- Get Paperwork --->
+        <cfquery name="qGetPaperwork" datasource="#APPLICATION.DSN#">
 			SELECT 
             	p.paperworkid, 
-                p.userid, 
-                p.seasonid, 
+                p.userID, 
+                p.seasonID, 
                 p.ar_info_sheet, 
                 p.ar_ref_quest1, 
                 p.ar_ref_quest2, 
@@ -1061,9 +1049,9 @@
         	FROM 
         		smg_users_paperwork p
         	LEFT JOIN 
-            	smg_seasons s ON s.seasonid = p.seasonid
+            	smg_seasons s ON s.seasonID = p.seasonID
         	WHERE 
-            	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
+            	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
                 
 				<cfif CLIENT.companyid eq 10>
                     AND
@@ -1073,81 +1061,83 @@
                         fk_companyid != <cfqueryparam cfsqltype="cf_sql_integer" value="10"> 
                 </cfif>
             
-				<cfif val(ARGUMENTS.seasonid)>
-                    AND p.seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonid)#">
+				<cfif val(ARGUMENTS.seasonID)>
+                    AND 
+                    	p.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
                 </cfif>
                 
             ORDER BY 
-                p.seasonid DESC
+                p.seasonID DESC
         </cfquery>
      
 		<cfscript>
 			// This is the query that is returned
-			qAllPaperWork = QueryNew("paperworkid,userid,seasonid,ar_info_sheet,ar_ref_quest1,ar_ref_quest2,ar_cbcAuthReview,ar_cbc_auth_form,ar_agreement,ar_training,secondVisit,agreeSig,cbcSig, season, secondVisitRepOK, areaRepOK, reviewAcct, secondRepReviewAcct");
+			qAllPaperWork = QueryNew("paperworkid,userID,seasonID,ar_info_sheet,ar_ref_quest1,ar_ref_quest2,ar_cbcAuthReview,ar_cbc_auth_form,ar_agreement,ar_training,secondVisit,agreeSig,cbcSig, season, secondVisitRepOK, areaRepOK, reviewAcct, secondRepReviewAcct");
+        	
+			// Set Initial values
+        	secondVisitRepOk = 0;
+			areaRepOk = 0;
+			reviewAcct = 0;
+			secondRepReviewAcct = 0;
         </cfscript>
         
-        <!--- Set Initial values --->
-        <cfset secondVisitRepOk = 0>
-        <cfset areaRepOk = 0>
-        <cfset reviewAcct = 0>
-        <cfset secondRepReviewAcct = 0>
-     
-		<cfloop query="checkAgreement">
+		<cfloop query="qGetPaperwork">
         	
 			<!----check CBC has been approved---->
-            <cfquery name="cbcCheck" datasource="#APPLICATION.DSN#">
+            <cfquery name="qGetCBC" datasource="#APPLICATION.DSN#">
                 SELECT 
                 	date_approved, 
-                    seasonid
+                    seasonID
                 FROM 
                 	smg_users_cbc
                 WHERE 
-                	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userid)#">
+                	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
                 AND 
-                	seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#checkAgreement.seasonid#">
+                	seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetPaperwork.seasonID#">
             </cfquery>
 	 	
-			<!----check to see if this account is active for second visit reps: agreement, cbcauthrization and approval, info sheet need to be on file.---->
-            <cfif checkAgreement.ar_info_sheet is not '' 
-                AND checkAgreement.ar_cbc_auth_form is not '' 
-                AND cbcCheck.date_approved is not ''
-                AND checkAgreement.ar_agreement is not ''
-                AND checkAgreement.cbcSig is not ''
-                AND checkAgreement.agreeSig is not ''>
+			<!----check to see if this account is active for second visit reps: agreement, 
+			cbcauthrization and approval, info sheet need to be on file.---->
+            <cfif IsDate(qGetPaperwork.ar_info_sheet) 
+                AND IsDate(qGetPaperwork.ar_cbc_auth_form) 
+                AND IsDate(qGetCBC.date_approved)
+                AND IsDate(qGetPaperwork.ar_agreement)
+                AND LEN(qGetPaperwork.cbcSig)
+                AND LEN(qGetPaperwork.agreeSig)>
                 <cfset secondVisitRepOk = 1>
             <cfelse>
                 <cfset secondVisitRepOk = 0>
             </cfif>
         
             <!----check to see if this account is active for area reps: agreement, cbcauthrization and approval, info sheet need to be on file, 2 references check and AR training completed.---->
-            <cfif checkAgreement.ar_info_sheet is not '' 
-                AND checkAgreement.ar_cbc_auth_form is not '' 
-                AND cbcCheck.date_approved is not ''
-                AND checkAgreement.ar_agreement is not ''
-                AND checkAgreement.ar_ref_quest1 is not ''
-                AND checkAgreement.ar_ref_quest2 is not ''>
+            <cfif IsDate(qGetPaperwork.ar_info_sheet) 
+                AND IsDate(qGetPaperwork.ar_cbc_auth_form) 
+                AND IsDate(qGetCBC.date_approved)
+                AND IsDate(qGetPaperwork.ar_agreement)
+                AND IsDate(qGetPaperwork.ar_ref_quest1)
+                AND IsDate(qGetPaperwork.ar_ref_quest2)>
                <cfset areaRepOk = 1>
             <cfelse>
                 <cfset areaRepOk = 0>
             </cfif>
             
         	<!--- set if area rep account needs to be reviewed---->
-             <cfif checkAgreement.ar_info_sheet is not '' 
-                AND checkAgreement.ar_cbc_auth_form is not '' 
-                AND cbcCheck.date_approved is  ''
-                AND checkAgreement.ar_agreement is not ''
-                AND checkAgreement.ar_ref_quest1 is not ''
-                AND checkAgreement.ar_ref_quest2 is not ''>
+             <cfif IsDate(qGetPaperwork.ar_info_sheet) 
+                AND IsDate(qGetPaperwork.ar_cbc_auth_form) 
+                AND NOT IsDate(qGetCBC.date_approved)
+                AND IsDate(qGetPaperwork.ar_agreement)
+                AND IsDate(qGetPaperwork.ar_ref_quest1)
+                AND IsDate(qGetPaperwork.ar_ref_quest2)>
                <cfset reviewAcct = 1>
             <cfelse>
                 <cfset reviewAcct = 0>
-            </cfif>
+            </cfif>            
             
             <!----set if second visit rep needs to be reviewed---->
-            <cfif checkAgreement.ar_info_sheet is not '' 
-                AND checkAgreement.ar_cbc_auth_form is not '' 
-                AND cbcCheck.date_approved is ''
-                AND checkAgreement.ar_agreement is not ''>
+            <cfif IsDate(qGetPaperwork.ar_info_sheet) 
+                AND IsDate(qGetPaperwork.ar_cbc_auth_form) 
+                AND NOT IsDate(qGetCBC.date_approved)
+                AND IsDate(qGetPaperwork.ar_agreement)>
                 <cfset secondRepReviewAcct = 1>
             <cfelse>
                 <cfset secondRepReviewAcct = 0>
@@ -1158,20 +1148,25 @@
 		<cfscript>
 			 // Insert blank first row
 			QueryAddRow(qAllPaperWork);
-			QuerySetCell(qAllPaperWork, "paperworkid", checkAgreement.paperworkid);
-			QuerySetCell(qAllPaperWork, "userid", checkAgreement.userid);
-			QuerySetCell(qAllPaperWork, "seasonid", checkAgreement.seasonid);
-			QuerySetCell(qAllPaperWork, "ar_info_sheet", checkAgreement.ar_info_sheet);
-			QuerySetCell(qAllPaperWork, "ar_ref_quest1", checkAgreement.ar_ref_quest1);
-			QuerySetCell(qAllPaperWork, "ar_ref_quest2", checkAgreement.ar_ref_quest2);
-			QuerySetCell(qAllPaperWork, "ar_cbcAuthReview", cbcCheck.date_approved);
-			QuerySetCell(qAllPaperWork, "ar_cbc_auth_form", checkAgreement.ar_cbc_auth_form);
-			QuerySetCell(qAllPaperWork, "ar_agreement", checkAgreement.ar_agreement);
-			QuerySetCell(qAllPaperWork, "ar_training", checkAgreement.ar_training);
-			QuerySetCell(qAllPaperWork, "secondVisit", checkAgreement.secondVisit);
-			QuerySetCell(qAllPaperWork, "agreeSig", checkAgreement.agreeSig);
-			QuerySetCell(qAllPaperWork, "cbcSig", checkAgreement.cbcSig);
-			QuerySetCell(qAllPaperWork, "season", checkAgreement.season);
+			QuerySetCell(qAllPaperWork, "paperworkid", qGetPaperwork.paperworkid);
+			QuerySetCell(qAllPaperWork, "userID", qGetPaperwork.userID);
+			QuerySetCell(qAllPaperWork, "seasonID", qGetPaperwork.seasonID);
+			QuerySetCell(qAllPaperWork, "ar_info_sheet", qGetPaperwork.ar_info_sheet);
+			QuerySetCell(qAllPaperWork, "ar_ref_quest1", qGetPaperwork.ar_ref_quest1);
+			QuerySetCell(qAllPaperWork, "ar_ref_quest2", qGetPaperwork.ar_ref_quest2);
+			// Throws an error if there is no qGetPaperwork
+			if (qGetPaperwork.recordCount) {
+				QuerySetCell(qAllPaperWork, "ar_cbcAuthReview", qGetCBC.date_approved);
+			} else {
+				QuerySetCell(qAllPaperWork, "ar_cbcAuthReview", "");
+			}
+			QuerySetCell(qAllPaperWork, "ar_cbc_auth_form", qGetPaperwork.ar_cbc_auth_form);
+			QuerySetCell(qAllPaperWork, "ar_agreement", qGetPaperwork.ar_agreement);
+			QuerySetCell(qAllPaperWork, "ar_training", qGetPaperwork.ar_training);
+			QuerySetCell(qAllPaperWork, "secondVisit", qGetPaperwork.secondVisit);
+			QuerySetCell(qAllPaperWork, "agreeSig", qGetPaperwork.agreeSig);
+			QuerySetCell(qAllPaperWork, "cbcSig", qGetPaperwork.cbcSig);
+			QuerySetCell(qAllPaperWork, "season", qGetPaperwork.season);
 			QuerySetCell(qAllPaperWork, "secondVisitRepOK", secondVisitRepOk);
 			QuerySetCell(qAllPaperWork, "areaRepOk", areaRepOk);
 			QuerySetCell(qAllPaperWork, "reviewAcct", reviewAcct);
