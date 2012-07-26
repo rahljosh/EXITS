@@ -17,16 +17,16 @@
                   	)
 				VALUES 
                 	(
-                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentid#">, 
+                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentid)#">, 
 						<cfif form.new9_beg_year is '' OR NOT VAL(FORM.new9_beg_year)>
                         	<cfqueryparam null="yes">,
                       	<cfelse>
-                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.new9_beg_year#">,
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.new9_beg_year)#">,
 						</cfif>
                         <cfif form.new9_end_year is '' OR NOT VAL(FORM.new9_end_year)>
                         	<cfqueryparam null="yes">,
                       	<cfelse>
-                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.new9_end_year#">,
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.new9_end_year)#">,
 						</cfif>
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.new_9class#">
                  	)
@@ -58,17 +58,17 @@
                     	<cfif form.upd9_beg_year is '' OR NOT VAL(FORM.upd9_beg_year)>
                         	<cfqueryparam null="yes">,
                       	<cfelse>
-                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.upd9_beg_year#">,
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.upd9_beg_year)#">,
 						</cfif>
 					end_year = 
 						<cfif form.upd9_end_year is '' OR NOT VAL(FORM.upd9_end_year)>
                         	<cfqueryparam null="yes">,
                       	<cfelse>
-                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.upd9_end_year#">,
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.upd9_end_year)#">,
 						</cfif>
 					class_year = <cfqueryparam cfsqltype="cf_sql_varchar" value="#upd_9class#">
 				WHERE 
-                	yearid = <cfqueryparam cfsqltype="cf_sql_integer" value="#upd_9yearid#">
+                	yearid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(upd_9yearid)#">
 				LIMIT 1				
 			</cfquery>
 		</cfif>
@@ -100,16 +100,16 @@
                   	)
 				VALUES 
                 	(
-                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentid#">, 
+                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentid)#">, 
 						<cfif form.new10_beg_year is '' OR NOT VAL(FORM.new10_beg_year)>
                         	<cfqueryparam null="yes">,
                       	<cfelse>
-                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.new10_beg_year#">,
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.new10_beg_year)#">,
 						</cfif>
                         <cfif form.new10_end_year is '' OR NOT VAL(FORM.new10_end_year)>
                         	<cfqueryparam null="yes">,
                       	<cfelse>
-                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.new10_end_year#">,
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.new10_end_year)#">,
 						</cfif>
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.new_10class#">
                  	)
@@ -141,17 +141,17 @@
                     	<cfif form.upd10_beg_year is '' OR NOT VAL(FORM.upd10_beg_year)>
                         	<cfqueryparam null="yes">,
                       	<cfelse>
-                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.upd10_beg_year#">,
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.upd10_beg_year)#">,
 						</cfif>
 					end_year = 
 						<cfif form.upd10_end_year is '' OR NOT VAL(FORM.upd10_end_year)>
                         	<cfqueryparam null="yes">,
                       	<cfelse>
-                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.upd10_end_year#">,
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.upd10_end_year)#">,
 						</cfif>
 					class_year = <cfqueryparam cfsqltype="cf_sql_varchar" value="#upd_10class#">
 				WHERE 
-                	yearid = <cfqueryparam cfsqltype="cf_sql_integer" value="#upd_10yearid#">
+                	yearid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(upd_10yearid)#">
 				LIMIT 1				
 			</cfquery>
 		</cfif>
@@ -183,16 +183,16 @@
                   	)
 				VALUES 
                 	(
-                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentid#">, 
+                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentid)#">, 
 						<cfif form.new11_beg_year is '' OR NOT VAL(FORM.new11_beg_year)>
                         	<cfqueryparam null="yes">,
                       	<cfelse>
-                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.new11_beg_year#">,
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.new11_beg_year)#">,
 						</cfif>
                         <cfif form.new11_end_year is '' OR NOT VAL(FORM.new11_end_year)>
                         	<cfqueryparam null="yes">,
                       	<cfelse>
-                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.new11_end_year#">,
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.new11_end_year)#">,
 						</cfif>
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.new_11class#">
                  	)
@@ -224,17 +224,17 @@
                     	<cfif form.upd11_beg_year is '' OR NOT VAL(FORM.upd11_beg_year)>
                         	<cfqueryparam null="yes">,
                       	<cfelse>
-                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.upd11_beg_year#">,
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.upd11_beg_year)#">,
 						</cfif>
 					end_year = 
 						<cfif form.upd11_end_year is '' OR NOT VAL(FORM.upd11_end_year)>
                         	<cfqueryparam null="yes">,
                       	<cfelse>
-                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.upd11_end_year#">,
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.upd11_end_year)#">,
 						</cfif>
 					class_year = <cfqueryparam cfsqltype="cf_sql_varchar" value="#upd_11class#">
 				WHERE 
-                	yearid = <cfqueryparam cfsqltype="cf_sql_integer" value="#upd_11yearid#">
+                	yearid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(upd_11yearid)#">
 				LIMIT 1				
 			</cfquery>
 		</cfif>
@@ -266,16 +266,16 @@
                   	)
 				VALUES 
                 	(
-                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentid#">, 
+                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentid)#">, 
 						<cfif form.new12_beg_year is '' OR NOT VAL(FORM.new12_beg_year)>
                         	<cfqueryparam null="yes">,
                       	<cfelse>
-                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.new12_beg_year#">,
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.new12_beg_year)#">,
 						</cfif>
                         <cfif form.new12_end_year is '' OR NOT VAL(FORM.new12_end_year)>
                         	<cfqueryparam null="yes">,
                       	<cfelse>
-                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.new12_end_year#">,
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.new12_end_year)#">,
 						</cfif>
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.new_12class#">
                  	)
@@ -307,17 +307,17 @@
                     	<cfif form.upd12_beg_year is '' OR NOT VAL(FORM.upd12_beg_year)>
                         	<cfqueryparam null="yes">,
                       	<cfelse>
-                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.upd12_beg_year#">,
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.upd12_beg_year)#">,
 						</cfif>
 					end_year = 
 						<cfif form.upd12_end_year is '' OR NOT VAL(FORM.upd12_end_year)>
                         	<cfqueryparam null="yes">,
                       	<cfelse>
-                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.upd12_end_year#">,
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.upd12_end_year)#">,
 						</cfif>
 					class_year = <cfqueryparam cfsqltype="cf_sql_varchar" value="#upd_12class#">
 				WHERE 
-                	yearid = <cfqueryparam cfsqltype="cf_sql_integer" value="#upd_12yearid#">
+                	yearid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(upd_12yearid)#">
 				LIMIT 1				
 			</cfquery>
 		</cfif>
