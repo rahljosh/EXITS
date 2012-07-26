@@ -249,7 +249,11 @@
 
         <!--- Production - Email Error Message - Display HTML Error --->
  		<cfif NOT APPLICATION.isServerLocal>
-
+			
+            <cfparam name="CLIENT.userID" default="0">
+            <cfparam name="CLIENT.studentID" default="0">
+            <cfparam name="CLIENT.name" default="">
+            
 			<cfscript>
                 // Current Path to root errorMessage.cfm file
                 vPath = "";
