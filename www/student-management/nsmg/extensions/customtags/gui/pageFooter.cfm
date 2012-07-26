@@ -143,6 +143,12 @@
 
             </cfcase>
             
+            
+            <!--- No Footer --->
+            <cfcase value="noFooter">
+
+            </cfcase>
+            
         </cfswitch>
     
     </body>

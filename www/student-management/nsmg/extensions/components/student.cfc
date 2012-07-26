@@ -290,6 +290,69 @@
 	</cffunction>
 
 
+	<cffunction name="getUnplacedStudents" access="public" returntype="query" output="false" hint="Gets unplaced students">
+        <cfargument name="regionID" default="0" hint="regionAssigned is not required">
+              
+        <cfquery 
+			name="qGetUnplacedStudents" 
+			datasource="#APPLICATION.DSN#">
+                SELECT  
+                    s.studentID, 
+                    s.uniqueid, 
+                    s.programID,
+                    s.hostID,
+                    s.firstName,
+                    s.familyLastName, 
+                    s.sex, 
+                    s.active, 
+                    s.dateassigned, 
+                    s.regionguar,
+                    s.state_guarantee, 
+                    s.aypenglish, 
+                    s.ayporientation, 
+                    s.scholarship, 
+                    s.privateschool,
+                    s.host_fam_approved,
+                    smg_regions.regionName, 
+                    smg_g.regionName as r_guarantee, 
+                    smg_states.state,             
+                    p.programname,
+                    c.countryname, 
+                    co.companyShort, 
+                    smg_hosts.familyLastName AS hostname
+                FROM 
+                    smg_students s
+                INNER JOIN 
+                    smg_companies co ON s.companyID = co.companyID
+                LEFT OUTER JOIN 
+                    smg_regions ON s.regionassigned = smg_regions.regionID
+                LEFT OUTER JOIN 
+                    smg_countrylist c ON s.countryresident = c.countryID
+                LEFT OUTER JOIN 
+                    smg_regions smg_g ON s.regionalguarantee = smg_g.regionID
+                LEFT OUTER JOIN 
+                    smg_states ON s.state_guarantee = smg_states.id
+                LEFT OUTER JOIN 
+                    smg_hosts ON s.hostID = smg_hosts.hostID
+                LEFT OUTER JOIN 
+                    smg_programs p ON s.programID = p.programID
+                WHERE 
+                    <!--- SHOW ONLY APPS APPROVED --->
+                    s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
+                AND 
+                    s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                AND 
+                    s.hostid = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                AND 
+                    s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
+                ORDER BY 
+					s.familyLastName
+		</cfquery>
+		   
+		<cfreturn qGetUnplacedStudents>
+	</cffunction>
+
+
 	<cffunction name="getAvailableDoublePlacement" access="public" returntype="query" output="false" hint="Gets placed available students for double placement">
         <cfargument name="regionID" default="0" hint="regionAssigned is not required">
         <cfargument name="studentID" default="0" hint="studentID is not required">

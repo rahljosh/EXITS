@@ -283,18 +283,13 @@
                     <div style="font: bold Arial,sans-serif; margin:0px; padding: 2px;" >
                     	<font style="font: 150%">#CLIENT.companyname#</font> <img src="pics/logos/#CLIENT.companyid#_header_icon.png"><br>
                         Program Manager is #CLIENT.programmanager#<br>
-						<cfif CLIENT.levels gt 1>
-                        	#CLIENT.accesslevelname# [
-                            <a href="index.cfm?curdoc=forms/change_access_level" title="You have access to multiple regions, click here to change your access.">
-                            	 Change Access
-                    		</a>
-                            ]
-                        <cfelse>
-                        	#CLIENT.accesslevelname#
+                        #CLIENT.accesslevelname#
+						<cfif CLIENT.levels GT 1>
+                        	[ <a href="index.cfm?curdoc=forms/change_access_level" title="You have access to multiple regions, click here to change your access">Change Access</a> ]
                         </cfif>
                     </div>
                     <div style="padding: 2px;">
-						#CLIENT.name# [<a href="index.cfm">Home</a>] [ <a href="index.cfm?curdoc=logout">Logout</a> ]
+						#CLIENT.name# [ <a href="index.cfm" title="Click here to go to your home page">Home</a> ] [ <a href="index.cfm?curdoc=logout" title="Click here to logout">Logout</a> ]
                     </div>
                     </td>
                 </tr>

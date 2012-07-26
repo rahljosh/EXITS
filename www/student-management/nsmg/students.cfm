@@ -58,6 +58,10 @@
 		// Get Private Schools Prices
 		qPrivateSchools = APPCFC.SCHOOL.getPrivateSchools();
 		
+		if ( NOT APPLICATION.CFC.USER.isOfficeUser() ) {
+			submitted = 1;
+		}
+		
 		// Set placed = yes if selecting approved/pending status
 		if ( ListFindNoCase("Approved,Pending", placementStatus) ) {
 			placed = 1;
