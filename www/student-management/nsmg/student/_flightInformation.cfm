@@ -791,7 +791,7 @@
                         <!--- NEW FLIGHT INFORMATION --->
                         <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType)>
                         
-                        	<cfif isDefined(qGetStudentInfo.programName)>
+                        	<cfif LEN(qGetStudentInfo.programName)>
                         
 								<cfif NOW() GTE DateAdd('m',-3,qGetStudentInfo.endDate)>
                                     <cfloop from="1" to="4" index="i"> 
