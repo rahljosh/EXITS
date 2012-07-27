@@ -362,13 +362,15 @@
 			name="qGetAvailableDoublePlacement" 
 			datasource="#APPLICATION.DSN#">
                 SELECT 
-                	studentID, 
-                    familyLastName,
-                    firstName
+                	s.studentID, 
+                    s.familyLastName,
+                    s.firstName
                 FROM 
-                	smg_students
+                	smg_students s
+                INNER JOIN
+                	smg_hosts h ON h.hostID = s.hostID
                 WHERE 
-                	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 
 				<cfif LEN(ARGUMENTS.hostID)>
                     AND
@@ -377,19 +379,19 @@
                     
 				<cfif LEN(ARGUMENTS.regionID)>
                     AND
-                        regionAssigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
+                        s.regionAssigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
                 </cfif>
 
                 <cfif LEN(ARGUMENTS.studentID)>
                     AND
-                        studentID != <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+                        s.studentID != <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
                 </cfif>
                     
                 ORDER BY 
                 	firstname, 
                     familylastname
 		</cfquery>
-		   
+        
 		<cfreturn qGetAvailableDoublePlacement>
 	</cffunction>
     
