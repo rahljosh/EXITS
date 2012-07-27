@@ -791,39 +791,46 @@
                         <!--- NEW FLIGHT INFORMATION --->
                         <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType)>
                         
-							<cfif NOW() GTE DateAdd('m',-3,qGetStudentInfo.endDate)>
-                            
-                                <cfloop from="1" to="4" index="i"> 
-                                    <tr bgcolor="##FEE6D3" align="center" class="trNewAYPDeparture <cfif qGetDeparture.recordCount> displayNone </cfif>">                        
-                                        <td>&nbsp;</td>
-                                        <td><input type="text" name="outgoingNewDepartureDate#i#" class="datePicker" maxlength="10"></td>
-                                        <td><input type="text" name="outgoingNewDepartureCity#i#" class="fieldSize100" maxlength="40"></td>
-                                        <td><input type="text" name="outgoingNewDepartureAirCode#i#" class="fieldSize40" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                        <td><input type="text" name="outgoingNewArrivalCity#i#" class="fieldSize100" maxlength="40"></td>
-                                        <td><input type="text" name="outgoingNewArrivalAirCode#i#" class="fieldSize40" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                        <td><input type="text" name="outgoingNewFlightNumber#i#" class="fieldSize60" maxlength="8" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                        <td><input type="text" name="outgoingNewDepartureTime#i#" class="fieldSize70 timePicker" maxlength="8"></td>
-                                        <td><input type="text" name="outgoingNewArrivalTime#i#" class="fieldSize70 timePicker" maxlength="8"></td>
-                                        <td align="center"><input type="checkbox" name="outgoingNewOvernight#i#" value="1"></td>
-                                        <td>&nbsp;</td> 
-                                        <td>&nbsp;</td>
+                        	<cfif isDefined(qGetStudentInfo.programName)>
+                        
+								<cfif NOW() GTE DateAdd('m',-3,qGetStudentInfo.endDate)>
+                                    <cfloop from="1" to="4" index="i"> 
+                                        <tr bgcolor="##FEE6D3" align="center" class="trNewAYPDeparture <cfif qGetDeparture.recordCount> displayNone </cfif>">                        
+                                            <td>&nbsp;</td>
+                                            <td><input type="text" name="outgoingNewDepartureDate#i#" class="datePicker" maxlength="10"></td>
+                                            <td><input type="text" name="outgoingNewDepartureCity#i#" class="fieldSize100" maxlength="40"></td>
+                                            <td><input type="text" name="outgoingNewDepartureAirCode#i#" class="fieldSize40" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></td>
+                                            <td><input type="text" name="outgoingNewArrivalCity#i#" class="fieldSize100" maxlength="40"></td>
+                                            <td><input type="text" name="outgoingNewArrivalAirCode#i#" class="fieldSize40" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></td>
+                                            <td><input type="text" name="outgoingNewFlightNumber#i#" class="fieldSize60" maxlength="8" onChange="javascript:this.value=this.value.toUpperCase();"></td>
+                                            <td><input type="text" name="outgoingNewDepartureTime#i#" class="fieldSize70 timePicker" maxlength="8"></td>
+                                            <td><input type="text" name="outgoingNewArrivalTime#i#" class="fieldSize70 timePicker" maxlength="8"></td>
+                                            <td align="center"><input type="checkbox" name="outgoingNewOvernight#i#" value="1"></td>
+                                            <td>&nbsp;</td> 
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                    </cfloop>
+                                    <cfif qGetDeparture.recordCount>
+                                        <tr bgcolor="##FEE6D3"><td colspan="12" align="center"><a href="javascript:displayClass('trNewAYPDeparture');">Click here to add more legs</a></td></tr>
+                                    </cfif>
+                                <cfelse>
+                                    <tr bgcolor="##FEE6D3" align="center">
+                                        <td colspan="12" align="center">
+                                            You can only enter departure flight information within 3 months of the end of the program.<br />
+                                            You will be able to enter departure flight information starting on: #DateFormat(DateAdd('m',-3,qGetStudentInfo.endDate),'mm/dd/yyyy')#
+                                        </td>
                                     </tr>
-                                </cfloop>
-                            
-                                <cfif qGetDeparture.recordCount>
-                                    <tr bgcolor="##FEE6D3"><td colspan="12" align="center"><a href="javascript:displayClass('trNewAYPDeparture');">Click here to add more legs</a></td></tr>
                                 </cfif>
-                                
-                          	<cfelse>
+                         	
+							<cfelse>
                             
                             	<tr bgcolor="##FEE6D3" align="center">
-                                	<td colspan="12" align="center">
-                                    	You can only enter departure flight information within 3 months of the end of the program.<br />
-                                        You will be able to enter departure flight information starting on: #DateFormat(DateAdd('m',-3,qGetStudentInfo.endDate),'mm/dd/yyyy')#
-                                   	</td>
+                                    <td colspan="12" align="center">
+                                        Please assign this student to a program before adding departure flight information.
+                                    </td>
                                 </tr>
-                            
-                            </cfif>
+                                
+                        	</cfif>
                             
                         </cfif>
                         
