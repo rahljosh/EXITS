@@ -374,7 +374,7 @@
 
 				<cfif LEN(ARGUMENTS.hostID)>
                     AND
-                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+                        s.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
                 </cfif>
                     
 				<cfif LEN(ARGUMENTS.regionID)>
@@ -388,8 +388,8 @@
                 </cfif>
                     
                 ORDER BY 
-                	firstname, 
-                    familylastname
+                	s.firstname, 
+                    s.familylastname
 		</cfquery>
         
 		<cfreturn qGetAvailableDoublePlacement>
