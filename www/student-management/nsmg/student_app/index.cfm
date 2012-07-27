@@ -16,7 +16,7 @@
     <cfparam name="URL.curdoc" default="initial_welcome">
 
 	<cfscript>
-        if ( isDefined("URL.s") ) {
+        if ( LEN(URL.s) ) {
             Location("verify.cfm?s=#url.s#", "no");
         }
     

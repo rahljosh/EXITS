@@ -79,6 +79,8 @@
         <cfparam name="URL.initSession" default="0">
         <cfparam name="URL.curdoc" default="">
         <cfparam name="URL.userType" default="">
+        <cfparam name="URL.s" default="">
+        <!--- Online Application - Activation Link - https://ise.exitsapplication.com/nsmg/student_app/index.cfm?s=7DC5F7FE-5056-A020-CC9555F332BD80F3 --->
         
 		<cfscript>
 			// Restart Application and Session Scopes
@@ -113,11 +115,17 @@
 				CLIENT.userType = 10; // Student
 			}
 			
+			// Online Application - Student Activation
+			if ( LEN(URL.s) AND findNoCase("student_app", getBaseTemplatePath()) ) {				
+				CLIENT.userType = 10;
+				CLIENT.studentID = APPLICATION.CFC.STUDENT.getStudentByID(uniqueID=URL.s).studentID;			
+			}
+			
 			// Session has Expired - Go to login page
-			if ( findNoCase("nsmg", getBaseTemplatePath()) AND NOT VAL(CLIENT.userType) AND ( NOT VAL(CLIENT.userID) OR NOT VAL(CLIENT.studentID) ) ) {
+			if ( ( findNoCase("nsmg", getBaseTemplatePath()) AND NOT VAL(CLIENT.userType) AND ( NOT VAL(CLIENT.userID) OR NOT VAL(CLIENT.studentID) ) )	) {
 				Location("http://#cgi.http_host#/", "no");
 			}
-
+			
 			// Always allow logout.
 			if ( NOT findNoCase("nsmg/logout.cfm", getBaseTemplatePath()) ) {
 				
