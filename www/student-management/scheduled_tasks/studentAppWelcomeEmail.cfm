@@ -15,6 +15,7 @@
         	*,
             sc.companyName,
             sc.companyShort,
+            sc.companyShort_noColor,
             sc.support_email,
             sc.url_ref            
         FROM (
@@ -67,7 +68,7 @@
 			<cfscript>
                 CLIENT.companyID = qGetStudentInfo.companyID;
             
-                vEmailSubject = '#qGetStudentInfo.companyshort# Student Exchange Application - Account Activation Required';
+                vEmailSubject = '#qGetStudentInfo.companyShort_noColor# Student Exchange Application - Account Activation Required';
                 
                 if ( VAL(qGetStudentInfo.branchID) ) {
                     // BRANCH 
