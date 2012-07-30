@@ -402,7 +402,7 @@
         </cfcase>
         <cfcase value="Work Program">
             <cfquery name="getChargesCancellations" datasource="MySQL">
-            SELECT s.chargeid, s.agentid, s.invoiceid, s.description, s.amount_due, s.stuid, s.companyid, s.programid, s.active, s.type AS charge_type, sp.type, sp.programname, e.firstname, e.lastname, e.active AS stud_active, sc.creditid AS creditid, sc.amount AS amount, sc.description AS credDescription, sc.type AS creditType, su.extra_accepts_sevis_fee, scomp.team_id
+            SELECT s.chargeid, s.agentid, s.invoiceid, s.description, s.amount_due, s.stuid, s.companyid, s.programid, s.active, s.type AS charge_type, sp.type, sp.programname, e.firstname, e.lastname, e.status AS stud_active, sc.creditid AS creditid, sc.amount AS amount, sc.description AS credDescription, sc.type AS creditType, su.extra_accepts_sevis_fee, scomp.team_id
             FROM  `smg_charges` s
             LEFT JOIN smg_credit sc ON s.chargeid = sc.chargeid
             INNER JOIN smg_programs sp ON sp.programid = s.programid
@@ -439,7 +439,7 @@
             </cfquery>          
     
             <cfquery name="getCurrStudInfo" datasource="MySQL">
-            SELECT e.candidateid AS studentid, e.intrep AS agentid, e.programid, e.firstname, e.lastname, e.active AS stud_active, e.companyid, sp.programname
+            SELECT e.candidateid AS studentid, e.intrep AS agentid, e.programid, e.firstname, e.lastname, e.status AS stud_active, e.companyid, sp.programname
             FROM extra_candidates e
             INNER JOIN smg_programs sp ON sp.programid = e.programid
             WHERE e.candidateid =#student#
