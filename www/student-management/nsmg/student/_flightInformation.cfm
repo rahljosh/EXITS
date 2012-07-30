@@ -792,9 +792,20 @@
                         <cfif ListFind("1,2,3,4,8,11,13", CLIENT.userType)>
                         
                         	<cfif LEN(qGetStudentInfo.programName)>
+                            
+                            	<cfscript>
+									officeUser = APPLICATION.CFC.USER.isOfficeUser(CLIENT.usertype);
+								</cfscript>
                         
-								<cfif NOW() GTE DateAdd('m',-3,qGetStudentInfo.endDate)>
-                                    <cfloop from="1" to="4" index="i"> 
+								<cfif NOW() LT DateAdd('m',-3,qGetStudentInfo.endDate) AND NOT officeUser>
+                                    <tr bgcolor="##FEE6D3" align="center">
+                                        <td colspan="12" align="center">
+                                            You can only enter departure flight information within 3 months of the end of the program.<br />
+                                            You will be able to enter departure flight information starting on: #DateFormat(DateAdd('m',-3,qGetStudentInfo.endDate),'mm/dd/yyyy')#
+                                        </td>
+                                    </tr>
+                                <cfelse>
+                                	<cfloop from="1" to="4" index="i"> 
                                         <tr bgcolor="##FEE6D3" align="center" class="trNewAYPDeparture <cfif qGetDeparture.recordCount> displayNone </cfif>">                        
                                             <td>&nbsp;</td>
                                             <td><input type="text" name="outgoingNewDepartureDate#i#" class="datePicker" maxlength="10"></td>
@@ -813,13 +824,6 @@
                                     <cfif qGetDeparture.recordCount>
                                         <tr bgcolor="##FEE6D3"><td colspan="12" align="center"><a href="javascript:displayClass('trNewAYPDeparture');">Click here to add more legs</a></td></tr>
                                     </cfif>
-                                <cfelse>
-                                    <tr bgcolor="##FEE6D3" align="center">
-                                        <td colspan="12" align="center">
-                                            You can only enter departure flight information within 3 months of the end of the program.<br />
-                                            You will be able to enter departure flight information starting on: #DateFormat(DateAdd('m',-3,qGetStudentInfo.endDate),'mm/dd/yyyy')#
-                                        </td>
-                                    </tr>
                                 </cfif>
                          	
 							<cfelse>
