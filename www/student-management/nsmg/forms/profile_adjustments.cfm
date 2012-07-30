@@ -62,7 +62,7 @@
 <table width="100%" border=0 cellpadding=4 cellspacing=0 class="section">
 	<tr bgcolor="e2efc7"><td colspan="2"><h2> School Information </h2></td></tr>
 	<tr bgcolor="e2efc7"><td class="label">Last Grade completed:</td>
-		<td><cfinput type="text" name="grades" size=10 value="#grades#"></td></tr>
+		<td><cfinput type="text" name="grades" size=10 maxlength="2" value="#grades#"></td></tr>
 	<tr bgcolor="e2efc7"><td class="label">Years of English:</td>
 		<td><cfinput type="text" name="yearsenglish" size=10 value="#yearsenglish#"></td></tr>
 	<cfif client.usertype LTE '4'>
