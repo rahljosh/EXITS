@@ -68,8 +68,8 @@ where studentid = #CLIENT.studentid#
 	<tr><td>Use the feature below to upload supplemental documents required by #get_intl_rep.businessname#.<br>
 		Supplements may include (but not be limited to) the SLEP Test Answer Sheet (including the score) and English Certificates.
 		    <br>
-	      You can upload as many files as you wish in the following formats JPG, JPEG, GIF, PDF, DOC. <br>
-	      <strong>PLEASE UPLOAD PREFERABLY JPEG, JPG OR GIF FILES.</strong><br>
+	      You can upload as many files as you wish in the following formats JPG, JPEG, GIF, TIF, TIFF, PNG, PDF <br>
+	      <strong>PLEASE UPLOAD PREFERABLY JPG, JPEG, GIF, TIF, TIFF, OR PNG FILES.</strong><br>
 	      Files must not be bigger than 2mb.
 		</td>
 	</tr>
