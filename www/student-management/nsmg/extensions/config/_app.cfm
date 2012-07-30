@@ -90,7 +90,7 @@
 	APPLICATION.EMAIL.cbcNotifications = 'support@iseusa.com;bill@iseusa.com;gary@iseusa.com;merri@iseusa.com;tal@iseusa.com;bhause@iseusa.com';
 	APPLICATION.EMAIL.cbcCaseNotifications = 'support@student-management.com;jana@case-usa.org';
 	APPLICATION.EMAIL.hostLeadNotifications = 'lamonica@iseusa.com';
-	APPLICATION.EMAIL.ISESchoolNotification = 'megan@iseusa.com;lisa@iseua.com;merri@iseusa.com;support@iseusa.com';
+	APPLICATION.EMAIL.ISESchoolNotification = 'megan@iseusa.com;lisa@iseusa.com;merri@iseusa.com;support@iseusa.com';
 	APPLICATION.EMAIL.CASESchoolNotification = 'jana@case-usa.org;support@student-management.com';
 	APPLICATION.EMAIL.PHPContact = 'luke@phpusa.com';
 
