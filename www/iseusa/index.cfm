@@ -97,6 +97,7 @@ a:active {
 }
 -->
 </style>
+
 <script src="http://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
 <script type="text/javascript">
 //<![CDATA[
@@ -113,7 +114,7 @@ $("#slidingDiv").animate({"height": "toggle"}, { duration: 1000 });
 ---->
 <div id="topBar">
 <cfinclude template="topBarLinks.cfm">
-<div id="logoBox"><a href="/"><img src="images/ISElogo.png" width="214" height="165" alt="ISE logo" border="0" /></a></div>
+<div id="logoBox"><a href="/"><img src="images/ISElogo.png" width="214" height="165" alt="Internation Student Exchange (ISE) logo" border="0" /></a></div>
 <!-- end topBar --></div>
 <div id="container">
 <div class="spacer2"></div>
@@ -169,7 +170,7 @@ $("#slidingDiv").animate({"height": "toggle"}, { duration: 1000 });
         <div id="studentTrips" class="mybox" style="display:none; text-align:center;":>
             <span class="MOtext" style="background-color: #D0EDF9;"> 
             <strong>Student Trips</strong><br /><br />
-            We offer many trips for our students throughout the school year.
+            Internation Student Exchange offers many trips for our students throughout the school year.
             <br /><br /><p align="center"><a href="trips/exchange-student-trips.cfm"><img src="images/buttons/Details.png" border="0"></a></p></span>
             <span class="bigImage"><img src="images/subPages/subStudentTrips.gif" /></span>
         </div>
@@ -211,7 +212,7 @@ $("#slidingDiv").animate({"height": "toggle"}, { duration: 1000 });
 <!-- end bottomInfoRight --></div>
 <div id="bottomInfoLeft">
   <div class="top"><!-- end top --></div>
-  <div class="middle"><a href="about-our-students.cfm"><img src="images/aboutStudents.gif" width="229" height="172" alt="About Students" border="0"/></a><a href="international-student-success-stories.cfm"><img src="images/studentSuccess.gif" width="240" height="172" alt="student Success" border="0"/></a><a href="http://www.america.gov/multimedia/video.html?videoId=221196877001" target="_blank"><img src="images/YESprogram_12.gif"alt="blog" border="0"/></a><a href="http://www.youtube.com/watch?v=YRP3PbaE-cA" target="_blank"><img src="images/video_13.gif" width="236" height="171" border="0" /></a></div>
+  <div class="middle"><a href="about-our-students.cfm"><img src="images/aboutStudents.gif" width="229" height="172" alt="About Students" border="0"/></a><a href="international-student-success-stories.cfm"><img src="images/studentSuccess.gif" width="240" height="172" alt="student Success" border="0"/></a><a href="be_a_ise_host_video.cfm" class="white"  rel="gb_page_center[575,400]"><img src="images/Be_a_host_button.png"alt="be a host family" border="0"/></a><a href="Be_a_hero_ISE_video.cfm" class="white"  rel="gb_page_center[575,400]"><img src="images/be_a_hero_button.png" alt="be a ISE hero" width="236" height="171" border="0" /></a></div>
   <div class="bottom"></div>
 <!-- end bottomInfoLeft --></div>
 <h1>&nbsp;</h1>
