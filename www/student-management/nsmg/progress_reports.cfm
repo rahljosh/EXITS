@@ -212,7 +212,6 @@
                 <td>
                     Phase<br />
                     <select name="rmonth" class="mediumField">
-                        <option value="0"></option>
                         <cfloop list="8,9,10,11,12,1,2,3,4,5,6,7" index="reportMonth">
                             <option value="#reportMonth#" <cfif CLIENT.pr_rmonth EQ reportMonth> selected="selected" </cfif> >#Left(MonthAsString(reportMonth), 3)# Report</option>
                         </cfloop>

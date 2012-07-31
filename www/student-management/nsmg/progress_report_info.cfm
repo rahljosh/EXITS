@@ -65,7 +65,7 @@
             DELETE FROM 
             	progress_report_dates
             WHERE 
-            	prdate_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.prdate_id#">
+            	prdate_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.prdate_id)#">
         </cfquery> 
         	
 	</cfcase>
@@ -80,7 +80,7 @@
                 SET
                 	x_pr_question_response = <cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('FORM.x_pr_question_response' & '#i#')#" >
                 WHERE 
-                	x_pr_question_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
+                	x_pr_question_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(i)#">
             </cfquery>
         </cfloop>
         
@@ -95,7 +95,7 @@
             FROM 
             	progress_reports
             WHERE 
-            	pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
+            	pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.pr_id)#">
         </cfquery>
         
         <cfset approve_field = ''>
@@ -124,7 +124,7 @@
                     #approve_field# = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
                     pr_rejected_date = NULL
                 WHERE 
-                	pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
+                	pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.pr_id)#">
             </cfquery>
             
         </cfif>
@@ -138,21 +138,21 @@
             DELETE FROM 
             	progress_report_dates
             WHERE 
-            	fk_progress_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
+            	fk_progress_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.pr_id)#">
         </cfquery>
         
         <cfquery datasource="#application.dsn#">
             DELETE FROM 
             	x_pr_questions
             WHERE 
-            	fk_progress_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
+            	fk_progress_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.pr_id)#">
         </cfquery>
         
         <cfquery datasource="#application.dsn#">
             DELETE FROM 
             	progress_reports
             WHERE 
-            	pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
+            	pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.pr_id)#">
         </cfquery>
         
         <cflocation url="index.cfm?curdoc=progress_reports" addtoken="no">
@@ -198,7 +198,7 @@ function OpenLetter(url) {
 <cfquery name="get_report" datasource="#application.dsn#">
     SELECT *
     FROM progress_reports
-    WHERE pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
+    WHERE pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.pr_id)#">
 </cfquery>
 
 <cfif NOT VAL(CLIENT.pr_rmonth)>
@@ -210,7 +210,7 @@ function OpenLetter(url) {
     FROM progress_report_dates
     INNER JOIN prdate_types ON progress_report_dates.fk_prdate_type = prdate_types.prdate_type_id
     INNER JOIN prdate_contacts ON progress_report_dates.fk_prdate_contact = prdate_contacts.prdate_contact_id
-    WHERE progress_report_dates.fk_progress_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
+    WHERE progress_report_dates.fk_progress_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.pr_id)#">
     ORDER BY progress_report_dates.prdate_date
 </cfquery>
 
@@ -226,7 +226,7 @@ function OpenLetter(url) {
     left join progress_report_dates  on progress_report_dates.fk_progress_report = pr.pr_id
     INNER JOIN prdate_types ON progress_report_dates.fk_prdate_type = prdate_types.prdate_type_id
     INNER JOIN prdate_contacts ON progress_report_dates.fk_prdate_contact = prdate_contacts.prdate_contact_id
-    where pr.fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_student#"> 
+    where pr.fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_report.fk_student)#"> 
     and pr_month_of_report = #perviousMonthsReport#
     ORDER BY progress_report_dates.prdate_date
 </cfquery>
@@ -235,33 +235,33 @@ function OpenLetter(url) {
     SELECT x_pr_questions.x_pr_question_id, x_pr_questions.x_pr_question_response, smg_prquestions.text, smg_prquestions.required
     FROM x_pr_questions
     INNER JOIN smg_prquestions ON x_pr_questions.fk_prquestion = smg_prquestions.id
-    WHERE x_pr_questions.fk_progress_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
+    WHERE x_pr_questions.fk_progress_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.pr_id)#">
     ORDER BY smg_prquestions.id
 </cfquery>
 
 <cfquery name="get_student" datasource="#application.dsn#">
 	SELECT studentid, firstname, familylastname, companyid
 	FROM smg_students
-	WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_student#">
+	WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_report.fk_student)#">
 </cfquery>
 
 <cfquery name="get_program" datasource="#application.dsn#">
     SELECT programid, programname
     FROM smg_programs
-    WHERE programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_program#">
+    WHERE programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_report.fk_program)#">
 </cfquery>
 
 <cfquery name="get_rep" datasource="#application.dsn#">
     SELECT userid, firstname, lastname
     FROM smg_users
-    WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_sr_user#">
+    WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_report.fk_sr_user)#">
 </cfquery>
 
 <cfif get_report.fk_pr_user NEQ ''>
     <cfquery name="get_place_rep" datasource="#application.dsn#">
         SELECT userid, firstname, lastname
         FROM smg_users
-        WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_pr_user#">
+        WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_report.fk_pr_user)#">
     </cfquery>
 <cfelse> 
    	<cfset get_place_rep.firstname = 'Not Originally'>
@@ -273,32 +273,32 @@ function OpenLetter(url) {
 	<cfquery name="get_advisor_for_rep" datasource="#application.dsn#">
 		SELECT userid, firstname, lastname
 		FROM smg_users
-		WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_ra_user#">
+		WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_report.fk_ra_user)#">
 	</cfquery>
 </cfif>
 
 <cfquery name="get_regional_director" datasource="#application.dsn#">
     SELECT userid, firstname, lastname
     FROM smg_users
-    WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_rd_user#">
+    WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_report.fk_rd_user)#">
 </cfquery>
 
 <cfquery name="get_facilitator" datasource="#application.dsn#">
     SELECT userid, firstname, lastname
     FROM smg_users
-    WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_ny_user#">
+    WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_report.fk_ny_user)#">
 </cfquery>
 
 <cfquery name="get_host_family" datasource="#application.dsn#">
     SELECT hostid, familylastname, fatherfirstname, motherfirstname
     FROM smg_hosts
-    WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_host#">
+    WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_report.fk_host)#">
 </cfquery>
 
 <cfquery name="get_international_rep" datasource="#application.dsn#">
     SELECT userid, businessname
     FROM smg_users
-    WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_intrep_user#">
+    WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_report.fk_intrep_user)#">
 </cfquery>
 
 <!--- set the edit/approve/reject/delete access. --->
@@ -536,7 +536,7 @@ function OpenLetter(url) {
         <cfquery name="get_rejected_by" datasource="#application.dsn#">
             SELECT userid, firstname, lastname
             FROM smg_users
-            WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_rejected_by_user#">
+            WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_report.fk_rejected_by_user)#">
         </cfquery>
       <tr>
         <th align="right">Rejected:</th>
