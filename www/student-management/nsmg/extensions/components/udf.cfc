@@ -676,6 +676,10 @@
         <cfargument name="destination" type="string" required="yes" hint="destination is required" />
 
         <cfscript>
+			// Remove Pound Sign
+			ARGUMENTS.origin = ReplaceNoCase(ARGUMENTS.origin, "##", "", "ALL");
+			ARGUMENTS.destination = ReplaceNoCase(ARGUMENTS.destination, "##", "", "ALL");
+
 			// Replace blank space with a +
 			ARGUMENTS.origin = ReplaceNoCase(ARGUMENTS.origin, " ", "+", "ALL");
 			ARGUMENTS.destination = ReplaceNoCase(ARGUMENTS.destination, " ", "+", "ALL");
