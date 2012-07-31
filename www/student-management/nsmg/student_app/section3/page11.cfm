@@ -199,7 +199,7 @@ function NextPage() {
 		<td colspan="3"><em>Have you ever been hospitalized, had surgery, or been under extended medical / psychological care? </em></td>
 	</tr>
 	<tr><td>&nbsp;</td>
-		<td colspan="3"><em>If yes, please provide details and dates:</em> &nbsp; <cfinput type="text" name="hospitalized_reason" size="50" value="#get_health.hospitalized_reason#" onchange="DataChanged();"></td>
+		<td colspan="3"><em>If yes, please provide details and dates:</em> &nbsp; <cfinput type="text" name="hospitalized_reason" size="50" maxlength="200" value="#get_health.hospitalized_reason#" onchange="DataChanged();"></td>
 	</tr>	
 </table><br>
 <hr class="bar">
@@ -342,7 +342,7 @@ function NextPage() {
 		<td colspan="5"><em>Have you been in good general health most of your life? </em></td>
 	</tr>
 	<tr><td>&nbsp;</td>
-		<td colspan="5"><em>If not, please explain.</em> &nbsp; <cfinput type="text" name="good_health_reason" size="50" value="#get_health.good_health_reason#" onchange="DataChanged();"></td>
+		<td colspan="5"><em>If not, please explain.</em> &nbsp; <cfinput type="text" name="good_health_reason" size="50" maxlength="200" value="#get_health.good_health_reason#" onchange="DataChanged();"></td>
 	</tr>
 </table><br>
 
@@ -411,8 +411,8 @@ function NextPage() {
 		</td>
 		<td><em>Any other drug or medication</em></td>
 	</tr>
-	<tr><td colspan="2"> &nbsp; <em>List: </em> &nbsp; <cfinput type="text" name="foods_list" size="40" value="#get_health.foods_list#" onchange="DataChanged();"></td>
-		<td colspan="2"> &nbsp; <em>List: </em> &nbsp; <cfinput type="text" name="other_drugs_list" size="40" value="#get_health.other_drugs_list#" onchange="DataChanged();"></td>
+	<tr><td colspan="2"> &nbsp; <em>List: </em> &nbsp; <cfinput type="text" name="foods_list" size="40" maxlength="200" value="#get_health.foods_list#" onchange="DataChanged();"></td>
+		<td colspan="2"> &nbsp; <em>List: </em> &nbsp; <cfinput type="text" name="other_drugs_list" size="40" maxlength="200" value="#get_health.other_drugs_list#" onchange="DataChanged();"></td>
 	</tr>
 	<tr><td align="right">
 			<cfif get_health.allergic_to_pets EQ '0'><cfinput type="radio" name="allergic_to_pets" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="allergic_to_pets" value="0" onchange="DataChanged();">No</cfif>
@@ -426,8 +426,8 @@ function NextPage() {
 		</td>
 		<td><em>Any other allergies?</em></td>
 	</tr>
-	<tr><td colspan="2"> &nbsp; <em>Please explain.</em> &nbsp; <cfinput type="text" name="pets_list" size="30" value="#get_health.pets_list#" onchange="DataChanged();"></td>
-		<td colspan="2"> &nbsp; <em>If yes, please list: </em> &nbsp; <cfinput type="text" name="other_allergies_list" size="30" value="#get_health.other_allergies_list#" onchange="DataChanged();"></td>
+	<tr><td colspan="2"> &nbsp; <em>Please explain.</em> &nbsp; <cfinput type="text" name="pets_list" size="30" maxlength="200" value="#get_health.pets_list#" onchange="DataChanged();"></td>
+		<td colspan="2"> &nbsp; <em>If yes, please list: </em> &nbsp; <cfinput type="text" name="other_allergies_list" size="30" maxlength="200" value="#get_health.other_allergies_list#" onchange="DataChanged();"></td>
 	</tr>	
 	<tr><td>&nbsp;</td></tr>
 	<tr><td colspan="4"><em>Have you ever received any medical attention or counseling for: </em></td></tr>
@@ -442,7 +442,7 @@ function NextPage() {
 		</td>
 		<td><em>Eating Disorders</em></td>
 	</tr>
-	<tr><td colspan="4"> &nbsp; <em>Please explain if yes.</em> &nbsp; <cfinput type="text" name="medical_attention_reason" size="60" value="#get_health.medical_attention_reason#" onchange="DataChanged();"></td>
+	<tr><td colspan="4"> &nbsp; <em>Please explain if yes.</em> &nbsp; <cfinput type="text" name="medical_attention_reason" size="60" maxlength="200" value="#get_health.medical_attention_reason#" onchange="DataChanged();"></td>
 	</tr>	
 </table><br>
 
