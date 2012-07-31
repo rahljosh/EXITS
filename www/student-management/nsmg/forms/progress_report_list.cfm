@@ -171,11 +171,14 @@ AND smg_programs.hold = 0
 										</select>
 									</form>
 									<cfelse>
-									<Cfquery name="region_name" datasource="MySQL">
-									select regionname
-									from smg_regions
-									where regionid = #url.regionid#
-									</Cfquery>
+									<cfquery name="region_name" datasource="MySQL">
+										SELECT
+                                        	regionname
+										FROM
+                                        	smg_regions
+										WHERE
+                                        	regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.regionID)#">
+									</cfquery>
 									#region_name.regionname#
 								</cfif> 
 								</td>
@@ -262,11 +265,15 @@ AND smg_programs.hold = 0
 					<td colspan=10>Reports Directly to Regional Director</td>
 				</tr>
 			<cfelse>
-				<Cfquery name="advisor_info" datasource="mysql">
-				select firstname, lastname
-				from smg_users
-				where userid = #advisorid#
-				</Cfquery>
+				<cfquery name="advisor_info" datasource="mysql">
+					SELECT
+                    	firstname,
+                        lastname
+					FROM
+                    	smg_users
+					WHERE
+                    	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(advisorid)#">
+				</cfquery>
 					<tr bgcolor="##CCCCCC">
 						<Td colspan=10><strong>#advisor_info.firstname# #advisor_info.lastname#</strong> </Td>
 					</tr>
@@ -279,20 +286,23 @@ AND smg_programs.hold = 0
 		<cfif currentrep NEQ #prevrep#>
 		<cfset prevrep = #arearepid#>
 		<!---Query to see if missing reports for students---->
-		<Cfquery name="total_students_per_rep" dbtype=query>
-		SELECT count(studentid) as total_number 
-		FROM  total_students
-		WHERE arearepid = #arearepid#
-		
-		</Cfquery>
+		<cfquery name="total_students_per_rep" dbtype=query>
+			SELECT
+            	count(studentid) as total_number 
+			FROM
+            	total_students
+			WHERE
+            	arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(arearepid)#">
+		</cfquery>
 	
-	
-
-		<Cfquery name="current_students_per_rep" dbtype=query>
-		SELECT count(studentid) total_showing
-		FROM  students_in_region
-		WHERE arearepid = #arearepid#
-		</Cfquery>
+		<cfquery name="current_students_per_rep" dbtype=query>
+			SELECT
+            	count(studentid) total_showing
+			FROM
+            	students_in_region
+			WHERE
+            	arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(arearepid)#">
+		</cfquery>
 	
 <!----
 		<Cfquery name="current_students_per_rep_ids" dbtype=query>
@@ -312,14 +322,21 @@ AND smg_programs.hold = 0
 			<cfset current_students_per_rep.total_showing = 0>
 		</cfif>
 	<cfquery name="total_students_under_rep" datasource="MySQL">
-select smg_students.studentid, smg_students.arearepid
-from smg_students
-inner join smg_programs on smg_programs.programid = smg_students.programid
-where smg_students.regionassigned = <cfqueryparam value="#url.regionid#" cfsqltype="cf_sql_integer">
-and smg_programs.hold = 0
-<!--- and smg_students.active= 1 --->
-and smg_students.arearepid = #arearepid#
-</cfquery>
+        SELECT
+        	smg_students.studentid,
+            smg_students.arearepid
+        FROM
+        	smg_students
+        INNER JOIN
+        	smg_programs ON smg_programs.programid = smg_students.programid
+        WHERE
+        	smg_students.regionassigned = <cfqueryparam value="#VAL(url.regionid)#" cfsqltype="cf_sql_integer">
+        AND
+        	smg_programs.hold = 0
+        <!--- and smg_students.active= 1 --->
+        AND
+        	smg_students.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(arearepid)#">
+    </cfquery>
 <!---- ::#total_students_under_rep.recordcount#::--->
 					<cfset sw = 0>
 				
