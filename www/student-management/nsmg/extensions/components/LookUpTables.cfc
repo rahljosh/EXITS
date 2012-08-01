@@ -322,9 +322,12 @@
                 SELECT 
                 	seasonID,
                     season,
+                    years,                    
                     active,
                     startDate,
-                    endDate
+                    endDate,
+                    paperworkStartdate,
+                    paperworkEndDate
                 FROM 
                 	smg_seasons
 				WHERE 
@@ -338,6 +341,57 @@
 		<cfreturn qGetSeason>
 	</cffunction>
 
+
+	<!--- Get Current Season Based on Today's date --->
+	<cffunction name="getCurrentSeason" access="public" returntype="query" output="false" hint=" Get Current Season Based on Today's date ">
+	
+		<cfquery 
+			name="qGetCurrentSeason" 
+			datasource="#APPLICATION.dsn#">
+				SELECT
+                	seasonID,
+                    season,
+                    years,                    
+                    active,
+                    startDate,
+                    endDate,
+                    DATE_ADD(endDate, INTERVAL 31 DAY) AS newEndDate 
+                    paperworkStartdate,
+                    paperworkEndDate
+				FROM
+                	smg_seasons
+                WHERE
+					CURRENT_DATE() BETWEEN startDate AND DATE_ADD(endDate, INTERVAL 31 DAY)  
+    	</cfquery>
+        
+        <cfreturn qGetCurrentSeason>        
+    </cffunction>
+    
+
+	<!--- Get Current Paperwork Season Based on Today's date --->
+	<cffunction name="getCurrentPaperworkSeason" access="public" returntype="query" output="false" hint="Get Current Paperwork Season Based on Today's date">
+	
+		<cfquery 
+			name="qGetCurrentPaperworkSeason" 
+			datasource="#APPLICATION.dsn#">
+				SELECT
+                	seasonID,
+                    season,
+                    years,                    
+                    active,
+                    startDate,
+                    endDate,
+                    paperworkStartdate,
+                    paperworkEndDate
+				FROM
+                	smg_seasons
+                WHERE
+					CURRENT_DATE() BETWEEN paperworkStartdate AND paperworkEndDate  
+    	</cfquery>
+        
+        <cfreturn qGetCurrentPaperworkSeason>        
+    </cffunction>
+    
 
 	<cffunction name="getCountry" access="public" returntype="query" output="false" hint="Returns a list of countries or a specific country">
     	<cfargument name="countryID" default="" hint="countryID is not required">
