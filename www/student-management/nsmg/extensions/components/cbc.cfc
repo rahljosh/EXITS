@@ -521,9 +521,7 @@
                     isNoSSN = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.isNoSSN#">,
                     flagcbc = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.flagCBC#">,
                     notes  = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#">,
-                    <cfif isDate(ARGUMENTS.date_approved)>
-                    	date_approved = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date_approved#">
-                 	</cfif>
+                    date_approved = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date_approved#" null="#NOT isDate(ARGUMENTS.date_approved)#">
                 WHERE 
                     cbcFamID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcFamID#">
         </cfquery>	
