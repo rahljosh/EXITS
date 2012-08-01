@@ -6,38 +6,35 @@
 <!--- Import CustomTag --->
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 
-
-<SCRIPT LANGUAGE="JavaScript">
-function displayAddPaperwork() {
-		if($("#AddPaperwork").css("display") == "none"){
-			$("#AddPaperwork").slideDown("slow");
-		} else {
-			$("#AddPaperwork").slideUp("slow");	
-		}
-	}		
-	displayAddPaperwork
-//  End -->
-</script>
 <style type="text/css">
 .thinBlueBorder {
 	border: thin solid #efefef;
 }
 </style>
 <cfoutput>
-<SCRIPT LANGUAGE="JavaScript">
-<!-- Begin
-function CheckDates(ckname, frname) {
-	if (document.form.elements[ckname].checked) {
-		document.form.elements[frname].value = "#DateFormat(now(), 'mm/dd/yyyy')#";
-		}
-	else { 
-		document.form.elements[frname].value = '';  
-	}
-}
-</script>
 
 <script type="text/javascript">
-		function zp(n){
+	<!-- Begin
+	function displayAddPaperwork() {
+			if($("##AddPaperwork").css("display") == "none"){
+				$("##AddPaperwork").slideDown("slow");
+			} else {
+				$("##AddPaperwork").slideUp("slow");	
+			}
+		}		
+		displayAddPaperwork
+	
+	
+	function CheckDates(ckname, frname) {
+		if (document.form.elements[ckname].checked) {
+			document.form.elements[frname].value = "#DateFormat(now(), 'mm/dd/yyyy')#";
+			}
+		else { 
+			document.form.elements[frname].value = '';  
+		}
+	}
+
+	function zp(n){
 		return n<10?("0"+n):n;
 		}
 		function insertDate(t,format){
@@ -52,14 +49,14 @@ function CheckDates(ckname, frname) {
 		format=format.replace(/YY/,YY);
 		t.value=format;
 		}
-		</script>
+		//  End -->
+</script>
+
 </cfoutput>
 <script src="../linked/js/jquery.placeholder.js"></script>
 </head>
 
 <body>
-
-
 
 <cfif NOT IsDefined('url.userid')>
 	<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
@@ -78,7 +75,6 @@ function CheckDates(ckname, frname) {
 	<cfabort>
 </cfif>
 
-
 <!--- CHECK RIGHTS --->
 <cfinclude template="../check_rights.cfm">
 
@@ -92,32 +88,23 @@ function CheckDates(ckname, frname) {
 	FROM
     	smg_users
 	WHERE
-    	userid = <cfqueryparam value="#url.userid#" cfsqltype="cf_sql_integer" maxlength="6">
+    	userid = <cfqueryparam value="#url.userid#" cfsqltype="cf_sql_integer">
 </cfquery>
 
 <cfscript>
 	//Check if paperwork is complete for season
-	get_paperwork = APPLICATION.CFC.udf.allpaperworkCompleted(userid=url.userid);
+	get_paperwork = APPLICATION.CFC.udf.allpaperworkCompleted(userid=url.userid,seasonID=9);
 	// Get User CBC
 	qGetCBCUser = APPCFC.CBC.getCBCUserByID(userID=url.userid,cbcType='user');
 </cfscript>
         
-<cfquery name="currentSeasonStatus" dbtype="query">
-	SELECT
-    	*
-  	FROM
-    	get_paperwork
-  	WHERE
-    	seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="9">
-</cfquery>
-
 <cfquery name="used_seasons" datasource="MySQL">
 	SELECT
     	p.seasonid
 	FROM
     	smg_users_paperwork p
 	WHERE
-    	userid = <cfqueryparam value="#url.userid#" cfsqltype="cf_sql_integer" maxlength="6">
+    	userid = <cfqueryparam value="#url.userid#" cfsqltype="cf_sql_integer">
     <cfif client.companyid eq 10>
     	AND
         	fk_companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="10">
@@ -125,6 +112,7 @@ function CheckDates(ckname, frname) {
 	GROUP BY
     	p.seasonid
 </cfquery>
+
 <cfset season_list = ValueList(used_seasons.seasonid)>
 
 <cfquery name="get_seasons" datasource="MySql">
@@ -136,16 +124,9 @@ function CheckDates(ckname, frname) {
 	WHERE
     	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
 	<!--- REMAINING SEASONS --->
-	<cfif get_paperwork.recordcount>		
+	<cfif LEN(season_list)>		
 		AND
-        	( 
-        		<cfloop list="#season_list#" index="seasonIndex">
-			 		seasonid != <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(seasonIndex)#">
-			 		<cfif seasonIndex NEQ #ListLast(season_list)#>
-                    	AND
-					</cfif>
-		  		</cfloop>
-         	)
+        	seasonID NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#season_list#" list="yes"> )
 	</cfif>
 	ORDER BY
     	season
@@ -172,9 +153,10 @@ function CheckDates(ckname, frname) {
 	INNER JOIN smg_companies c ON c.companyid = uar.companyid
 	INNER JOIN smg_usertype ut ON ut.usertypeid = uar.usertype
 	LEFT JOIN smg_users adv ON adv.userid = uar.advisorid
-	WHERE uar.userid = '#url.userid#'
+	WHERE uar.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(url.userid)#">
 	ORDER BY r.regionname
 </Cfquery>
+
 <cfoutput>
  <!--- Page Messages --->
     <gui:displayPageMessages 
@@ -191,15 +173,14 @@ function CheckDates(ckname, frname) {
 
 <!----Header Format Table---->
 
-
 <div class="thinBlueBorder">
 <table border=0 cellpadding=8 cellspacing=0 width="100%" >
 
 	<tr>
 		<td valign="top"><h2>User</h2>#get_rep.firstname# #get_rep.lastname# (###get_rep.userid#)</td>
         <td valign="top"><h2>Current Paperwork Status</h2>
-        Area Rep: <cfif currentSeasonStatus.arearepok eq 1>Looks good<cfelse>Something is missing</cfif><br />
-        2nd Visit: <cfif currentSeasonStatus.secondVisitRepOK eq 1>Looks good<cfelse>Something is missing</cfif>
+        Area Rep: <cfif get_paperwork.arearepok eq 1>Looks good<cfelse>Something is missing</cfif><br />
+        2nd Visit: <cfif get_paperwork.secondVisitRepOK eq 1>Looks good<cfelse>Something is missing</cfif>
          </td>
         <td valign="top"><h2>Current Account Status</h2>
         Active: <cfif get_rep.active eq 1>Yes<cfelse>No</cfif><br />
@@ -340,7 +321,7 @@ function CheckDates(ckname, frname) {
         <cfquery dbtype="query" name="currentSeasonCBCInfo">
         select userID, cbcID, batchID, flagCBC, denied
         from qGetCBCUser
-        where seasonid = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#seasonID#">
+        where seasonid = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#VAL(seasonID)#">
         </cfquery>
          
         <cfinput type="hidden" name="paperworkid_#currentrow#" value="#paperworkid#">
