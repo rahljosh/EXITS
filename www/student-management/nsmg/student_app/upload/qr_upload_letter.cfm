@@ -28,7 +28,7 @@
 <cfif newfilesize GT 2048>  
 
 	<!--- Delete File --->
-	<cffile action="delete" file="#directory#/#CFFILE.serverfile#">
+	<cffile action="delete" file="#directory##CFFILE.serverfile#">
     
 	<script type="text/javascript">
 		alert("The file you are trying to upload is bigger than 2mb. Files can not be bigger than 2mb. Please resize your file and try again.");
@@ -39,7 +39,7 @@
 <cfelseif NOT ListFind("jpg,jpeg,gif,tif,tiff,png,pdf", LCase(CFFILE.clientfileext))>
 
 	<!--- Delete File --->
-	<cffile action="delete" file="#directory#/#CFFILE.serverfile#">
+	<cffile action="delete" file="#directory##CFFILE.serverfile#">
 
 	<script type="text/javascript">
         alert("Unfortunately EXITS Online Application does not accept #CFFILE.clientfileext# files. \n EXITS only accepts files in the following formats: JPG, JPEG, GIF, TIF, TIFF, PNG, AND PDF. Please change the file type and try again.");
@@ -56,23 +56,23 @@
             imageCFC = createObject("component","image");
             
             // scaleX image to 1000px wide
-            scaleX1000 = imageCFC.scaleX("", "#directory#/#CFFILE.serverfile#", "#directory#/new#CFFILE.serverfile#", 1000);
+            scaleX1000 = imageCFC.scaleX("", "#directory##CFFILE.serverfile#", "#directory#/new#CFFILE.serverfile#", 1000);
         </cfscript>
         
         <!--- if file has been resized ---->
         <cfif FileExists("#directory#/new#CFFILE.ServerFileName#.#CFFILE.ServerFileExt#")>
             
             <!--- delete original file --->
-            <cffile action="delete" file="#directory#/#CFFILE.serverfile#">
+            <cffile action="delete" file="#directory##CFFILE.serverfile#">
             
             <!--- rename resized file --->
-            <cffile action="rename" source="#directory#/new#CFFILE.ServerFileName#.#CFFILE.ServerFileExt#" destination="#directory#/#FORM.studentid#.#LCase(CFFILE.ServerFileExt)#" attributes="normal">
+            <cffile action="rename" source="#directory#/new#CFFILE.ServerFileName#.#CFFILE.ServerFileExt#" destination="#directory##FORM.studentid#.#LCase(CFFILE.ServerFileExt)#" attributes="normal">
     
         </cfif>
     
     </cfif>
 
-	<cffile	action="rename" source="#directory#/#CFFILE.ServerFile#" destination="#directory#/#FORM.studentid#.#LCase(cffile.ClientFileExt)#" nameconflict="overwrite">
+	<cffile	action="rename" source="#directory##CFFILE.serverfile#" destination="#directory##FORM.studentid#.#LCase(cffile.ClientFileExt)#" nameconflict="overwrite">
 
 	<script type="text/javascript">
 		opener.location.reload(true);
