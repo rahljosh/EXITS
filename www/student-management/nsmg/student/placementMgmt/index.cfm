@@ -652,7 +652,7 @@
                         
                         <table width="90%" border="0" cellpadding="4" cellspacing="0" class="section paperwork" align="center">
                             <cfloop query="qGetActionsHistory">
-                                <tr>
+                                <tr bgcolor="###iif(qGetActionsHistory.currentrow MOD 2 ,DE("edeff4") ,DE("FFFFFF") )#">
                                     <td valign="top" width="25%">#DateFormat(qGetActionsHistory.dateCreated, 'mm/dd/yyyy')# at #TimeFormat(qGetActionsHistory.dateCreated, 'hh:mm tt')# <!--- EST ---></td>
                                     <td width="75%">#qGetActionsHistory.actions#</td>
                                 </tr>                        
