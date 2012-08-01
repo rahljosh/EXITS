@@ -72,7 +72,10 @@
     
     </cfif>
 
-	<cffile	action="rename" source="#directory##CFFILE.serverfile#" destination="#directory##FORM.studentid#.#LCase(cffile.ClientFileExt)#" nameconflict="overwrite">
+	<!--- The file may have already been renamed, so check if it exists before attempting to rename it. --->
+	<cfif FileExists('#directory##CFFILE.serverfile#')>
+		<cffile	action="rename" source="#directory##CFFILE.serverfile#" destination="#directory##FORM.studentid#.#LCase(cffile.ClientFileExt)#" nameconflict="overwrite">
+  	</cfif>
 
 	<script type="text/javascript">
 		opener.location.reload(true);
