@@ -1,6 +1,5 @@
 <cfif isDefined('url.hostid')>
-	<cfset client.hostid = #url.hostid#>
-<cfelse>
+	<cfset client.hostid = url.hostid>
 </cfif>
 
 <script>
