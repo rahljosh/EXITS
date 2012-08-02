@@ -67,7 +67,9 @@
                     regularArrival.isCompleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> 
         WHERE 
 			s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-
+        AND                    					
+            s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">                
+            
 		<cfif CLIENT.userType EQ 8>
             <!--- Intl Rep --->
             AND 
@@ -163,6 +165,8 @@
         	smg_aypCamps ac ON ac.campID = s.aypEnglish
 		WHERE 
 			s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+        AND                    					
+            s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">                
         AND 
             s.hostid != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         AND 
