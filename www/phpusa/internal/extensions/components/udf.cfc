@@ -72,6 +72,104 @@
 	</cffunction>
 
 
+	<!--- Encrypt Variable --->
+	<cffunction name="encryptVariable" access="public" returntype="string" output="false" hint="Encrypts a variable">
+    	<cfargument name="varString" hint="String">
+
+		<cfscript>			
+			// Declare Key
+			var encryptKey = "BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR";
+			var resultKey = '';
+			
+			try {
+				// Encrypt Variable
+				resultKey = Encrypt(TRIM(ARGUMENTS.varString), encryptKey, "desede", "hex");
+			} catch (Any e) {
+				// Set Encrypt Value to ''
+				resultKey = '';
+			}
+	
+			// Return Encrypted Variable
+			return(resultKey);
+        </cfscript>
+		   
+	</cffunction>
+
+	
+    <!--- Decrypt Variable --->
+	<cffunction name="decryptVariable" access="public" returntype="string" output="false" hint="Decrypts a variable">
+    	<cfargument name="varString" hint="String">
+
+		<cfscript>
+			// Declare Key
+			var decryptKey = "BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR";
+			var resultKey = '';
+			
+			try {
+				// Decrypt Variable
+				resultKey = Decrypt(ARGUMENTS.varString, decryptKey, "desede", "hex");
+			} catch (Any e) {
+				// Set Decrypt Value to ''
+				resultKey = '';
+			}
+	
+			// Return Decrypted Variable
+			return(resultKey);
+        </cfscript>
+		   
+	</cffunction>
+
+	
+    <!--- Display Social Security Number --->
+	<cffunction name="displaySSN" access="public" returntype="string" output="false" hint="Decrypts a variable">
+    	<cfargument name="varString" hint="String">
+        <cfargument name="isMaskedSSN" default="1" hint="Set to 1 to return SSN in ***-**-9999 format">
+		<cfargument name="displayType" default="" hint="user / hostFamily">
+        
+		<cfscript>
+			/*** Display SSN Rules
+				PHP
+					- Host Family - No one is allowed to view full SSN
+					- User - Thea Brewer and Bryan McCready are allowed to view full SSN
+			***/
+		
+			// Declare Variables		
+			
+			// ISE
+			var vUserListISE = '7657,9719'; // Thea Brewer | Bryan McCready 
+
+			// Stores all IDs so we can check quickly and return a masked SSN
+			var vAllowedIDList = '7657,9719';
+			
+			// Stores the return variable
+			var vReturnSSN = '';
+			
+			// Decrypt SSN
+			var vDecryptedSSN = decryptVariable(ARGUMENTS.varString);
+
+			// Format SSN Display
+			if ( LEN(vDecryptedSSN) AND ListFind(vAllowedIDList, CLIENT.userID) ) {
+
+				// PHP - SHOW ONLY FOR USER 
+				if ( ARGUMENTS.displayType EQ 'user' ) {
+					// return full SSN
+					vReturnSSN = vDecryptedSSN;
+				}
+				
+			} else if ( LEN(vDecryptedSSN) ) {
+
+				// SET return masked SSN as default
+				vReturnSSN = "XXX-XX-" & Right(vDecryptedSSN, 4);
+
+			}	
+			
+			// Return Encrypted Variable
+			return(vReturnSSN);
+        </cfscript>
+		   
+	</cffunction>
+    
+
 	<!--- This removes foreign accents from online application fields --->
 	<cffunction name="removeAccent" access="public" returntype="string" output="false" hint="Remove foreign acccents from a string">
     	<cfargument name="varString" hint="String">
