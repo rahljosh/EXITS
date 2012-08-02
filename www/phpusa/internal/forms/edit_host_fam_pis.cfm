@@ -300,10 +300,6 @@
             
             <tr>
                 <td align="center" colspan="2">
-					<cfif listFind("1,2,3,4", CLIENT.usertype)>
-                        <a href="?curdoc=querys/delete_host&hostID=#hostID#" onClick="return areYouSure(this);"><img src="pics/delete-btn.gif" width="102" height="27" border="0" align="middle" style="margin-right:50px;" /></a>
-                    </cfif>
-                    
                     <input name="Submit" type="image" value="next" src="pics/next.gif" align="middle" width="74" height="29" border="0">
                 </td>
 			</tr>
