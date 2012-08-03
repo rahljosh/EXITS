@@ -55,7 +55,7 @@
         FROM 
         	smg_students
         WHERE 
-        	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentid#">
+        	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentid)#">
     </cfquery>
     
     <cfquery name="qGetStatePrefence" datasource="MySQL">
@@ -70,7 +70,7 @@
         LEFT JOIN 
         	smg_states sta3 ON sta3.id = state3
         WHERE 
-        	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentid#">
+        	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentid)#">
     </cfquery>
     
     <cfquery name="qGetPrivateSchool" datasource="MySql">
@@ -81,7 +81,7 @@
         FROM 
         	smg_private_schools
         WHERE 
-        	privateschoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.privateschool#">
+        	privateschoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.privateschool)#">
     </cfquery>
     
     <cfquery name="qGetStatusHistory" datasource="MySql">
@@ -94,7 +94,7 @@
         LEFT JOIN 	
         	smg_users u ON sta.approvedby = u.userid
         WHERE 
-        	s.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentid#">
+        	s.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentid)#">
         AND 
         	sta.status = <cfqueryparam cfsqltype="cf_sql_integer" value="9">
     </cfquery>
