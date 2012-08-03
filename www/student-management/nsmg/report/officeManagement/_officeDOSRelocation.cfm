@@ -201,12 +201,17 @@
                     applicationLookUp alup ON alup.fieldID = hist.changePlacementReasonID
                     AND
                         fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="changePlacementReason">                             
-                WHERE                	
-                	hist.studentID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ValueList(qGetStudentIDList.studentID)#" list="yes"> )
-                AND
+                WHERE
                 	hist.datePlaced IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
                 AND
-                	hist.assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                
+                	hist.assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+              	AND 
+             		<cfif VAL(qGetStudentIDList.recordCount)>
+                        hist.studentID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ValueList(qGetStudentIDList.studentID)#" list="yes"> )
+              		<cfelse>
+                		hist.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+             		</cfif>
+                           
                 GROUP BY
                 	hist.studentID,
                     hist.hostID,
