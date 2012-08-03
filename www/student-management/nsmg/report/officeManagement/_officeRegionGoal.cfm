@@ -7,7 +7,8 @@
 				
 				#CGI.SCRIPT_NAME#?curdoc=report/index?action=officeRegionGoal
 				
-	Updated: 	06/14/2012 - Combing Great Lakes Region
+	Updated: 	08/03/2012 - Placed students = Pending Previously Approved and approved
+				06/14/2012 - Combing Great Lakes Region
 				06/14/2012 - Renaming report from Allocation to Goal		
 				
 ----- ------------------------------------------------------------------------- --->
@@ -141,6 +142,7 @@
             SELECT
                 s.studentID,
                 s.host_fam_approved,
+                sh.datePlaced,
                 sh.hostID
             FROM
                 smg_students s
@@ -154,6 +156,8 @@
                 smg_hostHistory sh ON sh.studentID = s.studentID
                 AND
                     sh.isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                AND
+                	sh.assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> <!--- Filter Out PHP students --->
             WHERE
                 s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
             AND
@@ -177,7 +181,7 @@
             WHERE
                 hostID IS NOT NULL
             AND
-                host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="1,2,3,4"> )
+            	datePlaced IS NOT NULL <!--- Include Pending that were previously approved --->
         </cfquery>
         
         <cfquery name="qGetPending" dbtype="query">
@@ -188,7 +192,7 @@
             WHERE
                 hostID IS NOT NULL
             AND
-                host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="5,6,7"> )
+            	datePlaced IS NULL <!--- Get Only New Placements --->
         </cfquery>
 		
         <cfscript>
@@ -322,7 +326,7 @@
         <cfheader name="Content-Disposition" value="attachment; filename=officeRegionGoal.xls">
 
         <table width="98%" cellpadding="4" cellspacing="0" align="center" border="1">
-            <tr><th colspan="10">#vReportTitle#</th></tr>
+            <tr><th colspan="10"><cfoutput>#vReportTitle#</cfoutput></th></tr>
             <tr style="font-weight:bold;">
                 <td>Company</td>
                 <td>Region</td>
