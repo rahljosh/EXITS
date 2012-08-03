@@ -345,7 +345,7 @@
         <cfscript>
 			// Send out email notification if flight information was entered by an International Representative / Branch
 			if ( ListFind("8,11,13", CLIENT.userType) ) {	 
-				APPLICATION.CFC.STUDENT.emailFlightInformation(studentID=qGetStudentInfo.studentID,isPHPStudent=VAL(qGetPHPStudentInfo.recordCount) );
+				APPLICATION.CFC.STUDENT.emailFlightInformation(studentID=qGetStudentInfo.studentID,sendEmailTo='regionalManager',isPHPStudent=VAL(qGetPHPStudentInfo.recordCount) );
 			}
 			
 			// Set Page Message

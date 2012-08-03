@@ -4356,10 +4356,6 @@
 
                         <p style="color: ##333;">
                         	Please find flight information attached for #qGetStudentFullInformation.firstName# #qGetStudentFullInformation.familyLastName# (###qGetStudentFullInformation.studentID#). 
-                            
-                            <cfif ARGUMENTS.sendEmailTo NEQ 'regionalManager'>
-	                            If it looks good, please feel free to forward to your regional manager.                                                      
-                            </cfif>
          				</p>
                         
 						<!--- Do Not Display for PHP --->
