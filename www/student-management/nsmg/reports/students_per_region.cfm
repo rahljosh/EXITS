@@ -213,8 +213,12 @@
             studentid
         FROM 
             qGetStudentList
-        WHERE 	
-    		regionAssigned IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentList.regionID#" list="yes" > )
+        WHERE
+        	<cfif VAL(qGetStudentList.recordCount)> 	
+    			regionAssigned IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentList.regionID#" list="yes" > )
+          	<cfelse>
+            	regionAssigned = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+            </cfif>
 	</cfquery>
 
     <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" <cfif FORM.reportType EQ 'excel'> border="1" </cfif> >
