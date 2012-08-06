@@ -406,7 +406,7 @@
 	}
 </style>
 
-<script language="javascript">	
+<script type="text/javascript">	
     // Document Ready!
     $(document).ready(function() {
 
@@ -420,6 +420,14 @@
 		});		
 
 	});
+	
+	var updateCounter = function(input) {
+		var len = input.value.length;
+		if (len > 254) {
+			alert("The reason is too long, it can only be 255 characters long.");
+			$(input).val(input.value.substring(0,254));
+		}
+	}
 </script> 	
 
 <cfoutput>
@@ -495,7 +503,9 @@
                                 <input type="checkbox" name="#cbcfamID#motherIsNoSSN" value="1" <cfif VAL(qGetCBCMother.isNoSSN)>checked="checked"</cfif>>
                             </cfif>
                         </td>
-                         <td><textarea rows="3" cols=15 name="#cbcfamID#notesmother"><cfif isDefined('notes')>#notes#</cfif></textarea></td>
+                         <td>
+                         	<textarea rows="3" cols=15 name="#cbcfamID#notesmother" onkeypress="updateCounter(this);"><cfif isDefined('notes')>#notes#</cfif></textarea>
+                         </td>
                           <td> 
                         <input type="text" name="#cbcfamID#date_approvedMother" message="Please input a valid date."  <cfif date_approved is ''>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif> value="#DateFormat(date_approved, 'mm/dd/yyyy')#" size="8" maxlength="10" >	
                        <Cfif date_approved is ''><br /><em><font size=-2>click in box for date</font></em></Cfif>
@@ -564,7 +574,7 @@
                                 <input type="checkbox" name="#cbcfamID#fatherIsNoSSN" value="1" <cfif VAL(qGetCBCFather.isNoSSN)>checked="checked"</cfif>>
                             </cfif>
                         </td>
-                         <td><textarea rows="3" cols=15 name="#cbcfamID#notesfather"><cfif isDefined('notes')>#notes#</cfif></textarea></td>
+                         <td><textarea rows="3" cols=15 name="#cbcfamID#notesfather" onkeypress="updateCounter(this);"><cfif isDefined('notes')>#notes#</cfif></textarea></td>
                           <td> 
                         <input type="text" name="#cbcfamID#date_approvedFather" message="Please input a valid date."  <cfif date_approved is ''>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif> value="#DateFormat(date_approved, 'mm/dd/yyyy')#" size="8" maxlength="10" >	
                        <Cfif date_approved is ''><br /><em><font size=-2>click in box for date</font></em></Cfif>
@@ -663,7 +673,7 @@
                                     <input type="checkbox" name="#familyID#memberIsNoSSN" value="1" <cfif VAL(qGetCBCMember.isNoSSN)>checked="checked"</cfif>>
                                 </cfif>
                             </td>
-                             <td><textarea rows="3" cols=15 name="#familyID#notesmember"><cfif isDefined('notes')>#notes#</cfif></textarea></td>
+                             <td><textarea rows="3" cols=15 name="#familyID#notesmember" onkeypress="updateCounter(this);"><cfif isDefined('notes')>#notes#</cfif></textarea></td>
                              <td> 
                         <input type="text" name="#familyID#date_approvedMember" message="Please input a valid date."  <cfif date_approved is ''>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif> value="#DateFormat(date_approved, 'mm/dd/yyyy')#" size="8" maxlength="10" >	
                        <Cfif date_approved is ''><br /><em><font size=-2>click in box for date</font></em></Cfif>
