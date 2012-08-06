@@ -31,7 +31,6 @@
 			<cfinput type="hidden" name="studentid" value="#url.studentid#">
 			Please upload your file here. <br>
 			EXITS Online Application accepts the following formats: JPG, JPEG, GIF, TIF, TIFF, PNG, AND PDF. <br>
-			<strong>PLEASE UPLOAD PREFERABLY JPEG, JPG OR GIF FILES.</strong><br>
 			If you upload the wrong file, just upload the correct file and the wrong file will be removed. <br><br>
 			<div align="center">
 			Browse for the file.. <cfinput type="file" name="file_upload" size=35 required="yes" enctype="multipart/form-data" message="You must select a file in order to continue." validateat="onsubmit,onserver">

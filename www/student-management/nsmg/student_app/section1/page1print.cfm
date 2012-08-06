@@ -1,19 +1,14 @@
-<cftry>
-
-<cfif LEN(URL.curdoc) OR IsDefined('url.path')>
-	<cfset path = "">
-<cfelseif IsDefined('url.exits_app')>
-	<cfset path = "nsmg/student_app/">
-<cfelse>
-	<cfset path = "../">
+<!--- This is used to set the relative directory, print_application.cfm sets this to an empty string --->
+<cfparam name="relative" default="../">
+<cfif LEN(URL.curdoc)>
+	<cfset relative = "">
 </cfif>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-	<link rel="stylesheet" type="text/css" <cfoutput>href="#path#app.css"</cfoutput>>
-	<title>Page [01] - Student's Information</title>
+	<link rel="stylesheet" type="text/css" <cfoutput>href="#relative#app.css"</cfoutput>>
 </head>
 <body <cfif NOT LEN(URL.curdoc)>onLoad="print()"</cfif>>
 
@@ -23,34 +18,30 @@
 	// Get Canada Area Choice
 	qGetSelectedCanadaAreaChoice = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='canadaAreaChoice',fieldID=get_student_info.app_canada_area);
 </cfscript>
-
 <cfquery name="get_intrep" datasource="MySql">
 	SELECT userid, businessname
 	FROM smg_users 
 	WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value='#VAL(get_student_info.intrep)#'>
 </cfquery>
-
 <cfquery name="country_list" datasource="MySQL">
 	SELECT countryid, countryname
 	FROM smg_countrylist
 	ORDER BY Countryname
 </cfquery>
-
 <cfquery name="religion_list" datasource="MySQL">
 	SELECT religionid, religionname
 	FROM smg_religions
 	ORDER BY religionname
 </cfquery>
-
 <cfquery name="app_programs" datasource="MySQL">
 	SELECT app_programid, app_program 
 	FROM smg_student_app_programs
 	WHERE app_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.app_indicated_program)#">
 </cfquery>
-<Cfquery name="assignedProgram" datasource="mysql">
-select programname
-from smg_programs
-where programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.programid)#">
+<cfquery name="assignedProgram" datasource="mysql">
+    SELECT programname
+    FROM smg_programs
+    WHERE programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.programid)#">
 </cfquery>
 <cfquery name="app_other_programs" datasource="MySQL">
 	SELECT app_programid, app_program 
@@ -70,13 +61,18 @@ where programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_stude
 <!--- HEADER OF TABLE --->
 <table width="100%" cellpadding="0" cellspacing="0" align="center" border="0">
 	<tr height="33">
-		<td width="8" class="tableside"><img src="#path#pics/p_topleft.gif" width="8"></td>
-		<td width="26" class="tablecenter"><img src="#path#pics/students.gif"></td>
+		<td width="8" class="tableside"><img src="#relative#pics/p_topleft.gif" width="8"></td>
+		<td width="26" class="tablecenter"><img src="#relative#pics/students.gif"></td>
 		<td class="tablecenter"><h2>Page [01] - Student's Information</h2></td>
 		<cfif LEN(URL.curdoc)>
-		<td align="right" class="tablecenter"><a href="" onClick="javascript: win=window.open('section1/page1print.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;"><img src="pics/printhispage.gif" border="0" alt="Click here to print this page"></img></A>&nbsp; &nbsp;</td>
+			<td align="right" class="tablecenter">
+            	<a href="" onClick="javascript: win=window.open('section1/page1print.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;">
+                	<img src="pics/printhispage.gif" border="0" alt="Click here to print this page"></img>
+             	</a>
+                &nbsp;&nbsp;
+         	</td>
 		</cfif>
-		<td width="42" class="tableside"><img src="#path#pics/p_topright.gif" width="42"></td>
+		<td width="42" class="tableside"><img src="#relative#pics/p_topright.gif" width="42"></td>
 	</tr>
 </table>
 
@@ -87,9 +83,9 @@ where programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_stude
 			<table width="100%" align="left" cellpadding="0" cellspacing="0">
 			<tr><td align="left" valign="top">
 				<cfif file.recordcount>
-					<img src="#path#../uploadedfiles/web-students/#file.name#" width="130" height="150"><br>
+					<img src="#relative#../uploadedfiles/web-students/#file.name#" width="130" height="150"><br>
 				<cfelse>
-					<img src="#path#pics/no_image.gif" border=0 width="130" height="150">
+					<img src="#relative#pics/no_image.gif" border=0 width="130" height="150">
 				</cfif>
 				</td>
 			</tr>
@@ -106,9 +102,9 @@ where programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_stude
 					<td width="140"><em>Middle Name</em></td>		
 				</tr>
 				<tr>
-					<td valign="top">#familylastname#<br><img src="#path#pics/line.gif" width="195" height="1" border="0" align="absmiddle"></td>
-					<td valign="top">#firstname#<br><img src="#path#pics/line.gif" width="175" height="1" border="0" align="absmiddle"></td>
-					<td valign="top">#middlename#<br><img src="#path#pics/line.gif" width="135" height="1" border="0" align="absmiddle"></td>
+					<td valign="top">#familylastname#<br><img src="#relative#pics/line.gif" width="195" height="1" border="0" align="absmiddle"></td>
+					<td valign="top">#firstname#<br><img src="#relative#pics/line.gif" width="175" height="1" border="0" align="absmiddle"></td>
+					<td valign="top">#middlename#<br><img src="#relative#pics/line.gif" width="135" height="1" border="0" align="absmiddle"></td>
 				</tr>
 				<tr><td colspan="3">&nbsp;</td></tr>
 				<tr><td colspan="3">
@@ -119,7 +115,7 @@ where programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_stude
 								<td><em>Additional Programs</em></td>
 							</tr>
 							<tr>
-								<td>#assignedProgram.programname# - #app_programs.app_program# <cfif LEN(qGetSelectedCanadaAreaChoice.name)> - #qGetSelectedCanadaAreaChoice.name# <cfelse>To be Defined</cfif> <br><img src="#path#pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
+								<td>#assignedProgram.programname# - #app_programs.app_program# <cfif LEN(qGetSelectedCanadaAreaChoice.name)> - #qGetSelectedCanadaAreaChoice.name# <cfelse>To be Defined</cfif> <br><img src="#relative#pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
 								<td><cfif app_other_programs.recordcount EQ '0'>None<cfelse>
                                 <cfloop list="#get_student_info.app_additional_program#" index=i>
                                 <cfquery name="app_other_programs" datasource="MySQL">
@@ -129,7 +125,7 @@ where programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_stude
                                 </cfquery> 
                                 #app_other_programs.app_program#, 
                                 </cfloop>
-                                </cfif><br><img src="#path#pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
+                                </cfif><br><img src="#relative#pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
 							</tr>
 							<tr><td colspan="2">&nbsp;</td></tr>
 						</table>
@@ -138,7 +134,7 @@ where programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_stude
 					<td colspan="3"><b>International Representative</b></td>
 				</tr>
 				<tr>
-					<td colspan="3" width="520">#get_intrep.businessname#<br><img src="#path#pics/line.gif" width="515" height="1" border="0" align="absmiddle"></td>
+					<td colspan="3" width="520">#get_intrep.businessname#<br><img src="#relative#pics/line.gif" width="515" height="1" border="0" align="absmiddle"></td>
 				</tr>
 			</table>
 		</td>
@@ -153,35 +149,35 @@ where programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_stude
 	<td width="48%" valign="top">
 		<table border=0 cellpadding=0 cellspacing=0>
 			<tr><td colspan="2"><em>Street Address</em></td></tr>
-			<tr><td colspan="2">#address#<br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
+			<tr><td colspan="2">#address#<br><img src="#relative#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
 			<tr><td>&nbsp;</td></tr>
 			<tr><td colspan="2"><em>City</em></td></tr>
-			<tr><td colspan="2">#city#<br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
+			<tr><td colspan="2">#city#<br><img src="#relative#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
 			<tr><td>&nbsp;</td></tr>
 			<tr><td width="160"><em>Zip Code</em></td><td width="160"><em>Country</em></td></tr>
 			<tr>
-				<td>#zip#<br><img src="#path#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>			
+				<td>#zip#<br><img src="#relative#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>			
 				<td><cfloop query="country_list"><cfif get_student_info.country is countryid>#countryname#</cfif></cfloop>
-					<br><img src="#path#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>
+					<br><img src="#relative#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>
 			</tr>	
 			<tr><td>&nbsp;</td></tr>	
 			<tr><td><em>Telephone No.</em></td><td><em>Fax No.</em></td></tr>
 			<tr>
-				<td>#phone#<br><img src="#path#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>
-				<td>#fax#<br><img src="#path#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>				
+				<td>#phone#<br><img src="#relative#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>
+				<td>#fax#<br><img src="#relative#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>				
 			</tr>
 			<tr><td>&nbsp;</td></tr>
 			<tr><td colspan="2"><em>E-Mail</em></td></tr>
-			<tr><td colspan="2">#email#<br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
+			<tr><td colspan="2">#email#<br><img src="#relative#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
 			<tr><td>&nbsp;</td></tr>	
 			<tr><td><em>Sex</em></td><td><em>Date of Birth <font size="-2">(mm/dd/yyyy)</font></em></td></tr>
 			<tr>
 				<td>
-					<cfif sex is 'male'><img src="#path#pics/RadioY.gif" width="13" height="13" border="0"><cfelse><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"></cfif> Male &nbsp; 
-					<cfif sex is 'female'><img src="#path#pics/RadioY.gif" width="13" height="13" border="0"><cfelse><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"></cfif> Female &nbsp;&nbsp;&nbsp;
-					<br><img src="#path#pics/line.gif" width="155" height="1" border="0" align="absmiddle">
+					<cfif sex is 'male'><img src="#relative#pics/RadioY.gif" width="13" height="13" border="0"><cfelse><img src="#relative#pics/RadioN.gif" width="13" height="13" border="0"></cfif> Male &nbsp; 
+					<cfif sex is 'female'><img src="#relative#pics/RadioY.gif" width="13" height="13" border="0"><cfelse><img src="#relative#pics/RadioN.gif" width="13" height="13" border="0"></cfif> Female &nbsp;&nbsp;&nbsp;
+					<br><img src="#relative#pics/line.gif" width="155" height="1" border="0" align="absmiddle">
 				</td>
-				<td>#DateFormat(dob, 'mm/dd/yyyy')#<br><img src="#path#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>
+				<td>#DateFormat(dob, 'mm/dd/yyyy')#<br><img src="#relative#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>
 			</tr>
 		</table>	
 	</td>
@@ -189,24 +185,24 @@ where programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_stude
 	<td width="48%" valign="top" align="left">
 		<table border=0 cellpadding=0 cellspacing=0>
 			<tr><td colspan="2"><em>Place of Birth</em></td></tr>
-			<tr><td colspan="2">#citybirth#<br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
+			<tr><td colspan="2">#citybirth#<br><img src="#relative#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
 			<tr><td>&nbsp;</td></tr>
 			<tr><td colspan="2"><em>Country of Birth</em></td></tr>
 			<tr><td colspan="2">
 					<cfloop query="country_list"><cfif get_student_info.countrybirth is countryid>#countryname#</cfif></cfloop>
-					<br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
+					<br><img src="#relative#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
 			</tr>
 			<tr><td>&nbsp;</td></tr>
 			<tr><td colspan="2"><em>Country of Citizenship</em></td></tr>
 			<tr><td colspan="2">
 				<cfloop query="country_list"><cfif get_student_info.countrycitizen is countryid>#countryname#</cfif></cfloop>
-				<br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
+				<br><img src="#relative#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
 			</tr>
 			<tr><td>&nbsp;</td></tr>
 			<tr><td colspan="2"><em>Country of Legal Permanent Residence</em></td></tr>
 			<tr><td colspan="2">
 				<cfloop query="country_list"><cfif get_student_info.countryresident is countryid>#countryname#</cfif></cfloop>
-				<br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
+				<br><img src="#relative#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
 			</tr>
 			<tr><td>&nbsp;</td></tr>
 			<tr><td colspan="2"><em>Religious Affiliation</em></td></tr>
@@ -217,11 +213,11 @@ where programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_stude
                 <cfelse>
 	                <cfloop query="religion_list"><cfif get_student_info.religiousaffiliation EQ religionid>#religionname#</cfif></cfloop>                
                 </cfif>
-				<br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
+				<br><img src="#relative#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
 			</tr>
 			<tr><td>&nbsp;</td></tr>			
 			<tr><td colspan="2"><em>Passport Number (if known)</em></td></tr>
-			<tr><td colspan="2">#passportnumber#<br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
+			<tr><td colspan="2">#passportnumber#<br><img src="#relative#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
 		</table>	
 	</td>
 </tr>
@@ -235,70 +231,70 @@ where programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_stude
 	<td width="48%" valign="top">
 		<table width="100%" border=0 cellpadding=0 cellspacing=0>
 			<tr><td colspan="2"><em>Father's Name</em></td></tr>
-			<tr><td colspan="2">#fathersname#<br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
+			<tr><td colspan="2">#fathersname#<br><img src="#relative#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
 			<tr><td>&nbsp;</td></tr>
 			<tr><td colspan="2"><em>Address</em></td></tr>					
-			<tr><td colspan="2">#fatheraddress#<br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
+			<tr><td colspan="2">#fatheraddress#<br><img src="#relative#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
 			<tr><td>&nbsp;</td></tr>
 			<tr><td colspan="2"><em>Country</em></td></tr>
 			<tr><td colspan="2">
 				<cfloop query="country_list"><cfif get_student_info.fathercountry is countryid>#countryname#</cfif></cfloop>
-				<br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
+				<br><img src="#relative#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
 			</tr>
 			<tr><td>&nbsp;</td></tr>
 			<tr><td width="160"><em>Date of Birth <font size="-2">(mm/dd/yyyy)</font></em></td><td width="160"><em>Speaks English</em></td></tr>	
 			<tr>
-				<td>#DateFormat(fatherDOB, 'mm/dd/yyyy')#<br><img src="#path#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>
+				<td>#DateFormat(fatherDOB, 'mm/dd/yyyy')#<br><img src="#relative#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>
 				<td>
-					<cfif fatherenglish is 'yes'><img src="#path#pics/RadioY.gif" width="13" height="13" border="0"><cfelse><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"></cfif> Yes &nbsp; &nbsp;
-					<cfif fatherenglish is 'no'><img src="#path#pics/RadioY.gif" width="13" height="13" border="0"><cfelse><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"></cfif> No 
-					<br><img src="#path#pics/line.gif" width="155" height="1" border="0" align="absmiddle">
+					<cfif fatherenglish is 'yes'><img src="#relative#pics/RadioY.gif" width="13" height="13" border="0"><cfelse><img src="#relative#pics/RadioN.gif" width="13" height="13" border="0"></cfif> Yes &nbsp; &nbsp;
+					<cfif fatherenglish is 'no'><img src="#relative#pics/RadioY.gif" width="13" height="13" border="0"><cfelse><img src="#relative#pics/RadioN.gif" width="13" height="13" border="0"></cfif> No 
+					<br><img src="#relative#pics/line.gif" width="155" height="1" border="0" align="absmiddle">
 				</td>
 			</tr>
 			<tr><td>&nbsp;</td></tr>
 			<tr><td><em>Business Phone</em></td><td><em>Employed By</em></td></tr>
 			<tr>
-				<td>#fatherworkphone#<br><img src="#path#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>
-				<td>#fathercompany#<br><img src="#path#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>
+				<td>#fatherworkphone#<br><img src="#relative#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>
+				<td>#fathercompany#<br><img src="#relative#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>
 			</tr>
 			<tr><td>&nbsp;</td></tr>
 			<tr><td colspan="2"><em>Occupation</em></td></tr>
-			<tr><td colspan="2">#fatherworkposition#<br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
+			<tr><td colspan="2">#fatherworkposition#<br><img src="#relative#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
 		</table>
 	</td>
 	<td width="4%">&nbsp;</td>
 	<td width="48%" valign="top">
 		<table width="100%" border=0 cellpadding=0 cellspacing=0>
 			<tr><td colspan="2"><em>Mother's Name</em></td></tr>
-			<tr><td colspan="2">#mothersname#<br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
+			<tr><td colspan="2">#mothersname#<br><img src="#relative#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
 			<tr><td>&nbsp;</td></tr>
 			<tr><td colspan="2"><em>Address</em></td></tr>
-			<tr><td colspan="2">#motheraddress#<br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
+			<tr><td colspan="2">#motheraddress#<br><img src="#relative#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
 			<tr><td>&nbsp;</td></tr>
 			<tr><td colspan="2"><em>Country</em></td></tr>
 			<tr><td colspan="2">
 				<cfloop query="country_list"><cfif get_student_info.mothercountry is countryid>#countryname#</cfif></cfloop>
-				<br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
+				<br><img src="#relative#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
 			</tr>
 			<tr><td>&nbsp;</td></tr>
 			<tr><td><em>Date of Birth <font size="-2">(mm/dd/yyyy)</font></em></td><td><em>Speaks English</em></td></tr>	
 			<tr>
-				<td>#DateFormat(motherDOB, 'mm/dd/yyyy')#<br><img src="#path#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>
+				<td>#DateFormat(motherDOB, 'mm/dd/yyyy')#<br><img src="#relative#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>
 				<td>
-					<cfif motherenglish is 'yes'><img src="#path#pics/RadioY.gif" width="13" height="13" border="0"><cfelse><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"></cfif> Yes &nbsp; &nbsp;
-					<cfif motherenglish is 'no'><img src="#path#pics/RadioY.gif" width="13" height="13" border="0"><cfelse><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"></cfif> No 
-					<br><img src="#path#pics/line.gif" width="155" height="1" border="0" align="absmiddle">
+					<cfif motherenglish is 'yes'><img src="#relative#pics/RadioY.gif" width="13" height="13" border="0"><cfelse><img src="#relative#pics/RadioN.gif" width="13" height="13" border="0"></cfif> Yes &nbsp; &nbsp;
+					<cfif motherenglish is 'no'><img src="#relative#pics/RadioY.gif" width="13" height="13" border="0"><cfelse><img src="#relative#pics/RadioN.gif" width="13" height="13" border="0"></cfif> No 
+					<br><img src="#relative#pics/line.gif" width="155" height="1" border="0" align="absmiddle">
 				</td>
 			</tr>
 			<tr><td>&nbsp;</td></tr>
 			<tr><td width="155"><em>Business Phone</em></td><td width="155"><em>Employed By</em></td></tr>
 			<tr>
-				<td>#motherworkphone#<br><img src="#path#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>
-				<td>#mothercompany#<br><img src="#path#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>
+				<td>#motherworkphone#<br><img src="#relative#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>
+				<td>#mothercompany#<br><img src="#relative#pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>
 			</tr>
 			<tr><td>&nbsp;</td></tr>
 			<tr><td colspan="2"><em>Occupation</em></td></tr>
-			<tr><td colspan="2">#motherworkposition#<br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
+			<tr><td colspan="2">#motherworkposition#<br><img src="#relative#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
 		</table>
 	</td>
 </tr>
@@ -312,22 +308,22 @@ where programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_stude
 	<td width="48%" valign="top">
 		<table width="100%" border=0 cellpadding=0 cellspacing=0>
 			<tr><td colspan="2"><em>Name</em></td></tr>
-			<tr><td colspan="2">#emergency_name#<br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
+			<tr><td colspan="2">#emergency_name#<br><img src="#relative#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
 			<tr><td>&nbsp;</td></tr>
 			<tr><td colspan="2"><em>Address</em></td></tr>
-			<tr><td colspan="2">#emergency_address#<br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>	
+			<tr><td colspan="2">#emergency_address#<br><img src="#relative#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>	
 		</table>	
 	</td>
 	<td width="4%">&nbsp;</td>
 	<td width="48%" valign="top">
 		<table width="100%" border=0 cellpadding=0 cellspacing=0>
 			<tr><td><em>Phone Number</em></td></tr>
-			<tr><td>#emergency_phone#<br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
+			<tr><td>#emergency_phone#<br><img src="#relative#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
 			<tr><td>&nbsp;</td></tr>
 			<tr><td><em>Country</em></td></tr>
 			<tr><td>
 			<cfloop query="country_list"><cfif get_student_info.emergency_country is countryid>#countryname#</cfif></cfloop>
-				<br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
+				<br><img src="#relative#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
 			</tr>
 		</table>
 	</td>
@@ -338,9 +334,9 @@ where programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_stude
 <!--- FOOTER OF TABLE --->
 <table width="100%" cellpadding="0" cellspacing="0">
 	<tr height="8">
-		<td width="8"><img src="#path#pics/p_bottonleft.gif" width="8"></td>
-		<td width="100%" class="tablebotton"><img src="#path#pics/p_spacer.gif"></td>
-		<td width="42"><img src="#path#pics/p_bottonright.gif" width="42"></td>
+		<td width="8"><img src="#relative#pics/p_bottonleft.gif" width="8"></td>
+		<td width="100%" class="tablebotton"><img src="#relative#pics/p_spacer.gif"></td>
+		<td width="42"><img src="#relative#pics/p_bottonright.gif" width="42"></td>
 	</tr>
 </table>
 
@@ -353,8 +349,3 @@ where programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_stude
 
 </body>
 </html>
-
-<cfcatch type="any">
-	<cfinclude template="../error_message.cfm">
-</cfcatch>
-</cftry>

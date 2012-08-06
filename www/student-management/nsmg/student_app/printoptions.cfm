@@ -31,7 +31,8 @@
 		</td>		
 		<td valign="top" width="2%">&nbsp;</td>
 		<td valign="top" width="49%" align="center">
-		<a class="item2" href="" onClick="javascript: win=window.open('print_application.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;">
+		<a class="item2" href="print_application.cfm" >
+        <!---onClick="javascript: win=window.open('print_application.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;"--->
 			<img src="pics/print_completed_app.gif" border="0">
 		</a><br>
 		Use the link above to print your completed online application.

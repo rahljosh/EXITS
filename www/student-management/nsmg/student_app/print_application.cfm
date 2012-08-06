@@ -1,322 +1,465 @@
-<!----
-<cftry>
----->
 <cfsetting requesttimeout="300">
 
-<!--- OPENING FROM PHP - AXIS --->
-<cfif IsDefined('url.user')>
-	<cfset client.usertype = '#url.user#'>
+<!--- FROM PHP - AXIS --->
+<cfif IsDefined('URL.user')>
+	<cfset CLIENT.usertype = '#URL.user#'>
 </cfif>
 
 <cfif IsDefined('url.unqid')>
 	<cfquery name="qGetStudentInfoPrint" datasource="MySql">
-	 	SELECT s.firstname, s.familylastname, s.studentid, s.intrep, s.app_indicated_program,
-			u.businessname, u.master_accountid
-		FROM smg_students s
-		INNER JOIN smg_users u ON u.userid = s.intrep
-		WHERE s.uniqueid = <cfqueryparam value="#url.unqid#" cfsqltype="cf_sql_char">
+		SELECT
+			s.firstname,
+			s.familylastname,
+			s.studentid,
+			s.intrep,
+			s.app_indicated_program,
+			u.businessname,
+			u.master_accountid
+		FROM
+			smg_students s
+		INNER JOIN
+			smg_users u ON u.userid = s.intrep
+		WHERE
+			s.uniqueid = <cfqueryparam value="#url.unqid#" cfsqltype="cf_sql_char">
 	</cfquery>	
-	<cfset client.studentid = '#qGetStudentInfoPrint.studentid#'>
+	<cfset CLIENT.studentid = '#qGetStudentInfoPrint.studentid#'>
 <cfelse>
 	<cfquery name="qGetStudentInfoPrint" datasource="MySql">
-	 	SELECT s.firstname, s.familylastname, s.studentid, s.intrep, s.uniqueid, s.app_indicated_program,
-			u.businessname, u.master_accountid
-		FROM smg_students s
-		INNER JOIN smg_users u ON u.userid = s.intrep
-		WHERE studentid = <cfqueryparam value="#client.studentid#" cfsqltype="cf_sql_integer">
+		SELECT
+			s.firstname,
+			s.familylastname,
+			s.studentid,
+			s.intrep,
+			s.uniqueid,
+			s.app_indicated_program,
+			u.businessname,
+			u.master_accountid
+		FROM
+			smg_students s
+		INNER JOIN
+			smg_users u ON u.userid = s.intrep
+		WHERE
+			studentid = <cfqueryparam value="#VAL(client.studentid)#" cfsqltype="cf_sql_integer">
 	</cfquery>
-    <cfset url.unqid = '#qGetStudentInfoPrint.uniqueid#'>
+	<cfset url.unqid = '#qGetStudentInfoPrint.uniqueid#'>
 </cfif>
+
 <cfif cgi.http_host is 'jan.case-usa.org' or cgi.http_host is 'www.case-usa.org'>
 	<cfset client.org_code = 10>
-	<cfset bgcolor ='ffffff'>    
+	<cfset bgcolor ='ffffff'>
 <cfelse>
-    <cfset client.org_code = 5>
-    <cfset bgcolor ='B5D66E'>  
+	<cfset client.org_code = 5>
+	<cfset bgcolor ='B5D66E'>
 </cfif>
 <cfquery name="org_info" datasource="mysql">
-select *
-from smg_companies
-where companyid = #client.org_code#
+	SELECT
+		*
+	FROM
+		smg_companies
+	WHERE
+		companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.org_code)#">
 </cfquery>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-	<link rel="stylesheet" type="text/css" href="app.css">
-	<title>EXITS Online Application <cfoutput query="qGetStudentInfoPrint"> - #firstname# #familylastname# (###studentid#) - #businessname#</cfoutput></title>
-	<script language="JavaScript" type="text/JavaScript">
-	<!--
-	function launch(newURL, newName, newFeatures, orgName) {
-	  var remote = open(newURL, newName, newFeatures);
-	  if (remote.opener == null)
-		remote.opener = window;
-	  remote.opener.name = orgName;
-	  return remote;
-	}
-	function launchRemote() {
-	  myRemote = launch("section4/page22print.cfm", "Files", "height=450,width=380,dependent=1,directories=0,fullscreen=0,location=0,menubar=0,resizable=0,scrollbars=1,status=0,toolbar=0", "myWindow");
-	}
-	-->
-	</script>
-	<style type="text/css">
-	<!--
-	body {
-		margin-left: 0.3in;
-		margin-top: 0.3in;
-		margin-right: 0.3in;
-		margin-bottom: 0.3in;
-	}
-	-->
-	</style>
-</head>
+
 <!----Check Allergy---->
 <cfquery name="check_allergy" datasource="#application.dsn#">
-select has_an_allergy
-from smg_student_app_health
-where studentid = #client.studentid#
+	SELECT
+		has_an_allergy
+	FROM
+		smg_student_app_health
+	WHERE
+		studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.studentID)#">
 </cfquery>
 <!-----Check Additional Medical---->
 <cfquery name="additional_info" datasource="#application.dsn#">
-select *
-from smg_student_app_health_explanations
-where studentid = #client.studentid#
+	SELECT
+		*
+	FROM
+		smg_student_app_health_explanations
+	WHERE
+		studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.studentID)#">
 </cfquery>
 
-<!--- check for attached files ---->
-<body onLoad="print();launchRemote();"> 
+<!--- This is to set the correct directory for displaying images in the included files --->
+<cfset relative = "">
 
-<input type="Button" name="printit" value="print" onclick="javascript:window.print();">
-<cfoutput>
-<a href="" onClick="javascript: win=window.open('section4/page22print.cfm?unqid=#url.unqid#', 'Settings', 'height=380, width=450, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">
-<img src="../pics/attached-files.gif" border="0"></a>
-</cfoutput>
-<cfset url.path = "">
-<br>
-
-<table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
-	<!--- SECTION 1 --->
-    <tr>
-    	<td valign="top">				
-			<cfinclude template="section1/page1print.cfm">
-			<div style="page-break-after:always;"></div>
-		</td>
-    </tr>
-    <tr>
-    	<td valign="top">				
-			<cfinclude template="section1/page2print.cfm">
-			<div style="page-break-after:always;"></div>
-		</td>
-    </tr>
-    <tr>
-    	<td valign="top">				
-			<cfinclude template="section1/page3print.cfm">
-			<div style="page-break-after:always;"></div>
-		</td>
-    </tr>
-    <tr>
-    	<td valign="top">				
-			<cfinclude template="section1/page4print.cfm">
-			<div style="page-break-after:always;"></div>
-		</td>
-    </tr>
-    <tr>
-    	<td valign="top">				
-			<!--- DO NOT PRINT PAGES 5 IF PDF or DOC is attached --->
-			<cfdirectory directory="#AppPath.onlineApp.studentLetter#" name="page5" filter="#qGetStudentInfoPrint.studentid#.*">	
-			<cfif Right(page5.name, 3) NEQ 'pdf' AND Right(page5.name, 3) NEQ 'doc'>	
-				<cfinclude template="section1/page5print.cfm">
-				<div style="page-break-after:always;"></div>	
-			</cfif>
-		</td>
-    </tr>
-    <tr>
-    	<td valign="top">				
-			<!--- DO NOT PRINT PAGES 5 IF PDF or DOC is attached --->
-			<cfdirectory directory="#AppPath.onlineApp.parentLetter#" name="page6" filter="#qGetStudentInfoPrint.studentid#.*">
-			<cfif Right(page6.name, 3) NEQ 'pdf' AND Right(page6.name, 3) NEQ 'doc'>	
-				<cfinclude template="section1/page6print.cfm">
-				<div style="page-break-after:always;"></div>
-			</cfif>
-		</td>
-    </tr>
-
-	<!--- SECTION 2 --->
-    <tr>
-    	<td valign="top">				
-			<cfinclude template="section2/page7print.cfm">
-			<div style="page-break-after:always;"></div>	
-		</td>
-    </tr>		
-    <tr>
-    	<td valign="top">				
-			<cfinclude template="section2/page8print.cfm">
-			<div style="page-break-after:always;"></div>	
-		</td>
-    </tr>		
-    <tr>
-    	<td valign="top">				
-			<cfinclude template="section2/page9print.cfm">
-			<div style="page-break-after:always;"></div>	
-		</td>
-    </tr>		
-    <tr>
-    	<td valign="top">				
-			<cfinclude template="section2/page10print.cfm">
-			<div style="page-break-after:always;"></div>	
-		</td>
-    </tr>
-
-	<!--- SECTION 3 --->
-    <tr>
-    	<td valign="top">				
-			<cfinclude template="section3/page11print.cfm">
-			<div style="page-break-after:always;"></div>	
-		</td>
-    </tr>	
-    <cfif additional_info.recordcount gt 0>
-    <Tr>
-    	<td valign="top">
-			<cfinclude template="section3/additional_info_print.cfm">
-			<div style="page-break-after:always;"></div>	
+<!--- SECTION 1 --->
+<cfsavecontent variable="pages1To4">
+	<tr>
+        <td valign="top">				
+            <cfinclude template="section1/page1print.cfm">
+            <div style="page-break-after:always;"></div>
         </td>
-    </Tr>
-    </cfif>	
-    <tr>
-    	<td valign="top">				
-			<cfinclude template="section3/page12print.cfm">
-			<div style="page-break-after:always;"></div>	
-		</td>
-    </tr>
-    <cfif check_allergy.has_an_allergy eq 1>
-		<tr>
-			<td valign="top">				
-				<cfinclude template="section3/allergy_info_request_print.cfm">
-				<div style="page-break-after:always;"></div>	
-			</td>
-		</tr>
-    </cfif>
-    <tr>
-    	<td valign="top">				
-			<cfinclude template="section3/page13print.cfm">
-			<div style="page-break-after:always;"></div>	
-		</td>
     </tr>
     <tr>
-    	<td valign="top">				
-			<!--- DO NOT PRINT PAGE 14 if PDF or DOC is attached --->
-			<cfdirectory directory="#AppPath.onlineApp.inserts#page14" name="page14" filter="#qGetStudentInfoPrint.studentid#.*">	
-			<cfif Right(page14.name, 3) NEQ 'pdf' AND Right(page14.name, 3) NEQ 'doc'>	
-				<cfinclude template="section3/page14print.cfm">
-				<cfif printpage EQ 'yes'>
-					<div style="page-break-after:always;"></div>	
-				</cfif>
-			</cfif>
-		</td>
+        <td valign="top">				
+            <cfinclude template="section1/page2print.cfm">
+            <div style="page-break-after:always;"></div>
+        </td>
     </tr>
+    <tr>
+        <td valign="top">				
+            <cfinclude template="section1/page3print.cfm">
+            <div style="page-break-after:always;"></div>
+        </td>
+    </tr>
+    <tr>
+        <td valign="top">				
+            <cfinclude template="section1/page4print.cfm">
+        </td>
+    </tr>
+</cfsavecontent>
 
-	<!--- SECTION 4 --->
-	<!--- DO NOT PRINT PAGES 15, 16 AND 17 if PDF or DOC are attached --->
+<cfsavecontent variable="page5">
+    <tr>
+        <td valign="top">		
+            <cfinclude template="section1/page5print.cfm">
+        </td>
+    </tr>
+</cfsavecontent>
+
+<cfsavecontent variable="page6">
+	<tr>
+        <td valign="top">				
+            <cfinclude template="section1/page6print.cfm">
+        </td>
+    </tr>
+</cfsavecontent>
+
+<!--- SECTION 2 --->
+
+<cfsavecontent variable="page7">
+	<tr>
+        <td valign="top">				
+            <cfinclude template="section2/page7print.cfm">
+        </td>
+    </tr>
+</cfsavecontent>
+
+<cfsavecontent variable="page8">
+	<tr>
+        <td valign="top">				
+            <cfinclude template="section2/page8print.cfm">
+        </td>
+    </tr>
+</cfsavecontent>
+
+<cfsavecontent variable="page9">
+	<tr>
+        <td valign="top">				
+            <cfinclude template="section2/page9print.cfm">
+        </td>
+    </tr>
+</cfsavecontent>
+
+<cfsavecontent variable="page10">
+	<tr>
+        <td valign="top">				
+            <cfinclude template="section2/page10print.cfm">
+        </td>
+    </tr>
+</cfsavecontent>
+
+<!--- SECTION 3 --->
+
+<cfsavecontent variable="page11">
+	<tr>
+        <td valign="top">				
+            <cfinclude template="section3/page11print.cfm">
+        </td>
+    </tr>
+  	<cfif additional_info.recordcount gt 0>
+    	<tr>
+      		<td valign="top">
+            	<cfinclude template="section3/additional_info_print.cfm">	
+         	</td>
+     	</tr>
+	</cfif>
+</cfsavecontent>
+
+<cfsavecontent variable="page12">
+	<tr>
+        <td valign="top">				
+            <cfinclude template="section3/page12print.cfm">
+        </td>
+    </tr>
+  	<cfif additional_info.recordcount gt 0>
+    	<tr>
+      		<td valign="top">
+            	<cfinclude template="section3/allergy_info_request_print.cfm">	
+         	</td>
+     	</tr>
+	</cfif>
+</cfsavecontent>
+
+<cfsavecontent variable="page13">
+	<tr>
+        <td valign="top">				
+            <cfinclude template="section3/page13print.cfm">
+        </td>
+    </tr>
+</cfsavecontent>
+
+<cfsavecontent variable="page14">
+	<tr>
+		<td valign="top">
+        	<cfinclude template="section3/page14print.cfm">
+        </td>
+  	</tr>
+</cfsavecontent>
+
+<!--- SECTION 4 --->
+
+<cfsavecontent variable="page15">
+	<tr>
+		<td valign="top">
+        	<cfinclude template="section4/page15print.cfm">
+        </td>
+  	</tr>
+</cfsavecontent>
+
+<cfsavecontent variable="page16">
+	<tr>
+		<td valign="top">
+        	<cfinclude template="section4/page16print.cfm">
+        </td>
+  	</tr>
+</cfsavecontent>
+
+<cfsavecontent variable="page17">
+	<tr>
+		<td valign="top">
+        	<cfinclude template="section4/page17print.cfm">
+        </td>
+  	</tr>
+</cfsavecontent>
+
+<cfsavecontent variable="page18">
+	<tr>
+		<td valign="top">
+        	<cfinclude template="section4/page18print.cfm">
+        </td>
+  	</tr>
+</cfsavecontent>
+
+<cfsavecontent variable="page19">
 	<tr>
     	<td valign="top">
-			<cfdirectory directory="#AppPath.onlineApp.inserts#page15" name="page15" filter="#qGetStudentInfoPrint.studentid#.*">	
-			<cfif Right(page15.name, 3) NEQ 'pdf' AND Right(page15.name, 3) NEQ 'doc'>	
-				<cfinclude template="section4/page15print.cfm">
-				<cfif printpage EQ 'yes'>
-					<div style="page-break-after:always;"></div>
-				</cfif>
-			</cfif>
-		</td>
+        	<cfinclude template="section4/page19print.cfm">
+        </td>
     </tr>
-    <tr>
-    	<td valign="top">				
-			<cfdirectory directory="#AppPath.onlineApp.inserts#page16" name="page16" filter="#qGetStudentInfoPrint.studentid#.*">	
-			<cfif Right(page16.name, 3) NEQ 'pdf' AND Right(page16.name, 3) NEQ 'doc'>	
-				<cfinclude template="section4/page16print.cfm">
-				<cfif printpage EQ 'yes'>
-					<div style="page-break-after:always;"></div>
-				</cfif>
-			</cfif>
-		</td>
+</cfsavecontent>
+
+<cfsavecontent variable="page2x">
+	<tr>
+    	<td valign="top">
+        	<cfinclude template="section4/page20print.cfm">
+        </td>
     </tr>
-    <tr>
-    	<td valign="top">				
-			<cfdirectory directory="#AppPath.onlineApp.inserts#page17" name="page17" filter="#qGetStudentInfoPrint.studentid#.*">	
-			<cfif Right(page17.name, 3) NEQ 'pdf' AND Right(page17.name, 3) NEQ 'doc'>	
-				<cfinclude template="section4/page17print.cfm">
-				<cfif printpage EQ 'yes'>
-					<div style="page-break-after:always;"></div>
-				</cfif>
-			</cfif>
-		</td>
+</cfsavecontent>
+
+<cfsavecontent variable="page3x">
+	<tr>
+    	<td valign="top">
+        	<cfinclude template="section4/page21print.cfm">
+        </td>
     </tr>
-	<!--- Do not display for ESI or Canada Application --->
-    <cfif CLIENT.companyID NEQ 14 AND NOT ListFind("14,15,16", get_student_info.app_indicated_program)> 
-        <tr>
-            <td valign="top">				
-                <cfinclude template="section4/page18print.cfm">
-                <cfif printpage EQ 'yes'>
-                    <div style="page-break-after:always;"></div>
-                </cfif>
-            </td>
-        </tr>
-    </cfif>
-    <tr>
-    	<td valign="top">				
-			<cfinclude template="section4/page19print.cfm">
-			<div style="page-break-after:always;"></div>	
-		</td>
-    </tr>
-			
-	<!--- HIDE GUARANTEE FOR EF AND INTERSTUDIES 8318 STUDENTS --->
-	<cfif IsDefined('client.usertype') AND client.usertype NEQ 10 AND qGetStudentInfoPrint.master_accountid NEQ 10115 AND qGetStudentInfoPrint.intrep NEQ 10115 AND qGetStudentInfoPrint.intrep NEQ 8318>
+</cfsavecontent>
+
+<cfoutput>
+
+	<!--- PUT THE SECTIONS TOGETHER WITH THE UPLOADED PDF's --->
     
-		<!----We don't need to include 20 for ESI---->
-        <cfif CLIENT.companyID NEQ 14>
-            <tr>
-                <td valign="top">				
-                        <cfdirectory directory="#AppPath.onlineApp.inserts#page20" name="page20" filter="#qGetStudentInfoPrint.studentid#.*">
-                        <cfif Right(page20.name, 3) NEQ 'pdf' AND Right(page20.name, 3) NEQ 'doc'>
-                            <cfinclude template="section4/page20print.cfm">
-                            <cfif printpage EQ 'yes'>
-                                <div style="page-break-after:always;"></div>
-                            </cfif>
-                        </cfif>
-                    </td>
-            </tr>
+    <!--- This is the list of PDF's to merge --->
+    <cfset sourceList = "#ExpandPath('.')#\ISE_Application#CLIENT.studentID#.pdf">
+    
+    <!--- Pages 1 to 4 --->
+    <cfdocument format="pdf" filename="ISE_Application#CLIENT.studentID#.pdf" overwrite="yes">
+        <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
+            #pages1To4#
+        </table>
+    </cfdocument>
+    
+    <!--- Page 5 (display only the PDF if there is one) --->
+    <cfif FileExists(ExpandPath('../uploadedfiles/letters/students/#CLIENT.studentID#.pdf'))>
+    	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/letters/students/')##CLIENT.studentID#.pdf">
+  	<cfelse>
+    	<cfdocument format="pdf" filename="page5#CLIENT.studentID#.pdf" overwrite="yes">
+            <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
+                #page5#
+            </table>
+        </cfdocument>
+        <cfset sourceList = sourceList & ",#ExpandPath('.')#\page5#CLIENT.studentID#.pdf">
+    </cfif>
+    
+    <!--- Page 6 (display only the PDF if there is one) --->
+    <cfif FileExists(ExpandPath('../uploadedfiles/letters/parents/#CLIENT.studentID#.pdf'))>
+    	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/letters/parents/')##CLIENT.studentID#.pdf">
+    <cfelse>
+    	<cfdocument format="pdf" filename="page6#CLIENT.studentID#.pdf" overwrite="yes">
+            <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
+                #page6#
+            </table>
+        </cfdocument>
+        <cfset sourceList = sourceList & ",#ExpandPath('.')#\page6#CLIENT.studentID#.pdf">
+    </cfif>
+    
+    <!--- Pages 7 to 9 (Loop through these and add uploaded PDF's if they exist) --->
+    <cfloop from="7" to="9" index="i">
+    	<cfset page = Evaluate('page' & #i#)>
+        <cfdocument format="pdf" filename="page#i##CLIENT.studentID#.pdf" overwrite="yes">
+            <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
+                #page#
+            </table>
+        </cfdocument>
+        <cfset sourceList = sourceList & ",#ExpandPath('.')#\page#i##CLIENT.studentID#.pdf">
+        <cfif FileExists(ExpandPath('../uploadedfiles/online_app/page0#i#/#CLIENT.studentID#.pdf'))>
+        	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/online_app/')#page0#i#/#CLIENT.studentID#.pdf">
+        </cfif>
+    </cfloop>
+    
+    <!--- Page 10 --->
+    <cfdocument format="pdf" filename="page10#CLIENT.studentID#.pdf" overwrite="yes">
+        <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
+            #page10#
+        </table>
+    </cfdocument>
+    <cfset sourceList = sourceList & ",#ExpandPath('.')#\page10#CLIENT.studentID#.pdf">
+    <cfif FileExists(ExpandPath('../uploadedfiles/online_app/page10/#CLIENT.studentID#.pdf'))>
+    	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/online_app/')#page10/#CLIENT.studentID#.pdf">
+    </cfif>
+    
+    <!--- Page 11 --->
+    <cfdocument format="pdf" filename="page11#CLIENT.studentID#.pdf" overwrite="yes">
+        <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
+            #page11#
+        </table>
+    </cfdocument>
+    <cfset sourceList = sourceList & ",#ExpandPath('.')#\page11#CLIENT.studentID#.pdf">
+    
+    <!--- Pages 12 and 13 (Loop through these and add uploaded PDF's if they exist) --->
+    <cfloop from="12" to="13" index="i">
+    	<cfset page = Evaluate('page' & #i#)>
+        <cfdocument format="pdf" filename="page#i##CLIENT.studentID#.pdf" overwrite="yes">
+            <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
+                #page#
+            </table>
+        </cfdocument>
+        <cfset sourceList = sourceList & ",#ExpandPath('.')#\page#i##CLIENT.studentID#.pdf">
+        <cfif FileExists(ExpandPath('../uploadedfiles/online_app/page#i#/#CLIENT.studentID#.pdf'))>
+        	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/online_app/')#page#i#/#CLIENT.studentID#.pdf">
+        </cfif>
+    </cfloop>
+    
+    <!--- Pages 14 to 17 (Loop through these and display only the PDF if it exists) --->
+    <cfloop from="14" to="17" index="i">
+    	<cfset page = Evaluate('page' & #i#)>
+        <cfif FileExists(ExpandPath('../uploadedfiles/online_app/page#i#/#CLIENT.studentID#.pdf'))>
+        	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/online_app/')#page#i#/#CLIENT.studentID#.pdf">
+        <cfelse>
+        	<cfdocument format="pdf" filename="page#i##CLIENT.studentID#.pdf" overwrite="yes">
+                <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
+                    #page#
+                </table>
+            </cfdocument>
+            <cfset sourceList = sourceList & ",#ExpandPath('.')#\page#i##CLIENT.studentID#.pdf">
+        </cfif>
+    </cfloop>
+    
+    <!--- Page 18 (Do not display for ESI or Canada Application) --->
+ 	<cfif CLIENT.companyID NEQ 14 AND NOT ListFind("14,15,16", get_student_info.app_indicated_program)>
+        <cfdocument format="pdf" filename="page18#CLIENT.studentID#.pdf" overwrite="yes">
+            <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
+                #page18#
+            </table>
+        </cfdocument>
+        <cfset sourceList = sourceList & ",#ExpandPath('.')#\page18#CLIENT.studentID#.pdf">
+        <cfif FileExists(ExpandPath('../uploadedfiles/online_app/page18/#CLIENT.studentID#.pdf'))>
+        	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/online_app/')#page18/#CLIENT.studentID#.pdf">
+        </cfif>
+   	</cfif>
+    
+    <!--- Page 19 --->
+  	<cfdocument format="pdf" filename="page19#CLIENT.studentID#.pdf" overwrite="yes">
+        <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
+            #page19#
+        </table>
+    </cfdocument>
+    <cfset sourceList = sourceList & ",#ExpandPath('.')#\page19#CLIENT.studentID#.pdf">
+    <cfif FileExists(ExpandPath('../uploadedfiles/online_app/page19/#CLIENT.studentID#.pdf'))>
+    	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/online_app/')#page19/#CLIENT.studentID#.pdf">
+    </cfif>
+    
+    <!--- Page 20 (HIDE GUARANTEE FOR EF AND INTERSTUDIES 8318 STUDENTS / ESI does not need 20) --->
+ 	<cfif 
+		IsDefined('client.usertype') 
+		AND client.usertype NEQ 10 
+		AND qGetStudentInfoPrint.master_accountid NEQ 10115 
+		AND qGetStudentInfoPrint.intrep NEQ 10115 
+		AND qGetStudentInfoPrint.intrep NEQ 8318
+		AND CLIENT.companyID NEQ 14>
+        <cfif FileExists(ExpandPath('../uploadedfiles/online_app/page20/#CLIENT.studentID#.pdf'))>
+        	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/online_app/')#page20/#CLIENT.studentID#.pdf">
+        <cfelse>
+        	<cfdocument format="pdf" filename="page20#CLIENT.studentID#.pdf" overwrite="yes">
+                <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
+                    #page2x#
+                </table>
+            </cfdocument>
+            <cfset sourceList = sourceList & ",#ExpandPath('.')#\page20#CLIENT.studentID#.pdf">
+        </cfif>
+ 	</cfif>
+    
+    <!--- Page 21 (HIDE GUARANTEE FOR EF AND INTERSTUDIES 8318 STUDENTS) --->
+	<cfif 
+		IsDefined('client.usertype') 
+		AND client.usertype NEQ 10 
+		AND qGetStudentInfoPrint.master_accountid NEQ 10115 
+		AND qGetStudentInfoPrint.intrep NEQ 10115 
+		AND qGetStudentInfoPrint.intrep NEQ 8318>
+        <cfif FileExists(ExpandPath('../uploadedfiles/online_app/page21/#CLIENT.studentID#.pdf'))>
+        	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/online_app/')#page21/#CLIENT.studentID#.pdf">
+        <cfelse>
+			<cfdocument format="pdf" filename="page21#CLIENT.studentID#.pdf" overwrite="yes">
+                <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
+                    #page3x#
+                </table>
+            </cfdocument>
+            <cfset sourceList = sourceList & ",#ExpandPath('.')#\page21#CLIENT.studentID#.pdf">
 		</cfif>
+  	</cfif>
+    
+    <!--- Page 22 --->
+    <cfset currentDirectory = "#ExpandPath('../uploadedfiles')#/virtualfolder/#qGetStudentInfoPrint.studentid#/page22">
+	<cfdirectory directory="#currentDirectory#" name="mydirectory" sort="datelastmodified DESC" filter="*.*">
+    <cfloop query="mydirectory">
+		<cfif ListFind("jpg,peg,gif,tif,iff,png", LCase(Right(name, 3)))>
+        	<cfdocument format="pdf" filename="page22#CLIENT.studentID#.pdf" overwrite="yes">
+                <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0">
+                    <tr>
+                        <td>
+                            <img src="../uploadedfiles/virtualfolder/#qGetStudentInfoPrint.studentid#/page22/#name#" width="660" height="820">
+                        </td>
+                    </tr>
+                </table>
+          	</cfdocument>
+            <cfset sourceList = sourceList & ",#ExpandPath('.')#\page22#CLIENT.studentID#.pdf">
+       	<cfelseif ListFind("pdf", LCase(Right(name, 3)))>
+        	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/virtualfolder/')##qGetStudentInfoPrint.studentid#/page22/#name#">
+        	
+        </cfif>
+    </cfloop>
+    
+    <!--- Merge the PDF files --->
+    <cfpdf action="merge" source="#sourceList#" destination="ISE_Application#CLIENT.studentID#.pdf" overwrite="yes">
+    
+    <!--- Delete the files that were just created and merged --->
+    <cfloop from="5" to="22" index="i">
+    	<cfif FileExists("#ExpandPath('.')#\page#i##CLIENT.studentID#.pdf")>
+    		<cffile action="delete" file="#ExpandPath('.')#\page#i##CLIENT.studentID#.pdf">
+      	</cfif>
+    </cfloop>	
         
-        <tr>
-            <td valign="top">				
-                    <cfdirectory directory="#AppPath.onlineApp.inserts#page21" name="page21" filter="#qGetStudentInfoPrint.studentid#.*">
-                    <cfif Right(page21.name, 3) NEQ 'pdf' AND Right(page21.name, 3) NEQ 'doc'>
-                        <cfinclude template="section4/page21print.cfm">
-                    </cfif>
-            </td>
-        </tr>
-	</cfif>
-</table>
+    <cfheader name="Content-Disposition" value="attachment; filename='ISE_Application#CLIENT.studentID#.pdf'">
+    <cfcontent type="application/pdf" file="#ExpandPath('.')#\ISE_Application#CLIENT.studentID#.pdf" deletefile="yes">
 
-<!--- PRINT PAGE 22 SUPPLEMENTS --->
-<cfset currentDirectory = "#AppPath.onlineApp.virtualFolder#/#qGetStudentInfoPrint.studentid#/page22">
-
-<cfdirectory directory="#currentDirectory#" name="mydirectory" sort="datelastmodified DESC" filter="*.*">
-
-<cfoutput query="mydirectory">
-    <cfif ListFind("jpg,peg,gif,tif,png", LCase(Right(name, 3)))>
-	<div style="page-break-after:always;"></div><br>
-	<table width="660" border="0" cellpadding="3" cellspacing="0" align="center">
-		<tr><td><img src="../uploadedfiles/virtualfolder/#qGetStudentInfoPrint.studentid#/page22/#name#" width="660" height="820">		</td>
-    </tr>
-	</table>
-	</cfif>
-</cfoutput>	
-
-</body>
-</html>
-<!----
-<cfcatch type="any">
-	<cfinclude template="error_message.cfm">
-</cfcatch>
-</cftry>
----->
+</cfoutput>

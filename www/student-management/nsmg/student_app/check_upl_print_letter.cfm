@@ -13,7 +13,9 @@ function areYouSure() {
 
 <cfinclude template="querys/get_latest_status.cfm">
 
-<cfdirectory directory="#AppPath.onlineApp.letters##doc#" name="file" filter="#client.studentid#.*">	
+<cfset directory = ExpandPath("../uploadedFiles/letters/")>
+
+<cfdirectory directory="#directory##doc#" name="file" filter="#get_student_info.studentid#.*">		
 
 <cfoutput>
 
@@ -25,7 +27,7 @@ function areYouSure() {
 <cfelse>
 	<table width="670" border=0 cellpadding=3 cellspacing=0 align="center">
 		<tr><td align="center"><b>If you would like to upload a scanned letter please click on the below.</b></td></tr>
-		<tr><td align="center"><a href="" onClick="javascript: win=window.open('#AppPath.onlineApp.uploadURL#form_upload_letter.cfm?referrer=#CGI.HTTP_HOST#&type=#doc#&studentid=#client.studentid#', 'UploadFiles', 'height=310, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="pics/uploadpage.gif" border=0></img></a></td></tr>
+		<tr><td align="center"><a href="" onClick="javascript: win=window.open('upload/upload_letter.cfm?referrer=#CGI.HTTP_HOST#&type=#doc#&student=#client.studentid#', 'UploadFiles', 'height=310, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><img src="pics/uploadpage.gif" border=0></img></a></td></tr>
 	</table><br>
 </cfif>
 
