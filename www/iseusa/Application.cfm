@@ -173,8 +173,9 @@
 		Constants.hearAboutUs[4] = "ISE Representative";
 		Constants.hearAboutUs[5] = "Church Group";
 		Constants.hearAboutUs[6] = "Other";
+		Constants.hearAboutUs[7] = "Past Host Family";
+		Constants.hearAboutUs[8] = "Post Card";
 		// ArrayAppend(Constants.hearAboutUs, "Other");
-		
 
 		//Set up constant for payment methods
 		APPLICATION.Constants.paymentMethod = ArrayNew(1);		
