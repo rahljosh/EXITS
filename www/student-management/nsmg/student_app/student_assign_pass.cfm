@@ -20,7 +20,7 @@ body {font:Arial, Helvetica, sans-serif;}
 <cfquery name="get_name" datasource="mysql">
 	select email, firstname, familylastname, password, app_current_status, application_expires
 	from smg_students
-	where studentid = '#client.studentid#'
+	where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(client.studentid)#">
 </cfquery>
 
 <!--- DO NOT UPDATE STATUS IF STATUS IS BIGGER THAN 1 --->
@@ -29,12 +29,12 @@ body {font:Arial, Helvetica, sans-serif;}
 		update smg_students
 		set password = '#form.password1#',
 		app_current_status = 2
-		WHERE studentid = '#client.studentid#'
+		WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(client.studentid)#">
 	</cfquery>
 	
 	<cfquery name="update_status" datasource="MySQL">
 		INSERT INTO smg_student_app_status (status, studentid)
-				values ('2', '#client.studentid#')
+				values ('2', <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(client.studentid)#">)
 	</cfquery>
 </cfif>
 
@@ -45,7 +45,7 @@ body {font:Arial, Helvetica, sans-serif;}
 Your account has been Successfully created. Below is your login information for your records.
 <br><br>
 Login ID (User ID) : #email#<br>
-Password: #password1#
+Password: #password#
 <br><br>
 
 You can log in and out of the EXITS Online Application System at any time using this login information.

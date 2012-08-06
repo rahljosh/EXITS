@@ -1,19 +1,14 @@
-<cftry>
-
-<cfif LEN(URL.curdoc) OR IsDefined('url.path')>
-	<cfset path = "">
-<cfelseif IsDefined('url.exits_app')>
-	<cfset path = "nsmg/student_app/">
-<cfelse>
-	<cfset path = "../">
+<!--- This is used to set the relative directory, print_application.cfm sets this to an empty string --->
+<cfparam name="relative" default="../">
+<cfif LEN(URL.curdoc)>
+	<cfset relative = "">
 </cfif>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-	<link rel="stylesheet" type="text/css" <cfoutput>href="#path#app.css"</cfoutput>>
-	<title>Page [21] - State Preference</title>
+	<link rel="stylesheet" type="text/css" <cfoutput>href="#relative#app.css"</cfoutput>>
 </head>
 <body <cfif NOT LEN(URL.curdoc)>onLoad="print()"</cfif>>
 
@@ -97,13 +92,13 @@
 	<!--- HEADER OF TABLE --->
 	<table width="100%" cellpadding="0" cellspacing="0" align="center" border="0">
 		<tr height="33">
-			<td width="8" class="tableside"><img src="#path#pics/p_topleft.gif" width="8"></td>
-			<td width="26" class="tablecenter"><img src="#path#pics/students.gif"></td>
+			<td width="8" class="tableside"><img src="#relative#pics/p_topleft.gif" width="8"></td>
+			<td width="26" class="tablecenter"><img src="#relative#pics/students.gif"></td>
 			<td class="tablecenter"><h2>Page [21] - <cfif CLIENT.companyID NEQ 14>State<cfelse>District</cfif> Choice </h2></td>
 			<cfif LEN(URL.curdoc)>
 			<td align="right" class="tablecenter"><a href="" onClick="javascript: win=window.open('section4/page21print.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;"><img src="pics/printhispage.gif" border="0" alt="Click here to print this page"></img></A>&nbsp; &nbsp;</td>
 			</cfif>
-			<td width="42" class="tableside"><img src="#path#pics/p_topright.gif" width="42"></td>
+			<td width="42" class="tableside"><img src="#relative#pics/p_topright.gif" width="42"></td>
 		</tr>
 	</table>
 	<cfif check_guarantee.app_region_guarantee gt 0> 
@@ -132,9 +127,9 @@
 		<!--- FOOTER OF TABLE --->
 		<table width="100%" cellpadding="0" cellspacing="0">
 			<tr height="8">
-				<td width="8"><img src="#path#pics/p_bottonleft.gif" width="8"></td>
-				<td width="100%" class="tablebotton"><img src="#path#pics/p_spacer.gif"></td>
-				<td width="42"><img src="#path#pics/p_bottonright.gif" width="42"></td>
+				<td width="8"><img src="#relative#pics/p_bottonleft.gif" width="8"></td>
+				<td width="100%" class="tablebotton"><img src="#relative#pics/p_spacer.gif"></td>
+				<td width="42"><img src="#relative#pics/p_bottonright.gif" width="42"></td>
 			</tr>
 		</table>
 		<cfabort>
@@ -149,7 +144,7 @@
 	<table width="660" border=0 cellpadding=1 cellspacing=0 align="center">
 		<tr>
 			<td width="110"><em>Student's Name</em></td>
-			<td width="560">#get_student_info.firstname# #get_student_info.familylastname#<br><img src="#path#pics/line.gif" width="520" height="1" border="0" align="absmiddle"></td>
+			<td width="560">#get_student_info.firstname# #get_student_info.familylastname#<br><img src="#relative#pics/line.gif" width="520" height="1" border="0" align="absmiddle"></td>
 		</tr>
 	</table><br>
 	
@@ -168,49 +163,49 @@
                         </tr>
                     </table>
                     
-                    <img src="#path#pics/usa-map.gif" width="642" height="331" align="middle"><br>
+                    <img src="#relative#pics/usa-map.gif" width="642" height="331" align="middle"><br>
 
 					<cfif states_requested.recordcount AND VAL(states_requested.state1)>
-                    	<img src="#path#pics/RadioY.gif" width="13" height="13" border="0">
+                    	<img src="#relative#pics/RadioY.gif" width="13" height="13" border="0">
 					<cfelse>
-                    	<img src="#path#pics/RadioN.gif" width="13" height="13" border="0">
+                    	<img src="#relative#pics/RadioN.gif" width="13" height="13" border="0">
 					</cfif> 
                     Yes, submit my choices as indicated below. 
                     
 					<cfif states_requested.recordcount OR states_requested.state1 EQ 0>
-                    	<img src="#path#pics/RadioY.gif" width="13" height="13" border="0">
+                    	<img src="#relative#pics/RadioY.gif" width="13" height="13" border="0">
 					<cfelse>
-                    	<img src="#path#pics/RadioN.gif" width="13" height="13" border="0">
+                    	<img src="#relative#pics/RadioN.gif" width="13" height="13" border="0">
 					</cfif> 
                     No, I am not interested in a state choice.<br><br>
                     
                     <table width="100%" border=0 cellpadding=2 cellspacing=0 align="center">
                         <tr>
                         <td width="90">1st Choice:</td>
-                        <td width="130" align="left">#states_requested.statename1#<br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
+                        <td width="130" align="left">#states_requested.statename1#<br><img src="#relative#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
                         <td width="90">&nbsp; 2nd Choice:</td>
-                        <td width="130" align="left">#states_requested.statename2#<br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
+                        <td width="130" align="left">#states_requested.statename2#<br><img src="#relative#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
                         <td width="90">&nbsp; 3rd Choice:</td>
-                        <td width="130" align="left">#states_requested.statename3#<br><img src="#path#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
+                        <td width="130" align="left">#states_requested.statename3#<br><img src="#relative#pics/line.gif" width="125" height="1" border="0" align="absmiddle"></td>
                     </table>
                 
                 <cfelse>
                 	<!--- Exchange Service Information --->
                     
-                    <img src="#path#pics/ESI-Map.gif" width="650" height="369" align="middle"><br>
+                    <img src="#relative#pics/ESI-Map.gif" width="650" height="369" align="middle"><br>
 
                     <table cellpadding="2" cellspacing="2" style="margin:10px;">
                         <tr>
                             <td width="90">1st Choice:</td>
-                            <td width="450" align="left">#qESIDistrictChoice.option1#<br><img src="#path#pics/line.gif" width="445" height="1" border="0" align="absmiddle"></td>
+                            <td width="450" align="left">#qESIDistrictChoice.option1#<br><img src="#relative#pics/line.gif" width="445" height="1" border="0" align="absmiddle"></td>
                         </tr>
                         <tr>                        
                             <td width="90">2nd Choice:</td>
-                            <td width="450" align="left">#qESIDistrictChoice.option2#<br><img src="#path#pics/line.gif" width="445" height="1" border="0" align="absmiddle"></td>
+                            <td width="450" align="left">#qESIDistrictChoice.option2#<br><img src="#relative#pics/line.gif" width="445" height="1" border="0" align="absmiddle"></td>
                         </tr>
                         <tr>                        
                             <td width="90">3rd Choice:</td>
-                            <td width="450" align="left">#qESIDistrictChoice.option3#<br><img src="#path#pics/line.gif" width="445" height="1" border="0" align="absmiddle"></td>
+                            <td width="450" align="left">#qESIDistrictChoice.option3#<br><img src="#relative#pics/line.gif" width="445" height="1" border="0" align="absmiddle"></td>
                         </tr>                        							
                     </table>
     
@@ -222,9 +217,9 @@
 	
 	<table width="660" border=0 cellpadding=0 cellspacing=0 align="center">
 		<tr>
-			<td width="315"><br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
+			<td width="315"><br><img src="#relative#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
 			<td width="40"></td>
-			<td width="315"><br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
+			<td width="315"><br><img src="#relative#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
 		</tr>
 		<tr>
 			<td>Student's Name (print clearly)</td>
@@ -234,9 +229,9 @@
 	</table><br><br>
 	<table width="660" border=0 cellpadding=0 cellspacing=0 align="center">
 		<tr>
-			<td width="315"><br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
+			<td width="315"><br><img src="#relative#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
 			<td width="40"></td>
-			<td width="315"><br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
+			<td width="315"><br><img src="#relative#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
 		</tr>
 		<tr>
 			<td>Parent's Name (print clearly)</td>
@@ -250,9 +245,9 @@
 	<!--- FOOTER OF TABLE --->
 	<table width="100%" cellpadding="0" cellspacing="0">
 		<tr height="8">
-			<td width="8"><img src="#path#pics/p_bottonleft.gif" width="8"></td>
-			<td width="100%" class="tablebotton"><img src="#path#pics/p_spacer.gif"></td>
-			<td width="42"><img src="#path#pics/p_bottonright.gif" width="42"></td>
+			<td width="8"><img src="#relative#pics/p_bottonleft.gif" width="8"></td>
+			<td width="100%" class="tablebotton"><img src="#relative#pics/p_spacer.gif"></td>
+			<td width="42"><img src="#relative#pics/p_bottonright.gif" width="42"></td>
 		</tr>
 	</table>
 	
@@ -268,8 +263,3 @@
 
 </body>
 </html>
-
-<cfcatch type="any">
-	<cfinclude template="../error_message.cfm">
-</cfcatch>
-</cftry>

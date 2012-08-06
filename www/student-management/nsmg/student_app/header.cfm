@@ -231,7 +231,7 @@
                 <cfquery name="logo" datasource="#application.dsn#">
                     SELECT logo
                     FROM smg_users 
-                    WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.intrep#">
+                    WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.intrep)#">
                 </cfquery>
                 <cfif NOT LEN(logo.logo)>
                     <!--- SMG LOGO --->
