@@ -20,7 +20,7 @@
 <cfquery name="user_compliance" datasource="MySql">
 	SELECT userid, compliance
 	FROM smg_users
-	WHERE userid = <cfqueryparam value="#client.userid#" cfsqltype="cf_sql_integer">
+	WHERE userid = <cfqueryparam value="#VAL(client.userid)#" cfsqltype="cf_sql_integer">
 </cfquery>
 
 <cfoutput>
@@ -126,9 +126,9 @@
             SELECT uar.regionid, uar.usertype, u.usertype as user_access
             FROM user_access_rights uar
             INNER JOIN smg_usertype u ON u.usertypeid = uar.usertype
-            WHERE uar.regionid = <cfqueryparam value="#url.regionid#" cfsqltype="cf_sql_integer">
-                  AND userid = '#client.userid#'
-                  AND uar.companyid = '#client.companyid#'
+            WHERE uar.regionid = <cfqueryparam value="#VAL(url.regionid)#" cfsqltype="cf_sql_integer">
+                  AND userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+                  AND uar.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyid#)#">
         </cfquery>
         
         <cfif check_region.recordcount EQ 0>
@@ -139,7 +139,7 @@
             SELECT user_access_rights.regionid, user_access_rights.usertype, u.usertype as user_access
             FROM user_access_rights
             INNER JOIN smg_usertype u ON u.usertypeid = user_access_rights.usertype
-            WHERE user_access_rights.regionid = <cfqueryparam value="#url.regionid#" cfsqltype="cf_sql_integer">
+            WHERE user_access_rights.regionid = <cfqueryparam value="#VAL(url.regionid)#" cfsqltype="cf_sql_integer">
                   AND userid = '#client.userid#'
         </cfquery>
         
