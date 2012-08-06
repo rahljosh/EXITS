@@ -449,9 +449,9 @@
     </cfloop>
     
     <!--- Merge the PDF files --->
-    <cfpdf action="merge" source="#sourceList#" destination="#ExpandPath('../uploadedFiles/temp/')#ISE_Application#CLIENT.studentID#.pdf" overwrite="yes">	
+    <cfpdf action="merge" source="#sourceList#" destination="#ExpandPath('../uploadedFiles/temp/')#ISE_Application#CLIENT.studentID##CLIENT.userID#.pdf" overwrite="yes">	
         
-    <cfheader name="Content-Disposition" value="attachment; filename='#ExpandPath('../uploadedFiles/temp/')#ISE_Application#CLIENT.studentID#.pdf'">
-    <cfcontent type="application/pdf" file="#ExpandPath('../uploadedFiles/temp/')#ISE_Application#CLIENT.studentID#.pdf">
+    <cfheader name="Content-Disposition" value="attachment; filename='#ExpandPath('../uploadedFiles/temp/')#ISE_Application#CLIENT.studentID##CLIENT.userID#.pdf'">
+    <cfcontent type="application/pdf" file="#ExpandPath('../uploadedFiles/temp/')#ISE_Application#CLIENT.studentID##CLIENT.userID#.pdf">
 
 </cfoutput>
