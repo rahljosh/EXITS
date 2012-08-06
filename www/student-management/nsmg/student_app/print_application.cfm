@@ -445,12 +445,14 @@
             <cfset sourceList = sourceList & ",#ExpandPath('.')#\page22#CLIENT.studentID#.pdf">
        	<cfelseif ListFind("pdf", LCase(Right(name, 3)))>
         	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/virtualfolder/')##qGetStudentInfoPrint.studentid#/page22/#name#">
-        	
         </cfif>
     </cfloop>
     
     <!--- Merge the PDF files --->
-    <cfpdf action="merge" source="#sourceList#" destination="ISE_Application#CLIENT.studentID#.pdf" overwrite="yes">
+    <cfif NOT DirectoryExists(#ExpandPath('../uploadedFiles/online_app/completedApplications')#)>
+		<cfdirectory action="create" directory="#ExpandPath('../uploadedFiles/online_app/completedApplications')#">
+    </cfif>
+    <cfpdf action="merge" source="#sourceList#" destination="#ExpandPath('../uploadedFiles')#/online_app/completedApplications/ISE_Application#CLIENT.studentID#.pdf" overwrite="yes">
     
     <!--- Delete the files that were just created and merged --->
     <cfloop from="5" to="22" index="i">
@@ -460,6 +462,6 @@
     </cfloop>	
         
     <cfheader name="Content-Disposition" value="attachment; filename='ISE_Application#CLIENT.studentID#.pdf'">
-    <cfcontent type="application/pdf" file="#ExpandPath('.')#\ISE_Application#CLIENT.studentID#.pdf" deletefile="yes">
+    <cfcontent type="application/pdf" file="#ExpandPath('.')#\ISE_Application#CLIENT.studentID#.pdf">
 
 </cfoutput>
