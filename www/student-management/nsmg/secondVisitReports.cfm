@@ -40,9 +40,6 @@
     <cfscript>
 		// Users allowed to add/hide reports
 		vAllowedUsers = "8731,1,510,17427,12431,12313,12389,16652,8743,11364,13799";
-		// James Griffiths has a different local userID than live userID (Live: 17427)
-		if (APPLICATION.isServerLocal)
-			vAllowedUsers = vAllowedUsers & ",17306";
 	</cfscript>
     
 	<cfif isDefined('FORM.hideReport')>
