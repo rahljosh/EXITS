@@ -10,7 +10,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-	<link rel="stylesheet" type="text/css" <cfoutput>href="#path#app.css"</cfoutput>>
+	<link rel="stylesheet" type="text/css" <cfoutput>href="#relative#app.css"</cfoutput>>
 	<title>Page [01] - Student's Information</title>
 	<style type="text/css">
 	<!--
@@ -36,8 +36,8 @@
 <!--- HEADER OF TABLE --->
 <table width="100%" cellpadding="0" cellspacing="0" align="center" border="0">
 	<tr height="33">
-		<td width="8" class="tableside"><img src="#path#pics/p_topleft.gif" width="8"></td>
-		<td width="26" class="tablecenter"><img src="#path#pics/students.gif"></td>
+		<td width="8" class="tableside"><img src="#relative#pics/p_topleft.gif" width="8"></td>
+		<td width="26" class="tablecenter"><img src="#relative#pics/students.gif"></td>
 		<td class="tablecenter"><h2>Page [01] - Student's Information</h2></td>
 		<cfif LEN(URL.curdoc)>
 		<td align="right" class="tablecenter"><a href="" onClick="javascript: win=window.open('section1/page1printblank.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;"><img src="#path#pics/printhispage.gif" border="0" alt="Click here to print this page"></img></A>&nbsp; &nbsp;</td>

@@ -4,7 +4,7 @@
 
 <cfif ListFind("jpg,peg,gif,tif,png", LCase(Right(file.name, 3)))>
 	<table width="660" border="0" cellpadding="3" cellspacing="0" align="center">
-		<tr><td><img src="#path#../uploadedfiles/online_app/#doc#/#file.name#" width="660" height="820"></td></tr>
+		<tr><td><img src="#relative#../uploadedfiles/online_app/#doc#/#file.name#" width="660" height="820"></td></tr>
 	</table>
 	<cfset printpage = 'no'>
 	<!--- ADD PAGE BREAK - PRINT ONLY ATTACHED FILE --->
