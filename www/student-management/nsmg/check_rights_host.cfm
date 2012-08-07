@@ -97,6 +97,8 @@
                 WHERE
                     hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
                 AND
+                    h.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
+                AND
                     ( 	
                         areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
                     OR 
