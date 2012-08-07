@@ -210,7 +210,7 @@
                     h.hostID
 				FROM
                 	smg_hosts h
-                INNER JOIN
+                LEFT OUTER JOIN
                 	smg_students s ON s.hostID = h.hostID
                 WHERE
                 	h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
@@ -221,6 +221,8 @@
                         s.areaRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vSupervisedUserIDList#" list="yes">  )
                     OR 
                         s.placeRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vSupervisedUserIDList#" list="yes">  )
+					OR
+                        h.areaRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vSupervisedUserIDList#" list="yes">  )              
                     )
 				GROUP BY
                 	hostID                 
@@ -239,7 +241,7 @@
                     h.hostID
 				FROM
                 	smg_hosts h
-                INNER JOIN
+                LEFT OUTER JOIN
                 	smg_students s ON s.hostID = h.hostID
                 WHERE
                 	h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
@@ -250,6 +252,8 @@
                         s.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
                     OR 
                         s.placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+					OR
+                        h.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">                        
                     )
 				GROUP BY
                 	hostID                 

@@ -761,7 +761,9 @@
                     <td class="label">Region: <span class="redtext">*</span></td>
                     <td> 
                         <select name="regionid" class="largeField">
-                            <option value="">Select Region</option>
+                            <cfif APPLICATION.CFC.USER.isOfficeUser()>
+	                            <option value="">Select Region</option>
+                            </cfif>
                             <cfloop query="qGetRegionList">
                                 <option value="#qGetRegionList.regionid#" <cfif FORM.regionid EQ qGetRegionList.regionid>selected</cfif>>#qGetRegionList.regionname#</option>
                             </cfloop>
