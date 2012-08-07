@@ -145,8 +145,8 @@
 						Location("index.cfm?curdoc=forms/change_password", "no");
 					}
 				
-				// Force agreement on PRODUCTION.
-				} else if ( isDefined("CLIENT.agreement_needed") AND NOT APPLICATION.IsServerLocal ) {
+				// Force Paperwork PRODUCTION.
+				} else if ( isDefined("CLIENT.agreement_needed") ) { // AND NOT APPLICATION.IsServerLocal
 					
 					// allow user only on yearly agreement page. 
 					if ( NOT ( LEN(URL.curdoc) AND listFindNoCase("forms/yearly_agreement,repRefs,displayRepAgreement,cbcAuthorization,employmentHistory,logout", URL.curdoc)) ) {
@@ -154,7 +154,7 @@
 					}
 				
 				// Force SSN on PRODUCTION.
-				} else if ( isDefined('CLIENT.needsSSN') AND NOT APPLICATION.IsServerLocal ) {
+				} else if ( isDefined('CLIENT.needsSSN') ) { // AND NOT APPLICATION.IsServerLocal
 					
 					if ( NOT ( LEN(URL.curdoc) AND listFindNoCase("forms/verifyInfo, forms/verifyInfo2, logout", URL.curdoc)) ) {
 						Location("index.cfm?curdoc=forms/verifyInfo", "no");
