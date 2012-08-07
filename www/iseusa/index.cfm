@@ -136,9 +136,10 @@ $("#slidingDiv").animate({"height": "toggle"}, { duration: 1000 });
 		
 		<!---Meet our Students---->
         <div id="meetStudents" class="mybox" style="display:none;":>
-            <span class="MOtext" style="background-color: #E6F2D5;">
+            <span class="MOtext" style="background-color: #E6F2D5; font-size: 90%;">
+            <div style="width: 125px; float: right;"><a href="student_of_the_day.cfm?page=/studentDay/Exchange_Student_1" target="_self" ><img src="images/studentOfDay/studentWeek.png" alt="Host Student of the week" width="125" height="125" border="0" /></a></div>
             <strong>Meet our Students</strong><br /><br />
-             ISE students come from all over the world and are excited about their upcoming exchange program in the United States. Will you be the loving host family that opens the door to the world for an exchange student?<br /><br /><p align="center"><a href="meet-our-students.cfm"><img src="images/buttons/GlearnMore.png" border="0"></a></p></span>
+             ISE students come from all over the world and are excited about their upcoming exchange program in the United States. Will you be the loving host family that opens the door to the world for an exchange student?<br /><p align="center"><a href="meet-our-students.cfm"><img src="images/buttons/GlearnMore.png" border="0"></a></p></span>
             <span class="bigImage"><img src="images/subPages/subMeetStudents_03.gif" /></span>
       	</div>
            
