@@ -139,6 +139,15 @@
 </cfif>
 
 <!--- REGION HISTORY --->
+<cfquery name="qGetRegionHistory" datasource="#APPLICATION.DSN#">
+	SELECT
+    	*
+   	FROM
+    	smg_regionHistory
+   	WHERE
+    	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qStudentInfo.studentID)#">
+</cfquery>
+
 <cfif qStudentInfo.regionassigned NEQ FORM.region>
 
 	<cfquery datasource="#APPLICATION.DSN#">
@@ -147,10 +156,64 @@
 		SET 
         	dateassigned = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDateTime(now())#">
 		WHERE 
-        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentID#">
+        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qStudentInfo.studentID)#">
 		LIMIT 1
 	</cfquery>
-
+    
+    <cfquery datasource="#APPLICATION.DSN#">
+    	INSERT INTO
+        	smg_regionHistory
+     		(
+        		studentID,
+                regionID,
+                rguarenteeid,
+                stateguaranteeid,
+                fee_waived,
+                reason,
+                changedby,
+                date
+        	)
+        VALUES
+        	(
+            	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qStudentInfo.studentID)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.region)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.rguarantee)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.state_guarantee)#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.region_reason#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+         	)
+    </cfquery>
+    
+<cfelseif NOT VAL(qGetRegionHistory.recordCount)>
+	
+    <cfquery datasource="#APPLICATION.DSN#">
+    	INSERT INTO
+        	smg_regionHistory
+     		(
+        		studentID,
+                regionID,
+                rguarenteeid,
+                stateguaranteeid,
+                fee_waived,
+                reason,
+                changedby,
+                date
+        	)
+        VALUES
+        	(
+            	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qStudentInfo.studentID)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.region)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.rguarantee)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.state_guarantee)#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="Student was unassigned">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+         	)
+    </cfquery>
+    
 </cfif>
 
 <cfscript>
