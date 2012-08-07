@@ -1,5 +1,6 @@
 <!--- This is used to set the relative directory, print_application.cfm sets this to an empty string --->
 <cfparam name="relative" default="../">
+
 <cfif LEN(URL.curdoc)>
 	<cfset relative = "">
 </cfif>
@@ -193,13 +194,13 @@
 	</div>
 	
 	<!--- FOOTER OF TABLE --->
-	<table width="100%" cellpadding="0" cellspacing="0">
-		<tr height="8">
-			<td width="8"><img src="#relative#pics/p_bottonleft.gif" width="8"></td>
-			<td width="100%" class="tablebotton"><img src="#relative#pics/p_spacer.gif"></td>
-			<td width="42"><img src="#relative#pics/p_bottonright.gif" width="42"></td>
-		</tr>
-	</table>
+    <table width="100%" cellpadding="0" cellspacing="0">
+        <tr height="8">
+            <td width="8"><img src="#relative#pics/p_bottonleft.gif" width="8"></td>
+            <td width="100%" class="tablebotton"><img src="#relative#pics/p_spacer.gif"></td>
+            <td width="42"><img src="#relative#pics/p_bottonright.gif" width="42"></td>
+        </tr>
+    </table>
 
 	<cfif NOT LEN(URL.curdoc)>
 		</td></tr>
