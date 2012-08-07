@@ -38,7 +38,7 @@ a2a_config.prioritize = ["email", "facebook", "twitter", "google_buzz", "google_
    <div class="HFpicR"  style="margin-top: 20px; margin-right: 20px; margin-left: 10px;"><img src="images/studentOfDay/familyCombined.png" width="150" height="113" /></div> <br />
  <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" /><strong>Become a Host Family</strong></h1>
    <p>All you need to do is provide a bed, three  meals a day, and a supportive, safe home environment for an academic  year, or a semester.</p>
-<div align="center"><img src="images/studentOfDay/APPLY_today.png" width="162" height="43" alt="apply today" /> </div><br /><br /> </div>
+<div align="center"><a href="http://www.iseusa.com/meet-our-students.cfm"><img src="images/studentOfDay/APPLY_today.png" alt="apply today" width="162" height="43" border="0" /></a> </div><br /><br /> </div>
 <!--end HFsidebarR--></div>
         <div class="HFsidebarL" style="width: 275px;">
         <div class="HFpicL" style="margin-right: 13px;"><img src="images/studentOfDay/kids_pic.jpg" width="96" height="196" /></div>
