@@ -212,14 +212,16 @@
                 	smg_hosts h
                 INNER JOIN
                 	smg_students s ON s.hostID = h.hostID
-                    AND
-                        (    
-                            s.areaRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vSupervisedUserIDList#" list="yes">  )
-                        OR 
-                            s.placeRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vSupervisedUserIDList#" list="yes">  )
-                        )
                 WHERE
                 	h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                AND
+                    h.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
+                AND
+                    (    
+                        s.areaRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vSupervisedUserIDList#" list="yes">  )
+                    OR 
+                        s.placeRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vSupervisedUserIDList#" list="yes">  )
+                    )
 				GROUP BY
                 	hostID                 
             </cfquery>
@@ -239,14 +241,16 @@
                 	smg_hosts h
                 INNER JOIN
                 	smg_students s ON s.hostID = h.hostID
-					AND
-                        (    
-                            s.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
-                        OR 
-                            s.placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
-                        )
                 WHERE
                 	h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                AND
+                    h.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
+                AND
+                    (    
+                        s.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+                    OR 
+                        s.placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+                    )
 				GROUP BY
                 	hostID                 
             </cfquery>
