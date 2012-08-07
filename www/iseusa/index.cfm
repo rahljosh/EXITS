@@ -126,21 +126,13 @@ $("#slidingDiv").animate({"height": "toggle"}, { duration: 1000 });
     <div id="lead">
 		
         <div id="initDiv" class="mybox">
-            <span class="MOtext" style="background-color: #E6F2D5;">
+        <span class="MOtext" style="background-color: #E6F2D5; font-size: 90%;">
+            <div style="width: 125px; float: right;"><a href="student_of_the_day.cfm?page=/studentDay/Exchange_Student_1" target="_self" ><img src="images/studentOfDay/studentWeek.png" alt="Host Student of the week" width="125" height="125" border="0" /></a></div>
             <strong>Meet our Students</strong><br /><br />
-            ISE students come from all over the world and are excited about their upcoming exchange program in the United States. Will you be the loving host family that opens the door to the world for an exchange student?<br /><br /><p align="center"><a href="meetStudents.cfm"><img src="images/buttons/GlearnMore.png" border="0"></a></p></span>
+            ISE students come from all over the world and are excited about their upcoming exchange program in the United States. Will you be the loving host family that opens the door to the world for an exchange student?<br /><p align="center"><a href="meetStudents.cfm"><img src="images/buttons/GlearnMore.png" border="0"></a></p></span>
             <span class="bigImage"><img src="images/subPages/subMeetStudents.gif" /></span>
         </div>
 		
-		<!--- Hillary Clinton --->
-        <!---
-		<div id="initDiv" class="mybox">		
-			<span class="SStext" style="background-color: #F1D0D1;">
-			<strong>Secretary of State Encourages the Hosting of Exchange Students </strong><br /><br />
-			On the heels of this message <strong>Assistant Secretary of State for Educational and Cultural Affairs, Ann Stock,</strong> followed up with<a href="/AnnStock.cfm" title="Ann Stock's Message" rel="gb_page_center[675,600]"> her own message</a> encouraging more Americans to &quot;[open] their homes and hearts and personally [engage] with people from all over the world&quot;<br /><p class="smText"><a href="/AnnStock.cfm" title="Ann Stock's Message" rel="gb_page_center[675,600]">Read Ann Stock's Entire Message</a><br /><a href="http://exchanges.state.gov/" target ="blank">More on Secretary Clinton's Message</a><br /></p></span>
-			<div class="videoClip"><object width="320" height="265"><param name="movie" value="http://www.youtube.com/v/YRP3PbaE-cA?fs=1&amp;hl=en_US"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/YRP3PbaE-cA?fs=1&amp;hl=en_US" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="320" height="265"></embed></object></div></div>
-		</div>		
-		--->
 		
 		<!---Meet our Students---->
         <div id="meetStudents" class="mybox" style="display:none;":>
