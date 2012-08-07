@@ -16,7 +16,7 @@
 
 <cfoutput query="get_student_info">
 
-<cfdirectory action="list" name="fam_pics" directory="#ExpandPath(relative & '../')#uploadedfiles/online_app/picture_album/#get_student_info.studentid#">
+<cfdirectory action="list" name="fam_pics" directory="#ExpandPath(relative)#uploadedfiles/online_app/picture_album/#get_student_info.studentid#">
 <cfif NOT LEN(URL.curdoc)>
 <table align="center" width=90% cellpadding=0 cellspacing=0  border=0> 
 <tr><td>
@@ -73,7 +73,7 @@
 		</cfquery>
 		<table width="660" border="0" cellpadding="0" cellspacing="0" align="center" height="350">	
 			<tr><td align="center" valign="top" width="2%" height="320">
-					<img src="#relative#../uploadedfiles/online_app/picture_album/#client.studentid#/#name#" width="500" height="360" border="0">
+					<img src="#relative#uploadedfiles/online_app/picture_album/#client.studentid#/#name#" width="500" height="360" border="0">
 				</td>
 			</tr>
 			<tr><td><em>Describe this Picture</em></td></tr>

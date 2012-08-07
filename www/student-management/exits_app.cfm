@@ -1,14 +1,16 @@
 <cftry>
 
+<cfsetting requesttimeout="500">
+
 <!--- Param URL Variables --->
 <cfparam name="URL.unqID" default="">
 <cfparam name="URL.curdoc" default="">
 
+<cfset relative = "/nsmg/">
+
 <cfif NOT LEN(url.unqid)>
 	<cfinclude template="nsmg/student_app/error_message.cfm">
 </cfif>
-
-<cfsetting requesttimeout="500">
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>

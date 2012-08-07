@@ -163,7 +163,7 @@
                         </tr>
                     </table>
                     
-                    <img src="#relative#pics/usa-map.gif" width="642" height="331" align="middle"><br>
+                    <img src="#relative#student_app/pics/usa-map.gif" width="642" height="331" align="middle"><br>
 
 					<cfif states_requested.recordcount AND VAL(states_requested.state1)>
                     	<img src="#relative#pics/RadioY.gif" width="13" height="13" border="0">

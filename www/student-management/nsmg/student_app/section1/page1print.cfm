@@ -83,7 +83,7 @@
 			<table width="100%" align="left" cellpadding="0" cellspacing="0">
 			<tr><td align="left" valign="top">
 				<cfif file.recordcount>
-					<img src="#relative#../uploadedfiles/web-students/#file.name#" width="130" height="150"><br>
+					<img src="#relative#uploadedfiles/web-students/#file.name#" width="130" height="150"><br>
 				<cfelse>
 					<img src="#relative#pics/no_image.gif" border=0 width="130" height="150">
 				</cfif>
