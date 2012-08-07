@@ -9,11 +9,11 @@
 
 ----- ------------------------------------------------------------------------- --->
 
-<cfajaxproxy cfc="extensions.components.cbc" jsclassname="CBC">
-
 <!--- Kill extra output --->
 <cfsilent>
-	
+
+	<cfajaxproxy cfc="extensions.components.cbc" jsclassname="CBC">
+
     <!--- Param URL Variables --->
     <cfparam name="url.hostID" default="">
     
@@ -83,12 +83,14 @@
         	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
         ORDER BY birthdate
     </cfquery>
+    
     <!---number kids at home---->
     <cfquery name="kidsAtHome" dbtype="query">
-    select count(childid)
-    from host_children
-    where liveathome = 'yes'
+        select count(childid)
+        from host_children
+        where liveathome = 'yes'
     </cfquery>
+    
     <!----- Students being Hosted----->
     <cfquery name="hosting_students" datasource="#application.dsn#">
         SELECT studentid, familylastname, firstname, p.programname, c.countryname
