@@ -9,7 +9,7 @@
 
 <!--- Kill Extra Output --->
 <cfsilent>
-
+	
 	<!--- Import CustomTag --->
     <cfimport taglib="extensions/customTags/gui/" prefix="gui" />	
 	
@@ -23,6 +23,13 @@
     <cfparam name="recordsToShow" default="25">
 
 	<cfscript>
+		// Get User Regions
+		qGetRegionList = APPLICATION.CFC.REGION.getUserRegions(
+			companyID=CLIENT.companyID,
+			userID=CLIENT.userID,
+			userType=CLIENT.userType
+		);
+	
 		// Store List of Supervised Users
 		vSupervisedUserIDList = '';
 		vHostIDList = '';
@@ -56,21 +63,6 @@
                 <td><input name="send" type="submit" value="Submit" /></td>
 				<cfif APPLICATION.CFC.USER.isOfficeUser()>
                     <td>
-						<!--- GET ALL REGIONS --->
-                        <cfquery name="qGetRegionList" datasource="#application.dsn#">
-                            SELECT 
-                            	regionid, 
-                                regionname
-                            FROM 
-                            	smg_regions
-                            WHERE 
-                            	company = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
-                            AND 
-                            	subofregion = 0
-                            ORDER BY 
-                            	regionname
-                        </cfquery>
-                        
                         Region<br />
                         <cfselect id="regionID" NAME="regionid" query="qGetRegionList" value="regionid" display="regionName" selected="#regionid#" queryPosition="below">
                         	<option value="0">All</option>
@@ -221,12 +213,10 @@
                 INNER JOIN
                 	smg_students s ON s.hostID = h.hostID
                     AND
-                        s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                    AND
                         (    
-                            s.arearepid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vSupervisedUserIDList#" list="yes">  )
+                            s.areaRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vSupervisedUserIDList#" list="yes">  )
                         OR 
-                            s.placerepid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vSupervisedUserIDList#" list="yes">  )
+                            s.placeRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vSupervisedUserIDList#" list="yes">  )
                         )
                 WHERE
                 	h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
@@ -249,15 +239,11 @@
                 	smg_hosts h
                 INNER JOIN
                 	smg_students s ON s.hostID = h.hostID
-                    <!---
-					AND
-                        s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                    --->
 					AND
                         (    
-                            s.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+                            s.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
                         OR 
-                            s.placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+                            s.placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
                         )
                 WHERE
                 	h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
