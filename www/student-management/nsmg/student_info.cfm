@@ -82,6 +82,7 @@
 		
 		// Get Facilitator for this Region
 		qFacilitator = APPLICATION.CFC.USER.getUserByID(userID=VAL(qRegionAssigned.regionfacilitator));
+		
 		//Get available programs
 		if ( CLIENT.companyid eq 13 OR client.companyid eq 14){
 			qGetActivePrograms = APPLICATION.CFC.PROGRAM.getPrograms(companyid=client.companyid,isActive=1);
@@ -90,8 +91,6 @@
 			{
 			qGetActivePrograms = APPLICATION.CFC.PROGRAM.getPrograms(isActive=1);
 		}
-			
-			
 	</cfscript>
 
 	<!--- Student Picture --->
@@ -119,6 +118,7 @@
         WHERE 
         	u.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.intrep)#">
     </cfquery>
+    
    <!----
     <cfquery name="qGetActivePrograms" datasource="#APPLICATION.DSN#">
         SELECT 
@@ -140,6 +140,7 @@
         	programname
     </cfquery>
       ---->
+      
     <cfquery name="qGetSelectedProgram" dbtype="query">
         SELECT 
         	*
@@ -480,7 +481,7 @@
                                         <!---- <cfset ImageScaleToFit(myimage, 250, 135)> ---->
                                         <cfimage source="#myImage#" action="writeToBrowser" border="0" width="135px"><br />
                                        
-                                        <cfif listFind("1,2,3,4", CLIENT.userType)><A href="qr_delete_picture.cfm?student=#studentPicture.name#&studentID=#studentID#">Remove Picture</a></cfif>
+                                        <cfif APPLICATION.CFC.USER.isOfficeUser()><A href="qr_delete_picture.cfm?student=#studentPicture.name#&studentID=#studentID#">Remove Picture</a></cfif>
                                         
                                         <cfcatch type="any">
                                             <img src="pics/no_stupicture.jpg" width="135">
@@ -500,7 +501,7 @@
                             	<td align="center" colspan="2">
                             		<font size=-1><span class="edit_link">
                                     [ 
-										<cfif ListFind("1,2,3,4", CLIENT.usertype)>
+										<cfif APPLICATION.CFC.USER.isOfficeUser()>
                                         	<a href="index.cfm?curdoc=forms/edit_student_app_1">edit</a> &middot; 
                                             <a href='studentProfileFull.cfm?uniqueid=#uniqueid#'>full profile</a> &middot;
                                         </cfif> 
@@ -574,10 +575,15 @@
 										<cfif randid NEQ 0>
 										<tr>
 											<td align="center">
-											<cfif CLIENT.usertype LTE '4'>
+											<cfif APPLICATION.CFC.USER.isOfficeUser()>
 												<a href="javascript:OpenApp('student_app/index.cfm?curdoc=section1&unqid=#uniqueid#&id=1');"><img src="pics/exits.jpg" border="0"></a>
 											<cfelse>
+                                            	<!--- Print Version --->
+                                            	<a href="javascript:OpenApp('../exits_app.cfm?unqid=#uniqueid#');"><img src="pics/exits.jpg" border="0"></a>
+                                                <!--- PDF --->
+                                                <!---
 												<a href="javascript:OpenApp('student_app/print_application.cfm?unqid=#uniqueid#');"><img src="pics/exits.jpg" border="0"></a>
+												--->                                                
 											</cfif>
 											<br /><a href="javascript:OpenMediumW('student_app/section4/page22print.cfm?unqid=#uniqueid#');"><img src="pics/attached-files.gif" border="0"></a>	
 											<cfif CLIENT.usertype lt 7>
@@ -613,7 +619,7 @@
                 <a href="student/placementMgmt/index.cfm?uniqueID=#qGetStudentInfo.uniqueID#&action=paperwork" class="jQueryModalPL">Placement Paperwork</a>
                 
 				<!--- OFFICE USERS ONLY --->
-				<cfif listFind("1,2,3,4", CLIENT.userType)> 
+				<cfif APPLICATION.CFC.USER.isOfficeUser()> 
 					<!---- <a href="" onClick="javascript: win=window.open('insurance/insurance_management.cfm?studentID=#qGetStudentInfo.studentID#', 'Settings', 'height=400, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Insurance Management</a> ---->	
 					<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#qGetStudentInfo.studentID#', 700, 500);" class="nav_bar">Representative Payments</a> 					
                     <a href="javascript:openPopUp('forms/missing_documents.cfm', 450, 500);" class="nav_bar">Missing Documents</a>
@@ -654,7 +660,7 @@
 			<table cellpadding=2 cellspacing=0 align="center" width="100%">
 				<tr bgcolor="##EAE8E8">
                 	<td colspan="2">
-                    	<span class="get_attention"><b>:: </b></span>Program <cfif CLIENT.usertype LTE '4'>&nbsp; &nbsp; [ <font size="-3"><a href="javascript:OpenHistory('forms/stu_program_history.cfm?unqid=#uniqueid#');">History</a> ]</font></cfif>
+                    	<span class="get_attention"><b>:: </b></span>Program <cfif APPLICATION.CFC.USER.isOfficeUser()>&nbsp; &nbsp; [ <font size="-3"><a href="javascript:OpenHistory('forms/stu_program_history.cfm?unqid=#uniqueid#');">History</a> ]</font></cfif>
                     </td>
                 </tr>
 				<tr><td>Program :</td>
@@ -711,7 +717,7 @@
         <td width="49%" valign="top">
             <table cellpadding=2 cellspacing=0 align="center" width="100%">
 				<tr bgcolor="##EAE8E8">
-                	<td colspan="2"><span class="get_attention"><b>:: </b></span>Region  <cfif CLIENT.usertype LTE '4'>&nbsp; &nbsp; [ <font size="-3"><a href="javascript:OpenHistory('forms/stu_region_history.cfm?unqid=#uniqueid#');"> History </a> ]</font></cfif></td>
+                	<td colspan="2"><span class="get_attention"><b>:: </b></span>Region  <cfif APPLICATION.CFC.USER.isOfficeUser()>&nbsp; &nbsp; [ <font size="-3"><a href="javascript:OpenHistory('forms/stu_region_history.cfm?unqid=#uniqueid#');"> History </a> ]</font></cfif></td>
                 </tr>
 				<tr>
                 	<td width="150px">Region :</td>
@@ -1003,7 +1009,7 @@
 	<tr>
 		<td width="49%" valign="top">
 			<table cellpadding="2" width="100%">
-				<tr bgcolor="##EAE8E8"><td colspan="3"><span class="get_attention"><b>:: </b></span>#CLIENT.DSFormName# Form <cfif CLIENT.usertype LTE '4'>&nbsp; &nbsp; [ <font size="-3"><a href="javascript:OpenHistory('sevis/student_history.cfm?unqid=#uniqueid#');">History</a> ]</font></cfif> </td></tr>				
+				<tr bgcolor="##EAE8E8"><td colspan="3"><span class="get_attention"><b>:: </b></span>#CLIENT.DSFormName# Form <cfif APPLICATION.CFC.USER.isOfficeUser()>&nbsp; &nbsp; [ <font size="-3"><a href="javascript:OpenHistory('sevis/student_history.cfm?unqid=#uniqueid#');">History</a> ]</font></cfif> </td></tr>				
 				<tr>		
 					<td><Cfif verification_received EQ ''><input type="checkbox" name="verification_box" value="0" onClick="PopulateDS2019Box()" <cfif FORM.edit EQ 'no'>disabled</cfif>> <cfelse> <input type="checkbox" name="verification_box" value="1" onClick="PopulateDS2019Box()" checked <cfif FORM.edit EQ 'no'>disabled</cfif>> </cfif>
 					<td>#CLIENT.DSFormName# Verification Received &nbsp; &nbsp; Date: &nbsp;<input type="text" name="verification_form" size=8 value="#DateFormat(verification_received, 'mm/dd/yyyy')#" <cfif FORM.edit EQ 'no'>readonly</cfif>></td>
@@ -1063,7 +1069,7 @@
 			<table cellpadding="2" width="100%">
 				<tr bgcolor="##EAE8E8"><td colspan="2"><span class="get_attention"><b>:: </b></span>Letters &nbsp; &nbsp; [  <font size=-3> <a href="javascript:OpenLetter('reports/printing_tips.cfm');">Printing Tips</a></font> ]</td></tr>
 				<!--- OFFICE USERS --->
-				<cfif CLIENT.usertype LTE '4'>
+				<cfif APPLICATION.CFC.USER.isOfficeUser()>
 				<tr>
 					<td>: : <a href="javascript:OpenLetter('reports/acceptance_letter.cfm');">Acceptance</a></td>
 					<td>: : <a href="javascript:OpenLetter('reports/placementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#');">Placement</a></td>
@@ -1086,10 +1092,10 @@
 				</tr>
                 <tr>
 					<td width="50%">: : <a href="javascript:OpenLetter('reports/labels_student_idcards.cfm?studentid=#studentid#');">Student ID Card</a>
-						<cfif CLIENT.usertype LTE '4'> &nbsp; <a href="javascript:OpenLetter('reports/emailStudentIDCard.cfm?studentID=#studentID#');">
+						<cfif APPLICATION.CFC.USER.isOfficeUser()> &nbsp; <a href="javascript:OpenLetter('reports/emailStudentIDCard.cfm?studentID=#studentID#');">
                    		<img src="pics/email.gif" border="0" alt="Email Student ID Card"></a></cfif></td>
 					<td width="50%">: : <a href="javascript:OpenLetter('forms/singlePersonPlacementAuth.cfm?studentid=#studentid#');">Single Person Auth.</a>
-						<cfif CLIENT.usertype LTE '4'> &nbsp; <a href="javascript:OpenLetter('reports/emailSinglePlaceAuth.cfm?studentID=#studentID#');">
+						<cfif APPLICATION.CFC.USER.isOfficeUser()> &nbsp; <a href="javascript:OpenLetter('reports/emailSinglePlaceAuth.cfm?studentID=#studentID#');">
                         <img src="pics/email.gif" border="0" alt="Email Single Place Auth"></a></cfif></td>
 				</tr>				
 			</table>
@@ -1099,7 +1105,7 @@
 					<td width="50%">: : <a href="javascript:OpenLetter('reports/double_placement_host_family.cfm');">Family & School</a></td>
 					<td width="50%">
 						: : <a href="javascript:OpenLetter('reports/double_placement_nat_fam.cfm');">Natural Family</a>
-						<cfif CLIENT.usertype LTE '4'> &nbsp; <a href="javascript:OpenLetter('reports/email_dbl_place_nat_fam.cfm?studentID=#qGetStudentInfo.studentID#');"><img src="pics/email.gif" border="0" alt="Email Nat. Family Letter"></a></cfif>
+						<cfif APPLICATION.CFC.USER.isOfficeUser()> &nbsp; <a href="javascript:OpenLetter('reports/email_dbl_place_nat_fam.cfm?studentID=#qGetStudentInfo.studentID#');"><img src="pics/email.gif" border="0" alt="Email Nat. Family Letter"></a></cfif>
 					</td>
 				</tr>
 				<tr>
@@ -1151,7 +1157,7 @@
 </cfform>
 		
 <!---- EDIT BUTTON - OFFICE USERS ---->
-<cfif CLIENT.usertype LTE '4' AND FORM.edit EQ 'no'>
+<cfif APPLICATION.CFC.USER.isOfficeUser() AND FORM.edit EQ 'no'>
     <table width="100%" border=0 cellpadding=0 cellspacing=0 align="center" class="section">	
     <tr><td align="center">
         <form action="?curdoc=student_info&studentID=#qGetStudentInfo.studentID#" method="post">&nbsp;
