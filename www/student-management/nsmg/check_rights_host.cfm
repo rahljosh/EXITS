@@ -20,7 +20,7 @@
         }
         
         // Store List of Supervised Users
-        vSupervisedUserIDList = '';
+        vSuperviseduserIDList = '';
         vHostIDList = '';
     </cfscript>
 
@@ -56,7 +56,7 @@
                 qGetUserUnderAdv = APPLICATION.CFC.USER.getSupervisedUsers(userType=CLIENT.userType, userID=CLIENT.userID, regionID=CLIENT.regionID);
                 
                 // Store Users under Advisor on a list
-                vSupervisedUserIDList = ValueList(qGetUserUnderAdv.userID);
+                vSuperviseduserIDList = ValueList(qGetUserUnderAdv.userID);
             </cfscript>
             
             <cfquery name="qCheckHostAccess" datasource="#application.dsn#">
@@ -64,7 +64,7 @@
                     h.hostID
                 FROM
                     smg_hosts h
-                INNER JOIN
+                LEFT OUTER JOIN
                     smg_students s ON s.hostID = h.hostID
                 WHERE
                     h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
@@ -72,9 +72,11 @@
                     h.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
                 AND
                 (
-                      s.areaRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vSupervisedUserIDList#" list="yes">  )
+                      s.areaRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vSuperviseduserIDList#" list="yes">  )
                   OR 
-                      s.placeRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vSupervisedUserIDList#" list="yes">  )
+                      s.placeRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vSuperviseduserIDList#" list="yes">  )
+                  OR
+                      h.areaRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vSuperviseduserIDList#" list="yes">  )                   
                 )                      
             </cfquery>
             
@@ -91,19 +93,23 @@
     
             <cfquery name="qCheckHostAccess" datasource="#APPLICATION.DSN#">
                 SELECT
-                    hostID
+                    h.hostID
                 FROM
-                    smg_students
+                    smg_hosts h
+                LEFT OUTER JOIN
+                    smg_students s ON s.hostID = h.hostID
                 WHERE
-                    hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
+                    h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
                 AND
-                    regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
+                    h.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
                 AND
-                    ( 	
-                        areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
-                    OR 
-                        placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
-                    )
+                (
+                      s.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                  OR 
+                      s.placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                  OR
+                      h.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">                    
+                ) 
             </cfquery>
             
             <cfscript>
@@ -133,7 +139,7 @@
         <table border=0 cellpadding=4 cellspacing=0 width="100%" class="section">
             <tr><td align="center" valign="top"><img src="pics/error_exclamation.gif" width="37" height="44"> I am sorry but you do not have the rights to see this page.</td></tr>
             <tr><td align="center">If you think this is a mistake please contact #APPLICATION.EMAIL.support#</td></tr>
-            <tr><td align="center">You can view your account by clicking <a href="?curdoc=user_info&userid=#CLIENT.userid#">here<a/>.<br /><br /></td></tr>			
+            <tr><td align="center">You can view your account by clicking <a href="?curdoc=user_info&userID=#CLIENT.userID#">here<a/>.<br /><br /></td></tr>			
         </table>
         <cfinclude template="table_footer.cfm">
 	</cfoutput>
