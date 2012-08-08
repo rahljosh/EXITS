@@ -6,7 +6,10 @@
 <cfparam name="URL.unqID" default="">
 <cfparam name="URL.curdoc" default="">
 
-<cfset relative = "/nsmg/">
+<cfscript>
+	vStudentAppRelativePath = "/nsmg/";
+	vUploadedFilesRelativePath = "/nsmg/";
+</cfscript>
 
 <cfif NOT LEN(url.unqid)>
 	<cfinclude template="nsmg/student_app/error_message.cfm">

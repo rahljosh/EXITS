@@ -1,4 +1,14 @@
-<cftry>
+<cfscript>
+	// These are used to set the vStudentAppRelativePath directory for images nsmg/student_app/pics and uploaded files nsmg/uploadedFiles/
+	// Param Variables
+	param name="vStudentAppRelativePath" default="../";
+	param name="vUploadedFilesRelativePath" default="../../";
+	
+	if ( LEN(URL.curdoc) ) {
+		vStudentAppRelativePath = "";
+		vUploadedFilesRelativePath = "../";
+	}
+</cfscript>
 
 <!--- relocate users if they try to access the edit page without permission --->
 
@@ -231,9 +241,3 @@ Please make sure you answer all questions.  One wrong answer could hold your app
 
 <!--- FOOTER OF TABLE --->
 <cfinclude template="../footer_table.cfm">
-
-<cfcatch type="any">
-	<cfinclude template="../error_message.cfm">
-</cfcatch>
-
-</cftry>
