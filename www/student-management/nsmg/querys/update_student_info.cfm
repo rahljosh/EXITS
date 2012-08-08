@@ -438,8 +438,13 @@
 		regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.region#">,
 		<!--- Regional Guarantee --->
         regionGuar = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.regionGuar#">, <!--- yes/no --->
-        regionalguarantee = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.rguarantee)#">, <!--- guaranteeID --->
-        state_guarantee = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.state_guarantee#">, <!--- stateID --->
+        <cfif FORM.regionGuar EQ 'no'>
+            regionalguarantee = <cfqueryparam cfsqltype="cf_sql_varchar" value="0">, <!--- guaranteeID --->
+            state_guarantee = <cfqueryparam cfsqltype="cf_sql_varchar" value="0">, <!--- stateID --->
+        <cfelse>
+            regionalguarantee = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.rguarantee)#">, <!--- guaranteeID --->
+            state_guarantee = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.state_guarantee#">, <!--- stateID --->
+        </cfif>
 		<!--- GUARANTEED --->
         <cfif VAL(FORM.state_guarantee)>            	
             jan_app = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
