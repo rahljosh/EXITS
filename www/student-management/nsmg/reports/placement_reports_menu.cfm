@@ -98,8 +98,8 @@
 					</td>		
 				</tr>
 				<tr><td colspan="2"><input type="checkbox" name="dates">&nbsp; Including Period Below (Placement Date)</input></td></tr>
-				<tr><td width="5">From : </td><td><cfinput type="text" name="date1" size="8" maxlength="10" value="mm/dd/yyyy" OnClick="this.value='';"></cfinput></td></tr>
-				<tr><td width="5">To : </td><td><cfinput type="text" name="date2" size="8" maxlength="10" value="mm/dd/yyyy" OnClick="this.value='';"></cfinput></td></tr>
+				<tr><td width="5">From : </td><td><cfinput type="text" name="date1" size="8" maxlength="10" value="" class="datePicker"></cfinput></td></tr>
+				<tr><td width="5">To : </td><td><cfinput type="text" name="date2" size="8" maxlength="10" value="" class="datePicker"></cfinput></td></tr>
 				<tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
 			</table>
 		</cfform>
@@ -140,8 +140,8 @@
 				</tr>
 				</cfif>					
 				<tr><td colspan="2"><input type="checkbox" name="dates">&nbsp; Including Period Below (Placement Date)</input></td></tr>
-				<tr><td width="5">From : </td><td><cfinput type="text" name="date1" size="8" maxlength="10" value="mm/dd/yyyy" OnClick="this.value='';"></cfinput></td></tr>
-				<tr><td width="5">To : </td><td><cfinput type="text" name="date2" size="8" maxlength="10" value="mm/dd/yyyy" OnClick="this.value='';"></cfinput></td></tr><tr>		
+				<tr><td width="5">From : </td><td><cfinput type="text" name="date1" size="8" maxlength="10" value="" class="datePicker"></cfinput></td></tr>
+				<tr><td width="5">To : </td><td><cfinput type="text" name="date2" size="8" maxlength="10" value="" class="datePicker"></cfinput></td></tr><tr>		
 				<tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
 			</table>
 		</cfform>
@@ -176,8 +176,8 @@
 					</td>		
 				</tr>
 				<tr><td colspan="2"><input type="checkbox" name="dates">&nbsp; Including Period Below (Placement Date)</input></td></tr>
-				<tr><td width="5">From : </td><td><cfinput type="text" name="date1" size="8" maxlength="10" value="mm/dd/yyyy" OnClick="this.value='';"></cfinput></td></tr>
-				<tr><td width="5">To : </td><td><cfinput type="text" name="date2" size="8" maxlength="10" value="mm/dd/yyyy" OnClick="this.value='';"></cfinput></td></tr><tr>		
+				<tr><td width="5">From : </td><td><cfinput type="text" name="date1" size="8" maxlength="10" value="" class="datePicker"></cfinput></td></tr>
+				<tr><td width="5">To : </td><td><cfinput type="text" name="date2" size="8" maxlength="10" value="" class="datePicker"></cfinput></td></tr><tr>		
 				<tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
 			</table>
 		</cfform>
@@ -206,8 +206,8 @@
 					</td>		
 				</tr>
 				<tr><td colspan="2"><input type="checkbox" name="dates">&nbsp; Including Period Below (Placement Date)</input></td></tr>
-				<tr><td width="5">From : </td><td><cfinput type="text" name="date1" size="8" maxlength="10" value="mm/dd/yyyy" OnClick="this.value='';"></cfinput></td></tr>
-				<tr><td width="5">To : </td><td><cfinput type="text" name="date2" size="8" maxlength="10" value="mm/dd/yyyy" OnClick="this.value='';"></cfinput></td></tr><tr>		
+				<tr><td width="5">From : </td><td><cfinput type="text" name="date1" size="8" maxlength="10" value="" class="datePicker"></cfinput></td></tr>
+				<tr><td width="5">To : </td><td><cfinput type="text" name="date2" size="8" maxlength="10" value="" class="datePicker"></cfinput></td></tr><tr>		
 				<tr>
 					<td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td>
 				</tr>
