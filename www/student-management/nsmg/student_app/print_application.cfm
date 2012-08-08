@@ -86,8 +86,11 @@
                 studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.studentID)#">
         </cfquery>
         
-        <!--- This is to set the correct directory for displaying images in the included files --->
-        <cfset relative = "">
+        <cfscript>
+			// This is to set the correct directory for displaying images in the uploaded files
+			vStudentAppRelativePath = "";
+			vUploadedFilesRelativePath = "../";
+        </cfscript>        
         
         <!--- SECTION 1 --->
         <tr>
