@@ -2,18 +2,26 @@
 	<CFSET form.school = "0">
 </cfif>
 
-<cfif #form.name# is '' and #form.address# is '' and #form.city# is ''> <!--- IF THERE'S NO INFORMATION, NOTHING IS INSERTED --->
-	<cflocation url="?curdoc=forms/host_fam_pis_6" addtoken="no">
+<!--- IF THERE'S NO INFORMATION, NOTHING IS INSERTED --->
+<cfif FORM.name IS '' AND FORM.address IS '' AND FORM.city IS ''>
+	
+    <cflocation url="?curdoc=forms/host_fam_pis_6" addtoken="no">
 
 <cfelse>
 	<!--- ADD NEW SCHOOL --->
 	<cfif form.school EQ 0>  
 		<cfquery name="check_new_school" datasource="MySql">
-			SELECT schoolid, schoolname
-			FROM smg_schools 
-			WHERE schoolname = '#form.name#' 
-				AND	city = '#form.city#'
-				AND state = '#form.state#'
+			SELECT 
+            	schoolid,
+                schoolname
+			FROM 
+            	smg_schools 
+			WHERE 
+            	schoolname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.name#">
+			AND	
+            	city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.city#">
+			AND 
+            	state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.state#">
 		</cfquery>
 		
 		<cfif check_new_school.recordcount is not 0><br>
@@ -46,7 +54,7 @@
                     )
                     VALUES 
                     (
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.name#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address2#" null="#yesNoFormat(TRIM(FORM.address2) EQ '')#">,
@@ -72,19 +80,22 @@
 	<cfelse>  
 		<cftransaction action="begin" isolation="SERIALIZABLE">	
 			<cfquery name="update_school" datasource="MySQL">
-				UPDATE smg_schools
-				SET 	schoolname = '#form.name#',
-						address = '#form.address#',
-						address2 = '#form.address2#',
-						city = '#form.city#',
-						state = '#form.state#',
-						zip = '#form.zip#',
-						phone = '#form.phone#',
-						fax = '#form.fax#',
-						email = '#form.email#',
-						url = '#form.url#',
-						principal = '#form.principal#'
-				WHERE schoolid = '#form.school#'
+				UPDATE
+                	smg_schools
+				SET
+                	schoolname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.name#">,
+					address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.address#">,
+					address2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.address2#">,
+					city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.city#">,
+					state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.state#">,
+					zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.zip#">,
+					phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.phone#">,
+					fax = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.fax#">,
+					email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.email#">,
+					url = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.url#">,
+					principal = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.principal#">
+				WHERE
+                	schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(form.school)#">
 				LIMIT 1					
 			</cfquery>
 		</cftransaction>
@@ -124,10 +135,13 @@
 	</cfif>
 
 	<cfquery name="add_School" datasource="MySQL">
-		update smg_hosts
-		set schoolid = '#client.schoolid#'
-		where hostid = '#client.hostid#'
-		LIMIT 1 
+		UPDATE
+        	smg_hosts
+       	SET
+        	schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.schoolID)#">
+      	WHERE
+        	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.hostID)#">
+       	LIMIT 1
 	</cfquery>		
 	
 </cfif>
