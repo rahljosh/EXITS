@@ -36,15 +36,13 @@
 		</a><br>
 		Use the link above to print your completed online application.
 		</td>
-        <!--- For the PDF application - need new button
-		
 		<td valign="top" width="2%">&nbsp;</td>
 		<td valign="top" width="49%" align="center">
 		<a class="item2" href="download_application.cfm" >
-			<img src="pics/print_completed_app.gif" border="0">
+			<img src="pics/download_completed_app_pdf.gif" border="0">
 		</a><br>
 		Use the link above to download your completed online application.
-		</td>--->
+		</td>
 	</tr>
 </table>
 <br><br>
