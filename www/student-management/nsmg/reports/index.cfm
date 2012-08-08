@@ -111,12 +111,20 @@
 	<!---- FIELD ---->
     <cfif client.usertype GTE '5'>
         <cfquery name="list_regions" datasource="MySql"> <!--- GET USERS REGION --->
-            SELECT user_access_rights.regionid, smg_regions.regionname
-            FROM user_access_rights
-            INNER JOIN smg_regions ON smg_regions.regionid = user_access_rights.regionid
-            WHERE userid = '#client.userid#' 
-                AND user_access_rights.companyid = '#client.companyid#'
-            ORDER BY default_region DESC, regionname
+            SELECT 
+            	user_access_rights.regionid,
+                smg_regions.regionname
+            FROM
+            	user_access_rights
+            INNER JOIN
+            	smg_regions ON smg_regions.regionid = user_access_rights.regionid
+            WHERE
+            	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userid)#"> 
+          	AND
+            	user_access_rights.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">
+            ORDER BY
+            	default_region DESC,
+                regionname
         </cfquery>
         
         <cfif NOT IsDefined('url.regionid')><cfset url.regionid = '#list_regions.regionid#'></cfif>
@@ -128,7 +136,7 @@
             INNER JOIN smg_usertype u ON u.usertypeid = uar.usertype
             WHERE uar.regionid = <cfqueryparam value="#VAL(url.regionid)#" cfsqltype="cf_sql_integer">
                   AND userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
-                  AND uar.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyid#)#">
+                  AND uar.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyid)#">
         </cfquery>
         
         <cfif check_region.recordcount EQ 0>
@@ -140,7 +148,7 @@
             FROM user_access_rights
             INNER JOIN smg_usertype u ON u.usertypeid = user_access_rights.usertype
             WHERE user_access_rights.regionid = <cfqueryparam value="#VAL(url.regionid)#" cfsqltype="cf_sql_integer">
-                  AND userid = '#client.userid#'
+                  AND userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userid)#">
         </cfquery>
         
         <cfset client.usertype = '#get_user_region.usertype#'>
