@@ -7,7 +7,7 @@
 <cfparam name="URL.curdoc" default="">
 
 <cfscript>
-	vStudentAppRelativePath = "/nsmg/";
+	vStudentAppRelativePath = "/nsmg/student_app/";
 	vUploadedFilesRelativePath = "/nsmg/";
 </cfscript>
 
