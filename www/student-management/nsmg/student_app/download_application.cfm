@@ -276,7 +276,7 @@
     <cfset sourceList = "#ExpandPath('../uploadedFiles/temp/')#ISE_Application#CLIENT.studentID#.pdf">
     
     <!--- Pages 1 to 4 --->
-    <cfdocument format="pdf"  filename="#ExpandPath('../uploadedFiles/temp/')#ISE_Application#CLIENT.studentID#.pdf" overwrite="yes">
+    <cfdocument format="pdf"  filename="#ExpandPath('../uploadedFiles/temp/')#ISE_Application#CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
         <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
             #pages1To4#
         </table>
@@ -286,7 +286,7 @@
     <cfif FileExists(ExpandPath('../uploadedfiles/letters/students/#CLIENT.studentID#.pdf'))>
     	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/letters/students/')##CLIENT.studentID#.pdf">
   	<cfelse>
-    	<cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page5#CLIENT.studentID#.pdf" overwrite="yes">
+    	<cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page5#CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
             <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
                 #page5#
             </table>
@@ -298,7 +298,7 @@
     <cfif FileExists(ExpandPath('../uploadedfiles/letters/parents/#CLIENT.studentID#.pdf'))>
     	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/letters/parents/')##CLIENT.studentID#.pdf">
     <cfelse>
-    	<cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page6#CLIENT.studentID#.pdf" overwrite="yes">
+    	<cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page6#CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
             <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
                 #page6#
             </table>
@@ -309,7 +309,7 @@
     <!--- Pages 7 to 9 (Loop through these and add uploaded PDF's if they exist) --->
     <cfloop from="7" to="9" index="i">
     	<cfset page = Evaluate('page' & #i#)>
-        <cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page#i##CLIENT.studentID#.pdf" overwrite="yes">
+        <cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page#i##CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
             <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
                 #page#
             </table>
@@ -321,7 +321,7 @@
     </cfloop>
     
     <!--- Page 10 --->
-    <cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page10#CLIENT.studentID#.pdf" overwrite="yes">
+    <cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page10#CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
         <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
             #page10#
         </table>
@@ -332,7 +332,7 @@
     </cfif>
     
     <!--- Page 11 --->
-    <cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page11#CLIENT.studentID#.pdf" overwrite="yes">
+    <cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page11#CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
         <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
             #page11#
         </table>
@@ -342,7 +342,7 @@
     <!--- Pages 12 and 13 (Loop through these and add uploaded PDF's if they exist) --->
     <cfloop from="12" to="13" index="i">
     	<cfset page = Evaluate('page' & #i#)>
-        <cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page#i##CLIENT.studentID#.pdf" overwrite="yes">
+        <cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page#i##CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
             <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
                 #page#
             </table>
@@ -359,7 +359,7 @@
         <cfif FileExists(ExpandPath('../uploadedfiles/online_app/page#i#/#CLIENT.studentID#.pdf'))>
         	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/online_app/')#page#i#/#CLIENT.studentID#.pdf">
         <cfelse>
-        	<cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page#i##CLIENT.studentID#.pdf" overwrite="yes">
+        	<cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page#i##CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
                 <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
                     #page#
                 </table>
@@ -370,7 +370,7 @@
     
     <!--- Page 18 (Do not display for ESI or Canada Application) --->
  	<cfif CLIENT.companyID NEQ 14 AND NOT ListFind("14,15,16", get_student_info.app_indicated_program)>
-        <cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page18#CLIENT.studentID#.pdf" overwrite="yes">
+        <cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page18#CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
             <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
                 #page18#
             </table>
@@ -382,7 +382,7 @@
    	</cfif>
     
     <!--- Page 19 --->
-  	<cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page19#CLIENT.studentID#.pdf" overwrite="yes">
+  	<cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page19#CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
         <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
             #page19#
         </table>
@@ -403,7 +403,7 @@
         <cfif FileExists(ExpandPath('../uploadedfiles/online_app/page20/#CLIENT.studentID#.pdf'))>
         	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/online_app/')#page20/#CLIENT.studentID#.pdf">
         <cfelse>
-        	<cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page20#CLIENT.studentID#.pdf" overwrite="yes">
+        	<cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page20#CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
                 <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
                     #page2x#
                 </table>
@@ -422,7 +422,7 @@
         <cfif FileExists(ExpandPath('../uploadedfiles/online_app/page21/#CLIENT.studentID#.pdf'))>
         	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/online_app/')#page21/#CLIENT.studentID#.pdf">
         <cfelse>
-			<cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page21#CLIENT.studentID#.pdf" overwrite="yes">
+			<cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page21#CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
                 <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
                     #page3x#
                 </table>
@@ -436,7 +436,7 @@
 	<cfdirectory directory="#currentDirectory#" name="mydirectory" sort="datelastmodified DESC" filter="*.*">
     <cfloop query="mydirectory">
 		<cfif ListFind("jpg,peg,gif,tif,iff,png", LCase(Right(name, 3)))>
-        	<cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page22#CLIENT.studentID#.pdf" overwrite="yes">
+        	<cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page22#CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
                 <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0">
                     <tr>
                         <td>
