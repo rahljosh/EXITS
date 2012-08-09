@@ -4293,44 +4293,55 @@
             
 			// Get Regional Manager
 			qGetRegionalManager = APPLICATION.CFC.USER.getRegionalManager(regionID=qGetStudentFullInformation.regionAssigned);
+
+            // Get Facilitator Email
+            qGetFacilitator = APPLICATION.CFC.REGION.getRegionFacilitatorByRegionID(regionID=qGetStudentFullInformation.regionAssigned);
+						
+			
+			// Make sure we have valid email addresses, if not use support
+			if ( IsValid("email", qGetCurrentUser.email) ) {
+				vCurrentUserEmailAddress = qGetCurrentUser.email;
+			} else {
+				vCurrentUserEmailAddress = APPLICATION.EMAIL.support;
+			}
+
+			// Make sure we have valid email addresses, if not use support
+			if ( IsValid("email", qGetRegionalManager.email) ) {
+				vRMEmailAddress = qGetRegionalManager.email;
+			} else {
+				vRMEmailAddress = APPLICATION.EMAIL.support;
+			}
+			
+			// Make sure we have valid email addresses, if not use support
+			if ( IsValid("email", qGetFacilitator.email) ) {
+				vFacilitatorEmailAddress = qGetFacilitator.email;
+			} else {
+				vFacilitatorEmailAddress = APPLICATION.EMAIL.support;
+			}
 			
 			// Set Up EmailTo and FlightInfo Link
-            if ( ARGUMENTS.sendEmailTo EQ 'currentUser' AND IsValid("email", qGetCurrentUser.email) ) {
+			if ( ARGUMENTS.sendEmailTo EQ 'currentUser' ) {
 				
-				// Public Student - Email Current User
-				flightEmailTo = qGetCurrentUser.email;
-			
-			} else if ( APPLICATION.IsServerLocal ) {
+				// Email Current User
+				flightEmailTo = vCurrentUserEmailAddress;
 				
-				// Local Server - Always email support
-                flightEmailTo = APPLICATION.EMAIL.support;
-			
 			} else if ( VAL(ARGUMENTS.isPHPStudent) ) {
             	
-				// PHP Student - Email Luke
+				// PHP Student - Email PHP
 				flightInfoLink = 'http://www.phpusa.com/internal/index.cfm?curdoc=student/student_info&unqid=#qGetStudentFullInformation.uniqueID#';
                 flightEmailTo = APPLICATION.EMAIL.PHPContact;				
 
-			} else if ( ARGUMENTS.sendEmailTo EQ 'regionalManager' AND IsValid("email", qGetRegionalManager.email) AND IsValid("email", qGetCurrentUser.email) ) {
+			} else if ( ARGUMENTS.sendEmailTo EQ 'regionalManager' ) {
 				
 				// Public Student - Email Regional Manager and send a copy to the current user
-				flightEmailTo = qGetRegionalManager.email;
-				flightEmailCC = qGetCurrentUser.email;
-                
-            } else if ( ARGUMENTS.sendEmailTo EQ 'regionalManager' AND IsValid("email", qGetRegionalManager.email) ) {
-				
-				// Public Student - Email Regional Manager | Do not send a copy to current user
-				flightEmailTo = qGetRegionalManager.email;
+				flightEmailTo = vRMEmailAddress;
+				flightEmailCC = vCurrentUserEmailAddress;
 
-			} else if ( IsValid("email", qGetFacilitator.email) ) {
-                
-				// Public Student - Email Facilitator
-                flightEmailTo = qGetFacilitator.email;
-                
 			} else {
 				
-				// Not a valid email, use support
-                flightEmailTo = APPLICATION.EMAIL.support;
+				// Public Student - Email Facilitator and send a copy to Regional Manager
+                flightEmailTo = vFacilitatorEmailAddress;
+				flightEmailCC = vRMEmailAddress;
             
 			}
 			
