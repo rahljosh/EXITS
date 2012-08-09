@@ -345,7 +345,7 @@
         <cfscript>
 			// Send out email notification if flight information was entered by an International Representative / Branch
 			if ( ListFind("8,11,13", CLIENT.userType) ) {	 
-				APPLICATION.CFC.STUDENT.emailFlightInformation(studentID=qGetStudentInfo.studentID,sendEmailTo='regionalManager',isPHPStudent=VAL(qGetPHPStudentInfo.recordCount) );
+				APPLICATION.CFC.STUDENT.emailFlightInformation(studentID=qGetStudentInfo.studentID,isPHPStudent=VAL(qGetPHPStudentInfo.recordCount) );
 			}
 			
 			// Set Page Message
@@ -561,9 +561,9 @@
                                         </td>
                                     </cfif>
                                     <td><input type="text" name="incomingPreAYPDepartureDate#qGetPreAypArrival.currentrow#" value="#DateFormat(dep_date , 'mm/dd/yyyy')#" class="datePicker" maxlength="10"></td>
-                                    <td><input type="text" name="incomingPreAYPDepartureCity#qGetPreAypArrival.currentrow#" class="fieldSize100" maxlength="40" value="#dep_city#"></td>
+                                    <td><input type="text" name="incomingPreAYPDepartureCity#qGetPreAypArrival.currentrow#" class="fieldSize100" maxlength="40" value="#dep_city#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                     <td><input type="text" name="incomingPreAYPDepartureAirCode#qGetPreAypArrival.currentrow#" class="fieldSize40" maxlength="3" value="#dep_aircode#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                    <td><input type="text" name="incomingPreAYPArrivalCity#qGetPreAypArrival.currentrow#" class="fieldSize100" maxlength="40" value="#arrival_city#"></td>
+                                    <td><input type="text" name="incomingPreAYPArrivalCity#qGetPreAypArrival.currentrow#" class="fieldSize100" maxlength="40" value="#arrival_city#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                     <td><input type="text" name="incomingPreAYPArrivalAirCode#qGetPreAypArrival.currentrow#" class="fieldSize40" maxlength="3" value="#arrival_aircode#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                     <td><input type="text" name="incomingPreAYPFlightNumber#qGetPreAypArrival.currentrow#" class="fieldSize60" maxlength="8" value="#flight_number#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                     <td><input type="text" name="incomingPreAYPDepartureTime#qGetPreAypArrival.currentrow#" class="fieldSize70 timePicker" maxlength="8" value="#TimeFormat(dep_time, 'hh:mm tt')#"></td>
@@ -587,9 +587,9 @@
                                     <tr bgcolor="##DDF0DD" align="center" class="trNewPreAYPArrival <cfif qGetPreAypArrival.recordCount> displayNone </cfif>">
                                         <td>&nbsp;</td>
                                         <td><input type="text" name="incomingNewPreAYPDepartureDate#i#" class="datePicker" maxlength="10"></td>
-                                        <td><input type="text" name="incomingNewPreAYPDepartureCity#i#" class="fieldSize100" maxlength="40"></td>
+                                        <td><input type="text" name="incomingNewPreAYPDepartureCity#i#" class="fieldSize100" maxlength="40" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                         <td><input type="text" name="incomingNewPreAYPDepartureAirCode#i#" class="fieldSize40" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                        <td><input type="text" name="incomingNewPreAYPArrivalCity#i#" class="fieldSize100" maxlength="40"></td>
+                                        <td><input type="text" name="incomingNewPreAYPArrivalCity#i#" class="fieldSize100" maxlength="40" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                         <td><input type="text" name="incomingNewPreAYPArrivalAirCode#i#" class="fieldSize40" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                         <td><input type="text" name="incomingNewPreAYPFlightNumber#i#" class="fieldSize60" maxlength="8" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                         <td><input type="text" name="incomingNewPreAYPDepartureTime#i#" class="fieldSize70 timePicker" class="timePicker" maxlength="8"></td>
@@ -664,9 +664,9 @@
 		                            </td>
                                 </cfif>                                
                                 <td><input type="text" name="incomingDepartureDate#qGetArrival.currentrow#" value="#DateFormat(dep_date , 'mm/dd/yyyy')#" class="datePicker" maxlength="10"></td>
-                                <td><input type="text" name="incomingDepartureCity#qGetArrival.currentrow#" class="fieldSize100" maxlength="40" value="#dep_city#"></td>
+                                <td><input type="text" name="incomingDepartureCity#qGetArrival.currentrow#" class="fieldSize100" maxlength="40" value="#dep_city#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                 <td><input type="text" name="incomingDepartureAirCode#qGetArrival.currentrow#" class="fieldSize40" maxlength="3" value="#dep_aircode#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                <td><input type="text" name="incomingArrivalCity#qGetArrival.currentrow#" class="fieldSize100" maxlength="40" value="#arrival_city#"></td>
+                                <td><input type="text" name="incomingArrivalCity#qGetArrival.currentrow#" class="fieldSize100" maxlength="40" value="#arrival_city#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                 <td><input type="text" name="incomingArrivalAirCode#qGetArrival.currentrow#" class="fieldSize40" maxlength="3" value="#arrival_aircode#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                 <td><input type="text" name="incomingFlightNumber#qGetArrival.currentrow#" class="fieldSize60" maxlength="8" value="#flight_number#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                 <td><input type="text" name="incomingDepartureTime#qGetArrival.currentrow#" class="fieldSize70 timePicker" maxlength="8" value="#TimeFormat(dep_time, 'hh:mm tt')#"></td>
@@ -690,9 +690,9 @@
                                 <tr bgcolor="##D5DCE5" align="center" class="trNewAYPArrival <cfif qGetArrival.recordCount> displayNone </cfif>">
                                     <td>&nbsp;</td>
                                     <td><input type="text" name="incomingNewDepartureDate#i#" class="datePicker" maxlength="10"></td>
-                                    <td><input type="text" name="incomingNewDepartureCity#i#" class="fieldSize100" maxlength="40"></td>
+                                    <td><input type="text" name="incomingNewDepartureCity#i#" class="fieldSize100" maxlength="40" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                     <td><input type="text" name="incomingNewDepartureAirCode#i#" class="fieldSize40" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                    <td><input type="text" name="incomingNewArrivalCity#i#" class="fieldSize100" maxlength="40"></td>
+                                    <td><input type="text" name="incomingNewArrivalCity#i#" class="fieldSize100" maxlength="40" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                     <td><input type="text" name="incomingNewArrivalAirCode#i#" class="fieldSize40" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                     <td><input type="text" name="incomingNewFlightNumber#i#" class="fieldSize60" maxlength="8" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                     <td><input type="text" name="incomingNewDepartureTime#i#" class="fieldSize70 timePicker" maxlength="8"></td>
@@ -769,9 +769,9 @@
 	                                </td>
 								</cfif>
                                 <td><input type="text" name="outgoingDepartureDate#qGetDeparture.currentrow#" value="#DateFormat(dep_date , 'mm/dd/yyyy')#" class="datePicker" maxlength="10"></td>
-                                <td><input type="text" name="outgoingDepartureCity#qGetDeparture.currentrow#" class="fieldSize100" maxlength="40" value="#dep_city#"></td>
+                                <td><input type="text" name="outgoingDepartureCity#qGetDeparture.currentrow#" class="fieldSize100" maxlength="40" value="#dep_city#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                 <td><input type="text" name="outgoingDepartureAirCode#qGetDeparture.currentrow#" class="fieldSize40" maxlength="3" value="#dep_aircode#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                <td><input type="text" name="outgoingArrivalCity#qGetDeparture.currentrow#" class="fieldSize100" maxlength="40" value="#arrival_city#"></td>
+                                <td><input type="text" name="outgoingArrivalCity#qGetDeparture.currentrow#" class="fieldSize100" maxlength="40" value="#arrival_city#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                 <td><input type="text" name="outgoingArrivalAirCode#qGetDeparture.currentrow#" class="fieldSize40" maxlength="3" value="#arrival_aircode#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                 <td><input type="text" name="outgoingFlightNumber#qGetDeparture.currentrow#" class="fieldSize60" maxlength="8" value="#flight_number#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                 <td><input type="text" name="outgoingDepartureTime#qGetDeparture.currentrow#" class="fieldSize70 timePicker" maxlength="8" value="#TimeFormat(dep_time, 'hh:mm tt')#"></td>
@@ -809,9 +809,9 @@
                                         <tr bgcolor="##FEE6D3" align="center" class="trNewAYPDeparture <cfif qGetDeparture.recordCount> displayNone </cfif>">                        
                                             <td>&nbsp;</td>
                                             <td><input type="text" name="outgoingNewDepartureDate#i#" class="datePicker" maxlength="10"></td>
-                                            <td><input type="text" name="outgoingNewDepartureCity#i#" class="fieldSize100" maxlength="40"></td>
+                                            <td><input type="text" name="outgoingNewDepartureCity#i#" class="fieldSize100" maxlength="40" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                             <td><input type="text" name="outgoingNewDepartureAirCode#i#" class="fieldSize40" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                            <td><input type="text" name="outgoingNewArrivalCity#i#" class="fieldSize100" maxlength="40"></td>
+                                            <td><input type="text" name="outgoingNewArrivalCity#i#" class="fieldSize100" maxlength="40" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                             <td><input type="text" name="outgoingNewArrivalAirCode#i#" class="fieldSize40" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                             <td><input type="text" name="outgoingNewFlightNumber#i#" class="fieldSize60" maxlength="8" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                             <td><input type="text" name="outgoingNewDepartureTime#i#" class="fieldSize70 timePicker" maxlength="8"></td>
