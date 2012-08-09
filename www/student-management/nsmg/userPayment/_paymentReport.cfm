@@ -33,7 +33,7 @@
 		qGetCompanyShort = APPLICATION.CFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
 		
 		// Get Total Payments by Program
-		qGetRepTotalPayments = APPLICATION.CFC.USER.getRepTotalPayments(userID=VAL(URL.userID), companyID=CLIENT.companyID);
+		qGetRepTotalPayments = APPLICATION.CFC.USER.getRepTotalPayments(userID=URL.userID, companyID=CLIENT.companyID);
 	</cfscript>
               
 </cfsilent>
