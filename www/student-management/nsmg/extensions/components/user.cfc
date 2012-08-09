@@ -32,7 +32,7 @@
               
         <cfquery 
 			name="qGetUsers" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT DISTINCT
 					u.*
                 FROM 
@@ -86,7 +86,7 @@
 
         <cfquery 
 			name="qGetUserByID" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
 					*
                 FROM 
@@ -194,12 +194,12 @@
 	</cffunction>
 
 
-	<cffunction name="setUserRoles" access="public" returntype="void" output="false" hint="Set SESSION user roles">
+	<cffunction name="setUserRoles" access="public" returntype="void" output="false" hint="Set User SESSION roles">
     	<cfargument name="userID" type="numeric" hint="userID is required">
               
         <cfquery 
 			name="qGetUserRoles" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
                 	alup.fieldKey,
                     alup.fieldID,
@@ -269,9 +269,146 @@
 		
 	</cffunction>
 
+
+	<cffunction name="setUserSessionPaperwork" access="public" returntype="void" output="false" hint="Set USER Paperwork Session Variables">
+        <cfargument name="userID" hint="User ID is Required">
+
+        <cfscript>
+			// Get Current Season
+			var vSeasonID = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
+		
+			// Get Paperwork Info (CBC and Agreement)
+			qGetSeasonPaperwork = APPLICATION.CFC.USER.getPaperworkByID(userID=ARGUMENTS.userID, seasonID=vSeasonID);
+
+			// Get Reference
+			qGetReferences = APPLICATION.CFC.USER.getReferencesByID(userID=ARGUMENTS.userID);	
+
+			// Get Employment History
+			qGetEmployment = APPLICATION.CFC.USER.getEmploymentByID(userID=ARGUMENTS.userID);		
+
+			// New Struct
+			SESSION.USER.PAPERWORK = StructNew();
+			// Current Season
+			SESSION.USER.PAPERWORK.seasonID = vSeasonID;
+			
+			// Signed Agreement
+			if ( isDate(qGetSeasonPaperwork.ar_agreement) ) {
+				SESSION.USER.PAPERWORK.isAgreementCompleted = true;
+			} else {
+				SESSION.USER.PAPERWORK.isAgreementCompleted = false;
+			}
+
+			// Signed CBC Authorization
+			if ( isDate(qGetSeasonPaperwork.ar_cbc_auth_form) ) {
+				SESSION.USER.PAPERWORK.isCBCAuthorizationCompleted = true;
+			} else {
+				SESSION.USER.PAPERWORK.isCBCAuthorizationCompleted = false;
+			}
+			
+			// Employment History - Minimum of 1
+			if ( qGetEmployment.recordCount GTE 1 ) {
+				SESSION.USER.PAPERWORK.isEmploymentHistoryCompleted = true;
+			} else {
+				SESSION.USER.PAPERWORK.isEmploymentHistoryCompleted = false;
+			}
+			
+			// References - Minimum of 4
+			if ( qGetReferences.recordCount GTE 4 ) {
+				SESSION.USER.PAPERWORK.isReferenceCompleted = true;
+			} else {
+				SESSION.USER.PAPERWORK.isReferenceCompleted = false;
+			}
+			
+			// Reference Questionnaire - Minimum of 2
+			SESSION.USER.PAPERWORK.isReferenceQuestionnaireCompleted = false;
+			
+			// Check if ALL Paperwork has been received
+			if ( 	
+					SESSION.USER.PAPERWORK.isAgreementCompleted 
+				AND 
+					SESSION.USER.PAPERWORK.isCBCAuthorizationCompleted 
+				AND 
+					SESSION.USER.PAPERWORK.isEmploymentHistoryCompleted 
+				AND 
+					SESSION.USER.PAPERWORK.isReferenceCompleted
+				) {
+					// Not Completed
+					SESSION.USER.PAPERWORK.isCompleted = true;
+			} else {
+				// Not Completed
+				SESSION.USER.PAPERWORK.isCompleted = false;
+			}
+		</cfscript>
+		
+	</cffunction>
+    
+    
+	<cffunction name="getUserSessionPaperwork" access="public" returntype="struct" hint="Get user SESSION paperwork variables" output="no">
+        <cfargument name="userID" hint="User ID is Required">
+
+        <cfscript>
+			try {
+				
+				// Check if PAPERWORK structure exits
+				if ( StructIsEmpty(SESSION.USER.PAPERWORK) ) {
+					// Set Session
+					setUserSessionPaperwork(userID=ARGUMENTS.userID);
+				}
+				
+			} catch (Any e) {
+				// Set Session
+				setUserSessionPaperwork(userID=ARGUMENTS.userID);
+			}
+			
+			// Make Sure Structs are not empty
+			return SESSION.PAPERWORK;
+		</cfscript>
+        
+	</cffunction>
+    
+
     <!--- ------------------------------------------------------------------------- ----
 		END OF USER SESSION
 	----- ------------------------------------------------------------------------- --->
+
+	<cffunction name="paperworkReceivedNotification" access="public" returntype="query" output="false" hint="Sends out an email notification when users fill out paperwork">
+        <cfargument name="userID" hint="User ID is Required">
+
+		<cfscript>
+            //Check if paperwork is complete for season
+            var qCheckPaperworkCompleted = APPLICATION.CFC.UDF.allpaperworkCompleted(userID=ARGUMENTS.userID);
+			// Get User Details
+			var qGetUser = getUsers(userID=ARGUMENTS.userID);
+			
+			var vEmailMessage = '';
+			var vEmailSubject = "Paperwork Submitted for #qGetUser.firstName# #qGetUser.lastName# ###qGetUser.userID#";
+        </cfscript>
+    
+        <cfif VAL(qCheckPaperworkCompleted.reviewAcct) AND isValid("email", CLIENT.programmanager_email)>
+    
+            <cfsavecontent variable="vEmailMessage">
+            
+                <cfoutput>				
+                    The references and all other paperwork appear to be in order for #qGetUser.firstname# #qGetUser.lastname# (###qGetUser.userID#).  
+                    A manual review is now required to activate the account.  
+                    Please review all paperwork and submit the CBC for processing. If everything looks good, approval of the CBC will activate this account.  
+            
+                    <br /><br />
+            
+                    <a href="#CLIENT.exits_url#/nsmg/index.cfm?curdoc=user_info&userID=#qGetUser.userID#">View #qGetUser.firstname#<cfif Right(qGetUser.firstname, 1) EQ 's'>'<cfelse>'s</cfif> account.</a>
+                </cfoutput>
+                
+            </cfsavecontent>
+    
+            <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                <cfinvokeargument name="email_to" value="#CLIENT.programmanager_email#"> 
+                <cfinvokeargument name="email_from" value="#CLIENT.emailfrom# (#CLIENT.companyshort# Support)">
+                <cfinvokeargument name="email_subject" value="#vEmailSubject#">
+                <cfinvokeargument name="email_message" value="#vEmailMessage#">
+            </cfinvoke>
+    
+        </cfif>
+	</cffunction>
 
 
 	<cffunction name="getUserRoleByID" access="public" returntype="query" output="false" hint="Gets a list of user roles by ID">
@@ -280,7 +417,7 @@
 
         <cfquery 
 			name="qGetUserRoleByID" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT 
                     u.useriD,
                     u.firstName,
@@ -289,7 +426,7 @@
                 FROM
                 	smg_users_role_JN surJN
 				INNER JOIN   
-                    smg_users u ON surJN.userid = u.userID
+                    smg_users u ON surJN.userID = u.userID
                 INNER JOIN
                 	applicationLookup alup on alup.fieldID = surJN.roleID                
                 	AND
@@ -314,12 +451,12 @@
 
 	<!--- Get Paperwork --->
 	<cffunction name="getPaperworkByID" access="public" returntype="query" output="false" hint="Gets paperwork by userID">
-    	<cfargument name="userID" default="" hint="userID is required">
-        <cfargument name="seasonID" default="" hint="userID is required">
+    	<cfargument name="userID" default="" hint="userID is not required">
+        <cfargument name="seasonID" default="" hint="userID is not required">
 
         <cfquery 
 			name="qGetPaperworkByID" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
                 	sup.paperworkID,
                     sup.userID,
@@ -358,17 +495,17 @@
         </cfquery>
 		
         <cfreturn qGetPaperworkByID>
-        
 	</cffunction>
 
 
 	<!--- Get References --->
 	<cffunction name="getReferencesByID" access="public" returntype="query" output="false" hint="Gets references by userID">
-    	<cfargument name="userID" default="" hint="userID is required">
+    	<cfargument name="userID" default="" hint="userID is not required">
+        <cfargument name="refID" default="" hint="refID is not required">
 
         <cfquery 
 			name="qGetReferencesByID" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT 
                    refID,
                    firstName,
@@ -387,22 +524,32 @@
                    approved
                 FROM 
                     smg_user_references
-                WHERE 
-                    referenceFor = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+                WHERE
+                	1 = 1
+                    
+                <cfif LEN(ARGUMENTS.userID)>                 
+                    AND
+                    	referenceFor = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+                </cfif>
+                    
+                <cfif LEN(ARGUMENTS.refID)>                 
+                    AND
+                    	refID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.refID)#">
+                </cfif>
         </cfquery>
 
         <cfreturn qGetReferencesByID>
-        
 	</cffunction>
     
     
 	<!--- Get Employment History --->
-	<cffunction name="getEmploymentHistoryByID" access="public" returntype="query" output="false" hint="Gets references by ID">
-    	<cfargument name="userID" default="" hint="userID is required">
+	<cffunction name="getEmploymentByID" access="public" returntype="query" output="false" hint="Gets references by ID">
+    	<cfargument name="userID" default="" hint="userID is not required">
+        <cfargument name="employmentID" default="" hint="userID is not required">
 
         <cfquery 
-			name="qGetEmploymentHistoryByID" 
-			datasource="#APPLICATION.dsn#">
+			name="qGetEmploymentByID" 
+			datasource="#APPLICATION.DSN#">
                 SELECT
                 	employmentID,
                     fk_userID,
@@ -421,39 +568,21 @@
                 FROM 
                     smg_users_employment_history
                 WHERE 
-                    fk_userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+                    1 = 1
+ 				
+                <cfif LEN(ARGUMENTS.userID)>                 
+                    AND
+                    	fk_userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.employmentID)>                 
+                    AND
+                    	employmentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.employmentID)#">
+                </cfif>
         </cfquery>
 
-        <cfreturn qGetReferencesByID>
-        
+        <cfreturn qGetEmploymentByID>
 	</cffunction>
-
-
-	<cffunction name="userNotifications" access="public" returntype="struct" output="false" hint="Returns a struct with all user notification">
-    	<cfargument name="userID" default="" hint="userID is required">
-    	
-        <cfscript>
-			vGetSeasonID = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
-			
-			// Get Paperwork - This is per Season
-			qGetPaperwork = getPaperworkByID(userID=ARGUMENTS.userID, seasonID=vGetSeasonID);
-			
-			// Get References - Does not expire
-			qGetReferences = getReferencesByID(userID=ARGUMENTS.userID);
-			
-			// Get Employment History - Does not expire
-			qGetEmploymentHistory = getEmploymentHistoryByID(userID=ARGUMENTS.userID);
-			
-			writedump(qGetPaperwork);
-			
-			writedump(qGetReferences);
-			
-			writedump(qGetEmploymentHistory);
-			
-			abort;
-		</cfscript>
-
-    </cffunction>
 
     <!--- ------------------------------------------------------------------------- ----
 		End of User Notifications
@@ -465,7 +594,7 @@
 
         <cfquery 
 			name="qGetFacilitators" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                	SELECT
 					u.*
 				FROM
@@ -502,7 +631,7 @@
 
         <cfquery 
 			name="qGetIntlRepresentatives" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT DISTINCT
 					u.*
                 FROM 
@@ -544,7 +673,7 @@
         
         <cfquery 
 			name="qGetCompleteUserAddress" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
                 	userID,
                     CONCAT(address, ', ', city, ', ', state, ', ', zip) AS completeAddress
@@ -597,7 +726,7 @@
               
         <cfquery 
 			name="qGetUserAccessRights" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
 					uar.id,
                     uar.userID,
@@ -694,7 +823,7 @@
               
         <cfquery 
 			name="qHasLoggedInUserComplianceAccess" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
 					userID,
                     hasComplianceAccess
@@ -716,9 +845,9 @@
               
         <cfquery 
 			name="qGetRegionalManager" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT 
-                	u.userid,
+                	u.userID,
                     u.firstName,
                     u.middleName,
                     u.lastName,
@@ -735,7 +864,7 @@
                 FROM 
                 	smg_users u
                 INNER JOIN 
-                	user_access_rights uar ON u.userid = uar.userid
+                	user_access_rights uar ON u.userID = uar.userID
 				INNER JOIN
                 	smg_regions r ON r.regionID = uar.regionID                    
                 WHERE 
@@ -764,31 +893,35 @@
             <!--- Get all users for a specific region --->
             <cfquery 
                 name="qGetSupervisedUsers" 
-                datasource="#APPLICATION.dsn#">
+                datasource="#APPLICATION.DSN#">
                     SELECT DISTINCT
                         u.*
                     FROM 
                     	smg_users u
                     INNER JOIN 
-                    	user_access_rights uar ON uar.userid = u.userid
+                    	user_access_rights uar ON uar.userID = u.userID
                     WHERE 
                     	u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                     AND 
                     	uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
-           			<cfif VAL(ARGUMENTS.regionID)>
+           			
+					<cfif VAL(ARGUMENTS.regionID)>
                         AND
                             uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
                 	</cfif>
+                    
 					<cfif LEN(ARGUMENTS.regionIDList)>
                         AND
                            uar.regionid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionIDList#" list="yes"> )
                 	</cfif>
+                    
                     AND
                     	u.accountCreationVerified != <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                     <!---
 					AND
 						u.dateAccountVerified IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
-					--->						
+					--->
+                    						
                     <cfif VAL(is2ndVisitIncluded)>
                         AND 
                             uar.usertype IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7,15" list="yes"> )
@@ -803,6 +936,9 @@
                             u.userID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.includeUserIDs#" list="yes"> )
                     </cfif>
                     
+                    GROUP BY
+                    	u.userID                        
+
                     ORDER BY 
                     	u.lastname,
                         u.firstName
@@ -812,13 +948,13 @@
         
             <cfquery 
                 name="qGetSupervisedUsers" 
-                datasource="#APPLICATION.dsn#">
+                datasource="#APPLICATION.DSN#">
                     SELECT DISTINCT
                         u.*
                     FROM 
                     	smg_users u
                     INNER JOIN 
-                    	user_access_rights uar ON uar.userid = u.userid
+                    	user_access_rights uar ON uar.userID = u.userID
                     WHERE 
                     	u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                     AND
@@ -828,6 +964,7 @@
                         AND
                             uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
                 	</cfif>
+                    
 					<cfif LEN(ARGUMENTS.regionIDList)>
                         AND
                            uar.regionid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionIDList#" list="yes"> )
@@ -871,6 +1008,9 @@
                     	OR
                             u.userID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.includeUserIDs#" list="yes"> )
                     </cfif>
+
+                    GROUP BY
+                    	u.userID
                     
                     ORDER BY 
                     	u.lastname,
@@ -889,7 +1029,7 @@
               
         <cfquery 
 			name="qGetUserMemberByID" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
 					id,
                     userID,
@@ -928,7 +1068,7 @@
               
             <cfquery 
                 name="qGetRepTotalPayments" 
-                datasource="#APPLICATION.dsn#">
+                datasource="#APPLICATION.DSN#">
                 SELECT                     
                     s.seasonID,
                     SUM(rep.amount) as totalPerProgram,
@@ -940,12 +1080,16 @@
                 LEFT JOIN
                 	smg_seasons s ON s.seasonID = p.seasonID    
                 WHERE 
-                    rep.agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
-                <cfif ARGUMENTS.companyID GT 5>
-                    AND rep.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
-                <cfelse>
-                    AND rep.companyID < <cfqueryparam cfsqltype="cf_sql_integer" value="6"> 
+                    rep.agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+                
+				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
+                    AND          
+                        rep.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                <cfelseif VAL(ARGUMENTS.companyID)>
+                    AND          
+                        rep.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
                 </cfif>
+                
                 GROUP BY
                     s.seasonID            
                 ORDER BY 
@@ -963,7 +1107,7 @@
               
         <cfquery 
 			name="qGetRepPaymentsByProgramID" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT 
                     rep.id, 
                     rep.amount, 
@@ -989,16 +1133,18 @@
                 LEFT JOIN 
                     smg_companies c ON c.companyID = rep.companyID
                 WHERE 
-                    rep.agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                    rep.agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
 				AND
-                	s.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">                  
-				<cfif ARGUMENTS.companyID GT 5>
-                    AND 
-                    	rep.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
-                <cfelse>
-                    AND 
-                    	rep.companyID < <cfqueryparam cfsqltype="cf_sql_integer" value="6"> 
+                	s.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">  
+                    
+				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
+                    AND          
+                        rep.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                <cfelseif VAL(ARGUMENTS.companyID)>
+                    AND          
+                        rep.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
                 </cfif>
+                
                 ORDER BY 
                     rep.date DESC
 		</cfquery>
@@ -1014,7 +1160,7 @@
               
         <cfquery 
 			name="qGetPlacementBonusReport" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT 
                     u.userID,
                     u.firstName,
@@ -1063,15 +1209,19 @@
     
 	<cffunction name="getTraining" access="public" returntype="query" output="false" hint="Gets a list of training records for a userID">
     	<cfargument name="userID" default="0" hint="userID is not required">
+        <cfargument name="seasonID" default="" hint="seasonID is not required">
+        <cfargument name="trainingID" default="" hint="trainingID is not required">
+        <cfargument name="hasPassed" default="1" hint="hasPassed is not required">
 
         <cfquery 
 			name="qGetTraining" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT DISTINCT
 					sut.id,
                     sut.user_id,
                     sut.office_user_id,
                     sut.training_id,
+                    sut.season_id,
                     sut.date_trained,
                     sut.score,
                     sut.has_passed,
@@ -1089,9 +1239,20 @@
 				LEFT OUTER JOIN
                 	smg_users officeUser ON officeUser.userID = sut.office_user_id                                       	
                 WHERE
-                    sut.user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                    sut.user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
                 AND
-                	has_passed = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                	has_passed = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.hasPassed)#">
+                
+				<cfif LEN(ARGUMENTS.seasonID)>
+                    AND
+                        season_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+                </cfif>
+                
+				<cfif LEN(ARGUMENTS.trainingID)>
+                    AND
+                        training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.trainingID)#">
+                </cfif>
+                
                 ORDER BY 
                     sut.date_created
 		</cfquery>
@@ -1106,7 +1267,7 @@
 
         <cfquery 
 			name="qGetExpiringTraining" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
                 	userID,
                     userInformation,
@@ -1192,7 +1353,7 @@
 		
         <cfquery 
             name="qInsertTraining" 
-            datasource="#APPLICATION.dsn#">
+            datasource="#APPLICATION.DSN#">
                 INSERT INTO 
                     smg_users_training
                 (
@@ -1249,7 +1410,7 @@
         
         <cfquery 
 			name="qReportTrainingByRegion" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT DISTINCT
 					u.userID,
                     u.firstName,
@@ -1378,7 +1539,7 @@
 
         <cfquery 
 			name="qReportTrainingNonCompliance" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT 
                     u.userID,
                     u.firstName,
@@ -1487,7 +1648,7 @@
              
         <cfquery 
 			name="qExportDOSUserList" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT 
                     u.userID,
                     u.firstName,
@@ -1796,7 +1957,7 @@
               
         <cfquery 
 			name="qGetInitialProblem" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
 					sp.idServicesProject,
                     sp.studentID,
@@ -1813,7 +1974,7 @@
                     u.lastname as userLast                    
                 FROM 
                     services_project sp
-                LEFT JOIN smg_users u on u.userid = sp.userid
+                LEFT JOIN smg_users u on u.userID = sp.userID
                 LEFT JOIN smg_students st on st.studentid = sp.studentid
                 WHERE
                     sp.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
@@ -1845,7 +2006,7 @@
         <!--- Do search --->
         <cfquery 
 			name="qRemoteLookUpUser" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT DISTINCT
                 	u.userID,
                     (
@@ -1968,7 +2129,7 @@
         
         <cfquery 
 			name="qGetUsersAssignedToRegion" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT DISTINCT
                     u.userID,
                     CONCAT(u.firstName, ' ', u.lastName, ' [', ut.shortUserType, ']' ) AS userInformation
