@@ -173,6 +173,7 @@
   	<cfif additional_info.recordcount gt 0>
     	<tr>
       		<td valign="top">
+            	<div style="page-break-after:always;"></div>
             	<cfinclude template="section3/additional_info_print.cfm">	
          	</td>
      	</tr>
@@ -188,6 +189,7 @@
   	<cfif additional_info.recordcount gt 0>
     	<tr>
       		<td valign="top">
+            	<div style="page-break-after:always;"></div>
             	<cfinclude template="section3/allergy_info_request_print.cfm">	
          	</td>
      	</tr>
@@ -272,11 +274,14 @@
 
 	<!--- PUT THE SECTIONS TOGETHER WITH THE UPLOADED PDF's --->
     
+    <!--- The file to write everything into --->
+    <cfset fileName = "#ExpandPath('../uploadedFiles/temp/')##VAL(CLIENT.studentID)#_#VAL(CLIENT.userID)#_ISEApplication_#TimeFormat(NOW(),'hh-mm-ss')#.pdf">
+    
     <!--- This is the list of PDF's to merge --->
-    <cfset sourceList = "#ExpandPath('../uploadedFiles/temp/')#ISE_Application#CLIENT.studentID#.pdf">
+    <cfset sourceList = "#fileName#">
     
     <!--- Pages 1 to 4 --->
-    <cfdocument format="pdf"  filename="#ExpandPath('../uploadedFiles/temp/')#ISE_Application#CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
+    <cfdocument format="pdf" filename="#fileName#" overwrite="yes" margintop="0.1" backgroundvisible="no">
         <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
             #pages1To4#
         </table>
@@ -452,9 +457,9 @@
     </cfloop>
     
     <!--- Merge the PDF files --->
-    <cfpdf action="merge" source="#sourceList#" destination="#ExpandPath('../uploadedFiles/temp/')#ISE_Application#CLIENT.studentID##CLIENT.userID#.pdf" overwrite="yes">	
+    <cfpdf action="merge" source="#sourceList#" destination="#fileName#" overwrite="yes">	
         
-    <cfheader name="Content-Disposition" value="attachment; filename='#CLIENT.studentID#-Complete-Application.pdf'">
-    <cfcontent type="application/pdf" file="#ExpandPath('../uploadedFiles/temp/')#ISE_Application#CLIENT.studentID##CLIENT.userID#.pdf">
+    <cfheader name="Content-Disposition" value="attachment; filename=#CLIENT.studentID#-Complete-Application.pdf">
+    <cfcontent type="application/pdf" file="#fileName#">
 
 </cfoutput>
