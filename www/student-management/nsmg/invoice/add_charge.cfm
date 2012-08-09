@@ -171,7 +171,7 @@ This agent does not have any students currently active OR all students have had 
 											</cfquery>
 							
 											<cfquery name="student_charges" datasource="MySQL">
-												select regionguar, regionalguarantee
+												select regionguar, regionalguarantee, state_guarantee
 												from smg_students
 												where studentid = #students_under_rep_not_charged.studentid#
 											</cfquery>
@@ -211,9 +211,9 @@ This agent does not have any students currently active OR all students have had 
 							<input type=hidden name="#students_under_rep_not_charged.studentid#guarantee_amount" value="" size=6>
 							<input type="hidden" name=#students_under_rep_not_charged.studentid#direct_placement_guarantee_disc value=''>
 							<cfelse>
-								<cfif student_charges.regionguar is 'no'>
+								<cfif student_charges.regionguar is 'no' AND student_charges.state_guarantee EQ 0>
 									<Tr>
-									<td></td><td colspan = 4 class="thin-border-left-right">Student doesn't have a regional guarantee <input type="hidden" name=#students_under_rep_not_charged.studentid#direct_placement_guarantee_disc value=''><input type=hidden name="#students_under_rep_not_charged.studentid#guarantee_amount" value="" size=6></td>
+									<td></td><td colspan = 4 class="thin-border-left-right">Student doesn't have a regional or state guarantee <input type="hidden" name=#students_under_rep_not_charged.studentid#direct_placement_guarantee_disc value=''><input type=hidden name="#students_under_rep_not_charged.studentid#guarantee_amount" value="" size=6></td>
 									</Tr>
 								<cfelse>
 								<!----Determine which type of guarantee student has---->
