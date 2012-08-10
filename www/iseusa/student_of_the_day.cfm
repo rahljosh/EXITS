@@ -30,9 +30,9 @@ a2a_config.prioritize = ["email", "facebook", "twitter", "google_buzz", "google_
 
 <!--end subPages--></div>
       <div class="HFsidebarR" style="width: 400px;"><div class="HFgradient" style="padding-left: 25px;">
-        <div style="width: 150px; float: right;padding: 5px; margin-top: 15px;margin-right: 10px; margin-left: 5px;"><img src="images/studentOfDay/student3.jpg" alt="Student of the Day" border="0" /></div>
-        <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" /><strong>YU - China</strong></h1>
-   <p style="font-family:'Palatino Linotype', 'Book Antiqua', Palatino, serif; font-size: 13px; line-height: 17px;">Yu, known to her European friends as Wendy, comes from a large province in China where she excels as both a student and an artist. In years as a student and pursuer of cultural exposure, Yu has travelled extensively throughout Asia and Europe. Using these experiences to fine tune her craft, Yu has folded her travelling experience and the people and places she has seen into her paintings. Yu is a lover of American music and movies and very much looks forward to learning about more American customs and culture when she comes to the U.S., as well as practicing her design skills.</p>
+        <div style="width: 150px; float: right;padding: 5px; margin-top: 15px;margin-right: 10px; margin-left: 5px;"><img src="images/studentOfDay/student4.jpg" alt="Student of the Day" border="0" /></div>
+        <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" /><strong>Laura - Belgium</strong></h1>
+   <p style="font-family:'Palatino Linotype', 'Book Antiqua', Palatino, serif; font-size: 13px; line-height: 17px;">Laura is an avid basketball player and fan with an athletic mentality and a above average English skills. She plays on two basketball teams and also enjoys tennis in her free time. A lover of music and American culture, Laura hopes to expand her catalogue of songs by American artists and see more of the world. She remarks in her letter that American culture and European culture can seem so different at time, and she would like to know about America in general.</p>
    <p style="color: #015EAB; font-style: italic;">{<strong>Note:</strong> photo is not of student; it represents interest only}</p><br />
    <hr style="width: 90%; color: #015EAB;" />
    <div class="HFpicR"  style="margin-top: 20px; margin-right: 20px; margin-left: 10px;"><img src="images/studentOfDay/familyCombined.png" width="150" height="113" /></div> <br />
