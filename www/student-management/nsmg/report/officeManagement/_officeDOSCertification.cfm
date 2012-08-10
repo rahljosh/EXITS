@@ -45,6 +45,7 @@
                 	u.userID,
                     u.firstName,
                     u.lastName,
+                    u.email,
                     r.regionID,
                     r.regionName,
                     t.date_trained,
@@ -214,6 +215,7 @@
                     <td>ID</td>
                     <td>First Name</td>
                     <td>Last Name</td>
+                    <td>Email</td>
                     <td>User Type</td>
                     <td>Date</td>
                 </tr>
@@ -246,13 +248,14 @@
                         
                         <tr>
                             <td #vRowColor#>#qGetResultsInRegion.regionName#</td>
-                            <td #vRowColor# align="left">#userID#</td>
-                            <td #vRowColor#>#firstName#</td>
-                            <td #vRowColor#>#lastName#</td>
-                            <td #vRowColor#>#userTypeName#</td>
+                            <td #vRowColor# align="left">#qGetResultsInRegion.userID#</td>
+                            <td #vRowColor#>#qGetResultsInRegion.firstName#</td>
+                            <td #vRowColor#>#qGetResultsInRegion.lastName#</td>
+                            <td #vRowColor#>#qGetResultsInRegion.email#</td>
+                            <td #vRowColor#>#qGetResultsInRegion.userTypeName#</td>
                             <td #vRowColor# align="left">
-                                <cfif IsDate(date_trained)>
-                                    #DateFormat(date_trained,"mm/dd/yyyy")#
+                                <cfif IsDate(qGetResultsInRegion.date_trained)>
+                                    #DateFormat(qGetResultsInRegion.date_trained,"mm/dd/yyyy")#
                                 <cfelse>
                                     <span style="color:red;">Missing</span>
                                 </cfif>
@@ -306,7 +309,7 @@
                     
                     <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                         <tr>
-                            <th class="left" colspan="4">
+                            <th class="left" colspan="5">
                                 <cfif CLIENT.companyID EQ 5>#qGetRegionList.companyShort# -</cfif>
                                 #qGetRegion.regionName#                        
                             </th>
@@ -316,20 +319,22 @@
                             <td class="subTitleLeft" width="10%" style="font-size:9px">ID</td>
                             <td class="subTitleLeft" width="15%" style="font-size:9px">First Name</td>
                             <td class="subTitleLeft" width="15%" style="font-size:9px">Last Name</td>
-                            <td class="subTitleLeft" width="40%" style="font-size:9px">User Type</td>
-                            <td class="subTitleLeft" width="20%" style="font-size:9px">Date</td>
+                            <td class="subTitleLeft" width="15%" style="font-size:9px">Email</td>
+                            <td class="subTitleLeft" width="35%" style="font-size:9px">User Type</td>
+                            <td class="subTitleLeft" width="10%" style="font-size:9px">Date</td>
                         </tr>
                       
                         <cfloop query="qGetResultsInRegion">
                             
                             <tr class="#iif(qGetResultsInRegion.currentRow MOD 2 ,DE("off") ,DE("on") )#">
-                                <td style="font-size:9px">#userID#</td>
-                                <td style="font-size:9px">#firstName#</td>
-                                <td style="font-size:9px">#lastName#</td>
-                                <td style="font-size:9px">#userTypeName#</td>
+                                <td style="font-size:9px">#qGetResultsInRegion.userID#</td>
+                                <td style="font-size:9px">#qGetResultsInRegion.firstName#</td>
+                                <td style="font-size:9px">#qGetResultsInRegion.lastName#</td>
+                                <td style="font-size:9px">#qGetResultsInRegion.email#</td>
+                                <td style="font-size:9px">#qGetResultsInRegion.userTypeName#</td>
                                 <td style="font-size:9px">
-                                    <cfif IsDate(date_trained)>
-                                        #DateFormat(date_trained,"mm/dd/yyyy")#
+                                    <cfif IsDate(qGetResultsInRegion.date_trained)>
+                                        #DateFormat(qGetResultsInRegion.date_trained,"mm/dd/yyyy")#
                                     <cfelse>
                                         <span style="color:red;">Missing</span>
                                     </cfif>
@@ -340,7 +345,7 @@
                         
                         <cfif NOT VAL(qGetResultsInRegion.recordcount)>
                             <tr class="off">
-                                <td colspan="5">No records found</td>
+                                <td colspan="6">No records found</td>
                             </tr>
                         </cfif>
                         
@@ -351,7 +356,7 @@
                 <!--- Total --->
                 <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                     <tr>
-                        <th class="left" colspan="4">Total</th>
+                        <th class="left" colspan="5">Total</th>
                         <th class="right">#qGetResults.recordcount#</th>
                     </tr>
                 </table>
