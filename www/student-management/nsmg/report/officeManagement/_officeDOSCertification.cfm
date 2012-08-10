@@ -166,7 +166,7 @@
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Description:</td>
                     <td>
-                        This report will show a list of all users and their DOS Certification test date in the specified region.
+                        This report will show a list of all active fully enabled users and their DOS Certification test date in the specified region.
                         It will show the date as Missing for any user who has not taken the test since the previous July 1st.
                     </td>		
                 </tr>
