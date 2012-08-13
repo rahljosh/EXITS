@@ -256,7 +256,7 @@
             AND 
                 isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
             ORDER BY 
-                dep_date ASC,
+                dep_date DESC,
                 dep_time ASC
             LIMIT 1                            
         ) AS dateArrived, 
