@@ -1252,7 +1252,7 @@
                                 value="#FORM.hostIDSuggest#" 
                                 autosuggest="cfc:nsmg.extensions.components.host.lookupHostFamily({cfautosuggestvalue}, #qGetStudentInfo.regionAssigned#)" 
                                 class="xLargeField"
-                                maxResultsDisplay="10"
+                                maxResultsDisplayed="25"
                                 showautosuggestloadingicon="true"
                                 tooltip="Type host family name">
                                 

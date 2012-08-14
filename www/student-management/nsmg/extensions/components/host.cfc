@@ -340,9 +340,25 @@
                     AND
                         regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
                 </cfif>
-				
+                
+                AND
+					CAST( 
+                    	CONCAT(                      
+                            familyLastName,
+                            ' - ', 
+                            IFNULL(fatherFirstName, ''),                                                  
+                            IF (fatherFirstName != '', IF (motherFirstName != '', ' and ', ''), ''),
+                            IFNULL(motherFirstName, ''),
+                            ' (##',
+                            hostID,
+                            ')'                    
+						) 
+					AS CHAR) LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.search#%">
+                
+				<!---
                 AND                    
                     familyLastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.search#%">
+				--->
                 
                 ORDER BY 
                     familyLastName
