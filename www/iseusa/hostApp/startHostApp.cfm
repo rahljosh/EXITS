@@ -1,3 +1,4 @@
+
 <!--- ------------------------------------------------------------------------- ----
 	
 	File:		startHostApp.cfm
@@ -27,6 +28,7 @@
     <cfparam name="FORM.fatherbirth" default="">
     <cfparam name="FORM.fatherssn" default="">
     <cfparam name="FORM.fatherworktype" default="">
+    <cfparam name="FORM.fatherEmployeer" default="">
     <cfparam name="FORM.father_cell" default="">
     <cfparam name="FORM.fatherfullpart" default="3">
 	<!--- Mother --->    
@@ -37,6 +39,7 @@
     <cfparam name="FORM.motherbirth" default="">
     <cfparam name="FORM.motherssn" default="">
     <cfparam name="FORM.motherworktype" default="">
+    <cfparam name="FORM.motherEmployeer" default="">
     <cfparam name="FORM.mother_cell" default="">
     <cfparam name="FORM.motherfullpart" default="3">
     <!--- Address --->
@@ -49,11 +52,11 @@
     <cfparam name="FORM.email" default="">
     <cfparam name="FORM.password" default="">
     <!--- Mailing Address --->
-    <cfparam name="FORM.mailing_address" default="">
-    <cfparam name="FORM.mailing_address2" default="">
-    <cfparam name="FORM.mailing_city" default="">
-    <cfparam name="FORM.mailing_state" default="">
-    <cfparam name="FORM.mailing_zip" default="">
+    <cfparam name="FORM.mailaddress" default="">
+    <cfparam name="FORM.mailaddress2" default="">
+    <cfparam name="FORM.mailcity" default="">
+    <cfparam name="FORM.mailstate" default="">
+    <cfparam name="FORM.mailzip" default="">
     <cfparam name="FORM.homeIsFunctBusiness" default="3">
     <cfparam name="FORM.homeBusinessDesc" default="">
 
@@ -97,50 +100,50 @@
             }	
 			
 			// Address
-            if ( APPLICATION.address_lookup NEQ 2 AND NOT LEN(TRIM(FORM.address)) ) {
+            if ( NOT LEN(TRIM(FORM.address)) ) {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Your home address is not valid.");
             }	
 
 			// City
-            if ( APPLICATION.address_lookup NEQ 2 AND NOT LEN(TRIM(FORM.city)) ) {
+            if (NOT LEN(TRIM(FORM.city)) ) {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("You need to indicate which city your home is located in.");
             }	
 
 			// State
-            if ( APPLICATION.address_lookup NEQ 2 AND NOT LEN(TRIM(FORM.state)) ) {
+            if ( NOT LEN(TRIM(FORM.state)) ) {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please indicate which state your home is located in.");
             }	
 
 			// Zip
-            if ( APPLICATION.address_lookup NEQ 2 AND NOT isValid("zipcode", TRIM(FORM.zip)) ) {
+            if ( NOT isValid("zipcode", TRIM(FORM.zip)) ) {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("The zip code for home address is not a valid zip code.");
             }	
 
 			
 			// Mailing Address
-            if ( APPLICATION.address_lookup NEQ 2 AND NOT LEN(TRIM(FORM.mailing_address)) ) {
+            if ( NOT LEN(TRIM(FORM.mailaddress)) ) {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please indicate your mailing address.");
             }	
 
 			// Mailing City
-            if ( APPLICATION.address_lookup NEQ 2 AND NOT LEN(TRIM(FORM.mailing_city)) ) {
+            if (NOT LEN(TRIM(FORM.mailcity)) ) {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please indicate your mailing address city.");
             }	
 
 			// Mailing State
-            if ( APPLICATION.address_lookup NEQ 2 AND NOT LEN(TRIM(FORM.mailing_state)) ) {
+            if (NOT LEN(TRIM(FORM.mailstate)) ) {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please indicate your mailing address state.");
             }	
 
 			// Mailing Zip
-            if ( APPLICATION.address_lookup NEQ 2 AND NOT isValid("zipcode", TRIM(FORM.mailing_zip)) ) {
+            if ( NOT isValid("zipcode", TRIM(FORM.mailzip)) ) {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("The zip code for mailing address is not a valid zip code.");
             }	
@@ -243,6 +246,11 @@
                 SESSION.formErrors.Add("You provided a job for the host father, but didn't indicate if you work full or part time.");
 			}
 			
+			// Father Employer
+            if ( LEN(TRIM(FORM.fatherworktype))  and not len(trim(FORM.fatherEmployeer)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("You provided a job for the host father, but didn't indicate the employer.");
+			}
 			// Father is Required
             if (LEN(TRIM(FORM.motherfirstname)) and not len(trim(FORM.motherdob)) )  {
                 // Get all the missing items in a list
@@ -259,7 +267,11 @@
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("You provided a job for the host mother, but didn't indicate if you work full or part time.");
 			}
-			
+			// Father Employer
+            if ( LEN(TRIM(FORM.motherworktype))  and not len(trim(FORM.motherEmployeer)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("You provided a job for the host mother, but didn't indicate the employer.");
+			}
 		</cfscript>
         
         <!--- Check if there are no errors --->
@@ -272,7 +284,7 @@
                 UPDATE 
                     smg_hosts 
                 SET
-                    familylastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.familylastname#">,
+                    familylastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(FORM.familylastname)#">,
                     <!--- Father --->
                     fatherlastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherlastname#" null="#yesNoFormat(TRIM(FORM.fatherlastname) EQ '')#">,
                     fatherfirstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherfirstname#" null="#yesNoFormat(TRIM(FORM.fatherfirstname) EQ '')#">,
@@ -286,6 +298,7 @@
                     <Cfif fatherfullpart neq 3>
                     fatherfullpart = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fatherfullpart#">,
                     </Cfif>
+                    fatherEmployeer = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(FORM.fatherEmployeer)#">,
 					<!--- Mother --->
                     motherfirstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherfirstname#" null="#yesNoFormat(TRIM(FORM.motherfirstname) EQ '')#">,
                     motherlastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherlastname#" null="#yesNoFormat(TRIM(FORM.motherlastname) EQ '')#">,
@@ -299,6 +312,7 @@
                     <cfif motherfullpart neq 3>
                     motherfullpart = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.motherfullpart#">,
                     </cfif>
+                    motherEmployeer = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(FORM.motherEmployeer)#">,
 					<!--- Address --->
                     address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
                     address2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address2#" null="#yesNoFormat(TRIM(FORM.address2) EQ '')#">,
@@ -309,11 +323,11 @@
                     email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#" null="#yesNoFormat(TRIM(FORM.email) EQ '')#">,
                     password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.password#">,
                     <!--- Mailing Address --->
-                    mailaddress = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailing_address#">,
-                    mailaddress2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailing_address2#" null="#yesNoFormat(TRIM(FORM.mailing_address2) EQ '')#">,
-                    mailcity = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailing_city#">,
-                    mailstate = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailing_state#">,
-                    mailzip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailing_zip#">,
+                    mailaddress = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailaddress#">,
+                    mailaddress2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailaddress2#" null="#yesNoFormat(TRIM(FORM.mailaddress2) EQ '')#">,
+                    mailcity = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailcity#">,
+                    mailstate = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailstate#">,
+                    mailzip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailzip#">,
                     homeIsFunctBusiness = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.homeIsFunctBusiness#">,
                     homeBusinessDesc = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homeBusinessDesc#">,
                     lead = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
@@ -340,8 +354,10 @@
 			FORM.fatherdob = qGetHostInfo.fatherdob;
 			FORM.fatherssn = qGetHostInfo.fatherssn;
 			FORM.fatherworktype = qGetHostInfo.fatherworktype;
+			FORM.fatherEmployeer = qGetHostInfo.fatheremployeer;
 			FORM.father_cell = qGetHostInfo.father_cell;
 			FORM.fatherfullpart = qGetHostInfo.fatherfullpart;
+			
 			// Mother --->    
 			FORM.motherfirstname = qGetHostInfo.motherfirstname;
 			FORM.motherlastname = qGetHostInfo.motherlastname;
@@ -352,6 +368,7 @@
 			FORM.motherworktype = qGetHostInfo.motherworktype;
 			FORM.mother_cell = qGetHostInfo.mother_cell;
 			FORM.motherfullpart = qGetHostInfo.motherfullpart;
+			FORM.motherEmployeer = qGetHostInfo.motherEmployeer;
 			// Address --->
 			FORM.address = qGetHostInfo.address;
 			FORM.address2 = qGetHostInfo.address2;
@@ -362,11 +379,11 @@
 			FORM.email = qGetHostInfo.email;
 			FORM.password = qGetHostInfo.password;
 			// Mailing Address --->
-			FORM.mailing_address = qGetHostInfo.mailaddress;
-			FORM.mailing_address2 = qGetHostInfo.mailaddress2;
-			FORM.mailing_city = qGetHostInfo.mailcity;
-			FORM.mailing_state = qGetHostInfo.mailstate;
-			FORM.mailing_zip = qGetHostInfo.mailzip;
+			FORM.mailaddress = qGetHostInfo.mailaddress;
+			FORM.mailaddress2 = qGetHostInfo.mailaddress2;
+			FORM.mailcity = qGetHostInfo.mailcity;
+			FORM.mailstate = qGetHostInfo.mailstate;
+			FORM.mailzip = qGetHostInfo.mailzip;
 			FORM.homeIsFunctBusiness = qGetHostInfo.homeIsFunctBusiness;
 			FORM.homeBusinessDesc = qGetHostInfo.homeBusinessDesc;
          	
@@ -421,17 +438,17 @@
 	function FillFields(box) 
 	{
 		if (box.checked == false) { 
-			document.my_form.mailing_address.value  = '';
-			document.my_form.mailing_address2.value = '';
-			document.my_form.mailing_city.value = '';
-			document.my_form.mailing_state.value = '';
-			document.my_form.mailing_zip.value = '';
+			document.my_form.mailaddress.value  = '';
+			document.my_form.mailaddress2.value = '';
+			document.my_form.mailcity.value = '';
+			document.my_form.mailstate.value = '';
+			document.my_form.mailzip.value = '';
 		} else {
-			document.my_form.mailing_address.value  = document.my_form.address.value;
-			document.my_form.mailing_address2.value = document.my_form.address2.value;
-			document.my_form.mailing_city.value = document.my_form.city.value;
-			document.my_form.mailing_state.value = document.my_form.state.value;
-			document.my_form.mailing_zip.value = document.my_form.zip.value;
+			document.my_form.mailaddress.value  = document.my_form.address.value;
+			document.my_form.mailaddress2.value = document.my_form.address2.value;
+			document.my_form.mailcity.value = document.my_form.city.value;
+			document.my_form.mailstate.value = document.my_form.state.value;
+			document.my_form.mailzip.value = document.my_form.zip.value;
 		}
 	}
 
@@ -480,37 +497,6 @@
         <td colspan=3><input type="text" name="familylastname" id="familylastname" value="#FORM.familylastname#" size="20" maxlength="150"></td>
     </tr>
 
-<!--- address lookup - auto version. --->
-<cfif application.address_lookup EQ 2>
-    <tr bgcolor="##deeaf3">
-        <td class="label">Lookup Address <span class="redtext">*</span></td>
-        <td colspan=3>
-            Enter at least the street address and zip code and click "Lookup".<br />
-            Address, City, State, and Zip will be automatically filled in.<br />
-            Address line 2 should be manually entered if needed.<br />
-            <cftextarea name="lookup_address" rows="2" cols="30" value="#FORM.lookup_address#" /><br />
-            <input type="button" value="Lookup" onClick="showLocation();" />
-        </td>
-    </tr>
-    <tr>
-        <td class="label"><h3>Address</h3></td>
-        <td colspan=3><cfinput type="text" name="address" value="#FORM.address#" size="40" maxlength="150" readonly="readonly"></td>
-    </tr>
-    <tr bgcolor="##deeaf3">
-        <td></td>
-        <td colspan=3><cfinput type="text" name="address2" value="#FORM.address2#" size="40" maxlength="150"></td>
-    </tr>
-    <tr>			 
-        <td class="label"><h3>City</h3></td>
-        <td colspan=3><cfinput type="text" name="city" value="#FORM.city#" size="20" maxlength="150" readonly="readonly"></td>
-    </tr>
-    <tr bgcolor="##deeaf3">
-        <td class="label"><h3>State</h3></td>
-        <td><cfinput type="text" name="state" value="#FORM.state#" size="2" maxlength="2" readonly="readonly"></td>
-        <td class="zip"><h3>Zip</h3></td>
-        <td><cfinput type="text" name="zip" value="#FORM.zip#" size="5" maxlength="5" readonly="readonly"></td>
-    </tr>
-<cfelse>
     <tr bgcolor="##deeaf3">
         <td class="label">
         
@@ -531,6 +517,7 @@
         <td class="label"><h3>City <span class="redtext">*</span></h3></td>
         <td colspan=3><cfinput type="text" name="city" value="#FORM.city#" size="20" maxlength="150"></td>
     </tr>
+
     <tr bgcolor="##deeaf3">
         <td class="label"><h3>State <span class="redtext">*</span></h3></td>
         <td>
@@ -541,25 +528,11 @@
         <td class="zip"><h3>Zip<span class="redtext">*</span></h3> </td>
         <td><cfinput type="text" name="zip" value="#FORM.zip#" size="5" maxlength="5" ></td>
     </tr>
-	<!--- address lookup - simple version. --->
-    <cfif application.address_lookup EQ 1>
-        <tr>
-            <td class="label"><h3>Lookup Address<span class="redtext">*</span></h3> </td>
-            <td colspan=3><font size="1">
-	            Enter Address, City, State, and Zip and click "Lookup".<br />
-                Verify the address displayed below, and make any corrections on the form if necessary.<br />
-                Address line 2 will not be included below.<br />
-                If you have trouble submitting an address, <a href="mailto:<cfoutput>#application.support_email#</cfoutput>?subject=Address Lookup">send it to us</a>.<br />
-                <input type="button" value="Lookup" onClick="showLocation();" /><br />
-		        <textarea name="lookup_address" readonly="readonly" rows="2" cols="30">Lookup address will be displayed here.</textarea>
-            </font></td>
-        </tr>
-    </cfif>
-</cfif>
+	
 
     <tr >
         <td ><h3>Phone <span class="redtext">+</span></h3></td>
-        <td colspan=3><cfinput type="text" name="phone" value="#FORM.phone#" size="16" maxlength="14" mask="(999) 999-9999"></td>
+        <td colspan=3><cfinput type="text" name="phone" value="#FORM.phone#" size="16" placeholder="(208) 867-5309" maxlength="14" mask="(999) 999-9999"></td>
     </tr>
     <tr bgcolor="##deeaf3">
         <td ><h3>Email</h3></td>
@@ -591,7 +564,7 @@
 	</tr>
   
      <Tr>
-	     <td align="left" colspan=4 id="describeBusiness" <cfif FORM.homeBusinessDesc is ''>  style="display: none;"</cfif>><Br /><strong>Please Describe<span class="redtext">*</span></strong><br><textarea cols="50" rows="4" name="homeBusinessDesc" wrap="VIRTUAL"><Cfoutput>#FORM.homeBusinessDesc#</cfoutput></textarea></td>
+	     <td align="left" colspan=4 id="describeBusiness" <cfif FORM.homeBusinessDesc is ''>  style="display: none;"</cfif>><Br /><strong>Please Describe<span class="redtext">*</span></strong><br><textarea cols="50" rows="4" name="homeBusinessDesc" wrap="VIRTUAL" placeholder="Name of Business, Nature of Business, etc"><Cfoutput>#FORM.homeBusinessDesc#</cfoutput></textarea></td>
 	</tr>   
 </table>
 <br />
@@ -599,30 +572,30 @@
 <a onclick="ShowHide(); return false;" href="##">+/- Need to add a mailing address that is different from the home address above?</a>
 <div id="slidingDiv" display:"none">
 ---->
-<h3>Mailing Address <font size=-1><input name="ShipSame" id="ShipSame" type="checkbox" class="formCheckbox" onClick="FillFields(this)" value="Same"<cfif IsDefined('FORM.ShipSame')> checked</cfif>><label for="ShipSame">Same as Home</label></font></h3>
+<h3>Mailing Address <font size=-1><input name="ShipSame" id="ShipSame" type="checkbox" class="formCheckbox" onClick="FillFields(this)" value="Same"<cfif IsDefined('FORM.ShipSame')> checked</cfif>><label for="ShipSame">Use Home Address</label></font></h3>
   <table width=100% cellspacing=0 cellpadding=2 class="border">
    <tr bgcolor="##deeaf3">
         <td class="label"><h3>Address <span class="redtext">*</span></h3></td>
         <td colspan=3>
-        	<cfinput type="text" name="mailing_address" value="#FORM.mailing_address#" size="40" maxlength="150" ></td>
+        	<cfinput type="text" name="mailaddress" value="#FORM.mailaddress#" size="40" maxlength="150" ></td>
     </tr>
     <tr bgcolor="##deeaf3">
         <td></td>
-        <td colspan=3><cfinput type="text" name="mailing_address2" value="#FORM.mailing_address2#" size="40" maxlength="150"></td>
+        <td colspan=3><cfinput type="text" name="mailaddress2" value="#FORM.mailaddress2#" size="40" maxlength="150"></td>
     </tr>
     <tr>			 
         <td class="label"><h3>City <span class="redtext">*</span></h3></td>
-        <td colspan=3><cfinput type="text" name="mailing_city" value="#FORM.mailing_city#" size="20" maxlength="150"></td>
+        <td colspan=3><cfinput type="text" name="mailcity" value="#FORM.mailcity#" size="20" maxlength="150"></td>
     </tr>
     <tr bgcolor="##deeaf3">
         <td class="label"><h3>State <span class="redtext">*</span></h3></td>
         <td>
-			<cfselect NAME="mailing_state" query="qGetStates" value="state" display="statename" selected="#FORM.mailing_state#" queryPosition="below">
+			<cfselect NAME="mailstate" query="qGetStates" value="state" display="statename" selected="#FORM.mailstate#" queryPosition="below">
 				<option></option>
 			</cfselect>
         </td>
         <td class="zip"><h3>Zip<span class="redtext">*</span></h3> </td>
-        <td><cfinput type="text" name="mailing_zip" value="#FORM.mailing_zip#" size="5" maxlength="5" ></td>
+        <td><cfinput type="text" name="mailzip" value="#FORM.mailzip#" size="5" maxlength="5" ></td>
     </tr>
   </table>
   <!----
@@ -645,7 +618,7 @@
     </tr>
     <tr bgcolor="##deeaf3">
     	<td class="label"><h3>Date of Birth</h3></td>
-        <td><cfinput type="text" name="fatherdob" value="#dateFormat(FORM.fatherdob, 'mm/dd/yyyy')#" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid Father's Date of Birth."> mm/dd/yyyy</td>
+        <td><cfinput type="text" name="fatherdob" value="#dateFormat(FORM.fatherdob, 'mm/dd/yyyy')#" size="10" maxlength="10" mask="99/99/9999" placeholder="MM/DD/YYYY"> </td>
     </tr>
 
     <tr >
@@ -654,14 +627,19 @@
         <input name="fatherfullpart" type="radio" value="1" <cfif form.fatherfullpart eq 1>checked</cfif>> Full Time  
         <input name="fatherfullpart" type="radio" value="0" <cfif form.fatherfullpart eq 0>checked</cfif>> Part Time </td>
     </tr>
+ <tr >
+    	<td class="label"><h3>Employer</h3></td>
+        <td><cfinput type="text" name="fatherEmployeer" value="#FORM.fatherEmployeer#" size="50" maxlength="200"> 
+         </td>
+    </tr>
     <tr bgcolor="##deeaf3">
         <td class="label"><h3>Cell Phone <span class="redtext">+</span></h3></td>
-        <td colspan=3><cfinput type="text" name="father_cell" value="#FORM.father_cell#" size="14" maxlength="14" mask="(999) 999-9999" validate="telephone" message="Please enter a valid Father's Cell Phone."></td>
+        <td colspan=3><cfinput type="text" name="father_cell" value="#FORM.father_cell#" size="14" maxlength="14" placeholder="(208) 867-5309"  mask="(999) 999-9999" ></td>
     </tr>
         <cfif FORM.allow_fatherssn eq 1>
         <tr>
         	<td class="label"><h3>SSN</h3></td>
-            <td><cfinput type="text" name="fatherssn" value="#FORM.fatherssn#" size="11" maxlength="11" mask="999-99-9999" validate="social_security_number" message="Please enter a valid Father's SSN."> <em>We use this durring the background check.</em></td>
+            <td><cfinput type="text" name="fatherssn" value="#FORM.fatherssn#" size="11" maxlength="11" mask="999-99-9999" > <em>We use this durring the background check.</em></td>
         </tr>	
     </cfif>
 </table>
@@ -683,7 +661,7 @@
     </tr>			
     <tr  bgcolor="##deeaf3">
     	<td class="label"><h3>Date of Birth</h3></td>
-        <td><cfinput type="text" name="motherdob" value="#dateFormat(FORM.motherdob, 'mm/dd/yyyy')#" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid Mother's Date of Birth."> mm/dd/yyyy</td>
+        <td><cfinput type="text" name="motherdob" value="#dateFormat(FORM.motherdob, 'mm/dd/yyyy')#" size="12" maxlength="10" mask="99/99/9999" placeholder="MM/DD/YYYY"> </td>
     </tr>
 
     <tr>
@@ -692,9 +670,14 @@
 		<input name="motherfullpart" type="radio" value="1" <cfif form.motherfullpart eq 1>checked</cfif>> Full Time  
         <input name="motherfullpart" type="radio" value="0" <cfif form.motherfullpart eq 0>checked</cfif>> Part Time </td>
     </tr>
+ <tr >
+    	<td class="label"><h3>Employer</h3></td>
+        <td><cfinput type="text" name="motherEmployeer" value="#FORM.motherEmployeer#" size="50" maxlength="200"> 
+         </td>
+    </tr>
     <tr   bgcolor="##deeaf3">
         <td class="label"><h3>Cell Phone <span class="redtext">+</span></h3></td>
-        <td colspan=3><cfinput type="text" name="mother_cell" value="#FORM.mother_cell#" size="14" maxlength="14" mask="(999) 999-9999" validate="telephone" message="Please enter a valid Mother's Cell Phone."></td>
+        <td colspan=3><cfinput type="text" name="mother_cell" value="#FORM.mother_cell#" size="14" maxlength="14" placeholder="(208) 867-5309" mask="(999) 999-9999" ></td>
     </tr>
         <cfif FORM.allow_motherssn eq 1>
         <tr>
@@ -713,3 +696,4 @@
     
 </cfform>
 </cfoutput>
+
