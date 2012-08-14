@@ -1,4 +1,4 @@
-<Cfparam name="form.school" default="0">
+<Cfparam name="form.school" default="na">
 <cfparam name="form.schoolWorks" default="3">
 <cfparam name="form.schoolWorksExpl" default="">
 <cfparam name="form.schoolCoach" default="3">
@@ -12,7 +12,12 @@
 <cfparam name="form.state" default="">
 <cfparam name="form.zip" default="">
 <Cfparam name="form.school" default="na">
-
+<Cfparam name="form.principal" default="">
+<Cfparam name="form.phone" default="">
+<Cfparam name="form.email" default="">
+<Cfparam name="form.extraCuricTrans" default="na">
+<cfparam name="form.schoolType" default="">
+<cfparam name="form.schoolFees" default="">
 
 
 <cfquery name="local" datasource="MySQL">
@@ -26,17 +31,21 @@ select * from smg_schools
 where (city = "#local.city#")and (state = "#local.state#")
 </cfquery>
 <cfquery name="get_host_school" datasource="MySQL">
-select smg_hosts.schoolid, smg_schools.schoolname, smg_schools.address, smg_schools.address2, smg_schools.principal,smg_schools.city, smg_schools.state, smg_schools.zip
+select smg_hosts.schoolid, smg_schools.schoolname, smg_schools.address, smg_schools.address2, smg_schools.principal,smg_schools.city, smg_schools.state, smg_schools.zip, smg_schools.phone, smg_schools.email, smg_schools.tuition, smg_schools.type
 from smg_hosts 
 left join smg_schools on smg_schools.schoolid = smg_hosts.schoolid
 where smg_hosts.hostid = #client.hostid#
 </cfquery>
 <cfquery name="qGetHostInfo" datasource="MySQL">
-select schoolWorks, schoolWorksExpl, schoolCoach, schoolCoachExpl, schooltransportation, schooltransportationother
+select schoolWorks, schoolWorksExpl, schoolCoach, schoolCoachExpl, schooltransportation, schooltransportationother,extraCuricTrans, schoolid
 from smg_hosts
 where hostid = #client.hostid#
 </cfquery>
-
+<cfquery name="hostKids" datasource="MySQL">
+select *
+from smg_host_children
+where hostid = #client.hostid#
+</cfquery>
 
 <!--- Import CustomTag Used for Page Messages and Form Errors --->
 <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
@@ -75,6 +84,11 @@ where hostid = #client.hostid#
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please enter the school's zip code.");
             }	
+				// type
+            if (NOT LEN(TRIM(FORM.schoolType)) )  {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate if this is a public or private school.");
+            }
 			
 	   </cfscript>
    </cfif>
@@ -113,7 +127,12 @@ where hostid = #client.hostid#
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please indicate how the student will get to school.");
             }
-			
+			// Extra Curricular Transportaion
+            if (NOT LEN(TRIM(FORM.extraCuricTrans)) )  {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate if you will provide transportation to extracuricular activities.");
+            }
+		
         </cfscript>
         
         <cfif NOT SESSION.formErrors.length()>
@@ -126,16 +145,19 @@ where hostid = #client.hostid#
                 schoolCoach = "#form.schoolCoach#",
                 schoolCoachExpl = "#form.schoolCoachExpl#",
                 schooltransportation = "#form.schoolTransportation#",
-                schooltransportationother = "#form.other_desc#"
+                schooltransportationother = "#form.other_desc#",
+                extraCuricTrans = "#form.extraCuricTrans#"
                 where hostid = #client.hostid#
                 </cfquery>
  			<!----Insert School Information---->
+           
+           
    			<cfif form.school is 'na'>
            			 <cfquery name="insert_school" datasource="MySQL">
                         INSERT INTO smg_schools
-                            (schoolname,address,address2,city,state,zip<!----,phone,fax,email,url,principal---->)								
-                        VALUES ("#form.schoolname#", "#form.address#", "#form.address2#", "#form.city#", "#form.state#", "#form.zip#"<!----, "#form.phone#",
-                                "#form.fax#", "#form.email#", "#form.url#", "#form.principal#"---->)
+                            (schoolname,address,address2,city,state,zip,phone,email,principal,type, tuition <!----,url,---->)								
+                        VALUES ("#form.schoolname#", "#form.address#", "#form.address2#", "#form.city#", "#form.state#", "#form.zip#", "#form.phone#",
+                                 "#form.email#", "#form.principal#", "#form.schoolType#", "#form.schoolFees#"<!---- "#form.url#",---->)
                     </cfquery>
                 
                     <cfquery name="schoolid" datasource="MySQL"> <!--- get the newest school --->
@@ -160,33 +182,35 @@ where hostid = #client.hostid#
             </cfif>
 
         
-          <Cflocation url="index.cfm?page=familyRules">
+          <Cflocation url="index.cfm?page=communityProfile">
        
   		</cfif>
 <Cfelse>	
 <!----The first time the page is loaded, pass in current values, if they exist.---->
 	 <cfscript>
-		 
-			 // Set FORM Values   
+			// Set FORM Values   
 			FORM.schoolName = get_host_school.schoolName;
 			FORM.address = get_host_school.address;
 			FORM.address2 = get_host_school.address2;
 			FORM.city = get_host_school.city;
 			FORM.state = get_host_school.state;
 			FORM.zip = get_host_school.zip;
-			
 			FORM.schoolWorks = qGetHostInfo.schoolWorks;
 			FORM.schoolWorksExpl = qGetHostInfo.schoolWorksExpl;
 			FORM.schoolCoach = qGetHostInfo.schoolCoach;
 			FORM.schoolCoachExpl = qGetHostInfo.schoolCoachExpl;
 			FORM.schooltransportation = qGetHostInfo.schooltransportation;
 			FORM.schooltransportationother = qGetHostInfo.schooltransportationother;
-		</cfscript>
+			FORM.extraCuricTrans = qGetHostInfo.extraCuricTrans;
+			FORM.school = qGetHostInfo.schoolid;
+			FORM.principal = get_host_school.principal;
+			FORM.phone = get_host_school.phone;
+			FORM.email = get_host_school.email;
+			FORM.schoolType = get_host_school.type;
+			FORM.schoolFees = get_host_school.tuition;
+	 </cfscript>
 </cfif> 
-    
-
-	
-       
+ 
 
 <Cfoutput>
 
@@ -236,13 +260,13 @@ the information for the school that the student will be attending.
 		<tr>
 			<td class="label"><h3>Address<span class="redtext">*</span></h3></td><td colspan=3 class="form_text"> <input type="text" name="address" size="20" value="#form.address#"></td>
 		</tr>
-		<tr bgcolor="##deeaf3">
+		<tr>
 			<td></td ><td  colspan=3 class="form_text"> <input type="text" name="address2" size="20" value="#form.address2#">
 		</tr>
-		<tr>			 
+		<tr bgcolor="##deeaf3">			 
 			<td class="label"><h3>City<span class="redtext">*</span></h3> </td><td  colspan=3 class="form_text"><input type="text" name="city" size="20" value="#form.city#">
 		</tr> 
-		<tr bgcolor="##deeaf3">	
+		<tr >	
 			<td class="label" > <h3>State<span class="redtext">*</span></h3> </td><td width=10 class="form_Text">
 		
    			 <cfquery name="get_states" datasource="mysql">
@@ -257,26 +281,40 @@ the information for the school that the student will be attending.
 	</td><td class="zip" ><h3>Zip<span class="redtext">*</span></h3> </td><td class="form_text"><input type="text" name="zip" size="5" value="#form.zip#"></td>
 
 		</tr>
+      
+		<tr bgcolor="##deeaf3">
+			<td class="label"><h3>Contact</h3></td><td class="form_text" colspan=3><cfinput type="text" name="principal" size=20 value="#form.principal#"></span> 
+		</tr>
+		<tr>			
+		<td class="label"><h3>Phone</h3></td><td class="form_text" colspan=3><cfinput type="text" name="phone" size=20 value="#form.phone#" placeholder="(208) 867-5309" mask='(999) 999-9999'></span>
+		</tr>
+		
+		<tr  bgcolor="##deeaf3">
+			<td class="label"><h3>Contact Email</h3></td><td class="form_text" colspan=3> <cfinput name="email" size=20 type="text" value="#form.email#" placeholder="contact@school.edu"></span>
+		</tr>
+        <Tr>
+        	<td class="label"><h3>School Type</h3></td>
+            <td  colspan=3><input type="radio" value="public" name="schoolType" <Cfif form.schooltype is 'public'>checked</cfif> /> Public &nbsp;&nbsp; <input type="radio" value="private" name="schoolType" <Cfif form.schooltype is 'private'>checked</cfif>   /> Private </td>
+        </Tr>
+        <Tr  bgcolor="##deeaf3">
+        	<td class="label"><h3>School Fees</h3></td><td  colspan=3><input type="text" name="schoolFees" size=25 placeholder="amount of tution or fees" value="#form.schoolFees#" /> </td>
+        </Tr>
         <!----
+        <tr bgcolor="##deeaf3">
+			<td class="label"><h3>Distance from Home</h3></td><td class="form_text" colspan=3> <cfinput name="distnaceFromHome" size=10 type="text" value="#form. placeholder="25 miles"></span>
+		</tr>
+       
 		<tr>
-			<td class="label"><h3>Principal</h3></td><td class="form_text" colspan=3><cfinput type="text" name="principal" size=20 value="#get_host_school.principal#"></span> 
+			<td class="label"><h3>Number of Students</h3></td>
+            <td class="form_text" colspan=3> <cfinput name="numberStudents" size=10 type="text" placeholder="1200"></span>
 		</tr>
-		<tr bgcolor="##deeaf3">			
-		<td class="label"><h3>Phone</h3></td><td class="form_text" colspan=3><cfinput type="text" name="phone" size=20 value="#get_host_school.phone#"> nnn-nnn-nnnn</span>
+    	<tr>
+			<td class="label" bgcolor="##deeaf3"><h3>School Year Starts</h3></td>
+            <td class="form_text" colspan=3> <cfinput name="schoolStars" size=10 type="text" placeholder="08/28/2012"></span>
 		</tr>
-		<tr>
-			<td class="label"><h3>Fax</h3></td><td class="form_text" colspan=3><cfinput type="text" name="fax" size=20 value="#get_host_school.fax#"> nnn-nnn-nnnn</span>
-		</tr>
-		<tr bgcolor="##deeaf3">
-			<td class="label"><h3>Contact Email</h3></td><td class="form_text" colspan=3> <cfinput name="email" size=20 type="text" value="#get_host_school.email#"></span>
-		</tr>
-		<tr>
-			<td class="label"><h3>Web Site</h3></td><td class="form_text" colspan=3> <cfinput name="url" size=20 type="text" value="#get_host_school.url#"></span>
-		</tr>
-		<tr bgcolor="##deeaf3">
-			<td class="label"><h3>Number of Students</h3></td><td class="form_text" colspan=3> <cfinput name="number_Students" size=5 type="text" value="#get_host_school.numberofstudents#"> College Bound: <cfinput type="text" name="collegebound" size=3 value="#get_host_school.collegebound#">%</span><br>	
+		 ---->
 			
-	</tr>---->
+	</tr>
 </table>
 <br />
 <cfif get_Schools.recordcount is not 0>
@@ -326,6 +364,13 @@ the information for the school that the student will be attending.
     <Tr>
 	     <td align="left" colspan=2 id="showCoachExpl" <cfif form.schoolCoach eq 0>style="display: none;"</cfif>><br /><strong>Please describe<span class="redtext">*</span></strong><br><textarea cols="50" rows="4" name="schoolCoachExpl" wrap="VIRTUAL"><Cfoutput>#form.schoolCoachExpl#</cfoutput></textarea></td>
 	</tr>
+    <Tr bgcolor="##deeaf3">
+	     <td align="left" colspan=2 >Please check any children that attend this school<br>
+         <cfloop query="hostKids">
+         <input type="checkbox" value="#childid#" /> #name# &nbsp;&nbsp;&nbsp;
+         </cfloop>
+         </td>
+	</tr>
 </table>
 
   <h2>Transportation</h2>
@@ -341,6 +386,24 @@ the information for the school that the student will be attending.
         <Td><cfinput type="radio" name="schoolTransportation" value="Other" checked="#form.schoolTransportation eq 'Other'#" >Other: <cfinput type="text" name="other_desc" size=10 value="#form.schoolTransportationother#"> </Td>
         <td> </td>
     </tr>
+	<tr bgcolor="##deeaf3">
+        <td class="label" colspan=2>Will you provide transportation for extracurricular activities?<span class="redtext">*</span></td>
+        <td>
+            <label>
+            <cfinput type="radio" name="extraCuricTrans" value="1"
+            checked="#form.extraCuricTrans eq 1#"
+             />
+            Yes
+            </label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <label>
+            <cfinput type="radio" name="extraCuricTrans" value="0"
+           checked="#form.extraCuricTrans eq 0#" 
+           />
+            No
+            </label>
+		 </td>
+	</tr>
 </table>
 
 <!----These questions are global to school, rep should answer.

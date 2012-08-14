@@ -7,13 +7,14 @@
 <cfparam name="form.famDietRest" default="3">
 <cfparam name="form.stuDietRest" default="3">
 <cfparam name="form.threesquares" default="3">
+<cfparam name="form.share_room" default="0">
 <cfparam name="form.allergic" default="3">
 <cfparam name="form.kid_share" default="0">
 <cfparam name="url.animalid" default=''>
 <cfparam name="url.hostid" default='#client.hostid#'>
 <cfparam name="form.indoor" default="na">
 <cfparam name="form.animaltype" default=''>
-
+<cfparam name="form.dietaryRestriction" default='3'>
 <!----Delete a Pet---->
 <Cfif isDefined('url.delete_animal')>
 	<cfquery datasource="mysql">
@@ -87,11 +88,7 @@
                 SESSION.formErrors.Add("Please indicate if any one in your family smokes.");
 			 }
 			 
-			//Student Smokes
-            if  (NOT LEN(TRIM(FORM.stu_smoke))) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate if you would be willing to host a student who smokes.");
-			 }	
+			
 			 //Student smoke conditions
 			 if (( FORM.stu_smoke EQ 1) AND NOT LEN(TRIM(FORM.smoke_conditions)) )  {
                 // Get all the missing items in a list
@@ -102,6 +99,11 @@
              if ( FORM.famDietRest EQ 3) {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please indicate if your family follows any dietary restrictions.");
+			 }
+					 // Family Dietary Restrictions
+             if ( FORM.dietaryRestriction EQ 3) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate if you would have problems hosting a student with dietary restrictions.");
 			 }
 			 if (( FORM.famDietRest EQ 1) AND NOT LEN(TRIM(FORM.famDietRestDesc)) )  {
                 // Get all the missing items in a list
@@ -156,14 +158,15 @@
                     <cfquery name="smoking_pref" datasource="MySQL">
                     update smg_hosts
                         set hostSmokes = '#form.smokes#',
-                            acceptsmoking = '#form.stu_smoke#',
+                           
                             smokeconditions = '#form.smoke_conditions#',
                             pet_allergies = '#form.allergic#',
                             famDietRest = '#form.famDietRest#',
                             famDietRestDesc = '#form.famDietRestDesc#',
                             stuDietRest = '#form.stuDietRest#',
                             stuDietRestDesc = '#form.stuDietRestDesc#',
-                            threesquares = '#form.threesquares#'
+                            threesquares = '#form.threesquares#',
+                            dietaryRestriction = '#form.dietaryRestriction#'
                             
                         where hostid = #client.hostid#
                     </cfquery>
@@ -185,6 +188,7 @@
 			FORM.stuDietRest = qGetHostInfo.stuDietRest;
 			FORM.stuDietRestDesc = qGetHostInfo.stuDietRestDesc;
 			FORM.threesquares = qGetHostInfo.threesquares;
+			FORM.dietaryRestriction = qGetHostInfo.dietaryRestriction;
 			
 		</cfscript>
 
@@ -253,8 +257,9 @@ where hostid = #client.hostid#
 
 
 <h3>Pets </h3>
-Please include all animals that live in or outside your home.<br /><span class="redtext">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Required fields</span>
-
+Please include all animals that live in or outside your home.<br />
+<span class="redtext">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Required fields</span>
+(if submitting animals)
 <table width=100% cellspacing=0 cellpadding=2 class="border">
     <tr bgcolor="#deeaf3">
     	<td class="label"><h3>Type of Animal<span class="redtext">*</span></h3></td>	
@@ -298,21 +303,44 @@ Please include all animals that live in or outside your home.<br /><span class="
        
         <td align="right">
        
-        <input type="image" src="../images/addPet.png" /></td>
+        <input type="image" src="../images/buttons/addPet.png" /></td>
     </tr>
 </table>
 </cfform>
 <br />
 	<hr width="50%" align="Center"/>
  <br />
+ 
  <cfform action="index.cfm?page=roomPetsSmoke" method="post">
+<h3>Allergies</h3>
+<table width=100% cellspacing=0 cellpadding=2 class="border">
+	<Tr bgcolor="#deeaf3">
+    	<Td>
+Would you be willing to host a student who is allergic to animals?<span class="redtext">*</span><Br /> (If they are able to handle the allergy with medication)
+		</Td>
+        <Td>
+
+   <label>
+            <cfinput type="radio" name="allergic" value="1"
+             checked="#form.allergic eq 1#"  />
+            Yes
+            </label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <label>
+            <cfinput type="radio" name="allergic" value="0"
+             checked="#form.allergic eq 0#" />
+            No
+            </label>
+     </Tr>
+ </table>
+ <br />
 <h3>Room Sharing</h3>
-<div class="get_Attention">The student may share a bedroom with one of the same sex and within a reasonable age difference, but must have his/her own bed.<sup>&dagger;</sup></div>
+<div class="get_Attention">The student may share a bedroom with someone of the same sex and within a reasonable age difference, but must have his/her own bed.<sup>&dagger;</sup></div>
 <table width=100% cellspacing=0 cellpadding=2 class="border">
 <cfif get_kids.recordcount is 0>
 	<Tr>
     	<td colspan=4 bgcolor="#deeaf3">
-<div class="get_Attention">Since you don't have any kids or other family memebers living at home, it is assumend the student will not be sharing a room.  If this is wrong, 
+<div class="get_Attention">Since you don't have any kids or other family members living at home, it is assumend the student will not be sharing a room.  If this is wrong, 
 you will need to <a href="index.cfm?page=familyMembers">add a family member</a>.
 </div>
 		</td>
@@ -373,36 +401,21 @@ you will need to <a href="index.cfm?page=familyMembers">add a family member</a>.
 		<td align="left" width=50%>Does anyone in your family smoke?<span class="redtext">*</span></td><td>
             <label>
             <cfinput type="radio" name="smokes" value="yes"
-            checked="#form.smokes eq 'yes'#" />
+            checked="#form.smokes eq 'yes'#"  onclick="document.getElementById('showsmoke').style.display='table-row';" />
             Yes
             </label>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <label>
             <cfinput type="radio" name="smokes" value="no"
-           checked="#form.smokes eq 'no'#" />
+           checked="#form.smokes eq 'no'#" onclick="document.getElementById('showsmoke').style.display='none';" />
             No
             </label>
 		 
  </td>
 	</tr>
-		<Tr bgcolor="#deeaf3">
-		<td align="left">Would you be willing to host a student who smokes?<span class="redtext">*</span></td><td>
-		        <label>
-            <cfinput type="radio" name="stu_smoke" value="yes"
-            onclick="document.getElementById('showsmoke').style.display='table-row';" checked="#form.stu_smoke is 'yes'#" />
-            Yes
-            </label>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <label>
-            <cfinput type="radio" name="stu_smoke" value="no"
-            onclick="document.getElementById('showsmoke').style.display='none';" checked="#form.stu_smoke is 'no'#"  />
-            No
-            </label>
 		
-</td>
-	</tr>
 		<Tr>
-		<td align="left" colspan="2" id="showsmoke" <Cfif form.stu_smoke neq 1>style="display: none;"</cfif>>Under what conditions?<br><textarea cols="50" rows="4" name="smoke_conditions" wrap="VIRTUAL"><Cfoutput>#form.smoke_conditions#</cfoutput></textarea></td>
+		<td align="left" colspan="2" id="showsmoke" <Cfif form.stu_smoke neq 1>style="display: none;"</cfif>>Under what conditions?<br><textarea cols="50" rows="4" name="smoke_conditions" wrap="VIRTUAL" placeholder="inside, outside, etc"><Cfoutput>#form.smoke_conditions#</cfoutput></textarea></td>
 	</tr>
 </table>
 <span cless="spacer"></span>
@@ -455,6 +468,24 @@ you will need to <a href="index.cfm?page=familyMembers">add a family member</a>.
      </Tr>
      <Tr  bgcolor="#deeaf3">
     	<Td>
+			Would you feel comfortable hosting a student with a dietary restriction?<span class="redtext">*</span><br /> (vegetarian, vegan, etc.)
+		</Td>
+        <td>
+   		<label>
+            <cfinput type="radio" name="dietaryRestriction" value="1" 
+             checked="#form.dietaryRestriction eq 1#"  />
+            Yes
+            </label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <label>
+            <cfinput type="radio" name="dietaryRestriction" value="0" 
+             checked="#form.dietaryRestriction eq 0#"  />
+            No
+        </label>
+     	</td>
+     </Tr>
+     <Tr>
+    	<Td>
 			Are you prepared to provide three (3) quality meals per day?<span class="redtext">*</span><br /> (students are expected to provide and/or pay for school lunches)
 		</Td>
         <td>
@@ -473,27 +504,7 @@ you will need to <a href="index.cfm?page=familyMembers">add a family member</a>.
      </Tr>
  </table>
 
-<h3>Allergies</h3>
-<table width=100% cellspacing=0 cellpadding=2 class="border">
-	<Tr bgcolor="#deeaf3">
-    	<Td>
-Would you be willing to host a student who is allergic to animals?<span class="redtext">*</span><Br /> (If they are able to handle the allergy with medication)
-		</Td>
-        <Td>
 
-   <label>
-            <cfinput type="radio" name="allergic" value="1"
-             checked="#form.allergic eq 1#"  />
-            Yes
-            </label>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <label>
-            <cfinput type="radio" name="allergic" value="0"
-             checked="#form.allergic eq 0#" />
-            No
-            </label>
-     </Tr>
- </table>
 
  <table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
     <tr>
@@ -505,8 +516,5 @@ Would you be willing to host a student who is allergic to animals?<span class="r
 </table>
 <span class="spacer"></span>
 </div>
-<h3><u>Department Of State Regulations</u></h3>
-<p>&dagger;<strong><a href="http://ecfr.gpoaccess.gov/cgi/t/text/text-idx?c=ecfr&sid=bfef5f6152d538eed70ad639c221a216&rgn=div8&view=text&node=22:1.0.1.7.37.2.1.6&idno=22" target="_blank" class=external>CFR Title 22, Part 62, Subpart B, &sect;62.25 (j)(4)</a></strong><br />
-       <em>Ensure that the host family is capable of providing a comfortable and nurturing home environment and that the home is clean and sanitary; that the exchange student's bedroom contains a separate bed for the student that is neither convertible nor inflatable in nature; and that the student has adequate storage space for clothes and personal belongings, reasonable access to bathroom facilities, study space if not otherwise available in the house and reasonable, unimpeded access to the outside of the house in the event of a fire or similar emergency. An exchange student may share a bedroom, but with no more than one other individual of the same sex.</em></p>
 
 </cfform>
