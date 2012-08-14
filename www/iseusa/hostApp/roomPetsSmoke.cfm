@@ -303,7 +303,7 @@ Please include all animals that live in or outside your home.<br />
        
         <td align="right">
        
-        <input type="image" src="../images/buttons/addPet.png" /></td>
+        <input type="image" src="images/buttons/addPet.png" /></td>
     </tr>
 </table>
 </cfform>
