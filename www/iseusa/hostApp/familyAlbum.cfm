@@ -1,23 +1,48 @@
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+	.box{
+		
+		margin: 10px 0px;
+		padding:15px 10px 15px 50px;
+		background-repeat: no-repeat;
+		background-position: 10px center;
+		position:relative;
+		color: #000;
+		background-color:#FFC;
+		background-image: url('../images/info.png');
+	}
+</style>
 <cfparam name="form.picCat" default=''>
 
 <!--- Import CustomTag Used for Page Messages and Form Errors --->
 <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 
-<cfset acceptedFiles = 'jpg,gif,png,JPG,GIF,PNG'>
+<cfset acceptedFiles = 'jpg,JPG,jpeg,JPEG'>
 
 <!----Delete Picture---->
 
 <cfif isDefined('url.delPic')>
 	<cffile action="delete" 
-    	file="C:\websites\student-management\nsmg\uploadedfiles\HostAlbum\#url.delPic#">
+    	file="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/large/#url.delPic#">
     <cffile action="delete" 
-    	file="C:\websites\student-management\nsmg\uploadedfiles\HostAlbum\thumbs\#url.delPic#"> 
+    	file="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs/#url.delPic#"> 
         <cfquery name="delPic" datasource="MySQL">
             delete from smg_host_picture_album
             where filename = '#url.delPic#'   
         </cfquery>
         <cflocation url="index.cfm?page=familyAlbum">
 </cfif>
+
 <Cfquery name="current_photos" datasource="mysql">
 select filename, description, cat 
 from smg_host_picture_album
@@ -44,54 +69,97 @@ from smg_host_pic_cat
             from smg_host_picture_album
             where fk_hostid = #client.hostid#
             </cfquery>
-            <cflocation url="index.cfm?page=roomPetsSmoke" addtoken="no">
+            <cflocation url="index.cfm?page=schoolInfo" addtoken="no">
 		</cfif>
+<script type="text/javascript">
+$(document).ready(function(){
+ $('.box').hide();
+  $('#dropdown').change(function() {
+    $('.box').hide();
+    $('#div' + $(this).val()).show();
+ });
+});
+</script>
 
 <h3>Upload Single Pictures<br />
 <font size=-2><em>Once you upload a picture, you will be able to add a description for each picture.</em></font></h3>
+
+
 <cfif isDefined("fileUpload")>
+<cfset form.picCat = #RemoveChars(form.picCat, 1, 4)#>
 <cfif form.fileUpload is ''>
 <div align="center"><font color="#FF0000"><h3>Please select a file to upload.</h3></font></div>
 <cfelse>
-
- <cffile action="upload"
-     destination="C:\websites\student-management\nsmg\uploadedfiles\HostAlbum\"
-     fileField="fileUpload" nameconflict="makeunique">
-<cfset newFName = "#client.hostid#_#dateformat(now(),'yyyyddmm')#_#timeformat(now(), 'hhmmss')#.#file.ServerFileExt#">
-   <cffile action="rename" destination="C:\websites\student-management\nsmg\uploadedfiles\HostAlbum\#newFName#" source="C:\websites\student-management\nsmg\uploadedfiles\HostAlbum\#file.serverfile#">
-
-   
-<cfset fileTypeOK = 1>
-<cfif #ListFind('#acceptedFIles#','#file.ServerFileExt#')# eq 0>
+		<cfif DirectoryExists('/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/large')>
+        <cfelse>
+        	<cfdirectory action = "create" directory = "/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/large" >
+        </cfif>	
+        
+        <cfif DirectoryExists('/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs')>
+        <cfelse>
+        	<cfdirectory action = "create" directory = "/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs" >
+        </cfif>	
+        
+        
+   <cffile action="upload"
+     destination="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/temp/"
+     fileField="fileUpload" nameconflict="makeunique">    
+      <cfdirectory action="list" name="currentPics2" directory="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/temp/">
+     
+      <cfset fileTypeOK = 1>
+	<cfif #ListFind('#acceptedFIles#','#file.ServerFileExt#')# eq 0>
    <cfset fileTypeOK = 0>
    <cffile action="delete" 
-    	file="C:\websites\student-management\nsmg\uploadedfiles\HostAlbum\#newFName#">
+    	file="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/#file.serverfile#">
    
-</cfif>
+	</cfif>
+
+      <!----Resize pictures for large and thumbnails---->
+       <cfloop query="currentPics2">
+            
+     			   <cfinvoke component="cfc.ResizeLarge" method="GetImage" returnvariable="myImage">
+                        <cfinvokeargument name="img" value="#name#"/>
+                        <cfinvokeargument name="hostid" value="#client.hostid#"/>
+                    </cfinvoke>
+                   
+ 					<cfinvoke component="cfc.ResizeThumb" method="GetImage" returnvariable="myImage">
+                        <cfinvokeargument name="img" value="#name#"/>
+                       
+                        <cfinvokeargument name="mls" value="#client.hostid#"/>
+                 	</cfinvoke>
+				
+                     </cfloop>
+                    <cfloop query="currentPics2">
+				 	<cffile action="delete" file="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/temp/#name#">  
+                   </cfloop>
+
+     
+  <!----  
+<cfset newFName = "#client.hostid#_#dateformat(now(),'yyyyddmm')#_#timeformat(now(), 'hhmmss')#.#file.ServerFileExt#">
+   <cffile action="rename" destination="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/large/#newFName#" source="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/regular/#file.serverfile#">
+   
+   <cffile action="rename" destination="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs/#newFName#" source="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs/#file.serverfile#">
+---->
+   
+
 <!--- Process Form Submission --->
          <cfscript>
             // Data Validation
 			//Play in Band
 			 if ( fileTypeOK eq 0) {
                 // Get all the missing items in a list
-                SESSION.formErrors.Add("You are trying to upload a #file.ServerFileExt#. We only accept image files of type jpg, png, or gif.  Please convert your file and try to upload again.");
+                SESSION.formErrors.Add("You are trying to upload a #file.ServerFileExt#. We only accept image files of type jpg or jpeg.  Please convert your file and try to upload again.");
 			 }
 		 </cfscript>
 <cfif NOT SESSION.formErrors.length()>
  
 
  
-   <cfimage
-    action = "resize"
-    height = "100"
-    source = "C:\websites\student-management\nsmg\uploadedfiles\HostAlbum\#newFName#"
-    width = "150"
-    destination = "C:\websites\student-management\nsmg\uploadedfiles\HostAlbum\thumbs\#newFName#"
-    >
+
 
      <cfquery datasource="MySQL">
      	insert into smg_host_picture_album (fk_hostID, filename, cat)
-     	values(#client.hostid#, '#newFName#', #form.picCat#)
+     	values(#client.hostid#, '#file.clientfilename#.jpg', #form.picCat#)
      </cfquery>
 
      <Cflocation url="index.cfm?page=familyAlbum" addtoken="no">
@@ -105,26 +173,40 @@ from smg_host_pic_cat
         messageType="section"
         />
 <table width=100% cellspacing=0 cellpadding=2 class="border">
-	<Tr>
-   		<td>
-
-
-<form enctype="multipart/form-data" method="post">
-<input type="file" name="fileUpload" /><br />
-
-
-</td>
-<Td>
-Select a catagory for this picture:<br />
-<cfoutput>
-<select name="picCat">
+	<tr>
+    	<td colspan="4">
+        <Cfoutput>
 <cfloop query="picCatagories">
-<option value="#catID#" <cfif form.picCat eq #catID#>selected</cfif>>#cat_name#<Cfif catid is not 7>*</Cfif></option>
+<div id="divarea#catid#" class="box"> #requirements#</div>
 </cfloop>
+</cfoutput>
+        
+        </td>
+    </tr>
+	<Tr>
+    <Td>
+Select a category for this picture:<br />
+
+<Cfoutput>
+<form enctype="multipart/form-data" method="post">
+<select name="picCat" id="dropdown">
+	<option value="0"></option>
+		<cfloop query="picCatagories">
+			<option value="area#catID#" <cfif form.picCat eq #catID#>selected</cfif>>#cat_name#<Cfif catid is not 7>*</Cfif></option>
+		</cfloop>
 </select>
 
 </cfoutput>
 </Td>
+   		<td>
+
+
+
+<input type="file" name="fileUpload" /><br />
+
+
+</td>
+
 <Td>
 
 
@@ -134,7 +216,7 @@ Select a catagory for this picture:<br />
     </Tr>
 </table>
 
-*At least on picture from this catagory is required.
+*At least on picture from this catagory is required. More than one photo may be needed to clearly depict each room.
 
 <h3>Your Photo Album</h3>
 <table width=100% cellspacing=0 cellpadding=2 class="border">
@@ -149,16 +231,14 @@ Select a catagory for this picture:<br />
         from smg_host_pic_cat
         where catID = #cat#
         </cfquery>
-    	<Td><cfimage action="writetobrowser" 
-        		source="http://ise.exitsapplication.com/nsmg/uploadedfiles/hostAlbum/thumbs/#filename#" height = 100><br />
+    	<Td><img src="http://111cooper.com/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs/#filename#" height = 100><br />
                 #catDesc.cat_name#<br />
-                <a href="index.cfm?page=familyAlbum&delPic=#filename#"><img src="../images/buttons/delete.png"  border=0 /></a>
-		</Td>
-        <td valign="top">
+                <a href="index.cfm?page=familyAlbum&delPic=#filename#"><img src="../images/buttons/deleteGreyRed.png" height=30  border=0 /></a>
+</Td>
+                <td valign="top">
                 Description of picture:<br />
-                <textarea name="desc_#filename#" cols="15" rows="5">#description#</textarea>
+                <textarea name="desc_#filename#" cols="20" rows="5">#description#</textarea>
               <Cfset count = #count# + 1>
-        </td>      
  	<Cfif  #count#  mod 2>
     </tr>
     </Cfif>
@@ -178,22 +258,29 @@ Select a catagory for this picture:<br />
 
 <table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
     <tr>
-    <cfif current_photos.recordcount neq 0>
-    <td colspan=4 align="Center">When you are done editing the descriptions, just click "Next"
-        	<input type="hidden" name="updateDesc" />
+  
+    <td colspan=4 align="Center" valign="center">When you are done editing the descriptions, just click "Next"
+        	
+        
+     
+        <td align="right">
+                  <input type="hidden" name="updateDesc" />
         	<input name="Submit" type="image" src="../images/buttons/Next.png"/>
+            </form>
+           
+            </td>
         </td>
-        </form>
-       <cfelse>
-        <td align="right"><a href="index.cfm?page=roomPetsSmoke"><img src="../images/buttons/Next.png" border=0></a></td>
-        </cfif>
+        
+       
     </tr>
     
 </table>
 
 
-
+<!----
 <h3><u>Department Of State Regulations</u></h3>
 
 <p>&dagger;<strong><a href="http://ecfr.gpoaccess.gov/cgi/t/text/text-idx?c=ecfr&sid=bfef5f6152d538eed70ad639c221a216&rgn=div8&view=text&node=22:1.0.1.7.37.2.1.6&idno=22" target="_blank" class=external>CFR Title 22, Part 62, Subpart B, &sect;62.25 (j)(2)</a></strong><br />
-<em>Utilize a standard application form developed by the sponsor that includes, at a minimum, all data fields provided in Appendix F, "Information to be Collected on Secondary School Student Host Family Applications". The form must include a statement stating that: "The income data collected will be used solely for the purposes of determining that the basic needs of the exchange student can be met, including three quality meals and transportation to and from school activities." Such application form must be signed and dated at the time of application by all potential host family applicants. The host family application must be designed to provide a detailed summary and profile of the host family, the physical home environment (to include photographs of the host family home's exterior and grounds, kitchen, student's bed[-=p0 room, bathroom, and family or living room), family composition, and community environment. Exchange students are not permitted to reside with their relatives.</em></p>
+
+
+<em> The host family application must be designed to provide a detailed summary and profile of the host family, the physical home environment (to include photographs of the host family home's exterior and grounds, kitchen, student's bedroom, bathroom, and family or living room), family composition, and community environment. Exchange students are not permitted to reside with their relatives.</em></p>---->

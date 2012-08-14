@@ -6,7 +6,7 @@
 <cfif isdefined('form.submit')>
     <cfquery name="insert_family_letter" datasource="MySQL">
     update smg_hosts
-        set familyletter = "#form.letter#"
+        set familyletter = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#form.letter#">
     where hostid = #client.hostid#
     </cfquery>
     
@@ -26,7 +26,7 @@
 		
 		</cfscript>
          <cfif NOT SESSION.formErrors.length()>
- 			<cflocation url="index.cfm?page=familyAlbum" addtoken="no">
+ 			<cflocation url="index.cfm?page=roomPetsSmoke" addtoken="no">
     	 </cfif>
 </cfif>
 
@@ -34,7 +34,7 @@
 <cfquery name="host_letter" datasource="MySQL">
 select familyletter
 from smg_hosts
-where hostid = #client.hostid#
+where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostID#">
 </cfquery>
 <cfform method="post" action="index.cfm?page=hostLetter">
 <input type="hidden" name="submit" />
