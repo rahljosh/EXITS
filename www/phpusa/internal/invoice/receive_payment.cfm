@@ -90,7 +90,6 @@ function findselected() {
 	LEFT JOIN php_schools ON php_schools.schoolid = php.schoolid
 	LEFT JOIN smg_program_type programtype ON programtype.programtypeid = p.type
 	WHERE php.companyid = <cfqueryparam value="#client.companyid#" cfsqltype="cf_sql_integer">
-		AND php.active = '1'
 	ORDER BY u.businessname, familylastname
 </cfquery>
 
