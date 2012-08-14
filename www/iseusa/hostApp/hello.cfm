@@ -168,9 +168,9 @@
              <cfelse>
            
 					   <cfif appNotComplete gte 180>
-                            <a href="index.cfm?page=checkList" style="text-align: left;"><img src="../images/buttons/submitHostApp.png" border="0"></a>
+                            <a href="index.cfm?page=checkList" style="text-align: left;"><img src="images/buttons/submitHostApp.png" border="0"></a>
                        <cfelse>
-                           <a href="index.cfm?page=checkList" style="text-align: left;"><img src="../images/buttons/missingInfo.png" border="0"></a>
+                           <a href="index.cfm?page=checkList" style="text-align: left;"><img src="images/buttons/missingInfo.png" border="0"></a>
                         </cfif>
              </cfif>
                          </td>
@@ -228,7 +228,7 @@
       <p>Congratulations on the decission to host a student with ISE.  We are excited to be working with you.
       <div align="center">
 			
-            	<a href="index.cfm?page=startHostApp"><img src="../images/buttons/contApp.png" alt="continue" border="0" /></a>
+            	<a href="index.cfm?page=startHostApp"><img src="images/buttons/contApp.png" alt="continue" border="0" /></a>
                 <!----
 				<cfif appInfo.lead eq 0>
             	<a href="index.cfm?page=startHostApp##pageTop"><img src="../images/buttons/startApp.png" alt="start" border="0" /></a>
