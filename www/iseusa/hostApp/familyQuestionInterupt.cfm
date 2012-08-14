@@ -1,37 +1,34 @@
-
+<Cfset client.usertype = 1>
+<Cfset client.email = 'josh@pokytrails.com'>
+<cfset season = 9>
+<cfset dirPath = "/home/httpd/vhosts/111cooper.com/httpdocs/">
 <!--- Import CustomTag Used for Page Messages and Form Errors --->
 <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 <cfparam name="submitForm" default=0>
 <cfquery name="qHostParentsMembers" datasource="mysql">
-select h.fatherfirstname, h.fatherdob, h.fatherlastname, h.motherfirstname, h.motherlastname, h.motherdob, h.fatherssn, h.motherssn
+select h.fatherfirstname, h.fatherdob, h.fatherlastname, h.motherfirstname, h.motherlastname, h.motherdob, h.fatherssn, h.motherssn, h.companyid, h.regionid, h.email
 from smg_hosts h
 where h.hostid = #client.hostid# 
 </cfquery>
 <cfquery name="qHostParentsCBC" datasource="mysql">
-select cbc_type,  date_sent
-from smg_hosts_cbc
+select * 
+from smg_documents
 where hostid = #client.hostid#
 </cfquery>
+
 <cfquery name="checkFatherCBC" dbtype="query">
 select *
 from qHostParentsCBC
-where cbc_type = 'father'
+where shortDesc = 'Father CBC Auth'
+
 </cfquery>
 <cfquery name="checkMotherCBC" dbtype="query">
 select *
 from qHostParentsCBC
-where cbc_type = 'mother'
+where shortDesc = 'Mother CBC Auth'
 </cfquery>
-<cfquery name="qHostFamilyMembers" datasource="mysql">
-select k.name, k.lastname, k.birthdate, k.cbc_form_received, k.childid, k.membertype, k.ssn, k.liveathome
-from smg_host_children k
-where k.hostid = #client.hostid# 
-</cfquery>
-<cfquery name="qActiveSeasons" datasource="mysql">
-select s.seasonid, s.season 
-from smg_seasons s
-where active = 1
-</cfquery>
+
+
 
 
 
@@ -71,15 +68,17 @@ where active = 1
 		 </cfscript>
    		</cfif>	
         <!----check to make sure that the person should have a background check run---->
-        
+ 
         
         <Cfloop list="#famList#" index="x">
+        	<cfif structKeyExists(form, "#x#_ssn")>
+        	
             <cfquery name="cbcCheck" datasource="mysql">
             select k.name, k.lastname, k.birthdate, k.cbc_form_received, k.childid, k.membertype, k.ssn, k.liveathome
             from smg_host_children k
             where k.childid = #x# 
             </cfquery>
-            <Cfif isDefined('#form[x & "_ssn"]#')>
+            <Cfif  ( LEN(TRIM('#form[x & "_ssn"]#')) NEQ 11)>
         	<Cfif #DateDiff('yyyy',cbcCheck.birthdate,now())# gte 18 and cbcCheck.liveathome is 'yes'>
             
 				<cfscript>
@@ -99,6 +98,7 @@ where active = 1
                 </cfscript>
         	</Cfif>
             </Cfif>
+            </Cfif>
         </Cfloop>
 
         <!--- Check if there are no errors --->
@@ -113,11 +113,11 @@ where active = 1
                     set fatherSSN = '#encfatherssn#'
                     where hostid = #client.hostid#
                     </cfquery>
-                      <cfif DirectoryExists('C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/')>
+                      <cfif DirectoryExists('#dirPath#nsmg/uploadedfiles/hosts/#client.hostid#/')>
         				<cfelse>
-           				 <cfdirectory action = "create" directory = "C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/" >
+           				 <cfdirectory action = "create" directory = "#dirPath#nsmg/uploadedfiles/hosts/#client.hostid#/" >
         				</cfif>
-                    <cfdocument format="PDF" filename="C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/#form.fatherSig#cbcAuthorization.pdf" overwrite="yes">
+                    <cfdocument format="PDF" filename="#dirPath#nsmg/uploadedfiles/hosts/#client.hostid#/#form.fatherSig#_cbcAuthorization.pdf" overwrite="yes">
                     <!--- form.pr_id and form.report_mode are required for the progress report in print mode.
                     form.pdf is used to not display the logo which isn't working on the PDF. --->
                     <cfset form.report_mode = 'print'>
@@ -130,8 +130,25 @@ where active = 1
                     #DateFormat(now(), 'mmm d, yyyy')# at #TimeFormat(now(), 'h:mm:ss tt')#<Br />
                     IP: #cgi.REMOTE_ADDR# 
                     </Cfoutput>
-                </cfdocument>    
+                </cfdocument>   
+                <cfquery name="insertDocInfo" datasource="mysql">
+                insert into smg_documents (fileName, type, dateFiled, filePath, description, shortDesc, userid, userType, hostID, seasonID)
+                				values('#form.fatherSig#_cbcAuthorization.pdf', 'pdf', #now()#, 'hosts/#client.hostid#/', 'CBC Authorization for #form.fatherSig#','Father CBC Auth',#client.hostid#, 'Host Father',#client.hostID#, #season#)
+                </cfquery> 
+                <!----
+                 <cfquery name="insertCBCInfo" datasource="mysql">
+                insert into smg_hosts_cbc (hostid, familyid, cbc_type,dateCreated, dateUpdated, seasonID, date_authorized, companyid)
+                			values(#client.hostid#, #x#, 'father', #now()#, #now()#, 9, #now()#, #qHostParentsMembers.companyid#) 
+                </cfquery>
+                ---->
+                <cfquery name="cbcInfo" datasource="mysql">
+                select cbcfamID 
+                from smg_hosts_cbc
+                where hostid = #client.hostid# and cbc_type = 'father'
+                </cfquery>    
+                
              </Cfif>
+             
              <!----Insert mothers ssn if defined---->
              <Cfif isDefined('form.motherssn')>
 				 <cfset encmotherssn = encrypt("#trim(form.motherssn)#", "#ssn_key#", "desede", "hex")>
@@ -142,11 +159,11 @@ where active = 1
                     </cfquery>
                     
 				
-                      <cfif DirectoryExists('C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/')>
+                      <cfif DirectoryExists('#dirPath#nsmg/uploadedfiles/hosts/#client.hostid#/')>
         				<cfelse>
-           				 <cfdirectory action = "create" directory = "C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/" >
+           				 <cfdirectory action = "create" directory = "#dirPath#nsmg/uploadedfiles/hosts/#client.hostid#/" >
         				</cfif>
-                    <cfdocument format="PDF" filename="C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/#form.motherSig#_cbcAuthorization.pdf" overwrite="yes">
+                    <cfdocument format="PDF" filename="#dirPath#nsmg/uploadedfiles/hosts/#client.hostid#/#form.motherSig#_cbcAuthorization.pdf" overwrite="yes">
                     <!--- form.pr_id and form.report_mode are required for the progress report in print mode.
                     form.pdf is used to not display the logo which isn't working on the PDF. --->
                     <cfset form.report_mode = 'print'>
@@ -160,8 +177,19 @@ where active = 1
                     IP: #cgi.REMOTE_ADDR# 
                     </Cfoutput>
                 </cfdocument> 
+                <cfquery name="insertDocInfo" datasource="mysql">
+                insert into smg_documents (fileName, type, dateFiled, filePath, description, shortDesc, userid, usertype, hostID, seasonID)
+                				values('#form.motherSig#_cbcAuthorization.pdf', 'pdf', #now()#, 'hosts/#client.hostid#/', 'CBC Authorization for #form.motherSig#','Mother CBC Auth',#client.hostid#,'Host Mother',#client.hostid#, #season#)
+                </cfquery> 
+                <!----
+                  <cfquery name="insertCBCInfo" datasource="mysql">
+                insert into smg_hosts_cbc (hostid, familyid, cbc_type,dateCreated, dateUpdated, seasonID, date_authorized, companyid)
+                			values(#client.hostid#, #x#, 'mother', #now()#, #now()#, 9, #now()#, #qHostParentsMembers.companyid#) 
+                </cfquery>
+				---->
              </Cfif>
               <Cfloop list="#famList#" index="x">
+              <cfif structKeyExists(form, "#x#_ssn")>
                <cfquery name="cbcCheck" datasource="mysql">
                 select k.name, k.lastname, k.birthdate, k.cbc_form_received, k.childid, k.membertype, k.ssn, k.liveathome
                 from smg_host_children k
@@ -177,11 +205,11 @@ where active = 1
                         </cfquery>
                      </Cfif>
                       
-                      <cfif DirectoryExists('C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/')>
+                      <cfif DirectoryExists('#dirPath#nsmg/uploadedfiles/hosts/#client.hostid#/')>
         				<cfelse>
-           				 <cfdirectory action = "create" directory = "C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/" >
+           				 <cfdirectory action = "create" directory = "#dirPath#nsmg/uploadedfiles/hosts/#client.hostid#/" >
         				</cfif>
-                    <cfdocument format="PDF" filename="C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/#form[x & "_sig"]#_cbcAuthorization.pdf" overwrite="yes">
+                    <cfdocument format="PDF" filename="#dirPath#nsmg/uploadedfiles/hosts/#client.hostid#/#form[x & "_sig"]#_cbcAuthorization.pdf" overwrite="yes">
                     <!--- form.pr_id and form.report_mode are required for the progress report in print mode.
                     form.pdf is used to not display the logo which isn't working on the PDF. --->
                     <cfset form.report_mode = 'print'>
@@ -197,7 +225,17 @@ where active = 1
                     IP: #cgi.REMOTE_ADDR# 
                     </Cfoutput>
                 </cfdocument> 
-                
+                 <cfquery name="insertDocInfo" datasource="mysql">
+                insert into smg_documents (fileName, type, dateFiled, filePath, description, shortDesc, userid, usertype, hostID, seasonid)
+                				values('#form[x & "_sig"]#_cbcAuthorization.pdf', 'pdf', #now()#, 'hosts/#client.hostid#/', 'CBC Authorization for family member #form[x & "_sig"]#','Member CBC Auth', #x#, 'Fam Member',#client.hostid#, #season#)
+                </cfquery> 
+                <!----
+                <cfquery name="insertCBCInfo" datasource="mysql">
+                insert into smg_hosts_cbc (hostid, familyid, cbc_type,dateCreated, dateUpdated, seasonID, date_authorized, companyid)
+                			values(#client.hostid#, #x#, 'member', #now()#, #now()#, 9, #now()#, #qHostParentsMembers.companyid#) 
+                </cfquery>
+				---->
+                </cfif>
               	</Cfloop>
               <!----Udpate Lead Table that Application is in process---->
             <cfquery datasource="mysql">
@@ -205,6 +243,92 @@ where active = 1
             set statusID = 8
             where email = '#client.hostemail#'
             </cfquery>
+            
+           
+            
+ <!----Get all cbc's and email them to host.  Notify the PM and Facilitator that CBC's are ready to review.---->
+            <Cfquery name="getCBCs" datasource="mysql">
+            select *
+            from smg_documents
+            where hostid = #client.hostid#
+            </Cfquery>
+             <cfsavecontent variable="hostCBCEmailMessage">
+              <Cfoutput>	
+              
+                Attached are copies of the Criminal Background Check Authorization you and any members of your family have electronically signed.  
+                <br /><br />
+                Regards-<Br />
+                ISE Support
+              </Cfoutput>
+                </cfsavecontent>
+
+            <cfinvoke component="cfc.email" method="send_mail">
+                
+                    <cfinvokeargument name="email_to" value="#qHostParentsMembers.email#">       
+					<!----
+                    <cfinvokeargument name="email_to" value="gary@iseusa.com"> 
+					---->
+                    <cfinvokeargument name="email_from" value="josh@111cooper.com">
+                    <cfinvokeargument name="email_subject" value="CBC Authorization Forms">
+                    <cfinvokeargument name="email_message" value="#hostCBCEmailMessage#">
+                    
+                    <cfloop query="getCBCs">
+                   		<cfif getCBCs.currentrow eq 1>
+                            <cfinvokeargument name="email_file" value="#dirPath#nsmg/uploadedfiles/#filePath##fileName#">
+                        <cfelse>
+                            <cfinvokeargument name="email_file#currentrow#" value="#dirPath#nsmg/uploadedfiles/#filePath##fileName#">
+                        </cfif>
+                   </cfloop>
+				
+                </cfinvoke>	
+          <!---Facilitator and Program Manager Email---->
+          
+          
+        <cfquery name="programManager" datasource="mysql">
+        select pm_email
+        from smg_companies
+        where companyid = #qHostParentsMembers.companyid#
+        </cfquery>
+        <cfquery name="facilitator" datasource="mysql">
+        select uar.userid, u.email
+        from user_access_rights uar
+        left join smg_users u on u.userid = uar.userid
+        where regionid = #qHostParentsMembers.regionid#
+        </cfquery>
+            <cfsavecontent variable="hostCBCEmailMessage">
+              <Cfoutput>	
+              ***** WOULD BE SENT TO #programManager.pm_email# and #facilitator.email#****<br /><br />
+                The following CBC Authorization forms have been submitted for the <strong>#qHostParentsMembers.fatherlastname#</strong> family.  Please review and process the CBC's when possible.  
+                <br /><br />
+                You can process the CBC's here: 
+                http://111cooper.com/nsmg/index.cfm?curdoc=cbc/hosts_cbc&hostID=#client.hostid#
+                <br /><br />
+                Regards-<Br />
+                ISE Support
+              </Cfoutput>
+                </cfsavecontent>
+
+            <cfinvoke component="cfc.email" method="send_mail">
+                
+                    <cfinvokeargument name="email_to" value="josh@pokytrails.com">       
+					<!----
+                    <cfinvokeargument name="email_to" value="gary@iseusa.com"> 
+					---->
+                    <cfinvokeargument name="email_from" value="josh@111cooper.com">
+                    <cfinvokeargument name="email_subject" value="CBC Authorization Forms">
+                    <cfinvokeargument name="email_message" value="#hostCBCEmailMessage#">
+                    
+                    <cfloop query="getCBCs">
+                   		<cfif getCBCs.currentrow eq 1>
+                            <cfinvokeargument name="email_file" value="#dirPath#nsmg/uploadedfiles/#filePath##fileName#">
+                        <cfelse>
+                            <cfinvokeargument name="email_file#currentrow#" value="#dirPath#nsmg/uploadedfiles/#filePath##fileName#">
+                        </cfif>
+                   </cfloop>
+				
+                </cfinvoke>	
+                <cflocation url="?page=hostLetter">
+            <!-------->
             
             <!----Begin Processing---->
             <!----Begin Processing---->
@@ -260,35 +384,35 @@ where active = 1
                 </cftry>  
                 
         
-            <!----Don't Process CBC's yet---->
+            <!----Don't Process CBC's yet
             
                 <cfscript>
                     // Gets List of Companies
-                    qGetCompanies = APPCFC.COMPANY.getCompanies();
+                    qGetCompanies = AppCFC.company.getCompanies();
                 
                     // Gets Host Family Information
-                    qGetHost = APPCFC.HOST.getHosts(hostID=hostID);
+                    qGetHost = AppCFC.HOST.getHosts(hostID=hostID);
             
                     // Get Host Mother CBC
-                    qGetCBCMother = APPCFC.CBC.getCBCHostByID(
+                    qGetCBCMother = AppCFC.CBC.getCBCHostByID(
                         hostID=hostID, 
                         cbcType='mother'
                     );
                     
                     // Get Mother Available Seasons
-                    qGetMotherSeason = APPCFC.CBC.getAvailableSeasons(currentSeasonIDs=ValueList(qGetCBCMother.seasonID));
+                    qGetMotherSeason = AppCFC.CBC.getAvailableSeasons(currentSeasonIDs=ValueList(qGetCBCMother.seasonID));
                     
                     // Gets Host Father CBC
-                    qGetCBCFather = APPCFC.CBC.getCBCHostByID(
+                    qGetCBCFather = AppCFC.CBC.getCBCHostByID(
                         hostID=hostID, 
                         cbcType='father'
                     );
                     
                     // Get Father Available Seasons
-                    qGetFatherSeason = APPCFC.CBC.getAvailableSeasons(currentSeasonIDs=ValueList(qGetCBCFather.seasonID));
+                    qGetFatherSeason = AppCFC.CBC.getAvailableSeasons(currentSeasonIDs=ValueList(qGetCBCFather.seasonID));
             
                     // Get Family Member CBC
-                    qGetHostMembers = APPCFC.CBC.getEligibleHostMember(hostID=hostID);
+                    qGetHostMembers = AppCFC.CBC.getEligibleHostMember(hostID=hostID);
             
                     // Set Variables
                     motherIDs = ValueList(qGetCBCMother.cbcfamID);
@@ -308,7 +432,7 @@ where active = 1
                         // Check if we have valid data for host mother
                         if ( VAL(FORM.motherSeasonID) AND LEN(FORM.motherdate_authorized) ) {
                             // Insert Host Mother CBC
-                            APPCFC.CBC.insertHostCBC(
+                            AppCFC.CBC.insertHostCBC(
                                 hostID=FORM.hostID,
                                 familyMemberID=0,
                                 cbcType='mother',
@@ -322,7 +446,7 @@ where active = 1
                         // Check if we have valid data for host father
                         if ( VAL(FORM.fatherSeasonID) AND LEN(FORM.fatherdate_authorized) ) {
                             // Insert Host Father CBC
-                            APPCFC.CBC.insertHostCBC(
+                            AppCFC.CBC.insertHostCBC(
                                 hostID=FORM.hostID,
                                 familyMemberID=0,
                                 cbcType='father',
@@ -350,7 +474,7 @@ where active = 1
                                 // Check if we have valid data for family members
                                 if ( VAL(FORM[memberID & 'seasonID']) AND LEN(FORM[memberID & 'date_authorized']) ) {
                                     // Insert Host Father CBC
-                                    APPCFC.CBC.insertHostCBC(
+                                    AppCFC.CBC.insertHostCBC(
                                         hostID=FORM.hostID,
                                         familyMemberID=memberID,
                                         cbcType='member',
@@ -374,7 +498,7 @@ where active = 1
                         
                         <cfscript>
                             // update Host Mother CBC Flag & SSN options
-                            APPCFC.CBC.updateHostOptions(
+                            AppCFC.CBC.updateHostOptions(
                                 cbcfamID=cbcID,
                                 isNoSSN=FORM[cbcID & "motherIsNoSSN"],
                                 flagCBC=0
@@ -391,7 +515,7 @@ where active = 1
                         
                         <cfscript>
                             // update Host Father CBC Flag & SSN options
-                            APPCFC.CBC.updateHostOptions(
+                            AppCFC.CBC.updateHostOptions(
                                 cbcfamID=cbcID,
                                 isNoSSN=FORM[cbcID & "fatherIsNoSSN"],
                                 flagCBC=0
@@ -409,7 +533,7 @@ where active = 1
             
                         <cfscript>
                             // update Host Member CBC Flag & SSN options
-                            APPCFC.CBC.updateHostOptions(
+                            AppCFC.CBC.updateHostOptions(
                                 cbcfamID=FORM[cbcID & "memberCBCFamID"],					
                                 isNoSSN=FORM[cbcID & "memberIsNoSSN"],
                                 flagCBC=0
@@ -426,14 +550,14 @@ where active = 1
                         errorCount = 0;
                         
                         // Get CBCs Host Parents Updated
-                        qGetCBCHost = APPCFC.CBC.getPendingCBCHost(
+                        qGetCBCHost = AppCFC.CBC.getPendingCBCHost(
                             companyID=CLIENT.companyID,
                             hostID=FORM.hostID,
                             userType='mother,father'
                         );	
             
                         // Get CBCs Host Members Updated
-                        qGetCBCMember = APPCFC.CBC.getPendingCBCHostMember(
+                        qGetCBCMember = AppCFC.CBC.getPendingCBCHostMember(
                             companyID=CLIENT.companyID,
                             hostID=FORM.hostID
                         );	
@@ -472,10 +596,10 @@ where active = 1
                             if ( VAL(processCBC) ) {
             
                                 // Get Company ID
-                                qGetCompanyID = APPCFC.COMPANY.getCompanies(companyID=qGetCBCHost.companyID);
+                                qGetCompanyID = AppCFC.COMPANY.getCompanies(companyID=qGetCBCHost.companyID);
                             
                                 // Process Batch
-                                APPCFC.CBC.processBatch(
+                                AppCFC.CBC.processBatch(
                                     companyID=qGetCBCHost.companyID,
                                     companyShort=qGetCompanyID.companyShort,
                                     userType=qGetCBCHost.cbc_type,
@@ -532,10 +656,10 @@ where active = 1
                             if ( VAL(processCBC) ) {
                                 
                                 // Get Company ID
-                                qGetCompanyID = APPCFC.COMPANY.getCompanies(companyID=qGetCBCMember.companyID);
+                                qGetCompanyID = AppCFC.COMPANY.getCompanies(companyID=qGetCBCMember.companyID);
                             
                                 // Process Batch
-                                APPCFC.CBC.processBatch(
+                                AppCFC.CBC.processBatch(
                                     companyID=qGetCompanyID.companyID,
                                     companyShort=qGetCompanyID.companyShort,
                                     userType='member',
@@ -564,25 +688,25 @@ where active = 1
                         // We are not refreshing the page in order to keep the error message information so refresh queries to get CBCs that were just ran.
                         
                         // Get Host Mother CBC
-                        qGetCBCMother = APPCFC.CBC.getCBCHostByID(
+                        qGetCBCMother = AppCFC.CBC.getCBCHostByID(
                             hostID=hostID, 
                             cbcType='mother'
                         );
                         
                         // Get Mother Available Seasons
-                        qGetMotherSeason = APPCFC.CBC.getAvailableSeasons(currentSeasonIDs=ValueList(qGetCBCMother.seasonID));
+                        qGetMotherSeason = AppCFC.CBC.getAvailableSeasons(currentSeasonIDs=ValueList(qGetCBCMother.seasonID));
                         
                         // Gets Host Father CBC
-                        qGetCBCFather = APPCFC.CBC.getCBCHostByID(
+                        qGetCBCFather = AppCFC.CBC.getCBCHostByID(
                             hostID=hostID, 
                             cbcType='father'
                         );
                         
                         // Get Father Available Seasons
-                        qGetFatherSeason = APPCFC.CBC.getAvailableSeasons(currentSeasonIDs=ValueList(qGetCBCFather.seasonID));
+                        qGetFatherSeason = AppCFC.CBC.getAvailableSeasons(currentSeasonIDs=ValueList(qGetCBCFather.seasonID));
                 
                         // Get Family Member CBC
-                        qGetHostMembers = APPCFC.CBC.getEligibleHostMember(hostID=hostID);
+                        qGetHostMembers = AppCFC.CBC.getEligibleHostMember(hostID=hostID);
                 
                         // Set Variables
                         motherIDs = ValueList(qGetCBCMother.cbcfamID);
@@ -596,7 +720,7 @@ where active = 1
             
             
             
-            
+            ---->
             <!------------------------>
             <!------------------------>
             <!------------------------>
@@ -605,11 +729,21 @@ where active = 1
             <cflocation url="?page=familyInterests">
 			---->
 			
-            <cflocation url="?page=familyInterests">
+            <cflocation url="?page=hostLetter">
+			
 		</cfif>	
 
  </cfif>
-
+<cfquery name="qHostFamilyMembers" datasource="mysql">
+select k.name, k.lastname, k.birthdate, k.cbc_form_received, k.childid, k.membertype, k.ssn, k.liveathome
+from smg_host_children k
+where k.hostid = #client.hostid# 
+</cfquery>
+<cfquery name="qActiveSeasons" datasource="mysql">
+select s.seasonid, s.season 
+from smg_seasons s
+where active = 1
+</cfquery>
 <h2>Criminal Background Check</h2>
 <!--- Form Errors --->
     <gui:displayFormErrors 
@@ -645,8 +779,9 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
             <td><h3>#DateDiff('yyyy',fatherdob,now())#</h3></td> 
              <input type="hidden" value="#fatherfirstname#" name="fatherfirstname" />
             <td>
+            
           	<cfif checkFatherCBC.recordcount eq 0>
-            	<cfinput type="text"  name="fatherssn"  mask="999-99-9999" size=12 typeahead="no" showautosuggestloadingicon="true" value="#fatherssn#">
+            	<cfinput type="text"  name="fatherssn"  mask="999-99-9999" size=12 typeahead="no" showautosuggestloadingicon="true" >
                 <cfset submitForm = 1>
       		<cfelse>
             	Request Submitted
@@ -664,7 +799,7 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
            
             <td>
             <cfif checkMotherCBC.recordcount eq 0>
-            	<cfinput type="text"  name="motherssn"  mask="999-99-9999" size=12 typeahead="no" showautosuggestloadingicon="true" value="#motherssn#">
+            	<cfinput type="text"  name="motherssn"  mask="999-99-9999" size=12 typeahead="no" showautosuggestloadingicon="true" >
                 <cfset submitForm = 1>
       		<cfelse>
             	Request Submitted
@@ -674,9 +809,11 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
         </tr>
     </cfif>
     </Cfloop>
+    <cfif qHostFamilyMembers.recordcount gt 0>
     <tr>
     	<Td colspan=7><hr width=60% align="center"></Td>
     </tr>
+    </cfif>
     <cfset famMembersList =''>
     <Cfloop query="qHostFamilyMembers">
     <Cfif #DateDiff('yyyy',birthdate,now())# gte 18>
@@ -706,7 +843,7 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
     <input type="hidden" name="famList" value="#famMembersList#" />
     </cfif>
    </table>
-<h3>Season</h3>
+<h3>Signature(s)</h3>
 	<table width=100% cellspacing=0 cellpadding=2 class="border">
    <Tr  bgcolor="##deeaf3">
    	<Th align="center">I/We are submitting this authorization for a criminal background check on the above individuals.  Please use our typed name in place of a signature to initiate the background check process.<br />
@@ -718,15 +855,35 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
     
     	<td >
         <table align="center">
+ 
+        
+
         	<Cfloop query="qHostParentsMembers">
-            <cfif fatherfirstname is not ''>
+           
+            <cfquery name="parentsCBC" datasource="mysql">
+                select *
+                from smg_documents
+                where userid = #client.hostid#
+                
+            </cfquery>
+           	<cfquery name="fatherCBC" dbtype="query">
+            select *
+            from parentsCBC
+            where shortDesc = 'Host Father'
+            </cfquery>
+           <cfquery name="motherCBC" dbtype="query">
+            select *
+            from parentsCBC
+            where shortDesc = 'Host Mother'
+            </cfquery>
+			<cfif fatherfirstname is not ''>
             <tr>
                 <Td><h3><p class=p_uppercase>#fatherfirstname# #fatherlastname#</h3></Td>
                 <Td>
                 <cfif checkFatherCBC.recordcount eq 0>
                 	<input type="text" name="FatherSig" size=20/></Td>
                 <cfelse>
-            		Request Submitted
+            		<a href="../uploadedfiles/#fatherCBC.filePath#/#fatherCBC.fileName#">View CBC Authoriaztion</a>
             	</cfif>
             </tr>    
             </cfif>
@@ -737,18 +894,25 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
                 <cfif checkMotherCBC.recordcount eq 0>
                 	<input type="text" name="MotherSig" size=20/>
                 <cfelse>
-            		Request Submitted
+            		<a href="../uploadedfiles/#motherCBC.filePath#/#motherCBC.fileName#">View CBC Authoriaztion</a>
             	</cfif>
                 </Td>
             </tr>    
             </cfif>
             </cfloop>
+        
             <Cfloop query="qHostFamilyMembers">
+          
+            <cfquery name="cbcInfo" datasource="mysql">
+            select *
+            from smg_documents
+            where userid = #qHostFamilyMembers.childID#
+            </cfquery>
 				<Cfif #DateDiff('yyyy',birthdate,now())# gte 18 and liveathome is 'yes'>
                     <tr>
                 		<Td><h3><p class=p_uppercase>#name# #lastname#</p></h3></Td><td>
                         <Cfif ssn is not ''>
-                        Request Submitted
+                        <a href="http://111cooper.com/nsmg/uploadedfiles/#cbcInfo.filePath##cbcInfo.fileName#">View CBC Authoriaztion
                         <cfelse>
                         <input type="text" name="#qHostFamilyMembers.childid#_sig" />
                         </Cfif>
@@ -771,17 +935,20 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
 <table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
 	<tr>
 		<td align="right">
-        
+        <!----
         <cfif submitForm eq 0>
         <a href="?page=familyInterests"><img src="../images/buttons/submitBlue.png" border=0 /></a>
         <cfelse>
+		---->
         <input name="Submit" type="image" src="../images/buttons/submitBlue.png" border=0>
+        <!----
         </cfif>
-        </td>
+        ---->
+		</td>
 	</tr>
 </table>
 </cfform>
-<p><b>As part of our background check, reports from several sources may be obtained.  Reports may include, but not be limited to, criminal history reports, Social Security verifications, address histories,and Sex Offender Registries.  Should any results from the aforementioned reports indicate that driving history records will need to be reviewed during a more comprehensive assessment, an additional authorization and release will be requested at that time.  You have a the right, upon written request, to complete and accurate disclosure of the nature and scope of the background check. 
+<p><b>As part of our background check, reports from several sources may be obtained.  Reports may include, but not be limited to, criminal history reports, Social Security verifications, address histories, and Sex Offender Registries.  Should any results from the aforementioned reports indicate that driving history records will need to be reviewed during a more comprehensive assessment, an additional authorization and release will be requested at that time.  You have a the right, upon written request, to complete and accurate disclosure of the nature and scope of the background check. 
 </b></p>
 
 <h3><u>Department Of State Regulations</u></h3>
