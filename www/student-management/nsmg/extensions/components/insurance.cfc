@@ -80,7 +80,9 @@
                 
                 <cfif ARGUMENTS.companyID EQ 10>
                     file LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%CASE%">
-                <cfelse>
+                <cfelseif ARGUMENTS.companyID EQ 14>
+                    file LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%ESI%">
+				<cfelse>
                     file LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%ISE%">
                 </cfif>
                 
