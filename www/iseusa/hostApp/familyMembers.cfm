@@ -253,7 +253,7 @@ where hostid = #client.hostid#
         <td><h3><p class=p_uppercase>#membertype#</h3></td>
         <td><h3><p class=p_uppercase> <cfif liveathome is 'yes'>Yes<cfelseif liveathome is 'no' and liveathomePartTime is 'yes'>Part Time<cfelse>No</cfif> </h3></td>
         <td><h3><p class=p_uppercase>#schoolname#</h3></td>
-        <Td><a href="index.cfm?page=familyMembers&childid=#childid#"><img src="../images/buttons/pencilBlue23x29.png" border=0 height=20/></a> <a href="index.cfm?page=familyMembers&delete_child=<cfoutput>#childid#&hostid=#url.hostid#</cfoutput>" onClick="return confirm('Are you sure you want to delete this Family Member?')"> <img src="../images/buttons/delete23x28.png" height=20 border=0/></a></Td>
+        <Td><a href="index.cfm?page=familyMembers&childid=#childid#"><img src="images/buttons/pencilBlue23x29.png" border=0 height=20/></a> <a href="index.cfm?page=familyMembers&delete_child=<cfoutput>#childid#&hostid=#url.hostid#</cfoutput>" onClick="return confirm('Are you sure you want to delete this Family Member?')"> <img src="images/buttons/delete23x28.png" height=20 border=0/></a></Td>
     </tr>
     </Cfloop>
     </cfif>
@@ -273,7 +273,7 @@ where hostid = #client.hostid#
         <a onclick="ShowHide(); return false;" href="##">
         No <cfif qFamilyMembers.recordcount neq 0> other</cfif> family members to add</a>
 <div id="slidingDiv" display:"none">
-        <A href="index.cfm?page=familyQuestionInterupt"><img src="../images/buttons/Next.png" border="0" /></A>	</div>	
+        <A href="index.cfm?page=familyQuestionInterupt"><img src="images/buttons/Next.png" border="0" /></A>	</div>	
         </td>
 </table>
 Please include all your children, whether they are living at home or not, and <span style="background-color:#FF0; padding: 3px;"><strong> any other persons</strong></span> who live with you on a regular basis.<br /><span class="redtext">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Required fields</span>
