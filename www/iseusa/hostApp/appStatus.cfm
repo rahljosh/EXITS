@@ -5,7 +5,7 @@
 <Cfquery name="cl" datasource="mysql">
 SELECT * 
 FROM smg_hosts
-WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(client.hostid)#"> 
+WHERE hostid = #client.hostid# 
 </cfquery>
 
 <cfset appNotComplete = 0>
@@ -175,7 +175,7 @@ WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(client.hosti
         	Session.formErrors.clear();
       	</cfscript>
 	    <cfelse>
-				<cfset appNotComplete = #appNotComplete# + 23.75>	
+				<cfset appNotComplete = #appNotComplete# + 27>	
         </cfif>
 
 <!------------------------>
@@ -183,7 +183,7 @@ WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(client.hosti
 <Cfquery name="familyMembers" datasource="mysql">
 	SELECT *
 	FROM smg_host_children
-	WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(cl.hostid)#"> 
+	WHERE hostid = #cl.hostid#
 </cfquery>
 <Cfif familyMembers.recordcount gt 0>
 <Cfloop query="familyMembers">
@@ -226,7 +226,7 @@ WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(client.hosti
         	Session.formErrors.clear();
       	</cfscript>
   <cfelse>
-				<cfset appNotComplete = #appNotComplete# + 23.75>	
+				<cfset appNotComplete = #appNotComplete# + 27>	
   </cfif>
 
 <!------------------------>
@@ -290,7 +290,7 @@ WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(client.hosti
         	Session.formErrors.clear();
       	</cfscript>
         <Cfelse>
-		<cfset appNotComplete = #appNotComplete# + 23.75>	</cfif>
+		<cfset appNotComplete = #appNotComplete# + 27>	</cfif>
 <!------------------------>
 <!----Personal Description---->
     
@@ -315,21 +315,21 @@ WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(client.hosti
         	Session.formErrors.clear();
       	</cfscript>
          <Cfelse>
-		 <cfset appNotComplete = #appNotComplete# + 23.75>	</cfif>  
+		 <cfset appNotComplete = #appNotComplete# + 27>	</cfif>  
 	
 <!------------------------>
 <!----Family Album---->   
 
 <Cfquery name="hostPicCat" datasource="mysql">
 	select *
-    from smg_host_pic_cat
+    from smg_host_pic_cat 
     <!---Don't include Other description---->
     where catID != 7
 </Cfquery>
 <Cfquery name="hostPics" datasource="mysql">
 	select *
     from smg_host_picture_album
-    where fk_hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(client.hostid)#"> 
+    where fk_hostID = #cl.hostid#
 </Cfquery>
 <cfloop query="hostPicCat">
 	<cfquery dbtype="query" name="catExist">
@@ -355,7 +355,7 @@ WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(client.hosti
         	Session.formErrors.clear();
       	</cfscript>
 <cfelse>
-<cfset appNotComplete = #appNotComplete# + 23.75>	
+<cfset appNotComplete = #appNotComplete# + 27>	
 </cfif>
  
 <!------------------------>
@@ -363,7 +363,7 @@ WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(client.hosti
      <cfquery name="get_kids" datasource="MySQL">
     select childid, name, shared
     from smg_host_children
-    where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(client.hostid)#">  
+    where hostid = #client.hostid#
     </cfquery>
     
 
@@ -427,7 +427,7 @@ WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(client.hosti
         	Session.formErrors.clear();
       	</cfscript>
         <Cfelse>
-			<cfset appNotComplete = #appNotComplete# + 23.75>	
+			<cfset appNotComplete = #appNotComplete# + 27>	
         </cfif>
         
 <!------------------------>
@@ -462,7 +462,7 @@ WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(client.hosti
         	Session.formErrors.clear();
       	</cfscript>
         <cfelse>
-				<cfset appNotComplete = #appNotComplete# + 23.75>	</cfif> 
+				<cfset appNotComplete = #appNotComplete# + 27>	</cfif> 
         
    
 <!------------------------>
@@ -471,7 +471,7 @@ WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(client.hosti
 	<Cfquery name="churchInfo" datasource="mysql">
     select *
     from churches 
-    where churchid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(cl.churchid)#">  
+    where churchid = #cl.churchid#
     </cfquery>
 
             <cfscript>
@@ -525,7 +525,7 @@ WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(client.hosti
         	Session.formErrors.clear();
       	</cfscript>
          <cfelse>
-		<cfset appNotComplete = #appNotComplete# + 23.75>	</cfif>
+		<cfset appNotComplete = #appNotComplete# + 27>	</cfif>
 </cfif>     
         
         
@@ -642,14 +642,14 @@ WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(client.hosti
         	Session.formErrors.clear();
       	</cfscript>
         <cfelse>
-				<cfset appNotComplete = #appNotComplete# + 23.75>	</cfif>      
+				<cfset appNotComplete = #appNotComplete# + 27>	</cfif>      
 
 <!------------------------>
 <!----School Info----> 
 <cfquery name="schoolInfo" datasource="mySql">
 select *
 from smg_schools
-where schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(cl.schoolid)#">  
+where schoolid = #cl.schoolid#
 </Cfquery>
 <cfscript>
           		
@@ -685,7 +685,7 @@ where schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(cl.schooli
 			
 			
 			// State
-            if ( (cl.schooltransportation is 'other') AND (NOT LEN(TRIM(cl.schooltransportationother))) ) {
+            if ( (cl.school_trans is 'other') AND (NOT LEN(TRIM(cl.other_trans))) ) {
               // Get all the missing items in a list
                 SESSION.formErrors.Add("School Info You indicated that the student will get to school but Other, but didn't specify what that other method would be.");
             }	
@@ -728,7 +728,7 @@ where schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(cl.schooli
         	Session.formErrors.clear();
       	</cfscript>
         <cfelse>
-		<cfset appNotComplete = #appNotComplete# + 23.75>	</cfif>
+		<cfset appNotComplete = #appNotComplete# + 27>	</cfif>
         
         
 <!------------------------>
@@ -772,27 +772,26 @@ where schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(cl.schooli
         	Session.formErrors.clear();
       	</cfscript>
             <cfelse>
-				<cfset appNotComplete = #appNotComplete# + 23.75>	
+				<cfset appNotComplete = #appNotComplete# + 27>	
             </cfif>
 <!------------------------>
 <!----References---->
 <Cfquery name="references" datasource="mysql">
 	SELECT *
 	FROM smg_family_references
-	WHERE referencefor = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(cl.hostid)#">
+	WHERE referencefor = #cl.hostid#
 </cfquery>
 
     <!---number kids at home---->
     <cfquery name="kidsAtHome" datasource="mysql">
     select count(childid) as kidcount
     from smg_host_children
-    where liveathome = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
-     and hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(cl.hostid)#">
+    where liveathome = 'yes' and hostid =#client.hostid#
     </cfquery>
  	<Cfquery name="get_host_info" datasource="mysql">
     select fatherfirstname, motherfirstname
     from smg_hosts
-    where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(cl.hostid)#">
+    where hostid = #client.hostid#
     </cfquery>
 
 	<Cfset father=0>
@@ -873,7 +872,7 @@ where schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(cl.schooli
         	Session.formErrors.clear();
       	</cfscript>
      <cfelse>
-		<cfset appNotComplete = #appNotComplete# + 23.75>	
+		<cfset appNotComplete = #appNotComplete# + 27>	
      </cfif>
 <!------------------------>
 <!----Finance Data---->        
@@ -911,7 +910,7 @@ where schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(cl.schooli
         	Session.formErrors.clear();
       	</cfscript>
     <cfelse>
-		<cfset appNotComplete = #appNotComplete# + 23.75>	
+		<cfset appNotComplete = #appNotComplete# + 27>	
     </cfif>
     
     <!--- Form Errors --->

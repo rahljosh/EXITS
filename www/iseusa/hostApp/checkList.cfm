@@ -1,4 +1,42 @@
+<Cfif isDefined('form.processApp')>
+	<cfquery datasource="mysql">
+    update smg_hosts
+    set hostAppStatus = 7
+    where hostid = #client.hostid#
+    </cfquery>
+    <cfquery name="hostName" datasource="mysql">
+    select familylastname 
+    from smg_hosts
+    where hostid = #client.hostid#
+    </cfquery>
+    <cfquery name="emailAddy" datasource="mysql">
+    select email 
+    from smg_users
+    left join smg_hosts on smg_hosts.arearepid = smg_users.userid
+    where smg_hosts.hostid = #client.hostid#
+    </cfquery>
+   	<cfsavecontent variable="nextLevel">                      
+		<cfoutput>
+          The #hostName.familylastname# application has been submitted for your review.
+        <br /><br />  
+          You can review the app <a href="http://111cooper.com/nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=#client.usertype#">here</a>.
+        
+        
+        </cfoutput>
+    </cfsavecontent>
 
+    <cfinvoke component="nsmg.cfc.email" method="send_mail">
+    <!----
+        <cfinvokeargument name="email_to" value="#mailTo#">
+		---->
+        <cfinvokeargument name="email_to" value="josh@iseusa.com">
+        <cfinvokeargument name="email_subject" value="#hostName.familylastname# App Needs your Approval">
+        <cfinvokeargument name="email_message" value="#nextLevel#">
+        <cfinvokeargument name="email_from" value="josh@111cooper.com">
+    </cfinvoke>
+    <cflocation url="?curdoc=hello">
+    
+</Cfif>
 <cfset okpassage1 = 'This section is complete.'>
 <cfset okpassage2 = 'This section is complete.'>
 <cfset okpassage3 = 'This section is complete.'>
@@ -29,7 +67,6 @@ WHERE hostid = #client.hostid#
 </cfquery>
 
 <div align="center"><h2>Application Checklist</h2></div>
-
 
 <p>
 Please use the menu on the left or the section title to navigate to the section that is missing information.  <br /><Br />
@@ -248,7 +285,10 @@ have been approved as a host family, it simpliy indicates that your application 
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please enter the sex of #name#.");
             }
-	
+		if ( NOT LEN(TRIM(interests)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter the interests of #name#.");
+            }
 			 </cfscript>
 	</cfloop>
  </Cfif>
@@ -268,7 +308,7 @@ have been approved as a host family, it simpliy indicates that your application 
         </cfif>
 
 <!------------------------>
-<!----Family Interests---->
+<!----Family Interests
 		      
         <cfquery name="host_interests" datasource="MySQL">
         select interests, interests_other, playBand, playOrchestra, playCompSports, orcInstrument, bandInstrument, sportDesc
@@ -333,6 +373,7 @@ have been approved as a host family, it simpliy indicates that your application 
             messageType="checklist"/>
         </cfif>
 	<br />
+	---->
 <!------------------------>
 <!----Personal Description---->
     
@@ -364,51 +405,6 @@ have been approved as a host family, it simpliy indicates that your application 
     	<br />    
 	
 <!------------------------>
-<!----Family Album---->   
-
-<Cfquery name="hostPicCat" datasource="mysql">
-	select *
-    from smg_host_pic_cat
-    <!---Don't include Other description---->
-    where catID != 7
-</Cfquery>
-<Cfquery name="hostPics" datasource="mysql">
-	select *
-    from smg_host_picture_album
-    where fk_hostID = #cl.hostid#
-</Cfquery>
-<cfloop query="hostPicCat">
-	<cfquery dbtype="query" name="catExist">
-    select id
-    from hostPics
-    where cat = #catId#
-    </cfquery>
-	<Cfif catExist.recordcount eq 0>
-		 <cfscript>
-                // Data Validation
-                //No Letter
-                 if (  1 EQ 1) {
-                    // Get all the missing items in a list
-                    SESSION.formErrors.Add("You seem to be missing a picutre of: #hostPicCat.cat_name#.");
-                 }
-                                    
-            </cfscript>
-    </Cfif>
-
-</cfloop>
-        <strong><font size=+1>Family Album</font></strong><br />
-    <cfif NOT SESSION.formErrors.length()>
-    <Cfset randPassage = RandRange(1,6)>
-        <font color="##00CC00">&##10004;</font> #Evaluate("okPassage" & randPassage)#<Br><br>
-    <cfelse>
-    	<cfset StillMissingInfo = 1>
-        <gui:displayFormErrors 
-        formErrors="#SESSION.formErrors.GetCollection()#"
-        messageType="checklist"/>
-    </cfif>
-    <br />  
- 
-<!------------------------>
 <!----Hosting Environment---->   
      <cfquery name="get_kids" datasource="MySQL">
     select childid, name, shared
@@ -426,17 +422,7 @@ have been approved as a host family, it simpliy indicates that your application 
                 SESSION.formErrors.Add("Please indicate if any one in your family smokes.");
 			 }
 			 
-			//Student Smokes
-            if ( NOT LEN(TRIM(cl.acceptsmoking)) )   {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate if you would be willing to host a student who smokes.");
-			 }	
-			 //Student smoke conditions
-			 if (( cl.acceptsmoking EQ 1) AND NOT LEN(TRIM(cl.smokeconditions)) )  {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("You have indicated that you would host a student who smokes, but did not indicate under what conditions.");
-			}
-			
+		
 			 // Family Dietary Restrictions
              if ( NOT LEN(TRIM(cl.famDietRest)) )  {
                 // Get all the missing items in a list
@@ -484,23 +470,11 @@ have been approved as a host family, it simpliy indicates that your application 
         <br />
         
 <!------------------------>
-<!----Religion Pref---->   
+<!----Religion Pref  ---->
           <cfscript>
             // Data Validation
 			//REligions Belief
-			if ( NOT LEN(TRIM(cl.religion)) )   {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate your religious preference.");
-			 }
-
-			if (( cl.religion gt 0) AND (cl.religious_participation EQ -1))  {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("You have indicated a religious belief but have not answered the question: How often do you go to your religious establishment?");
-			 }
-			 if ((( cl.religious_participation EQ 4) OR (cl.religious_participation EQ 3) OR (cl.religious_participation EQ 2)) and (cl.churchtrans eq 3))  {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("You have indicated that you go attend religious services, but did not answer: Would you expect your exchange student to attend services with your family?");
-			 }
+			
 			 // Student Transportation
 			 if ( NOT LEN(TRIM(cl.churchtrans)) )   {
                 // Get all the missing items in a list
@@ -524,7 +498,91 @@ have been approved as a host family, it simpliy indicates that your application 
         
    
 <!------------------------>
-<!----Church Info---->     
+<!----House Rules ----> 
+<cfscript>
+            // Data Validation
+				
+        	
+			// Address
+            if ( NOT LEN(TRIM(cl.houserules_curfewweeknights)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please specify the curfew for school nights.");
+            }	
+			
+			// City
+            if ( NOT LEN(TRIM(cl.houserules_curfewweekends)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please specify the curfew for weekends.");
+            }			
+        	
+        	// State
+            if ( NOT LEN(TRIM(cl.houserules_chores)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please list the chores that the student we responsible for.");
+            }		
+			
+				
+ 
+			</cfscript>
+          	<strong><font size=+1>Family Rules</font></strong><br />
+        <cfif NOT SESSION.formErrors.length()>
+  			<font color="##00CC00">&##10004;</font> #Evaluate("okPassage" & randPassage)#<Br><br>
+        <cfelse>
+        <cfset StillMissingInfo = 1>
+            <gui:displayFormErrors 
+            formErrors="#SESSION.formErrors.GetCollection()#"
+            messageType="checklist"/>
+        </cfif>
+        <br /> 
+<!------------------------>
+<!----Family Album---->   
+
+<Cfquery name="hostPicCat" datasource="mysql">
+	select *
+    from smg_host_pic_cat
+    <!---Don't include Other description---->
+    where catID != 7
+</Cfquery>
+<Cfquery name="hostPics" datasource="mysql">
+	select *
+    from smg_host_picture_album
+    where fk_hostID = #cl.hostid#
+</Cfquery>
+<cfloop query="hostPicCat">
+	<cfquery dbtype="query" name="catExist">
+    select id
+    from hostPics
+    where cat = #catId#
+    </cfquery>
+	<Cfif catExist.recordcount eq 0>
+		 <cfscript>
+                // Data Validation
+                //No Letter
+                 if (  1 EQ 1) {
+                    // Get all the missing items in a list
+                    SESSION.formErrors.Add("You seem to be missing a picutre of: #hostPicCat.cat_name#.");
+                 }
+                                    
+            </cfscript>
+    </Cfif>
+
+</cfloop>
+        <strong><font size=+1>Family Album</font></strong><br />
+    <cfif NOT SESSION.formErrors.length()>
+    <Cfset randPassage = RandRange(1,6)>
+        <font color="##00CC00">&##10004;</font> #Evaluate("okPassage" & randPassage)#<Br><br>
+    <cfelse>
+    	<cfset StillMissingInfo = 1>
+        <gui:displayFormErrors 
+        formErrors="#SESSION.formErrors.GetCollection()#"
+        messageType="checklist"/>
+    </cfif>
+    <br />  
+ 
+<!------------------------>
+
+
+<!----Church Info     
 <cfif cl.churchid gt 0>
 	<Cfquery name="churchInfo" datasource="mysql">
     select *
@@ -591,8 +649,99 @@ have been approved as a host family, it simpliy indicates that your application 
         <br />   
 </cfif>     
         
-        
+        ----> 
  <!------------------------>
+ <!----School Info----> 
+<cfquery name="schoolInfo" datasource="mySql">
+select *
+from smg_schools
+where schoolid = #cl.schoolid#
+</Cfquery>
+<cfscript>
+          		
+        	
+			// Zip
+            if ( NOT LEN(TRIM(cl.schooltransportation)) )  {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate how the student will get to school.");
+            }
+			
+			// State
+            if ( cl.schoolWorks EQ 3 ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate if any member of your household works for the high school.");
+            }		
+			
+			// State
+            if ( (cl.schoolWorks EQ 1) AND (NOT LEN(TRIM(cl.schoolWorksExpl))) ) {
+              // Get all the missing items in a list
+                SESSION.formErrors.Add("You have indicated that someone works with the school, but didn't explain.  Please provide details regarding the posistion.");
+            }	
+			
+			if ( cl.schoolCoach EQ 3 ) {
+               // Get all the missing items in a list
+               SESSION.formErrors.Add("Please indicate if a coach has contacted you about hosting an exchange student.");
+            }		
+			
+			// State
+            if ( (cl.schoolCoach EQ 1) AND (NOT LEN(TRIM(cl.schoolCoachExpl))) ) {
+              // Get all the missing items in a list
+                SESSION.formErrors.Add("You have indicated that a coach contacted you, but didn't explain.  Please provide details regarding this contact.");
+            }	
+			
+			
+			// State
+            if ( (cl.schooltransportation is 'other') AND (NOT LEN(TRIM(cl.other_desc))) ) {
+              // Get all the missing items in a list
+                SESSION.formErrors.Add("You indicated that the student will get to school but Other, but didn't specify what that other method would be.");
+            }	
+
+         // Data Validation
+			//  Name
+            if ( NOT LEN(TRIM(schoolInfo.schoolname)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter the name of the school.");
+            }			
+        	
+			// Address
+            if ( NOT LEN(TRIM(schoolInfo.address)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter the address of the school.");
+            }	
+			
+			// City
+            if ( NOT LEN(TRIM(schoolInfo.city)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter the city the school is located in.");
+            }			
+        	
+        	// State
+            if ( NOT LEN(TRIM(schoolInfo.state)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter the state the school is located in.");
+            }		
+			
+			// Zip
+            if ( NOT LEN(TRIM(schoolInfo.zip)) )  {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter the school's zip code.");
+            }	
+        
+        </cfscript> 
+          	<strong><font size=+1>School Information</font></strong><br />
+        <cfif NOT SESSION.formErrors.length()>
+        <Cfset randPassage = RandRange(1,6)>
+  			<font color="##00CC00">&##10004;</font> #Evaluate("okPassage" & randPassage)#<Br><br>
+        <cfelse>
+        <cfset StillMissingInfo = 1>
+            <gui:displayFormErrors 
+            formErrors="#SESSION.formErrors.GetCollection()#"
+            messageType="checklist"/>
+        </cfif>
+        <br /> 
+        
+        
+<!------------------------>
 <!----Community Info---->         
         
         <cfscript>
@@ -712,84 +861,36 @@ have been approved as a host family, it simpliy indicates that your application 
         <br />        
 
 <!------------------------>
-<!----School Info----> 
-<cfquery name="schoolInfo" datasource="mySql">
-select *
-from smg_schools
-where schoolid = #cl.schoolid#
-</Cfquery>
-<cfscript>
-          		
-        	
-			// Zip
-            if ( NOT LEN(TRIM(cl.schooltransportation)) )  {
+<!----Finance Data---->        
+     
+        
+ <cfscript>
+           // Data Validation
+			// Family Last Name
+            if (NOT LEN(TRIM(cl.publicAssitance))) {
                 // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate how the student will get to school.");
-            }
-			
-			// State
-            if ( cl.schoolWorks EQ 3 ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate if any member of your household works for the high school.");
-            }		
-			
-			// State
-            if ( (cl.schoolWorks EQ 1) AND (NOT LEN(TRIM(cl.schoolWorksExpl))) ) {
-              // Get all the missing items in a list
-                SESSION.formErrors.Add("You have indicated that someone works with the school, but didn't explain.  Please provide details regarding the posistion.");
-            }	
-			
-			if ( cl.schoolCoach EQ 3 ) {
-               // Get all the missing items in a list
-               SESSION.formErrors.Add("Please indicate if a coach has contacted you about hosting an exchange student.");
-            }		
-			
-			// State
-            if ( (cl.schoolCoach EQ 1) AND (NOT LEN(TRIM(cl.schoolCoachExpl))) ) {
-              // Get all the missing items in a list
-                SESSION.formErrors.Add("You have indicated that a coach contacted you, but didn't explain.  Please provide details regarding this contact.");
-            }	
-			
-			
-			// State
-            if ( (cl.schooltransportation is 'other') AND (NOT LEN(TRIM(cl.other_desc))) ) {
-              // Get all the missing items in a list
-                SESSION.formErrors.Add("You indicated that the student will get to school but Other, but didn't specify what that other method would be.");
-            }	
-
-         // Data Validation
-			//  Name
-            if ( NOT LEN(TRIM(schoolInfo.schoolname)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please enter the name of the school.");
+                SESSION.formErrors.Add("Please indicate if any member of your household is receiving any public assistance.");
             }			
         	
 			// Address
-            if ( NOT LEN(TRIM(schoolInfo.address)) ) {
+            if (NOT LEN(TRIM(cl.crime))) {
                 // Get all the missing items in a list
-                SESSION.formErrors.Add("Please enter the address of the school.");
+                SESSION.formErrors.Add("Please indicate if any member in your household has beeen charged with a crime.");
             }	
 			
 			// City
-            if ( NOT LEN(TRIM(schoolInfo.city)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please enter the city the school is located in.");
+    		  if ( (cl.crime EQ 1) AND (NOT LEN(TRIM(cl.crimeExpl))) ) {
+              // Get all the missing items in a list
+                SESSION.formErrors.Add("You have indicated that someone has been charged with a crime, but did not explain.");
             }			
         	
         	// State
-            if ( NOT LEN(TRIM(schoolInfo.state)) ) {
+            if(NOT LEN(TRIM(cl.income)))   {
                 // Get all the missing items in a list
-                SESSION.formErrors.Add("Please enter the state the school is located in.");
+                SESSION.formErrors.Add("Please indicate your household income.");
             }		
-			
-			// Zip
-            if ( NOT LEN(TRIM(schoolInfo.zip)) )  {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please enter the school's zip code.");
-            }	
-        
-        </cfscript> 
-          	<strong><font size=+1>School Information</font></strong><br />
+	</cfscript>
+          	<strong><font size=+1>Confidential Information</font></strong><br />
         <cfif NOT SESSION.formErrors.length()>
         <Cfset randPassage = RandRange(1,6)>
   			<font color="##00CC00">&##10004;</font> #Evaluate("okPassage" & randPassage)#<Br><br>
@@ -798,56 +899,10 @@ where schoolid = #cl.schoolid#
             <gui:displayFormErrors 
             formErrors="#SESSION.formErrors.GetCollection()#"
             messageType="checklist"/>
-        </cfif>
-        <br /> 
-        
-        
-<!------------------------>
-<!----House Rules ----> 
-<cfscript>
-            // Data Validation
-			// Family Last Name
-            if ( NOT LEN(TRIM(cl.houserules_smoke)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please enter your rules for smoking at the home.");
-            }			
-        	
-			// Address
-            if ( NOT LEN(TRIM(cl.houserules_curfewweeknights)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please specify the curfew for school nights.");
-            }	
-			
-			// City
-            if ( NOT LEN(TRIM(cl.houserules_curfewweekends)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please specify the curfew for weekends.");
-            }			
-        	
-        	// State
-            if ( NOT LEN(TRIM(cl.houserules_chores)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please list the chores that the student we responsible for.");
-            }		
-			
-			// Zip
-            if ( NOT LEN(TRIM(cl.houserules_church)) )  {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate any specific rules regarding religious expectations.");
-            }			
- 
-			</cfscript>
-          	<strong><font size=+1>House Rules</font></strong><br />
-        <cfif NOT SESSION.formErrors.length()>
-  			<font color="##00CC00">&##10004;</font> #Evaluate("okPassage" & randPassage)#<Br><br>
-        <cfelse>
-        <cfset StillMissingInfo = 1>
-            <gui:displayFormErrors 
-            formErrors="#SESSION.formErrors.GetCollection()#"
-            messageType="checklist"/>
-        </cfif>
-        <br /> 
-<!------------------------>
+        </cfif>    
+    
+</Cfoutput>
+
 <!----References---->
 <Cfquery name="references" datasource="mysql">
 	SELECT *
@@ -901,29 +956,7 @@ where schoolid = #cl.schoolid#
                 SESSION.formErrors.Add("Please enter the last name for #firstname#.");
             }	
 			
-			// City
-            if ( NOT LEN(TRIM(address)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please enter the address for #firstname#.");
-            }			
-        	
-			// City
-            if ( NOT LEN(TRIM(city)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please enter the city for #firstname#.");
-            }		
-			
-        	// State
-            if ( NOT LEN(TRIM(state)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please select the state for #firstname#.");
-            }		
-			
-			// Zip
-            if ( NOT LEN(TRIM(zip)) )  {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please enter a zip code for #firstname#.");
-            }			
+
         	
 			// Family Last Name
             if ( NOT LEN(TRIM(phone)) ) {
@@ -943,7 +976,7 @@ where schoolid = #cl.schoolid#
          <strong><font size=+1>References</font></strong><br />
         <cfif NOT SESSION.formErrors.length()>
         <Cfset randPassage = RandRange(1,6)>
-  			<font color="##00CC00">&##10004;</font> #Evaluate("okPassage" & randPassage)#<Br><br>
+  		<cfoutput>	<font color="##00CC00">&##10004;</font> #Evaluate("okPassage" & randPassage)#<Br><br></Cfoutput>
         <cfelse>
         <cfset StillMissingInfo = 1>
             <gui:displayFormErrors 
@@ -951,47 +984,7 @@ where schoolid = #cl.schoolid#
             messageType="checklist"/>
         </cfif>
 <!------------------------>
-<!----Finance Data---->        
-     
-        
- <cfscript>
-           // Data Validation
-			// Family Last Name
-            if (NOT LEN(TRIM(cl.publicAssitance))) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate if any member of your household is receiving any public assistance.");
-            }			
-        	
-			// Address
-            if (NOT LEN(TRIM(cl.crime))) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate if any member in your household has beeen charged with a crime.");
-            }	
-			
-			// City
-    		  if ( (cl.crime EQ 1) AND (NOT LEN(TRIM(cl.crimeExpl))) ) {
-              // Get all the missing items in a list
-                SESSION.formErrors.Add("You have indicated that someone has been charged with a crime, but did not explain.");
-            }			
-        	
-        	// State
-            if(NOT LEN(TRIM(cl.income)))   {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate your household income.");
-            }		
-	</cfscript>
-          	<strong><font size=+1>Finance Data</font></strong><br />
-        <cfif NOT SESSION.formErrors.length()>
-        <Cfset randPassage = RandRange(1,6)>
-  			<font color="##00CC00">&##10004;</font> #Evaluate("okPassage" & randPassage)#<Br><br>
-        <cfelse>
-        <cfset StillMissingInfo = 1>
-            <gui:displayFormErrors 
-            formErrors="#SESSION.formErrors.GetCollection()#"
-            messageType="checklist"/>
-        </cfif>    
-    
-</Cfoutput>
+
 <br /><br />
 
 <table bgcolor="#e6e6e6" cellpadding=8 >
@@ -1008,7 +1001,7 @@ where schoolid = #cl.schoolid#
         <cfif StillMissingInfo eq 1>
         	<img src="../images/buttons/SubmitApp_03_grey.png" width="244" height="66" />
         <cfelse>
-         <form method="post" action="?index.cfm?page=hello">
+         <form method="post" action="?index.cfm?page=checklist">
             	<input name="processApp" type="hidden" value="" />
         	<input type="image" src="../images/buttons/SubmitApp_03.png" width="244" height="66" />
             </form>
