@@ -375,9 +375,9 @@ Please include all your children, whether they are living at home or not, and <s
 		<td align="right">
 		<Cfif url.childid is not ''><a href="?page=familyMembers">
         	<img src="../images/buttons/goBack_44.png" border=0/></a> 
-            <input name="Submit" type="image" src="../images/buttons/update_44.png" border=0> 
+            <input name="Submit" type="image" src="images/buttons/update_44.png" border=0> 
         <cfelse>
-        	<input name="Submit" type="image" src="../images/buttons/addMember.png" border=0>
+        	<input name="Submit" type="image" src="images/buttons/addMember.png" border=0>
         </Cfif> 
         <!----
         <br />
