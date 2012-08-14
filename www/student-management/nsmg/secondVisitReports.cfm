@@ -640,14 +640,19 @@
                             <td>#yesNoFormat(get_report.recordCount)#</td>
                             <td valign="center">
 								<cfif get_report.recordCount>
+                                	
+                                    <cfscript>
+										vAllowedUserIDList = '';
+										vAllowedUserIDList = ListAppend(vAllowedUserIDList, get_report.fk_secondVisitRep);
+										vAllowedUserIDList = ListAppend(vAllowedUserIDList, get_report.fk_sr_user);
+										vAllowedUserIDList = ListAppend(vAllowedUserIDList, get_report.fk_ra_user);
+										vAllowedUserIDList = ListAppend(vAllowedUserIDList, get_report.fk_rd_user);
+										vAllowedUserIDList = ListAppend(vAllowedUserIDList, get_report.fk_ny_user);
+										vAllowedUserIDList = ListAppend(vAllowedUserIDList, get_report.fk_secondVisitRep);
+									</cfscript>
+                                
                                     <!--- access is limited to: CLIENT.usertype LTE 4, second vist rep, supervising rep, regional advisor, regional director, and facilitator. --->
-                                    <cfif listfind("1,2,3,4", CLIENT.userType) OR listFind("#get_report.fk_secondVisitRep#,
-                                                                                           #get_report.fk_sr_user#,
-                                                                                           #get_report.fk_ra_user#,
-                                                                                           #get_report.fk_rd_user#,
-                                                                                           #get_report.fk_ny_user#,
-                                                                                           #get_report.fk_secondVisitRep#",
-                                                                                           CLIENT.userid)>
+                                    <cfif listfind("1,2,3,4", CLIENT.userType) OR listFind(vAllowedUserIDList, CLIENT.userid)>
                                         <!--- restrict view of report until the supervising rep approves it. --->
                                         <!----check the type of report, use appropriate person to view---->
                                         <cfset submittingRep = '#secondVisitRepID#'>
@@ -1066,19 +1071,25 @@
 			 <Cfquery name="previousKids" datasource="#APPLICATION.DSN#">
                       SELECT hh.studentid
                         FROM smg_hostHistory hh
+                        INNER JOIN 
+                        	smg_students s ON s.studentID = hh.studentID
+                            AND
+                                s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.selectedprogram#" list="yes"> ) 
                         WHERE hh.secondVIsitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetResults.secondvisitrepid)#">
                         AND  hh.studentid not in
                              (SELECT studentid
                               FROM smg_students
                               WHERE secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetResults.secondvisitrepid)#"> )
-                           
                         UNION       
                              
                         SELECT
                             sht.studentid
                         FROM
                             smg_hostHistoryTracking sht
-                        
+						INNER JOIN 
+                        	smg_students s ON s.studentID = sht.studentID
+                            AND
+                                s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.selectedprogram#" list="yes"> ) 	                            
                         WHERE 
                             fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetResults.secondvisitrepid)#">
                         AND 
@@ -1086,8 +1097,7 @@
                         AND sht.studentid NOT IN 
                           (SELECT hh.studentid
                            FROM smg_hostHistory hh
-                           WHERE hh.secondVIsitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetResults.secondvisitrepid)#">) 
-          
+                           WHERE hh.secondVIsitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetResults.secondvisitrepid)#">)
 			  </cfquery>
 
              
