@@ -548,8 +548,9 @@
                         <table width="20%" align="left" cellpadding="2">
                             <tr>
                                 <td valign="top">
-                                    <cfif FileExists(expandPath("../uploadedfiles/web-candidates/#qGetCandidate.candidateID#.jpg"))>
-                                        <img src="../uploadedfiles/web-candidates/#qGetCandidate.candidateID#.jpg" width="135">
+                                	<!--- switch to this when we get rid of extra under student management -- expandPath("../uploadedfiles/web-candidates/#qGetCandidate.candidateID#.jpg") --->
+                                    <cfif FileExists("C://websites/www/student-management/extra/internal/uploadedFiles/web-candidates/#qGetCandidate.candidateID#.jpg")>
+                                        <img src="https://www.student-management.com/extra/internal/uploadedFiles/web-candidates/#qGetCandidate.candidateID#.jpg" width="135">
                                     <cfelse>
                                         <img src="../pics/no_stupicture.jpg" width="137" height="137">
                                     </cfif>
