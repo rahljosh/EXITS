@@ -112,9 +112,9 @@
 		
 		// Settings for DOS Email
 		if ( CLIENT.companyID EQ 10 ) {
-			vEmailFrom = 'jana@case-usa.org (Jana De Fillipps)';
+			vEmailFrom = APPLICATION.EMAIL.CASEComplianceFrom;
 		} else {
-			vEmailFrom = 'megan@iseusa.com (Megan Perlleshi)';
+			vEmailFrom = APPLICATION.EMAIL.ISEComplianceFrom;
 		}
 		
 		vEmailSubject = '#CLIENT.companyShort# - Department of State Certification Test';

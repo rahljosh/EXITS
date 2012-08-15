@@ -41,7 +41,7 @@
 			// ISE
 			if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) ) {
 				// Add Error Message
-				SESSION.formErrors.Add("EXITS could not process your Traincaster DOS Certification login at this time. Please contact Megan Perlleshi at megan@iseusa.com");
+				SESSION.formErrors.Add("EXITS could not process your Traincaster DOS Certification login at this time. Please contact Merri Deluca at merri@iseusa.com");
 			// CASE
 			} else {
 				// Add Error Message
