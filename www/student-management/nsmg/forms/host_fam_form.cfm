@@ -397,8 +397,107 @@
             	<cfif form.submit_Start is 'eHost'>
           
                     <cfsavecontent variable="hostWelcome">
+                    
+						<style type="text/css">
+                         .rdholder {
+                            height:auto;
+                            width:auto;
+                            margin-bottom:25px;
+                            margin-top: 15px;
+                         } 
+                        
+                        
+                         .rdholder .rdbox {
+                            border-left:1px solid #c6c6c6;
+                            border-right:1px solid #c6c6c6;
+                            padding:2px 15px;
+                            margin:0;
+                            display: block;
+                            min-height: 137px;
+                         } 
+                        
+                         .rdtop {
+                            width:auto;
+                            height:20px;
+                            /* -webkit for Safari and Google Chrome */
+                        
+                          -webkit-border-top-left-radius:12px;
+                            -webkit-border-top-right-radius:12px;
+                            /* -moz for Firefox, Flock and SeaMonkey  */
+                        
+                          -moz-border-radius-topright:12px;
+                            -moz-border-radius-topleft:12px;
+                            background-color: #FFF;
+                            color: #006699;
+                            border-top-width: 1px;
+                            border-right-width: 1px;
+                            border-bottom-width: 0px;
+                            border-left-width: 1px;
+                            border-top-style: solid;
+                            border-right-style: solid;
+                            border-bottom-style: solid;
+                            border-left-style: solid;
+                            border-top-color: #c6c6c6;
+                            border-right-color: #c6c6c6;
+                            border-bottom-color: #c6c6c6;
+                            border-left-color: #c6c6c6;
+                         } 
+                        
+                         .rdtop .rdtitle {
+                            margin:0;
+                            line-height:30px;
+                            font-family:Arial, Geneva, sans-serif;
+                            font-size:20px;
+                            padding-top: 5px;
+                            padding-right: 10px;
+                            padding-bottom: 0px;
+                            padding-left: 10px;
+                            color: #006699;
+                         }
+                        
+                         .rdbottom {
+                        
+                          width:auto;
+                          height:10px;
+                          border-bottom: 1px solid #c6c6c6;
+                          border-left:1px solid #c6c6c6;
+                          border-right:1px solid #c6c6c6;
+                           /* -webkit for Safari and Google Chrome */
+                        
+                          -webkit-border-bottom-left-radius:12px;
+                          -webkit-border-bottom-right-radius:12px;
+                        
+                        
+                         /* -moz for Firefox, Flock and SeaMonkey  */
+                        
+                          -moz-border-radius-bottomright:12px;
+                          -moz-border-radius-bottomleft:12px; 
+                         
+                         }
+                        
+                        .clearfix {
+                            display: block;
+                            height: 5px;
+                            width: 500px;
+                            clear: both;
+                        }
+                        .rdholder .rdbox p, li, td {
+                            font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+                            font-size: .80em;
+                            padding-top: 0px;
+                            padding-right: 20px;
+                            padding-bottom: 0px;
+                            padding-left: 20px;
+                        }
+                        
+                        </style>
+                        
+                        
+                        <div class="rdholder" style="width: 595px;"> 
+                                        <div class="rdtop"> </div> <!-- end top --> 
+                                     <div class="rdbox">
                         <cfoutput>
-                            <cfif form.fatherfirstname is not ''>#fatherfirstname#</cfif><Cfif form.fatherfirstname is not '' and form.motherfirstname is not ''> and</Cfif> <cfif form.motherfirstname is not ''>#form.motherfirstname#</cfif>-
+                           <p><strong> <cfif form.fatherfirstname is not ''>#fatherfirstname#</cfif><Cfif form.fatherfirstname is not '' and form.motherfirstname is not ''> and</Cfif> <cfif form.motherfirstname is not ''>#form.motherfirstname#</cfif>-</strong></p>
                             
                             <p>I am so excited that you have decided to host a student!</p>
                             
@@ -413,19 +512,19 @@
                             
                            <p>The application process can take any where from 15-60 minutes to complete depending on the information you provide and number of pictures you submit.</p> 
                             
-                            <p>You can always come back to the application at a later time to complete it or change any information that you want.  Please keep in mind though, that once the applciation is submitted, you will no longer be able to change any information on the application. </p>
-                           <p><i> We have just launched an electronic host family application, and you are one of the first families to use this new tool.  While we have tested it out extensivly, please bear with us as we work out the final bugs. Should you get any errors or feel that something is confusing, please feel free to let us know how we can improve the process.  There is a live chat and email support available through the application if you need immediate assistance while filling out the applciation.  Any and all feedback would be greatly appreciated.</i></p>
+                            <p>You can always come back to the  application at a later time to complete it or change any information  that you want.  Please keep in mind though, that once the applciation is  submitted, you will no longer be able to change any information on the  application. </p>
+          <p><em> We have just launched an electronic  host family application, and you are one of the first families to use  this new tool.  While we have tested it out extensivly, please bear with  us as we work out the final bugs. Should you get any errors or feel  that something is confusing, please feel free to let us know how we can  improve the process.  There is a live chat and email support available  through the application if you need immediate assistance while filling  out the applciation.  Any and all feedback would be greatly appreciated.</em></p>
                             
-                            
-                            
-                            <p>To start filling out your application, please click on the following link:</p>
-                           
-                            <p><A href="http://www.iseusa.com/hostApp/">http://www.iseusa.com/hostApp</A></p>
-                            
-                            <p>Please use the following login information:</p>
-                            
-                            Username/Email: #form.email#<br />
-                            Password: #strPassword#
+                              <div style="display: block; float: left; width: 250px;  padding: 10px;  font-family:Arial, Helvetica, sans-serif; font-size: .80em"> <strong><em>To start filling out your application, please click on the following link:</em></strong><br /><br />
+         <a href="http://ise.111cooper.com/hostApp/" target="_blank"><img src="http://ise.exitsapplication.com/nsmg/pics/hostAppEmail.jpg" width="200" height="56" border="0"></a> <br /></div>
+         <div style="display: block; float: right; width: 270px; padding: 10px; font-family:Arial, Helvetica, sans-serif; font-size: .80em; border: thin solid ##CCC;"><div><strong><em>Please use the following login information:</em></strong></div><br /><br />
+<div style="width: 50px; float: left;"><img src="http://ise.exitsapplication.com/nsmg/pics/lock.png" width="39" height="56"></div>
+   <div> <strong>Username / Email:</strong><br /> <a href="mailto:#form.email#" target="_blank">#form.email#</a><br />
+  <strong>Password:</strong>#strPassword#</div>
+
+</div>
+
+                        
                         </cfoutput>
                     </cfsavecontent>
              
