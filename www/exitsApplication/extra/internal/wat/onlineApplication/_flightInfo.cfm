@@ -34,7 +34,7 @@
     <cfparam name="FORM.programID" default="#VAL(qGetCandidateInfo.programID)#">
 
 	<!--- Ajax Call to the Component --->
-    <cfajaxproxy cfc="extra.extensions.components.flightInformation" jsclassname="flightInformation">
+    <cfajaxproxy cfc="extensions.components.flightInformation" jsclassname="flightInformation">
     
 </cfsilent>
 

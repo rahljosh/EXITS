@@ -70,7 +70,7 @@
         </cfsavecontent>
     
         <!--- SEND EMAIL IF THIS USER IS AN INTERNATIONAL REPRESENTATIVE --->
-        <cfinvoke component="EXTRA.extensions.components.email" method="sendEmail">
+        <cfinvoke component="extensions.components.email" method="sendEmail">
             <cfinvokeargument name="emailTo" value="anca@csb-usa.com">
             <cfinvokeargument name="emailSubject" value="EXTRA - International Representative Notice of Information Change">
             <cfinvokeargument name="emailMessage" value="#vEmailMessage#">            

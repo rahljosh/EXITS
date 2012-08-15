@@ -12,7 +12,7 @@
 <cfquery name="get_user" datasource="mysql">
 	SELECT *
 	FROM smg_users
-	WHERE userid = '#client.userid#'
+	WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(client.userID)#">
 </cfquery>
 
 <cfcatch type="any">

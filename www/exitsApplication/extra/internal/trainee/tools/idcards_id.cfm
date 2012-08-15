@@ -105,7 +105,7 @@
 				<td class="label" align="center">
 					<table width="80%" border="0" cellspacing="0" cellpadding="0">
 						<tr>
-							<td width="30%" height="16" bordercolor="FFFFFF" bgcolor="FFFFFF" class="style1"><div align="center"><img src="http://www.student-management.com/extra/internal/pics/ISE-Logo.gif" width="87" height="80" /></div></td>
+							<td width="30%" height="16" bordercolor="FFFFFF" bgcolor="FFFFFF" class="style1"><div align="center"><img src="http://www.extra.exitsApplication.com/internal/pics/ISE-Logo.gif" width="87" height="80" /></div></td>
 							<td bordercolor="FFFFFF" bgcolor="FFFFFF" class="style1" align="center"><span class="title">ISE - Trainee</span><br />
 								<span class="address">119 Cooper Street, Babylon<br>
 								NY 11702 - USA</span> <br /> <br />

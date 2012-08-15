@@ -13,7 +13,7 @@
 <cfsilent>
 
 	<!--- Import CustomTag --->
-    <cfimport taglib="/extra/extensions/customTags/gui/" prefix="gui" /> 
+    <cfimport taglib="/extensions/customTags/gui/" prefix="gui" /> 
 
     <cfsetting requesttimeout="9999">
     
@@ -28,7 +28,7 @@
 </cfsilent>    
 
 <!--- Ajax Call to the Component --->
-<cfajaxproxy cfc="extra.extensions.components.candidate" jsclassname="candidate">
+<cfajaxproxy cfc="extensions.components.candidate" jsclassname="candidate">
 
 <script type="text/javascript">
 	// Function to find the index in an array of the first entry with a specific value. 

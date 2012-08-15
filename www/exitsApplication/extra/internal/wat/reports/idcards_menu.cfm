@@ -54,7 +54,7 @@
                                                         value="programID"
                                                         display="programName"
                                                         selected="#FORM.programID#"
-                                                        bind="cfc:extra.extensions.components.program.getProgramsRemote()" 
+                                                        bind="cfc:extensions.components.program.getProgramsRemote()" 
                                                         bindonload="true" /> 
                                                 </td>
                                             </tr>
@@ -68,7 +68,7 @@
                                                         value="userID"
                                                         display="businessName"
                                                         selected="#FORM.intRep#"
-                                                        bind="cfc:extra.extensions.components.user.getIntlRepRemote({programID})" /> 
+                                                        bind="cfc:extensions.components.user.getIntlRepRemote({programID})" /> 
                                                 </td>
                                             </tr>
                                             <tr>
@@ -81,7 +81,7 @@
                                                         value="verificationReceived"
                                                         display="verificationReceived"
                                                         selected="#FORM.verification_received#"
-                                                        bind="cfc:extra.extensions.components.user.getVerificationDate({intRep},{programID})" /> 
+                                                        bind="cfc:extensions.components.user.getVerificationDate({intRep},{programID})" /> 
                                                 </td>
                                             </tr>
                                             <tr><td align="center" colspan="2"><cfinput type="image" name="submit" value=" Submit " src="../pics/view.gif"></td></tr>
@@ -111,7 +111,7 @@
                                                         value="programID"
                                                         display="programName"
                                                         selected="#FORM.programID#"
-                                                        bind="cfc:extra.extensions.components.program.getProgramsRemote()" 
+                                                        bind="cfc:extensions.components.program.getProgramsRemote()" 
                                                         bindonload="true" /> 
                                                 </td>
                                             </tr>
@@ -125,7 +125,7 @@
                                                         value="userID"
                                                         display="businessName"
                                                         selected="#FORM.intRep#"
-                                                        bind="cfc:extra.extensions.components.user.getIntlRepRemote({programID2})" /> 
+                                                        bind="cfc:extensions.components.user.getIntlRepRemote({programID2})" /> 
                                                 </td>
                                             </tr>
                                             <tr>
@@ -138,7 +138,7 @@
                                                         value="verificationReceived"
                                                         display="verificationReceived"
                                                         selected="#FORM.verification_received#"
-                                                        bind="cfc:extra.extensions.components.user.getVerificationDate({intRep2},{programID2})" /> 
+                                                        bind="cfc:extensions.components.user.getVerificationDate({intRep2},{programID2})" /> 
                                                 </td>
                                             </tr>										
                                             <tr><td align="center" colspan="2"><cfinput type="image" name="submit" value=" Submit " src="../pics/view.gif"></td></tr>
@@ -174,7 +174,7 @@
                                                         value="programID"
                                                         display="programName"
                                                         selected="#FORM.programID#"
-                                                        bind="cfc:extra.extensions.components.program.getProgramsRemote()" 
+                                                        bind="cfc:extensions.components.program.getProgramsRemote()" 
                                                         bindonload="true" /> 
                                                 </td>
                                             </tr>
@@ -188,7 +188,7 @@
                                                         value="userID"
                                                         display="businessName"
                                                         selected="#FORM.intRep#"
-                                                        bind="cfc:extra.extensions.components.user.getIntlRepRemote({programID3})" /> 
+                                                        bind="cfc:extensions.components.user.getIntlRepRemote({programID3})" /> 
                                                 </td>
                                             </tr>
                                             <tr>
@@ -201,7 +201,7 @@
                                                         value="verificationReceived"
                                                         display="verificationReceived"
                                                         selected="#FORM.verification_received#"
-                                                        bind="cfc:extra.extensions.components.user.getVerificationDate({intRep3},{programID3})" /> 
+                                                        bind="cfc:extensions.components.user.getVerificationDate({intRep3},{programID3})" /> 
                                                 </td>
                                             </tr>
                                             <tr>
@@ -239,7 +239,7 @@
                                                         value="programID"
                                                         display="programName"
                                                         selected="#FORM.programID#"
-                                                        bind="cfc:extra.extensions.components.program.getProgramsRemote()" 
+                                                        bind="cfc:extensions.components.program.getProgramsRemote()" 
                                                         bindonload="true" /> 
                                                 </td>
                                             </tr>
@@ -253,7 +253,7 @@
                                                         value="userID"
                                                         display="businessName"
                                                         selected="#FORM.intRep#"
-                                                        bind="cfc:extra.extensions.components.user.getIntlRepRemote({programID4})" /> 
+                                                        bind="cfc:extensions.components.user.getIntlRepRemote({programID4})" /> 
                                                 </td>
                                             </tr>
                                             <tr>
@@ -266,7 +266,7 @@
                                                         value="verificationReceived"
                                                         display="verificationReceived"
                                                         selected="#FORM.verification_received#"
-                                                        bind="cfc:extra.extensions.components.user.getVerificationDate({intRep4},{programID4})" /> 
+                                                        bind="cfc:extensions.components.user.getVerificationDate({intRep4},{programID4})" /> 
                                                 </td>
                                             </tr>
                                             <tr><td align="center" colspan="2"><cfinput type="image" name="submit" value=" Submit " src="../pics/view.gif"></td></tr>

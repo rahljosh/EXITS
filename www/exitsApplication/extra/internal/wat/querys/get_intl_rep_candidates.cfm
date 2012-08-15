@@ -3,7 +3,7 @@
 	FROM extra_candidates
 	INNER JOIN smg_users ON smg_users.userid = extra_candidates.intrep
 	<!---<cfif #client.companyid# is '5'><cfelse>--->
-		and extra_candidates.companyid = '#client.companyid#'
+		and extra_candidates.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(client.companyid)#">
 	<!---</cfif>--->
 	GROUP BY intrep
 	ORDER BY businessname

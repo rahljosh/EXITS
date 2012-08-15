@@ -17,9 +17,9 @@
     <cfparam name="FORM.candidateID" default="#APPLICATION.CFC.CANDIDATE.getcandidateID()#">
     <cfparam name="FORM.foreignTable" default="#APPLICATION.foreignTable#">
 
-	<cfajaxproxy cfc="extra.extensions.components.document" jsclassname="proxyDocument">
+	<cfajaxproxy cfc="extensions.components.document" jsclassname="proxyDocument">
     
-    <cfajaxproxy cfc="extra.extensions.components.candidate" jsclassname="proxyCandidate">
+    <cfajaxproxy cfc="extensions.components.candidate" jsclassname="proxyCandidate">
 
     <cfscript>
 		// Get Current Candidate Information
@@ -146,7 +146,7 @@
                         <cfgrid name="documentList" 
                             title="Click on Edit to update the category information"
                             format="html"
-                            bind="cfc:extra.extensions.components.document.getDocumentsRemote({foreignTable},{candidateID},{cfgridPage},{cfgridPageSize},{cfgridSortColumn},{cfgridSortDirection})"                    
+                            bind="cfc:extensions.components.document.getDocumentsRemote({foreignTable},{candidateID},{cfgridPage},{cfgridPageSize},{cfgridSortColumn},{cfgridSortDirection})"                    
                             width="650px"
                             pagesize="10"
                             bgcolor="##FFFFFF" 

@@ -16,7 +16,7 @@
 	LEFT JOIN smg_program_type ON type = programtypeid
 	INNER JOIN smg_companies c ON p.companyid = c.companyid
 	WHERE p.active = '1'
-		AND p.companyid = '#client.companyid#'
+		AND p.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(client.companyid)#">
 	ORDER BY startdate DESC, programname
 	<!--- enddate > '#DateFormat(now(), 'yyyy-mm-dd')#' --->
 </cfquery>

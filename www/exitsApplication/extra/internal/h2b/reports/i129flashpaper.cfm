@@ -75,7 +75,7 @@
 		<a href="mailto:#int_agent.email#">#int_agent.email#</a><br><br><br>
 		#DateFormat(now(), 'dddd, mmmm dd, yyyy')#<br>	</td>
 	<td class="style1"><!---<img src="../../pics/logo/#client.companyid#.gif"  alt="" border="0" align="right">--->
-	<img src="http://dev.student-management.com/extra/internal/pics/Into-Logo.jpg" width="80" height="80" />	</td>	
+	<img src="http://dev.extra.exitsApplication.com/internal/pics/Into-Logo.jpg" width="80" height="80" />	</td>	
 	<td align="right" valign="top" class="style1"> 
 		<div align="right"><span id="titleleft">
 		#companyshort.companyshort#<br>

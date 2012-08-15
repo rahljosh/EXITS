@@ -1,7 +1,7 @@
 
 <html>
 <head><title></title>
-<link href="http://dev.student-management.com/extra/style.css" rel="stylesheet" type="text/css">
+<link href="http://dev.extra.exitsApplication.com/style.css" rel="stylesheet" type="text/css">
 <body>
 
 <cfquery name="programstools" datasource="MySql">

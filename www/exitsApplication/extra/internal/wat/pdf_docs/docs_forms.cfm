@@ -30,7 +30,7 @@ function areYouSure() {
 <cfset link8 = 'wat'>
 <cfset link9 = 'h2b'>
 
-<cfset currentDirectory = "c:\websites\extra\internal\uploadedfiles\pdf_docs\#Evaluate("link" & get_company.companyid)#">
+<cfset currentDirectory = "c:\websites\www\exitsApplication\extra\internal\uploadedfiles\pdf_docs\#Evaluate("link" & get_company.companyid)#">
 
 <cfdirectory action="List" directory="#currentDirectory#" name="DirList" sort="name asc" filter="*.pdf">
 

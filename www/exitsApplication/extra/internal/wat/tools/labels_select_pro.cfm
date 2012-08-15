@@ -33,12 +33,12 @@
               </tr>
               <tr>
                 <td width="5"><font size="2" face="Verdana, Arial, Helvetica, sans-serif">From :</font> </td>
-                <td><cfinput type="text" name="date1" size="7" maxlength="10" validate="date" required="yes">
+                <td><cfinput type="text" name="date1" size="7" maxlength="10" validate="date" required="yes" class="datePicker">
                   <font size="2" face="Verdana, Arial, Helvetica, sans-serif">mm/dd/yyyy </font></td>
               </tr>
               <tr>
                 <td width="5"><font size="2" face="Verdana, Arial, Helvetica, sans-serif">To : </font></td>
-                <td><cfinput type="text" name="date2" size="7" maxlength="10" validate="date" required="yes">
+                <td><cfinput type="text" name="date2" size="7" maxlength="10" validate="date" required="yes" class="datePicker">
                   <font size="2" face="Verdana, Arial, Helvetica, sans-serif">mm/dd/yyyy</font></td>
               </tr>
               <tr>
@@ -62,11 +62,11 @@
               </tr>
               <tr>
                 <td width="5"><font size="2" face="Verdana, Arial, Helvetica, sans-serif">From :</font> </td>
-                <td><cfinput type="text" name="id1" size="4" maxlength="6" validate="integer" required="yes"></td>
+                <td><cfinput type="text" name="id1" size="4" maxlength="6" validate="date" required="yes" class="datePicker"></td>
               </tr>
               <tr>
                 <td width="5"><font size="2" face="Verdana, Arial, Helvetica, sans-serif">To : </font></td>
-                <td><cfinput type="text" name="id2" size="4" maxlength="6" validate="integer" required="yes"></td>
+                <td><cfinput type="text" name="id2" size="4" maxlength="6" validate="date" required="yes" class="datePicker"></td>
               </tr>
               <tr>
                 <td colspan="2" align="center" bgcolor="##e9ecf1"><input type="image" src="../pics/preview.gif" align="center" border="0" /></td>

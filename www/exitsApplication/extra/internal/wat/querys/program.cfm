@@ -19,7 +19,7 @@
 	FROM 
     	smg_programs
 	WHERE 
-    	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+    	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(client.companyid)#">
 	ORDER BY 
     	programname
 </cfquery>

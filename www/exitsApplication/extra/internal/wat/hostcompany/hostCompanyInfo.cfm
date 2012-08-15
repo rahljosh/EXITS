@@ -16,7 +16,7 @@
     <cfimport taglib="../../../extensions/customTags/gui/" prefix="gui" />	
     
   	<!--- Ajax Call to the Component --->
-    <cfajaxproxy cfc="extra.extensions.components.udf" jsclassname="UDFComponent">
+    <cfajaxproxy cfc="extensions.components.udf" jsclassname="UDFComponent">
 
     <!--- Param variables --->
     <cfparam name="URL.hostCompanyID" default="0">

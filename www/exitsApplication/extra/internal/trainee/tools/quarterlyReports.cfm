@@ -13,7 +13,7 @@
 <cfsilent>
 
 	<!--- Import CustomTag --->
-    <cfimport taglib="/extra/extensions/customTags/gui/" prefix="gui" /> 
+    <cfimport taglib="/extensions/customTags/gui/" prefix="gui" /> 
 	
     <cfparam name="FORM.monthEvaluation" default="">
     
@@ -54,7 +54,7 @@
 </cfsilent>    
 
 <!--- Ajax Call to the Component --->
-<cfajaxproxy cfc="extra.extensions.components.candidate" jsclassname="candidate">
+<cfajaxproxy cfc="extensions.components.candidate" jsclassname="candidate">
 
 <script language="javascript">
 	// Function to find the index in an array of the first entry with a specific value. 

@@ -6,7 +6,7 @@
 <title>New User</title>
 
 <!--- Ajax Call to the Component --->
-<cfajaxproxy cfc="extra.extensions.components.udf" jsclassname="UDFComponent">
+<cfajaxproxy cfc="extensions.components.udf" jsclassname="UDFComponent">
 
 <SCRIPT LANGUAGE="JavaScript">
 <!-- Begin -->

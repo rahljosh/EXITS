@@ -164,7 +164,7 @@ function checkDate(theField){
 		<cfif get_arrival.recordcount GT '0'>
 		<cfloop query="get_arrival"> <!--- previous information --->
 		<tr bgcolor="D5DCE5">
-			<td align="center"><cfif client.usertype LTE 4><a href="../querys/delete_flight_info.cfm?ID=#ID#" onClick="return areYouSure(this);"><img src="http://www.student-management.com/nsmg/pics/deletex.gif" border="0"></img></a></cfif></td>
+			<td align="center"><cfif client.usertype LTE 4><a href="../querys/delete_flight_info.cfm?ID=#ID#" onClick="return areYouSure(this);"><img src="http://www.ise.exitsApplication.com/nsmg/pics/deletex.gif" border="0"></img></a></cfif></td>
 			<td align="center">#DateFormat(departDate , 'mm/dd/yyyy')#&nbsp;</td>
 			<td align="center">#departCity#&nbsp;</td>
 			<td align="center">#departAirportCode#&nbsp;</td>
@@ -178,7 +178,7 @@ function checkDate(theField){
 				<input type="checkbox" name="ar_isOvernightFlight#get_arrival.currentrow#" value="#isOvernightFlight#" #chk# readonly="yes" disabled></input></td>
 			<td align="center">
 				<cfif flightNumber is not ''>
-				<a href="http://dps1.travelocity.com/dparflifo.ctl?aln_name=#left(flightNumber,2)#&flt_num=#RemoveChars(flightNumber,1,2)#" target="blank"><img src="http://www.student-management.com/nsmg/pics/arrow.gif" border="0"></img></a><cfelse>n/a</cfif></td>
+				<a href="http://dps1.travelocity.com/dparflifo.ctl?aln_name=#left(flightNumber,2)#&flt_num=#RemoveChars(flightNumber,1,2)#" target="blank"><img src="http://www.ise.exitsApplication.com/nsmg/pics/arrow.gif" border="0"></img></a><cfelse>n/a</cfif></td>
 		</tr>
 		</cfloop>
 		</cfif>
@@ -257,7 +257,7 @@ function checkDate(theField){
 		<cfif get_departure.recordcount GT 0> <!--- previous information --->
 		<cfloop query="get_departure">
 		<tr bgcolor="FEE6D3">
-			<td align="center"><cfif client.usertype LTE 4><a href="../querys/delete_flight_info.cfm?ID=#ID#" onClick="return areYouSure(this);"><img src="http://www.student-management.com/nsmg/pics/deletex.gif" border="0"></img></a></cfif></td>
+			<td align="center"><cfif client.usertype LTE 4><a href="../querys/delete_flight_info.cfm?ID=#ID#" onClick="return areYouSure(this);"><img src="http://www.ise.exitsApplication.com/nsmg/pics/deletex.gif" border="0"></img></a></cfif></td>
 			<td>#DateFormat(departDate , 'mm/dd/yyyy')#&nbsp;</td>
 			<td align="center">#departCity#&nbsp;</td>
 			<td align="center">#departAirportCode#&nbsp;</td>
@@ -271,7 +271,7 @@ function checkDate(theField){
 				<input type="checkbox" name="ar_isOvernightFlight#get_arrival.currentrow#" value="#isOvernightFlight#" #chk# disabled></input></td>
 			<td align="center">
 				<cfif flightNumber is not ''>
-				<a href="http://dps1.travelocity.com/dparflifo.ctl?aln_name=#left(flightNumber,2)#&flt_num=#RemoveChars(flightNumber,1,2)#" target="blank"><img src="http://www.student-management.com/nsmg/pics/arrow.gif" border="0"></img></a><cfelse>n/a</cfif></td>
+				<a href="http://dps1.travelocity.com/dparflifo.ctl?aln_name=#left(flightNumber,2)#&flt_num=#RemoveChars(flightNumber,1,2)#" target="blank"><img src="http://www.ise.exitsApplication.com/nsmg/pics/arrow.gif" border="0"></img></a><cfelse>n/a</cfif></td>
 		</tr>
 		</cfloop>
 		</cfif>
@@ -325,9 +325,9 @@ function checkDate(theField){
 
 <table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
 	<tr><cfif client.usertype LTE 4>
-		<td align="right" width="50%"><input name="Submit" type="image" src="http://www.student-management.com/nsmg/pics/update.gif" border=0 alt=" update ">&nbsp;</td>
+		<td align="right" width="50%"><input name="Submit" type="image" src="http://www.ise.exitsApplication.com/nsmg/pics/update.gif" border=0 alt=" update ">&nbsp;</td>
 		</cfif>
-		<td align="left" width="50%">&nbsp;<input type="image" value="close window" src="http://www.student-management.com/nsmg/pics/close.gif" onClick="javascript:window.close()"></td></tr>
+		<td align="left" width="50%">&nbsp;<input type="image" value="close window" src="http://www.ise.exitsApplication.com/nsmg/pics/close.gif" onClick="javascript:window.close()"></td></tr>
 </table>
 
 

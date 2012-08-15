@@ -11,7 +11,7 @@
         // Set a short name for the APPLICATION.PATH
         AppPath = APPLICATION.PATH;
     
-        // Base Path eg. C:\websites\student-management\extra\internal\trainee\ 
+        // Base Path eg. C:\websites\www\exitsApplication\extra\internal\trainee\ 
         AppPath.base = getDirectoryFromPath(getBaseTemplatePath());
     		
 		// Remove the last item from Base (trainee, h2b or wat)
@@ -31,7 +31,7 @@
 
 		// Create a function that let us create CFCs from any location
 		function CreateCFC(strCFCName){
-			return(CreateObject("component", ("extra.extensions.components." & ARGUMENTS.strCFCName)));
+			return(CreateObject("component", ("extensions.components." & ARGUMENTS.strCFCName)));
 		}
 
 		// Page Messages

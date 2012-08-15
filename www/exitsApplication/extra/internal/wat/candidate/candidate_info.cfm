@@ -22,7 +22,7 @@
     <cfparam name="FORM.candCompID" default="0">
     <cfparam name="FORM.cancelStatus" default="">
     
-    <cfajaxproxy cfc="extra.extensions.components.hostCompany" jsclassname="HCComponent">
+    <cfajaxproxy cfc="extensions.components.hostCompany" jsclassname="HCComponent">
     
     <cfscript>
 		
@@ -1335,7 +1335,7 @@
                                                     value="ID"
                                                     display="title"
                                                     selected="#qCandidatePlaceCompany.jobID#"
-                                                    bind="cfc:extra.extensions.components.hostCompany.getJobTitle({hostCompanyID})"
+                                                    bind="cfc:extensions.components.hostCompany.getJobTitle({hostCompanyID})"
                                                     bindonload="true" /> 
                                             </td>
                                         </tr>
@@ -1656,7 +1656,7 @@
                                                             value="ID"
                                                             display="title"
                                                             selected="#qGetAllPlacements.jobID#"
-                                                            bind="cfc:extra.extensions.components.hostCompany.getJobTitle({hostCompanyID_#qGetAllPlacements.candCompID#})"
+                                                            bind="cfc:extensions.components.hostCompany.getJobTitle({hostCompanyID_#qGetAllPlacements.candCompID#})"
                                                             bindonload="true" /> 
                                                     </td>
                                                 </tr>
