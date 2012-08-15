@@ -130,7 +130,7 @@
                     </cfcase>
 
                     <cfcase value="schoolName">
-                        p.schoolName,
+                        sc.schoolName,
                         s.familyLastName
                     </cfcase>
 
