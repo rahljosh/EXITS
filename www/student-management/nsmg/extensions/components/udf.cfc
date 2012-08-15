@@ -1158,5 +1158,86 @@
         </cfscript>	
         
     </cffunction>
+    <!-----Update the ToDoList, and if user is a Facilitor or Office person, update paperwork as well.---->
     
+	<cffunction name="updateToDoList" access="public" returntype="string">
+        <cfargument name="hostid" type="numeric" required="yes" default="" hint="Pass in host id you are updating">
+        <cfargument name="studentid" type="numeric" required="no" default="0" hint="student id of student assigned to host">
+        <Cfargument name="itemID" type="numeric" required="yes" default="0" hint="Item that is being approved">
+        <cfargument name="userType" type="numeric" required="yes" default="0" hint="the user type updating, so we know what date to insert.">
+        
+        
+        <!----Check if there is a record on file for this host.  First we check if any record exits for current student.  If not student is assigned, make sure only one non-studet assigned exits, we don't need multiple non-assigned records for any given host family.---->
+        
+        <cfquery name="checkRecord" datasource="#APPLICATION.DSN#">
+            SELECT
+             id, fk_studentid, fk_hostid
+            FROM
+                smg_ToDoListDates
+            WHERE 
+                fk_HostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostid)#">
+            AND
+            	itemID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.itemID)#">
+            <!----<cfif #VAL(ARGUMENTS.studentid)#>
+            AND
+                fk_StudentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentid)#">
+            </cfif>
+			---->
+           
+        </cfquery>
+        
+        <Cfif checkRecord.recordcount gt 1>
+			<cfset status = 'Multiple records with out a student assigned.  Please contact IT.'>
+             <cfscript>
+                return(status);
+            </cfscript>
+        <Cfelseif checkRecord.recordcount eq 1>
+        	<Cfquery name="updateToDoList" datasource="#application.dsn#">
+        	update smg_ToDoListDates
+				set  
+                <Cfif val(ARGUMENTS.studentid)>
+                	fk_StudentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">,
+                </Cfif>
+                	<Cfif ARGUMENTS.userType eq 7>
+                    	areaRepApproval 
+                    <cfelseif ARGUMENTS.userType eq 6>
+                    	regionalAdvisorApproval
+                    <cfelseif ARGUMENTS.userType eq 5>
+                    	regionalDirectorApproval
+                    <cfelseif ARGUMENTS.userType lte 4>
+                    	facApproval
+                    </Cfif>
+                       =   <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">     
+                
+             WHERE id =  <cfqueryparam cfsqltype="cf_sql_integer" value="#checkRecord.id# ">   
+            </Cfquery>
+            <cfset status = 'Information Updated'>
+        <Cfelse>
+        	<Cfquery name="updateToDoList" datasource="#application.dsn#">
+        	insert into smg_ToDoListDates (
+				<Cfif ARGUMENTS.userType eq 7>
+                    	areaRepApproval 
+                    <cfelseif ARGUMENTS.userType eq 6>
+                    	regionalAdvisorApproval
+                    <cfelseif ARGUMENTS.userType eq 5>
+                    	regionalDirectorApproval
+                    <cfelseif ARGUMENTS.userType lte 4>
+                    	facApproval
+                    </Cfif>, itemID, fk_hostid, fk_studentid)
+      values(<cfqueryparam cfsqltype="cf_sql_date" value="#now()#">, <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.itemid# ">,
+      			       <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostid# ">, <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentid# ">)     
+      
+            </Cfquery>
+            <cfset status = 'Record Updated'>  
+        </Cfif>
+        
+        <cfif ARGUMENTS.userType LTE 4>
+        	<!----need t update final paperwork screen---->
+        </cfif>
+         	
+		<cfscript>
+            return status;
+        </cfscript>	
+        
+    </cffunction>
 </cfcomponent>
