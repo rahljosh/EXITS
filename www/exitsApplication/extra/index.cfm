@@ -28,7 +28,7 @@
     <!--- SSL --->
     <cfscript>
 		if ( NOT APPLICATION.IsServerLocal AND CGI.SERVER_PORT EQ 80 ) {
-			location("https://#CGI.HTTP_HOST##CGI.SCRIPT_NAME#", "no");		
+			//location("https://#CGI.HTTP_HOST##CGI.SCRIPT_NAME#", "no");		
 		}
 		
 		if ( LEN(URL.link) ) {
