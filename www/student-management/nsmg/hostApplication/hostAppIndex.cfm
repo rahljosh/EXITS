@@ -200,7 +200,9 @@
                 )
             </cfif>
             <Cfif val(form.status)>
-               	AND h.HostAppStatus = #form.status#    
+               	AND h.HostAppStatus = #form.status#   
+            <cfelse>
+            	AND h.hostAppStatus > 4  
             </Cfif>
 			<cfif form.active NEQ ''>
                 AND h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#form.active#">
