@@ -1,10 +1,10 @@
 <cfcomponent>
 	<cffunction name="GetImage" hint="Re-sizes images for display in album">
 <!----Get info on Image---->
-<cfimage action="info" structName="picInfo" source="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/temp/#img#">
+<cfimage action="info" structName="picInfo" source="C:/websites/student-management/nsmg/uploadedfiles/HostAlbumResize/#img#">
 <!--- Set the image path where photos exist --->
-<cfset imgpath = "/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/temp/#img#">
-<cfset newPath = "/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/large/">
+<cfset imgpath = "C:/websites/student-management/nsmg/uploadedfiles/HostAlbumResize/#img#">
+<cfset newPath = "C:/websites/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/large/">
 
 <!--- Re-writes image extension if for alternates of JPG, and adds _resized to differentiate from fullsize images --->
 <cfset rfile= "#REReplace("#img#",".(jpg|JPG|JPEG|jpeg)",".jpg")#">
