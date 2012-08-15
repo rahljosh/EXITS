@@ -687,7 +687,7 @@ where schoolid = #cl.schoolid#
 			
 			
 			// State
-            if ( (cl.schooltransportation is 'other') AND (NOT LEN(TRIM(cl.other_desc))) ) {
+            if ( (cl.school_trans is 'other') AND (NOT LEN(TRIM(cl.other_trans))) ) {
               // Get all the missing items in a list
                 SESSION.formErrors.Add("School Info You indicated that the student will get to school but Other, but didn't specify what that other method would be.");
             }	
