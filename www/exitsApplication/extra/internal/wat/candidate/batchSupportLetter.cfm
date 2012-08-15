@@ -72,7 +72,7 @@
                         value="programID"
                         display="programName"
                         selected="#FORM.programID#"
-                        bind="cfc:extra.extensions.components.program.getProgramsRemote()" 
+                        bind="cfc:extensions.components.program.getProgramsRemote()" 
                         bindonload="true" /> 
                 </td>
             </tr>
@@ -86,7 +86,7 @@
                         value="userID"
                         display="businessName"
                         selected="#FORM.intRep#"
-                        bind="cfc:extra.extensions.components.user.getIntlRepRemote({programID})" /> 
+                        bind="cfc:extensions.components.user.getIntlRepRemote({programID})" /> 
                 </td>
             </tr>
             <tr>
@@ -99,7 +99,7 @@
                         value="verificationReceived"
                         display="verificationReceived"
                         selected="#FORM.verification_received#"
-                        bind="cfc:extra.extensions.components.user.getVerificationDate({intRep},{programID})" /> 
+                        bind="cfc:extensions.components.user.getVerificationDate({intRep},{programID})" /> 
                 </td>
             </tr>
             <tr>

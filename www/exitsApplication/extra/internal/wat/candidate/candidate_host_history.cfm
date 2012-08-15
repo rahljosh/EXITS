@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<cfajaxproxy cfc="extra.extensions.components.candidate" jsclassname="CANDIDATE">
+<cfajaxproxy cfc="extensions.components.candidate" jsclassname="CANDIDATE">
 
 <cfif not IsDefined('url.unqid')>
 	<cfinclude template="../error_message.cfm">

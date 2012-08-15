@@ -147,10 +147,10 @@
 		// ***** DEVELOPMENT Server Settings *****
 
 		// Set Site URL
-		APPLICATION.SITE.URL.main = 'http://brazil/extra/';
-		APPLICATION.SITE.URL.activation = 'http://brazil/extra/accountActivation.cfm';
-		//APPLICATION.SITE.URL.main = 'http://smg.local/extra/';
-		//APPLICATION.SITE.URL.activation = 'http://smg.local/extra/accountActivation.cfm';
+		APPLICATION.SITE.URL.main = 'http://brazil/';
+		APPLICATION.SITE.URL.activation = 'http://brazil/accountActivation.cfm';
+		//APPLICATION.SITE.URL.main = 'http://smg.local/';
+		//APPLICATION.SITE.URL.activation = 'http://extra.local/accountActivation.cfm';
 		
 		// Email Settings
 		APPLICATION.EMAIL.contactUs = 'marcus@iseusa.com';
@@ -158,7 +158,7 @@
 		APPLICATION.EMAIL.errors = 'marcus@iseusa.com';
 
 		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());	'
-		APPLICATION.PATH.base = 'C:/Websites/www/student-management/extra/internal/';
+		APPLICATION.PATH.base = 'C:/Websites/www/exitsApplication/extra/internal/';
 		
 		APPLICATION.KEY.googleMapsAPI = 'ABQIAAAAiT0TfDoNFmmMRtOgGZNu_RQ7SAcFHxXg_-mJGkd4r8IEQsqs-RTA-mZLUkFOvNCYFwvV4y4wGdOOyg'; // URL: http://smg.local
 
@@ -167,7 +167,7 @@
 		// ***** PRODUCTION Server Settings *****
 
 		// Set Site URL
-		APPLICATION.SITE.URL.main = 'http://www.student-management.com/extra/';
+		APPLICATION.SITE.URL.main = 'http://www.extra.exitsApplication.com/';
 		APPLICATION.SITE.URL.activation =  APPLICATION.SITE.URL.main & 'accountActivation.cfm';
 		
 		// Email Settings
@@ -176,7 +176,7 @@
 		APPLICATION.EMAIL.errors = 'errors@student-management.com';
 		
 		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());	'
-		APPLICATION.PATH.base = 'C:/Websites/student-management/extra/internal/';
+		APPLICATION.PATH.base = 'C:/Websites/www/exitsApplication/extra/internal/';
 		
 		APPLICATION.KEY.googleMapsAPI = 'ABQIAAAAiT0TfDoNFmmMRtOgGZNu_RRLNEIHL1-VAyvTpFfu6UHsH4aa6RS5HJTmI0cZToeRuO_UU4JcIi2qaw'; // URL: http://exitsapplication.com
 

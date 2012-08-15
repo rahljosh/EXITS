@@ -33,7 +33,7 @@ and c.programid = #form.program#
 		
 		</td>
 		<td align="right">
-		<img src="http://dev.student-management.com/extra/images/extra-logo.jpg" width=50 height=65>		
+		<img src="http://dev.extra.exitsApplication.com/images/extra-logo.jpg" width=50 height=65>		
 		</td>
 </Table>
 <br><br>

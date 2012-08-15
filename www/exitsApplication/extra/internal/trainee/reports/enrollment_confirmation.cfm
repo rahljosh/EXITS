@@ -50,7 +50,7 @@
           		<td>
                 	<table width="100%" border="0">
               			<tr>
-                			<td width="13%" class="style1"><img src="http://www.student-management.com/nsmg/pics/ise-logo2.gif" width="120" height="120" /> </td>
+                			<td width="13%" class="style1"><img src="http://www.ise.exitsApplication.com/nsmg/pics/ise-logo2.gif" width="120" height="120" /> </td>
                 			<td width="87%" class="style1">
                           		<b>International Student Exchange</b><br>
                           		<br />

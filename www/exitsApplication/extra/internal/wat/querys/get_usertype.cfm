@@ -12,7 +12,8 @@
 <cfquery name="get_usertype" datasource="MySql">
 	SELECT usertypeid, usertype
 	FROM smg_usertype
-	WHERE usertypeid >= '#client.usertype#' AND usertypeid <= '3'
+	WHERE usertypeid >= <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(client.usertype)#">
+    AND usertypeid <= '3'
 </cfquery>
 
 <cfcatch type="any">

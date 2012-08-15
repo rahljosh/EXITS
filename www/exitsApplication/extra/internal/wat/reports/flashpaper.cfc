@@ -93,7 +93,7 @@
 			<cfinvokeargument name="width" value="600">
 			<cfinvokeargument name="height" value="800">
 		<cfargument name="cachedirectory" type="string" required="yes" hint="The cache directory for the swf file." value="">
-		<cfargument name="cachedirectoryUrl" type="string" required="yes" hint="The url path to the cached directory." value="C:\websites\extra\internal\h2b\reports\cache""http://dev.student-management.com/extra/internal/h2b/reports/cache">
+		<cfargument name="cachedirectoryUrl" type="string" required="yes" hint="The url path to the cached directory." value="C:\websites\extra\internal\h2b\reports\cache""http://dev.extra.exitsApplication.com/internal/h2b/reports/cache">
 		</cfinvoke>
 		
 		<cfreturn TRUE>

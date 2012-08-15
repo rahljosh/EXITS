@@ -75,7 +75,7 @@
 		INSERT INTO smg_links 
 			(link)
 		VALUES 
-			('https://www.student-management.com/extra/internal/#folder#/index.cfm?curdoc=helpdesk/helpdesk_view&helpdeskid=#get_ticket.helpdeskid#')
+			('https://www.extra.exitsApplication.com/internal/#folder#/index.cfm?curdoc=helpdesk/helpdesk_view&helpdeskid=#get_ticket.helpdeskid#')
 	</cfquery>
 
 	<cfquery name="get_link_id" datasource="MySQL">
@@ -95,7 +95,7 @@ Ticket ## #get_ticket.helpdeskid#.
 
 Please click on the link to check the status, review the item, or add additional information. 
 
-http://www.student-management.com/extra/?link=#get_link_id.linkid#
+http://www.extra.exitsApplication.com/?link=#get_link_id.linkid#
 			
 *Authentication maybe required if you are not currently logged on to the Student Management website.*
 
@@ -119,7 +119,7 @@ contact support@student-management.com immediately.
 Dear #assigned_to.firstname# #assigned_to.lastname#,
 
 A new request of service has been submitted to you.
-Item Link: http://www.student-management.com/extra/?link=#get_link_id.linkid#
+Item Link: http://www.extra.exitsApplication.com/?link=#get_link_id.linkid#
 
 Ticket ## #get_ticket.helpdeskid#.
 
@@ -135,7 +135,7 @@ Submitted on: #dateformat (now(), "dd/mm/yyyy")# by #get_user.firstname# #get_us
 			Support,
 			
 			A new request of service has been submitted to you.
-			Item Link: http://www.student-management.com/extra/?link=#get_link_id.linkid#
+			Item Link: http://www.extra.exitsApplication.com/?link=#get_link_id.linkid#
 			
 			Ticket ## #get_ticket.helpdeskid#.
 			

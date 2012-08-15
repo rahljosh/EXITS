@@ -150,7 +150,7 @@
             <table border="0" width="100%">
                 <tr> 
                     <td align="center">
-                        <img src="../../../../#APPLICATION.CSB[setSponsor].smallLogo#" border="0">
+                        <img src="../../../#APPLICATION.CSB[setSponsor].smallLogo#" border="0">
                     </td>
                     <td align="center" width="100%"> 
                         <p class="style5">&nbsp;</p>

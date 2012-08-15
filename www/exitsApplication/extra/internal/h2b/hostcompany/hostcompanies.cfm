@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <title>Host Companies List</title>
 </body>
-<link href="http://dev.student-management.com/extra/style.css" rel="stylesheet" type="text/css">
+<link href="http://dev.extra.exitsApplication.com/style.css" rel="stylesheet" type="text/css">
 
 <table width="100%" height="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="#CCCCCC" bgcolor="#FFFFFF">
   <tr>

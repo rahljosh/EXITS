@@ -64,7 +64,7 @@
 					
 					Ticket ###form.helpdeskid#
 					
-					To view the comment and current status please visit http://www.student-management.com/extra/?link=#find_link.id#
+					To view the comment and current status please visit http://www.extra.exitsApplication.com/?link=#find_link.id#
 						
 					*Authentication may be required if you are not logged in.*
 						
@@ -117,7 +117,7 @@
 					
 					Ticket ###form.helpdeskid#
 					
-					To view the comment and current status please visit http://www.student-management.com/extra/?link=#find_link.id#
+					To view the comment and current status please visit http://www.extra.exitsApplication.com/?link=#find_link.id#
 				
 					*Authentication may be required if you are not logged in.*
 						

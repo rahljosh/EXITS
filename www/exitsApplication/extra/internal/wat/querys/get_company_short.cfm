@@ -2,5 +2,5 @@
 <Cfquery name="companyshort" datasource="MySQL">
 select *
 from smg_companies
-where companyid = #client.companyid#
+where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(client.companyid)#">
 </Cfquery>
