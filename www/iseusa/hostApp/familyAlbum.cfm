@@ -33,9 +33,9 @@
 
 <cfif isDefined('url.delPic')>
 	<cffile action="delete" 
-    	file="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/large/#url.delPic#">
+    	file="C:/websites/www/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/large/#url.delPic#">
     <cffile action="delete" 
-    	file="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs/#url.delPic#"> 
+    	file="C:/websites/www/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs/#url.delPic#"> 
         <cfquery name="delPic" datasource="MySQL">
             delete from smg_host_picture_album
             where filename = '#url.delPic#'   
@@ -90,27 +90,27 @@ $(document).ready(function(){
 <cfif form.fileUpload is ''>
 <div align="center"><font color="#FF0000"><h3>Please select a file to upload.</h3></font></div>
 <cfelse>
-		<cfif DirectoryExists('/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/large')>
+		<cfif DirectoryExists('C:/websites/www/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/large')>
         <cfelse>
-        	<cfdirectory action = "create" directory = "/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/large" >
+        	<cfdirectory action = "create" directory = "C:/websites/www/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/large" >
         </cfif>	
         
-        <cfif DirectoryExists('/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs')>
+        <cfif DirectoryExists('C:/websites/www/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs')>
         <cfelse>
-        	<cfdirectory action = "create" directory = "/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs" >
+        	<cfdirectory action = "create" directory = "C:/websites/www/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs" >
         </cfif>	
         
         
    <cffile action="upload"
-     destination="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/temp/"
+     destination="C:/websites/www/student-management/nsmg/uploadedfiles/temp/"
      fileField="fileUpload" nameconflict="makeunique">    
-      <cfdirectory action="list" name="currentPics2" directory="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/temp/">
+      <cfdirectory action="list" name="currentPics2" directory="C:/websites/www/student-management/nsmg/uploadedfiles/temp/">
      
       <cfset fileTypeOK = 1>
 	<cfif #ListFind('#acceptedFIles#','#file.ServerFileExt#')# eq 0>
    <cfset fileTypeOK = 0>
    <cffile action="delete" 
-    	file="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/#file.serverfile#">
+    	file="C:/websites/www/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/#file.serverfile#">
    
 	</cfif>
 
@@ -130,7 +130,7 @@ $(document).ready(function(){
 				
                      </cfloop>
                     <cfloop query="currentPics2">
-				 	<cffile action="delete" file="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/temp/#name#">  
+				 	<cffile action="delete" file="C:/websites/www/student-management/nsmg/uploadedfiles/temp/#name#">  
                    </cfloop>
 
      
@@ -231,7 +231,7 @@ Select a category for this picture:<br />
         from smg_host_pic_cat
         where catID = #cat#
         </cfquery>
-    	<Td><img src="http://111cooper.com/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs/#filename#" height = 100><br />
+    	<Td><img src="http://ise.exitsapplication.com/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs/#filename#" height = 100><br />
                 #catDesc.cat_name#<br />
                 <a href="index.cfm?page=familyAlbum&delPic=#filename#"><img src="../images/buttons/deleteGreyRed.png" height=30  border=0 /></a>
 </Td>
@@ -239,7 +239,7 @@ Select a category for this picture:<br />
                 Description of picture:<br />
                 <textarea name="desc_#filename#" cols="20" rows="5">#description#</textarea>
               <Cfset count = #count# + 1>
- 	<Cfif  #count#  mod 2>
+ 	<Cfif  #count#  mod 2>ß
     </tr>
     </Cfif>
     </cfloop>
