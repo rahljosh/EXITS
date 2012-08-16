@@ -51,7 +51,7 @@
 
 <cfoutput>
 	
-    <cfdocument name="printPDFApplication" format="pdf" localUrl="no" backgroundvisible="yes" saveasname="CSB-Application">
+    <cfdocument name="printPDFApplication" format="pdf" localUrl="yes" backgroundvisible="yes" saveasname="CSB-Application">
 	
         <cfdocumentsection name="Application">
         
