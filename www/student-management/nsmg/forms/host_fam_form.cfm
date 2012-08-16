@@ -49,8 +49,9 @@
     <cfparam name="FORM.submit_Start" default="paper">
 
 	<cfscript>
+	
 		// Set Regions or users or user type that can start host app
-		allowedUsers = '1,12313,7203,1077,14488';	
+		allowedUsers = '1,12313,8747,17972,17791,8731,12431,17438,17767,15045,10133,6617,16552,16718,10631,9974';	
 		
     	if ( VAL (URL.hostID) ) {
 			FORM.hostID = URL.hostID;	
@@ -885,10 +886,12 @@
            </cfif>
           		<td valing="top" align="center">
 				<cfif ListFind(#allowedUsers#,'#client.userid#')>
+                (Host Fam Fills Out App)<br />
                    <input name="Submit_start" type="image" value="ehost" src="pics/buttons_ehost.png" alt="Start E-App" border="0" /> 
                 </cfif>
                 </td>
                 <td align="Center">   
+                (Office User Fills Out App)<br />
                    <input name="Submit_start" type="image" value="paper" src="pics/buttons_SUBMIT.png" alt="Submit Paper Application" border="0" />
                 </td>
             </tr>
