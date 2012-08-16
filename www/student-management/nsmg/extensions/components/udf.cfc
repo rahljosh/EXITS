@@ -167,6 +167,17 @@
 	</cffunction>
 
 
+	<!--- Gets the current page, without the page or ext, that the user is currently on --->
+	<cffunction name="getCurrentPageFromPath" access="public" returntype="string" output="No" hint="Gets the current page, without the page or ext, that the user is currently on">
+		<cfargument name="Path" type="string" required="Yes" />
+		
+		<cfscript>
+			// Return the last list element without the ext
+			return LCase(ListFirst(GetFileFromPath(ARGUMENTS.Path), "."));
+		</cfscript>
+	</cffunction>
+
+
 	<!--- Create Folder if it does not exist --->
 	<cffunction name="createFolder" access="public" returntype="void" output="no" hint="Check if folder exits, if it does not, it creates it">
         <cfargument name="fullPath" type="string" required="yes" hint="Full Path is required" />
@@ -397,21 +408,6 @@
 			var two = Right(VAL(ARGUMENTS.num),2);
 			var ordinal="";
 			
-			/*
-			switch(two) {
-				case "11": 
-				case "12": 
-				case "13": { 
-					num = two; 
-					break; 
-				}
-				default: { 
-					num = Right(num,1); 
-					break; 
-				}
-			}
-			*/
-
 			// 1st, 2nd, 3rd, everything else is "th"
 			switch( num ) {
 				case "1":
