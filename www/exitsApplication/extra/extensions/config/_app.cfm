@@ -167,7 +167,7 @@
 		// ***** PRODUCTION Server Settings *****
 
 		// Set Site URL
-		APPLICATION.SITE.URL.main = 'http://www.extra.exitsApplication.com/';
+		APPLICATION.SITE.URL.main = 'http://extra.exitsApplication.com/';
 		APPLICATION.SITE.URL.activation =  APPLICATION.SITE.URL.main & 'accountActivation.cfm';
 		
 		// Email Settings
