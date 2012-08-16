@@ -158,7 +158,7 @@
 		APPLICATION.EMAIL.errors = 'marcus@iseusa.com';
 
 		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());	'
-		APPLICATION.PATH.base = 'C:/Websites/www/exitsApplication/extra/internal/';
+		APPLICATION.PATH.base = 'C:/websites/www/exitsApplication/extra/internal/';
 		
 		APPLICATION.KEY.googleMapsAPI = 'ABQIAAAAiT0TfDoNFmmMRtOgGZNu_RQ7SAcFHxXg_-mJGkd4r8IEQsqs-RTA-mZLUkFOvNCYFwvV4y4wGdOOyg'; // URL: http://smg.local
 
@@ -176,7 +176,7 @@
 		APPLICATION.EMAIL.errors = 'errors@student-management.com';
 		
 		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());	'
-		APPLICATION.PATH.base = 'C:/Websites/www/exitsApplication/extra/internal/';
+		APPLICATION.PATH.base = 'C:/websites/exitsApplication/extra/internal/';
 		
 		APPLICATION.KEY.googleMapsAPI = 'ABQIAAAAiT0TfDoNFmmMRtOgGZNu_RRLNEIHL1-VAyvTpFfu6UHsH4aa6RS5HJTmI0cZToeRuO_UU4JcIi2qaw'; // URL: http://exitsapplication.com
 
