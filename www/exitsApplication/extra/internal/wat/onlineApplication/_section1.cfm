@@ -421,8 +421,8 @@
             <div class="pictureMessage"></div>
             
             <div class="divPicture">
-            	<cfif candidatePicture.recordCount>
-                    <img id="thumb" src="../../uploadedfiles/web-candidates/#candidatePicture.name#">
+                <cfif FileExists(ExpandPath("../../uploadedfiles/web-candidates/#FORM.candidateID#.jpg"))>
+                    <img id="thumb" src="../../uploadedfiles/web-candidates/#FORM.candidateID#.jpg">
                 <cfelse>
                     <img id="thumb" width="150" height="150" src="../../pics/onlineApp/noPicture.jpg">
                 </cfif>         
