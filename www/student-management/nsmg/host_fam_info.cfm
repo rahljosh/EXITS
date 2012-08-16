@@ -291,7 +291,7 @@ div.scroll2 {
                 <span class="rdtitle">Host Family Information</span> 
                  <cfif CLIENT.usertype LTE 5>
                  <a href="" onClick="return confirm('You are about to delete this Host Family. You will not be able to recover this information. Click OK to continue.')"><img src="pics/deletex.gif" border="0" ></a>
-                <a href=""><img src="pics/buttons/pencilBlue23x29.png" class="floatRight" border=0/></a>
+                <a href="?curdoc=forms/host_fam_form&hostID=#family_info.hostID#"><img src="pics/buttons/pencilBlue23x29.png" class="floatRight" border=0/></a>
                 </cfif>
             	</div> <!-- end top --> 
              <div class="rdbox">
@@ -343,7 +343,7 @@ div.scroll2 {
     	<div class="rdholder" style="width:100%;float:left;" > 
 				<div class="rdtop"> 
                 <span class="rdtitle">School Information</span> 
-                 <a href=""><img src="pics/buttons/pencilBlue23x29.png" class="floatRight" border=0/></a>
+                 <a href="?curdoc=forms/host_fam_pis_5&hostID=#family_info.hostID#"><img src="pics/buttons/pencilBlue23x29.png" class="floatRight" border=0/></a>
             	</div> <!-- end top --> 
              <div class="rdbox">
     
@@ -460,7 +460,7 @@ div.scroll2 {
 				<div class="rdtop"> 
                 <span class="rdtitle">Criminal Background Check</span> 
                 <cfif client.usertype EQ '1' OR user_compliance.compliance EQ '1'>
-                	<a href=""><img src="pics/buttons/pencilBlue23x29.png" class="floatRight" border=0/></a>
+                	<a href="?curdoc=cbc/hosts_cbc&hostID=#family_info.hostID#"><img src="pics/buttons/pencilBlue23x29.png" class="floatRight" border=0/></a>
                 </cfif>
             	</div> <!-- end top --> 
              <div class="rdbox">  
@@ -821,7 +821,7 @@ div.scroll2 {
 				<div class="rdtop"> 
                 <span class="rdtitle">Community Information</span> 
                
-                 <a href=""><img src="pics/buttons/pencilBlue23x29.png" class="floatRight" border=0/></a>
+                 <a href="?curdoc=forms/host_fam_pis_7&hostID=#family_info.hostID#"><img src="pics/buttons/pencilBlue23x29.png" class="floatRight" border=0/></a>
             	</div> <!-- end top --> 
              <div class="rdbox">
 
