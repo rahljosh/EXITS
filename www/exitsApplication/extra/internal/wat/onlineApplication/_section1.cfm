@@ -420,12 +420,12 @@
         	            
             <div class="pictureMessage"></div>
             
-            <div class="divPicture">	            
-				<cfif candidatePicture.recordCount>
+            <div class="divPicture">
+            	<cfif candidatePicture.recordCount>
                     <img id="thumb" src="../../uploadedfiles/web-candidates/#candidatePicture.name#">
                 <cfelse>
                     <img id="thumb" width="150" height="150" src="../../pics/onlineApp/noPicture.jpg">
-                </cfif>            
+                </cfif>         
             </div>
             
             <p class="note">(smiling - max size 2mb)</p>
