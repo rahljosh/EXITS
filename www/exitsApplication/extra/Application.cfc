@@ -227,6 +227,42 @@
 		<cfargument name="EventName" type="string" required="false" default=""	/>
  		
  		<cfif NOT APPLICATION.IsServerLocal>
+        
+        	<cfparam name="CLIENT.userID" default="0">
+            <cfparam name="CLIENT.studentID" default="0">
+            <cfparam name="CLIENT.name" default="">
+        
+        	<cfscript>
+                // Current Path to root errorMessage.cfm file
+                vPath = "";
+                
+                // Set List Path (C:\Websites\www\exitsApplication\extra\index.cfm)
+                vListPath = CF_TEMPLATE_PATH;
+                
+                // Get Root Position
+                vListRootAt = ListFindNoCase(vListPath, "extra", "\");
+                
+                // Calculate How Many levels we are far from the root | last element is the page itself, do not count it.
+                vTotalExtraLevels = (ListLen(vListPath, "\") - 1) - vListRootAt;
+                
+                // Add Extra Root levels
+                For ( i=1;i LTE vTotalExtraLevels; i=i+1) {
+                    vPath = vPath & "../";	
+                }
+				
+
+				// Set Error ID
+				if ( VAL(CLIENT.userID) ) {
+					vErrorID = "#CLIENT.userID#-#dateformat(now(),'mm-dd-yyyy')#-#timeformat(now(),'hh-mm-ss')#";
+					vLoggedInName = "<p>User: #CLIENT.name# (###CLIENT.userID#)</p>";
+				} else if ( VAL(CLIENT.studentID) ) {
+					vErrorID = "#CLIENT.studentID#-#dateformat(now(),'mm-dd-yyyy')#-#timeformat(now(),'hh-mm-ss')#";
+					vLoggedInName = "<p>Student: #CLIENT.name# (###CLIENT.studentID#)</p>";
+				} else {
+					vErrorID = "00-#dateformat(now(),'mm-dd-yyyy')#-#timeformat(now(),'hh-mm-ss')#";
+					vLoggedInName = "<p>unknown</p>";
+				}
+            </cfscript>
 			
             <!--- Production Environment - Email Error --->
             <cfmail to="#APPLICATION.EMAIL.errors#" from="#APPLICATION.EMAIL.support#" subject="EXTRA : Error" type="HTML">
@@ -244,6 +280,10 @@
                 <cfdump var="#SESSION#">
                 <br /><br />
                 
+                <h3>CLIENT:</h3>
+                <cfdump var="#CLIENT#">
+                <br /><br />
+                
                 <h3>FORM:</h3>
                 <cfdump var="#FORM#">
                 <br /><br />
@@ -253,9 +293,12 @@
                 
             </cfmail>
             
-            <cfset GetPageContext().GetOut().ClearBuffer() />
-            
-            <cflocation url="/index.cfm" addtoken="no" />
+            <cfscript>
+				GetPageContext().GetOut().ClearBuffer();
+			
+				// Redirect to error page
+				location ("#vPath#errorMessage.cfm", "no");
+			</cfscript>
         
         <cfelse>
 			
