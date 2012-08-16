@@ -120,7 +120,23 @@
 </cfif>
 
 <!----Activation History---->
-<cfif NOT LEN(FORM.active_reason)>
+<cfscript>
+	if (FORM.active EQ "on") {
+		isActive = 1;
+		if (LEN(FORM.active_reason))
+			FORM.active_reason = "activated - " & FORM.active_reason;
+		else
+			FORM.active_reason = "activated";
+	} else {
+		isActive = 0;
+		if (LEN(FORM.active_reason))
+			FORM.active_reason = "inactivated - " & FORM.active_reason;
+		else
+			FORM.active_reason = "inactivated";
+	}
+</cfscript>
+<cfif qStudentInfo.active NEQ isActive>
+    
     <cfquery name="active_reason" datasource="#APPLICATION.DSN#">
         INSERT INTO 
         	smg_active_stu_reasons 
@@ -131,11 +147,94 @@
         )
         VALUES 
         (
-        	<cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentID#">,
-            <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">,
+        	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qStudentInfo.studentID)#">,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userid)#">,
             <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.active_reason#">
         )
     </cfquery>
+    
+    <!--- Send reactivation email --->
+    <cfif isActive EQ 1>
+    
+    	<cfscript>
+            // Get Intl. Rep. Info
+            qGetIntlRep = APPLICATION.CFC.USER.getUserByID(userID=qStudentInfo.intRep);
+    
+            // Get Current Program
+            qGetProgramInfo = APPLICATION.CFC.PROGRAM.getPrograms(ProgramID=qStudentInfo.programID);		
+            
+            // Email CC List
+            if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) ) {
+                emailCC = CLIENT.projectmanager_email & ';ellen@iseusa.com;marcus@iseusa.com;sergei@iseusa.com;' & CLIENT.email;
+            } else { 
+                emailCC = CLIENT.projectmanager_email & ';' & CLIENT.email;
+            }
+			
+			// Get PM Email
+			vGetProjectManagerEmail = APPLICATION.CFC.COMPANY.getCompanies(companyID=qStudentInfo.companyID).pm_email;
+			
+			if ( isValid("email",vGetProjectManagerEmail) ) {
+				emailCC = 	emailCC  & ';' & vGetProjectManagerEmail;	 
+			}
+               
+            // Display All Emails Involved
+            emailList = CLIENT.finance_email & ';' & emailCC;
+            
+            // Replace ';' with a <br />
+            emailList = ReplaceNoCase(emailList, ';', '<br />', "ALL");
+        </cfscript>
+    
+    	<cfoutput>
+            <cfsavecontent variable="email_message">
+                <p>#qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# has been re-activated.</p>
+                
+                Student: <strong>#qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# (###qStudentInfo.Studentid#)</strong><br />
+                
+                Intl. Agent: <strong>#qGetIntlRep.businessName# (###qGetIntlRep.userID#)</strong><br />
+                
+                Program: <strong>#qGetProgramInfo.programName# (###qGetProgramInfo.programID#)</strong><br />
+                
+                Reason: <strong>#FORM.active_reason#</strong><br />
+                
+                Placement Approved: 
+                <cfif IsDate(qStudentInfo.date_host_fam_approved)>
+                    <strong>#DateFormat(qStudentInfo.date_host_fam_approved, 'mm/dd/yyyy')# @ #TimeFormat(qStudentInfo.date_host_fam_approved, 'h:mm tt')#</strong>
+                <cfelse>
+                    <strong>Unplaced</strong>
+                </cfif> <br />
+    
+                SEVIS No.: 
+                <cfif NOT LEN(qStudentInfo.ds2019_no)>
+                    <strong>No SEVIS Number on File</strong>
+                <cfelse>
+                    <strong>#qStudentInfo.ds2019_no#</strong>
+                </cfif> <br />                         
+            
+                SEVIS Fee: 
+                <cfif qStudentInfo.sevis_fee_paid_date is ''>
+                    <strong>Not Paid</strong>
+                <cfelse>
+                    <strong>Paid on #DateFormat(qStudentInfo.sevis_fee_paid_date,'mm/dd/yyyy')#</strong>
+                </cfif> <br />
+                
+                Re-activated By: <strong>#CLIENT.name# - #CLIENT.email#</strong><br /><br />
+                
+                The following people received this notice: <br /> 
+                <strong>#emailList#</strong><br /> <br />
+            </cfsavecontent>
+        </cfoutput>
+    
+    	<!--- send email --->
+        <cfinvoke component="nsmg.cfc.email" method="send_mail">
+            <cfinvokeargument name="email_from" value="#CLIENT.name# <#CLIENT.email#>">
+            <cfinvokeargument name="email_to" value="#CLIENT.finance_email#">
+            <cfinvokeargument name="email_cc" value="#emailCC#"> 
+            <cfinvokeargument name="email_subject" value="Student Re-Activation: #qGetIntlRep.businessname# (###qGetIntlRep.userID#) - #qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# (###qStudentInfo.Studentid#) - #qGetProgramInfo.programname# (###qGetProgramInfo.programID#)">
+            <cfinvokeargument name="email_message" value="#email_message#">
+        </cfinvoke>
+    
+    </cfif>
+    
 </cfif>
 
 <!--- REGION HISTORY --->
