@@ -49,23 +49,6 @@
 		<!--- Define arguments. --->
 		<cfargument name="TargetPage" type="string" required="true" />
 		
-		<cfparam name="URL.init" default="0">
-        <cfparam name="URL.initApp" default="0">
-        <cfparam name="URL.initSession" default="0">
-     
-        <!--- Param CLIENT variables --->
-        <cfparam name="CLIENT.isLoggedIn" default="">
-        <cfparam name="CLIENT.loginType" default="">
-        
-        <!--- User Specific --->
-        <cfparam name="CLIENT.companyID" default="0">    
-        <cfparam name="CLIENT.userType" default="">
-        <cfparam name="CLIENT.userID" default=""> 
-        <cfparam name="CLIENT.firstName" default="">  
-        <cfparam name="CLIENT.lastname" default="">  
-        <cfparam name="CLIENT.lastLogin" default="">  
-        <cfparam name="CLIENT.email" default="">     
-
 		<!--- New Address --->
         <cflocation url="https://extra.exitsapplication.com/" addtoken="no">
         
