@@ -120,7 +120,7 @@ function CheckFields() {
        	AND
           	alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="language">
   	WHERE
-      	l.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentID#">
+      	l.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.studentID)#">
 </cfquery>
 
 <cfquery name="qGetPrimaryLanguage" dbtype="query">
