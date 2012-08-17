@@ -51,6 +51,7 @@
     <cfparam name="FORM.emergencyPhoneArea" default="">
     <cfparam name="FORM.emergencyPhonePrefix" default="">
     <cfparam name="FORM.emergencyPhoneNumber" default="">
+    <cfparam name="FORM.emergency_email" default="">
 	<!--- Dates of Official Vacation --->
     <cfparam name="FORM.watStartVacation" default="">
     <cfparam name="FORM.watStartVacationMonth" default="">
@@ -189,6 +190,7 @@
 					passport_number = FORM.passport_number,
 					emergency_name = FORM.emergency_name,
 					emergency_phone = FORM.emergency_phone,
+					emergency_email = FORM.emergency_email,
 					wat_vacation_start = FORM.watStartVacation,
 					wat_vacation_end = FORM.watEndVacation,
 					startDate = FORM.programStart,
@@ -259,6 +261,7 @@
 			FORM.emergencyPhoneArea = stEmergencyPhone.areaCode;
 			FORM.emergencyPhonePrefix = stEmergencyPhone.prefix;
 			FORM.emergencyPhoneNumber = stEmergencyPhone.number;
+			FORM.emergency_email = qGetCandidateInfo.emergency_email;
 			// Dates of Official Vacation
 			FORM.watStartVacation = qGetCandidateInfo.wat_vacation_start;
 			if ( IsDate(qGetCandidateInfo.wat_vacation_start) ) {
@@ -676,7 +679,7 @@
         	<cfelse>
 	            <input type="text" name="#qGetQuestions.fieldKey[3]#" id="#qGetQuestions.fieldKey[3]#" value="#FORM[qGetQuestions.fieldKey[3]]#" class="#qGetQuestions.classType[3]#" maxlength="100" />
             </cfif> 
-            <p class="note"><em>*</em> Required for CSB-Placement only</p>           
+            <p class="note"><em>*</em> Required for CSB-Placement only, but recommended for all particapants.</p>           
         </div>
         
         <!--- Passport Number --->
@@ -735,6 +738,18 @@
                     <span class="phoneNote">number</span>
                 </p>
             </cfif>            
+        </div>
+        
+        <!--- Emergency Email Address --->
+        <div class="field">
+        	<label for="emergency_email">Emergency Email Address </label>
+            <cfif printApplication>
+            	<div class="printField">
+                	#FORM.emergency_email# &nbsp;
+                </div>
+            <cfelse>
+            	<input type="text" name="emergency_email" id="emergency_email" value="#FORM.emergency_email#" class="largeField" maxlength="100" />
+            </cfif>
         </div>
 
     </fieldset>

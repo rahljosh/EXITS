@@ -221,6 +221,7 @@
         <cfargument name="passport_number" default="" hint="Candidate Passport Number">
         <cfargument name="emergency_name" default="" hint="Candidate Emergency Name">
         <cfargument name="emergency_phone" default="" hint="Candidate Emergency Phone">
+        <cfargument name="emergency_email" default="" hint="Candidate Emergency Email">
         <cfargument name="wat_vacation_start" default="" hint="Start of Official Vacation">
         <cfargument name="wat_vacation_end" default="" hint="End of Official Vacation">
         <cfargument name="startDate" default="" hint="Program Start Date">
@@ -254,6 +255,7 @@
                     passport_number = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.passport_number))#">,
                     emergency_name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.emergency_name))#">,
                     emergency_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.emergency_phone))#">,
+                    emergency_email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.emergency_email))#">,
                     wat_vacation_start = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.wat_vacation_start)#" null="#NOT IsDate(ARGUMENTS.wat_vacation_start)#">,
                     wat_vacation_end = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.wat_vacation_end)#" null="#NOT IsDate(ARGUMENTS.wat_vacation_end)#">,
                     startDate = <cfqueryparam cfsqltype="cf_sql_date" value="#TRIM(ARGUMENTS.startDate)#" null="#NOT IsDate(ARGUMENTS.startDate)#">,
