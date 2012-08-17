@@ -971,7 +971,7 @@ GROUP BY
 		<cfquery name="agent_details" datasource="mysql">
 		select businessname
 		from smg_users
-		where userid = #agentid#
+		where userid = #VAL(totals.agentid)#
 		</cfquery>
 	
 		<Tr <cfif payments_received.currentrow mod 2>bgcolor="ededed"</cfif>>
