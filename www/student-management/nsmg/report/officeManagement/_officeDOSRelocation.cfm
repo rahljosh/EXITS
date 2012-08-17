@@ -31,6 +31,7 @@
 
 		// Get Programs
 		qGetPrograms = APPLICATION.CFC.PROGRAM.getPrograms(programIDList=FORM.programID);
+
 	</cfscript>	
 
     <!--- FORM Submitted --->
@@ -43,6 +44,12 @@
             if ( NOT VAL(FORM.programID) ) {
                 // Set Page Message
                 SESSION.formErrors.Add("You must select at least one program");
+            }
+			
+			// Region
+            if ( NOT VAL(FORM.regionID) ) {
+                // Set Page Message
+                SESSION.formErrors.Add("You must select at least one region");
             }
 		</cfscript>
 
@@ -58,7 +65,9 @@
                 INNER JOIN 
                     smg_students s ON s.studentID = h.studentID
                     AND 
-                        s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )   
+                        s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
+                  	AND
+                    	s.regionAssigned IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> )  
                         
                     <!--- Student Status --->
                     <cfswitch expression="#FORM.studentStatus#">
@@ -123,6 +132,8 @@
                     <!--- Company Info --->
                     c.companyName,
                     c.iap_auth,
+                    <!--- Region Info --->
+                    r.regionName,
                     <!--- Country of Citizenship --->
                     cl.countryName,
                     <!--- Host Family --->
@@ -189,6 +200,8 @@
                     smg_students s ON s.studentID = hist.studentID
                 INNER JOIN 
                     smg_companies c ON c.companyID = s.companyID
+               	INNER JOIN
+                	smg_regions r ON r.regionID = s.regionAssigned
                 INNER JOIN 
                     smg_countrylist cl on cl.countryID = s.countryResident
                 INNER JOIN 
@@ -248,6 +261,19 @@
                             <cfloop query="qGetProgramList"><option value="#qGetProgramList.programID#">#qGetProgramList.programName#</option></cfloop>
                         </select>
                     </td>
+                </tr>
+                <tr class="on">
+                    <td class="subTitleRightNoBorder">Region: <span class="required">*</span></td>
+                    <td>
+                        <select name="regionID" id="regionID" class="xLargeField" multiple size="6" required>
+                            <cfloop query="qGetRegionList">
+                            	<option value="#qGetRegionList.regionID#">
+                                	<cfif CLIENT.companyID EQ 5>#qGetRegionList.companyShort# -</cfif>
+                                    #qGetRegionList.regionname#
+                                </option>
+                            </cfloop>
+                        </select>
+                    </td>		
                 </tr>
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Student Status: <span class="required">*</span></td>
@@ -317,6 +343,7 @@
         <tr style="font-weight:bold;">
             <td>Program Number</td>
             <td>Program Name</td>
+            <td>Region</td>
             <td>Participant's Last Name</td>
             <td>Participant's First Name</td>
             <td>Home Country</td>
@@ -417,6 +444,7 @@
             <tr>
                 <td #vRowColor#>#qGetResults.iap_auth#</td>
                 <td #vRowColor#>#qGetResults.companyName#</td>
+                <td #vRowColor#>#qGetResults.regionName#</td>
                 <td #vRowColor#>#qGetResults.studentLastName#</td>
                 <td #vRowColor#>#qGetResults.studentFirstName#</td>
                 <td #vRowColor#>#qGetResults.countryName#</td>
