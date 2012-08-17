@@ -947,6 +947,13 @@
                                                 <input type="text" name="emergency_phone" class="style1 editPage xLargeField" value="#qGetCandidate.emergency_phone#" maxlength="50">
                                            </td>
                                         </tr>
+                                        <tr>
+                                        	<td class="style1" align="right"><strong>Email:</strong></td>
+                                            <td class="style1">
+                                            	<span class="readOnly">#qGetCandidate.emergency_email#</span>
+                                                <input type="text" name="emergency_email" class="style1 editPage xLargeField" value="#qGetCandidate.emergency_email#" maxlength="100">
+                                            </td>
+                                        </tr>
                                     </table>	
                    
                                 </td>

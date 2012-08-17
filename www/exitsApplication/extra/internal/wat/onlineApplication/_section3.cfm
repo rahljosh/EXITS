@@ -154,12 +154,10 @@
         <div class="field">
         	<label>CSB Scale Score (1 to 10):</label> 
             
-                <p class="paddingNote">1 to 3	No significant knowledge</p>
-                <p class="paddingNote">4 to 5+	Basic</p>
-                <p class="paddingNote">6 to 6+	Intermediate</p>
-                <p class="paddingNote">7 to 7+	Upper Intermediate</p>
-                <p class="paddingNote">8 to 9	Advanced</p>
-                <p class="paddingNote">9+ to 10 Fluent</p> <br />
+                <p class="paddingNote">1 to 4 - Poor</p>
+                <p class="paddingNote">5 to 6 - Fair</p>
+                <p class="paddingNote">7 to 8 - Good</p>
+                <p class="paddingNote">9 to 10 - Excellent</p>
             
         </div>
         
@@ -175,7 +173,7 @@
 
 		<!--- English Level --->
 		<div class="field">
-			<label for="#qGetQuestions.fieldKey[1]#">#qGetQuestions.displayField[1]# <cfif qGetQuestions.isRequired[1]><em>*</em></cfif></label> 
+			<label for="#qGetQuestions.fieldKey[1]#"><strong>#qGetQuestions.displayField[1]#</strong> <cfif qGetQuestions.isRequired[1]><em>*</em></cfif></label> 
             <cfif printApplication>
             	<div class="printField">#FORM[qGetQuestions.fieldKey[1]]# &nbsp;</div>
         	<cfelse>
@@ -187,10 +185,106 @@
                 </select>
 			</cfif>
 		</div>
+        
+        <!--- English Reading Level --->
+        <div style="margin-left:5px;">
+            <strong><u>Reading</u></strong>
+            <br />
+            <font size="-3">
+                1 to 4 – Poor: Reads and understands simple words and can explain little or none of the text’s meaning.<br />
+                5 to 6 – Fair: Reads some of the vocabulary and explains basic ideas.<br />
+                7 to 8 – Good: Reads well and can explain most of the ideas.<br />
+                9 to 10 – Excellent: Reads with few errors and easily explains the meaning.<br />
+            </font>
+            <br />
+            &nbsp;When asked to read aloud in English from a book, magazine, or newspaper, the participant scored:
+		</div>
+		<div class="field">
+			<label for="#qGetQuestions.fieldKey[6]#">&nbsp;<cfif qGetQuestions.isRequired[6]><em>*</em></cfif></label> 
+            <cfif printApplication>
+            	<div class="printField">#FORM[qGetQuestions.fieldKey[6]]# &nbsp;</div>
+        	<cfelse>
+                <select name="#qGetQuestions.fieldKey[6]#" id="#qGetQuestions.fieldKey[6]#" class="#qGetQuestions.classType[6]#">
+                    <option value=""></option>
+                    <cfloop from="1" to="10" index="i">
+                        <option value="#i#" <cfif FORM[qGetQuestions.fieldKey[6]] EQ i> selected="selected" </cfif> >#i#</option>
+                    </cfloop>
+                </select>
+			</cfif>
+		</div>
+        
+        <!--- English Writing Level --->
+        <div style="margin-left:5px;">
+            <strong><u>Writing</u></strong>
+            <br />
+            <font size="-3">
+                1 to 4 – Poor: Uses a limited vocabulary and is difficult to understand.<br />
+                5 to 6 – Fair: Writes only simple sentences, grammar is irregular and hardly understandable.<br />
+                7 to 8 – Good: May use irregular grammar, but uses fair vocabulary and is understandable.<br />
+                9 to 10 – Excellent: Writes fluently with a great vocabulary and sentence structure.<br />
+            </font>
+            <br />
+            &nbsp;When asked to write a short essay in English stating what he or she hopes to gain from the SWT experience, the participant scored:
+		</div>
+		<div class="field">
+			<label for="#qGetQuestions.fieldKey[7]#">&nbsp;<cfif qGetQuestions.isRequired[7]><em>*</em></cfif></label> 
+            <cfif printApplication>
+            	<div class="printField">#FORM[qGetQuestions.fieldKey[7]]# &nbsp;</div>
+        	<cfelse>
+                <select name="#qGetQuestions.fieldKey[7]#" id="#qGetQuestions.fieldKey[7]#" class="#qGetQuestions.classType[7]#">
+                    <option value=""></option>
+                    <cfloop from="1" to="10" index="i">
+                        <option value="#i#" <cfif FORM[qGetQuestions.fieldKey[7]] EQ i> selected="selected" </cfif> >#i#</option>
+                    </cfloop>
+                </select>
+			</cfif>
+		</div>
+        
+        <!--- English Verbal Level --->
+        <div style="margin-left:5px;">
+            <strong><u>Verbal</u></strong>
+            <br />
+            <font size="-3">
+                1 to 4 – Poor: Understands solely Basic English and is translating.<br />
+                5 to 6 – Fair: The speaking ability is limited and easily reverts to native language.<br />
+                7 to 8 – Good: Understands most conversation, slow at times, but with appropriate answers and is able to pose necessary questions correctly.<br />
+                9 to 10 – Excellent: Understands and responds to difficult questions by being nearly fluent.<br />
+            </font>
+            <br />
+            &nbsp;Estimate the participant’s ability to understand and speak English after engaging him/her in English-only conversation about current events:
+       	</div>
+		<div class="field">
+			<label for="#qGetQuestions.fieldKey[8]#">&nbsp;<cfif qGetQuestions.isRequired[8]><em>*</em></cfif></label> 
+            <cfif printApplication>
+            	<div class="printField">#FORM[qGetQuestions.fieldKey[8]]# &nbsp;</div>
+        	<cfelse>
+                <select name="#qGetQuestions.fieldKey[8]#" id="#qGetQuestions.fieldKey[8]#" class="#qGetQuestions.classType[8]#">
+                    <option value=""></option>
+                    <cfloop from="1" to="10" index="i">
+                        <option value="#i#" <cfif FORM[qGetQuestions.fieldKey[8]] EQ i> selected="selected" </cfif> >#i#</option>
+                    </cfloop>
+                </select>
+			</cfif>
+		</div>
+        
+        <!--- English Success Potential --->
+        <div style="margin-left:5px;">
+            <strong>
+                Please briefly comment below about the participant's potential for success and any other information you think will assist in the evaluation of this participant:
+            </strong>
+		</div>
+		<div class="field">
+        	<label for="#qGetQuestions.fieldKey[9]#">&nbsp;<cfif qGetQuestions.isRequired[9]><em>*</em></cfif></label>
+            <cfif printApplication>
+            	<div class="printField">#FORM[qGetQuestions.fieldKey[9]]# &nbsp;</div>
+        	<cfelse>
+            	<textarea name="#qGetQuestions.fieldKey[9]#" id="#qGetQuestions.fieldKey[9]#" class="#qGetQuestions.classType[9]#" rows="4" cols="50">#FORM[qGetQuestions.fieldKey[9]]#</textarea>
+			</cfif>
+		</div>
 
 		<!--- Slep Score --->
 		<div class="field">
-			<label for="#qGetQuestions.fieldKey[2]#">#qGetQuestions.displayField[2]# <cfif qGetQuestions.isRequired[2]><em>*</em></cfif></label> 
+			<label for="#qGetQuestions.fieldKey[2]#">#qGetQuestions.displayField[2]# (if any) <cfif qGetQuestions.isRequired[2]><em>*</em></cfif></label> 
             <cfif printApplication>
             	<div class="printField">#FORM[qGetQuestions.fieldKey[2]]# &nbsp;</div>
         	<cfelse>
