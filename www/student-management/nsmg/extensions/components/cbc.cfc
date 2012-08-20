@@ -451,6 +451,8 @@
                     	date_sent IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
                     AND
                     	cbc_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcType#">
+                   	AND
+                    	cbcfamid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.familyMemberID)#">
             </cfquery>
             	
 			<cfif NOT qCheckPending.recordCount>

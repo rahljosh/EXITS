@@ -122,29 +122,29 @@
         <!--- FAMILY MEMBERS --->
         <cfif VAL(FORM.memberIDs)>
         
-            <cfloop list="#FORM.memberIDs#" index="memberID">
-                
-   				<!--- Param Form Variables / New Season --->
-                <cfparam name="FORM.#memberID#companyID" default="0">
-                <cfparam name="FORM.#memberID#seasonID" default="0">
-                <cfparam name="FORM.#memberID#date_authorized" default="">
-                <cfparam name="FORM.#memberID#IsNoSSN" default="0">
+            <cfloop list="#FORM.memberIDs#" index="id">
+            
+                <!--- Param Form Variables / New Season --->
+                <cfparam name="FORM.#id#companyID" default="0">
+                <cfparam name="FORM.#id#seasonID" default="0">
+                <cfparam name="FORM.#id#date_authorized" default="">
+                <cfparam name="FORM.#id#IsNoSSN" default="0">
                 
                 <cfscript>
-					// Check if we have valid data for family members
-					if ( VAL(FORM[memberID & 'seasonID']) AND LEN(FORM[memberID & 'date_authorized']) ) {
-						// Insert Host Father CBC
-						APPCFC.CBC.insertHostCBC(
-							hostID=FORM.hostID,
-							familyMemberID=memberID,
-							cbcType='member',
-							seasonID=FORM[memberID & 'seasonID'],
-							companyID=FORM[memberID & 'companyID'],
-							dateAuthorized=FORM[memberID & "date_authorized"],
-							isNoSSN=FORM[memberID & "isNoSSN"]
-						);	
-					}
-				</cfscript>
+                    // Check if we have valid data for family members
+                    if ( VAL(FORM[id & 'seasonID']) AND LEN(FORM[id & 'date_authorized']) ) {
+                        // Insert Host Member CBC
+                        APPCFC.CBC.insertHostCBC(
+                            hostID=FORM.hostID,
+                            familyMemberID=id,
+                            cbcType='member',
+                            seasonID=FORM[id & 'seasonID'],
+                            companyID=FORM[id & 'companyID'],
+                            dateAuthorized=FORM[id & "date_authorized"],
+                            isNoSSN=FORM[id & "isNoSSN"]
+                        );
+                    }
+                </cfscript>
                 
             </cfloop>
             
@@ -195,22 +195,38 @@
         <!--- CBC FLAG/SSN HOST MEMBERS ---->
         <cfloop list="#FORM.memberIDs#" index='cbcID'>
         
-            <!--- Param Form Variables --->
-            <cfparam name="FORM.#cbcID#memberCBCFamID" default="0">
-            <cfparam name="FORM.#cbcID#memberIsNoSSN" default="0">
-			<cfparam name="FORM.#cbcID#notesmember" default="0">
-            <cfparam name="FORM.#cbcID#date_Approvedmember" default="0">
-            <cfparam name="FORM.#cbcID#memberflagCBC" default="0">
-            <cfscript>
-				// update Host Member CBC Flag & SSN options
-				APPCFC.CBC.updateHostOptions(
-					cbcfamID=FORM[cbcID & "memberCBCFamID"],					
-					isNoSSN=FORM[cbcID & "memberIsNoSSN"],
-					notes=FORM[cbcID & "notesmember"],
-					date_approved=FORM[cbcID & "date_Approvedmember"],
-					flagCBC=FORM[cbcID & "memberflagCBC"]
-				);			
+        	<cfscript>
+				// Gets Host Member CBC
+				qGetCBCMember = APPCFC.CBC.getCBCHostByID(
+					hostID=hostID,
+					familyMemberID=cbcID,
+					cbcType='member'
+				);		
+
+				// Get Member Available Seasons
+				qGetMemberSeason = APPCFC.CBC.getAvailableSeasons(currentSeasonIDs=ValueList(qGetCBCMember.seasonID));
 			</cfscript>
+            
+            <cfloop query="qGetCBCMember">
+        
+				<!--- Param Form Variables --->
+                <cfparam name="FORM.#cbcFamID#memberCBCFamID" default="0">
+                <cfparam name="FORM.#cbcFamID#memberIsNoSSN" default="0">
+                <cfparam name="FORM.#cbcFamID#notesmember" default="0">
+                <cfparam name="FORM.#cbcFamID#date_Approvedmember" default="0">
+                <cfparam name="FORM.#cbcFamID#memberflagCBC" default="0">
+                <cfscript>
+                    // update Host Member CBC Flag & SSN options
+                    APPCFC.CBC.updateHostOptions(
+                        cbcfamID=cbcFamID,					
+                        isNoSSN=FORM[cbcFamID & "memberIsNoSSN"],
+                        notes=FORM[cbcFamID & "notesmember"],
+                        date_approved=FORM[cbcFamID & "date_Approvedmember"],
+                        flagCBC=FORM[cbcFamID & "memberflagCBC"]
+                    );			
+                </cfscript>
+                
+          	</cfloop>
 			
         </cfloop>
         
@@ -665,17 +681,17 @@
                             <td><cfif isDate(qGetCBCMember.date_sent)>#DateFormat(qGetCBCMember.date_sent, 'mm/dd/yyyy')#<cfelse>processing</cfif></td>
                             <td><cfif isDate(qGetCBCMember.date_expired)>#DateFormat(qGetCBCMember.date_expired, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
                             <td><a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCMember.hostID#&CBCFamID=#qGetCBCMember.CBCFamID#&file=batch_#qGetCBCMember.batchid#_host_mother_#qGetCBCMember.hostid#_rec.xml" target="_blank">#qGetCBCMember.requestID#</a></td>
-                            <td><input type="checkbox" name="#familyID#memberflagCBC" value="1" <cfif VAL(flagCBC)>checked="checked"</cfif>></td>
+                            <td><input type="checkbox" name="#cbcFamID#memberflagCBC" value="1" <cfif VAL(flagCBC)>checked="checked"</cfif>></td>
                             <td>
                                 <cfif LEN(qGetCBCMember.date_sent)>
                                     #YesNoFormat(qGetCBCMember.isNoSSN)#
                                 <cfelse>
-                                    <input type="checkbox" name="#familyID#memberIsNoSSN" value="1" <cfif VAL(qGetCBCMember.isNoSSN)>checked="checked"</cfif>>
+                                    <input type="checkbox" name="#cbcFamID#memberIsNoSSN" value="1" <cfif VAL(qGetCBCMember.isNoSSN)>checked="checked"</cfif>>
                                 </cfif>
                             </td>
-                             <td><textarea rows="3" cols=15 name="#familyID#notesmember" onkeypress="updateCounter(this);"><cfif isDefined('notes')>#notes#</cfif></textarea></td>
+                             <td><textarea rows="3" cols=15 name="#cbcFamID#notesmember" onkeypress="updateCounter(this);"><cfif isDefined('notes')>#notes#</cfif></textarea></td>
                              <td> 
-                        <input type="text" name="#familyID#date_approvedMember" message="Please input a valid date."  <cfif date_approved is ''>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif> value="#DateFormat(date_approved, 'mm/dd/yyyy')#" size="8" maxlength="10" >	
+                        <input type="text" name="#cbcFamID#date_approvedMember" message="Please input a valid date."  <cfif date_approved is ''>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif> value="#DateFormat(date_approved, 'mm/dd/yyyy')#" size="8" maxlength="10" >	
                        <Cfif date_approved is ''><br /><em><font size=-2>click in box for date</font></em></Cfif>
                         </td>
                         </tr>
