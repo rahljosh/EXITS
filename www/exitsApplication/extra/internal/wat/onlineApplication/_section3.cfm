@@ -186,6 +186,8 @@
 			</cfif>
 		</div>
         
+        <br />
+        
         <!--- English Reading Level --->
         <div style="margin-left:5px;">
             <strong><u>Reading</u></strong>
