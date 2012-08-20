@@ -441,7 +441,7 @@
             </cfquery> 
             
             <cfquery name="getCurrStudInfo" datasource="MySQL">
-            SELECT ss.studentid AS stuid, ss.firstname, ss.familylastname AS lastname, ss.active AS stud_active, ss.date_host_fam_approved, ss.host_fam_approved, ss.sevis_fee_paid_date, ss.intrep AS agentid, ss.programid, ss.companyid, ss.canceldate, ss.cancelreason, sp.programname, sp.type AS progType, sh.state AS hostState, sr.regionname, shist.datePISEmailed
+            SELECT ss.studentid AS stuid, ss.firstname, ss.familylastname AS lastname, ss.active AS stud_active, ss.hostID, ss.date_host_fam_approved, ss.host_fam_approved, ss.sevis_fee_paid_date, ss.intrep AS agentid, ss.programid, ss.companyid, ss.canceldate, ss.cancelreason, sp.programname, sp.type AS progType, sh.state AS hostState, sr.regionname, shist.datePISEmailed
             FROM smg_students ss
             LEFT JOIN smg_programs sp ON sp.programid = ss.programid
             LEFT JOIN smg_hosts sh ON ss.hostid = sh.hostid
@@ -575,7 +575,7 @@
                 <td></td>
                 <td>
                 <strong>Placement status: </strong>
-                <cfif getCurrStudInfo.datePISEmailed IS NOT "">
+                <cfif getCurrStudInfo.hostID IS NOT "">
                     Placement approved on #DateFormat(getCurrStudInfo.date_host_fam_approved, 'mm/dd/yyyy')#.
     <cfelse>
                     Unplaced
@@ -801,7 +801,7 @@
         
     <cfswitch expression="#form.chooseProgram#">
         <cfcase value="High School">  
-            <cfif getCurrStudInfo.datePISEmailed IS NOT "">
+            <cfif getCurrStudInfo.hostID IS NOT "">
             
             	<!--- smg vietnam gets charged 200 for visa denials --->
             	<cfif getCurrStudInfo.agentid EQ 123 AND getCurrStudInfo.cancelreason IS 'visa denial'>
