@@ -575,7 +575,7 @@
                 <td></td>
                 <td>
                 <strong>Placement status: </strong>
-                <cfif getCurrStudInfo.hostID IS NOT "">
+                <cfif getCurrStudInfo.hostID GT 0>
                     Placement approved on #DateFormat(getCurrStudInfo.date_host_fam_approved, 'mm/dd/yyyy')#.
     <cfelse>
                     Unplaced
@@ -590,7 +590,7 @@
                 <td></td>
                 <td>
                 <strong>Placed in <em>(State/ Region)</em>: </strong>
-                <cfif getCurrStudInfo.datePISEmailed IS NOT "">
+                <cfif getCurrStudInfo.hostID GT 0>
                     #getCurrStudInfo.hostState# / #variables.regionPlaced#
     <cfelse>
                     Unplaced
@@ -801,7 +801,7 @@
         
     <cfswitch expression="#form.chooseProgram#">
         <cfcase value="High School">  
-            <cfif getCurrStudInfo.hostID IS NOT "">
+            <cfif getCurrStudInfo.hostID GT 0>
             
             	<!--- smg vietnam gets charged 200 for visa denials --->
             	<cfif getCurrStudInfo.agentid EQ 123 AND getCurrStudInfo.cancelreason IS 'visa denial'>
