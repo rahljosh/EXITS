@@ -16,6 +16,7 @@
 
     <cfparam name="FORM.submitted" default="0">
 	<cfparam name="FORM.prdate_id" default="">
+    <cfparam name="FORM.pr_id" default="0">
 	
     <!--- Param LOCAL Variables --->
     <cfparam name="vSetStartDate" default="">
