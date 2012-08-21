@@ -68,7 +68,9 @@
 		</style>
 </head>
 <body>
-<Cfparam name="usertype" default="#client.usertype#">
+<cfparam name="client.tempusertype" default="#client.usertype#">
+<Cfparam name="url.usertype" default="#client.tempusertype#">
+<Cfparam name="usertype" default="#client.tempusertype#">
 <Cfset client.hostid = #url.hostid#>
 <!-----Deny this itme---->
 
@@ -84,7 +86,7 @@
     </cfquery>
     
     <cfquery datasource="#application.dsn#">
-        update smg_hosts set hostAppStatus = #usertype#
+        update smg_hosts set hostAppStatus = #client.tempusertype#
         where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
     </cfquery>
     <Cfquery name="repInfo" datasource="#application.dsn#">
@@ -117,16 +119,16 @@
         LEFT JOIN smg_users on smg_users.userid = smg_regions.regionfacilitator
         WHERE regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#appStatus.regionid#">
     </cfquery>
-   <cfif usertype eq 7>
+   <cfif client.tempusertype eq 7>
    	<cfset mailTo = #get_regional_director.email#>
-   <Cfelseif usertype eq 6>
+   <Cfelseif client.tempusertype eq 6>
    	<cfset mailTo = #get_regional_director.email#>
-   <cfelseif usertype eq 5>
+   <cfelseif client.tempusertype eq 5>
    	<cfset mailTo = #get_facilitator.email#>
-   <cfelseif usertype lte 4>
+   <cfelseif client.tempusertype lte 4>
    	<cfset mailTo = "#get_regional_director.email#,#repInfo.email#">
    </cfif>
-   <cfif usertype lte 4>
+   <cfif client.tempusertype lte 4>
       	<cfsavecontent variable="nextLevel">                      
 		<cfoutput>
         Great News!<br />
@@ -140,7 +142,7 @@
 		<cfoutput>
           The #appStatus.familylastname# application has been approved by #client.name# and is ready for your approval. 
         <br /><br />  
-          You can review the app <a href="http://111cooper.com/nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=#usertype#">here</a>.
+          You can review the app <a href="http://111cooper.com/nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=#client.tempusertype#">here</a>.
         
         
         </cfoutput>
@@ -175,10 +177,12 @@ ORDER BY RAND()
 </cfquery>
 
 <cfif isDefined('form.changeUserType')>
-	<cfset usertype = #form.changeUserType#>
+	<cfset client.tempusertype = #form.changeUserType#>
     <cfset studentid = #form.changeStudent#>
 </cfif>
+<cfoutput>
 
+</cfoutput>
 <cfform method="post" action="?curdoc=hostApplication/toDoList&status=#url.status#&hostid=#client.hostid#">
 
 <cfoutput>
@@ -192,9 +196,9 @@ ORDER BY RAND()
         
         <select name="changeUserType">
         
-        <option value=7 <cfif usertype eq 7>selected</cfif>>Area Rep</option>
-        <option value=5 <cfif usertype eq 5>selected</cfif>>Reginal Manager</option>
-        <option value=4 <cfif usertype lte 4>selected</cfif>>Facilitator</option>
+        <option value=7 <cfif client.tempusertype eq 7>selected</cfif>>Area Rep</option>
+        <option value=5 <cfif client.tempusertype eq 5>selected</cfif>>Reginal Manager</option>
+        <option value=4 <cfif client.tempusertype lte 4>selected</cfif>>Facilitator</option>
         </select>
         
         </td>
@@ -216,7 +220,7 @@ ORDER BY RAND()
 <cfquery name="toDoList" datasource="#application.dsn#">
     SELECT *
     FROM smg_ToDoList 
-    where whoViews LIKE '%#usertype#%'
+    where whoViews LIKE '%#client.tempusertype#%'
 </cfquery>
 
 <!---set up hide scripts---->
@@ -231,13 +235,13 @@ ORDER BY RAND()
 </cfloop>
 </cfoutput>
 
-<cfif usertype eq 7>
+<cfif client.tempusertype eq 7>
 	<Cfset approvalLevel = 'approvalDates.areaRepApproval'>
-<Cfelseif usertype eq 6>
+<Cfelseif client.tempusertype eq 6>
 	<Cfset approvalLevel = 'approvalDates.regionalAdvisorApproval'>
-<Cfelseif usertype eq 5>
+<Cfelseif client.tempusertype eq 5>
 	<Cfset approvalLevel = 'approvalDates.regionalDirectorApproval'>
-<Cfelseif usertype lte 4>
+<Cfelseif client.tempusertype lte 4>
 	<Cfset approvalLevel = 'approvalDates.facApproval'>
 </cfif>
 
@@ -310,7 +314,7 @@ ORDER BY RAND()
                 <Cfif isStudentRequired eq 1 and studentid eq 0>
                     <td colspan=4><em><font color="##ccc">No student assigned, student assignment needed for this item.
                     <Cfelse>
-                <td><a class='iframe' href="#link#?itemID=#id#&userType=#usertype#&studentid=#studentid#">#linkDesc#</a></td>
+                <td><a class='iframe' href="#link#?itemID=#id#&userType=#client.tempusertype#&studentid=#studentid#">#linkDesc#</a></td>
 				<td><Cfif listFind(whoViews, 7)>
                 	<!----If the Area Rep should approve, show mask or date of approval, if not, show N/A---->
 						<cfif approvalDates.areaRepApproval is '' and approvalDates.areaRepDenial is ''>
@@ -319,7 +323,7 @@ ORDER BY RAND()
                         	<a onclick="ShowHide#toDoList.currentrow#(); return false;" href="##"> <strong><font color="##993333">#DateFormat(approvalDates.areaRepApproval, 'MM/DD/YYYY')#</font></strong></a>
                         <cfelse>
                              #DateFormat(approvalDates.areaRepApproval, 'MM/DD/YYYY')#
-                             <Cfif usertype eq 7>
+                             <Cfif client.tempusertype eq 7>
                              	<cfset itemsApproved = #itemsApproved# + 1>
                              </Cfif> 
                         </cfif>
@@ -334,7 +338,7 @@ ORDER BY RAND()
                         	<a onclick="ShowHide#toDoList.currentrow#(); return false;" href="##"> <strong><font color="##993333">#DateFormat(approvalDates.regionalDirectorApproval, 'MM/DD/YYYY')#</strong></font></a>
                     <cfelse>
                     	 #DateFormat(approvalDates.regionalDirectorApproval, 'MM/DD/YYYY')#
-                         <Cfif usertype eq 5>
+                         <Cfif client.tempusertype eq 5>
                              	<cfset itemsApproved = #itemsApproved# + 1>
                              </Cfif> 
                 	</cfif>
@@ -346,7 +350,7 @@ ORDER BY RAND()
                         	<a onclick="ShowHide#toDoList.currentrow#(); return false;" href="##"><font color="##993333">  <strong>#DateFormat(approvalDates.facApproval, 'MM/DD/YYYY')#</strong></font></a>
                     <cfelse>
                     	 #DateFormat(approvalDates.facApproval, 'MM/DD/YYYY')#
-                          <Cfif usertype lte 4>
+                          <Cfif client.tempusertype lte 4>
                              	<cfset itemsApproved = #itemsApproved# + 1>
                              </Cfif> 
                 	</cfif>
@@ -382,9 +386,9 @@ ORDER BY RAND()
                 <cfloop query="references">
                 <tr <cfif references.currentrow mod 2> bgcolor="##F7F7F7"</cfif>>
                     <td>
-					 <Cfif (usertype eq 7 and references.arApproved is '') or
-					 		(usertype eq 5 and references.rdApproved is '') or
-							(usertype lte 4 and references.nyApproved is '') >
+					 <Cfif (client.tempusertype eq 7 and references.arApproved is '') or
+					 		(client.tempusertype eq 5 and references.rdApproved is '') or
+							(client.tempusertype lte 4 and references.nyApproved is '') >
 					<img src="pics/warning.png" width=16 heigh=16>
                     	<cfelse><img src="pics/valid.png" width=16 heigh=16></Cfif></td>
                         
@@ -406,7 +410,7 @@ ORDER BY RAND()
                     	<font color="##ccc">MM/DD/YYYY</font>
                     <cfelse>
                     	 #DateFormat(references.arApproved, 'MM/DD/YYYY')#
-                          <Cfif usertype eq 7>
+                          <Cfif client.tempusertype eq 7>
                              	<cfset itemsApproved = #itemsApproved# + 1>
                              </Cfif> 
                 	</cfif>
@@ -417,7 +421,7 @@ ORDER BY RAND()
                     	<font color="##ccc">MM/DD/YYYY</font>
                     <cfelse>
                     	 #DateFormat(references.rdApproved, 'MM/DD/YYYY')#
-                          <Cfif usertype eq 5>
+                          <Cfif client.tempusertype eq 5>
                              	<cfset itemsApproved = #itemsApproved# + 1>
                              </Cfif> 
                 	</cfif>
@@ -427,7 +431,7 @@ ORDER BY RAND()
                     	<font color="##ccc">MM/DD/YYYY</font>
                     <cfelse>
                     	 #DateFormat(references.nyApproved, 'MM/DD/YYYY')#
-                          <Cfif usertype lte 4>
+                          <Cfif client.tempusertype lte 4>
                              	<cfset itemsApproved = #itemsApproved# + 1>
                              </Cfif> 
                 	</cfif>
@@ -443,7 +447,7 @@ ORDER BY RAND()
 <br /><br />
 
 
- <cfif appStatus.hostAppStatus eq usertype>
+ <cfif appStatus.hostAppStatus eq client.tempusertype>
  <div align="center"><h3>Application has been approved.</h3></div>
  
  <cfelse>

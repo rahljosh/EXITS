@@ -1,7 +1,7 @@
 <!--- Import CustomTag Used for Page Messages and Form Errors --->
 <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 <link href="http://ise.111cooper.com/hostApp/css/hostApp.css" rel="stylesheet" type="text/css" />
-<link href="http://ise.exitsapplication.com/nsmg/linked/css/baseStyle.css" rel="stylesheet" type="text/css" />
+<link href="http://111cooper.com/nsmg/linked/css/baseStyle.css" rel="stylesheet" type="text/css" />
 <cfparam name="form.picCat" default=''>
 
 <cfinclude template="approveDenyInclude.cfm">

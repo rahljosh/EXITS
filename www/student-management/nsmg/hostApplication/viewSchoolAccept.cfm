@@ -68,18 +68,7 @@ and shortDesc =  'School Acceptance'
          insert into smg_documents (fileName, type, dateFiled, filePath, description, shortDesc, userid, userType, hostID)
                 				values ('#file.serverfile#', '#file.ServerFileExt#', #now()#, 'hosts/#client.hostid#', 'School Acceptance Form - Signed #form.dateSigned#', 'School Acceptance', #client.userid#, 'Host Family', #client.hostid#)
         </cfquery>
-			<cfscript>
-			// Get update ToDoList
-			updateToDoList = APPLICATION.CFC.UDF.updateToDoList(hostID=client.hostid,studentID=client.studentid,itemid=url.itemid,usertype=url.usertype);
-			</cfscript>
-              <div align="center">
-            
-            <h1>Succesfully Approved.</h1>
-            <em>this window should close shortly</em>
-            </div>
-         
-             <body onload="parent.$.fn.colorbox.close();">
-                <cfabort>
+		
 	</cfif>
 </cfif>
 

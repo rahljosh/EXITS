@@ -29,9 +29,9 @@ houserules_other
 from smg_hosts
 where hostid =<cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
 </cfquery>
-
+<cfoutput>
 <cfinclude template="approveDenyInclude.cfm">
-
+</cfoutput>
 <cfif isDefined('form.process')>
 
     
