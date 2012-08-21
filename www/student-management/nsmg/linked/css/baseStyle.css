@@ -1235,3 +1235,35 @@ input.projectHelpHours {
 /********************************************
 	END OF MAIN MENU STYLES
 ********************************************/
+
+/********************************************
+	START OF TWO COLUMN LAYOUT FOR INFO PAGES (user, host)
+********************************************/
+
+.smlink         		{font-size: 11px;}
+.section        		{border-top: 1px solid #c6c6c6;; border-right: 2px solid #c6c6c6;border-left: 2px solid #c6c6c6;border-bottom: 0px; background: #ffffff;}
+.sectionFoot    		{border-bottom: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;font-size:2px;}
+.sectionBottomDivider 	{border-bottom: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;}
+.sectionTopDivider 		{border-top: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;}
+.sectionSubHead			{font-size:11px;font-weight:bold;}
+.alert{
+	width:auto;
+	height:55px;
+	border:#666;
+	background-color:#FF9797;
+	text-align:center;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	vertical-align:center;
+
+}
+.clearfix {
+	display: block;
+	clear: both;
+	height: 5px;
+	width: 100%;
+}
+
+/********************************************
+	END OF TWO COLUMN LAYOUT FOR INFO PAGES (user, host)
+********************************************/
