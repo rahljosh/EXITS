@@ -1161,7 +1161,7 @@
         <cfargument name="studentid" type="numeric" required="no" default="0" hint="student id of student assigned to host">
         <Cfargument name="itemID" type="numeric" required="yes" default="0" hint="Item that is being approved">
         <cfargument name="userType" type="numeric" required="yes" default="0" hint="the user type updating, so we know what date to insert.">
-        <cfargument name="deny" type="numeric" required="no" default="0" hint="the user type updating, so we know what date to insert.">
+        <cfargument name="denyApp" type="numeric" required="no" default="0" hint="the user type updating, so we know what date to insert.">
         
         <!----Check if there is a record on file for this host.  First we check if any record exits for current student.  If not student is assigned, make sure only one non-studet assigned exits, we don't need multiple non-assigned records for any given host family.---->
         
@@ -1194,7 +1194,7 @@
                 <Cfif val(ARGUMENTS.studentid)>
                 	fk_StudentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">,
                 </Cfif>
-                <cfif ARGUMENTS.deny eq 1>
+                <cfif ARGUMENTS.denyApp eq 1>
                 	<Cfif ARGUMENTS.userType eq 7>
                     	areaRepDenial 
                     <cfelseif ARGUMENTS.userType eq 6>
