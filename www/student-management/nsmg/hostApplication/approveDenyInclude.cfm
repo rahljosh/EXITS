@@ -1,5 +1,6 @@
-<Cfif isDefined('deny')>
-	<cfif isDefined('form.denyReason')>
+
+<Cfif isDefined('form.deny')>
+  <cfif isDefined('processDeny')>
     <cfif form.denyReason is ''>
     <table bgcolor="#FFFF99" align="Center">
     	<tr>
@@ -15,16 +16,18 @@
         
                 <cfscript>
                 // Get update ToDoList
-                updateToDoList = APPLICATION.CFC.UDF.updateToDoList(hostID=client.hostid,studentID=client.studentid,itemid=url.itemid,usertype=url.usertype,deny=1);
+                updateToDoList = APPLICATION.CFC.UDF.updateHostAppToDoList(hostID=client.hostid,studentID=client.studentid,itemid=url.itemid,usertype=url.usertype,denyApp=1);
                 </cfscript>
+                
                   <div align="center">
                 
                 <h1>Succesfully Submited.</h1>
                 <em>this window should close shortly</em>
                 </div>
-             
+            
                  <body onload="parent.$.fn.colorbox.close();">
                     <cfabort>
+					
         
         </cfoutput>
        </cfif>
@@ -36,8 +39,8 @@
     <em> Host Family will see this message.</em><br />
     <cfoutput>
     <form method="post" action="#listlast(cgi.script_name,"/")#?itemID=#url.itemID#&userType=#url.usertype#">
-    <input type="hidden" name="deny" value=1/>
-    
+    <input type="hidden" name="deny" value="1" />
+    <input type="hidden" name="processDeny" value=1>
     <textarea cols="60" rows="20" name="denyReason" placeholder="More information is needed regarding...."></textarea><br />
     
     <input type="image" src="../pics/buttons/Next.png" />
@@ -50,7 +53,7 @@
 <cfif isDefined('form.approve')>
 			<cfscript>
 			// Get update ToDoList
-			updateToDoList = APPLICATION.CFC.UDF.updateToDoList(hostID=client.hostid,studentID=client.studentid,itemid=url.itemid,usertype=url.usertype);
+			updateToDoList = APPLICATION.CFC.UDF.updateHostAppToDoList(hostID=client.hostid,studentID=client.studentid,itemid=url.itemid,usertype=url.usertype,denyApp=0);
 			</cfscript>
               <div align="center">
             

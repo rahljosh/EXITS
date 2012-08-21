@@ -53,7 +53,7 @@ select schoolWorks, schoolWorksExpl, schoolCoach, schoolCoachExpl, schooltranspo
 from smg_hosts
 where hostid = #client.hostid#
 </cfquery>
-<cfquery name="local" datasource="MySQL">
+<cfquery name="localinfo" datasource="MySQL">
 	select city,state,zip
 	from smg_hosts
 	where hostid = #client.hostid#
@@ -66,7 +66,7 @@ where hostid = #client.hostid#
  <cfscript>
                 // Get Host Mother CBC
                 homeSchoolDist = APPCFC.udf.calculateAddressDistance(
-                    origin='#local.city# #local.state# #local.zip#', 
+                    origin='#localinfo.city# #localinfo.state# #localinfo.zip#', 
                     destination='#get_host_school.address# #get_host_school.city# #get_host_school.state#'
                 );
             </cfscript>

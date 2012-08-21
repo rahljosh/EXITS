@@ -41,11 +41,12 @@
 <Cfparam name="form.neighborhood" default="">
 <cfparam name="displayMessage" default="">
 
-<cfquery name="local" datasource="MySQL">
-	select city,state,zip
+<cfquery name="localInfo" datasource="MySQL">
+	select city, state, zip
 	from smg_hosts
 	where hostid = #client.hostid#
 </cfquery>
+
 
 <cfquery name="family_info" datasource="MySQL">
 select *
@@ -129,7 +130,7 @@ from smg_airports
         <cfscript>
                 // Get Host Mother CBC
                 cityDist = APPCFC.udf.calculateAddressDistance(
-                    origin='#local.city# #local.state# #local.zip#', 
+                    origin='#localInfo.city# #localInfo.state# #localInfo.zip#', 
                     destination='#form.near_city#'
                 );
             </cfscript>
@@ -210,8 +211,8 @@ from smg_airports
     <cfquery name="guessLocalAirport" datasource="MySQL">
     select *
     from smg_airports
-    where city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.city#">
-    AND state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.state#">
+    where city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#localInfo.city#">
+    AND state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#localInfo.state#">
     </cfquery>
 
     <Cfif guessLocalAirport.recordcount neq 0>
@@ -224,8 +225,8 @@ from smg_airports
     <cfquery name="guessMajorAirport" datasource="MySQL">
     select major_air_code
     from smg_hosts
-    where city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.city#">
-    AND state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.state#">
+    where city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#localInfo.city#">
+    AND state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#localInfo.state#">
     limit 1
     </cfquery>
 
@@ -240,8 +241,8 @@ from smg_airports
     <cfquery name="getPopulation" datasource="MySQL">
     select population
     from smg_cityState
-    where city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.city#">
-    AND state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.state#">
+    where city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#localInfo.city#">
+    AND state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#localInfo.state#">
     </cfquery>
 
     <Cfif getPopulation.recordcount neq 0>
@@ -255,8 +256,8 @@ from smg_airports
     <cfquery name="getWeather" datasource="MySQL">
     select wintertemp, summertemp, snowy_winter,terrain2,terrain1, terrain3, rainy_winter, hot_summer, mild_summer, high_hummidity, dry_air, terrain3_desc 		
     from smg_hosts
-    where city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.city#">
-    AND state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.state#">
+    where city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#localInfo.city#">
+    AND state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#localInfo.state#">
     and summertemp != 0
     limit 1
     </cfquery>
@@ -285,8 +286,8 @@ from smg_airports
     <cfquery name="getInterest" datasource="MySQL">
     select point_interest 		
     from smg_hosts
-    where city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.city#">
-    AND state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.state#">
+    where city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#localInfo.city#">
+    AND state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#localInfo.state#">
     and point_interest != ''
     limit 1
     </cfquery>
@@ -313,15 +314,15 @@ from smg_airports
 <table width=100%>
 	<tr>
     	<td>
-<h2>Community Information for #local.city#, #local.state#</h2>
+<h2>Community Information for #localInfo.city#, #localInfo.state#</h2>
 		</td>
         <Td align="right">
-        <a href="http://en.wikipedia.org/wiki/#local.city#,_#local.state#" class="iframe">Need more info on #local.city#?</a>
+        <a href="http://en.wikipedia.org/wiki/#localInfo.city#,_#localInfo.state#" class="iframe">Need more info on #localInfo.city#?</a>
         </Td>
 <table width=100% cellspacing=0 cellpadding=2 class="border">
 	
      <tr>	
-        <td >Population of #local.city# :</td><td class="form_text"><input type="text" size=15 name="population" value='#form.population#'/></td>
+        <td >Population of #localInfo.city# :</td><td class="form_text"><input type="text" size=15 name="population" value='#form.population#'/></td>
         
       </tr>
       <tr  bgcolor="##deeaf3">

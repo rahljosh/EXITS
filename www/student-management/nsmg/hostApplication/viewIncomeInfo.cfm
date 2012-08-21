@@ -7,9 +7,12 @@
 
 <!--- Import CustomTag Used for Page Messages and Form Errors --->
 <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
-<link href="http://ise.111cooper.com/hostApp/css/hostApp.css" rel="stylesheet" type="text/css" />
+<link href="http://iseusa.com/css/ISEstyle.css" rel="stylesheet" type="text/css" />
+<link href="http://iseusa.com/hostApp/css/hostApp.css" rel="stylesheet" type="text/css" />
 <link href="http://ise.exitsapplication.com/nsmg/linked/css/baseStyle.css" rel="stylesheet" type="text/css" />
-
+<link rel="stylesheet" href="chosen/chosen.css" />
+<link rel="stylesheet" href="http://iseusa.com/css/css/wiki.css" />
+<link rel="stylesheet" href="http://iseusa.com/css/css/colorbox2.css" />
 <cfinclude template="approveDenyInclude.cfm">
 
 <cfif isDefined('form.process')>
