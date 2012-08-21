@@ -1182,6 +1182,7 @@
 			---->
            
         </cfquery>
+       
         
         <Cfif checkRecord.recordcount gt 1>
 			<cfset status = 'Multiple records with out a student assigned.  Please contact IT.'>
@@ -1244,9 +1245,22 @@
                     	regionalDirectorApproval
                     <cfelseif ARGUMENTS.userType lte 4>
                     	facApproval
-                    </Cfif>, itemID, fk_hostid, fk_studentid)
+                    </Cfif>, itemID, fk_hostid, fk_studentid,
+                    
+						<Cfif ARGUMENTS.userType eq 7>
+                            areaRepDenial 
+                        <cfelseif ARGUMENTS.userType eq 6>
+                            regionalAdvisorDenial 
+                        <cfelseif ARGUMENTS.userType eq 5>
+                            regionalDirectorDenial 
+                        <cfelseif ARGUMENTS.userType lte 4>
+                            facDenial 
+                        </Cfif>
+                    
+               
+                    )
       values(<cfqueryparam cfsqltype="cf_sql_date" value="#now()#">, <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.itemid# ">,
-      			       <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostid# ">, <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentid# ">)     
+      			       <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostid# ">, <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentid# ">, <cfif ARGUMENTS.denyApp eq 1><cfqueryparam cfsqltype="cf_sql_varchar" value="#form.denyReason#"><cfelse><cfqueryparam cfsqltype="cf_sql_varchar" value=""></cfif>)     
       
             </Cfquery>
             <cfset status = 'Record Updated'>  
