@@ -4,13 +4,7 @@
 <link href="http://ise.exitsapplication.com/nsmg/linked/css/baseStyle.css" rel="stylesheet" type="text/css" />
 <cfparam name="form.picCat" default=''>
 
-<cfif isDefined('form.approved')>
- 			<cfscript>
-			// Get update ToDoList
-			updateToDoList = APPLICATION.CFC.UDF.updateToDoList(hostID=client.hostid,studentID=client.studentid,itemid=url.itemid,usertype=#url.usertype#);
-			</cfscript>
-            <body onLoad="parent.$.fn.colorbox.close();">
-</cfif>
+<cfinclude template="approveDenyInclude.cfm">
 
 
 <!--- Import CustomTag Used for Page Messages and Form Errors --->
@@ -248,13 +242,6 @@ Select a catagory for this picture:<br />
       <br />
 <hr width=80% align="center" height=1px />
 <br />
-<Cfform method="post" action="viewFamPics.cfm?itemID=#url.itemID#&usertype=#url.usertype#">
-<input name="approved" type="hidden" />
-<table cellpadding=10 align="center">
-	<tr>
-    	<td><img src="../pics/buttons/deny.png" width="90%"/></td><td>&nbsp;</td>
-        
-        <Td><input type="image" src="../pics/buttons/approveBut.png" name="process" value=1 width="90%" /></Td>
-    </tr>
 
-</cfform>
+<cfinclude template="approveDenyButtonsInclude.cfm">
+

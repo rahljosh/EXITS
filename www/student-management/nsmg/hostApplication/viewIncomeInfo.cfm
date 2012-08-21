@@ -10,6 +10,8 @@
 <link href="http://ise.111cooper.com/hostApp/css/hostApp.css" rel="stylesheet" type="text/css" />
 <link href="http://ise.exitsapplication.com/nsmg/linked/css/baseStyle.css" rel="stylesheet" type="text/css" />
 
+<cfinclude template="approveDenyInclude.cfm">
+
 <cfif isDefined('form.process')>
 
 
@@ -51,7 +53,7 @@
 	</cfscript>
 
          <cfif NOT SESSION.formErrors.length()>
-           
+       
          <cfquery name="insert_rules" datasource="MySQL">
             update smg_hosts
                 set
@@ -65,11 +67,7 @@
                     hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
             </cfquery>
          
-			<cfscript>
-			// Get update ToDoList
-			updateToDoList = APPLICATION.CFC.UDF.updateToDoList(hostID=client.hostid,studentID=client.studentid,itemid=url.itemid,usertype=url.usertype);
-			</cfscript>
-            <body onload="parent.$.fn.colorbox.close();">
+			
          </cfif>
 </cfif>
 <cfquery name="demoInfo" datasource="MySql">
@@ -96,7 +94,7 @@ where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
 <hr width=80% align="center" height=1px />
 <cfoutput>
 <cfform method="post" action="viewIncomeInfo.cfm?itemID=#url.itemID#&usertype=#url.usertype#">
-
+<input type="hidden" name="process" value=1>
   <table width=100% cellspacing=0 cellpadding=2 class="border">
     <tr  bgcolor="##deeaf3">
     	<td class="label" valign="top"><h3>Is any member of your household receiving<br> any kind of public assistance?<span class="redtext">*</span><sup>&dagger;&dagger;</sup></h3></td>
@@ -161,14 +159,8 @@ where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
    </table>
    <br />
 <hr width=80% align="center" height=1px />
-<br />
-<table cellpadding=10 align="center">
-	<tr>
-    	<td><img src="../pics/buttons/deny.png" width="90%"/></td><td>&nbsp;</td>
-        
-        <Td><input type="image" src="../pics/buttons/approveBut.png" name="process" value=#url.itemid# width="90%" /></Td>
-    </tr>
-</table>
 
+<cfinclude template="updateInfoInclude.cfm">
    </cfform>
+   <cfinclude template="approveDenyButtonsInclude.cfm">
    </cfoutput>
