@@ -23,15 +23,7 @@
 </head>
 
 <body>
-<cfif isDefined('form.process')>
-   <cfscript>
-			// Get update ToDoList
-			updateToDoList = APPLICATION.CFC.UDF.updateToDoList(hostID=client.hostid,studentID=client.studentid,itemid=url.itemid,usertype=#url.usertype#);
-			</cfscript>
-           
-            <body onload="parent.$.fn.colorbox.close();">
-			<cfabort>
-</cfif>
+<cfinclude template="approveDenyInclude.cfm">
 
 <!----See if a letter exists---->
 <Cfquery name="checkDocs" datasource="#application.dsn#">
@@ -148,15 +140,7 @@ and shortDesc =  'School Acceptance'
 </Table>
       <br />
 <hr width=80% align="center" height=1px />
-<br />
-
-<table cellpadding=10 align="center">
-	<tr>
-    	<td><img src="../pics/buttons/deny.png" width="90%"/></td><td>&nbsp;</td>
-        
-        <Td><input type="image" src="../pics/buttons/approveBut.png" name="process" value=1 width="90%" /></Td>
-    </tr>
-</table>
+<cfinclude template="approveDenyButtonsInclude.cfm">
 </cfif>
 </cfoutput>
 </cfform>

@@ -8,15 +8,8 @@
 <link rel="stylesheet" href="chosen/chosen.css" />
 <!--- Import CustomTag Used for Page Messages and Form Errors --->
 <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
-<Cfif isDefined('form.approved')>
+<cfinclude template="approveDenyInclude.cfm">
 
-  			<cfscript>
-			// Get update ToDoList
-			updateToDoList = APPLICATION.CFC.UDF.updateToDoList(hostID=client.hostid,studentID=client.studentid,itemid=url.itemid,usertype=#url.usertype#);
-			</cfscript>
-            <body onload="parent.$.fn.colorbox.close();">
-            <cfabort>
-</Cfif>
 </head>
 
 
@@ -517,40 +510,15 @@ Describe the points of interest in your  area:</td>
 		</Td>
     </tr>
  </table>
- <br />
- <table border=0 cellpadding=4 cellspacing=0 width=100% >
-    <tr>
-  
-    <td colspan=4 align="Center" valign="center">Made any changes?  Make sure you click Update
-        	
-        
-     
-        <td align="right">
-                  
-        	<input name="Submit" type="image" src="../pics/buttons/update_44.png"/>
-            </form>
-           
-            </td>
-        </td>
-        
-       
-    </tr>
-    
-</table>
-</cfform>
       <br />
 <hr width=80% align="center" height=1px />
-<br />
-<Cfform method="post" action="viewCommunityProfile.cfm?itemID=#url.itemID#&usertype=#url.usertype#">
-<input name="approved" type="hidden" />
-<table cellpadding=10 align="center">
-	<tr>
-    	<td><img src="../pics/buttons/deny.png" width="90%"/></td><td>&nbsp;</td>
-        
-        <Td><input type="image" src="../pics/buttons/approveBut.png" name="process2" value=1 width="90%" /></Td>
-    </tr>
-</table>
-</Cfform>
+<cfinclude template="updateInfoInclude.cfm">
+</cfform>
+
+
+
+
+<cfinclude template="approveDenyButtonsInclude.cfm">
 
 </cfoutput>
 

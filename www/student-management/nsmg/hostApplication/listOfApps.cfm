@@ -22,11 +22,15 @@ AND
             	<tr>
                 	<th align="left">ID</th><th align="left">Family Name</th><th  align="left">Father</th><th  align="left">Mother</th><th align="left">City, State</th><Th align="left">Email</Th>
                 </tr>
+                <cfif hostApps.recordcount eq 0>
+                	<td colspan="6"> There are no applications to display</td>
+                <cfelse>
                 <cfloop query="hostApps">
                 <tr <cfif currentrow mod 2>bgcolor="##efefef"</cfif>>
                 	<td>#hostid#</td><td><a href="index.cfm?curdoc=hostApplication/toDoList&hostid=#hostid#&status=#url.status#">#familylastname#</a></td><td>#fatherfirstname#</td><td>#motherfirstname#</td><td>#city#, #state#</td><td>#email#</td>
                 </tr>	
                 </cfloop>
+                </cfif>
                </table>
     		</div>
             	<div class="rdbottom"></div> <!-- end bottom --> 

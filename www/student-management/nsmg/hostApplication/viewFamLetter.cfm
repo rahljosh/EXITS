@@ -7,20 +7,10 @@
 
 <body>
 
-<cfif isDefined('form.process')>
-			<cfscript>
-			// Get update ToDoList
-			updateToDoList = APPLICATION.CFC.UDF.updateToDoList(hostID=client.hostid,studentID=client.studentid,itemid=url.itemid,usertype=url.usertype);
-			</cfscript>
-              <div align="center">
-            
-            <h1>Succesfully Submited.</h1>
-            <em>this window should close shortly</em>
-            </div>
-         
-             <body onload="parent.$.fn.colorbox.close();">
-                <cfabort>
-</cfif>
+
+
+
+<cfinclude template="approveDenyInclude.cfm">
 
 <cfquery name="letter" datasource="#application.dsn#">
 select familyletter
@@ -42,14 +32,7 @@ where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostID#">
       <br />
 <hr width=80% align="center" height=1px />
 <br />
-<form method="post" action="viewFamLetter.cfm?itemID=#url.itemID#&usertype=#url.usertype#">
-<table cellpadding=10 align="center">
-	<tr>
-    	<td><img src="../pics/buttons/deny.png" width="90%"/></td><td>&nbsp;</td>
-        
-        <Td><input type="image" src="../pics/buttons/approveBut.png" name="process" value=1 width="90%" /></Td>
-    </tr>
-</table>
+<cfinclude template="approveDenyButtonsInclude.cfm">
 </cfoutput>
 </body>
 </html>

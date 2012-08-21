@@ -8,15 +8,8 @@
 </head>
 
 <body>
-<cfif isDefined('form.approved')>
- 			<cfscript>
-			// Get update ToDoList
-			updateToDoList = APPLICATION.CFC.UDF.updateToDoList(hostID=client.hostid,studentID=client.studentid,itemid=url.itemid,usertype=#url.usertype#);
-			</cfscript>
-           
-            <body onLoad="parent.$.fn.colorbox.close();">
-			
-</cfif>
+<cfinclude template="approveDenyInclude.cfm">
+
 <Cfif isDefined('form.process')>
 
 	<cfquery name="updateSchool" datasource="#application.dsn#">
@@ -260,40 +253,14 @@ where hostid = #client.hostid#
 </table>
 
 
-<table border=0 cellpadding=4 cellspacing=0 width=100% >
-    <tr>
-  
-    <td colspan=4 align="Center" valign="center">Made any changes?  Make sure you click Update
-        	
-        
-     
-        <td align="right">
-                  <input type="hidden" name="updateDesc" />
-        	<input name="Submit" type="image" src="../pics/buttons/update_44.png"/>
-            </form>
-           
-            </td>
-        </td>
-        
-       
-    </tr>
-    
-</table>
-</cfform>
-</cfoutput>
 <br />
-      <br />
+
 <hr width=80% align="center" height=1px />
-<br />
-<Cfform method="post" action="viewSchool.cfm?itemID=#url.itemID#&usertype=#url.usertype#">
-<input name="approved" type="hidden" />
-<table cellpadding=10 align="center">
-	<tr>
-    	<td><img src="../pics/buttons/deny.png" width="90%"/></td><td>&nbsp;</td>
-        
-        <Td><input type="image" src="../pics/buttons/approveBut.png" name="process2" value=1 width="90%" /></Td>
-    </tr>
+
+<cfinclude template="updateInfoInclude.cfm">
 
 </cfform>
+<cfinclude template="approveDenyButtonsInclude.cfm">
+</cfoutput> 
 </body>
 </html>

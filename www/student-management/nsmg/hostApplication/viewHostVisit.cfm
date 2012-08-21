@@ -9,7 +9,7 @@ and fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
 
 <cfif checkHostVisit.recordcount gt 0>
 <Cfoutput>
-   	<cflocation url="../forms/initialHomeVisitReport.cfm?reportid=#checkHostVisit.pr_id#">
+   	<cflocation url="../forms/initialHomeVisitReport.cfm?reportid=#checkHostVisit.pr_id#&itemID=#url.itemID#&userType=#url.usertype#">
 	<cfabort>
     </Cfoutput>
 </cfif>

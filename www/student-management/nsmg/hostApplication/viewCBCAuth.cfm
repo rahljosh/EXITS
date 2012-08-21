@@ -4,13 +4,7 @@
 <link href="http://ise.111cooper.com/hostApp/css/hostApp.css" rel="stylesheet" type="text/css" />
 <link href="http://ise.exitsapplication.com/nsmg/linked/css/baseStyle.css" rel="stylesheet" type="text/css" />
 
-<cfif isDefined('form.process')>
-			<cfscript>
-			// Get update ToDoList
-			updateToDoList = APPLICATION.CFC.UDF.updateToDoList(hostID=client.hostid,studentID=client.studentid,itemid=url.itemid,usertype=url.usertype);
-			</cfscript>
-             <body onload="parent.$.fn.colorbox.close();">
-</cfif>
+<cfinclude template="approveDenyInclude.cfm">
 
 <!--- Form Errors --->
     <gui:displayFormErrors 
@@ -175,13 +169,7 @@ where active = 1
       <br />
 <hr width=80% align="center" height=1px />
 <br />
-<table cellpadding=10 align="center">
-	<tr>
-    	<td><img src="../pics/buttons/deny.png" width="90%"/></td><td>&nbsp;</td>
-        
-        <Td><input type="image" src="../pics/buttons/approveBut.png" name="process" value=1 width="90%" /></Td>
-    </tr>
-</table>
+<cfinclude template="approveDenyButtonsInclude.cfm">
    
    </cfoutput>
 </cfform>
