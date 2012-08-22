@@ -207,21 +207,32 @@ SELECT
     sch.stuid, 
     sch.chargeid, 
     sch.companyid, 
+    sch.programid,
     'invoice', 
     sch.invoiceid, 
     sch.date,
+    
+    <!--- high school students table --->
     ss.firstname,
     ss.familylastname,
-    CAST(IFNULL(CONCAT( ss.firstname, ' ', ss.familylastname, ' (', ss.studentid, ')'), sch.description) AS CHAR) AS invDescrip, 
+    CAST(IFNULL(CONCAT( ss.firstname, ' ', ss.familylastname, ' (', ss.studentid, ')'), sch.description) AS CHAR) AS hsInvDescrip,
+    <!--- end: high school students table --->
+    
+    <!--- work programs students table --->
+    ec.firstname,
+    ec.lastname,
+    CAST(IFNULL(CONCAT( ec.firstname, ' ', ec.lastname, ' (', ec.candidateid, ')'), sch.description) AS CHAR) AS workInvDescrip, 
+    <!--- end: work programs students table --->
+    
     sch.description, 
     sch.type, 
     sch.amount_due
 FROM
     smg_charges sch
 LEFT JOIN
-    smg_students ss
-ON
-    ss.studentid = sch.stuid
+    smg_students ss ON ss.studentid = sch.stuid
+LEFT JOIN
+    extra_candidates ec ON ec.candidateid = sch.stuid
 WHERE
     sch.agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.intrep#">
 <cfif selectPrograms IS NOT "All">
@@ -234,26 +245,35 @@ UNION ALL
 SELECT
     sc.stuid, 
     sc.chargeid, 
-    sc.companyid, 
+    sc.companyid,
+    sch.programid,
     'credit note', 
     sc.creditid, 
     sc.date,
+    
+    <!--- high school students table --->
     ss.firstname,
     ss.familylastname,
-    CAST(IFNULL(CONCAT( ss.firstname, ' ', ss.familylastname, ' (', ss.studentid, ')'), sc.description) AS CHAR) AS invDescrip, 
+    CAST(IFNULL(CONCAT( ss.firstname, ' ', ss.familylastname, ' (', ss.studentid, ')'), sc.description) AS CHAR) AS hsInvDescrip,
+    <!--- end: high school students table ---> 
+    
+    <!--- work programs students table --->
+    ec.firstname,
+    ec.lastname,
+    CAST(IFNULL(CONCAT( ec.firstname, ' ', ec.lastname, ' (', ec.candidateid, ')'), sc.description) AS CHAR) AS workInvDescrip,
+    <!--- end: work programs students table --->
+    
     sch.description, 
     sch.type, 
     sc.amount*-1
 FROM
     smg_credit sc
 LEFT JOIN
-    smg_students ss
-ON
-    ss.studentid = sc.stuid
+    smg_students ss ON ss.studentid = sc.stuid
 LEFT JOIN
-    smg_charges sch
-ON
-    sch.chargeid = sc.chargeid
+    extra_candidates ec ON ec.candidateid = sc.stuid
+LEFT JOIN
+    smg_charges sch ON sch.chargeid = sc.chargeid
 WHERE
     sc.agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.intrep#">
 <cfif selectPrograms IS NOT "All">
@@ -336,7 +356,14 @@ FROM getCharges
             <tr>
                 <td class="two">
                     <cfif studentCharges.currentRow EQ 1>
-                   		<small>#studentCharges.invDescrip#</small>
+                    	<cfswitch expression="#studentCharges.companyid#">
+                        	<cfcase value="7,8,9">
+                   				<small>#studentCharges.workInvDescrip#</small>
+                            </cfcase>
+                            <cfdefaultcase>
+                            	<small>#studentCharges.hsInvDescrip#</small>
+                            </cfdefaultcase>
+                        </cfswitch>
                     </cfif>
                 </td>
                 <td class="two" align="center">
