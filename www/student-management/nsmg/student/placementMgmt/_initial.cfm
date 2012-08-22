@@ -260,7 +260,9 @@
 			// Data Validation
 			if ( NOT VAL(FORM.hostID) ) {
 				SESSION.formErrors.Add("You must select a host family, if you do not see it on the list, please close this window and add a host family");
-			}			
+				// It is possible the hostID did not copy over, erase Host Family Suggest
+				FORM.hostIDSuggest = "";
+			}					
 
 			if ( NOT LEN(FORM.isWelcomeFamily) ) {
 				SESSION.formErrors.Add("You must answer whether is a welcome family or not");
@@ -278,7 +280,7 @@
 				SESSION.formErrors.Add("You must select a supervising representative from the list");
 			}	
 			
-			if ( VAL(FORM.doublePlace) AND qGetPlacementHistoryByID.doublePlacementID NEQ FORM.doublePlace ) { 
+			if ( VAL(FORM.hostID) AND VAL(FORM.doublePlace) AND qGetPlacementHistoryByID.doublePlacementID NEQ FORM.doublePlace ) { 
 			
 				// Check if double placement is not assigned to a different student
 				qCheckDoublePlacement = APPLICATION.CFC.STUDENT.getStudentByID(studentID=VAL(FORM.doublePlace));
