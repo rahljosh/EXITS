@@ -269,6 +269,7 @@
                          	<tr>
                             	<td>
                                 	<select name="app_additional_program">
+                                    	<option value="0">None</option>
                                     	<cfloop query="qAppAddPrograms">
                                         	<cfif app_programid neq 6 and app_programid neq 8>
                                         		<option value="#app_programID#" <cfif ListFind(get_student_info.app_additional_program, app_programid)>selected='selected'</cfif>>#app_program#</option>
