@@ -11,12 +11,18 @@ and (tdld.arearepDenial != '' OR
      tdld.regionalDirectorDenial != '' OR
      tdld.facDenial != '')
 </Cfquery>
-<Cfquery ="hostInfo" datasource="#application.dsn#">
+<Cfquery name="hostInfo" datasource="#application.dsn#">
 select email, password
 from smg_hosts
 where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
 </Cfquery>
-<Cfif isDefined('sendEmail')>
+
+<Cfif isDefined('form.sendEmail')>
+<cfquery datasource="#application.dsn#">
+update smg_hosts
+	set hostAppStatus = 8
+where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
+</cfquery>
 <cfsavecontent variable="denyApp">      
 	<style type="text/css">
                          .rdholder {
@@ -110,6 +116,9 @@ where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
                             padding-left: 20px;
                         }
                         
+						
+						.thinBorder{border:solid 1px;}
+						
                         </style> 
                          
                         <div class="rdholder" style="width: 595px;"> 
@@ -120,7 +129,8 @@ where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
           <br><br>Your application has been unlocked and you can login to make any adjustments that are needed.
           <br /><br />
           <Cfoutput>
-<Table class=border width=80% align="center" cellpadding="4" cellspacing="0">
+ 
+<table style="border: solid 1px;" width=80% align="center" cellpadding="4" cellspacing="0" >
 	<Tr >
     	<Th align="left">Item</Th><th align="left">Problem Found</th>
     </Tr>
@@ -136,18 +146,25 @@ where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
     </cfloop>
 </cfif>
 </Table>
+
+
+<br><br>
 </Cfoutput>
 <Cfif form.additionalInfo is not ''>
+<div align="left">
 The following additional information was added:<br><Br>
 #form.additionalInfo#
+</div>
+<br>
+<br>
 </Cfif> 
 
 <div style="display: block; float: left; width: 250px;  padding: 10px;  font-family:Arial, Helvetica, sans-serif; font-size: .80em"> <strong><em>To update your application, please click on the following link:</em></strong><br /><br />
-         <a href="http://www.iseusa.com/hostApp/" target="_blank"><img src="http://ise.exitsapplication.com/nsmg/pics/hostAppEmail.jpg" width="200" height="56" border="0"></a> <br /></div>
+         <a href="http://www.iseusa.com/hostApp/" target="_blank"><img src="http://www.iseusa.com/hostApp/images/buttons/contApp.png" width="200" height="56" border="0"></a> <br /></div>
          <div style="display: block; float: right; width: 270px; padding: 10px; font-family:Arial, Helvetica, sans-serif; font-size: .80em; border: thin solid ##CCC;"><div><strong><em>Please use the following login information:</em></strong></div><br /><br />
 <div style="width: 50px; float: left;"><img src="http://ise.exitsapplication.com/nsmg/pics/lock.png" width="39" height="56"></div>
-   <div> <strong>Username / Email:</strong><br /> <a href="mailto:#form.email#" target="_blank">#hostInfo.email#</a><br />
-  <strong>Password:</strong>#hostIfno.password#</div>
+   <div> <strong>Username / Email:</strong><br /> <a href="mailto:#hostinfo.email#" target="_blank">#hostInfo.email#</a><br />
+  <strong>Password:</strong>#hostInfo.password#</div>
           
         
         </cfoutput>
@@ -158,11 +175,20 @@ The following additional information was added:<br><Br>
         <cfinvokeargument name="email_to" value="#mailTo#">
 		---->
         <cfinvokeargument name="email_to" value="josh@pokytrails.com">
+         <cfinvokeargument name="email_cc" value="#client.email#">
         <cfinvokeargument name="email_subject" value="Problems with Host Application">
         <cfinvokeargument name="email_message" value="#denyApp#">
         <cfinvokeargument name="email_from" value="hostApp@iseusa.com">
     </cfinvoke>
-
+    
+ <div align="center">
+                
+                <h1>Succesfully Submited.</h1>
+                <em>this window should close shortly</em>
+                </div>
+            
+                 <body onload="parent.$.fn.colorbox.close();">
+                    <cfabort>
 
 </Cfif>
 The following problems have been noted with the application and these reasons will be included in the email sent to the host family:<br><br>
@@ -183,12 +209,15 @@ The following problems have been noted with the application and these reasons wi
     </cfloop>
 </cfif>
 </Table>
-</Cfoutput>
+
 <br>
 <div align="center">
-<form method="denyHostApp.cfm">
+<form action="denyHostApp.cfm" method="post">
+<input type="hidden" name="sendEmail">
 Please include any additional information or a message to the host family below:<br><Br>
 <textarea rows="10" cols="60" name="additionalInfo" placeholder="Your application is just missing a few...."></textarea><br><br>
 <input type="image" src="../pics/buttons/submit.png">
+</form>
+</Cfoutput>
 </div>
 <p>&nbsp;</p>
