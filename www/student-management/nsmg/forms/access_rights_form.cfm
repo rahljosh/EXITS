@@ -226,6 +226,7 @@
                     )
                 </cfquery>
                 
+                <!--- Commented out as per Brian Hause Request - 08/22/2012
 				<cfif listFind("1,2,3,4,5,12", CLIENT.companyID) AND ListFind("6,7", FORM.usertype)>
         	   
                     <cfquery name="newUserInfo" datasource="#APPLICATION.DSN#">
@@ -290,7 +291,8 @@
                     </cfinvoke>
                     
             	</cfif>
-            
+            	--->
+                
         		<cflocation url="index.cfm?curdoc=user_info&userid=#URL.userID#" addtoken="No">
                 
 			<!--- edit --->
@@ -307,6 +309,7 @@
                     	id = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.ID#">
                 </cfquery>
                 
+                <!--- Commented out as per Brian Hause Request - 08/22/2012
 				<cfif listFind("1,2,3,4,5,12", CLIENT.companyID) AND ListFind("6,7", FORM.usertype)>
 
                     <cfquery name="newUserInfo" datasource="#APPLICATION.DSN#">
@@ -357,6 +360,7 @@
                     </cfinvoke>
 			
 				</cfif>
+                --->
                 
         		<cflocation url="index.cfm?curdoc=user_info&userid=#URL.userID#" addtoken="No">
         	
