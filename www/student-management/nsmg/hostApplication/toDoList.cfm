@@ -3,9 +3,9 @@
     	
         
     <link rel="stylesheet" href="../linked/css/colorbox2.css" />
-   <!----
+ 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-	---->
+	
 	<script src="linked/js/jquery.colorbox.js"></script>
 	
 	
@@ -74,6 +74,10 @@
 <Cfset client.hostid = #url.hostid#>
 <!-----Deny this itme---->
 
+<cfif isDefined('form.denyApp')>
+
+
+</cfif>
 
 
 
@@ -457,10 +461,10 @@ ORDER BY RAND()
     
     	
     	<td>
-        <form method="post" action="?curdoc=hostApplication/toDoList&status=#url.status#&hostid=#client.hostid#">
-        	<input type="hidden" name="denyApp" value=1/>
-        	<input type="image" src="pics/buttons/deny.png" width=90%>
-        </form>
+        <a class='iframe' href="hostApplication/denyHostApp.cfm">
+        	<img  src="pics/buttons/deny.png" width=90% border=0>
+            </a>
+        
         </td><td>&nbsp;</td><Td>
         <cfif itemsNeedApproved neq itemsApproved>
         <img src="pics/buttons/approveButBW.png" width="90%" />
