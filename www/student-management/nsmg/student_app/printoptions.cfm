@@ -9,6 +9,43 @@
 </head>
 <body>
 
+<cfparam name="SESSION.errorFiles" default="">
+<cfparam name="SESSION.downloadReady" default="1">
+
+<cfif LEN(SESSION.errorFiles)>
+	<script type="text/javascript">
+		alert("The following files were not included:\n<cfoutput>#SESSION.errorFiles#</cfoutput>");
+	</script>
+    <cfset SESSION.errorFiles = "">
+</cfif>
+
+<cfif NOT VAL(SESSION.downloadReady)>
+	<script type="text/javascript">
+        setTimeout(function(){
+           window.location.reload(1);
+        }, 1000);
+    </script>
+</cfif>
+
+<script type="text/javascript">
+	function preparingDownload() {
+		window.open("download_application.cfm","");
+		waitToRun(window.location.reload(),1500);
+	}
+	
+	function waitToRun(command, time) {
+		var startTime = new Date().getTime();
+		var currentTime = startTime;
+		while (currentTime < startTime + time) {
+			currentTime = new Date().getTime();
+			if (currentTime >= startTime + time) {
+				command
+				break;
+			}
+		}
+	}
+</script>
+
 <!--- HEADER OF TABLE --->
 <table width="100%" cellpadding="0" cellspacing="0">
 	<tr height="33">
@@ -38,7 +75,7 @@
 		</td>
 		<td valign="top" width="2%">&nbsp;</td>
 		<td valign="top" width="49%" align="center">
-		<a class="item2" href="download_application.cfm" >
+		<a class="item2" href="" onClick="preparingDownload();">
 			<img src="pics/download_completed_app_pdf.gif" border="0">
 		</a><br>
 		Use the link above to download your completed online application.

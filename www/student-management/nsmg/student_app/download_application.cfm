@@ -1,3 +1,5 @@
+<cfset SESSION.downloadReady = 0>
+
 <cfsetting requesttimeout="300">
 
 <!--- FROM PHP - AXIS --->
@@ -254,7 +256,7 @@
     </tr>
 </cfsavecontent>
 
-<cfsavecontent variable="page2x">
+<cfsavecontent variable="page20">
 	<tr>
     	<td valign="top">
         	<cfinclude template="section4/page20print.cfm">
@@ -262,7 +264,7 @@
     </tr>
 </cfsavecontent>
 
-<cfsavecontent variable="page3x">
+<cfsavecontent variable="page21">
 	<tr>
     	<td valign="top">
         	<cfinclude template="section4/page21print.cfm">
@@ -277,84 +279,95 @@
     <!--- The file to write everything into --->
     <cfset fileName = "#ExpandPath('../uploadedFiles/temp/')##VAL(CLIENT.studentID)#_#VAL(CLIENT.userID)#_ISEApplication_#TimeFormat(NOW(),'hh-mm-ss')#.pdf">
     
-    <!--- This is the list of PDF's to merge --->
-    <cfset sourceList = "#fileName#">
+    <!--- This is the list of files that could not be merged --->
+    <cfset errorFiles = "">
     
     <!--- Pages 1 to 4 --->
     <cfdocument format="pdf" filename="#fileName#" overwrite="yes" margintop="0.1" backgroundvisible="no">
-        <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
-            #pages1To4#
-        </table>
+        <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0">#pages1To4#</table>
     </cfdocument>
     
     <!--- Page 5 (display only the PDF if there is one) --->
     <cfif FileExists(ExpandPath('../uploadedfiles/letters/students/#CLIENT.studentID#.pdf'))>
-    	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/letters/students/')##CLIENT.studentID#.pdf">
+    	<cftry>
+        	<cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedfiles/letters/students/')##CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
+            <cfcatch type="any">
+                <cfset errorFiles = errorFiles & "Page 5: #CLIENT.studentID#.pdf\n">
+            </cfcatch>
+        </cftry>
   	<cfelse>
     	<cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page5#CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
-            <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
-                #page5#
-            </table>
+            <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0">#page5#</table>
         </cfdocument>
-        <cfset sourceList = sourceList & ",#ExpandPath('../uploadedFiles/temp/')#page5#CLIENT.studentID#.pdf">
+        <cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedFiles/temp/')#page5#CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
     </cfif>
     
     <!--- Page 6 (display only the PDF if there is one) --->
     <cfif FileExists(ExpandPath('../uploadedfiles/letters/parents/#CLIENT.studentID#.pdf'))>
-    	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/letters/parents/')##CLIENT.studentID#.pdf">
+    	<cftry>
+        	<cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedfiles/letters/parents/')##CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
+            <cfcatch type="any">
+                <cfset errorFiles = errorFiles & "Page 6: #CLIENT.studentID#.pdf\n">
+            </cfcatch>
+        </cftry>
     <cfelse>
     	<cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page6#CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
-            <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
-                #page6#
-            </table>
+            <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0">#page6#</table>
         </cfdocument>
-        <cfset sourceList = sourceList & ",#ExpandPath('../uploadedFiles/temp/')#page6#CLIENT.studentID#.pdf">
+        <cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedFiles/temp/')#page6#CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
     </cfif>
     
     <!--- Pages 7 to 9 (Loop through these and add uploaded PDF's if they exist) --->
     <cfloop from="7" to="9" index="i">
     	<cfset page = Evaluate('page' & #i#)>
         <cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page#i##CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
-            <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
-                #page#
-            </table>
+            <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0">#page#</table>
         </cfdocument>
-        <cfset sourceList = sourceList & ",#ExpandPath('../uploadedFiles/temp/')#page#i##CLIENT.studentID#.pdf">
+        <cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedFiles/temp/')#page#i##CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
         <cfif FileExists(ExpandPath('../uploadedfiles/online_app/page0#i#/#CLIENT.studentID#.pdf'))>
-        	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/online_app/')#page0#i#/#CLIENT.studentID#.pdf">
+        	<cftry>
+                <cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedfiles/online_app/')#page0#i#/#CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
+                <cfcatch type="any">
+                    <cfset errorFiles = errorFiles & "Page #i#: #CLIENT.studentID#.pdf\n">
+                </cfcatch>
+            </cftry>
         </cfif>
     </cfloop>
     
     <!--- Page 10 --->
     <cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page10#CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
-        <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
-            #page10#
-        </table>
+        <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0">#page10#</table>
     </cfdocument>
-    <cfset sourceList = sourceList & ",#ExpandPath('../uploadedFiles/temp/')#\page10#CLIENT.studentID#.pdf">
+    <cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedFiles/temp/')#page10#CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
     <cfif FileExists(ExpandPath('../uploadedfiles/online_app/page10/#CLIENT.studentID#.pdf'))>
-    	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/online_app/')#page10/#CLIENT.studentID#.pdf">
+    	<cftry>
+            <cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedfiles/online_app/page10/')##CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
+            <cfcatch type="any">
+                <cfset errorFiles = errorFiles & "Page 10: #CLIENT.studentID#.pdf\n">
+            </cfcatch>
+        </cftry>
     </cfif>
     
     <!--- Page 11 --->
     <cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page11#CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
-        <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
-            #page11#
-        </table>
+        <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0">#page11#</table>
     </cfdocument>
-    <cfset sourceList = sourceList & ",#ExpandPath('../uploadedFiles/temp/')#page11#CLIENT.studentID#.pdf">
+    <cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedFiles/temp/')#page11#CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
     
     <!--- Pages 12 and 13 (Loop through these and add uploaded PDF's if they exist) --->
     <cfloop from="12" to="13" index="i">
     	<cfset page = Evaluate('page' & #i#)>
         <cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page#i##CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
-            <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
-                #page#
-            </table>
+            <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0">#page#</table>
         </cfdocument>
-        <cfset sourceList = sourceList & ",#ExpandPath('../uploadedFiles/temp/')#page#i##CLIENT.studentID#.pdf">
+        <cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedFiles/temp/')#page#i##CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
         <cfif FileExists(ExpandPath('../uploadedfiles/online_app/page#i#/#CLIENT.studentID#.pdf'))>
-        	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/online_app/')#page#i#/#CLIENT.studentID#.pdf">
+        	<cftry>
+            	<cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedfiles/online_app/')#page#i#/#CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
+                <cfcatch type="any">
+                    <cfset errorFiles = errorFiles & "Page #i#: #CLIENT.studentID#.pdf\n">
+                </cfcatch>
+            </cftry>
         </cfif>
     </cfloop>
     
@@ -362,39 +375,48 @@
     <cfloop from="14" to="17" index="i">
     	<cfset page = Evaluate('page' & #i#)>
         <cfif FileExists(ExpandPath('../uploadedfiles/online_app/page#i#/#CLIENT.studentID#.pdf'))>
-        	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/online_app/')#page#i#/#CLIENT.studentID#.pdf">
+        	<cftry>
+            	<cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedfiles/online_app/')#page#i#/#CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
+                <cfcatch type="any">
+                    <cfset errorFiles = errorFiles & "Page #i#: #CLIENT.studentID#.pdf\n">
+                </cfcatch>
+            </cftry>
         <cfelse>
         	<cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page#i##CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
-                <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
-                    #page#
-                </table>
+                <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0">#page#</table>
             </cfdocument>
-            <cfset sourceList = sourceList & ",#ExpandPath('../uploadedFiles/temp/')#page#i##CLIENT.studentID#.pdf">
+            <cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedFiles/temp/')#page#i##CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
         </cfif>
     </cfloop>
     
     <!--- Page 18 (Do not display for ESI or Canada Application) --->
  	<cfif CLIENT.companyID NEQ 14 AND NOT ListFind("14,15,16", get_student_info.app_indicated_program)>
         <cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page18#CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
-            <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
-                #page18#
-            </table>
+            <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0">#page18#</table>
         </cfdocument>
-        <cfset sourceList = sourceList & ",#ExpandPath('../uploadedFiles/temp/')#page18#CLIENT.studentID#.pdf">
+        <cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedFiles/temp/')#page18#CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
         <cfif FileExists(ExpandPath('../uploadedfiles/online_app/page18/#CLIENT.studentID#.pdf'))>
-        	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/online_app/')#page18/#CLIENT.studentID#.pdf">
+        	<cftry>
+                <cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedfiles/online_app/')#page18/#CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
+                <cfcatch type="any">
+                    <cfset errorFiles = errorFiles & "Page 18: #CLIENT.studentID#.pdf\n">
+                </cfcatch>
+            </cftry>
         </cfif>
    	</cfif>
     
     <!--- Page 19 --->
   	<cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page19#CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
-        <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
-            #page19#
-        </table>
+        <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0">#page19#</table>
     </cfdocument>
-    <cfset sourceList = sourceList & ",#ExpandPath('../uploadedFiles/temp/')#page19#CLIENT.studentID#.pdf">
+    <cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedFiles/temp/')#page19#CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
     <cfif FileExists(ExpandPath('../uploadedfiles/online_app/page19/#CLIENT.studentID#.pdf'))>
-    	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/online_app/')#page19/#CLIENT.studentID#.pdf">
+    	<cftry>
+        	<cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedfiles/online_app/')#page19/#CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
+            <cfcatch type="any">
+                <cfset errorFiles = errorFiles & "Page 19: #CLIENT.studentID#.pdf\n">
+            </cfcatch>
+        </cftry>
     </cfif>
     
     <!--- Page 20 (HIDE GUARANTEE FOR EF AND INTERSTUDIES 8318 STUDENTS / ESI does not need 20) --->
@@ -406,14 +428,17 @@
 		AND qGetStudentInfoPrint.intrep NEQ 8318
 		AND CLIENT.companyID NEQ 14>
         <cfif FileExists(ExpandPath('../uploadedfiles/online_app/page20/#CLIENT.studentID#.pdf'))>
-        	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/online_app/')#page20/#CLIENT.studentID#.pdf">
+        	<cftry>
+                <cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedfiles/online_app/')#page20/#CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
+                <cfcatch type="any">
+                    <cfset errorFiles = errorFiles & "Page 20: #CLIENT.studentID#.pdf\n">
+                </cfcatch>
+          	</cftry>
         <cfelse>
         	<cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page20#CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
-                <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
-                    #page2x#
-                </table>
+                <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0">#page20#</table>
             </cfdocument>
-            <cfset sourceList = sourceList & ",#ExpandPath('../uploadedFiles/temp/')#page20#CLIENT.studentID#.pdf">
+            <cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedFiles/temp/')#page20#CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
         </cfif>
  	</cfif>
     
@@ -425,14 +450,17 @@
 		AND qGetStudentInfoPrint.intrep NEQ 10115 
 		AND qGetStudentInfoPrint.intrep NEQ 8318>
         <cfif FileExists(ExpandPath('../uploadedfiles/online_app/page21/#CLIENT.studentID#.pdf'))>
-        	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/online_app/')#page21/#CLIENT.studentID#.pdf">
+        	<cftry>
+                <cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedfiles/online_app/')#page21/#CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
+                <cfcatch type="any">
+                    <cfset errorFiles = errorFiles & "Page 21: #CLIENT.studentID#.pdf\n">
+                </cfcatch>
+          	</cftry>
         <cfelse>
 			<cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page21#CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
-                <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0"> 
-                    #page3x#
-                </table>
+                <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0">#page21#</table>
             </cfdocument>
-            <cfset sourceList = sourceList & ",#ExpandPath('../uploadedFiles/temp/')#page21#CLIENT.studentID#.pdf">
+            <cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedFiles/temp/')#page21#CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
 		</cfif>
   	</cfif>
     
@@ -450,16 +478,22 @@
                     </tr>
                 </table>
           	</cfdocument>
-            <cfset sourceList = sourceList & ",#ExpandPath('../uploadedFiles/temp/')#page22#CLIENT.studentID#.pdf">
+            <cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedFiles/temp/')#page22#CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
        	<cfelseif ListFind("pdf", LCase(Right(name, 3)))>
-        	<cfset sourceList = sourceList & ",#ExpandPath('../uploadedfiles/virtualfolder/')##qGetStudentInfoPrint.studentid#/page22/#name#">
-        </cfif>
+        	<cftry>
+            	<cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedfiles/virtualfolder/')##qGetStudentInfoPrint.studentid#/page22/#name#" destination="#fileName#" overwrite="yes">
+                <cfcatch type="any">
+                    <cfset errorFiles = errorFiles & "Page 22: #name#\n">
+                </cfcatch>
+          	</cftry>
+		</cfif>
     </cfloop>
     
-    <!--- Merge the PDF files --->
-    <cfpdf action="merge" source="#sourceList#" destination="#fileName#" overwrite="yes">	
-        
+    <!--- List files that had an error --->
+    <cfset SESSION.errorFiles = #errorFiles#>
+    <cfset SESSION.downloadReady = 1>
+    
     <cfheader name="Content-Disposition" value="attachment; filename=#CLIENT.studentID#-Complete-Application.pdf">
     <cfcontent type="application/pdf" file="#fileName#">
-
+    
 </cfoutput>
