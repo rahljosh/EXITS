@@ -54,7 +54,7 @@
         FROM
             smg_users
         WHERE
-            userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
+            userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.userID)#">
     </cfquery>
 
 	<cfif ListFind("1,2,3,4", CLIENT.userType)>
@@ -67,9 +67,9 @@
                 smg_regions
             WHERE 
                 <cfif VAL(URL.companyID)>
-                    company = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.companyID#">
+                    company = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.companyID)#">
                 <cfelse>            
-                    company = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+                    company = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyid)#">
                 </cfif> 
             AND	
             	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">               
@@ -89,18 +89,18 @@
             INNER JOIN
             	user_access_rights uar ON r.regionID = uar.regionID
             WHERE 
-                uar.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#"> 
+                uar.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#"> 
             AND
-            	uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userType#"> 
+            	uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userType)#"> 
             AND	
             	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">    
                            
 			<cfif VAL(URL.companyID)>
                 AND 
-                    uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.companyID#">
+                    uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.companyID)#">
             <cfelse>   
                 AND 
-                    uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                    uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">
             </cfif>  
                 
             ORDER BY 
@@ -127,14 +127,14 @@
                 )
                 VALUES 
                 (
-                	<cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">,
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.userID)#">,
 					<!--- CASE, WEP, Canada and ESI --->
                     <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.NonISE, CLIENT.companyID)>
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">,
                     <cfelse>
                         <cfqueryparam cfsqltype="cf_sql_integer" value="5">,
                     </cfif>    
-                	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.usertypeid#">,
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.usertypeid)#">,
                 	<cfqueryparam cfsqltype="cf_sql_integer" value="1">
                 )
             </cfquery>
@@ -163,11 +163,11 @@
                 FROM 
                 	user_access_rights
                 WHERE 
-                	regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionid#">
+                	regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.regionid)#">
                 AND 
-                	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
+                	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.userID)#">
                 <cfif NOT new>
-                	AND id != <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.ID#">
+                	AND id != <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.ID)#">
                 </cfif>
             </cfquery>
             
@@ -211,10 +211,10 @@
                     )
                     VALUES 
                     (
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.companyid#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionid#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.usertype#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.userID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.companyid)#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.regionid)#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.usertype)#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.advisorID)#">,
                         <!--- for a new user or forcing entry for user without a record, 
 						this is their first user_access_rights record, so need to set it as the default. --->
@@ -302,11 +302,11 @@
                     UPDATE 
                     	user_access_rights 
                     SET
-                        regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionid#">,
-                        usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.usertype#">,
-                        advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.advisorID#">
+                        regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.regionid)#">,
+                        usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.usertype)#">,
+                        advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.advisorID)#">
                     WHERE 
-                    	id = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.ID#">
+                    	id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.ID)#">
                 </cfquery>
                 
                 <!--- Commented out as per Brian Hause Request - 08/22/2012
@@ -401,7 +401,7 @@
             FROM 
             	user_access_rights
             WHERE 
-            	id = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.ID#">
+            	id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.ID)#">
         </cfquery>
         
         <cfloop list="#field_list#" index="counter">
@@ -491,7 +491,7 @@
                     LEFT JOIN 
                         smg_usertype ON smg_users.usertype = smg_usertype.usertypeid
                     WHERE 
-                        userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
+                        userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.userID)#">
                 </cfquery>
                 
                 <!--- these usertypes are hard coded and don't get the form selections. --->
@@ -555,7 +555,7 @@
                                             WHERE 
                                             <!--- CASE, WEP, Canada and ESI --->
                                             <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.NonISE, CLIENT.companyID)>
-                                                companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                                                companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">
                                             <cfelse>
                                                 companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
                                             </cfif>    
@@ -586,7 +586,7 @@
                                             FROM 
                                                 smg_companies
                                             WHERE 
-                                                companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.companyid#">
+                                                companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.companyid)#">
                                         </cfquery>
                                         #qGetCompany.team_id#
                                         <input type="hidden" name="companyid" value="#FORM.companyid#">
@@ -619,10 +619,10 @@
                                                 usertypeid IN (1,2,3,4,5,6,7,8,9)
                                             <cfif CLIENT.usertype GT 4>
                                             AND 
-                                                usertypeid > <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.usertype#">
+                                                usertypeid > <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.usertype)#">
                                             <cfelse>
                                             AND 
-                                                usertypeid >= <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.usertype#">
+                                                usertypeid >= <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.usertype)#">
                                             OR 
                                             	usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="15">
                                             </cfif>
@@ -663,12 +663,12 @@
 												
 												<cfif CLIENT.userType EQ 6>
                                                 	AND
-                                                    	uar.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                                                    	uar.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                                                 </cfif>
                                                 
                                                 <cfif VAL(FORM.advisorID)>
                                                     OR
-                                                        u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.advisorID#">
+                                                        u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.advisorID)#">
                                                 </cfif>
                                                 
                                                 ORDER BY 
@@ -707,10 +707,10 @@
 							<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
                                 smg_companies.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
                             <cfelse>
-                                smg_companies.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                                smg_companies.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#"> 
                             </cfif>
                             AND 
-                                user_access_rights.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
+                                user_access_rights.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.userID)#">
                         </cfquery>
                         
                         <!--- don't allow delete if user has only one record. --->
