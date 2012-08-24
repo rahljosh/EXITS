@@ -23,7 +23,7 @@ WHERE uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#url.uniqueid#"
 
 <table width="100%" border="0">
   <tr>
-    <td width="11%"><img src="http://www.ise.exitsApplication/nsmg/pics/ise-logo2.gif" width="120" height="120" /></td>
+    <td width="11%"><img src="../../pics/ise-logo2.gif" width="120" height="120" /></td>
     <td width="89%"><div class="style2">
       <div align="center">Visa Application Instructions <font color="#FFFFFF">____________ </font> </div>
     </div></td>

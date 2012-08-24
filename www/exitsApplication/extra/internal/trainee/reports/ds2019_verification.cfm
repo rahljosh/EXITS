@@ -108,7 +108,7 @@
 		<br><br>
 		#DateFormat(now(), 'dddd, mmmm dd, yyyy')#<br>	</td>
 	<td class="style1"><!---<img src="../../pics/logo/#client.companyid#.gif"  alt="" border="0" align="right">--->
-	<img src="http://www.ise.exitsApplication.com/nsmg/pics/ise-logo2.gif" width="80" height="80" />	</td>	
+	<img src="../../pics/ise-logo2.gif" width="80" height="80" />	</td>	
 	<td align="right" valign="top" class="style1"> 
 		<div align="right"><br>
 		#companyshort.address#<br>

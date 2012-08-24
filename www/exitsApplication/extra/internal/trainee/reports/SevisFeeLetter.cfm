@@ -25,7 +25,7 @@
     </style>
     <table width="100%" border="0">
       <tr>
-        <td width="11%"><img src="http://www.ise.exitsApplication.com/nsmg/pics/ise-logo2.gif" width="120" height="120" /></td>
+        <td width="11%"><img src="../../pics/ise-logo2.gif" width="120" height="120" /></td>
         <td width="89%"><div class="style2">
           <div align="center">Sevis Fee Instruction Letter <font color="#FFFFFF">____________ </font> </div>
         </div></td>
