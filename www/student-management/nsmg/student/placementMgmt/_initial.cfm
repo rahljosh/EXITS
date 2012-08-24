@@ -86,6 +86,8 @@
 				// Data Validation
 				if ( NOT VAL(FORM.hostID) ) {
 					SESSION.formErrors.Add("You must select a host family, if you do not see it on the list, please close this window and add a host family");
+					// It is possible the hostID did not copy over, erase Host Family Suggest
+					FORM.hostIDSuggest = "";
 				}			
 	
 				if ( NOT LEN(FORM.isWelcomeFamily) ) {
