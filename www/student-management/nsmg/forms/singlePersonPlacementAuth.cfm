@@ -43,25 +43,22 @@ been additionally screened by #client.companyshort#.</p><br /></Cfif>
 <p><cfif studentFamInfo.fathersname is not '' AND studentFamInfo.mothersname is not ''>We<cfelse>I</cfif>, <u><strong>#studentFamInfo.fathersname# <cfif studentFamInfo.fathersname is not ''>&amp;</cfif> #studentFamInfo.mothersname#</strong></u>, agree to a single person placement for our son or daughter
 during his/her exchange year. <cfif client.companyid NEQ 14>I/we understand this type of placement has been additionally screened by #client.companyshort#.</cfif></p>
         </Td>
-	</Tr>
+	</Tr>       
  	<tr>
     	<td class="signatureLine" valign="bottom"><br /><Br /><br /><br /><br />____________________________________</td><td>&nbsp;</td>
         <td class="signatureLine" valign="bottom"><u><font size=+2>#dateFormat(now(), 'mmm. dd, yyyy')#</font></u></td>
     </tr>
     <tr>
     	<td>#studentfaminfo.firstname# #studentfaminfo.familylastname#</td><td></td><td>Date</td>
-        </tr>
+    </tr>
  
-    <cfif studentFamInfo.fathersname is not ''>
     <tr>
     	<td class="signatureLine" valign="bottom"><br /><Br /><br /><br /><br />____________________________________</td><td>&nbsp;</td>
         <td class="signatureLine" valign="bottom"><u><font size=+2>#dateFormat(now(), 'mmm. dd, yyyy')#</font></u></td>
     </tr>
     <tr>
-    	<td>#studentFamInfo.fathersname# <Cfif studentFamInfo.mothersname is not ''>OR <br /></Cfif> #studentFamInfo.mothersname# </td><td></td><td>Date/td>
+    	<td>#studentFamInfo.fathersname# <Cfif LEN(studentFamInfo.fathersname) AND LEN(studentFamInfo.mothersname)>OR <br /></Cfif> #studentFamInfo.mothersname# </td><td></td><td>Date</td>
     </tr>
-    </cfif>
-
     
     <tr>
     	<td class="signatureLine" valign="bottom"><br /><Br /><br /><br /><br />____________________________________</td><td>&nbsp;</td>
