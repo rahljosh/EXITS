@@ -1,7 +1,7 @@
 <Cfset client.usertype = 1>
 <Cfset client.email = 'josh@pokytrails.com'>
 <cfset season = 9>
-<cfset dirPath = "/home/httpd/vhosts/111cooper.com/httpdocs/">
+<cfset dirPath = "C:/websites/student-management/nsmg/">
 <!--- Import CustomTag Used for Page Messages and Form Errors --->
 <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 <cfparam name="submitForm" default=0>
@@ -113,11 +113,11 @@ where shortDesc = 'Mother CBC Auth'
                     set fatherSSN = '#encfatherssn#'
                     where hostid = #client.hostid#
                     </cfquery>
-                      <cfif DirectoryExists('#dirPath#nsmg/uploadedfiles/hosts/#client.hostid#/')>
+                      <cfif DirectoryExists('#dirPath#uploadedfiles/hosts/#client.hostid#/')>
         				<cfelse>
-           				 <cfdirectory action = "create" directory = "#dirPath#nsmg/uploadedfiles/hosts/#client.hostid#/" >
+           				 <cfdirectory action = "create" directory = "#dirPath#uploadedfiles/hosts/#client.hostid#/" >
         				</cfif>
-                    <cfdocument format="PDF" filename="#dirPath#nsmg/uploadedfiles/hosts/#client.hostid#/#form.fatherSig#_cbcAuthorization.pdf" overwrite="yes">
+                    <cfdocument format="PDF" filename="#dirPath#uploadedfiles/hosts/#client.hostid#/#form.fatherSig#_cbcAuthorization.pdf" overwrite="yes">
                     <!--- form.pr_id and form.report_mode are required for the progress report in print mode.
                     form.pdf is used to not display the logo which isn't working on the PDF. --->
                     <cfset form.report_mode = 'print'>
@@ -159,11 +159,11 @@ where shortDesc = 'Mother CBC Auth'
                     </cfquery>
                     
 				
-                      <cfif DirectoryExists('#dirPath#nsmg/uploadedfiles/hosts/#client.hostid#/')>
+                      <cfif DirectoryExists('#dirPath#uploadedfiles/hosts/#client.hostid#/')>
         				<cfelse>
-           				 <cfdirectory action = "create" directory = "#dirPath#nsmg/uploadedfiles/hosts/#client.hostid#/" >
+           				 <cfdirectory action = "create" directory = "#dirPath#uploadedfiles/hosts/#client.hostid#/" >
         				</cfif>
-                    <cfdocument format="PDF" filename="#dirPath#nsmg/uploadedfiles/hosts/#client.hostid#/#form.motherSig#_cbcAuthorization.pdf" overwrite="yes">
+                    <cfdocument format="PDF" filename="#dirPath#uploadedfiles/hosts/#client.hostid#/#form.motherSig#_cbcAuthorization.pdf" overwrite="yes">
                     <!--- form.pr_id and form.report_mode are required for the progress report in print mode.
                     form.pdf is used to not display the logo which isn't working on the PDF. --->
                     <cfset form.report_mode = 'print'>
@@ -205,11 +205,11 @@ where shortDesc = 'Mother CBC Auth'
                         </cfquery>
                      </Cfif>
                       
-                      <cfif DirectoryExists('#dirPath#nsmg/uploadedfiles/hosts/#client.hostid#/')>
+                      <cfif DirectoryExists('#dirPath#uploadedfiles/hosts/#client.hostid#/')>
         				<cfelse>
-           				 <cfdirectory action = "create" directory = "#dirPath#nsmg/uploadedfiles/hosts/#client.hostid#/" >
+           				 <cfdirectory action = "create" directory = "#dirPath#uploadedfiles/hosts/#client.hostid#/" >
         				</cfif>
-                    <cfdocument format="PDF" filename="#dirPath#nsmg/uploadedfiles/hosts/#client.hostid#/#form[x & "_sig"]#_cbcAuthorization.pdf" overwrite="yes">
+                    <cfdocument format="PDF" filename="#dirPath#uploadedfiles/hosts/#client.hostid#/#form[x & "_sig"]#_cbcAuthorization.pdf" overwrite="yes">
                     <!--- form.pr_id and form.report_mode are required for the progress report in print mode.
                     form.pdf is used to not display the logo which isn't working on the PDF. --->
                     <cfset form.report_mode = 'print'>
@@ -268,15 +268,15 @@ where shortDesc = 'Mother CBC Auth'
 					<!----
                     <cfinvokeargument name="email_to" value="gary@iseusa.com"> 
 					---->
-                    <cfinvokeargument name="email_from" value="josh@111cooper.com">
+                    <cfinvokeargument name="email_from" value="hostApp@iseusa.com">
                     <cfinvokeargument name="email_subject" value="CBC Authorization Forms">
                     <cfinvokeargument name="email_message" value="#hostCBCEmailMessage#">
                     
                     <cfloop query="getCBCs">
                    		<cfif getCBCs.currentrow eq 1>
-                            <cfinvokeargument name="email_file" value="#dirPath#nsmg/uploadedfiles/#filePath##fileName#">
+                            <cfinvokeargument name="email_file" value="#dirPath#uploadedfiles/#filePath##fileName#">
                         <cfelse>
-                            <cfinvokeargument name="email_file#currentrow#" value="#dirPath#nsmg/uploadedfiles/#filePath##fileName#">
+                            <cfinvokeargument name="email_file#currentrow#" value="#dirPath#uploadedfiles/#filePath##fileName#">
                         </cfif>
                    </cfloop>
 				
@@ -301,7 +301,7 @@ where shortDesc = 'Mother CBC Auth'
                 The following CBC Authorization forms have been submitted for the <strong>#qHostParentsMembers.fatherlastname#</strong> family.  Please review and process the CBC's when possible.  
                 <br /><br />
                 You can process the CBC's here: 
-                http://111cooper.com/nsmg/index.cfm?curdoc=cbc/hosts_cbc&hostID=#client.hostid#
+                http://ise.exitsapplication.com/nsmg/index.cfm?curdoc=cbc/hosts_cbc&hostID=#client.hostid#
                 <br /><br />
                 Regards-<Br />
                 ISE Support
@@ -310,19 +310,19 @@ where shortDesc = 'Mother CBC Auth'
 
             <cfinvoke component="cfc.email" method="send_mail">
                 
-                    <cfinvokeargument name="email_to" value="josh@pokytrails.com">       
+                    <cfinvokeargument name="email_to" value="programManager.pm_email,facilitator.email">       
 					<!----
                     <cfinvokeargument name="email_to" value="gary@iseusa.com"> 
 					---->
-                    <cfinvokeargument name="email_from" value="josh@111cooper.com">
+                    <cfinvokeargument name="email_from" value="hostApp@iseusa.com">
                     <cfinvokeargument name="email_subject" value="CBC Authorization Forms">
                     <cfinvokeargument name="email_message" value="#hostCBCEmailMessage#">
                     
                     <cfloop query="getCBCs">
                    		<cfif getCBCs.currentrow eq 1>
-                            <cfinvokeargument name="email_file" value="#dirPath#nsmg/uploadedfiles/#filePath##fileName#">
+                            <cfinvokeargument name="email_file" value="#dirPath#uploadedfiles/#filePath##fileName#">
                         <cfelse>
-                            <cfinvokeargument name="email_file#currentrow#" value="#dirPath#nsmg/uploadedfiles/#filePath##fileName#">
+                            <cfinvokeargument name="email_file#currentrow#" value="#dirPath#uploadedfiles/#filePath##fileName#">
                         </cfif>
                    </cfloop>
 				
