@@ -1432,6 +1432,7 @@
                             dateplaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                         </cfif>
                         
+                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">,
                         schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.schoolID)#">,  
                         placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.placeRepID)#">,
                         areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.areaRepID)#">,
@@ -1441,6 +1442,76 @@
             </cfquery>
         
 		</cfif>
+        
+        <!--- Send an email to Luke, Joanna, Tina, and Bryan if this a relocation --->
+        <cfif VAL(ARGUMENTS.isRelocation)>
+			<cfscript>
+				// Student's previous placement
+				qGetPlacementHistory = getPlacementHistory(studentID=qGetStudentInfo.studentID);
+				
+				// Set the date as the previous 15th
+				if (DatePart('d',NOW()) GTE 15) {
+                    date = CreateDate(DatePart('yyyy',NOW()),DatePart('m',NOW()),15);
+                } else {
+                    date = CreateDate(DatePart('yyyy',NOW()),DatePart('m',NOW())-1,15);
+                }
+				
+				// This will find all of the placements for this student since the previous 15'th
+				condition = false;
+				i = 1;
+				while (NOT condition) {
+					if (qGetPlacementHistory.recordCount GTE i) {
+						if (DateDiff('d',date,qGetPlacementHistory.datePlaced[i]) GT 0) {
+							i = i + 1;
+						} else {
+							condition = true;	
+						}
+					} else {
+						condition = true;
+					}
+				}
+				
+				// Create an array that will store the amounts owed to each HF
+				amountsOwed = arrayNew(1);
+				
+				for (j=i; j GT 0; j = j - 1) {
+					if (j EQ i) {
+						daysHere = DateDiff('d',date,qGetPlacementHistory.datePlaced[j-1]);
+					} else if(j NEQ 1) {
+						daysHere = DateDiff('d',qGetPlacementHistory.datePlaced[j],qGetPlacementHistory.datePlaced[j-1]);
+					} else {
+						daysHere = 30 - DateDiff('d',date,qGetPlacementHistory.datePlaced[1]);
+					}
+					amountsOwed[j] = DecimalFormat((daysHere/30)*qGetPlacementHistory.hostFamilyRate);
+				}
+            </cfscript>
+			<cfsavecontent variable="emailMessage">
+            	<cfoutput>
+                	<p style="font-size:14px; font-weight:bold;">#qGetStudentInfo.firstName# #qGetStudentInfo.familyLastName# (###qGetStudentInfo.studentID#) - #qGetPlacementHistory.schoolName# Relocation:</p>
+                    <cfloop from="#i#" to="1" index="count" step="-1">
+                    	<cfif count EQ 1>
+                        	<p><strong>Current Placement - #DateFormat(qGetPlacementHistory.datePlaced[count],'mm/dd/yyy')#</strong></p>
+						<cfelse>
+                        	<p><strong>Previous Placement - #DateFormat(qGetPlacementHistory.datePlaced[count],'mm/dd/yyy')#</strong></p>
+                        </cfif>
+                        <p>
+                            Host Family: #qGetPlacementHistory.fatherFirstName[count]#
+                            <cfif LEN(qGetPlacementHistory.fatherFirstName[count]) AND LEN(qGetPlacementHistory.motherFirstName[count])>
+                                & 
+                            </cfif>
+                            #qGetPlacementHistory.motherFirstName[count]# #qGetPlacementHistory.familyLastName[count]# (###qGetPlacementHistory.hostID[count]#)<br />
+                            Amount Owed: $<cfif VAL(amountsOwed[count])>#amountsOwed[count]#<cfelse>0.00</cfif><br />
+                        </p>
+                    </cfloop>
+            	</cfoutput>
+            </cfsavecontent>        
+        	<cfinvoke component="internal.extensions.components.email" method="send_mail">
+            	<cfinvokeargument name="email_from" value="#APPLICATION.EMAIL.support#">
+                <cfinvokeargument name="email_to" value="luke@phpusa.com,joanna@phpusa.com,tina@phpusa.com,bmccready@iseusa.com">
+                <cfinvokeargument name="email_subject" value="PHP Student Relocation - #qGetStudentInfo.firstName# #qGetStudentInfo.familyLastName# (###qGetStudentInfo.studentID#) - #qGetPlacementHistory.schoolName#">
+                <cfinvokeargument name="email_message" value="#emailMessage#">
+           	</cfinvoke>
+        </cfif>
         
 	</cffunction>
 

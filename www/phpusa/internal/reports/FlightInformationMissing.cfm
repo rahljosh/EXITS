@@ -69,7 +69,7 @@
             LEFT OUTER JOIN
                 php_schools sc ON sc.schoolID = php.schoolID                   
             WHERE
-                s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                php.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
            	AND
             	php.cancelDate IS NULL
             AND 
