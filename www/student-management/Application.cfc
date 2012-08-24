@@ -127,10 +127,10 @@
 			}
 			
 			// Always allow logout.
-			if ( NOT findNoCase("nsmg/logout.cfm", getBaseTemplatePath()) ) {
+			if ( NOT findNoCase("nsmg/logout.cfm", getBaseTemplatePath()) ) {  // OR URL.curdoc NEQ "logout"
 				
 				// Force verify user information.
-				if ( isDefined("CLIENT.verify_info") ) {
+				if ( isDefined("CLIENT.verify_info") AND NOT APPLICATION.IsServerLocal ) { // AND NOT APPLICATION.IsServerLocal
 					
 					// allow user only on user info and user form.
 					if ( NOT ( LEN(URL.curdoc) AND listFindNoCase("user_info,forms/user_form", URL.curdoc)) ) {
@@ -138,23 +138,23 @@
 					}
 				
 				// Force change password
-				} else if ( isDefined("CLIENT.change_password") ) {
+				} else if ( isDefined("CLIENT.change_password") AND NOT APPLICATION.IsServerLocal ) { // AND NOT APPLICATION.IsServerLocal
 					
 					// allow user only on change password page.
 					if ( NOT ( LEN(URL.curdoc) AND  URL.curdoc EQ 'forms/change_password' OR  listFindNoCase("logout", URL.curdoc)) ) {
 						Location("index.cfm?curdoc=forms/change_password", "no");
 					}
 				
-				// Force Paperwork PRODUCTION.
-				} else if ( isDefined("CLIENT.agreement_needed") ) { // AND NOT APPLICATION.IsServerLocal
+				// Force Paperwork PRODUCTION - Not for Canada
+				} else if ( isDefined("CLIENT.agreement_needed") AND CGI.SERVER_NAME NEQ "canada.exitsapplication.com" AND NOT APPLICATION.IsServerLocal ) { // AND NOT APPLICATION.IsServerLocal
 					
 					// allow user only on yearly agreement page. 
 					if ( NOT ( LEN(URL.curdoc) AND listFindNoCase("forms/yearly_agreement,repRefs,displayRepAgreement,cbcAuthorization,employmentHistory,logout", URL.curdoc)) ) {
 						Location("index.cfm?curdoc=forms/yearly_agreement&userid=#CLIENT.userid#", "no");
 					}
 				
-				// Force SSN on PRODUCTION.
-				} else if ( isDefined('CLIENT.needsSSN') ) { // AND NOT APPLICATION.IsServerLocal
+				// Force SSN on PRODUCTION  - Not for Canada
+				} else if ( isDefined('CLIENT.needsSSN') AND CGI.SERVER_NAME NEQ "canada.exitsapplication.com" AND NOT APPLICATION.IsServerLocal ) { // AND NOT APPLICATION.IsServerLocal
 					
 					if ( NOT ( LEN(URL.curdoc) AND listFindNoCase("forms/verifyInfo, forms/verifyInfo2, logout", URL.curdoc)) ) {
 						Location("index.cfm?curdoc=forms/verifyInfo", "no");
@@ -176,8 +176,17 @@
 			// Insert Track
 			include "nsmg/includes/trackman.cfm";
 		</cfscript>
-
-
+		
+        <!---
+		<!--- Check to see if the current path is legal. Users cannot access files starting with "_" so throw error if need be. --->
+		<cfif NOT Compare(Left(APPLICATION.CFC.UDF.GetCurrentPageFromPath(CGI.cf_template_path), 1), "_")>
+            <cfthrow 
+                message="Cannot access files that start with _" 
+                type="EXCEPTION"
+                />	
+        </cfif>
+		--->
+        
 		<!--- Return out. --->
 		<cfreturn true />
 	</cffunction>
