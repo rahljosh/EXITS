@@ -179,6 +179,7 @@
 				compliance_single_ref_check2 = FORM.compliance_single_ref_check2,
 				// Placement Paperwork
 				datePlaced = FORM.datePlaced,
+				previousDatePlaced = qGetPlacementHistoryByID.datePlaced,
 				dateRelocated = FORM.dateRelocated,
 				// Page 1
 				doc_host_app_page1_date = FORM.doc_host_app_page1_date,

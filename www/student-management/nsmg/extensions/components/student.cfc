@@ -2184,41 +2184,69 @@
         <cfargument name="historyID" default="0" hint="historyID is not required">
         <cfargument name="datePlaced" hint="studentID is required">
     	
-        <!--- Do not update current placement if history ID was passed --->
-        <cfif NOT VAL(ARGUMENTS.historyID)>
+        <cfscript>
+			var vSetNewDate = CreateODBCDateTime(ARGUMENTS.datePlaced & " " & TimeFormat(now(), "hh:mm:ss tt"));
+		</cfscript>
+        
+        <!--- Check if we are updating a history or current record --->
+        <cfquery name="qGetHistoryID" datasource="#APPLICATION.DSN#">
+            SELECT
+                historyID,
+                isActive
+            FROM 
+                smg_hostHistory
+            WHERE
+                studentID = <cfqueryparam cfsqltype="integer" value="#ARGUMENTS.studentID#">
+            AND
+                assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+
+            <!--- Get history record --->
+            <cfif VAL(ARGUMENTS.historyID)>
+                AND
+                    historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.historyID)#">
+            <!--- Get active record --->
+            <cfelse>
+                AND
+                    isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">            
+            </cfif>
+        </cfquery>
+        
+        <!--- Only update smg_students table if historyID belongs to the current placement --->
+        <cfif VAL(qGetHistoryID.isActive)>
         
             <cfquery datasource="#APPLICATION.DSN#">
                 UPDATE 
                     smg_students
                 SET
-                    datePlaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.datePlaced)#">
+                    datePlaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vSetNewDate#">
                 WHERE
-                    studentID = <cfqueryparam cfsqltype="integer" value="#ARGUMENTS.studentID#">
+                    studentID = <cfqueryparam cfsqltype="integer" value="#VAL(ARGUMENTS.studentID)#">
             </cfquery>
-       
-       </cfif>
+            
+       	</cfif>
         
-        <cfquery datasource="#APPLICATION.DSN#">
+		<cfquery datasource="#APPLICATION.DSN#" result="recordKey">
         	UPDATE 
 				smg_hostHistory
         	SET
-				datePlaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.datePlaced)#">
+				datePlaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vSetNewDate#">
         	WHERE
-				studentID = <cfqueryparam cfsqltype="integer" value="#ARGUMENTS.studentID#">
+				historyID = <cfqueryparam cfsqltype="integer" value="#VAL(qGetHistoryID.historyID)#">
+        </cfquery>
+
+        <!--- Update History Log --->
+        <cfquery datasource="#APPLICATION.DSN#">
+			UPDATE
+            	applicationHistory
+            SET
+            	dateCreated = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vSetNewDate#">,
+                dateUpdated = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vSetNewDate#"> 
+            WHERE
+            	foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="smg_hostHistory">
             AND
-            	assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-            
-            <!--- Update active record --->
-			<cfif NOT VAL(ARGUMENTS.historyID)>
-                AND
-                    isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">            
-            <!--- Update history record --->
-			<cfelse>
-                AND
-                    historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.historyID#">
-            </cfif>
-            
-            LIMIT 1
+            	foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHistoryID.historyID)#">   
+            AND
+            	actions LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%Placement Approved%">
         </cfquery>
 	
 	</cffunction>
@@ -2603,6 +2631,7 @@
         <cfargument name="compliance_single_ref_check2" default="" hint="compliance_single_ref_check2 is not required">
         <!--- Placement Paperwork --->
         <cfargument name="datePlaced" default="" hint="datePlaced is not required">
+        <cfargument name="previousDatePlaced" default="" hint="previousDatePlaced is not required">
         <cfargument name="dateRelocated" default="" hint="dateRelocated is not required">
         <!--- Page 1 --->
         <cfargument name="doc_host_app_page1_date" default="" hint="doc_host_app_page1_date is not required">
@@ -2664,7 +2693,19 @@
         <cfargument name="compliance_host_arrival_orientation" default="" hint="compliance_host_arrival_orientation is not required">
         <cfargument name="doc_class_schedule" default="" hint="doc_class_schedule is not required">    
         <cfargument name="compliance_class_schedule" default="" hint="compliance_class_schedule is not required">    
-
+		
+        <cfscript>
+			// Check if placement date has changed
+			if ( isDate(ARGUMENTS.previousDatePlaced) AND isDate(ARGUMENTS.datePlaced) AND ARGUMENTS.previousDatePlaced NEQ ARGUMENTS.datePlaced ) {
+				// Update History Log
+				updateDatePlaced(
+					studentID=ARGUMENTS.studentID,
+					historyID=ARGUMENTS.historyID,
+					datePlaced=ARGUMENTS.datePlaced
+				);
+			}
+		</cfscript>
+        
         <!--- Update Host History Documents --->
         <cfquery 
 			datasource="#APPLICATION.DSN#">
