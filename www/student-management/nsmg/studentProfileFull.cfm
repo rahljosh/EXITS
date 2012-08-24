@@ -70,9 +70,9 @@ function OpenApp(url) {
         FROM 
         	user_access_rights
 		WHERE 
-        	regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.regionassigned#"> 
+        	regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.regionassigned)#"> 
 		AND  
-        	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+        	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(client.userid)#">
 	</cfquery>	
     	
 	<cfif qGetStudentInfo.companyid is not client.companyid OR qCheckUserAccess.recordcount is 0><br>
@@ -101,68 +101,68 @@ function OpenApp(url) {
 <cfquery name="qGetRegionAssigned" datasource="MySQL">
 select regionname
 from smg_regions
-where regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.regionassigned#">
+where regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.regionassigned)#">
 </cfquery>
 
 <cfquery name="qGetRegionGuaranteed" datasource="MySQL">
 select regionname
 from smg_regions
-where regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.regionalguarantee#">
+where regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.regionalguarantee)#">
 </cfquery>
 
 <Cfquery name="qGetReligionInfo" datasource="MySQL">
 select religionname, religionid
 from smg_religions
-where religionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.religiousaffiliation#">
+where religionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.religiousaffiliation)#">
 </cfquery>
 
 <cfquery name="qGetIntlRep" datasource="MySQL">
 select companyid, businessname
 from smg_users 
-where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.intrep#">
+where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.intrep)#">
 </cfquery>
 
 <Cfquery name="qGetCompanyShort" datasource="MySQL">
 select companyshort, companyshort_nocolor, team_id
 from smg_companies
-where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(client.companyid)#">
 </Cfquery>
 
 <cfquery name="qGetProgramName" datasource="MySQL">
 select programname
 from smg_programs
-where programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.programid#">
+where programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.programid)#">
 </cfquery>
 
 <cfquery name="qGetSiblings" datasource="MySQL">
 Select name, liveathome, sex, birthdate, studentID, childid
 From smg_student_siblings
-Where studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#">
+Where studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
 Order by birthdate
 </cfquery>
 
 <cfquery name="qGetCountryBirth" datasource="MySql">
 	SELECT countryname 
 	FROM smg_countrylist	
-	WHERE countryid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.countrybirth#">
+	WHERE countryid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.countrybirth)#">
 </cfquery>
 
 <cfquery name="qGetCountryCitizenship" datasource="MySql">
 	SELECT countryname  
 	FROM smg_countrylist 
-	WHERE countryid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.countrycitizen#">
+	WHERE countryid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.countrycitizen)#">
 </cfquery>
 
 <cfquery name="qGetCountryResidence" datasource="MySql">
 	SELECT countryname  
 	FROM smg_countrylist
-	WHERE countryid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.countryresident#">
+	WHERE countryid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.countryresident)#">
 </cfquery>
 
 <cfquery name="qGetStateGuaranteed" datasource="MySql">
 	SELECT statename  
 	FROM smg_states
-	WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.state_guarantee#">
+	WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.state_guarantee)#">
 </cfquery>
 	
 <link rel="stylesheet" href="profile.css" type="text/css">
