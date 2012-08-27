@@ -27,7 +27,8 @@ AND
 UPDATE
 	smg_students
 SET
-	app_current_status = 5
+	app_current_status = 5,
+    dateApplication = current_date()
 WHERE
     companyid = 13 
 AND
