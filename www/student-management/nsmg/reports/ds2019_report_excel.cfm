@@ -16,8 +16,12 @@
 <!-----Company Information----->
 <cfinclude template="../querys/get_company_short.cfm">
 
+<cfscript>
+	vSetPIEStudentList = '33427,33443,33444,33445,33446,33447,33448,33411,33409,33403,33420,33417,33416,33408,33407,33406,33405,33404,33402,33399,33430,33423,33425,33424,33382,33385,33386,33387,33389,33388';
+</cfscript>
+
 <!--- get Students  --->
-<Cfquery name="get_students" datasource="MySQL">
+<Cfquery name="qGetStudentList" datasource="MySQL">
 	SELECT 
 		s.studentid, s.firstname, s.familylastname, s.programid, s.ds2019_no, s.regionassigned, s.dateplaced, s.intrep, s.companyid,
 		s.placerepid, s.arearepid, s.hostid, s.schoolid, s.programid, s.isWelcomeFamily, s.sevis_activated,
@@ -109,32 +113,40 @@
 		<th>ZIP</th>
 		<th>Name of Local <br /> Coordinator</th>
 		<th>Remarks</th>
+        <th>PIE</th>
 	</tr>
-	<cfloop query="get_students">
+	<cfloop query="qGetStudentList">
 		<tr>
-			<td align="center">#iap_auth#</td>
+			<td align="center">#qGetStudentList.iap_auth#</td>
 			<td>#companyshort.companyname#</td>
-			<td>#familylastname#</td>
-			<td>#firstname#</td>
-			<td>#countryname#</td>
-			<td align="center">#ds2019_no#</td>
-			<td><cfif sevis_activated EQ 0>Initial<cfelse>&nbsp;</cfif></td>
-			<td>#fatherlastname#</td>
-			<td>#fatherfirstname#</td>
-			<td><cfif motherlastname NEQ fatherlastname>#motherlastname#</cfif></td>
-			<td>#motherfirstname#</td>
-			<td align="center"><cfif isWelcomeFamily EQ 1>Welcome<cfelse>Permanent</cfif></td>
-			<td><cfif hostaddress EQ ''>#hostaddress2#<cfelse>#hostaddress#</cfif></td>
-			<td>#hostcity#</td>
-			<td align="center">#hoststate#</td>
-			<td>#hostzip#</td>
-			<td>#schoolname#</td>
-			<td><cfif schooladdress EQ ''>#schooladdress2#<cfelse>#schooladdress#</cfif></td>
-			<td>#schoolcity#</td>
-			<td align="center">#schoolstate#</td>
-			<td>#schoolzip#</td>
-			<td>#area_firstname# #area_lastname#</td>
+			<td>#qGetStudentList.familylastname#</td>
+			<td>#qGetStudentList.firstname#</td>
+			<td>#qGetStudentList.countryname#</td>
+			<td align="center">#qGetStudentList.ds2019_no#</td>
+			<td><cfif qGetStudentList.sevis_activated EQ 0>Initial<cfelse>&nbsp;</cfif></td>
+			<td>#qGetStudentList.fatherlastname#</td>
+			<td>#qGetStudentList.fatherfirstname#</td>
+			<td><cfif qGetStudentList.motherlastname NEQ qGetStudentList.fatherlastname>#qGetStudentList.motherlastname#</cfif></td>
+			<td>#qGetStudentList.motherfirstname#</td>
+			<td align="center"><cfif qGetStudentList.isWelcomeFamily EQ 1>Welcome<cfelse>Permanent</cfif></td>
+			<td><cfif qGetStudentList.hostaddress EQ ''>#qGetStudentList.hostaddress2#<cfelse>#qGetStudentList.hostaddress#</cfif></td>
+			<td>#qGetStudentList.hostcity#</td>
+			<td align="center">#qGetStudentList.hoststate#</td>
+			<td>#qGetStudentList.hostzip#</td>
+			<td>#qGetStudentList.schoolname#</td>
+			<td><cfif qGetStudentList.schooladdress EQ ''>#qGetStudentList.schooladdress2#<cfelse>#qGetStudentList.schooladdress#</cfif></td>
+			<td>#qGetStudentList.schoolcity#</td>
+			<td align="center">#qGetStudentList.schoolstate#</td>
+			<td>#qGetStudentList.schoolzip#</td>
+			<td>#qGetStudentList.area_firstname# #qGetStudentList.area_lastname#</td>
 			<td>&nbsp;</td>
+            <td>
+            	<cfif ListFind(vSetPIEStudentList, qGetStudentList.studentID)>
+                	P
+                <cfelse>
+                	&nbsp;
+                </cfif>
+            </td>
 		</tr>		
 		<!--- CREATE NEW HISTORY --->
 		<cfquery name="create_history" datasource="MySql">
