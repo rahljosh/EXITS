@@ -618,6 +618,9 @@
                             ib.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="N">
                 WHERE 
                     s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+				AND
+                	<!--- SHOW ONLY APPS APPROVED --->
+                    s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
                 AND 
                     s.programID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes">)   
                 <cfif CLIENT.companyID EQ 5>
