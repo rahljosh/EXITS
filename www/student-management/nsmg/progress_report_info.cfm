@@ -708,6 +708,8 @@ function OpenLetter(url) {
                 	<!--- edit contact date. --->
                     <form action="index.cfm?curdoc=forms/pr_date_form" method="post">
                     <input type="hidden" name="prdate_id" value="#prdate_id#">
+                    <input type="hidden" name="pr_id" value="#FORM.pr_id#">
+                    <input type="hidden" name="pr_rmonth" value="#FORM.pr_rmonth#">
                     <input name="Submit" type="image" src="pics/buttons/pencilBlue23x29.png" alt="Edit Contact Date" border=0>
                     </form>
                 </td>
