@@ -334,8 +334,7 @@ WHERE creditid = #url.creditid#
 
                     <cfloop query="creditUsed">
                         <tr>
-                            <td align="right" class="thin-border-left"></td>
-                            <td align="right">#dateFormat(creditUsed.date, 'mm-dd-yyyy')#</td>
+                            <td colspan="2" align="right" class="thin-border-left">#dateFormat(creditUsed.date, 'mm-dd-yyyy')#</td>
                             <td align="right">#creditUsed.invoiceid#</td>
                             <td align="right" class="thin-border-right">
                             	<font color="##FF0000">-#LSCurrencyFormat(creditUsed.amountapplied, 'local')#</font>
@@ -345,8 +344,7 @@ WHERE creditid = #url.creditid#
                     </cfloop>
                     
 					<tr valign="middle" height="40">
-                    	<td colspan="2" align="right" class="thin-border-left"></td>
-						<td align="right"><b>TOTAL APPLIED:</b></td>
+						<td colspan="3" align="right" class="thin-border-left"><b>TOTAL APPLIED:</b></td>
 						<td align="right" class="thin-border-right">
                         	<b><font color="##FF0000">-#LSCurrencyFormat(variables.totalapplied, 'local')#</font></b>
                         </td>
