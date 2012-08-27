@@ -234,7 +234,7 @@
     <table width="40%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
         <tr>
             <td colspan="2" align="center">
-                <h2>The <strong>#DateFormat(vSetDueDate, 'mmmm')#</strong> report is for contact durring the month of <strong>#DateFormat(vSetStartDate, 'mmmm')#</strong>.</h2>
+                <h2>The <strong>#DateFormat(vSetDueDate, 'mmmm')#</strong> report is for contact during the month of <strong>#DateFormat(vSetStartDate, 'mmmm')#</strong>.</h2>
             </td>
         </tr>        
         <tr>
