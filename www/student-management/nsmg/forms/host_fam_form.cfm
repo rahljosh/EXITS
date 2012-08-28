@@ -521,7 +521,7 @@
          <div style="display: block; float: right; width: 270px; padding: 10px; font-family:Arial, Helvetica, sans-serif; font-size: .80em; border: thin solid ##CCC;"><div><strong><em>Please use the following login information:</em></strong></div><br /><br />
 <div style="width: 50px; float: left;"><img src="http://ise.exitsapplication.com/nsmg/pics/lock.png" width="39" height="56"></div>
    <div> <strong>Username / Email:</strong><br /> <a href="mailto:#form.email#" target="_blank">#form.email#</a><br />
-  <strong>Password:</strong>#strPassword#</div>
+  <strong>Password:<br /></strong>#strPassword#</div>
 
 </div>
 
