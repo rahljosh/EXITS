@@ -15,7 +15,7 @@
 <Cfparam name="form.principal" default="">
 <Cfparam name="form.phone" default="">
 <Cfparam name="form.email" default="">
-<Cfparam name="form.extraCuricTrans" default="na">
+<Cfparam name="form.extraCuricTrans" default="">
 <cfparam name="form.schoolType" default="">
 <cfparam name="form.schoolFees" default="">
 

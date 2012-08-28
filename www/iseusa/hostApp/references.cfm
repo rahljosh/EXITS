@@ -295,12 +295,12 @@ No additional references are required.
 	</table>
 <table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
     <tr>
-        <td align="right"><Cfif isDefined('url.edit')><a href="?page=references"><img src="../images/buttons/goBack_44.png" border=0/></a> <input name="Submit" type="image" src="../images/buttons/update_44.png" border=0><cfelse><input name="Submit" type="image" src="../images/buttons/addRef.png" border=0></Cfif>
+        <td align="right"><Cfif isDefined('url.edit')><a href="?page=references"><img src="images/buttons/goBack_44.png" border=0/></a> <input name="Submit" type="image" src="../images/buttons/update_44.png" border=0><cfelse><input name="Submit" type="image" src="images/buttons/addRef.png" border=0></Cfif>
         <br />
           <a onclick="ShowHide(); return false;" href="##">
          I am finished entering references.</a>
 <div id="slidingDiv" display:"none">
-        <A href="index.cfm?page=checkList"><img src="../images/buttons/Next.png" border="0" /></A>	</div>	
+        <A href="index.cfm?page=checkList"><img src="images/buttons/Next.png" border="0" /></A>	</div>	
         
         
        </td>

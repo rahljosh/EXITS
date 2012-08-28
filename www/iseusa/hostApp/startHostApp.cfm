@@ -468,7 +468,7 @@
 
 <h1 class="enter" id="hostFamilyHeader">#lcase(FORM.familylastname)# Family Application</h1>
 <p>
-	Completing the host family application will take between 15 and 30 minutes.  
+	Completing the host family application will take between 15 and 60 minutes.  
     You do not have to complete it all at once, feel free to come back and complete it.
 </p>
 <p>Use the menu on the left to navigate to any section of the application.</p>

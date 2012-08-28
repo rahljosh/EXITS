@@ -202,7 +202,7 @@
                 <cfif appInfo.regionid eq 0>
                 Not Assigned
                 <cfelse>#appInfo.regionname#
-                </cfif>
+              </cfif>
             </p>
             <p><strong>Regional Manager -</strong> 
             <cfif appInfo.regionid eq 0>
@@ -237,7 +237,7 @@
             ---->
             
             </div>
-      <p>  Your student's family will receive a copy of the information you provide so please be as complete as possible.  Please be aware that the Department of State has specific requirements regarding the photos that are uploaded on the family album.  We are mandated to have photos of specific areas of your home on file. <br /><br /> 
+      <p>  Your student's family will receive selected  information from this application. Student and their families will not receive any confidential infromation.  Please be aware that the Department of State has specific requirements regarding the photos that are uploaded on the family album.  We are mandated to have photos of specific areas of your home on file. <br /><br /> 
          Before your applcation can be approved background checks will need to be run on all household members over the age of 18.<br /><br />
          If you have not already been in contact with a representative, you will be contacted shortly after your application is submitted.</p>
         	</cfif>

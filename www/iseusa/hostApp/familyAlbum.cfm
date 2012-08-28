@@ -89,6 +89,9 @@ $(document).ready(function(){
 <cfset form.picCat = #RemoveChars(form.picCat, 1, 4)#>
 <cfif form.fileUpload is ''>
 <div align="center"><font color="#FF0000"><h3>Please select a file to upload.</h3></font></div>
+<Cfelseif form.picCat is ''>
+<div align="center"><font color="#FF0000"><h3>Please indicate which catagory this picture belongs to.</h3></font></div>
+
 <cfelse>
 		<cfif DirectoryExists('C:/websites/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/large')>
         <cfelse>
@@ -104,7 +107,7 @@ $(document).ready(function(){
    <cffile action="upload"
      destination="C:/websites/student-management/nsmg/uploadedfiles/HostAlbumResize"
      fileField="fileUpload" nameconflict="makeunique">    
-     <cffile action="rename" file="C:/websites/student-management/nsmg/uploadedfiles/HostAlbumResize/#file.serverfile#" 
+     <cffile action="rename" source="C:/websites/student-management/nsmg/uploadedfiles/HostAlbumResize/#file.serverfile#" 
      					destination="C:/websites/student-management/nsmg/uploadedfiles/HostAlbumResize/#CreateUUID()#.#file.ServerFileExt#">
       <cfdirectory action="list" name="currentPics2" directory="C:/websites/student-management/nsmg/uploadedfiles/HostAlbumResize">
     
@@ -129,7 +132,10 @@ $(document).ready(function(){
                        
                         <cfinvokeargument name="mls" value="#client.hostid#"/>
                  	</cfinvoke>
-				
+				 <cfquery datasource="MySQL">
+                    insert into smg_host_picture_album (fk_hostID, filename, cat)
+                    values(#client.hostid#, '#name#', #form.picCat#)
+                 </cfquery>
                      </cfloop>
                     <cfloop query="currentPics2">
 				 	<cffile action="delete" file="C:/websites/student-management/nsmg/uploadedfiles/HostAlbumResize/#name#">  
@@ -159,10 +165,7 @@ $(document).ready(function(){
  
 
 
-     <cfquery datasource="MySQL">
-     	insert into smg_host_picture_album (fk_hostID, filename, cat)
-     	values(#client.hostid#, '#file.clientfilename#.jpg', #form.picCat#)
-     </cfquery>
+    
 
      <Cflocation url="index.cfm?page=familyAlbum" addtoken="no">
     </cfif>
