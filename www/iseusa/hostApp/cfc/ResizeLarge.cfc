@@ -17,12 +17,12 @@
             <cfif picInfo.height gt picInfo.width>
             <!----Portrait---->
             <Cfset ratio = #picInfo.width# / #picInfo.height#>
-            <cfset calcMeasure = 640 * #ratio#>
+            <cfset calcMeasure = 800 * #ratio#>
             		<cfset ImageResize(myImage,"#calcMeasure#","640","highestPerformance")>
             <Cfelse>
             <!----Landscape---->
             <Cfset ratio = #picInfo.height# / #picInfo.width#  >
-            <cfset calcMeasure = 640 * #ratio#>
+            <cfset calcMeasure = 800 * #ratio#>
                     <cfset ImageResize(myImage,"640","#calcMeasure#","highestPerformance")>
             </cfif>
             
