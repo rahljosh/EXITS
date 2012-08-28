@@ -443,5 +443,102 @@
 		</cfscript>
         
 	</cffunction>
+	<cffunction name="calculateAddressDistance" access="public" returntype="string">
+    	<cfargument name="origin" type="string" required="yes" hint="origin is required" />
+        <cfargument name="destination" type="string" required="yes" hint="destination is required" />
+
+        <cfscript>
+			// Remove Pound Sign
+			ARGUMENTS.origin = ReplaceNoCase(ARGUMENTS.origin, "##", "", "ALL");
+			ARGUMENTS.destination = ReplaceNoCase(ARGUMENTS.destination, "##", "", "ALL");
+
+			// Replace blank space with a +
+			ARGUMENTS.origin = ReplaceNoCase(ARGUMENTS.origin, " ", "+", "ALL");
+			ARGUMENTS.destination = ReplaceNoCase(ARGUMENTS.destination, " ", "+", "ALL");
+		</cfscript>
+
+        <!--- 
+			Geolocation
+			<cfhttp url="https://maps.google.com/maps/geo?q=#ARGUMENTS.origin#&output=xml&oe=utf8\&sensor=false&key=#APPLICATION.KEY.googleMapsAPI#" delimiter="," resolveurl="yes" />
+			alternatives=true to get multiple routes and find the shortest one | multiples <routes>
+		--->
+		
+		<!--- Driving Directions --->        
+        <cfhttp url="http://maps.googleapis.com/maps/api/directions/xml?sensor=false&alternatives=true&origin=#ARGUMENTS.origin#&destination=#ARGUMENTS.destination#" delimiter="," resolveurl="yes" />
+        
+        <cfscript>
+			//var vMeterValue = 0.000621371192;
+			var vFootValue = 0.000189393939;
+			var vReturnValue = '';			
+			var vGetShortestDistance = '';
+			// meters --> vResponseXML.DirectionsResponse.route.leg.distance.value.XmlText
+			// miles --> vResponseXML.DirectionsResponse.route.leg.distance.text.XmlText
+
+			try {
+				
+				// Parse XML we received back to a variable
+				vResponseXML = XmlParse(cfhttp.filecontent);		
+
+				try {
+					
+					// Results could be in ft or mi format
+					vReturnValue = vResponseXML.DirectionsResponse.route.leg.distance.text.XmlText;
+					
+					// Loop through routes to get the shortest distance
+					for ( i=1; i LTE ArrayLen(vResponseXML.DirectionsResponse.route); i=i+1 ) {
+						
+						// Distance from route [i]
+						vReturnValue = vResponseXML.DirectionsResponse.route[i].leg.distance.text.XmlText;
+						
+						if ( Right(vReturnValue, 2) EQ 'ft' ) {
+							
+							// Feet Value Returned
+							vReturnValue = ReplaceNoCase(vReturnValue, " ft", "", "ALL");	
+							
+							// Set Up Default Values
+							if ( vReturnValue LTE 1000 ) {
+								vReturnValue = 0.1;
+							} else {
+								vReturnValue = DecimalFormat(ReplaceNoCase(vReturnValue, " ft", "", "ALL") * vFootValue);	
+							}
+							
+						} else {
+							// Miles Value Returned
+							vReturnValue = ReplaceNoCase(vReturnValue, " mi", "", "ALL");
+						}
+						
+						// Check if is the shortest distance
+						if ( NOT LEN(vGetShortestDistance) OR vReturnValue LT vGetShortestDistance ) {
+							vGetShortestDistance = vReturnValue;
+						}
+	
+					}
+	
+					return vGetShortestDistance;
+					
+				} catch( any error ) {
+					
+					try {
+					
+						return vResponseXML.DirectionsResponse.status;
+					
+					} catch( any error ) {
+						
+						return 'Error';
+						// return 0;
+					
+					}
+						
+				}
+			
+			} catch( any error ) {
+
+				return 'Error';
+				// return 0;
+
+			}
+		</cfscript>
+        
+    </cffunction>
 
 </cfcomponent>
