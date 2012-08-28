@@ -1,30 +1,66 @@
-<cfif isdefined('url.studentid')>
-	<cfset client.studentid = #url.studentid#>
+<cfif isdefined('URL.studentID')>
+	<cfset CLIENT.studentID = URL.studentID>
 </cfif>
-
-<cfquery name="get_student_info" datasource="mysql">
-	SELECT s.familylastname, s.address, s.address2, s.city, s.zip, s.hostid, s.doubleplace, s.familylastname, s.firstname, s.ds2019_no, s.sex,
-			s.arearepid, s.regionassigned, s.programid, s.intrep,
-			c.countryname,
-			p.startdate
-	FROM smg_students s
-	INNER JOIN smg_countrylist c ON c.countryid = s.countryresident
-	INNER JOIN smg_programs p ON p.programid = s.programid
-	WHERE s.studentid = '#client.studentid#'
-</cfquery>
 
 <!-----Company Information----->
 <cfinclude template="../querys/get_company_short.cfm">
 
+<cfquery name="get_student_info" datasource="mysql">
+	SELECT 
+    	s.studentID,
+        s.intRep,
+    	s.familylastname, 
+        s.address,
+        s.address2, 
+        s.city, 
+        s.zip, 
+        s.firstname, 
+        s.ds2019_no, 
+        s.sex,
+        s.regionassigned, 
+        s.programid, 
+        sh.hostID, 
+        sh.schoolID,
+		sh.arearepID, 
+        sh.doublePlacementID, 
+		c.countryname,
+		p.programname, 
+        p.startdate
+	FROM 
+    	smg_students s
+	INNER JOIN
+    	smg_hostHistory sh ON sh.studentID = s.studentID
+        AND
+        	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">        
+	INNER JOIN 
+    	smg_countrylist c ON c.countryid = s.countryresident
+	INNER JOIN 
+    	smg_programs p ON p.programid = s.programid        
+	WHERE 
+    	s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.studentID)#">
+</cfquery>
+
 <!--- Double Placement Student --->
-<cfquery name="double_placement" datasource="MySQL">
-	SELECT s.firstname, s.familylastname, s.ds2019_no, s.sex,
-			c.countryname,
-			p.startdate
-	FROM smg_students s
-	INNER JOIN smg_countrylist c ON c.countryid = s.countryresident
-	INNER JOIN smg_programs p ON p.programid = s.programid
-	WHERE s.studentid = #get_student_info.doubleplace#
+<cfquery name="qGetDoublePlacementInfo" datasource="MySQL">
+	SELECT 
+    	s.firstname, 
+        s.familylastname, 
+        s.countryresident, 
+        c.countryname, 
+        s.schoolid, 
+        s.hostid, 
+        s.ds2019_no, 
+        s.sex,
+		p.programname, 
+        p.startdate
+	FROM 
+    	smg_students s
+    INNER 
+    	JOIN smg_countrylist c ON c.countryid = s.countryresident
+	INNER 
+    	JOIN smg_programs p ON p.programid = s.programid
+	WHERE 
+    	s.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.doublePlacementID)#">
 </cfquery>
 
 <link rel="stylesheet" href="../profile.css" type="text/css">
@@ -59,19 +95,19 @@
 	  <p>#UCASE(RTRIM(get_student_info.sex))#</p></td>
 </tr>
 <tr>
-	<cfif get_student_info.doubleplace is 0>
+	<cfif get_student_info.doublePlacementID is 0>
 		<td colspan="4" class="style1"><b><font color="FF0000">There is no double placement assigned for the student above.</font><font color="FF0000"></font></b></td>
 	<cfelse>
 	<td class="style1" valign="top">2.</td>
-	<td width="300" class="style1" valign="top">#UCASE(RTRIM(double_placement.firstname))# #UCASE(RTRIM(double_placement.familylastname))# <br>
-		DS2019 no.: &nbsp; #double_placement.ds2019_no# <br>
-		Program Start Date: &nbsp; #DateFormat(double_placement.startdate, 'mm/dd/yyyy')#</td>
+	<td width="300" class="style1" valign="top">#UCASE(RTRIM(qGetDoublePlacementInfo.firstname))# #UCASE(RTRIM(qGetDoublePlacementInfo.familylastname))# <br>
+		DS2019 no.: &nbsp; #qGetDoublePlacementInfo.ds2019_no# <br>
+		Program Start Date: &nbsp; #DateFormat(qGetDoublePlacementInfo.startdate, 'mm/dd/yyyy')#</td>
 
 	
 	 <td width="80" class="style1" valign="top"><p>FROM</p>
     <p>GENDER</p></td>
-	<td class="style1" valign="top"><p>#UCASE(RTRIM(double_placement.countryname))#</p>
-	  <p>#UCASE(RTRIM(double_placement.sex))#</p></td>
+	<td class="style1" valign="top"><p>#UCASE(RTRIM(qGetDoublePlacementInfo.countryname))#</p>
+	  <p>#UCASE(RTRIM(qGetDoublePlacementInfo.sex))#</p></td>
 	</cfif>
 
 </table>
