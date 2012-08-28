@@ -252,6 +252,7 @@ where shortDesc = 'Mother CBC Auth'
             from smg_documents
             where hostid = #client.hostid#
             </Cfquery>
+            
              <cfsavecontent variable="hostCBCEmailMessage">
               <Cfoutput>	
               
@@ -297,7 +298,7 @@ where shortDesc = 'Mother CBC Auth'
         </cfquery>
             <cfsavecontent variable="hostCBCEmailMessage">
               <Cfoutput>	
-              ***** WOULD BE SENT TO #programManager.pm_email# and #facilitator.email#****<br /><br />
+              
                 The following CBC Authorization forms have been submitted for the <strong>#qHostParentsMembers.fatherlastname#</strong> family.  Please review and process the CBC's when possible.  
                 <br /><br />
                 You can process the CBC's here: 

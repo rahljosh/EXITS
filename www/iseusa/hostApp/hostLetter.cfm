@@ -21,7 +21,7 @@
 			//Letter to Short
 			 if (  (LEN(TRIM(FORM.letter)) GTE 1) AND (LEN(TRIM(FORM.letter)) LT 300)  ) {
                 // Get all the missing items in a list
-                SESSION.formErrors.Add("Your letter is to short. If you would like to move onto another portion of the application with out finishing your letter, please use the menu to the left to navigate past this page.");
+                SESSION.formErrors.Add("Your letter is too short. If you would like to proceed to another portion of the application without finishing your letter, please use the menu to the left to navigate past this page.");
 			 }
 		
 		</cfscript>

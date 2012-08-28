@@ -112,7 +112,7 @@ from smg_religions
 <table width=100% cellspacing=0 cellpadding=2 class="border">
 
       <tr bgcolor="#deeaf3">
-    	<td width=550>Would you provide transportation to the student's religious services if they are different from your own?<span class="redtext">*</span> </td>
+    	<td width=500>Would you provide transportation to the student's religious services if they are different from your own?<span class="redtext">*</span> </td>
         <td> <label>
             <cfinput type="radio" name="stu_trans" value="yes" checked="#form.stu_trans eq 'yes'#"/>
             Yes
@@ -128,7 +128,7 @@ from smg_religions
     <br />
 <table width=100% cellspacing=0 cellpadding=2 class="border">
 	<tr>
-    	<td>
+    	<td width=500>
  Are you willing to voluntarily inform your exchange student of your religious affiliation? 
  		</td>
        	<td> 
@@ -147,7 +147,7 @@ from smg_religions
             </label></td>
 </tr>
 	<tr bgcolor="#deeaf3">
-    	<td>
+    	<td width=500>
 Does any member of your household have difficulty hosting a student with different religious beliefts?
  		</td>
        	<td> 
