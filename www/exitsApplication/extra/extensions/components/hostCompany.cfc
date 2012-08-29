@@ -97,5 +97,64 @@
 		</cfscript>
         
     </cffunction>
+    
+	<!--- Start of Auto Suggest --->
+    <cffunction name="remoteLookUpHostComp" access="remote" returnFormat="json" output="false" hint="Remote function to get host families, returns an array">
+        <cfargument name="searchString" type="string" default="" hint="Search is not required">
+        <cfargument name="maxRows" type="numeric" required="false" default="30" hint="Max Rows is not required" />
+        <cfargument name="companyID" default="#CLIENT.companyID#" hint="CompanyID is not required">
+        
+        <cfscript>
+			var vReturnArray = arrayNew(1);
+		</cfscript>
+        
+        <cfquery 
+			name="qRemoteLookUpHost" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT 
+                	hostCompanyID,
+					CAST( 
+                    	CONCAT(                      
+                            name,
+                            ' (##',
+                            hostCompanyID,
+                            ')'                    
+						) 
+					AS CHAR) AS displayName
+                FROM 
+                	extra_hostcompany
+                WHERE           
+                    companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+
+				<cfif IsNumeric(ARGUMENTS.searchString)>
+                    AND
+                    	hostCompanyID LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+                <cfelse>
+                    AND 
+                       	name LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+				</cfif>	
+
+                ORDER BY 
+                    name
+
+				LIMIT 
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.maxRows#" />                 
+        </cfquery>
+
+		<cfscript>
+			// Loop through query
+            For ( i=1; i LTE qRemoteLookUpHost.recordCount; i=i+1 ) {
+
+				vUserStruct = structNew();
+				vUserStruct.hostCompID = qRemoteLookUpHost.hostCompanyID[i];
+				vUserStruct.displayName = qRemoteLookUpHost.displayName[i];
+				
+				ArrayAppend(vReturnArray,vUserStruct);
+            }
+			
+			return vReturnArray;
+        </cfscript>
+
+    </cffunction> 
 
 </cfcomponent>
