@@ -833,7 +833,6 @@
                     </tr>
 
                     <!--- Date Relocated --->
-                    <!--- WAITING TO GO LIVE
 					<cfif VAL(qGetPlacementHistoryByID.isRelocation)>
                         <tr class="mouseOverColor">
                             <td class="paperworkLeftColumn">                                
@@ -851,10 +850,6 @@
                             </td>
                         </tr>
                     </cfif>
-					--->
-                    
-                    <!--- WAITING TO GO LIVE - DELETE THIS --->
-                    <input type="hidden" name="dateRelocated" id="dateRelocated" class="datePicker editPage displayNone" value="#DateFormat(FORM.dateRelocated, 'mm/dd/yyyy')#">
                     
                     <!--- PIS Sent to Intl. Representative --->
                     <tr class="mouseOverColor"> 
