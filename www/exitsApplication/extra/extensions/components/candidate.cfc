@@ -1836,5 +1836,75 @@
         <cfreturn getCandidateJobTitle>
         
     </cffunction>
+    
+	<!--- ------------------------------------------------------------------------- ----
+		Start of Remote Functions 
+	----- ------------------------------------------------------------------------- --->
+    
+    <cffunction name="remoteLookUpCandidate" access="remote" returnFormat="json" output="false" hint="Remote function to get students, returns an array">
+        <cfargument name="searchString" type="string" default="" hint="Search is not required">
+        <cfargument name="maxRows" type="numeric" required="false" default="30" hint="Max Rows is not required" />
+        <cfargument name="companyID" default="#CLIENT.companyID#" hint="CompanyID is not required">
+        
+        <cfscript>
+			var vReturnArray = arrayNew(1);
+		</cfscript>
+        
+        <cfquery 
+			name="qRemoteLookUpCandidate" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT 
+                	candidateID,
+                    uniqueID,
+					CAST( CONCAT(lastName, ', ', firstName, ' (##', candidateID, ')' ) AS CHAR) AS displayName
+                FROM 
+                	extra_candidates
+                
+                WHERE 
+                    programid != <cfqueryparam cfsqltype="cf_sql_integer" value="0">                
+
+                    AND          
+                        companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+
+				<cfif IsNumeric(ARGUMENTS.searchString)>
+                    AND
+                    	candidateID LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+                <cfelse>
+                    AND 
+                    	(
+                        	lastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+	                    OR
+    	                	firstName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+        				)
+                </cfif>				
+				
+                ORDER BY 
+                    lastName,
+                    firstName
+
+				LIMIT 
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.maxRows#" />  
+        </cfquery>
+
+		<cfscript>
+			// Loop through query
+            For ( i=1; i LTE qRemoteLookUpCandidate.recordCount; i=i+1 ) {
+
+				vStudentStruct = structNew();
+				vStudentStruct.candidateID = qRemoteLookUpCandidate.candidateID[i];
+				vStudentStruct.uniqueID = qRemoteLookUpCandidate.uniqueID[i];
+				vStudentStruct.displayName = qRemoteLookUpCandidate.displayName[i];
+				
+				ArrayAppend(vReturnArray,vStudentStruct);
+            }
+			
+			return vReturnArray;
+        </cfscript>
+
+    </cffunction> 
+    
+	<!--- ------------------------------------------------------------------------- ----
+		End of Remote Functions 
+	----- ------------------------------------------------------------------------- --->
 
 </cfcomponent>

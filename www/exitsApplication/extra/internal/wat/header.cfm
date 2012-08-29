@@ -13,6 +13,31 @@
     <!--- Param Variables --->
     <cfparam name="CLIENT.userID" default="0">
     <cfparam name="URL.ID" default="0">
+    
+    <!--- Quick Search Form --->
+    <cfparam name="FORM.quickSearchAutoSuggestCandidateID" default="">
+    <cfparam name="FORM.quickSearchCandidateID" default="">
+    <cfparam name="FORM.quickSearchAutoSuggestHostCompID" default="">
+    <cfparam name="FORM.quickSearchHostCompID" default="">
+
+    <cfscript>
+		// check to make sure we have a valid companyID
+		if ( NOT VAL(CLIENT.companyID) ) {
+			CLIENT.companyID = 5;
+		}	
+		
+		vQuickSearchNotFound = 0;
+		
+		// Quick Search Student 
+        if ( VAL(FORM.quickSearchCandidateID) ) {
+			Location("index.cfm?curdoc=candidate/candidate_info&uniqueid=#FORM.quickSearchCandidateID#", "no");
+        }
+		
+		// Quick Search Host Company
+        if ( VAL(FORM.quickSearchHostCompID) ) {
+			Location("index.cfm?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#FORM.quickSearchHostCompID#", "no");
+		}
+	</cfscript>
 
     <cfscript>
 		// SET LINKS
@@ -114,6 +139,75 @@
 </head>
 <body>
 
+<script type="text/javascript">
+	// Avoid two selections on quick search
+	var quickSearchValidation = function() {		
+		$(".quickSearchField").val("");
+	}
+	
+	$(function() {
+		
+		// Quick Search - Student Auto Suggest
+		$("#quickSearchAutoSuggestCandidateID").autocomplete({
+
+			source: function(request, response) {
+				$.ajax({
+					url: "../../extensions/components/candidate.cfc?method=remoteLookUpCandidate",
+					dataType: "json",
+					data: { 
+						searchString: request.term
+					},
+					success: function(data) {
+						response( $.map( data, function(item) {
+							return {
+								//label: item.DISPLAYNAME,
+								value: item.DISPLAYNAME,
+								valueID: item.UNIQUEID
+							}
+						}));
+					}
+				})
+			},
+			select: function(event, ui) {
+				$("#quickSearchCandidateID").val(ui.item.valueID);
+				$("#quickSearchForm").submit();
+			},
+			minLength: 2	
+
+		});
+		
+		// Quick Search - Host Auto Suggest  
+		$("#quickSearchAutoSuggestHostCompID").autocomplete({
+
+			source: function(request, response) {
+				$.ajax({
+					url: "../../extensions/components/hostCompany.cfc?method=remoteLookUpHostComp",
+					dataType: "json",
+					data: { 
+						searchString: request.term
+					},
+					success: function(data) {
+						response( $.map( data, function(item) {
+							return {
+								//label: item.DISPLAYNAME,
+								value: item.DISPLAYNAME,
+								valueID: item.HOSTCOMPID
+							}
+						}));
+					}
+				})
+			},
+			select: function(event, ui) {
+				$("#quickSearchHostCompID").val(ui.item.valueID);
+				$("#quickSearchForm").submit();
+			}, 
+			minLength: 2
+			
+		});
+		
+	});	
+</script>
+
 <cfoutput>
 
 <table width="90%" border="0" align="center" bordercolor="##CCCCCC" bgcolor="##FFFFFF" style="padding-bottom:5px;">
@@ -123,7 +217,7 @@
         </td>
     </tr>
     <tr>
-        <td width="400" valign=top bordercolor="##FFFFFF" class="style1">
+        <td width="400" valign="bottom" bordercolor="##FFFFFF" class="style1">
 			<cfif qGetCompanyAccess.recordcount>
                 <span class="style5" style="font-weight:bold;">
                 	Choose another Program: &nbsp;
@@ -142,6 +236,11 @@
 			
             [ <A href="index.cfm?curdoc=initial_welcome" class="style4"><b>Home</b></a> ] 
             [ <a href="../logout.cfm" class="style4"><b>Logout</b></a> ]
+            
+            <div style="margin-top:5px; font-size:0.9em;">
+                    <strong>Last Login:</strong> #DateFormat(CLIENT.lastlogin, 'mmm d, yyyy')#
+                        <strong>at</strong> #TimeFormat(CLIENT.lastlogin, 'h:mm tt')# 
+            </div>
 		</td>
         
 		<!--- Update Messages --->
@@ -179,8 +278,53 @@
     	</cfif>
         
         <td align="right" valign="top" bordercolor="##FFFFFF" class="style5">
-        	<strong>Last Login:</strong> #DateFormat(CLIENT.lastlogin, 'mmm d, yyyy')#
-        	<strong>at</strong> #TimeFormat(CLIENT.lastlogin, 'h:mm tt')# 
+        
+        	<table>
+                <tr>
+					<!--- Quick Search Options --->
+                    <cfif listFind("1,2,3,4", CLIENT.userType)>
+                	<td valign="top">
+                        <cfform name="quickSearchForm" id="quickSearchForm" method="post" action="" style="margin:0px; padding:0px;">
+                        
+                           	<input type="hidden" name="quickSearchCandidateID" id="quickSearchCandidateID" value="#FORM.quickSearchCandidateID#" class="quickSearchField"/>
+                           	<input type="hidden" name="quickSearchHostCompID" id="quickSearchHostCompID" value="#FORM.quickSearchHostCompID#" class="quickSearchField" />
+                            <table width="500px" cellpadding="2" cellspacing="0" class="quickSearchTable" align="right">
+                                <tr>
+                                    <th colspan="4">
+                                        Quick Search
+                                        <!--- Display Error Messages Here ---> 
+                                        <cfif VAL(vQuickSearchNotFound)>
+                                            <span class="errors">record not found</span>	
+                                        </cfif>
+                                    </th>
+                                </tr>
+                                
+                                <tr class="on">
+                                
+                                    <td class="subTitleRightNoBorderMiddle">
+                                        Candidate:
+                                    </td>
+                                    <td>
+                                        <input type="text" name="quickSearchAutoSuggestCandidateID" id="quickSearchAutoSuggestCandidateID" value="#FORM.quickSearchAutoSuggestCandidateID#" onclick="quickSearchValidation();" class="mediumField quickSearchField" maxlength="20" />
+                                    </td>
+                                    
+
+                                
+                                    <td class="subTitleRightNoBorderMiddle">
+                                        Host Company:
+                                    </td>
+                                    <td>
+                                        <input type="text" name="quickSearchAutoSuggestHostCompID" id="quickSearchAutoSuggestHostCompID" value="#FORM.quickSearchAutoSuggestHostCompID#" onclick="quickSearchValidation();" class="mediumField quickSearchField" maxlength="20" />
+                                    </td>
+                                </tr>
+                                
+                            </table>
+                        </cfform> 
+                	</td>
+                    </cfif>
+                </tr>
+            </table>
+            
         </td>
 	</tr>
     <tr>
