@@ -5,7 +5,7 @@
 	Date:		February 13, 2012
 	Desc:		Pending Host Families
 
-	Updated:  	
+	Updated:  	08/03/2012 - Placement Type added
 
 ----- ------------------------------------------------------------------------- --->
 
@@ -19,9 +19,13 @@
     <!--- Param URL variables --->
     <cfparam name="URL.sortBy" default="">
     <cfparam name="URL.sortOrder" default="ASC">
+    <cfparam name="URL.preAypCamp" default="">
+    <cfparam name="URL.placementType" default="">
 
     <!--- Param FORM Variables --->
-    <cfparam name="FORM.preAypCamp" default="0">
+    <cfparam name="FORM.submitted" default="0">
+    <cfparam name="FORM.preAypCamp" default="">
+    <cfparam name="FORM.placementType" default="">
     <cfparam name="FORM.regionID" default="#CLIENT.regionID#">
     <cfparam name="FORM.userType" default="#CLIENT.userType#">
 	
@@ -32,12 +36,44 @@
 		// Get AYP English Camps
 		qAYPEnglishCamps = APPCFC.SCHOOL.getAYPCamps(campType='english');	
 
+		vSetClassNotification = '';
+
         // make sure we have a valid sortOrder value
 		if ( NOT ListFind("ASC,DESC", URL.sortOrder) ) {
 			URL.sortOrder = "ASC";				  
 		}
+
+		// Build New URL based on preAypCAmp and Placement Type Selection in order to keep the option selected when refreshing the page
+		if ( VAL(FORM.submitted) ) {
+
+			// rebuilt QueryString and remove placementType and preAypCamp
+			vNewQueryString = CGI.QUERY_STRING;
+
+			// Clean Up preAypCamp URL
+			if ( ListContainsNoCase(vNewQueryString, "preAypCamp", "&") ) {
+				vNewQueryString = ListDeleteAt(vNewQueryString, ListContainsNoCase(vNewQueryString, "preAypCamp", "&"), "&");
+			}
 			
-		vSetClassNotification = '';
+			// Clean Up placementType URL
+			if ( ListContainsNoCase(vNewQueryString, "placementType", "&") ) {
+				vNewQueryString = ListDeleteAt(vNewQueryString, ListContainsNoCase(vNewQueryString, "placementType", "&"), "&");
+			}
+			
+			// Get Current URL
+			vNewURL = CGI.SCRIPT_NAME & "?" & vNewQueryString;
+			
+			if ( LEN(FORM.placementType) ) {
+				vNewURL = vNewURL & "&placementType=" & FORM.placementType;
+			}
+			
+			if ( LEN(FORM.preAypCamp) ) {
+				vNewURL = vNewURL & "&preAypCamp=" & FORM.preAypCamp;
+			}
+			
+			// Reload Page with proper URL variables
+			location(vNewURL, "no");
+			
+		}
 	</cfscript>
 
     <!--- Field Viewing --->
@@ -126,7 +162,7 @@
             AND
             	sh.isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
             AND	
-            	sh.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+            	sh.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> <!--- Filter out PHP --->
 		INNER JOIN
         	smg_companies c ON c.companyID = s.companyID            
 		INNER JOIN
@@ -152,14 +188,30 @@
         </cfif>
         
         <!--- Pre-AYP Filter --->
-		<cfif FORM.preAypCamp EQ 'All'>
+		<cfif URL.preAypCamp EQ 'All'>
             AND 
                 s.aypenglish = english.campID 
-        <cfelseif VAL(FORM.preAypCamp)>
+        <cfelseif VAL(URL.preAypCamp)>
             AND 
-                s.aypenglish = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.preAypCamp#">
-        </cfif>
+                s.aypenglish = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.preAypCamp#">
+        </cfif>        
         
+        <!--- Placement Type --->
+        <cfif URL.placementType EQ 'newPlacements'>
+        	AND
+            	sh.datePlaced IS NULL
+        	AND
+            	sh.isRelocation = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+        <cfelseif URL.placementType EQ 'previouslyApproved'>
+        	AND
+            	sh.datePlaced IS NOT NULL
+        	AND
+            	sh.isRelocation = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+        <cfelseif URL.placementType EQ 'relocations'>
+        	AND
+            	sh.isRelocation = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+        </cfif>
+
         <cfswitch expression="#FORM.userType#">
         	
             <!--- Filter Out Placements Waiting on AR --->
@@ -279,7 +331,7 @@
             </cfdefaultcase>
 
         </cfswitch>
-
+		
 	</cfquery>
     
 </cfsilent>   
@@ -301,10 +353,15 @@
 		});	
 		
 		// Submit preAypCamp form when option changes
-		$("#preAypCamp").change(function() {
-			$("#studentFilterForm").submit();
+		$("#placementType").change(function() {
+			$("#placementFilterForm").submit();
 		});
-		
+
+		// Submit Placement Type form when option changes
+		$("#preAypCamp").change(function() {
+			$("#placementFilterForm").submit();
+		});
+
 		// Submit regionSelectForm form when option changes
 		$("#regionSelectForm").change(function() {
 			$("#regionSelectForm").submit();
@@ -326,29 +383,39 @@
 	
     <!--- Office Users - PreAyp Filter --->
     <cfif APPLICATION.CFC.USER.isOfficeUser()>
-		<table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">        
-            <tr>
-                <td>                      
-					<form name="studentFilterForm" id="studentFilterForm" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
-                    	Pre-AYP Camp: &nbsp; 
-                      	<select name="preAypCamp" id="preAypCamp" class="largeField">
-							<option value="0" <cfif FORM.preAypCamp EQ 0> selected="selected" </cfif> ></option>
-                            <option value="All" <cfif FORM.preAypCamp EQ 'All'> selected="selected" </cfif> >All Pre-AYP Camps</option>
+    	<form name="placementFilterForm" id="placementFilterForm" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
+        	<input type="hidden" name="submitted" value="1">
+            <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">        
+                <tr>
+                    <td>                      
+                        <label for="placementType">Placement Type:</label> &nbsp; 
+                        <select name="placementType" id="placementType" class="largeField">
+                            <option value="" <cfif NOT LEN(URL.placementType)> selected="selected" </cfif> >All</option>
+                            <option value="newPlacements" <cfif URL.placementType EQ 'newPlacements'> selected="selected" </cfif> >New Placements</option>
+                            <option value="previouslyApproved" <cfif URL.placementType EQ 'previouslyApproved'> selected="selected" </cfif> >Previously Approved</option>
+                            <option value="relocations" <cfif URL.placementType EQ 'relocations'> selected="selected" </cfif> >Relocations</option>
+                        </select>
+                    </td>
+                    <td>
+                        <label for="preAypCamp">Pre-AYP Camp:</label> &nbsp; 
+                        <select name="preAypCamp" id="preAypCamp" class="largeField">
+                            <option value="" <cfif NOT LEN(URL.preAypCamp)> selected="selected" </cfif> ></option>
+                            <option value="All" <cfif URL.preAypCamp EQ 'All'> selected="selected" </cfif> >All Pre-AYP Camps</option>
                             <cfloop query="qAYPEnglishCamps">
-                                <option value="#qAYPEnglishCamps.campID#" <cfif FORM.preAypCamp EQ qAYPEnglishCamps.campID> selected="selected" </cfif> >#qAYPEnglishCamps.name#</option>
+                                <option value="#qAYPEnglishCamps.campID#" <cfif URL.preAypCamp EQ qAYPEnglishCamps.campID> selected="selected" </cfif> >#qAYPEnglishCamps.name#</option>
                             </cfloop>
-                      	</select>
-					</form>	
-                </td>
-            </tr>
-		</table>            
+                        </select>
+                    </td>
+                </tr>
+            </table> 
+		</form>	                       
 	<!--- Field Viewing - REGIONS DROP DOWN LIST --->
     <cfelseif NOT APPLICATION.CFC.USER.isOfficeUser() AND qGetRegionList.recordcount GT 1>
 		<table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">        
 			<tr>
 				<td>                      
 					<form name="regionSelectForm" id="regionSelectForm" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
-						You have access to multiple regions filter by Region: &nbsp; 
+						<label for="regionID">You have access to multiple regions filter by Region:</label> &nbsp; 
                         <select name="regionID" id="regionID" class="xLargeField">
                             <cfloop query="qGetRegionList">
                                 <option value="#qGetRegionList.regionID#" <cfif FORM.regionID EQ qGetRegionList.regionID>selected</cfif>>#qGetRegionList.regionname# - #qGetRegionList.userAccessLevel#</option>
@@ -360,23 +427,22 @@
         </table>            
     </cfif> 
     
-    <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
-    	<tr>
-        	<td>
+    <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">    	
+        <tr>
+        	<td width="85%">
 				<cfif FORM.userType EQ 7>
-                    <p>
-                        The following list shows the placements that you have submitted and the status of that placement.  
-                        If the report is marked Rejected, you can click on piece of the Host Information to see 
-                        why it was rejected and then make the necessary changes or remove the placement.
-                    </p>
+                    The following list shows the placements that you have submitted and the status of that placement.
+                    If the report is marked Rejected, you can click on piece of the Host Information to see 
+                    why it was rejected and then make the necessary changes or remove the placement.
                 <cfelse>
-                    <p>
-                        The following list shows the placements that you have submitted and the status of those placements.  
-                        If the report is marked Rejected, you can click on the Host Information column to see 
-                        why it was rejected. From there you can make the necessary changes or remove the placement.
-                    </p>   	
+                    The following list shows the placements that you have submitted and the status of those placements.  
+                    If the report is marked Rejected, you can click on the Host Information column to see 
+                    why it was rejected. From there you can make the necessary changes or remove the placement.
                 </cfif>
 			</td>
+            <td align="right" width="15%">
+            	<strong>#qGetPendingHosts.recordCount# records</strong>
+            </td>
 		</tr>
 	</table>                                
 
@@ -455,7 +521,7 @@
 				vDisplayStudent = true;
 				
 				// If selecting Pre-AYP display only students that are pending documents
-				if ( FORM.preAypCamp NEQ 0 AND vSetClassNotification EQ 'attentionGreen' ) {
+				if ( LEN(URL.preAypCamp) AND vSetClassNotification EQ 'attentionGreen' ) {
 					vDisplayStudent = false;
 				}
             </cfscript>
