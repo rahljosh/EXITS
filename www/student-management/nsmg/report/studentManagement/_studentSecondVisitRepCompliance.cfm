@@ -191,7 +191,7 @@
                                     programID = s.programID
                                 --->
                                 ORDER BY 
-                                    dep_date ASC,
+                                    dep_date DESC,
                                     dep_time ASC
                                 LIMIT 1                            
                             ) AS dateArrived, 
@@ -214,7 +214,7 @@
                                         programID = s.programID
                                     --->
                                     ORDER BY 
-                                        dep_date ASC,
+                                        dep_date DESC,
                                         dep_time ASC
                                     LIMIT 1                            
                                 )                    
@@ -308,7 +308,7 @@
                                     programID = s.programID
                                 --->
                                 ORDER BY 
-                                    dep_date ASC,
+                                    dep_date DESC,
                                     dep_time ASC
                                 LIMIT 1                            
                             ) AS dateArrived,
@@ -331,7 +331,7 @@
                                         programID = s.programID
                                     --->
                                     ORDER BY 
-                                        dep_date ASC,
+                                        dep_date DESC,
                                         dep_time ASC
                                     LIMIT 1                            
                                 )                    
