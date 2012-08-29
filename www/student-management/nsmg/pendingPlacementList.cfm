@@ -20,7 +20,7 @@
     <cfparam name="URL.sortBy" default="">
     <cfparam name="URL.sortOrder" default="ASC">
     <cfparam name="URL.preAypCamp" default="">
-    <cfparam name="URL.placementType" default="">
+    <cfparam name="URL.placementType" default="newPlacements">
 
     <!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
