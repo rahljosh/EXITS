@@ -98,11 +98,9 @@
 					SESSION.formErrors.Add("You must answer whether is a relocation or not");
 				}			
 				
-				/*** WAITING TO GO LIVE 
 				if ( VAL(FORM.isRelocation) AND isDate(FORM.dateRelocated) AND FORM.dateRelocated LT DateFormat(now(), 'mm/dd/yyyy') ) {
 					SESSION.formErrors.Add("Relocation date is out of compliance, please enter a new date");
 				}
-				***/
 
 				if ( NOT VAL(FORM.changePlacementReasonID) ) {
 					SESSION.formErrors.Add("You must select a reason for changing host family");
@@ -328,7 +326,6 @@
 		} else if ( FORM.subAction EQ 'approve' ) {
 			
 			// Data Validation
-			/*** WAITING TO GO LIVE
 			if ( APPLICATION.CFC.USER.isOfficeUser() AND VAL(qGetPlacementHistoryByID.isRelocation) AND NOT IsDate(FORM.dateRelocated) ) {
 				SESSION.formErrors.Add("You must enter what date the student relocated to this new family");
 			}			
@@ -336,7 +333,6 @@
 			if ( APPLICATION.CFC.USER.isOfficeUser() AND VAL(qGetPlacementHistoryByID.isRelocation) AND isDate(FORM.dateRelocated) AND FORM.dateRelocated LT DateFormat(now(), 'mm/dd/yyyy') ) {
 				SESSION.formErrors.Add("Relocation date is out of compliance, please enter a new date");
 			}
-			***/
 			
 			// Check if there are no errors
 			if ( NOT SESSION.formErrors.length() ) {				
@@ -732,8 +728,6 @@
 	
 	var displayRelocationDate = function() {
 		
-		/** WAITING TO GO LIVE
-		
 		// Get Change Placement Reason ID Value		
 		vGetRelocationOption = $("input[name='isRelocation']:checked").val() ;
 		
@@ -747,8 +741,7 @@
 			// Hide Forms
 			$(".relocationDateInput").fadeOut('fast');
 		}
-		**/
-		
+
 	}
 
 
@@ -1045,10 +1038,8 @@
                                 </tr>
                                 <tr>
                                     <td class="placementMgmtInfo" align="center">
-                                        <!--- WAITING TO GO LIVE
                                         <label class="reportTitleLeftClean" for="dateSetHostPermanent">Please enter a relocation date?</label>
                                         <input type="text" name="dateRelocated" id="dateRelocated" class="datePicker" value="#DateFormat(FORM.dateRelocated, 'mm/dd/yyyy')#">
-										--->
                                         <input type="image" name="submit" src="../../student_app/pics/submit.gif" alt="Approve Placement" style="display:block;" />  
                                     </td>
                                 </tr>
@@ -1289,11 +1280,9 @@
                                     <label for="isRelocation1">Yes</label>
                                 </cfif>
 
-								<!--- WAITING TO GO LIVE
 								<!--- Relocation Date --->
                                 <span class="relocationDateInput" style="display:none">Please enter a relocation date (if known):</span> 
                                 <input type="text" name="dateRelocated" id="dateRelocated" class="datePicker relocationDateInput displayNone" value="#DateFormat(FORM.dateRelocated, 'mm/dd/yyyy')#">
-                                --->
                                 
 								<!--- Reason --->
                                 <span>Please indicate why you are changing the host family: <em>*</em></span> 
