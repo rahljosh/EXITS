@@ -1,2 +1,34 @@
-<cfheader name="Content-Disposition" value="attachment; filename='#form.fName#'">
-<cfcontent type="text/plain" file="#form.fPath#">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>EXITS - View File</title>
+</head>
+
+<body>
+
+<cfparam name="FORM.fName" default="">
+<cfparam name="FORM.fPath" default="">
+
+<cfscript>
+	vFileName = FORM.fName;
+
+	vGetBrowserInfo = APPLICATION.CFC.UDF.browserDetect();
+	
+	if ( FindNoCase("chrome", vGetBrowserInfo) ) {
+		// Add '' to work on Chrome - Duplicate headers issue	
+		vFileName = "'#FORM.fName#'";
+	}			
+</cfscript>
+
+<cfoutput>
+	<!--- Prevent Cache --->
+    <cfheader name="expires" value="#GetHttpTimeString(Now())#">
+    <cfheader name="pragma" value="no-cache">
+    <cfheader name="cache-control" value="no-cache, no-store, must-revalidate">
+    <cfheader name="Content-Disposition" value="attachment; filename=#vFileName#">
+    <cfcontent type="text/plain" file="#FORM.fPath#">
+</cfoutput>
+
+</body>
+</html>
