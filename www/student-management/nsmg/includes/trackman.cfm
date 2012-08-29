@@ -35,12 +35,12 @@
     )
     VALUES 
    	(
-        <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userID#">,
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(client.userID)#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#cgi.QUERY_STRING#">,
         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#cgi.HTTP_REFERER#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#cgi.remote_host#" maxlength="50">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#cgi.http_user_agent#">,
-        <cfqueryparam cfsqltype="cf_sql_integer" value="#client.usertype#">
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(client.usertype)#">
     )
 </cfquery>
