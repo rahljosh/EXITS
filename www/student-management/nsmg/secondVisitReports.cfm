@@ -1075,11 +1075,13 @@
                             <cfif APPLICATION.CFC.USER.isOfficeUser() OR listFind(vAllowedUserIDList,CLIENT.userID)>
         
                                 <!--- Display Pending / View Options --->
-                                <cfif NOT isDate(ARGUMENTS.setQuery.pr_sr_approved_date)>
-                                    <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#ARGUMENTS.setQuery.pr_ID#">[ Pending ]</a>
-                                <cfelse>
-                                    <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#ARGUMENTS.setQuery.pr_ID#"><img src="pics/buttons/greyedView.png" border="0" /></a>
-                                </cfif>
+                                <a href="index.cfm?curdoc=forms/secondHomeVisitReport&reportID=#ARGUMENTS.setQuery.pr_ID#" title="Click to view report">
+									<cfif NOT isDate(ARGUMENTS.setQuery.pr_sr_approved_date)>
+                                        <img src="pics/buttons/pending.png" border="0" />
+                                    <cfelse>
+                                        <img src="pics/buttons/greyedView.png" border="0" />
+                                    </cfif>
+                                </a>
                     
                             <cfelse>
                                 n/a 
@@ -1382,7 +1384,7 @@
                     <th align="left">Host</th>
                     <th>Due</th>
                     <th>Days Left</th>
-                    <th align="left">Actions</th>
+                    <th>Actions</th>
                     <th>Date of Visit</th>
                     <th>SR Approved</th>
                     <th>RA Approved</th>
