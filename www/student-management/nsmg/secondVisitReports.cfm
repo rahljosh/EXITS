@@ -1037,17 +1037,19 @@
                         	Pending Placement Approval
 						<cfelseif NOT isDate(ARGUMENTS.setQuery.dateArrived)>
                             Missing Flight Information
+						<cfelseif ARGUMENTS.setQuery.dateArrived GT now()>
+							Not In Country - Arrives on #DateFormat(ARGUMENTS.setQuery.dateArrived, 'mm/dd/yy')#
 						<cfelseif isDate(ARGUMENTS.setQuery.dateStartWindowCompliance)>
                             From #DateFormat(ARGUMENTS.setQuery.dateStartWindowCompliance, 'mm/dd/yy')# To #DateFormat(ARGUMENTS.setQuery.dateEndWindowCompliance, 'mm/dd/yy')#
-                        <cfelse>
-                        	Not In Country
 						</cfif>                       
                     </td>
                     <cfif isDate(ARGUMENTS.setQuery.pr_ny_approved_date)>
                         <td align="center">completed</td>
                     <cfelse>
                         <td align="center" #vSetRemainingDayCSS#>
-                        	<cfif ARGUMENTS.setQuery.remainingDays GT 0>                        
+                        	<cfif ARGUMENTS.setQuery.remainingDays GT 60>                        
+                            	n/a
+                            <cfelseif ARGUMENTS.setQuery.remainingDays GT 0>
                                 #ARGUMENTS.setQuery.remainingDays#
                         	<cfelseif isDate(ARGUMENTS.setQuery.dateStartWindowCompliance)>
                             	0
@@ -1095,7 +1097,7 @@
                                     <input name="Submit" type="image" src="pics/plus.png" height="20" alt="Add New Report" border="0">
                                 </form>
                                 
-                            <cfelseif NOT VAL(ARGUMENTS.setQuery.hideReportID) AND isDate(ARGUMENTS.setQuery.dateStartWindowCompliance) AND isDate(ARGUMENTS.setQuery.datePlaced)>
+                            <cfelseif NOT VAL(ARGUMENTS.setQuery.hideReportID) AND isDate(ARGUMENTS.setQuery.dateStartWindowCompliance) AND isDate(ARGUMENTS.setQuery.datePlaced) AND ARGUMENTS.setQuery.dateStartWindowCompliance LT now()>
                             
                                 <!--- Add Report --->
                                 <form action="index.cfm?curdoc=forms/pr_add" method="post" style="display:inline;margin-right:10px;">
