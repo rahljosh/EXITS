@@ -497,5 +497,75 @@
 		</cfquery>
 
 	</cffunction>
+    
+    <!--- Auto Suggest --->
+    <cffunction name="remoteLookUpUser" access="remote" returnFormat="json" output="false" hint="Remote function to get users, returns an array">
+        <cfargument name="searchString" type="string" default="" hint="Search is not required">
+        <cfargument name="maxRows" type="numeric" required="false" default="30" hint="Max Rows is not required" />
+        <cfargument name="companyID" default="#CLIENT.companyID#" hint="CompanyID is not required">
+        
+        <cfscript>
+			var vReturnArray = arrayNew(1);
+		</cfscript>
+        
+        <!--- Do search --->
+        <cfquery 
+			name="qRemoteLookUpUser" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT DISTINCT
+                	u.userID,
+                    u.uniqueID,
+                    (
+                        CASE                     
+                            WHEN 
+                                u.businessName != '' 
+                            THEN 
+                                CAST( CONCAT(u.businessName, ' (##', u.userID, ') - ', u.lastName, ', ', u.firstName ) AS CHAR) 
+                            ELSE
+                                CAST( CONCAT(u.lastName, ', ', u.firstName, ' (##', u.userID, ')' ) AS CHAR)                                    
+                        END
+                    ) AS displayName                      
+                FROM 
+                	smg_users u
+                INNER JOIN
+                	user_access_rights uar ON uar.userID = u.userID
+                WHERE 
+                   	u.usertype = 8
+					<cfif IsNumeric(ARGUMENTS.searchString)>
+                    	AND u.userID LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+                    <cfelse>
+                    	AND
+                        (
+                                u.lastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#ARGUMENTS.searchString#%">
+                            OR
+                                u.firstName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#ARGUMENTS.searchString#%">
+                            OR
+                                u.businessName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#ARGUMENTS.searchString#%">
+						)
+					</cfif>				
+                    
+                ORDER BY 
+                	u.businessname,
+                    u.lastName,
+                    u.firstName
+				LIMIT 
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.maxRows#" />                 
+        </cfquery>
+
+		<cfscript>
+			// Loop through query
+            For ( i=1; i LTE qRemoteLookUpUser.recordCount; i=i+1 ) {
+
+				vUserStruct = structNew();
+				vUserStruct.uniqueID = qRemoteLookUpUser.uniqueID[i];
+				vUserStruct.displayName = qRemoteLookUpUser.displayName[i];
+				
+				ArrayAppend(vReturnArray,vUserStruct);
+            }
+			
+			return vReturnArray;
+        </cfscript>
+
+    </cffunction>
 
 </cfcomponent>

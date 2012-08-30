@@ -16,27 +16,30 @@
     
     <!--- Quick Search Form --->
     <cfparam name="FORM.quickSearchAutoSuggestCandidateID" default="">
-    <cfparam name="FORM.quickSearchCandidateID" default="">
+    <cfparam name="FORM.quickSearchCandidateUniqueID" default="">
     <cfparam name="FORM.quickSearchAutoSuggestHostCompID" default="">
     <cfparam name="FORM.quickSearchHostCompID" default="">
+    <cfparam name="FORM.quickSearchAutoSuggestUserUniqueID" default="">
+    <cfparam name="FORM.quickSearchUserUniqueID" default="">
 
     <cfscript>
-		// check to make sure we have a valid companyID
-		if ( NOT VAL(CLIENT.companyID) ) {
-			CLIENT.companyID = 5;
-		}	
-		
 		vQuickSearchNotFound = 0;
 		
 		// Quick Search Student 
-        if ( VAL(FORM.quickSearchCandidateID) ) {
-			Location("index.cfm?curdoc=candidate/candidate_info&uniqueid=#FORM.quickSearchCandidateID#", "no");
+        if ( LEN(FORM.quickSearchCandidateUniqueID) ) {
+			Location("index.cfm?curdoc=candidate/candidate_info&uniqueid=#FORM.quickSearchCandidateUniqueID#", "no");
         }
 		
 		// Quick Search Host Company
         if ( VAL(FORM.quickSearchHostCompID) ) {
 			Location("index.cfm?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#FORM.quickSearchHostCompID#", "no");
 		}
+		
+		// Quick Search International Representative
+		if ( LEN(FORM.quickSearchUserUniqueID) ) {
+			Location("index.cfm?curdoc=intRep/intlRepInfo&uniqueID=#FORM.quickSearchUserUniqueID#", "no");
+		}
+			
 	</cfscript>
 
     <cfscript>
@@ -169,7 +172,7 @@
 				})
 			},
 			select: function(event, ui) {
-				$("#quickSearchCandidateID").val(ui.item.valueID);
+				$("#quickSearchCandidateUniqueID").val(ui.item.valueID);
 				$("#quickSearchForm").submit();
 			},
 			minLength: 2	
@@ -205,11 +208,39 @@
 			
 		});
 		
+		// Quick Search - User Auto Suggest
+		$("#quickSearchAutoSuggestUserUniqueID").autocomplete({
+														
+			source: function(request, response) {
+				$.ajax({
+					url: "../../extensions/components/user.cfc?method=remoteLookUpUser",
+					dataType: "json",
+					data: { 
+						searchString: request.term
+					},
+					success: function(data) {
+						response( $.map( data, function(item) {
+							return {
+								//label: item.DISPLAYNAME,
+								value: item.DISPLAYNAME,
+								valueID: item.UNIQUEID
+							}
+						}));
+					}
+				})
+			},
+			select: function(event, ui) {
+				$("#quickSearchUserUniqueID").val(ui.item.valueID);
+				$("#quickSearchForm").submit();
+			},
+			minLength: 2	
+			
+		});
+		
 	});	
 </script>
 
 <cfoutput>
-
 <table width="90%" border="0" align="center" bordercolor="##CCCCCC" bgcolor="##FFFFFF" style="padding-bottom:5px;">
     <Tr>
         <td width=98 rowspan=4 bordercolor="##FFFFFF" align="center">
@@ -286,11 +317,12 @@
                 	<td valign="top">
                         <cfform name="quickSearchForm" id="quickSearchForm" method="post" action="" style="margin:0px; padding:0px;">
                         
-                           	<input type="hidden" name="quickSearchCandidateID" id="quickSearchCandidateID" value="#FORM.quickSearchCandidateID#" class="quickSearchField"/>
+                           	<input type="hidden" name="quickSearchCandidateUniqueID" id="quickSearchCandidateUniqueID" value="#FORM.quickSearchCandidateUniqueID#" class="quickSearchField"/>
                            	<input type="hidden" name="quickSearchHostCompID" id="quickSearchHostCompID" value="#FORM.quickSearchHostCompID#" class="quickSearchField" />
-                            <table width="500px" cellpadding="2" cellspacing="0" class="quickSearchTable" align="right">
+                            <input type="hidden" name="quickSearchUserUniqueID" id="quickSearchUserUniqueID" value="#FORM.quickSearchUserUniqueID#" class="quickSearchField" />
+                            <table width="700em" cellpadding="2" cellspacing="0" class="quickSearchTable" align="right">
                                 <tr>
-                                    <th colspan="4">
+                                    <th colspan="6">
                                         Quick Search
                                         <!--- Display Error Messages Here ---> 
                                         <cfif VAL(vQuickSearchNotFound)>
@@ -307,15 +339,19 @@
                                     <td>
                                         <input type="text" name="quickSearchAutoSuggestCandidateID" id="quickSearchAutoSuggestCandidateID" value="#FORM.quickSearchAutoSuggestCandidateID#" onclick="quickSearchValidation();" class="mediumField quickSearchField" maxlength="20" />
                                     </td>
-                                    
-
-                                
+                                                                  
                                     <td class="subTitleRightNoBorderMiddle">
                                         Host Company:
                                     </td>
                                     <td>
                                         <input type="text" name="quickSearchAutoSuggestHostCompID" id="quickSearchAutoSuggestHostCompID" value="#FORM.quickSearchAutoSuggestHostCompID#" onclick="quickSearchValidation();" class="mediumField quickSearchField" maxlength="20" />
                                     </td>
+                                    
+                                    <td class="subTitleRightNoBorderMiddle">
+                                    	Intl. Rep.: 
+                                    </td>
+                                    <td><input type="text" name="quickSearchAutoSuggestUserUniqueID" id="quickSearchAutoSuggestUserUniqueID" value="#FORM.quickSearchAutoSuggestUserUniqueID#" onclick="quickSearchValidation();" class="mediumField quickSearchField" maxlength="20" /></td>
+                    
                                 </tr>
                                 
                             </table>

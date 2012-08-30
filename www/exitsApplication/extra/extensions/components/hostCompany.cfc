@@ -118,7 +118,8 @@
                             name,
                             ' (##',
                             hostCompanyID,
-                            ')'                    
+                            ') - ',
+                            supervisor                  
 						) 
 					AS CHAR) AS displayName
                 FROM 
@@ -131,7 +132,11 @@
                     	hostCompanyID LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
                 <cfelse>
                     AND 
-                       	name LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+                       	(
+                        	name LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+                         OR
+                         	supervisor LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#ARGUMENTS.searchString#%">
+                        )
 				</cfif>	
 
                 ORDER BY 
