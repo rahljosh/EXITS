@@ -270,7 +270,7 @@
             
             <div style="margin-top:5px; font-size:0.9em;">
                     <strong>Last Login:</strong> #DateFormat(CLIENT.lastlogin, 'mmm d, yyyy')#
-                        <strong>at</strong> #TimeFormat(CLIENT.lastlogin, 'h:mm tt')# 
+                    <strong>at</strong> #TimeFormat(CLIENT.lastlogin, 'h:mm tt')# 
             </div>
 		</td>
         
