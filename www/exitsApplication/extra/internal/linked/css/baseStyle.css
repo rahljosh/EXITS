@@ -41,6 +41,7 @@
 .quickSearchTable {
 	border:1px solid #085dad;
 	margin-top:1px;
+	font-size:10px;
 }
 
 .quickSearchTable th {
