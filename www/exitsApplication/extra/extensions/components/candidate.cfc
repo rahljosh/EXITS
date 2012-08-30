@@ -1856,6 +1856,7 @@
                 SELECT 
                 	candidateID,
                     uniqueID,
+                    ds2019,
 					CAST( CONCAT(lastName, ', ', firstName, ' (##', candidateID, ')' ) AS CHAR) AS displayName
                 FROM 
                 	extra_candidates
@@ -1868,13 +1869,19 @@
 
 				<cfif IsNumeric(ARGUMENTS.searchString)>
                     AND
-                    	candidateID LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+                    	(
+                        	candidateID LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+                        OR
+                        	ds2019 LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#ARGUMENTS.searchString#%">
+                        )
                 <cfelse>
                     AND 
                     	(
                         	lastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
 	                    OR
     	                	firstName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+                        OR
+                        	ds2019 LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#ARGUMENTS.searchString#%">
         				)
                 </cfif>				
 				
