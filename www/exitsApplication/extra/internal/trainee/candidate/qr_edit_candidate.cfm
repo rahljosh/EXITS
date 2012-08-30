@@ -202,18 +202,7 @@
 
 
 <cfif sendemail eq 'yes' AND LEN(FORM.ds2019)>
-
-    <cfquery name="get_intrep_email" datasource="mysql">
-        SELECT 	
-            email
-        FROM 
-            smg_users
-        WHERE 
-            userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
-    </cfquery>
-
     <cfinclude template="SevisFeeLetterEmail.cfm">
-
 </cfif>
     
 <cfoutput>
