@@ -4,6 +4,58 @@
 <cfparam name="FORM.companyID" default="#CLIENT.companyID#">
 <cfparam name="FORM.submitted" default="0">
 
+<!--- Quick Search Form --->
+<cfparam name="FORM.quickSearchAutoSuggestAgentID" default="type agent, ID, contact">
+<cfparam name="FORM.quickSearchAgentID" default="">
+
+<cfscript>	
+	
+	// Quick Search User
+	if ( VAL(FORM.quickSearchAgentID) ) {
+		Location("index.cfm?curdoc=invoice/user_account_details&userid=#FORM.quickSearchAgentID#", "no");	
+	}
+</cfscript>
+
+<script type="text/javascript">
+	// Avoid two selections on quick search
+	var quickSearchValidation = function() {		
+		$(".quickSearchField").val("");
+	}
+	
+	$(function() {
+
+		// Quick Search - User Auto Suggest
+		$("#quickSearchAutoSuggestAgentID").autocomplete({
+														
+			source: function(request, response) {
+				$.ajax({
+					url: "extensions/components/user.cfc?method=remoteLookUpUser",
+					dataType: "json",
+					data: { 
+						searchString: request.term
+					},
+					success: function(data) {
+						response( $.map( data, function(item) {
+							return {
+								//label: item.DISPLAYNAME,
+								value: item.DISPLAYNAME,
+								valueID: item.USERID
+							}
+						}));
+					}
+				})
+			},
+			select: function(event, ui) {
+				$("#quickSearchAgentID").val(ui.item.valueID);
+				$("#quickSearchAgentForm").submit();
+			},
+			minLength: 2	
+			
+		});
+		
+	});	
+</script>
+
 <cfif FORM.submitted>
 	
 	<!--- query to get company info --->
@@ -343,6 +395,10 @@ END) AS testCompId --->
 							<table width = 100%>
 								<tr>
 									<td valign="top" width=50%>
+                                    <cfform name="quickSearchAgentForm" id="quickSearchAgentForm" method="post" action="" style="margin:0px; padding:0px;">
+                                    	<input type="text" style="font-size:11px; font-style:italic; color:##666666;" name="quickSearchAutoSuggestAgentID" id="quickSearchAutoSuggestAgentID" value="#FORM.quickSearchAutoSuggestAgentID#" onclick="quickSearchValidation();" class="mediumField quickSearchField" maxlength="20" />
+                                        <input type="hidden" name="quickSearchAgentID" id="quickSearchAgentID" value="#FORM.quickSearchAgentID#" class="quickSearchField" />
+                                    </cfform>
 									<b>#agent_details.businessname#</b><br>
 									Agent ID: #userid#<br>
 		#agent_Details.firstname# #agent_details.lastname#<br>
