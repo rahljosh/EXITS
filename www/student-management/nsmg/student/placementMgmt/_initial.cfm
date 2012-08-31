@@ -168,7 +168,11 @@
 
 				if ( NOT LEN(FORM.placeRepIDReason) ) {
 					SESSION.formErrors.Add("You must enter a reason for changing placing representative");
-				}			
+				}	
+				
+				if ( VAL(FORM.secondVisitRepID) AND VAL(FORM.placeRepID) AND FORM.secondVisitRepID EQ FORM.placeRepID ) { 
+					SESSION.formErrors.Add("Placing Representative must be different than Second Visit Representative");
+				}	
 			
 			} 
 			
@@ -194,7 +198,11 @@
 
 				if ( NOT LEN(FORM.secondVisitRepIDReason) ) {
 					SESSION.formErrors.Add("You must enter a reason for changing second representative visit");
-				}			
+				}	
+				
+				if ( VAL(FORM.secondVisitRepID) AND VAL(FORM.placeRepID) AND FORM.secondVisitRepID EQ FORM.placeRepID ) { 
+					SESSION.formErrors.Add("Second Visit Representative must be different than Placing Representative");
+				}	
 			
 			}
 			
@@ -278,6 +286,10 @@
 
 			if ( NOT VAL(FORM.areaRepID) ) { 
 				SESSION.formErrors.Add("You must select a supervising representative from the list");
+			}	
+			
+			if ( VAL(FORM.secondVisitRepID) AND VAL(FORM.placeRepID) AND FORM.secondVisitRepID EQ FORM.placeRepID ) { 
+				SESSION.formErrors.Add("Second Visit Representative must be different than Placing Representative");
 			}	
 			
 			if ( VAL(FORM.hostID) AND VAL(FORM.doublePlace) AND qGetPlacementHistoryByID.doublePlacementID NEQ FORM.doublePlace ) { 
@@ -1554,6 +1566,7 @@
                         <div class="placementMgmtLinks">
                             [ <a href="../../index.cfm?curdoc=user_info&userID=#qGetPlacementHistoryByID.secondVisitRepID#" target="_blank">More Information</a> 
                             
+                            <!--- Do not allow update if there is a report created --->
                             <cfif NOT VAL(qGetSecondVisitReport.recordCount) AND NOT ListFind(CLIENT.userType, "5,6,7")>
                                 |
                                 <a href="javascript:displayUpdateField('divSecondVisitRepID','secondVisitRepID');">Update</a> 
@@ -1620,6 +1633,13 @@
                             	
                                 2<sup>nd</sup> Representative will be assigned by your Regional Manager.
                             
+                            </cfif>
+                            
+                            <!--- Do not allow update if there is a report created --->
+                            <cfif VAL(qGetSecondVisitReport.recordCount) AND ListFind(CLIENT.userType, "5,6,7")>
+                                <p class="formNote">
+                                    A 2<sup>nd</sup> visit report has been created/submitted by this rep. Update has been disabled.
+                                </p>
                             </cfif>
                         
                         </div>
