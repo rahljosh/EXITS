@@ -2246,7 +2246,7 @@
             AND
             	foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHistoryID.historyID)#">   
             AND
-            	actions LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%Placement Approved%">
+            	actions LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%Placement Approved by Office%">
         </cfquery>
 	
 	</cffunction>
