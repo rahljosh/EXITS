@@ -264,10 +264,10 @@
                     UPDATE 
                         smg_hosts 
                     SET
-                        familyLastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.familyLastName#">,
-                        fatherLastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherLastName#">,
-                        fatherFirstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherFirstName#">,
-                        fatherMiddleName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherMiddleName#">,
+                        familyLastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.familyLastName)#">,
+                        fatherLastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.fatherLastName)#">,
+                        fatherFirstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.fatherFirstName)#">,
+                        fatherMiddleName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.fatherMiddleName)#">,
                         fatherBirth = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.fatherBirth)#">,
                         fatherDOB = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.fatherDOB#" null="#NOT IsDate(FORM.fatherDOB)#">,
                         <!--- Father SSN --->
@@ -276,9 +276,9 @@
                         </cfif>
                         fatherWorkType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherWorkType#">,
                         father_cell = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.father_cell#">,
-                        motherFirstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherFirstName#">,
-                        motherLastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherLastName#">,
-                        motherMiddleName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherMiddleName#">,
+                        motherFirstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.motherFirstName)#">,
+                        motherLastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.motherLastName)#">,
+                        motherMiddleName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.motherMiddleName)#">,
                         motherBirth = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.motherBirth)#">,
                         motherDOB = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.motherDOB#" null="#NOT IsDate(FORM.motherDOB)#">,
                         <!--- Mother SSN --->
@@ -348,10 +348,10 @@
                     )
                     VALUES 
                     (
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.familyLastName#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherLastName#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherFirstName#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherMiddleName#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.familyLastName)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.fatherLastName)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.fatherFirstName)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.fatherMiddleName)#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.fatherBirth)#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.fatherDOB#" null="#NOT IsDate(FORM.fatherDOB)#">,
                         <!--- Father SSN --->
@@ -360,9 +360,9 @@
                         </cfif>
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherWorkType#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.father_cell#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherFirstName#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherLastName#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherMiddleName#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.motherFirstName)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.motherLastName)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.motherMiddleName)#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.motherBirth)#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.motherDOB#" null="#NOT IsDate(FORM.motherDOB)#">,
                         <!--- Mother SSN --->
