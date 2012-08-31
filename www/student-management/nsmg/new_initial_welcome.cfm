@@ -160,10 +160,10 @@
         INNER JOIN 
         	user_access_rights uar ON u.userid = uar.userid
         WHERE 
-        <cfif client.usertype gte 5>
+        <cfif CLIENT.usertype gte 5>
            	uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionid#">
     	<cfelse>
-        	uar.companyid = #client.companyid#
+        	uar.companyid = #CLIENT.companyid#
         </cfif>
         AND 
         	u.datecreated >= <cfqueryparam cfsqltype="cf_sql_date" value="#new_date#">
@@ -278,65 +278,53 @@
                
             	</div> <!-- end top --> 
              <div class="rdbox">
-             <table width=90% align="center" cellpadding=4>
-             	<tr>
-                	
-			<cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, CLIENT.companyID)>
-                            <Td width=22><img src="pics/icons/DOS.png" border="0" title="Click Here to Take the DOS Certification Test" /></Td>
-                            <td>
-                            <!----<a href="index.cfm?curdoc=user/index&uniqueID=#CLIENT.uniqueID#&action=trainCasterLogin" target="_blank" title="Click Here to Take the DOS Test">---->
-                              DOS Certification
-                            </a>
-                            </td>
-                        </cfif>
-                    </td>
-                    <td><img src="pics/icons/annualPaperwork.png" border="0" title="Click Here to fill out  your annual paperwork" /></td>
-				     <td>		<a href="index.cfm?curdoc=forms/yearly_agreement">
-                          Yearly Paperwork
-                        </a>
-                    </td>
-                 </tr>
              
-                    	<tr>
-                        <!----Progress Reports---->
-                        	<Td width=22><img src="pics/icons/onlineReports.png" /></Td><td>          
-							<cfif client.usertype eq 15>
-                                <a href="index.cfm?curdoc=secondVisitReports">Second Visit Reports</a><br>
-                            <cfelse>
-                                <a href="index.cfm?curdoc=progress_reports">Progress & Home Visit Reports</a><br>
-                            </cfif>
-                            </td>
-                        
-                        <!----View Pending Placements---->
-                        <cfif client.usertype lte 7>
-                        
-                        	<Td  width=22><img src="pics/icons/viewPlacements.png" /></Td><td>
-                            
-                            <a href="index.cfm?curdoc=pendingPlacementList">View Pending Placements</a></td>
-                        
-                        </cfif>
-                      	<!----Help Project---->
-                        </tr>
-                         <tr>
-                        <cfif (CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12 or client.companyID eq 10) and client.usertype lte 7>
-                       
-                        	<Td  width=22><img src="pics/icons/HelpHours.png" /></Td><td>	
-                            <a href="index.cfm?curdoc=project_help">H.E.L.P. Community Service Hours</a></td>
-                      
-                        </cfif>
-                        	
-                        
-                        
-                        <cfif APPLICATION.CFC.USER.isOfficeUser() and (CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12 or client.companyid eq 10)>
-                      
-                        	<Td  width=22><img src="pics/icons/webex.png" /></Td><td>	
-                            <a href="index.cfm?curdoc=calendar/index">WebEx Calendar</a></td>
-                        
-                        </cfif>
-                        </tr>
-                      </Table>
-                        
-                  
+            <table width=90% align="center" cellpadding=4>
+	            <tr>
+    		        <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, CLIENT.companyID)>
+			            <td width=22><img src="pics/icons/DOS.png" border="0" title="Click Here to Take the DOS Certification Test" /></td>
+			            <td>
+            				<a href="index.cfm?curdoc=user/index&uniqueID=#CLIENT.uniqueID#&action=trainCasterLogin" target="_blank" title="Click Here to Take the DOS Test">
+				            	Click Here to Take the DOS Certification Test
+				            </a>
+            			</td>
+            		</cfif>
+                    <td><img src="pics/icons/annualPaperwork.png" border="0" title="Click Here to fill out  your annual paperwork" /></td>
+					<td><a href="index.cfm?curdoc=forms/yearly_agreement">Yearly Paperwork</a></td>
+            	</tr>
+             
+                <tr>
+                	<!----Progress Reports---->
+                	<td width=22><img src="pics/icons/onlineReports.png" /></td><td>          
+                		<cfif CLIENT.usertype eq 15>
+                			<a href="index.cfm?curdoc=secondVisitReports">Second Visit Reports</a>
+                		<cfelse>
+                			<a href="index.cfm?curdoc=progress_reports">Progress Reports</a>
+                            / 
+                            <a href="index.cfm?curdoc=secondVisitReports">Second Visit Reports</a>
+                		</cfif>
+                	</td>
+                
+					<!----View Pending Placements---->
+                    <cfif ListFind("1,2,3,4,5,6,7", CLIENT.usertype)>
+                        <td width=22><img src="pics/icons/viewPlacements.png" /></td>
+                        <td><a href="index.cfm?curdoc=pendingPlacementList">View Pending Placements</a></td>
+                    </cfif>
+                </tr>
+                
+                <!----Help Project---->
+                <tr>
+					<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, CLIENT.companyID) AND ListFind("1,2,3,4,5,6,7", CLIENT.usertype)>
+                        <td width=22><img src="pics/icons/HelpHours.png" /></td>
+                        <td><a href="index.cfm?curdoc=project_help">H.E.L.P. Community Service Hours</a></td>                
+                    </cfif>
+                
+					<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, CLIENT.companyID) AND APPLICATION.CFC.USER.isOfficeUser()>
+                        <td width=22><img src="pics/icons/webex.png" /></td><td>	
+                        <a href="index.cfm?curdoc=calendar/index">WebEx Calendar</a></td>
+                    </cfif>
+                </tr>
+                </Table>
                 
     		</div>
             	<div class="rdbottom"></div> <!-- end bottom --> 
@@ -346,10 +334,10 @@
                 <span class="rdtitle">Incentives</span> 
             	</div> <!-- end top --> 
              <div class="rdbox">
-             <cfif client.companyid lte 5>
+             <cfif CLIENT.companyid lte 5>
                         <Table width=90% align="center" cellpadding=4>
                         	<Tr>
-                            	<Td width=22><img src="pics/icons/bonus.png" /></td>
+                            	<td width=22><img src="pics/icons/bonus.png" /></td>
                                 <td><a href="uploadedfiles/pdf_docs/ISE/promotion/Pre-Ayp%20Bonus%202012.pdf" target="_blank">Pre-AYP</a> </td>
                             </Tr>	
                             <Tr>
@@ -448,7 +436,7 @@
 					<!---_Available for All companies---->
                     <cfif ListFind("1,2,3,4,5,10,12,14", CLIENT.companyid) >
                 	<tr>
-                    	<Td><img src="pics/icons/marketing.png" /></Td><td><a href="marketing/difference.cfm" target="_blank">Make A Difference</a></td>
+                    	<td><img src="pics/icons/marketing.png" /></td><td><a href="marketing/difference.cfm" target="_blank">Make A Difference</a></td>
                         <td><img src="pics/icons/marketing2.png" /></td><td><a href="marketing/HostFam2012/HostFamiles.cfm" target="_blank">Host Families</a></td>
                         
                     </tr>
@@ -486,9 +474,9 @@
              <Cfif APPLICATION.CFC.USER.isOfficeUser()>
                     <table align="Center" width=80% >
                 	<Tr>
-                    	<Td width=25><img src="pics/icons/map.png" /></Td><td>
+                    	<td width=25><img src="pics/icons/map.png" /></td><td>
            <a href="javascript:openPopUp('tools/stateStatus.cfm', 875, 675);">Available States</a>
-            			</Td>
+            			</td>
                         <td rowspan=2 width=60%><font size=-2><em>State and Region availability can change at any time, acceptance of choice will not be guranteed until application is submitted for approval</em></font>
                   </tr>
                   <tr>
@@ -522,7 +510,7 @@
                             <cfset is_advisor = 0>
                              <table>
                              	<Tr>
-                                	<Td></Td><td>Name & Location</td><Td>Account Status</Td>
+                                	<td></td><td>Name & Location</td><td>Account Status</td>
                                 </Tr>
                                 
                             <cfloop query="get_new_users"> 
@@ -549,9 +537,9 @@
                                 <cfelse>
                                     <a href="index.cfm?curdoc=user_info&userid=#userid#">#firstname# #lastname#</a> of #city#, #state#
                                 </cfif>
-                                </td><Td>
+                                </td><td>
 								
-								<cfif not val(accountCreationVerified)>Not Active, <CFif client.usertype eq 4><a href="?curdoc=forms/user_paperwork&userid=#userid#"></cfif>Verification Needed</a><cfelse>Account Active</cfif></Td>
+								<cfif not val(accountCreationVerified)>Not Active, <CFif CLIENT.usertype eq 4><a href="?curdoc=forms/user_paperwork&userid=#userid#"></cfif>Verification Needed</a><cfelse>Account Active</cfif></td>
                                 </Tr>
                             </cfloop>
                             </table>
@@ -621,7 +609,7 @@
     </table>
      <table class="news">
     	<Tr>
-        	<Td width=80% valign="top">
+        	<td width=80% valign="top">
             
              <div class="rdholder"> 
 				<div class="rdtop"> 
@@ -633,7 +621,7 @@
         <tr>
            <td  valign="top" width="100%"><br>
                 <img src="pics/newsIcon.png" width=100 height=100 align="left">
-                <cfif client.usertype neq 15>
+                <cfif CLIENT.usertype neq 15>
                            
                 <!---<img src="#CLIENT.exits_url#/nsmg/pics/clover.gif" width="75" align="left" >--->
                 <cfif news_messages.recordcount is 0>
@@ -692,7 +680,7 @@
     
     
     	</td>
-        <Td valign="top">
+        <td valign="top">
         
       	 
     	 <cfif (ListFind("5,6,7,9", CLIENT.userType) AND ListFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, CLIENT.companyid)) >
@@ -701,15 +689,15 @@
          <table border=0>
         	<Tr>
              <cfif placed_students.Count LT 7>
-            	<Td class="sticky" align="center">
+            	<td class="sticky" align="center">
              
                 #tripcount#
-                </Td>
+                </td>
                 <td>
-                 placements away from a trip to <A href="uploadedFiles/Incentive_trip/incentiveTrip_#client.companyid#.pdf" target="_blank">#incentive_trip.trip_place#!</A>
+                 placements away from a trip to <A href="uploadedFiles/Incentive_trip/incentiveTrip_#CLIENT.companyid#.pdf" target="_blank">#incentive_trip.trip_place#!</A>
                
                 <cfelse>
-                 <td colspan=2>   You've earned a trip to <A href="uploadedFiles/Incentive_trip/incentiveTrip_#client.companyid#.pdf" target="_blank">#incentive_trip.trip_place#!!!</A> 
+                 <td colspan=2>   You've earned a trip to <A href="uploadedFiles/Incentive_trip/incentiveTrip_#CLIENT.companyid#.pdf" target="_blank">#incentive_trip.trip_place#!!!</A> 
                 </td></cfif>
            
                         
@@ -718,7 +706,7 @@
     </cfif>
       
       <!----
-     <cfif client.companyid eq 10>
+     <cfif CLIENT.companyid eq 10>
         		  <!----Special Announcements---->
     <table width=100% cellpadding=0 cellspacing=0 border="0" height=24>
         <tr height=24>
@@ -747,7 +735,7 @@
     <cfinclude template="table_footer.cfm">
     </cfif>
 	---->
-        </Td>
+        </td>
      </tr>
   </table>
 </cfif>
@@ -826,7 +814,7 @@
 						</td>
                     </cfif>
                 </tr>
-                <cfif client.usertype neq 15>
+                <cfif CLIENT.usertype neq 15>
                 <tr>
                     <td></td>
                 </tr>
@@ -861,7 +849,7 @@
                 <tr>
                 	
                     
-                    <Td></Td>
+                    <td></td>
                 </tr>
                 </cfif>
             </table>
@@ -905,7 +893,7 @@
 	<table cellpadding="2" cellspacing="4" width=100% bgcolor="##FFFFFF" class="section">
 		<tr>
 			<td class="get_attention" width="50%"><span class="get_attention"><b>::</b></span> News, Alerts, and Updates from #companyname.businessname#</u></td>
-			<td class="get_attention"><span class="get_attention"><b>::</b></span> State & Region Access</Td>
+			<td class="get_attention"><span class="get_attention"><b>::</b></span> State & Region Access</td>
 		</tr>
 		<tr>
 			<td valign="top">
@@ -952,9 +940,9 @@
 			<td valign="top" rowspan=2 align="center">
             	<table>
                 	<Tr>
-                    	<Td>
+                    	<td>
             <a href="javascript:openPopUp('tools/stateStatus.cfm', 875, 675);"><img src="pics/buttons/state.png"border=0/></a>
-            			</Td>
+            			</td>
                      	<td>
             <a href="javascript:openPopUp('tools/regionStatus.cfm', 750, 675);"><img src="pics/buttons/region.png"border=0/></a>
                         </td>
@@ -966,7 +954,7 @@
 			</td>
 		</tr>
         <Tr>
-        	<td class="get_attention"><span class="get_attention"><b>::</b></span> Your Current Help Desk Tickets </Td>
+        	<td class="get_attention"><span class="get_attention"><b>::</b></span> Your Current Help Desk Tickets </td>
             <td></td>
         </Tr>
         <tr>
@@ -993,7 +981,7 @@
                 
             
             </td>
-			<td></Td>
+			<td></td>
         </Tr>
         <tr>
 	</table>
@@ -1010,7 +998,7 @@
     <table cellpadding="2" cellspacing="4" width=100% bgcolor="##FFFFFF" class="section">
         <tr>
             <td class="get_attention" width="50%"><span class="get_attention"><b>::</b></span> News, Alerts, and Updates from #companyname.businessname#</u></td>
-            <td class="get_attention" width="50%"><span class="get_attention"><b>::</b></span> Your Current Help Desk Tickets </Td>
+            <td class="get_attention" width="50%"><span class="get_attention"><b>::</b></span> Your Current Help Desk Tickets </td>
         </tr>
         <tr>
             <td valign="top">
@@ -1055,7 +1043,7 @@
 </cfif>
 
 <!----footer of table---->
-<cfif client.usertype gt 4>
+<cfif CLIENT.usertype gt 4>
 <cfinclude template="table_footer.cfm">
 </cfif>
 </cfoutput>

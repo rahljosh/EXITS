@@ -8,10 +8,12 @@
 	Updated:  	
 
 ----- ------------------------------------------------------------------------- --->
-<cfset newPageList = '1,12313'>
-<Cfif listFind(newPageList, #client.userid#)>
-	<cflocation url="?curdoc=new_initial_welcome">
+<cfset newPageList = '1,12313,510'>
+
+<Cfif listFind(newPageList, client.userid)>
+	<cflocation url="?curdoc=new_initial_welcome" addtoken="no">
 </Cfif>
+
 <!--- Kill Extra Output --->
 <cfsilent>
 
