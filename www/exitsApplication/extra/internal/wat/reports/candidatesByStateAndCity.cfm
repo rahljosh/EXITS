@@ -1,6 +1,6 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		missingCheckedInDate.cfm
+	File:		candidatesByStateAndCity.cfm
 	Author:		James Griffiths
 	Date:		May 16, 2012
 	Desc:		Candidates by State and City.
@@ -39,15 +39,14 @@
             c.startdate,
             c.enddate,
             c.wat_placement,
+            c.hostCompanyID,
             h.city,
             h.state,
-            h.name,
             cntry.countryName AS country,
             r.firstname AS repFirstName,
             r.lastname AS repLastName,
             r.userID AS repID,
             r.businessName,
-            ej.title,
             com.companyShort,
             p.programName
      	FROM
@@ -56,16 +55,12 @@
         	extra_hostCompany h ON c.hostCompanyID = h.hostCompanyID
       	INNER JOIN
         	smg_users r ON r.userID = c.intrep
-      	INNER JOIN
-        	extra_candidate_place_company ecpc ON ecpc.candidateID = c.candidateID
        	INNER JOIN
         	smg_companies com ON com.companyID = c.companyID
        	INNER JOIN
         	smg_programs p ON p.programID = c.programID
        	INNER JOIN
         	smg_countrylist cntry ON cntry.countryID = c.citizen_country
-       	LEFT OUTER JOIN
-        	extra_jobs ej ON ej.ID = ecpc.jobID
       	WHERE
         	c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
 		<cfif FORM.programID GT 0>
@@ -76,6 +71,8 @@
             AND
                 h.state = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.stateID#">
       	</cfif>
+        GROUP BY
+        	c.candidateID
         ORDER BY
         	state
     </cfquery>
@@ -213,8 +210,7 @@
                                 <td width="10%">Email</td>
                                 <td width="6%">Start Date</td>
                                 <td width="6%">End Date</td>
-                                <td width="10%">Placement Info</td>
-                                <td width="10%">Job Title</td>
+                                <td width="20%">Placement Info</td>
                                 <td width="8%">Option</td>
                                 <td width="15%">Intl. Rep.</td>
                           	<cfelse>
@@ -227,7 +223,6 @@
                                 <td>Start Date</td>
                                 <td>End Date</td>
                                 <td>Placement Info</td>
-                                <td>Job Title</td>
                                 <td>Option</td>
                                 <td>Intl. Rep</td>
                             </cfif>
@@ -243,6 +238,24 @@
                                 vRowCount = vRowCount + 1;
                             </cfscript>
                             
+                            <cfquery name="qGetPlacements" datasource="MySql">
+                            	SELECT
+                                	h.name,
+                                    j.title
+                              	FROM
+                                	extra_hostCompany h
+                              	INNER JOIN
+                                	extra_candidate_place_company ecpc ON ecpc.hostCompanyID = h.hostCompanyID
+                               	LEFT JOIN
+                                	extra_jobs j ON j.ID = ecpc.jobID
+                               	WHERE
+                                	ecpc.status = 1
+                              	AND
+                                	ecpc.candidateID = #qGetNumCity.candidateID#
+                               	ORDER BY
+                                	ecpc.isSecondary ASC
+                            </cfquery>
+                            
                             <tr bgcolor="###IIf(vRowCount MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#" style="font-size:10px;">
                                 <td valign="center">
                                     <a href="?curdoc=candidate/candidate_info&uniqueid=#qGetNumCity.uniqueID#" target="_blank" class="style4">
@@ -256,8 +269,7 @@
                                 <td>#qGetNumCity.email#</td>
                                 <td>#DateFormat(qGetNumCity.startdate, 'mm/dd/yyyy')#</td>
                                 <td>#DateFormat(qGetNumCity.enddate, 'mm/dd/yyyy')#</td>
-                                <td>#qGetNumCity.name#</td>
-                                <td>#qGetNumCity.title#</td>
+                                <td><cfloop query="qGetPlacements">(#qGetPlacements.currentRow#) #name# - #title#<cfif qGetPlacements.currentRow NEQ qGetPlacements.recordCount><br /></cfif></cfloop></td>
                                 <td>#qGetNumCity.wat_placement#</td>
                                 <td>#qGetNumCity.businessName#</td>
                             </tr>
