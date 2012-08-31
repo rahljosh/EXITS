@@ -23,7 +23,7 @@
                 
                 <p>
                     #APPLICATION.MPD.name# and our partner exchange organizations are proud to offer this year's Student Exchange Trips of exciting adventures across America.
-                    #APPLICATION.MPD.name# will be organizing 10 trips, chaperoned and supervised exclusively by our representatives for the 2011-12 season.
+                    #APPLICATION.MPD.name# will be organizing 10 trips, chaperoned and supervised exclusively by our representatives for the 2012-13 season.
                 </p>
                 
                 <strong>NEW THIS SEASON: STUDENTS DO NOT PURCHASE THEIR OWN AIRFARE.  Once you are registered for a tour, you will be contacted regarding airfare.</strong></p>
@@ -33,7 +33,7 @@
         <cfif NOT VAL(qGetTourList.recordcount)>           
             <tr>
                 <td colspan="4"> 
-                    <h3><div align="center">Please check back on Nov 4th for new trip availability.</div></h3>
+                    <h3><div align="center">Please check back on Sept 15th for new trip availability.</div></h3>
                 </td>
             </tr>
         </cfif>
