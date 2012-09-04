@@ -80,7 +80,7 @@
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_secondVisitRep#">,
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_sr_user#">,
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_pr_user#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_ra_user#" null="#NOT LEN(FORM.fk_ra_user)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_ra_user#" null="#NOT VAL(FORM.fk_ra_user)#">,
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_rd_user#">,
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_ny_user#">,
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_host#">,
