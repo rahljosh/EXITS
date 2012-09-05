@@ -59,10 +59,15 @@
                     	ec.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
             WHERE 
             	u.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-			<cfif VAL(FORM.userID)>
-                AND
-                    u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
-            </cfif>
+          	<cfif CLIENT.userType EQ 8>
+            	AND
+                	u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+            <cfelse>
+				<cfif VAL(FORM.userID)>
+                    AND 
+                        u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
+                </cfif>
+          	</cfif>
             GROUP BY
             	u.userID
             ORDER BY 
@@ -134,10 +139,15 @@
             AND
             	ec.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="Self-Placement">
                 
-           	<cfif VAL(FORM.userID)>
-                AND 
-                    ec.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
-           	</cfif>
+           	<cfif CLIENT.userType EQ 8>
+            	AND
+                	ec.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+            <cfelse>
+				<cfif VAL(FORM.userID)>
+                    AND 
+                        ec.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
+                </cfif>
+          	</cfif>
 			
 			<cfif LEN(FORM.selfJobOfferStatus)>
             	AND
@@ -251,17 +261,19 @@
     <tr valign="middle" height="24">
         <td valign="middle" colspan="2">&nbsp;</td>
     </tr>
-    <tr valign="middle">
-        <td align="right" valign="middle" class="style1"><b>Intl. Rep.:</b> </td>
-        <td valign="middle">  
-            <select name="userID" class="style1">
-                <option value="All">---  All International Representatives  ---</option>
-                <cfloop query="qGetIntlRepList">
-                    <option value="#qGetIntlRepList.userID#" <cfif qGetIntlRepList.userID EQ FORM.userID> selected</cfif> >#qGetIntlRepList.businessname#</option>
-                </cfloop>
-            </select>
-        </td>
-    </tr>
+    <cfif CLIENT.userType LTE 4>
+        <tr valign="middle">
+            <td align="right" valign="middle" class="style1"><b>Intl. Rep.:</b> </td>
+            <td valign="middle">  
+                <select name="userID" class="style1">
+                    <option value="All">---  All International Representatives  ---</option>
+                    <cfloop query="qGetIntlRepList">
+                        <option value="#qGetIntlRepList.userID#" <cfif qGetIntlRepList.userID EQ FORM.userID> selected</cfif> >#qGetIntlRepList.businessname#</option>
+                    </cfloop>
+                </select>
+            </td>
+        </tr>
+    </cfif>
     <tr>
         <td valign="middle" align="right" class="style1"><b>Program:</b></td>
         <td> 
@@ -388,7 +400,9 @@
                         </cfif>
                         <th align="left" class="#tableTitleClass#">Email Confirmation</th>
                         <th align="left" class="#tableTitleClass#">Phone Confirmation</th>
-                        <th align="left" class="#tableTitleClass#">Notes</th>
+                        <cfif CLIENT.userType NEQ 8>
+                        	<th align="left" class="#tableTitleClass#">Notes</th>
+                      	</cfif>
                     </tr>
                     <cfif ListFind("2,3", FORM.printOption)>
                         <tr>
@@ -416,11 +430,29 @@
                             </cfif>
                             <td class="style1">#qTotalPerAgent.selfConfirmationName#</td>
                             <td class="style1">
-                            	<cfif VAL(qTotalPerAgent.authentication_secretaryOfState)>Secretary of State<br /></cfif>
-                                <cfif VAL(qTotalPerAgent.authentication_departmentOfLabor)>Deparment of Labor<br /></cfif>
-                                <cfif VAL(qTotalPerAgent.authentication_googleEarth)>Google Earth<br /></cfif>
+                            	<cfif CLIENT.userType NEQ 8>
+									<cfif VAL(qTotalPerAgent.authentication_secretaryOfState)>Secretary of State<br /></cfif>
+                                    <cfif VAL(qTotalPerAgent.authentication_departmentOfLabor)>Deparment of Labor<br /></cfif>
+                                    <cfif VAL(qTotalPerAgent.authentication_googleEarth)>Google Earth<br /></cfif>
+                              	<cfelse>
+                                	<cfif VAL(qTotalPerAgent.authentication_secretaryOfState) AND VAL(qTotalPerAgent.authentication_departmentOfLabor) AND VAL(qTotalPerAgent.authentication_googleEarth)>
+                                    	Yes
+                                   	<cfelse>
+                                    	No
+                                    </cfif>
+								</cfif>
                             </td>
-                            <td class="style1">#qTotalPerAgent.EIN#</td>
+                            <td class="style1">
+                            	<cfif CLIENT.userType NEQ 8>
+                                	#qTotalPerAgent.EIN#
+                              	<cfelse>
+                                	<cfif LEN(qTotalPerAgent.EIN)>
+                                    	Yes
+                                    <cfelse>
+                                    	No
+                                    </cfif>
+                                </cfif>
+                            </td>
                             <td class="style1">
                             	<cfif ListFind("0,1", qTotalPerAgent.workmensCompensation)>
                                 	#YesNoFormat(qTotalPerAgent.workmensCompensation)#
@@ -433,7 +465,9 @@
                             </cfif>
                             <td class="style1">#DateFormat(qTotalPerAgent.selfEmailConfirmationDate, 'mm/dd/yyyy')#</td>
                             <td class="style1">#DateFormat(qTotalPerAgent.selfPhoneConfirmationDate, 'mm/dd/yyyy')#</td>
-                            <td class="style1">#qTotalPerAgent.selfConfirmationNotes#</td>
+                            <cfif CLIENT.userType NEQ 8>
+                            	<td class="style1">#qTotalPerAgent.selfConfirmationNotes#</td>
+                          	</cfif>
                         </tr>
                     </cfloop>        
 

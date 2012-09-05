@@ -95,6 +95,7 @@
                 </div>
             </td>
             <td bgcolor="##8FB6C9" width="15%"><a class="item1" href="?curdoc=user/user_info&uniqueid=#get_user_uniqueid.uniqueid#">My Info</a></td>
+            <td bgcolor="##8FB6C9" width="15%"><a class="item1" href="?curdoc=reports/all_reports">Reports</a></td>
             <!---
             <td bgcolor="##8FB6C9" width="15%">
             	<a class="item1" href="">Tools</a>

@@ -47,10 +47,15 @@
                     	ec.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
             WHERE 
             	u.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-			<cfif VAL(FORM.userID)>
-                AND
-                    u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
-            </cfif>
+            <cfif CLIENT.userType EQ 8>
+            	AND
+                	u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+            <cfelse>
+				<cfif VAL(FORM.userID)>
+                    AND 
+                        u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
+                </cfif>
+          	</cfif>
             GROUP BY
             	u.userID
             ORDER BY 
@@ -113,10 +118,15 @@
                 ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
             AND 
                 ec.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
-           	<cfif VAL(FORM.userID)>
-                AND 
-                    ec.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
-           	</cfif>
+           	<cfif CLIENT.userType EQ 8>
+            	AND
+                	ec.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+            <cfelse>
+				<cfif VAL(FORM.userID)>
+                    AND 
+                        ec.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
+                </cfif>
+          	</cfif>
         </cfquery>
 
 
@@ -229,17 +239,19 @@
     <tr valign="middle" height="24">
         <td valign="middle" colspan="2">&nbsp;</td>
     </tr>
-    <tr valign="middle">
-        <td align="right" valign="middle" class="style1"><b>Intl. Rep.:</b> </td>
-        <td valign="middle">  
-            <select name="userID" class="style1">
-                <option value="All">---  All International Representatives  ---</option>
-                <cfloop query="qGetIntlRepList">
-                    <option value="#qGetIntlRepList.userID#" <cfif qGetIntlRepList.userID EQ FORM.userID> selected</cfif> >#qGetIntlRepList.businessname#</option>
-                </cfloop>
-            </select>
-        </td>
-    </tr>
+    <cfif CLIENT.userType LTE 4>
+        <tr valign="middle">
+            <td align="right" valign="middle" class="style1"><b>Intl. Rep.:</b> </td>
+            <td valign="middle">
+                <select name="userID" class="style1">
+                    <option value="All">---  All International Representatives  ---</option>
+                    <cfloop query="qGetIntlRepList">
+                        <option value="#qGetIntlRepList.userID#" <cfif qGetIntlRepList.userID EQ FORM.userID> selected</cfif> >#qGetIntlRepList.businessname#</option>
+                    </cfloop>
+                </select>
+            </td>
+        </tr>
+  	</cfif>
     <tr>
         <td valign="middle" align="right" class="style1"><b>Program:</b></td>
         <td> 
@@ -360,13 +372,12 @@
                     <th align="left" class="#tableTitleClass#" width="7%">E-mail</th>
                     <th align="left" class="#tableTitleClass#" width="5%">Start Date</th>
                     <th align="left" class="#tableTitleClass#" width="5%">End Date</th>
-                    <th align="left" class="#tableTitleClass#" width="17%">Placement Information</th>
+                    <th align="left" class="#tableTitleClass#" width="20%">Placement Information</th>
                     <th align="left" class="#tableTitleClass#" width="8%">Job Title</th>
-                    <th align="left" class="#tableTitleClass#" width="4%">City</th>
-                    <th align="left" class="#tableTitleClass#" width="5%">State</th>
-                    <th align="left" class="#tableTitleClass#" width="8%">DS-2019</th>
-                    <th align="left" class="#tableTitleClass#" width="8%">Option</th>
-                    <th align="left" class="#tableTitleClass#" width="10%">Intl. Rep.</th>
+                    <th align="left" class="#tableTitleClass#" width="6%">City</th>
+                    <th align="left" class="#tableTitleClass#" width="6%">State</th>
+                    <th align="left" class="#tableTitleClass#" width="10%">DS-2019</th>
+                    <th align="left" class="#tableTitleClass#" width="10%">Option</th>
                 </tr>
                 <cfif ListFind("2,3", FORM.printOption)>
                     <tr>
@@ -438,13 +449,13 @@
                                                     #qGetAllPlacements.name#
                                                 </a>
                                             </td>
-                                            <td width="24%">
+                                            <td width="20%">
                                                 #qGetAllPlacements.jobTitle#
                                             </td>
-                                            <td width="13">
+                                            <td width="15">
                                                 #qGetAllPlacements.city#
                                             </td>
-                                            <td width="13%">
+                                            <td width="15%">
                                                 #qGetAllPlacements.state#
                                             </td>
                                         </tr>
@@ -456,13 +467,13 @@
                                                 #qTotalPerAgent.hostCompanyName#
                                             </a>
                                         </td>
-                                        <td width="24%">
+                                        <td width="20%">
                                             #qTotalPerAgent.jobTitle#
                                         </td>
-                                        <td width="13">
+                                        <td width="15">
                                             #qTotalPerAgent.hostCompanyCity#
                                         </td>
-                                        <td width="13%">
+                                        <td width="15%">
                                             #qTotalPerAgent.hostCompanyState# 
                                         </td>
                                     </tr>
@@ -471,7 +482,6 @@
                         </td>
                         <td class="style1">#qTotalPerAgent.ds2019#</td>
                         <td class="style1">#qTotalPerAgent.wat_placement#</td>
-                        <td class="style1">#qTotalPerAgent.businessname#</td>
                     </tr>
                 </cfloop>        
             </table>
