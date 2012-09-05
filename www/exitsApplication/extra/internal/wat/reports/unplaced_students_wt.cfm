@@ -34,15 +34,19 @@
         LEFT JOIN
         	extra_hostcompany eh ON eh.hostcompanyid = c.requested_placement 
         WHERE 
-        	c.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+        	c.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyid)#">
         AND 
         	c.hostcompanyid = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         AND 
-        	c.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.program#">
+        	c.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.program)#">
         AND 
         	c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND 
         	c.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="CSB-Placement">
+      	<cfif CLIENT.userType EQ 8>
+        	AND
+            	c.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+        </cfif>
         ORDER BY 
         	u.businessname
 	</cfquery>
@@ -81,15 +85,19 @@
         LEFT JOIN
         	extra_hostcompany eh ON eh.hostcompanyid = c.requested_placement 
         WHERE 
-        	c.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+        	c.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyid)#">
         AND 
         	c.hostcompanyid = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         AND 
-        	c.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.program#">
+        	c.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.program)#">
         AND 
         	c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND 
         	c.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="Self-Placement">
+      	<cfif CLIENT.userType EQ 8>
+        	AND
+            	c.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+        </cfif>
         ORDER BY 
         	u.businessname
 	</cfquery>
@@ -127,7 +135,7 @@
     <tr>
     <td valign="middle" align="right" class="style1">Program: </td><td> 
 	<select name="program" class="style1">
-		<option></option>
+		<option>Select a Program</option>
 		<cfloop query="qGetProgramList">
 		<option value=#programid# <cfif IsDefined('FORM.program')><cfif qGetProgramList.programid eq #FORM.program#> selected</cfif></cfif>>#programname#</option>
 		</cfloop>
@@ -179,12 +187,14 @@
       <Th align="left" bgcolor="##4F8EA4" class="style2">Student</Th>
       <th align="left" bgcolor="##4F8EA4" class="style2">Sex</th>
       <th align="left" bgcolor="##4F8EA4" class="style2">Country</th>
-      <th align="left" bgcolor="##4F8EA4" class="style2">Skype ID</th>
-      <th align="left" bgcolor="##4F8EA4" class="style2">Req. Placement</th>
-      <th align="left" bgcolor="##4F8EA4" class="style2">Comments</th>
-      <th align="left" bgcolor="##4F8EA4" class="style2">English Assessment CSB</th>
-      <th align="left" bgcolor="##4F8EA4" class="style2">English Assessment Comment</th>
-	  <th align="left" bgcolor="##4F8EA4" class="style2">Intl. Rep.</th>
+      <cfif CLIENT.userType NEQ 8>
+          <th align="left" bgcolor="##4F8EA4" class="style2">Skype ID</th>
+          <th align="left" bgcolor="##4F8EA4" class="style2">Req. Placement</th>
+          <th align="left" bgcolor="##4F8EA4" class="style2">Comments</th>
+          <th align="left" bgcolor="##4F8EA4" class="style2">English Assessment CSB</th>
+          <th align="left" bgcolor="##4F8EA4" class="style2">English Assessment Comment</th>
+          <th align="left" bgcolor="##4F8EA4" class="style2">Intl. Rep.</th>
+    	</cfif>
 	  <th align="left" bgcolor="##4F8EA4" class="style2">Option</th>
     </tr>	
 
@@ -204,12 +214,14 @@
                     </td>
 					<td class="style1">#sex#</td>
 					<td class="style1">#countryname#</td>
-                    <td class="style1">#APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='section1', foreignTable=APPLICATION.foreignTable, foreignID=qGetCandidates.candidateID, applicationQuestionID=27).answer#</td>
-					<td class="style1">#name#</td>
-					<td class="style1">#change_requested_comment#</td>
-                    <td class="style1">#englishAssessment#</td>
-                    <td class="style1">#englishAssessmentComment#</td>
-                    <td class="style1">#businessname#</td>
+                    <cfif CLIENT.userType NEQ 8>
+                        <td class="style1">#APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='section1', foreignTable=APPLICATION.foreignTable, foreignID=qGetCandidates.candidateID, applicationQuestionID=27).answer#</td>
+                        <td class="style1">#name#</td>
+                        <td class="style1">#change_requested_comment#</td>
+                        <td class="style1">#englishAssessment#</td>
+                        <td class="style1">#englishAssessmentComment#</td>
+                        <td class="style1">#businessname#</td>
+                  	</cfif>
 					<td class="style1">#wat_placement#</td>                    
 				  </tr>
 				  <cfset into = into + 1 >
@@ -224,12 +236,14 @@
                     </td>
 					<td class="style1">#sex#</td>
 					<td class="style1">#countryname#</td>
-                    <td class="style1">#APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='section1', foreignTable=APPLICATION.foreignTable, foreignID=VAL(qGetCandidates.candidateID), applicationQuestionID=27).answer#</td>
-					<td class="style1">#name#</td>
-                    <td class="style1">#change_requested_comment#</td>
-					<td class="style1">#englishAssessment#</td>
-                    <td class="style1">#englishAssessmentComment#</td>
-                    <td class="style1">#businessname#</td>
+                    <cfif CLIENT.userType NEQ 8>
+                        <td class="style1">#APPLICATION.CFC.ONLINEAPP.getAnswerByFilter(sectionName='section1', foreignTable=APPLICATION.foreignTable, foreignID=VAL(qGetCandidates.candidateID), applicationQuestionID=27).answer#</td>
+                        <td class="style1">#name#</td>
+                        <td class="style1">#change_requested_comment#</td>
+                        <td class="style1">#englishAssessment#</td>
+                        <td class="style1">#englishAssessmentComment#</td>
+                        <td class="style1">#businessname#</td>
+                   	</cfif>
 					<td class="style1">#wat_placement#</td>
 				  </tr>		
 				  <cfset into = into + 1 >	  
