@@ -50,8 +50,8 @@
 		
 		vIsDoublePlacementLanguageCompliant = '';
 		
-		// Check if placement is compliant - Office users
-		if ( APPLICATION.CFC.USER.isOfficeUser() ) {
+		// Check if placement is compliant - Office users | Display message to managers
+		if ( listFind("1,2,3,4,5", CLIENT.userType) ) {
 
 			// Check if Host Family is in compliance
 			vIsPlacementCompliant = APPLICATION.CFC.CBC.checkHostFamilyCompliance(
