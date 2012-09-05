@@ -2085,8 +2085,10 @@
                 <cfoutput>
                 
                     <div style="color:##F00">
-                    
-                        <p>You can only approve a placement when placement is compliant. <br /> Please see below:</p>
+                    	
+                        <cfif APPLICATION.CFC.USER.isOfficeUser()>
+                        	<p>You can only approve a placement when placement is compliant. <br /> Please see below:</p>
+                        </cfif>
                         
                         <!--- Display Missing CBC --->
                         #vMissingMessage#
