@@ -48,12 +48,16 @@ WHERE smg_students.studentid = #client.studentid#
 		<cfif companyshort.fax is ''><cfelse> Fax: #companyshort.fax#<br></cfif></div>
 	</td></tr>		
 </table>
+
 <br>
+
 <!--- line --->
 <table width=650 align="center" border=0 bgcolor="FFFFFF">
 <tr><td><hr width=90% align="center"></td></tr>
 </table>
+
 <br>
+
 <!--- School info --->
 <table width=650 align="center" border=0 bgcolor="FFFFFF">
 	<tr>
@@ -71,12 +75,16 @@ WHERE smg_students.studentid = #client.studentid#
 	</tr>
 	<tr><td align="right" colspan="2">#DateFormat(now(), 'dddd, mmmm dd, yyyy')#</td></tr>
 </table>
-<br><br>
+
+<br>
+
 <!--- student info --->
 <table width=650 align="center" border=0 bgcolor="FFFFFF">
 <tr><td><b>Relocation of Student: #get_letter_info.firstname# #get_letter_info.familylastname# from #get_letter_info.countryname#</b></td></tr>
 </table>
+
 <br>
+
 <!--- host family + Area Rep --->
 <table width=650 align="center" border=0 bgcolor="FFFFFF">
 	<tr>
@@ -98,55 +106,60 @@ WHERE smg_students.studentid = #client.studentid#
 		</div></td>
 	</tr>
 </table>
+
 <br>
 
 <table width=650 align="center" border=0 bgcolor="FFFFFF">
-<tr><td><div align="justify">
-<p>
-#companyshort.companyname# would like to thank you for allowing #get_letter_info.firstname# #get_letter_info.familylastname#
-to attend your school. <cfif client.companyid neq 14>#get_letter_info.firstname# is on an #companyshort.companyname# sponsored J1 visa.</cfif>
-</p>
-
-<p>
-This letter is to inform you that #get_letter_info.firstname# has relocated to the above mentioned host family.
-</p>
-
-<p>
-We wish to let you know that #get_letter_info.firstname# is being supervised by #get_letter_info.ar_firstname# 
-#get_letter_info.ar_lastname#, <cfif companyshort.companyid is 4>a <cfelse>an </cfif>#companyshort.companyshort_nocolor# Area Representative. 
-#companyshort.companyshort_nocolor# Area Representatives act as a counselor to assist the student, school and host family should there be any
-concerns during #get_letter_info.firstname#'<cfif #right(get_letter_info.firstname, 1)# is 's'><cfelse>s</cfif> stay in the US.
-</p>
-
-<p>
-Please feel free to contact #get_letter_info.ar_firstname# #get_letter_info.ar_lastname# anytime you feel it would be appropriate.
-In addition, the #companyshort.companyshort_nocolor# Student Services Department, at #companyshort.toll_free#, is available to your school,
-host family and student should there ever be a serious concern with the host family, student or area representative.
-</p>
-
-<!--- GRADUATE STUDENTS - COUNTRY 49 = COLOMBIA / COUNTRY 237 = VENEZUELA --->
-<cfif get_letter_info.grades EQ 12 OR (get_letter_info.grades EQ 11 AND (get_letter_info.countryresident EQ '49' OR get_letter_info.countryresident EQ '237'))>
-<p>
-We hope that #get_letter_info.firstname#'<cfif #right(get_letter_info.firstname, 1)# is 's'><cfelse>s</cfif> school experience will 
-help to increase global understanding and friendship in your school and community. We would like to note that #get_letter_info.firstname#
-will have completed secondary school in <cfif get_letter_info.sex EQ 'male'>his<cfelse>her</cfif> native country upon arrival. Please let us know if we can assist you at 
-any time during #get_letter_info.firstname#'<cfif #right(get_letter_info.firstname, 1)# is 's'><cfelse>s</cfif> enrollment in your school.
-</p>
-<cfelse>
-<p>
-We hope that #get_letter_info.firstname#'<cfif #right(get_letter_info.firstname, 1)# is 's'><cfelse>s</cfif> school experience will 
-help to increase global understanding and friendship in your school and community. Please let us know if we can assist you at 
-any time during #get_letter_info.firstname#'<cfif #right(get_letter_info.firstname, 1)# is 's'><cfelse>s</cfif> enrollment in your school.
-</p>
-</cfif>
-
-<br>
-
-<p>
-Very truly yours,<br><br>
-#companyshort.lettersig#<br>
-#companyshort.companyname#<br>
-</p></div></td></tr>
+<tr>
+	<td>
+	<div align="justify">
+        <p>
+        #companyshort.companyname# would like to thank you for allowing #get_letter_info.firstname# #get_letter_info.familylastname#
+        to attend your school. <cfif client.companyid neq 14>#get_letter_info.firstname# is on an #companyshort.companyname# sponsored J1 visa.</cfif>
+        </p>
+        
+        <p>
+        This letter is to inform you that #get_letter_info.firstname# has relocated to the above mentioned host family.
+        </p>
+        
+        <p>
+        We wish to let you know that #get_letter_info.firstname# is being supervised by #get_letter_info.ar_firstname# 
+        #get_letter_info.ar_lastname#, <cfif companyshort.companyid is 4>a <cfelse>an </cfif>#companyshort.companyshort_nocolor# Area Representative. 
+        #companyshort.companyshort_nocolor# Area Representatives act as a counselor to assist the student, school and host family should there be any
+        concerns during #get_letter_info.firstname#'<cfif #right(get_letter_info.firstname, 1)# is 's'><cfelse>s</cfif> stay in the US.
+        </p>
+        
+        <p>
+        Please feel free to contact #get_letter_info.ar_firstname# #get_letter_info.ar_lastname# anytime you feel it would be appropriate.
+        In addition, the #companyshort.companyshort_nocolor# Student Services Department, at #companyshort.toll_free#, is available to your school,
+        host family and student should there ever be a serious concern with the host family, student or area representative.
+        </p>
+        
+        <!--- GRADUATE STUDENTS - COUNTRY 49 = COLOMBIA / COUNTRY 237 = VENEZUELA --->
+        <cfif get_letter_info.grades EQ 12 OR (get_letter_info.grades EQ 11 AND (get_letter_info.countryresident EQ '49' OR get_letter_info.countryresident EQ '237'))>
+        <p>
+        We hope that #get_letter_info.firstname#'<cfif #right(get_letter_info.firstname, 1)# is 's'><cfelse>s</cfif> school experience will 
+        help to increase global understanding and friendship in your school and community. We would like to note that #get_letter_info.firstname#
+        will have completed secondary school in <cfif get_letter_info.sex EQ 'male'>his<cfelse>her</cfif> native country upon arrival. Please let us know if we can assist you at 
+        any time during #get_letter_info.firstname#'<cfif #right(get_letter_info.firstname, 1)# is 's'><cfelse>s</cfif> enrollment in your school.
+        </p>
+        <cfelse>
+        <p>
+        We hope that #get_letter_info.firstname#'<cfif #right(get_letter_info.firstname, 1)# is 's'><cfelse>s</cfif> school experience will 
+        help to increase global understanding and friendship in your school and community. Please let us know if we can assist you at 
+        any time during #get_letter_info.firstname#'<cfif #right(get_letter_info.firstname, 1)# is 's'><cfelse>s</cfif> enrollment in your school.
+        </p>
+        </cfif>
+        
+        <p>
+        Very truly yours,<br>
+        #companyshort.lettersig#<br>
+        #companyshort.companyname#<br>
+        </p>
+        </div>
+	</td>
+</tr>
+</table>
 </cfoutput>
 
 </body>

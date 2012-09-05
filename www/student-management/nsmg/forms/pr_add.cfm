@@ -359,7 +359,7 @@
                             <th align="right">Regional Advisor:</th>
                         <td>
 							<cfif qGetAdvisorInfo.recordCount>
-                                #qGetAdvisorInfo.firstname# #qGetAdvisorInfo.lastname# ###qGetAdvisorInfo.userID#)
+                                #qGetAdvisorInfo.firstname# #qGetAdvisorInfo.lastname# ###qGetAdvisorInfo.userID#
                             <cfelse>
                             	Reports Directly to Regional Director
                             </cfif>
