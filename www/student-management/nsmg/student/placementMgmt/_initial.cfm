@@ -558,6 +558,13 @@
 		// Display Change Placecement
 		displayChangePlacementReason();
 		
+		/*
+		// Disable Button After First Click
+		$("input:image").click(function(){
+			$("#submit").attr('disabled','disabled').css('opacity',0.5);
+		});				
+		*/
+		
 	});
 	
 	
@@ -1003,9 +1010,9 @@
             
                 <tr>
                     <td align="center" style="padding-top:10px;">
-
-						<!--- Check if CBCs are in compliance with DOS --->											
-                        <cfif APPLICATION.CFC.USER.isOfficeUser() AND LEN(vIsPlacementCompliant)>
+                    
+						<!--- Check if CBCs are in compliance with DOS  - Display message to office and regional managers --->											
+                        <cfif listFind("1,2,3,4,5", CLIENT.userType) AND LEN(vIsPlacementCompliant)>
                             
                             <!--- Display Compliance --->
                             #vIsPlacementCompliant#
@@ -1717,7 +1724,7 @@
 		<!--- Form Buttons --->  
         <table width="90%" id="tableDisplaySaveButton" border="0" cellpadding="2" cellspacing="0" class="section displayNone" align="center" style="padding:5px;">
             <tr>
-                <td align="center"><input name="Submit" type="image" src="../../student_app/pics/save.gif" border="0" alt="Save"/></td>
+                <td align="center"><input name="submit" id="submit" type="image" src="../../student_app/pics/save.gif" border="0" alt="Save"/></td>
             </tr>                
         </table>    
 
