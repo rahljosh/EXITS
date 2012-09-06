@@ -557,12 +557,28 @@
 		
 		// Display Change Placecement
 		displayChangePlacementReason();
-		
+
 		/*
-		// Disable Button After First Click
+		$("form").submit(function(){
+			if (this.beenSubmitted)
+				return false;
+			else
+				this.beenSubmitted = true;
+		});
+
+		// Prevent double submission
 		$("input:image").click(function(){
 			$("#submit").attr('disabled','disabled').css('opacity',0.5);
-		});				
+			this.submit();
+		});	
+		
+		$("form").submit(
+						 
+		  function() {
+			  alert('test');
+			$("input.image").attr("disabled","true").css('opacity',0.5);
+		  }
+		);	
 		*/
 		
 	});
@@ -1643,7 +1659,7 @@
                             </cfif>
                             
                             <!--- Do not allow update if there is a report created --->
-                            <cfif VAL(qGetSecondVisitReport.recordCount) AND ListFind(CLIENT.userType, "5,6,7")>
+                            <cfif VAL(qGetSecondVisitReport.recordCount)>
                                 <p class="formNote">
                                     A 2<sup>nd</sup> visit report has been created/submitted by this rep. Update has been disabled.
                                 </p>
