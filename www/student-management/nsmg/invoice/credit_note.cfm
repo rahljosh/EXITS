@@ -80,6 +80,7 @@ SELECT sc.creditid, sc.agentid, sc.stuid, sc.invoiceid, sc.description, sc.type,
 			WHEN sp.type = 11 THEN 8
 			WHEN sp.type = 22 THEN 8
 			WHEN sp.type = 23 THEN 8
+            WHEN s.companyid IS NULL THEN #CLIENT.companyID#
 			ELSE s.companyid
 			END) AS testCompId
 FROM smg_credit sc
