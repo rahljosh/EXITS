@@ -1444,7 +1444,7 @@
 		</cfif>
         
         <!--- Send an email to Luke, Joanna, Tina, and Bryan if this a relocation --->
-        <cfif VAL(ARGUMENTS.isRelocation)>
+        <cfif VAL(ARGUMENTS.isRelocation) AND (ARGUMENTS.hostID NEQ 0) AND (ARGUMENTS.hostID NEQ qGetStudentInfo.hostID)>
 			<cfscript>
 				// Student's previous placement
 				qGetPlacementHistory = getPlacementHistory(studentID=qGetStudentInfo.studentID);
