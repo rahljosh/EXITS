@@ -269,6 +269,7 @@
 							
                             <a href="#CGI.SCRIPT_NAME#?action=download" class="itemLinks <cfif Find("download", CGI.QUERY_STRING)> selected </cfif>">Download Forms</a>
                             <a href="#CGI.SCRIPT_NAME#?action=documents" class="itemLinks <cfif Find("documents", CGI.QUERY_STRING)> selected </cfif>">Upload Documents</a>
+                            <a href="#CGI.SCRIPT_NAME#?action=materials" class="itemLinks <cfif Find("materials", CGI.QUERY_STRING)> selected </cfif>">Program Manuals/Materials</a>
                             <a href="#CGI.SCRIPT_NAME#?action=printApplication" class="itemLinks">Print Application</a>
                             <a href="#CGI.SCRIPT_NAME#?action=flightInfo" class="itemLinks <cfif Find("flightInfo", CGI.QUERY_STRING)> selected </cfif>">Flight Information</a>                            
 							<cfif CLIENT.loginType NEQ 'user'>
