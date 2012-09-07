@@ -179,6 +179,11 @@
                 <span class="text">
 					PS: You will have access to all candidates submitted to CSB. You will be able to check their status and information (no edit).
                 </span>
+                
+                <span class="title">New user in EXTRA?</span>
+                <span class="text">
+                	<a href="onlineApplication/tutorial.cfm">Click here for a breif tutorial</a>
+                </span>
 
             </div>
             
