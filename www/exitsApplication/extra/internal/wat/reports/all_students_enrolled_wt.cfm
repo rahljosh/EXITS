@@ -94,16 +94,35 @@
                 u.businessName
             FROM
                 extra_candidates ec
-            LEFT JOIN
-            	extra_candidate_place_company ecpc ON ecpc.candidateID = ec.candidateID
-                AND
-                	ec.hostcompanyid = ecpc.hostCompanyID
-				AND 
-                    ecpc.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-               	<cfif FORM.placementType EQ "primary">
-                	AND
-                    	ecpc.isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-                </cfif>
+          	<cfif FORM.placementType EQ "primary" OR FORM.placementType EQ "secondary">
+            	INNER JOIN
+                	extra_candidate_place_company ecpc ON ecpc.candidateID = ec.candidateID
+                    AND
+                        ec.hostcompanyid = ecpc.hostCompanyID
+                    AND 
+                        ecpc.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                    <cfif FORM.placementType EQ "primary">
+                        AND
+                            ecpc.isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                    <cfelseif FORM.placementType EQ "secondary">
+                        AND
+                            ecpc.isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                    </cfif>
+          	<cfelse>
+            	LEFT JOIN
+                	extra_candidate_place_company ecpc ON ecpc.candidateID = ec.candidateID
+                    AND
+                        ec.hostcompanyid = ecpc.hostCompanyID
+                    AND 
+                        ecpc.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                    <cfif FORM.placementType EQ "primary">
+                        AND
+                            ecpc.isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                    <cfelseif FORM.placementType EQ "secondary">
+                        AND
+                            ecpc.isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                    </cfif>
+          	</cfif>
             LEFT JOIN
             	extra_jobs ej ON ej.id = ecpc.jobID
             LEFT JOIN 
@@ -445,9 +464,13 @@
                                     <cfloop query="qGetAllPlacements">
                                         <tr>
                                             <td width="50%">
+                                            	<cfif FORM.placementType NEQ "secondary">
                                                 <a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qGetAllPlacements.hostCompanyID#"  target="_blank" class="style4">
                                                     #qGetAllPlacements.name#
                                                 </a>
+                                                <cfelse>
+                                                	#qGetAllPlacements.name#
+                                                </cfif>
                                             </td>
                                             <td width="20%">
                                                 #qGetAllPlacements.jobTitle#

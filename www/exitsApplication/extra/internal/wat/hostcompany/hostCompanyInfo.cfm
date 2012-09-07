@@ -1513,160 +1513,164 @@
                         <br />
 
                         <!--- Other Information --->
-                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
-                            <tr>
-								<td bordercolor="##FFFFFF">
-
-                                    <table width="100%" cellpadding="3" cellspacing="3" border="0">
-                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
-                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Other Information</td>
-                                        </tr>
-                                        <tr>
-                                            <td width="35%" class="style1" align="right"><strong>Person Signing Job Offer:</strong></td>
-                                            <td class="style1" bordercolor="##FFFFFF">
-                                                <span class="readOnly">#FORM.personJobOfferName#</span>
-                                                <input type="text" name="personJobOfferName" id="personJobOfferName" value="#FORM.personJobOfferName#" class="style1 editPage" size="35" maxlength="100">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="style1" align="right"><strong>Title:</strong></td>
-                                            <td class="style1" bordercolor="##FFFFFF">
-                                                <span class="readOnly">#FORM.personJobOfferTitle#</span>
-                                                <input type="text" name="personJobOfferTitle" id="personJobOfferTitle" value="#FORM.personJobOfferTitle#" class="style1 editPage" size="35" maxlength="100">
-                                            </td>
-                                        </tr>
-                                        
-                                        <cfset ind = 0>
-                                        
-                                        <!--- J1 Positions --->
-                                        <cfloop query="qGetActivePrograms">
-                                        	<cfset ind += 1>
-                                        	<tr>
-                                            	<td class="style1" align="right"><strong>J1 Positions - #qGetActivePrograms.programName#:</strong></td>
+                        <cfif CLIENT.userType NEQ 8>
+                        
+                            <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                                <tr>
+                                    <td bordercolor="##FFFFFF">
+    
+                                        <table width="100%" cellpadding="3" cellspacing="3" border="0">
+                                            <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
+                                                <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Other Information</td>
+                                            </tr>
+                                            <tr>
+                                                <td width="35%" class="style1" align="right"><strong>Person Signing Job Offer:</strong></td>
                                                 <td class="style1" bordercolor="##FFFFFF">
-                                                    <select name="numberPositions_#ind#" id="numberPositions_#ind#" class="style1 editPage">
-                                                        <cfloop from="0" to="100" index="j">
-                                                            <option value="#j#" <cfif qGetActivePrograms.numberPositions EQ '#j#'>selected</cfif>>#j#</option>
-                                                        </cfloop>
-                                                    </select>
-                                                    <span class="readOnly">#qGetActivePrograms.numberPositions#</span>
+                                                    <span class="readOnly">#FORM.personJobOfferName#</span>
+                                                    <input type="text" name="personJobOfferName" id="personJobOfferName" value="#FORM.personJobOfferName#" class="style1 editPage" size="35" maxlength="100">
                                                 </td>
                                             </tr>
-                                        </cfloop>
-                                        <!--- End J1 Positions --->
-                                        
-                                        <!--- Authentication --->
-                                        <tr>
-                                        
-                                        	<td class="style1" colspan="2">
-            
-                                                <table width="100%" cellpadding="3" cellspacing="3" align="center" style="border:1px solid ##C7CFDC; background-color:##F7F7F7;">
-                                                	
-                                                    <tr>
-                                                    	<td colspan="2">
-                                                        	<strong><center>Authentication</center></strong>
-                                                        </td>
-                                                    </tr>
-                                                
-                                             		<tr>
-                                                        <td class="style1" align="right" width="30%"><label for="authentication_secretaryOfState"><strong>Secretary of State:</strong></label></td>
-                                                        <td class="style1" width="70%">
-                                                            <input type="checkbox" name="authentication_secretaryOfState" id="authentication_secretaryOfState" value="1" class="formField" disabled <cfif VAL(FORM.authentication_secretaryOfState)> checked </cfif> /> 
-                                                            <span class="editPage">
-                                                            	Expiration: <input type="text" name="authentication_secretaryOfStateExpiration" id="authentication_secretaryOfStateExpiration" value="#DateFormat(authentication_secretaryOfStateExpiration, 'mm/dd/yyyy')#" class="style1 datePicker editPage" />
-                                                            	<input type="image" src="../pics/arrowUp.jpg" class="editPage" value="Upload" name="business_license_upload" id="business_license_upload" style="float:right; padding-right:25px;" />										
-                                                          	</span>
-                                                            <span class="readOnly">
-                                                            	<cfif FORM.authentication_secretaryOfStateExpiration NEQ "">
-                                                                	Expiration: 
-                                                                	<cfif  FORM.authentication_secretaryOfStateExpiration LT NOW()>
-                                                                    	<span style="color:red;">#DateFormat(FORM.authentication_secretaryOfStateExpiration, "mm/dd/yyyy")#</span>
-                                                                    <cfelse>
-                                                                		#DateFormat(FORM.authentication_secretaryOfStateExpiration, "mm/dd/yyyy")#
-                                                              		</cfif>
-																</cfif>
-                                                           	</span>
-                                                            	<img class="readOnly" src="../pics/Print30x30.png" alt="print" onclick="printBusinessLicense();" style="float:right; padding-right:25px;" />
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="style1" align="right"><label for="authentication_departmentOfLabor"><strong>Department of Labor:</strong></label></td>
-                                                        <td class="style1">
-                                                            <input type="checkbox" name="authentication_departmentOfLabor" id="authentication_departmentOfLabor" value="1" class="formField" disabled <cfif VAL(FORM.authentication_departmentOfLabor)> checked </cfif> />
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="style1" align="right"><label for="authentication_googleEarth"><strong>Google Earth:</strong></label></td>
-                                                        <td class="style1">
-                                                            <input type="checkbox" name="authentication_googleEarth" id="authentication_googleEarth" value="1" class="formField" disabled <cfif VAL(FORM.authentication_googleEarth)> checked </cfif> />
-                                                        </td>
-                                                    </tr>
+                                            <tr>
+                                                <td class="style1" align="right"><strong>Title:</strong></td>
+                                                <td class="style1" bordercolor="##FFFFFF">
+                                                    <span class="readOnly">#FORM.personJobOfferTitle#</span>
+                                                    <input type="text" name="personJobOfferTitle" id="personJobOfferTitle" value="#FORM.personJobOfferTitle#" class="style1 editPage" size="35" maxlength="100">
+                                                </td>
+                                            </tr>
+                                            
+                                            <cfset ind = 0>
+                                            
+                                            <!--- J1 Positions --->
+                                            <cfloop query="qGetActivePrograms">
+                                                <cfset ind += 1>
+                                                <tr>
+                                                    <td class="style1" align="right"><strong>J1 Positions - #qGetActivePrograms.programName#:</strong></td>
+                                                    <td class="style1" bordercolor="##FFFFFF">
+                                                        <select name="numberPositions_#ind#" id="numberPositions_#ind#" class="style1 editPage">
+                                                            <cfloop from="0" to="100" index="j">
+                                                                <option value="#j#" <cfif qGetActivePrograms.numberPositions EQ '#j#'>selected</cfif>>#j#</option>
+                                                            </cfloop>
+                                                        </select>
+                                                        <span class="readOnly">#qGetActivePrograms.numberPositions#</span>
+                                                    </td>
+                                                </tr>
+                                            </cfloop>
+                                            <!--- End J1 Positions --->
+                                            
+                                            <!--- Authentication --->
+                                            <tr>
+                                            
+                                                <td class="style1" colspan="2">
+                
+                                                    <table width="100%" cellpadding="3" cellspacing="3" align="center" style="border:1px solid ##C7CFDC; background-color:##F7F7F7;">
+                                                        
+                                                        <tr>
+                                                            <td colspan="2">
+                                                                <strong><center>Authentication</center></strong>
+                                                            </td>
+                                                        </tr>
                                                     
-                                                </table>
-                                              
-                                         	</td>
-                                           
-                                      	</tr>
-                                        
-                                        <tr>
-                                            <td class="style1" align="right"><strong>EIN:</strong></td>
-                                            <td class="style1" bordercolor="##FFFFFF">
-                                                <span class="readOnly">#FORM.EIN#</span>
-                                                <input type="text" name="EIN" id="EIN" value="#FORM.EIN#" class="style1 editPage" size="35" maxlength="100">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="style1" align="right"><strong>Workmen's Compensation:</strong></td>
-                                            <td class="style1" bordercolor="##FFFFFF">
-                                                <span class="readOnly">
-                                                    <cfif ListFind("0,1", FORM.workmensCompensation)>
-                                                        #YesNoFormat(VAL(FORM.workmensCompensation))#
-                                                    <cfelseif FORM.workmensCompensation EQ 2>
-                                                        N/A
-                                                    </cfif>
-                                                </span>
-                                                <select name="workmensCompensation" id="workmensCompensation" class="style1 editPage selfPlacementField"> 
-                                                    <option value="" <cfif NOT LEN(FORM.workmensCompensation)>selected</cfif> ></option>
-                                                    <option value="0" <cfif FORM.workmensCompensation EQ 0>selected</cfif> >No</option>
-                                                    <option value="1" <cfif FORM.workmensCompensation EQ 1>selected</cfif> >Yes</option>                                                    
-                                                    <option value="2" <cfif FORM.workmensCompensation EQ 2>selected</cfif> >N/A</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                        	<td class="style1" align="right"><strong>WC Expiration Date:</strong></td>
-                                            <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">
-                                                	<cfif IsDate(FORM.WCDateExpired) AND FORM.WCDateExpired GT NOW()>
-                                                    	#DateFormat(FORM.WCDateExpired, 'mm/dd/yyyy')#
-                                                  	<cfelse>
-                                                    	Workmen's compensation is missing.
-                                                 	</cfif>
-                                             	</span>
-                                                	<input type="text" name="WCDateExpired" id="WCDateExpired" value="#DateFormat(WCDateExpired, 'mm/dd/yyyy')#" class="style1 datePicker editPage selfPlacementField" size="35" maxlength="100">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="style1" align="right"><strong>Homepage:&nbsp;</strong></td>
-                                            <td class="style1">
-                                                <span class="readOnly"><a href="#FORM.homepage#" target="_blank">#FORM.homepage#</a></span>
-                                                <input type="text" name="homepage" value="#FORM.homepage#" class="style1 editPage" size="35" maxlength="100">
-                                            </td>                                            
-                                        </tr>
-                                        <tr>
-                                            <td class="style1" align="right" valign="top"><strong>Observations:&nbsp;</strong></td>
-                                            <td class="style1">
-                                                <span class="readOnly">#FORM.observations#</span>
-                                                <textarea name="observations" class="style1 editPage" cols="35" rows="4">#FORM.observations#</textarea>
-                                            </td>                                            
-                                        </tr> 
-                                    </table>
-
-                                </td>
-                            </tr>
-                        </table> 
-                        
-                        <br />
+                                                        <tr>
+                                                            <td class="style1" align="right" width="30%"><label for="authentication_secretaryOfState"><strong>Secretary of State:</strong></label></td>
+                                                            <td class="style1" width="70%">
+                                                                <input type="checkbox" name="authentication_secretaryOfState" id="authentication_secretaryOfState" value="1" class="formField" disabled <cfif VAL(FORM.authentication_secretaryOfState)> checked </cfif> /> 
+                                                                <span class="editPage">
+                                                                    Expiration: <input type="text" name="authentication_secretaryOfStateExpiration" id="authentication_secretaryOfStateExpiration" value="#DateFormat(authentication_secretaryOfStateExpiration, 'mm/dd/yyyy')#" class="style1 datePicker editPage" />
+                                                                    <input type="image" src="../pics/arrowUp.jpg" class="editPage" value="Upload" name="business_license_upload" id="business_license_upload" style="float:right; padding-right:25px;" />										
+                                                                </span>
+                                                                <span class="readOnly">
+                                                                    <cfif FORM.authentication_secretaryOfStateExpiration NEQ "">
+                                                                        Expiration: 
+                                                                        <cfif  FORM.authentication_secretaryOfStateExpiration LT NOW()>
+                                                                            <span style="color:red;">#DateFormat(FORM.authentication_secretaryOfStateExpiration, "mm/dd/yyyy")#</span>
+                                                                        <cfelse>
+                                                                            #DateFormat(FORM.authentication_secretaryOfStateExpiration, "mm/dd/yyyy")#
+                                                                        </cfif>
+                                                                    </cfif>
+                                                                </span>
+                                                                    <img class="readOnly" src="../pics/Print30x30.png" alt="print" onclick="printBusinessLicense();" style="float:right; padding-right:25px;" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="style1" align="right"><label for="authentication_departmentOfLabor"><strong>Department of Labor:</strong></label></td>
+                                                            <td class="style1">
+                                                                <input type="checkbox" name="authentication_departmentOfLabor" id="authentication_departmentOfLabor" value="1" class="formField" disabled <cfif VAL(FORM.authentication_departmentOfLabor)> checked </cfif> />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="style1" align="right"><label for="authentication_googleEarth"><strong>Google Earth:</strong></label></td>
+                                                            <td class="style1">
+                                                                <input type="checkbox" name="authentication_googleEarth" id="authentication_googleEarth" value="1" class="formField" disabled <cfif VAL(FORM.authentication_googleEarth)> checked </cfif> />
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                    </table>
+                                                  
+                                                </td>
+                                               
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td class="style1" align="right"><strong>EIN:</strong></td>
+                                                <td class="style1" bordercolor="##FFFFFF">
+                                                    <span class="readOnly">#FORM.EIN#</span>
+                                                    <input type="text" name="EIN" id="EIN" value="#FORM.EIN#" class="style1 editPage" size="35" maxlength="100">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="style1" align="right"><strong>Workmen's Compensation:</strong></td>
+                                                <td class="style1" bordercolor="##FFFFFF">
+                                                    <span class="readOnly">
+                                                        <cfif ListFind("0,1", FORM.workmensCompensation)>
+                                                            #YesNoFormat(VAL(FORM.workmensCompensation))#
+                                                        <cfelseif FORM.workmensCompensation EQ 2>
+                                                            N/A
+                                                        </cfif>
+                                                    </span>
+                                                    <select name="workmensCompensation" id="workmensCompensation" class="style1 editPage selfPlacementField"> 
+                                                        <option value="" <cfif NOT LEN(FORM.workmensCompensation)>selected</cfif> ></option>
+                                                        <option value="0" <cfif FORM.workmensCompensation EQ 0>selected</cfif> >No</option>
+                                                        <option value="1" <cfif FORM.workmensCompensation EQ 1>selected</cfif> >Yes</option>                                                    
+                                                        <option value="2" <cfif FORM.workmensCompensation EQ 2>selected</cfif> >N/A</option>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="style1" align="right"><strong>WC Expiration Date:</strong></td>
+                                                <td class="style1" bordercolor="##FFFFFF">
+                                                    <span class="readOnly">
+                                                        <cfif IsDate(FORM.WCDateExpired) AND FORM.WCDateExpired GT NOW()>
+                                                            #DateFormat(FORM.WCDateExpired, 'mm/dd/yyyy')#
+                                                        <cfelse>
+                                                            Workmen's compensation is missing.
+                                                        </cfif>
+                                                    </span>
+                                                        <input type="text" name="WCDateExpired" id="WCDateExpired" value="#DateFormat(WCDateExpired, 'mm/dd/yyyy')#" class="style1 datePicker editPage selfPlacementField" size="35" maxlength="100">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="style1" align="right"><strong>Homepage:&nbsp;</strong></td>
+                                                <td class="style1">
+                                                    <span class="readOnly"><a href="#FORM.homepage#" target="_blank">#FORM.homepage#</a></span>
+                                                    <input type="text" name="homepage" value="#FORM.homepage#" class="style1 editPage" size="35" maxlength="100">
+                                                </td>                                            
+                                            </tr>
+                                            <tr>
+                                                <td class="style1" align="right" valign="top"><strong>Observations:&nbsp;</strong></td>
+                                                <td class="style1">
+                                                    <span class="readOnly">#FORM.observations#</span>
+                                                    <textarea name="observations" class="style1 editPage" cols="35" rows="4">#FORM.observations#</textarea>
+                                                </td>                                            
+                                            </tr> 
+                                        </table>
+    
+                                    </td>
+                                </tr>
+                            </table> 
+                            
+                            <br />
+                            
+                      	</cfif>
 
 						<!--- JOBS --->
                         <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
