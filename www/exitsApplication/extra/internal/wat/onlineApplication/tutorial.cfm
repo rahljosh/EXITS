@@ -13,7 +13,7 @@
 <cfif FileExists(tutorial)>
 
 	<!--- Set up the header --->
-    <cfheader name="content-disposition" value="attachment; filename=EXTRA_Tutorial"/>
+    <cfheader name="content-disposition" value="attachment; filename=EXTRATutorial.pdf"/>
         
     <!--- Set up the content type --->
 	<cfcontent type="application/pdf" file="#tutorial#" deletefile="no" />
