@@ -205,14 +205,14 @@
                 </tr>		
                 <tr>
                     <td colspan=3>PHP Pays Host Family: 
-                    	<input type="radio" value=1 name="payhost" onchange="setPayAsYes();" <cfif get_school.payhost eq 1>checked</cfif>>Yes 
-                        <input type="radio" value=0 name="payhost" onchange="setPayAsNo();" <cfif get_school.payhost eq 0>checked</cfif>>No  
+                    	<input type="radio" value=1 name="payhost" <cfif get_school.payhost eq 1>checked</cfif>>Yes 
+                        <input type="radio" value=0 name="payhost" <cfif get_school.payhost eq 0>checked</cfif>>No  
                  	</td>
                 </tr>
 				<cfif (CLIENT.userType EQ 1) OR (ListFind("7630,17427",CLIENT.userID)) OR (APPLICATION.isServerLocal AND CLIENT.userID EQ 17306)>
                     <tr>
                         <td>Host Family Monthly Rate:</td>
-                        <td><input type="text" name="hostFamilyRate" id="hostFamilyRate" value="#get_school.hostFamilyRate#" size="10" <cfif get_school.payHost EQ 0>readonly="readonly"</cfif> /></td>
+                        <td><input type="text" name="hostFamilyRate" id="hostFamilyRate" value="#get_school.hostFamilyRate#" size="10" /></td>
                     </tr>
                 <cfelseif ListFind("1,2,3",CLIENT.userType)>
                     <tr>

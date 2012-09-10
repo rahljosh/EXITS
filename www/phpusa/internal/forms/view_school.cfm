@@ -24,15 +24,6 @@
 		return false;
 	  }
 	}
-
-	var setPayAsYes = function() {
-		$("#hostFamilyRate").removeAttr("readOnly");
-	}
-	
-	var setPayAsNo = function() {
-		$("#hostFamilyRate").val("0.00");
-		$("#hostFamilyRate").attr("readOnly", "readOnly");
-	}
 	
 </script>
 </head>
