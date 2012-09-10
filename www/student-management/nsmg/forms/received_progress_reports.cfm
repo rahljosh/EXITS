@@ -7,31 +7,44 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #2
 <title>Progress Reports</title>
 
 <cfif isDefined('form.addReportNow')>
-<Cfset form.studentid = #url.stuid#>
- <cfquery name="get_student" datasource="#application.dsn#">
-        SELECT secondVisitRepID, arearepid, placerepid, intrep, regionassigned, hostid, programid, companyid
-        FROM smg_students
-        WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.studentid#">
+	<cfset form.studentid = #url.stuid#>
+
+    <cfquery name="get_student" datasource="#application.dsn#">
+        SELECT
+            secondVisitRepID,
+            arearepid,
+            placerepid,
+            intrep,
+            regionassigned,
+            hostid,
+            programid,
+            companyid
+        FROM
+            smg_students
+        WHERE
+            studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentid)#">
     </cfquery>
     
-    <cfset form.companyid = get_student.companyid>
+	<cfset form.companyid = get_student.companyid>
     <cfset form.fk_sr_user = get_student.arearepid>
     <cfset form.fk_pr_user = get_student.placerepid>
     <cfset form.fk_secondVisitRep = form.secondVisitRepID>
-    <Cfset form.programid = get_student.programid>
+    <cfset form.programid = get_student.programid>
     <cfset form.fk_host = form.hostid>
     <cfset form.fk_intrep_user = get_student.intrep>
     
     <cfquery name="get_advisor_for_rep" datasource="#application.dsn#">
         SELECT advisorid
         FROM user_access_rights
-        WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student.arearepid#">
-        AND regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student.regionassigned#">
+        WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(get_student.arearepid)#">
+        AND regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student.regionassigned)#">
     </cfquery>
+        
     <cfset form.fk_ra_user = get_advisor_for_rep.advisorid>
+	
 	<!--- advisorid can be 0 and we want null, and the 0 might be phased out later. --->
-	<cfif form.fk_ra_user EQ 0>
-	    <cfset form.fk_ra_user = ''>
+    <cfif form.fk_ra_user EQ 0>
+        <cfset form.fk_ra_user = ''>
     </cfif>
 	
     <cfquery name="get_regional_director" datasource="#application.dsn#">
@@ -39,58 +52,85 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #2
         FROM smg_users
         INNER JOIN user_access_rights on smg_users.userid = user_access_rights.userid
         WHERE user_access_rights.usertype = 5
-        AND user_access_rights.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student.regionassigned#">
+        AND user_access_rights.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student.regionassigned)#">
         AND smg_users.active = 1
     </cfquery>
     
-    <cfset form.fk_rd_user = get_regional_director.userid>
-    <cfif form.fk_rd_user EQ ''>
-    	Regional Director is missing.  Report may not be added.
+	<cfset form.fk_rd_user = get_regional_director.userid>
+
+	<cfif form.fk_rd_user EQ ''>
+        Regional Director is missing.  Report may not be added.
         <cfabort>
     </cfif>
 
     <cfquery name="get_facilitator" datasource="#application.dsn#">
         SELECT regionfacilitator
         FROM smg_regions
-        WHERE regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student.regionassigned#">
+        WHERE regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student.regionassigned)#">
     </cfquery>
-    <cfset form.fk_ny_user = get_facilitator.regionfacilitator>
-    <cfif form.fk_ny_user EQ 0 or form.fk_ny_user EQ ''>
-    	Facilitator is missing.  Report may not be added.
+
+	<cfset form.fk_ny_user = get_facilitator.regionfacilitator>
+    
+	<cfif form.fk_ny_user EQ 0 or form.fk_ny_user EQ ''>
+        Facilitator is missing.  Report may not be added.
         <cfabort>
     </cfif>
     
-            <cfquery datasource="#application.dsn#">
-            INSERT INTO progress_reports (fk_reportType, fk_student, pr_uniqueid, pr_month_of_report, fk_program, fk_secondVisitRep, fk_sr_user, fk_pr_user, fk_ra_user, fk_rd_user, fk_ny_user, fk_host, fk_intrep_user)
-            VALUES (
-            <cfqueryparam cfsqltype="cf_sql_integer" value="2">,
-            <cfqueryparam cfsqltype="cf_sql_integer" value="#form.studentid#">,
-            <cfqueryparam cfsqltype="cf_sql_idstamp" value="#createuuid()#">,
-            <cfqueryparam cfsqltype="cf_sql_integer" value="#DatePart('m','#now()#')#">,
-            <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#">,
-            <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_secondVisitRep#">,
-            <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_sr_user#">,
-            <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_pr_user#">,
-            <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_ra_user#" null="#yesNoFormat(trim(form.fk_ra_user) EQ '')#">,
-            <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_rd_user#">,
-            <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_ny_user#">,
-            <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_host#">,
-            <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_intrep_user#">
+    <cfquery datasource="#application.dsn#">
+        INSERT INTO progress_reports 
+            (
+                fk_reportType,
+                fk_student,
+                pr_uniqueid,
+                pr_month_of_report,
+                fk_program,
+                fk_secondVisitRep,
+                fk_sr_user,
+                fk_pr_user,
+                fk_ra_user,
+                fk_rd_user,
+                fk_ny_user,
+                fk_host,
+                fk_intrep_user
+            )
+        VALUES
+            (
+                <cfqueryparam cfsqltype="cf_sql_integer" value="2">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(form.studentid)#">,
+                <cfqueryparam cfsqltype="cf_sql_idstamp" value="#createuuid()#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(DatePart('m','#now()#'))#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(form.programid)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(form.fk_secondVisitRep)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(form.fk_sr_user)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(form.fk_pr_user)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_ra_user#" null="#yesNoFormat(trim(form.fk_ra_user) EQ '')#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(form.fk_rd_user)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(form.fk_ny_user)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(form.fk_host)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(form.fk_intrep_user)#">
             )  
-        </cfquery>
-        <cfquery name="get_id" datasource="#application.dsn#">
-            SELECT MAX(pr_id) AS pr_id
-            FROM progress_reports
-        </cfquery>
+    </cfquery>
 
-    
-	<cfquery  datasource="#application.dsn#">
-    	insert into secondVisitAnswers (fk_reportID, fk_studentID)
-        			values(#get_id.pr_id#, #form.studentid#)
-    </Cfquery>
+    <cfquery name="get_id" datasource="#application.dsn#">
+        SELECT MAX(pr_id) AS pr_id
+        FROM progress_reports
+    </cfquery>
 
+    <cfquery  datasource="#application.dsn#">
+        INSERT INTO secondVisitAnswers
+            (
+                fk_reportID,
+                fk_studentID
+            )
+        VALUES
+            (
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_id.pr_id)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentid)#">
+            )
+    </cfquery>
+
+</cfif>
     
-</CFif>
 <table width="100%" cellspacing="5">
   <tr>
     <td>
@@ -108,7 +148,7 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #2
     SELECT progress_reports.*, reportTrackingType.description
     FROM progress_reports
     LEFT JOIN reportTrackingType on reportTrackingType.reportTypeID = progress_reports.fk_reportType
-    WHERE fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.stuid#">
+    WHERE fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(url.stuid)#">
     ORDER BY fk_reportType, pr_id DESC
 </cfquery>
 
@@ -116,7 +156,7 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #2
 select distinct smg_hosthistory.hostid, smg_hosts.familylastname, smg_hosts.hostid
 from smg_hosthistory
 left join smg_hosts on smg_hosts.hostid = smg_hosthistory.hostid
-where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.stuid#">
+where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(url.stuid)#">
 
 </cfquery>
 <table width="100%" border=0 cellpadding=4 cellspacing=0 class="section">
@@ -224,7 +264,7 @@ where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.stuid#">
         smg_document_tracking.date_submitted, smg_document_tracking.date_ra_approved, smg_document_tracking.date_rd_approved, smg_document_tracking.ny_accepted
     FROM smg_prquestion_details
     INNER JOIN smg_document_tracking ON smg_prquestion_details.report_number = smg_document_tracking.report_number
-    WHERE smg_prquestion_details.stuid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.stuid#">
+    WHERE smg_prquestion_details.stuid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(url.stuid)#">
     ORDER BY smg_prquestion_details.report_number DESC
 </cfquery>
 
