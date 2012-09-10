@@ -13,19 +13,46 @@ function OpenLetter(url) {
 
 
 <cfquery name="getResults" datasource="#application.dsn#">
- SELECT  s.studentid, s.uniqueid, s.firstname, s.familylastname, s.sex, s.active, s.dateassigned, s.regionguar,
-            s.state_guarantee, s.aypenglish, s.ayporientation, s.hostid, s.scholarship, s.privateschool,
-            smg_regions.regionname, smg_g.regionname as r_guarantee, smg_states.state, smg_programs.programname,
-            c.countryname, co.companyshort, smg_hosts.familylastname AS hostname
-        FROM smg_students s
-        INNER JOIN smg_companies co ON s.companyid = co.companyid
-        LEFT JOIN smg_regions ON s.regionassigned = smg_regions.regionid
-        LEFT JOIN smg_countrylist c ON s.countryresident = c.countryid
-        LEFT JOIN smg_regions smg_g ON s.regionalguarantee = smg_g.regionid
-        LEFT JOIN smg_states ON s.state_guarantee = smg_states.id
-        LEFT JOIN smg_hosts ON s.hostid = smg_hosts.hostid
-        LEFT JOIN smg_programs on s.programID = smg_programs.programID
-  where s.secondVisitRepID = #client.userid#
+	SELECT
+    	s.studentid,
+        s.uniqueid,
+        s.firstname,
+        s.familylastname,
+        s.sex,
+        s.active,
+        s.dateassigned,
+        s.regionguar,
+        s.state_guarantee,
+        s.aypenglish,
+        s.ayporientation,
+        s.hostid,
+        s.scholarship,
+        s.privateschool,
+     	smg_regions.regionname,
+        smg_g.regionname as r_guarantee,
+        smg_states.state,
+        smg_programs.programname,
+      	c.countryname,
+        co.companyshort,
+        smg_hosts.familylastname AS hostname
+ 	FROM 
+    	smg_students s
+  	INNER JOIN 
+    	smg_companies co ON s.companyid = co.companyid
+ 	LEFT JOIN 
+    	smg_regions ON s.regionassigned = smg_regions.regionid
+   	LEFT JOIN 
+    	smg_countrylist c ON s.countryresident = c.countryid
+    LEFT JOIN 
+    	smg_regions smg_g ON s.regionalguarantee = smg_g.regionid
+    LEFT JOIN 
+    	smg_states ON s.state_guarantee = smg_states.id
+    LEFT JOIN 
+    	smg_hosts ON s.hostid = smg_hosts.hostid
+    LEFT JOIN 
+    	smg_programs on s.programID = smg_programs.programID
+ 	WHERE
+    	s.secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
 </cfquery>
 
 <cfif getResults.recordCount GT 0>
@@ -58,13 +85,13 @@ function OpenLetter(url) {
                 <td>
 					<cfif totalPages GT 1>
                         <cfif url.startPage NEQ 1>
-                            <a href="index.cfm?curdoc=students&startPage=#url.startPage - 1#&#urlVariables#">< PREV</a> &nbsp;
+                            <a href="index.cfm?curdoc=students&startPage=#url.startPage - 1#&#url.Variables#">< PREV</a> &nbsp;
                         </cfif>
                         <cfloop from="1" to="#totalPages#" index="i">
-                            <cfif i is url.startPage>#i#<cfelse><a href="index.cfm?curdoc=students&startPage=#i#&#urlVariables#">#i#</a></cfif>
+                            <cfif i is url.startPage>#i#<cfelse><a href="index.cfm?curdoc=students&startPage=#i#&#url.Variables#">#i#</a></cfif>
                         </cfloop>
                         <cfif isNextPage>
-                            &nbsp; <a href="index.cfm?curdoc=students&startPage=#url.startPage + 1#&#urlVariables#">NEXT ></a>
+                            &nbsp; <a href="index.cfm?curdoc=students&startPage=#url.startPage + 1#&#url.Variables#">NEXT ></a>
                         </cfif>
                         <br>
                     </cfif>
