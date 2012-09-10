@@ -46,6 +46,16 @@
 	<cfelse>
 		<cfset CLIENT.EXITS_URL = 'https://' & CGI.HTTP_HOST>
     </cfif>
+    
+    
+    <!--- Go Daddy Remedy --->
+    <cfif CGI.HTTP_HOST EQ '204.12.118.245'>
+        <cfset CLIENT.companyid = 1>
+        <cfset CLIENT.companyname = 'ISE'>
+        <cfset CLIENT.emailFrom = 'support@iseusa.com'>
+        <cfset CLIENT.site_url = '204.12.118.245'>
+    </cfif>
+    
 
     <!--- Process Form Submission - login --->
     <cfif isDefined("FORM.login_submitted")>
