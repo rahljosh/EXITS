@@ -182,7 +182,7 @@
                 
                 <span class="title">New user in EXTRA?</span>
                 <span class="text">
-                	<a href="onlineApplication/tutorial.cfm">Click here for a breif tutorial</a>
+                	<a href="onlineApplication/tutorial.cfm" style="color:red;">Click here for a breif tutorial</a>
                 </span>
 
             </div>
