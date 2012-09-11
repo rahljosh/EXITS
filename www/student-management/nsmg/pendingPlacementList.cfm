@@ -20,8 +20,12 @@
     <cfparam name="URL.sortBy" default="">
     <cfparam name="URL.sortOrder" default="ASC">
     <cfparam name="URL.preAypCamp" default="">
-    <cfparam name="URL.placementType" default="newPlacements">
-
+    <!--- Default CASE to All --->
+	<cfif CLIENT.companyID EQ 10>
+    	<cfparam name="URL.placementType" default="All">
+	<cfelse>
+    	<cfparam name="URL.placementType" default="newPlacements">
+    </cfif>
     <!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.preAypCamp" default="">
@@ -390,7 +394,7 @@
                     <td>                      
                         <label for="placementType">Placement Type:</label> &nbsp; 
                         <select name="placementType" id="placementType" class="largeField">
-                            <option value="" <cfif NOT LEN(URL.placementType)> selected="selected" </cfif> >All</option>
+                            <option value="All" <cfif URL.placementType EQ 'All'> selected="selected" </cfif> >All</option>
                             <option value="newPlacements" <cfif URL.placementType EQ 'newPlacements'> selected="selected" </cfif> >New Placements</option>
                             <option value="previouslyApproved" <cfif URL.placementType EQ 'previouslyApproved'> selected="selected" </cfif> >Previously Approved</option>
                             <option value="relocations" <cfif URL.placementType EQ 'relocations'> selected="selected" </cfif> >Relocations</option>
