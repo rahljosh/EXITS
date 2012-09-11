@@ -20,9 +20,9 @@
 <table width=100% border=0 cellpadding=4 cellspacing=0 class="section">
 <tr><td>
 
-<cfif NOT IsDefined('form.from') OR NOT IsDefined('form.to')>
+<cfif NOT IsDefined('FORM.from') OR NOT IsDefined('FORM.to')>
 
-	<cfform name="hosts" action="?curdoc=compliance/combine_schools&confirm=yes" method="post">
+	<cfform name="schools" action="?curdoc=compliance/combine_schools&confirm=yes" method="post">
 		<Table cellpadding=6 cellspacing="0" align="center" width="75%">
 			<tr><th colspan="2" bgcolor="e2efc7">Combining Schools</th></tr>
 			<tr><td align="right">From : </td><td><cfinput name="from" type="text" size="5" maxlength="6" validate="integer" required="yes"> * this one will be deleted</td></tr>
@@ -35,7 +35,7 @@
 
 <cfelseif IsDefined('url.confirm')>
 
-	<cfif form.from EQ '' OR form.to EQ ''>
+	<cfif FORM.from EQ '' OR FORM.to EQ ''>
 		From or To cannot be null. Please go back and try again.
 		<cfabort>
 	</cfif>
@@ -43,18 +43,18 @@
 	<cfquery name="get_from" datasource="MySql">
 		SELECT schoolid, schoolname, address, city, state, zip, principal
 		FROM smg_schools
-		WHERE schoolid = '#form.from#'
+		WHERE schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.from)#">
 	</cfquery>
 	
 	<cfquery name="get_to" datasource="MySql">
 		SELECT schoolid, schoolname, address, city, state, zip, principal
 		FROM smg_schools
-		WHERE schoolid = '#form.to#'
+		WHERE schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.to)#">
 	</cfquery>
 
 	<cfform name="confirm" action="?curdoc=compliance/combine_schools" method="post">
-		<cfinput type="hidden" name="from" value="#form.from#">
-		<cfinput type="hidden" name="to" value="#form.to#">
+		<cfinput type="hidden" name="from" value="#FORM.from#">
+		<cfinput type="hidden" name="to" value="#FORM.to#">
 		<Table cellpadding=6 cellspacing="0" align="center" width="75%">
 			<tr><th colspan="2" bgcolor="e2efc7">Combining Schools</th></tr>
 			<tr><th>FROM</th><th>TO</th></tr>
@@ -78,10 +78,6 @@
 			</tr>
 			<cfset block_deletion = 0>
 			
-			<cfif get_from.schoolname NEQ get_to.schoolname>
-				<tr><th colspan="2" bgcolor="e2efc7">**** Schools have different names ****</th></tr>
-				<cfset block_deletion = 1>
-			</cfif>
 			<cfif get_from.city NEQ get_to.city>
 				<tr><th colspan="2" bgcolor="e2efc7">*** Schools are located in different cities ***</th></tr>
 				<cfset block_deletion = 1>
@@ -91,7 +87,7 @@
 				<cfset block_deletion = 1>
 			</cfif>
 			<cfif block_deletion EQ 0>
-				<tr><th colspan="2">PS: Please confirm the schools are duplicates and you would like to combine them.</th></tr>
+				<tr><th colspan="2">PS: Please confirm the schools are duplicates and you would like to combine them. THIS ACTION CANNOT BE UNDONE.</th></tr>
 				<tr><td colspan="2" bgcolor="e2efc7" align="center"><a href="?curdoc=compliance/combine_schools">Click here to go back and try another school</a> &nbsp; &nbsp;<cfinput name="submit" type="submit" value="Confirm"></td></tr>
 			<cfelse>
 				<tr><th colspan="2">In order to combine these schools please make sure they have the exacly name, city and state. Please try again.</th></tr>
@@ -105,36 +101,49 @@
 	<cfset school_dates_count = 0>
 	
 	<!--- GET STUDENTS --->
-	<cfquery name="students" datasource="MySQL">
+	<cfquery name="qGetTotalStudents" datasource="MySQL">
 		SELECT studentid
 		FROM smg_students
-		WHERE schoolid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">		
+		WHERE schoolid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">		
 	</cfquery>
 	<!--- MOVE STUDENTS --->
-	<cfquery name="move_students" datasource="MySQL">
+	<cfquery datasource="MySQL">
 		UPDATE smg_students
-		SET schoolid = <cfqueryparam value="#form.to#" cfsqltype="cf_sql_integer">
-		WHERE schoolid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">		
+		SET schoolid = <cfqueryparam value="#FORM.to#" cfsqltype="cf_sql_integer">
+		WHERE schoolid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">		
 	</cfquery>
+    
 
 	<!--- GET SCHOOL HISTORY --->
-	<cfquery name="school_history" datasource="MySQL">
+	<cfquery name="qGetSchoolHistory" datasource="MySQL">
 		SELECT schoolid
 		FROM smg_hosthistory
-		WHERE schoolid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">		
+		WHERE schoolid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">		
 	</cfquery>
 	<!--- MOVE SCHOOL HISTORY --->
-	<cfquery name="move_school_history" datasource="MySQL">
+	<cfquery datasource="MySQL">
 		UPDATE smg_hosthistory
-		SET schoolid = <cfqueryparam value="#form.to#" cfsqltype="cf_sql_integer">
-		WHERE schoolid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">		
+		SET schoolid = <cfqueryparam value="#FORM.to#" cfsqltype="cf_sql_integer">
+		WHERE schoolid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">		
 	</cfquery>
+	<!--- MOVE SCHOOL HISTORY TRACKING --->
+	<cfquery datasource="MySQL">
+		UPDATE 
+        	smg_hosthistoryTracking
+		SET 
+        	fieldID = <cfqueryparam value="#FORM.to#" cfsqltype="cf_sql_integer">
+		WHERE 
+        	fieldID = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">	
+		AND
+        	fieldName =  <cfqueryparam value="schoolID" cfsqltype="cf_sql_varchar">           	
+	</cfquery>
+    
 
 	<!--- GET SCHOOL DATES --->
 	<cfquery name="school_dates" datasource="MySQL">
 		SELECT schoolid, seasonid
 		FROM smg_school_dates 
-		WHERE schoolid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">		
+		WHERE schoolid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">		
 	</cfquery>
 	
 	<cfloop query="school_dates">
@@ -142,7 +151,7 @@
 		<cfquery name="school_dates" datasource="MySQL">
 			SELECT schoolid, seasonid
 			FROM smg_school_dates 
-			WHERE schoolid = <cfqueryparam value="#form.to#" cfsqltype="cf_sql_integer">
+			WHERE schoolid = <cfqueryparam value="#FORM.to#" cfsqltype="cf_sql_integer">
 				AND seasonid = '#seasonid#'		
 		</cfquery>
 			
@@ -150,7 +159,7 @@
 			<!--- MOVE SCHOOL DATES --->
 			<cfquery name="move_school_dates" datasource="MySQL">
 				UPDATE smg_school_dates
-				SET schoolid = <cfqueryparam value="#form.to#" cfsqltype="cf_sql_integer">
+				SET schoolid = <cfqueryparam value="#FORM.to#" cfsqltype="cf_sql_integer">
 				WHERE schoolid = '#schoolid#'
 					AND seasonid = '#seasonid#'		
 			</cfquery>
@@ -159,49 +168,49 @@
 	</cfloop>
 	<Table cellpadding=6 cellspacing="0" align="center" width="75%">
 		<tr><th colspan="2" bgcolor="e2efc7">Combining Schools</th></tr>
-		<tr><th colspan="2">Records moved from : ###form.from#  &nbsp; to : ###form.to#</th></tr>
-		<tr><td align="right" width="200">Students :</td><td width="450">#students.recordcount#</td></tr>
-		<tr><td align="right">School History :</td><td>#school_history.recordcount#</td></tr>
+		<tr><th colspan="2">Records moved from : ###FORM.from#  &nbsp; to : ###FORM.to#</th></tr>
+		<tr><td align="right" width="200">Students :</td><td width="450">#qGetTotalStudents.recordcount#</td></tr>
+		<tr><td align="right">School History :</td><td>#qGetSchoolHistory.recordcount#</td></tr>
 		<tr><td align="right">School Dates :</td><td>#school_dates_count#</td></tr>
 		<tr><td colspan="2">&nbsp;</td></tr>
 		<tr><th colspan="2">Deletion Information</th></tr>
 		
 		<!--- CHECK IF SCHOOL READY TO BE DELETED --->
 		<!--- GET STUDENTS --->
-		<cfquery name="students" datasource="MySQL">
+		<cfquery name="qGetTotalStudents" datasource="MySQL">
 			SELECT studentid
 			FROM smg_students
-			WHERE schoolid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">		
+			WHERE schoolid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">		
 		</cfquery>
 
 		<!--- GET SCHOOL HISTORY --->
-		<cfquery name="school_history" datasource="MySQL">
+		<cfquery name="qGetSchoolHistory" datasource="MySQL">
 			SELECT schoolid
 			FROM smg_hosthistory
-			WHERE schoolid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">		
+			WHERE schoolid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">		
 		</cfquery>
 	
-		<cfif students.recordcount EQ 0 AND school_history.recordcount EQ 0>
+		<cfif qGetTotalStudents.recordcount EQ 0 AND qGetSchoolHistory.recordcount EQ 0>
 
 			<!--- DELETE SCHOOL DATES --->
-			<cfquery name="delete_dates" datasource="MySql">
+			<cfquery datasource="MySql">
 				DELETE 
 				FROM smg_school_dates
-				WHERE schoolid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">
+				WHERE schoolid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">
 				LIMIT 1
 			</cfquery>
 
 			<!--- DELETE SCHOOL --->
-			<cfquery name="delete_school" datasource="MySql">
+			<cfquery datasource="MySql">
 				DELETE 
 				FROM smg_schools
-				WHERE schoolid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">
+				WHERE schoolid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">
 				LIMIT 1
 			</cfquery>
 			
-			<tr><td align="right">School deleted :</td><td>## #form.from#</td></tr>
+			<tr><td align="right">School deleted :</td><td>## #FORM.from#</td></tr>
 		<cfelse>
-		<tr><th colspan="2">## #form.from# School was not deleted.</th></tr>
+			<tr><th colspan="2">## #FORM.from# School was not deleted.</th></tr>
 		</cfif>
 		<tr><td colspan="2">&nbsp;</td></tr>
 		<tr><th colspan="2">DONE.</th></tr>

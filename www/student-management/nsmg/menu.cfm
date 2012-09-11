@@ -380,7 +380,7 @@
                         <!--- Compliance Access --->
                         <cfif APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID,role="runCBC")>   
                             <li><a href="index.cfm?curdoc=cbc/cbc_menu">CBC Batch</a></li>
-                            <li><a href="index.cfm?curdoc=cbc/combine_hosts">Combining Hosts</a></li>   
+                            <li><a href="index.cfm?curdoc=compliance/combine_hosts">Combining Hosts</a></li>   
                             <li><a href="index.cfm?curdoc=compliance/combine_schools">Combining Schools</a></li>
                         </cfif>
 

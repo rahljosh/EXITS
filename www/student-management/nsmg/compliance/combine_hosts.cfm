@@ -20,9 +20,9 @@
 <table width=100% border=0 cellpadding=4 cellspacing=0 class="section">
 <tr><td>
 
-<cfif NOT IsDefined('form.from') OR NOT IsDefined('form.to')>
+<cfif NOT IsDefined('FORM.from') OR NOT IsDefined('FORM.to')>
 
-	<cfform name="hosts" action="?curdoc=cbc/combine_hosts&confirm=yes" method="post">
+	<cfform name="hosts" action="?curdoc=compliance/combine_hosts&confirm=yes" method="post">
 		<Table cellpadding=6 cellspacing="0" align="center" width="50%">
 			<tr><th colspan="2" bgcolor="e2efc7">Combining Host Families</th></tr>
 			<tr><td align="right">From : </td><td><cfinput name="from" type="text" size="5" maxlength="6" validate="integer" required="yes"> * this one will be deleted</td></tr>
@@ -35,7 +35,7 @@
 
 <cfelseif IsDefined('url.confirm')>
 
-	<cfif form.from EQ '' OR form.to EQ ''>
+	<cfif FORM.from EQ '' OR FORM.to EQ ''>
 		From or To cannot be null. Please go back and try again.
 		<cfabort>
 	</cfif>
@@ -43,13 +43,13 @@
 	<cfquery name="get_from" datasource="MySql">
 		SELECT hostid, companyid, familylastname, fatherfirstname, motherfirstname, address, city
 		FROM smg_hosts
-		WHERE hostid = '#form.from#'
+		WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.from)#">
 	</cfquery>
 	
 	<cfquery name="get_to" datasource="MySql">
 		SELECT hostid, companyid, familylastname, fatherfirstname, motherfirstname, address, city
 		FROM smg_hosts
-		WHERE hostid = '#form.to#'
+		WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.to)#">
 	</cfquery>
 
 	<cfif get_from.companyid NEQ get_to.companyid>
@@ -57,9 +57,9 @@
 		<cfabort>
 	</cfif>
 
-	<cfform name="confirm" action="?curdoc=cbc/combine_hosts" method="post">
-		<cfinput type="hidden" name="from" value="#form.from#">
-		<cfinput type="hidden" name="to" value="#form.to#">
+	<cfform name="confirm" action="?curdoc=compliance/combine_hosts" method="post">
+		<cfinput type="hidden" name="from" value="#FORM.from#">
+		<cfinput type="hidden" name="to" value="#FORM.to#">
 		<Table cellpadding=6 cellspacing="0" align="center" width="50%">
 			<tr><th colspan="2" bgcolor="e2efc7">Combining Host Families</th></tr>
 			<tr><td align="right">From : </td>
@@ -77,8 +77,8 @@
 			<cfif get_from.familylastname NEQ get_to.familylastname>
 			<tr><th colspan="2" bgcolor="e2efc7">Host families do not have the same last name. If you wish to combine them please click on continue.</th></tr>
 			</cfif>
-			<tr><th colspan="2">PS: Please confirm the host famlies are duplicates and you would like to combine them.</th></tr>
-			<tr><td colspan="2" bgcolor="e2efc7" align="center"><a href="?curdoc=cbc/combine_hosts">Click here to go back and try another family</a> &nbsp; &nbsp;<cfinput name="submit" type="submit" value="Confirm"></td></tr>
+			<tr><th colspan="2">PS: Please confirm the host famlies are duplicates and you would like to combine them. THIS ACTION CANNOT BE UNDONE.</th></tr>
+			<tr><td colspan="2" bgcolor="e2efc7" align="center"><a href="?curdoc=compliance/combine_hosts">Click here to go back and try another family</a> &nbsp; &nbsp;<cfinput name="submit" type="submit" value="Confirm"></td></tr>
 		</table>
 	</cfform>	
 
@@ -88,44 +88,55 @@
 	<cfquery name="students" datasource="MySQL">
 		SELECT studentid
 		FROM smg_students
-		WHERE hostid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">		
+		WHERE hostid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">		
 	</cfquery>
 	<!--- MOVE STUDENTS --->
 	<cfquery name="move_students" datasource="MySQL">
 		UPDATE smg_students
-		SET hostid = <cfqueryparam value="#form.to#" cfsqltype="cf_sql_integer">
-		WHERE hostid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">		
+		SET hostid = <cfqueryparam value="#FORM.to#" cfsqltype="cf_sql_integer">
+		WHERE hostid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">		
 	</cfquery>
 
 	<!--- GET CBC --->
 	<cfquery name="cbc" datasource="MySQL">
 		SELECT hostid
 		FROM smg_hosts_cbc
-		WHERE hostid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">		
+		WHERE hostid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">		
 	</cfquery>
 	<!--- MOVE CBC --->
 	<cfquery name="move_cbc" datasource="MySQL">
 		UPDATE smg_hosts_cbc
-		SET hostid = <cfqueryparam value="#form.to#" cfsqltype="cf_sql_integer">
-		WHERE hostid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">		
+		SET hostid = <cfqueryparam value="#FORM.to#" cfsqltype="cf_sql_integer">
+		WHERE hostid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">		
 	</cfquery>
 
 	<!--- GET HOST HISTORY --->
 	<cfquery name="host_history" datasource="MySQL">
 		SELECT hostid
 		FROM smg_hosthistory
-		WHERE hostid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">		
+		WHERE hostid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">		
 	</cfquery>
 	<!--- MOVE HOST HISTORY --->
 	<cfquery name="move_host_history" datasource="MySQL">
 		UPDATE smg_hosthistory
-		SET hostid = <cfqueryparam value="#form.to#" cfsqltype="cf_sql_integer">
-		WHERE hostid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">		
+		SET hostid = <cfqueryparam value="#FORM.to#" cfsqltype="cf_sql_integer">
+		WHERE hostid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">		
+	</cfquery>
+    <!--- MOVE SCHOOL HISTORY TRACKING --->
+	<cfquery datasource="MySQL">
+		UPDATE 
+        	smg_hosthistoryTracking
+		SET 
+        	fieldID = <cfqueryparam value="#FORM.to#" cfsqltype="cf_sql_integer">
+		WHERE 
+        	fieldID = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">	
+		AND
+        	fieldName =  <cfqueryparam value="hostID" cfsqltype="cf_sql_varchar">           	
 	</cfquery>
 
 	<Table cellpadding=6 cellspacing="0" align="center" width="50%">
 		<tr><th colspan="2" bgcolor="e2efc7">Combining Host Families</th></tr>
-		<tr><th colspan="2">Records moved from : ###form.from#  &nbsp; to : ###form.to#</th></tr>
+		<tr><th colspan="2">Records moved from : ###FORM.from#  &nbsp; to : ###FORM.to#</th></tr>
 		<tr><td align="right" width="200">Students :</td><td width="450">#students.recordcount#</td></tr>
 		<tr><td align="right">CBCs : </td><td>#cbc.recordcount#</td></tr>
 		<tr><td align="right">Host History :</td><td>#host_history.recordcount#</td></tr>
@@ -137,19 +148,19 @@
 		<cfquery name="students" datasource="MySQL">
 			SELECT studentid
 			FROM smg_students
-			WHERE hostid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">		
+			WHERE hostid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">		
 		</cfquery>
 		<!--- GET CBC --->
 		<cfquery name="cbc" datasource="MySQL">
 			SELECT hostid
 			FROM smg_hosts_cbc
-			WHERE hostid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">		
+			WHERE hostid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">		
 		</cfquery>
 		<!--- GET HOST HISTORY --->
 		<cfquery name="host_history" datasource="MySQL">
 			SELECT hostid
 			FROM smg_hosthistory
-			WHERE hostid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">		
+			WHERE hostid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">		
 		</cfquery>
 	
 		<cfif students.recordcount EQ 0 AND cbc.recordcount EQ 0 AND host_history.recordcount EQ 0>
@@ -157,31 +168,31 @@
 			<cfquery name="delete_host" datasource="MySql">
 				DELETE 
 				FROM smg_hosts
-				WHERE hostid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">
+				WHERE hostid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">
 				LIMIT 1
 			</cfquery>
 			<!--- DELETE CHILDREN --->
 			<cfquery name="delete_children" datasource="MySql">
 				DELETE 
 				FROM smg_host_children
-				WHERE hostid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">
+				WHERE hostid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">
 			</cfquery>
 			<!--- DELETE ANIMALS --->
 			<cfquery name="delete_animals" datasource="MySql">
 				DELETE 
 				FROM smg_host_animals
-				WHERE hostid = <cfqueryparam value="#form.from#" cfsqltype="cf_sql_integer">
+				WHERE hostid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">
 			</cfquery>	
-			<tr><td align="right">Host family deleted :</td><td>## #form.from#</td></tr>
-			<tr><td align="right">Host children for family deleted :</td><td>## #form.from#</td></tr>
-			<tr><td align="right">Host animals for family deleted :</td><td>## #form.from#</td></tr>
+			<tr><td align="right">Host family deleted :</td><td>## #FORM.from#</td></tr>
+			<tr><td align="right">Host children for family deleted :</td><td>## #FORM.from#</td></tr>
+			<tr><td align="right">Host animals for family deleted :</td><td>## #FORM.from#</td></tr>
 		<cfelse>
-		<tr><th colspan="2">## #form.from# Host family was not deleted.</th></tr>
+		<tr><th colspan="2">## #FORM.from# Host family was not deleted.</th></tr>
 		</cfif>
 		<tr><td colspan="2">&nbsp;</td></tr>
 		<tr><th colspan="2">DONE.</th></tr>
 		<tr><td colspan="2">&nbsp;</td></tr>
-		<tr><th colspan="2" bgcolor="e2efc7"><a href="?curdoc=cbc/combine_hosts">Click here to combine another family</a></th></tr>
+		<tr><th colspan="2" bgcolor="e2efc7"><a href="?curdoc=compliance/combine_hosts">Click here to combine another family</a></th></tr>
 	</table>
 
 </cfif>
