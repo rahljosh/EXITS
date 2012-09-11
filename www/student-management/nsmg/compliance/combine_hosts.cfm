@@ -168,20 +168,19 @@
 			<cfquery name="delete_host" datasource="MySql">
 				DELETE 
 				FROM smg_hosts
-				WHERE hostid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">
-				LIMIT 1
+				WHERE hostid = <cfqueryparam value="#VAL(FORM.from)#" cfsqltype="cf_sql_integer">
 			</cfquery>
 			<!--- DELETE CHILDREN --->
 			<cfquery name="delete_children" datasource="MySql">
 				DELETE 
 				FROM smg_host_children
-				WHERE hostid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">
+				WHERE hostid = <cfqueryparam value="#VAL(FORM.from)#" cfsqltype="cf_sql_integer">
 			</cfquery>
 			<!--- DELETE ANIMALS --->
 			<cfquery name="delete_animals" datasource="MySql">
 				DELETE 
 				FROM smg_host_animals
-				WHERE hostid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">
+				WHERE hostid = <cfqueryparam value="#VAL(FORM.from)#" cfsqltype="cf_sql_integer">
 			</cfquery>	
 			<tr><td align="right">Host family deleted :</td><td>## #FORM.from#</td></tr>
 			<tr><td align="right">Host children for family deleted :</td><td>## #FORM.from#</td></tr>
