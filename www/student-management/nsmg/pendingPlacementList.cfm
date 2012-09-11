@@ -20,8 +20,8 @@
     <cfparam name="URL.sortBy" default="">
     <cfparam name="URL.sortOrder" default="ASC">
     <cfparam name="URL.preAypCamp" default="">
-    <!--- Default CASE to All --->
-	<cfif CLIENT.companyID EQ 10>
+    <!--- Default CASE and ESI to All --->
+	<cfif listFind("10,14", CLIENT.companyID)>
     	<cfparam name="URL.placementType" default="All">
 	<cfelse>
     	<cfparam name="URL.placementType" default="newPlacements">
