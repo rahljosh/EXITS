@@ -187,7 +187,7 @@
 		<cfquery name="qGetSchoolHistory" datasource="MySQL">
 			SELECT schoolid
 			FROM smg_hosthistory
-			WHERE schoolid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">		
+			WHERE schoolid = <cfqueryparam value="#VAL(FORM.from)#" cfsqltype="cf_sql_integer">		
 		</cfquery>
 	
 		<cfif qGetTotalStudents.recordcount EQ 0 AND qGetSchoolHistory.recordcount EQ 0>
@@ -196,16 +196,14 @@
 			<cfquery datasource="MySql">
 				DELETE 
 				FROM smg_school_dates
-				WHERE schoolid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">
-				LIMIT 1
+				WHERE schoolid = <cfqueryparam value="#VAL(FORM.from)#" cfsqltype="cf_sql_integer">
 			</cfquery>
 
 			<!--- DELETE SCHOOL --->
 			<cfquery datasource="MySql">
 				DELETE 
 				FROM smg_schools
-				WHERE schoolid = <cfqueryparam value="#FORM.from#" cfsqltype="cf_sql_integer">
-				LIMIT 1
+				WHERE schoolid = <cfqueryparam value="#VAL(FORM.from)#" cfsqltype="cf_sql_integer">
 			</cfquery>
 			
 			<tr><td align="right">School deleted :</td><td>## #FORM.from#</td></tr>
