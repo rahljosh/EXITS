@@ -366,20 +366,24 @@
                     <td width="15%" <cfif qGetPlacementHistory.hasHostIDChanged> class="placementMgmtChanged" </cfif> >
                     	<cfif ListFind("1,2,3",CLIENT.userType)>
 							<cfif qGetPlacementHistory.isRelocation EQ 1>
-                                <cfscript>										
-                                    if (DatePart('d',NOW()) GTE 15) {
-                                        date = CreateDate(DatePart('yyyy',NOW()),DatePart('m',NOW()),15);
-                                    } else {
-                                        date = CreateDate(DatePart('yyyy',NOW()),DatePart('m',NOW())-1,15);
-                                    }
-                                    days = DateDiff('d',date,qGetPlacementHistory.datePlaced);
-                                    if (days GTE 0) {
-                                        amountOwed = DecimalFormat(qGetPlacementHistory.hostFamilyRate - ((days/30)*qGetPlacementHistory.hostFamilyRate));
-                                    } else {
-                                        amountOwed = qGetPlacementHistory.hostFamilyRate;
-                                    }
+                                <cfscript>
+									if (isDate(qGetPlacementHistory.datePlaced)) {
+										if (DatePart('d',NOW()) GTE 15) {
+											date = CreateDate(DatePart('yyyy',NOW()),DatePart('m',NOW()),15);
+										} else {
+											date = CreateDate(DatePart('yyyy',NOW()),DatePart('m',NOW())-1,15);
+										}
+										days = DateDiff('d',date,qGetPlacementHistory.datePlaced);
+										if (days GTE 0) {
+											amountOwed = "$" & DecimalFormat(qGetPlacementHistory.hostFamilyRate - ((days/30)*qGetPlacementHistory.hostFamilyRate));
+										} else {
+											amountOwed = "$" & qGetPlacementHistory.hostFamilyRate;
+										}
+									} else {
+										amountOwed = "Placement date is missing.";	
+									}
                                 </cfscript>
-                                $#amountOwed#
+                                #amountOwed#
                             </cfif>
                        	</cfif>
                     </td>
@@ -501,26 +505,30 @@
                             <td width="15%" <cfif qGetPlacementHistory.hasHostIDChanged> class="placementMgmtChanged" </cfif> >
                             	<cfif ListFind("1,2,3",CLIENT.userType)>
 									<cfif qGetPlacementHistory.isRelocation[1] EQ 1>
-                                        <cfscript>										
-                                            if (DatePart('d',NOW()) GTE 15) {
-                                                date = CreateDate(DatePart('yyyy',NOW()),DatePart('m',NOW()),15);
-                                            } else {
-                                                date = CreateDate(DatePart('yyyy',NOW()),DatePart('m',NOW())-1,15);
-                                            }
-                                            days = DateDiff('d',date,qGetPlacementHistory.datePlaced[currentrow-1]);
-                                            if (days GTE 0) {
-                                                daysNotHere = DateDiff('d',date,qGetPlacementHistory.datePlaced);
-                                                if (daysNotHere GTE 0) {
-                                                    amountOwed = DecimalFormat(((days-daysNotHere)/30)*qGetPlacementHistory.hostFamilyRate);
-                                                } else {
-                                                    amountOwed = DecimalFormat((days/30)*qGetPlacementHistory.hostFamilyRate);
-                                                }
-                                            } else {
-                                                amountOwed = 0;
-                                            }
+                                        <cfscript>
+											if (isDate(qGetPlacementHistory.datePlaced[currentrow-1])) {
+												if (DatePart('d',NOW()) GTE 15) {
+													date = CreateDate(DatePart('yyyy',NOW()),DatePart('m',NOW()),15);
+												} else {
+													date = CreateDate(DatePart('yyyy',NOW()),DatePart('m',NOW())-1,15);
+												}
+												days = DateDiff('d',date,qGetPlacementHistory.datePlaced[currentrow-1]);
+												if (days GTE 0) {
+													daysNotHere = DateDiff('d',date,qGetPlacementHistory.datePlaced);
+													if (daysNotHere GTE 0) {
+														amountOwed = "$" & DecimalFormat(((days-daysNotHere)/30)*qGetPlacementHistory.hostFamilyRate);
+													} else {
+														amountOwed = "$" & DecimalFormat((days/30)*qGetPlacementHistory.hostFamilyRate);
+													}
+												} else {
+													amountOwed = 0;
+												}
+											} else {
+												amountOwed = "Next placement date is missing.";
+											}
                                         </cfscript>
                                         <cfif amountOwed NEQ 0>
-                                            $#amountOwed#
+                                            #amountOwed#
                                         </cfif>                                    
                                     </cfif>
                                	</cfif>
