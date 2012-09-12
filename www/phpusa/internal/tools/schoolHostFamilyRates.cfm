@@ -64,7 +64,7 @@
 	
 </script>
 
-<cfif (CLIENT.userType EQ 1) OR (ListFind("7630,17427",CLIENT.userID)) OR (APPLICATION.isServerLocal AND CLIENT.userID EQ 17306)>
+<cfif (CLIENT.userType EQ 1) OR (ListFind("9719,7630,17427",CLIENT.userID))>
 
 	<cfoutput>
 	
