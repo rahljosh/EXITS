@@ -180,6 +180,7 @@
                     host_start_date,
                     host_end_date,
                     studentHosting,
+                    dietaryRestriction,
                     imported         
                 FROM 
                     smg_hosts
