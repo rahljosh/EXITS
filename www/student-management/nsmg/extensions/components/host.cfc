@@ -183,6 +183,7 @@
                     dietaryRestriction,
                     houserules_expenses,
                     houserules_inet,
+                    hostingDiff,
                     imported         
                 FROM 
                     smg_hosts
