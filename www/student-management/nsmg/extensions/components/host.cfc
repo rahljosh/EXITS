@@ -479,7 +479,10 @@
                     SSN,
                     school,
                     shared,
-                    roomShareWith
+                    roomShareWith,
+                    liveathomePartTime,
+                    interests,
+                    employer
                 FROM 
                     smg_host_children
                 WHERE
