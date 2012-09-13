@@ -240,7 +240,7 @@ h1 {
   <div class="textBlock">
   <h1>Seeking Volunteer Host Families</h1>
   <div style="width: 175px; float: left;">
-    <p>Share in a culturally rewarding experience by becoming a volunteer host family for 2012-13 foreign exchange high school students from around the globe.  Students range in age from 15- 18 1/2, will be part of your family and will attend your local high school.  Our students have their own health insurance</p></div>
+    <p>Share in a culturally rewarding experience by becoming a volunteer host family for foreign exchange high school students from around the globe.  Students range in age from 15- 18 1/2, will be part of your family and will attend your local high school.  Our students have their own health insurance</p></div>
   <div style="width: 175px; float: left;"><p> and spending money.  As a volunteer host family you will have the support of a highly dedicated network of professionals to assist you right from the submission of your application until the time that your student returns home.  You can host a student from a country of your choice for 5, 10 or 12-months.</p></div>
   <div style="width: 175px; float: right;"><div class="rdholder">
           <div class="rdtop"></div>
