@@ -181,6 +181,8 @@
                     host_end_date,
                     studentHosting,
                     dietaryRestriction,
+                    houserules_expenses,
+                    houserules_inet,
                     imported         
                 FROM 
                     smg_hosts
