@@ -17,7 +17,7 @@
 
 <cfif VAL(file.recordcount)>
 	<table width="600px" border="0" cellpadding="3" cellspacing="0" align="center" style="border-bottom:1px solid ##cfcfcf; padding-bottom:10px; margin-bottom:15px; margin-top:5px;">
-		<tr><td><h2>You have uploaded a #Right(file.name, 3)# document for this page.</h2></td></tr>
+		<tr><td><h2>You have uploaded a #Right(file.name, 3)# file for this page.</h2></td></tr>
 		<tr><td>Choose one of the following to work with the page you have uploaded.</td></tr>
 		<tr>
         	<td>

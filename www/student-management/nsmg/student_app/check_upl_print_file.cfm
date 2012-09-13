@@ -21,7 +21,7 @@ function areYouSure() {
 	
 	if ( LEN(URL.curdoc) ) {
 		vStudentAppRelativePath = "";
-		vUploadedFilesRelativePath = "";
+		vUploadedFilesRelativePath = "../";
 	}
 </cfscript>
 
@@ -31,7 +31,7 @@ function areYouSure() {
 
 <cfif file.recordcount NEQ '0'>
 	<table width="670" border=0 cellpadding=3 cellspacing=0 align="center">
-		<tr><td><br><h2>You have uploaded a #Right(file.name, 3)# document for this file.</h2></td></tr>
+		<tr><td><br><h2>You have uploaded a #Right(file.name, 3)# file for this page.</h2></td></tr>
 		<tr><td><a href="#vUploadedFilesRelativePath#uploadedfiles/online_app/#doc#/#file.name#" target="_blank"><img src="pics/button_edit.png" border=0> View the file you have uploaded </a></td></tr>
 	</table><br>
 <cfelse>
