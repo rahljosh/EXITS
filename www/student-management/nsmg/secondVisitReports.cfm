@@ -284,10 +284,8 @@
                             assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                         AND 
                             isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                        <!--- 
                         AND
                             programID = s.programID
-                        --->
                         ORDER BY 
                             dep_date DESC,
                             dep_time ASC
@@ -327,10 +325,8 @@
                                         assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                                     AND 
                                         isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                                    <!--- 
                                     AND
                                         programID = s.programID
-                                    --->
                                     ORDER BY 
                                         dep_date DESC,
                                         dep_time ASC
@@ -473,10 +469,8 @@
                             assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                         AND 
                             isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                        <!--- 
                         AND
                             programID = s.programID
-                        --->
                         ORDER BY 
                             dep_date DESC,
                             dep_time ASC
@@ -664,10 +658,8 @@
                             assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                         AND 
                             isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                        <!--- 
                         AND
                             programID = s.programID
-                        --->
                         ORDER BY 
                             dep_date DESC,
                             dep_time ASC
@@ -707,10 +699,8 @@
                                         assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                                     AND 
                                         isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                                    <!--- 
                                     AND
                                         programID = s.programID
-                                    --->
                                     ORDER BY 
                                         dep_date DESC,
                                         dep_time ASC
