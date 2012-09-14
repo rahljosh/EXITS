@@ -36,6 +36,7 @@
                             
                                      
                                 AND 
+                                
                                     hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#"> 
                             
 
