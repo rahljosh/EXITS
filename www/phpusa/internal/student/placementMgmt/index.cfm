@@ -380,7 +380,7 @@
 											amountOwed = "$" & qGetPlacementHistory.hostFamilyRate;
 										}
 									} else {
-										amountOwed = "Placement date is missing.";	
+										amountOwed = "Missing placement date.";	
 									}
                                 </cfscript>
                                 #amountOwed#
@@ -506,7 +506,7 @@
                             	<cfif ListFind("1,2,3",CLIENT.userType)>
 									<cfif qGetPlacementHistory.isRelocation[1] EQ 1>
                                         <cfscript>
-											if (isDate(qGetPlacementHistory.datePlaced[currentrow-1])) {
+											if (isDate(qGetPlacementHistory.datePlaced[currentrow-1]) AND isDate(qGetPlacementHistory.datePlaced) ) {
 												if (DatePart('d',NOW()) GTE 15) {
 													date = CreateDate(DatePart('yyyy',NOW()),DatePart('m',NOW()),15);
 												} else {
@@ -524,7 +524,7 @@
 													amountOwed = 0;
 												}
 											} else {
-												amountOwed = "Next placement date is missing.";
+												amountOwed = "Missing placement date.";
 											}
                                         </cfscript>
                                         <cfif amountOwed NEQ 0>
