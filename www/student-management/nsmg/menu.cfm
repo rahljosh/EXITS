@@ -254,11 +254,9 @@
                 </cfif>
                 
                 <!--- Reports For Managers and Advisors --->
-                <!---
-				<cfif listFind("5,6", CLIENT.userType)>
+				<cfif listFind("5", CLIENT.userType)>
 					<li><a href="index.cfm?curdoc=report/index">New Reports</a></li>
 				</cfif>
-				--->
                 
                 <li><a href="index.cfm?curdoc=support">Support</a></li>
                 
