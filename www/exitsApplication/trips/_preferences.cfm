@@ -286,10 +286,10 @@
             
             <cfscript>
 				// Go to Book Trip - CC Processing
-				// Location('#CGI.SCRIPT_NAME#?action=bookTrip', 'no');
+				Location('#CGI.SCRIPT_NAME#?action=bookTrip', 'no');
 				
 				// No Credit Card Involved
-				Location('#CGI.SCRIPT_NAME#?action=reservationSeat', 'no');
+				//Location('#CGI.SCRIPT_NAME#?action=reservationSeat', 'no');
 	        </cfscript>
             
 		</cfif> <!--- NOT SESSION.formErrors.length() --->
