@@ -21,9 +21,19 @@
         SELECT
         	s.schoolID,
             s.schoolName,
-            s.contact
+            s.contact,
+            s.email,
+            s.phone,
+            s.website,
+            s.address,
+            s.address2,
+            s.city,
+            state.stateName,
+            s.zip
         FROM
             php_schools s
+      	INNER JOIN
+        	smg_states state ON state.id = s.state
         <cfif VAL(FORM.schoolID)>
             WHERE
                 s.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.schoolID)#">
@@ -60,10 +70,14 @@
     <table width="95%" cellpadding="0" cellspacing="0" align="center" frame="below">
     
     	<tr>
-            <td width="25%"><b>School</b></td>
-            <td width="25%"><b>Contact</b></td>
-            <td width="25%"><b>Area Rep.</b></td>
-            <td width="25%"><b>Area Rep. Email</b></td>
+            <td width="18%"><b>School</b></td>
+            <td width="18%"><b>Address</b></td>
+            <td width="8%"><b>Contact</b></td>
+            <td width="13%"><b>Email</b></td>
+            <td width="10%"><b>Phone</b></td>
+            <td width="10%"><b>Area Rep.</b></td>
+            <td width="13%"><b>Area Rep. Email</b></td>
+            <td width="10%"><b>Area Rep. Phone</b></td>
         </tr>
         
         <cfloop query="qGetSchools">
@@ -72,7 +86,8 @@
                 	c.userID,
                     u.firstName,
                     u.lastName,
-                    u.email
+                    u.email,
+                    u.phone
              	FROM
                 	php_school_contacts c
               	INNER JOIN
@@ -84,13 +99,17 @@
             </cfquery>
             <tr bgcolor="#iif(qGetSchools.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
                 <td valign="top" class="style1">#schoolName# (###schoolID#)</td>
+                <td valign="top" class="style1">#address# #address2# #city#, #statename# #zip#</td>
                 <td valign="top" class="style1">#contact#</td>
-                <td valign="top" class="style1" colspan="2">
+                <td valign="top" class="style1">#email#</td>
+                <td valign="top" class="style1">#phone#</td>
+                <td valign="top" class="style1" colspan="3">
                 	<table width="100%">
                     	<cfloop query="qGetReps">
                         	<tr>
-                            	<td valign="top" class="style1" width="50%"><cfif VAL(qGetReps.recordCount)>#qGetReps.firstName# #qGetReps.lastName# (###qGetReps.userID#)</cfif></td>
-                				<td valign="top" class="style1" width="50%">#qGetReps.email#</td>
+                            	<td valign="top" class="style1" width="30%"><cfif VAL(qGetReps.recordCount)>#qGetReps.firstName# #qGetReps.lastName# (###qGetReps.userID#)</cfif></td>
+                				<td valign="top" class="style1" width="40%">#qGetReps.email#</td>
+                                <td valign="top" class="style1" width="30%">#qGetReps.phone#</td>
                             </tr>
                         </cfloop>
                     </table>
