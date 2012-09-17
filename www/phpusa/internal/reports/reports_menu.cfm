@@ -171,12 +171,12 @@
 		</tr>
 	</table><br>
     
-    <!--- ROW 4 - 1 box --->
+    <!--- ROW 4 - 2 boxes --->
 	<table cellpadding=3 cellspacing="0" align="center" width="100%">
 		<tr>
-			<td width="50%" valign="top" align="center">
+			<td width="50%" valign="top">
 				<cfform action="reports/invoice_report.cfm" method="POST" target="blank">
-				<Table cellpadding=3 cellspacing="0" width="50%">
+				<Table cellpadding=3 cellspacing="0" width="100%">
 					<tr><th colspan="2" bgcolor="##C4CDE7">Invoice Report</th></tr>
 					<tr>
 						<td align="right">Program :</td>
@@ -224,6 +224,25 @@
 				</table>
 				</cfform>
 			</td>
+            <td width="50%" valign="top">
+            	<cfform action="reports/school_contact_report.cfm" method="POST" target="blank">
+                    <table cellpadding=3 cellspacing="0" width="100%">
+                        <tr><th colspan="2" bgcolor="##C4CDE7">School Contact Report</th></tr>
+                  			<tr>
+                                <td align="right">School :</td>
+                                <td>
+                                    <cfselect name="schoolID">
+                                        <option value="0">All</option>
+                                        <cfloop query="qGetPHPSchools">
+                                            <option value="#schoolid#">#schoolname#</option>
+                                        </cfloop>
+                                    </cfselect>
+                                </td>
+                            </tr>
+                  		<tr><td colspan="2" align="center" bgcolor="##C4CDE7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
+                    </table>
+                </cfform>
+            </td>
 		</tr>
 	</table><br>
 
