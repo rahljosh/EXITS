@@ -75,6 +75,8 @@
     <cfparam name="FORM.watDocOriginalAdvertisingMaterialExpirationCB" default="FALSE">
     <cfparam name="FORM.watDocEnglishAdvertisingMaterialExpiration" default="">
     <cfparam name="FORM.watDocEnglishAdvertisingMaterialExpirationCB" default="FALSE">
+    <cfparam name="FORM.watDocOriginalCBCExpiration" default="">
+    <cfparam name="FORM.watDocEnglishCBCExpiration" default="">
     <cfparam name="FORM.watDocLetterNotEngageThirdParties" default="0">
 
     <cfscript>
@@ -286,6 +288,8 @@
                         watDocEnglishBusinessLicenseExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocEnglishBusinessLicenseExpiration#">,
                         watDocNotarizedFinancialStatementExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocNotarizedFinancialStatementExpiration#">,
                         watDocBankruptcyDisclosureExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocBankruptcyDisclosureExpiration#">,
+                        watDocOriginalCBCExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocOriginalCBCExpiration#">,
+                        watDocEnglishCBCExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocEnglishCBCExpiration#">,
                         watDocWrittenReference1 = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocWrittenReference1#">,
                         watDocWrittenReference2 = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocWrittenReference2#">,
                         watDocWrittenReference3 = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocWrittenReference3#">,
@@ -362,6 +366,8 @@
                         watDocPreviousExperience,
                         watDocOriginalCBC,
                         watDocEnglishCBC,
+                        watDocOriginalCBCExpiration,
+                        watDocEnglishCBCExpiration,
                         watDocOriginalAdvertisingMaterialExpiration,
                         watDocEnglishAdvertisingMaterialExpiration,
                         watDocLetterNotEngageThirdParties,
@@ -425,6 +431,8 @@
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocPreviousExperience#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocOriginalCBC#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocEnglishCBC#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocOriginalCBCExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocEnglishCBCExpiration#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocOriginalAdvertisingMaterialExpiration#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocEnglishAdvertisingMaterialExpiration#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocLetterNotEngageThirdParties#">,
@@ -502,6 +510,8 @@
 				FORM.watDocPreviousExperience = qGetIntlRepInfo.watDocPreviousExperience;
 				FORM.watDocOriginalCBC = qGetIntlRepInfo.watDocOriginalCBC;
 				FORM.watDocEnglishCBC = qGetIntlRepInfo.watDocEnglishCBC;
+				FORM.watDocOriginalCBCExpiration = qGetIntlRepInfo.watDocOriginalCBCExpiration;
+				FORM.watDocEnglishCBCExpiration = qGetIntlRepInfo.watDocEnglishCBCExpiration;
 				FORM.watDocOriginalAdvertisingMaterialExpiration = qGetIntlRepInfo.watDocOriginalAdvertisingMaterialExpiration;
 				FORM.watDocEnglishAdvertisingMaterialExpiration = qGetIntlRepInfo.watDocEnglishAdvertisingMaterialExpiration;
 				FORM.watDocLetterNotEngageThirdParties = qGetIntlRepInfo.watDocLetterNotEngageThirdParties;
@@ -983,18 +993,70 @@
                                         </tr>	
                                         <tr>
                                         	<td class="fieldTitle">
-                                            	<input type="checkbox" name="watDocOriginalCBC" id="watDocOriginalCBC" value="1" class="formField" disabled <cfif VAL(FORM.watDocOriginalCBC)> checked </cfif> >
+                                            	<input 
+                                                	type="checkbox" 
+                                                    name="watDocOriginalCBC" 
+                                                    id="watDocOriginalCBC" 
+                                                    value="1" 
+                                                    class="formField" 
+                                                    disabled 
+													<cfif VAL(FORM.watDocOriginalCBC)> 
+                                                    	checked 
+													</cfif> >
                                             </td>
                                             <td class="style1">
                                                 <label for="watDocOriginalCBC">Original criminal background check</label>
+                                                <br />
+                                                &nbsp;&nbsp;Expiration Date: 
+                                                <span class="readOnly"
+                                                	<cfif isDate(FORM.watDocOriginalCBCExpiration)>
+                                                    	<cfif DateCompare(FORM.watDocOriginalCBCExpiration, NOW(), "d") EQ -1>
+                                                        	style="color:red;"
+                                                        </cfif>
+                                                    </cfif>
+                                               	>
+                                                	#DateFormat(watDocOriginalCBCExpiration, "mm/dd/yyyy")#
+                                                </span>
+                                                <input
+                                                	type="text"
+                                                    name="watDocOriginalCBCExpiration"
+                                                    id="watDocOriginalCBCExpiration"
+                                                    value="#DateFormat(FORM.watDocOriginalCBCExpiration, 'mm/dd/yyyy')#"
+                                                    class="datePicker style1 editPage"  />
                                             </td>
                                         </tr>	
                                         <tr>
                                         	<td class="fieldTitle">
-                                            	<input type="checkbox" name="watDocEnglishCBC" id="watDocEnglishCBC" value="1" class="formField" disabled <cfif VAL(FORM.watDocEnglishCBC)> checked </cfif> >
+                                            	<input 
+                                                	type="checkbox" 
+                                                    name="watDocEnglishCBC" 
+                                                    id="watDocEnglishCBC" 
+                                                    value="1" 
+                                                    class="formField" 
+                                                    disabled 
+													<cfif VAL(FORM.watDocEnglishCBC)> 
+                                                    	checked 
+													</cfif> >
                                             </td>
                                             <td class="style1">
-                                                <label for="watDocEnglishCBC">English criminal background check</label>
+                                                <label for="watDocOriginalCBC">English criminal background check</label>
+                                                <br />
+                                                &nbsp;&nbsp;Expiration Date: 
+                                                <span class="readOnly"
+                                                	<cfif isDate(FORM.watDocEnglishCBCExpiration)>
+                                                    	<cfif DateCompare(FORM.watDocEnglishCBCExpiration, NOW(), "d") EQ -1>
+                                                        	style="color:red;"
+                                                        </cfif>
+                                                    </cfif>
+                                               	>
+                                                	#DateFormat(watDocEnglishCBCExpiration, "mm/dd/yyyy")#
+                                                </span>
+                                                <input
+                                                	type="text"
+                                                    name="watDocEnglishCBCExpiration"
+                                                    id="watDocEnglishCBCExpiration"
+                                                    value="#DateFormat(FORM.watDocEnglishCBCExpiration, 'mm/dd/yyyy')#"
+                                                    class="datePicker style1 editPage"  />
                                             </td>
                                         </tr>	
                                         <tr>
