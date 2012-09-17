@@ -33,7 +33,7 @@
         <cfif NOT VAL(qGetTourList.recordcount)>           
             <tr>
                 <td colspan="4"> 
-                    <h3><div align="center">Please check back on Sept 15th for new trip availability.</div></h3>
+                    <h3><div align="center">Please check back on Sept 30th for new trip availability.</div></h3>
                 </td>
             </tr>
         </cfif>
