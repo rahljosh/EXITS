@@ -1470,13 +1470,20 @@
                     smg_users_training sut
                 WHERE
                     user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
+                    AND          
+                        company_ID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+                <cfelse>
+                    AND          
+                        company_ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                </cfif>
                 AND
                 	has_passed = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                 AND
                     training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
                 AND
                 	DATE_ADD(date_trained, INTERVAL 11 MONTH) >= NOW()
-				ORDER BY
+                ORDER BY
                 	dateExpired DESC
 				LIMIT 1                                        
 		</cfquery>
