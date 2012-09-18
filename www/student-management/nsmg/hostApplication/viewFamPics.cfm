@@ -16,9 +16,9 @@
 
 <cfif isDefined('url.delPic')>
 	<cffile action="delete" 
-    	file="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/large/#url.delPic#">
+    	file="C:/websites/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/large/#url.delPic#">
     <cffile action="delete" 
-    	file="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs/#url.delPic#"> 
+    	file="C:/websites/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs/#url.delPic#"> 
         <cfquery name="delPic" datasource="MySQL">
             delete from smg_host_picture_album
             where filename = '#url.delPic#'   
@@ -61,27 +61,27 @@ from smg_host_pic_cat
 <cfif form.fileUpload is ''>
 <div align="center"><font color="#FF0000"><h3>Please select a file to upload.</h3></font></div>
 <cfelse>
-		<cfif DirectoryExists('/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/large')>
+		<cfif DirectoryExists('C:/websites/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/large')>
         <cfelse>
-        	<cfdirectory action = "create" directory = "/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/large" >
+        	<cfdirectory action = "create" directory = "C:/websites/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/large" >
         </cfif>	
         
-        <cfif DirectoryExists('/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs')>
+        <cfif DirectoryExists('C:/websites/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs')>
         <cfelse>
-        	<cfdirectory action = "create" directory = "/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs" >
+        	<cfdirectory action = "create" directory = "C:/websites/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs" >
         </cfif>	
         
         
    <cffile action="upload"
-     destination="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/temp/"
+     destination="C:/websites/student-management/nsmg/uploadedfiles/temp/"
      fileField="fileUpload" nameconflict="makeunique">    
-      <cfdirectory action="list" name="currentPics2" directory="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/temp/">
+      <cfdirectory action="list" name="currentPics2" directory="C:/websites/student-management/nsmg/uploadedfiles/temp/">
      
       <cfset fileTypeOK = 1>
 	<cfif #ListFind('#acceptedFIles#','#file.ServerFileExt#')# eq 0>
    <cfset fileTypeOK = 0>
    <cffile action="delete" 
-    	file="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/#file.serverfile#">
+    	file="C:/websites/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/#file.serverfile#">
    
 	</cfif>
 
@@ -101,7 +101,7 @@ from smg_host_pic_cat
 				
                      </cfloop>
                     <cfloop query="currentPics2">
-				 	<cffile action="delete" file="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/temp/#name#">  
+				 	<cffile action="delete" file="C:/websites/student-management/nsmg/uploadedfiles/temp/#name#">  
                    </cfloop>
 
      
@@ -193,7 +193,7 @@ Select a catagory for this picture:<br />
         from smg_host_pic_cat
         where catID = #current_photos.cat#
         </cfquery>
-    	<Td><img src="http://111cooper.com/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs/#filename#" height = 100><br />
+    	<Td><img src="http://ise.exitsapplication.com/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs/#filename#" height = 100><br />
                 #catDesc.cat_name#<br />
                 <a href="viewFamPics.cfm?delPic=#filename#"><img src="../pics/buttons/deleteGreyRed.png" height=30  border=0 /></a>
 </Td>

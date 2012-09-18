@@ -35,26 +35,27 @@ and shortDesc =  'School Acceptance'
 
 <cfset acceptedFiles = 'jpg,JPG,jpeg,JPEG'>
 <cfif isDefined('form.process')>
- 	<cfif DirectoryExists('/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/hosts/#client.hostid#')>
+
+ 	<cfif DirectoryExists('C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#')>
     <cfelse>
-        <cfdirectory action = "create" directory = "/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/hosts/#client.hostid#" >
+        <cfdirectory action = "create" directory = "C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#" >
     </cfif>	
 
- 	<cfif DirectoryExists('/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/hosts/#client.hostid#/thumbs')>
+ 	<cfif DirectoryExists('C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/thumbs')>
     <cfelse>
-        <cfdirectory action = "create" directory = "/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/hosts/#client.hostid#/thumbs" >
+        <cfdirectory action = "create" directory = "C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/thumbs" >
     </cfif>	  
     
 <cffile action="upload"
-     destination="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/hosts/#client.hostid#"
+     destination="C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#"
      fileField="schoolAcceptLetter" nameconflict="makeunique">    
-      <cfdirectory action="list" name="schoolAcceptance" directory="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/hosts/#client.hostid#">
+      <cfdirectory action="list" name="schoolAcceptance" directory="C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#">
       
    <cfset fileTypeOK = 1>
    <cfif #ListFind('#acceptedFIles#','#file.ServerFileExt#')# eq 0>
 	   <cfset fileTypeOK = 0>
        <cffile action="delete" 
-            file="/home/httpd/vhosts/111cooper.com/httpdocs/nsmg/uploadedfiles/HostAlbum/#client.hostid#/#file.serverfile#">
+            file="C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/#file.serverfile#">
    <cfelse>
    <!----Make an thumbnail of image so it doesn't take long to display.  keeping original for printing if needed---->
    
@@ -68,7 +69,7 @@ and shortDesc =  'School Acceptance'
          insert into smg_documents (fileName, type, dateFiled, filePath, description, shortDesc, userid, userType, hostID)
                 				values ('#file.serverfile#', '#file.ServerFileExt#', #now()#, 'hosts/#client.hostid#', 'School Acceptance Form - Signed #form.dateSigned#', 'School Acceptance', #client.userid#, 'Host Family', #client.hostid#)
         </cfquery>
-		
+		<cflocation url="viewSchoolAccept.cfm?itemID=#url.itemID#&usertype=#url.usertype#">
 	</cfif>
 </cfif>
 
@@ -95,18 +96,10 @@ and shortDesc =  'School Acceptance'
     </cfloop>
     </Table>
 <div id="slidingDiv" display:"none" align="center"> 
- <img src="../uploadedfiles/#checkDocs.filepath#/thumbs/#checkDocs.fileName#">
+ <img src="../uploadedfiles/#checkDocs.filepath#/#checkDocs.fileName#">
  
  <br />
- <form action="viewFamRules.cfm?itemID=#url.itemID#&usertype=#url.usertype#" method="post">
-  <input type="hidden" name="process" />
- <table cellpadding=10 align="center">
-	<tr>
-    	<td><img src="../pics/buttons/deny.png" width="90%"/></td><td>&nbsp;</td>
-        
-        <Td><input type="image" src="../pics/buttons/approveBut.png" name="process" value=1 width="90%" /></Td>
-    </tr>
-    </table>
+<cfinclude template="approveDenyButtonsInclude.cfm">
 </div>
 
 <cfelse>
@@ -129,7 +122,16 @@ and shortDesc =  'School Acceptance'
 </Table>
       <br />
 <hr width=80% align="center" height=1px />
-<cfinclude template="approveDenyButtonsInclude.cfm">
+ <form action="view SchoolAccept.cfm?itemID=#url.itemID#&usertype=#url.usertype#" method="post">
+  <input type="hidden" name="process" />
+ <table cellpadding=10 align="center">
+	<tr>
+        
+        <Td><input type="image" src="../pics/buttons/submit.png" name="process" value=1 /></Td>
+    </tr>
+    </table>
+
+
 </cfif>
 </cfoutput>
 </cfform>

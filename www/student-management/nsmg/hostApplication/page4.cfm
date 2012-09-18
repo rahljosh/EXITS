@@ -139,7 +139,10 @@ regarding the hosting of an exchange student with a particular athletic ability?
                                     	<Td valign="top"> <span class="title">Chores</span></Td><Td>#qGetHostFamily.houserules_chores#</Td>
                                     </Tr>
                      				<Tr>
-                                    	<Td valign="top"> <span class="title">Religious Expectations</span></Td><Td>#qGetHostFamily.houserules_church#</Td>
+                                    	<Td valign="top"> <span class="title">Computer, Internet and Email Usage</span></Td><Td>#qGetHostFamily.houserules_inet#</Td>
+                                    </Tr>
+                                    <Tr>
+                                    	<Td valign="top"> <span class="title">Expenses</span></Td><Td>#qGetHostFamily.houserules_expenses#</Td>
                                     </Tr>
                                     <Tr>
                                     	<Td valign="top"> <span class="title">Other</span></Td><Td>#qGetHostFamily.houserules_other#</Td>
@@ -151,10 +154,13 @@ regarding the hosting of an exchange student with a particular athletic ability?
                         <td colspan=2 align="center"><img src="../pics/hostAppBanners/Religion_43.jpg"/></Td>
                     </tr>
                     <tr>
-                    	<Td width=50% valign="top">
+                    	
                         	<Table width=100%>
+                            <tr>
+                            	<td> <span class="title">Any members have difficulty hosting diff. religion?</span></td><Td><cfif #qGetHostFamily.hostingDiff# eq 0>No<cfelse>Yes</cfif></Td>
+                            </tr>
                                 <tr>
-                                    <td width=80%>  <span class="title">Religious Affiliation</span></td><td>#religion.religionname#</td>
+                                    <td>  <span class="title">Religious Affiliation</span></td><td>#religion.religionname#</td>
                                 </tr>
                                 <tr>
                                     <td>  <span class="title">Religious Attendance</span></td><td>#qGetHostFamily.religious_participation#</td>
@@ -169,25 +175,7 @@ if they are different from your own?</span></td><td>#CapFirst3(qGetHostFamily.ch
                                 
                               </table> 
                           </Td>
-                          <td>
-                          	<Table width=100%>
-                                <tr>
-                                    <td>  <span class="title">Religious Institution</span></td><td>#religionInfo.churchname#</td>
-                                </tr>
-                                <tr>
-                                    <td valign="Top">  <span class="title">Address</span></td><td>#religionInfo.address#<br>#religionInfo.address2#</td>
-                                </tr>
-                                <tr>
-                                    <td>  <span class="title">City, State Zip</span></td><td>#religionInfo.city#, #religionInfo.state# #religionInfo.zip#</td>
-                                </tr>
-                                <tr>
-                                    <td>  <span class="title">Religious Leader</span></td><td>#religionInfo.pastor#</td>
-                                </tr>
-                                <tr>
-                                    <td>  <span class="title">Phone</span></td><td>#religionInfo.phone#</td>
-                                </tr>
-                              </table> 
-                          </td>
+                         
                         </tr>
                       </table>        
                      

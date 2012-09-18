@@ -12,7 +12,6 @@
     </cfscript>
     
 
-
  <cfquery name="qPets" datasource="mysql">
     select *
     from smg_host_animals
@@ -29,7 +28,6 @@ from smg_users u
 where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepid#">
 </cfquery>        
 
-  
 <cffunction name="CapFirst" returntype="string" output="false">
     <cfargument name="str" type="string" required="true" />
     
@@ -94,13 +92,13 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
                                         <td width="250">
                                             #qGetHostFamily.fatherfirstname# #qGetHostFamily.fatherlastname#
                                             <cfif IsDate(qGetHostFamily.fatherDOB)>
-                                                (#DateDiff('yyyy', qGetHostFamily.fatherDOB, now())#)
+                                                (#DateDiff('yyyy', qGetHostFamily.fatherDOB, now())# - #DateFormat(qGetHostFamily.fatherDOB, 'mm/dd/yyyy')#)
                                             </cfif>
                                         </td>
                                     </tr>
                                     <tr>
                                     	<td><span class="title">Occupation:</span></td>
-                                        <td>#qGetHostFamily.fatherworktype# (<Cfif qGetHostFamily.fatherfullpart eq 1>Full Time<cfelse>Part Time</Cfif>)</td>
+                                        <td>#qGetHostFamily.fatherworktype# - #qGetHostFamily.fatherEmployeer#  (<Cfif qGetHostFamily.fatherfullpart eq 1>Full Time<cfelse>Part Time</Cfif>)</td>
                                     </tr>
                                      <tr>
                                     	<td><span class="title">Cell:</span></td>
@@ -116,13 +114,13 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
     	                            	<td width="250">
                                         	#qGetHostFamily.motherfirstname# #qGetHostFamily.motherlastname#
 											<cfif IsDate(qGetHostFamily.motherDOB)>
-                                                (#DateDiff('yyyy', qGetHostFamily.motherDOB, now())#)
+                                                (#DateDiff('yyyy', qGetHostFamily.motherDOB, now())# - #DateFormat(qGetHostFamily.motherDOB, 'mm/dd/yyyy')#)
                                             </cfif>
                                         </td>
 									</tr>
                                 	<tr>
                                     	<td><span class="title">Occupation:</span></td>
-		                                <td>#qGetHostFamily.motherworktype# (<Cfif qGetHostFamily.motherfullpart eq 1>Full Time<cfelse>Part Time</Cfif>)</td>
+		                                <td>#qGetHostFamily.motherworktype# - #qGetHostFamily.motherEmployeer#  (<Cfif qGetHostFamily.motherfullpart eq 1>Full Time<cfelse>Part Time</Cfif>)</td>
                                     </tr>
                                     <tr>
                                     	<td><span class="title">Cell:</span></td>
@@ -182,16 +180,23 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
                                     <td><span class="title">Name</td>
                                     <td align="center"><span class="title">Age</td>
                                     <td align="center"><span class="title">Sex</td>
-                                    <td align="center"><span class="title">Lives @ Home</td>
+                                    <td align="center">At  Home</td>
                                     <td align="center"><span class="title">Shared Room</td>
                                     <td align="center"><span class="title">Relation</td>
                                     <td align="center"><span class="title">School</td>
+                                    <td align="center"><span class="title">Interests</td>
                                 </tr>
                           <cfif qGetHostChildren.recordcount eq 0>
                           		<Tr>
                                 	<Td colspan=8 align="center">No family members are listed with this family. </Td>
                           </cfif>
                           <cfloop query="qGetHostChildren">
+                          <cfquery name="SchoolName" datasource="#application.dsn#">
+                          select schoolname
+                         
+                          from smg_schools
+                          where schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(school)#">
+                          </cfquery>
                                     <tr <cfif qGetHostChildren.currentrow MOD 2>bgcolor="##ddeaf3"</cfif> >
                                         <td>
                             				<cfset maxwords = 1>
@@ -206,11 +211,11 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
 											</cfif>
                                         </td>
                                         <td align="center">#CapFirst(qGetHostChildren.sex)#</td>
-                                        <td align="center">#CapFirst(qGetHostChildren.liveathome)#</td>
+                                        <td align="center"><cfif qGetHostChildren.liveathome is 'yes'>Yes<cfelseif qGetHostChildren.liveathome is 'no' and qGetHostChildren.liveathomePartTime is 'yes'>Part Time<cfelse>No</cfif></td>
                                         <td align="center">#CapFirst(qGetHostChildren.shared)#</td>
                                         <td align="center">#CapFirst(qGetHostChildren.membertype)#</td>
-                                        <td align="center">#qGetHostChildren.school#</td>
-                                        <td align="center"></td>
+                                        <td align="center">#SchoolName.schoolname#</td>
+                                        <td align="center">#qGetHostChildren.interests#</td>
                                     </tr>
                                 </cfloop>
                             </table>
@@ -241,6 +246,10 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
                                			<Td colspan=2><span class="title">Restrictions: </span><br />
 										<cfif qGetHostFamily.stuDietRestDesc is ''>No Restrictions Noted<cfelse>#qGetHostFamily.stuDietRestDesc#</cfif></td>
                               		<tr>
+                                    <tr>
+                                        <Td><span class="title">Comfortable hosting a student with dietary restrictions?</Td>
+                                        <td align="Center"><Cfif qGetHostFamily.dietaryRestriction eq 0>No<cfelse>Yes</Cfif></td>
+                                    </tr>
                                   	<Tr>
                                     	<td><span class="title">Are you prepared to provide three (3) quality meals per day?</span></td>
                                         <td align="Center"><cfif qGetHostFamily.threesquares eq 0>No<cfelse>Yes</cfif></td> 
@@ -297,9 +306,7 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
                                		<Tr>
                                			<Td width=80%><span class="title">Does anyone in your home smoke?</span></Td><td>#CapFirst(qGetHostFamily.hostsmokes)#</td>
                               		<tr>
-                                    <Tr>
-                               			<Td><span class="title">Would you host a student who smokes?</span></Td><td>#CapFirst(qGetHostFamily.acceptsmoking)#</td>
-                              		<tr>
+                                   
                                     <Tr>
                                			<Td colspan=2><span class="title">Conditions:</span> #qGetHostFamily.smokeconditions#</td>
                               		<tr>
@@ -312,6 +319,7 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
                      <table>
                         
                          <br /><br />
+                     <!----
                        <!----INterests---->     
                              <table  align="center" border="0" cellpadding="4" cellspacing="0" width="800">
                         <tr>           
@@ -362,7 +370,7 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
                             
                                 
                            </table>
-                            
+                            ---->
                             
                         </td>
                     </tr>                
