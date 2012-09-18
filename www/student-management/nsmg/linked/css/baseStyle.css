@@ -118,6 +118,13 @@
 	border:1px solid #999;	
 }
 
+.longTextAreaa {
+	height: 80px;
+	width : 500px;
+	margin-bottom: .5em;
+	border:1px solid #999;	
+}
+
 .xLargeTextArea {
 	height: 80px;
 	width : 350px;
@@ -1006,30 +1013,68 @@ input.projectHelpHours {
 	min-height: 50px;
 } 
 
-.rdholder .rdbox .subSection {
-	width:100%;
+.rdholder .rdboxPaperwork {
+	border-left:1px solid #c6c6c6;
+	border-right:1px solid #c6c6c6;
+	padding:10px 15px;
+	margin:0;
+	display:inline-block;
+	min-height: 50px;
+} 
+
+.rdholder .rdboxPaperwork .subSection {
+	width:31%;
+	min-height:150px;
 	font-size:0.9em;
+	float:left;
+	padding:0px;
+	margin: 5px 10px 15px 10px;
+	border:1px solid #3b5998;
+	-moz-border-radius: 10px;
+	border-radius: 10px;		
+}
+
+.rdholder .rdboxPaperwork .subSectionLarge {
+	width:31%;
+	min-height:280px;
+	font-size:0.9em;
+	float:left;
+	padding:0px;
+	margin: 5px 10px 15px 10px;
+	border:1px solid #3b5998;
+	-moz-border-radius: 10px;
+	border-radius: 10px;	
+}
+
+.rdholder .rdboxPaperwork .subSection .title,
+.rdholder .rdboxPaperwork .subSectionLarge .title {
+	padding:5px 5px 5px 5px;
 	display:block;
-	margin: 5px 0px 20px 0px;
-	/* border-left:1px solid #3b5998; */
-}
-
-.rdholder .rdbox .subSection .title {
-	width:98%;
-	padding: 3px 5px 3px 7px;
-	margin: 0px 0px 10px 0px;
+	margin:0px 0px 10px 0px;
 	background-color:#edeff4; /* f2f2f2 */
-	border-top:1px solid #3b5998; /* cccccc e6e6e6 ccd0db */
+	-moz-border-radius: 10px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
 }
 
-.rdholder .rdbox .subSection .title h2 {
+.rdholder .rdboxPaperwork .subSection .title img,
+.rdholder .rdboxPaperwork .subSectionLarge .title img {
+	padding-left:10px;
+	float:left;
+	vertical-align:middle;
+}
+
+.rdholder .rdboxPaperwork .subSection .title h2,
+.rdholder .rdboxPaperwork .subSectionLarge .title h2 {
+	padding-left:10px;
 	color:#3b5998; /* 3b5998 666666 */
 	display:inline;
 	font-size:1.2em;
-	font-weight:bold;	
+	font-weight:bold;
 }
 
-.rdholder .rdbox .subSection .title a {
+.rdholder .rdboxPaperwork .subSection .title a,
+.rdholder .rdboxPaperwork .subSectionLarge .title a {
 	float:right;
 	color:#3b5998; /* 3b5998 43589a */
 	font-size:1.1em;
@@ -1037,7 +1082,8 @@ input.projectHelpHours {
 	text-decoration:none;
 }
 
-.rdholder .rdbox .subSection .title a:hover {
+.rdholder .rdboxPaperwork .subSection .title a:hover,
+.rdholder .rdboxPaperwork .subSectionLarge .title a:hover {
 	text-decoration:underline;
 }
 

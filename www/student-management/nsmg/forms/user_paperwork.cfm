@@ -93,7 +93,7 @@
 
 <cfscript>
 	//Check if paperwork is complete for season
-	get_paperwork = APPLICATION.CFC.udf.allpaperworkCompleted(userid=url.userid,seasonID=9);
+	get_paperwork = APPLICATION.CFC.udf.allpaperworkCompleted(userid=url.userid,seasonID=APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID);
 	// Get User CBC
 	qGetCBCUser = APPCFC.CBC.getCBCUserByID(userID=url.userid,cbcType='user');
 </cfscript>

@@ -14,7 +14,7 @@
 	
 	<cfscript>
 		// Param local variables
-		param name="action" default="list";
+		param name="action" default="welcome";
 		
 		// Param URL variables
 		param name="URL.uniqueID" default="";
@@ -29,21 +29,19 @@
 
 <cfswitch expression="#action#">
 
-    <cfcase value="traincasterLogin" delimiters=",">
+    <cfcase value="welcome,displayAgreement,cbcAuthorization,employmentHistory,reference,trackUserPaperwork,traincasterLogin" delimiters=",">
 
         <!--- Include template --->
         <cfinclude template="_#action#.cfm" />
 
     </cfcase>
 
-    <!--- The default case is the login page --->
-    <!---
+    <!--- The default case is the welcome page --->
     <cfdefaultcase>
         
         <!--- Include template --->
-        <cfinclude template="_traincasterLogin.cfm" />
+        <cfinclude template="_welcome.cfm" />
 
     </cfdefaultcase>
-	--->
 
 </cfswitch>

@@ -2,9 +2,6 @@
 	<Cfset client.loginError=''> 
     <cfparam name="CLIENT.companyID" default="1">
     
-    <cfparam name="season" default="9">
-    <!----This should be removed when SMG uses the global login page---->
-	   
 	<!--- Login.  called by: flash/login.cfm --->
 	<cffunction name="login" access="public" returntype="string">
 		<cfargument name="username" type="string" required="yes">
@@ -193,21 +190,22 @@
             </cfquery>
         </cfif>
         
-         
-        
-        
-     
 		<!----Check if they have all paperwork and account is not expired or disabled---->
-       
+		<cfscript>
+            //Check if paperwork is complete for season
+            //qAllPaperWorkCompleted = APPLICATION.CFC.udf.allpaperworkCompleted(userid=qAuthenticateUser.userID,seasonid=9);
             
-            <Cfscript>
-                //Check if paperwork is complete for season
-				qAllPaperWorkCompleted = APPLICATION.CFC.udf.allpaperworkCompleted(userid=#qAuthenticateUser.userID#,seasonid=9);
-			</cfscript>
+            /*** NEW PAPERWORK SECTION ***/
+			// Set USER SESSION Variables
+			APPLICATION.CFC.USER.setUserSession(userID=qAuthenticateUser.userID);
+		
+			// Set USER SESSION Roles
+			APPLICATION.CFC.USER.setUserSessionRoles(userID=qAuthenticateUser.userID);	
+			
+			// Set USER SESSION Paperwork
+			APPLICATION.CFC.USER.setUserSessionPaperwork(userID=qAuthenticateUser.userID);
+        </cfscript>
             
-       
-   		
-         
         <Cfif not val(qAuthenticateUser.accountCreationVerified)>
         
         	<cfquery name="disabledReasonid" datasource="#application.dsn#">
@@ -230,6 +228,7 @@
       <Cfif len(client.loginError)>
       	<cflocation url="http://#cgi.server_name#">
       </Cfif>
+      
 		<cfset CLIENT.userID = qAuthenticateUser.userID>
         <cfset CLIENT.uniqueID = qAuthenticateUser.uniqueID>
 		<cfset CLIENT.name = qAuthenticateUser.firstname & ' ' & qAuthenticateUser.lastname>
@@ -356,7 +355,8 @@
             
             <!---Check files for user office users----->
           
-            
+            <!--- DELETE THIS - MARCUS MELO --->
+            <!---
             <cfif client.usertype eq 15>
             	<cfif qAllPaperWorkCompleted.secondVisitRepOK neq 1>
                		<cfset CLIENT.agreement_needed= 1>
@@ -367,6 +367,7 @@
                </cfif>
             
             </cfif>
+			--->
             
 		
           

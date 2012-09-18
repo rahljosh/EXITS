@@ -22,9 +22,12 @@
 			DeleteClientVariable(ListGetAt(vClientVarList, i));
 		}
 		
+		// Delete SESSION User and Paperwork Information
+		structDelete(SESSION, "user");
+
 		// Delete SESSION Roles
 		structDelete(SESSION, "roles");
-
+		
 		// Location
 		location("http://#cgi.http_host#/", "no");
 	</cfscript>
