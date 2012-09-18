@@ -106,6 +106,12 @@
 
 		// Get References - Does not expire - Minimum of 4 references
 		qGetReferences = APPLICATION.CFC.USER.getReferencesByID(userID=qGetUser.userID);
+		
+		
+		/*****
+			Reset Paperwork - REMOVE THIS LATER
+		***/
+		APPLICATION.CFC.USER.getUserSessionPaperwork();
 	</cfscript>
     
 </cfsilent>
@@ -206,7 +212,7 @@
 				
                 <!--- Complete --->
                 <cfif APPLICATION.CFC.USER.getUserSessionPaperwork().isDOSCertificationCompleted>
-                	<p>#qGetSeason.years# DOS Certification expires on #APPLICATION.CFC.USER.getUserSessionPaperwork().paperworkEndDate#</p>
+                	<p>#qGetSeason.years# DOS Certification expires on #APPLICATION.CFC.USER.getUserSessionPaperwork().dosDateExpired#</p>
                     <div align="center" style="padding-top:7px;"><img src="pics/buttons/complete.png" border="0" /></div>
                 <!--- Need Info --->
 				<cfelse>
