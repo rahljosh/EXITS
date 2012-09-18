@@ -64,6 +64,7 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
     <cfreturn newstr />
 </cffunction>  
 
+
 <body>
 <cfoutput>
 <!----Page 1---->
@@ -110,13 +111,13 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
                                         <td width="250">
                                             #qGetHostFamily.fatherfirstname# #qGetHostFamily.fatherlastname#
                                             <cfif IsDate(qGetHostFamily.fatherDOB)>
-                                                (#DateDiff('yyyy', qGetHostFamily.fatherDOB, now())#)
+                                                (#DateDiff('yyyy', qGetHostFamily.fatherDOB, now())# - #DateFormat(qGetHostFamily.fatherDOB, 'mm/dd/yyyy')#)
                                             </cfif>
                                         </td>
                                     </tr>
                                     <tr>
                                     	<td><span class="title">Occupation:</span></td>
-                                        <td>#qGetHostFamily.fatherworktype# (<Cfif qGetHostFamily.fatherfullpart eq 1>Full Time<cfelse>Part Time</Cfif>)</td>
+                                       <td>#qGetHostFamily.fatherworktype# - #qGetHostFamily.fatherEmployeer#  (<Cfif qGetHostFamily.fatherfullpart eq 1>Full Time<cfelse>Part Time</Cfif>)</td>
                                     </tr>
                                      <tr>
                                     	<td><span class="title">Cell:</span></td>
@@ -132,13 +133,13 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
     	                            	<td width="250">
                                         	#qGetHostFamily.motherfirstname# #qGetHostFamily.motherlastname#
 											<cfif IsDate(qGetHostFamily.motherDOB)>
-                                                (#DateDiff('yyyy', qGetHostFamily.motherDOB, now())#)
+                                                (#DateDiff('yyyy', qGetHostFamily.motherDOB, now())# - #DateFormat(qGetHostFamily.motherDOB, 'mm/dd/yyyy')#)
                                             </cfif>
                                         </td>
 									</tr>
                                 	<tr>
                                     	<td><span class="title">Occupation:</span></td>
-		                                <td>#qGetHostFamily.motherworktype# (<Cfif qGetHostFamily.motherfullpart eq 1>Full Time<cfelse>Part Time</Cfif>)</td>
+		                                <td>#qGetHostFamily.motherworktype# - #qGetHostFamily.motherEmployeer#  (<Cfif qGetHostFamily.motherfullpart eq 1>Full Time<cfelse>Part Time</Cfif>)</td>
                                     </tr>
                                     <tr>
                                     	<td><span class="title">Cell:</span></td>
@@ -193,21 +194,28 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
                         </tr>
                         <tr>
                             <td valign="top">
-                          <table  align="Center" width=800 cellpadding=4 cellspacing=0>
+                         <table  align="Center" width=100% cellpadding=4 cellspacing=0>
                                 <tr>
                                     <td><span class="title">Name</td>
                                     <td align="center"><span class="title">Age</td>
                                     <td align="center"><span class="title">Sex</td>
-                                    <td align="center"><span class="title">Lives @ Home</td>
+                                    <td align="center">At  Home</td>
                                     <td align="center"><span class="title">Shared Room</td>
                                     <td align="center"><span class="title">Relation</td>
                                     <td align="center"><span class="title">School</td>
+                                    <td align="center"><span class="title">Interests</td>
                                 </tr>
                           <cfif qGetHostChildren.recordcount eq 0>
                           		<Tr>
                                 	<Td colspan=8 align="center">No family members are listed with this family. </Td>
                           </cfif>
                           <cfloop query="qGetHostChildren">
+                          <cfquery name="SchoolName" datasource="#application.dsn#">
+                          select schoolname
+                         
+                          from smg_schools
+                          where schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(school)#">
+                          </cfquery>
                                     <tr <cfif qGetHostChildren.currentrow MOD 2>bgcolor="##ddeaf3"</cfif> >
                                         <td>
                             				<cfset maxwords = 1>
@@ -221,12 +229,12 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
                                             	n/a
 											</cfif>
                                         </td>
-                                        <td align="center">#capFirst1(qGetHostChildren.sex)#</td>
-                                        <td align="center">#capFirst1(qGetHostChildren.liveathome)#</td>
-                                        <td align="center">#capFirst1(qGetHostChildren.shared)#</td>
-                                        <td align="center">#capFirst1(qGetHostChildren.membertype)#</td>
-                                        <td align="center">#qGetHostChildren.school#</td>
-                                        <td align="center"></td>
+                                        <td align="center">#CapFirst1(qGetHostChildren.sex)#</td>
+                                        <td align="center"><cfif qGetHostChildren.liveathome is 'yes'>Yes<cfelseif qGetHostChildren.liveathome is 'no' and qGetHostChildren.liveathomePartTime is 'yes'>Part Time<cfelse>No</cfif></td>
+                                        <td align="center">#CapFirst1(qGetHostChildren.shared)#</td>
+                                        <td align="center">#CapFirst1(qGetHostChildren.membertype)#</td>
+                                        <td align="center">#SchoolName.schoolname#</td>
+                                        <td align="center">#qGetHostChildren.interests#</td>
                                     </tr>
                                 </cfloop>
                             </table>
@@ -257,6 +265,10 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
                                			<Td colspan=2><span class="title">Restrictions: </span><br />
 										<cfif qGetHostFamily.stuDietRestDesc is ''>No Restrictions Noted<cfelse>#qGetHostFamily.stuDietRestDesc#</cfif></td>
                               		<tr>
+                                    <tr>
+                                        <Td><span class="title">Comfortable hosting a student with dietary restrictions?</Td>
+                                        <td align="Center"><Cfif qGetHostFamily.dietaryRestriction eq 0>No<cfelse>Yes</Cfif></td>
+                                    </tr>
                                   	<Tr>
                                     	<td><span class="title">Are you prepared to provide three (3) quality meals per day?</span></td>
                                         <td align="Center"><cfif qGetHostFamily.threesquares eq 0>No<cfelse>Yes</cfif></td> 
@@ -327,6 +339,8 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
                      </td>
                       </tr>
                   </table>
+                  
+                  <!----
                        <!----INterests---->     
                              <table  align="center" border="0" cellpadding="4" cellspacing="0" width="800">
                         <tr>           
@@ -373,7 +387,7 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
                                     </td>
                                 </tr>
                            </table>
-
+---->
                         </td>
                     </tr>                
 				</table>
@@ -466,7 +480,7 @@ son or daughter and their parents, such as personalities, background, lifestyle 
         from smg_host_pic_cat
         where catID = #cat#
         </cfquery>
-    	<Td><img src="http://ise.exitsapplication.com/nsmg/uploadedfiles/hostAlbum/thumbs/#filename#" width = 250><br />
+    	<Td><img src="http://ise.exitsapplication.com/nsmg/uploadedfiles/HostAlbum/#url.hostid#/thumbs/#filename#" width = 250><br />
             <span class="title">Catagory:</span> #catDesc.cat_name#<br />
             <span class="title">Description:</span>#description#
 		</Td>
@@ -602,7 +616,10 @@ regarding the hosting of an exchange student with a particular athletic ability?
                                     	<Td valign="top"> <span class="title">Chores</span></Td><Td>#qGetHostFamily.houserules_chores#</Td>
                                     </Tr>
                      				<Tr>
-                                    	<Td valign="top"> <span class="title">Religious Expectations</span></Td><Td>#qGetHostFamily.houserules_church#</Td>
+                                    	<Td valign="top"> <span class="title">Computer, Internet and Email Usage</span></Td><Td>#qGetHostFamily.houserules_inet#</Td>
+                                    </Tr>
+                                    <Tr>
+                                    	<Td valign="top"> <span class="title">Expenses</span></Td><Td>#qGetHostFamily.houserules_expenses#</Td>
                                     </Tr>
                                     <Tr>
                                     	<Td valign="top"> <span class="title">Other</span></Td><Td>#qGetHostFamily.houserules_other#</Td>
@@ -613,44 +630,29 @@ regarding the hosting of an exchange student with a particular athletic ability?
                     <tr>           
                         <td colspan=2 align="center"><img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/Religion_43.jpg"/></Td>
                     </tr>
-                    <tr>
-                    	<Td valign="top" width=450>
-                        	<Table>
+                     <tr>
+                    	
+                        	<Table width=100%>
+                            <tr>
+                            	<td> <span class="title">Any members have difficulty hosting diff. religion?</span></td><Td><cfif #qGetHostFamily.hostingDiff# eq 0>No<cfelse>Yes</cfif></Td>
+                            </tr>
                                 <tr>
-                                    <td width=80%>  <span class="title">Religious Affiliation</span></td><td>#religion.religionname#</td>
+                                    <td>  <span class="title">Religious Affiliation</span></td><td>#religion.religionname#</td>
                                 </tr>
                                 <tr>
                                     <td>  <span class="title">Religious Attendance</span></td><td>#qGetHostFamily.religious_participation#</td>
                                 </tr>
                                 <tr>
-                                    <td>  <span class="title">Do you expect your student to attend<br> services?</span></td><td>#capFirst1(qGetHostFamily.churchfam)#</td>
+                                    <td>  <span class="title">Do you expect your student to attend<br> services?</span></td><td>#CapFirst1(qGetHostFamily.churchfam)#</td>
                                 </tr>
                                 <tr>
-                                    <td>  <span class="title">Would you transport the student to their religious services
-if they are different from your own?</span></td><td>#capFirst1(qGetHostFamily.churchtrans)#</td>
+                                    <td>  <span class="title">Would you transport the student to their religious<Br> services
+if they are different from your own?</span></td><td>#CapFirst1(qGetHostFamily.churchtrans)#</td>
                                 </tr>
                                 
                               </table> 
                           </Td>
-                          <td >
-                          	<Table width=100%>
-                                <tr>
-                                    <td>  <span class="title">Religious Institution</span></td><td>#religionInfo.churchname#</td>
-                                </tr>
-                                <tr>
-                                    <td valign="Top">  <span class="title">Address</span></td><td>#religionInfo.address#<br>#religionInfo.address2#</td>
-                                </tr>
-                                <tr>
-                                    <td>  <span class="title">City, State Zip</span></td><td>#religionInfo.city#, #religionInfo.state# #religionInfo.zip#</td>
-                                </tr>
-                                <tr>
-                                    <td>  <span class="title">Religious Leader</span></td><td>#religionInfo.pastor#</td>
-                                </tr>
-                                <tr>
-                                    <td>  <span class="title">Phone</span></td><td>#religionInfo.phone#</td>
-                                </tr>
-                              </table> 
-                          </td>
+                         
                         </tr>
                       </table>        
                      
@@ -765,3 +767,123 @@ if they are different from your own?</span></td><td>#capFirst1(qGetHostFamily.ch
            </table>
 <!----End of page 5---->
 </cfoutput>
+<div style="page-break-after:always;"></div>
+
+    <cfscript>
+		// Host Family
+		qGetHostFamily = APPLICATION.CFC.HOST.getHosts(hostID=url.hostID);
+		
+		// Host Family Children
+		qGetHostChildren = APPLICATION.CFC.HOST.getHostMemberByID(hostID=url.hostID);
+		
+
+    </cfscript>
+    
+
+<cfquery name="qreferences" datasource="MySQL">
+select *
+from smg_family_references
+where referencefor = <cfqueryparam cfsqltype="integer" value="#url.hostID#">
+</cfquery>
+   <cfoutput> 
+  <table class="profileTable" align="center">
+        <tr>
+            <td>
+   				 <table width=800>
+                    <tr>
+                        <td colspan=3><img src="../pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
+                    </tr>
+                    <tr>
+                    
+                    	
+                        <Td valign="top" align="center" width=50%>
+                           <span class="title"><font size=+1> #qGetHostFamily.familyLastName# (#qGetHostFamily.hostid#)<br /> Host Family Application</font></span>
+                        </Td>
+                       
+                </table>
+			<!--- Finance Prefs --->
+                <table  align="center" border="0" cellpadding="4" cellspacing="0" width="800">
+                    <tr>           
+                        <td colspan=6 align="center"><img src="../pics/hostAppBanners/HPpdf_29.jpg"/></Td>
+                    </tr>
+                    <tr>
+                    	<Td><span class="title">Is any member of your household receiving
+any kind of public assistance?</span>
+						</Td>
+                        <Td>
+                        	<Cfif val(qGetHostFamily.publicAssitance)>Yes<cfelse>No</Cfif> 
+                    </tr>
+                     <tr>
+                    	<Td><span class="title">Average annual income range</span>
+						</Td>
+                        <Td>
+                        	<Cfif qGetHostFamily.income eq 25>Less then $25,000</Cfif> 
+                            <Cfif qGetHostFamily.income eq 35>$25,000 - $35,000</Cfif> 
+                            <Cfif qGetHostFamily.income eq 45>$35,001 - $45,000</Cfif> 
+                            <Cfif qGetHostFamily.income eq 55>$45,001 - $55,000</Cfif> 
+                            <Cfif qGetHostFamily.income eq 65>$55,001 - $65,000</Cfif> 
+                            <Cfif qGetHostFamily.income eq 75>$65,001 - $75,000</Cfif> 
+                            <Cfif qGetHostFamily.income eq 85>$75,000 and above</Cfif> 
+                    	</Td>
+                    </tr>
+                       <tr>
+                    	<Td><span class="title">Has any member of your household ever been charged
+with a crime?</span>
+						</Td>
+                        <Td>
+                        	<Cfif val(qGetHostFamily.crime)>Yes<cfelse>No</Cfif> 
+                    </tr>
+                    <tr>
+                    	<td colspan=2><span class="title">Explain:</span><Cfif qGetHostFamily.crimeExpl is ''>No explanation received.<cfelse> #qGetHostFamily.crimeExpl#</Cfif></Td>
+                    </tr>
+                      <tr>
+                    	<Td><span class="title">Have you had any contact with Child Protective Services
+Agency in the past?</span>
+						</Td>
+                        <Td>
+                        	<Cfif val(qGetHostFamily.cps)>Yes<cfelse>No</Cfif> 
+                    </tr>
+                    <tr>
+                    	<td  colspan=2><span class="title">Explain:</span> <Cfif qGetHostFamily.cpsExpl is ''>No explanation received.<cfelse>#qGetHostFamily.cpsExpl#</Cfif></Td>
+                    </tr>
+            		</table>
+     				<!--- Finance Prefs --->
+                <table  align="center" border="0" cellpadding="4" cellspacing="0" width="800">
+                    <tr>           
+                        <td colspan=6 align="center"><img src="../pics/hostAppBanners/HPpdf_32.jpg"/></Td>
+                     </tr>
+                     <tr>
+                     	<td>         
+                           <table width=100% cellspacing=0 cellpadding=2 class="border">
+                               <Tr>
+                                <Th>Name</Th><Th>Address</Th><th>City</th><Th>State</Th><th>Zip</th><th>Phone</th><th></th>
+                                </Tr>
+                           	   <Cfloop query="qreferences">
+                                    <tr <Cfif currentrow mod 2> bgcolor="##deeaf3"</cfif>>
+                                        <Td><h3><p class=p_uppercase>#firstname# #lastname#</h3></Td>
+                                        <td><h3><p class=p_uppercase>#address# #address2#</h3></td>
+                                        <Td><h3>#city#</h3></Td>
+                                        <td><h3>#state#</h3></td>
+                                        <td><h3>#zip#</h3></td>
+                                        <td><h3>#phone#</h3></td>
+                                       
+                                    </tr>
+                                    </Cfloop>     
+                                  </table>
+                         </td>              
+           			</tr>
+                    </table>                              
+           <table width=100%>
+                                     	
+                	<tr>
+                 	  <td align="left"> <span class="title">Printed: #DateFormat(now(),'mmm. d, yyyy')#</span>	</td>
+                      <td align="right"><span class="title">Page 6</span>
+                          
+               </td>
+             </tr>
+           
+           </table>
+           
+           
+           
+ </cfoutput>
