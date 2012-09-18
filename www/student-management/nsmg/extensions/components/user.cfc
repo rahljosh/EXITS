@@ -372,11 +372,11 @@
 			stUserPaperwork.paperworkRequiredDate = DateFormat(qGetCurrentSeason.paperworkRequiredDate, "mm/dd/yyyy");
 			stUserPaperwork.paperworkEndDate = DateFormat(qGetCurrentSeason.paperworkEndDate, "mm/dd/yyyy");
 			
+			// DOS Certification
+			stDOSCertification = APPLICATION.CFC.USER.isDOSCertificationValid(userID=ARGUMENTS.userID);
+			
 			// Get Paperwork Info (CBC, Agreement, Training)
 			qGetSeasonPaperwork = APPLICATION.CFC.USER.getSeasonPaperwork(userID=ARGUMENTS.userID, seasonID=qGetCurrentSeason.seasonID);
-
-			// Get DOS Certification
-			qGetDOSCertification = APPLICATION.CFC.USER.getTraining(userID=ARGUMENTS.userID,seasonID=qGetCurrentSeason.seasonID,trainingID=2);
 
 			// Get Reference - 4 Required / Not based on season
 			qGetReferences = APPLICATION.CFC.USER.getReferencesByID(userID=ARGUMENTS.userID);	
@@ -409,11 +409,8 @@
 			stUserPaperwork.isCBCApproved = false;
 			
 			// DOS Certification
-			if ( qGetDOSCertification.recordCount ) {
-				stUserPaperwork.isDOSCertificationCompleted = true;
-			} else {
-				stUserPaperwork.isDOSCertificationCompleted = false;
-			}
+			stUserPaperwork.isDOSCertificationCompleted = stDOSCertification.isDOSCertificationValid;
+			stUserPaperwork.dosDateExpired = stDOSCertification.dateExpired;
 			
 			// Employment History - Minimum of 1
 			if ( qGetEmployment.recordCount GTE 1 AND ( NOT VAL(qGetUser.prevOrgAffiliation) OR ( qGetUser.prevOrgAffiliation EQ 1 AND LEN(qGetUser.prevAffiliationName) ) ) ) {
@@ -1456,6 +1453,48 @@
 		</cfquery>
 		   
 		<cfreturn qGetTraining>
+	</cffunction>
+
+
+	<cffunction name="isDOSCertificationValid" access="public" returntype="struct" output="false" hint="Returns a structure">
+    	<cfargument name="userID" hint="userID is required">
+		
+        <cfquery 
+			name="qIsDOSCertificationValid" 
+			datasource="#APPLICATION.DSN#">
+                SELECT DISTINCT
+					id,
+                    date_trained,
+                    DATE_ADD(date_trained, INTERVAL 11 MONTH) AS dateExpired
+                FROM 
+                    smg_users_training sut
+                WHERE
+                    user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+                AND
+                	has_passed = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                AND
+                    training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
+                AND
+                	DATE_ADD(date_trained, INTERVAL 11 MONTH) >= NOW()
+				ORDER BY
+                	dateExpired DESC
+				LIMIT 1                                        
+		</cfquery>
+        
+        <cfscript>
+			vReturnStruct = StructNew();			
+		
+			if ( qIsDOSCertificationValid.recordCount )  {
+				vReturnStruct.dateExpired = DateFormat(qIsDOSCertificationValid.dateExpired, 'mm/dd/yyyy');
+				vReturnStruct.isDOSCertificationValid = true;
+			} else {
+				vReturnStruct.dateExpired = "";
+				vReturnStruct.isDOSCertificationValid = false;
+			}
+			
+			return vReturnStruct;
+		</cfscript>
+        
 	</cffunction>
 
 
