@@ -885,10 +885,10 @@
                  </td>
            </cfif>
           		<td valing="top" align="center">
-				<cfif ListFind(#allowedUsers#,'#client.userid#')>
+				
                 (Host Fam Fills Out App)<br />
                    <input name="Submit_start" type="image" value="ehost" src="pics/buttons_ehost.png" alt="Start E-App" border="0" /> 
-                </cfif>
+               
                 </td>
                 <td align="Center">   
                 (Office User Fills Out App)<br />
