@@ -775,8 +775,6 @@
                     <td style="line-height:20px;">
                     	<!----<a href="index.cfm?curdoc=forms/startHostApp">Start a Host App</a><br />---->
                         
-                        <
-                        
                     </td>
          			<!--- Office Users --->
 					<cfif APPLICATION.CFC.USER.isOfficeUser()>
