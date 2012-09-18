@@ -319,7 +319,9 @@
 							<cfif client.usertype eq 15>
                                 <a href="index.cfm?curdoc=secondVisitReports">Second Visit Reports</a><br>
                             <cfelse>
-                                <a href="index.cfm?curdoc=progress_reports">Progress & Home Visit Reports</a><br>
+                                <a href="index.cfm?curdoc=progress_reports">Progress Reports</a>
+                                / 
+                                <a href="index.cfm?curdoc=secondVisitReports">Second Visit Reports</a>
                             </cfif>
                             </td>
                         
