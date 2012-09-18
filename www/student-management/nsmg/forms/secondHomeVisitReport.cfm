@@ -831,7 +831,7 @@
     
     
             <div class="item">
-                <label class="title">Does #qGetStudentInfo.firstname# have access to the outdoors from <cfif qGetStudentInfo.sex is 'male'>his<cfelse>her</cfif>bedroom? 
+                <label class="title">Does #qGetStudentInfo.firstname# have access to the outdoors from <cfif qGetStudentInfo.sex is 'male'>his<cfelse>her</cfif> bedroom? 
                     <span class="small">i.e. a door or window</span>
                 </label>
                 <cfif allow_save>	
