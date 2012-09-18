@@ -160,11 +160,11 @@
 						Location("index.cfm?curdoc=forms/verifyInfo", "no");
 					}
 			
-				// Force New Paperwork Section
-				} else if ( listFind("5,6,7,15", CLIENT.userType) AND VAL(APPLICATION.CFC.USER.getUserSession().ID) AND NOT APPLICATION.CFC.USER.getUserSessionPaperwork().isPaperworkCompleted AND NOT APPLICATION.CFC.USER.getUserSession().paperworkSkipAllowed) {
+				// Force New Paperwork Section - Not for Canada
+				} else if ( listFind("5,6,7,15", CLIENT.userType) AND CGI.SERVER_NAME NEQ "canada.exitsapplication.com" AND VAL(APPLICATION.CFC.USER.getUserSession().ID) AND NOT APPLICATION.CFC.USER.getUserSessionPaperwork().isPaperworkCompleted AND NOT APPLICATION.CFC.USER.getUserSession().paperworkSkipAllowed) {
 					
 					// allow user only on paperwork page including sub pages and logout.
-					if ( NOT listFindNoCase("user/index,logout", URL.curdoc) AND CGI.SCRIPT_NAME NEQ "/nsmg/user/index.cfm" ) {
+					if ( NOT listFindNoCase("user/index,logout,calendar/index", URL.curdoc) AND CGI.SCRIPT_NAME NEQ "/nsmg/user/index.cfm" ) {
 						Location("index.cfm?curdoc=user/index", "no"); 
 					}
 					
