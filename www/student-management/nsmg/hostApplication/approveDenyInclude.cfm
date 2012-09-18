@@ -1,4 +1,6 @@
+<Cfoutput>
 
+</Cfoutput>
 <Cfif isDefined('form.deny')>
   <cfif isDefined('processDeny')>
     <cfif form.denyReason is ''>
@@ -25,7 +27,7 @@
                 <em>this window should close shortly</em>
                 </div>
             
-                 <body onload="parent.$.fn.colorbox.close();">
+                 <body onLoad="parent.$.fn.colorbox.close();">
                     <cfabort>
 					
         
@@ -51,6 +53,8 @@
 </Cfif>
 
 <cfif isDefined('form.approve')>
+
+
 			<cfscript>
 			// Get update ToDoList
 			updateToDoList = APPLICATION.CFC.UDF.updateHostAppToDoList(hostID=client.hostid,studentID=client.studentid,itemid=url.itemid,usertype=url.usertype,denyApp=0);
