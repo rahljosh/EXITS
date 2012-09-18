@@ -146,7 +146,7 @@
 					}
 				
 				// Force Paperwork PRODUCTION - Not for Canada
-				} else if ( isDefined("CLIENT.agreement_needed") AND CGI.SERVER_NAME NEQ "canada.exitsapplication.com" AND NOT APPLICATION.IsServerLocal ) { // AND NOT APPLICATION.IsServerLocal
+				} else if ( isDefined("CLIENT.agreement_needed") AND CGI.SERVER_NAME NEQ "canada.exitsapplication.com" ) { // AND NOT APPLICATION.IsServerLocal
 					
 					// allow user only on yearly agreement page. 
 					if ( NOT ( LEN(URL.curdoc) AND listFindNoCase("forms/yearly_agreement,repRefs,displayRepAgreement,cbcAuthorization,employmentHistory,logout", URL.curdoc)) ) {
@@ -158,6 +158,14 @@
 					
 					if ( NOT ( LEN(URL.curdoc) AND listFindNoCase("forms/verifyInfo, forms/verifyInfo2, logout", URL.curdoc)) ) {
 						Location("index.cfm?curdoc=forms/verifyInfo", "no");
+					}
+			
+				// Force New Paperwork Section
+				} else if ( listFind("5,6,7,15", CLIENT.userType) AND VAL(APPLICATION.CFC.USER.getUserSession().ID) AND NOT APPLICATION.CFC.USER.getUserSessionPaperwork().isPaperworkCompleted AND NOT APPLICATION.CFC.USER.getUserSession().paperworkSkipAllowed) {
+					
+					// allow user only on paperwork page including sub pages and logout.
+					if ( NOT listFindNoCase("user/index,logout", URL.curdoc) AND CGI.SCRIPT_NAME NEQ "/nsmg/user/index.cfm" ) {
+						Location("index.cfm?curdoc=user/index", "no"); 
 					}
 					
 				}

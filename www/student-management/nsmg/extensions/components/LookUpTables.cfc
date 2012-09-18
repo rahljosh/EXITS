@@ -381,7 +381,8 @@
                     active,
                     startDate,
                     endDate,
-                    paperworkStartdate,
+                    paperworkStartDate,
+                    paperworkRequiredDate,
                     paperworkEndDate
 				FROM
                 	smg_seasons

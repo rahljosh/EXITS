@@ -135,6 +135,41 @@
 			}
 		</cfscript>
 	</cffunction>
+    
+    
+	<cffunction name="isSecondVisitRep" access="public" returntype="boolean" output="No" hint="Returns true or false">
+        <cfargument name="userID" type="numeric" hint="userID is required" />
+        <cfargument name="companyID" type="numeric" hint="companyID is required" />
+
+        <cfquery 
+			name="qGetUserAccess" 
+			datasource="#APPLICATION.DSN#">
+				SELECT
+                	userID,
+                    userType
+                FROM	
+                	user_access_rights
+                WHERE
+                	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+               	AND     
+					companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.companyID)#">                    
+        </cfquery>
+        
+		<cfscript>
+			// Check if it`s a second visit rep only			
+			vUserTypeList = ValueList(qGetUserAccess.userType);
+			
+			if ( ListFind(vUserTypeList, 5) OR ListFind(vUserTypeList, 6) OR ListFind(vUserTypeList, 7) ) {				
+				// User has multi level access
+				return false;
+			} else {
+				// User is a 2nd visit rep only
+				return true;	
+			}
+		</cfscript>
+        
+	</cffunction>
+    
 
 
     <!--- ------------------------------------------------------------------------- ----
@@ -142,8 +177,8 @@
 	----- ------------------------------------------------------------------------- --->
 
 	<cffunction name="setUserSession" access="public" returntype="void" output="false" hint="Set USER Session Variables">
-        <cfargument name="userID" default="#CLIENT.userID#" hint="User ID">
-
+		<cfargument name="userID" default="#CLIENT.userID#" hint="User ID">
+        
         <cfscript>
 			// Get Candidate Information
 			qGetUserInfo = getUsers(userID=VAL(ARGUMENTS.userID));
@@ -158,7 +193,9 @@
 			SESSION.USER.fullName = qGetUserInfo.firstName & " " & qGetUserInfo.lastName;
 			SESSION.USER.dateLastLoggedIn = qGetUserInfo.lastLogin;
 			SESSION.USER.email = qGetUserInfo.email;
-
+			
+			SESSION.USER.paperworkSkipAllowed = false;
+			
 			// Path Information - set up upload files path
 			SESSION.USER.myUploadFolder = APPLICATION.PATH.users & ARGUMENTS.userID & "/";
 			// Make sure folder exists
@@ -194,9 +231,9 @@
 	</cffunction>
 
 
-	<cffunction name="setUserRoles" access="public" returntype="void" output="false" hint="Set User SESSION roles">
-    	<cfargument name="userID" type="numeric" hint="userID is required">
-              
+	<cffunction name="setUserSessionRoles" access="public" returntype="void" output="false" hint="Set User SESSION roles">
+        <cfargument name="userID" default="#CLIENT.userID#" hint="User ID">
+             
         <cfquery 
 			name="qGetUserRoles" 
 			datasource="#APPLICATION.DSN#">
@@ -240,8 +277,9 @@
 	</cffunction>
     
     
+    <!--- Rename to hasUserSessionRoleAccess --->
 	<cffunction name="hasUserRoleAccess" access="public" returntype="boolean" output="false" hint="Returns 1/0 depeding on user access">
-	    <cfargument name="userID" type="numeric" hint="userID is required">
+	    <cfargument name="userID" default="#CLIENT.userID#" hint="User ID">
     	<cfargument name="role" type="string" hint="role is required">
 		
         <cfscript>
@@ -251,11 +289,11 @@
 				// Check if roles do not exist
 				if ( StructIsEmpty(SESSION.ROLES) ) {
 					// Set Roles
-					setUserRoles(userID=ARGUMENTS.userID);
+					setUserSessionRoles();
 				}
 			} catch (Any e) {
 				// Set Roles
-				setUserRoles(userID=ARGUMENTS.userID);
+				setUserSessionRoles();
 			}
 			
 			try {
@@ -268,83 +306,23 @@
 		</cfscript>
 		
 	</cffunction>
+	
 
-
-	<cffunction name="setUserSessionPaperwork" access="public" returntype="void" output="false" hint="Set USER Paperwork Session Variables">
-        <cfargument name="userID" hint="User ID is Required">
-
+	<cffunction name="setUserSessionPaperwork" access="public" returntype="void" output="false" hint="Copies paperwork struct to SESSION">
+		<cfargument name="userID" default="#CLIENT.userID#" hint="User ID">
+        
         <cfscript>
-			// Get Current Season
-			var vSeasonID = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
-		
-			// Get Paperwork Info (CBC and Agreement)
-			qGetSeasonPaperwork = APPLICATION.CFC.USER.getPaperworkByID(userID=ARGUMENTS.userID, seasonID=vSeasonID);
-
-			// Get Reference
-			qGetReferences = APPLICATION.CFC.USER.getReferencesByID(userID=ARGUMENTS.userID);	
-
-			// Get Employment History
-			qGetEmployment = APPLICATION.CFC.USER.getEmploymentByID(userID=ARGUMENTS.userID);		
-
 			// New Struct
 			SESSION.USER.PAPERWORK = StructNew();
-			// Current Season
-			SESSION.USER.PAPERWORK.seasonID = vSeasonID;
 			
-			// Signed Agreement
-			if ( isDate(qGetSeasonPaperwork.ar_agreement) ) {
-				SESSION.USER.PAPERWORK.isAgreementCompleted = true;
-			} else {
-				SESSION.USER.PAPERWORK.isAgreementCompleted = false;
-			}
-
-			// Signed CBC Authorization
-			if ( isDate(qGetSeasonPaperwork.ar_cbc_auth_form) ) {
-				SESSION.USER.PAPERWORK.isCBCAuthorizationCompleted = true;
-			} else {
-				SESSION.USER.PAPERWORK.isCBCAuthorizationCompleted = false;
-			}
-			
-			// Employment History - Minimum of 1
-			if ( qGetEmployment.recordCount GTE 1 ) {
-				SESSION.USER.PAPERWORK.isEmploymentHistoryCompleted = true;
-			} else {
-				SESSION.USER.PAPERWORK.isEmploymentHistoryCompleted = false;
-			}
-			
-			// References - Minimum of 4
-			if ( qGetReferences.recordCount GTE 4 ) {
-				SESSION.USER.PAPERWORK.isReferenceCompleted = true;
-			} else {
-				SESSION.USER.PAPERWORK.isReferenceCompleted = false;
-			}
-			
-			// Reference Questionnaire - Minimum of 2
-			SESSION.USER.PAPERWORK.isReferenceQuestionnaireCompleted = false;
-			
-			// Check if ALL Paperwork has been received
-			if ( 	
-					SESSION.USER.PAPERWORK.isAgreementCompleted 
-				AND 
-					SESSION.USER.PAPERWORK.isCBCAuthorizationCompleted 
-				AND 
-					SESSION.USER.PAPERWORK.isEmploymentHistoryCompleted 
-				AND 
-					SESSION.USER.PAPERWORK.isReferenceCompleted
-				) {
-					// Not Completed
-					SESSION.USER.PAPERWORK.isCompleted = true;
-			} else {
-				// Not Completed
-				SESSION.USER.PAPERWORK.isCompleted = false;
-			}
+			// Copy Paperwork to Session Scope
+			SESSION.USER.PAPERWORK = getUserPaperwork(userID=VAL(ARGUMENTS.userID));
 		</cfscript>
 		
 	</cffunction>
     
     
 	<cffunction name="getUserSessionPaperwork" access="public" returntype="struct" hint="Get user SESSION paperwork variables" output="no">
-        <cfargument name="userID" hint="User ID is Required">
 
         <cfscript>
 			try {
@@ -352,16 +330,16 @@
 				// Check if PAPERWORK structure exits
 				if ( StructIsEmpty(SESSION.USER.PAPERWORK) ) {
 					// Set Session
-					setUserSessionPaperwork(userID=ARGUMENTS.userID);
+					setUserSessionPaperwork();
 				}
 				
 			} catch (Any e) {
 				// Set Session
-				setUserSessionPaperwork(userID=ARGUMENTS.userID);
+				setUserSessionPaperwork();
 			}
 			
 			// Make Sure Structs are not empty
-			return SESSION.PAPERWORK;
+			return SESSION.USER.PAPERWORK;
 		</cfscript>
         
 	</cffunction>
@@ -371,43 +349,156 @@
 		END OF USER SESSION
 	----- ------------------------------------------------------------------------- --->
 
-	<cffunction name="paperworkReceivedNotification" access="public" returntype="query" output="false" hint="Sends out an email notification when users fill out paperwork">
+
+	<cffunction name="getUserPaperwork" access="public" returntype="struct" output="false" hint="Returns a strcut with a complete paperwork information for a user">
         <cfargument name="userID" hint="User ID is Required">
 
-		<cfscript>
-            //Check if paperwork is complete for season
-            var qCheckPaperworkCompleted = APPLICATION.CFC.UDF.allpaperworkCompleted(userID=ARGUMENTS.userID);
-			// Get User Details
-			var qGetUser = getUsers(userID=ARGUMENTS.userID);
+        <cfscript>
+			// New Struct
+			var stUserPaperwork = StructNew();
 			
-			var vEmailMessage = '';
-			var vEmailSubject = "Paperwork Submitted for #qGetUser.firstName# #qGetUser.lastName# ###qGetUser.userID#";
-        </cfscript>
-    
-        <cfif VAL(qCheckPaperworkCompleted.reviewAcct) AND isValid("email", CLIENT.programmanager_email)>
-    
-            <cfsavecontent variable="vEmailMessage">
-            
-                <cfoutput>				
-                    The references and all other paperwork appear to be in order for #qGetUser.firstname# #qGetUser.lastname# (###qGetUser.userID#).  
-                    A manual review is now required to activate the account.  
-                    Please review all paperwork and submit the CBC for processing. If everything looks good, approval of the CBC will activate this account.  
-            
-                    <br /><br />
-            
-                    <a href="#CLIENT.exits_url#/nsmg/index.cfm?curdoc=user_info&userID=#qGetUser.userID#">View #qGetUser.firstname#<cfif Right(qGetUser.firstname, 1) EQ 's'>'<cfelse>'s</cfif> account.</a>
-                </cfoutput>
-                
-            </cfsavecontent>
-    
-            <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                <cfinvokeargument name="email_to" value="#CLIENT.programmanager_email#"> 
-                <cfinvokeargument name="email_from" value="#CLIENT.emailfrom# (#CLIENT.companyshort# Support)">
-                <cfinvokeargument name="email_subject" value="#vEmailSubject#">
-                <cfinvokeargument name="email_message" value="#vEmailMessage#">
-            </cfinvoke>
-    
-        </cfif>
+			// Get User Information
+			var qGetUser = APPLICATION.CFC.USER.getUsers(userID=ARGUMENTS.userID);
+			
+			// Check if user is a second visit rep
+			var vIsSecondVisitRep = isSecondVisitRep(userID=ARGUMENTS.userID,companyID=CLIENT.companyID);
+			
+			// Get Current Season
+			var qGetCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason();
+
+			// Set Current Season Information
+			stUserPaperwork.seasonID = qGetCurrentSeason.seasonID;
+			stUserPaperwork.paperworkStartDate = DateFormat(qGetCurrentSeason.paperworkStartDate, "mm/dd/yyyy");
+			stUserPaperwork.paperworkRequiredDate = DateFormat(qGetCurrentSeason.paperworkRequiredDate, "mm/dd/yyyy");
+			stUserPaperwork.paperworkEndDate = DateFormat(qGetCurrentSeason.paperworkEndDate, "mm/dd/yyyy");
+			
+			// Get Paperwork Info (CBC, Agreement, Training)
+			qGetSeasonPaperwork = APPLICATION.CFC.USER.getSeasonPaperwork(userID=ARGUMENTS.userID, seasonID=qGetCurrentSeason.seasonID);
+
+			// Get DOS Certification
+			qGetDOSCertification = APPLICATION.CFC.USER.getTraining(userID=ARGUMENTS.userID,seasonID=qGetCurrentSeason.seasonID,trainingID=2);
+
+			// Get Reference - 4 Required / Not based on season
+			qGetReferences = APPLICATION.CFC.USER.getReferencesByID(userID=ARGUMENTS.userID);	
+
+			// Get Employment History - 1 Required / Not based on season
+			qGetEmployment = APPLICATION.CFC.USER.getEmploymentByID(userID=ARGUMENTS.userID);		
+
+			// Set if we'll force paperwork
+			if ( now() GTE qGetCurrentSeason.paperworkRequiredDate ) {
+				stUserPaperwork.isPaperworkRequired = true;
+			} else {
+				stUserPaperwork.isPaperworkRequired = false;
+			}	
+			
+			// Signed Agreement
+			if ( isDate(qGetSeasonPaperwork.ar_agreement) ) {
+				stUserPaperwork.isAgreementCompleted = true;
+			} else {
+				stUserPaperwork.isAgreementCompleted = false;
+			}
+
+			// Signed CBC Authorization
+			if ( isDate(qGetSeasonPaperwork.ar_cbc_auth_form) ) {
+				stUserPaperwork.isCBCAuthorizationCompleted = true;
+			} else {
+				stUserPaperwork.isCBCAuthorizationCompleted = false;
+			}
+			
+			// Check if CBC has been approved
+			stUserPaperwork.isCBCApproved = false;
+			
+			// DOS Certification
+			if ( qGetDOSCertification.recordCount ) {
+				stUserPaperwork.isDOSCertificationCompleted = true;
+			} else {
+				stUserPaperwork.isDOSCertificationCompleted = false;
+			}
+			
+			// Employment History - Minimum of 1
+			if ( qGetEmployment.recordCount GTE 1 AND ( NOT VAL(qGetUser.prevOrgAffiliation) OR ( qGetUser.prevOrgAffiliation EQ 1 AND LEN(qGetUser.prevAffiliationName) ) ) ) {
+				stUserPaperwork.isEmploymentHistoryCompleted = true;
+			} else {
+				stUserPaperwork.isEmploymentHistoryCompleted = false;
+			}
+
+			// References - Minimum of 4
+			if ( qGetReferences.recordCount GTE 4 ) {
+				stUserPaperwork.isReferenceCompleted = true;
+			} else {
+				stUserPaperwork.isReferenceCompleted = false;
+			}
+			stUserPaperwork.missingReferences = 4 - qGetReferences.recordcount;
+			
+			
+			// Training - New Area Rep or Area Rep Refresher
+			if ( isDate(qGetSeasonPaperwork.ar_training) ) {
+				stUserPaperwork.isTrainingCompleted = true;
+			} else {
+				stUserPaperwork.isTrainingCompleted = false;
+			}
+
+			// Reference Questionnaire - Minimum of 2
+			if ( isDate(qGetSeasonPaperwork.ar_ref_quest1) AND isDate(qGetSeasonPaperwork.ar_ref_quest2) ) { 
+				stUserPaperwork.isReferenceQuestionnaireCompleted = true;
+			} else { 
+				stUserPaperwork.isReferenceQuestionnaireCompleted = false;
+			}
+			
+			// 2nd Visit - No employment history and reference
+			if ( vIsSecondVisitRep EQ 15 ) {
+				stUserPaperwork.isReferenceCompleted = true;
+				stUserPaperwork.isReferenceQuestionnaireCompleted = true;
+				stUserPaperwork.isEmploymentHistoryCompleted = true;
+			}
+			
+			// CBC Review
+			// ar_cbcAuthReview
+
+			// Check if ALL Paperwork have been received
+			if ( 	
+					stUserPaperwork.isAgreementCompleted 
+				AND 
+					stUserPaperwork.isCBCAuthorizationCompleted
+				AND	
+					stUserPaperwork.isDOSCertificationCompleted 
+				AND 
+					stUserPaperwork.isEmploymentHistoryCompleted 
+				AND 
+					stUserPaperwork.isReferenceCompleted
+				AND 
+					stUserPaperwork.isTrainingCompleted					
+				) {
+					
+					// User Has Submitted All Required Paperwork
+					stUserPaperwork.isPaperworkCompleted = true;
+					
+					if ( stUserPaperwork.isReferenceQuestionnaireCompleted  ) {
+						// Completed
+						stUserPaperwork.isAccountCompliant = true;
+						// Paperwork has been reviewed, set to false so notification is not sent out
+						stUserPaperwork.isAccountReadyForReview = false;
+					} else {
+						// Completed
+						stUserPaperwork.isAccountCompliant = false;
+						// Paperwork has not been reviewed, set to true so email is sent out
+						stUserPaperwork.isAccountReadyForReview = true;
+					}
+					
+			} else {
+				
+				// User Has Not Submitted All Required Paperwork
+				stUserPaperwork.isPaperworkCompleted = false;
+				// Set Account as non compliant
+				stUserPaperwork.isAccountCompliant = false;
+				// set notification to false email is not sent out
+				stUserPaperwork.isAccountReadyForReview = false;
+				
+			}
+			
+			return stUserPaperwork;
+		</cfscript>
+		
 	</cffunction>
 
 
@@ -448,14 +539,14 @@
     <!--- ------------------------------------------------------------------------- ----
 		User Notifications
 	----- ------------------------------------------------------------------------- --->
-
-	<!--- Get Paperwork --->
-	<cffunction name="getPaperworkByID" access="public" returntype="query" output="false" hint="Gets paperwork by userID">
+	
+	<!--- Get Season Paperwork --->
+	<cffunction name="getSeasonPaperwork" access="public" returntype="query" output="false" hint="Gets season paperwork by userID">
     	<cfargument name="userID" default="" hint="userID is not required">
-        <cfargument name="seasonID" default="" hint="userID is not required">
-
+        <cfargument name="seasonID" default="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#" hint="seasonID is required">
+		
         <cfquery 
-			name="qGetPaperworkByID" 
+			name="qGetSeasonPaperwork" 
 			datasource="#APPLICATION.DSN#">
                 SELECT
                 	sup.paperworkID,
@@ -483,7 +574,6 @@
                     sup.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
                 AND
                     sup.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
-                
 				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
                     AND          
                         sup.fk_companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
@@ -491,13 +581,81 @@
                     AND          
                         sup.fk_companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
                 </cfif>
-                
         </cfquery>
-		
-        <cfreturn qGetPaperworkByID>
+        
+        <cfreturn qGetSeasonPaperwork>
 	</cffunction>
 
 
+	<cffunction name="updateSeasonPaperwork" access="public" returntype="void" output="false" hint="Update User Paperwork">
+    	<cfargument name="userID" default="" hint="userID is not required">
+        <cfargument name="seasonID" default="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#" hint="seasonID is required">
+        <cfargument name="fieldName" hint="fieldName is required">
+        <cfargument name="fieldValue" hint="fieldValue is required">
+
+        <cfscript>
+			// Check if we have a season paperwork record
+			qGetSeasonPaperwork = getSeasonPaperwork(userID=ARGUMENTS.userID,seasonID=ARGUMENTS.seasonID);
+			
+			// Check if we are updating a date or string field
+			vDateFieldList = "ar_info_sheet,ar_ref_quest1,ar_ref_quest2,ar_cbc_auth_form,ar_cbcAuthReview,ar_agreement,ar_training";
+			vStringFieldList = "agreeSig,cbcSig";
+			vListofFields = vDateFieldList & "," & vStringFieldList;
+		</cfscript>
+        
+		<!--- Check if we have a valid field to update --->
+        <cfif ListFind(vListofFields, ARGUMENTS.fieldName) AND qGetSeasonPaperwork.recordCount>
+            
+            <!--- Update ---> 
+            <cfquery 
+                datasource="#APPLICATION.DSN#">
+                    UPDATE
+                        smg_users_paperwork
+                    SET
+						<!--- Date Field --->
+                        <cfif ListFind(vListofFields, ARGUMENTS.fieldName)>
+                            #ARGUMENTS.fieldName# = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.fieldValue#" null="#NOT IsDate(ARGUMENTS.fieldValue)#">
+                        <!--- String Field --->
+                        <cfelse>
+                            #ARGUMENTS.fieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fieldValue#">
+                        </cfif>
+                    WHERE
+                        paperworkID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetSeasonPaperwork.paperworkID#">
+            </cfquery>
+
+        <cfelseif ListFind(vListofFields, ARGUMENTS.fieldName)>
+        
+            <!--- Insert ---> 
+            <cfquery 
+                datasource="#APPLICATION.DSN#">
+                    INSERT INTO
+                        smg_users_paperwork
+                    (
+                        userID,
+                        seasonID,
+                        fk_companyID,
+                        #ARGUMENTS.fieldName#
+                    )
+                    VALUES
+                    (
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">,
+                        <!--- Date Field --->
+                        <cfif ListFind(vListofFields, ARGUMENTS.fieldName)>
+                            <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.fieldValue#" null="#NOT IsDate(ARGUMENTS.fieldValue)#">
+                        <!--- String Field --->
+                        <cfelse>
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fieldValue#">
+                        </cfif>
+                    )
+            </cfquery>
+        
+        </cfif>
+        
+	</cffunction>
+    
+    
 	<!--- Get References --->
 	<cffunction name="getReferencesByID" access="public" returntype="query" output="false" hint="Gets references by userID">
     	<cfargument name="userID" default="" hint="userID is not required">
@@ -582,6 +740,46 @@
         </cfquery>
 
         <cfreturn qGetEmploymentByID>
+	</cffunction>
+
+
+	<cffunction name="paperworkReceivedNotification" access="public" returntype="void" output="false" hint="Sends out an email notification when users fill out paperwork">
+        <cfargument name="userID" hint="User ID is Required">
+
+		<cfscript>
+			// Get User Details
+			var qGetUser = getUsers(userID=ARGUMENTS.userID);
+			
+			var stGetPaperwork = getUserPaperwork(userID=ARGUMENTS.userID);
+			
+			var vEmailMessage = '';
+			var vEmailSubject = "Paperwork Submitted for #qGetUser.firstName# #qGetUser.lastName# (###qGetUser.userID#)";
+        </cfscript>
+    
+        <cfif VAL(stGetPaperwork.isAccountReadyForReview) AND isValid("email", CLIENT.programmanager_email)>
+    
+            <cfsavecontent variable="vEmailMessage">
+            
+                <cfoutput>				
+                    The references and all other paperwork appear to be in order for #qGetUser.firstName# #qGetUser.lastName# (###qGetUser.userID#)).  
+                    A manual review is now required to activate the account.  
+                    Please review all paperwork and submit the CBC for processing. If everything looks good, approval of the CBC will activate this account.  
+            
+                    <br /><br />
+            
+                    <a href="#CLIENT.exits_url#/nsmg/index.cfm?curdoc=user_info&userID=#qGetUser.userID#">View #qGetUser.firstname#<cfif Right(qGetUser.firstname, 1) EQ 's'>'<cfelse>'s</cfif> account.</a>
+                </cfoutput>
+                
+            </cfsavecontent>
+    
+            <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                <cfinvokeargument name="email_to" value="#CLIENT.programmanager_email#"> 
+                <cfinvokeargument name="email_from" value="#CLIENT.emailfrom# (#CLIENT.companyshort# Support)">
+                <cfinvokeargument name="email_subject" value="#vEmailSubject#">
+                <cfinvokeargument name="email_message" value="#vEmailMessage#">
+            </cfinvoke>
+    
+        </cfif>
 	</cffunction>
 
     <!--- ------------------------------------------------------------------------- ----
@@ -1349,6 +1547,15 @@
 			if ( ARGUMENTS.trainingID EQ 2 AND ARGUMENTS.SCORE < 90 ) {
 				hasPassed = 0;
 			}
+			
+			// Copy New Area Reps or Area Rep. Refresher trainings to current smg_users_paperwork
+			if ( listFind("6,10", ARGUMENTS.trainingID) ) {
+				updateSeasonPaperwork(userID=ARGUMENTS.userID,fieldName="ar_training",fieldValue=ARGUMENTS.dateTrained);
+				
+				//Check if we need to send out a notification to the program manager - Only accounts that needs review / depending on the order of people submitting things, we have to check
+				paperworkReceivedNotification(userID=ARGUMENTS.userID);
+
+			}
 		</cfscript>	
 		
         <cfquery 
@@ -1361,6 +1568,7 @@
                     company_id,
                     office_user_id,
                     training_id,
+                    season_id,
                     date_trained,
                     score,
                     has_passed,
@@ -1372,6 +1580,7 @@
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.officeUserID#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.trainingID#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID)#">,
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.dateTrained)#">,
                     <cfqueryparam cfsqltype="cf_sql_float" value="#ARGUMENTS.score#">,
                     <cfqueryparam cfsqltype="cf_sql_bit" value="#hasPassed#">,
@@ -1398,6 +1607,13 @@
                         )   
         </cfquery>
 		
+        <cfscript>
+			if ( ARGUMENTS.userID EQ CLIENT.userID ) {
+				// Update User Session Paperwork
+				APPLICATION.CFC.USER.setUserSessionPaperwork();
+			}
+		</cfscript>
+        
 	</cffunction>
 
 

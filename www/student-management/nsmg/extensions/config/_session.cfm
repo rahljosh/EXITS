@@ -37,10 +37,13 @@
 	}
 
 	// Set USER SESSION Variables
-	APPLICATION.CFC.USER.setUserSession(userID=CLIENT.userID);
+	APPLICATION.CFC.USER.setUserSession();
 
-	// Set User Roles
-	APPLICATION.CFC.USER.setUserRoles(userID=CLIENT.userID);	
+	// Set USER SESSION Roles
+	APPLICATION.CFC.USER.setUserSessionRoles();	
+	
+	// Set USER SESSION Paperwork
+	APPLICATION.CFC.USER.setUserSessionPaperwork();
 	
 	// Set Email Variables
 	APPLICATION.CFC.UDF.setSessionEmailVariables();
