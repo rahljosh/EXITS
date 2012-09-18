@@ -261,7 +261,7 @@
     <tr bgcolor="##F8F8F8">
         <td>Placement*</td>
         <td>Paperwork*</td>
-        <td>$750</td>
+        <td>$175</td>
     </tr>
     <tr>
         <td>Supervision Phase 1**</td>
