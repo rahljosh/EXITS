@@ -130,10 +130,13 @@ where active = 1
 </Cfloop>
 <!--- Check if there are no errors --->
     <cfif NOT SESSION.formErrors.length()>
+    
+    	
             <cfquery datasource="#application.dsn#">
             insert into hostRefQuestionaireTracking (dateInterview, interviewer, arearepid, fk_referencesID, hostid)
                                     values(#CreateODBCDate(form.dateInterview)#, #client.userid#, #url.rep#, #url.ref#, #url.hostid#)
              </cfquery>
+    
             <Cfquery name="reportID" datasource="#application.dsn#">
             select max(id) as reportID
             from hostRefQuestionaireTracking
@@ -151,6 +154,21 @@ where active = 1
                                     values(#reportid.reportid#, #id#, <Cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('form.' & id)#"> )
                 </cfquery>
             </cfloop>
+        <cfquery name="markApproved" datasource="#application.dsn#">
+        update hostRefQuestionaireTracking
+        set 
+    	<Cfif client.usertype eq 7>
+        arApproved = 
+        <cfelseif client.usertype eq 6>
+        rmApproved = 
+        <cfelseif client.usertype eq 5>
+        rdApproved = 
+        <cfelseif client.usertype lte 4>
+        nyApproved = 
+        </Cfif>
+        <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
+    where  id = <cfqueryparam cfsqltype="cf_sql_integer" value="#reportid.reportid#">
+    </cfquery>
             <body onload="opener.location.reload()">
            
             <SCRIPT LANGUAGE="JavaScript"><!--

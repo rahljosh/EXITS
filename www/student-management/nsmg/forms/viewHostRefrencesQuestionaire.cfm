@@ -123,7 +123,7 @@ order by ARQ.id
         <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
     where  fk_ReferencesID = <cfqueryparam cfsqltype="cf_sql_integer" value="#questionTracking.fk_ReferencesID#"> 
     </cfquery>
-	<Cfif usertype lte 4>
+	<Cfif client.usertype lte 5>
         <cfquery datasource="#application.dsn#">
         update smg_family_references
         set approved = #form.approve#
@@ -196,32 +196,38 @@ where refid = #questionTracking.fk_ReferencesID#
           
         </p>
     	 </cfloop>
-         <Cfif client.usertype lte 5 and currentStatus.approved neq 2>
         
-         <input type=hidden name="refid" value="#questionTracking.fk_ReferencesID#" />
-          <TABLE width=100%>
-          	<tR>
-            	<TD><SELECT name=approve>
-                	<option value=1>Needs Further Review</option>
-                    <option value=2>Approved</option>
-                    <option value=3>Rejected</option>
-                    
-                    </SELECT> 
-           		</TD>
-                <Td>
-                     <div align="right" >
-                    <input type="hidden" name="submit" />
-                    <button type="submit">Submit Information</button>
-                    </div>
-        		</Td>
-             </tR>
-          </TABLE>
-        
-        <Cfelse>
-        <div align="Ceter">
-             	SUBMITTED
-         </div>
-    	</Cfif>
+         <Cfif  currentStatus.approved eq 2>
+         APPROVED
+         <cfelse>
+         
+			 <Cfif client.usertype lte 5 and currentStatus.approved neq 2>
+            
+             <input type=hidden name="refid" value="#questionTracking.fk_ReferencesID#" />
+              <TABLE width=100%>
+                <tR>
+                    <TD><SELECT name=approve>
+                        <option value=1>Needs Further Review</option>
+                        <option value=2>Approved</option>
+                        <option value=3>Rejected</option>
+                        
+                        </SELECT> 
+                    </TD>
+                    <Td>
+                         <div align="right" >
+                        <input type="hidden" name="submit" />
+                        <button type="submit">Submit Information</button>
+                        </div>
+                    </Td>
+                 </tR>
+              </TABLE>
+            
+            <Cfelse>
+            <div align="Ceter">
+                    SUBMITTED
+             </div>
+            </Cfif>
+        </Cfif>
         </form>
 </div>
 </cfoutput>
