@@ -492,7 +492,7 @@
                         
                         <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, CLIENT.companyID)>
                             <a href="index.cfm?curdoc=user/index&uniqueID=#CLIENT.uniqueID#&action=trainCasterLogin" target="_blank" title="Click Here to Take the DOS Test">
-                                <img src="pics/DOScertification.png" border="0" title="Click Here to Take the DOS Certification Test" />
+                                <img src="pics/buttons/DOScertification.png" border="0" title="Click Here to Take the DOS Certification Test" />
                             </a><br />
                         </cfif>
                         
