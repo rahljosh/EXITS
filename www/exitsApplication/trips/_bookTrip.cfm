@@ -108,6 +108,8 @@
         	sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="female">            
     </cfquery>
     
+    <cfparam name="SESSION.TOUR.declinedTransactions" default="0">
+    
     <cfscript>	
 		// Credit Card Denied Multiple Times
 		if ( SESSION.TOUR.declinedTransactions GT 1 ) {
