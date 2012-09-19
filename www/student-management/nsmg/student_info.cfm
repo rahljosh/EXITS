@@ -24,7 +24,7 @@
 		// Set currentDate
 		currentDate = now();
 		
-		vAllowedDivisionChangeList = "8731,8743,12313,12431,16718,12389,17993";  // Bill, Bob, Brian Hause, Gary, Tal and Merri, Jan McInvale	
+		vAllowedDivisionChangeList = "8731,8743,12313,12431,16718,12389,17993,16552";  // Bill, Bob, Brian Hause, Gary, Tal and Merri, Jan McInvale, Steve S	
 		
 		// Get Student Information 
 		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=VAL(studentID)); 
