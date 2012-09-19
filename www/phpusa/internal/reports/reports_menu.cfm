@@ -239,6 +239,15 @@
                                     </cfselect>
                                 </td>
                             </tr>
+                            <tr>
+                                <td align="right">Order By :</td>
+                                <td>
+                                    <cfselect name="orderBy">
+                                        <option value="1">School</option>
+                                        <option value="2">Area Rep</option>
+                                    </cfselect>
+                                </td>
+                            </tr>	
                   		<tr><td colspan="2" align="center" bgcolor="##C4CDE7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
                     </table>
                 </cfform>

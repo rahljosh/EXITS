@@ -16,29 +16,56 @@
     <!-----Company Information----->
     <cfinclude template="../querys/get_company_short.cfm">
     
-    <!--- get the information from the schools --->
-    <cfquery name="qGetSchools" datasource="MySql">
-        SELECT
-        	s.schoolID,
-            s.schoolName,
-            s.contact,
-            s.email,
-            s.phone,
-            s.website,
-            s.address,
-            s.address2,
-            s.city,
-            state.stateName,
-            s.zip
-        FROM
-            php_schools s
-      	INNER JOIN
-        	smg_states state ON state.id = s.state
-        <cfif VAL(FORM.schoolID)>
-            WHERE
-                s.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.schoolID)#">
-        </cfif>
-    </cfquery>
+    <!--- Choose the ordering --->
+    <cfif FORM.orderBy EQ 1>
+    
+		<!--- get the information from the schools --->
+        <cfquery name="qGetSchools" datasource="MySql">
+            SELECT
+                s.schoolID,
+                s.schoolName,
+                s.contact,
+                s.email,
+                s.phone,
+                s.website,
+                s.address,
+                s.address2,
+                s.city,
+                state.stateName,
+                s.zip
+            FROM
+                php_schools s
+            INNER JOIN
+                smg_states state ON state.id = s.state
+            <cfif VAL(FORM.schoolID)>
+                WHERE
+                    s.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.schoolID)#">
+            </cfif>
+            ORDER BY
+                s.schoolName
+        </cfquery>
+        
+  	<cfelseif FORM.orderBy EQ 2>
+    	
+        <cfquery name="qGetReps" datasource="MySql">
+            SELECT
+                c.userID,
+                u.firstName,
+                u.lastName,
+                u.email,
+                u.phone
+            FROM
+                php_school_contacts c
+            INNER JOIN
+                smg_users u ON u.userID = c.userID
+            GROUP BY
+                c.userID
+          	ORDER BY
+            	firstName,
+                lastName
+        </cfquery>
+        
+    </cfif>
     
 </cfsilent>
 
@@ -70,52 +97,116 @@
     <table width="95%" cellpadding="0" cellspacing="0" align="center" frame="below">
     
     	<tr>
-            <td width="18%"><b>School</b></td>
-            <td width="18%"><b>Address</b></td>
-            <td width="8%"><b>Contact</b></td>
-            <td width="13%"><b>Email</b></td>
-            <td width="10%"><b>Phone</b></td>
-            <td width="10%"><b>Area Rep.</b></td>
-            <td width="13%"><b>Area Rep. Email</b></td>
-            <td width="10%"><b>Area Rep. Phone</b></td>
+        	<cfif FORM.orderBy EQ 1>
+                <td width="18%"><b>School</b></td>
+                <td width="18%"><b>Address</b></td>
+                <td width="8%"><b>Contact</b></td>
+                <td width="13%"><b>Email</b></td>
+                <td width="10%"><b>Phone</b></td>
+                <td width="10%"><b>Area Rep.</b></td>
+                <td width="13%"><b>Area Rep. Email</b></td>
+                <td width="10%"><b>Area Rep. Phone</b></td>
+          	<cfelseif FORM.orderBy EQ 2>
+            	<td width="15%"><b>Area Rep.</b></td>
+                <td width="15%"><b>Area Rep. Email</b></td>
+                <td width="10%"><b>Area Rep. Phone</b></td>
+                <td width="18%"><b>School</b></td>
+                <td width="12%"><b>Address</b></td>
+                <td width="7%"><b>Contact</b></td>
+                <td width="16%"><b>Email</b></td>
+                <td width="7%"><b>Phone</b></td>
+            </cfif>
         </tr>
         
-        <cfloop query="qGetSchools">
-        	<cfquery name="qGetReps" datasource="MySql">
-            	SELECT
-                	c.userID,
-                    u.firstName,
-                    u.lastName,
-                    u.email,
-                    u.phone
-             	FROM
-                	php_school_contacts c
-              	INNER JOIN
-                	smg_users u ON u.userID = c.userID
-              	WHERE
-                	c.schoolID = #schoolID#
-              	GROUP BY
-                	c.userID
-            </cfquery>
-            <tr bgcolor="#iif(qGetSchools.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
-                <td valign="top" class="style1">#schoolName# (###schoolID#)</td>
-                <td valign="top" class="style1">#address# #address2# #city#, #statename# #zip#</td>
-                <td valign="top" class="style1">#contact#</td>
-                <td valign="top" class="style1">#email#</td>
-                <td valign="top" class="style1">#phone#</td>
-                <td valign="top" class="style1" colspan="3">
-                	<table width="100%">
-                    	<cfloop query="qGetReps">
-                        	<tr>
-                            	<td valign="top" class="style1" width="30%"><cfif VAL(qGetReps.recordCount)>#qGetReps.firstName# #qGetReps.lastName# (###qGetReps.userID#)</cfif></td>
-                				<td valign="top" class="style1" width="40%">#qGetReps.email#</td>
-                                <td valign="top" class="style1" width="30%">#qGetReps.phone#</td>
-                            </tr>
-                        </cfloop>
-                    </table>
-                </td>
-            </tr>
-		</cfloop>
+        <cfif FORM.orderBy EQ 1>
+        
+            <cfloop query="qGetSchools">
+                <cfquery name="qGetReps" datasource="MySql">
+                    SELECT
+                        c.userID,
+                        u.firstName,
+                        u.lastName,
+                        u.email,
+                        u.phone
+                    FROM
+                        php_school_contacts c
+                    INNER JOIN
+                        smg_users u ON u.userID = c.userID
+                    WHERE
+                        c.schoolID = #schoolID#
+                    GROUP BY
+                        c.userID
+                </cfquery>
+                <tr bgcolor="#iif(qGetSchools.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
+                    <td valign="top" class="style1">#schoolName# (###schoolID#)</td>
+                    <td valign="top" class="style1">#address# #address2# #city#, #statename# #zip#</td>
+                    <td valign="top" class="style1">#contact#</td>
+                    <td valign="top" class="style1">#email#</td>
+                    <td valign="top" class="style1">#phone#</td>
+                    <td valign="top" class="style1" colspan="3">
+                        <table width="100%">
+                            <cfloop query="qGetReps">
+                                <tr>
+                                    <td valign="top" class="style1" width="30%"><cfif VAL(qGetReps.recordCount)>#qGetReps.firstName# #qGetReps.lastName# (###qGetReps.userID#)</cfif></td>
+                                    <td valign="top" class="style1" width="40%">#qGetReps.email#</td>
+                                    <td valign="top" class="style1" width="30%">#qGetReps.phone#</td>
+                                </tr>
+                            </cfloop>
+                        </table>
+                    </td>
+                </tr>
+            </cfloop>
+            
+     	<cfelseif FORM.orderBy EQ 2>
+        
+        	<cfloop query="qGetReps">
+            	<cfquery name="qGetSchools" datasource="MySql">
+                	SELECT
+                        s.schoolID,
+                        s.schoolName,
+                        s.contact,
+                        s.email,
+                        s.phone,
+                        s.website,
+                        s.address,
+                        s.address2,
+                        s.city,
+                        state.stateName,
+                        s.zip
+                    FROM
+                        php_schools s
+                    INNER JOIN
+                        smg_states state ON state.id = s.state
+                   	WHERE
+                    	s.schoolID IN (SELECT schoolID FROM php_school_contacts WHERE userID = #userID#)
+                    <cfif VAL(FORM.schoolID)>
+                        AND
+                            s.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.schoolID)#">
+                    </cfif>
+                    ORDER BY
+                        s.schoolName
+                </cfquery> 
+                <tr bgcolor="#iif(qGetReps.currentrow MOD 2 ,DE("e9ecf1") ,DE("white") )#">
+                	<td valign="top" class="style1">#qGetReps.firstName# #qGetReps.lastName# (###qGetReps.userID#)</td>
+                    <td valign="top" class="style1">#qGetReps.email#</td>
+                    <td valign="top" class="style1">#qGetReps.phone#</td>
+                    <td valign="top" class="style1" colspan="5">
+                    	<table width="100%">
+                            <cfloop query="qGetSchools">
+                                <tr>
+                                    <td valign="top" class="style1" width="30%">#schoolName# (###schoolID#)</td>
+                                    <td valign="top" class="style1" width="20%">#address# #address2# #city#, #statename# #zip#</td>
+                                    <td valign="top" class="style1" width="12%">#contact#</td>
+                                    <td valign="top" class="style1" width="26%">#email#</td>
+                                    <td valign="top" class="style1" width="12%">#phone#</td>                                 
+                                </tr>
+                            </cfloop>
+                       	</table>
+                 	</td>
+                </tr>           
+            </cfloop>
+        
+        </cfif>
         
  	</table>
     
