@@ -434,6 +434,13 @@
 			} else {
 				stUserPaperwork.isTrainingCompleted = false;
 			}
+			
+			
+			/***** 
+				webEX trainings are not ready to go live, set them as true until we are ready
+				Marcus Melo 09/18/2012
+			******/			
+			stUserPaperwork.isTrainingCompleted = true;
 
 			// Reference Questionnaire - Minimum of 2
 			if ( isDate(qGetSeasonPaperwork.ar_ref_quest1) AND isDate(qGetSeasonPaperwork.ar_ref_quest2) ) { 
