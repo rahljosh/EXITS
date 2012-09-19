@@ -232,8 +232,8 @@
 </style>
 
 <cfoutput>
-<cfif client.companyid eq 10>
-	<cflocation url="?curdoc=case_initial_welcome">
+<cfif client.companyid eq 10 OR client.companyid eq 14 OR client.companyid eq 11>
+	<cflocation url="?curdoc=old_initial_welcome">
 </cfif>
 <!--- OFFICE USERS - INTL. REPS AND BRANCHES --->
 <cfif listFind("1,2,3,4,5,6,7,8,11", CLIENT.usertype)>
