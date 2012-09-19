@@ -38,7 +38,9 @@
 			// Check Signature
 			vDoesSignatureMatch = 0;
 			
-			if ( LEN(TRIM(FORM.Signature)) AND TRIM(FORM.Signature) EQ TRIM(CLIENT.name) ) {
+			vUserSignature = TRIM(qGetUser.firstName) & " " & TRIM(qGetUser.lastName);
+			
+			if ( LEN(TRIM(FORM.Signature)) AND TRIM(FORM.Signature) EQ TRIM(vUserSignature) ) {
 				vDoesSignatureMatch = 1;
 			}
 			
