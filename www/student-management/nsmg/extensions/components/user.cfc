@@ -441,6 +441,11 @@
 				Marcus Melo 09/18/2012
 			******/			
 			stUserPaperwork.isTrainingCompleted = true;
+			/***** 
+				webEX trainings are not ready to go live, set them as true until we are ready
+				Marcus Melo 09/18/2012
+			******/			
+			
 
 			// Reference Questionnaire - Minimum of 2
 			if ( isDate(qGetSeasonPaperwork.ar_ref_quest1) AND isDate(qGetSeasonPaperwork.ar_ref_quest2) ) { 
@@ -449,11 +454,13 @@
 				stUserPaperwork.isReferenceQuestionnaireCompleted = false;
 			}
 			
-			// 2nd Visit - No employment history and reference
-			if ( vIsSecondVisitRep EQ 15 ) {
+			// 2nd Visit - Only Agreement and CBC - No Reference, employment history, trainings and DOS test
+			if ( vIsSecondVisitRep ) {
 				stUserPaperwork.isReferenceCompleted = true;
 				stUserPaperwork.isReferenceQuestionnaireCompleted = true;
 				stUserPaperwork.isEmploymentHistoryCompleted = true;
+				stUserPaperwork.isTrainingCompleted = true;
+				stUserPaperwork.isDOSCertificationCompleted = true;
 			}
 			
 			// CBC Review
