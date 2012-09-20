@@ -117,7 +117,7 @@
     <cfif FORM.submitted>
     
 		<cfif FORM.submit_Start EQ 'eHost'>
-        
+        	<cfif form.email is not ''>
             <cfquery name="qCheckEmail" datasource="#application.dsn#">
                 SELECT 
                 	hostid, 
@@ -132,12 +132,20 @@
                     	hostid != <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.hostid#">
                 </cfif>
             </cfquery>
-            
+            <Cfelse>
+            <cfset qCheckEmail.recordcount = 0>
+            </cfif>
 			<cfscript>
 				// Data Validation - Check required Fields
 				if ( qCheckEmail.recordcount NEQ 0 ) {
 					SESSION.formErrors.Add("This email address is already assigned to the #qCheckEmail.hostid# - #qCheckEmail.familylastname# family.");
 				}
+				if ( NOT LEN(FORM.email) ) {
+					SESSION.formErrors.Add("An email is required for the eHost option.");
+				}
+					if ( LEN(FORM.email) AND NOT isValid("email", Trim(FORM.email)) ) {
+					SESSION.formErrors.Add("Please enter a valid Email.");
+				} 
             </cfscript>
     
 		</cfif>
@@ -389,7 +397,7 @@
                        
                     )  
                 </cfquery>
-
+	
                 <cfscript>
 					// Set new host company ID
 					FORM.hostID = newRecord.GENERATED_KEY;
@@ -547,7 +555,7 @@
                 // Reload page with updated information
                 location("#CGI.SCRIPT_NAME#?curdoc=host_fam_info&hostID=#FORM.hostID#", "no");
             </cfscript>
-        
+     
     	</cfif> <!---  NOT SESSION.formErrors.length() --->
     
 	<cfelse>
@@ -592,6 +600,76 @@
     </cfif> <!--- FORM Submitted --->
     
 </cfsilent>
+
+<style type="text/css">
+.buttonBlue {
+	border-top: 1px solid #046A3A;
+	background: #035eac;
+	background: -webkit-gradient(linear, left top, left bottom, from(#035eac), to(#5a81c0));
+	background: -webkit-linear-gradient(top, #035eac, #5a81c0);
+	background: -moz-linear-gradient(top, #035eac, #5a81c0);
+	background: -ms-linear-gradient(top, #035eac, #5a81c0);
+	background: -o-linear-gradient(top, #035eac, #5a81c0);
+	padding: 5px 10px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+	-webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+	-moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+	box-shadow: rgba(0,0,0,1) 0 1px 0;
+	text-shadow: rgba(0,0,0,.4) 0 1px 0;
+	color: white;
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	text-decoration: none;
+	vertical-align: middle;
+	font-weight: bold;
+   }
+.buttonBlue:hover {
+	border-top-color: #5a81c0;
+	background: #5a81c0;
+	color: #ccc;
+   }
+.buttonBlue:active {
+   border-top-color: #5a81c0;
+   background: #5a81c0;
+   }  
+   
+.buttonRed {
+	border-top: 1px solid #046A3A;
+	background: #ed3d35;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ed3d35), to(#9c1a1d));
+	background: -webkit-linear-gradient(top, #ed3d35, #9c1a1d);
+	background: -moz-linear-gradient(top, #ed3d35, #9c1a1d);
+	background: -ms-linear-gradient(top, #ed3d35, #9c1a1d);
+	background: -o-linear-gradient(top, #ed3d35, #9c1a1d);
+	padding: 5px 10px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+	-webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+	-moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+	box-shadow: rgba(0,0,0,1) 0 1px 0;
+	text-shadow: rgba(0,0,0,.4) 0 1px 0;
+	color: white;
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	text-decoration: none;
+	vertical-align: middle;
+	font-weight: bold;
+   }
+.buttonRed:hover {
+	border-top-color: #9c1a1d;
+	background: #9c1a1d;
+	color: #ccc;
+   }
+.buttonRed:active {
+   border-top-color: #9c1a1d;
+   background: #9c1a1d;
+   }     
+</style>
+
+
 
 <script type="text/JavaScript">
 	<!--
@@ -887,12 +965,12 @@
           		<td valing="top" align="center">
 				
                 (Host Fam Fills Out App)<br />
-                   <input name="Submit_start" type="image" value="ehost" src="pics/buttons_ehost.png" alt="Start E-App" border="0" /> 
+                   <input name="Submit_start" type="submit" value="eHost" src="pics/buttons_ehost.png" alt="Start E-App" border="0" class="buttonBlue" /> 
                
                 </td>
                 <td align="Center">   
                 (Office User Fills Out App)<br />
-                   <input name="Submit_start" type="image" value="paper" src="pics/buttons_SUBMIT.png" alt="Submit Paper Application" border="0" />
+                   <input name="Submit_start" type="submit" value="Submit" src="pics/buttons_SUBMIT.png" alt="Submit Paper Application" border="0" class="buttonRed" />
                 </td>
             </tr>
         </table>
