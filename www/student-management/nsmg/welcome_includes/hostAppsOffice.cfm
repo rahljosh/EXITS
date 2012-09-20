@@ -15,7 +15,7 @@
 				<th valign="top">Host</th>                
 				<th valign="top">Field</th>
 				<th valign="top">Manager</th>
-				<th valign="top">NY</th>
+				<th valign="top">HQ</th>
 				<th valign="top">Approved</th>
 
 			</tr>
@@ -48,7 +48,9 @@
                                      <cfelse>
                                      	< <cfqueryparam cfsqltype="cf_sql_integer" value="6">
                                      </cfif>
-                           
+                           <Cfif client.usertype gt 4>
+                           	AND arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+                           </Cfif>
                       		
                         </cfquery> 
                         
@@ -57,7 +59,8 @@
 				</cfloop>
                 </tr>
 		</table>
-	</td>
+        
+        	</td>
 	<td align="right" valign="top" rowspan=2></td>
 	</tr>
 </table>
