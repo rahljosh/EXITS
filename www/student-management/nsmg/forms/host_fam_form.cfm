@@ -308,7 +308,8 @@
                         phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
                         email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
                         HostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="9">,
-                        password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#strPassword#">
+                        password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#strPassword#">,
+                        active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                         
                     WHERE 
                         hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#currentHost#">
@@ -409,6 +410,7 @@
 					// Set new host company ID
 					FORM.hostID = newRecord.GENERATED_KEY;
 				</cfscript>
+                <cfset currentHost = #FORM.hostID#>
         </cfif>
             	<cfif form.submit_Start is 'eHost'>
         
