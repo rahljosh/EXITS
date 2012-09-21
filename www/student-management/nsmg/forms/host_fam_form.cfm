@@ -307,6 +307,7 @@
                         zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
                         phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
                         email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
+                        HostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="9">,
                         password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#strPassword#">
                         
                     WHERE 
@@ -618,7 +619,7 @@
     	</cfscript>
 
     </cfif> <!--- FORM Submitted --->
-    
+  </cfif>  
 </cfsilent>
 
 <style type="text/css">
