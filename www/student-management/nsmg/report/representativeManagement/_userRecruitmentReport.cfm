@@ -1,11 +1,11 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		_officeRecruitmentReport.cfm
+	File:		_userRecruitmentReport.cfm
 	Author:		James Griffiths
 	Date:		September 21, 2012
 	Desc:		Rectruitment totals
 				
-				#CGI.SCRIPT_NAME#?curdoc=report/index?action=officeRecruitmentReport		
+				#CGI.SCRIPT_NAME#?curdoc=report/index?action=userRecruitmentReport		
 				
 ----- ------------------------------------------------------------------------- --->
 
@@ -25,7 +25,7 @@
 		param name="FORM.outputType" default="flashPaper";
 
 		// Set Report Title To Keep Consistency
-		vReportTitle = "Office Management - Recruitment Report";
+		vReportTitle = "Representative Management - Recruitment Report";
 		
 		vExcelTotalRowColor = "##d8d8d8";
 	</cfscript>
@@ -136,7 +136,7 @@
 
 	<cfoutput>
 
-        <form action="report/index.cfm?action=officeRecruitmentReport" name="officeRegionGoal" id="officeRegionGoal" method="post" target="blank">
+        <form action="report/index.cfm?action=userRecruitmentReport" name="officeRegionGoal" id="officeRegionGoal" method="post" target="blank">
             <input type="hidden" name="submitted" value="1" />
             <table width="50%" cellpadding="8" cellspacing="0" class="blueThemeReportTable" align="center">
                 <tr><th colspan="2">#vReportTitle#</th></tr>
