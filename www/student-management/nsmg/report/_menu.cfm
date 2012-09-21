@@ -321,7 +321,13 @@
 	</tr>   
     <tr>
         <td class="lastRow">&nbsp;
-			
+			<ul class="mainList">
+                <li onclick="loadSelectedReport('officeRecruitmentReport');">Recruitment Report</li>
+                <ul>
+                    <li>Generate a total by region of new area reps</li>
+                    <li>Filter by: Region, Season</li>
+				</ul>
+            </ul>
         </td>
         <td class="lastRow">&nbsp;
 			
