@@ -463,6 +463,13 @@
 				stUserPaperwork.isDOSCertificationCompleted = true;
 			}
 			
+			
+			// ESI - No DOS Test and WebEx
+			if ( APPLICATION.SETTINGS.COMPANYLIST.ESI NEQ companyID ) {
+				stUserPaperwork.isTrainingCompleted = true;
+				stUserPaperwork.isDOSCertificationCompleted = true;
+			}
+			
 			// CBC Review
 			// ar_cbcAuthReview
 

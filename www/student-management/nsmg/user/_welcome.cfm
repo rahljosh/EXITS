@@ -203,8 +203,8 @@
             </div>
 
 
-            <!--- Do Not Display for Second Visit Reps --->
-            <cfif CLIENT.userType NEQ 15>
+            <!--- Do Not Display for Second Visit Reps or ESI --->
+            <cfif CLIENT.userType NEQ 15 AND APPLICATION.SETTINGS.COMPANYLIST.ESI NEQ companyID>
 
                 <div class="subSection">
                     
@@ -348,74 +348,79 @@
                 </div>
 
 
-                <div class="subSectionLarge">
-                    
-                    <div class="title"> 
-                        <img src="pics/icons/onlineReports.png" border="0" title="Department of State Certification" />               
-                        <h2>Trainings</h2>
-                    </div>
-    
-                    <table width="96%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" style="margin-bottom:15px;">
-                        <tr>
-                            <th class="left">Date Trained</th>
-                            <th class="left">Training</th>
-                            <th class="left">Score %</th>
-                            <th class="left">Added By</th>
-                            <th class="left">Date Recorded</th>
-                        </tr>
+				<!--- Do not display for ESI --->
+                <cfif APPLICATION.SETTINGS.COMPANYLIST.ESI NEQ companyID>
+                    <div class="subSectionLarge">
                         
-                        <!---
-                        <cfloop query="qGetTraining">
-                            <tr class="#iif(qGetTraining.currentrow MOD 2 ,DE("on") ,DE("off") )#">
-                                <td>#DateFormat(qGetTraining.date_trained, 'mm/dd/yyyy')#</td>
-                                <td>#qGetTraining.trainingName#</td>
-                                <td>
-                                    <cfif qGetTraining.score GT 0>
-                                        #qGetTraining.score#%
-                                    <cfelse>
-                                        n/a
-                                    </cfif>
-                                </td>
-                                <td>
-                                    <cfif LEN(qGetTraining.officeUser)>
-                                        #qGetTraining.officeUser#
-                                    <cfelse>
-                                        EXITS
-                                    </cfif>                                
-                                </td>
-                                <td>#DateFormat(qGetTraining.date_created, 'mm/dd/yyyy')#</td>
-                            </tr>                        
-                        </cfloop>
-                        <cfif NOT qGetTraining.recordCount>
-                            <tr class="on"><td colspan="5" align="center">You have not taken any trainings this season</td>                                              
-                        </cfif>
-                        --->                    
-                        <tr class="on"><td colspan="5" align="center">Trainings will be available soon.</td>                                              
-                    </table>
-    
-                    <div align="center">
-                        <a href="index.cfm?curdoc=calendar/index">
-                            <img src="pics/webex-logo.jpg" border="0">
-                        </a>
-                    </div>                                        
-    
-                    <!---
-                    <!--- Complete --->
-                    <cfif APPLICATION.CFC.USER.getUserSessionPaperwork().isTrainingCompleted>
-                        <div align="center" style="padding-top:7px;"><img src="pics/buttons/complete.png" border="0" /></div>                
-                    <!--- Need Info --->
-                    <cfelse>
+                        <div class="title"> 
+                            <img src="pics/icons/onlineReports.png" border="0" title="Department of State Certification" />               
+                            <h2>Trainings</h2>
+                        </div>
+        
+                        <table width="96%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable" style="margin-bottom:15px;">
+                            <tr>
+                                <th class="left">Date Trained</th>
+                                <th class="left">Training</th>
+                                <th class="left">Score %</th>
+                                <th class="left">Added By</th>
+                                <th class="left">Date Recorded</th>
+                            </tr>
+                            
+                            <!---
+                            <cfloop query="qGetTraining">
+                                <tr class="#iif(qGetTraining.currentrow MOD 2 ,DE("on") ,DE("off") )#">
+                                    <td>#DateFormat(qGetTraining.date_trained, 'mm/dd/yyyy')#</td>
+                                    <td>#qGetTraining.trainingName#</td>
+                                    <td>
+                                        <cfif qGetTraining.score GT 0>
+                                            #qGetTraining.score#%
+                                        <cfelse>
+                                            n/a
+                                        </cfif>
+                                    </td>
+                                    <td>
+                                        <cfif LEN(qGetTraining.officeUser)>
+                                            #qGetTraining.officeUser#
+                                        <cfelse>
+                                            EXITS
+                                        </cfif>                                
+                                    </td>
+                                    <td>#DateFormat(qGetTraining.date_created, 'mm/dd/yyyy')#</td>
+                                </tr>                        
+                            </cfloop>
+                            <cfif NOT qGetTraining.recordCount>
+                                <tr class="on"><td colspan="5" align="center">You have not taken any trainings this season</td>                                              
+                            </cfif>
+                            --->                    
+                            <tr class="on"><td colspan="5" align="center">Trainings will be available soon.</td>                                              
+                        </table>
+        
                         <div align="center">
-                            <p>You are missing the New Area Rep or Area Rep Refresher training. Click below for our WebEx trainings schedule</p>
                             <a href="index.cfm?curdoc=calendar/index">
                                 <img src="pics/webex-logo.jpg" border="0">
                             </a>
                         </div>                                        
-                    </cfif>
-                    --->
+        
+                        <!---
+                        <!--- Complete --->
+                        <cfif APPLICATION.CFC.USER.getUserSessionPaperwork().isTrainingCompleted>
+                            <div align="center" style="padding-top:7px;"><img src="pics/buttons/complete.png" border="0" /></div>                
+                        <!--- Need Info --->
+                        <cfelse>
+                            <div align="center">
+                                <p>You are missing the New Area Rep or Area Rep Refresher training. Click below for our WebEx trainings schedule</p>
+                                <a href="index.cfm?curdoc=calendar/index">
+                                    <img src="pics/webex-logo.jpg" border="0">
+                                </a>
+                            </div>                                        
+                        </cfif>
+                        --->
+                        
+                    </div>
                     
-                </div>
-
+				</cfif>
+                
+                
 			</cfif>
             
             <!--- Skip Paperwork Option --->
