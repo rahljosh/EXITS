@@ -47,6 +47,7 @@
     <cfparam name="FORM.regionid" default="">
     <cfparam name="FORM.arearepid" default="">
     <cfparam name="FORM.submit_Start" default="paper">
+    <cfparam name="currentHost" default="0">
 
 	<cfscript>
 	
@@ -121,25 +122,30 @@
             <cfquery name="qCheckEmail" datasource="#application.dsn#">
                 SELECT 
                 	hostid, 
-                    familylastname 
+                    familylastname,
+                    password
                 FROM 
                 	smg_hosts
+                    
                 WHERE
-                	email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.email#">
-				
-				<cfif VAL(FORM.hostID)>
-                	AND
+                	<cfif VAL(FORM.hostID)>
                     	hostid != <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.hostid#">
-                </cfif>
+					<cfelse>
+                	    email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.email#">
+					</cfif>
             </cfquery>
+            <cfif qCheckEmail.recordcount eq 1>
+            <cfset currentHost = #qCheckEmail.hostid#>
+            <cfif qCheckEmail.password is not ''>
+            <Cfset strPassword = '#qCheckEmail.password#'>
+            </cfif>
             <Cfelse>
             <cfset qCheckEmail.recordcount = 0>
             </cfif>
+       
 			<cfscript>
 				// Data Validation - Check required Fields
-				if ( qCheckEmail.recordcount NEQ 0 ) {
-					SESSION.formErrors.Add("This email address is already assigned to the #qCheckEmail.hostid# - #qCheckEmail.familylastname# family.");
-				}
+				
 				if ( NOT LEN(FORM.email) ) {
 					SESSION.formErrors.Add("An email is required for the eHost option.");
 				}
@@ -147,7 +153,6 @@
 					SESSION.formErrors.Add("Please enter a valid Email.");
 				} 
             </cfscript>
-    
 		</cfif>
 
 		<cfscript>
@@ -265,7 +270,7 @@
                 }				
             </cfscript>
 
-			<cfif VAL(FORM.hostID)>
+			<cfif VAL(currentHost)>
 				    
                 <!--- Update --->
                 <cfquery datasource="MySql" result="test">
@@ -301,10 +306,11 @@
                         state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.state#">,
                         zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
                         phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
-                        email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">
+                        email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
+                        password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#strPassword#">
                         
                     WHERE 
-                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostID#">
+                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#currentHost#">
                 </cfquery>			
                 
             <cfelse>
@@ -402,9 +408,9 @@
 					// Set new host company ID
 					FORM.hostID = newRecord.GENERATED_KEY;
 				</cfscript>
-        
+        </cfif>
             	<cfif form.submit_Start is 'eHost'>
-          
+        
                     <cfsavecontent variable="hostWelcome">
                     
 						<style type="text/css">
@@ -501,14 +507,28 @@
                         
                         </style>
                         
-                        
+        
                         <div class="rdholder" style="width: 595px;"> 
                                         <div class="rdtop"> </div> <!-- end top --> 
                                      <div class="rdbox">
                         <cfoutput>
+                        
                            <p><strong> <cfif form.fatherfirstname is not ''>#fatherfirstname#</cfif><Cfif form.fatherfirstname is not '' and form.motherfirstname is not ''> and</Cfif> <cfif form.motherfirstname is not ''>#form.motherfirstname#</cfif>-</strong></p>
+                            <cfif val(currentHost)>
+                            <p>I am so excited that you have decided to host another student!</p>
                             
-                            <p>I am so excited that you have decided to host a student!</p>
+                            <p>Everytime you host a student, we require host families to update the information, if needed, that we have on file</p>
+                            
+                            <p>We are required by the Department of State to collect the following information:</p>
+                            <ul>
+                            <li>a background check on any person who is 17 years of age or older and who is living in the home. 
+                            <li>pictures of certain areas of your home and property to reflect where the student will be living.  
+                            <li>basic finacial and finacial aid information on your family
+                            </ul>
+                            At the end of this email, you will find login information that will allow you to update any information that has changed and to provide new information that may be required since you last hosted. 
+                           <cfelse> 
+                           
+                           <p>I am so excited that you have decided to host a student!</p>
                             
                             <p>To get started in the process of placing a student with you, I need you to fill out a host application.   The application has a number of questions that will help in finding a student who is suited to living with you.  Please fill out the application as completely as possible.</p>
                             
@@ -518,8 +538,8 @@
                             <li>pictures of certain areas of your home and property to reflect where the student will be living.  
                             <li>basic finacial and finacial aid information on your family
                             </ul>
-                            
-                           <p>The application process can take any where from 15-60 minutes to complete depending on the information you provide and number of pictures you submit.</p> 
+                        </cfif>
+                           <p>The application process can take any where from 15-60 minutes to complete depending on the information needed and number of pictures you submit.</p> 
                             
                             <p>You can always come back to the  application at a later time to complete it or change any information  that you want.  Please keep in mind though, that once the applciation is  submitted, you will no longer be able to change any information on the  application. </p>
           <p><em> We have just launched this electronic  host family application, and you are one of the first families to use  this new tool.  While we have tested it out extensivly, please bear with  us as we work out the final bugs. Should you get any errors or feel  that something is confusing, please feel free to let us know how we can  improve the process.  There is a live chat and email support available  through the application if you need immediate assistance while filling  out the application.  Any and all feedback would be greatly appreciated.</em></p>
@@ -546,16 +566,16 @@
                     
                 </cfif>
 		
-			</cfif> <!--- VAL(FORM.hostID) --->
+			<!--- VAL(FORM.hostID) --->
 
 			<cfscript>
                 // Set Page Message
                 // SESSION.pageMessages.Add("Form successfully submitted.");
                 
                 // Reload page with updated information
-                location("#CGI.SCRIPT_NAME#?curdoc=host_fam_info&hostID=#FORM.hostID#", "no");
+                location("#CGI.SCRIPT_NAME#?curdoc=host_fam_info&hostID=#currentHost#", "no");
             </cfscript>
-     
+      
     	</cfif> <!---  NOT SESSION.formErrors.length() --->
     
 	<cfelse>
@@ -596,7 +616,7 @@
 				FORM.mother_cell = '';
 			}
     	</cfscript>
-    
+
     </cfif> <!--- FORM Submitted --->
     
 </cfsilent>
