@@ -43,13 +43,13 @@ form.motherlast.value = form.familyname.value;
 <table width="100%" border=0 cellpadding=3 cellspacing=0 class="section">
 	<tr><td width="80%">
 		<table border=0 cellpadding=3 cellspacing=0 align="left" width="100%">
-			<tr><td class="label">Family Name:</td><td colspan=3> <input type="text" name="familyname" size="20" value="#familylastname#"></td></tr>
-			<tr><td class="label">First Name:</td><td colspan=3> <input type="text" name="firstname" size="20" value="#firstname#"></td></tr>
-			<tr><td class="label">Middle Name:</td><td colspan=3> <input type="text" name="middlename" size="20" value="#middlename#"></td></tr>
-			<tr><td class="label">Address:</td><td colspan=3> <cfinput type="text" name="address" size="20" value="#address#"></td></tr>
+			<tr><td class="label">Family Name:</td><td colspan=3> <input type="text" name="familyname" size="20" maxlength="150" value="#familylastname#"></td></tr>
+			<tr><td class="label">First Name:</td><td colspan=3> <input type="text" name="firstname" size="20" maxlength="150" value="#firstname#"></td></tr>
+			<tr><td class="label">Middle Name:</td><td colspan=3> <input type="text" name="middlename" size="20" maxlength="150" value="#middlename#"></td></tr>
+			<tr><td class="label">Address:</td><td colspan=3> <cfinput type="text" name="address" size="20" maxlength="150" value="#address#"></td></tr>
 			<tr><td></td>
-				<td  colspan=3><cfinput type="text" name="address2" size="20" value="#address2#"></td></tr>
-			<tr><td class="label">City: </td><td  colspan=3><cfinput type="text" name="city" size="20" value="#city#"></td></tr>
+				<td  colspan=3><cfinput type="text" name="address2" size="20" maxlength="150" value="#address2#"></td></tr>
+			<tr><td class="label">City: </td><td  colspan=3><cfinput type="text" name="city" size="20" maxlength="150" value="#city#"></td></tr>
 			<tr><td class="label" > Country:</td>
 				<td><cfselect name="country">
 					<option value="">Country...</option>
@@ -57,17 +57,17 @@ form.motherlast.value = form.familyname.value;
 					  <option value="#countryid#" <cfif #get_student_info.country# is #countryid#>selected</cfif>>#countryname#</option>
 					</cfloop>
 					</cfselect></td></tr>
-			<tr><td class="zip">Zip: </td><td><cfinput type="text" name="zip" size="10" value="#zip#"></td></tr>
-			<tr><td class="label">Phone:</td><td  colspan=3> <cfinput type="text" name="phone" size=20 value="#phone#"></td></tr>
-			<tr><td class="label">Fax:</td><td  colspan=3> <cfinput type="text" name="fax" size=20 value="#fax#"></td></tr>
-			<tr><td class="label">Email:</td><td  colspan=3> <cfinput type="text" name="email" size=20 value="#email#"></td></tr>
+			<tr><td class="zip">Zip: </td><td><cfinput type="text" name="zip" size="10" maxlength="25" value="#zip#"></td></tr>
+			<tr><td class="label">Phone:</td><td  colspan=3> <cfinput type="text" name="phone" size=20 maxlength="150" value="#phone#"></td></tr>
+			<tr><td class="label">Fax:</td><td  colspan=3> <cfinput type="text" name="fax" size=20 maxlength="150" value="#fax#"></td></tr>
+			<tr><td class="label">Email:</td><td  colspan=3> <cfinput type="text" name="email" size=20 maxlength="150" value="#email#"></td></tr>
 			
 			<tr bgcolor="e2efc7">
 				<td class="label">Sex:</td><td class="form_text"><cfif sex is 'male'><cfinput type="radio" name="sex" value="male" checked><cfelse><cfinput type="radio" name="sex" value="male"></cfif>Male <cfif sex is 'female'><cfinput type="radio" name="sex" value="female" checked><cfelse><cfinput type="radio" name="sex" value="female"></cfif>Female</td></tr>
 			<tr bgcolor="e2efc7">
-				<td class="label">Hair Color: </td><td class="form_text"><cfinput type="text" name="haircolor" size="10" value="#haircolor#"></td></tr>
+				<td class="label">Hair Color: </td><td class="form_text"><cfinput type="text" name="haircolor" size="10" maxlength="11" value="#haircolor#"></td></tr>
 			<tr bgcolor="e2efc7">
-				<td class="label">Eye Color: </td><td class="form_text"><cfinput type="text" name="eyecolor" size="10" value="#eyecolor#"></td></tr>
+				<td class="label">Eye Color: </td><td class="form_text"><cfinput type="text" name="eyecolor" size="10" maxlength="11" value="#eyecolor#"></td></tr>
 			<tr bgcolor="e2efc7">
 				<td class="label">Height: </td><td class="form_text"><cfinput type="text" name="heightcm" size="3"> cm or <cfinput type="text" name="height" size="3" value="#height#"> feet/inches</td></tr>
 			<tr bgcolor="e2efc7">
