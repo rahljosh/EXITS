@@ -7,31 +7,35 @@
 <cfset height = #Left(feet,1)# & "'" & #Round(inches)# & "''" >
 </cfif>
 <cfquery name="update_student_app_1" datasource="MySQL">
-update smg_students
-	set familylastname= '#form.familyname#',
-	    firstname = '#form.firstname#',
-		middlename= '#form.middlename#',
-		address= '#form.address#',
-		address2= '#form.address2#',
-		city= '#form.city#',
-		country= '#form.country#',
-		zip= '#form.zip#',
-		phone= '#form.phone#',
-		fax= '#form.fax#',
-		email= '#form.email#',
-		<cfif IsDefined('form.sex')>sex = '#form.sex#',</cfif> 
-		countryresident= '#form.Countryresidence#',
-		countrycitizen= '#form.countrycitizinship#',
-		passportnumber= '#form.passport#',
-		dob= #CreateODBCDate(form.dob)#,
-		citybirth='#form.citybirth#',
-		countrybirth='#form.countrybirth#',
-		haircolor = '#form.haircolor#',
-		eyecolor= '#form.eyecolor#',
-        height = '#height#',
-		weight = '#form.weight#'
-	where studentid = #client.studentid#
-						
+	UPDATE
+    	smg_students
+  	SET
+    	familylastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.familyname#">,
+        firstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.firstname#">,
+        middlename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.middlename#">,
+        address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
+        address2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address2#">,
+        city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
+   		country = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.country#">,
+		zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
+        phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
+        fax = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fax#">,
+        email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
+        <cfif IsDefined('form.sex')>
+        	sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sex#">,
+		</cfif>        
+        countryresident = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.countryresidence#">,
+        countrycitizen = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.countrycitizinship#">,
+        passportnumber = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.passport#">,
+        dob = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.dob)#">,
+        citybirth = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.citybirth#">,
+        countrybirth = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.countrybirth#">,
+        haircolor = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.haircolor#">,
+        eyecolor = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.eyecolor#">,
+        height = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.height#">,
+        weight = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.weight#">
+  	WHERE
+    	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.studentID)#">				
 </cfquery>
 
 <cfoutput>
