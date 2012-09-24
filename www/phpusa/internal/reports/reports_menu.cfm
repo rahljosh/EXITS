@@ -174,7 +174,67 @@
     <!--- ROW 4 - 2 boxes --->
 	<table cellpadding=3 cellspacing="0" align="center" width="100%">
 		<tr>
-			<td width="50%" valign="top">
+        	<td width="50%" valign="top">
+            	<cfform action="reports/currently_placed_students.cfm" method="POST" target="blank">
+                	<table cellpadding="3" cellspacing="0" width="100%">
+                    	<tr><th colspan="2" bgcolor="##C4CDE7">Students Currently Placed</th></tr>
+                        <tr>
+							<td align="right">Program :</td>
+							<td>
+                                <cfselect name="programid" multiple size="5">
+                                    <cfloop query="get_programs"><option value="#programid#">#programname#</option></cfloop>
+                                </cfselect>
+							</td>
+						</tr>
+                        <tr>
+                                <td align="right">Order By :</td>
+                                <td>
+                                    <cfselect name="orderBy">
+                                        <option value="1">Student</option>
+                                        <option value="2">Host Family</option>
+                                        <option value="3">School</option>
+                                    </cfselect>
+                                </td>
+                            </tr>	
+                        <tr><td colspan="2" align="center" bgcolor="##C4CDE7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
+                    </table>
+                </cfform>
+            </td>
+            <td width="50%" valign="top">
+            	<cfform action="reports/school_contact_report.cfm" method="POST" target="blank">
+                    <table cellpadding=3 cellspacing="0" width="100%">
+                        <tr><th colspan="2" bgcolor="##C4CDE7">School Contact Report</th></tr>
+                  			<tr>
+                                <td align="right">School :</td>
+                                <td>
+                                    <cfselect name="schoolID">
+                                        <option value="0">All</option>
+                                        <cfloop query="qGetPHPSchools">
+                                            <option value="#schoolid#">#schoolname#</option>
+                                        </cfloop>
+                                    </cfselect>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">Order By :</td>
+                                <td>
+                                    <cfselect name="orderBy">
+                                        <option value="1">School</option>
+                                        <option value="2">Area Rep</option>
+                                    </cfselect>
+                                </td>
+                            </tr>	
+                  		<tr><td colspan="2" align="center" bgcolor="##C4CDE7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
+                    </table>
+                </cfform>
+            </td>
+		</tr>
+	</table><br>
+    
+    <!--- ROW 5 - 1 box --->
+    <table cellpadding="3" cellspacing="0" align="center" width="50%">
+    	<tr>
+        	<td width="100%" valign="top" align="center">
 				<cfform action="reports/invoice_report.cfm" method="POST" target="blank">
 				<Table cellpadding=3 cellspacing="0" width="100%">
 					<tr><th colspan="2" bgcolor="##C4CDE7">Invoice Report</th></tr>
@@ -224,36 +284,8 @@
 				</table>
 				</cfform>
 			</td>
-            <td width="50%" valign="top">
-            	<cfform action="reports/school_contact_report.cfm" method="POST" target="blank">
-                    <table cellpadding=3 cellspacing="0" width="100%">
-                        <tr><th colspan="2" bgcolor="##C4CDE7">School Contact Report</th></tr>
-                  			<tr>
-                                <td align="right">School :</td>
-                                <td>
-                                    <cfselect name="schoolID">
-                                        <option value="0">All</option>
-                                        <cfloop query="qGetPHPSchools">
-                                            <option value="#schoolid#">#schoolname#</option>
-                                        </cfloop>
-                                    </cfselect>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td align="right">Order By :</td>
-                                <td>
-                                    <cfselect name="orderBy">
-                                        <option value="1">School</option>
-                                        <option value="2">Area Rep</option>
-                                    </cfselect>
-                                </td>
-                            </tr>	
-                  		<tr><td colspan="2" align="center" bgcolor="##C4CDE7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
-                    </table>
-                </cfform>
-            </td>
-		</tr>
-	</table><br>
+        </tr>
+    </table>
 
 </td>
 </tr>
