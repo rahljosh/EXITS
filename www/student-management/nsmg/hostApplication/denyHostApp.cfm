@@ -1,6 +1,9 @@
 <link href="http://ise.111cooper.com/hostApp/css/hostApp.css" rel="stylesheet" type="text/css" />
 <link href="http://ise.exitsapplication.com/nsmg/linked/css/baseStyle.css" rel="stylesheet" type="text/css" />
-
+<cfparam name="url.hostid" default="">
+<cfif val(url.hostid)>
+	<cfset client.hostid = #url.hostid#>
+</cfif>
 <Cfquery name="getDeniedReasons" datasource="#application.dsn#">
 select tdld.arearepDenial, tdld.regionalAdvisorDenial, tdld.regionalDirectorDenial,tdld.facDenial, tdl.description 
 from smg_ToDoListDates tdld
@@ -20,7 +23,9 @@ where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
 <Cfif isDefined('form.sendEmail')>
 <cfquery datasource="#application.dsn#">
 update smg_hosts
-	set hostAppStatus = 8
+	set hostAppStatus = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="8">,
+    applicationDenied = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
+    reasonAppDenied = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.additionalInfo#">
 where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
 </cfquery>
 <cfsavecontent variable="denyApp">      
@@ -187,7 +192,7 @@ The following additional information was added:<br><Br>
                 <em>this window should close shortly</em>
                 </div>
             
-                 <body onload="parent.$.fn.colorbox.close();">
+                 <body onLoad="parent.$.fn.colorbox.close();">
                     <cfabort>
 
 </Cfif>
