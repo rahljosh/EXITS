@@ -81,7 +81,7 @@ SELECT sc.creditid, sc.agentid, sc.stuid, sc.invoiceid, sc.description, sc.type,
 			WHEN sp.type = 22 THEN 8
 			WHEN sp.type = 23 THEN 8
             WHEN s.companyid IS NULL THEN #CLIENT.companyID#
-			ELSE s.companyid
+			ELSE sc.companyid
 			END) AS testCompId
 FROM smg_credit sc
 LEFT JOIN smg_students s ON s.studentid = sc.stuid
