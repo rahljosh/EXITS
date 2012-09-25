@@ -75,7 +75,13 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
 				<!--- Host Header --->
                <table width=800 align="Center">
                     <tr>
-                        <td colspan=3><img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
+                        <td colspan=3>
+                        <cfif client.companyid neq 10>
+                        <img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/Pdf_Headers_02.jpg">
+                        <cfelse>
+                         <img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/Pdf_Headers_10.jpg">
+                        </cfif>
+                        </td>
                     </tr>
                     <tr>
                     	<td>
@@ -402,7 +408,13 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
             <td>
    				 <table width=800>
                     <tr>
-                        <td colspan=3 ><img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
+                        <td colspan=3 >
+                        <cfif client.companyid neq 10>
+                        <img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/Pdf_Headers_02.jpg">
+                        <cfelse>
+                         <img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/Pdf_Headers_10.jpg">
+                        </cfif>
+                        </td>
                     </tr>
                     <tr>
                     
@@ -450,7 +462,14 @@ son or daughter and their parents, such as personalities, background, lifestyle 
             <td>
    				 <table width=800>
                     <tr>
-                        <td colspan=3 align="Center"><img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
+                        <td colspan=3 align="Center">
+                        
+                        <cfif client.companyid neq 10>
+                        <img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/Pdf_Headers_02.jpg">
+                        <cfelse>
+                         <img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/Pdf_Headers_10.jpg">
+                        </cfif>
+                        </td>
                     </tr>
                     <tr>
                     
@@ -528,7 +547,13 @@ son or daughter and their parents, such as personalities, background, lifestyle 
             <td>
    				 <table width=800>
                     <tr>
-                        <td colspan=3><img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
+                        <td colspan=3>
+                        <cfif client.companyid neq 10>
+                        <img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/Pdf_Headers_02.jpg">
+                        <cfelse>
+                         <img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/Pdf_Headers_10.jpg">
+                        </cfif>
+                        </td>
                     </tr>
                     <tr>
                     
@@ -680,7 +705,13 @@ if they are different from your own?</span></td><td>#CapFirst1(qGetHostFamily.ch
             <td>
    				 <table width=800>
                     <tr>
-                        <td colspan=3><img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
+                        <td colspan=3>
+                        <cfif client.companyid neq 10>
+                        <img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/Pdf_Headers_02.jpg">
+                        <cfelse>
+                         <img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/Pdf_Headers_10.jpg">
+                        </cfif>
+                        </td>
                     </tr>
                     <tr>
                     
@@ -791,7 +822,13 @@ where referencefor = <cfqueryparam cfsqltype="integer" value="#url.hostID#">
             <td>
    				 <table width=800>
                     <tr>
-                        <td colspan=3><img src="../pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
+                        <td colspan=3>
+                        <cfif client.companyid neq 10>
+                        <img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/Pdf_Headers_02.jpg">
+                        <cfelse>
+                         <img src="http://ise.exitsapplication.com/nsmg/pics/hostAppBanners/Pdf_Headers_10.jpg">
+                        </cfif>
+                        </td>
                     </tr>
                     <tr>
                     
