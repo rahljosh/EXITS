@@ -236,7 +236,7 @@
 	<cflocation url="?curdoc=old_initial_welcome">
 </cfif>
 <!--- OFFICE USERS - INTL. REPS AND BRANCHES --->
-<cfif listFind("1,2,3,4,5,6,7,8,11", CLIENT.usertype)>
+<cfif listFind("1,2,3,4,5,6,7,8,11,15", CLIENT.usertype)>
 <!----news section, if there is a news item---->
     <table width=100%>
         <tr>
@@ -272,9 +272,79 @@
             <td></td>
         </tr>
     </table>
+<Cfif client.usertype eq 15>
+ <!----Current Items ---->
+		   <div class="rdholder" style="width:100%;float:left;"> 
+				<div class="rdtop"> 
+                <span class="rdtitle">Online Reports</span> 
+               
+            	</div> <!-- end top --> 
+             <div class="rdbox">
+             <table width=90% align="center" cellpadding=4>
+             	<tr>
+                	
+			
+                    <td><img src="pics/icons/annualPaperwork.png" border="0" title="Click Here to fill out  your annual paperwork" /></td>
+				     <td>
+                     	<a href="index.cfm?curdoc=user/index">
+                          Yearly Paperwork
+                        </a>
+                    </td>
+                    <td></td><td></td>
+                 </tr>
+             
+                    	<tr>
+                        <!----Progress Reports---->
+                        	<Td width=22><img src="pics/icons/onlineReports.png" /></Td><td>          
+							<cfif client.usertype eq 15>
+                                <a href="index.cfm?curdoc=secondVisitReports">Second Visit Reports</a><br>
+                            <cfelse>
+                                <a href="index.cfm?curdoc=progress_reports">Progress Reports</a>
+                                / 
+                                <a href="index.cfm?curdoc=secondVisitReports">Second Visit Reports</a>
+                            </cfif>
+                            </td>
+                        
+                        <!----View Pending Placements---->
+                        <cfif client.usertype lte 7>
+                        
+                        	<Td  width=22><img src="pics/icons/viewPlacements.png" /></Td><td>
+                            
+                            <a href="index.cfm?curdoc=pendingPlacementList">View Pending Placements</a></td>
+                        
+                        </cfif>
+                      	<!----Help Project---->
+                        </tr>
+                         <tr>
+                        <cfif (CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12 or client.companyID eq 10) and client.usertype lte 7>
+                       
+                        	<Td  width=22><img src="pics/icons/HelpHours.png" /></Td><td>	
+                            <a href="index.cfm?curdoc=project_help">H.E.L.P. Community Service Hours</a></td>
+                      
+                        </cfif>
+                        	
+                        
+                        
+                        <cfif APPLICATION.CFC.USER.isOfficeUser() and (CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12 or client.companyid eq 10)>
+                      
+                        	<Td  width=22><img src="pics/icons/webex.png" /></Td><td>	
+                            <a href="index.cfm?curdoc=calendar/index">WebEx Calendar</a></td>
+                        
+                        </cfif>
+                        </tr>
+                      </Table>
+                        
+                  
+                
+    		</div>
+            	<div class="rdbottom"></div> <!-- end bottom --> 
+         	</div>
 
+<CFABORT>
+</CFIF>
 <!----Left column for alignment purposes---->
 <div style="width:49%;float:left;display:block;">
+
 			<!----Student Applications---->
 		   <div class="rdholder" style="width:100%;float:left;"> 
 				<div class="rdtop"> 
@@ -288,7 +358,7 @@
             	<div class="rdbottom"></div> <!-- end bottom --> 
          	</div>
   			<!----End Student Applications---->
-            
+          
             <!----Current Items ---->
 		   <div class="rdholder" style="width:100%;float:left;"> 
 				<div class="rdtop"> 
@@ -299,20 +369,13 @@
              <table width=90% align="center" cellpadding=4>
              	<tr>
                 	
-			<cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, CLIENT.companyID)>
-                            <Td width=22><img src="pics/icons/DOS.png" border="0" title="Click Here to Take the DOS Certification Test" /></Td>
-                            <td>
-                            <!----<a href="index.cfm?curdoc=user/index&uniqueID=#CLIENT.uniqueID#&action=trainCasterLogin" target="_blank" title="Click Here to Take the DOS Test">---->
-                              DOS Certification
-                            </a>
-                            </td>
-                        </cfif>
-                    </td>
+			
                     <td><img src="pics/icons/annualPaperwork.png" border="0" title="Click Here to fill out  your annual paperwork" /></td>
-				     <td>		<a href="index.cfm?curdoc=forms/yearly_agreement">
+				     <td>		<a href="index.cfm?curdoc=user/index">
                           Yearly Paperwork
                         </a>
                     </td>
+                    <td></td><td></td>
                  </tr>
              
                     	<tr>
@@ -1070,4 +1133,5 @@
 <cfinclude template="table_footer.cfm">
 </cfif>
 ---->
+
 </cfoutput>
