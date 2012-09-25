@@ -4,10 +4,12 @@
     from smg_hosts
     where hostid = #client.hostid#
     </cfquery>
-    <cfset setStatus = #client.tempusertype# - 1>
+    <cfset setStatus = #client.usertype# - 1>
     
     <cfquery datasource="#application.dsn#">
-        update smg_hosts set hostAppStatus = <Cfif client.tempusertype lte 4> 4 <cfelse>#setStatus#</Cfif>
+        update smg_hosts set hostAppStatus = <Cfif client.usertype lte 4> 4 <cfelse>#setStatus#</Cfif>,
+        	applicationDenied = <cfqueryparam  cfsqltype="CF_SQL_DATE" null="yes">,
+    reasonAppDenied = <cfqueryparam  cfsqltype="CF_SQL_VARCHAR" null="yes">
         where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
     </cfquery>
     <Cfquery name="repInfo" datasource="#application.dsn#">
@@ -41,20 +43,20 @@
         LEFT JOIN smg_users on smg_users.userid = smg_regions.regionfacilitator
         WHERE regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#appStatus.regionid#">
     </cfquery>
-   <cfif client.tempusertype eq 7>
+   <cfif client.usertype eq 7>
 	   <Cfif get_advisor_for_rep.email is ''>
         <cfset mailTo = #get_regional_director.email#>
        <cfelse>
         <cfset mailTo = #get_advisor_for_rep.email#>
        </Cfif>
-   <Cfelseif client.tempusertype eq 6>
+   <Cfelseif client.usertype eq 6>
    	<cfset mailTo = #get_regional_director.email#>
-   <cfelseif client.tempusertype eq 5>
+   <cfelseif client.usertype eq 5>
    	<cfset mailTo = #get_facilitator.email#>
-   <cfelseif client.tempusertype lte 4>
+   <cfelseif client.usertype lte 4>
    	<cfset mailTo = "#get_regional_director.email#,#repInfo.email#">
    </cfif>
-   <cfif client.tempusertype lte 4>
+   <cfif client.usertype lte 4>
       	<cfsavecontent variable="nextLevel">                      
 		<cfoutput>
         Great News!<br />
@@ -68,7 +70,7 @@
 		<cfoutput>
           The #appStatus.familylastname# application has been approved by #client.name# and is ready for your approval. 
         <br /><br />  
-          You can review the app <a href="http://ise.exitsapplication.com/nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=#client.tempusertype#">here</a>.
+          You can review the app <a href="http://ise.exitsapplication.com/nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=#client.usertype#">here</a>.
         
         
         </cfoutput>
@@ -88,17 +90,17 @@
       <div align="center">
      <h2>Application has been marked as Approved.</h2>
      <br><br>  An email notification was sent to
-       <cfif client.tempusertype eq 7>
+       <cfif client.usertype eq 7>
    			<cfif get_advisor_for_rep.firstname is ''>
              	#get_regional_director.firstname# #get_regional_director.lastname# (#mailto#)
             <cfelse>    
    				#get_advisor_for_rep.firstname# #get_advisor_for_rep.lastname# (#mailto#)
             </cfif>
-   <Cfelseif client.tempusertype eq 6>
+   <Cfelseif client.usertype eq 6>
    #get_regional_director.firstname# #get_regional_director.lastname# (#mailto#)
-   <cfelseif client.tempusertype eq 5>
+   <cfelseif client.usertype eq 5>
    	#get_facilitator.firstname# #get_facilitator.firstname# (#mailto#)
-   <cfelseif client.tempusertype lte 4>
+   <cfelseif client.usertype lte 4>
    #get_regional_director.firstname# #get_regional_director.firstname# (#mailto#) and  #repInfo.firstname# #repInfo.lastname# (#repInfo.email#)
    </cfif>
    </h2></div>
