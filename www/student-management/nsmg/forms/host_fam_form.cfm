@@ -46,7 +46,7 @@
     <cfparam name="FORM.companyid" default="">
     <cfparam name="FORM.regionid" default="">
     <cfparam name="FORM.arearepid" default="">
-    <cfparam name="FORM.submit_Start" default="paper">
+    <cfparam name="FORM.submit_Start" default="">
     <cfparam name="currentHost" default="0">
 
 	<cfscript>
@@ -113,40 +113,77 @@
 			vDisplayMotherSSN = 1;
 		}
 	</cfscript>
-    		
+    <cfif form.submit_start is ''>
+    		<cfscript>
+			FORM.familyLastName = qGetHostFamilyInfo.familyLastName;
+			FORM.fatherLastName = qGetHostFamilyInfo.fatherLastName;
+			FORM.fatherFirstName = qGetHostFamilyInfo.fatherFirstName;
+			FORM.fatherMiddleName = qGetHostFamilyInfo.fatherMiddleName;
+			FORM.fatherDOB = qGetHostFamilyInfo.fatherDOB;
+			FORM.fatherSSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetHostFamilyInfo.fatherSSN, displayType='hostFamily');
+			FORM.fatherWorkType = qGetHostFamilyInfo.fatherWorkType;
+			FORM.father_cell = qGetHostFamilyInfo.father_cell;
+			FORM.motherFirstName = qGetHostFamilyInfo.motherFirstName;
+			FORM.motherLastName = qGetHostFamilyInfo.motherLastName;
+			FORM.motherMiddleName = qGetHostFamilyInfo.motherMiddleName;
+			FORM.motherDOB = qGetHostFamilyInfo.motherDOB;
+			FORM.motherSSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetHostFamilyInfo.motherSSN, displayType='hostFamily');
+			FORM.motherWorkType = qGetHostFamilyInfo.motherWorkType;
+			FORM.mother_cell = qGetHostFamilyInfo.mother_cell;
+			FORM.address = qGetHostFamilyInfo.address;
+			FORM.address2 = qGetHostFamilyInfo.address2;
+			FORM.city = qGetHostFamilyInfo.city;
+			FORM.state = qGetHostFamilyInfo.state;
+			FORM.zip = qGetHostFamilyInfo.zip;
+			FORM.phone = qGetHostFamilyInfo.phone;
+			FORM.email = qGetHostFamilyInfo.email;
+			FORM.companyid = qGetHostFamilyInfo.companyid;
+			FORM.regionid = qGetHostFamilyInfo.regionid;
+			FORM.arearepid = qGetHostFamilyInfo.arearepid;
+			
+			// the default values in the database for these used to be "na", so remove any.
+			if ( FORM.father_cell EQ 'na' ) {
+				FORM.father_cell = '';
+            }
+			
+			if ( FORM.mother_cell EQ 'na') {
+				FORM.mother_cell = '';
+			}
+    	</cfscript>
+        </cfif>
 	<!--- FORM Submitted --->
     <cfif FORM.submitted>
-    
-		<cfif FORM.submit_Start EQ 'eHost'>
+		
+		
         	<cfif form.email is not ''>
-            <cfquery name="qCheckEmail" datasource="#application.dsn#">
-                SELECT 
-                	hostid, 
-                    familylastname,
-                    password
-                FROM 
-                	smg_hosts
-                    
-                WHERE
-                	<cfif VAL(FORM.hostID)>
-                    	hostid != <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.hostid#">
-					<cfelse>
-                	    email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.email#">
-					</cfif>
-            </cfquery>
-            <cfif qCheckEmail.recordcount eq 1>
-            <cfset currentHost = #qCheckEmail.hostid#>
-            <cfif qCheckEmail.password is not ''>
-            <Cfset strPassword = '#qCheckEmail.password#'>
-            </cfif>
-            <Cfelse>
-            <cfset qCheckEmail.recordcount = 0>
-            </cfif>
+                <cfquery name="qCheckEmail" datasource="#application.dsn#">
+                    SELECT 
+                        hostid, 
+                        familylastname,
+                        password
+                    FROM 
+                        smg_hosts
+                        
+                    WHERE
+                        <cfif VAL(FORM.hostID)>
+                            hostid != <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.hostid#">
+                        <cfelse>
+                            email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.email#">
+                        </cfif>
+                </cfquery>
+				<cfif qCheckEmail.recordcount eq 1>
+                <cfset currentHost = #qCheckEmail.hostid#>
+                    <cfif qCheckEmail.password is not ''>
+                    <Cfset strPassword = '#qCheckEmail.password#'>
+                    </cfif>
+                <Cfelse>
+                    <cfset qCheckEmail.recordcount = 0>
+                </cfif>
        
 			<cfscript>
 				// Data Validation - Check required Fields
 				
-				if ( NOT LEN(FORM.email) ) {
+				if ( NOT LEN(FORM.email) and (submit_start EQ 'eHost') ) {
 					SESSION.formErrors.Add("An email is required for the eHost option.");
 				}
 					if ( LEN(FORM.email) AND NOT isValid("email", Trim(FORM.email)) ) {
@@ -154,7 +191,7 @@
 				} 
             </cfscript>
 		</cfif>
-
+	
 		<cfscript>
 			// Data Validation - Check required Fields
 			if ( FORM.lookup_success NEQ 1 ) {
@@ -270,8 +307,8 @@
                 }				
             </cfscript>
 
-			<cfif VAL(currentHost)>
-				    
+			<cfif VAL(currentHost) OR val(form.hostid)>
+           s
                 <!--- Update --->
                 <cfquery datasource="MySql" result="test">
                     UPDATE 
@@ -312,9 +349,13 @@
                         active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                         
                     WHERE 
-                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#currentHost#">
+                    	<Cfif val(form.hostID)>
+                        	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.hostid#">
+                        <cfelse>
+                        	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#currentHost#">
+                		</Cfif>
                 </cfquery>			
-                
+             
             <cfelse>
 				
 				<!--- Insert Host Family --->                  
@@ -570,7 +611,15 @@
                 </cfif>
 		
 			<!--- VAL(FORM.hostID) --->
-
+			<CFIF VAL(FORM.HOSTID)>
+            <cfscript>
+                // Set Page Message
+                // SESSION.pageMessages.Add("Form successfully submitted.");
+                
+                // Reload page with updated information
+                location("#CGI.SCRIPT_NAME#?curdoc=host_fam_info&hostID=#FORM.HOSTID#", "no");
+            </cfscript>
+            <CFELSE>
 			<cfscript>
                 // Set Page Message
                 // SESSION.pageMessages.Add("Form successfully submitted.");
@@ -578,7 +627,7 @@
                 // Reload page with updated information
                 location("#CGI.SCRIPT_NAME#?curdoc=host_fam_info&hostID=#currentHost#", "no");
             </cfscript>
-      
+      		</CFIF>
     	</cfif> <!---  NOT SESSION.formErrors.length() --->
     
 	<cfelse>
@@ -621,7 +670,9 @@
     	</cfscript>
 
     </cfif> <!--- FORM Submitted --->
-  </cfif>  
+    <!--- Update --->
+        
+   
 </cfsilent>
 
 <style type="text/css">
@@ -792,7 +843,7 @@
                 </tr>
                 <tr>
                     <td class="label">Address:</td>
-                    <td><input type="text" name="address" value="#FORM.address#" size="40" class="largeField" readonly="readonly"></td>
+                    <td><input type="text" name="address" value="#FORM.address#" size="40" class="largeField" readonly></td>
                 </tr>
                 <tr>
                     <td></td>
@@ -800,15 +851,15 @@
                 </tr>
                 <tr>			 
                     <td class="label">City</td>
-                    <td><input type="text" name="city" value="#FORM.city#" size="20" class="largeField" readonly="readonly"></td>
+                    <td><input type="text" name="city" value="#FORM.city#" size="20" class="largeField" readonly></td>
                 </tr>
                 <tr>
                     <td class="label">State:</td>
-                    <td><input type="text" name="state" value="#FORM.state#" size="2" maxlength="2" readonly="readonly"></td>
+                    <td><input type="text" name="state" value="#FORM.state#" size="2" maxlength="2" readonly></td>
                 </tr>
                 <tr>
                     <td class="zip">Zip:</td>
-                    <td><input type="text" name="zip" value="#FORM.zip#" class="smallField" maxlength="5" readonly="readonly"></td>
+                    <td><input type="text" name="zip" value="#FORM.zip#" class="smallField" maxlength="5" readonly></td>
                 </tr>
             
 			<!--- Regular Address --->
@@ -855,7 +906,7 @@
                                 Address line 2 will not be included below.<br />
                                 If you have trouble submitting an address, <a href="mailto:#APPLICATION.CFC.UDF.getSessionEmail(emailType='support')#?subject=Address Lookup">send it to us</a>.<br />
                                 <input type="button" value="Lookup" onClick="showLocation();" /><br />
-                                <textarea name="lookup_address" readonly="readonly" rows="2" cols="30">Lookup address will be displayed here.</textarea>
+                                <textarea name="lookup_address" readonly rows="2" cols="30">Lookup address will be displayed here.</textarea>
                         	</font>
                     	</td>
                     </tr>
@@ -980,19 +1031,21 @@
             <cfif qGetHostFamilyInfo.recordCount AND ListFind("1,2,3,4", CLIENT.usertype)>
                 <td valign="top">
 					
-                        <a href="?curdoc=querys/delete_host&hostID=#URL.hostID#" onClick="return confirm('You are about to delete this Host Family. You will not be able to recover this information. Click OK to continue.')" style="float:left;">
+                        <a href="" onClick="return confirm('You are about to delete this Host Family. You will not be able to recover this information. Click OK to continue.')" style="float:left;">
                             <img src="pics/delete.gif" border="0">
                         </a>
                  </td>
            </cfif>
+           <cfif client.companyid neq 10>
           		<td valing="top" align="center">
 				
                 (Host Fam Fills Out App)<br />
                    <input name="Submit_start" type="submit" value="eHost" src="pics/buttons_ehost.png" alt="Start E-App" border="0" class="buttonBlue" /> 
                
                 </td>
+                </cfif>
                 <td align="Center">   
-                (Office User Fills Out App)<br />
+                (Office User Fills Out App / Update Info)<br />
                    <input name="Submit_start" type="submit" value="Submit" src="pics/buttons_SUBMIT.png" alt="Submit Paper Application" border="0" class="buttonRed" />
                 </td>
             </tr>
