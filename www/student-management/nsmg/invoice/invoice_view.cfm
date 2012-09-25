@@ -61,20 +61,52 @@
                     WHEN p.type = 23 THEN 8
                     ELSE c.companyid
                 END
-			) AS setCompanyID
+			) AS setCompanyID,
+            (
+            	CASE 
+                    <!--- Trainee --->
+                    WHEN p.type = 7 THEN ec.firstname
+                    WHEN p.type = 8 THEN ec.firstname
+                    WHEN p.type = 9 THEN ec.firstname
+                    <!--- WAT --->
+                    WHEN p.type = 11 THEN ec.firstname
+                    <!--- H2B --->
+                    WHEN p.type = 22 THEN ec.firstname
+                    WHEN p.type = 23 THEN ec.firstname
+                    ELSE ss.firstname
+                END
+			) AS firstname,
+            (
+            	CASE 
+                    <!--- Trainee --->
+                    WHEN p.type = 7 THEN ec.lastname
+                    WHEN p.type = 8 THEN ec.lastname
+                    WHEN p.type = 9 THEN ec.lastname
+                    <!--- WAT --->
+                    WHEN p.type = 11 THEN ec.lastname
+                    <!--- H2B --->
+                    WHEN p.type = 22 THEN ec.lastname
+                    WHEN p.type = 23 THEN ec.lastname
+                    ELSE ss.familylastname
+                END
+			) AS lastname
         FROM 
             smg_charges c
         LEFT OUTER JOIN 
             smg_programs p ON p.programid = c.programid
+        LEFT OUTER JOIN 
+            smg_students ss ON ss.studentID = c.stuID
+        LEFT OUTER JOIN 
+            extra_candidates ec ON ec.candidateID = c.stuID
         WHERE 
             c.invoiceid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.id)#">
         GROUP BY 
             c.stuid
         ORDER BY 
-            c.stuid, 
-            c.chargeid
+            firstname,
+            lastname
     </cfquery>
-
+    
     <cfquery name="qGetInvoicePayments" datasource="MySQL">
         SELECT 
             SUM(spc.amountapplied) AS amountapplied,
@@ -484,40 +516,6 @@
 
         <cfloop query="qGetInvoiceInfo">
         
-            <!--- select query to view high-school OR work invoice --->
-            <cfswitch expression="#qGetInvoiceInfo.progType#">
-            	
-                <!--- work programs --->      
-                <cfcase value="7,8,9,11,22,23">  
-                    
-                    <cfquery name="qGetStudentName" datasource="mysql">
-                        SELECT 
-                        	firstname, 
-                            lastname AS familylastname
-                        FROM 
-                        	extra_candidates
-                        WHERE 
-                        	candidateid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetInvoiceInfo.stuid#">
-                    </cfquery>
-                    
-                </cfcase>
-                
-                <!--- High School --->
-                <cfdefaultcase>
-                
-                    <cfquery name="qGetStudentName" datasource="mysql">
-                    	SELECT 
-                        	firstname, familylastname
-                    	FROM 
-                        	smg_students
-                    	WHERE 
-                        	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetInvoiceInfo.stuid#">
-                    </cfquery>
-                    
-                </cfdefaultcase>
-                
-            </cfswitch>
-            
             <cfquery name="qGetChargeCount" datasource="MySQL">
                 SELECT 	
                 	chargeid, 
@@ -547,7 +545,7 @@
                 <tr>
                     <td>
 						<cfif qGetChargeCount.CurrentRow EQ 1>
-                            #qGetStudentName.firstname# #qGetStudentName.familylastname# (###qGetInvoiceInfo.stuid#)
+                            #qGetInvoiceInfo.firstname# #qGetInvoiceInfo.lastname# (###qGetInvoiceInfo.stuid#)
 						</cfif>
                     </td>
                     <td>
