@@ -131,7 +131,7 @@ AND
              </cfif>
               <Cfif client.usertype gt 4>
                            	AND arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-                           </Cfif>
+ order by applicationDenied                          </Cfif>
 </Cfquery>
 <cfform method="post" action="?curdoc=hostApplication/listOfApps&status=#url.status#">
 
@@ -146,14 +146,15 @@ AND
              <div class="rdbox">
 			<table width=98% cellpadding=8 cellspacing=0 align="center">
             	<tr>
-                	<th align="left">ID</th><th align="left">Family Name</th><th  align="left">Father</th><th  align="left">Mother</th><th align="left">City, State</th><Th align="left">Email</Th><th>Application</th>
+                	<th align="left">ID</th><th align="left">Family Name</th><th  align="left">Father</th><th  align="left">Mother</th><th align="left">City, State</th><Th align="left">Email</Th><th align="left">Denied</th><th>Application</th>
                 </tr>
                 <cfif hostApps.recordcount eq 0>
                 	<td colspan="6"> There are no applications to display</td>
                 <cfelse>
                 <cfloop query="hostApps">
                 <tr <cfif currentrow mod 2>bgcolor="##efefef"</cfif>>
-                	<td>#hostid#</td><td><a href="index.cfm?curdoc=hostApplication/toDoList&hostid=#hostid#&status=#url.status#">#familylastname#</a></td><td>#fatherfirstname#</td><td>#motherfirstname#</td><td>#city#, #state#</td><td>#email#</td>
+                	<td>#hostid#</td><td><a href="index.cfm?curdoc=hostApplication/toDoList&hostid=#hostid#&status=#url.status#">#familylastname#</a></td><td>#fatherfirstname#</td><td>#motherfirstname#</td><td>#city#, #state#</td><td>#email#</td><td ><Cfif applicationDenied is not ''>
+                    <a class='iframe' href="hostApplication/deniedReasons.cfm?hostid=#hostid#"> #dateFormat(applicationDenied, 'mm/dd/yyyy')#</a></Cfif></td>
                     <td width=200>
                     		<table border=0>
                            			<tr>
@@ -174,7 +175,8 @@ AND
             </td>
             
             
-                </tr>	
+                </tr>
+              
                 </cfloop>
                 </cfif>
                </table>
