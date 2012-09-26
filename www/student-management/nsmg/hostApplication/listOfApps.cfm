@@ -1,5 +1,5 @@
  <link rel="stylesheet" href="../linked/css/colorbox2.css" />
- 
+
 <Cfparam name="url.usertype" default="#client.usertype#">
 <Cfparam name="usertype" default="#client.usertype#">
  <!----
@@ -116,7 +116,19 @@
    </h2></div>
 </cfoutput>
 </cfif>    
-   
+
+<cfif client.usertype eq 6>
+<cfset userUnderList =''>
+	<cfquery name="usersUnder" datasource="#application.dsn#">
+    select userid
+    from user_access_rights
+    where regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.regionid#">
+    AND advisorid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+    </cfquery>
+    <cfloop query="usersUnder">
+    <Cfset userUnderList = #ListAppend(userUnderList, userid)#> 
+	</cfloop>
+</cfif>
 
 <Cfquery name="hostApps" datasource="#application.dsn#">
 select *
@@ -129,10 +141,20 @@ AND
              <cfelse>
                 < <cfqueryparam cfsqltype="cf_sql_integer" value="6">
              </cfif>
-              <Cfif client.usertype gt 4>
-                           	AND arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
- order by applicationDenied                          </Cfif>
+              <Cfif client.usertype eq 7>
+                  AND arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+              <cfelseif client.usertype eq 6>
+              	and 
+              		arearepid in (#userUnderList#) 
+			  <cfelseif client.usertype eq 5>
+              	  AND regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.regionid#">
+               </Cfif>
+              
+ order by applicationDenied                         
 </Cfquery>
+
+
+
 <cfform method="post" action="?curdoc=hostApplication/listOfApps&status=#url.status#">
 
 
