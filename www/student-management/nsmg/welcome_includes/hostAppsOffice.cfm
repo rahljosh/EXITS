@@ -22,6 +22,20 @@
 			<tr>
 				<cfloop list = '9,8,7,6,5,4' index="i">
                     <td align="center">	
+                    
+					<cfif client.usertype eq 6>
+                    <cfset userUnderList =''>
+                        <cfquery name="usersUnder" datasource="#application.dsn#">
+                        select userid
+                        from user_access_rights
+                        where regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.regionid#">
+                        AND advisorid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+                        </cfquery>
+                        <cfloop query="usersUnder">
+                        <Cfset userUnderList = #ListAppend(userUnderList, userid)#> 
+                        </cfloop>
+                    </cfif>
+
                         <cfquery name="apps" datasource="#application.dsn#">
                             SELECT 
                             	COUNT(hostid) AS count 
@@ -43,15 +57,19 @@
 							
                            		AND 
                                 	companyID 
-                                    <cfif client.companyid eq 10>
-                                    	 = <cfqueryparam cfsqltype="cf_sql_integer" value="10">
+                                       <cfif client.companyid eq 10>
+                                         = <cfqueryparam cfsqltype="cf_sql_integer" value="10">
                                      <cfelse>
-                                     	< <cfqueryparam cfsqltype="cf_sql_integer" value="6">
+                                        < <cfqueryparam cfsqltype="cf_sql_integer" value="6">
                                      </cfif>
-                           <Cfif client.usertype gt 4>
-                           	AND arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-                           </Cfif>
-                      		
+								  <Cfif client.usertype eq 7>
+                                      AND arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+                                  <cfelseif client.usertype eq 6>
+                                    and 
+                                        arearepid in (#userUnderList#) 
+                                  <cfelseif client.usertype eq 5>
+                                      AND regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.regionid#">
+                                   </Cfif>
                         </cfquery> 
                         
                         <cfoutput><a href="index.cfm?curdoc=hostApplication/listOfApps&status=#i#">#apps.count#</a></cfoutput>
