@@ -138,12 +138,12 @@
             	*
             FROM 
             	smg_users
-           
             WHERE 
             	smg_users.username = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(username)#">
             AND 
             	smg_users.password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(password)#">
-
+			AND
+            	smg_users.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         </cfquery>
         
         <cfif qAuthenticateUser.recordcount EQ 0>
