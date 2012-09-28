@@ -8,6 +8,7 @@
 	<cfparam name="FORM.hostCompanyID" default="0">
 	<cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.submitted" default="0">
+    <cfparam name="FORM.placementType" default="All">
     <cfparam name="FORM.studentStatus" default="All">
 
     <cfscript>
@@ -38,18 +39,33 @@
                 ehc.hostCompanyID,
                 ehc.name
             FROM 
-            	extra_hostcompany ehc    
-			INNER JOIN
-            	extra_candidates ec ON ec.hostCompanyID = ehc.hostCompanyID
-                	AND
+            	extra_hostcompany ehc
+         	WHERE
+            	ehc.hostCompanyID IN (
+                	SELECT 
+                    	ecpc.hostCompanyID 
+                 	FROM
+                    	extra_candidate_place_company ecpc 
+                 	INNER JOIN 
+                   		extra_candidates ec ON ec.candidateID = ecpc.candidateID
+                 	WHERE
                     	ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
 					AND
                     	ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
                     AND 
                         ec.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
+                  	AND
+                    	ecpc.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                  	<cfif FORM.placementType EQ 1>
+                    	AND
+                        	ecpc.isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                   	<cfelseif FORM.placementType EQ 2>
+                    	AND
+                        	ecpc.isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                    </cfif> )
 
 			<cfif VAL(FORM.hostcompanyID)> 
-                WHERE 
+                AND
                     ehc.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               
             </cfif>
 
@@ -64,7 +80,7 @@
             SELECT 
                 c.candidateID,
                 c.uniqueID,
-                c.hostCompanyID,
+                ecpc.hostCompanyID,
                 c.firstname,             
                 c.lastname, 
                 c.sex, 
@@ -84,7 +100,16 @@
             INNER JOIN
                 smg_users u on u.userid = c.intrep
             INNER JOIN
-            	extra_hostCompany ehc ON ehc.hostCompanyID = c.hostCompanyID
+            	extra_candidate_place_company ecpc ON ecpc.candidateID = c.candidateID
+                	AND
+                    	ecpc.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                  	<cfif FORM.placementType EQ 1>
+                    	AND
+                    		ecpc.isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                    <cfelseif FORM.placementType EQ 2>
+                    	AND
+                        	ecpc.isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                    </cfif>
             LEFT JOIN 
                 smg_countrylist country ON country.countryid = c.home_country
             WHERE 
@@ -99,10 +124,9 @@
    			</cfif>
            	<cfif VAL(FORM.hostcompanyID)> 
                 AND
-                    c.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               
+                    ecpc.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               
 			</cfif>                
        		ORDER BY
-                ehc.name,
                 c.candidateID
 		</cfquery>
 
@@ -180,6 +204,16 @@
                     <cfloop query="qGetProgramList">
                     	<option value="#programID#" <cfif qGetProgramList.programID EQ FORM.programID> selected </cfif> >#programname#</option>
                     </cfloop>
+                </select>
+            </td>
+        </tr>
+        <tr>
+        	<td valign="middle" align="right" class="style1"><b>Placement Type:</b></td>
+            <td>
+            	<select name="placementType" class="style1">
+                	<option value="All" <cfif "All" EQ FORM.placementType> selected</cfif>>All</option>
+                    <option value="1" <cfif "1" EQ FORM.placementType> selected</cfif>>Primary</option>
+                    <option value="2" <cfif "2" EQ FORM.placementType> selected</cfif>>Secondary</option>
                 </select>
             </td>
         </tr>
