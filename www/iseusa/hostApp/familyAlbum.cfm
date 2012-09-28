@@ -129,12 +129,13 @@ $(document).ready(function(){
                    
  					<cfinvoke component="cfc.ResizeThumb" method="GetImage" returnvariable="myImage">
                         <cfinvokeargument name="img" value="#name#"/>
-                       
                         <cfinvokeargument name="mls" value="#client.hostid#"/>
                  	</cfinvoke>
+                    <cfset fileNameNew= "#REReplace("#name#",".(jpg|JPG|JPEG|jpeg)",".jpg")#">
+                    
 				 <cfquery datasource="MySQL">
                     insert into smg_host_picture_album (fk_hostID, filename, cat)
-                    values(#client.hostid#, '#name#', #form.picCat#)
+                    values(#client.hostid#, '#fileNameNew#', #form.picCat#)
                  </cfquery>
                      </cfloop>
                     <cfloop query="currentPics2">
