@@ -335,7 +335,7 @@ Would you be willing to host a student who is allergic to animals?<span class="r
  </table>
  <br />
 <h3>Room Sharing</h3>
-<div class="get_Attention">The student may share a bedroom with someone of the same sex and within a reasonable age difference, but must have his/her own bed.<sup>&dagger;</sup></div>
+<div class="get_Attention">The student may share a bedroom with someone of the same sex and within a reasonable age difference, but must have his/her own bed.</div>
 <table width=100% cellspacing=0 cellpadding=2 class="border">
 <cfif get_kids.recordcount is 0>
 	<Tr>
