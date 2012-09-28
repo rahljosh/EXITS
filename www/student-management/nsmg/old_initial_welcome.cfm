@@ -8,16 +8,16 @@
 	Updated:  	
 
 ----- ------------------------------------------------------------------------- --->
-
+<cfset newPageList = '1,12313,510'>
+<!---
+<Cfif listFind(newPageList, client.userid)>
+	<cflocation url="?curdoc=new_initial_welcome" addtoken="no">
+</Cfif>
+---->
 <!--- Kill Extra Output --->
 <cfsilent>
 
     <cfsetting requesttimeout="200">
-
-	<!--- Old Initial Welcome for Case, WEP and ESI or Intl. Rep and Branch Accounts --->
-    <cfif listFind("8,11", CLIENT.userType)>
-        <cflocation url="index.cfm?curdoc=old_initial_welcome" addtoken="no">
-    </cfif>
 
 	<!--- the number of weeks to display new items. --->
     <cfparam name="url.new_weeks" default="2">
@@ -179,22 +179,6 @@
         	u.datecreated DESC
     </cfquery>
     
-        <cfquery name="placed_students" datasource="#application.dsn#">
-        SELECT COUNT(*) AS Count
-        FROM smg_students
-        INNER JOIN smg_programs ON smg_programs.programid = smg_students.programid
-        INNER JOIN smg_incentive_trip ON smg_programs.tripid = smg_incentive_trip.tripid
-        WHERE smg_students.placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#"> 
-        AND smg_students.host_fam_approved < 5 
-        AND smg_students.active = 1
-        AND smg_incentive_trip.active = 1
-    </cfquery>
-
-    <cfquery name="incentive_trip" datasource="#application.dsn#">
-        SELECT trip_place
-        FROM smg_incentive_trip 
-        WHERE active = 1
-    </cfquery>
 </cfsilent>    
 
 <script type="text/javascript">
@@ -237,28 +221,42 @@
 </style>
 
 <cfoutput>
-<cfif client.companyid eq 10 OR client.companyid eq 14 OR client.companyid eq 11>
-	<cflocation url="?curdoc=old_initial_welcome">
-</cfif>
+
 <!--- OFFICE USERS - INTL. REPS AND BRANCHES --->
-<cfif listFind("1,2,3,4,5,6,7,8,11,15", CLIENT.usertype)>
-<!----news section, if there is a news item---->
+<cfif listFind("1,2,3,4,8,11", CLIENT.usertype)>
+
     <table width=100%>
         <tr>
             <td>Your last visit was on #DateFormat(CLIENT.lastlogin, 'mmm d, yyyy')# MST</td>
             <td align="right">#DateFormat(now(), 'MMMM D, YYYY')#</td>
         </tr>
     </table>
-<cfif news_messages.recordcount gt 0>
-<div class="rdholder"> 
-				<div class="rdtop"> 
-                <span class="rdtitle">Please take note...</span> 
-            </div> <!-- end top --> 
-             <div class="rdbox">
-			<img src="pics/newsIcon.png" width=65 height=65 align="left">
+    
+    <table width=100%>
+        <tr>
+            <td width=40% valign="top">
             
-      
-						<cfloop query="news_messages">
+                <!----News & Announcements---->
+                <table width=100% cellpadding=0 cellspacing=0 border="0" height=24>
+                    <tr height=24>
+                        <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
+                        <td width=26 background="pics/header_background.gif"><img src="pics/news.gif"></td>
+                        <td background="pics/header_background.gif"><h2>Activities Relating to Today</h2></td>
+                        <td background="pics/header_background.gif" width=16></td>
+                        <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
+                    </tr>
+                </table>
+                    
+                <table width=100% cellpadding="4" cellspacing=0 border="0" class="section" >
+                    <tr>
+                        <td  valign="top" width="100%">
+                         
+                            <img src="pics/tower_100.jpg" width=71 height=100 align="left">
+                            <!---<img src="#CLIENT.exits_url#/nsmg/pics/clover.gif" width="75" align="left" >--->
+                            <cfif news_messages.recordcount is 0>
+                                <br>There are currently no announcements or news items.
+                            <cfelse>
+                                <cfloop query="news_messages">
                                     <p><b>#message#</b><br>
                                     #DateFormat(startdate, 'MMMM D, YYYY')# - #replaceList(details, '#chr(13)##chr(10)#,#chr(13)#,#chr(10)#', '<br>,<br>,<br>')#
                                     <cfif additional_file is not ''>
@@ -266,429 +264,55 @@
                                     </cfif>
                                     </p>
                                 </cfloop>
-				
-			</div>
-             <div class="rdbottom"></div> <!-- end bottom --> 
-            
-             </div>
-</cfif>
-    <table width=100%>
-        <tr>
-            <td></td>
-        </tr>
-    </table>
-<Cfif client.usertype eq 15>
- <!----Current Items ---->
-		   <div class="rdholder" style="width:100%;float:left;"> 
-				<div class="rdtop"> 
-                <span class="rdtitle">Online Reports</span> 
-               
-            	</div> <!-- end top --> 
-             <div class="rdbox">
-             <table width=90% align="center" cellpadding=4>
-             	<tr>
-                	
-			
-                    <td><img src="pics/icons/annualPaperwork.png" border="0" title="Click Here to fill out  your annual paperwork" /></td>
-				     <td>
-                     	<a href="index.cfm?curdoc=user/index">
-                          Yearly Paperwork
-                        </a>
-                    </td>
-                    <td></td><td></td>
-                 </tr>
-             
-                    	<tr>
-                        <!----Progress Reports---->
-                        	<Td width=22><img src="pics/icons/onlineReports.png" /></Td><td>          
-							<cfif client.usertype eq 15>
-                                <a href="index.cfm?curdoc=secondVisitReports">Second Visit Reports</a><br>
-                            <cfelse>
-                                <a href="index.cfm?curdoc=progress_reports">Progress Reports</a>
-                                / 
-                                <a href="index.cfm?curdoc=secondVisitReports">Second Visit Reports</a>
                             </cfif>
-                            </td>
-                        
-                        <!----View Pending Placements---->
-                        <cfif client.usertype lte 7>
-                        
-                        	<Td  width=22><img src="pics/icons/viewPlacements.png" /></Td><td>
-                            
-                            <a href="index.cfm?curdoc=pendingPlacementList">View Pending Placements</a></td>
-                        
-                        </cfif>
-                      	<!----Help Project---->
-                        </tr>
-                         <tr>
-                        <cfif (CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12 or client.companyID eq 10) and client.usertype lte 7>
-                       
-                        	<Td  width=22><img src="pics/icons/HelpHours.png" /></Td><td>	
-                            <a href="index.cfm?curdoc=project_help">H.E.L.P. Community Service Hours</a></td>
-                      
-                        </cfif>
-                        	
-                        
-                        
-                        <cfif APPLICATION.CFC.USER.isOfficeUser() and (CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12 or client.companyid eq 10)>
-                      
-                        	<Td  width=22><img src="pics/icons/webex.png" /></Td><td>	
-                            <a href="index.cfm?curdoc=calendar/index">WebEx Calendar</a></td>
-                        
-                        </cfif>
-                        </tr>
-                      </Table>
-                        
-                  
-                
-    		</div>
-            	<div class="rdbottom"></div> <!-- end bottom --> 
-         	</div>
-
-<CFABORT>
-</CFIF>
-<!----Left column for alignment purposes---->
-<div style="width:49%;float:left;display:block;">
-
-			<!----Student Applications---->
-		   <div class="rdholder" style="width:100%;float:left;"> 
-				<div class="rdtop"> 
-                <span class="rdtitle">Host  Applications</span> 
-               
-            	</div> <!-- end top --> 
-             <div class="rdbox">
-			<cfinclude template="welcome_includes/hostAppsOffice.cfm">
-                
-    		</div>
-            	<div class="rdbottom"></div> <!-- end bottom --> 
-         	</div>
-  			<!----End Student Applications---->
-          
-            <!----Current Items ---->
-		   <div class="rdholder" style="width:100%;float:left;"> 
-				<div class="rdtop"> 
-                <span class="rdtitle">Online Reports</span> 
-               
-            	</div> <!-- end top --> 
-             <div class="rdbox">
-             <table width=90% align="center" cellpadding=4>
-             	<tr>
-                	
-			
-                    <td><img src="pics/icons/annualPaperwork.png" border="0" title="Click Here to fill out  your annual paperwork" /></td>
-				     <td>		<a href="index.cfm?curdoc=user/index">
-                          Yearly Paperwork
-                        </a>
-                    </td>
-                    <td></td><td></td>
-                 </tr>
-             
-                    	<tr>
-                        <!----Progress Reports---->
-                        	<Td width=22><img src="pics/icons/onlineReports.png" /></Td><td>          
-							<cfif client.usertype eq 15>
-                                <a href="index.cfm?curdoc=secondVisitReports">Second Visit Reports</a><br>
-                            <cfelse>
-                                <a href="index.cfm?curdoc=progress_reports">Progress Reports</a>
-                                / 
-                                <a href="index.cfm?curdoc=secondVisitReports">Second Visit Reports</a>
+							<cfif CLIENT.usertype gte 8>
+                                <br><br>Please see below for announcements from your organization.
                             </cfif>
-                            </td>
                         
-                        <!----View Pending Placements---->
-                        <cfif client.usertype lte 7>
-                        
-                        	<Td  width=22><img src="pics/icons/viewPlacements.png" /></Td><td>
-                            
-                            <a href="index.cfm?curdoc=pendingPlacementList">View Pending Placements</a></td>
-                        
-                        </cfif>
-                      	<!----Help Project---->
-                        </tr>
-                         <tr>
-                        <cfif (CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12 or client.companyID eq 10) and client.usertype lte 7>
-                       
-                        	<Td  width=22><img src="pics/icons/HelpHours.png" /></Td><td>	
-                            <a href="index.cfm?curdoc=project_help">H.E.L.P. Community Service Hours</a></td>
-                      
-                        </cfif>
-                        	
-                        
-                        
-                        <cfif APPLICATION.CFC.USER.isOfficeUser() and (CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12 or client.companyid eq 10)>
-                      
-                        	<Td  width=22><img src="pics/icons/webex.png" /></Td><td>	
-                            <a href="index.cfm?curdoc=calendar/index">WebEx Calendar</a></td>
-                        
-                        </cfif>
-                        </tr>
-                      </Table>
-                        
-                  
+                        </td>
+                        <td align="right" valign="top" rowspan=2></td>
+                    </tr>
+                </table>
                 
-    		</div>
-            	<div class="rdbottom"></div> <!-- end bottom --> 
-         	</div>
-             <div class="rdholder" style="width:100%;float:right;"> 
-				<div class="rdtop"> 
-                <span class="rdtitle">Incentives</span> 
-            	</div> <!-- end top --> 
-             <div class="rdbox">
-             <cfif client.companyid lte 5>
-                        <Table width=90% align="center" cellpadding=4>
-                        	<Tr>
-                            	<Td width=22><img src="pics/icons/bonus.png" /></td>
-                                <td><a href="uploadedfiles/pdf_docs/ISE/promotion/Pre-Ayp%20Bonus%202012.pdf" target="_blank">Pre-AYP</a> </td>
-                            </Tr>	
-                            <Tr>
-                            	<td><img src="pics/icons/bonus2.png" /></td>
-                                <td><a href="uploadedfiles/pdf_docs/ISE/promotion/Early%20Placement%20Bonus%202012.pdf" target="_blank">Early Placement</a> </td>
-                            </Tr>
-                            <Tr>
-                            	<td><img src="pics/icons/bonus.png" /></td>
-                                <td><a href="slideshow/pdfs/CASE/CEOBonus.pdf" target="_blank">CEO Placement Bonus</a></td>
-                            </Tr>
-                         </Table>
-                           	
-			 <cfelse>
-             There are currently no available bonuses
-             </cfif>
-             
-                    
-			
-             
-             </div>
-            	<div class="rdbottom"></div> <!-- end bottom --> 
-         	</div>
-
-			
-			<!----New Students---->
-             <div class="rdholder" style="width:100%;float:right;"> 
-				<div class="rdtop"> 
-                <span class="rdtitle">New Students</span> 
-            	</div> <!-- end top --> 
-             <div class="rdbox">
-            <cfif new_students.recordcount eq 0>
-                           <em> There are no new students.</em>
-                        <cfelse>
-                            <!--- this is used to display the message if the user was added since last login. --->
-                            <cfset since_lastlogin = 0>
-                            <cfloop query="new_students">
-								<!--- highlight if user was added since last login. --->
-                                <cfif dateapplication GTE CLIENT.lastlogin>
-                                    <a href="index.cfm?curdoc=student_info&studentid=#studentid#"><font color="FF0000">#firstname# #familylastname#</font></a>
-			                        <cfset since_lastlogin = 1>
-                                <cfelse>
-                                    <a href="index.cfm?curdoc=student_info&studentid=#studentid#">#firstname# #familylastname#</a>
-                                </cfif>
-                                <br>
-                            </cfloop>
-                            <cfif since_lastlogin>
-                            	<br /><font color="FF0000">students in red were added since your last visit</font>
-                            </cfif>
-                        </cfif>
-                    
-			
-             
-             </div>
-            	<div class="rdbottom"></div> <!-- end bottom --> 
-         	</div>
-                 	
-    <!--- ------------------------------------------------------------------------- ---->
-	<!---- Right Column---->
-    <!--- ------------------------------------------------------------------------- ---->
-    <!--- ------------------------------------------------------------------------- ---->
-    <!--- ------------------------------------------------------------------------- ---->
-     </div>
-  <div style="width:49%;float:right;display:block;">
-            
-     <!-----Student Applications---->
-	
-		   <div class="rdholder" style="width:100%;float:right;"> 
-           <cfif client.usertype lte 7 AND client.usertype GT 4>
-           <cfinclude template="welcome_includes/adds.cfm">
-           <cfelse>
-				<div class="rdtop"> 
-                <span class="rdtitle">Student Applications </span> 
-            	</div> <!-- end top --> 
-             <div class="rdbox">
-             <cfif CLIENT.userid EQ 10115>
+                <!----footer of table---->
+                <cfinclude template="table_footer.cfm">
+                
+            </td>
+            <td valign="top" width="1%">&nbsp;</td>
+            <td valign="top" width="59%">
+                <cfif CLIENT.userid EQ 10115>
                     <cfinclude template="welcome_includes/ef_centraloffice.cfm">
                 <cfelseif CLIENT.usertype EQ 8>
                     <cfinclude template="welcome_includes/int_agent_apps.cfm">
                 <cfelseif CLIENT.usertype EQ 11>
                     <cfinclude template="welcome_includes/branch_apps.cfm">
-                <cfelseif CLIENT.usertype LTE 4>
+                <cfelseif APPLICATION.CFC.USER.isOfficeUser()>
                     <cfinclude template="welcome_includes/office_apps.cfm">
                 </cfif>
-                	
-                
-             
-             </div>
-            	<div class="rdbottom"></div> <!-- end bottom --> 
-         	</div>
-            </cfif>
-            <!-----------Marketing Material-------->
-             <div class="rdholder" style="width:100%;float:right;"> 
-				<div class="rdtop"> 
-                <span class="rdtitle">Marketing Materials </span> 
-                 <em>Save/Print option available on preview
-             	</em></div>
-             <div class="rdbox">
-             
-            
-             	<table width=80% align="center">
-					<!---_Available for All companies---->
-                    <cfif ListFind("1,2,3,4,5,10,12,14", CLIENT.companyid) >
-                	<tr>
-                    	<Td><img src="pics/icons/marketing.png" /></Td><td><a href="marketing/difference.cfm" target="_blank">Make A Difference</a></td>
-                        <td><img src="pics/icons/marketing2.png" /></td><td><a href="marketing/HostFam2012/HostFamiles.cfm" target="_blank">Host Families</a></td>
-                        
-                    </tr>
-                    <tr>    
-                        <td><img src="pics/icons/marketing2.png" /></td><td><A href="marketing/aroundWorld.cfm" target="_blank"> School Around the World</A></td>
-                        <td><img src="pics/icons/marketing3.png" /></td><td> <a href="marketing/bookmark.cfm" target="_blank">  Enrich Your Life Bookmarks</A></td>
-
-                    </tr>
-                    <tr>
-                    	<td><img src="pics/icons/marketing3.png" /></td><td><a href="marketing/openHeart.cfm" target="_blank">Open Heart & Soul</a></td>
-                    	<td></td><td></td>
-                    </tr>
-                    </cfif>
-                    <!----ESI ONLY Docs---->
-                    <cfif ListFind("14", CLIENT.companyid) >
-                    <tr>
-                    	<td><img src="pics/icons/marketing.png" /></td><td><a href="marketing/bookmark.cfm" target="_blank">Enrich Your Life Bookmarks</a></td>
-                        <td><img src="pics/icons/marketing.png" /></td><td><a href="marketing/difference.cfm" target="_blank">Make A Difference</a></td>
-                    </tr>
-                    </cfif>
-             </TABLE>
-                    
-			
-             
-             </div>
-            	<div class="rdbottom"></div> <!-- end bottom --> 
-         	</div>
- 			<!------End of Marketing Material---->
-            <!----State and Region Availability---->
-            <cfif listFind("1,2,3,4,8,11", CLIENT.usertype)>
-             <div class="rdholder" style="width:100%;float:right;"> 
-				<div class="rdtop"> 
-                <span class="rdtitle">State & Region Availability</span> 
-            	</div> <!-- end top --> 
-             <div class="rdbox">
-             <Cfif APPLICATION.CFC.USER.isOfficeUser()>
-                    <table align="Center" width=80% >
-                	<Tr>
-                    	<Td width=25><img src="pics/icons/map.png" /></Td><td>
-           <a href="javascript:openPopUp('tools/stateStatus.cfm', 875, 675);">Available States</a>
-            			</Td>
-                        <td rowspan=2 width=60%><font size=-2><em>State and Region availability can change at any time, acceptance of choice will not be guranteed until application is submitted for approval</em></font>
-                  </tr>
-                  <tr>
-                    <td><img src="pics/icons/region.png" /></td>
-                        <td>
-            <a href="javascript:openPopUp('tools/regionStatus.cfm', 750, 775);">Available Regions</a>
-                        </td>
-                    </Tr>
-                </table>
-                 
-				</cfif>
-                    
-			
-             
-             </div>
-            	<div class="rdbottom"></div> <!-- end bottom --> 
-         	</div>
-            </cfif>
-            <!----New Users---->
-             <div class="rdholder" style="width:100%;float:right;"> 
-				<div class="rdtop"> 
-                <span class="rdtitle">New Users</span> 
-            	</div> <!-- end top --> 
-             <div class="rdbox">
-              <cfif get_new_users.recordcount eq 0 or CLIENT.usertype gte 6>
-                           <em> There are no new reps in your region.</em>
-                        <cfelse>
-                            <!--- this is used to display the message if the user was added since last login. --->
-                            <cfset since_lastlogin = 0>
-							<!--- this is used to display the message if the user is the advisor of any new users. --->
-                            <cfset is_advisor = 0>
-                             <table>
-                             	<Tr>
-                                	<Td></Td><td>Name & Location</td><Td>Account Status</Td>
-                                </Tr>
-                                
-                            <cfloop query="get_new_users"> 
-                           
-                            	<cfscript>
-                                	//Check if paperwork is complete for season
-									CheckPaperwork = APPLICATION.CFC.udf.paperworkCompleted(userid=get_new_users..userid,season=9);
-								</cfscript>
-								
-								<!--- put * if user is the advisor for this user. --->
-                                <cfif advisorid EQ CLIENT.userid>
-                                    <font color="FF0000" size="4"><strong>*</strong></font>
-			                        <cfset is_advisor = 1>
-                                </cfif>
-                               
-                                	<Tr>
-                                    	<td>
-                            	<a href="mailto:#email#"><img src="pics/email.gif" border="0" align="absmiddle"></a></td>
-                                	<td>
-								<!--- highlight if user was added since last login. --->
-                                <cfif datecreated GTE CLIENT.lastlogin>
-                                    <a href="index.cfm?curdoc=user_info&userid=#userid#"><font color="FF0000">#firstname# #lastname#</font></a> <font color="FF0000">of #city#, #state#</font>
-			                        <cfset since_lastlogin = 1>
-                                <cfelse>
-                                    <a href="index.cfm?curdoc=user_info&userid=#userid#">#firstname# #lastname#</a> of #city#, #state#
-                                </cfif>
-                                </td><Td>
-								
-								<cfif not val(accountCreationVerified)>Not Active, <CFif client.usertype eq 4><a href="?curdoc=forms/user_paperwork&userid=#userid#"></cfif>Verification Needed</a><cfelse>Account Active</cfif></Td>
-                                </Tr>
-                            </cfloop>
-                            </table>
-                            <cfif since_lastlogin>
-                            	<br /><font color="FF0000">users in red were added since your last visit</font>
-                            </cfif>
-                            <cfif is_advisor>
-                            	<br /><font color="FF0000" size="4"><strong>*</strong></font> reps assigned to you
-                            </cfif>
-                        </cfif>
-                    
-			
-             
-             </div>
-            	<div class="rdbottom"></div> <!-- end bottom --> 
-         	</div>
-            
-            	<!---End of new Users----->
-                 <table align="right">
-            	<Tr>
-                	<td>
-            <form name="form" id="form">
-                    <td><font size="1">
-						Display students & users newer than
-                        <select name="jumpMenu" id="jumpMenu" onchange="MM_jumpMenu('parent',this,0)" class="new_weeks">
-                            <option value="index.cfm?curdoc=initial_welcome&new_weeks=1" <cfif url.new_weeks EQ 1>selected="selected"</cfif>>1 Week</option>
-                            <option value="index.cfm?curdoc=initial_welcome&new_weeks=2" <cfif url.new_weeks EQ 2>selected="selected"</cfif>>2 Weeks</option>
-                            <option value="index.cfm?curdoc=initial_welcome&new_weeks=3" <cfif url.new_weeks EQ 3>selected="selected"</cfif>>3 Weeks</option>
-                            <option value="index.cfm?curdoc=initial_welcome&new_weeks=4" <cfif url.new_weeks EQ 4>selected="selected"</cfif>>4 Weeks</option>
-                            <option value="index.cfm?curdoc=initial_welcome&new_weeks=5" <cfif url.new_weeks EQ 5>selected="selected"</cfif>>5 Weeks</option>
-                            <option value="index.cfm?curdoc=initial_welcome&new_weeks=6" <cfif url.new_weeks EQ 6>selected="selected"</cfif>>6 Weeks</option>
-                        </select>
-                    </font></td>
-                    </form>
-                   </tr>
-                </table> 
-            
- </div>   
+            </td>
+            <td align="right" valign="top" rowspan="2"></td>
+        </tr>
+    </table>
     
 <!---- FIELD --->
 <cfelse>
 
+    <cfquery name="placed_students" datasource="#application.dsn#">
+        SELECT COUNT(*) AS Count
+        FROM smg_students
+        INNER JOIN smg_programs ON smg_programs.programid = smg_students.programid
+        INNER JOIN smg_incentive_trip ON smg_programs.tripid = smg_incentive_trip.tripid
+        WHERE smg_students.placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#"> 
+        AND smg_students.host_fam_approved < 5 
+        AND smg_students.active = 1
+        AND smg_incentive_trip.active = 1
+    </cfquery>
 
+    <cfquery name="incentive_trip" datasource="#application.dsn#">
+        SELECT trip_place
+        FROM smg_incentive_trip 
+        WHERE active = 1
+    </cfquery>
 
     <table width=100%>
         <tr>
@@ -833,11 +457,7 @@
     
 <br>
 
-
-
-<!---- OFFICE AND FIELD ---->			
-<cfif ListFind("5,6,7,9,15", CLIENT.usertype) and 1 eq 2>        
-    <!----CURRENT ITEMS---->
+<!----CURRENT ITEMS---->
 <table width=100% cellpadding=0 cellspacing=0 border="0" height=24>
     <tr height=24>
         <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
@@ -847,6 +467,10 @@
         <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
     </tr>
 </table>
+
+<!---- OFFICE AND FIELD ---->			
+<cfif ListFind("1,2,3,4,5,6,7,9,15", CLIENT.usertype)>        
+    
     <table width=100% cellspacing=0 border="0" class="section">
         <tr>
             <td align="center">               
@@ -866,7 +490,38 @@
                     <td style="line-height:20px;">
                     	<!----<a href="index.cfm?curdoc=forms/startHostApp">Start a Host App</a><br />---->
                         
-                        <
+                        <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, CLIENT.companyID)>
+                            <a href="index.cfm?curdoc=user/index&uniqueID=#CLIENT.uniqueID#&action=trainCasterLogin" target="_blank" title="Click Here to Take the DOS Test">
+                                <img src="pics/buttons/DOScertification.png" border="0" title="Click Here to Take the DOS Certification Test" />
+                            </a><br />
+                        </cfif>
+                        
+                      	<a href="index.cfm?curdoc=forms/yearly_agreement">Please complete your annual area representative agreement and paperwork!<br /></a>
+                        
+                        <cfif client.usertype eq 15>
+                            <a href="index.cfm?curdoc=secondVisitReports">Online Reports</a><br>
+                        <cfelse>
+                            <a href="index.cfm?curdoc=progress_reports">Online Reports</a><br>
+                        </cfif>
+                        
+                        <cfif (CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12 or client.companyID eq 10) and client.usertype lte 7>
+                        	<a href="index.cfm?curdoc=project_help">H.E.L.P. Community Service Hours</a><br>
+                        </cfif>
+                        	
+                        <cfif client.usertype lte 7>
+                            <a href="index.cfm?curdoc=pendingPlacementList">View Pending Placements</a><br />
+                        </cfif>
+                        
+                        <cfif APPLICATION.CFC.USER.isOfficeUser() and (CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12 or client.companyid eq 10)>
+                        	<a href="index.cfm?curdoc=calendar/index">WebEx Calendar</a> <br />
+                        </cfif>
+                        
+                       	<cfif client.companyid lte 5>
+                        	2012 Placing Season Bonuses!<BR />
+                           	<a href="uploadedfiles/pdf_docs/ISE/promotion/Pre-Ayp%20Bonus%202012.pdf" target="_blank">Pre-AYP</a> :: 
+                           	<a href="uploadedfiles/pdf_docs/ISE/promotion/Early%20Placement%20Bonus%202012.pdf" target="_blank">Early Placement</a> :: 
+                           	<a href="slideshow/pdfs/CASE/CEOBonus.pdf" target="_blank">CEO Placement Bonus</a>
+						</cfif>
                         
                     </td>
          			<!--- Office Users --->
@@ -882,7 +537,7 @@
                                     <cfloop query="help_desk_user">
                                         <tr bgcolor="#iif(help_desk_user.currentrow MOD 2 ,DE("EEEEEE") ,DE("FFFFFF") )#">
                                             <td valign="top">#DateFormat(date, 'mm/dd/yyyy')#</td>
-                                            <td valign="top"><a href="">#title#</a></td>
+                                            <td valign="top"><a href="?curdoc=helpdesk/help_desk_view&helpdeskid=#helpdeskid#">#title#</a></td>
                                             <td valign="top">#status#</td>
                                         </tr>
                                     </cfloop>
@@ -915,10 +570,89 @@
                 </tr>
                 <tr valign="top">
                	  <td >
-                 
+                  <!---_Available for All companies---->
+                  	<cfif ListFind("1,2,3,4,5,10,12,14", CLIENT.companyid) >
+                    Here are some new brochures to help in your marketing.<Br />
+                    <a href="marketing/difference.cfm" target="_blank">Make A Difference</a><img src="pics/new_03.png" /><br />
+                    <a href="marketing/openHeart.cfm" target="_blank">Open Heart & Soul</a><br />
+                 	<A href="marketing/aroundWorld.cfm" target="_blank"> School Around the World</A><Br />
+                    <a href="marketing/bookmark.cfm" target="_blank">Enrich Your Life Bookmarks</a><br />
+                    <!----ESI ONLY Docs---->
+                    <cfif ListFind("14", CLIENT.companyid) >
+					<a href="marketing/bookmark.cfm" target="_blank">Enrich Your Life Bookmarks</a><br />
+				 	</cfif>
+                    <!----NOT ESI---->
+                    <cfif ListFind("1,2,3,4,5,10,12,14", CLIENT.companyid) >
+                    <a href="marketing/HostFam2012/HostFamiles.cfm" target="_blank">Host Families</a><img src="pics/new_03.png" /><br />
+                    </cfif>
+					<!---CASE ONLY---->
+					<cfif ListFind("10", CLIENT.companyid) >
+					<a href="marketing/difference.cfm" target="_blank">Make A Difference</a><br />
+				 	</cfif>
+                    <br /><br />
+                     <font size=-1> <em>Click on the Save/Print option to generate a PDF that is suitable for printing.</em></font>
+                          
+                  </cfif>
+                  <!----Available for just ISE companies---->
+                  <Cfif client.userid eq 1 or client.userid eq 12313 or client.userid eq 13251>
+                  <br /><Br />
+                  <!----
+                 <a href="javascript:openPopUp('forms/displayRepAgreement.cfm', 640, 800);">Area Rep Agreement</a>
+                 <a href="javascript:openPopUp('forms/cbcAuthorization.cfm', 640, 800);">CBC Authorization </a>
+                 <a href="javascript:openPopUp('forms/repRefs.cfm', 640, 800);">References </a>
+				 ---->
+				 </Cfif>
                  </td>
                     <td>
-                      
+                        <cfif get_new_users.recordcount eq 0 or CLIENT.usertype gte 6>
+                            There are no new reps in your region.
+                        <cfelse>
+                            <!--- this is used to display the message if the user was added since last login. --->
+                            <cfset since_lastlogin = 0>
+							<!--- this is used to display the message if the user is the advisor of any new users. --->
+                            <cfset is_advisor = 0>
+                             <table>
+                             	<Tr>
+                                	<Td></Td><td>Name & Location</td><Td>Account Status</Td>
+                                </Tr>
+                                
+                            <cfloop query="get_new_users"> 
+                           
+                            	<cfscript>
+                                	//Check if paperwork is complete for season
+									CheckPaperwork = APPLICATION.CFC.udf.paperworkCompleted(userid=get_new_users..userid,season=9);
+								</cfscript>
+								
+								<!--- put * if user is the advisor for this user. --->
+                                <cfif advisorid EQ CLIENT.userid>
+                                    <font color="FF0000" size="4"><strong>*</strong></font>
+			                        <cfset is_advisor = 1>
+                                </cfif>
+                               
+                                	<Tr>
+                                    	<td>
+                            	<a href="mailto:#email#"><img src="pics/email.gif" border="0" align="absmiddle"></a></td>
+                                	<td>
+								<!--- highlight if user was added since last login. --->
+                                <cfif datecreated GTE CLIENT.lastlogin>
+                                    <a href="index.cfm?curdoc=user_info&userid=#userid#"><font color="FF0000">#firstname# #lastname#</font></a> <font color="FF0000">of #city#, #state#</font>
+			                        <cfset since_lastlogin = 1>
+                                <cfelse>
+                                    <a href="index.cfm?curdoc=user_info&userid=#userid#">#firstname# #lastname#</a> of #city#, #state#
+                                </cfif>
+                                </td><Td>
+								
+								<cfif not val(accountCreationVerified)>Not Active, <CFif client.usertype eq 4><a href="?curdoc=forms/user_paperwork&userid=#userid#"></cfif>Verification Needed</a><cfelse>Account Active</cfif></Td>
+                                </Tr>
+                            </cfloop>
+                            </table>
+                            <cfif since_lastlogin>
+                            	<br /><font color="FF0000">users in red were added since your last visit</font>
+                            </cfif>
+                            <cfif is_advisor>
+                            	<br /><font color="FF0000" size="4"><strong>*</strong></font> reps assigned to you
+                            </cfif>
+                        </cfif>
                      </td>
                 </tr>
                 <tr>
@@ -930,16 +664,58 @@
                 <tr>
                    
                      <td>
-                        
+                        <cfif new_students.recordcount eq 0>
+                            There are no new students.
+                        <cfelse>
+                            <!--- this is used to display the message if the user was added since last login. --->
+                            <cfset since_lastlogin = 0>
+                            <cfloop query="new_students">
+								<!--- highlight if user was added since last login. --->
+                                <cfif dateapplication GTE CLIENT.lastlogin>
+                                    <a href="index.cfm?curdoc=student_info&studentid=#studentid#"><font color="FF0000">#firstname# #familylastname#</font></a>
+			                        <cfset since_lastlogin = 1>
+                                <cfelse>
+                                    <a href="index.cfm?curdoc=student_info&studentid=#studentid#">#firstname# #familylastname#</a>
+                                </cfif>
+                                <br>
+                            </cfloop>
+                            <cfif since_lastlogin>
+                            	<br /><font color="FF0000">students in red were added since your last visit</font>
+                            </cfif>
+                        </cfif>
                     </td>
                       <td valign="top" align="Center">
-                  
+                   <Cfif APPLICATION.CFC.USER.isOfficeUser()>
+                    <table>
+                	<Tr>
+                    	<Td>
+           <a href="javascript:openPopUp('tools/stateStatus.cfm', 875, 675);"><img src="pics/buttons/state.png"border=0/></a>
+            			</Td>
+                     	<td>
+            <a href="javascript:openPopUp('tools/regionStatus.cfm', 750, 775);"><img src="pics/buttons/region.png"border=0/></a>
+                        </td>
+                    </Tr>
+                </table>
+                 
+				</cfif>
                     
                     </td>
                 </tr>
                 <tr>
                 	
-                    
+                    <form name="form" id="form">
+                    <td><font size="1">
+						Display students & users newer than
+                        <select name="jumpMenu" id="jumpMenu" onchange="MM_jumpMenu('parent',this,0)" class="new_weeks">
+                            <option value="index.cfm?curdoc=initial_welcome&new_weeks=1" <cfif url.new_weeks EQ 1>selected="selected"</cfif>>1 Week</option>
+                            <option value="index.cfm?curdoc=initial_welcome&new_weeks=2" <cfif url.new_weeks EQ 2>selected="selected"</cfif>>2 Weeks</option>
+                            <option value="index.cfm?curdoc=initial_welcome&new_weeks=3" <cfif url.new_weeks EQ 3>selected="selected"</cfif>>3 Weeks</option>
+                            <option value="index.cfm?curdoc=initial_welcome&new_weeks=4" <cfif url.new_weeks EQ 4>selected="selected"</cfif>>4 Weeks</option>
+                            <option value="index.cfm?curdoc=initial_welcome&new_weeks=5" <cfif url.new_weeks EQ 5>selected="selected"</cfif>>5 Weeks</option>
+                            <option value="index.cfm?curdoc=initial_welcome&new_weeks=6" <cfif url.new_weeks EQ 6>selected="selected"</cfif>>6 Weeks</option>
+                        </select>
+                    </font></td>
+                    </form>
                     <Td></Td>
                 </tr>
                 </cfif>
@@ -1130,13 +906,10 @@
             </td>
         </tr>
     </table>
-<cfinclude template="table_footer.cfm">
+
 </cfif>
 
-<!----footer of table
-<cfif client.usertype gt 4>
+<!----footer of table---->
 <cfinclude template="table_footer.cfm">
-</cfif>
----->
 
 </cfoutput>
