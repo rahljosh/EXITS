@@ -47,6 +47,7 @@
 
             <a href="https://iseusa1.webex.com/iseusa1/lsr.php?AT=pb&SP=EC&rID=3469892&rKey=c358e2605164895e" target="_blank">Host Family Recruitment</a>
             
+            <!--- Removed as Per Paul Session Request - 09/28/2012
             &nbsp; &nbsp; | &nbsp; &nbsp;
             
             <a href="https://iseusa1.webex.com/iseusa1/lsr.php?AT=pb&SP=EC&rID=3457042&rKey=a9e6bbf7446fdd27" target="_blank">New Area Reps</a> 
@@ -54,6 +55,7 @@
             &nbsp; &nbsp; | &nbsp; &nbsp;
            
             <a href="https://iseusa1.webex.com/iseusa1/lsr.php?AT=pb&SP=EC&rID=3692602&rKey=5ba0602384323b89" target="_blank" style="width:300px;">New Lead System</a>
+            --->
             
             &nbsp; ]
         </p>
