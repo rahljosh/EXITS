@@ -17,6 +17,7 @@
     <cfparam name="FORM.stateID" default="0">
     <cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.submitted" default="0">
+    <cfparam name="FORM.studentStatus" default="All">
 
     <cfscript>
 		// Get Program List
@@ -62,7 +63,11 @@
        	INNER JOIN
         	smg_countrylist cntry ON cntry.countryID = c.citizen_country
       	WHERE
-        	c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        	c.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="cancelled">
+        <cfif FORM.studentStatus NEQ 'All'>
+        	AND
+            	c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentStatus#">
+        </cfif>    
 		<cfif FORM.programID GT 0>
         	AND
             	c.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
@@ -125,6 +130,16 @@
                     </cfloop>
                 </select>
 	        </td>
+        </tr>
+        <tr>
+            <td valign="middle" align="right" class="style1"><b>Student Status:</b></td>
+            <td> 
+                <select name="studentStatus" class="style1">
+                    <option value="All" <cfif "All" eq FORM.studentStatus> selected</cfif>>All</option>
+                    <option value="1" <cfif 1 eq FORM.studentStatus> selected</cfif>>Active</option>
+                    <option value="0" <cfif 0 eq FORM.studentStatus> selected</cfif>>Inactive</option>
+                </select>
+            </td>
         </tr>
         <tr>
             <td align="right"  class="style1"><b>Format: </b></td>

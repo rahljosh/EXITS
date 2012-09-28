@@ -87,7 +87,7 @@
         </td>
     </tr>
     <tr>
-        <td valign="middle" align="right" class="style1"><b>Country:</b></td>
+        <td valign="middle" align="right" class="style1"><b>Status:</b></td>
         <td> 
             <select name="studentStatus" class="style1">
             	<option value="All" <cfif "All" eq FORM.studentStatus> selected</cfif>>All</option>

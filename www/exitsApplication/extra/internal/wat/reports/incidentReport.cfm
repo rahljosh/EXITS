@@ -16,6 +16,7 @@
     <cfparam name="FORM.programID" default="0">
     <cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.isSolved" default="">
+    <cfparam name="FORM.studentStatus" default="All">
 
     <cfscript>
 		// Get Program List
@@ -74,8 +75,12 @@
                     </cfif> 
             WHERE 
                 ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-            AND 
-                ec.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+          	AND
+            	ec.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="cancelled">
+         	<cfif FORM.studentStatus NEQ 'All'>
+            	AND
+                	ec.status = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentStatus#">
+            </cfif>
            	
 			<cfif VAL(FORM.programID)>  
                 AND 
@@ -135,6 +140,16 @@
                 </td>
             </tr>
             <tr>
+                <td valign="middle" align="right" class="style1"><b>Status:</b></td>
+                <td> 
+                    <select name="studentStatus" class="style1">
+                        <option value="All" <cfif "All" eq FORM.studentStatus> selected</cfif>>All</option>
+                        <option value="1" <cfif 1 eq FORM.studentStatus> selected</cfif>>Active</option>
+                        <option value="0" <cfif 0 eq FORM.studentStatus> selected</cfif>>Inactive</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
                 <td align="right"  class="style1"><b>Format: </b></td>
                 <td class="style1"> 
                     <input type="radio" name="printOption" id="printOption1" value="1" <cfif FORM.printOption EQ 1> checked </cfif> > <label for="printOption1">Onscreen (View Only)</label>
@@ -157,6 +172,10 @@
 <cfif FORM.submitted>
 
     <cfsavecontent variable="reportContent">
+    
+    	<cfoutput>  
+            <div class="style1"><strong>&nbsp; &nbsp; Total Number of Students:</strong> #qGetCandidates.recordCount#</div>
+     	</cfoutput>
        
         <cfoutput query="qGetCandidates" group="hostCompanyID">
             
