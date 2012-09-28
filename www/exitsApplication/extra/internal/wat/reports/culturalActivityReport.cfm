@@ -16,6 +16,7 @@
     <cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.solved" default="0">
     <cfparam name="FORM.status" default="0">
+    <cfparam name="FORM.studentStatus" default="All">
 
     <cfscript>
 		// Get Program List
@@ -64,8 +65,12 @@
                 AND 
                     ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
            	</cfif>
-            AND 
-                ec.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            AND
+            	ec.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="cancelled">
+         	<cfif FORM.studentStatus NEQ 'All'>
+            	AND
+                	ec.status = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentStatus#">
+            </cfif>
        		GROUP BY
             	ec.candidateID
             ORDER BY
@@ -103,6 +108,16 @@
                     <select name="status" class="style1">
                  		<option value="0" <cfif FORM.status EQ 0>selected="selected"</cfif> >Candidates with cultural activity</option>
                         <option value="1" <cfif FORM.status EQ 1>selected="selected"</cfif>>Candidates without cultural activity</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td valign="middle" align="right" class="style1"><b>Student Status:</b></td>
+                <td> 
+                    <select name="studentStatus" class="style1">
+                        <option value="All" <cfif "All" eq FORM.studentStatus> selected</cfif>>All</option>
+                        <option value="1" <cfif 1 eq FORM.studentStatus> selected</cfif>>Active</option>
+                        <option value="0" <cfif 0 eq FORM.studentStatus> selected</cfif>>Inactive</option>
                     </select>
                 </td>
             </tr>

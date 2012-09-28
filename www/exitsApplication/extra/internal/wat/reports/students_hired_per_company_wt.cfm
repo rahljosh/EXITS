@@ -8,6 +8,7 @@
 	<cfparam name="FORM.hostCompanyID" default="0">
 	<cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.submitted" default="0">
+    <cfparam name="FORM.studentStatus" default="All">
 
     <cfscript>
 		// Get Program List
@@ -92,7 +93,11 @@
                 c.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
             AND 
                 c.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
-           <cfif VAL(FORM.hostcompanyID)> 
+      		<cfif FORM.studentStatus NEQ 'All'>
+  				AND
+        			c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentStatus#">
+   			</cfif>
+           	<cfif VAL(FORM.hostcompanyID)> 
                 AND
                     c.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               
 			</cfif>                
@@ -151,7 +156,7 @@
     <table width="95%" cellpadding="4" cellspacing="0" border="0" align="center">
         <tr valign="middle" height="24">
             <td valign="middle" bgcolor="##E4E4E4" class="title1" colspan="2">
-            	<font size="2" face="Verdana, Arial, Helvetica, sans-serif">&nbsp; Host Company Reports -> All Active Candidates</font>
+            	<font size="2" face="Verdana, Arial, Helvetica, sans-serif">&nbsp; Host Company Reports -> All Participating Candidates</font>
 			</td>                
         </tr>
         <tr valign="middle" height="24">
@@ -175,6 +180,16 @@
                     <cfloop query="qGetProgramList">
                     	<option value="#programID#" <cfif qGetProgramList.programID EQ FORM.programID> selected </cfif> >#programname#</option>
                     </cfloop>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td valign="middle" align="right" class="style1"><b>Status:</b></td>
+            <td> 
+                <select name="studentStatus" class="style1">
+                    <option value="All" <cfif "All" eq FORM.studentStatus> selected</cfif>>All</option>
+                    <option value="1" <cfif 1 eq FORM.studentStatus> selected</cfif>>Active</option>
+                    <option value="0" <cfif 0 eq FORM.studentStatus> selected</cfif>>Inactive</option>
                 </select>
             </td>
         </tr>
