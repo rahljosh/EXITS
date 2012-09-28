@@ -102,7 +102,7 @@ from smg_religions
 <cfform action="index.cfm?page=religionPref">
 
 <cfinput type="hidden" name="process"> 
-<h2>Religious Preference</h2>
+<h2>Religious Affiliation</h2>
 <!--- Form Errors --->
     <gui:displayFormErrors 
         formErrors="#SESSION.formErrors.GetCollection()#"
