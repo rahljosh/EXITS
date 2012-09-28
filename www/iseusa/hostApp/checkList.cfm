@@ -992,7 +992,7 @@ where schoolid = #cl.schoolid#
     	<Td>  
         
         <cfif StillMissingInfo eq 1>
-        	Looks like your still missing some information, please review the sections listed above.
+        	Looks like your still missing some information, please review the sections listed above. The botton to the right will not be active (the arrow will turn red) until all the required information above has been filled out. 
         <cfelse>
         	Happy with how everything looks?  Click the button to the right to submit your application.
     	</cfif>
