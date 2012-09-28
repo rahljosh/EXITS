@@ -342,7 +342,15 @@ Please include all your children, whether they are living at home or not, and <s
         </td>
         
     </tr>
-            <tr bgcolor="#deeaf3">
+     <tr  bgcolor="#deeaf3" >
+    	<td class="label"><h3>Grade in School</h3></td>
+        <td>
+        <input type="text" name="schoolGrade" value="#form.schoolGrade#" size=20 />
+            
+        </td>
+        
+    </tr>
+            <tr>
     	<td class="label"><h3>Current Employer</h3></td>
         <td>
         <cfoutput>
@@ -352,7 +360,7 @@ Please include all your children, whether they are living at home or not, and <s
         </td>
         
     </tr>
-    <tr >
+    <tr  bgcolor="#deeaf3">
     	<td class="label" valign="top" ><h3>Interests <span class="redtext">*</span></h3></td>
         <td>
        <cfoutput>
