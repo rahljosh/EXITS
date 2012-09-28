@@ -1,15 +1,26 @@
+<cfoutput>
+	<cfparam name="setTo" default="#client.usertype#">
+</cfoutput>
 <cfset client.hostid = #url.hostid#>
     <cfquery name="appStatus" datasource="#application.dsn#">
     select hostAppStatus, familylastname, arearepid, regionid
     from smg_hosts
     where hostid = #client.hostid#
     </cfquery>
-    <cfset setStatus = #client.usertype# - 1>
+    
+    <cfif listFind('4,5,6,7', #client.usertype#)>
+    	<cfset setTo = #client.usertype# - 1>
+    <cfelseif client.usertype lt 4>
+    	<cfset setTo = 3>
+    <cfelse>
+    	<cfset setTo = #client.usertype#>
+    </cfif>
+
     
     <cfquery datasource="#application.dsn#">
-        update smg_hosts set hostAppStatus = <Cfif client.usertype lte 4> 4 <cfelse>#setStatus#</Cfif>,
+        update smg_hosts set hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="#setTo#">,
         	applicationDenied = <cfqueryparam  cfsqltype="CF_SQL_DATE" null="yes">,
-    reasonAppDenied = <cfqueryparam  cfsqltype="CF_SQL_VARCHAR" null="yes">
+   			 reasonAppDenied = <cfqueryparam  cfsqltype="CF_SQL_VARCHAR" null="yes">
         where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
     </cfquery>
     <Cfquery name="repInfo" datasource="#application.dsn#">
@@ -99,9 +110,9 @@
    <Cfelseif client.usertype eq 6>
    #get_regional_director.firstname# #get_regional_director.lastname# (#mailto#)
    <cfelseif client.usertype eq 5>
-   	#get_facilitator.firstname# #get_facilitator.firstname# (#mailto#)
+   	#get_facilitator.firstname# #get_facilitator.lastname# (#mailto#)
    <cfelseif client.usertype lte 4>
-   #get_regional_director.firstname# #get_regional_director.firstname# (#mailto#) and  #repInfo.firstname# #repInfo.lastname# (#repInfo.email#)
+   #get_regional_director.firstname# #get_regional_director.lastname# (#mailto#) and  #repInfo.firstname# #repInfo.lastname# (#repInfo.email#)
    </cfif>
    </h2></div>
    </h2></div>

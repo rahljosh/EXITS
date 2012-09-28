@@ -4,6 +4,70 @@
 <cfif val(url.hostid)>
 	<cfset client.hostid = #url.hostid#>
 </cfif>
+<cfquery name="appStatus" datasource="#application.dsn#">
+    select hostAppStatus, familylastname, arearepid, regionid, email 
+    from smg_hosts
+    where hostid = #client.hostid#
+    </cfquery>
+<!----Set Email on who is receiving---->
+ <Cfquery name="repInfo" datasource="#application.dsn#">
+    select email, firstname, lastname, userid
+    from smg_users
+    where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#appStatus.arearepid#">
+    </Cfquery>
+    
+    <Cfquery name="repInfoAdvisor" datasource="#application.dsn#">
+    select advisorid
+    from user_access_rights
+    where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#appStatus.arearepid#">
+    and regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.regionid#">
+    </Cfquery>
+    <cfif repInfoAdvisor.recordcount eq 0>
+    	<cfset get_regional_manager.email = ''>
+    <cfelse>
+        <cfquery name="get_regional_manager" datasource="#application.dsn#">
+            SELECT smg_users.userid, smg_users.email, smg_users.firstname, smg_users.lastname
+            FROM smg_users
+            WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#repInfoAdvisor.advisorid#"> 
+        </cfquery>
+	</cfif>
+    <cfquery name="get_regional_director" datasource="#application.dsn#">
+        SELECT smg_users.userid, smg_users.email, smg_users.firstname, smg_users.lastname
+        FROM smg_users
+        LEFT JOIN user_access_rights on smg_users.userid = user_access_rights.userid
+        WHERE user_access_rights.usertype = 5
+        AND user_access_rights.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#appStatus.regionid#">
+        AND smg_users.active = 1
+    </cfquery>
+   
+
+    <cfquery name="get_facilitator" datasource="#application.dsn#">
+        SELECT smg_regions.regionfacilitator, smg_users.email, smg_users.firstname, smg_users.lastname
+        FROM smg_regions
+        LEFT JOIN smg_users on smg_users.userid = smg_regions.regionfacilitator
+        WHERE regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#appStatus.regionid#">
+    </cfquery>
+   <cfif client.usertype eq 7>
+   		<cfset mailTo = '#appStatus.email#'>
+	    <cfset appCurrentStatus = 8>
+   <Cfelseif client.usertype eq 6>
+    <Cfset mailTo = '#repInfo.email#'>
+   	<cfset appCurrentStatus = 7>
+   <cfelseif client.usertype eq 5>
+   		<Cfif get_regional_manager.email is ''>
+        	<cfset mailTo = '#repInfo.email#'>
+            <cfset appCurrentStatus = 7>
+       <cfelse>
+        	<cfset mailTo = '#get_regional_manager.email#'>
+            <cfset appCurrentStatus = 6>
+       </Cfif>
+   
+   	<cfelseif client.usertype lte 4>
+   		<cfset mailTo = '#get_regional_director.email#'>
+        <cfset appCurrentStatus = 5>
+   </cfif>
+
+
 <Cfquery name="getDeniedReasons" datasource="#application.dsn#">
 select tdld.arearepDenial, tdld.regionalAdvisorDenial, tdld.regionalDirectorDenial,tdld.facDenial, tdl.description 
 from smg_ToDoListDates tdld
@@ -21,9 +85,11 @@ where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
 </Cfquery>
 
 <Cfif isDefined('form.sendEmail')>
+
 <cfquery datasource="#application.dsn#">
 update smg_hosts
-	set hostAppStatus = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="8">,
+	set hostAppStatus =
+    <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#appCurrentStatus#">,
     applicationDenied = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
     reasonAppDenied = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.additionalInfo#">
 where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
@@ -130,7 +196,7 @@ where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
                                         <div class="rdtop"> </div> <!-- end top --> 
                                      <div class="rdbox">               
 		<cfoutput>
-          Unfortunatly there are some problems with your host family application.  Please reveiw the list below or problem items.
+          Unfortunately there are some problems with your host family application.  Please review the list below or problem items.
           <br><br>Your application has been unlocked and you can login to make any adjustments that are needed.
           <br /><br />
           <Cfoutput>
@@ -141,7 +207,7 @@ where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
     </Tr>
 <cfif getDeniedReasons.recordcount eq 0>
 	<tr bgcolor="##F7F7F7" >
-    	<td colspan=2 align="center">No issues were recorded for any sections of the application.<br><br>Are you sure you want to deny it?</td>
+    	<td colspan=2 align="center">No issues were recorded on specific sections of the application, please see below for general comments.</td>
     </tr>
 <cfelse>
     <cfloop query="getDeniedReasons">
@@ -176,10 +242,11 @@ The following additional information was added:<br><Br>
     </cfsavecontent>
 
     <cfinvoke component="nsmg.cfc.email" method="send_mail">
-    <!----
+    
         <cfinvokeargument name="email_to" value="#mailTo#">
-		---->
+		<!----
         <cfinvokeargument name="email_to" value="josh@pokytrails.com">
+		---->
          <cfinvokeargument name="email_cc" value="#client.email#">
         <cfinvokeargument name="email_subject" value="Problems with Host Application">
         <cfinvokeargument name="email_message" value="#denyApp#">
