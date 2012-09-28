@@ -28,7 +28,7 @@
     from smg_hosts
     where hostid = #client.hostid#
     </cfquery>
-    
+  
     <cfquery datasource="#application.dsn#">
         update smg_hosts set hostAppStatus = #client.usertype#
         where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
@@ -118,7 +118,7 @@
 </cfif>    
 
 <cfif client.usertype eq 6>
-<cfset userUnderList =''>
+<cfset userUnderList ='#client.userid#'>
 	<cfquery name="usersUnder" datasource="#application.dsn#">
     select userid
     from user_access_rights
@@ -135,11 +135,11 @@ select *
 from smg_hosts
 where HostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.status#">
 AND 
-            companyID 
-            <cfif client.companyid eq 10>
-                 = <cfqueryparam cfsqltype="cf_sql_integer" value="10">
-             <cfelse>
-                < <cfqueryparam cfsqltype="cf_sql_integer" value="6">
+            <cfif listFind('1,2,3,4,12', '#client.companyid#')>
+               companyID   = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+             <cfelseif client.companyid eq 5>
+              (companyID   <  <cfqueryparam cfsqltype="cf_sql_integer" value="6"> OR 
+              companyID   =  <cfqueryparam cfsqltype="cf_sql_integer" value="12">)
              </cfif>
               <Cfif client.usertype eq 7>
                   AND arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
@@ -155,10 +155,7 @@ AND
 
 
 
-<cfform method="post" action="?curdoc=hostApplication/listOfApps&status=#url.status#">
-
-
-</cfform>   
+ 
 <cfoutput>
    <div class="rdholder" style="width:90%;float:left;"> 
 				<div class="rdtop"> 
@@ -187,9 +184,10 @@ AND
                                          <td><a class='iframe' href="hostApplication/approveHostApp.cfm?hostid=#hostID#">
                                                             <img  src="pics/buttons/approve.png" width=80 border=0>
                                                             </a></td> 
-                                         <td> <a class='iframe' href="hostApplication/denyHostApp.cfm?hostid=#hostID#">
+                                                            
+                                         <td> <cfif url.status lt 8><a class='iframe' href="hostApplication/denyHostApp.cfm?hostid=#hostID#">
                                                             <img  src="pics/buttons/deny.png" width=80 border=0>
-                                                            </a>
+                                                            </a></cfif>
                                      	</td>
                                         </cfif>
                                         </tr>      </table>                 
