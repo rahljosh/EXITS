@@ -123,13 +123,14 @@
  <Cfset client.hostemail = '#appInfo.email#'>
 <cfset appNotComplete = 1>
 <cfinclude template="appStatus.cfm">
-  <cfif isDefined('form.processApp')>
+ <cfif appInfo.hostAppStatus eq 9>
   <cfquery name="updateHostAppStatus" datasource="mysql">
   update smg_hosts
-  set HostAppStatus = 7
+  set HostAppStatus = 8
   where hostid = #client.hostid#
   </cfquery>
-  </cfif>
+</cfif>
+  
 
  <h1 class="enter">Welcome #lcase(appInfo.familylastname)# Family!</h1>
  <div align="center"><a href="../hostLogout.cfm">Logout</a></div>
@@ -137,7 +138,7 @@
 
   <table>
   	<tr>
-    	<td><h3 align="Center">App Overview</h3></td><Td></Td><td><h3 align="Center">Application Instructions / Announcements</h3></td>
+    	<td><h3 align="Center">Application Overview</h3></td><Td></Td><td><h3 align="Center">Application Instructions / Announcements</h3></td>
     </tr>
     <tr>
      <td width=50% valign="top" class="green">
