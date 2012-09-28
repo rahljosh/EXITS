@@ -266,7 +266,9 @@ div.scroll2 {
 		<tr><td>City:</td><td>#family_info.city#</td></tr>
 		<tr><td>State:</td><td>#family_info.state#</td><td>ZIP:</td><td>#family_info.zip#</td></tr>
 		<tr><td>Phone:</td><td>#family_info.phone#</td></tr>
-		<tr><td>Email:</td><td><a href="mailto:#family_info.email#">#family_info.email#</a></td></tr>
+		<tr><td>Email:</td><td><a href="mailto:#family_info.email#">#family_info.email#</a></td>
+        <cfif client.usertype lte 4><td>Password:</td><td><cfif family_info.password is ''>#family_info.password#</cfif></td></cfif>
+        </tr>
 		<tr><th colspan="2" align="left">Father's Information</th></tr>
 		<tr><td>Name:</td><td>#family_info.fatherfirstname# #family_info.fatherlastname#</td><td>Age:</td><td><cfif family_info.fatherdob NEQ ''>#dateDiff('yyyy', family_info.fatherdob, now())#</cfif></td></tr>
 		<tr><td>Occupation:</td><td><cfif family_info.fatherworktype is ''>n/a<cfelse>#family_info.fatherworktype#</cfif></td><td>Cell Phone:</td><td>#family_info.father_cell#</td></tr>
