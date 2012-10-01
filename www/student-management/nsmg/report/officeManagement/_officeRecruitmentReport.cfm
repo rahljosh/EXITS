@@ -80,7 +80,7 @@
                	AND	
                 	uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )
               	AND
-                	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> IN ( SELECT MIN(seasonID) FROM smg_users_paperwork WHERE userID = u.userID )
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> = ( SELECT MIN(seasonID) FROM smg_users_paperwork WHERE userID = u.userID  )
               	GROUP BY
                 	u.userID
             </cfquery>
@@ -93,10 +93,14 @@
                     smg_users u
               	INNER JOIN
                 	user_access_rights uar ON uar.userID = u.userID
+              	INNER JOIN
+                	smg_users_paperwork p ON p.userID = u.userID
+                     	AND
+                        	p.ar_agreement IS NOT NULL
+                     	AND
+                			<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> = ( SELECT MIN(seasonID) FROM smg_users_paperwork WHERE userID = u.userID )
               	WHERE
                		uar.userType = 7
-              	AND
-                	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> IN ( SELECT MIN(seasonID) FROM smg_users_paperwork WHERE userID = u.userID AND ar_agreement IS NOT NULL )
               	AND	
                 	uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )
               	GROUP BY
@@ -118,7 +122,7 @@
               	WHERE
                		uar.userType = 7
               	AND
-                	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> IN ( SELECT MIN(seasonID) FROM smg_users_paperwork WHERE userID = u.userID )
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> = ( SELECT MIN(seasonID) FROM smg_users_paperwork WHERE userID = u.userID )
              	AND	
                 	uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )
               	GROUP BY
@@ -602,8 +606,8 @@
                     </tr>      
                     <tr>
                         <td class="subTitleCenter" width="20%" style="font-size:10px">Number of New Reps Added</td>	
-                        <td class="subTitleCenter" width="20%" style="font-size:10px">Number Enabled</td>
-                        <td class="subTitleCenter" width="20%" style="font-size:10px">Percent Enabled</td>
+                        <td class="subTitleCenter" width="20%" style="font-size:10px">Number Contracted</td>
+                        <td class="subTitleCenter" width="20%" style="font-size:10px">Percent Contracted</td>
                         <td class="subTitleCenter" width="20%" style="font-size:10px">Number with a placement</td>
                         <td class="subTitleCenter" width="20%" style="font-size:10px">Percent with a placement</td>
                     </tr>
