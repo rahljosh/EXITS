@@ -151,7 +151,7 @@
                     AND
                         p.type IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vProgramTypeList#" list="yes"> )
                     AND
-                        p.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> 
+                        p.smgSeasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> 
             LEFT OUTER JOIN
                 smg_hostHistory sh ON sh.studentID = s.studentID
                 AND
