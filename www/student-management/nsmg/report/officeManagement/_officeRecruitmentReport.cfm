@@ -80,7 +80,7 @@
                	AND	
                 	uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )
               	AND
-                	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> = ( SELECT MIN(seasonID) FROM smg_users_paperwork WHERE userID = u.userID )
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> IN ( SELECT seasonID FROM smg_users_paperwork WHERE userID = u.userID )
               	GROUP BY
                 	u.userID
             </cfquery>
@@ -96,11 +96,9 @@
               	WHERE
                		uar.userType = 7
               	AND
-                	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> = ( SELECT MIN(seasonID) FROM smg_users_paperwork WHERE userID = u.userID )
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> IN ( SELECT seasonID FROM smg_users_paperwork WHERE userID = u.userID AND ar_agreement != NULL )
               	AND	
                 	uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )
-               	AND
-                	u.accountCreationVerified = 1
               	GROUP BY
                 	u.userID
             </cfquery>
@@ -120,7 +118,7 @@
               	WHERE
                		uar.userType = 7
               	AND
-                	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> = ( SELECT MIN(seasonID) FROM smg_users_paperwork WHERE userID = u.userID )
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> IN ( SELECT seasonID FROM smg_users_paperwork WHERE userID = u.userID )
              	AND	
                 	uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )
               	GROUP BY
@@ -228,8 +226,8 @@
                 <td>Region</td>
                 <td>Region Manager</td>
                 <td>Number of New Reps Added</td>
-                <td>Number Enabled</td>
-                <td>Percent Enabled</td>
+                <td>Number Contracted</td>
+                <td>Percent Contracted</td>
                 <td>Number with a placement</td>
                 <td>Percent with a placement</td>
             </tr>
@@ -502,8 +500,8 @@
                             <td class="subTitleLeft" width="10%" style="font-size:10px;">Region</td>
                             <td class="subTitleLeft" width="10%" style="font-size:10px;">Region Manager</td>
                             <td class="subTitleCenter" width="15%" style="font-size:10px">Number of New Reps Added</td>	
-                            <td class="subTitleCenter" width="15%" style="font-size:10px">Number Enabled</td>
-                            <td class="subTitleCenter" width="20%" style="font-size:10px">Percent Enabled</td>
+                            <td class="subTitleCenter" width="15%" style="font-size:10px">Number Contracted</td>
+                            <td class="subTitleCenter" width="20%" style="font-size:10px">Percent Contracted</td>
                             <td class="subTitleCenter" width="20%" style="font-size:10px">Number with a placement</td>
                             <td class="subTitleCenter" width="20%" style="font-size:10px">Percent with a placement</td>
                         </tr>
