@@ -454,7 +454,7 @@
 				stUserPaperwork.isReferenceQuestionnaireCompleted = false;
 			}
 			
-			// 2nd Visit - Only Agreement and CBC - No Reference, employment history, trainings and DOS test
+			// 2nd Visit - Only Agreement and CBC - No References, employment history, trainings and DOS test
 			if ( vIsSecondVisitRep ) {
 				stUserPaperwork.isReferenceCompleted = true;
 				stUserPaperwork.isReferenceQuestionnaireCompleted = true;
@@ -464,8 +464,11 @@
 			}
 			
 			
-			// ESI - No DOS Test and WebEx
-			if ( APPLICATION.SETTINGS.COMPANYLIST.ESI NEQ companyID ) {
+			// ESI - Only Agreement and CBC - No References, employment history, trainings and DOS test
+			if ( CLIENT.companyID EQ APPLICATION.SETTINGS.COMPANYLIST.ESI ) {
+				stUserPaperwork.isReferenceCompleted = true;
+				stUserPaperwork.isEmploymentHistoryCompleted = true;
+				stUserPaperwork.isReferenceQuestionnaireCompleted = true;
 				stUserPaperwork.isTrainingCompleted = true;
 				stUserPaperwork.isDOSCertificationCompleted = true;
 			}
@@ -997,37 +1000,12 @@
         <cfscript>
 			var allowAccess = false;
 
-			if ( ARGUMENTS.currentUserType LTE 4 OR ARGUMENTS.currentUserID EQ ARGUMENTS.viewUserID ) {
-				
-				// Allow Access to office users and users seeing their own information
-				allowAccess = true;
-			
-			} else {
+			// Get view user access				
+			qViewUserAccess = getUserAccessRights(userID=ARGUMENTS.viewUserID, regionID=ARGUMENTS.currentRegionID);
 
-				// Get view user access				
-				viewUserAccess = getUserAccessRights(userID=ARGUMENTS.viewUserID, regionID=ARGUMENTS.currentRegionID);
-				
-				if ( VAL(viewUserAccess.recordCount) ) {
-				
-					switch(ARGUMENTS.currentUserType) {
-						
-						// Regional Manager
-						case 5: {
-							 allowAccess = true;
-							 break;
-						}
-						
-						// Regional Advisor
-						case 6: {
-							 if ( ARGUMENTS.currentUserID EQ viewUserAccess.advisorID ) {
-								 allowAccess = true;
-							 }
-							 break;
-						}
-						
-						// Area Rep is only allowed to see their own information
-					}								 
-				}
+			// Allow Access to office users, users seeing their own information, advisors seeing their own users and regional managers
+			if ( listFind("1,2,3,4", ARGUMENTS.currentUserType) OR ARGUMENTS.currentUserID EQ ARGUMENTS.viewUserID OR ARGUMENTS.currentUserID EQ qViewUserAccess.advisorID OR ( ARGUMENTS.currentUserType EQ 5 AND ARGUMENTS.currentRegionID EQ qViewUserAccess.regionID ) ) {
+				allowAccess = true;
 			}
 		</cfscript>
         
