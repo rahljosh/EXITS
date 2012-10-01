@@ -352,7 +352,6 @@
             
             <!----Check files for office users---->
             
-            
             <!---Check files for user office users----->
           
             <!--- DELETE THIS - MARCUS MELO --->
@@ -369,9 +368,6 @@
             </cfif>
 			--->
             
-		
-          
-         
 		</cfif>
          
          
