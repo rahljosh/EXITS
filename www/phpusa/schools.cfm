@@ -56,7 +56,7 @@ a:active {
     <!-- end photobox --></div>
 
      <p class="headline">High School</p>
-<p>Please click on the city or state below to learn more about each school we work with.  Please feel free to <a href="contact.cfm" class="menu2">CONTACT US</a> with questions about any school on this list. </p>
+<p>Please click on the city or state below to learn more about each school we work with.  Please feel free to <a href="contactUs.cfm" class="menu2">CONTACT US</a> with questions about any school on this list. </p>
                   <table width="48%" border=0 cellpadding=4 cellspacing=0>
 	<blockquote><tr>
 		<th width=85>
