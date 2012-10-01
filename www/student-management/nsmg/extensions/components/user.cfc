@@ -941,7 +941,6 @@
 	<cffunction name="getUserAccessRights" access="public" returntype="query" output="false" hint="Gets user access rights for a user or region">
     	<cfargument name="userID" type="numeric" default="0" hint="userID is required">
         <cfargument name="regionID" type="numeric" default="0" hint="regionID is required">
-        <cfargument name="companyID" type="numeric" default="0" hint="companyID is required">
               
         <cfquery 
 			name="qGetUserAccessRights" 
@@ -965,22 +964,22 @@
                 WHERE
                 	1 = 1
 
-				<cfif VAL(ARGUMENTS.userID )>
+				<cfif VAL(ARGUMENTS.userID)>
                 	AND
                     	uar.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
                 </cfif>                  
                     
-				<cfif VAL(ARGUMENTS.regionID )>
+				<cfif VAL(ARGUMENTS.regionID)>
                 	AND
                     	uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
                 </cfif>   
 
-				<cfif ARGUMENTS.companyID EQ 10>
-                	AND
-                    	uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
-                <cfelse>
-                	AND
-                    	uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                    AND          
+                        uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                <cfelseif VAL(CLIENT.companyID)>
+                    AND          
+                        uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
                 </cfif>
 
 				ORDER BY
