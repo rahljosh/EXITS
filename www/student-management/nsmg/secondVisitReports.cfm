@@ -163,7 +163,7 @@
         </cfcase>
         
     </cfswitch>
-    
+
     <cfquery name="qGetResults" datasource="#APPLICATION.DSN#">
         SELECT 
             <!--- Student --->
@@ -381,11 +381,11 @@
                     user_access_rights uar ON uar.userID = ht.secondVisitRepID
 						<cfif APPLICATION.CFC.USER.isOfficeUser()>
                             AND
-                                uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.pr_regionID#" list="yes"> )
+                                uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.pr_regionID#">
                         <cfelse>
                             <!--- don't use CLIENT.pr_regionID because if they change access level this is not reset. --->
                             AND
-                                uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#" list="yes"> )
+                                uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
                         </cfif>
                 INNER JOIN
                 	smg_programs p on p.programID = s.programID
@@ -412,7 +412,7 @@
 				LEFT OUTER JOIN
                 	smg_users hiddenBy ON hiddenBy.userID = shr.fk_userID  
                 WHERE
-                	1 = 1
+                	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
                     
 				<!--- User Access --->
                 <cfswitch expression="#CLIENT.userType#">
@@ -541,11 +541,11 @@
                     user_access_rights uar ON uar.userID = ht.secondVisitRepID
 						<cfif APPLICATION.CFC.USER.isOfficeUser()>
                             AND
-                                uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.pr_regionID#" list="yes"> )
+                                uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.pr_regionID#">
                         <cfelse>
                             <!--- don't use CLIENT.pr_regionID because if they change access level this is not reset. --->
                             AND
-                                uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#" list="yes"> )
+                                uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
                         </cfif>
                 INNER JOIN
                 	smg_programs p on p.programID = s.programID
@@ -574,6 +574,8 @@
 				LEFT OUTER JOIN
                 	smg_users hiddenBy ON hiddenBy.userID = shr.fk_userID  
                 WHERE
+					s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                AND					
 					<!--- Get only records that have already a report approved --->
 					(
                         SELECT 
@@ -759,11 +761,11 @@
                     user_access_rights uar ON uar.userID = sht.fieldID
 						<cfif APPLICATION.CFC.USER.isOfficeUser()>
                             AND
-                                uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.pr_regionID#" list="yes"> )
+                                uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.pr_regionID#">
                         <cfelse>
                             <!--- don't use CLIENT.pr_regionID because if they change access level this is not reset. --->
                             AND
-                                uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#" list="yes"> )
+                                uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
                         </cfif>
                 INNER JOIN
                 	smg_programs p on p.programID = s.programID
@@ -790,7 +792,7 @@
 				LEFT OUTER JOIN
                 	smg_users hiddenBy ON hiddenBy.userID = shr.fk_userID  
                 WHERE
-                	1 = 1
+                	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
 
 				<!--- User Access --->
                 <cfswitch expression="#CLIENT.userType#">
