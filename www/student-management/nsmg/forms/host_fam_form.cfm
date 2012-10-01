@@ -1036,14 +1036,14 @@
                         </a>
                  </td>
            </cfif>
-           <cfif client.companyid neq 10>
+           
           		<td valing="top" align="center">
 				
                 (Host Fam Fills Out App)<br />
                    <input name="Submit_start" type="submit" value="eHost" src="pics/buttons_ehost.png" alt="Start E-App" border="0" class="buttonBlue" /> 
                
                 </td>
-                </cfif>
+                
                 <td align="Center">   
                 (Office User Fills Out App / Update Info)<br />
                    <input name="Submit_start" type="submit" value="Submit" src="pics/buttons_SUBMIT.png" alt="Submit Paper Application" border="0" class="buttonRed" />
