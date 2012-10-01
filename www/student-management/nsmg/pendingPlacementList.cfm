@@ -21,7 +21,7 @@
     <cfparam name="URL.sortOrder" default="ASC">
     <cfparam name="URL.preAypCamp" default="">
     <!--- Default CASE and ESI to All --->
-	<cfif listFind("10,14", CLIENT.companyID)>
+	<cfif NOT APPLICATION.CFC.USER.isOfficeUser() OR listFind("10,14", CLIENT.companyID)>
     	<cfparam name="URL.placementType" default="All">
 	<cfelse>
     	<cfparam name="URL.placementType" default="newPlacements">
