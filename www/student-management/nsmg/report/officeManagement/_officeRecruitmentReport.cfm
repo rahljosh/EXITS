@@ -80,7 +80,7 @@
                	AND	
                 	uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )
               	AND
-                	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> IN ( SELECT seasonID FROM smg_users_paperwork WHERE userID = u.userID )
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> IN ( SELECT MIN(seasonID) FROM smg_users_paperwork WHERE userID = u.userID )
               	GROUP BY
                 	u.userID
             </cfquery>
@@ -96,7 +96,7 @@
               	WHERE
                		uar.userType = 7
               	AND
-                	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> IN ( SELECT seasonID FROM smg_users_paperwork WHERE userID = u.userID AND ar_agreement != NULL )
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> IN ( SELECT MIN(seasonID) FROM smg_users_paperwork WHERE userID = u.userID AND ar_agreement IS NOT NULL )
               	AND	
                 	uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )
               	GROUP BY
@@ -118,7 +118,7 @@
               	WHERE
                		uar.userType = 7
               	AND
-                	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> IN ( SELECT seasonID FROM smg_users_paperwork WHERE userID = u.userID )
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> IN ( SELECT MIN(seasonID) FROM smg_users_paperwork WHERE userID = u.userID )
              	AND	
                 	uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )
               	GROUP BY
