@@ -63,7 +63,7 @@
    <Cfelseif client.usertype eq 6>
    	<cfset mailTo = #get_regional_director.email#>
    <cfelseif client.usertype eq 5>
-   	<cfset mailTo = #get_facilitator.email#>
+   	<cfset mailTo = 'compliance@iseusa.com'>
    <cfelseif client.usertype lte 4>
    	<cfset mailTo = "#get_regional_director.email#,#repInfo.email#">
    </cfif>
