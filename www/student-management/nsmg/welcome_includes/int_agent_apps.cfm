@@ -1,15 +1,4 @@
-<!----Application Info---->
-<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
-	<tr height=24>
-		<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
-		<td width=26 background="pics/header_background.gif"><img src="pics/news.gif"></td>
-		<td background="pics/header_background.gif"><h2>Current Online Application Stats</h2></td>
-		<td background="pics/header_background.gif" width=16></td>
-		<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
-	</tr>
-</table>
-					
-<table width=100% cellpadding=4 cellspacing=0 border=0 class="section" >
+<table width=100% cellpadding=4 cellspacing=0 border=0>
 	<tr>
 		<td style="line-height:20px;" valign="top" width="100%">
 			<table width=100% valign="top" border=0>
@@ -104,14 +93,5 @@
 			</table>
 		</td>
 		<td align="right" valign="top" rowspan=2>
-	</tr>
-</table>
-
-<!----footer of table---->
-<table width=100% cellpadding=0 cellspacing=0 border=0>
-	<tr>
-		<td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td>
-		<td width=100% background="pics/header_background_footer.gif"></td>
-		<td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td>
 	</tr>
 </table>
