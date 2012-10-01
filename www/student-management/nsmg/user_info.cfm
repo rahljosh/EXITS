@@ -28,17 +28,17 @@
 	<cfparam name="FORM.score" default="">
     
     <cfscript>
+		// Get Current Season
+		qGetCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason();
+		
 		// Get Training Options
 		qGetTrainingOptions = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='smgUsersTraining');
 	
 		// Get Training records for this user
 		qGetTraining = APPLICATION.CFC.USER.getTraining(userID=URL.userID);
-		  
-    	//Check if paperwork is complete for season
-		CheckPaperwork = APPLICATION.CFC.udf.paperworkCompleted(userID=URL.userID,season=APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID);
 		
-         //Check if paperwork is complete for season
-		get_paperwork = APPLICATION.CFC.udf.allpaperworkCompleted(userID=url.userID,seasonid=APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID);
+		// Get User Paperwork Struct
+		stUserPaperwork = APPLICATION.CFC.USER.getUserPaperwork(userID=URL.userID);
 	</cfscript>
 
 	<!----Rep Info---->
@@ -366,59 +366,54 @@
     </cfif>
 </cfif>
 <cfoutput query="rep_info">
-<cfif not val(accountCreationVerified)>
-	<cfif get_paperwork.reviewAcct eq 1>
-        <div class="alert">
-        <h1>Account Review Required - Account appears ready for manual review. </h1>
-        <em>Please review references and run CBC.  When everything looks fine, approve the CBC through Paperwork menu to activate account.</em> </div>
-        <br />
-    <cfelseif get_paperwork.areaRepOK eq 0 or get_paperwork.arearepOk is ''>
-        <div class="alert">
-        <h1>Account Not Enabled</h1>
-        <em>Please review items missing in the paperwork section.</em> </div>
-        <br />
+
+	<cfif not val(accountCreationVerified)>
+        <cfif stUserPaperwork.isAccountReadyForReview>
+            <div class="alert">
+            <h1>Account Review Required - Account appears ready for manual review. </h1>
+            <em>Please review references and run CBC.  When everything looks fine, approve the CBC through Paperwork menu to activate account.</em> </div>
+            <br />
+        <cfelseif NOT stUserPaperwork.isAccountCompliant>
+            <div class="alert">
+            <h1>Account Not Enabled</h1>
+            <em>Please review items missing in the paperwork section.</em> </div>
+            <br />
+        </cfif>
     </cfif>
-</cfif>
 
-
-
-			<!--- INFORMATION --->
-			<div class="rdholder"> 
-				<div class="rdtop"> 
-                <span class="rdtitle">Please Note</span> 
-            </div> <!-- end top --> 
-             <div class="rdbox">
-			
-						<cfif isDefined("CLIENT.verify_info")>
-                            <font size="4" color="##FF0000"><b>
-                            Please verify that your Personal Information is correct, if not, please click on edit (<img src="pics/edit.png">) and update your information.<br>
-                            You must click below to verify your information before you may proceed.<br />
-                            </b></font>
-                            <a href="index.cfm?curdoc=user_info&action=verify_info&userID=#rep_info.userID#"><img src="pics/verify_account_info.jpg" width="144" height="112" border="0"></a>
-                        <cfelse>
-							<!--- international user --->
-                            <cfif uar_usertype EQ 8>
-                                <div style="font-size:14px;font-weight:bold;" align="justify">
-                                Please verify that your account information is correct.
-                                Inaccurate information could result in delayed communication, missed emails, inaccurate records and inefficient communication.  
-                                To update your information, click on please click on the edit icon (<img src="pics/edit.png">). 
-                                If information is incorrect and you update your information, please notify #CLIENT.company_submitting# immediatly of any such updates. 
-                                </div> 
-                            <cfelse>
-                                <div style="font-size:14px;font-weight:bold;" align="justify">
-                                Please verify that your account information is correct.
-                                Inaccurate information could result in delayed payments and missed emails.
-                                #CLIENT.company_submitting# is not responsible for delayed payments if your information is incorrect.  
-                                If information is incorrect and you update your information, you must notify your manager or facilitator.
-                                </div>
-                                If you can not edit information that is incorrect, contact your manager or facilitator.
-                            </cfif>
-                        </cfif>
-				
-			</div>
-             <div class="rdbottom"></div> <!-- end bottom --> 
-            
-             </div>
+	<!--- INFORMATION --->
+    <div class="rdholder"> 
+   		<div class="rdtop"><span class="rdtitle">Please Note</span></div> <!-- end top --> 
+        <div class="rdbox">
+			<cfif isDefined("CLIENT.verify_info")>
+                <font size="4" color="##FF0000"><b>
+                Please verify that your Personal Information is correct, if not, please click on edit (<img src="pics/edit.png">) and update your information.<br>
+                You must click below to verify your information before you may proceed.<br />
+                </b></font>
+                <a href="index.cfm?curdoc=user_info&action=verify_info&userID=#rep_info.userID#"><img src="pics/verify_account_info.jpg" width="144" height="112" border="0"></a>
+            <cfelse>
+				<!--- international user --->
+                <cfif uar_usertype EQ 8>
+                    <div style="font-size:14px;font-weight:bold;" align="justify">
+                    Please verify that your account information is correct.
+                    Inaccurate information could result in delayed communication, missed emails, inaccurate records and inefficient communication.  
+                    To update your information, click on please click on the edit icon (<img src="pics/edit.png">). 
+                    If information is incorrect and you update your information, please notify #CLIENT.company_submitting# immediatly of any such updates. 
+                    </div> 
+                <cfelse>
+                    <div style="font-size:14px;font-weight:bold;" align="justify">
+                    Please verify that your account information is correct.
+                    Inaccurate information could result in delayed payments and missed emails.
+                    #CLIENT.company_submitting# is not responsible for delayed payments if your information is incorrect.  
+                    If information is incorrect and you update your information, you must notify your manager or facilitator.
+                    </div>
+                    If you can not edit information that is incorrect, contact your manager or facilitator.
+                </cfif>
+            </cfif>
+        </div>
+   		<div class="rdbottom"></div> <!-- end bottom --> 
+    </div>
+    
 <!----Left column for alignment purposes---->
 <div style="width:49%;float:left;display:block;">
 			<!----Personal Information---->
@@ -816,12 +811,16 @@
                     OR cbc.cbc_type = 'mother' AND ((h.motherssn = '#rep_info.ssn#' AND h.motherssn != '') OR (h.motherfirstname = '#rep_info.firstname#' AND h.motherlastname = '#rep_info.lastname#' <cfif rep_info.dob NEQ ''>AND h.motherdob = '#DateFormat(rep_info.dob,'yyyy/mm/dd')#'</cfif>))
                 </cfquery>
                 
-                <Cfquery name="currentSeasonCBC" dbtype="query">
-                select date_sent
-                from get_cbc_user
-                where seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(get_paperwork.seasonid)#"> 
-                and userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.userID#"> 
-                </Cfquery>
+                <cfquery name="currentSeasonCBC" dbtype="query">
+                    select 
+                    	date_sent
+                    from 
+                    	get_cbc_user
+                    where 
+                    	seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCurrentSeason.seasonID)#"> 
+                    and 
+                    	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.userID#"> 
+                </cfquery>
                
           
                 <div class="rdholder" style="width:100%;float:left;" > 
@@ -1138,26 +1137,34 @@
                         	<tr>
                             	<td><strong>Login Enabled:</strong></td><td> <Cfif accountCreationVerified is '' or  accountCreationVerified eq 0><a href="index.cfm?curdoc=forms/user_paperwork&userID=#url.userID#"> No</a><Cfelse>Yes</Cfif></td>
                            </tr>
-                          
-                           <tr>
-                           		<td>
-									<cfif uar_usertype NEQ 8>
-                                    <strong>Area Rep Paperwork:</strong></td><td>
-                                    <a href="?curdoc=forms/user_paperwork&userID=#url.userID#">
-                                    <cfif get_paperwork.arearepok eq 1>
-                                    Complete<cfelse>Incomplete</cfif></a>
-                                    </td></cfif>
-                                
-                           <tr>
-                           		<td>
-									<cfif uar_usertype NEQ 8>
-                                    <strong>2<sup>nd</sup> Visit Paperwork:</strong></td><td>
-                                    <a href="?curdoc=forms/user_paperwork&userID=#url.userID#">
-                                    <cfif get_paperwork.secondVisitRepOK eq 1>
-                                    Complete<cfelse>Incomplete</cfif></a>
-                                    </td></cfif>
-                                
-                           </tr>
+                           
+                           <cfif NOT listFind("8,11", uar_usertype)>
+                               <tr>
+                                    <td><strong>Area Rep Paperwork:</strong></td>
+                                    <td>
+                                        <a href="?curdoc=forms/user_paperwork&userID=#url.userID#">
+											<cfif stUserPaperwork.isAccountCompliant>
+                                                Complete
+                                            <cfelse>
+                                                Incomplete
+                                            </cfif>
+                                        </a>
+                                    </td>
+                               </tr>
+                               <tr>
+                                    <td><strong>2<sup>nd</sup> Visit Paperwork:</strong></td>
+                                    <td>
+                                        <a href="?curdoc=forms/user_paperwork&userID=#url.userID#">
+											<cfif stUserPaperwork.isAccountCompliant>
+                                                Complete
+                                            <cfelse>
+                                                Incomplete
+                                            </cfif>
+                                        </a>
+									</td>
+                               </tr>
+                           </cfif>
+                               
                           </table>
      				</td>
                     <Td width=230>
@@ -1856,15 +1863,8 @@
                             
             	</div> <!-- end top --> 
              <div class="rdbox">    
-                 <!----
-                <table width="100%" cellpadding=10 cellspacing="0" border="0">
-                   <tr><td align="Center" colspan=4<cfif get_paperwork.ar_ref_quest1 is '' or get_paperwork.ar_ref_quest2 is ''> bgcolor="##FF0000"</cfif> ><a href="javascript:displayReferenceForm();"><cfif get_paperwork.ar_ref_quest1 is '' or get_paperwork.ar_ref_quest2 is ''><font color="##ffffff"></cfif>View / Hide References</font></a><br /></td></tr>
-                   <td><td align="center">
-                   ---->
-                   
-                    
                     <table width=100%>
-                    <tr><td><b>Season: #get_paperwork.season#</td></tr>
+                    <tr><td><b>Season: #qGetCurrentSeason.season#</td></tr>
                     <tr>
                         <td valign="top">
                             <table width=100% cellspacing=0 cellpadding="4">
