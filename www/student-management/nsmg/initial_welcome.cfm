@@ -570,8 +570,8 @@
                             <cfset since_lastlogin = 0>
                             <!--- this is used to display the message if the user is the advisor of any new users. --->
                             <cfset is_advisor = 0>
-                            <table>
-                                <tr>
+                            <table width="100%" cellpadding="4" cellspacing="0">
+                                <tr style="font-weight:bold;">
                                 	<td></td>
                                     <td>Name & Location</td>
                                     <td>Account Status</td>
@@ -579,8 +579,8 @@
                                 <cfloop query="get_new_users"> 
                                 
 									<cfscript>
-										//Check if paperwork is complete for season
-										CheckPaperwork = APPLICATION.CFC.udf.paperworkCompleted(userID=get_new_users.userID,season=9);
+										// Get User Paperwork Struct
+										stUserPaperwork = APPLICATION.CFC.USER.getUserPaperwork(userID=get_new_users.userID);
                                     </cfscript>
                                 
 									<!--- put * if user is the advisor for this user. --->
@@ -601,15 +601,22 @@
                                             </cfif>
                                         </td>
                                         <td>
-											<cfif not val(accountCreationVerified)>
-                                                Not Active, 
-                                                <cfif CLIENT.usertype eq 4>
+											<cfif stUserPaperwork.isAccountCompliant>
+                                           		Account Active - Paperwork Compliant
+                                            <cfelseif stUserPaperwork.isAccountReadyForReview>
+                                                Active (Paperwork received) - 
+												<cfif APPLICATION.CFC.USER.isOfficeUser()>
                                                 	<a href="?curdoc=forms/user_paperwork&userID=#userID#">Verification Needed</a>
 												<cfelse>
                                                 	Verification Needed
 												</cfif>
                                             <cfelse>
-                                                Account Active
+                                                Active - 
+                                                <cfif APPLICATION.CFC.USER.isOfficeUser()>
+                                                	<a href="?curdoc=forms/user_paperwork&userID=#userID#">Missing Paperwork</a>
+												<cfelse>
+                                                	Missing Paperwork
+												</cfif>
                                             </cfif>
                                         </td>
                                     </tr>

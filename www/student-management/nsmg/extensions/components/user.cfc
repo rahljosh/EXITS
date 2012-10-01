@@ -454,6 +454,7 @@
 				stUserPaperwork.isReferenceQuestionnaireCompleted = false;
 			}
 			
+			
 			// 2nd Visit - Only Agreement and CBC - No References, employment history, trainings and DOS test
 			if ( vIsSecondVisitRep ) {
 				stUserPaperwork.isReferenceCompleted = true;
