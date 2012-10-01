@@ -1,4 +1,4 @@
-<cfif (ListFind("5,6,7,9", CLIENT.userType) AND ListFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, CLIENT.companyid)) >
+<cfif (ListFind("5,6,7,9,15", CLIENT.userType) AND ListFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, CLIENT.companyid)) >
                      <cfset tripcount = 7 - placed_students.Count>
               <table>
               	<Tr>
