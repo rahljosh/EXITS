@@ -95,7 +95,7 @@
         	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
     </cfquery>
 
-    <cfquery name="qreferences" datasource="MySQL">
+    <cfquery name="qGetReferences" datasource="MySQL">
         SELECT 
         	*
         FROM
@@ -301,7 +301,7 @@
 	$(document).ready(function() {
 		$(".jQueryModal").colorbox( {
 			   width:"60%",
-			   height:"60%",
+			   height:"75%",
 			   iframe:true,
 			   overlayClose:false,
 			   escKey:false
@@ -975,7 +975,7 @@
             	</div> <!-- end top --> 
              <div class="rdbox">
 
-             <Cfif comments EQ ''>No additional information available.<cfelse>#comments#</cfif><br><br>
+             <cfif comments EQ ''>No additional information available.<cfelse>#comments#</cfif><br><br>
                    
                 <!----footer of  notes  table---->
                    </div>
@@ -1011,13 +1011,13 @@
                         	<tr>
                             <Th align="left">Name</Th><Th align="left">Date</Th><th  align="left">Type</th>
                             </Tr>
-                           <Cfif documents.recordcount eq 0>
+                           <cfif documents.recordcount eq 0>
                             <tr>
                                 <td colspan=7>No documents are on file for #firstname#.</td>
                             </tr>
                             <cfelse>
                             <Cfloop query="documents">
-                            <tr <Cfif currentrow mod 2> bgcolor="##efefef"</cfif>>
+                            <tr <cfif currentrow mod 2> bgcolor="##efefef"</cfif>>
                               
                                 <Td valign="middle"><a href="javascript:openPopUp('uploadedfiles/users/#userID#/#name#')">#name#</a></Td>
                                 <td valign="middle">#dateFormat(datelastModified, 'mm/dd/yyyy')#</td>
@@ -1041,7 +1041,7 @@
             <!----Emolyment History---->
             <!--- ------------------------------------------------------------------------- ---->   
                 <br /><br />
-                <Cfif client.usertype lte 4>
+                <cfif client.usertype lte 4>
                 <cfquery name="qEmploymentHistory" datasource="MySQL">
                 select *
                 from smg_users_employment_history
@@ -1065,26 +1065,26 @@
                            <Tr>
                            	 	<td colspan=7>
                                 <b>Prior Exchange Experience:</b><br />
-                                <Cfif prevOrgAffiliation eq 0>
+                                <cfif prevOrgAffiliation eq 0>
                                 None
                                 <cfelseif prevOrgAffiliation eq 1> 
                                  #prevAffiliationName#<br />
                                  <cfif #prevAffiliationProblem# is not ''><em><font color="##CCCCCC">Problems:</font></em> #prevAffiliationProblem#</cfif>
                                  <cfelse>
                                  Question not Answered.
-                                 </Cfif>
+                                 </cfif>
                                  <br /><br />
                                 </td>
                            </Tr>
                             <Th></Th><Th>Employer</Th><Th>Address</Th><th>City</th><Th>State</Th><th>Zip</th><th>Phone</th>
                             </Tr>
-                           <Cfif qEmploymentHistory.recordcount eq 0>
+                           <cfif qEmploymentHistory.recordcount eq 0>
                             <tr>
                                 <td colspan=7>No employers are on file for #firstname#.</td>
                             </tr>
                             <cfelse>
                             <Cfloop query="qEmploymentHistory">
-                            <tr <Cfif currentrow mod 2> bgcolor="##efefef"</cfif>>
+                            <tr <cfif currentrow mod 2> bgcolor="##efefef"</cfif>>
                                 <Td><cfif current eq 1>&radic;</cfif></Td>
                                 <Td valign="middle">#employer#</Td>
                                 <td valign="middle">#address# #address2#</td>
@@ -1135,7 +1135,7 @@
                            		<td><strong>Status:</strong></td><td> <cfif active EQ 1>Active<cfelse>Inactive</cfif></td>
                            </tr>
                         	<tr>
-                            	<td><strong>Login Enabled:</strong></td><td> <Cfif accountCreationVerified is '' or  accountCreationVerified eq 0><a href="index.cfm?curdoc=forms/user_paperwork&userID=#url.userID#"> No</a><Cfelse>Yes</Cfif></td>
+                            	<td><strong>Login Enabled:</strong></td><td> <cfif accountCreationVerified is '' or  accountCreationVerified eq 0><a href="index.cfm?curdoc=forms/user_paperwork&userID=#url.userID#"> No</a><Cfelse>Yes</cfif></td>
                            </tr>
                            
                            <cfif NOT listFind("8,11", uar_usertype)>
@@ -1753,13 +1753,13 @@
                                     	<tr  bgcolor="##0b5886">
                                         	<th colspan=4><font color="white">Placed (#get_placed_students.recordcount#)</font></th>
                                         </tr>
-                                        <Cfif get_placed_students.recordcount EQ 0>
+                                        <cfif get_placed_students.recordcount EQ 0>
                                             <tr><td colspan="6" align="left">Rep has not placed any students</td></tr>
                                         <cfelse>
                                         <tr>
                                             <Th align="left">First Last (ID)</Th><th align="left">Gender</th><th align="left">Country</th><th align="left">Program</th>
                                         </tr>
-                                        </Cfif>
+                                        </cfif>
                                         <cfloop query="get_placed_Students">
                                         <tr bgcolor="#iif(get_placed_Students.currentrow MOD 2 ,DE("efefef") ,DE("ffffff") )#">		
                                             
@@ -1781,13 +1781,13 @@
                             	<tr  bgcolor="##0b5886">
                                     <th colspan=4><font color="white">Supervising (#get_supervised_students.recordcount#)</font></th>
                                 </tr>
-                                <Cfif get_supervised_students.recordcount eq 0>
+                                <cfif get_supervised_students.recordcount eq 0>
                                     <Tr><td colspan="6" align="left">Rep is not supervising any students</td></Tr>
                                  <cfelse>
                                 <tr>
                                    <Th align="left">First Last (ID)</Th><th align="left">Gender</th><th align="left">Country</th><th align="left">Program</th>
                                  </tr>
-                                 </Cfif>
+                                 </cfif>
                                 <cfloop query="get_supervised_students">
                                 <tr bgcolor="#iif(get_supervised_students.currentrow MOD 2 ,DE("efefef") ,DE("ffffff") )#">		
                                             
@@ -1811,14 +1811,14 @@
                               <tr  bgcolor="##0b5886">
                                     <th colspan=4><font color="white">Second Visit Students: (#get_2ndvisit_students.recordcount#)</font></th>
                                 </tr>
-                                <Cfif get_2ndvisit_students.recordcount EQ 0>
+                                <cfif get_2ndvisit_students.recordcount EQ 0>
                                  	
                                     	<Tr><td colspan="6" align="left">Rep is not a 2nd Visit rep for any students.</td></Tr>
                                 <cfelse>
                                  <tr>
                                             <Th align="left">First Last (ID)</Th><th align="left">Gender</th><th align="left">Country</th><th align="left">Program</th>
                                         </tr>
-                                </Cfif>
+                                </cfif>
                                 <cfloop query="get_2ndvisit_students">
                                 <tr bgcolor="#iif(get_2ndvisit_students.currentrow MOD 2 ,DE("efefef") ,DE("ffffff") )#">		
                                         <td align="left">#firstname# #familylastname# (#studentid#)</td>
@@ -1847,96 +1847,101 @@
             <!--- ------------------------------------------------------------------------- ---->  
 
           	
- 	    <!--- ------------------------------------------------------------------------- ---->
+			<!--- ------------------------------------------------------------------------- ---->
             <!----References---->
             <!--- ------------------------------------------------------------------------- ---->         
-         
-                <!--- References ---->
-                <div class="rdholder"  style="width:100%;float:right;" > 
-				<div class="rdtop"> 
-                <span class="rdtitle">References</span> 
-
-                <!--- DOS Usertype does not have access to edit information --->
-				<cfif CLIENT.userType NEQ 27>
-	                <a href="javascript:openPopUp('forms/repRefs.cfm?curdoc=repRefs&userID=#url.userID#', 640, 800);"><img src="pics/buttons/pencilBlue23x29.png" border="0" alt="Edit" class="floatRight"></a>
-    			</cfif>
-                            
-            	</div> <!-- end top --> 
-             <div class="rdbox">    
-                    <table width=100%>
-                    <tr><td><b>Season: #qGetCurrentSeason.season#</td></tr>
-                    <tr>
-                        <td valign="top">
-                            <table width=100% cellspacing=0 cellpadding="4">
-                            	<Tr bgcolor="##CCCCCC">
-                                <Td>Name</Td>
-                                <Td align="center">Phone</Td>                                
-                                <td align="center">Status</td>
-                                <td align="center">
-										<Cfif client.usertype lte 5 and client.userID neq userID>
-										Report</cfif>
-                                    </td>
-                                    
-                                </Tr>
-							
-                            <Cfif qreferences.recordcount EQ 0>   	
+            <div class="rdholder"  style="width:100%;float:right;" > 
+            
+                <div class="rdtop"> 
+                	<span class="rdtitle">References</span> 
+                    
+					<!--- DOS Usertype does not have access to edit information --->
+                    <cfif CLIENT.userType NEQ 27>
+                        <a href="user/index.cfm?action=reference&userID=#rep_info.userID#" class="jQueryModal"><img src="pics/buttons/pencilBlue23x29.png" border="0" alt="Edit" class="floatRight"></a>
+                    </cfif>
+                    
+                </div> <!-- end top --> 
+                
+                <div class="rdbox">    
+                    <table width="100%" cellpadding="4" cellspacing="0">
+                        <tr>
+                        	<td colspan="5"><strong>Season: #qGetCurrentSeason.season#</strong></td>
+                        </tr>
+                        <Tr bgcolor="##CCCCCC">
+                        	<Td>Name</Td>
+                        	<Td align="center">Phone</Td>                                
+                        	<td align="center">Status</td>
+                        	<cfif client.usertype lte 5 and client.userID neq userID>
+                        		<td align="center">Report</td>
+                        	</cfif>
+                        	<!--- DOS Usertype does not have access to edit information --->
+                        	<cfif CLIENT.userType NEQ 27 OR APPLICATION.CFC.USER.isOfficeUser() OR CLIENT.userID EQ rep_info.userID>
+                        		<td align="center">Actions</Td> 
+                        	</cfif>
+                        </Tr>
+                        
+                        <cfif NOT VAL(qGetReferences.recordcount)>   	
                             <tr>
-                                <td colspan=3>No references on file.</td>
-                             </tr>
-                             <cfelse>
-                             <Cfloop query="qreferences">
-                             <Cfquery name="checkRefReport" datasource="#APPLICATION.DSN#">
-                             select *
-                             from areaRepQuestionaireTracking
-                             where fk_ReferencesID = #refid# 
-                             
-                             </Cfquery>
-                             <tr <Cfif qreferences.currentrow mod 2>bgcolor=##efefef</cfif>>
-                               	<Td><strong>#firstname# #lastname#</strong> - <em>#relationship# (#howlong#)</em></Td>
+                                <td colspan="4">No references on file.</td>
+                            </tr>
+                        </cfif>
+                        
+                        <Cfloop query="qGetReferences">
+                            
+                            <Cfquery name="checkRefReport" datasource="#APPLICATION.DSN#">
+                            	select 
+                                	*
+                            	from 
+                            		areaRepQuestionaireTracking
+                            	where 
+                                	fk_ReferencesID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetReferences.refid)#"> 
+                            </Cfquery>
+                            
+                            <tr <cfif qGetReferences.currentrow mod 2>bgcolor=##efefef</cfif>>
+                                <Td><strong>#firstname# #lastname#</strong> - <em>#relationship# (#howlong#)</em></Td>
                                 <td align="Center">#phone#</td>
                                 <Td align="Center">
-                                <Cfif qreferences.approved eq 0>
-                                Waiting
-                                <Cfelseif qreferences.approved eq 1>
-                                Pending
-                                <Cfelseif qreferences.approved eq 2>
-                                Approved
-                                <Cfelseif qreferences.approved eq 3>
-                                Rejected
-                                </Cfif>
+                                    <cfif qGetReferences.approved eq 0>
+                                        Waiting
+                                    <Cfelseif qGetReferences.approved eq 1>
+                                        Pending
+                                    <Cfelseif qGetReferences.approved eq 2>
+                                        Approved
+                                    <Cfelseif qGetReferences.approved eq 3>
+                                        Rejected
+                                    </cfif>
                                 </Td>
-                                <Td align="Center">
-                                
-                                <Cfif client.usertype lte 6 and client.userID neq userID>
-									<Cfif checkRefReport.recordcount eq 0 and client.usertype lte 6 >
-                                     <a href="javascript:openPopUp('forms/refrencesQuestionaire.cfm?ref=#refid#&rep=#userID#', 680, 800);">Submit Report
-                                    <cfelse>
-                                   <a href="javascript:openPopUp('forms/viewRefrencesQuestionaire.cfm?reportid=#checkRefReport.id#', 640, 800);">View Report</a>
-                                    </Cfif>
-                                <cfelse>
-                               
+                                <cfif client.usertype lte 5 and client.userID neq userID> 
+                                    <Td align="Center">
+                                        <cfif checkRefReport.recordcount eq 0 and client.usertype lte 6 >
+                                            <a href="javascript:openPopUp('forms/refrencesQuestionaire.cfm?ref=#refid#&rep=#userID#', 680, 800);">Submit Report
+                                        <cfelse>
+                                            <a href="javascript:openPopUp('forms/viewRefrencesQuestionaire.cfm?reportid=#checkRefReport.id#', 640, 800);">View Report</a>
+                                        </cfif>
+                                    </Td>
                                 </cfif>
-                                </Td> 
-                              
-                             </tr>
-                             <Tr <Cfif qreferences.currentrow mod 2>bgcolor=##efefef</cfif>>
-                             	<td colspan=2>#address# #address2# #city# #state#, #zip#</td><Td colspan=2></Td>
-                             </Tr>
-                             </Cfloop>
-                             </Cfif>
-                         
-                              </table>
-                        </td>
-                    </tr>
-                </table>
+                                <!--- DOS Usertype does not have access to edit information --->
+                                <cfif CLIENT.userType NEQ 27 OR APPLICATION.CFC.USER.isOfficeUser() OR CLIENT.userID EQ rep_info.userID>
+                                    <td align="center">
+                                        [
+                                        <a href="user/index.cfm?action=reference&refID=#qGetReferences.refID#" class="jQueryModal">Edit</a> 
+                                        |
+                                        <a href="index.cfm?curdoc=user/index&action=welcome&subAction=deleteReference&refID=#qGetReferences.refID#&userID=#qGetReferences.referenceFor#" onClick="return confirm('Are you sure you want to delete this reference?')">Delete</a>
+										]
+                                    </td>
+                                </cfif> 
+                            </tr>
+                            <Tr <cfif qGetReferences.currentrow mod 2>bgcolor=##efefef</cfif>>
+                            	<td colspan="5">#address# #address2# #city# #state#, #zip#</td>
+                            </Tr>
+                        </Cfloop>
+                    </table>
+                </div>
                 
-                <!----footer of  references   table---->
-                   </div>
-                   <div class="rdbottom"></div> <!-- end bottom --> 
-                
-                   </div>
-                 
-			<!--- ------------------------------------------------------------------------- ---->
+                <div class="rdbottom"></div> <!-- end bottom --> 
+            </div>
+            
+            <!--- ------------------------------------------------------------------------- ---->
             <!----End References---->
             <!--- ------------------------------------------------------------------------- ---->                  
             

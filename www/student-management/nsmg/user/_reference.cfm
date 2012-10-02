@@ -12,7 +12,10 @@
 
 	<!--- Import CustomTag --->
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
-
+	
+    <!--- Param URL Variables --->
+    <cfparam name="URL.userID" default="0">
+    
     <!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.refID" default="0">
@@ -33,6 +36,10 @@
     <cfparam name="URL.refID" default="0">
     
     <cfscript>
+		if ( VAL(URL.userID) ) {
+			FORM.userID = URL.userID;	
+		}
+	
 		// Get References
 		qGetReferences = APPLICATION.CFC.USER.getReferencesByID(userID=FORM.userID);	
 
