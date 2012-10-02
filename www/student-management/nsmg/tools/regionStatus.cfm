@@ -9,10 +9,7 @@
 <cfparam name="form.selectedProgram" default="">
 <cfscript>
 	// Get Programs
-	qGetActivePrograms= APPLICATION.CFC.program.getPrograms(
-		isActive=1,
-		companyid=1
-	);
+	qGetActivePrograms= APPLICATION.CFC.program.getPrograms(isActive=1);
 </cfscript>
 <cfif isDefined('url.programid')>
 	<cfset form.selectedProgram = #url.programid#>

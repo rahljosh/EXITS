@@ -39,11 +39,9 @@
 </cfif>
 <cfscript>
 	// Get Programs
-	qGetActivePrograms= APPLICATION.CFC.program.getPrograms(
-		isActive=1,
-		companyid=1
-	);
+	qGetActivePrograms= APPLICATION.CFC.program.getPrograms(isActive=1);
 </cfscript>
+
 <cfif NOT VAL(form.selectedProgram)>
 
 
