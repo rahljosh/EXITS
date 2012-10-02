@@ -44,15 +44,15 @@
         </cfscript>
 
     <!--- Delete Reference --->
-	<cfelseif URL.subAction EQ 'deleteReference' AND VAL(URL.refID)>
-    
+	<cfelseif URL.subAction EQ 'deleteReference' AND VAL(URL.refID) AND VAL(URL.userID)>
+    	
         <cfquery datasource="#APPLICATION.DSN#">	
         	DELETE FROM 
             	smg_user_references
         	WHERE
             	refID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.refID#">
             AND
-            	referenceFor = <cfqueryparam cfsqltype="cf_sql_interger" value="#CLIENT.userID#">  <!--- DO NOT USE CLIENT --->
+            	referenceFor = <cfqueryparam cfsqltype="cf_sql_interger" value="#URL.userID#">  <!--- DO NOT USE CLIENT --->
         </cfquery>
 
 		<cfscript>
@@ -63,7 +63,8 @@
             SESSION.pageMessages.Add("Reference successfully deleted");	
 			
 			// Refresh Page
-			Location("index.cfm?curdoc=user/index", "no");
+			//Location("index.cfm?curdoc=user/index", "no");
+			Location(CGI.HTTP_REFERER, "no");
         </cfscript>
     
     <!--- Skip Paperwork Fill Out Later --->
@@ -304,7 +305,7 @@
                                 	[
                                     <a href="user/index.cfm?action=reference&refID=#qGetReferences.refID#" class="jQueryModal">Edit</a> 
                                     |
-                                    <a href="index.cfm?curdoc=user/index&action=welcome&subAction=deleteReference&refID=#qGetReferences.refID#" onClick="return confirm('Are you sure you want to delete this reference?')">Delete</a>
+                                    <a href="index.cfm?curdoc=user/index&action=welcome&subAction=deleteReference&refID=#qGetReferences.refID#&userID=#qGetReferences.referenceFor#" onClick="return confirm('Are you sure you want to delete this reference?')">Delete</a>
                                 	]
                                 </td>
                             </tr>                        

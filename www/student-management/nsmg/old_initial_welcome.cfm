@@ -496,7 +496,7 @@
                             </a><br />
                         </cfif>
                         
-                      	<a href="index.cfm?curdoc=forms/yearly_agreement">Please complete your annual area representative agreement and paperwork!<br /></a>
+                      	<a href="index.cfm?curdoc=user/index">Please complete your annual area representative agreement and paperwork!<br /></a>
                         
                         <cfif client.usertype eq 15>
                             <a href="index.cfm?curdoc=secondVisitReports">Online Reports</a><br>
@@ -596,11 +596,6 @@
                   <!----Available for just ISE companies---->
                   <Cfif client.userid eq 1 or client.userid eq 12313 or client.userid eq 13251>
                   <br /><Br />
-                  <!----
-                 <a href="javascript:openPopUp('forms/displayRepAgreement.cfm', 640, 800);">Area Rep Agreement</a>
-                 <a href="javascript:openPopUp('forms/cbcAuthorization.cfm', 640, 800);">CBC Authorization </a>
-                 <a href="javascript:openPopUp('forms/repRefs.cfm', 640, 800);">References </a>
-				 ---->
 				 </Cfif>
                  </td>
                     <td>
