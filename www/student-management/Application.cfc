@@ -145,14 +145,6 @@
 						Location("index.cfm?curdoc=forms/change_password", "no");
 					}
 				
-				// Force Paperwork PRODUCTION - Not for Canada
-				} else if ( isDefined("CLIENT.agreement_needed") AND CGI.SERVER_NAME NEQ "canada.exitsapplication.com" ) { // AND NOT APPLICATION.IsServerLocal
-					
-					// allow user only on yearly agreement page. 
-					if ( NOT ( LEN(URL.curdoc) AND listFindNoCase("forms/yearly_agreement,repRefs,displayRepAgreement,cbcAuthorization,employmentHistory,logout", URL.curdoc)) ) {
-						Location("index.cfm?curdoc=forms/yearly_agreement&userid=#CLIENT.userid#", "no");
-					}
-				
 				// Force SSN on PRODUCTION  - Not for Canada
 				} else if ( isDefined('CLIENT.needsSSN') AND CGI.SERVER_NAME NEQ "canada.exitsapplication.com" AND NOT APPLICATION.IsServerLocal ) { // AND NOT APPLICATION.IsServerLocal
 					

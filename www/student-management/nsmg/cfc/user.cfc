@@ -192,9 +192,6 @@
         
 		<!----Check if they have all paperwork and account is not expired or disabled---->
 		<cfscript>
-            //Check if paperwork is complete for season
-            //qAllPaperWorkCompleted = APPLICATION.CFC.udf.allpaperworkCompleted(userid=qAuthenticateUser.userID,seasonid=9);
-            
             /*** NEW PAPERWORK SECTION ***/
 			// Set USER SESSION Variables
 			APPLICATION.CFC.USER.setUserSession(userID=qAuthenticateUser.userID);
