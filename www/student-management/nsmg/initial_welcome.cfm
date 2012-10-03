@@ -602,21 +602,32 @@
                                         </td>
                                         <td>
 											<cfif stUserPaperwork.isAccountCompliant>
-                                           		Account Active - Paperwork Compliant
-                                            <cfelseif stUserPaperwork.isAccountReadyForRMReview>
-                                                Active (Paperwork received) - 
+                                           		
+                                                Account Active (Paperwork Compliant)
+                                                
+											<cfelseif stUserPaperwork.isAccountReadyForRMReview>
+                                               
+                                                Active (paperwork received) - 
+                                                <a href="index.cfm?curdoc=user_info&userID=#get_new_users.userID#">References Questionnaire Needed</a>
+                                                
+											<cfelseif stUserPaperwork.isAccountReadyForOfficeReview>
+                                            
+                                                Active (paperwork received) - 
 												<cfif APPLICATION.CFC.USER.isOfficeUser()>
-                                                	<a href="index.cfm?curdoc=user/index&action=paperworkDetails&userID=#get_new_users.userID#">Verification Needed</a>
+                                                	<a href="index.cfm?curdoc=user/index&action=paperworkDetails&userID=#get_new_users.userID#">Office Verification Needed</a>
 												<cfelse>
-                                                	Verification Needed
+                                                	Office Verification Needed
 												</cfif>
+                                                
                                             <cfelse>
+                                            
                                                 Active - 
                                                 <cfif APPLICATION.CFC.USER.isOfficeUser()>
                                                 	<a href="index.cfm?curdoc=user/index&action=paperworkDetails&userID=#get_new_users.userID#">Missing Paperwork</a>
 												<cfelse>
                                                 	Missing Paperwork
 												</cfif>
+                                                
                                             </cfif>
                                         </td>
                                     </tr>
