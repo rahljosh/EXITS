@@ -207,8 +207,11 @@
 			
 			// Path Information - set up upload files path
 			SESSION.USER.myUploadFolder = APPLICATION.PATH.users & ARGUMENTS.userID & "/";
+			
 			// Make sure folder exists
-			APPLICATION.CFC.UDF.createFolder(getUserSession().myUploadFolder);
+			if ( VAL(SESSION.USER.ID) ) {			
+				APPLICATION.CFC.UDF.createFolder(getUserSession().myUploadFolder);
+			}
 			
 			// Relative Path
 			SESSION.USER.myRelativeUploadFolder = "uploadedfiles/users/#ARGUMENTS.userID#/";
