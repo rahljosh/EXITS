@@ -368,7 +368,7 @@
 <cfoutput query="rep_info">
 
 	<cfif not val(accountCreationVerified)>
-        <cfif stUserPaperwork.isAccountReadyForReview>
+        <cfif stUserPaperwork.isAccountReadyForRMReview>
             <div class="alert">
             <h1>Account Review Required - Account appears ready for manual review. </h1>
             <em>Please review references and run CBC.  When everything looks fine, approve the CBC through Paperwork menu to activate account.</em> </div>

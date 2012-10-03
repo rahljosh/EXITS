@@ -342,7 +342,7 @@
                     </cfif>
                     
                     <!--- Add Continue Button --->
-                    <cfif APPLICATION.CFC.USER.getUserSessionPaperwork().isAccountReadyForReview>
+                    <cfif APPLICATION.CFC.USER.getUserSessionPaperwork().isAccountReadyForRMReview>
                     	
                     </cfif>
 
@@ -434,7 +434,7 @@
         <div class="rdbottom"></div> <!-- end rdbottom --> 
         
     </div>
-
+	
     <!---
     <cfdump var="#APPLICATION.CFC.USER.getUserSession()#">    
     <cfdump var="#NOT APPLICATION.CFC.USER.getUserSessionPaperwork().isPaperworkCompleted#">

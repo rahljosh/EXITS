@@ -165,7 +165,7 @@
             </cfscript>
             
 			<cfif NOT isDate(qGetSeasonPaperwork.ar_ref_quest1)>
-            
+
             	<cfquery name="updatePaperwork" datasource="#APPLICATION.DSN#">
                 	UPDATE 
                     	smg_users_paperwork
@@ -189,8 +189,8 @@
         	</cfif>
             
 			<cfscript>
-				//Check if we need to send out a notification to the program manager - Only accounts that needs review / depending on the order of people submitting things, we have to check
-				APPLICATION.CFC.USER.paperworkReceivedNotification(userID=URL.rep);
+				// Check if we need to send out a notification to the program manager - Only accounts that needs review
+				APPLICATION.CFC.USER.papeworkSubmittedOfficeNotification(userID=URL.rep);
          	</cfscript>
                         
       	</cfif>

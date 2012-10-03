@@ -167,8 +167,8 @@
 				// Update User Session Paperwork
 				APPLICATION.CFC.USER.setUserSessionPaperwork();
 			
-				//Check if we need to send out a notification to the program manager - Only accounts that needs review / depending on the order of people submitting things, we have to check
-				APPLICATION.CFC.USER.paperworkReceivedNotification(userID=FORM.userID);
+				// Check if we need to send out a notification to the regional manager
+				APPLICATION.CFC.USER.paperworkSubmittedRMNotification(userID=FORM.userID);
 			</cfscript>
         	
 		</cfif>  <!--- NOT SESSION.formErrors.length() --->
