@@ -135,7 +135,7 @@ select *
 from smg_hosts
 where HostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.status#">
 AND 
-            <cfif listFind('1,2,3,4,12', '#client.companyid#')>
+            <cfif listFind('1,2,3,4,10,12', '#client.companyid#')>
                companyID   = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
              <cfelseif client.companyid eq 5>
               (companyID   <  <cfqueryparam cfsqltype="cf_sql_integer" value="6"> OR 
