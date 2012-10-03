@@ -641,7 +641,7 @@
                                 <td>
                                     <cfif stUserPaperwork.isAccountCompliant>
                                         Account Active - Paperwork Compliant
-                                    <cfelseif stUserPaperwork.isAccountReadyForReview>
+                                    <cfelseif stUserPaperwork.isAccountReadyForRMReview>
                                         Active (Paperwork received) - 
                                         <cfif APPLICATION.CFC.USER.isOfficeUser()>
                                             <a href="index.cfm?curdoc=user/index&action=paperworkDetails&userID=#get_new_users.userID#">Verification Needed</a>

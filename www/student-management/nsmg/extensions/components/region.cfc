@@ -116,7 +116,7 @@
 	</cffunction>
 
 
-	<cffunction name="getRegionsByList" access="public" returntype="query" output="false" hint="Gets a list of regions by region list">
+	<cffunction name="getRegionsByList" access="public" returntype="query" output="false" hint="Gets a list of regions by a list of region IDs">
     	<cfargument name="regionIDList" default="" hint="regionID list is not required">        
         <cfargument name="companyID" default="0" hint="companyID is not required">
         <cfargument name="isActive" default="1" hint="isActive is not required.">
@@ -162,7 +162,7 @@
         <cfargument name="usertype" type="numeric" hint="usertype is required">
         
         <!--- Office Users --->
-        <cfif ListFind("1,2,3,4", ARGUMENTS.userType )>
+        <cfif ListFind("1,2,3,4", ARGUMENTS.userType)>
               
             <cfquery 
                 name="qGetUserRegions" 

@@ -472,7 +472,7 @@
 			******/			
 			
 
-			// Reference Questionnaire - Minimum of 2
+			// Reference Questionnaire - Minimum of 2 - Phase out these two fields and use the reference table instead
 			if ( isDate(qGetSeasonPaperwork.ar_ref_quest1) AND isDate(qGetSeasonPaperwork.ar_ref_quest2) ) { 
 				stUserPaperwork.isReferenceQuestionnaireCompleted = true;
 			} else { 
@@ -513,19 +513,32 @@
 				) {
 					
 					// User Has Submitted All Required Paperwork
-					stUserPaperwork.isPaperworkCompleted = true;
+					stUserPaperwork.isPaperworkCompleted = true;					
+					// Notify Regional Manager
+					stUserPaperwork.isAccountReadyForRMReview = true;
 					
-					// Check if references and CBC have been approved by PM
+					// Check if references and CBC have been approved - Account Compliant
 					if ( stUserPaperwork.isReferenceQuestionnaireCompleted AND stUserPaperwork.isCBCApproved ) {
+						
 						// Paperwork compliant
 						stUserPaperwork.isAccountCompliant = true;
-						// Paperwork has been reviewed, set to false so notification is not sent out
-						stUserPaperwork.isAccountReadyForReview = false;
+						// Notify Office - Program Manager
+						stUserPaperwork.isAccountReadyForOfficeReview = true;
+					
+					// Check if RM has submitted References - Account Not Compliant
+					} else if ( stUserPaperwork.isReferenceQuestionnaireCompleted ) {
+						
+						// Paperwork compliant
+						stUserPaperwork.isAccountCompliant = false;
+						// Notify Office - Program Manager
+						stUserPaperwork.isAccountReadyForOfficeReview = true;
+						
 					} else {
+						
 						// Paperwork not compliant
 						stUserPaperwork.isAccountCompliant = false;
-						// Paperwork has ready for review, set to true so email is sent out
-						stUserPaperwork.isAccountReadyForReview = true;
+						stUserPaperwork.isAccountReadyForOfficeReview = false;
+						
 					}
 					
 			} else {
@@ -534,9 +547,21 @@
 				stUserPaperwork.isPaperworkCompleted = false;
 				// Set Account as non compliant
 				stUserPaperwork.isAccountCompliant = false;
-				// set notification to false email is not sent out
-				stUserPaperwork.isAccountReadyForReview = false;
+				// set RM notification to false email is not sent out
+				stUserPaperwork.isAccountReadyForRMReview = false;
+				// set Office notification to false email is not sent out
+				stUserPaperwork.isAccountReadyForOfficeReview = false;
 				
+			}
+			
+			// Check if RM Notification has been sent to avoid sending multiple notifications
+			if ( isDate(qGetSeasonPaperwork.RMReviewDateNotified) ) {
+				stUserPaperwork.isAccountReadyForRMReview = false;
+			}
+			
+			// Check if Office Notification has been sent to avoid sending multiple notifications
+			if ( isDate(qGetSeasonPaperwork.officeReviewDateNotified) ) {
+				stUserPaperwork.isAccountReadyForOfficeReview = false;
 			}
 			
 			return stUserPaperwork;
@@ -606,6 +631,8 @@
                     sup.secondVisit,
                     sup.agreeSig,
                     sup.cbcSig,
+                    sup.RMReviewDateNotified,
+                    sup.officeReviewDateNotified,
                     ss.years,
                     ss.paperworkStartDate,
                     ss.paperworkEndDate
@@ -648,7 +675,7 @@
 			qGetSeasonPaperwork = getSeasonPaperwork(userID=ARGUMENTS.userID,seasonID=ARGUMENTS.seasonID);
 			
 			// Check if we are updating a date or string field
-			vDateFieldList = "ar_info_sheet,ar_ref_quest1,ar_ref_quest2,ar_cbc_auth_form,ar_agreement,ar_training";
+			vDateFieldList = "ar_info_sheet,ar_ref_quest1,ar_ref_quest2,ar_cbc_auth_form,ar_agreement,ar_training,RMReviewDateNotified,officeReviewDateNotified";
 			
 			vStringFieldList = "agreeSig,cbcSig";
 			
@@ -795,29 +822,34 @@
 	</cffunction>
 
 
-	<cffunction name="paperworkReceivedNotification" access="public" returntype="void" output="false" hint="Sends out an email notification when users fill out paperwork">
+	<cffunction name="paperworkSubmittedRMNotification" access="public" returntype="void" output="false" hint="Sends out an email notification to regional managers when users fill out paperwork">
         <cfargument name="userID" hint="User ID is Required">
 
 		<cfscript>
 			// Get User Details
 			var qGetUser = getUsers(userID=ARGUMENTS.userID);
-			
+
+			// Check Paperwork
 			var stGetPaperwork = getUserPaperwork(userID=ARGUMENTS.userID);
 			
-			var vEmailMessage = '';
-			var vEmailSubject = "Paperwork Submitted for #qGetUser.firstName# #qGetUser.lastName# (###qGetUser.userID#)";
+			// Get Region ID
+			var vDefaultUserRegionID = getUserAccessRights(userID=ARGUMENTS.userID).regionID;
+			
+			// Email Variables
+			var vEmailTo = getRegionalManager(regionID=vDefaultUserRegionID).email;
+			var vEmailSubject = "#qGetUser.firstName# #qGetUser.lastName# (###qGetUser.userID#) has submitted paperwork";
+			var vEmailMessage = '';			
         </cfscript>
     
-        <cfif VAL(stGetPaperwork.isAccountReadyForReview) AND isValid("email", CLIENT.programmanager_email)>
-    
+        <cfif stGetPaperwork.isAccountReadyForRMReview AND isValid("email", vEmailTo)>
+    		
             <cfsavecontent variable="vEmailMessage">
             
                 <cfoutput>				
-                    The references and all other paperwork appear to be in order for #qGetUser.firstName# #qGetUser.lastName# (###qGetUser.userID#)).  
-                    A manual review is now required to activate the account.  
-                    Please review all paperwork and submit the CBC for processing. If everything looks good, approval of the CBC will activate this account.  
-            
-                    <br /><br />
+                    <p>
+                    	#qGetUser.firstName# #qGetUser.lastName# (###qGetUser.userID#) has submitted all required paperwork.  <br />  
+                    	Please submit at least 2 reference questionnaires in order to activate this account. <br />  
+            		</p>
             
                     <a href="#CLIENT.exits_url#/nsmg/index.cfm?curdoc=user_info&userID=#qGetUser.userID#">View #qGetUser.firstname#<cfif Right(qGetUser.firstname, 1) EQ 's'>'<cfelse>'s</cfif> account.</a>
                 </cfoutput>
@@ -825,14 +857,68 @@
             </cfsavecontent>
     
             <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                <cfinvokeargument name="email_to" value="#CLIENT.programmanager_email#"> 
+                <cfinvokeargument name="email_to" value="#vEmailTo#"> 
                 <cfinvokeargument name="email_from" value="#CLIENT.emailfrom# (#CLIENT.companyshort# Support)">
                 <cfinvokeargument name="email_subject" value="#vEmailSubject#">
                 <cfinvokeargument name="email_message" value="#vEmailMessage#">
             </cfinvoke>
+            
+            <cfscript>
+				// Store date notification sent to avoid sending multiple notifications
+				updateSeasonPaperwork(userID=ARGUMENTS.userID,fieldName="RMReviewDateNotified",fieldValue=dateFormat(now(), 'mm/dd/yyyy'));
+			</cfscript>
     
         </cfif>
 	</cffunction>
+    
+    
+	<cffunction name="papeworkSubmittedOfficeNotification" access="public" returntype="void" output="false" hint="Sends out an email notification to office when RMs fill out references">
+        <cfargument name="userID" hint="User ID is Required">
+
+		<cfscript>
+			// Get User Details
+			var qGetUser = getUsers(userID=ARGUMENTS.userID);
+			
+			// Check Paperwork
+			var stGetPaperwork = getUserPaperwork(userID=ARGUMENTS.userID);
+			
+			// Email Variables
+			var vEmailTo = CLIENT.programmanager_email;
+			var vEmailSubject = "Paperwork has been submitted for #qGetUser.firstName# #qGetUser.lastName# (###qGetUser.userID#)";
+			var vEmailMessage = '';
+		</cfscript>
+    
+        <cfif stGetPaperwork.isAccountReadyForOfficeReview AND isValid("email", vEmailTo)>
+    
+            <cfsavecontent variable="vEmailMessage">
+            
+                <cfoutput>
+                	<p>				
+                    	The references for #qGetUser.firstName# #qGetUser.lastName# (###qGetUser.userID#) have been submitted by the regional manager. <br />         
+                    	A manual review is now required to activate the account. <br />                    
+	                    Please review all paperwork and submit the CBC for processing. If everything looks good, approval of the CBC will activate this account.  
+    				</p>
+                            
+                    <a href="#CLIENT.exits_url#/nsmg/index.cfm?curdoc=user_info&userID=#qGetUser.userID#">View #qGetUser.firstname#<cfif Right(qGetUser.firstname, 1) EQ 's'>'<cfelse>'s</cfif> account.</a>
+                </cfoutput>
+                
+            </cfsavecontent>
+    
+            <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                <cfinvokeargument name="email_to" value="#vEmailTo#"> 
+                <cfinvokeargument name="email_from" value="#CLIENT.emailfrom# (#CLIENT.companyshort# Support)">
+                <cfinvokeargument name="email_subject" value="#vEmailSubject#">
+                <cfinvokeargument name="email_message" value="#vEmailMessage#">
+            </cfinvoke>
+            
+            <cfscript>
+				// Store date notification sent to avoid sending multiple notifications
+				updateSeasonPaperwork(userID=ARGUMENTS.userID,fieldName="officeReviewDateNotified",fieldValue=dateFormat(now(), 'mm/dd/yyyy'));
+			</cfscript>
+    
+        </cfif>
+	</cffunction>
+    
 
     <!--- ------------------------------------------------------------------------- ----
 		End of User Notifications
@@ -1625,11 +1711,10 @@
 			
 			// Copy New Area Reps or Area Rep. Refresher trainings to current smg_users_paperwork
 			if ( listFind("6,10", ARGUMENTS.trainingID) ) {
+				// Insert Training Date to the paperwork table
 				updateSeasonPaperwork(userID=ARGUMENTS.userID,fieldName="ar_training",fieldValue=ARGUMENTS.dateTrained);
-				
-				//Check if we need to send out a notification to the program manager - Only accounts that needs review / depending on the order of people submitting things, we have to check
-				paperworkReceivedNotification(userID=ARGUMENTS.userID);
-
+				// Check if we need to send out a notification to the regional manager
+				paperworkSubmittedRMNotification(userID=ARGUMENTS.userID);
 			}
 		</cfscript>	
 		
