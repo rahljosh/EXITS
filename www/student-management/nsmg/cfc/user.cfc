@@ -343,31 +343,6 @@
             </cfif>
 		</cfif>
        
-		<!--- this usertype doesn't need to verify information or submit agreements --->
-        <cfif listfind("5,6,7,15", CLIENT.usertype) >
-        	<!---Check if new user agreement is needed. --->
-            
-            <!----Check files for office users---->
-            
-            <!---Check files for user office users----->
-          
-            <!--- DELETE THIS - MARCUS MELO --->
-            <!---
-            <cfif client.usertype eq 15>
-            	<cfif qAllPaperWorkCompleted.secondVisitRepOK neq 1>
-               		<cfset CLIENT.agreement_needed= 1>
-               </cfif>
-            <cfelse>
-            	<cfif qAllPaperWorkCompleted.areaRepOk neq 1>
-               		<cfset CLIENT.agreement_needed= 1>
-               </cfif>
-            
-            </cfif>
-			--->
-            
-		</cfif>
-         
-         
         <!--- change password --->
         <cfif qAuthenticateUser.changepass EQ 1>
 			<!--- this is checked in APPLICATION.cfm and redirected if set. --->

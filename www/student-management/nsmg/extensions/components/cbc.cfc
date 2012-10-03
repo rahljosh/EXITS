@@ -766,7 +766,7 @@
                         u.cbcID,
                         u.userID,
                         u.familyID,
-                        u.seasonID,
+                        u.seasonID, <!--- phase out --->
                         u.companyID,
                         u.batchID, <!--- phase out --->
                         u.requestID,
@@ -790,25 +790,33 @@
                         u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#"> 
                     
                     <cfif VAL(ARGUMENTS.familyID)>
-                    AND
-                        u.familyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.familyID#">                
+                        AND
+                            u.familyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.familyID#">                
                 	</cfif>
                     
                     <cfif VAL(ARGUMENTS.cbcID)>
-                    AND
-                        u.cbcID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.cbcID#">                
+                        AND
+                            u.cbcID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.cbcID#">                
                 	</cfif>
 
                     <cfif ARGUMENTS.cbcType EQ "user">
-                    AND 
-                        u.familyID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                        AND 
+                            u.familyID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                     <cfelseif ARGUMENTS.cbcType EQ "member">
-                    AND 
-                        u.familyID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                        AND 
+                            u.familyID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                    </cfif>
+                    
+                    <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                        AND 
+                            u.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                    <cfelseif VAL(CLIENT.companyID)>
+                        AND 
+                            u.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
                     </cfif>
                     
 				ORDER BY
-                	u.seasonID                    
+                	u.date_expired DESC                    
             </cfquery>    
 
 		<cfreturn qGetCBCUserByID>
