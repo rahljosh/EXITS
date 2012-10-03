@@ -23,7 +23,7 @@
         FROM 
         	extra_hostcompany 
         WHERE         	
-            companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+            companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">
         AND 
         	name != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
 		ORDER BY 
@@ -49,9 +49,9 @@
                  	INNER JOIN 
                    		extra_candidates ec ON ec.candidateID = ecpc.candidateID
                  	WHERE
-                    	ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                    	ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">
 					AND
-                    	ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
+                    	ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
                     AND 
                         ec.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
                   	AND
@@ -81,6 +81,7 @@
                 c.candidateID,
                 c.uniqueID,
                 ecpc.hostCompanyID,
+                ecpc.isSecondary,
                 c.firstname,             
                 c.lastname, 
                 c.sex, 
@@ -125,10 +126,44 @@
            	<cfif VAL(FORM.hostcompanyID)> 
                 AND
                     ecpc.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               
-			</cfif>                
+			</cfif>              
        		ORDER BY
                 c.candidateID
 		</cfquery>
+        
+        <cfquery name="qGetTotalNumberCandidates" dbtype="query">
+        	SELECT DISTINCT
+            	candidateID
+          	FROM
+            	qGetAllCandidates
+        </cfquery>
+        
+        <cfquery name="qGetTotalNumberCSBCandidates" dbtype="query">
+        	SELECT DISTINCT
+            	candidateID
+          	FROM
+            	qGetAllCandidates
+          	WHERE
+            	wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="CSB-Placement">
+        </cfquery>
+        
+        <cfquery name="qGetTotalNumberSelfCandidates" dbtype="query">
+        	SELECT DISTINCT
+            	candidateID
+          	FROM
+            	qGetAllCandidates
+          	WHERE
+            	wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="Self-Placement">
+        </cfquery>
+        
+        <cfquery name="qGetTotalNumberWalkInCandidates" dbtype="query">
+        	SELECT DISTINCT
+            	candidateID
+          	FROM
+            	qGetAllCandidates
+          	WHERE
+            	wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="Walk-In">
+        </cfquery>
 
         <cffunction name="filterGetAllCandidates" hint="Gets total by Host Company">
         	<cfargument name="placementType" default="" hint="Placement Type is not required">
@@ -158,15 +193,6 @@
             
             <cfreturn qFilterGetAllCandidates>
         </cffunction>
-
-		<cfscript>
-			// Get Overall Results
-			totalCSBPlacements = filterGetAllCandidates(placementType='CSB-Placement').recordCount;
-		
-			totalSelfPlacements = filterGetAllCandidates(placementType='Self-Placement').recordCount;
-
-			totalWalkInPlacements = filterGetAllCandidates(placementType='Walk-In').recordCount;
-        </cfscript>	
 
 	</cfif>
 
@@ -263,99 +289,105 @@
                 
                 totalPerHostCompanyWalkInPlacements = filterGetAllCandidates(placementType='Walk-In', hostCompanyID=qGetHostCompany.hostCompanyID).recordCount;
             </cfscript>
+            
+            <cfif qTotalPerHostCompany.recordCount>
 
-            <table width="98%" cellpadding="4" cellspacing="0" align="center" style="margin-top:10px; margin-bottom:20px; border:1px solid ##4F8EA4; line-height:15px;"> 
-                <tr>
-                    <td colspan="14">
-                            <strong>#qGetHostCompany.name# - Total candidates: #qTotalPerHostCompany.recordCount#</strong> 
-                            (
-                                #totalPerHostCompanyCSBPlacements# CSB; &nbsp; 
-                                #totalPerHostCompanySelfPlacements# Self; &nbsp; 
-                                #totalPerHostCompanyWalkInPlacements# Walk-In 
-                            )
-                        </small>
-                    </td>
-                </tr>
-                <tr style="background-color:##4F8EA4; color:##FFF; padding:5px; font-weight:bold; font-size: 11px; vertical-align:top;">
-                    <td width="3%">ID</Td>
-                    <td width="12%">Last Name</Td>
-                    <td width="8%">First Name</Td>
-                    <td width="3%">Sex</td>
-                    <td width="5%">DOB</Td>
-                    <td width="8%">Country</td>
-                    <td width="12%">Email</td>
-                    <td width="5%">DS-2019</td>
-                    <td width="5%">SSN</Td>
-                    <td width="5%">Start Date</td>
-                    <td width="5%">End Date</td>
-                    <td width="10%">Intl. Rep.</td>
-                    <td width="7%">Option</td>
-                    <td width="12%">English Assessment CSB</td>
-                </tr>
-                <cfloop query="qTotalPerHostCompany">
-                    <tr bgcolor="###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#">
-                        <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.candidateID#</a></td>
-                        <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.lastname#</a></td>
-                        <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.firstname#</a></td>
-                        <td class="style1">#qTotalPerHostCompany.sex#</td>
-                        <td class="style1">#dateformat(qTotalPerHostCompany.dob, 'mm/dd/yyyy')#</td>
-                        <td class="style1">#qTotalPerHostCompany.countryname#</td>
-                        <td class="style1"><a href="mailto:#qTotalPerHostCompany.email#" class="style4">#qTotalPerHostCompany.email#</a></td>
-                        <td class="style1">#qTotalPerHostCompany.ds2019#</td>
-                        <td class="style1">
-                        	<cfif ListFind("1,2,3,4", CLIENT.userType) AND LEN(qTotalPerHostCompany.SSN)>
-                            	<span class="style1">#APPLICATION.CFC.UDF.displaySSN(qTotalPerHostCompany.SSN)#</span>
-                            </cfif>                        
+                <table width="98%" cellpadding="4" cellspacing="0" align="center" style="margin-top:10px; margin-bottom:20px; border:1px solid ##4F8EA4; line-height:15px;"> 
+                    <tr>
+                        <td colspan="14">
+                                <strong>#qGetHostCompany.name# - Total candidates: #qTotalPerHostCompany.recordCount#</strong> 
+                                (
+                                    #totalPerHostCompanyCSBPlacements# CSB; &nbsp; 
+                                    #totalPerHostCompanySelfPlacements# Self; &nbsp; 
+                                    #totalPerHostCompanyWalkInPlacements# Walk-In 
+                                )
+                            </small>
                         </td>
-                        <cfif LEN(qTotalPerHostCompany.ds2019)>
-                            <td><span class="style1">#dateformat(qTotalPerHostCompany.startdate, 'mm/dd/yyyy')#</span></td>
-                            <td><span class="style1">#dateformat(qTotalPerHostCompany.enddate, 'mm/dd/yyyy')# </span></td>
-                        <cfelse>
-                            <td colspan="2" align="center"><span class="style1">Awaiting DS-2019</span></td>
-                        </cfif>
-                        <td><span class="style1">#qTotalPerHostCompany.businessname#</span></td>
-                        <td><span class="style1">#qTotalPerHostCompany.wat_placement#</span></td>
-                        <td><span class="style1">#qTotalPerHostCompany.englishAssessment#</span></td>
                     </tr>
-                	
-                	<!--- Seeking Employment - Display Reason --->
-                    <cfif qGetHostCompany.hostCompanyID EQ 195>
-                    
-                        <cfquery name="qGetHostHistory" datasource="MySql">
-                            SELECT  
-                            	reason_host
-                            FROM 
-                            	extra_candidate_place_company 
-                            WHERE 
-                            	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qTotalPerHostCompany.candidateID#">
-                            AND	
-                            	reason_host != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-                            ORDER BY
-                            	candCompID DESC
-                            LIMIT 1		                           
-                        </cfquery>
-
-                    	<tr bgcolor="###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#">
-                        	<td colspan="14" class="style1" style="border-top:1px solid ###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("E4E4E4") ,DE("FFFFFF") )#;">
-                            	<strong>Reason:</strong> 
-                                <cfloop query="qGetHostHistory">
-                                	#qGetHostHistory.reason_host# <br />
-                                </cfloop>
+                    <tr style="background-color:##4F8EA4; color:##FFF; padding:5px; font-weight:bold; font-size: 11px; vertical-align:top;">
+                        <td width="3%">ID</td>
+                        <td width="12%">Last Name</td>
+                        <td width="8%">First Name</td>
+                        <td width="3%">Sex</td>
+                        <td width="5%">DOB</td>
+                        <td width="6%">Country</td>
+                        <td width="11%">Email</td>
+                        <td width="5%">DS-2019</td>
+                        <td width="5%">SSN</td>
+                        <td width="5%">Start Date</td>
+                        <td width="5%">End Date</td>
+                        <td width="10%">Intl. Rep.</td>
+                        <td width="7%">Option</td>
+                        <td width="5%">Placement Type</td>
+                        <td width="10%">English Assessment CSB</td>
+                    </tr>
+                    <cfloop query="qTotalPerHostCompany">
+                        <tr bgcolor="###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#">
+                            <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.candidateID#</a></td>
+                            <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.lastname#</a></td>
+                            <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.firstname#</a></td>
+                            <td class="style1">#qTotalPerHostCompany.sex#</td>
+                            <td class="style1">#dateformat(qTotalPerHostCompany.dob, 'mm/dd/yyyy')#</td>
+                            <td class="style1">#qTotalPerHostCompany.countryname#</td>
+                            <td class="style1"><a href="mailto:#qTotalPerHostCompany.email#" class="style4">#qTotalPerHostCompany.email#</a></td>
+                            <td class="style1">#qTotalPerHostCompany.ds2019#</td>
+                            <td class="style1">
+                                <cfif ListFind("1,2,3,4", CLIENT.userType) AND LEN(qTotalPerHostCompany.SSN)>
+                                    <span class="style1">#APPLICATION.CFC.UDF.displaySSN(qTotalPerHostCompany.SSN)#</span>
+                                </cfif>                        
                             </td>
+                            <cfif LEN(qTotalPerHostCompany.ds2019)>
+                                <td><span class="style1">#dateformat(qTotalPerHostCompany.startdate, 'mm/dd/yyyy')#</span></td>
+                                <td><span class="style1">#dateformat(qTotalPerHostCompany.enddate, 'mm/dd/yyyy')# </span></td>
+                            <cfelse>
+                                <td colspan="2" align="center"><span class="style1">Awaiting DS-2019</span></td>
+                            </cfif>
+                            <td><span class="style1">#qTotalPerHostCompany.businessname#</span></td>
+                            <td><span class="style1">#qTotalPerHostCompany.wat_placement#</span></td>
+                            <td><span class="style1"><cfif VAL(qTotalPerHostCompany.isSecondary)>Secondary<cfelse>Primary</cfif></span></td>
+                            <td><span class="style1">#qTotalPerHostCompany.englishAssessment#</span></td>
                         </tr>
-                    </cfif>
-                    
-                </cfloop>
-
-            </table>
+                        
+                        <!--- Seeking Employment - Display Reason --->
+                        <cfif qGetHostCompany.hostCompanyID EQ 195>
+                        
+                            <cfquery name="qGetHostHistory" datasource="MySql">
+                                SELECT  
+                                    reason_host
+                                FROM 
+                                    extra_candidate_place_company 
+                                WHERE 
+                                    candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qTotalPerHostCompany.candidateID#">
+                                AND	
+                                    reason_host != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                                ORDER BY
+                                    candCompID DESC
+                                LIMIT 1		                           
+                            </cfquery>
+    
+                            <tr bgcolor="###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#">
+                                <td colspan="15" class="style1" style="border-top:1px solid ###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("E4E4E4") ,DE("FFFFFF") )#;">
+                                    <strong>Reason:</strong> 
+                                    <cfloop query="qGetHostHistory">
+                                        #qGetHostHistory.reason_host# <br />
+                                    </cfloop>
+                                </td>
+                            </tr>
+                        </cfif>
+                        
+                    </cfloop>
+    
+                </table>
+                
+         	</cfif>
          
 		</cfloop>
-            
-        <div class="style1"><strong>&nbsp; &nbsp; CSB-Placement:</strong> #totalCSBPlacements#</div>	
-        <div class="style1"><strong>&nbsp; &nbsp; Self-Placement:</strong> #totalSelfPlacements#</div>
-        <div class="style1"><strong>&nbsp; &nbsp; Walk-In:</strong> #totalWalkInPlacements#</div>
+          
+        <div class="style1"><strong>&nbsp; &nbsp; CSB-Placement:</strong> #qGetTotalNumberCSBCandidates.recordCount#</div>	
+        <div class="style1"><strong>&nbsp; &nbsp; Self-Placement:</strong> #qGetTotalNumberSelfCandidates.recordCount#</div>
+        <div class="style1"><strong>&nbsp; &nbsp; Walk-In:</strong> #qGetTotalNumberWalkInCandidates.recordCount#</div>
         <div class="style1"><strong>&nbsp; &nbsp; ---------------------------------------------</strong></div>
-        <div class="style1"><strong>&nbsp; &nbsp; Total Number of Students:</strong> #qGetAllCandidates.recordCount#</div>
+        <div class="style1"><strong>&nbsp; &nbsp; Total Number of Students:</strong> #qGetTotalNumberCandidates.recordCount#</div>
         <div class="style1"><strong>&nbsp; &nbsp; ---------------------------------------------</strong></div>  		
 		    	
     </cfsavecontent>
