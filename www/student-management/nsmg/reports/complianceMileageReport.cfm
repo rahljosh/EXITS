@@ -194,40 +194,14 @@
 			<td class="subTitleLeft" width="26%">Student</td>
             <td class="subTitleLeft" width="22%">Supervising Representative</td>		            
             <td class="subTitleLeft" width="22%">Host Family</td>				
-			<td class="subTitleCenter" width="15%">Point to Point Distance</td>
 			<td class="subTitleCenter" width="15%">Google Shortest Driving Distance</td>
 		</tr>      
 
 		<cfoutput>
 			            
-			<cfquery name="qGetHostCoordinates" datasource="MySql">
-				SELECT 
-					zip, 
-					latitude, 
-					longitude
-				FROM 
-					zip_codes
-				WHERE 
-					zip = <cfqueryparam cfsqltype="cf_sql_integer" value="#Left(VAL(qGetResults.hostZip), 5)#">
-			</cfquery>
-			
-			<cfquery name="qGetSupervisingCoordinates" datasource="MySql">
-				SELECT 
-					zip, 
-					latitude, 
-					longitude
-				FROM 
-					zip_codes
-				WHERE 
-					zip = <cfqueryparam cfsqltype="cf_sql_integer" value="#Left(VAL(qGetResults.supervisingZip), 5)#">
-			</cfquery>
-		
 			<cfscript>
 				vCurrentRow++;
-			
-				// Old Method
-				vDistance = LatLonDist(qGetHostCoordinates.latitude,qGetHostCoordinates.longitude,qGetSupervisingCoordinates.latitude,qGetSupervisingCoordinates.longitude,'sm');
-				
+							
 				vUpdateTable = 0;
 				
 				// Check if we have recorded distance in the database from Google driving directions
@@ -269,7 +243,6 @@
                 	#qGetResults.hostlastname# (###qGetResults.hostid#)
                 	<span class="note">#qGetResults.hostAddress#</span>
                 </td>                           
-                <td class="center"><cfif vDistance NEQ 'Incorrect parameters'>#Left(vDistance, 4)#<cfelse>#vDistance#</cfif> mi</td>
                 <td class="center #vSetColorCode#">#vGoogleDistance# mi</td>
             </tr>
             
@@ -292,56 +265,4 @@
 </cfoutput>
 
 <!--- Page Header --->
-<gui:pageFooter />	
-
-<!--- UPDATE MISSING LATITUDE AND LONGITUDE --->
-
-<!---
-<cfif client.usertype EQ 1>
-
-	<cfquery name="get_zips" datasource="MySql">
-		SELECT zipcodeid, zip, latitude, longitude
-		FROM zip_codes
-		WHERE latitude = '' 
-			OR longitude = ''
-		LIMIT 100
-	</cfquery>
-	
-	<cfoutput>
-		
-	UPDATE Longitude and Latitude<br /><br />
-	
-	<cfloop query="get_zips">
-	
-		<!--- <cfhttp url="http://maps.google.co.uk/maps?q=11702&output=kml" delimiter="," resolveurl="yes" /> --->
-		<cfhttp url="http://maps.google.com/maps?q=#zip#&output=kml" delimiter="," resolveurl="yes" />
-			<!--- #cfhttp.FileContent# --->
-			<!--- <cfdump var="#xmlparse(cfhttp.FileContent)#"/><br /> --->
-			<cfset request.GoogleXMLResult = ''>			
-			<cfset request.GoogleXMLResult = xmlparse(cfhttp.FileContent) />
-			
-			<cfif IsDefined('request.GoogleXMLResult.kml.placemark.lookat.latitude.XMLText') AND IsDefined('request.GoogleXMLResult.kml.placemark.lookat.longitude.XMLText')>
-				<cfset request.coords = request.GoogleXMLResult.kml.placemark.point.coordinates.XMLText />
-				<cfset request.latitude = request.GoogleXMLResult.kml.placemark.lookat.latitude.XMLText />
-				<cfset request.longitude = request.GoogleXMLResult.kml.placemark.lookat.longitude.XMLText />
-				zip = #zip# &nbsp; &nbsp; - &nbsp; &nbsp;  latitude = #request.latitude# &nbsp; &nbsp; - &nbsp; &nbsp; longitude = #request.longitude#<br />		
-			
-			<cfelseif IsDefined('request.GoogleXMLResult.kml.folder.lookat.latitude.XMLText') AND IsDefined('request.GoogleXMLResult.kml.folder.lookat.longitude.XMLText')>
-				<cfset request.latitude = request.GoogleXMLResult.kml.folder.lookat.latitude.XMLText />
-				<cfset request.longitude = request.GoogleXMLResult.kml.folder.lookat.longitude.XMLText />
-				zip = #zip# &nbsp; &nbsp; - &nbsp; &nbsp;  latitude = #request.latitude# &nbsp; &nbsp; - &nbsp; &nbsp; longitude = #request.longitude#<br />			
-			</cfif>
-			
-			<cfif IsDefined('request.latitude') AND IsDefined('request.longitude')>
-				<cfquery name="update" datasource="MySql">
-					UPDATE zip_codes
-					SET latitude = '#request.latitude#',
-						longitude = '#request.longitude#'
-					WHERE zipcodeid = '#zipcodeid#'
-					LIMIT 1
-				</cfquery>
-			</cfif>	
-	</cfloop>
-	</cfoutput>	
-</cfif>
---->
+<gui:pageFooter />
