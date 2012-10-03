@@ -137,7 +137,7 @@
 	</cffunction>
     
     
-	<cffunction name="isSecondVisitRep" access="public" returntype="boolean" output="No" hint="Returns true or false">
+	<cffunction name="isUserSecondVisitRepresentativeOnly" access="public" returntype="boolean" output="No" hint="Returns true or false if user has only second visit access">
         <cfargument name="userID" type="numeric" hint="userID is required" />
         <cfargument name="companyID" type="numeric" hint="companyID is required" />
 
@@ -145,27 +145,36 @@
 			name="qGetUserAccess" 
 			datasource="#APPLICATION.DSN#">
 				SELECT
-                	userID,
                     userType
                 FROM	
                 	user_access_rights
                 WHERE
                 	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
-               	AND     
-					companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.companyID)#">                    
+				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
+                    AND          
+                        companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                <cfelseif VAL(ARGUMENTS.companyID)>
+                    AND          
+                        companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                </cfif>
+                GROUP BY
+                	userType
         </cfquery>
         
 		<cfscript>
-			// Check if it`s a second visit rep only			
-			vUserTypeList = ValueList(qGetUserAccess.userType);
+			vIsSecondVisitRepOnly = true;
 			
-			if ( ListFind(vUserTypeList, 5) OR ListFind(vUserTypeList, 6) OR ListFind(vUserTypeList, 7) ) {				
-				// User has multi level access
-				return false;
-			} else {
-				// User is a 2nd visit rep only
-				return true;	
+			// Loop Through Access Level
+			for ( i=1; i LTE qGetUserAccess.recordCount; i=i+1 ) {
+				
+				// Check if user has a different access level
+				if ( qGetUserAccess.userType[i] NEQ 15 ) {
+					vIsSecondVisitRepOnly = false;
+				}
+				
 			}
+			
+			return vIsSecondVisitRepOnly;
 		</cfscript>
         
 	</cffunction>
@@ -358,31 +367,38 @@
 			var stUserPaperwork = StructNew();
 			
 			// Get User Information
-			var qGetUser = APPLICATION.CFC.USER.getUsers(userID=ARGUMENTS.userID);
+			var qGetUser = getUsers(userID=ARGUMENTS.userID);
 			
-			// Check if user is a second visit rep
-			var vIsSecondVisitRep = isSecondVisitRep(userID=ARGUMENTS.userID,companyID=CLIENT.companyID);
-			
+			// Get User CBC
+			var qGetUserCBC = APPLICATION.CFC.CBC.getCBCUserByID(userID=ARGUMENTS.userID,cbcType='user');
+			stUserPaperwork.cbcDateExpired = DateFormat(qGetUserCBC.date_expired, 'mm/dd/yyyy');
+
 			// Get Current Season
 			var qGetCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason();
+
+			// Get Paperwork Info (CBC, Agreement, Training)
+			var qGetSeasonPaperwork = APPLICATION.CFC.USER.getSeasonPaperwork(userID=ARGUMENTS.userID, seasonID=qGetCurrentSeason.seasonID);
+
+			// Get Reference - 4 Required / Not based on season
+			var qGetReferences = APPLICATION.CFC.USER.getReferencesByID(userID=ARGUMENTS.userID);	
+
+			// Get Employment History - 1 Required / Not based on season
+			var qGetEmployment = APPLICATION.CFC.USER.getEmploymentByID(userID=ARGUMENTS.userID);		
+
+			// Check if user is a second visit rep
+			var vIsSecondVisitRepOnly = isUserSecondVisitRepresentativeOnly(userID=ARGUMENTS.userID,companyID=CLIENT.companyID);
+			stUserPaperwork.isSecondVisitRepresentative = vIsSecondVisitRepOnly;
+
+			// DOS Certification
+			var stDOSCertification = APPLICATION.CFC.USER.isDOSCertificationValid(userID=ARGUMENTS.userID);
+			stUserPaperwork.isDOSCertificationCompleted = stDOSCertification.isDOSCertificationValid;
+			stUserPaperwork.dosDateExpired = stDOSCertification.dateExpired;
 
 			// Set Current Season Information
 			stUserPaperwork.seasonID = qGetCurrentSeason.seasonID;
 			stUserPaperwork.paperworkStartDate = DateFormat(qGetCurrentSeason.paperworkStartDate, "mm/dd/yyyy");
 			stUserPaperwork.paperworkRequiredDate = DateFormat(qGetCurrentSeason.paperworkRequiredDate, "mm/dd/yyyy");
 			stUserPaperwork.paperworkEndDate = DateFormat(qGetCurrentSeason.paperworkEndDate, "mm/dd/yyyy");
-			
-			// DOS Certification
-			stDOSCertification = APPLICATION.CFC.USER.isDOSCertificationValid(userID=ARGUMENTS.userID);
-			
-			// Get Paperwork Info (CBC, Agreement, Training)
-			qGetSeasonPaperwork = APPLICATION.CFC.USER.getSeasonPaperwork(userID=ARGUMENTS.userID, seasonID=qGetCurrentSeason.seasonID);
-
-			// Get Reference - 4 Required / Not based on season
-			qGetReferences = APPLICATION.CFC.USER.getReferencesByID(userID=ARGUMENTS.userID);	
-
-			// Get Employment History - 1 Required / Not based on season
-			qGetEmployment = APPLICATION.CFC.USER.getEmploymentByID(userID=ARGUMENTS.userID);		
 
 			// Set if we'll force paperwork
 			if ( now() GTE qGetCurrentSeason.paperworkRequiredDate ) {
@@ -405,13 +421,20 @@
 				stUserPaperwork.isCBCAuthorizationCompleted = false;
 			}
 			
-			// Check if CBC has been approved
-			stUserPaperwork.isCBCApproved = false;
+			// Check if CBC is valid
+			if ( isDate(qGetUserCBC.date_expired) AND qGetUserCBC.date_expired GTE dateFormat(now(), 'yyyy/mm/dd') ) {
+				stUserPaperwork.isCBCValid = true;
+			} else {
+				stUserPaperwork.isCBCValid = false;
+			}
 			
-			// DOS Certification
-			stUserPaperwork.isDOSCertificationCompleted = stDOSCertification.isDOSCertificationValid;
-			stUserPaperwork.dosDateExpired = stDOSCertification.dateExpired;
-			
+			// CBC Approved
+			if ( stUserPaperwork.isCBCValid AND isDate(qGetUserCBC.date_approved) ) {
+				stUserPaperwork.isCBCApproved = true;
+			} else {
+				stUserPaperwork.isCBCApproved = false;
+			}
+
 			// Employment History - Minimum of 1
 			if ( qGetEmployment.recordCount GTE 1 AND ( NOT VAL(qGetUser.prevOrgAffiliation) OR ( qGetUser.prevOrgAffiliation EQ 1 AND LEN(qGetUser.prevAffiliationName) ) ) ) {
 				stUserPaperwork.isEmploymentHistoryCompleted = true;
@@ -426,7 +449,6 @@
 				stUserPaperwork.isReferenceCompleted = false;
 			}
 			stUserPaperwork.missingReferences = 4 - qGetReferences.recordcount;
-			
 			
 			// Training - New Area Rep or Area Rep Refresher
 			if ( isDate(qGetSeasonPaperwork.ar_training) ) {
@@ -454,16 +476,14 @@
 				stUserPaperwork.isReferenceQuestionnaireCompleted = false;
 			}
 			
-			
 			// 2nd Visit - Only Agreement and CBC - No References, employment history, trainings and DOS test
-			if ( vIsSecondVisitRep ) {
+			if ( vIsSecondVisitRepOnly ) {
 				stUserPaperwork.isReferenceCompleted = true;
 				stUserPaperwork.isReferenceQuestionnaireCompleted = true;
 				stUserPaperwork.isEmploymentHistoryCompleted = true;
 				stUserPaperwork.isTrainingCompleted = true;
 				stUserPaperwork.isDOSCertificationCompleted = true;
 			}
-			
 			
 			// ESI - Only Agreement and CBC - No References, employment history, trainings and DOS test
 			if ( CLIENT.companyID EQ APPLICATION.SETTINGS.COMPANYLIST.ESI ) {
@@ -474,36 +494,34 @@
 				stUserPaperwork.isDOSCertificationCompleted = true;
 			}
 			
-			// CBC Review
-			// ar_cbcAuthReview
-
-			// Check if ALL Paperwork have been received
+			// Check if ALL Paperwork have been submitted by the user
 			if ( 	
 					stUserPaperwork.isAgreementCompleted 
 				AND 
-					stUserPaperwork.isCBCAuthorizationCompleted
+					stUserPaperwork.isCBCAuthorizationCompleted 
 				AND	
 					stUserPaperwork.isDOSCertificationCompleted 
 				AND 
 					stUserPaperwork.isEmploymentHistoryCompleted 
 				AND 
-					stUserPaperwork.isReferenceCompleted
+					stUserPaperwork.isReferenceCompleted 
 				AND 
-					stUserPaperwork.isTrainingCompleted					
+					stUserPaperwork.isTrainingCompleted
 				) {
 					
 					// User Has Submitted All Required Paperwork
 					stUserPaperwork.isPaperworkCompleted = true;
 					
-					if ( stUserPaperwork.isReferenceQuestionnaireCompleted  ) {
-						// Completed
+					// Check if references and CBC have been approved by PM
+					if ( stUserPaperwork.isReferenceQuestionnaireCompleted AND stUserPaperwork.isCBCApproved ) {
+						// Paperwork compliant
 						stUserPaperwork.isAccountCompliant = true;
 						// Paperwork has been reviewed, set to false so notification is not sent out
 						stUserPaperwork.isAccountReadyForReview = false;
 					} else {
-						// Completed
+						// Paperwork not compliant
 						stUserPaperwork.isAccountCompliant = false;
-						// Paperwork has not been reviewed, set to true so email is sent out
+						// Paperwork has ready for review, set to true so email is sent out
 						stUserPaperwork.isAccountReadyForReview = true;
 					}
 					
@@ -566,7 +584,8 @@
 	<cffunction name="getSeasonPaperwork" access="public" returntype="query" output="false" hint="Gets season paperwork by userID">
     	<cfargument name="userID" default="" hint="userID is not required">
         <cfargument name="seasonID" default="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#" hint="seasonID is required">
-		
+		<cfargument name="getAllRecords" default="0" hint="Set to true to get all seasons">
+        
         <cfquery 
 			name="qGetSeasonPaperwork" 
 			datasource="#APPLICATION.DSN#">
@@ -579,7 +598,6 @@
                     sup.ar_ref_quest1,
                     sup.ar_ref_quest2,
                     sup.ar_cbc_auth_form,
-                    sup.ar_cbcAuthReview,
                     sup.ar_agreement,
                     sup.ar_training,
                     sup.secondVisit,
@@ -594,8 +612,12 @@
                 	smg_seasons ss ON ss.seasonID = sup.seasonID
                 WHERE 
                     sup.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
-                AND
-                    sup.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+                
+				<cfif NOT VAL(ARGUMENTS.getAllRecords)>                
+                    AND
+                        sup.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+                </cfif>
+                
 				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
                     AND          
                         sup.fk_companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
@@ -603,6 +625,9 @@
                     AND          
                         sup.fk_companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
                 </cfif>
+                
+                ORDER BY
+                	sup.seasonID DESC
         </cfquery>
         
         <cfreturn qGetSeasonPaperwork>
@@ -620,8 +645,10 @@
 			qGetSeasonPaperwork = getSeasonPaperwork(userID=ARGUMENTS.userID,seasonID=ARGUMENTS.seasonID);
 			
 			// Check if we are updating a date or string field
-			vDateFieldList = "ar_info_sheet,ar_ref_quest1,ar_ref_quest2,ar_cbc_auth_form,ar_cbcAuthReview,ar_agreement,ar_training";
+			vDateFieldList = "ar_info_sheet,ar_ref_quest1,ar_ref_quest2,ar_cbc_auth_form,ar_agreement,ar_training";
+			
 			vStringFieldList = "agreeSig,cbcSig";
+			
 			vListofFields = vDateFieldList & "," & vStringFieldList;
 		</cfscript>
         

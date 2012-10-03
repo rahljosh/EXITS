@@ -606,14 +606,14 @@
                                             <cfelseif stUserPaperwork.isAccountReadyForReview>
                                                 Active (Paperwork received) - 
 												<cfif APPLICATION.CFC.USER.isOfficeUser()>
-                                                	<a href="?curdoc=forms/user_paperwork&userID=#userID#">Verification Needed</a>
+                                                	<a href="index.cfm?curdoc=user/index&action=paperworkDetails&userID=#get_new_users.userID#">Verification Needed</a>
 												<cfelse>
                                                 	Verification Needed
 												</cfif>
                                             <cfelse>
                                                 Active - 
                                                 <cfif APPLICATION.CFC.USER.isOfficeUser()>
-                                                	<a href="?curdoc=forms/user_paperwork&userID=#userID#">Missing Paperwork</a>
+                                                	<a href="index.cfm?curdoc=user/index&action=paperworkDetails&userID=#get_new_users.userID#">Missing Paperwork</a>
 												<cfelse>
                                                 	Missing Paperwork
 												</cfif>

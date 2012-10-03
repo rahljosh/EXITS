@@ -3,7 +3,7 @@
 	File:		agreement2ndVisit.cfm
 	Author:		Marcus Melo
 	Date:		July 31, 2012
-	Desc:		Agreement Contract
+	Desc:		Agreement 2nd Visit Contract
 	
 ----- ------------------------------------------------------------------------- --->
 

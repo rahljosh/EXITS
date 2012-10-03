@@ -1,6 +1,6 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		_index.cfm
+	File:		_welcome.cfm
 	Author:		Marcus Melo
 	Date:		July 17, 2012
 	Desc:		User Landing Page	

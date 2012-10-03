@@ -708,7 +708,7 @@
                                                         </cfif>
                                                     <a href="index.cfm?curdoc=forms/access_rights_form&id=#id#&companyID=#companyID#&userID=#rep_info.userID#" title="Edit Access Level">Edit</a>
                                                     <cfelse>
-                                                    <a href="index.cfm?curdoc=forms/convertToRep&userID=#rep_info.userID#"><img src="pics/convertBut_sm.jpg" /></a>
+                                                    <a href="index.cfm?curdoc=forms/convertToRep&userID=#rep_info.userID#"><img src="pics/convertBut_sm.jpg" border="0" /></a>
                                                     </cfif>
                                                 </td> 
                                                 <!---<td><a href="index.cfm?curdoc=forms/access_rights_form&id=#id#"><img src="pics/edit.png" border="0" alt="Edit"></a></td>--->
@@ -1135,33 +1135,24 @@
                            		<td><strong>Status:</strong></td><td> <cfif active EQ 1>Active<cfelse>Inactive</cfif></td>
                            </tr>
                         	<tr>
-                            	<td><strong>Login Enabled:</strong></td><td> <cfif accountCreationVerified is '' or  accountCreationVerified eq 0><a href="index.cfm?curdoc=forms/user_paperwork&userID=#url.userID#"> No</a><Cfelse>Yes</cfif></td>
+                            	<td><strong>Login Enabled:</strong></td>
+                                <td> <cfif accountCreationVerified is '' or  accountCreationVerified eq 0>
+                                	<a href="index.cfm?curdoc=user/index&action=paperworkDetails&userID=#URL.userID#">No</a><Cfelse>Yes</cfif>
+                                </td>
                            </tr>
                            
                            <cfif NOT listFind("8,11", uar_usertype)>
                                <tr>
-                                    <td><strong>Area Rep Paperwork:</strong></td>
+                                    <td><strong>Paperwork Status:</strong></td>
                                     <td>
-                                        <a href="?curdoc=forms/user_paperwork&userID=#url.userID#">
+                                        <a href="index.cfm?curdoc=user/index&action=paperworkDetails&userID=#URL.userID#">
 											<cfif stUserPaperwork.isAccountCompliant>
-                                                Complete
+                                                Compliant
                                             <cfelse>
-                                                Incomplete
+                                                Not Compliant
                                             </cfif>
                                         </a>
                                     </td>
-                               </tr>
-                               <tr>
-                                    <td><strong>2<sup>nd</sup> Visit Paperwork:</strong></td>
-                                    <td>
-                                        <a href="?curdoc=forms/user_paperwork&userID=#url.userID#">
-											<cfif stUserPaperwork.isAccountCompliant>
-                                                Complete
-                                            <cfelse>
-                                                Incomplete
-                                            </cfif>
-                                        </a>
-									</td>
                                </tr>
                            </cfif>
                                

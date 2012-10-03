@@ -139,13 +139,16 @@
                     <cfqueryparam cfsqltype="cf_sql_integer" value="8">
                 )
      	</cfquery>
+        
         <cfquery name="reportID" datasource="#APPLICATION.DSN#">
         	SELECT
             	MAX(id) AS reportID
           	FROM
             	areaRepQuestionaireTracking
         </cfquery>
+        
         <cfif CLIENT.userType LTE 5>
+        
         	<cfquery datasource="#APPLICATION.DSN#">
             	UPDATE
                 	smg_user_references
@@ -154,68 +157,44 @@
                 WHERE
                 	refID = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.ref#">
             </cfquery>
-     		<!---check if References in paperwork have been udpated.  If they havn't approve them---->
+     		
+			<!---check if References in paperwork have been udpated.  If they havn't approve them---->
 			<cfscript>
-        		//Check if paperwork is complete for season
-                get_paperwork = APPLICATION.CFC.udf.allpaperworkCompleted(userid=url.rep);
+				// Get Paperwork Info
+				qGetSeasonPaperwork = APPLICATION.CFC.USER.getSeasonPaperwork(userID=URL.rep);
             </cfscript>
-			<cfif get_paperwork.ar_ref_quest1 is ''>
+            
+			<cfif NOT isDate(qGetSeasonPaperwork.ar_ref_quest1)>
+            
             	<cfquery name="updatePaperwork" datasource="#APPLICATION.DSN#">
                 	UPDATE 
                     	smg_users_paperwork
                   	SET
                     	ar_ref_quest1 = <cfqueryparam cfsqltype="CF_SQL_DATE" value="#now()#">
                  	WHERE
-                    	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.rep)#">
+                    	paperworkID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetSeasonPaperwork.paperworkID)#">
            		</cfquery>
-       		<cfelseif get_paperwork.ar_ref_quest2 is ''>
+       		
+			<cfelseif NOT isDate(qGetSeasonPaperwork.ar_ref_quest2)>
+            
           		<cfquery name="updatePaperwork" datasource="#APPLICATION.DSN#">
                 	UPDATE
                     	smg_users_paperwork
                  	SET
                     	ar_ref_quest2 = <cfqueryparam cfsqltype="CF_SQL_DATE" value="#now()#">
                  	WHERE
-                    	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.rep)#">
+                    	paperworkID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetSeasonPaperwork.paperworkID)#">
            		</cfquery>
+                
         	</cfif>
-        	<!----Check if this account should be reviewed more then likely this will not happen here, but depending on the order of people submitting things, we have to check.---->
+            
 			<cfscript>
-				//Check if paperwork is complete for season
-				get_paperwork = APPLICATION.CFC.udf.allpaperworkCompleted(userid=url.rep);
-				//Get User Info
-				qGetUserInfo = APPLICATION.CFC.user.getUserByID(userid=url.rep );
+				//Check if we need to send out a notification to the program manager - Only accounts that needs review / depending on the order of people submitting things, we have to check
+				APPLICATION.CFC.USER.paperworkReceivedNotification(userID=URL.rep);
          	</cfscript>
-		 	<cfif val(get_paperwork.reviewAcct)>
-         		<cfquery name="progManager" datasource="#APPLICATION.DSN#">
-                	SELECT
-                    	pm_email
-                   	FROM
-                    	smg_companies
-                   	WHERE
-                    	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">
-                </cfquery>
-              	<cfsavecontent variable="programEmailMessage">
-              		<cfoutput>				
-                    	The references and all other paperwork appear to be in order for  #qGetUserInfo.firstname# #qGetUserInfo.lastname# (#qGetUserInfo.userID#). 
-                        A manual review is now required to actiavte the account.  Please review all paper work and submit the CBC for processing. If everything looks 
-                        good, approval of the CBC will activate this account.
-                        <br />
-                        <br /> 
-                    	<a href="#client.exits_url#/nsmg/index.cfm?curdoc=user_info&userid=#url.rep#">
-                        	View #qGetUserInfo.firstname#<cfif Right(#qGetUserInfo.firstname#, 1) is 's'>'<cfelse>'s</cfif> account.
-                     	</a>
-					</cfoutput>
-         		</cfsavecontent>
-             	<cfinvoke component="nsmg.cfc.email" method="send_mail">
-         			<!----**********This emai is sent to the Program Manager*******************--->
-                 	<cfinvokeargument name="email_to" value="#progManager.pm_email#"> 
-                    <cfinvokeargument name="email_bcc" value="support@iseusa.com"> 
-                  	<cfinvokeargument name="email_from" value="""#client.companyshort# Support"" <#client.emailfrom#>">
-                    <cfinvokeargument name="email_subject" value="CBC Authorization for #qGetUserInfo.firstname# #qGetUserInfo.lastname#">
-                    <cfinvokeargument name="email_message" value="#programEmailMessage#">
-           		</cfinvoke>	 
-   			</cfif>
+                        
       	</cfif>
+        
     	<cfloop query="questions">
      		<cfquery datasource="#APPLICATION.DSN#">
           		INSERT INTO
@@ -239,14 +218,9 @@
             </script>
             <div align="center">
             	<h1>Succesfully Submited.</h1>
-            	<cfif val(get_paperwork.arearepok)>
-                	This account is ready for a manual review.  Emails have been sent to the program manager to initiate the reveiw process and activate the account.
-				</cfif>
-                <br />
                 <br />
             	<em>this window should close shortly</em>
             	<br />
-                <br />
          	</div>
         	<cfabort>
      	</cfif>      

@@ -239,27 +239,21 @@
 			</cfscript>
             					
         </cfloop>
-		<cfif isDefined('url.return')>
+        
         <cfscript>
 			// Check if there are no errors 
 			if ( NOT SESSION.formErrors.length() ) {
-                // Set Page Message
-                SESSION.pageMessages.Add("Form successfully submitted.");
+				// Set Page Message
+				SESSION.pageMessages.Add("Form successfully submitted.");
 			}
-			
-			Location("index.cfm?curdoc=forms/user_paperwork&userid=#url.userID#", "no");
-		</cfscript>
-        <cfelse>
-        <cfscript>
-			// Check if there are no errors 
-			if ( NOT SESSION.formErrors.length() ) {
-                // Set Page Message
-                SESSION.pageMessages.Add("Form successfully submitted.");
+		
+			if ( isDefined('url.return') ) {
+				Location("index.cfm?curdoc=user/index&action=paperworkDetails&userID=#url.userID#", "no");
+			} else {
+				Location(CGI.SCRIPT_NAME & "?" & CGI.QUERY_STRING, "no");
 			}
-			
-			Location(CGI.SCRIPT_NAME & "?" & CGI.QUERY_STRING, "no");
 		</cfscript>
-      	</cfif>
+        
 	</cfif> <!--- End of FORM.submitted --->
     
 </cfsilent>
