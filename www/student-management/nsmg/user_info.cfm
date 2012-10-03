@@ -666,7 +666,7 @@
             	</div> <!-- end top --> 
              <div class="rdbox">
                 <!----****company info****---->
-                 <table width="100%" cellpadding=10 cellspacing="0" border="0">
+                 <table width="100%" cellpadding="4" cellspacing="0" border="0">
                     <tr>
                         <td style="line-height:20px;" valign="top">
                           
@@ -903,7 +903,7 @@
              <div class="rdbox">
                 
               
-                <table width="100%" cellpadding=10 cellspacing="0" border="0" >
+                <table width="100%" cellpadding="4" cellspacing="0" border="0" >
                     <tr>
                         <td style="line-height:22px;" valign="top">
                             <Cfquery name="super_payments" datasource="#APPLICATION.DSN#">
@@ -1614,7 +1614,7 @@
             	</div> <!-- end top --> 
              <div class="rdbox">
                 
-                <table width="100%" cellpadding=10 cellspacing="0" border="0">
+                <table width="100%" cellpadding="4" cellspacing="0" border="0">
                     <tr>
                         <td style="line-height:20px;" valign="top">
                         <Cfquery name="family_members" datasource="#APPLICATION.DSN#">
@@ -1676,56 +1676,83 @@
             	</div> <!-- end top --> 
              <div class="rdbox">
                 <!----****student info****---->
-                 <table width="100%" cellpadding=10 cellspacing="0" border="0">
+                 <table width="100%" cellpadding="4" cellspacing="0" border="0">
                     <tr>
                         <td style="line-height:20px;" valign="top">
                        
                             <!----Query for placed students---->
-                            <cfquery name="get_placed_students" datasource="#APPLICATION.DSN#">
-                                SELECT smg_students.studentid, smg_students.familylastname, smg_students.firstname, smg_students.placerepid,
-                                    smg_students.sex, smg_countrylist.countryname, smg_students.countryresident, smg_students.city, smg_students.branchid as branch,
-                                    smg_users.firstname as intl_firstname, smg_users.lastname as intl_lastname, smg_users.businessname as intl_businessname,
+                            <cfquery name="qGetPlacedStudents" datasource="#APPLICATION.DSN#">
+                                SELECT 
+                                	CAST(CONCAT(s.firstName, ' ', s.familyLastName,  ' ##', s.studentID) AS CHAR) AS studentDisplayName,
+                                    s.sex, 
+                                    smg_countrylist.countryname, 
                                     p.programname
-                                FROM smg_students 
-                                LEFT JOIN smg_countrylist ON smg_students.countryresident = smg_countrylist.countryid 
-                                INNER JOIN smg_users ON smg_students.intrep = smg_users.userID
-                                INNER JOIN smg_programs p ON p.programid = smg_students.programid
-                                WHERE smg_students.placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userID#">
+                                FROM 
+                                	smg_students s 
+                                LEFT OUTER JOIN 
+                                	smg_countrylist ON s.countryresident = smg_countrylist.countryid 
+                                INNER JOIN 
+                                	smg_users ON s.intrep = smg_users.userID
+                                INNER JOIN 
+                                	smg_programs p ON p.programid = s.programid
+                                WHERE 
+                                	s.placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userID#">
                                 AND 
-						        	smg_students.host_fam_approved < <cfqueryparam cfsqltype="cf_sql_integer" value="5">
-								AND smg_students.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.globalCompanyList#" list="yes">)
+						        	s.host_fam_approved < <cfqueryparam cfsqltype="cf_sql_integer" value="5">
+								AND 
+                                	s.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.globalCompanyList#" list="yes">)
+                                ORDER BY
+                                	p.startDate DESC
                             </cfquery>
+                            
                             <!----Query for supervised students---->
-                            <cfquery name="get_supervised_students" datasource="#APPLICATION.DSN#">
-                                SELECT smg_students.studentid, smg_students.familylastname, smg_students.firstname, smg_students.placerepid,
-                                    smg_students.sex, smg_countrylist.countryname, smg_students.countryresident, smg_students.city, smg_students.branchid as branch,
-                                    smg_users.firstname as intl_firstname, smg_users.lastname as intl_lastname, smg_users.businessname as intl_businessname,
+                            <cfquery name="qGetSupervisedStudents" datasource="#APPLICATION.DSN#">
+                                SELECT 
+                                	CAST(CONCAT(s.firstName, ' ', s.familyLastName,  ' ##', s.studentID) AS CHAR) AS studentDisplayName,
+                                    s.sex, 
+                                    smg_countrylist.countryname, 
                                     p.programname
-                                 FROM smg_students 
-                                 LEFT JOIN smg_countrylist ON smg_students.countryresident = smg_countrylist.countryid 
-                                 INNER JOIN smg_users ON smg_students.intrep = smg_users.userID
-                                 INNER JOIN smg_programs p ON p.programid = smg_students.programid
-                                 WHERE smg_students.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userID#">
+                                 FROM 
+                                 	smg_students s
+                                 LEFT OUTER JOIN 
+                                 	smg_countrylist ON s.countryresident = smg_countrylist.countryid 
+                                 INNER JOIN 
+                                 	smg_users ON s.intrep = smg_users.userID
+                                 INNER JOIN 
+                                 	smg_programs p ON p.programid = s.programid
+                                 WHERE 
+                                 	s.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userID#">
                                  AND 
-						        	smg_students.host_fam_approved < <cfqueryparam cfsqltype="cf_sql_integer" value="5">
-								 
-	                               AND smg_students.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.globalCompanyList#" list="yes">)
-                                
+						        	s.host_fam_approved < <cfqueryparam cfsqltype="cf_sql_integer" value="5">								 
+	                             AND 
+                                 	s.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.globalCompanyList#" list="yes">)    
+                                ORDER BY
+                                	p.startDate DESC
                             </cfquery>	
-                             <!----Query for 2nd visit students---->
-                            <cfquery name="get_2ndvisit_students" datasource="#APPLICATION.DSN#">
-                                SELECT smg_students.studentid, smg_students.familylastname, smg_students.firstname, smg_students.placerepid,
-                                    smg_students.sex, smg_countrylist.countryname, smg_students.countryresident, smg_students.city, smg_students.branchid as branch,
-                                    smg_users.firstname as intl_firstname, smg_users.lastname as intl_lastname, smg_users.businessname as intl_businessname,
+                            
+                            <!----Query for 2nd visit students---->
+                            <cfquery name="qGet2ndVisitStudents" datasource="#APPLICATION.DSN#">
+                                SELECT 
+                                	CAST(CONCAT(s.firstName, ' ', s.familyLastName,  ' ##', s.studentID) AS CHAR) AS studentDisplayName,
+                                    s.sex, 
+                                    smg_countrylist.countryname, 
                                     p.programname
-                                FROM smg_students 
-                                LEFT JOIN smg_countrylist ON smg_students.countryresident = smg_countrylist.countryid 
-                                INNER JOIN smg_users ON smg_students.secondvisitrepid = smg_users.userID
-                                INNER JOIN smg_programs p ON p.programid = smg_students.programid
-                                WHERE smg_students.secondvisitrepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userID#">
-                                
-								AND smg_students.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.globalCompanyList#" list="yes">)
-                            </cfquery>			
+                                FROM 
+                                	smg_students s 
+                                LEFT OUTER JOIN 
+                                	smg_countrylist ON s.countryresident = smg_countrylist.countryid 
+                                INNER JOIN 
+                                	smg_users ON s.secondvisitrepid = smg_users.userID
+                                INNER JOIN 
+                                	smg_programs p ON p.programid = s.programid
+                                WHERE 
+                                	s.secondvisitrepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userID#">
+								AND 
+                                	s.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.globalCompanyList#" list="yes">)
+                                ORDER BY
+                                	p.startDate DESC
+                            </cfquery>
+                            			
                             <style type="text/css">
                             <!--
                             div.scroll1 {
@@ -1738,95 +1765,88 @@
                           
                            			<!-----Kids Placed---->
                                    
-                                    <cfif get_placed_students.recordcount gt 2><div class="scroll1"></cfif>
+                                    <cfif qGetPlacedStudents.recordcount gt 2><div class="scroll1"></cfif>
                                     <!----scrolling table with placed information---->
-                                    <table border="0" width="100%" cellpadding="4" cellspacing="0">
+                                    <table border="0" width="100%" cellpadding="2" cellspacing="0">
                                     	<tr  bgcolor="##0b5886">
-                                        	<th colspan=4><font color="white">Placed (#get_placed_students.recordcount#)</font></th>
+                                        	<th colspan=4><font color="white">Placed (#qGetPlacedStudents.recordcount#)</font></th>
                                         </tr>
-                                        <cfif get_placed_students.recordcount EQ 0>
+                                        <cfif qGetPlacedStudents.recordcount EQ 0>
                                             <tr><td colspan="6" align="left">Rep has not placed any students</td></tr>
                                         <cfelse>
                                         <tr>
                                             <Th align="left">First Last (ID)</Th><th align="left">Gender</th><th align="left">Country</th><th align="left">Program</th>
                                         </tr>
                                         </cfif>
-                                        <cfloop query="get_placed_Students">
-                                        <tr bgcolor="#iif(get_placed_Students.currentrow MOD 2 ,DE("efefef") ,DE("ffffff") )#">		
-                                            
-                                            <td align="left">#firstname# #familylastname# (#studentid#)</td>
-                                            
-                                            <td align="left">#sex#</td>
-                                            <td  align="left">#Left(countryname,13)#</td>
-                                            
-                                            <td align="left"><u>#programname#</u></td>
+                                        <cfloop query="qGetPlacedStudents">
+                                        <tr bgcolor="#iif(qGetPlacedStudents.currentrow MOD 2 ,DE("efefef") ,DE("ffffff") )#">		
+                                            <td align="left">#qGetPlacedStudents.studentDisplayName#</td>
+                                            <td align="left">#qGetPlacedStudents.sex#</td>
+                                            <td  align="left">#Left(qGetPlacedStudents.countryname,13)#</td>
+                                            <td align="left"><u>#qGetPlacedStudents.programname#</u></td>
                                         </tr>
                                         </cfloop>
                                     </table>
                             
-                            <cfif get_placed_students.recordcount gt 2></div></cfif><br>
+                            <cfif qGetPlacedStudents.recordcount gt 2></div></cfif><br>
                             
-                            <cfif get_supervised_students.recordcount gt 2><div class="scroll1"></cfif>
+                            <cfif qGetSupervisedStudents.recordcount gt 2><div class="scroll1"></cfif>
                             <!----scrolling table with supervised information---->
-                            <table width="100%" border="0" cellpadding="4" cellspacing="0">
-                            	<tr  bgcolor="##0b5886">
-                                    <th colspan=4><font color="white">Supervising (#get_supervised_students.recordcount#)</font></th>
+                            <table width="100%" border="0" cellpadding="2" cellspacing="0">
+                            	<tr bgcolor="##0b5886">
+                                    <th colspan=4><font color="white">Supervising (#qGetSupervisedStudents.recordcount#)</font></th>
                                 </tr>
-                                <cfif get_supervised_students.recordcount eq 0>
+                                <cfif qGetSupervisedStudents.recordcount eq 0>
                                     <Tr><td colspan="6" align="left">Rep is not supervising any students</td></Tr>
                                  <cfelse>
                                 <tr>
                                    <Th align="left">First Last (ID)</Th><th align="left">Gender</th><th align="left">Country</th><th align="left">Program</th>
                                  </tr>
                                  </cfif>
-                                <cfloop query="get_supervised_students">
-                                <tr bgcolor="#iif(get_supervised_students.currentrow MOD 2 ,DE("efefef") ,DE("ffffff") )#">		
-                                            
-                                            <td align="left">#firstname# #familylastname# (#studentid#)</td>
-                                            
-                                            <td align="left">#sex#</td>
-                                            <td  align="left">#Left(countryname,13)#</td>
-                                            
-                                            <td align="left"><u>#programname#</u></td>
-                                        </tr>
+                                <cfloop query="qGetSupervisedStudents">
+                                	<tr bgcolor="#iif(qGetSupervisedStudents.currentrow MOD 2 ,DE("efefef") ,DE("ffffff") )#">		
+                                        <td align="left">#qGetSupervisedStudents.studentDisplayName#</td>
+                                        <td align="left">#qGetSupervisedStudents.sex#</td>
+                                        <td  align="left">#Left(qGetSupervisedStudents.countryname,13)#</td>
+                                        <td align="left"><u>#qGetSupervisedStudents.programname#</u></td>
+                                    </tr>
                                 </cfloop>
                             </table>
                             
                                  
-                            <cfif get_supervised_students.recordcount gt 2></div></cfif>
+                            <cfif qGetSupervisedStudents.recordcount gt 2></div></cfif>
                             <!----Second Visit Students---->
                              <br />
-                            <cfif get_2ndvisit_students.recordcount gt 2><div class="scroll1"></cfif>
+                            <cfif qGet2ndVisitStudents.recordcount gt 2><div class="scroll1"></cfif>
                             <!----scrolling table with secondvisit information---->
                             <table border="0" width="100%" cellpadding="4" cellspacing="0">
-                              <tr  bgcolor="##0b5886">
-                                    <th colspan=4><font color="white">Second Visit Students: (#get_2ndvisit_students.recordcount#)</font></th>
+                              	<tr  bgcolor="##0b5886">
+                                    <th colspan=4><font color="white">Second Visit Students: (#qGet2ndVisitStudents.recordcount#)</font></th>
                                 </tr>
-                                <cfif get_2ndvisit_students.recordcount EQ 0>
-                                 	
-                                    	<Tr><td colspan="6" align="left">Rep is not a 2nd Visit rep for any students.</td></Tr>
+                                <cfif qGet2ndVisitStudents.recordcount EQ 0>
+                                    <Tr><td colspan="6" align="left">Rep is not a 2nd Visit rep for any students.</td></Tr>
                                 <cfelse>
-                                 <tr>
-                                            <Th align="left">First Last (ID)</Th><th align="left">Gender</th><th align="left">Country</th><th align="left">Program</th>
-                                        </tr>
+                                    <tr>
+                                        <Th align="left">First Last (ID)</Th><th align="left">Gender</th><th align="left">Country</th><th align="left">Program</th>
+                                    </tr>
                                 </cfif>
-                                <cfloop query="get_2ndvisit_students">
-                                <tr bgcolor="#iif(get_2ndvisit_students.currentrow MOD 2 ,DE("efefef") ,DE("ffffff") )#">		
-                                        <td align="left">#firstname# #familylastname# (#studentid#)</td>
-                                        <td align="left">#sex#</td>
-                                        <td  align="left">#Left(countryname,13)#</td>
-                                        <td align="left"><u>#programname#</u></td>
-                                 </tr>
+                                <cfloop query="qGet2ndVisitStudents">
+                                    <tr bgcolor="#iif(qGet2ndVisitStudents.currentrow MOD 2 ,DE("efefef") ,DE("ffffff") )#">		
+                                        <td align="left">#qGet2ndVisitStudents.studentDisplayName#</td>
+                                        <td align="left">#qGet2ndVisitStudents.sex#</td>
+                                        <td  align="left">#Left(qGet2ndVisitStudents.countryname,13)#</td>
+                                        <td align="left"><u>#qGet2ndVisitStudents.programname#</u></td>
+                                     </tr>
                                 </cfloop>
                             </table>
                             
-                       
                         </td>
                     </tr>
                 </table>
                 
                 <!----****end student info---->
-             
+             	
+                <p>* Approved Placements Only</p>
               
                 <!----footer of  student table---->
                 </div>
