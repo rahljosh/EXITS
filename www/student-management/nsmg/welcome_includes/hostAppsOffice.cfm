@@ -41,49 +41,49 @@
                         
                     </cfif>
 
-                        <cfquery name="apps" datasource="#application.dsn#">
-                            SELECT 
-                                COUNT(hostid) AS count 
-                            FROM 
-                                smg_hosts
-                            WHERE 
-                                <!--- RANDID = TO IDENTIFY ONLINE APPS --->
-                                hostAppStatus != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-                            
-                            <!--- Do not get active reps if viewing a rejected status ---> 	    
-                            AND 
-                                hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#"> 
-                            
-                            <!--- ISE Divisions --->
-                            <cfif CLIENT.companyID NEQ 5>
-                                AND
-                                    companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-                            <!--- Get All ISE Apps --->
-                            <cfelseif CLIENT.companyID eq 5>
-                                AND
-                                    companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> ) 
-                            </cfif>
-                            
-                            <!--- Area Rep --->
-                            <cfif CLIENT.usertype eq 7>
-                                AND 
-                                    arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
-                            <!--- RA --->
-							<cfelseif CLIENT.usertype eq 6 AND len(userUnderList)>
-                                AND 
-                                    arearepid in ( #userUnderList# ) 
-                            <!--- RM --->
-							<cfelseif CLIENT.usertype eq 5>
-                                AND 
-                                    regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
-                            </cfif>
-                            
-                        </cfquery> 
+                    <cfquery name="apps" datasource="#application.dsn#">
+                        SELECT 
+                            COUNT(hostid) AS count 
+                        FROM 
+                            smg_hosts
+                        WHERE 
+                            <!--- RANDID = TO IDENTIFY ONLINE APPS --->
+                            hostAppStatus != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                         
-                        <cfoutput><cfif CLIENT.usertype lte i><a href="index.cfm?curdoc=hostApplication/listOfApps&status=#i#"></cfif>#apps.count#</a></cfoutput>
-                    </td>
-				</cfloop>
-                </tr>
+                        <!--- Do not get active reps if viewing a rejected status ---> 	    
+                        AND 
+                            hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#"> 
+                        
+                        <!--- ISE Divisions --->
+                        <cfif CLIENT.companyID NEQ 5>
+                            AND
+                                companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                        <!--- Get All ISE Apps --->
+                        <cfelseif CLIENT.companyID eq 5>
+                            AND
+                                companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> ) 
+                        </cfif>
+                        
+                        <!--- Area Rep --->
+                        <cfif CLIENT.usertype eq 7>
+                            AND 
+                                arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                        <!--- RA --->
+                        <cfelseif CLIENT.usertype eq 6 AND len(userUnderList)>
+                            AND 
+                                arearepid in ( <cfqueryparam cfsqltype="cf_sql_integer" value="#userUnderList#" list="yes"> ) 
+                        <!--- RM --->
+                        <cfelseif CLIENT.usertype eq 5>
+                            AND 
+                                regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
+                        </cfif>
+                        
+                    </cfquery> 
+                    
+                    <cfoutput><cfif CLIENT.usertype lte i><a href="index.cfm?curdoc=hostApplication/listOfApps&status=#i#"></cfif>#apps.count#</a></cfoutput>
+                </td>
+            </cfloop>
+            </tr>
 		</table>
         
         	</td>
