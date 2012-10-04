@@ -152,7 +152,7 @@ where active = 1
                 <td>
                 <input type="hidden" name="#qHostFamilyMembers.childid#_name" value="#name#" />
               <Cfif ssn is not ''>
-              	<a href="http://111cooper.com/nsmg/uploadedfiles/#cbcInfo.filePath##cbcInfo.fileName#">View CBC Authoriaztion</td>
+              	<a href="http://ise.exitsapplication.com/nsmg/uploadedfiles/#cbcInfo.filePath##cbcInfo.fileName#">View CBC Authoriaztion</td>
               <cfelse>
                Missing Information
                </td>
