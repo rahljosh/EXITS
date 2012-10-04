@@ -387,6 +387,8 @@
                             AND
                                 uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
                         </cfif>
+                        AND
+                        	uar.userType IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7,15" list="yes"> )
                 INNER JOIN
                 	smg_programs p on p.programID = s.programID
                 INNER JOIN
@@ -547,6 +549,8 @@
                             AND
                                 uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
                         </cfif>
+                        AND
+                        	uar.userType IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7,15" list="yes"> )
                 INNER JOIN
                 	smg_programs p on p.programID = s.programID
                 INNER JOIN
@@ -767,6 +771,8 @@
                             AND
                                 uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
                         </cfif>
+                        AND
+                        	uar.userType IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7,15" list="yes"> )
                 INNER JOIN
                 	smg_programs p on p.programID = s.programID
                 INNER JOIN
