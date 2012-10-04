@@ -105,42 +105,48 @@ $(document).ready(function(){
         
         
    <cffile action="upload"
-     destination="C:/websites/student-management/nsmg/uploadedfiles/HostAlbumResize"
+     destination="C:/websites/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#"
      fileField="fileUpload" nameconflict="makeunique">    
-     <cffile action="rename" source="C:/websites/student-management/nsmg/uploadedfiles/HostAlbumResize/#file.serverfile#" 
-     					destination="C:/websites/student-management/nsmg/uploadedfiles/HostAlbumResize/#CreateUUID()#.#file.ServerFileExt#">
-      <cfdirectory action="list" name="currentPics2" directory="C:/websites/student-management/nsmg/uploadedfiles/HostAlbumResize">
-    
-      <cfset fileTypeOK = 1>
+     <!----
+     <cffile action="rename" source="C:/websites/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/large/#file.serverfile#" 
+     					destination="C:/websites/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/large/#CreateUUID()#.#file.ServerFileExt#">
+      ---->
+    	
+   <cfset fileTypeOK = 1>
 	<cfif #ListFind('#acceptedFIles#','#file.ServerFileExt#')# eq 0>
-   <cfset fileTypeOK = 0>
-   <cffile action="delete" 
-    	file="C:/websites/student-management/nsmg/uploadedfiles/HostAlbumResize/#file.serverfile#">
+	   <cfset fileTypeOK = 0>
+       <cffile action="delete" 
+    	file="C:/websites/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/#file.serverfile#">
    
 	<cfelse>
 
       <!----Resize pictures for large and thumbnails---->
-       <cfloop query="currentPics2">
+       
             
      			   <cfinvoke component="cfc.ResizeLarge" method="GetImage" returnvariable="myImage">
-                        <cfinvokeargument name="img" value="#name#"/>
+                        <cfinvokeargument name="img" value="#file.ServerFile#"/>
                         <cfinvokeargument name="hostid" value="#client.hostid#"/>
                     </cfinvoke>
                    
  					<cfinvoke component="cfc.ResizeThumb" method="GetImage" returnvariable="myImage">
-                        <cfinvokeargument name="img" value="#name#"/>
-                        <cfinvokeargument name="mls" value="#client.hostid#"/>
+                        <cfinvokeargument name="img" value="#file.ServerFile#"/>
+                        <cfinvokeargument name="hostid" value="#client.hostid#"/>
                  	</cfinvoke>
-                    <cfset fileNameNew= "#REReplace("#name#",".(jpg|JPG|JPEG|jpeg)",".jpg")#">
+					
+                    <cfset fileNameNew= "#REReplace("#file.ServerFile#",".(jpg|JPG|JPEG|jpeg)",".jpg")#">
                     
 				 <cfquery datasource="MySQL">
                     insert into smg_host_picture_album (fk_hostID, filename, cat)
                     values(#client.hostid#, '#fileNameNew#', #form.picCat#)
                  </cfquery>
-                     </cfloop>
-                    <cfloop query="currentPics2">
-				 	<cffile action="delete" file="C:/websites/student-management/nsmg/uploadedfiles/HostAlbumResize/#name#">  
-                   </cfloop>
+                 <!----
+                   <cffile action="rename" source="C:/websites/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/large/#file.serverfile#" 
+     					destination="C:/websites/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/large/#CreateUUID()#.#file.ServerFileExt#">
+                   <cffile action="rename" source="C:/websites/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs/#file.serverfile#" 
+     					destination="C:/websites/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs/#CreateUUID()#.#file.ServerFileExt#">
+                        --->
+				 	<cffile action="delete" file="C:/websites/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/#file.ServerFile#">  
+                   
 
      </cfif>
   <!----  
