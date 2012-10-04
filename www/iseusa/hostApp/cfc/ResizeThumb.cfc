@@ -1,9 +1,9 @@
 <cfcomponent>
 	<cffunction name="GetImage" hint="Re-sizes images for display in album">
 <!----Get info on Image---->
-<cfimage action="info" structName="picInfo" source="C:/websites/student-management/nsmg/uploadedfiles/HostAlbumResize/#img#">
+<cfimage action="info" structName="picInfo" source="C:/websites/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/#img#">
 <!--- Set the image path where photos exist --->
-<cfset imgpath = "C:/websites/student-management/nsmg/uploadedfiles/HostAlbumResize/#img#">
+<cfset imgpath = "C:/websites/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/#img#">
 <cfset newPath = "C:/websites/student-management/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs/">
 <!--- Set the domain path, allows reuse resized images on other sites --->
 
