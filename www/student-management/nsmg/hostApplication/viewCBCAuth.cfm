@@ -101,8 +101,8 @@ where active = 1
         <tr <Cfif currentrow mod 2> bgcolor="##deeaf3"</cfif>>
             <Td><p class=p_uppercase>#fatherfirstname# #fatherlastname#</Td>
             <Td><p class=p_uppercase>Host Father</Td>
-            <Td>#DateFormat(fatherdob, 'mmm d, yyyy')#</Td>
-            <td>#DateDiff('yyyy',fatherdob,now())#</td> 
+            <Td><cfif fatherdob is ''>N/A<cfelse>#DateFormat(fatherdob, 'mmm d, yyyy')#</cfif></Td>
+            <td><cfif fatherdob is ''>N/A<cfelse>#DateDiff('yyyy',fatherdob,now())#</cfif></td> 
              <input type="hidden" value="#fatherfirstname#" name="fatherfirstname" />
             <td>
             
@@ -115,8 +115,8 @@ where active = 1
         <tr >
             <Td><p class=p_uppercase>#motherfirstname# #motherlastname#</Td>
             <Td><p class=p_uppercase>Host Mother</Td>
-            <Td>#DateFormat(motherdob, 'mmm d, yyyy')#</Td>
-            <td>#DateDiff('yyyy',motherdob,now())#</td> 
+            <Td><cfif motherdob is ''>N/A<cfelse>#DateFormat(motherdob, 'mmm d, yyyy')#</cfif></Td>
+            <td><cfif motherdob is ''>N/A<cfelse>#DateDiff('yyyy',motherdob,now())#</cfif></td> 
            <input type="hidden" value="#motherfirstname#" name="motherfirstname" />
            
             <td>
