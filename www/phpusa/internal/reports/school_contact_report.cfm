@@ -12,60 +12,60 @@
 	
     <!--- Param Form Variables ---->
     <cfparam name="FORM.schoolID" default="0">
+    <cfparam name="FORM.active" default="All">
     
     <!-----Company Information----->
     <cfinclude template="../querys/get_company_short.cfm">
     
-    <!--- Choose the ordering --->
-    <cfif FORM.orderBy EQ 1>
+	<!--- get the information from the schools --->
+    <cfquery name="qGetSchools" datasource="MySql">
+        SELECT
+            s.schoolID,
+            s.schoolName,
+            s.contact,
+            s.email,
+            s.phone,
+            s.website,
+            s.address,
+            s.address2,
+            s.city,
+            state.stateName,
+            s.zip
+        FROM
+            php_schools s
+        INNER JOIN
+            smg_states state ON state.id = s.state
+        WHERE
+            1=1
+        <cfif VAL(FORM.schoolID)>
+            AND
+                s.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.schoolID)#">
+        </cfif>
+        <cfif FORM.active NEQ 'All'>
+            AND
+                s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.active)#">
+        </cfif>
+        ORDER BY
+            s.schoolName
+    </cfquery>
     
-		<!--- get the information from the schools --->
-        <cfquery name="qGetSchools" datasource="MySql">
-            SELECT
-                s.schoolID,
-                s.schoolName,
-                s.contact,
-                s.email,
-                s.phone,
-                s.website,
-                s.address,
-                s.address2,
-                s.city,
-                state.stateName,
-                s.zip
-            FROM
-                php_schools s
-            INNER JOIN
-                smg_states state ON state.id = s.state
-            <cfif VAL(FORM.schoolID)>
-                WHERE
-                    s.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.schoolID)#">
-            </cfif>
-            ORDER BY
-                s.schoolName
-        </cfquery>
-        
-  	<cfelseif FORM.orderBy EQ 2>
-    	
-        <cfquery name="qGetReps" datasource="MySql">
-            SELECT
-                c.userID,
-                u.firstName,
-                u.lastName,
-                u.email,
-                u.phone
-            FROM
-                php_school_contacts c
-            INNER JOIN
-                smg_users u ON u.userID = c.userID
-            GROUP BY
-                c.userID
-          	ORDER BY
-            	firstName,
-                lastName
-        </cfquery>
-        
-    </cfif>
+    <cfquery name="qGetReps" datasource="MySql">
+        SELECT
+            c.userID,
+            u.firstName,
+            u.lastName,
+            u.email,
+            u.phone
+        FROM
+            php_school_contacts c
+        INNER JOIN
+            smg_users u ON u.userID = c.userID
+        GROUP BY
+            c.userID
+        ORDER BY
+            firstName,
+            lastName
+    </cfquery>
     
 </cfsilent>
 
@@ -89,6 +89,9 @@
     <table width="100%" cellpadding="4" cellspacing="0" align="center">
     	<tr>
         	<th><span class="application_section_header">#companyshort.companyshort# - School Contact Report</span></th>
+        </tr>
+        <tr>
+        	<th>Number of schools in this report: #qGetSchools.recordCount#</th>
         </tr>
     </table>
     
@@ -182,6 +185,10 @@
                     <cfif VAL(FORM.schoolID)>
                         AND
                             s.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.schoolID)#">
+                    </cfif>
+                    <cfif FORM.active NEQ 'All'>
+                        AND
+                            s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.active)#">
                     </cfif>
                     ORDER BY
                         s.schoolName

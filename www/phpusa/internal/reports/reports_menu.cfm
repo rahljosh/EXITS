@@ -216,6 +216,16 @@
                                 </td>
                             </tr>
                             <tr>
+                            	<td align="right">Active :</td>
+                                <td>
+                                	<select name="active">
+                                    	<option value="All">All</option>
+                                    	<option value="1">Active</option>
+                                        <option value="0">Inactive</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td align="right">Order By :</td>
                                 <td>
                                     <cfselect name="orderBy">
