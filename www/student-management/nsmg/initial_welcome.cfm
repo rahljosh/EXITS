@@ -346,7 +346,7 @@
                                     <td><a href="index.cfm?curdoc=project_help">H.E.L.P. Community Service Hours</a></td>
                                 </cfif>
                                 <!---  WebEx --->
-                                <cfif APPLICATION.CFC.USER.isOfficeUser() and (CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12 or CLIENT.companyID eq 10)>
+                                <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, CLIENT.companyID)>
                                     <td width="22"><img src="pics/icons/webex.png" /></td>
                                     <td><a href="index.cfm?curdoc=calendar/index">WebEx Calendar</a></td>
                                 </cfif>
