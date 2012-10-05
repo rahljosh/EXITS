@@ -1930,12 +1930,12 @@
                                         Rejected
                                     </cfif>
                                 </Td>
-                                <cfif client.usertype lte 5 and client.userID neq userID> 
+                                <cfif client.usertype lte 6 and client.userID neq userID> 
                                     <Td align="Center">
-                                        <cfif checkRefReport.recordcount eq 0 and client.usertype lte 6 >
-                                            <a href="javascript:openPopUp('forms/refrencesQuestionaire.cfm?ref=#refid#&rep=#userID#', 680, 800);">Submit Report
-                                        <cfelse>
+                                        <cfif checkRefReport.recordcount>
                                             <a href="javascript:openPopUp('forms/viewRefrencesQuestionaire.cfm?reportid=#checkRefReport.id#', 640, 800);">View Report</a>
+                                        <cfelse>
+                                            <a href="javascript:openPopUp('forms/refrencesQuestionaire.cfm?ref=#refid#&rep=#userID#', 680, 800);">Submit Report
                                         </cfif>
                                     </Td>
                                 </cfif>
