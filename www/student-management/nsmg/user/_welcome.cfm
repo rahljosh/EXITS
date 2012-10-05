@@ -231,7 +231,8 @@
                         <p>Our records indicate that you have <strong>NOT</strong> taken the DOS Certification test for this season, please click on the link below to take the test.</p>
                         <div align="center">
                             <a href="user/index.cfm?uniqueID=#CLIENT.uniqueID#&action=trainCasterLogin" target="_blank" title="Click Here to Take the DOS Test">
-                                <img src="pics/buttons/DOScertification.png" border="0" title="Click Here to Take the DOS Certification Test" />
+                                <img src="pics/buttons/needInformation.png" border="0" /> 
+                                <!--- <img src="pics/buttons/DOScertification.png" border="0" title="Click Here to Take the DOS Certification Test" /> --->
                             </a>
                         </div>                    
                     </cfif> 
@@ -370,7 +371,6 @@
                                 <th class="left">Date Recorded</th>
                             </tr>
                             
-                            <!---
                             <cfloop query="qGetTraining">
                                 <tr class="#iif(qGetTraining.currentrow MOD 2 ,DE("on") ,DE("off") )#">
                                     <td>#DateFormat(qGetTraining.date_trained, 'mm/dd/yyyy')#</td>
@@ -395,17 +395,16 @@
                             <cfif NOT qGetTraining.recordCount>
                                 <tr class="on"><td colspan="5" align="center">You have not taken any trainings this season</td>                                              
                             </cfif>
-                            --->                    
-                            <tr class="on"><td colspan="5" align="center">Trainings will be available soon.</td>                                              
                         </table>
-        
+                        
                         <div align="center">
+                            <p>Click Below to view a list of trainigs available</p>
                             <a href="index.cfm?curdoc=calendar/index">
                                 <img src="pics/webex-logo.jpg" border="0">
                             </a>
                         </div>                                        
-        
-                        <!---
+        				
+                        <!----
                         <!--- Complete --->
                         <cfif APPLICATION.CFC.USER.getUserSessionPaperwork().isTrainingCompleted>
                             <div align="center" style="padding-top:7px;"><img src="pics/buttons/complete.png" border="0" /></div>                
@@ -418,7 +417,7 @@
                                 </a>
                             </div>                                        
                         </cfif>
-                        --->
+						--->						
                         
                     </div>
                     
