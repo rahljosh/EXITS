@@ -533,7 +533,7 @@
                                 <tr>
                                     <td width="25"><img src="pics/icons/map.png" /></td>
                                     <td><a href="javascript:openPopUp('tools/stateStatus.cfm', 875, 675);">Available States</a></td>
-                                    <td rowspan="2" width="60%"><font size=-2><em>State and Region availability can change at any time, acceptance of choice will not be guranteed until application is submitted for approval</em></font>
+                                    <td rowspan="2" width="60%"><font size=-2><em>State and Region availability can change at any time, acceptance of choice will not be confirmed until application is submitted for approval</em></font>
                                 </tr>
                                 <tr>
                                     <td><img src="pics/icons/region.png" /></td>
