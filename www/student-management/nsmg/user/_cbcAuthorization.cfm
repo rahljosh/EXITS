@@ -204,8 +204,7 @@
                     	smg_users_paperwork
                     SET 
                     	ar_cbc_auth_form = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
-                        ar_info_sheet = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
-	                    cbcSig = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.signature#"> 
+	                    cbcSig = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.signature)#"> 
                     WHERE
                     	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.userID)#"> 
                     AND 
@@ -224,7 +223,7 @@
                         seasonID,
                         fk_companyID, 
                         cbcSig,
-                        ar_info_sheet
+                        dateCreated
                      )
                 	VALUES	
                     (
@@ -232,8 +231,8 @@
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.userID)#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.seasonID)#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">, 
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.signature#">,
-						<cfqueryparam cfsqltype="cf_sql_date" value="#now()#">                        
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.signature)#">,
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">                        
 					)
                 </cfquery>
                 

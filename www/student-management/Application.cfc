@@ -159,7 +159,7 @@
 						AND 
 							VAL(APPLICATION.CFC.USER.getUserSession().ID) 
 						AND 
-							NOT APPLICATION.CFC.USER.getUserSessionPaperwork().isPaperworkCompleted 
+							NOT APPLICATION.CFC.USER.getUserSessionPaperwork().isAccountCompliant 
 						AND 
 							NOT APPLICATION.CFC.USER.getUserSession().paperworkSkipAllowed
 						// allow user only on paperwork page including sub pages and logout.

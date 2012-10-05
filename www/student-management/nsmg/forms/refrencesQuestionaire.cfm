@@ -1,104 +1,106 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Refrences Questionnaire</title>
-<link rel="stylesheet" media="all" type="text/css"href="../linked/css/baseStyle.css" />
-
-<style type="text/css">
-	body{
-	font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
-	font-size:12px;
-	}
-	p, h1, form, button{border:0; margin:0; padding:0;}
-	.spacer{clear:both; height:1px;}
-	/* ----------- My Form ----------- */
-	.myform{
-	margin:0 auto;
-	width:600px;
-	padding:14px;
-	}
-	
-	/* ----------- stylized ----------- */
-	#stylized{
-	border:solid 2px #b7ddf2;
-	background:#ebf4fb;
-	}
-	#stylized h1 {
-	font-size:14px;
-	font-weight:bold;
-	margin-bottom:8px;
-	}
-	#stylized p{
-	font-size:11px;
-	color:#666666;
-	margin-bottom:20px;
-	border-bottom:solid 1px #b7ddf2;
-	padding-bottom:10px;
-	}
-	#stylized label{
-	display:block;
-	font-weight:bold;
-	text-align:left;
-	
-
-	padding-right:15px;
-	}
-	#stylized .small{
-	color:#666666;
-	display:block;
-	font-size:11px;
-	font-weight:normal;
-	text-align:right;
-	width:190px;
-	}
-	
-	#stylized .inputLabel{
-	padding-right: 15px;
-	vertical-align: top;
-	}
-	
-	#stylized button{
-	clear:both;
-	margin-left:150px;
-	width:125px;
-	height:31px;
-	background:#666666 url(img/button.png) no-repeat;
-	text-align:center;
-	line-height:31px;
-	color:#FFFFFF;
-	font-size:11px;
-	font-weight:bold;
-	}
-</style>
-
+<!--- Kill extra output --->
 <cfsilent>
-    <!--- Import CustomTag Used for Page Messages and Form Errors --->
+
+	<!--- Import CustomTag --->
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
+    
+    <cfquery name="questions" datasource="#application.dsn#">
+        SELECT
+            *
+        FROM
+            areaRepQuestions
+        WHERE
+            active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+    </cfquery>
+    
+    <cfparam name="FORM.dateInterview" default="">
+    
+    <cfloop query="questions">
+        <cfparam name="FORM.#id#" default="">
+    </cfloop>
+    
+    <cfscript>
+        // Get User By Userid
+        qGetProspectiveRepInfo = APPLICATION.CFC.USER.getUserByID(userID=url.rep);
+        // Get User By Userid
+        qGetUserInfo = APPLICATION.CFC.USER.getUserByID(userID=client.userid);
+    </cfscript>
+
 </cfsilent>
-</head>
 
-<cfquery name="questions" datasource="#application.dsn#">
-	SELECT
-    	*
-  	FROM
-    	areaRepQuestions
-  	WHERE
-    	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-</cfquery>
 
-<cfparam name="FORM.dateInterview" default="">
+<!--- Page Header --->
+<gui:pageHeader
+	headerType="applicationNoHeader"
+	/>	
+    
+    <style type="text/css">
+        body{
+        font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
+        font-size:12px;
+        }
+        p, h1, form, button{border:0; margin:0; padding:0;}
+        .spacer{clear:both; height:1px;}
+        /* ----------- My Form ----------- */
+        .myform{
+        margin:0 auto;
+        width:600px;
+        padding:14px;
+        }
+        
+        /* ----------- stylized ----------- */
+        #stylized{
+        border:solid 2px #b7ddf2;
+        background:#ebf4fb;
+        }
+        #stylized h1 {
+        font-size:14px;
+        font-weight:bold;
+        margin-bottom:8px;
+        }
+        #stylized p{
+        font-size:11px;
+        color:#666666;
+        margin-bottom:20px;
+        border-bottom:solid 1px #b7ddf2;
+        padding-bottom:10px;
+        }
+        #stylized label{
+        display:block;
+        font-weight:bold;
+        text-align:left;
+        
+    
+        padding-right:15px;
+        }
+        #stylized .small{
+        color:#666666;
+        display:block;
+        font-size:11px;
+        font-weight:normal;
+        text-align:right;
+        width:190px;
+        }
+        
+        #stylized .inputLabel{
+        padding-right: 15px;
+        vertical-align: top;
+        }
+        
+        #stylized button{
+        clear:both;
+        margin-left:150px;
+        width:125px;
+        height:31px;
+        background:#666666 url(img/button.png) no-repeat;
+        text-align:center;
+        line-height:31px;
+        color:#FFFFFF;
+        font-size:11px;
+        font-weight:bold;
+        }
+    </style>
 
-<cfloop query="questions">
-	<cfparam name="FORM.#id#" default="">
-</cfloop>
-
-<cfscript>
-	// Get User By Userid
-	qGetProspectiveRepInfo = APPLICATION.CFC.USER.getUserByID(userID=url.rep);
-	// Get User By Userid
-	qGetUserInfo = APPLICATION.CFC.USER.getUserByID(userID=client.userid);
-</cfscript>
 
 <cfif isDefined('form.submit')>
 	<cfscript>
@@ -136,7 +138,7 @@
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.rep)#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.ref)#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#">
                 )
      	</cfquery>
         
@@ -261,7 +263,7 @@
        			<cfform method="post" action="refrencesQuestionaire.cfm?rep=#url.rep#&ref=#url.ref#">
        				<label>Date of Interview</label>
                     <br />
-         			<cfinput type="text" name="dateInterview" size="10" value="#form.dateInterview#" mask="99/99/9999"  />mm/dd/yyyy
+         			<cfinput type="text" name="dateInterview" size="10" value="#form.dateInterview#" class="datePicker"  /> mm/dd/yyyy
         			<br />
                     <br />
         			<cfloop query="questions">
@@ -278,5 +280,8 @@
         		</cfform>
 			</div>
 		</cfoutput>
-	</body>
-</html>
+        
+<!--- Page Footer --->
+<gui:pageFooter
+	footerType="application"
+/>

@@ -66,7 +66,7 @@
         <li> 
         	<u>Term</u>
         	<p>
-            	The Term of this Agreement shall commence on the Effective Date and shall cease on #DateFormat(qGetSeason.paperworkEndDate, 'mmmm d, yyyy')#, <!--- Date ---> 
+            	The Term of this Agreement shall commence on the Effective Date and shall cease on #DateFormat(qGetSeason.datePaperworkEnded, 'mmmm d, yyyy')#, <!--- Date ---> 
                 unless otherwise agreed in writing between the parties or unless earlier terminated pursuant to Section 7 hereof.
          	</p>
         </li>

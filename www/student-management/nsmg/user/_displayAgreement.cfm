@@ -131,7 +131,7 @@
                     	smg_users_paperwork
                     SET 
                     	ar_agreement = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
-	                    agreeSig = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.signature#"> 
+	                    agreeSig = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.signature)#"> 
                     WHERE
                     	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.userID)#"> 
                     AND 
@@ -149,7 +149,8 @@
                         userID, 
                         seasonID,
                         fk_companyID, 
-                        agreeSig
+                        agreeSig,
+                        dateCreated
                      )
                 	VALUES	
                     (
@@ -157,7 +158,8 @@
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.userID)#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.seasonID)#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">, 
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.signature#">
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.signature)#">,
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
 					)
                 </cfquery>
                 

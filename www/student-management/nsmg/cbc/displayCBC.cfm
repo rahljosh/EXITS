@@ -12,8 +12,10 @@
     <gui:pageHeader
         headerType="applicationNoHeader"
     />  
-
-<!--- Import CustomTag Used for Page Messages and Form Errors --->
+	
+    <cfparam name="FORM.userID" default="0">
+    
+	<!--- Import CustomTag Used for Page Messages and Form Errors --->
 	<cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 
 <head>
@@ -86,6 +88,7 @@ body {
 
 <!----Submit info, but don't approve---->
 <cfif isDefined('form.submitcbcinfo')>
+
 	<Cfquery datasource="#application.dsn#">
     update smg_users_cbc
     set notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.notes#">,
@@ -104,12 +107,13 @@ body {
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#form.cbcid#">
                     )
-  
     </Cfquery>
+    
     <cfscript> 
 	// Set Page Message
     SESSION.pageMessages.Add("Information has been updated.  CBC was NOT approved.");
 	</cfscript>
+    
         <!----Clost window---->
             <SCRIPT LANGUAGE="JavaScript"><!--
 			setTimeout('self.close()',1000);
@@ -118,14 +122,13 @@ body {
 
 <!----Approve CBC---->
 <cfif isDefined('form.approveCBC')>
+
 	<Cfquery datasource="#application.dsn#">
     update smg_users_cbc
     set notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.notes#">,
     flagCBC = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
     date_approved = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
     denied = <cfqueryparam cfsqltype="cf_sql_date" value="">
-    
-   
     where cbcID = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.cbcID#">
     </Cfquery>
     
@@ -140,22 +143,27 @@ body {
                     )
   
     </Cfquery>
-      <cfscript>
+    
+    <cfscript>
+		// Check if account is fully enabled, if yes notify user
+		APPLICATION.CFC.USER.accountFullyEnabledNotification(userID=FORM.userID);
+		
 	    SESSION.pageMessages.Add("Information was updated, CBC was approved, and flags (if any) removed");
 	</cfscript>
+    
     <!----Clost window ---->
             <SCRIPT LANGUAGE="JavaScript"><!--
 			setTimeout('self.close()',1000);
 			//--></SCRIPT>
 </cfif>
+
 <cfif isDefined('form.denyCBCInfo')>
+
 	<Cfquery datasource="#application.dsn#">
     update smg_users_cbc
     set
     flagCBC = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
     denied = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
-    
-   
     where cbcID = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.cbcID#">
     </Cfquery>
 	
@@ -171,9 +179,10 @@ body {
   
     </Cfquery>
     
-      <cfscript>
-	    SESSION.pageMessages.Add("Information was updated, CBC was approved, and flags (if any) removed");
+    <cfscript>
+	    SESSION.pageMessages.Add("Information was denied.");
 	</cfscript>
+    
     <!----Clost window ---->
             <SCRIPT LANGUAGE="JavaScript"><!--
 			setTimeout('self.close()',1000);
@@ -182,16 +191,18 @@ body {
 <body onLoad="opener.location.reload()">
 
 <!----get any info regarding this CBC---->
+
 <cfscript>
-// Get User CBC
-		qGetCBCUser = APPCFC.CBC.getCBCUserByID(userID=userID,cbcType='user',cbcID=#url.cbcID#);
+	// Get User CBC
+	qGetCBCUser = APPCFC.CBC.getCBCUserByID(userID=userID,cbcType='user',cbcID=URL.cbcID);
 </cfscript>
+
 <!----Denial/Submit/Approve info history---->
     <Cfquery name="cbcDenialReasons" datasource="#application.dsn#">
     select h.type, h.dateCommented, h.whoCommented, h.reason, smg_users.firstname, smg_users.lastname
     from smg_users_cbc_reason_history h
     left join smg_users on smg_users.userid = h.whoCommented
-    where cbcid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.cbcID#">
+    where cbcid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.cbcID#">
     order by dateCommented desc
     </Cfquery>
 <cfoutput>
@@ -227,8 +238,9 @@ body {
   <div class="clearfix"></div>
 <div class="lightGrey">
 <Cfoutput>
- <form method="post" action="displayCBC.cfm?userid=#url.userid#&cbcID=#url.cbcID#&file=#url.file#&curdoc=displayCBC">
-        <input type="hidden" name="cbcID" value="#url.cbcID#"/>
+ <form method="post" action="displayCBC.cfm?userid=#URL.userid#&cbcID=#URL.cbcID#&file=#URL.file#&curdoc=displayCBC">
+        <input type="hidden" name="cbcID" value="#URL.cbcID#"/>
+        <input type="hidden" name="userID" value="#qGetCBCUser.userID#" />
         <input type="hidden" name="seasonID" value="#qGetCBCUser.seasonID#" />
         <table width=100% align="Center">
         

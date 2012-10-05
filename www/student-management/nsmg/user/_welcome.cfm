@@ -159,6 +159,14 @@
 
         <div class="rdboxPaperwork">
             
+			<cfif APPLICATION.CFC.USER.getUserSessionPaperwork().isUserPaperworkCompleted>            	
+            	<p align="center"><strong>Paperwork Status:</strong> Submitted | <strong>EXITS Access:</strong> Limited</p>
+                <p align="center" style="color:##F00">                	
+                    You have submitted all required paperwork for this season. A manual review is needed in order to fully activate your account. <br />
+					As soon as we review it, you are going to be notified by email and be granted full access to EXITS. <br />
+                </p>
+            </cfif>
+            
             <div class="subSection">
             
                 <div class="title">  
@@ -168,7 +176,7 @@
                 
 				<cfif APPLICATION.CFC.USER.getUserSessionPaperwork().isAgreementCompleted>
                     <p>
-                    	#qGetSeason.years# Agreement expires on #APPLICATION.CFC.USER.getUserSessionPaperwork().paperworkEndDate#
+                    	#qGetSeason.years# Agreement expires on #APPLICATION.CFC.USER.getUserSessionPaperwork().season.datePaperworkEnded#
 						<cfif FileExists("#APPLICATION.CFC.USER.getUserSession().myUploadFolder#Season#qGetSeason.seasonID#AreaRepAgreement.pdf")>
 	                        <a href="#APPLICATION.CFC.USER.getUserSession().myRelativeUploadFolder#Season#qGetSeason.seasonID#AreaRepAgreement.pdf" target="_blank" style="float:right;">[ Download Agreement ]</a>
                         </cfif>
@@ -190,7 +198,7 @@
                 
                 <cfif APPLICATION.CFC.USER.getUserSessionPaperwork().isCBCAuthorizationCompleted>
                     <p>
-                    	#qGetSeason.years# Authorization expires on #APPLICATION.CFC.USER.getUserSessionPaperwork().paperworkEndDate# 
+                    	#qGetSeason.years# Authorization expires on #APPLICATION.CFC.USER.getUserSessionPaperwork().season.datePaperworkEnded# 
 						<cfif FileExists("#APPLICATION.CFC.USER.getUserSession().myUploadFolder#Season#qGetSeason.seasonID#cbcAuthorization.pdf")>
 	                        <a href="#APPLICATION.CFC.USER.getUserSession().myRelativeUploadFolder#Season#qGetSeason.seasonID#cbcAuthorization.pdf" target="_blank" style="float:right;">[ Download CBC Authorization ]</a>
                         </cfif>
@@ -216,7 +224,7 @@
                     
                     <!--- Complete --->
                     <cfif APPLICATION.CFC.USER.getUserSessionPaperwork().isDOSCertificationCompleted>
-                        <p>#qGetSeason.years# DOS Certification expires on #APPLICATION.CFC.USER.getUserSessionPaperwork().dosDateExpired#</p>
+                        <p>#qGetSeason.years# DOS Certification expires on #APPLICATION.CFC.USER.getUserSessionPaperwork().dateDOSTestExpired#</p>
                         <div align="center" style="padding-top:7px;"><img src="pics/buttons/complete.png" border="0" /></div>
                     <!--- Need Info --->
                     <cfelse>
@@ -341,11 +349,6 @@
                         <div align="center" style="padding-top:7px;"><a href="user/index.cfm?action=reference" class="jQueryModal"><img src="pics/buttons/needInformation.png" border="0" /></a></div>
                     </cfif>
                     
-                    <!--- Add Continue Button --->
-                    <cfif APPLICATION.CFC.USER.getUserSessionPaperwork().isAccountReadyForRMReview>
-                    	
-                    </cfif>
-
                 </div>
 
 
@@ -435,9 +438,10 @@
         
     </div>
 	
+    
     <!---
     <cfdump var="#APPLICATION.CFC.USER.getUserSession()#">    
-    <cfdump var="#NOT APPLICATION.CFC.USER.getUserSessionPaperwork().isPaperworkCompleted#">
+    <cfdump var="#NOT APPLICATION.CFC.USER.getUserSessionPaperwork().isUserPaperworkCompleted#">
 	<cfdump var="#APPLICATION.CFC.USER.getUserSessionPaperwork()#">
     --->
     

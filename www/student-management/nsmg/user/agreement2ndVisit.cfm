@@ -50,7 +50,7 @@
 	WHEREAS, #qGetCompanyInfo.companyshort_nocolor# wishes to engage the Second Visit Area Representative as an independent contractor, but not an employee, 
     agent, legal representative, partner or joint venture of #qGetCompanyInfo.companyshort_nocolor#, and the Second VIsit Area Representative wishes to be so 
     engaged pursuant to the terms and conditions of this Agreement. The Term of this Agreement shall commence on the Effective Date and shall cease on  
-    #DateFormat(qGetSeason.paperworkEndDate, 'mmmm d, yyyy')#, unless otherwise agreed in writing 
+    #DateFormat(qGetSeason.datePaperworkEnded, 'mmmm d, yyyy')#, unless otherwise agreed in writing 
     between the parties or unless earlier terminated. 
 </p>
 

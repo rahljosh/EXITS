@@ -239,8 +239,8 @@
         <cfset CLIENT.usertype = get_default_access.usertype>
         <cfset CLIENT.regions = get_default_access.regionid>  <!--- these are both the same, but phase out CLIENT.regions --->
         <cfset CLIENT.regionid = get_default_access.regionid>
-    <!----Check is SSN is missing---->
-        <cfif qAuthenticateUser.dateAccountVerified is not  '' AND qAuthenticateUser.ssn is '' AND   listfind('1,2,3,4,5,6,7', CLIENT.usertype)>
+    	<!----Check is SSN is missing---->
+        <cfif NOT LEN(qAuthenticateUser.ssn) AND listfind('1,2,3,4,5,6,7', CLIENT.usertype)>
         	<cfset CLIENT.needsSSN = 1>
         </cfif>
         <!--- companyname, programmanager and accesslevelname are used in header.cfm.  These are also set in forms/change_access_level.cfm. --->

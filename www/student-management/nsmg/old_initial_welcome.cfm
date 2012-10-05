@@ -156,8 +156,6 @@
             u.state, 
             u.datecreated,
             u.whocreated,
-            u.accountCreationVerified,
-            u.dateAccountVerified,
             u.active,
             uar.advisorid
         FROM 
@@ -643,12 +641,12 @@
                                         
                                         Account Active (Paperwork Compliant)
                                         
-                                    <cfelseif stUserPaperwork.isAccountReadyForRMReview>
+                                    <cfelseif stUserPaperwork.accountReviewStatus EQ 'rmReview'>
                                        
                                         Active (paperwork received) - 
                                         <a href="index.cfm?curdoc=user_info&userID=#get_new_users.userID#">References Questionnaire Needed</a>
                                         
-                                    <cfelseif stUserPaperwork.isAccountReadyForOfficeReview>
+                                    <cfelseif stUserPaperwork.accountReviewStatus EQ 'officeReview'>
                                     
                                         Active (paperwork received) - 
                                         <cfif APPLICATION.CFC.USER.isOfficeUser()>

@@ -249,7 +249,7 @@
                     <tr bgcolor="##000000" style="color:##FFFFFF;">
                         <td>Current Season</td>
                         <td align="center">Agreement</td>
-                        <cfif NOT stUserPaperwork.isSecondVisitRepresentative>
+                        <cfif NOT stUserPaperwork.user.isSecondVisitRepresentative>
                             <td align="center">Ref. Questionnaire ##1</td>
                             <td align="center">Ref. Questionnaire ##2</td>
                             <td align="center">AR Training </td>
@@ -276,7 +276,7 @@
                             <cfif APPLICATION.CFC.USER.isOfficeUser()>
 
                                 <td align="center"><input type="text" name="ar_agreement_#qGetSeasonPaperwork.currentrow#" value="#DateFormat(qGetSeasonPaperwork.ar_agreement, 'mm/dd/yyyy')#" class="datePicker" disabled></td>
-                                <cfif NOT stUserPaperwork.isSecondVisitRepresentative>
+                                <cfif NOT stUserPaperwork.user.isSecondVisitRepresentative>
                                     <td align="center"><input type="text" name="ar_ref_quest1_#qGetSeasonPaperwork.currentrow#" value="#DateFormat(qGetSeasonPaperwork.ar_ref_quest1, 'mm/dd/yyyy')#" class="datePicker" <cfif NOT IsDate(qGetSeasonPaperwork.ar_ref_quest1)>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif>></td>
                                     <td align="center"><input type="text" name="ar_ref_quest2_#qGetSeasonPaperwork.currentrow#" value="#DateFormat(qGetSeasonPaperwork.ar_ref_quest2, 'mm/dd/yyyy')#" class="datePicker" <cfif NOT isDate(qGetSeasonPaperwork.ar_ref_quest2)>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif>></td>
                                     <td align="center"><input type="text" name="ar_training_#qGetSeasonPaperwork.currentrow#"  value="#DateFormat(qGetSeasonPaperwork.ar_training, 'mm/dd/yyyy')#" class="datePicker" disabled></td>
@@ -305,7 +305,7 @@
                             <cfelse>
                             	
                                 <td align="center">#DateFormat(qGetSeasonPaperwork.ar_agreement, 'mm/dd/yyyy')#</td>
-                                <cfif NOT stUserPaperwork.isSecondVisitRepresentative>
+                                <cfif NOT stUserPaperwork.user.isSecondVisitRepresentative>
                                     <td align="center">#DateFormat(qGetSeasonPaperwork.ar_ref_quest1, 'mm/dd/yyyy')#</td>
                                     <td align="center">#DateFormat(qGetSeasonPaperwork.ar_ref_quest2, 'mm/dd/yyyy')#</td>
                                     <td align="center">#DateFormat(qGetSeasonPaperwork.ar_training, 'mm/dd/yyyy')#</td>

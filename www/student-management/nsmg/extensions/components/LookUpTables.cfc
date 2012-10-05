@@ -326,8 +326,9 @@
                     active,
                     startDate,
                     endDate,
-                    paperworkStartdate,
-                    paperworkEndDate
+                    datePaperworkStarted,
+                    datePaperworkRequired,
+                    datePaperworkEnded
                 FROM 
                 	smg_seasons
 				WHERE 
@@ -356,8 +357,8 @@
                     startDate,
                     endDate,
                     DATE_ADD(endDate, INTERVAL 31 DAY) AS newEndDate 
-                    paperworkStartdate,
-                    paperworkEndDate
+                    datePaperworkStarted,
+                    datePaperworkEnded
 				FROM
                 	smg_seasons
                 WHERE
@@ -381,13 +382,13 @@
                     active,
                     startDate,
                     endDate,
-                    paperworkStartDate,
-                    paperworkRequiredDate,
-                    paperworkEndDate
+                    datePaperworkStarted,
+                    datePaperworkRequired,
+                    datePaperworkEnded
 				FROM
                 	smg_seasons
                 WHERE
-					CURRENT_DATE() BETWEEN paperworkStartdate AND paperworkEndDate  
+					CURRENT_DATE() BETWEEN datePaperworkStarted AND datePaperworkEnded  
     	</cfquery>
         
         <cfreturn qGetCurrentPaperworkSeason>        
