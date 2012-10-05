@@ -478,7 +478,7 @@
                             dep_time ASC
                         LIMIT 1                            
                     ) AS dateArrived, 
-                    <!--- Date of Visit is the new dateStartWindowCompliance --->
+                    <!--- Date of Visit from previous approved report is the new dateStartWindowCompliance --->
                     (
                         SELECT 
                             sva2.dateOfVisit
@@ -492,6 +492,8 @@
                             pr2.fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="2">	
                         AND
                             pr2.fk_host = ht.hostID
+                        AND	
+                        	pr_ny_approved_date IS NOT NULL
                         ORDER BY 
                             sva2.dateOfVisit DESC
                         LIMIT 1                            
