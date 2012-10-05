@@ -395,20 +395,20 @@
 			var qGetCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason();
 			
 			// Get Paperwork Info (CBC, Agreement, Training)
-			var qGetSeasonPaperwork = APPLICATION.CFC.USER.getSeasonPaperwork(userID=ARGUMENTS.userID, seasonID=qGetCurrentSeason.seasonID);
+			var qGetSeasonPaperwork = getSeasonPaperwork(userID=ARGUMENTS.userID, seasonID=qGetCurrentSeason.seasonID);
 
 			// Get Reference - 4 Required / Not based on season
-			var qGetReferences = APPLICATION.CFC.USER.getReferencesByID(userID=ARGUMENTS.userID);	
+			var qGetReferences = getReferencesByID(userID=ARGUMENTS.userID);	
 
 			// Get Employment History - 1 Required / Not based on season
-			var qGetEmployment = APPLICATION.CFC.USER.getEmploymentByID(userID=ARGUMENTS.userID);		
+			var qGetEmployment = getEmploymentByID(userID=ARGUMENTS.userID);		
 
 			// Check if user is a second visit rep
 			var vIsSecondVisitRepOnly = isUserSecondVisitRepresentativeOnly(userID=ARGUMENTS.userID,companyID=CLIENT.companyID);
 			stUserPaperwork.user.isSecondVisitRepresentative = vIsSecondVisitRepOnly;
 
 			// DOS Certification
-			var stDOSCertification = APPLICATION.CFC.USER.isDOSCertificationValid(userID=ARGUMENTS.userID);
+			var stDOSCertification = isDOSCertificationValid(userID=ARGUMENTS.userID);
 			stUserPaperwork.isDOSCertificationCompleted = stDOSCertification.isDOSCertificationValid;
 			stUserPaperwork.dateDOSTestExpired = stDOSCertification.dateExpired;
 			
@@ -512,7 +512,8 @@
 				TEMPORARY SOLUTION
 				Return users - Set Reference Questionnaire to complete for now until we sort this out. |  New users need to have reference questionnaire
 			****/
-			if ( qGetUserInfo.dateCreated LTE '2012-09-01'  ) {
+			qGetAllSeasonPaperwork = getSeasonPaperwork(userID=ARGUMENTS.userID, getAllRecords=1);
+			if ( qGetAllSeasonPaperwork.recordCount GTE 2 ) {
 				stUserPaperwork.isReferenceQuestionnaireCompleted = true;
 			}
 			/**** TEMPORARY SOLUTION ****/
@@ -1845,7 +1846,7 @@
         <cfscript>
 			if ( ARGUMENTS.userID EQ CLIENT.userID ) {
 				// Update User Session Paperwork
-				APPLICATION.CFC.USER.setUserSessionPaperwork();
+				setUserSessionPaperwork();
 			}
 		</cfscript>
         
