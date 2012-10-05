@@ -153,14 +153,14 @@
           	</cfif>
         </cfquery>
 
-
         <cffunction name="filterGetAllCandidates" hint="Gets total by Intl. Rep">
         	<cfargument name="placementType" default="" hint="Placement Type is not required">
             <cfargument name="intRep" default="0" hint="IntRep is not required">
             <cfargument name="hasDS" default="" hint="0/1">
+            <cfargument name="distinct" default="">
             
             <cfquery name="qFilterGetAllCandidates" dbtype="query">
-                SELECT
+                SELECT <cfif LEN(ARGUMENTS.distinct)>DISTINCT</cfif>
                     *
                 FROM	
                     qGetAllCandidates
@@ -195,17 +195,17 @@
 		
 		<cfscript>
 			// Get Overall Results
-			totalCSBPlacements = filterGetAllCandidates(placementType='CSB-Placement').recordCount;
+			totalCSBPlacements = filterGetAllCandidates(placementType='CSB-Placement', distinct="yes").recordCount;
 		
-			totalSelfPlacements = filterGetAllCandidates(placementType='Self-Placement').recordCount;
+			totalSelfPlacements = filterGetAllCandidates(placementType='Self-Placement', distinct="yes").recordCount;
 
-			totalWalkInPlacements = filterGetAllCandidates(placementType='Walk-In').recordCount;
+			totalWalkInPlacements = filterGetAllCandidates(placementType='Walk-In', distinct="yes").recordCount;
 
-			totalUnassigned = filterGetAllCandidates(placementType='').recordCount;
+			totalUnassigned = filterGetAllCandidates(placementType='', distinct="yes").recordCount;
 			
-			totalDSissued = filterGetAllCandidates(placementType='All', hasDS=1).recordCount;
+			totalDSissued = filterGetAllCandidates(placementType='All', hasDS=1, distinct="yes").recordCount;
 			
-			totalDSNotIssued = filterGetAllCandidates(placementType='All', hasDS=0).recordCount;
+			totalDSNotIssued = filterGetAllCandidates(placementType='All', hasDS=0, distinct="yes").recordCount;
         </cfscript>	
     
     </cfif>       
@@ -376,154 +376,159 @@
 				
 				totalPerAgentDSNotIssued = filterGetAllCandidates(placementType='ALL', hasDS=0, intRep=qGetIntlReps.userID).recordCount;
             </cfscript>
+            
+            <cfif qTotalPerAgent.recordCount>
         		
-            <table width="99%" cellpadding="4" cellspacing=0 align="center">
-                    <tr>
-                        <td colspan="14">
-                            <small>
-                                <strong>#qGetIntlReps.businessname# - Total candidates: #qTotalPerAgent.recordCount#</strong> 
-                                (
-                                    #totalPerAgentCSBPlacements# CSB; &nbsp; 
-                                    #totalPerAgentSelfPlacements# Self; &nbsp; 
-                                    #totalPerAgentWalkInPlacements# Walk-In; &nbsp; 
-                                    #totalPerAgentUnassigned# Unassigned &nbsp;
-                                ) &nbsp; | &nbsp;
-                                <strong>DS-2019 Forms issued: &nbsp;</strong> #totalPerAgentDSissued#  &nbsp; | &nbsp;
-                                <strong>DS-2019 Forms to be issued: &nbsp;</strong> #totalPerAgentDSNotIssued#
-                            </small>
-                        </td>
-                    </tr>
-                <cfif ListFind("2,3", FORM.printOption)>
-                    <tr>
-                        <td colspan="14"><img src="../../pics/black_pixel.gif" width="100%" height="2"></td>
-                    </tr>
-				</cfif>
-                <tr>
-                    <th align="left" class="#tableTitleClass#" width="4%">ID</Th>
-                    <th align="left" class="#tableTitleClass#" width="8%">Last Name</Th>
-                    <th align="left" class="#tableTitleClass#" width="8%">First Name</Th>
-                    <th align="left" class="#tableTitleClass#" width="3%">Sex</th>
-                    <th align="left" class="#tableTitleClass#" width="7%">E-mail</th>
-                    <th align="left" class="#tableTitleClass#" width="5%">Start Date</th>
-                    <th align="left" class="#tableTitleClass#" width="5%">End Date</th>
-                    <th align="left" class="#tableTitleClass#" width="20%">Placement Information</th>
-                    <th align="left" class="#tableTitleClass#" width="8%">Job Title</th>
-                    <th align="left" class="#tableTitleClass#" width="6%">City</th>
-                    <th align="left" class="#tableTitleClass#" width="6%">State</th>
-                    <th align="left" class="#tableTitleClass#" width="10%">DS-2019</th>
-                    <th align="left" class="#tableTitleClass#" width="10%">Option</th>
-                </tr>
-                <cfif ListFind("2,3", FORM.printOption)>
-                    <tr>
-                        <td colspan="14"><img src="../../pics/black_pixel.gif" width="100%" height="2"></td>
-                    </tr>
-				</cfif>
-                <cfloop query="qTotalPerAgent">
-                
-                	<cfif FORM.placementType NEQ "primary">
-                
-                        <cfquery name="qGetAllPlacements" datasource="MySql">
-                            SELECT
-                                ecpc.hostCompanyID,
-                                ecpc.jobID,
-                                h.name,
-                                h.city,
-                                s.state,
-                                ej.title AS jobTitle
-                            FROM
-                                extra_candidate_place_company ecpc
-                            INNER JOIN
-                                extra_hostCompany h ON h.hostCompanyID = ecpc.hostCompanyID
-                            INNER JOIN
-                                smg_states s ON s.id = h.state
-                            LEFT JOIN
-                                extra_jobs ej ON ej.ID = ecpc.jobID
-                            WHERE
-                                candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qTotalPerAgent.candidateID#">
-                            AND
-                                status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                            <cfif FORM.placementType EQ "primary">
-                                AND
-                                    isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-                            <cfelseif FORM.placementType EQ "secondary">
-                                AND
-                                    isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                            </cfif>
-                        </cfquery>
-                	
+                <table width="99%" cellpadding="4" cellspacing=0 align="center">
+                        <tr>
+                            <td colspan="14">
+                                <small>
+                                    <strong>#qGetIntlReps.businessname# - Total candidates: #qTotalPerAgent.recordCount#</strong> 
+                                    (
+                                        #totalPerAgentCSBPlacements# CSB; &nbsp; 
+                                        #totalPerAgentSelfPlacements# Self; &nbsp; 
+                                        #totalPerAgentWalkInPlacements# Walk-In; &nbsp; 
+                                        #totalPerAgentUnassigned# Unassigned &nbsp;
+                                    ) &nbsp; | &nbsp;
+                                    <strong>DS-2019 Forms issued: &nbsp;</strong> #totalPerAgentDSissued#  &nbsp; | &nbsp;
+                                    <strong>DS-2019 Forms to be issued: &nbsp;</strong> #totalPerAgentDSNotIssued#
+                                </small>
+                            </td>
+                        </tr>
+                    <cfif ListFind("2,3", FORM.printOption)>
+                        <tr>
+                            <td colspan="14"><img src="../../pics/black_pixel.gif" width="100%" height="2"></td>
+                        </tr>
                     </cfif>
-                
-                    <tr <cfif qTotalPerAgent.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>                    
-                        <td class="style1">
-                        	<a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerAgent.uniqueID#" target="_blank" class="style4">
-                            	#qTotalPerAgent.candidateID#
-                            </a>
-                        </td>
-                        <td class="style1">
-                        	<a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerAgent.uniqueID#" target="_blank" class="style4">
-                            	#qTotalPerAgent.lastname#
-                            </a>
-                        </td>
-                        <td class="style1">
-                        	<a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerAgent.uniqueID#" target="_blank" class="style4">
-                            	#qTotalPerAgent.firstname#
-                            </a>
-                        </td>
-                        <td class="style1">#qTotalPerAgent.sex#</td>
-                        <td class="style1">#qTotalPerAgent.email#</td>
-                        <td class="style1">#DateFormat(qTotalPerAgent.startdate, 'mm/dd/yyyy')#</td>
-                        <td class="style1">#DateFormat(qTotalPerAgent.enddate, 'mm/dd/yyyy')#</td>
-                        <td class="style1" colspan="4">
-                        	<table width="100%">
-                            	<cfif FORM.placementType NEQ "primary">
-                                    <cfloop query="qGetAllPlacements">
+                    <tr>
+                        <th align="left" class="#tableTitleClass#" width="4%">ID</Th>
+                        <th align="left" class="#tableTitleClass#" width="8%">Last Name</Th>
+                        <th align="left" class="#tableTitleClass#" width="8%">First Name</Th>
+                        <th align="left" class="#tableTitleClass#" width="3%">Sex</th>
+                        <th align="left" class="#tableTitleClass#" width="7%">E-mail</th>
+                        <th align="left" class="#tableTitleClass#" width="5%">Start Date</th>
+                        <th align="left" class="#tableTitleClass#" width="5%">End Date</th>
+                        <th align="left" class="#tableTitleClass#" width="20%">Placement Information</th>
+                        <th align="left" class="#tableTitleClass#" width="8%">Job Title</th>
+                        <th align="left" class="#tableTitleClass#" width="6%">City</th>
+                        <th align="left" class="#tableTitleClass#" width="6%">State</th>
+                        <th align="left" class="#tableTitleClass#" width="10%">DS-2019</th>
+                        <th align="left" class="#tableTitleClass#" width="10%">Option</th>
+                    </tr>
+                    <cfif ListFind("2,3", FORM.printOption)>
+                        <tr>
+                            <td colspan="14"><img src="../../pics/black_pixel.gif" width="100%" height="2"></td>
+                        </tr>
+                    </cfif>
+                    <cfloop query="qTotalPerAgent">
+                    
+                        <cfif FORM.placementType NEQ "primary">
+                    
+                            <cfquery name="qGetAllPlacements" datasource="MySql">
+                                SELECT
+                                    ecpc.hostCompanyID,
+                                    ecpc.jobID,
+                                    h.name,
+                                    h.city,
+                                    s.state,
+                                    ej.title AS jobTitle
+                                FROM
+                                    extra_candidate_place_company ecpc
+                                INNER JOIN
+                                    extra_hostCompany h ON h.hostCompanyID = ecpc.hostCompanyID
+                                INNER JOIN
+                                    smg_states s ON s.id = h.state
+                                LEFT JOIN
+                                    extra_jobs ej ON ej.ID = ecpc.jobID
+                                WHERE
+                                    candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qTotalPerAgent.candidateID#">
+                                AND
+                                    status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                                <cfif FORM.placementType EQ "primary">
+                                    AND
+                                        isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                                <cfelseif FORM.placementType EQ "secondary">
+                                    AND
+                                        isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                                </cfif>
+                            </cfquery>
+                        
+                        </cfif>
+                    
+                        <tr <cfif qTotalPerAgent.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>                    
+                            <td class="style1">
+                                <a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerAgent.uniqueID#" target="_blank" class="style4">
+                                    #qTotalPerAgent.candidateID#
+                                </a>
+                            </td>
+                            <td class="style1">
+                                <a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerAgent.uniqueID#" target="_blank" class="style4">
+                                    #qTotalPerAgent.lastname#
+                                </a>
+                            </td>
+                            <td class="style1">
+                                <a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerAgent.uniqueID#" target="_blank" class="style4">
+                                    #qTotalPerAgent.firstname#
+                                </a>
+                            </td>
+                            <td class="style1">#qTotalPerAgent.sex#</td>
+                            <td class="style1">#qTotalPerAgent.email#</td>
+                            <td class="style1">#DateFormat(qTotalPerAgent.startdate, 'mm/dd/yyyy')#</td>
+                            <td class="style1">#DateFormat(qTotalPerAgent.enddate, 'mm/dd/yyyy')#</td>
+                            <td class="style1" colspan="4">
+                                <table width="100%">
+                                    <cfif FORM.placementType NEQ "primary">
+                                        <cfloop query="qGetAllPlacements">
+                                            <tr>
+                                                <td width="50%">
+                                                    <cfif FORM.placementType NEQ "secondary">
+                                                    <a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qGetAllPlacements.hostCompanyID#"  target="_blank" class="style4">
+                                                        #qGetAllPlacements.name#
+                                                    </a>
+                                                    <cfelse>
+                                                        #qGetAllPlacements.name#
+                                                    </cfif>
+                                                </td>
+                                                <td width="20%">
+                                                    #qGetAllPlacements.jobTitle#
+                                                </td>
+                                                <td width="15">
+                                                    #qGetAllPlacements.city#
+                                                </td>
+                                                <td width="15%">
+                                                    #qGetAllPlacements.state#
+                                                </td>
+                                            </tr>
+                                        </cfloop>
+                                    <cfelse>
                                         <tr>
                                             <td width="50%">
-                                            	<cfif FORM.placementType NEQ "secondary">
-                                                <a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qGetAllPlacements.hostCompanyID#"  target="_blank" class="style4">
-                                                    #qGetAllPlacements.name#
+                                                <a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qTotalPerAgent.hostCompanyID#"  target="_blank" class="style4">
+                                                    #qTotalPerAgent.hostCompanyName#
                                                 </a>
-                                                <cfelse>
-                                                	#qGetAllPlacements.name#
-                                                </cfif>
                                             </td>
                                             <td width="20%">
-                                                #qGetAllPlacements.jobTitle#
+                                                #qTotalPerAgent.jobTitle#
                                             </td>
                                             <td width="15">
-                                                #qGetAllPlacements.city#
+                                                #qTotalPerAgent.hostCompanyCity#
                                             </td>
                                             <td width="15%">
-                                                #qGetAllPlacements.state#
+                                                #qTotalPerAgent.hostCompanyState# 
                                             </td>
                                         </tr>
-                                    </cfloop>
-                               	<cfelse>
-                                	<tr>
-                                        <td width="50%">
-                                            <a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qTotalPerAgent.hostCompanyID#"  target="_blank" class="style4">
-                                                #qTotalPerAgent.hostCompanyName#
-                                            </a>
-                                        </td>
-                                        <td width="20%">
-                                            #qTotalPerAgent.jobTitle#
-                                        </td>
-                                        <td width="15">
-                                            #qTotalPerAgent.hostCompanyCity#
-                                        </td>
-                                        <td width="15%">
-                                            #qTotalPerAgent.hostCompanyState# 
-                                        </td>
-                                    </tr>
-                               	</cfif>
-                          	</table>
-                        </td>
-                        <td class="style1">#qTotalPerAgent.ds2019#</td>
-                        <td class="style1">#qTotalPerAgent.wat_placement#</td>
-                    </tr>
-                </cfloop>        
-            </table>
-            <br />	
+                                    </cfif>
+                                </table>
+                            </td>
+                            <td class="style1">#qTotalPerAgent.ds2019#</td>
+                            <td class="style1">#qTotalPerAgent.wat_placement#</td>
+                        </tr>
+                    </cfloop>        
+                </table>
+                <br />	
+                
+         	</cfif>
+                
 		</cfloop>
         
         <cfif ListFind("2,3", FORM.printOption)> 
