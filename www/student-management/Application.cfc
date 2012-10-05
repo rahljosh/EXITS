@@ -132,23 +132,24 @@
 				// Force verify user information.
 				if ( isDefined("CLIENT.verify_info") AND NOT APPLICATION.IsServerLocal ) { // AND NOT APPLICATION.IsServerLocal
 					
-					// allow user only on user info and user form.
-					if ( NOT ( LEN(URL.curdoc) AND listFindNoCase("user_info,forms/user_form", URL.curdoc)) ) {
+					// allow userInfo, user_form and logout
+					if ( NOT ( LEN(URL.curdoc) AND listFindNoCase("user_info,forms/user_form,logout", URL.curdoc)) ) {
 						Location("index.cfm?curdoc=user_info&userid=#CLIENT.userid#", "no");
 					}
 				
 				// Force change password
 				} else if ( isDefined("CLIENT.change_password") AND NOT APPLICATION.IsServerLocal ) { // AND NOT APPLICATION.IsServerLocal
 					
-					// allow user only on change password page.
-					if ( NOT ( LEN(URL.curdoc) AND  URL.curdoc EQ 'forms/change_password' OR  listFindNoCase("logout", URL.curdoc)) ) {
+					// allow user only on change password page and logout.
+					if ( NOT ( LEN(URL.curdoc) AND listFindNoCase("forms/change_password,logout", URL.curdoc) ) ) {
 						Location("index.cfm?curdoc=forms/change_password", "no");
 					}
 				
 				// Force SSN on PRODUCTION  - Not for Canada
 				} else if ( isDefined('CLIENT.needsSSN') AND CGI.SERVER_NAME NEQ "canada.exitsapplication.com" AND NOT APPLICATION.IsServerLocal ) { // AND NOT APPLICATION.IsServerLocal
 					
-					if ( NOT ( LEN(URL.curdoc) AND listFindNoCase("forms/verifyInfo, forms/verifyInfo2, logout", URL.curdoc)) ) {
+					// allow verifyInfo, verifyInfo2 and logout
+					if ( NOT ( LEN(URL.curdoc) AND listFindNoCase("forms/verifyInfo,forms/verifyInfo2,logout", URL.curdoc)) ) {
 						Location("index.cfm?curdoc=forms/verifyInfo", "no");
 					}
 			
@@ -162,7 +163,7 @@
 							NOT APPLICATION.CFC.USER.getUserSessionPaperwork().isAccountCompliant 
 						AND 
 							NOT APPLICATION.CFC.USER.getUserSession().paperworkSkipAllowed
-						// allow user only on paperwork page including sub pages and logout.
+						// allow paperwork, logout and webEx
 						AND 
 							NOT listFindNoCase("user/index,logout,calendar/index", URL.curdoc)
 						AND 
