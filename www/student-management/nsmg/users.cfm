@@ -17,7 +17,11 @@
 	
     <cfparam name="URL.startPage" default="1">
     <cfparam name="submitted" default="0">
-    <cfparam name="company_region" default="region,#CLIENT.regionid#">
+    <cfif APPLICATION.CFC.USER.isOfficeUser()>
+        <cfparam name="company_region" default="">
+    <cfelse>
+        <cfparam name="company_region" default="region,#CLIENT.regionid#">
+    </cfif>
     <cfparam name="user_type" default="">
     <cfparam name="assigned" default="1">
     <cfparam name="keyword" default="">
@@ -102,9 +106,9 @@
                 <select name="company_region">
                     <option value="" selected="selected">All</option>
                     <cfoutput query="qRegionList" group="companyid">
-                      <option value="company,#companyid#" >#team_id# (All Regions)</option> <!--- <cfif company_region EQ 'company,#companyid#'>selected</cfif> --->
-                        <cfoutput>
-                            <option value="region,#regionid#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#team_id# - #regionname#</option> <!--- <cfif company_region EQ 'region,#regionid#'>selected</cfif> --->
+					<option value="company,#companyid#" <cfif company_region EQ "company,#companyid#">selected="selected"</cfif>  >#team_id# (All Regions)</option> <!--- <cfif company_region EQ 'company,#companyid#'>selected</cfif> --->
+                    	<cfoutput>
+                        	<option value="region,#regionid#" <cfif company_region EQ "region,#regionid#">selected="selected"</cfif> >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#team_id# - #regionname#</option> <!--- <cfif company_region EQ 'region,#regionid#'>selected</cfif> --->
                         </cfoutput>
                     </cfoutput>
                 </select>
