@@ -367,20 +367,24 @@
 </cfif>
 <cfoutput query="rep_info">
 
-	<cfif not val(accountCreationVerified)>
-        <cfif stUserPaperwork.isAccountReadyForRMReview>
-            <div class="alert">
-            <h1>Account Review Required - Account appears ready for manual review. </h1>
-            <em>Please review references and run CBC.  When everything looks fine, approve the CBC through Paperwork menu to activate account.</em> </div>
-            <br />
-        <cfelseif NOT stUserPaperwork.isAccountCompliant>
-            <div class="alert">
-            <h1>Account Not Enabled</h1>
-            <em>Please review items missing in the paperwork section.</em> </div>
-            <br />
-        </cfif>
+	<cfif stUserPaperwork.accountReviewStatus EQ 'rmReview'>
+        <div class="alert">
+        	<h1>Account Review Required</h1>
+            <em>Reference Questionnaire Needed.</em>
+        </div>
+    <cfelseif stUserPaperwork.accountReviewStatus EQ 'officeReview'>
+        <div class="alert">
+        	<h1>Account Review Required</h1>
+            <em>CBC Approval Needed.</em>
+        </div>
+    <cfelseif NOT stUserPaperwork.isAccountCompliant>
+        <div class="alert">
+	        <h1>Account Not Enabled</h1>
+    	    <em>User has not submitted all required paperwork for this season. Please review items missing in the paperwork section.</em>
+        </div>
+        <br />
     </cfif>
-
+    
 	<!--- INFORMATION --->
     <div class="rdholder"> 
    		<div class="rdtop"><span class="rdtitle">Please Note</span></div> <!-- end top --> 
@@ -1136,8 +1140,12 @@
                            </tr>
                         	<tr>
                             	<td><strong>Login Enabled:</strong></td>
-                                <td> <cfif accountCreationVerified is '' or  accountCreationVerified eq 0>
-                                	<a href="index.cfm?curdoc=user/index&action=paperworkDetails&userID=#URL.userID#">No</a><Cfelse>Yes</cfif>
+                                <td> 
+									<cfif stUserPaperwork.isAccountCompliant>
+                                		Yes
+									<cfelse>
+                                    	<a href="index.cfm?curdoc=user/index&action=paperworkDetails&userID=#URL.userID#">No</a>
+									</cfif>
                                 </td>
                            </tr>
                            
@@ -1177,7 +1185,7 @@
                              </table>   
                     </Td>
                     <Td>
-                        
+                        <!------ UPDATE THIS MARCUS MELO --->
                         <cfif accountCreationVerified eq 0>
                         
 							<cfif val(disableReasonid.id)>

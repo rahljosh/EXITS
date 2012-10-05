@@ -245,6 +245,10 @@
 			if ( NOT SESSION.formErrors.length() ) {
 				// Set Page Message
 				SESSION.pageMessages.Add("Form successfully submitted.");
+
+				// Check if account is compliant, if so notify user he is granted full access to EXITS
+				APPLICATION.CFC.USER.accountFullyEnabledNotification(userID=FORM.userID);
+				
 			}
 		
 			if ( isDefined('url.return') ) {

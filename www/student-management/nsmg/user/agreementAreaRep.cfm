@@ -69,7 +69,7 @@
     <li> 
         <u>Term</u>
         <p>
-            The Term of this Agreement shall commence on the Effective Date and shall cease on #DateFormat(qGetSeason.paperworkEndDate, 'mmmm d, yyyy')#, <!--- August 31, 2013, --->
+            The Term of this Agreement shall commence on the Effective Date and shall cease on #DateFormat(qGetSeason.datePaperworkEnded, 'mmmm d, yyyy')#, <!--- August 31, 2013, --->
             unless otherwise agreed in writing between the parties or unless earlier terminated pursuant to Section 7 hereof.
         </p>
     </li>
@@ -157,7 +157,7 @@
                 Area Representatives are required to organize or coordinate a five (5) hour community
                 service project (or projects) for the students that they supervise. All community service
                 hours for participating student must be entered in to the #qGetCompanyInfo.companyshort_nocolor# 
-                database by April 20, #Year(qGetSeason.paperworkEndDate)#. <!--- Date --->
+                database by April 20, #Year(qGetSeason.datePaperworkEnded)#. <!--- Date --->
             </p>
         </li>
             
@@ -421,7 +421,7 @@
         <p>
             (a) <strong>Fast-Track Placement Bonus:</strong> A bonus of $1,500 will be paid by #qGetCompanyInfo.companyshort_nocolor# to
             the AR each time the AR has successfully placed a group of five (5) August arriving students in five (5) permanent homes and 
-            submitted all Department of State and CSIET mandated documentation prior to April 15, #Year(qGetSeason.paperworkEndDate)#. <!--- Date --->
+            submitted all Department of State and CSIET mandated documentation prior to April 15, #Year(qGetSeason.datePaperworkEnded)#. <!--- Date --->
         </p>
         
         <p>
