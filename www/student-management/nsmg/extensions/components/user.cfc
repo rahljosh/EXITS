@@ -203,6 +203,9 @@
 			SESSION.USER.dateLastLoggedIn = qGetUserInfo.lastLogin;
 			SESSION.USER.email = qGetUserInfo.email;
 			
+			//SESSION.USER.defaultRegion = "";
+			//SESSION.USER.userType = "";
+			
 			SESSION.USER.paperworkSkipAllowed = false;
 			
 			// Path Information - set up upload files path
@@ -350,6 +353,9 @@
 				setUserSessionPaperwork();
 			}
 			
+			// FORCE UPDATE SESSION SO USERS DON'T GET ERRORS | COMMENT THIS
+			//setUserSessionPaperwork();
+			
 			// Make Sure Structs are not empty
 			return SESSION.USER.PAPERWORK;
 		</cfscript>
@@ -362,7 +368,7 @@
 	----- ------------------------------------------------------------------------- --->
 
 
-	<cffunction name="getUserPaperwork" access="public" returntype="struct" output="false" hint="Returns a strcut with a complete paperwork information for a user">
+	<cffunction name="getUserPaperwork" access="public" returntype="struct" output="false" hint="Returns a struct with a complete paperwork information for a user">
         <cfargument name="userID" hint="User ID is Required">
 
         <cfscript>
@@ -485,15 +491,13 @@
 			}
 			
 			
-			/***** 
+			/**** 
+				TEMPORARY SOLUTION 
 				webEX trainings are not ready to go live, set them as true until we are ready
 				Marcus Melo 09/18/2012
-			******/			
+			****/		
 			stUserPaperwork.isTrainingCompleted = true;
-			/***** 
-				webEX trainings are not ready to go live, set them as true until we are ready
-				Marcus Melo 09/18/2012
-			******/			
+			/**** TEMPORARY SOLUTION ****/			
 			
 
 			// Reference Questionnaire - Minimum of 2 - Phase out these two fields and use the reference table instead
@@ -502,6 +506,17 @@
 			} else { 
 				stUserPaperwork.isReferenceQuestionnaireCompleted = false;
 			}
+			
+			
+			/**** 
+				TEMPORARY SOLUTION
+				Return users - Set Reference Questionnaire to complete for now until we sort this out. |  New users need to have reference questionnaire
+			****/
+			if ( qGetUserInfo.dateCreated LTE '2012-09-01'  ) {
+				stUserPaperwork.isReferenceQuestionnaireCompleted = true;
+			}
+			/**** TEMPORARY SOLUTION ****/
+			
 			
 			// 2nd Visit - Only Agreement and CBC - No References, employment history, trainings and DOS test
 			if ( vIsSecondVisitRepOnly ) {
