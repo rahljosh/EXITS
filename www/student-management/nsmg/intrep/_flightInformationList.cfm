@@ -400,8 +400,10 @@
 <table width="100%" cellspacing="0" cellpadding="3" style="border:1px solid ##999">
 	<tr>
         <th bgcolor="##E2EFC7" style="border-bottom:1px solid ##999">
-    	    <span class="get_attention"><b>:: </b></span>
-            Public School Students Missing Flight Arrival Information - Total of #qStudentsMissingArrival.recordCount# students
+            <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+            	Public School 
+            </cfif>
+            Students Missing Flight Arrival Information - Total of #qStudentsMissingArrival.recordCount# students
         </th>
     </tr>    
 	<tr>
@@ -485,8 +487,10 @@
 <table width="100%" cellspacing="0" cellpadding="3" style="border:1px solid ##999">
 	<tr>
         <th bgcolor="##E2EFC7" style="border-bottom:1px solid ##999">
-    	    <span class="get_attention"><b>:: </b></span>
-            Public School Students Missing Flight Departure Information - Total of #qStudentsMissingDeparture.recordCount# students
+            <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+            	Public School 
+            </cfif>
+            Students Missing Flight Departure Information - Total of #qStudentsMissingDeparture.recordCount# students
         </th>
     </tr>    
 	<tr>
