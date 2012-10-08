@@ -61,21 +61,17 @@
             <cfloop From="1" To="#qGetSeasonPaperwork.recordCount#" Index="x">
             	
 				<!--- Param FORM Variables --->
-                <cfparam name="FORM.ar_agreement_#x#" default="#qGetSeasonPaperwork.ar_agreement#">
                 <cfparam name="FORM.ar_ref_quest1_#x#" default="#qGetSeasonPaperwork.ar_ref_quest1#">
                 <cfparam name="FORM.ar_ref_quest2_#x#" default="#qGetSeasonPaperwork.ar_ref_quest2#">
                 <cfparam name="FORM.ar_training_#x#" default="#qGetSeasonPaperwork.ar_training#">
-                <cfparam name="FORM.ar_cbc_auth_form_#x#" default="#qGetSeasonPaperwork.ar_cbc_auth_form#">
                 
                 <cfquery datasource="#APPLICATION.DSN#">
                     UPDATE 
                         smg_users_paperwork 
                     SET
-                        ar_agreement = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM['ar_agreement_' & x]#" null="#NOT IsDate(FORM['ar_agreement_' & x])#">,
 						ar_ref_quest1 = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM['ar_ref_quest1_' & x]#" null="#NOT IsDate(FORM['ar_ref_quest1_' & x])#">,
                         ar_ref_quest2 = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM['ar_ref_quest2_' & x]#" null="#NOT IsDate(FORM['ar_ref_quest2_' & x])#">,
-                        ar_training = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM['ar_training_' & x]#" null="#NOT IsDate(FORM['ar_training_' & x])#">,
-                        ar_cbc_auth_form = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM['ar_cbc_auth_form_' & x]#" null="#NOT IsDate(FORM['ar_cbc_auth_form_' & x])#">
+                        ar_training = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM['ar_training_' & x]#" null="#NOT IsDate(FORM['ar_training_' & x])#">
                     WHERE
                         paperworkID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM['paperworkID_' & x]#">
                     AND
@@ -213,7 +209,6 @@
     	
         <div class="rdbox">
 
-			<!----Header Format Table---->
             <div class="thinBlueBorder">
                 <table border=0 cellpadding=8 cellspacing=0 width="100%" >
                     <tr>
@@ -239,29 +234,44 @@
                 </table>
             </div>
 
-            <!--- Update --->
             <cfform name="form" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#"method="post">
                 <cfinput type="hidden" name="userID" value="#FORM.userID#">
                 <cfinput type="hidden" name="submittedUserType" value="#qGetRegionCompanyAccess.usertype#">
                 <cfinput type="hidden" name="subAction" value="update"> 
 
-                <table cellpadding="4" cellspacing="0" border="0" width="100%">
-                    <tr bgcolor="##000000" style="color:##FFFFFF;">
-                        <td>Current Season</td>
-                        <td align="center">Agreement</td>
+                <table width="100%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
+                    <tr>
+                    	<th style="border-right:1px solid ##FFF;">&nbsp;</th>
+                        <cfif NOT stUserPaperwork.user.isSecondVisitRepresentative>                        
+                            <th colspan="6" style="border-right:1px solid ##FFF;">User</th>
+                            <th colspan="2" style="border-right:1px solid ##FFF;">Regional Manager</th>
+                            <th colspan="2" style="border-right:1px solid ##FFF;">Program Manager</th>
+                        <cfelse>
+                            <th colspan="2" style="border-right:1px solid ##FFF;">User</th>
+                            <th colspan="2" style="border-right:1px solid ##FFF;">Program Manager</th>
+                        </cfif>
+                        <th>Actions</th>	
+                    </tr>
+                    <tr class="off">
+                        <td class="subTitleCenter">Current Season</td>
+                        <td class="subTitleCenter">Agreement</td>
+                        <td class="subTitleCenter">CBC Authorization </td>
                         <cfif NOT stUserPaperwork.user.isSecondVisitRepresentative>
-                            <td align="center">Ref. Questionnaire ##1</td>
-                            <td align="center">Ref. Questionnaire ##2</td>
-                            <td align="center">AR Training </td>
+                            <td class="subTitleCenter">DOS Test Expiration Date</td>
+                            <td class="subTitleCenter">Employment History</td>
+                            <td class="subTitleCenter">References</td>
+                            <td class="subTitleCenter">AR Training</td>
+                            <td class="subTitleCenter">Ref. Questionnaire ##1</td>
+                            <td class="subTitleCenter">Ref. Questionnaire ##2</td>
 						</cfif>
-                        <td align="center">CBC Authorization </td>
-                        <td align="center">CBC Approved</td>
-                        <td></td>
+                        <td class="subTitleCenter">CBC Expiration Date</td>
+                        <td class="subTitleCenter">CBC Approved</td>
+                        <td class="subTitleCenter">&nbsp;</td>	
                     </tr>
                     
 					<cfif NOT VAL(qGetSeasonPaperwork.recordcount)>
-                        <tr>
-                            <td colspan="8" align="center">No paperwork has been recorded.</td>
+                        <tr class="on">
+                            <td colspan="13" class="center">EXITS has not received any paperwork for this season.</td>
                         </tr>
                     </cfif>
                 
@@ -269,20 +279,72 @@
                     
                     	<cfinput type="hidden" name="paperworkid_#currentrow#" value="#paperworkid#">
                     
-                        <tr <cfif currentrow mod 2> bgcolor="##eae8e8"</cfif>>
-                            <td><strong>#qGetSeasonPaperwork.years#</strong></td>
+                        <tr class="on">
+                            <td class="center" style="border-right:1px solid ##FFF;">#qGetSeasonPaperwork.years#</td>
+                            <td class="center">
+                                <cfif IsDate(qGetSeasonPaperwork.ar_agreement)>
+                                    #DateFormat(qGetSeasonPaperwork.ar_agreement, 'mm/dd/yyyy')#
+                                <cfelse>
+                                    missing
+                                </cfif>
+                           </td>
+                            <td class="center">
+                                <cfif IsDate(qGetSeasonPaperwork.ar_cbc_auth_form)>
+                                    #DateFormat(qGetSeasonPaperwork.ar_cbc_auth_form, 'mm/dd/yyyy')#
+                                <cfelse>
+                                    missing
+                                </cfif>
+                            </td> 
+                                                           
+							<!--- Hide These for 2nd Visit Reps --->
+							<cfif NOT stUserPaperwork.user.isSecondVisitRepresentative>                            
+                                <td class="center">
+                                    <cfif IsDate(stUserPaperwork.dateDOSTestExpired)>
+                                        #stUserPaperwork.dateDOSTestExpired#
+                                    <cfelse>
+                                        missing
+                                    </cfif>
+                                </td>
+                                <td class="center">
+                                    <cfif stUserPaperwork.isEmploymentHistoryCompleted>
+                                        completed
+                                    <cfelse>
+                                        missing
+                                    </cfif>
+                                </td>
+                                <td class="center">
+                                    <cfif NOT VAL(stUserPaperwork.missingReferences)>
+                                        completed
+                                    <cfelse>
+                                        missing #stUserPaperwork.missingReferences#
+                                    </cfif>
+                                </td>
+                                
+                                <!--- Editable for Office Users --->
+                            	<cfif APPLICATION.CFC.USER.isOfficeUser()>
+                                    <td class="center" style="border-right:1px solid ##FFF;"><input type="text" name="ar_training_#qGetSeasonPaperwork.currentrow#"  value="#DateFormat(qGetSeasonPaperwork.ar_training, 'mm/dd/yyyy')#" class="datePicker"></td>
+                                    <td class="center"><input type="text" name="ar_ref_quest1_#qGetSeasonPaperwork.currentrow#" value="#DateFormat(qGetSeasonPaperwork.ar_ref_quest1, 'mm/dd/yyyy')#" class="datePicker" <cfif NOT IsDate(qGetSeasonPaperwork.ar_ref_quest1)>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif>></td>
+                                    <td class="center" style="border-right:1px solid ##FFF;"><input type="text" name="ar_ref_quest2_#qGetSeasonPaperwork.currentrow#" value="#DateFormat(qGetSeasonPaperwork.ar_ref_quest2, 'mm/dd/yyyy')#" class="datePicker" <cfif NOT isDate(qGetSeasonPaperwork.ar_ref_quest2)>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif>></td>
+                                <cfelse>
+                                	<td class="center" style="border-right:1px solid ##FFF;">#DateFormat(qGetSeasonPaperwork.ar_training, 'mm/dd/yyyy')#</td>
+                                    <td class="center">#DateFormat(qGetSeasonPaperwork.ar_ref_quest1, 'mm/dd/yyyy')#</td>
+                                    <td class="center" style="border-right:1px solid ##FFF;">#DateFormat(qGetSeasonPaperwork.ar_ref_quest2, 'mm/dd/yyyy')#</td>
+                                </cfif>
+                                
+							</cfif>
+                            
+                            <td class="center">
+                                <cfif isDate(stUserPaperwork.dateCBCExpired)>
+                                    #stUserPaperwork.dateCBCExpired#
+                                <cfelse>
+                                    missing
+                                </cfif>
+                            </td>
                             
                             <!--- Editable for Office Users --->
                             <cfif APPLICATION.CFC.USER.isOfficeUser()>
-
-                                <td align="center"><input type="text" name="ar_agreement_#qGetSeasonPaperwork.currentrow#" value="#DateFormat(qGetSeasonPaperwork.ar_agreement, 'mm/dd/yyyy')#" class="datePicker" disabled></td>
-                                <cfif NOT stUserPaperwork.user.isSecondVisitRepresentative>
-                                    <td align="center"><input type="text" name="ar_ref_quest1_#qGetSeasonPaperwork.currentrow#" value="#DateFormat(qGetSeasonPaperwork.ar_ref_quest1, 'mm/dd/yyyy')#" class="datePicker" <cfif NOT IsDate(qGetSeasonPaperwork.ar_ref_quest1)>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif>></td>
-                                    <td align="center"><input type="text" name="ar_ref_quest2_#qGetSeasonPaperwork.currentrow#" value="#DateFormat(qGetSeasonPaperwork.ar_ref_quest2, 'mm/dd/yyyy')#" class="datePicker" <cfif NOT isDate(qGetSeasonPaperwork.ar_ref_quest2)>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif>></td>
-                                    <td align="center"><input type="text" name="ar_training_#qGetSeasonPaperwork.currentrow#"  value="#DateFormat(qGetSeasonPaperwork.ar_training, 'mm/dd/yyyy')#" class="datePicker" disabled></td>
-                                </cfif>
-                                <td align="center"><input type="text" name="ar_cbc_auth_form_#qGetSeasonPaperwork.currentrow#" value="#DateFormat(qGetSeasonPaperwork.ar_cbc_auth_form, 'mm/dd/yyyy')#" class="datePicker" disabled></td>
-                                <td align="center">
+                                
+                                <td class="center" style="border-right:1px solid ##FFF;">
 									<cfif NOT LEN(qGetUserCBC.requestID)>
                                         <a href="index.cfm?curdoc=cbc/users_cbc&userID=#FORM.userID#&return=paperwork">CBC hasn't run</a>
                                     <cfelse>
@@ -299,19 +361,11 @@
                                         </a>
                                     </cfif>
                                 </td>
-                                <td><a href="index.cfm?curdoc=user/index&action=paperworkDetails&subAction=delete&userID=#qGetSeasonPaperwork.userID#&seasonID=#qGetSeasonPaperwork.seasonID#" title="Delete Season"><img src="pics/x.png" height="20" border="0"></a></td>
-                            
+                                <td class="center"><a href="index.cfm?curdoc=user/index&action=paperworkDetails&subAction=delete&userID=#qGetSeasonPaperwork.userID#&seasonID=#qGetSeasonPaperwork.seasonID#" title="Delete Season"><img src="pics/x.png" height="20" border="0"></a></td>
+							
 							<!--- Read Only --->
                             <cfelse>
-                            	
-                                <td align="center">#DateFormat(qGetSeasonPaperwork.ar_agreement, 'mm/dd/yyyy')#</td>
-                                <cfif NOT stUserPaperwork.user.isSecondVisitRepresentative>
-                                    <td align="center">#DateFormat(qGetSeasonPaperwork.ar_ref_quest1, 'mm/dd/yyyy')#</td>
-                                    <td align="center">#DateFormat(qGetSeasonPaperwork.ar_ref_quest2, 'mm/dd/yyyy')#</td>
-                                    <td align="center">#DateFormat(qGetSeasonPaperwork.ar_training, 'mm/dd/yyyy')#</td>
-                                </cfif>
-                                <td align="center">#DateFormat(qGetSeasonPaperwork.ar_cbc_auth_form, 'mm/dd/yyyy')#</td>
-                                <td align="center">
+                                <td class="center" style="border-right:1px solid ##FFF;">
 									<cfif NOT LEN(qGetUserCBC.requestID)>
                                         CBC hasn't run
                                     <cfelse>                                        
@@ -326,8 +380,7 @@
                                         </cfif>
                                     </cfif>
                                 </td>
-                                <td>&nbsp;</td>
-                            
+                                <td class="center">n/a</td>
 							</cfif>
                             
                         </tr>
@@ -335,7 +388,7 @@
                     
 					<cfif APPLICATION.CFC.USER.isOfficeUser()>
                         <tr>
-                        	<td colspan="8" align="center"><input type="image" src="pics/buttons/update_44.png" /></td>
+                        	<td colspan="13" class="center"><input type="image" src="pics/buttons/update_44.png" /></td>
                         </tr>
                     </cfif>
                     
@@ -349,4 +402,4 @@
 
 	</div>
     
-</cfoutput>    
+</cfoutput>
