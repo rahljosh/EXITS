@@ -353,8 +353,8 @@
 				setUserSessionPaperwork();
 			}
 			
-			// FORCE UPDATE SESSION SO USERS DON'T GET ERRORS | COMMENT THIS
-			//setUserSessionPaperwork();
+			// FORCE UPDATE SESSION SO USERS DON'T GET ERRORS | COMMENT THIS LATER 10/05/2012
+			// setUserSessionPaperwork();
 			
 			// Make Sure Structs are not empty
 			return SESSION.USER.PAPERWORK;
@@ -798,7 +798,6 @@
                    relationship,
                    howLong,
                    referenceFor,
-                   season,
                    approved
                 FROM 
                     smg_user_references

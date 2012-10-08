@@ -39,7 +39,12 @@
 		if ( VAL(URL.userID) ) {
 			FORM.userID = URL.userID;	
 		}
-	
+
+		// Check if we are editing information
+		if ( VAL(URL.refID) ) {
+			FORM.refID = URL.refID;	
+		}
+
 		// Get References
 		qGetReferences = APPLICATION.CFC.USER.getReferencesByID(userID=FORM.userID);	
 
@@ -49,11 +54,6 @@
 		// Minimum of 4 references
 		vMinReferences = 4;
 		vRemainingReferences = vMinReferences - qGetReferences.recordcount;
-		
-		// Check if we are editing information
-		if ( VAL(URL.refID) ) {
-			FORM.refID = URL.refID;	
-		}
 	</cfscript>	
 
     <!--- Insert/Update --->
@@ -399,69 +399,3 @@
     />
 
 </cfoutput>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--- Field --->
-<cfif NOT APPLICATION.CFC.USER.isOfficeUser()>
-
-	<cfscript>
-		// Get Regional Manager
-		qGetRegionalManager = APPLICATION.CFC.user.getRegionalManager(regionID=CLIENT.regionID);
-    </cfscript>
-
-<cfelse>
-
-    <cfset qGetRegionalManager.email = CLIENT.programmanager_email>
-
-</Cfif>
-    
-<cfquery name="qGetRegionalAdvisor" datasource="#APPLICATION.dsn#">
-    SELECT 
-        uar.advisorid, 
-        u.email
-    FROM 
-        user_access_rights uar
-    LEFT JOIN 
-        smg_users u on u.userid = uar.advisorid
-    WHERE 
-        uar.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
-</cfquery>	
-
-<cfif qGetRegionalAdvisor.recordcount eq 0>
-    <cfset qGetRegionalAdvisor.email = ''>
-</cfif>
-    
-<cfif vRemainingReferences LTE 0>
-    
-    <cfsavecontent variable="programEmailMessage">
-		<cfoutput>				
-        References and work experience have been submitted for #client.name# (#url.userid#)
-        <br /><br />
-        <a href="#client.exits_url#/nsmg/index.cfm?curdoc=user_info&userid=#userid#">View and Submit</a>
-        </cfoutput>
-    </cfsavecontent>
-    
-    <cfinvoke component="nsmg.cfc.email" method="send_mail">
-        <cfinvokeargument name="email_to" value="#qGetRegionalManager.email#"> 
-        <cfif qGetRegionalAdvisor.email is not ''>
-            <cfinvokeargument name="email_cc" value="#qGetRegionalAdvisor.email#"> 
-		</cfif>    
-	    <cfinvokeargument name="email_from" value="""#client.companyshort# Support"" <#client.emailfrom#>">
-    	<cfinvokeargument name="email_subject" value="References">
-	    <cfinvokeargument name="email_message" value="#programEmailMessage#">
-    </cfinvoke>       
-</cfif>

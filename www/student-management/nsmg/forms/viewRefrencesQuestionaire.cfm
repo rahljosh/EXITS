@@ -70,41 +70,19 @@
 	}
 </style>
 </head>
-<!----
-<Cfif isDefined('form.submit')>
-    <Cfquery name="Answeredquestions" datasource="#application.dsn#">
-    select *
-    from areaRepQuestionaireAnswers
-    where fk_reportID = #url.reportid#
-    </cfquery>
-    <cfquery datasource="#application.dsn#">
-        update areaRepQuestionaireTracking
-        set dateInterview = #CreateODBCDate(form.dateInterview)#
-        where id = #url.reportid#
-    </cfquery>
-   
-	<cfloop query="Answeredquestions">
-            <cfquery datasource="#application.dsn#">
-            update areaRepQuestionaireAnswers
-             set answer = '#Evaluate("form." & id)#'
-      		where id = #id#
-            </cfquery>
-	 </cfloop>
 
-</Cfif>
----->
-<Cfset season = 9>
 <Cfquery name="questionTracking" datasource="#application.dsn#">
 select *
-from areaRepQuestionaireTracking
+from smg_users_references_tracking
 where ID = #url.reportid#
 </cfquery>
+
 <Cfquery name="questions" datasource="#application.dsn#">
-select *, ARQ.qText, ARQ.id
-from areaRepQuestionaireAnswers ARQA
-left join areaRepQuestions ARQ on ARQ.id = ARQA.fk_questionID
+select *, SURQ.qText, SURQ.id
+from smg_users_references_answers SURA
+left join smg_users_references_questions SURQ on SURQ.id = SURA.fk_questionID
 where fk_reportID = #url.reportid#
-order by ARQ.id
+order by SURQ.id
 </cfquery>
 
 
@@ -115,28 +93,28 @@ order by ARQ.id
     set approved = #form.approve#
     where refID = #questionTracking.fk_ReferencesID#
     </Cfquery>
+    
     <CFIF form.approve is 2>
         <CFquery name="checkRefPaperwork" datasource="#application.dsn#">
         select ar_ref_quest1, ar_ref_quest2
         from smg_users_paperwork
         where userid = #questionTracking.areaRepID#
-        and seasonid = #season#
+        and seasonid = #APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#
         </CFquery>
-        
        
 			<Cfif checkRefPaperwork.ar_ref_quest1 is ''>
                 <Cfquery name="updatePaperWork" datasource="#application.dsn#">
                 update smg_users_paperwork
                     set ar_ref_quest1 = #now()#
                 where userid = #questionTracking.areaRepID#
-                and seasonid = #season#
+                and seasonid = #APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#
                 </CFquery>
             <cfelse>
                   <Cfquery name="updatePaperWork" datasource="#application.dsn#">
                 update smg_users_paperwork
                     set ar_ref_quest2 = #now()#
                 where userid = #questionTracking.areaRepID#
-                and seasonid = #season#
+                and seasonid = #APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#
                 </CFquery>
             </Cfif>
 
