@@ -8,7 +8,7 @@
         SELECT
             *
         FROM
-            areaRepQuestions
+            smg_users_references_questions
         WHERE
             active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
     </cfquery>
@@ -124,13 +124,13 @@
     <cfif NOT SESSION.formErrors.length()>
   		<cfquery datasource="#application.dsn#">
             INSERT INTO
-            	areaRepQuestionaireTracking
+            	smg_users_references_tracking
                 (
                 	dateInterview,
                     interviewer,
                     arearepid,
                     fk_referencesID,
-                    season
+                    seasonID
                 )
           	VALUES
             	(
@@ -146,7 +146,7 @@
         	SELECT
             	MAX(id) AS reportID
           	FROM
-            	areaRepQuestionaireTracking
+            	smg_users_references_tracking
         </cfquery>
         
         <cfif CLIENT.userType LTE 5>
@@ -200,7 +200,7 @@
     	<cfloop query="questions">
      		<cfquery datasource="#APPLICATION.DSN#">
           		INSERT INTO
-                	areaRepQuestionaireAnswers
+                	smg_users_references_answers
                     (
                     	fk_reportID,
                         fk_questionID,
@@ -214,7 +214,7 @@
                  	)
           	</cfquery>
       	</cfloop>
-		<body onload="opener.location.reload()">
+		<body onLoad="opener.location.reload()">
 			<script type="text/javascript">
                 setTimeout('self.close()',2000);
             </script>
