@@ -114,7 +114,6 @@
         	u.userid, 
             u.firstname, 
             u.lastname,
-			pw.ar_info_sheet, 
             pw.ar_ref_quest1, 
             pw.ar_ref_quest2, 
             pw.ar_cbc_auth_form, 
@@ -136,8 +135,6 @@
             
             AND
             (
-                    pw.ar_info_sheet IS NULL 
-                OR 
                     pw.ar_ref_quest1 IS NULL 
                 OR 
                     pw.ar_ref_quest2 IS NULL 
@@ -170,7 +167,6 @@
 				<tr bgcolor="#iif(qGetReps.currentrow MOD 2 ,DE("EDEDED") ,DE("FFFFFF") )#">
 					<td>#firstname# #lastname# (###userid#)</td>
 					<td width="100%"><font size="-4" style="font-style:italic">
-						<cfif NOT LEN(ar_info_sheet)>AR Info Sheet &nbsp; &nbsp; </cfif>
 						<cfif NOT LEN(ar_ref_quest1)>AR Ref Quest. 1 &nbsp; &nbsp; </cfif>
 						<cfif NOT LEN(ar_ref_quest2)>AR Ref Quest. 2 &nbsp; &nbsp; </cfif>
 						<cfif NOT LEN(ar_cbc_auth_form)>CBC Authorization Form &nbsp; &nbsp; </cfif>
@@ -265,7 +261,7 @@ USES PROGRAM ID INSTEAD OF SEASON ID
 	<cfset current_region = qGetRegions.regionID>
 
 	<cfquery name="qGetReps" datasource="MySql">
-		SELECT DISTINCT u.userid, u.firstname, u.lastname, u.ar_info_sheet, ar_ref_quest1, ar_ref_quest2, ar_agreement, ar_training
+		SELECT DISTINCT u.userid, u.firstname, u.lastname, ar_ref_quest1, ar_ref_quest2, ar_agreement, ar_training
 		FROM smg_users u
 		INNER JOIN smg_students s ON (s.arearepid = u.userid OR s.placerepid = u.userid)
 		WHERE s.regionassigned = '#current_region#' 
@@ -276,7 +272,7 @@ USES PROGRAM ID INSTEAD OF SEASON ID
 				s.programid = #prog# 
 				<cfif prog is #ListLast(FORM.programid)#><Cfelse>or</cfif>
 				</cfloop> )
-			AND (u.ar_info_sheet IS NULL OR ar_ref_quest1 IS NULL OR ar_ref_quest2 IS NULL OR ar_agreement IS NULL OR ar_training IS NULL) 
+			AND (ar_ref_quest1 IS NULL OR ar_ref_quest2 IS NULL OR ar_agreement IS NULL OR ar_training IS NULL) 
 		GROUP BY u.userid
 		ORDER BY u.lastname
 	</cfquery>
@@ -297,7 +293,6 @@ USES PROGRAM ID INSTEAD OF SEASON ID
 				<tr bgcolor="#iif(qGetReps.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
 					<td>#firstname# #lastname# (###userid#)</td>
 					<td><font size="-3" style="font-style:italic">
-						<cfif ar_info_sheet EQ ''>AR Info Sheet &nbsp; &nbsp; </cfif>
 						<cfif ar_ref_quest1 EQ ''>AR Ref Quest. 1 &nbsp; &nbsp; </cfif>
 						<cfif ar_ref_quest2 EQ ''>AR Ref Quest. 2 &nbsp; &nbsp; </cfif>
 						<cfif ar_agreement EQ ''>AR Agreement &nbsp; &nbsp; </cfif>
