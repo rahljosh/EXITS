@@ -64,7 +64,6 @@
                     u.lastname,
                     uar.regionID,
                     r.regionName,
-                    pw.ar_info_sheet, 
                     pw.ar_ref_quest1, 
                     pw.ar_ref_quest2, 
                     pw.ar_cbc_auth_form, 
@@ -100,8 +99,6 @@
                     
                     AND
                     (
-                            pw.ar_info_sheet IS NULL 
-                        OR 
                             pw.ar_ref_quest1 IS NULL 
                         OR 
                             pw.ar_ref_quest2 IS NULL 
@@ -263,7 +260,6 @@
                     <td #vRowColor#>#qGetResults.regionName#</td>
                     <td #vRowColor#>#qGetResults.firstname# #qGetResults.lastname# (###qGetResults.userID#)</td>
                     <td #vRowColor#>
-                        <cfif NOT LEN(ar_info_sheet)>AR Info Sheet &nbsp; &nbsp; </cfif>
                         <cfif NOT LEN(ar_ref_quest1)>AR Ref Quest. 1 &nbsp; &nbsp; </cfif>
                         <cfif NOT LEN(ar_ref_quest2)>AR Ref Quest. 2 &nbsp; &nbsp; </cfif>
                         <cfif NOT LEN(ar_cbc_auth_form)>CBC Authorization Form &nbsp; &nbsp; </cfif>
@@ -350,7 +346,6 @@
                         <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
                             <td style="font-size:9px">#qGetRepsInRegion.firstname# #qGetRepsInRegion.lastname# (###qGetRepsInRegion.userID#)</td>                         
                             <td style="font-size:9px">
-                                <cfif NOT LEN(ar_info_sheet)>AR Info Sheet &nbsp; &nbsp; </cfif>
                                 <cfif NOT LEN(ar_ref_quest1)>AR Ref Quest. 1 &nbsp; &nbsp; </cfif>
                                 <cfif NOT LEN(ar_ref_quest2)>AR Ref Quest. 2 &nbsp; &nbsp; </cfif>
                                 <cfif NOT LEN(ar_cbc_auth_form)>CBC Authorization Form &nbsp; &nbsp; </cfif>

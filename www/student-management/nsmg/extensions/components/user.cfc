@@ -635,7 +635,6 @@
                     sup.userID,
                     sup.seasonID,
                     sup.fk_companyID,
-                    sup.ar_info_sheet,
                     sup.ar_ref_quest1,
                     sup.ar_ref_quest2,
                     sup.ar_cbc_auth_form,
@@ -689,7 +688,7 @@
 			qGetSeasonPaperwork = getSeasonPaperwork(userID=ARGUMENTS.userID,seasonID=ARGUMENTS.seasonID);
 			
 			// Check if we are updating a date or string field
-			vDateFieldList = "ar_info_sheet,ar_ref_quest1,ar_ref_quest2,ar_cbc_auth_form,ar_agreement,ar_training,dateRMReviewNotified,dateOfficeReviewNotified";
+			vDateFieldList = "ar_ref_quest1,ar_ref_quest2,ar_cbc_auth_form,ar_agreement,ar_training,dateRMReviewNotified,dateOfficeReviewNotified";
 			
 			vStringFieldList = "agreeSig,cbcSig";
 			
