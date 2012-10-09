@@ -496,7 +496,9 @@
 				webEX trainings are not ready to go live, set them as true until we are ready
 				Marcus Melo 09/18/2012
 			****/		
-			stUserPaperwork.isTrainingCompleted = true;
+			if ( now() LT '2012/11/01' ) {
+				stUserPaperwork.isTrainingCompleted = true;
+			}
 			/**** TEMPORARY SOLUTION ****/			
 			
 
@@ -862,11 +864,20 @@
 
 
 	<cffunction name="paperworkSubmittedRMNotification" access="public" returntype="void" output="false" hint="Sends out a notification to regional managers when users fill out paperwork">
-        <cfargument name="userID" hint="User ID is Required">
+        <cfargument name="userID" hint="User ID is Required">   
+        <cfargument name="structUserPaperwork" type="struct" default="#StructNew()#">     
 
 		<cfscript>
-			// Check Paperwork
-			var stUserPaperwork = getUserPaperwork(userID=ARGUMENTS.userID);
+			if ( StructIsEmpty(ARGUMENTS.structUserPaperwork) ) {
+				// Get Paperwork Struct
+				var stUserPaperwork = getUserPaperwork(userID=ARGUMENTS.userID);
+			} else {
+				// Set Paperwork Struct
+				var stUserPaperwork = ARGUMENTS.structUserPaperwork;
+			}
+
+			// Check if we need to send out a notification to the program manager
+			papeworkSubmittedOfficeNotification(userID=ARGUMENTS.userID,structUserPaperwork=stUserPaperwork);
 			
 			// Get Region ID
 			var vDefaultUserRegionID = getUserAccessRights(userID=ARGUMENTS.userID).regionID;
@@ -874,7 +885,7 @@
 			// Email Variables
 			var vEmailTo = getRegionalManager(regionID=vDefaultUserRegionID).email;
 			var vEmailSubject = "#stUserPaperwork.user.displayName# has submitted paperwork";
-			var vEmailMessage = '';			
+			var vEmailMessage = '';	
         </cfscript>
     
         <cfif NOT isDate(stUserPaperwork.dateRMReviewNotified) AND stUserPaperwork.accountReviewStatus EQ 'rmReview' AND isValid("email", vEmailTo)>
@@ -909,13 +920,19 @@
     
 	<cffunction name="papeworkSubmittedOfficeNotification" access="public" returntype="void" output="false" hint="Sends out a notification to office when RMs fill out references">
         <cfargument name="userID" hint="User ID is Required">
+        <cfargument name="structUserPaperwork" type="struct" default="#StructNew()#">
 
 		<cfscript>
+			if ( StructIsEmpty(ARGUMENTS.structUserPaperwork) ) {
+				// Get Paperwork Struct
+				var stUserPaperwork = getUserPaperwork(userID=ARGUMENTS.userID);
+			} else {
+				// Set Paperwork Struct
+				var stUserPaperwork = ARGUMENTS.structUserPaperwork;
+			}
+
 			// Check if account is compliant, if so notify user he is granted full access to EXITS
-			accountFullyEnabledNotification(userID=ARGUMENTS.userID);
-			
-			// Check Paperwork
-			var stUserPaperwork = getUserPaperwork(userID=ARGUMENTS.userID);
+			accountFullyEnabledNotification(userID=ARGUMENTS.userID, structUserPaperwork=stUserPaperwork);
 			
 			// Email Variables
 			var vEmailTo = CLIENT.programmanager_email;
@@ -928,7 +945,13 @@
             <cfsavecontent variable="vEmailMessage">
             
                 <cfoutput>
-                	<p>The references for #stUserPaperwork.user.displayName# have been submitted by the regional manager.</p>
+                	<!--- 2nd Visit Reps don't have references --->
+                    <cfif stUserPaperwork.user.isSecondVisitRepresentative>
+                		<p>2<sup>nd</sup> Representative #stUserPaperwork.user.displayName# has submitted all required paperwork.</p>
+                    <cfelse>
+                    	<p>The references for #stUserPaperwork.user.displayName# have been submitted by the regional manager.</p>
+                    </cfif>
+                    
                     <p>A manual review is now required to activate the account.</p>	
                     <p>Please review all paperwork and submit the CBC for processing. If everything looks good, approval of the CBC will activate this account.</p>		
                             
@@ -955,10 +978,16 @@
 
 	<cffunction name="accountFullyEnabledNotification" access="public" returntype="void" output="false" hint="Sends out a notification to user when account has been granted full access">
         <cfargument name="userID" hint="User ID is Required">
+        <cfargument name="structUserPaperwork" type="struct" default="#StructNew()#">
 
 		<cfscript>
-			// Check Paperwork
-			var stUserPaperwork = getUserPaperwork(userID=ARGUMENTS.userID);
+			if ( StructIsEmpty(ARGUMENTS.structUserPaperwork) ) {
+				// Get Paperwork Struct
+				var stUserPaperwork = getUserPaperwork(userID=ARGUMENTS.userID);
+			} else {
+				// Set Paperwork Struct
+				var stUserPaperwork = ARGUMENTS.structUserPaperwork;
+			}
 			
 			// Email Variables
 			var vEmailTo = stUserPaperwork.user.email;
