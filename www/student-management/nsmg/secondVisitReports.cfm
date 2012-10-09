@@ -239,7 +239,7 @@
             DATEDIFF( DATE_ADD(dateStartWindowCompliance, INTERVAL complianceWindow DAY), CURRENT_DATE ) AS remainingDays
         FROM
             (	
-				<!--- Query to get 1st Current Second Visit Representative Report --->	
+				<!--- Query to get 1st (Current) Second Visit Representative Report --->	
                 SELECT
                     s.studentID,
                     s.uniqueID,
@@ -1300,6 +1300,9 @@
                         <option value="notRequired" <cfif CLIENT.reportStatus EQ 'notRequired'> selected="selected" </cfif> >Set as Not Required</option>
                         <option value="completed" <cfif CLIENT.reportStatus EQ 'completed'> selected="selected" </cfif> >Completed</option>
                         <option value="rejected" <cfif CLIENT.reportStatus EQ 'rejected'> selected="selected" </cfif> >Rejected</option>
+                        <cfif APPLICATION.CFC.USER.isOfficeUser()>
+                        	<option value="hidden" <cfif CLIENT.reportStatus EQ 'hidden'> selected="selected" </cfif> >Show Hidden Reports</option>
+                        </cfif>
                     </select>
                     <br />
 					<span class="note">* Reports are not completed until approved by headquarters</span>
@@ -1347,11 +1350,16 @@
                     FROM
                         qGetResults
                     WHERE
-                        secondVisitRepID =  <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.secondVisitRepID#"> 
-                    AND
-                    	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">  
+                        secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.secondVisitRepID#"> 
                     AND
                     	isRepCurrentAssigned = <cfqueryparam cfsqltype="cf_sql_numeric" value="1">	
+                    <cfif FORM.reportStatus EQ 'hidden'>
+                        AND
+                            isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="0">  
+                    <cfelse>
+                        AND
+                            isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">  
+					</cfif>
                     ORDER BY
                     	familyLastName
                 </cfquery>
@@ -1363,9 +1371,7 @@
                     FROM
                         qGetResults
                     WHERE
-                        secondVisitRepID =  <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.secondVisitRepID#"> 
-                    AND
-                    	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">  
+                        secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.secondVisitRepID#"> 
                     AND
                     	isRepCurrentAssigned = <cfqueryparam cfsqltype="cf_sql_numeric" value="0">	
                     ORDER BY
@@ -1375,7 +1381,7 @@
 				<tr>
                 	<td colspan="13" class="rep">
                     	#qGetResults.secondVisitRepDisplayName#
-                    	<span style="float:right;padding-right:5px;">#VAL(qGetCurrentStudents.recordCount) + VAL(qGetPreviousStudents.recordCount)# records</span>
+                    	<span style="float:right;padding-right:5px;">#VAL(qGetCurrentStudents.recordCount) + VAL(qGetPreviousStudents.recordCount)# record(s)</span>
                     </td>
               	<tr>
                	<tr>
