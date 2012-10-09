@@ -1922,15 +1922,21 @@
                                 <td><strong>#firstname# #lastname#</strong> - <em>#relationship# (#howlong#)</em></td>
                                 <td align="Center">#phone#</td>
                                 <Td align="Center">
-                                    <cfif qGetReferences.approved eq 0>
-                                        Waiting
-                                    <Cfelseif qGetReferences.approved eq 1>
-                                        Pending
-                                    <Cfelseif qGetReferences.approved eq 2>
-                                        Approved
-                                    <Cfelseif qGetReferences.approved eq 3>
-                                        Rejected
-                                    </cfif>
+                                    <cfif getReferenceReportBySeason.recordcount>
+									
+										<cfif qGetReferences.approved eq 0>
+                                            Waiting
+                                        <Cfelseif qGetReferences.approved eq 1>
+                                            Pending
+                                        <Cfelseif qGetReferences.approved eq 2>
+                                            Approved
+                                        <Cfelseif qGetReferences.approved eq 3>
+                                            Rejected
+                                        </cfif>
+									
+                                    <cfelse>
+                                    	Pending
+                                    </cfif>                                                                         
                                 </td>
                                 <cfif listFind("1,2,3,4,5,6", CLIENT.userType) AND CLIENT.userID NEQ userID> 
                                     <Td align="Center">
