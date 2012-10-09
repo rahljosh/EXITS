@@ -1300,9 +1300,6 @@
                         <option value="notRequired" <cfif CLIENT.reportStatus EQ 'notRequired'> selected="selected" </cfif> >Set as Not Required</option>
                         <option value="completed" <cfif CLIENT.reportStatus EQ 'completed'> selected="selected" </cfif> >Completed</option>
                         <option value="rejected" <cfif CLIENT.reportStatus EQ 'rejected'> selected="selected" </cfif> >Rejected</option>
-                        <cfif APPLICATION.CFC.USER.isOfficeUser()>
-                        	<option value="hidden" <cfif CLIENT.reportStatus EQ 'hidden'> selected="selected" </cfif> >Show Hidden Reports</option>
-                        </cfif>
                     </select>
                     <br />
 					<span class="note">* Reports are not completed until approved by headquarters</span>
@@ -1353,13 +1350,6 @@
                         secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.secondVisitRepID#"> 
                     AND
                     	isRepCurrentAssigned = <cfqueryparam cfsqltype="cf_sql_numeric" value="1">	
-                    <cfif FORM.reportStatus EQ 'hidden'>
-                        AND
-                            isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="0">  
-                    <cfelse>
-                        AND
-                            isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">  
-					</cfif>
                     ORDER BY
                     	familyLastName
                 </cfquery>
