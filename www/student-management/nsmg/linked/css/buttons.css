@@ -1,0 +1,101 @@
+/* CSS Document */
+/****Green Button******/
+.buttonGreen {
+	border-top: 1px solid #046A3A;
+	background: #69bd45;
+	background: -webkit-gradient(linear, left top, left bottom, from(#69bd45), to(#066e26));
+	background: -webkit-linear-gradient(top, #69bd45, #066e26);
+	background: -moz-linear-gradient(top, #69bd45, #066e26);
+	background: -ms-linear-gradient(top, #69bd45, #066e26);
+	background: -o-linear-gradient(top, #69bd45, #066e26);
+	padding: 5px 10px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+	-webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+	-moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+	box-shadow: rgba(0,0,0,1) 0 1px 0;
+	text-shadow: rgba(0,0,0,.4) 0 1px 0;
+	color: white;
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	text-decoration: none;
+	vertical-align: middle;
+	font-weight: bold;
+   }
+.buttonGreen:hover {
+	border-top-color: #066e26;
+	background: #5a81c0;
+	color: #ccc;
+   }
+.buttonGreen:active {
+   border-top-color: #066e26;
+   background: #5a81c0;
+   }  
+
+/****Blue Button******/
+.buttonBlue {
+	border-top: 1px solid #046A3A;
+	background: #5a81c0;
+	background: -webkit-gradient(linear, left top, left bottom, from(#5a81c0), to(#035eac));
+	background: -webkit-linear-gradient(top, #5a81c0, #035eac);
+	background: -moz-linear-gradient(top, #5a81c0, #035eac);
+	background: -ms-linear-gradient(top, #5a81c0, #035eac);
+	background: -o-linear-gradient(top, #5a81c0, #035eac);
+	padding: 5px 10px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+	-webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+	-moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+	box-shadow: rgba(0,0,0,1) 0 1px 0;
+	text-shadow: rgba(0,0,0,.4) 0 1px 0;
+	color: white;
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	text-decoration: none;
+	vertical-align: middle;
+	font-weight: bold;
+   }
+.buttonBlue:hover {
+	border-top-color: #5a81c0;
+	background: #5a81c0;
+	color: #ccc;
+   }
+.buttonBlue:active {
+   border-top-color: #5a81c0;
+   background: #5a81c0;
+   }  
+/*****Red Button****/
+.buttonRed {
+	border-top: 1px solid #046A3A;
+	background: #ed3d35;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ed3d35), to(#9c1a1d));
+	background: -webkit-linear-gradient(top, #ed3d35, #9c1a1d);
+	background: -moz-linear-gradient(top, #ed3d35, #9c1a1d);
+	background: -ms-linear-gradient(top, #ed3d35, #9c1a1d);
+	background: -o-linear-gradient(top, #ed3d35, #9c1a1d);
+	padding: 5px 10px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+	-webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+	-moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+	box-shadow: rgba(0,0,0,1) 0 1px 0;
+	text-shadow: rgba(0,0,0,.4) 0 1px 0;
+	color: white;
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	text-decoration: none;
+	vertical-align: middle;
+	font-weight: bold;
+   }
+.buttonRed:hover {
+	border-top-color: #9c1a1d;
+	background: #9c1a1d;
+	color: #ccc;
+   }
+.buttonRed:active {
+   border-top-color: #9c1a1d;
+   background: #9c1a1d;
+   }     
