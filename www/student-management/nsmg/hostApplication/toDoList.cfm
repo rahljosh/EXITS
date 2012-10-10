@@ -163,7 +163,7 @@
 </cfif>
 
 <cfquery name="appStatus" datasource="#application.dsn#">
-select hostAppStatus
+select hostAppStatus, fatherlastname, motherlastname, motherfirstname, fatherfirstname, familylastname, email, city, state, password
 from smg_hosts
 where hostid = #client.hostid#
 </cfquery>
@@ -227,8 +227,29 @@ where hostid = #client.hostid#
  	<cfset client.appStatus = #url.status#>
 </cfif>
 
-
-    <!----Personal Information---->
+ <!----Personal Information---->
+		   <div class="rdholder" style="width:100%;float:left;"> 
+				<div class="rdtop"> 
+                <span class="rdtitle">Host Family Summary</span> 
+              
+				
+            	</div> <!-- end top --> 
+             <div class="rdbox">
+             <Cfoutput>
+<table width=30% align="Center">
+	<tr>
+    	<th align="left">Family</th><th align="left">Login Info</th>
+    </tr>
+    	<td><cfif appStatus.fatherfirstname is not ''>#appStatus.fatherfirstname#</cfif> <cfif appStatus.fatherfirstname is not '' and appStatus.motherfirstname is not ''>& </cfif>#appStatus.motherfirstname# #appStatus.familylastname#<br />#appStatus.city# #appStatus.state#</td>
+        <td>#appStatus.email#<br />#appStatus.password#</td>
+    </tr>
+</table>
+</Cfoutput>
+</div>
+            	<div class="rdbottom"></div> <!-- end bottom --> 
+         	</div>
+          
+    <!----To Do List---->
 		   <div class="rdholder" style="width:100%;float:left;"> 
 				<div class="rdtop"> 
                 <span class="rdtitle">To Do List for Application Approval</span> 
@@ -297,7 +318,7 @@ where hostid = #client.hostid#
                 </cfif>
                 </Td>
                 <td>#description#</td>
-                <Cfif isStudentRequired eq 1 and studentid eq 0>
+                <Cfif 1 eq 2>
                     <td colspan=4><em><font color="##ccc">No student assigned, student assignment needed for this item.
                     <Cfelse>
                 <td><a class='iframe' href="#link#?itemID=#id#&userType=#client.usertype#&studentid=#studentid#">#linkDesc#</a></td>
