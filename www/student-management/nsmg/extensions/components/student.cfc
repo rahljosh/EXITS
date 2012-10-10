@@ -1666,6 +1666,9 @@
 			</cfquery>
             
             <cfscript>
+				// Set Date Placed Ended
+				setDatePlacedEnded(studentID=ARGUMENTS.studentID,datePlacedEnded=DateFormat(now(), 'mm/dd/yyyy'));
+			
 				// Set Old Records to Inactive
 				setHostHistoryInactive(studentID=ARGUMENTS.studentID);
 				
@@ -2107,7 +2110,7 @@
         <cfscript>
 			var vHistoryID = ARGUMENTS.historyID;
 			
-			if ( NOT VAL(ARGUMENTS.historyID) ) {
+			if ( NOT VAL(vHistoryID) ) {
 				
 				vHistoryID = getPlacementHistory(studentID=VAL(ARGUMENTS.studentID)).historyID;
 				
