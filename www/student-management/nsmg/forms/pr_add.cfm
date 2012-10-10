@@ -202,7 +202,9 @@
         FORM.fk_pr_user = qGetStudent.placerepID;
         FORM.programID = qGetStudent.programID;
 		FORM.fk_intrep_user = qGetStudent.intrep;
-		FORM.fk_host = qGetStudent.hostID;
+		if ( NOT VAL(FORM.fk_host) ) {
+			FORM.fk_host = qGetStudent.hostID;
+		}
 		FORM.fk_secondVisitRep = qGetStudent.secondVisitRepID;
 		FORM.fk_ra_user = qGetRegionalAdvisorID.advisorID;
 		FORM.fk_ny_user = qGetRegionFacilitator.regionfacilitator;
@@ -213,18 +215,25 @@
 
 		// Get Second Visit Representative
         qGetSecondVisitRep = APPLICATION.CFC.USER.getUsers(userID=VAL(FORM.fk_secondVisitRep));
+        
         // Get Supervising Representative
         qGetSupervisingRep = APPLICATION.CFC.USER.getUsers(userID=VAL(FORM.fk_sr_user));
+        
         // Get Placing Representative
         qGetPlacingRepresentative = APPLICATION.CFC.USER.getUsers(userID=VAL(FORM.fk_pr_user));
+        
         // Get Advisor
         qGetAdvisorInfo = APPLICATION.CFC.USER.getUsers(userID=VAL(FORM.fk_ra_user));
+        
         // Get Facilitator
         qGetFacilitator = APPLICATION.CFC.USER.getUsers(userID=VAL(FORM.fk_ny_user));
+        
         // Get Intl. Representative
         qGetIntlRep = APPLICATION.CFC.USER.getUsers(userID=VAL(FORM.fk_intrep_user));
+        
         // Get Program Info
         qGetProgram = APPLICATION.CFC.PROGRAM.getPrograms(programID=VAL(FORM.programID));
+        
         // Host Family
         qGetHostFamily = APPLICATION.CFC.HOST.getHosts(hostID=VAL(FORM.fk_host));
     </cfscript>
@@ -379,7 +388,7 @@
                                 #qGetHostFamily.fatherfirstname#
                                 <cfif NOT LEN(qGetHostFamily.fatherfirstname) AND NOT LEN(qGetHostFamily.motherfirstname)>&amp;</cfif>
                                 #qGetHostFamily.motherfirstname#
-                                #qGetHostFamily.familylastname# ###qGetHostFamily.hostID#)
+                                #qGetHostFamily.familylastname# ###qGetHostFamily.hostID#
                             </td>
                         </tr>
                         <tr>
