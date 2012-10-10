@@ -6,7 +6,7 @@
 	Desc:		Host Family Information
 				
 ----- ------------------------------------------------------------------------- --->
-
+<link rel="stylesheet" href="linked/css/buttons.css" type="text/css">
 <!--- Kill extra output --->
 <cfsilent>
 	
@@ -308,7 +308,7 @@
             </cfscript>
 
 			<cfif VAL(currentHost) OR val(form.hostid)>
-           s
+          
                 <!--- Update --->
                 <cfquery datasource="MySql" result="test">
                     UPDATE 
@@ -344,7 +344,9 @@
                         zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
                         phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
                         email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
+                        <cfif form.submit_Start neq 'update'>
                         HostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="9">,
+                        </cfif>
                         password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#strPassword#">,
                         active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                         
@@ -559,7 +561,7 @@
                         
                            <p><strong> <cfif form.fatherfirstname is not ''>#fatherfirstname#</cfif><Cfif form.fatherfirstname is not '' and form.motherfirstname is not ''> and</Cfif> <cfif form.motherfirstname is not ''>#form.motherfirstname#</cfif>-</strong></p>
                             <cfif val(currentHost)>
-                            <p>I am so excited that you have decided to host another student!</p>
+                            <p>I am so excited that you have decided to host a student!</p>
                             
                             <p>Everytime you host a student, we require host families to update the information, if needed, that we have on file</p>
                             
@@ -567,7 +569,7 @@
                             <ul>
                             <li>a background check on any person who is 17 years of age or older and who is living in the home. 
                             <li>pictures of certain areas of your home and property to reflect where the student will be living.  
-                            <li>basic finacial and finacial aid information on your family
+                            <li>basic financial and financial aid information on your family
                             </ul>
                             At the end of this email, you will find login information that will allow you to update any information that has changed and to provide new information that may be required since you last hosted. 
                            <cfelse> 
@@ -585,13 +587,13 @@
                         </cfif>
                            <p>The application process can take any where from 15-60 minutes to complete depending on the information needed and number of pictures you submit.</p> 
                             
-                            <p>You can always come back to the  application at a later time to complete it or change any information  that you want.  Please keep in mind though, that once the applciation is  submitted, you will no longer be able to change any information on the  application. </p>
-          <p><em> We have just launched this electronic  host family application, and you are one of the first families to use  this new tool.  While we have tested it out extensivly, please bear with  us as we work out the final bugs. Should you get any errors or feel  that something is confusing, please feel free to let us know how we can  improve the process.  There is a live chat and email support available  through the application if you need immediate assistance while filling  out the application.  Any and all feedback would be greatly appreciated.</em></p>
+                            <p>You can always come back to the  application at a later time to complete it or change any information  that you want.  Please keep in mind though, that once the application is  submitted, you will no longer be able to change any information on the  application. </p>
+          <p><em> We have just launched this electronic  host family application, and you are one of the first families to use  this new tool.  Please bear with  us as we work out the final bugs. Should you get any errors or feel  that something is confusing, please feel free to let us know how we can  improve the process.  There is a live chat and email support available  through the application if you need immediate assistance while filling  out the application.  Any and all feedback would be greatly appreciated.</em></p>
                             
                               <div style="display: block; float: left; width: 250px;  padding: 10px;  font-family:Arial, Helvetica, sans-serif; font-size: .80em"> <strong><em>To start filling out your application, please click on the following link:</em></strong><br /><br />
-         <a href="http://www.iseusa.com/hostApp/" target="_blank"><img src="http://ise.exitsapplication.com/nsmg/pics/hostAppEmail.jpg" width="200" height="56" border="0"></a> <br /></div>
+         <Cfif client.companyid eq 10><a href="http://www.case-usa.org/hostApp/" target="_blank"><cfelse><a href="https://www.iseusa.com/hostApp/" target="_blank"></cfif><img src="#client.exits_url#/nsmg/pics/hostAppEmail.jpg" width="200" height="56" border="0"></a> <br /></div>
          <div style="display: block; float: right; width: 270px; padding: 10px; font-family:Arial, Helvetica, sans-serif; font-size: .80em; border: thin solid ##CCC;"><div><strong><em>Please use the following login information:</em></strong></div><br /><br />
-<div style="width: 50px; float: left;"><img src="http://ise.exitsapplication.com/nsmg/pics/lock.png" width="39" height="56"></div>
+<div style="width: 50px; float: left;"><img src="#client.exits_url#/nsmg/pics/lock.png" width="39" height="56"></div>
    <div> <strong>Username / Email:</strong><br /> <a href="mailto:#form.email#" target="_blank">#form.email#</a><br />
   <strong>Password:<br /></strong>#strPassword#</div>
 
@@ -675,73 +677,7 @@
    
 </cfsilent>
 
-<style type="text/css">
-.buttonBlue {
-	border-top: 1px solid #046A3A;
-	background: #035eac;
-	background: -webkit-gradient(linear, left top, left bottom, from(#035eac), to(#5a81c0));
-	background: -webkit-linear-gradient(top, #035eac, #5a81c0);
-	background: -moz-linear-gradient(top, #035eac, #5a81c0);
-	background: -ms-linear-gradient(top, #035eac, #5a81c0);
-	background: -o-linear-gradient(top, #035eac, #5a81c0);
-	padding: 5px 10px;
-	-webkit-border-radius: 8px;
-	-moz-border-radius: 8px;
-	border-radius: 8px;
-	-webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
-	-moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
-	box-shadow: rgba(0,0,0,1) 0 1px 0;
-	text-shadow: rgba(0,0,0,.4) 0 1px 0;
-	color: white;
-	font-size: 12px;
-	font-family: Arial, Helvetica, sans-serif;
-	text-decoration: none;
-	vertical-align: middle;
-	font-weight: bold;
-   }
-.buttonBlue:hover {
-	border-top-color: #5a81c0;
-	background: #5a81c0;
-	color: #ccc;
-   }
-.buttonBlue:active {
-   border-top-color: #5a81c0;
-   background: #5a81c0;
-   }  
-   
-.buttonRed {
-	border-top: 1px solid #046A3A;
-	background: #ed3d35;
-	background: -webkit-gradient(linear, left top, left bottom, from(#ed3d35), to(#9c1a1d));
-	background: -webkit-linear-gradient(top, #ed3d35, #9c1a1d);
-	background: -moz-linear-gradient(top, #ed3d35, #9c1a1d);
-	background: -ms-linear-gradient(top, #ed3d35, #9c1a1d);
-	background: -o-linear-gradient(top, #ed3d35, #9c1a1d);
-	padding: 5px 10px;
-	-webkit-border-radius: 8px;
-	-moz-border-radius: 8px;
-	border-radius: 8px;
-	-webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
-	-moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
-	box-shadow: rgba(0,0,0,1) 0 1px 0;
-	text-shadow: rgba(0,0,0,.4) 0 1px 0;
-	color: white;
-	font-size: 12px;
-	font-family: Arial, Helvetica, sans-serif;
-	text-decoration: none;
-	vertical-align: middle;
-	font-weight: bold;
-   }
-.buttonRed:hover {
-	border-top-color: #9c1a1d;
-	background: #9c1a1d;
-	color: #ccc;
-   }
-.buttonRed:active {
-   border-top-color: #9c1a1d;
-   background: #9c1a1d;
-   }     
-</style>
+
 
 
 
@@ -1039,14 +975,21 @@
            
           		<td valing="top" align="center">
 				
-                (Host Fam Fills Out App)<br />
-                   <input name="Submit_start" type="submit" value="eHost" src="pics/buttons_ehost.png" alt="Start E-App" border="0" class="buttonBlue" /> 
-               
+                
+                   <input name="Submit_start" type="submit" value="eHost"  alt="Start E-App" border="0" class="buttonBlue" /> <br />
+               (Host Fam Fills Out App)
                 </td>
                 
                 <td align="Center">   
-                (Office User Fills Out App / Update Info)<br />
-                   <input name="Submit_start" type="submit" value="Submit" src="pics/buttons_SUBMIT.png" alt="Submit Paper Application" border="0" class="buttonRed" />
+                
+                   <input name="Submit_start" type="submit" value="Submit"  alt="Submit Paper Application" border="0" class="buttonRed" /><br />
+                   (Office User Fills Out App)
+                </td>
+                 
+                <td align="Center">   
+                
+                   <input name="Submit_start" type="submit" value="Update"  alt="Update Information" border="0" class="buttonGreen" /><br />
+                   (Just Update Info)
                 </td>
             </tr>
         </table>
