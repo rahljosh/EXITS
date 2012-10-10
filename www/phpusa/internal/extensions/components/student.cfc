@@ -889,6 +889,7 @@
 			// Set Action Message
 			var vUpdatedBy = 'n/a';
 			var vActions = '';			
+			var vPreviousSchoolName = '';
 			
 			var hasHostIDChanged = 0;
 			var hasSchoolIDChanged = 0;
@@ -1002,6 +1003,7 @@
 						// Previous School for reference
 						qGetSchoolInfo = APPLICATION.CFC.SCHOOL.getSchools(schoolID=qGetStudentInfo.schoolID);
 						vActions = vActions & "Previous School: #qGetSchoolInfo.schoolName# ###qGetSchoolInfo.schoolID# <br /> #CHR(13)#";
+						vPreviousSchoolName = "#qGetSchoolInfo.schoolName# (###qGetSchoolInfo.schoolID#)";
 						// School Paperwork Received
 					}				
 	
@@ -1161,8 +1163,70 @@
 	            	WHERE
     					studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
 			</cfquery>
-        
-        </cfif>
+            
+            <!--- Send Out Email Notification to Finance Department --->
+            <cfscript>
+				// Get International Representative
+				qIntlRep = APPLICATION.CFC.USER.getUsers(userID=qGetStudentInfo.intrep);
+
+				// Get Program
+				qGetProgramInfo = APPLICATION.CFC.PROGRAM.getPrograms(programID=qGetStudentInfo.programID);
+				
+				// Get New School
+				qGetNewSchoolInfo = APPLICATION.CFC.SCHOOL.getSchools(schoolID=ARGUMENTS.schoolID);				
+			</cfscript>
+            
+            <cfsavecontent variable="vEmailMessage">            	
+                <cfoutput>
+					<h1>School Change Notification</h1>
+                    <p>This email is to let you know that a student changed school in the database</p>                                                        
+                    
+                    <table width="100%" cellpadding="4" cellspacing="0">
+                    	<tr>
+                        	<td>Intl. Rep.:</td>
+                            <td>#qIntlRep.businessname# (###qIntlRep.userID#)</td>
+						</tr>                            
+                    	<tr>
+                        	<td>Student:</td>
+                            <td>#qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID# - Assigned ID ###qGetStudentInfo.assignedID#)</td>
+						</tr>                            
+                    	<tr>
+                        	<td>Program:</td>
+                            <td>#qGetProgramInfo.programname# (###qGetProgramInfo.programID#)</td>
+						</tr>                            
+                    	<tr>
+                        	<td>Change Date:</td>
+                            <td>#DateFormat(now(), 'mm/dd/yyyy')#</td>
+						</tr>                            
+                    	<tr>
+                        	<td>Previous School:</td>
+                            <td>#vPreviousSchoolName#</td>
+						</tr>                            
+                    	<tr>
+                        	<td>New School:</td>
+                            <td>#qGetNewSchoolInfo.schoolName# (###qGetNewSchoolInfo.schoolID#)</td>
+						</tr>                            
+                    	<tr>
+                        	<td>Reason:</td>
+                            <td>#ARGUMENTS.schoolIDReason#</td>
+						</tr>                            
+                    	<tr>
+                        	<td>Updated by:</td>
+                            <td>#qGetEnteredBy.firstName# #qGetEnteredBy.lastName# (###qGetEnteredBy.userID#)</td>
+						</tr>
+					</table>                                                    
+                </cfoutput>
+            </cfsavecontent>
+            
+        	<cfinvoke component="internal.extensions.components.email" method="send_mail">
+            	<cfinvokeargument name="email_from" value="#APPLICATION.EMAIL.support#">
+                <cfinvokeargument name="email_to" value="#APPLICATION.EMAIL.finance#">
+                <cfinvokeargument name="email_subject" value="PHP School Change Notification - #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#) - #qGetProgramInfo.programname# (###qGetProgramInfo.programID#) ">
+                <cfinvokeargument name="email_message" value="#vEmailMessage#">
+           	</cfinvoke>
+            <!--- End of Send Out Email Notification to Finance Department --->
+                     
+		</cfif>
         
         
 		<!--- Insert History Information --->
