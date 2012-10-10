@@ -65,7 +65,7 @@
    <cfelseif client.usertype eq 5>
    	<cfset mailTo = 'compliance@iseusa.com'>
    <cfelseif client.usertype lte 4>
-   	<cfset mailTo = "#get_regional_director.email#,#repInfo.email#">
+   	<cfset mailTo = "#get_regional_director.email#,#repInfo.email#,compliance@iseusa.com">
    </cfif>
    <cfif client.usertype lte 4>
       	<cfsavecontent variable="nextLevel">                      

@@ -181,7 +181,7 @@ Select a catagory for this picture:<br />
 
 <cfif current_photos.recordcount neq 0>
 <cfoutput>
-<form method="post" action="viewFamPics.cfm?itemID=#url.itemID#&usertype=#url.usertype#">
+<form method="post" action="viewFamPics.cfm?itemID=#url.itemID#">
  </cfoutput>
 	<tr>
     <cfset count = 1>
@@ -195,7 +195,7 @@ Select a catagory for this picture:<br />
         </cfquery>
     	<Td><img src="http://ise.exitsapplication.com/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs/#filename#" height = 100><br />
                 #catDesc.cat_name#<br />
-                <a href="viewFamPics.cfm?delPic=#filename#"><img src="../pics/buttons/deleteGreyRed.png" height=30  border=0 /></a>
+                <a href="viewFamPics.cfm?delPic=#filename#&itemID=#url.itemID#"><img src="../pics/buttons/deleteGreyRed.png" height=30  border=0 /></a>
 </Td>
                 <td valign="top">
                 Description of picture:<br />

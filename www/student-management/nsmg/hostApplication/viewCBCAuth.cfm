@@ -19,19 +19,20 @@
 <!----CBC Shit---->
 
 
-<cfset dirPath = "/home/httpd/vhosts/111cooper.com/httpdocs/">
+
 <!--- Import CustomTag Used for Page Messages and Form Errors --->
 <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 <cfparam name="submitForm" default=0>
 <cfquery name="qHostParentsMembers" datasource="mysql">
 select h.fatherfirstname, h.fatherdob, h.fatherlastname, h.motherfirstname, h.motherlastname, h.motherdob, h.fatherssn, h.motherssn, h.companyid, h.regionid, h.email
 from smg_hosts h
-where h.hostid = #client.hostid# 
+where h.hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
 </cfquery>
+
 <cfquery name="qHostParentsCBC" datasource="mysql">
 select * 
 from smg_documents
-where hostid = #client.hostid#
+where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
 </cfquery>
 
 <cfquery name="checkFatherCBC" dbtype="query">
@@ -40,6 +41,7 @@ from qHostParentsCBC
 where shortDesc = 'Father CBC Auth'
 
 </cfquery>
+
 <cfquery name="checkMotherCBC" dbtype="query">
 select *
 from qHostParentsCBC
@@ -50,29 +52,14 @@ where shortDesc = 'Mother CBC Auth'
 <cfquery name="qHostFamilyMembers" datasource="mysql">
 select k.name, k.lastname, k.birthdate, k.cbc_form_received, k.childid, k.membertype, k.ssn, k.liveathome
 from smg_host_children k
-where k.hostid = #client.hostid# 
+where k.hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#"> 
 </cfquery>
 <cfquery name="qActiveSeasons" datasource="mysql">
 select s.seasonid, s.season 
 from smg_seasons s
 where active = 1
 </cfquery>
- <cfquery name="parentsCBC" datasource="mysql">
-                select *
-                from smg_documents
-                where userid = #client.hostid#
-                
-            </cfquery>
-           	<cfquery name="fatherCBC" dbtype="query">
-            select *
-            from parentsCBC
-            where shortDesc = 'Host Father'
-            </cfquery>
-           <cfquery name="motherCBC" dbtype="query">
-            select *
-            from parentsCBC
-            where shortDesc = 'Host Mother'
-            </cfquery>
+ 
 <h2>Criminal Background Check</h2>
 <!--- Form Errors --->
     <gui:displayFormErrors 
@@ -106,7 +93,7 @@ where active = 1
              <input type="hidden" value="#fatherfirstname#" name="fatherfirstname" />
             <td>
             
-          	<a href="../uploadedfiles/#fatherCBC.filePath#/#fatherCBC.fileName#">View CBC Authoriaztion</a>
+          	<a href="../uploadedfiles/#checkFatherCBC.filePath##checkFatherCBC.fileName#">View CBC Authoriaztion</a>
             
             </td>
       </tr>
@@ -121,7 +108,7 @@ where active = 1
            
             <td>
             
-            <a href="../uploadedfiles/#motherCBC.filePath#/#motherCBC.fileName#">View CBC Authoriaztion</a>
+            <a href="../uploadedfiles/#checkMotherCBC.filePath##checkMotherCBC.fileName#">View CBC Authoriaztion</a>
             
             	
             </td>

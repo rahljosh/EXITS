@@ -101,28 +101,23 @@ where hostid = #client.hostid#
   <table width=100% cellspacing=0 cellpadding=2 class="border" align="center">
     <tr bgcolor="##deeaf3">
         <td class="label" width=100>High School<span class="redtext">*</span></td><td class="form_text" > 
-        #form.schoolname#
-        <!----<input type="text" name="schoolname" size="20" value="#form.schoolname#">----></span>
+        <input type="text" name="schoolname" size="20" value="#form.schoolname#"></span>
 </tr>
 		<tr>
 			<td class="label">Address<span class="redtext">*</span></td><td  class="form_text"> 
-            #form.address#
-           <!----<input type="text" name="address" size="20" value="#form.address#">----></td>
+           <input type="text" name="address" size="20" value="#form.address#" /></td>
 		</tr>
 		<tr>
 			<td></td ><td   class="form_text"> 
-            #form.address2#
-            <!----<input type="text" name="address2" size="20" value="#form.address2#">---->
+            <input type="text" name="address2" size="20" value="#form.address2#" />
 		</tr>
 		<tr bgcolor="##deeaf3">			 
 			<td class="label">City<span class="redtext">*</span> </td><td   class="form_text">
-            #form.city#
-            <!----<input type="text" name="city" size="20" value="#form.city#">---->
+            <input type="text" name="city" size="20" value="#form.city#">
 		</tr> 
 		<tr >	
 			<td class="label" > State<span class="redtext">*</span> </td><td width=10 class="form_Text">
-			#form.state#
-            <!----
+			
    			 <cfquery name="get_states" datasource="mysql">
                 SELECT state, statename
                 FROM smg_states
@@ -131,48 +126,43 @@ where hostid = #client.hostid#
 			<cfselect NAME="state" query="get_states" value="state" display="statename" selected="#form.state#" queryPosition="below">
 				<option></option>
 			</cfselect>
-			---->
+			
 	
 	</td>
     </tr>
     <tr>
     <td class="zip" >Zip<span class="redtext">*</span> </td><td class="form_text">
-    #form.zip#
-    <!----
-    <input type="text" name="zip" size="5" value="#form.zip#">----></td>
+    
+    <input type="text" name="zip" size="5" value="#form.zip#"></td>
 
 		</tr>
       
 		<tr bgcolor="##deeaf3">
-			<td class="label">Contact</td><td class="form_text" >#form.principal#<!----<cfinput type="text" name="principal" size=20 value="#form.principal#">----></span> 
+			<td class="label">Contact</td><td class="form_text" ><cfinput type="text" name="principal" size=20 value="#form.principal#"></span> 
 		</tr>
 		<tr>			
 		<td class="label">Phone</td><td class="form_text" >
-        #form.phone#
-        <!----<cfinput type="text" name="phone" size=20 value="#form.phone#" placeholder="(208) 867-5309" mask='(999) 999-9999'>----></span>
+        <cfinput type="text" name="phone" size=20 value="#form.phone#" placeholder="(208) 867-5309" mask='(999) 999-9999'></span>
 		</tr>
 		
 		<tr  bgcolor="##deeaf3">
 			<td class="label">Contact Email</td><td class="form_text" > 
-            #form.email#
-            <!----<cfinput name="email" size=20 type="text" value="#form.email#" placeholder="contact@school.edu">----></span>
+            <cfinput name="email" size=20 type="text" value="#form.email#" placeholder="contact@school.edu"></span>
 		</tr>
         <Tr>
         	<td class="label">School Type</td>
-            <td  ><input type="radio" value="public" disabled="disabled" name="schoolType" <Cfif form.schooltype is 'public'>checked</cfif> /> Public &nbsp;&nbsp; <input name="schoolType" type="radio" disabled="disabled" value="private"  <Cfif form.schooltype is 'private'>checked</cfif>   /> Private </td>
+            <td  ><input type="radio" value="public"  name="schoolType" <Cfif form.schooltype is 'public'>checked</cfif> /> Public &nbsp;&nbsp; <input name="schoolType" type="radio"  value="private"  <Cfif form.schooltype is 'private'>checked</cfif>   /> Private </td>
         </Tr>
         <Tr  bgcolor="##deeaf3">
         	<td class="label">School Fees</td><td  >
-            #form.schoolFees#
-            <!----
-            <input type="text" name="schoolFees" size=25 placeholder="amount of tution or fees" value="#form.schoolFees#" />----> </td>
+            
+            <input type="text" name="schoolFees" size=25 placeholder="amount of tution or fees" value="#form.schoolFees#" /> </td>
         </Tr>
         <tr>
 			<td class="label">Student Enrollment</td>
             <td class="form_text" >
-            #form.numberofstudents#
-            <!----
-             <cfinput name="numberStudents" size=10 type="text" placeholder="1200" value="#FORM.numberofstudents#">----></span>
+            
+             <cfinput name="numberStudents" size=10 type="text" placeholder="1200" value="#FORM.numberofstudents#"></span>
 		</tr>
         <tr   bgcolor="##deeaf3">
 			<td class="label">Distance from Hosts' Home</td><td class="form_text" > #homeSchoolDist# mile<cfif #homeSchoolDist# gt 1>s</cfif></span>
