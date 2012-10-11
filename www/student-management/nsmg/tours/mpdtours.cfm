@@ -92,7 +92,7 @@
                 t.tour_ID,
                 t.tour_name,
                 t.totalSpots,
-                COUNT(sts.siblingID) AS total,
+                0 AS total,
                 COUNT(hMale.sex) AS totalMale,
                 COUNT(hFemale.sex) AS totalFemale
             FROM 
@@ -287,7 +287,6 @@
         
         <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
             <tr>
-                <td><input name="send" type="submit" value="Submit" /></td>
                 <td>
                     Trips<br />
                     <cfselect name="tour_id" query="qGetTours" value="tour_id" display="tour_name" selected="#tour_id#" queryPosition="below" class="largeField">
@@ -335,6 +334,7 @@
                         <option <cfif recordsToShow EQ 500>selected</cfif>>500</option>
                     </select>            
                 </td>
+                <td><input name="send" type="submit" value="Submit" /></td>
             </tr>
         </table>
     </cfform>
