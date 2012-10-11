@@ -20,11 +20,11 @@
 				// Local Environment
 				VARIABLES.processingURL = 'https://test.authorize.net/gateway/transact.dll';	
 				// CIM URL
-				VARIABLES.CIMprocessingURL = 'https://api.authorize.net/xml/v1/request.api';
+				VARIABLES.CIMprocessingURL = 'https://apitest.authorize.net/xml/v1/request.api';
 				// The merchant's unique API login ID
-				VARIABLES.loginID = '2E3jsfH7L5F'; 
+				VARIABLES.loginID = '7MWuj9w95d4'; 
 				// The merchant's unique transaction key
-				VARIABLES.transactionKey = '979cxZC5g8dDRf9b';
+				VARIABLES.transactionKey = '2f773dtL2d6Wf9QV';
 			} else {
 				// Production Environment - MPD TOURS	
 				VARIABLES.processingURL = 'https://secure.authorize.net/gateway/transact.dll';
@@ -37,6 +37,20 @@
 			}
 
 		    /*	
+				*** Developer Account | CIM Enabled ***
+				Login ID: devMpdTours12
+				Password: Ise2012Usa
+				API Login ID: 7MWuj9w95d4
+				Transaction Key: 2f773dtL2d6Wf9QV
+				Payment Gateway ID: 376470
+			
+				*** Shared Developer Account ***
+				Login ID: cnptest7192010
+				Password: Authnet001
+				API Login ID: 2E3jsfH7L5F
+				Transaction Key: 979cxZC5g8dDRf9b
+				Payment Gateway ID:
+			
 				Developer URL
 					https://test.authorize.net/gateway/transact.dll
 					https://certification.authorize.net/gateway/transact.dll
@@ -49,6 +63,13 @@
 					https://secure.authorize.net/gateway/transact.dll
 
 				WSDL https://api.authorize.net/xml/v1/schema/AnetApiSchema.xsd
+				
+				American Express Test Card 370000000000002
+				Discover Test Card 6011000000000012
+				Visa Test Card 4007000000027
+				Second Visa Test Card 4012888818888
+				JCB 3088000000000017
+				Diners Club/ Carte Blanche 38000000000006				
 			*/
 
 			// Return this initialized instance
@@ -401,7 +422,10 @@
 			datasource="#APPLICATION.DSN.Source#">
 				SELECT
                 	authorizeNetProfileID,
-                    email
+                    email,
+                    email,
+                    firstName,
+                    familyLastName
                 FROM
                 	smg_students
                 WHERE
