@@ -63,13 +63,48 @@
         from smg_religions 
         where religionname = '#StudentXMLFile.applications.application[i].page2.religion.religiousaffiliation.XmlText#'
         </cfquery>		
-		<!----Years Studied English---->
-		<cfset countEnglish = ArrayLen(#StudentXMLFile.applications.application[i].page2.languages.language#)>
-		<cfloop index="yreng" from="1" to="#countEnglish#">
-			<cfif #StudentXMLFile.applications.application[i].page2.languages.language[yreng].xmltext# is 'English'>
-				<cfset yrs_study_english = #StudentXMLFile.applications.application[i].page2.languages.yearsofstudy[yreng].xmltext# >
-			</cfif>
-		</cfloop>
+		<!----Languages---->
+		<cfloop from="1" to="#ArrayLen(StudentXMLFile.applications.application[i].page2.languages.language)#" index="x">
+   			<cfif #StudentXMLFile.applications.application[i].page2.languages.language[x].primarylanguage.xmlText#>
+            	<Cfset curLangPrim = 1>
+            <cfelse>
+            	<Cfset curLangPrim = 0>
+            </cfif>
+    
+   
+    	<cfquery name="getLangFieldID" datasource="#application.dsn#">
+        select fieldid 
+        from smg.applicationlookup
+        where name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#Trim(StudentXMLFile.applications.application[i].page2.languages.language[x].xmlText)#">
+        and fieldkey = <cfqueryparam cfsqltype="cf_sql_varchar" value='language'>
+        </cfquery> 
+       
+      
+        
+        
+        
+        <Cfif #Trim(StudentXMLFile.applications.application[i].page2.languages.language[x].xmlText)# is 'English'>
+            <cfquery name="getISEStudentID" datasource="#application.dsn#">
+            select studentID 
+            from smg_students where soid = <Cfqueryparam cfsqltype="cf_sql_varchar" value="#StudentXMLFile.applications.application[i].XmlAttributes.studentid#">
+            </cfquery>
+            <Cfquery datasource="#applciation.dsn#">
+                update smg_students set
+                yearsenglish = <cfqueryparam cfsqltype="cf_sql_integer" value="#StudentXMLFile.applications.application[i].page2.languages.language[x].yearsofstudy.xmlText#">
+                    where studentid = 
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#getISEStudentID.studentid#">
+            </Cfquery>
+        <cfelse>
+            <cfquery datasource="#application.dsn#">
+            insert into smg_student_app_language (studentid, languageid, isPrimary, dateCreated, dateModified)
+                        values (#getISEStudentID.studentid#, #getLangFieldID.fieldid#, #curIangPrim#, #CreateODBCDate(now())#, #CreateODBCDate(now())#)
+            </cfquery>
+        </Cfif>
+        
+  <br />
+    </cfloop>
+
+        
         <!----Other Interests---->
         <!----Years Studied English---->
        
@@ -160,7 +195,6 @@ UPDATE smg_students
         </cfif>
         band = <cfif #StudentXMLFile.applications.application[i].page2.musicalinstrument.XmlText# is ''>'no'<cfelse>'yes'</cfif>,
 		chores_list = '#StudentXMLFile.applications.application[i].page2.householdresponsibilities.XmlText#',
-		yearsenglish = <cfif yrs_study_english is not ''> #yrs_study_english#<cfelse>null</cfif>,
 		religious_participation = '#ind_religious_part#',
 		app_region_guarantee = #app_region_guarantee#,
         app_other_interest = '#list_participate_activities#'
