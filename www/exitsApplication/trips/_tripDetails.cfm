@@ -81,8 +81,7 @@
                         <tr>
                             <td width="28%" height="62" align="center">
                                 <span class="TitlesLG">#APPLICATION.CFC.UDF.TextAreaTripOutput(qGetTourDetails.tour_name)#</span><br />
-                        
-                                <span class="SubTitle">#LSCurrencyFormat(APPLICATION.CFC.UDF.TextAreaTripOutput(qGetTourDetails.tour_price), 'local')#</span>
+                                <span class="SubTitle">#LSCurrencyFormat(APPLICATION.CFC.UDF.TextAreaTripOutput(qGetTourDetails.tour_price))#</span>
                             </td>
                             <td width="42%">
                                 <span class="SubTitleLG">#qGetTourDetails.tour_date#</span><br />
