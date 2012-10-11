@@ -140,6 +140,13 @@
         <!--- No Errors Found --->
         <cfif NOT SESSION.formErrors.length()>
         	
+            <cfscript>
+				// Calculate Total Cost
+				vTotalRegistrations = 1 + listLen(hostChildSelectedList);
+			
+				vTotalCost = qGetTourDetails.tour_price * vTotalRegistrations;
+			</cfscript>
+            
 			<!--- Check if we need to update/insert record --->
             <cfif VAL(qGetStudentPendingRegistration.ID)>
             
@@ -149,6 +156,7 @@
                         student_tours
                     SET
                         tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetTourDetails.tour_ID)#">,
+                        totalCost = <cfqueryparam cfsqltype="cf_sql_float" value="#vTotalCost#">,
                         nationality = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.shareRoomNationality#">,
                         stunationality = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetStudentInfo.countryName#">,
                         person1 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.shareRoomPerson1#">, 
@@ -171,6 +179,7 @@
                         studentID, 
                         tripID,
                         companyID,
+                        totalCost,
                         nationality,
                         stunationality,
                         person1, 
@@ -186,6 +195,7 @@
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetTourDetails.tour_ID)#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.companyID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_float" value="#vTotalCost#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.shareRoomNationality#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetStudentInfo.countryName#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.shareRoomPerson1#">,
@@ -434,16 +444,28 @@
                 <td class="tripFormField" width="70%">#APPLICATION.CFC.UDF.TextAreaTripOutput(qGetTourDetails.tour_name)# <a href="#CGI.SCRIPT_NAME#" style="float:right; padding-right:15px;">[ Change Trip ] </a></td>
             </tr>
             <tr>
-                <td class="tripFormTitle">Cost:</td>
-                <td class="tripFormField">
-                    #LSCurrencyFormat(APPLICATION.CFC.UDF.TextAreaTripOutput(qGetTourDetails.tour_price), 'local')#
-                    <em class="tripNotesRight">Per person - Does not include your round trip airline ticket)</em>
-                </td>
-            </tr>
-            <tr class="blueRow">
                 <td class="tripFormTitle">Dates:</td>
                 <td class="tripFormField">#qGetTourDetails.tour_date# - #qGetTourDetails.tour_length#</td>
             </tr>
+            <tr class="blueRow">
+                <td class="tripFormTitle">Cost:</td>
+                <td class="tripFormField">
+                    #LSCurrencyFormat(APPLICATION.CFC.UDF.TextAreaTripOutput(qGetTourDetails.tour_price))# 
+                    <em class="tripNotesRight">Per person - Does not include your round trip airline ticket</em>
+                </td>
+            </tr>
+            <cfif qGetTourDetails.chargeType EQ 'deposit'>
+                <tr>
+                    <td class="tripFormTitle">Deposit:</td>
+                    <td class="tripFormField">
+                        #LSCurrencyFormat(100)# 
+                        <em class="tripNotesRight">*** Deposit Due Immediately ***</em>
+                        <em class="tripNotesRight">
+                            Remaining balance will be charged to the same credit card 60 days prior to the trip. If credit card used changes please notify MPD Tours America with new information
+                        </em>
+                    </td>
+                </tr>
+            </cfif>
         </table>
         
                             

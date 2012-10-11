@@ -412,13 +412,14 @@
 			vGetCustomerProfileID = qGetCustomerProfileID.authorizeNetProfileID;
 		
 			// customer is not registered with Authorize.net / register customer / update customerProfileID in customer table
-			if ( NOT VAL(vGetCustomerProfileID) ) {
+			if ( vGetCustomerProfileID EQ 0 ) {
 				
 				// Register Student/Customer
 				vGetCustomerProfileID = createCustomerProfile(
 					customerID = ARGUMENTS.customerID, 
 					email = qGetCustomerProfileID.email,
-					companyID = ARGUMENTS.companyID
+					companyID = ARGUMENTS.companyID,
+					studentName = "#qGetCustomerProfileID.firstName# #qGetCustomerProfileID.familyLastName#"
 				);
 				
 			}
@@ -433,18 +434,25 @@
 		<cfargument name="customerID" displayName="CustomerID / StudentID" type="numeric" hint="CustomerID / StudentID" required="true" />
 		<cfargument name="email" displayName="Customer Email" type="string" hint="Customer Email" default="" />
 		<cfargument name="companyID" displayName="companyID" default="1" type="numeric" hint="companyID" />
+        <cfargument name="studentName" displayname="Student Name" default="">
         
         <cfscript>
 			var resultCode = '';
 			var resultMessage = '';
 			var resultMessageCode = '';
 			var customerProfileID = 0;
-			
-			vDescription = "ISE Student";
-			
+						
+			// Set Description
 			if ( ARGUMENTS.companyID EQ 10 ) {
 				vDescription = "CASE Student";
-			} 
+			} else {
+				vDescription = "ISE Student";
+			}
+			
+			// Insert Student Name
+			if ( LEN(ARGUMENTS.studentName) ) {
+				vDescription = vDescription & " - " & ARGUMENTS.studentName;
+			}
 		</cfscript>
         
         <cfoutput>	
@@ -456,7 +464,7 @@
                     </merchantAuthentication>
                     <profile>
                         <merchantCustomerId>#TRIM(ARGUMENTS.customerID)#</merchantCustomerId>
-                        <description>#vDescription#</description>
+                        <description>#TRIM(vDescription)#</description>
                         <email>#TRIM(ARGUMENTS.email)#</email>
                     </profile>
                 </createCustomerProfileRequest>

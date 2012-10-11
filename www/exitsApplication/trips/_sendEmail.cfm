@@ -49,6 +49,7 @@
         
 	</cfdocument>
 
+
     <!--- Email to Student --->    
     <cfsavecontent variable="stuEmailMessage">
         <p>		
@@ -91,34 +92,49 @@
         </p>
     </cfsavecontent>   
     
+    <cfscript>
+		// Make sure we have a valid email address
+		if ( IsValid("email", qGetRegistrationDetails.email) ) {
+			vSetEmailTo = qGetRegistrationDetails.email;
+		} else {
+			vSetEmailTo = APPLICATION.EMAIL.trips;
+		}
+	</cfscript>
+    
     <cfinvoke component="extensions.components.email" method="sendEmail">
         <cfinvokeargument name="email_from" value="<#APPLICATION.MPD.email#> (#SESSION.COMPANY.shortName# Trip Support)">
-    	<cfinvokeargument name="email_to" value="#qGetRegistrationDetails.email#">
+    	<cfinvokeargument name="email_to" value="#vSetEmailTo#">
         <cfinvokeargument name="email_bcc" value="#APPLICATION.EMAIL.trips#">
         <cfinvokeargument name="email_subject" value="Your #qGetTourDetails.tour_name# Trip Details">
         <cfinvokeargument name="email_message" value="#stuEmailMessage#">
         <cfinvokeargument name="email_file" value="#APPLICATION.PATH.TEMP#permissionForm_#VAL(qGetStudentInfo.studentID)#.pdf">
         <cfinvokeargument name="email_file2" value="#APPLICATION.PATH.tour##qGetTourDetails.packetfile#">
     </cfinvoke>	
+    <!--- End of Email to Student --->
+    
     
     <!--- Email to Manager --->
-    <cfsavecontent variable="repEmailMessage">
-        #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#) has registered to go on the #qGetTourDetails.tour_name# tour.<br /><br />
-        
-        Dates: #DateFormat(qGetTourDetails.tour_start, 'mmm d, yyyy')# - #DateFormat(qGetTourDetails.tour_end, 'mmm d, yyyy')#
-        
-        If you feel that #qGetStudentInfo.firstname# should NOT be going on this trip, please notify us by using this 
-        <a href="#SESSION.COMPANY.exitsURL#/nsmg/index.cfm?curdoc=tours/hold&studentID=#qGetStudentInfo.studentid#&tripID=#qGetTourDetails.tour_id#">form</a> 
-        (you will need to be logged into follow the link)
-    </cfsavecontent>
+    <cfif IsValid("email", qGetRegionalManager.email)>
     
-    <cfinvoke component="extensions.components.email" method="sendEmail">
-        <cfinvokeargument name="email_from" value="<#APPLICATION.MPD.email#> (#SESSION.COMPANY.shortName# Trip Support)">
-        <cfinvokeargument name="email_to" value="#qGetRegionalManager.email#">
-        <cfinvokeargument name="email_bcc" value="#APPLICATION.EMAIL.trips#">
-        <cfinvokeargument name="email_subject" value="Student Trip Registration #qGetTourDetails.tour_name# - #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)">
-        <cfinvokeargument name="email_message" value="#repEmailMessage#">
-    </cfinvoke>	
+        <cfsavecontent variable="repEmailMessage">
+            #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#) has registered to go on the #qGetTourDetails.tour_name# tour.<br /><br />
+            
+            Dates: #DateFormat(qGetTourDetails.tour_start, 'mmm d, yyyy')# - #DateFormat(qGetTourDetails.tour_end, 'mmm d, yyyy')#
+            
+            If you feel that #qGetStudentInfo.firstname# should NOT be going on this trip, please notify us by using this 
+            <a href="#SESSION.COMPANY.exitsURL#/nsmg/index.cfm?curdoc=tours/hold&studentID=#qGetStudentInfo.studentid#&tripID=#qGetTourDetails.tour_id#">form</a> 
+            (you will need to be logged into follow the link)
+        </cfsavecontent>
+        
+        <cfinvoke component="extensions.components.email" method="sendEmail">
+            <cfinvokeargument name="email_from" value="<#APPLICATION.MPD.email#> (#SESSION.COMPANY.shortName# Trip Support)">
+            <cfinvokeargument name="email_to" value="#qGetRegionalManager.email#">
+            <cfinvokeargument name="email_bcc" value="#APPLICATION.EMAIL.trips#">
+            <cfinvokeargument name="email_subject" value="Student Trip Registration #qGetTourDetails.tour_name# - #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)">
+            <cfinvokeargument name="email_message" value="#repEmailMessage#">
+        </cfinvoke>	
+	</cfif>
+    <!--- End of Email to Manager --->
 
 
     <!--- Email to MPD --->
@@ -135,5 +151,6 @@
         <cfinvokeargument name="email_subject" value="Student Trip Registration #qGetTourDetails.tour_name# - #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)">
         <cfinvokeargument name="email_message" value="#mpdEmailMessage#">
     </cfinvoke>	
+    <!--- End of Email to MPD --->
 
 </cfoutput>

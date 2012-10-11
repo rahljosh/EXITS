@@ -18,6 +18,7 @@
     <cfquery name="qGetRegistrationDetails" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	st.ID,
+            st.totalCost,
             st.stunationality,
             st.email,
             st.nationality,
@@ -81,10 +82,19 @@
 			applicationPaymentID = 0
 		);	
 	</cfscript>
+
+    <!--- Try to send out all email notifications MPD | Student | Regional Manager --->
+    <cftry>
+	
+		<!--- Email Student the Permission Form and Student Packet --->
+        <cfinclude template="_sendEmail.cfm">
+	
+        <cfcatch type="any">
+			<!--- Do Nothing --->    
+        </cfcatch>        
     
-    <!--- Email Student the Permission Form and Student Packet --->
-    <cfinclude template="_sendEmail.cfm">
-    
+    </cftry>
+
 </cfsilent>
     
 <cfoutput>
@@ -102,11 +112,8 @@
             <td class="tripFormField" width="70%">#APPLICATION.CFC.UDF.TextAreaTripOutput(qGetTourDetails.tour_name)#</td>
         </tr>
         <tr>
-            <td class="tripFormTitle">Total Cost:</td>
-            <td class="tripFormField">
-                #LSCurrencyFormat(qGetRegistrationDetails.amount)#
-                <em class="tripNotesRight">#LSCurrencyFormat(qGetTourDetails.tour_price)# Per person - Does not include your round trip airline ticket</em>
-            </td>
+            <td class="tripFormTitle">Dates:</td>
+            <td class="tripFormField">#qGetTourDetails.tour_date# - #qGetTourDetails.tour_length#</td>
         </tr>
         <tr class="blueRow">
             <td class="tripFormTitle">Number of Registrations:</td>
@@ -118,9 +125,28 @@
             </td>
         </tr>
         <tr>
-            <td class="tripFormTitle">Dates:</td>
-            <td class="tripFormField">#qGetTourDetails.tour_date# - #qGetTourDetails.tour_length#</td>
+            <td class="tripFormTitle">Total Cost:</td>
+            <td class="tripFormField">
+                #LSCurrencyFormat(qGetRegistrationDetails.totalCost)#
+                <em class="tripNotesRight">#LSCurrencyFormat(qGetTourDetails.tour_price)# Per person - Does not include your round trip airline ticket</em>
+            </td>
         </tr>
+        <!--- Deposit Only --->
+        <cfif qGetTourDetails.chargeType EQ 'deposit'>
+            <tr class="blueRow">
+                <td class="tripFormTitle">Deposit:</td>
+                <td class="tripFormField">#LSCurrencyFormat(100)#</td>
+            </tr>
+            <tr>
+                <td class="tripFormTitle">Remaining Balance:</td>
+                <td class="tripFormField">
+                    #LSCurrencyFormat(qGetRegistrationDetails.totalCost - qGetRegistrationDetails.amount)#
+                    <em class="tripNotesRight">
+                        Remaining balance will be charged to the same credit card 60 days prior to the trip. If credit card used changes please notify MPD Tours America with new information
+                    </em>
+                </td>
+            </tr>
+        </cfif>
     </table>
     
     
@@ -171,8 +197,8 @@
             <td class="tripFormField" width="70%">#LSCurrencyFormat(qGetRegistrationDetails.amount)#</td>
         </tr>
         <tr class="blueRow">
-            <td class="tripFormTitle" width="30%">Transaction ID:</td>
-            <td class="tripFormField" width="70%">#qGetRegistrationDetails.authTransactionID#</td>
+            <td class="tripFormTitle">Transaction ID:</td>
+            <td class="tripFormField">#qGetRegistrationDetails.authTransactionID#</td>
         </tr>                    
         <tr>
             <td class="tripFormTitle">Name on Credit Card:</td>

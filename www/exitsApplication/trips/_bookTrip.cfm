@@ -138,8 +138,15 @@
 		// Total Students and siblings
 		vTotalRegistrations = VAL(vTotalMaleRegistering) + VAL(vTotalFemaleRegistering);
     
-		// Set Total Price	
-		vTotalDue = qGetTourDetails.tour_price * vTotalRegistrations;
+		// Set Total Cost	
+		vTotalCost = qGetTourDetails.tour_price * vTotalRegistrations;
+		
+		// Set Total Due
+		if ( qGetTourDetails.chargeType EQ 'deposit' ) {
+			vTotalDue = 100;
+		} else {
+			vTotalDue = vTotalCost;
+		}
 		
 		// Check trip availability
 		vIsTripFull = 0;
@@ -463,6 +470,11 @@
                     	student_tours
 					SET
                     	paid = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
+						<cfif qGetTourDetails.chargeType EQ 'deposit'>
+                            dateDepositPaid = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                        <cfelse>
+                            dateFullyPaid = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                        </cfif>
                         active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                     WHERE
                         ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentPendingRegistration.ID)#"> 
@@ -515,6 +527,7 @@
     <cfelse>
     	
         <cfscript>
+			// Set Total Due
 			FORM.totalDue = vTotalDue;
 			
 			// Pre Populate Field 
@@ -583,7 +596,7 @@
 	
 		$( "#dialog-paymentConfirmation-confirm" ).dialog({
 			resizable: false,
-			height:300,
+			height:350,
 			width:400,
 			modal: true,
 			buttons: {
@@ -609,10 +622,10 @@
     <div id="dialog-paymentConfirmation-confirm" title="Submit Payment" class="displayNone" style="font-size:1em;"> 
         <p>
         	<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 0 0;"></span>
-        	Your credit card will be charged a total of #LSCurrencyFormat(FORM.totalDue)# for this trip.
+        	Your credit card will be charged a total of <strong>#LSCurrencyFormat(FORM.totalDue)#</strong> for this trip
         </p> 
         <p>
-        	Processing your credit card might take up to a minute, please do not resubmit this page.
+        	<strong>Processing your credit card might take up to a minute, please DO NOT resubmit this page</strong>
 		</p>
     </div> 
     
@@ -640,11 +653,8 @@
                 <td class="tripFormField" width="70%">#APPLICATION.CFC.UDF.TextAreaTripOutput(qGetTourDetails.tour_name)#</td>
             </tr>
             <tr>
-                <td class="tripFormTitle">Total Amount Due:</td>
-                <td class="tripFormField">
-                    <span class="totalDue">#LSCurrencyFormat(FORM.totalDue)#</span>
-                    <em class="tripNotesRight">#LSCurrencyFormat(qGetTourDetails.tour_price)# Per person - Does not include your round trip airline ticket</em>
-                </td>
+                <td class="tripFormTitle">Dates:</td>
+                <td class="tripFormField">#qGetTourDetails.tour_date# - #qGetTourDetails.tour_length#</td>
             </tr>
             <tr class="blueRow">
                 <td class="tripFormTitle">Number of Registrations:</td>
@@ -655,10 +665,43 @@
                     </cfif>
                 </td>
             </tr>
-            <tr>
-                <td class="tripFormTitle">Dates:</td>
-                <td class="tripFormField">#qGetTourDetails.tour_date# - #qGetTourDetails.tour_length#</td>
-            </tr>
+            <cfif qGetTourDetails.chargeType EQ 'deposit'>
+                <tr>
+                    <td class="tripFormTitle">Total Cost:</td>
+                    <td class="tripFormField">
+                        #LSCurrencyFormat(vTotalCost)#
+                        <em class="tripNotesRight">#LSCurrencyFormat(qGetTourDetails.tour_price)# Per person - Does not include your round trip airline ticket</em>
+                    </td>
+                </tr>
+                <tr class="blueRow">
+                    <td class="tripFormTitle">Total Due Now:</td>
+                    <td class="tripFormField">
+                        <cfif qGetTourDetails.chargeType EQ 'deposit'>
+                            <span class="totalDue">#LSCurrencyFormat(FORM.totalDue)#</span>
+                            <em class="tripNotesRight">*** Deposit Only ***</em>
+                        <cfelse>
+                            <span class="totalDue">#LSCurrencyFormat(FORM.totalDue)#</span>
+                        </cfif>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tripFormTitle">Remaining Balance:</td>
+                    <td class="tripFormField">
+                        #LSCurrencyFormat(vTotalCost - FORM.totalDue)#
+                        <em class="tripNotesRight">
+                            Remaining balance will be charged to the same credit card 60 days prior to the trip. If credit card used changes please notify MPD Tours America with new information
+                        </em>
+                    </td>
+                </tr>
+			<cfelse>
+                <tr>
+                    <td class="tripFormTitle">Total Cost:</td>
+                    <td class="tripFormField">
+                        <span class="totalDue">#LSCurrencyFormat(vTotalCost)#</span>
+                        <em class="tripNotesRight">#LSCurrencyFormat(qGetTourDetails.tour_price)# Per person - Does not include your round trip airline ticket</em>
+                    </td>
+                </tr>
+            </cfif>
         </table>                
         
         <!--- Trip Not Full --->
