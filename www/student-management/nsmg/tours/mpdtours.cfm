@@ -67,7 +67,7 @@
             LEFT OUTER JOIN
                 student_tours st ON st.tripID = t.tour_ID
                     AND
-                        st.paid IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                        st.paid IS NOT NULL
                     AND
                         st.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
             LEFT OUTER JOIN	
@@ -98,19 +98,19 @@
             INNER JOIN	
                 student_tours_siblings sts ON sts.tripID = t.tour_ID
                     AND
-                        sts.paid IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                        sts.paid IS NOT NULL
             LEFT OUTER JOIN
                 smg_host_children hMale ON hMale.childID = sts.siblingID
                     AND
                         hMale.sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="male">
                     AND
-                        hMale.childID IN ( SELECT siblingID FROM student_tours_siblings WHERE paid IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes"> )
+                        hMale.childID IN ( SELECT siblingID FROM student_tours_siblings WHERE paid IS NOT NULL )
             LEFT OUTER JOIN
                 smg_host_children hFemale ON hMale.childID = sts.siblingID
                     AND
                         hFemale.sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="female">
                     AND
-                        hFemale.childID IN ( SELECT siblingID FROM student_tours_siblings WHERE paid IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes"> )
+                        hFemale.childID IN ( SELECT siblingID FROM student_tours_siblings WHERE paid IS NOT NULL )
             WHERE
                 t.tour_status = <cfqueryparam cfsqltype="cf_sql_varchar" value="active" >
                         
@@ -139,18 +139,23 @@
                 stu.uniqueID, 
                 stu.sex,
                 c.companyshort_nocolor,
-                ap.authTransactionID,
-                ap.amount
-            FROM 
-            	student_tours st
-            INNER JOIN
-            	smg_students stu on stu.studentID = st.studentID
-            INNER JOIN
-            	applicationPayment ap ON ap.foreignID = st.ID
+                <!--- Get a sum of multiple payments (deposit + balance) --->
+                ( 
+                	SELECT 
+                		sum(amount)
+                  	FROM
+                  		applicationPayment ap
+                    WHERE
+                    	ap.foreignID = st.ID
                 	AND
                     	ap.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student_tours">
                     AND	
                         authIsSuccess = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                ) AS totalReceived	
+            FROM 
+            	student_tours st
+            INNER JOIN
+            	smg_students stu on stu.studentID = st.studentID
             INNER JOIN
             	smg_tours on smg_tours.tour_id = st.tripid
             LEFT JOIN 
@@ -164,25 +169,48 @@
                     AND
                     	st.active = <cfqueryparam cfsqltype="cf_sql_varchar" value="1">
                     AND
-                    	st.paid IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                    	st.paid IS NOT NULL
                 </cfcase>
                 
+                <cfcase value="pendingBalance">
+                    AND
+                    	st.dateDepositPaid IS NOT NULL
+                    AND
+                    	st.dateFullyPaid IS NULL
+                </cfcase>
+
+                <cfcase value="fullyPaid">
+                    AND
+                    	st.dateFullyPaid IS NOT NULL
+                </cfcase>
+
                 <cfcase value="pending">
                     AND
                     	st.active = <cfqueryparam cfsqltype="cf_sql_varchar" value="1">
-                    AND	
-                    	ap.paymentMethodID = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
                     AND
-                    	st.paid IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                    	st.paid IS NULL
+                    AND
+                    	st.ID IN (
+                        	SELECT
+                            	foreignID
+                            FROM
+                            	applicationPayment
+                            WHERE	
+                                foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student_tours">
+                            AND	
+                                authIsSuccess = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                            AND
+                            	paymentMethodID = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
+                        )  
                 </cfcase>
                 
                 <cfcase value="canceled">
                     AND
-                    	st.dateCanceled IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                    	st.dateCanceled IS NOT NULL
                     <!---	
                         st.active = <cfqueryparam cfsqltype="cf_sql_varchar" value="0">
                     AND
-                    	st.paid IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                    	st.paid IS NOT NULL
                      --->   
                 </cfcase>  
 			
@@ -208,10 +236,10 @@
             
             <cfif permissionForm EQ 1>
             	AND 
-                	st.permissionForm IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                	st.permissionForm IS NOT NULL
             <cfelseif permissionForm EQ 0>
             	AND 
-                	st.permissionForm IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                	st.permissionForm IS NULL
             </cfif>
 
        		ORDER BY 
@@ -270,8 +298,10 @@
                 </td>
                 <td>
                     Status<br />
-                    <select name="studentStatus" class="mediumField">
+                    <select name="studentStatus" class="largeField">
                         <option value="registered" <cfif studentStatus EQ 'registered'>selected</cfif>>Registered</option>
+                        <option value="pendingBalance" <cfif studentStatus EQ 'pendingBalance'>selected</cfif>>Pending Balance Payment</option>
+                        <option value="fullyPaid" <cfif studentStatus EQ 'fullyPaid'>selected</cfif>>Fully Paid</option>
                         <option value="pending" <cfif studentStatus EQ 'pending'>selected</cfif>>Pending Payment</option>
                         <option value="canceled" <cfif studentStatus EQ 'canceled'>selected</cfif>>Cancelled</option>
                     </select>            
@@ -339,9 +369,9 @@
                     <td align="center">Gender</td>
                     <td align="center">Host Siblings</td>
                     <td>Tour</td>
-                    <td>Paid</td>                     
-                    <td>Total</td>                   
-                    <td>Transaction ID</td>
+                    <td>Total Cost</td>
+                    <td>Total Received</td>
+                    <td align="center">Registered On</td>   
                     <td>Permission</td>
                     <td>Arrival Flight</td>
                     <td>Departure Flight</td>
@@ -393,7 +423,7 @@
                        
                         <cfif studentStatus NEQ 'pending'>
                             AND 
-                                paid IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                                paid IS NOT NULL
                         </cfif>
                         
                         AND 
@@ -407,9 +437,15 @@
                         <td align="center">#UCase(Left(qGetResults.sex, 1))#</td>
                         <td align="center"><cfif qGetTotalSiblings.recordCount>#qGetTotalSiblings.recordCount#</cfif></td>
                         <td>#qGetResults.tour_name#</td>
-                        <td><cfif IsDate(qGetResults.paid)>#DateFormat(qGetResults.paid)#</cfif></td>
-                        <td>#DollarFormat(qGetResults.amount)#</td>
-                        <td>#qGetResults.authTransactionID#</td>
+                        <td>#DollarFormat(qGetResults.totalCost)#</td>
+						<td>
+                        	<cfif qGetResults.totalCost EQ qGetResults.totalReceived>
+                            	<span style="color:##00F; font-weight:bold;">#DollarFormat(qGetResults.totalReceived)#</span>
+                            <cfelse>                          
+	                            <span style="color:##F00; font-weight:bold;">#DollarFormat(qGetResults.totalReceived)#</span>
+                            </cfif>
+                        </td>                       
+                        <td align="center">#dateFormat(qGetResults.dateCreated, 'mm/dd/yyyy')#</td>
                         <td><cfif IsDate(qGetResults.permissionForm)>#DateFormat(qGetResults.permissionForm)#</cfif></td>
                         <td><cfif LEN(qGetArrivalFlight.departDate)>#DateFormat(qGetArrivalFlight.departDate)#<cfelse>No</cfif></td>
                         <td><cfif LEN(qGetDepartureFlight.departDate)>#DateFormat(qGetDepartureFlight.departDate)#<cfelse>No</cfif></td>

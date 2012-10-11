@@ -50,8 +50,8 @@
     <table width="100%" align="center" cellpadding="3" cellspacing="2" class="section">
         <tr>
             <td>
-                <font size=-1><b>Total Tours: </b> #qGetTourList.recordcount#</font><br /><br />
-                Use the tag <b>!company!</b> instead of the company name. It will be changed automatically.<br />
+                <font size=-1><strong>Total Tours: </strong> #qGetTourList.recordcount#</font><br /><br />
+                Use the tag <strong>!company!</strong> instead of the company name. It will be changed automatically.<br />
             </td>
             <td align="right">
             	<cfif URL.status NEQ 'all'>
@@ -81,12 +81,16 @@
 	<cfloop query="qGetTourList">
         <table width="100%" align="center" cellpadding="3" cellspacing="2" class="section">
             <tr <cfif qGetTourList.packetfile is ''>bgcolor="##FFCCCC"</cfif>>
-                <td width="120"><img src="../nsmg/uploadedfiles/student-tours/#qGetTourList.tour_img2#.jpg" width="100px" height="100px" /></td>
+                <td width="120">
+                	<a href="?curdoc=tours/student-tours/tourDetails&tour_id=#qGetTourList.tour_id#"><img src="../nsmg/uploadedfiles/student-tours/#qGetTourList.tour_img2#.jpg" width="100px" height="100px" /></a>
+                </td>
                 <td>
-                    <b><u>#qGetTourList.tour_name#</u></b> <br />
-                    <b>Status:</b> #qGetTourList.tour_status#<br />
-                    <b>Date:</b> #qGetTourList.tour_date#<br />
-                    <b>Packet File:</b> <Cfif qGetTourList.packetfile is ''>NO FILE ON RECORD<cfelse>#packetfile#</Cfif>
+                    <strong><u><a href="?curdoc=tours/student-tours/tourDetails&tour_id=#qGetTourList.tour_id#">#qGetTourList.tour_name#</a></u></strong> <br />
+                    <strong>Status:</strong> #qGetTourList.tour_status#<br />
+                    <strong>Date:</strong> #qGetTourList.tour_date#<br />
+                    <strong>Price:</strong> #DollarFormat(qGetTourList.tour_price)#<br />
+                    <strong>Charge Type:</strong> #qGetTourList.chargeType#<br />
+                    <strong>Packet File:</strong> <Cfif qGetTourList.packetfile is ''>NO FILE ON RECORD<cfelse>#packetfile#</Cfif>
                 </td>
                 <td width="10%"><div align="center"><a href="?curdoc=tours/student-tours/tourDetails&tour_id=#qGetTourList.tour_id#"><img src="pics/edit.gif" border="0" /></a></div></td>
             </tr>

@@ -23,6 +23,7 @@
     <cfparam name="FORM.tour_ID" default="0">
     <cfparam name="FORM.tour_name" default="">
     <cfparam name="FORM.tour_date" default="">
+    <cfparam name="FORM.chargeType" default="Deposit">
     <cfparam name="FORM.tour_price" default="">
     <cfparam name="FORM.totalSpots" default="">
     <cfparam name="FORM.spotLimit" default="">
@@ -146,6 +147,7 @@
             SET 
             	tour_name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.tour_name#">, 
                 tour_date = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.tour_date#">, 
+                chargeType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.chargeType#">,
                 tour_price = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.tour_price#">, 
                 totalSpots = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.totalSpots)#">,
                 spotLimit = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.spotLimit)#">, 
@@ -179,6 +181,7 @@
 			// DEFAULT FORM VARIABLES
 			FORM.tour_name = qGetTripDetails.tour_name;
 			FORM.tour_date = qGetTripDetails.tour_date;
+			FORM.chargeType = qGetTripDetails.chargeType;
 			FORM.tour_price = qGetTripDetails.tour_price;
 			FORM.totalSpots = qGetTripDetails.totalSpots;
 			FORM.spotLimit = qGetTripDetails.spotLimit;
@@ -259,6 +262,15 @@
                 <td valign="top">
                 	<cfinput type="text" name="tour_price" message="Enter only numbers for the price.  Do not inlcude $" validate="integer" required="yes" value="#FORM.tour_price#" class="smallField"> 
             		DO NOT PUT $
+                </td>
+            </tr>
+            <tr>
+                <td valign="top" align="right"><b>Charge Type:</b></div></td>
+                <td valign="top">
+                	<select name="chargeType" id="chargeType" class="largeField">
+						<option value="deposit" <cfif FORM.chargeType EQ 'deposit'> selected="selected" </cfif> >$100 Deposit + Full Payment</option> 
+                        <option value="full" <cfif FORM.chargeType EQ 'full'> selected="selected" </cfif> >Full Payment</option>                    
+                    </select>
                 </td>
             </tr>
             <tr>

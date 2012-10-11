@@ -16,6 +16,7 @@
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 
     <!--- Param URL Variables --->
+    <cfparam name="URL.action" default="">
     <cfparam name="URL.studentID" default="0">
     <cfparam name="URL.tripID" default="0">
 
@@ -40,7 +41,7 @@
 		
 		if ( VAL(URL.tripID) ) {
 			FORM.tripID = URL.tripID;	
-		}
+		}	
 	</cfscript>
     
     <cfquery name="qGetRegistrationInfo" datasource="#APPLICATION.DSN#">
@@ -48,6 +49,9 @@
         	td.*,
         	st.id, 
             st.tripID,
+            st.totalCost,
+            st.dateDepositPaid,
+            st.dateFullyPaid,
             st.med,
             st.date, 
             st.paid, 
@@ -64,7 +68,6 @@
             st.refundAmount,
             st.refundNotes,
             ap.ID AS applicationPaymentID,
-            ap.authTransactionID,
             ap.amount,            
             s.studentID,
             s.companyID, 
@@ -81,7 +84,20 @@
             h.city as hostCity, 
             h.state as hostState,
             h.address as hostAddress,
-            h.zip as hostZip
+            h.zip as hostZip,
+			<!--- Get a sum of multiple payments (deposit + balance) --->
+            ( 
+                SELECT 
+                    sum(amount)
+                FROM
+                    applicationPayment ap
+                WHERE
+                    ap.foreignID = st.ID
+                AND
+                    ap.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student_tours">
+                AND	
+                    authIsSuccess = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+            ) AS totalReceived	
         FROM 
         	student_tours st
         INNER JOIN
@@ -101,6 +117,19 @@
         AND	
             st.tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.tripID)#">
     </cfquery>
+    
+    <cfquery name="qGetPaymentHistory" datasource="#APPLICATION.DSN#">
+    	SELECT
+            ap.*     
+        FROM
+	        applicationPayment ap
+        WHERE
+            ap.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student_tours">
+        AND	
+            ap.authIsSuccess = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+        AND
+        	ap.foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegistrationInfo.ID#">
+	</cfquery>   
     
     <cfquery name="qGetDepartureFlightInformation" datasource="#APPLICATION.DSN#">
     	SELECT
@@ -255,6 +284,7 @@
             <cfelse>
             
                 <cfscript>
+					// Error Message
 					SESSION.formErrors.Add("Please provide a valid email address");
 				</cfscript>
                 
@@ -352,8 +382,101 @@
         
         </cfcase>
         
+        <!--- Authorize.net Submit Payment --->
+        <cfcase value="authorizeNetPayment">
+        
+			<cfscript> 
+				// Create Component Object
+				cfcPaymentGateway = CreateCFC("paymentGateway").Init();
+				
+				// Try to process payment
+				try {
+
+					// credit card authorization and capture
+					stProcessPayment = cfcPaymentGateway.CIMauthorizeAndCapture (
+						customerProfileId = cfcPaymentGateway.getCustomerProfileID(customerID=VAL(FORM.studentID),companyID=CLIENT.companyID),
+						customerPaymentProfileId = TRIM(FORM.authorizeNetPaymentID),														   
+						orderNumber = '##' & Year(now()) & '-' & qGetRegistrationInfo.ID,	
+						invoiceNumber = '##' & Year(now()) & '-' & qGetRegistrationInfo.ID,	 
+						amount = TRIM(FORM.amount),
+						// ApplicationPayment Table					
+						foreignID=qGetRegistrationInfo.ID,
+						paymentMethodID=qGetPaymentHistory.paymentMethodID,
+						paymentMethodType=qGetPaymentHistory.paymentMethodType,
+						creditCardTypeID=qGetPaymentHistory.creditCardTypeID,
+						creditCardType=qGetPaymentHistory.creditCardType,
+						nameOnCard=qGetPaymentHistory.nameOnCard,
+						lastDigits=qGetPaymentHistory.lastDigits,
+						expirationMonth=qGetPaymentHistory.expirationMonth,
+						expirationYear=qGetPaymentHistory.expirationYear,
+						billingFirstName=qGetPaymentHistory.billingFirstName,
+						billingLastName=qGetPaymentHistory.billingLastName,
+						billingCompany=qGetPaymentHistory.billingCompany,
+						billingAddress=qGetPaymentHistory.billingAddress,
+						billingCity=qGetPaymentHistory.billingCity,
+						billingState=qGetPaymentHistory.billingState,
+						billingZipCode=qGetPaymentHistory.billingZipCode,
+						billingCountryID=qGetPaymentHistory.billingCountryID
+					);															
+					
+					// Transaction Approved
+					if ( stProcessPayment.authIsSuccess ) {
+						// Successfull Message
+						SESSION.pageMessages.Add(stProcessPayment.resultMessage);
+					// Transaction Denied
+					} else {
+						// Error Message
+						SESSION.formErrors.Add(stProcessPayment.resultMessage);
+					}
+					
+				} catch(Any excpt) {
+					// Could Not Process the Transaction
+					SESSION.formErrors.Add(excpt.Message);
+				}
+            </cfscript>
+			
+            <!--- Get Total Paid --->
+            <cfquery name="qGetTotalPaid" datasource="#APPLICATION.DSN#">
+                SELECT
+                    SUM(Amount) AS totalReceived     
+                FROM
+                    applicationPayment ap
+                WHERE
+                    ap.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student_tours">
+                AND	
+                    ap.authIsSuccess = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                AND
+                    ap.foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegistrationInfo.ID#">
+            </cfquery>   
+
+			<!--- Set Trip as Fully Paid --->
+            <cfif NOT isDate(qGetRegistrationInfo.dateFullyPaid) AND qGetRegistrationInfo.totalCost EQ qGetTotalPaid.totalReceived>
+
+                <cfquery datasource="#APPLICATION.DSN#">
+                    UPDATE
+                        student_tours
+                    SET
+                        dateFullyPaid = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                    WHERE
+                        ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegistrationInfo.ID#">		
+                </cfquery>
+                
+                <cfscript>
+                    SESSION.pageMessages.Add("Trip Fully Paid");
+                </cfscript>
+        
+            </cfif>
+            
+			<cfscript>
+				// Refresh Page
+                Location("#CGI.SCRIPT_NAME#?curdoc=tours/profile&studentID=#FORM.studentID#&tripID=#FORM.tripID#", "no");
+            </cfscript>
+        
+        </cfcase>
+        
+        
 		<!--- Payment Trip --->
-        <cfcase value="payTrip">
+        <cfcase value="manualPayment">
 
 			<cfscript>
                 if ( NOT IsDate(FORM.datePaid) ) {
@@ -551,7 +674,6 @@
 <script type="text/javascript" src="../nsmg/student_info.js"></script>
 
 <script type="text/javascript">
-
 	$(document).ready(function() {
 							   
 		$(".jQueryModalPL").colorbox( {
@@ -573,11 +695,37 @@
 	
 	// Display Payment Form
 	var displayPaymentForm = function() { 
-		$("#paymentForm").fadeIn();	
+		$("#processPaymentForm").fadeIn();	
+		//$("#paymentForm").fadeIn();	
 	}
 	
 	var openFlights = function(studentID, tripID, viewType) {
 		window.open("tours/flightInfo.cfm?studentID=" + studentID + "&tripID=" + tripID + "&viewType=" + viewType, "Flight Information", "height=700, width=1100");
+	}
+	
+	// JQuery Modal
+	var confirmPayment = function() { 
+			
+		// a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
+		$( "#dialog:ui-dialog" ).dialog( "destroy" );
+	
+		$( "#dialog-paymentConfirmation-confirm" ).dialog({
+			resizable: false,
+			height:200,
+			width:400,
+			modal: true,
+			buttons: {
+				"Submit Payment": function() {
+					$( this ).dialog( "close" );
+					// Submit Form
+					$("#processPaymentForm").submit();
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+			
 	}
 </script>	
 		
@@ -603,6 +751,22 @@
         messageType="tableSection"
         width="100%"
         />
+
+	<!--- Modal Dialogs --->
+    
+    <!--- Payment Confirmation - Modal Dialog Box --->
+    <div id="dialog-paymentConfirmation-confirm" title="Authorize.net - Submit Payment" class="displayNone" style="font-size:1em;"> 
+        <p>
+        	<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 0 0;"></span>
+        	Credit Card on file will be charged a total of <strong>#LSCurrencyFormat(qGetRegistrationInfo.totalCost - qGetRegistrationInfo.totalReceived)#</strong> for this trip
+        </p> 
+        <p>
+        	<strong>Processing a credit card payment might take up to a minute, please DO NOT resubmit this page.</strong>
+		</p>
+    </div> 
+    
+	<!--- End of Modal Dialogs --->
+
 
     <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%" style="padding-top:10px; padding-bottom:10px;">
 		<tr>            
@@ -651,39 +815,57 @@
                 <span class="greyTextBlock">
                 	<div style="width:100px; display:inline-block;">Registered On</div>
                     <div style="width:100px; display:inline-block;">Total Cost</div> 
+                    <div style="width:100px; display:inline-block;">Total Paid</div> 
+                    <div style="width:100px; display:inline-block;">Balance Due</div> 
                 </span>
                 
                 <span class="bigLabelBlock">
                 	<div style="width:100px; display:inline-block;">#DateFormat(qGetRegistrationInfo.date)#</div> 
-                    <div style="width:100px; display:inline-block;">#DollarFormat(qGetRegistrationInfo.amount)#</div>
-                </span>
-
-                <span class="greyTextBlock">
-                    <div style="width:100px; display:inline-block;">Payment Date</div>
-                    <div style="width:160px; display:inline-block;">Transaction ID / Reference</div>                    
-                </span>
-                
-                <span class="bigLabelBlock">
-                	<div style="width:100px; display:inline-block;">
-                    	<cfif IsDate(qGetRegistrationInfo.paid)>
-                        	#dateFormat(qGetRegistrationInfo.paid, 'mm/dd/yy')#
+                    <div style="width:100px; display:inline-block;">#LSCurrencyFormat(qGetRegistrationInfo.totalCost)#</div>
+                    <div style="width:100px; display:inline-block;">#LSCurrencyFormat(qGetRegistrationInfo.totalReceived)#</div>
+                    <div style="width:100px; display:inline-block;">
+                    	<cfif qGetRegistrationInfo.totalCost EQ qGetRegistrationInfo.totalReceived>
+                        	Fully Paid
                         <cfelse>
-                        	n/a
-                        </cfif>
-                    </div> 
-                    
-                    <div style="width:160px; display:inline-block;">
-                    	<cfif LEN(qGetRegistrationInfo.authTransactionID)>
-                            #qGetRegistrationInfo.authTransactionID#
-                        <cfelse>
-                        	n/a
+                        	<span style="color:##F00; font-weight:bold;">#LSCurrencyFormat(qGetRegistrationInfo.totalCost - qGetRegistrationInfo.totalReceived)#</span>
                         </cfif>
                     </div>
                 </span>
+
+                <span class="greyTextBlock">
+                	<div style="width:130px; display:inline-block;">Credit Card</div>
+                    <div style="width:80px; display:inline-block;">Last Digits</div>
+                    <div style="width:90px; display:inline-block;">Payment Date</div>
+                    <div style="width:60px; display:inline-block;">Amount</div>
+                    <div style="width:160px; display:inline-block;">Transaction ID / Reference</div>                    
+                </span>
+                
+                <!--- List All Payments --->
+                <cfloop query="qGetPaymentHistory">
+                    <span class="bigLabelBlock">
+                        <div style="width:130px; display:inline-block;">#qGetPaymentHistory.creditCardType#</div>
+                        <div style="width:80px; display:inline-block;">#qGetPaymentHistory.lastDigits#</div>
+                        <div style="width:90px; display:inline-block;">
+                            <cfif IsDate(qGetPaymentHistory.dateCreated)>
+                                #dateFormat(qGetPaymentHistory.dateCreated, 'mm/dd/yy')#
+                            <cfelse>
+                                n/a
+                            </cfif>
+                        </div> 
+                        <div style="width:60px; display:inline-block;">#LSCurrencyFormat(qGetPaymentHistory.amount)#</div> 
+                        <div style="width:160px; display:inline-block;">
+                            <cfif LEN(qGetPaymentHistory.authTransactionID)>
+                                #qGetPaymentHistory.authTransactionID#
+                            <cfelse>
+                                n/a
+                            </cfif>
+                        </div>
+                    </span>
+                </cfloop>
                 
                 <cfif IsDate(qGetRegistrationInfo.dateCanceled)>
                     <span class="greyTextBlock">Cancelation Date &nbsp; / &nbsp; Refund Amount</span>
-                    <span class="bigLabelBlock">#DateFormat(qGetRegistrationInfo.dateCanceled, 'mm/dd/yyyy')# &nbsp; / &nbsp; #DollarFormat(qGetRegistrationInfo.refundAmount)#</span>
+                    <span class="bigLabelBlock">#DateFormat(qGetRegistrationInfo.dateCanceled, 'mm/dd/yyyy')# &nbsp; / &nbsp; #LSCurrencyFormat(qGetRegistrationInfo.refundAmount)#</span>
                     
                     <span class="greyTextBlock">Notes</span>
                     <span class="bigLabelBlock">#qGetRegistrationInfo.refundNotes#</span>
@@ -743,11 +925,58 @@
 		</tr>
 	</table>
 
-    <!--- Payment --->
-	<form name="paymentForm" id="paymentForm" action="#CGI.SCRIPT_NAME#?curdoc=tours/profile" method="post" <cfif FORM.action NEQ "payTrip"> class="displayNone" </cfif> > 
+
+    <!--- Charge Credit Card ---> 
+	<form name="processPaymentForm" id="processPaymentForm" action="#CGI.SCRIPT_NAME#?curdoc=tours/profile" method="post" <cfif FORM.action NEQ "authorizeNetPayment"> class="displayNone" </cfif> > 
+        <input type="hidden" name="action" value="authorizeNetPayment" />
         <input type="hidden" name="studentID" value="#FORM.studentID#" />
         <input type="hidden" name="tripID" value="#FORM.tripID#" />
-        <input type="hidden" name="action" value="payTrip" />
+        <input type="hidden" name="authorizeNetPaymentID" value="#qGetPaymentHistory.authorizeNetPaymentID#" />
+        <input type="hidden" name="amount" value="#qGetRegistrationInfo.totalCost - qGetRegistrationInfo.totalReceived#" />       
+
+        <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%" style="padding-top:10px; padding-bottom:10px;">
+            <tr>
+                <td>
+                
+                    <table cellpadding="4" cellspacing="0" border="0" align="center" width="50%" style="border:1px solid ##3b5998;">
+                        <tr style="background-color:##3b5998; color:##FFF; font-weight:bold;">
+                            <th colspan="2">Authorize.Net - Charge Remaining Balance</th>
+                        </tr> 
+                        <tr>
+                            <td width="30%" class="greyTextRight">Amount</td>
+                            <td width="70%">#LSCurrencyFormat(qGetRegistrationInfo.totalCost - qGetRegistrationInfo.totalReceived)#</td>
+                        </tr>
+                        <tr>
+                            <td class="greyTextRight">Credit Card Type</td>
+                            <td>#qGetPaymentHistory.creditCardType#</td>
+                        </tr>
+                        <tr>
+                            <td class="greyTextRight">Last 4 Digits of Credit Card</td>
+                            <td>#qGetPaymentHistory.lastDigits#</td>
+                        </tr>
+                        <tr>
+                        	<td>&nbsp;</td>
+                        	<td>
+                            	Credit Card on file is going to be used to process this transaction.
+                            </td>
+                        </tr>                        
+                        <tr>
+                        	<td colspan="2" align="center"><a href="javascript:confirmPayment();"><img src="pics/submitBlue.png" border="0" /></a></td>
+                        </tr>
+                    </table> 
+                
+                </td>            
+            </tr>                               
+        </table>                 
+	
+    </form>   
+
+
+    <!--- Payment --->
+	<form name="paymentForm" id="paymentForm" action="#CGI.SCRIPT_NAME#?curdoc=tours/profile" method="post" <cfif FORM.action NEQ "manualPayment"> class="displayNone" </cfif> > 
+        <input type="hidden" name="action" value="manualPayment" />
+        <input type="hidden" name="studentID" value="#FORM.studentID#" />
+        <input type="hidden" name="tripID" value="#FORM.tripID#" />        
      
         <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%" style="padding-top:10px; padding-bottom:10px;">
             <tr>
@@ -759,7 +988,7 @@
                         </tr> 
                         <tr>
                             <td width="30%" class="greyTextRight">Amount</td>
-                            <td width="70%">#DollarFormat(qGetRegistrationInfo.amount)#</td>
+                            <td width="70%">#LSCurrencyFormat(qGetRegistrationInfo.amount)#</td>
                         </tr> 
                         <tr>
                             <td class="greyTextRight">Payment Date</td>
@@ -780,11 +1009,12 @@
 	
     </form>   
 
+
     <!--- Cancelation --->
 	<form name="cancelForm" id="cancelForm" action="#CGI.SCRIPT_NAME#?curdoc=tours/profile" method="post" <cfif FORM.action NEQ "cancelTrip"> class="displayNone" </cfif> > 
+        <input type="hidden" name="action" value="cancelTrip" />
         <input type="hidden" name="studentID" value="#FORM.studentID#" />
         <input type="hidden" name="tripID" value="#FORM.tripID#" />
-        <input type="hidden" name="action" value="cancelTrip" />
      
         <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%" style="padding-top:10px; padding-bottom:10px;">
             <tr>
@@ -831,7 +1061,7 @@
                     </tr>
                     <tr style="text-align:center;">
                         <td>#dateFormat(qGetRegistrationInfo.dateOnHold, 'mm/dd/yyyy')#</td>
-                        <td>#dateFormat(qGetRegistrationInfo.paid, 'mm/dd/yyyy')#</td>
+                        <td>#dateFormat(qGetRegistrationInfo.dateFullyPaid, 'mm/dd/yyyy')#</td>
                         <td>#dateFormat(qGetRegistrationInfo.permissionForm, 'mm/dd/yyyy')#</td>
                         <td>#dateFormat(qGetArrivalFlightInformation.departDate, 'mm/dd/yyyy')#</td>
                         <td>#dateFormat(qGetDepartureFlightInformation.departDate, 'mm/dd/yyyy')#</td>
@@ -872,7 +1102,7 @@
                         
                         <!--- Payment --->
                         <td>
-                        	<cfif isDate(qGetRegistrationInfo.paid)>
+                        	<cfif isDate(qGetRegistrationInfo.dateFullyPaid)>
                                 <img src="pics/buttons/received_17.png" border="0" />
                             <cfelse>
                                 <a href="javascript:displayPaymentForm();"><img src="pics/buttons/Notreceived_21.png" border="0" /></a>
