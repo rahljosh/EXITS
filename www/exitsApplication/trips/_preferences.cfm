@@ -203,7 +203,7 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.shareRoomPerson3#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.medicalInformation#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
-                        <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                     )
                 </cfquery>
