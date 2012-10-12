@@ -1054,7 +1054,7 @@
                 <table cellpadding="4" cellspacing="0" border="0" align="center">
                     <tr style="text-align:center;">
                         <td><h2>Hold</h2></td>
-                        <td><h2>Payment</h2></td>
+                        <td><h2>Full Payment</h2></td>
                         <td><h2>Permission</h2></td>
                         <td><h2>Arrival Flight</h2></td>
                         <td><h2>Departure Flight</h2></td>

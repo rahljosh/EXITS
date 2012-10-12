@@ -371,14 +371,15 @@
                     <td align="center">Gender</td>
                     <td align="center">Host Siblings</td>
                     <td>Tour</td>
-                    <td>Total Cost</td>
-                    <td>Total Received</td>
+                    <td align="center">Total Cost</td>
+                    <td align="center">Total Received</td>
+                    <td align="center">Balance Due</td>
                     <td align="center">Registered On</td>   
-                    <td>Permission</td>
-                    <td>Arrival Flight</td>
-                    <td>Departure Flight</td>
-                    <td>On Hold</td>
-                    <td>Company</td>
+                    <td align="center">Permission</td>
+                    <td align="center">Arrival Flight</td>
+                    <td align="center">Departure Flight</td>
+                    <td align="center">On Hold</td>
+                    <td align="center">Company</td>
                 </tr>
                 <cfloop query="qGetResults" startrow="#startrow#" endrow="#endrow#">
                 
@@ -434,25 +435,26 @@
             
                     <tr bgcolor="#iif(qGetResults.currentRow MOD 2 ,DE("ffffe6") ,DE("white") )#">
                         <td><a href="?curdoc=tours/profile&studentID=#qGetResults.studentID#&tripID=#qGetResults.tripID#">#studentID#</a></td>
-                        <td>#qGetResults.familylastname#</td>
-                        <td>#qGetResults.firstname#</td>
+                        <td><a href="?curdoc=tours/profile&studentID=#qGetResults.studentID#&tripID=#qGetResults.tripID#">#qGetResults.familylastname#</a></td>
+                        <td><a href="?curdoc=tours/profile&studentID=#qGetResults.studentID#&tripID=#qGetResults.tripID#">#qGetResults.firstname#</a></td>
                         <td align="center">#UCase(Left(qGetResults.sex, 1))#</td>
                         <td align="center"><cfif qGetTotalSiblings.recordCount>#qGetTotalSiblings.recordCount#</cfif></td>
                         <td>#qGetResults.tour_name#</td>
-                        <td>#DollarFormat(qGetResults.totalCost)#</td>
-						<td>
-                        	<cfif qGetResults.totalCost EQ qGetResults.totalReceived>
-                            	<span style="color:##00F; font-weight:bold;">#DollarFormat(qGetResults.totalReceived)#</span>
+                        <td align="center">#DollarFormat(qGetResults.totalCost)#</td>
+						<td align="center">#DollarFormat(qGetResults.totalReceived)#</td> 
+                        <td align="center">
+                        	<cfif qGetResults.totalReceived GTE qGetResults.totalCost>
+                            	PAID
                             <cfelse>                          
-	                            <span style="color:##F00; font-weight:bold;">#DollarFormat(qGetResults.totalReceived)#</span>
+	                            <span style="color:##F00; font-weight:bold;">#DollarFormat(qGetResults.totalCost - qGetResults.totalReceived)#</span>
                             </cfif>
                         </td>                       
                         <td align="center">#dateFormat(qGetResults.dateCreated, 'mm/dd/yyyy')#</td>
-                        <td><cfif IsDate(qGetResults.permissionForm)>#DateFormat(qGetResults.permissionForm)#</cfif></td>
-                        <td><cfif LEN(qGetArrivalFlight.departDate)>#DateFormat(qGetArrivalFlight.departDate)#<cfelse>No</cfif></td>
-                        <td><cfif LEN(qGetDepartureFlight.departDate)>#DateFormat(qGetDepartureFlight.departDate)#<cfelse>No</cfif></td>
-                        <td><cfif IsDate(qGetResults.dateOnHold)>#DateFormat(qGetResults.dateOnHold)#</cfif></td>
-                        <td>#qGetResults.companyshort_nocolor#</td>
+                        <td align="center"><cfif IsDate(qGetResults.permissionForm)>#DateFormat(qGetResults.permissionForm)#</cfif></td>
+                        <td align="center"><cfif LEN(qGetArrivalFlight.departDate)>#DateFormat(qGetArrivalFlight.departDate)#<cfelse>No</cfif></td>
+                        <td align="center"><cfif LEN(qGetDepartureFlight.departDate)>#DateFormat(qGetDepartureFlight.departDate)#<cfelse>No</cfif></td>
+                        <td align="center"><cfif IsDate(qGetResults.dateOnHold)>#DateFormat(qGetResults.dateOnHold)#</cfif></td>
+                        <td align="center">#qGetResults.companyshort_nocolor#</td>
                     </tr>
                 </cfloop>
             </table>
