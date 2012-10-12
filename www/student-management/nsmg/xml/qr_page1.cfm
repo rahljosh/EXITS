@@ -88,7 +88,7 @@
             select studentID 
             from smg_students where soid = <Cfqueryparam cfsqltype="cf_sql_varchar" value="#StudentXMLFile.applications.application[i].XmlAttributes.studentid#">
             </cfquery>
-            <Cfquery datasource="#applciation.dsn#">
+            <Cfquery datasource="#application.dsn#">
                 update smg_students set
                 yearsenglish = <cfqueryparam cfsqltype="cf_sql_integer" value="#StudentXMLFile.applications.application[i].page2.languages.language[x].yearsofstudy.xmlText#">
                     where studentid = 
@@ -96,8 +96,8 @@
             </Cfquery>
         <cfelse>
             <cfquery datasource="#application.dsn#">
-            insert into smg_student_app_language (studentid, languageid, isPrimary, dateCreated, dateModified)
-                        values (#getISEStudentID.studentid#, #getLangFieldID.fieldid#, #curIangPrim#, #CreateODBCDate(now())#, #CreateODBCDate(now())#)
+            insert into smg_student_app_language (studentid, languageid, isPrimary, dateCreated)
+                        values (#getISEStudentID.studentid#, #getLangFieldID.fieldid#, #curLangPrim#, #CreateODBCDate(now())#)
             </cfquery>
         </Cfif>
         
