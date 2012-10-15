@@ -21,7 +21,7 @@
     <cfparam name="studentStatus" default="registered">
     <cfparam name="permissionForm" default="">
     <cfparam name="tour_id" default="0">
-    <cfparam name="orderby" default="tour_name">
+    <cfparam name="orderBy" default="dateCreated">
     <cfparam name="recordsToShow" default="500">
 	
     <cfscript>
@@ -130,11 +130,11 @@
 
 	<!--- FORM submitted --->
     <cfif submitted>
-
+	
         <cfquery name="qGetResults" datasource="#APPLICATION.DSN#">
            	SELECT 
             	st.*, 
-                smg_tours.tour_name,
+                t.tour_name,
                 stu.familylastname, 
                 stu.firstname, 
                 stu.studentID, 
@@ -157,11 +157,11 @@
             FROM 
             	student_tours st
             INNER JOIN
-            	smg_students stu on stu.studentID = st.studentID
+            	smg_students stu ON stu.studentID = st.studentID
             INNER JOIN
-            	smg_tours on smg_tours.tour_id = st.tripid
+            	smg_tours t ON t.tour_id = st.tripid
             LEFT JOIN 
-            	smg_companies c on c.companyid = st.companyid
+            	smg_companies c ON c.companyid = st.companyid
             WHERE
             	1 = 1
                 
@@ -223,7 +223,7 @@
                 	st.tripid = <cfqueryparam cfsqltype="cf_sql_integer" value="#tour_id#">
            	<cfelse>
             	AND
-                	smg_tours.tour_status = <cfqueryparam cfsqltype="cf_sql_varchar" value="active">
+                	t.tour_status = <cfqueryparam cfsqltype="cf_sql_varchar" value="active">
             </cfif>
             
             <cfif LEN(TRIM(keyword))>
@@ -245,9 +245,47 @@
             </cfif>
 
        		ORDER BY 
-            	#orderby#, 
-                stu.studentID,
-                tour_name
+            	
+                <cfswitch expression="#orderBy#">
+                
+                	<cfcase value="dateCreated">
+                    	st.dateCreated DESC,
+                        t.tour_name,
+                        stu.studentID
+                    </cfcase>
+
+                	<cfcase value="studentID">
+                    	stu.studentID,
+                        t.tour_name
+                    </cfcase>
+
+                	<cfcase value="familylastname">
+                    	stu.familylastname,
+                    	stu.studentID,
+                        t.tour_name                       
+                    </cfcase>
+
+                	<cfcase value="tour_name">
+                    	t.tour_name,
+                        st.dateCreated DESC,
+                        stu.studentID
+                    </cfcase>
+                    
+                	<cfcase value="permission">
+                    	st.permissionForm,
+                    	t.tour_name,
+                        st.dateCreated DESC,
+                        stu.studentID
+                    </cfcase>
+                    
+                    <cfdefaultcase>
+                    	t.tour_name,
+                        st.dateCreated DESC,
+                        stu.studentID
+                    </cfdefaultcase>
+				
+                </cfswitch>                    
+                
         </cfquery>
 		
         <cfif qGetResults.recordCount>
@@ -266,7 +304,7 @@
                 <cfset endrow = qGetResults.recordCount>
             </cfif>
             
-            <cfset urlVariables = "submitted=1&tour_id=#tour_id#&keyword=#urlEncodedFormat(keyword)#&permissionForm=#permissionForm#&orderby=#orderby#&recordsToShow=#recordsToShow#">
+            <cfset urlVariables = "submitted=1&tour_id=#tour_id#&keyword=#urlEncodedFormat(keyword)#&permissionForm=#permissionForm#&orderBy=#orderBy#&recordsToShow=#recordsToShow#">
 		
         </cfif>
     
@@ -317,11 +355,12 @@
                 </td>
                 <td>
                     Order By<br />
-                    <select name="orderby" class="mediumField">
-                        <option value="stu.studentID" <cfif orderby EQ 'studentID'>selected</cfif>>ID</option>
-                        <option value="familylastname" <cfif orderby EQ 'familylastname'>selected</cfif>>Last Name</option>
-                        <option value="tour_name" <cfif orderby EQ 'tour_name'>selected</cfif>>Tour</option>
-                        <option value="permission" <cfif orderby EQ 'permission'>selected</cfif>>Permission</option>
+                    <select name="orderBy" class="mediumField">
+                   		<option value="dateCreated" <cfif orderBy EQ 'dateCreated'>selected</cfif>>Registered On</option>
+                        <option value="studentID" <cfif orderBy EQ 'studentID'>selected</cfif>>ID</option>
+                        <option value="familylastname" <cfif orderBy EQ 'familylastname'>selected</cfif>>Last Name</option>
+                        <option value="tour_name" <cfif orderBy EQ 'tour_name'>selected</cfif>>Tour</option>
+                        <option value="permission" <cfif orderBy EQ 'permission'>selected</cfif>>Permission</option>
                     </select>            
                 </td>
                 <td>
