@@ -1356,14 +1356,12 @@
                     <cfif FORM.reportStatus EQ 'hidden'>
                         AND
                             isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="0">  
-                    <cfelse>
-                        AND
-                            isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">  
 					</cfif>
                     ORDER BY
                     	familyLastName
                 </cfquery>
                 
+
                 <!--- Get Previous Assigned Students --->
                 <cfquery name="qGetPreviousStudents" dbtype="query">
                     SELECT 
