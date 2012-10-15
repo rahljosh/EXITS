@@ -203,7 +203,11 @@
 				if ( VAL(FORM.secondVisitRepID) AND VAL(FORM.placeRepID) AND FORM.secondVisitRepID EQ FORM.placeRepID ) { 
 					SESSION.formErrors.Add("Second Visit Representative must be different than Placing Representative");
 				}	
-			
+
+				if ( VAL(FORM.secondVisitRepID) AND VAL(FORM.areaRepID) AND FORM.secondVisitRepID EQ FORM.areaRepID ) { 
+					SESSION.formErrors.Add("Second Visit Representative must be different than Supervising Representative");
+				}	
+
 			}
 			
 			// Update Double Placement
@@ -290,6 +294,10 @@
 			
 			if ( VAL(FORM.secondVisitRepID) AND VAL(FORM.placeRepID) AND FORM.secondVisitRepID EQ FORM.placeRepID ) { 
 				SESSION.formErrors.Add("Second Visit Representative must be different than Placing Representative");
+			}	
+			
+			if ( VAL(FORM.secondVisitRepID) AND VAL(FORM.areaRepID) AND FORM.secondVisitRepID EQ FORM.areaRepID ) { 
+				SESSION.formErrors.Add("Second Visit Representative must be different than Supervising Representative");
 			}	
 			
 			if ( VAL(FORM.hostID) AND VAL(FORM.doublePlace) AND qGetPlacementHistoryByID.doublePlacementID NEQ FORM.doublePlace ) { 
