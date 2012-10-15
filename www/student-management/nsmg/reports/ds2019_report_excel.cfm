@@ -61,24 +61,22 @@
 
 <cfoutput>
 
-<cfquery name="check_history" datasource="MySql">
-	SELECT DISTINCT companyid, datecreated
-	FROM smg_csiet_history
-	WHERE companyid = '#client.companyid#'
-	ORDER BY datecreated DESC
-</cfquery>
-
-<!--- HISTORY FILE ---->
-<cfset todaydate = #now()#>
-<cfif check_history.datecreated EQ DateFormat(todaydate, 'yyyy-mm-dd')>
-	<!--- DELETE HISTORY FROM THE SAME DAY --->
-	<cfquery name="delete" datasource="MySql">
-		DELETE
-		FROM smg_csiet_history
-		WHERE companyid = '#client.companyid#'
-			AND datecreated = '#DateFormat(todaydate, 'yyyy-mm-dd')#'
-	</cfquery>
-</cfif>
+<!--- DELETE HISTORY FROM THE SAME DAY --->
+<cfquery name="delete" datasource="MySql">
+	DELETE
+	FROM 
+    	smg_csiet_history
+	WHERE 
+    	date(datecreated) = <cfqueryparam cfsqltype="cf_sql_date" value="#DateFormat(now, 'yyyy-mm-dd')#">
+    <cfif CLIENT.companyID EQ 5>
+        AND	
+            companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+    <cfelse>
+        AND	
+            companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+    </cfif>
+	
+</cfquery>   
 
 <!--- set content type --->
 <cfcontent type="application/msexcel">
@@ -147,15 +145,18 @@
                 	&nbsp;
                 </cfif>
             </td>
-		</tr>		
+		</tr>	
+        
+        <cfset vGetTimeStamp = now()>
+        	
 		<!--- CREATE NEW HISTORY --->
 		<cfquery name="create_history" datasource="MySql">
 			INSERT INTO smg_csiet_history
-				(companyid, datecreated, timecreated, csietid, studentid, hostid, isWelcomeFamily, host_lastname, host_address, host_city, host_state, host_zip, 
+				(companyid, datecreated, csietid, studentid, hostid, isWelcomeFamily, host_lastname, host_address, host_city, host_state, host_zip, 
 				schoolid, school_name, school_address, school_city, school_state, school_zip, programid, regionid, placement_date,
 				placerepid,  place_firstname, place_lastname, arearepid, area_firstname, area_lastname, sevis_initial)
 			VALUES
-				('#companyid#', #CreateODBCDateTime(todaydate)#, #CreateODBCTime(todaydate)#, '#currentrow#', '#studentid#', '#hostid#', 
+				('#companyid#', <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vGetTimeStamp#">, '#currentrow#', '#studentid#', '#hostid#', 
 				'#isWelcomeFamily#', '#hostfamily#', '<cfif hostaddress EQ ''>#hostaddress2#<cfelse>#hostaddress#</cfif>', '#hostcity#', 
 				'#hoststate#', '#hostzip#', '#schoolid#', '#schoolname#', '<cfif schooladdress EQ ''>#schooladdress2#<cfelse>#schooladdress#</cfif>',
 				'#schoolcity#', '#schoolstate#', '#schoolzip#', '#programid#', '#regionassigned#', 

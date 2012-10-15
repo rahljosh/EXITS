@@ -20,10 +20,20 @@
 <cfinclude template="../querys/get_regions.cfm">
 
 <cfquery name="get_history_files" datasource="MySQL">
-	SELECT DISTINCT companyid, datecreated, timecreated
-	FROM smg_csiet_history
-	WHERE companyid = '#client.companyid#'
-	ORDER BY datecreated DESC
+	SELECT DISTINCT 
+    	companyid, datecreated
+	FROM 
+    	smg_csiet_history
+	WHERE 
+    <cfif CLIENT.companyID EQ 5>
+        companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+    <cfelse>
+        companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+    </cfif>
+    GROUP BY
+    	dateCreated
+	ORDER BY 
+    	datecreated DESC        
 </cfquery>
 
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
@@ -45,7 +55,7 @@
             R E P O R T S 
              <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
                 <font size="0.8em">
-                	<br> (PS: Change to SMG to include all ISE students - William, Margarita, Diana, Gary and Brian)
+                	<br> (PS: Change to ISE to include all ISE divisions)
                 </font>
             </cfif>
     	</th>
@@ -66,46 +76,6 @@
 			</cfform>
 		</td>
 		<td align="center" width="50%" valign="top">
-		</td>
-	</tr>
-</table><br>
-
-<table width=100% border=0 cellpadding=4 cellspacing=0>
-	<tr>
-		<td align="center" width="50%" valign="top">
-			<cfform action="reports/ds2019_report.cfm" method="POST" target="blank">
-			<Table cellpadding=6 cellspacing="0" align="center" width="100%">
-				<tr><th colspan="2" bgcolor="e2efc7">DOS - #CLIENT.DSFormName# Placement Report</th></tr>
-				<tr align="left">
-					<td>Program :</td>
-					<td><select name="programid" multiple  size="6">
-					<cfloop query="get_program"><option value="#ProgramID#"><cfif client.companyid EQ '5'>#get_program.companyshort# - </cfif>#programname#</option></cfloop></select>
-					</td>
-				</tr>
-			<tr><td></td><td><input type="text" disabled size="6"></td></tr>
-				<tr><TD colspan="2" align="center" bgcolor="e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
-			</table>
-			</cfform>
-		</td>
-		<td align="center" width="50%" valign="top">
-			<cfform action="reports/ds2019_report_ver.cfm" method="POST" target="blank">
-			<Table cellpadding=6 cellspacing="0" align="center" width="100%">
-				<tr><th colspan="2" bgcolor="e2efc7">DOS - #CLIENT.DSFormName# Placement Report by Region</th></tr>
-				<tr align="left">
-					<td>Program :</td>
-					<td><select name="programid" multiple  size="6">
-					<cfloop query="get_program"><option value="#ProgramID#"><cfif client.companyid EQ '5'>#get_program.companyshort# - </cfif>#programname#</option></cfloop></select>
-					</td>
-				</tr>
-				<tr>
-					<TD>Region :</td>
-					<TD><select name="regionid" size="1">
-						<option value=0>All Regions</option>
-						<cfloop query="get_regions"><option value="#regionid#">#regionname#</option></cfloop>
-						</select></td></tr>				
-				<tr><TD colspan="2" align="center" bgcolor="e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
-			</table>
-			</cfform>
 		</td>
 	</tr>
 </table><br>
@@ -171,38 +141,13 @@
 	<tr><th colspan="2" bgcolor="e2efc7">H I S T O R Y &nbsp; &nbsp; R E P O R T S</th></tr>
 	<tr>
 		<td align="center" width="50%" valign="top">
-			<Table cellpadding=6 cellspacing="0" align="center" width="100%">
-			<cfform action="reports/ds2019_history.cfm" method="POST" target="blank">
-				<tr><th colspan="2" bgcolor="e2efc7">DOS - #CLIENT.DSFormName# Placement Report</th></tr>
-				<tr>
-					<TD>History Files :</td>
-					<TD><select name="datecreated" size="1">
-						<cfloop query="get_history_files"><option value="#DateFormat(datecreated, 'yyyy-mm-dd')#">#DateFormat(datecreated, 'mm/dd/yyyy')# #TimeFormat(timecreated, 'hh:mm tt')#</option></cfloop>
-						</select></td>
-				</tr>				
-				<tr><TD colspan="2" align="center" bgcolor="e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
-			</cfform>
-			<tr><td>&nbsp;</td></tr>
-			<cfform action="reports/ds2019_history_word.cfm" method="POST">
-				<tr><th colspan="2" bgcolor="e2efc7">DOS - #CLIENT.DSFormName# Placement Report - Word Format</th></tr>
-				<tr>
-					<TD>History Files :</td>
-					<TD><select name="datecreated" size="1">
-						<cfloop query="get_history_files"><option value="#DateFormat(datecreated, 'yyyy-mm-dd')#">#DateFormat(datecreated, 'mm/dd/yyyy')# #TimeFormat(timecreated, 'hh:mm tt')#</option></cfloop>
-						</select></td>
-				</tr>				
-				<tr><TD colspan="2" align="center" bgcolor="e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
-			</cfform>					
-			</table>
-		</td>
-		<td align="center" width="50%" valign="top">
 			<cfform action="reports/ds2019_history_references.cfm" method="POST" target="blank">
 			<Table cellpadding=6 cellspacing="0" align="center" width="100%">
 				<tr><th colspan="2" bgcolor="e2efc7">CSIET - Long Term References</th></tr>
 				<tr>
 					<TD>History Files :</td>
 					<TD><select name="datecreated" size="1">
-						<cfloop query="get_history_files"><option value="#DateFormat(datecreated, 'yyyy-mm-dd')#">#DateFormat(datecreated, 'mm/dd/yyyy')# #TimeFormat(timecreated, 'hh:mm tt')#</option></cfloop>
+						<cfloop query="get_history_files"><option value="#datecreated#">#DateFormat(datecreated, 'mm/dd/yyyy')# #TimeFormat(datecreated, 'hh:mm:ss tt')#</option></cfloop>
 						</select></td>
 				</tr>
 				<tr><td>Random Numbers :</td><td><textarea name="random" cols="35" rows="5"></textarea></td></tr>
@@ -223,7 +168,7 @@
 				<tr>
 					<TD>History Files :</td>
 					<TD><select name="datecreated" size="1">
-						<cfloop query="get_history_files"><option value="#DateFormat(datecreated, 'yyyy-mm-dd')#">#DateFormat(datecreated, 'mm/dd/yyyy')# #TimeFormat(timecreated, 'hh:mm tt')#</option></cfloop>
+						<cfloop query="get_history_files"><option value="#datecreated#">#DateFormat(datecreated, 'mm/dd/yyyy')# #TimeFormat(datecreated, 'hh:mm:ss tt')#</option></cfloop>
 						</select></td>
 				</tr>
 				<tr><td>Random Numbers :</td><td><textarea name="random" cols="35" rows="5"></textarea></td></tr>
@@ -239,7 +184,7 @@
 				<tr>
 					<TD>History Files :</td>
 					<TD><select name="datecreated" size="1">
-						<cfloop query="get_history_files"><option value="#DateFormat(datecreated, 'yyyy-mm-dd')#">#DateFormat(datecreated, 'mm/dd/yyyy')# #TimeFormat(timecreated, 'hh:mm tt')#</option></cfloop>
+						<cfloop query="get_history_files"><option value="#datecreated#">#DateFormat(datecreated, 'mm/dd/yyyy')# #TimeFormat(datecreated, 'hh:mm:ss tt')#</option></cfloop>
 						</select></td>
 				</tr>
 				<tr><td>Random Numbers :</td><td><textarea name="random" cols="35" rows="5"></textarea></td></tr>

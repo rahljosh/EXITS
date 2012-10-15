@@ -29,7 +29,7 @@
 
 <!--- get Students  --->
 <Cfquery name="get_history" datasource="MySQL">
-	SELECT  history.companyid, history.datecreated, history.timecreated, history.csietid, history.studentid,	history.hostid, history.host_lastname, history.host_address,
+	SELECT  history.companyid, history.datecreated, history.csietid, history.studentid,	history.hostid, history.host_lastname, history.host_address,
 			history.host_city, history.host_state, history.host_zip, history.schoolid, history.school_name, history.school_address,
 			history.school_city, history.school_state, history.school_zip, history.programid, history.regionid, history.placement_date,
 			history.placerepid,  history.place_firstname, history.place_lastname, history.arearepid, history.area_firstname, history.area_lastname,
@@ -64,7 +64,7 @@
 	<tr>
 		<td width="50">&nbsp;</td>
 		<td><img src="../pics/logos/#client.companyid#.gif"  alt="" border="0" align="left"></td>
-		<td valign="middle" align="left"><font size="+3"><b>#CLIENT.DSFormName# - History File <br> From #DateFormat(get_history.datecreated, 'mm/dd/yyyy')# - #TimeFormat(get_history.timecreated, 'hh:mm tt')#</b></font></td>		
+		<td valign="middle" align="left"><font size="+3"><b>#CLIENT.DSFormName# - History File <br> From #DateFormat(get_history.datecreated, 'mm/dd/yyyy')# - #TimeFormat(get_history.datecreated, 'hh:mm tt')#</b></font></td>		
 	</tr>
 	<tr><td colspan="3"><hr width=100% align="center"></td></tr>
 </table>
