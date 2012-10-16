@@ -47,8 +47,12 @@
 	/*******************************************
 		Site URL
 	*******************************************/
-	APPLICATION.siteURL = 'http://' & CGI.HTTP_HOST & '/';
-
+	// Check if this is Dev or Production 
+	if ( APPLICATION.isServerLocal ) {
+		APPLICATION.siteURL = 'http://' & CGI.HTTP_HOST & '/';
+	} else {
+		APPLICATION.siteURL = 'https://' & CGI.HTTP_HOST & '/';
+	}
 
 	/***** Create APPLICATION.METADATA structure / Stores Default Metadata Information *****/
 	APPLICATION.METADATA = StructNew();		

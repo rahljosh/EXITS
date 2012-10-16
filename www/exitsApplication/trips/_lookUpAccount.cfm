@@ -387,7 +387,7 @@
                         <td class="tripFormTitle">Password <span class="required">*</span></td>
                         <td width="70%">
                         	<input type="password" name="exitsPassword" class="mediumField" value="#FORM.exitsPassword#" maxlength="100">
-                            <em class="tripNotesRight"><a href="http://ise.exitsapplication.com/login.cfm?forgot=1" target="_blank">Forgot Login?</a></em>
+                            <em class="tripNotesRight"><a href="https://ise.exitsapplication.com/login.cfm?forgot=1" target="_blank">Forgot Login?</a></em>
                         </td>
                     </tr>
                     <tr class="blueRow">
