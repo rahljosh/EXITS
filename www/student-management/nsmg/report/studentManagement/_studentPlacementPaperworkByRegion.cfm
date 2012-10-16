@@ -566,7 +566,7 @@
 					vTotalFamilyMembers = vIsFatherHome + vIsMotherHome + qGetResults.totalChildrenAtHome;
 	
 					// Required for Single Parents 
-					if ( qGetResults.seasonID GTE 8 AND vTotalFamilyMembers EQ 1 ) {  
+					if ( vTotalFamilyMembers EQ 1 ) {  
 						
 						// Single Person Placement Verification
 						if ( NOT isDate(qGetResults.doc_single_place_auth) ) {
@@ -615,36 +615,31 @@
 						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Family Photo <br />", " <br />");
 					}
 	
-					// Required starting Aug 12
-					if ( qGetResults.seasonID GTE 9 ) {
-						
-						// Student Bedroom Photo
-						if ( NOT isDate(qGetResults.doc_bedroom_photo) ) {
-							vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Student Bedroom Photo <br />", " <br />");
-						}
-	
-						// Student Bathroom Photo
-						if ( NOT isDate(qGetResults.doc_bathroom_photo) ) {
-							vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Student Bathroom Photo <br />", " <br />");
-						}
-	
-						// Kitchen Photo
-						if ( NOT isDate(qGetResults.doc_kitchen_photo) ) {
-							vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Kitchen Photo <br />", " <br />");
-						}
-	
-						// Living Room Photo
-						if ( NOT isDate(qGetResults.doc_living_room_photo) ) {
-							vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Living Room Photo <br />", " <br />");
-						}
-						
-						// Outside Photo
-						if ( NOT isDate(qGetResults.doc_outside_photo) ) {
-							vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Outside Photo <br />", " <br />");
-						}
-	
-					}  
+					// Student Bedroom Photo
+					if ( NOT isDate(qGetResults.doc_bedroom_photo) ) {
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Student Bedroom Photo <br />", " <br />");
+					}
+
+					// Student Bathroom Photo
+					if ( NOT isDate(qGetResults.doc_bathroom_photo) ) {
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Student Bathroom Photo <br />", " <br />");
+					}
+
+					// Kitchen Photo
+					if ( NOT isDate(qGetResults.doc_kitchen_photo) ) {
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Kitchen Photo <br />", " <br />");
+					}
+
+					// Living Room Photo
+					if ( NOT isDate(qGetResults.doc_living_room_photo) ) {
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Living Room Photo <br />", " <br />");
+					}
 					
+					// Outside Photo
+					if ( NOT isDate(qGetResults.doc_outside_photo) ) {
+						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Outside Photo <br />", " <br />");
+					}
+	
 					// School & Community Profile Form
 					if ( NOT isDate(qGetResults.doc_school_profile_rec) ) {
 						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "School & Community Profile <br />", " <br />");
@@ -715,57 +710,61 @@
 					}
                 </cfscript>
                 
-                <tr>
-                    <td #vRowColor#>#qGetResults.regionName#</td>
-                    <td #vRowColor#>#qGetResults.facilitatorName#</td>
-                    <td #vRowColor#>#qGetResults.repName#</td>
-                    <td #vRowColor#>#qGetResults.studentID#</td>
-                    <td #vRowColor#>#qGetResults.firstName#</td>
-                    <td #vRowColor#>#qGetResults.familyLastName#</td>                    
-                    <td #vRowColor#>
-                        <cfif VAL(qGetResults.active)>
-                            <span class="note">Active</span>
-                        <cfelseif isDate(qGetResults.cancelDate)>
-                            <span class="noteAlert">Cancelled</span>
-                        </cfif>
-                    </td>
-                    <td #vRowColor#>#qGetResults.programName#</td>
-                    <td #vRowColor#>#qGetResults.hostID#</td>
-                    <td #vRowColor#>
-                        #qGetResults.hostFamilyLastName#
-    
-                        <span class="note">
-                            (
-                                <cfif VAL(qGetResults.isWelcomeFamily)>
-                                    Welcome
-                                <cfelse>
-                                    Permanent
-                                </cfif>
-                                -
-                                <cfif VAL(qGetResults.isActivePlacement)>
-                                    Current
-                                <cfelse>
-                                    Previous
-                                </cfif>
-    
-                                <cfif VAL(qGetResults.isRelocation)>
-                                    - Relocation
-                                </cfif>
-                            )
-                        </span>                            
-                    </td>
-                    <td #vRowColor#>#DateFormat(qGetResults.datePlaced, 'mm/dd/yy')#</td>
-                    <td #vRowColor#>
-                        <cfif VAL(vIsCompliant)>
-                            compliant
-                        <cfelse>
-                            #vMissingDocumentsMessage#
-                            
-                            #vOutOfComplianceDocuments#
-                        </cfif>
-                    </td>
-                </tr>
-           
+                <cfif LEN(vMissingDocumentsMessage)>
+                
+                    <tr>
+                        <td #vRowColor#>#qGetResults.regionName#</td>
+                        <td #vRowColor#>#qGetResults.facilitatorName#</td>
+                        <td #vRowColor#>#qGetResults.repName#</td>
+                        <td #vRowColor#>#qGetResults.studentID#</td>
+                        <td #vRowColor#>#qGetResults.firstName#</td>
+                        <td #vRowColor#>#qGetResults.familyLastName#</td>                    
+                        <td #vRowColor#>
+                            <cfif VAL(qGetResults.active)>
+                                <span class="note">Active</span>
+                            <cfelseif isDate(qGetResults.cancelDate)>
+                                <span class="noteAlert">Cancelled</span>
+                            </cfif>
+                        </td>
+                        <td #vRowColor#>#qGetResults.programName#</td>
+                        <td #vRowColor#>#qGetResults.hostID#</td>
+                        <td #vRowColor#>
+                            #qGetResults.hostFamilyLastName#
+        
+                            <span class="note">
+                                (
+                                    <cfif VAL(qGetResults.isWelcomeFamily)>
+                                        Welcome
+                                    <cfelse>
+                                        Permanent
+                                    </cfif>
+                                    -
+                                    <cfif VAL(qGetResults.isActivePlacement)>
+                                        Current
+                                    <cfelse>
+                                        Previous
+                                    </cfif>
+        
+                                    <cfif VAL(qGetResults.isRelocation)>
+                                        - Relocation
+                                    </cfif>
+                                )
+                            </span>                            
+                        </td>
+                        <td #vRowColor#>#DateFormat(qGetResults.datePlaced, 'mm/dd/yy')#</td>
+                        <td #vRowColor#>
+                            <cfif VAL(vIsCompliant)>
+                                compliant
+                            <cfelse>
+                                #vMissingDocumentsMessage#
+                                
+                                #vOutOfComplianceDocuments#
+                            </cfif>
+                        </td>
+                    </tr>
+           	
+            	</cfif>
+            
             </cfoutput>
     
         </table>
@@ -905,7 +904,7 @@
                                 vTotalFamilyMembers = vIsFatherHome + vIsMotherHome + qGetStudentsInRegion.totalChildrenAtHome;
 
                                 // Required for Single Parents 
-                                if ( qGetStudentsInRegion.seasonID GTE 8 AND vTotalFamilyMembers EQ 1 ) {  
+                                if ( vTotalFamilyMembers EQ 1 ) {  
                                     
 									// Single Person Placement Verification
 									if ( NOT isDate(qGetStudentsInRegion.doc_single_place_auth) ) {
@@ -954,36 +953,31 @@
                                     vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Family Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 
-                                // Required starting Aug 12
-                                if ( qGetStudentsInRegion.seasonID GTE 9 ) {
-                                    
-									// Student Bedroom Photo
-									if ( NOT isDate(qGetStudentsInRegion.doc_bedroom_photo) ) {
-										vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Student Bedroom Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
-									}
+								// Student Bedroom Photo
+								if ( NOT isDate(qGetStudentsInRegion.doc_bedroom_photo) ) {
+									vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Student Bedroom Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+								}
 
-									// Student Bathroom Photo
-									if ( NOT isDate(qGetStudentsInRegion.doc_bathroom_photo) ) {
-										vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Student Bathroom Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
-									}
+								// Student Bathroom Photo
+								if ( NOT isDate(qGetStudentsInRegion.doc_bathroom_photo) ) {
+									vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Student Bathroom Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+								}
 
-									// Kitchen Photo
-									if ( NOT isDate(qGetStudentsInRegion.doc_kitchen_photo) ) {
-										vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Kitchen Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
-									}
+								// Kitchen Photo
+								if ( NOT isDate(qGetStudentsInRegion.doc_kitchen_photo) ) {
+									vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Kitchen Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+								}
 
-									// Living Room Photo
-									if ( NOT isDate(qGetStudentsInRegion.doc_living_room_photo) ) {
-										vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Living Room Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
-									}
-									
-									// Outside Photo
-									if ( NOT isDate(qGetStudentsInRegion.doc_outside_photo) ) {
-										vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Outside Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
-									}
-
-                                }  
+								// Living Room Photo
+								if ( NOT isDate(qGetStudentsInRegion.doc_living_room_photo) ) {
+									vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Living Room Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+								}
 								
+								// Outside Photo
+								if ( NOT isDate(qGetStudentsInRegion.doc_outside_photo) ) {
+									vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Outside Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+								}
+
                                 // School & Community Profile Form
                                 if ( NOT isDate(qGetStudentsInRegion.doc_school_profile_rec) ) {
                                     vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "School & Community Profile &nbsp; &nbsp;", " &nbsp; &nbsp;");
@@ -1047,52 +1041,56 @@
 								*/
                             </cfscript>
                             
-                            <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
-                                <td style="font-size:9px">
-                                    #qGetStudentsInRegion.studentName#
-                                    <cfif VAL(qGetStudentsInRegion.active)>
-                                        <span class="note">(Active)</span>
-                                    <cfelseif isDate(qGetStudentsInRegion.cancelDate)>
-                                        <span class="noteAlert">(Cancelled)</span>
-                                    <cfelseif NOT VAL(qGetStudentsInRegion.active)>
-                                        <span class="note">(Inactive)</span>
-                                    </cfif>
-                                </td>
-                                <td style="font-size:9px">#qGetStudentsInRegion.programName#</td>
-                                <td style="font-size:9px">
-                                    #qGetStudentsInRegion.hostFamilyLastName# ###qGetStudentsInRegion.hostID# 
-                                    <span class="note">
-                                        (
-                                            <cfif VAL(qGetStudentsInRegion.isWelcomeFamily)>
-                                                Welcome
-                                            <cfelse>
-                                                Permanent
-                                            </cfif>
-                                            -
-                                            <cfif VAL(qGetStudentsInRegion.isActivePlacement)>
-                                                Current
-                                            <cfelse>
-                                                Previous
-                                            </cfif>
-    
-                                            <cfif VAL(qGetStudentsInRegion.isRelocation)>
-                                                - Relocation
-                                            </cfif>
-                                        )
-                                    </span>                            
-                                </td>
-                                <td class="center" style="font-size:9px">#DateFormat(qGetStudentsInRegion.datePlaced, 'mm/dd/yy')#</td>
-                                <td style="font-size:9px">
-                                    <cfif VAL(vIsCompliant)>
-                                        compliant
-                                    <cfelse>
-                                        #vMissingDocumentsMessage#
-                                        
-                                        #vOutOfComplianceDocuments#
-                                    </cfif>
-                                </td>
-                            </tr>
-            
+                            <cfif LEN(vMissingDocumentsMessage)>
+                            
+                                <tr class="#iif(vCurrentRow MOD 2 ,DE("off") ,DE("on") )#">
+                                    <td style="font-size:9px">
+                                        #qGetStudentsInRegion.studentName#
+                                        <cfif VAL(qGetStudentsInRegion.active)>
+                                            <span class="note">(Active)</span>
+                                        <cfelseif isDate(qGetStudentsInRegion.cancelDate)>
+                                            <span class="noteAlert">(Cancelled)</span>
+                                        <cfelseif NOT VAL(qGetStudentsInRegion.active)>
+                                            <span class="note">(Inactive)</span>
+                                        </cfif>
+                                    </td>
+                                    <td style="font-size:9px">#qGetStudentsInRegion.programName#</td>
+                                    <td style="font-size:9px">
+                                        #qGetStudentsInRegion.hostFamilyLastName# ###qGetStudentsInRegion.hostID# 
+                                        <span class="note">
+                                            (
+                                                <cfif VAL(qGetStudentsInRegion.isWelcomeFamily)>
+                                                    Welcome
+                                                <cfelse>
+                                                    Permanent
+                                                </cfif>
+                                                -
+                                                <cfif VAL(qGetStudentsInRegion.isActivePlacement)>
+                                                    Current
+                                                <cfelse>
+                                                    Previous
+                                                </cfif>
+        
+                                                <cfif VAL(qGetStudentsInRegion.isRelocation)>
+                                                    - Relocation
+                                                </cfif>
+                                            )
+                                        </span>                            
+                                    </td>
+                                    <td class="center" style="font-size:9px">#DateFormat(qGetStudentsInRegion.datePlaced, 'mm/dd/yy')#</td>
+                                    <td style="font-size:9px">
+                                        <cfif VAL(vIsCompliant)>
+                                            compliant
+                                        <cfelse>
+                                            #vMissingDocumentsMessage#
+                                            
+                                            #vOutOfComplianceDocuments#
+                                        </cfif>
+                                    </td>
+                                </tr>
+            			
+                        	</cfif>
+                        
                         </cfoutput>
                     
                     </table>
