@@ -204,7 +204,7 @@
 					SESSION.formErrors.Add("Second Visit Representative must be different than Placing Representative");
 				}	
 
-				if ( VAL(FORM.secondVisitRepID) AND VAL(FORM.areaRepID) AND FORM.secondVisitRepID EQ FORM.areaRepID ) { 
+				if ( CLIENT.companyID NEQ 10 AND VAL(FORM.secondVisitRepID) AND VAL(FORM.areaRepID) AND FORM.secondVisitRepID EQ FORM.areaRepID ) { 
 					SESSION.formErrors.Add("Second Visit Representative must be different than Supervising Representative");
 				}	
 
@@ -296,7 +296,7 @@
 				SESSION.formErrors.Add("Second Visit Representative must be different than Placing Representative");
 			}	
 			
-			if ( VAL(FORM.secondVisitRepID) AND VAL(FORM.areaRepID) AND FORM.secondVisitRepID EQ FORM.areaRepID ) { 
+			if ( CLIENT.companyID NEQ 10 AND VAL(FORM.secondVisitRepID) AND VAL(FORM.areaRepID) AND FORM.secondVisitRepID EQ FORM.areaRepID ) { 
 				SESSION.formErrors.Add("Second Visit Representative must be different than Supervising Representative");
 			}	
 			
