@@ -72,239 +72,273 @@
 
         <!--- No Errors Found --->
         <cfif NOT SESSION.formErrors.length()>
-        
-            <cfquery name="qGetResults" datasource="#APPLICATION.DSN#">
-                SELECT 
-                    s.studentID,
-                    s.firstName,
-                    s.familyLastName,
-                    CAST(CONCAT(s.firstName, ' ', s.familyLastName,  ' ##', s.studentID) AS CHAR) AS studentName,
-                    s.active,
-                    s.cancelDate,
-                    sh.areaRepID,
-                    sh.placeRepID,
-                    sh.isRelocation,
-                    sh.isWelcomeFamily,
-                    sh.isActive AS isActivePlacement,
-                    sh.datePlaced,
-                    sh.doc_host_app_page1_date,
-                    sh.doc_host_app_page2_date,
-                    sh.doc_letter_rec_date, 
-                    sh.doc_rules_rec_date, 
-                    sh.doc_rules_sign_date,
-                    sh.doc_photos_rec_date, 
-                    <!--- Added 02/27/2012 - Required for August 12 Students --->
-                    sh.doc_bedroom_photo,
-                    sh.doc_bathroom_photo,
-                    sh.doc_kitchen_photo,
-                    sh.doc_living_room_photo,
-                    sh.doc_outside_photo,
-                    <!--- End of Added 02/27/2012 - Required for August 12 Students --->
-                    sh.doc_school_accept_date, 
-                    sh.doc_school_profile_rec,
-                    sh.doc_conf_host_rec, 
-                    sh.doc_date_of_visit, 
-                    sh.doc_ref_form_1, 
-                    sh.doc_ref_form_2, 
-                    sh.doc_single_place_auth,
-                    sh.stu_arrival_orientation, 
-                    sh.host_arrival_orientation, 
-                    sh.doc_class_schedule,
-                    sh.doc_income_ver_date,
-                    sh.doc_single_ref_check1,
-                    sh.doc_single_ref_check2,
-                    <!--- Second Visit Report --->
-                    secondVisitReport.pr_ny_approved_date,
-                    <!--- Program --->
-                    p.programName,
-                    p.seasonID,
-                    <!--- Host Family --->
-                    h.hostID,             
-                    h.familyLastName as hostFamilyLastName,
-                    h.fatherFirstName,
-                    h.motherFirstName,
-                    <!--- Get Total of Children at home --->
-                    (
-                        SELECT 
-                            COUNT(shc.childID) 
-                        FROM 
-                            smg_host_children shc
-                        WHERE
-                            shc.hostID = h.hostID
-                        AND
-                            shc.liveathome = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
-                        AND	
-                            shc.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                    ) AS totalChildrenAtHome,
-                    <!--- Region --->
-                    r.regionID,
-                    r.regionName,
-                    <!--- Facilitator --->
-                    CONCAT(fac.firstName, ' ', fac.lastName) AS facilitatorName,
-                    <!--- Placing / Supervising --->
-                    u.userID repID,
-                    u.email as repEmail,
-                    CONCAT(u.firstName, ' ', u.lastName) AS repName
-                FROM 
-                    smg_students s
-                INNER JOIN
-                    smg_hostHistory sh ON sh.studentID = s.studentID
-					<!--- Date Placed --->
-                    <cfif isDate(FORM.placedDateFrom) AND isDate(FORM.placedDateTo)>
-                        AND 
-                            sh.datePlaced
-                            BETWEEN 
-                                <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.placedDateFrom#"> 	
+
+            <!--- Get a list of host families that were included in the DOS Report and Sevis Updates --->
+            <cfquery name="qGetHostList" datasource="#APPLICATION.DSN#">
+            	SELECT
+                	hostID
+                FROM
+                	(
+				
+						<!--- GET CSIET HOSTS --->
+                        SELECT
+                            ch.hostID
+                        FROM
+                            smg_csiet_history ch                    
+                        INNER JOIN
+                            smg_students s ON s.studentID = ch.studentID
                             AND
-                                <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d', 1, FORM.placedDateTo)#"> 	
-                    </cfif>
-                INNER JOIN
-                    smg_programs p on p.programID = s.programID
-                    <!--- Program --->
-                    AND
-                    	p.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> ) 
-                INNER JOIN
-                    smg_hosts h ON h.hostID = sh.hostID
-                INNER JOIN
-                    smg_regions r ON r.regionID = s.regionAssigned
-                    <!--- Region --->
-                    AND
-                        r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> ) 
-				<!--- Second Visit Report - Check the report itself and not the fields on placement paperwork --->
-                LEFT OUTER JOIN 
-                    progress_reports secondVisitReport ON secondVisitReport.fk_student = s.studentID
-                        AND
-                            secondVisitReport.fk_host = sh.hostID
-                        AND
-                            secondVisitReport.fk_reporttype = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
-                        AND
-                            secondVisitReport.pr_ny_approved_date IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">                    
-                LEFT OUTER JOIN 
-                    smg_users fac ON r.regionFacilitator = fac.userID            
-                INNER JOIN
-                	<!--- Report By ---->
-                    smg_users u ON sh.#FORM.reportBy# = u.userID
-                WHERE 
-					1 = 1
-                 
-              	<!--- Regional Advisors --->
-				<cfif LEN(vListOfAdvisorUsers)>
-                	AND
-                        (
-                       		s.areaRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
-                        OR
-                     		s.placeRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
-                        )
-				</cfif>    
-                <!--- Student Status --->
-                <cfif FORM.studentStatus EQ 'Active'>
-                	AND
-                    	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                <cfelseif FORM.studentStatus EQ 'Inactive'>
-                	AND
-                    	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                <cfelseif FORM.studentStatus EQ 'Canceled'>
-                	AND
-                    	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                    AND
-                    	s.cancelDate IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
-                </cfif>
-
-                <!--- Placement Status --->
-                <cfif FORM.placementStatus EQ 'Placed'>
-                    AND 
-                        s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4" list="yes"> )	
-                <cfelseif FORM.placementStatus EQ 'Pending'>
-                    AND 
-                        s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )	
-                <cfelseif FORM.placementStatus EQ 'Rejected'>
-                    AND 
-                        s.host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="99"> 	
-                <cfelse>
-                    AND 
-                        s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,6,7,99" list="yes"> )	
-				</cfif>
-                
-                <!--- Paperwork Option --->
-                <cfif FORM.compliantOption EQ 'Missing'>
-                    AND 
-                        (
-                            sh.doc_host_app_page1_date IS NULL 
-                        OR 
-                            sh.doc_host_app_page2_date IS NULL 
-                        OR 
-                            sh.doc_letter_rec_date IS NULL 
-                        OR 
-                            sh.doc_rules_rec_date IS NULL 
-                        OR
-                            sh.doc_rules_sign_date IS NULL
-                        OR
-                            sh.doc_photos_rec_date IS NULL 
-                        OR 
-                            sh.doc_school_accept_date IS NULL 
-                        OR 
-                            sh.doc_school_profile_rec IS NULL 
-                        OR
-                            sh.doc_conf_host_rec IS NULL 
-                        OR 
-                            sh.doc_date_of_visit IS NULL 
-                        OR 
-                            sh.doc_ref_form_1 IS NULL 
-                        OR 
-                            sh.doc_ref_form_2 IS NULL
-                        OR 
-                            sh.stu_arrival_orientation IS NULL 
-                        OR 
-                            sh.host_arrival_orientation IS NULL 
-                        OR 
-                            sh.doc_class_schedule IS NULL
-                        OR
-                            sh.doc_income_ver_date IS NULL
-                        OR
-                            sh.doc_single_ref_check1 IS NULL
-                        OR
-                            sh.doc_single_ref_check2 IS NULL            
-                        <!---  Second Visit Report - Check the report itself - OR s.doc_conf_host_rec2 IS NULL --->
-                        OR
-                            secondVisitReport.pr_ny_approved_date IS NULL 
-                        )
-                  
-                    <!--- Added 02/27/2012 / Required starting Aug 12 --->                                                               
-                    OR
-                        (
-                            p.seasonID >= <cfqueryparam cfsqltype="cf_sql_integer" value="9">
-							
-							<!--- Student Status --->
-                            <cfif FORM.studentStatus EQ 'Active'>
+                                s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> ) 
+                                <!--- Student Status --->
+                                <cfif FORM.studentStatus EQ 'Active'>
+                                    AND
+                                        s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                                <cfelseif FORM.studentStatus EQ 'Inactive'>
+                                    AND
+                                        s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                                <cfelseif FORM.studentStatus EQ 'Canceled'>
+                                    AND
+                                        s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                                    AND
+                                        s.cancelDate IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                                </cfif>
+                            
+                        UNION
+                        
+                        <!--- GET SEVIS UPDATES --->
+                        SELECT
+                            ssh.hostID
+                        FROM
+                            smg_sevis_history ssh                    
+                        INNER JOIN
+                            smg_students s ON s.studentID = ssh.studentID
+                            AND
+                                s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> ) 
+                                <!--- Student Status --->
+                                <cfif FORM.studentStatus EQ 'Active'>
+                                    AND
+                                        s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                                <cfelseif FORM.studentStatus EQ 'Inactive'>
+                                    AND
+                                        s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                                <cfelseif FORM.studentStatus EQ 'Canceled'>
+                                    AND
+                                        s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                                    AND
+                                        s.cancelDate IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                                </cfif>
+                            
+					) AS t 
+                    
+                    GROUP BY
+                        hostID  
+            </cfquery>
+            
+            <cfquery name="qGetResults" datasource="#APPLICATION.DSN#">
+                SELECT
+                	*
+                FROM
+                	( 
+                        SELECT 
+                            s.studentID,
+                            s.firstName,
+                            s.familyLastName,
+                            CAST(CONCAT(s.firstName, ' ', s.familyLastName,  ' ##', s.studentID) AS CHAR) AS studentName,
+                            s.active,
+                            s.cancelDate,
+                            sh.areaRepID,
+                            sh.placeRepID,
+                            sh.isRelocation,
+                            sh.isWelcomeFamily,
+                            sh.isActive AS isActivePlacement,
+                            sh.datePlaced,
+                            sh.doc_host_app_page1_date,
+                            sh.doc_host_app_page2_date,
+                            sh.doc_letter_rec_date, 
+                            sh.doc_rules_rec_date, 
+                            sh.doc_rules_sign_date,
+                            sh.doc_photos_rec_date, 
+                            <!--- Added 02/27/2012 - Required for August 12 Students --->
+                            sh.doc_bedroom_photo,
+                            sh.doc_bathroom_photo,
+                            sh.doc_kitchen_photo,
+                            sh.doc_living_room_photo,
+                            sh.doc_outside_photo,
+                            <!--- End of Added 02/27/2012 - Required for August 12 Students --->
+                            sh.doc_school_accept_date, 
+                            sh.doc_school_profile_rec,
+                            sh.doc_conf_host_rec, 
+                            sh.doc_date_of_visit, 
+                            sh.doc_ref_form_1, 
+                            sh.doc_ref_form_2, 
+                            sh.doc_single_place_auth,
+                            sh.stu_arrival_orientation, 
+                            sh.host_arrival_orientation, 
+                            sh.doc_class_schedule,
+                            sh.doc_income_ver_date,
+                            sh.doc_single_ref_check1,
+                            sh.doc_single_ref_check2,
+                            <!--- Second Visit Report --->
+                            secondVisitReport.pr_ny_approved_date,
+                            <!--- Program --->
+                            p.programName,
+                            p.seasonID,
+                            <!--- Host Family --->
+                            h.hostID,             
+                            h.familyLastName as hostFamilyLastName,
+                            h.fatherFirstName,
+                            h.motherFirstName,
+                            <!--- Get Total of Children at home --->
+                            (
+                                SELECT 
+                                    COUNT(shc.childID) 
+                                FROM 
+                                    smg_host_children shc
+                                WHERE
+                                    shc.hostID = h.hostID
                                 AND
-                                    s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                            <cfelseif FORM.studentStatus EQ 'Inactive'>
-                                AND
-                                    s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                            <cfelseif FORM.studentStatus EQ 'Canceled'>
-                                AND
-                                    s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                                AND
-                                    s.cancelDate IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                                    shc.liveathome = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
+                                AND	
+                                    shc.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                            ) AS totalChildrenAtHome,
+                            <!--- Region --->
+                            r.regionID,
+                            r.regionName,
+                            <!--- Facilitator --->
+                            CONCAT(fac.firstName, ' ', fac.lastName) AS facilitatorName,
+                            <!--- Placing / Supervising --->
+                            u.userID repID,
+                            u.email as repEmail,
+                            CONCAT(u.firstName, ' ', u.lastName) AS repName
+                        FROM 
+                            smg_students s
+                        INNER JOIN
+                            smg_hostHistory sh ON sh.studentID = s.studentID
+                            <!--- Date Placed --->
+                            <cfif isDate(FORM.placedDateFrom) AND isDate(FORM.placedDateTo)>
+                                AND 
+                                    sh.datePlaced
+                                    BETWEEN 
+                                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.placedDateFrom#"> 	
+                                    AND
+                                        <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d', 1, FORM.placedDateTo)#"> 	
                             </cfif>
-
-							<!--- Placement Status --->
-                            <cfif FORM.placementStatus EQ 'Placed'>
-                                AND 
-                                    s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4" list="yes"> )	
-                            <cfelseif FORM.placementStatus EQ 'Pending'>
-                                AND 
-                                    s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )	
-                            <cfelseif FORM.placementStatus EQ 'Rejected'>
-                                AND 
-                                    s.host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="99"> 	
-                            <cfelse>
-                                AND 
-                                    s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,6,7,99" list="yes"> )	
-                            </cfif>
-
+                        INNER JOIN
+                            smg_programs p on p.programID = s.programID
+                            <!--- Program --->
+                            AND
+                                p.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> ) 
+                        INNER JOIN
+                            smg_hosts h ON h.hostID = sh.hostID
+                        INNER JOIN
+                            smg_regions r ON r.regionID = s.regionAssigned
+                            <!--- Region --->
+                            AND
+                                r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> ) 
+                        <!--- Second Visit Report - Check the report itself and not the fields on placement paperwork --->
+                        LEFT OUTER JOIN 
+                            progress_reports secondVisitReport ON secondVisitReport.fk_student = s.studentID
+                                AND
+                                    secondVisitReport.fk_host = sh.hostID
+                                AND
+                                    secondVisitReport.fk_reporttype = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
+                                AND
+                                    secondVisitReport.pr_ny_approved_date IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">                    
+                        LEFT OUTER JOIN 
+                            smg_users fac ON r.regionFacilitator = fac.userID            
+                        INNER JOIN
+                            <!--- Report By ---->
+                            smg_users u ON sh.#FORM.reportBy# = u.userID
+                        WHERE 
+                            1 = 1
+                         
+                        <!--- Regional Advisors --->
+                        <cfif LEN(vListOfAdvisorUsers)>
+                            AND
+                                (
+                                    s.areaRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
+                                OR
+                                    s.placeRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
+                                )
+                        </cfif>    
+                        
+                        <!--- Student Status --->
+                        <cfif FORM.studentStatus EQ 'Active'>
+                            AND
+                                s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                        <cfelseif FORM.studentStatus EQ 'Inactive'>
+                            AND
+                                s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                        <cfelseif FORM.studentStatus EQ 'Canceled'>
+                            AND
+                                s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                            AND
+                                s.cancelDate IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                        </cfif>
+        
+                        <!--- Placement Status --->
+                        <cfif FORM.placementStatus EQ 'Placed'>
                             AND 
-                                (                   	
+                                s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4" list="yes"> )	
+							<!---
+                            AND
+                                sh.datePlaced IS NOT NULL <!--- Approved Placements Only --->	
+                            --->
+                        <cfelseif FORM.placementStatus EQ 'Pending'>
+                            AND 
+                                s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )	
+                        <cfelseif FORM.placementStatus EQ 'Rejected'>
+                            AND 
+                                s.host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="99"> 	
+                        <cfelse>
+                            AND 
+                                s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,6,7,99" list="yes"> )	
+                        </cfif>
+                        
+                        <!--- Paperwork Option --->
+                        <cfif FORM.compliantOption EQ 'Missing'>
+                            AND 
+                                (
+                                    sh.doc_host_app_page1_date IS NULL 
+                                OR 
+                                    sh.doc_host_app_page2_date IS NULL 
+                                OR 
+                                    sh.doc_letter_rec_date IS NULL 
+                                OR 
+                                    sh.doc_rules_rec_date IS NULL 
+                                OR
+                                    sh.doc_rules_sign_date IS NULL
+                                OR
+                                    sh.doc_photos_rec_date IS NULL 
+                                OR 
+                                    sh.doc_school_accept_date IS NULL 
+                                OR 
+                                    sh.doc_school_profile_rec IS NULL 
+                                OR
+                                    sh.doc_conf_host_rec IS NULL 
+                                OR 
+                                    sh.doc_date_of_visit IS NULL 
+                                OR 
+                                    sh.doc_ref_form_1 IS NULL 
+                                OR 
+                                    sh.doc_ref_form_2 IS NULL
+                                OR 
+                                    sh.stu_arrival_orientation IS NULL 
+                                OR 
+                                    sh.host_arrival_orientation IS NULL 
+                                OR 
+                                    sh.doc_class_schedule IS NULL
+                                OR
+                                    sh.doc_income_ver_date IS NULL
+                                OR
+                                    sh.doc_single_ref_check1 IS NULL
+                                OR
+                                    sh.doc_single_ref_check2 IS NULL            
+                                <!---  Second Visit Report - Check the report itself - OR s.doc_conf_host_rec2 IS NULL --->
+                                OR
+                                    secondVisitReport.pr_ny_approved_date IS NULL 
+                                <!--- Added 02/27/2012 / Required starting Aug 12 --->     
+                                OR
                                     sh.doc_bedroom_photo IS NULL   
                                 OR
                                     sh.doc_bathroom_photo IS NULL   
@@ -314,14 +348,19 @@
                                     sh.doc_living_room_photo IS NULL   
                                 OR
                                     sh.doc_outside_photo IS NULL   
-                                )                        
-                        )
-                </cfif>
-                
-                ORDER BY   
-                    repName,          
-                    studentName,
-                    sh.dateCreated DESC            
+                                )
+                        </cfif>
+                        
+                        ORDER BY   
+                            repName,          
+                            studentName,
+                            sh.dateCreated DESC  
+                    ) AS T  
+                    
+                    WHERE
+                        isActivePlacement = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> 
+                    OR
+                        hostID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ValueList(qGetHostList.hostID)#" list="yes"> ) 
             </cfquery>
 
 		</cfif> <!--- NOT SESSION.formErrors.length() ---->
@@ -766,9 +805,8 @@
             
             </cfsavecontent>
         
-            <!--- Display Report Header --->
-            #reportHeader#
-        
+        	#reportHeader#
+        	
         </cfoutput>
                 
 		<!--- Loop Regions ---> 
@@ -1076,7 +1114,6 @@
                         />
                         
                         <cfoutput>
-                        	#reportHeader#
                     		#reportBody#
 						</cfoutput>
                         
@@ -1085,7 +1122,6 @@
                 <cfelse>
                 
                     <cfoutput>
-                    	#reportHeader#
                     	#reportBody# 
 					</cfoutput>
                     
