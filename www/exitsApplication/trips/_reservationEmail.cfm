@@ -113,7 +113,7 @@
 	
         <p>
         	Please visit our website for additional questions. 
-        	<a href="http://trips.exitsapplication.com/frequently-asked-questions.cfm">http://trips.exitsapplication.com/frequently-asked-questions.cfm</a>
+        	<a href="https://trips.exitsapplication.com/frequently-asked-questions.cfm">https://trips.exitsapplication.com/frequently-asked-questions.cfm</a>
         </p>
         
         <p>If you have any questions that are not answerd please don't hesitate to contact us at #APPLICATION.MPD.email#. </p>

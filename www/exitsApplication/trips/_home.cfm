@@ -45,9 +45,9 @@
                     <input type="hidden" name="action" value="tripDetails" />
                     <input type="hidden" name="tourID" value="#qGetTourList.tour_id#" />
                     <cfif APPLICATION.isServerLocal>
-                    	<input type="image" name="submit" src="http://smg.local/nsmg/uploadedfiles/student-tours/#qGetTourList.tour_img1#.jpg" alt="#qGetTourList.tour_name# Details" /> <br />
+                    	<input type="image" name="submit" src="https://smg.local/nsmg/uploadedfiles/student-tours/#qGetTourList.tour_img1#.jpg" alt="#qGetTourList.tour_name# Details" /> <br />
                    	<cfelse>
-                    	<input type="image" name="submit" src="http://ise.exitsapplication.com/nsmg/uploadedfiles/student-tours/#qGetTourList.tour_img1#.jpg" alt="#qGetTourList.tour_name# Details" /> <br />
+                    	<input type="image" name="submit" src="https://ise.exitsapplication.com/nsmg/uploadedfiles/student-tours/#qGetTourList.tour_img1#.jpg" alt="#qGetTourList.tour_name# Details" /> <br />
                     </cfif>
                     
                     <p style="font-weight:bold; margin:3px;">#qGetTourList.tour_name#</p>

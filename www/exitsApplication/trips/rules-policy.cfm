@@ -33,7 +33,7 @@
                     <p class="bold">Instructions</p>
                     
                     <ul class="paragraphRules">
-                        <li>Visit <a href="http://trips.exitsapplication.com">http://trips.exitsapplication.com</a>  to book your trip.</li>	
+                        <li>Visit <a href="https://trips.exitsapplication.com">https://trips.exitsapplication.com</a>  to book your trip.</li>	
                         <ul class="paragraphRules">
                             <li><font size=-1>If you want to go on other tours, you will need to do this process for <em><strong>each</strong></em> tour you want to go on.</font></li>
                         </ul>

@@ -83,7 +83,7 @@
                         <p class="faq-section">How to book a tour?</p>
                         
                         <ol style="text-align:left; line-height:20px;">
-                            <li><a href="http://trips.exitsapplication.com/">Reserve your spot</a> on your tour on MPD Trips Website</li>
+                            <li><a href="https://trips.exitsapplication.com/">Reserve your spot</a> on your tour on MPD Trips Website</li>
                             <li>You will receive an email with both a Payment Form and Permission Form attached.</li>
                             <li>You must fully complete both forms and submit them</li>
                             <li>Once submitted, you will receive a confirmation email that all necessary paperwork has been submitted.</li>
