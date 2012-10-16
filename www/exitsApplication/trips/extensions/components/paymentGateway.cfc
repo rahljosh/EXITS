@@ -68,6 +68,8 @@
 				Discover Test Card 6011000000000012
 				Visa Test Card 4007000000027
 				Second Visa Test Card 4012888818888
+				Master Card 5105105105105100
+				Second Master Card 5555555555554444
 				JCB 3088000000000017
 				Diners Club/ Carte Blanche 38000000000006				
 			*/
