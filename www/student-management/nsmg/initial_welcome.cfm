@@ -322,8 +322,11 @@
                             <tr>
                                 <td><img src="pics/icons/annualPaperwork.png" border="0" title="Click Here to fill out  your annual paperwork" /></td>
                                 <td><a href="index.cfm?curdoc=user/index">Yearly Paperwork</a></td>
-                                <td></td>
-                                <td></td>
+								<!--- View Pending Placements --->
+                                <cfif CLIENT.usertype LTE 7>
+                                    <td width="22"><img src="pics/icons/viewPlacements.png" /></td>
+                                    <td><a href="index.cfm?curdoc=pendingPlacementList">View Pending Placements</a></td>
+                                </cfif>
                				</tr>
                 			<tr>
 								<!--- Progress Reports --->
@@ -333,10 +336,10 @@
                                     / 
                                     <a href="index.cfm?curdoc=secondVisitReports">Second Visit Reports</a>
                                 </td>
-								<!--- View Pending Placements --->
-                                <cfif CLIENT.usertype LTE 7>
-                                    <td width="22"><img src="pics/icons/viewPlacements.png" /></td>
-                                    <td><a href="index.cfm?curdoc=pendingPlacementList">View Pending Placements</a></td>
+                                <!---  WebEx --->
+                                <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, CLIENT.companyID)>
+                                    <td width="22"><img src="pics/icons/webex.png" /></td>
+                                    <td><a href="index.cfm?curdoc=calendar/index">WebEx Calendar</a></td>
                                 </cfif>
                 			</tr>
                             <tr>
@@ -345,10 +348,10 @@
                                     <td width="22"><img src="pics/icons/HelpHours.png" /></td>
                                     <td><a href="index.cfm?curdoc=project_help">H.E.L.P. Community Service Hours</a></td>
                                 </cfif>
-                                <!---  WebEx --->
-                                <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, CLIENT.companyID)>
-                                    <td width="22"><img src="pics/icons/webex.png" /></td>
-                                    <td><a href="index.cfm?curdoc=calendar/index">WebEx Calendar</a></td>
+                                <!--- Quick Start --->
+                                <cfif ListFind("1,2,3,4,5", CLIENT.userType) AND listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG ,CLIENT.companyID)>
+                                    <td width="22"><img src="pics/icons/annualPaperwork.png" /></td>
+                                    <td><a href="uploadedfiles/pdf_docs/ISE/quick-start-manual.pdf" target="_blank">Quick Start Manual</a></td>
                                 </cfif>
                             </tr>
                 		</table>
