@@ -276,12 +276,12 @@
 		<cfargument name="Exception" type="any" required="true" />
 		<cfargument name="EventName" type="string" required="false" default="" />
 
+        <cfparam name="CLIENT.userID" default="0">
+        <cfparam name="CLIENT.studentID" default="0">
+        <cfparam name="CLIENT.name" default="">
+
         <!--- Production - Email Error Message - Display HTML Error --->
- 		<cfif NOT APPLICATION.isServerLocal>
-			
-            <cfparam name="CLIENT.userID" default="0">
-            <cfparam name="CLIENT.studentID" default="0">
-            <cfparam name="CLIENT.name" default="">
+ 		<cfif NOT APPLICATION.isServerLocal AND CLIENT.userID NEQ 20> <!--- Fred from INTO needs to see the errors --->
             
 			<cfscript>
                 // Current Path to root errorMessage.cfm file
