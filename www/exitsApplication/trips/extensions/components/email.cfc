@@ -88,11 +88,11 @@
 
     
 	<cffunction name="sendEmail" access="public" returntype="void">
-        <cfargument name="email_from" default="#SESSION.COMPANY.supportEmail#" required="true">
+        <cfargument name="email_from" default="#APPLICATION.MPD.email#" required="true">
 		<cfargument name="email_to" type="string" required="true">
 		<cfargument name="email_subject" type="string" required="true">
 		<!--- the from address in the cfmail tag below is always the support address because emails from other domains are blocked.  use replyto if needed. --->
-		<cfargument name="email_replyto" type="string" required="false" default="#SESSION.COMPANY.supportEmail#">
+		<cfargument name="email_replyto" type="string" required="false" default="#APPLICATION.MPD.email#">
         <cfargument name="email_cc" type="string" required="false" default="">
         <cfargument name="email_bcc" type="string" required="false" default=""  hint="optional bcc">
 		<!--- message is optional because include_content may be used instead. --->
