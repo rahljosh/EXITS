@@ -68,3 +68,17 @@
    border-top-color: #3BB54A;
    background: #3BB54A;
 }
+
+.tripNotes {
+	color: #666;
+	font-size:1em;
+	display:block;
+	padding:0px 0px 2px 10px;
+}
+
+.tripNotesRight {
+	color: #666;
+	font-size:1em;
+	display:block;
+	padding:3px 0px 0px 0px;
+}

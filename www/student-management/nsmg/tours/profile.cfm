@@ -33,6 +33,26 @@
     <!--- Payment --->
 	<cfparam name="FORM.datePaid" default="">
     <cfparam name="FORM.referencePaid" default="">
+	<!--- Credit Card Processing --->
+    <cfparam name="FORM.authorizeNetPaymentID" default="">
+    <cfparam name="FORM.creditCardTypeID" default="">
+    <cfparam name="FORM.creditCardType" default="">
+    <cfparam name="FORM.balanceDue" default="0">
+    <cfparam name="FORM.nameOnCard" default="">
+    <cfparam name="FORM.cardNumber" default="">
+    <cfparam name="FORM.lastDigits" default="">
+    <cfparam name="FORM.expirationMonth" default="">
+    <cfparam name="FORM.expirationYear" default="">
+    <cfparam name="FORM.cardCode" default="">
+    <cfparam name="FORM.billingFirstName" default="">
+    <cfparam name="FORM.billingFirstName" default="">
+    <cfparam name="FORM.billingLastName" default="">
+    <cfparam name="FORM.billingCompany" default="">
+    <cfparam name="FORM.billingAddress" default="">
+    <cfparam name="FORM.billingCity" default="">
+    <cfparam name="FORM.billingState" default="">
+    <cfparam name="FORM.billingZipCode" default="">
+    <cfparam name="FORM.billingCountryID" default="232">
     
     <cfscript>
 		if ( VAL(URL.studentID) ) {
@@ -42,12 +62,25 @@
 		if ( VAL(URL.tripID) ) {
 			FORM.tripID = URL.tripID;	
 		}	
+		
+		// Get State List
+		qGetStateList = APPLICATION.CFC.LOOKUPTABLES.getState();
+		
+		// Get Country List
+		qGetCountryList = APPLICATION.CFC.LOOKUPTABLES.getCountry();
+		
+		//Set up constant for credit card types
+		arCreditCardType = ArrayNew(1);		
+		arCreditCardType[1] = "American Express";
+		arCreditCardType[2] = "Discover";
+		arCreditCardType[3] = "MasterCard";
+		arCreditCardType[4] = "Visa";
 	</cfscript>
     
     <cfquery name="qGetRegistrationInfo" datasource="#APPLICATION.DSN#">
         SELECT 
         	td.*,
-        	st.id, 
+        	st.id,             
             st.tripID,
             st.totalCost,
             st.dateDepositPaid,
@@ -67,6 +100,7 @@
             st.dateCanceled,
             st.refundAmount,
             st.refundNotes,
+            td.tour_name,
             ap.ID AS applicationPaymentID,
             ap.amount,            
             s.studentID,
@@ -130,6 +164,21 @@
         AND
         	ap.foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegistrationInfo.ID#">
 	</cfquery>   
+
+    <cfquery name="qGetAuthorizeRecordedPayment" datasource="#APPLICATION.DSN#">
+    	SELECT
+            ap.*     
+        FROM
+	        applicationPayment ap
+        WHERE
+            ap.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student_tours">
+        AND	
+            ap.authIsSuccess = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+        AND
+        	ap.foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegistrationInfo.ID#">
+        GROUP BY
+        	authorizeNetPaymentID
+	</cfquery>   
     
     <cfquery name="qGetDepartureFlightInformation" datasource="#APPLICATION.DSN#">
     	SELECT
@@ -162,6 +211,9 @@
 			// Form Email Address
 			FORM.emailAddress = qGetRegistrationInfo.email;
 		}
+		
+		// Set Balance Due 
+		FORM.balanceDue = qGetRegistrationInfo.totalCost - qGetRegistrationInfo.totalReceived;
 	</cfscript>
     
     <!----Get Siblings on tours---->
@@ -388,90 +440,196 @@
 			<cfscript> 
 				// Create Component Object
 				cfcPaymentGateway = CreateCFC("paymentGateway").Init();
+			
+				if ( FORM.authorizeNetPaymentID EQ 0 ) {
 				
-				// Try to process payment
-				try {
-
-					// credit card authorization and capture
-					stProcessPayment = cfcPaymentGateway.CIMauthorizeAndCapture (
-						customerProfileId = cfcPaymentGateway.getCustomerProfileID(customerID=VAL(FORM.studentID),companyID=CLIENT.companyID),
-						customerPaymentProfileId = TRIM(FORM.authorizeNetPaymentID),														   
-						orderNumber = '##' & Year(now()) & '-' & qGetRegistrationInfo.ID,	
-						invoiceNumber = '##' & Year(now()) & '-' & qGetRegistrationInfo.ID,	 
-						amount = TRIM(FORM.amount),
-						// ApplicationPayment Table					
-						foreignID=qGetRegistrationInfo.ID,
-						paymentMethodID=qGetPaymentHistory.paymentMethodID,
-						paymentMethodType=qGetPaymentHistory.paymentMethodType,
-						creditCardTypeID=qGetPaymentHistory.creditCardTypeID,
-						creditCardType=qGetPaymentHistory.creditCardType,
-						nameOnCard=qGetPaymentHistory.nameOnCard,
-						lastDigits=qGetPaymentHistory.lastDigits,
-						expirationMonth=qGetPaymentHistory.expirationMonth,
-						expirationYear=qGetPaymentHistory.expirationYear,
-						billingFirstName=qGetPaymentHistory.billingFirstName,
-						billingLastName=qGetPaymentHistory.billingLastName,
-						billingCompany=qGetPaymentHistory.billingCompany,
-						billingAddress=qGetPaymentHistory.billingAddress,
-						billingCity=qGetPaymentHistory.billingCity,
-						billingState=qGetPaymentHistory.billingState,
-						billingZipCode=qGetPaymentHistory.billingZipCode,
-						billingCountryID=qGetPaymentHistory.billingCountryID
-					);															
-					
-					// Transaction Approved
-					if ( stProcessPayment.authIsSuccess ) {
-						// Successfull Message
-						SESSION.pageMessages.Add(stProcessPayment.resultMessage);
-					// Transaction Denied
-					} else {
-						// Error Message
-						SESSION.formErrors.Add(stProcessPayment.resultMessage);
+					if ( NOT LEN(FORM.nameOnCard) ) {
+						SESSION.formErrors.Add("Please enter name on credit card");
+					}
+		
+					if ( NOT LEN(FORM.creditCardTypeID) ) {
+						SESSION.formErrors.Add("Please select a credit card type");
+					}
+		
+					if ( NOT LEN(FORM.cardNumber) ) {
+						SESSION.formErrors.Add("Please enter a valid credit card number");
+					}
+		
+					if ( NOT LEN(FORM.expirationMonth) ) {
+						SESSION.formErrors.Add("Please select an expiration month");
+					}
+		
+					if ( NOT LEN(FORM.expirationYear) ) {
+						SESSION.formErrors.Add("Please select an expiration year");
+					}
+		
+					if ( LEN(FORM.expirationMonth) AND LEN(FORM.expirationYear) AND FORM.expirationMonth & '/' & FORM.expirationYear LT DateAdd('m', -1, now()) ) {
+						SESSION.formErrors.Add("Credit card has expired");
 					}
 					
-				} catch(Any excpt) {
-					// Could Not Process the Transaction
-					SESSION.formErrors.Add(excpt.Message);
-				}
-            </cfscript>
+					if ( NOT LEN(FORM.cardCode) ) {
+						SESSION.formErrors.Add("Please enter a CCV code");
+					}
+					
+					if ( NOT LEN(FORM.billingFirstName) ) {
+						SESSION.formErrors.Add("Please enter a first name");
+					}
+		
+					if ( NOT LEN(FORM.billingLastName) ) {
+						SESSION.formErrors.Add("Please enter a last name");
+					}
+		
+					if ( NOT LEN(FORM.billingAddress) ) {
+						SESSION.formErrors.Add("Please enter an address");
+					}
+		
+					if ( NOT LEN(FORM.billingCity) ) {
+						SESSION.formErrors.Add("Please enter a city");
+					}
+		
+					if ( NOT LEN(FORM.billingState) ) {
+						SESSION.formErrors.Add("Please enter a state");
+					}
+		
+					if ( NOT LEN(FORM.billingZipCode) ) {
+						SESSION.formErrors.Add("Please enter a zip/postal code");
+					}
+		
+					if ( NOT LEN(FORM.billingCountryID) ) {
+						SESSION.formErrors.Add("Please select a country");
+					}			
 			
-            <!--- Get Total Paid --->
-            <cfquery name="qGetTotalPaid" datasource="#APPLICATION.DSN#">
-                SELECT
-                    SUM(Amount) AS totalReceived     
-                FROM
-                    applicationPayment ap
-                WHERE
-                    ap.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student_tours">
-                AND	
-                    ap.authIsSuccess = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                AND
-                    ap.foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegistrationInfo.ID#">
-            </cfquery>   
-
-			<!--- Set Trip as Fully Paid --->
-            <cfif NOT isDate(qGetRegistrationInfo.dateFullyPaid) AND qGetRegistrationInfo.totalCost EQ qGetTotalPaid.totalReceived>
-
-                <cfquery datasource="#APPLICATION.DSN#">
-                    UPDATE
-                        student_tours
-                    SET
-                        dateFullyPaid = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+				} else {
+					
+					// Using Existing Payment Information = Set FORM Values
+					qGetPaymentInfoByID = cfcPaymentGateway.getApplicationPaymentByID(authorizeNetPaymentID=FORM.authorizeNetPaymentID);
+					
+					// Set Form Values According to Previous Payment Method
+					FORM.creditCardTypeID=qGetPaymentInfoByID.creditCardTypeID;
+					FORM.creditCardType=qGetPaymentInfoByID.creditCardType;
+					FORM.nameOnCard=qGetPaymentInfoByID.nameOnCard;
+					FORM.cardNumber = '';
+					FORM.lastDigits=qGetPaymentInfoByID.lastDigits;
+					FORM.cardCode = '';
+					FORM.expirationMonth=qGetPaymentInfoByID.expirationMonth;
+					FORM.expirationYear=qGetPaymentInfoByID.expirationYear;
+					FORM.billingFirstName=qGetPaymentInfoByID.billingFirstName;
+					FORM.billingLastName=qGetPaymentInfoByID.billingLastName;
+					FORM.billingCompany=qGetPaymentInfoByID.billingCompany;
+					FORM.billingAddress=qGetPaymentInfoByID.billingAddress;
+					FORM.billingCity=qGetPaymentInfoByID.billingCity;
+					FORM.billingState=qGetPaymentInfoByID.billingState;
+					FORM.billingZipCode=qGetPaymentInfoByID.billingZipCode;
+					FORM.billingCountryID=qGetPaymentInfoByID.billingCountryID;
+					
+				}
+			</cfscript>
+            
+            <!--- // Check if there are no errors  --->
+            <cfif NOT SESSION.formErrors.length()>
+            
+				<cfscript>
+					// Try to process payment
+					try {
+						
+						// New Credit Card - Set Variables
+						if ( FORM.authorizeNetPaymentID EQ 0 ) {
+							vSetCreditCardType = arCreditCardType[FORM.creditCardTypeID];	
+							vSetLastDigits = Right(FORM.cardNumber, 4);
+						// Existing Credit Card - Keep values from query above
+						} else {
+							vSetCreditCardType = FORM.creditCardType;	
+							vSetLastDigits = FORM.lastDigits;
+						}
+						
+						// credit card authorization and capture
+						stProcessPayment = cfcPaymentGateway.CIMauthorizeAndCapture (
+							studentID=FORM.studentID,
+							description="MPD Tours - #qGetRegistrationInfo.tour_name# - Balance Payment",
+							customerPaymentProfileId = TRIM(FORM.authorizeNetPaymentID),														   
+							orderNumber = '##' & Year(now()) & '-' & qGetRegistrationInfo.ID,	
+							invoiceNumber = '##' & Year(now()) & '-' & qGetRegistrationInfo.ID,	 
+							amount = TRIM(FORM.amount),
+							// ApplicationPayment Table					
+							foreignID=qGetRegistrationInfo.ID,
+							paymentMethodID=1,
+							paymentMethodType="Credit Card",
+							creditCardTypeID=FORM.creditCardTypeID,
+							creditCardType=vSetCreditCardType,
+							nameOnCard=FORM.nameOnCard,
+							cardNumber=FORM.cardNumber,
+							lastDigits=vSetLastDigits,
+							cardCode=FORM.cardCode,
+							expirationMonth=FORM.expirationMonth,
+							expirationYear=FORM.expirationYear,
+							billingFirstName=FORM.billingFirstName,
+							billingLastName=FORM.billingLastName,
+							billingCompany=FORM.billingCompany,
+							billingAddress=FORM.billingAddress,
+							billingCity=FORM.billingCity,
+							billingState=FORM.billingState,
+							billingZipCode=FORM.billingZipCode,
+							billingCountryID=FORM.billingCountryID
+						);															
+						
+						// Transaction Approved
+						if ( stProcessPayment.authIsSuccess ) {
+							// Successfull Message
+							SESSION.pageMessages.Add(stProcessPayment.resultMessage);
+						// Transaction Denied
+						} else {
+							// Error Message
+							SESSION.formErrors.Add(stProcessPayment.resultMessage);
+						}
+						
+					} catch(Any excpt) {
+						// Could Not Process the Transaction
+						SESSION.formErrors.Add(excpt.Message);
+					}
+            	</cfscript>
+			
+				<!--- Get Total Paid --->
+                <cfquery name="qGetTotalPaid" datasource="#APPLICATION.DSN#">
+                    SELECT
+                        SUM(Amount) AS totalReceived     
+                    FROM
+                        applicationPayment ap
                     WHERE
-                        ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegistrationInfo.ID#">		
-                </cfquery>
+                        ap.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student_tours">
+                    AND	
+                        ap.authIsSuccess = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                    AND
+                        ap.foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegistrationInfo.ID#">
+                </cfquery>   
+    
+                <!--- Set Trip as Fully Paid --->
+                <cfif NOT isDate(qGetRegistrationInfo.dateFullyPaid) AND qGetRegistrationInfo.totalCost EQ qGetTotalPaid.totalReceived>
+    
+                    <cfquery datasource="#APPLICATION.DSN#">
+                        UPDATE
+                            student_tours
+                        SET
+                            dateFullyPaid = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                        WHERE
+                            ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegistrationInfo.ID#">		
+                    </cfquery>
+                    
+                    <cfscript>
+                        SESSION.pageMessages.Add("Trip Fully Paid");
+                    </cfscript>
+            
+                </cfif>
                 
                 <cfscript>
-                    SESSION.pageMessages.Add("Trip Fully Paid");
+					// No Errors - Refresh Page
+                    if ( NOT SESSION.formErrors.length() ) {
+						// Refresh Page
+						Location("#CGI.SCRIPT_NAME#?curdoc=tours/profile&studentID=#FORM.studentID#&tripID=#FORM.tripID#", "no");
+					}
                 </cfscript>
-        
-            </cfif>
             
-			<cfscript>
-				// Refresh Page
-                Location("#CGI.SCRIPT_NAME#?curdoc=tours/profile&studentID=#FORM.studentID#&tripID=#FORM.tripID#", "no");
-            </cfscript>
-        
+            </cfif>
+            				
         </cfcase>
         
         
@@ -685,18 +843,64 @@
 			onClosed:function(){ window.location.reload(); }
 		});
 		
+		// Display Credit Card Information	
+		displayCreditCardForm();
+				
+		$("#authorizeNetPaymentID").click(function() {
+			// Display Credit Card Information	
+			displayCreditCardForm();												   
+		});
+		
 	});
 	
+	// Display Credit Card Information when New is selected
+	var displayCreditCardForm = function() { 
+		vSelectedItem = $("#authorizeNetPaymentID").val();
+		if ( vSelectedItem == 0 ) {
+			$(".newCreditCardForm").fadeIn("fast");
+			// Display Correct State Field	
+			displayStateField();
+		} else {
+			$(".newCreditCardForm").fadeOut("fast");
+		}
+
+	}
+
+	// Slide down steateform field div
+	var displayStateField = function(usFieldClass, nonUsFieldClass) { 
+		
+		// Get Current Country Value
+		getCountrySelected = $("#billingCountryID").val();
 	
+		if ( getCountrySelected == 232 ) {
+			// US Selected	
+			$("#nonUsStateField").slideUp("fast");
+			$("#usStateField").slideDown("slow");
+			// clear the other value
+			$(".nonUsBillingState").val("");
+		} else {
+			// Non Us Selected
+			$("#usStateField").slideUp("fast");
+			$("#nonUsStateField").slideDown("slow");	
+			// clear the other value
+			$(".usBillingState").val("");
+		}
+	
+	}
+
 	// Display Cancel Form
 	var displayCancelForm = function() { 
 		$("#cancelForm").fadeIn();	
 	}
 	
 	// Display Payment Form
-	var displayPaymentForm = function() { 
+	var displayAuthorizePaymentForm = function() { 
 		$("#processPaymentForm").fadeIn();	
-		//$("#paymentForm").fadeIn();	
+	}
+	
+	// Display Payment Form
+	var displayPaymentForm = function() { 
+		$("#paymentForm").fadeIn();	
 	}
 	
 	var openFlights = function(studentID, tripID, viewType) {
@@ -758,7 +962,7 @@
     <div id="dialog-paymentConfirmation-confirm" title="Authorize.net - Submit Payment" class="displayNone" style="font-size:1em;"> 
         <p>
         	<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 0 0;"></span>
-        	Credit Card on file will be charged a total of <strong>#LSCurrencyFormat(qGetRegistrationInfo.totalCost - qGetRegistrationInfo.totalReceived)#</strong> for this trip
+        	Credit Card on file will be charged a total of <strong>#LSCurrencyFormat(FORM.balanceDue)#</strong> for this trip
         </p> 
         <p>
         	<strong>Processing a credit card payment might take up to a minute, please DO NOT resubmit this page.</strong>
@@ -827,7 +1031,7 @@
                     	<cfif qGetRegistrationInfo.totalCost EQ qGetRegistrationInfo.totalReceived>
                         	Fully Paid
                         <cfelse>
-                        	<span style="color:##F00; font-weight:bold;">#LSCurrencyFormat(qGetRegistrationInfo.totalCost - qGetRegistrationInfo.totalReceived)#</span>
+                        	<span style="color:##F00; font-weight:bold;">#LSCurrencyFormat(FORM.balanceDue)#</span>
                         </cfif>
                     </div>
                 </span>
@@ -931,8 +1135,7 @@
         <input type="hidden" name="action" value="authorizeNetPayment" />
         <input type="hidden" name="studentID" value="#FORM.studentID#" />
         <input type="hidden" name="tripID" value="#FORM.tripID#" />
-        <input type="hidden" name="authorizeNetPaymentID" value="#qGetPaymentHistory.authorizeNetPaymentID#" />
-        <input type="hidden" name="amount" value="#qGetRegistrationInfo.totalCost - qGetRegistrationInfo.totalReceived#" />       
+        <input type="hidden" name="amount" value="#FORM.balanceDue#" />      
 
         <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%" style="padding-top:10px; padding-bottom:10px;">
             <tr>
@@ -947,19 +1150,131 @@
                             <td width="70%">#LSCurrencyFormat(qGetRegistrationInfo.totalCost - qGetRegistrationInfo.totalReceived)#</td>
                         </tr>
                         <tr>
-                            <td class="greyTextRight">Credit Card Type</td>
-                            <td>#qGetPaymentHistory.creditCardType#</td>
-                        </tr>
-                        <tr>
-                            <td class="greyTextRight">Last 4 Digits of Credit Card</td>
-                            <td>#qGetPaymentHistory.lastDigits#</td>
-                        </tr>
-                        <tr>
-                        	<td>&nbsp;</td>
-                        	<td>
-                            	Credit Card on file is going to be used to process this transaction.
+                            <td class="greyTextRight">Payment Method</td>
+                            <td>
+                            	<select name="authorizeNetPaymentID" id="authorizeNetPaymentID" class="xLargeField">
+                                	<cfloop query="qGetAuthorizeRecordedPayment">
+                                    	<option value="#qGetAuthorizeRecordedPayment.authorizeNetPaymentID#" <cfif FORM.authorizeNetPaymentID EQ qGetAuthorizeRecordedPayment.authorizeNetPaymentID>selected="selected"</cfif> >
+                                        	#qGetAuthorizeRecordedPayment.creditCardType# - #qGetAuthorizeRecordedPayment.lastDigits# - Exp. #qGetAuthorizeRecordedPayment.expirationMonth#/#qGetAuthorizeRecordedPayment.expirationYear#
+                                        </option>
+                                    </cfloop>
+                                    <option value="0" <cfif FORM.authorizeNetPaymentID EQ '0'>selected="selected"</cfif> >*** New Credit Card ***</option>
+                                </select>
                             </td>
-                        </tr>                        
+                        </tr>
+                        
+						<!--- New Credit Card --->
+                        <tr class="newCreditCardForm displayNone">
+                            <td class="greyTextRight">Name on Credit Card <span class="required">*</span></td>
+                            <td><input type="text" name="nameOnCard" id="nameOnCard" value="#FORM.nameOnCard#" class="largeField" maxlength="100" /></td>
+                        </tr>
+                        <tr class="newCreditCardForm displayNone">
+                            <td class="greyTextRight">Credit Card Type <span class="required">*</span></td>
+                            <td>
+                                <select name="creditCardTypeID" id="creditCardTypeID" class="mediumField">
+                                    <option value=""></option>
+                                    <cfloop index="i" from="1" to="#ArrayLen(arCreditCardType)#">
+                                        <option value="#i#" <cfif i EQ FORM.creditCardTypeID> selected="selected" </cfif> >#arCreditCardType[i]#</option>
+                                    </cfloop>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="newCreditCardForm displayNone">
+                            <td class="greyTextRight">Credit Card Number <span class="required">*</span></td>
+                            <td>
+                                <input type="text" name="cardNumber" id="cardNumber" value="#FORM.cardNumber#" class="mediumField" maxlength="16" />
+                                <em class="tripNotesRight">This will be a 15 or 16 digit number on the front of the card. No spaces or dashes</em>
+                            </td>
+                        </tr>
+                        <tr class="newCreditCardForm displayNone">
+                            <td class="greyTextRight">Expiration Date <span class="required">*</span></td>
+                            <td>
+                                <select name="expirationMonth" id="expirationMonth" class="mediumField">
+                                    <option value=""></option>
+                                    <cfloop from="1" to="12" index="i">
+                                        <option value="#i#" <cfif FORM.expirationMonth EQ i> selected="selected" </cfif> >#MonthAsString(i)#</option>
+                                    </cfloop>
+                                </select>
+                                /
+                                <select name="expirationYear" id="expirationYear" class="smallField">
+                                    <option value=""></option>
+                                    <cfloop from="#Year(now())#" to="#Year(now()) + 8#" index="i">
+                                        <option value="#i#" <cfif FORM.expirationYear EQ i> selected="selected" </cfif> >#i#</option>
+                                    </cfloop>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="newCreditCardForm displayNone">
+                            <td class="greyTextRight">CCV/CID Code <span class="required">*</span></td>
+                            <td>
+                                <input type="text" name="cardCode" id="cardCode" value="#FORM.cardCode#" class="xSmallField" maxlength="4" />
+                                <div class="creditCardImageDiv">
+                                    <div id="displayCardImage" class="card1"></div>
+                                </div>
+                                <em class="tripNotesRight">3 or 4 digit code</em>
+                            </td>
+                        </tr>
+                        <tr class="newCreditCardForm displayNone" style="background-color:##3b5998; color:##FFF; font-weight:bold;">
+                            <th colspan="2">Billing Address</th>
+                        </tr> 
+                        <tr class="newCreditCardForm displayNone">
+                            <td class="greyTextRight" width="30%">First Name <span class="required">*</span></td>
+                            <td width="70%"><input type="text" name="billingFirstName" id="billingFirstName" value="#FORM.billingFirstName#" class="largeField" maxlength="100" /></td>
+                        </tr>
+                        <tr class="newCreditCardForm displayNone">
+                            <td class="greyTextRight">Last Name <span class="required">*</span></td>
+                            <td><input type="text" name="billingLastName" id="billingLastName" value="#FORM.billingLastName#" class="largeField" maxlength="100" /></td>
+                        </tr>
+                        <tr class="newCreditCardForm displayNone">
+                            <td class="greyTextRight">Company Name</td>
+                            <td><input type="text" name="billingCompany" id="billingCompany" value="#FORM.billingCompany#" class="largeField" maxlength="100" /></td>
+                        </tr>
+                        <tr class="newCreditCardForm displayNone">
+                            <td class="greyTextRight">Country <span class="required">*</span></td>
+                            <td>
+                                <select name="billingCountryID" id="billingCountryID" class="largeField" onchange="displayStateField();">
+                                    <option value=""></option>
+                                    <cfloop query="qGetCountryList">
+                                        <option value="#qGetCountryList.countryID#" <cfif FORM.billingCountryID EQ qGetCountryList.countryID> selected="selected" </cfif> >#qGetCountryList.countryName#</option>
+                                    </cfloop>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="newCreditCardForm displayNone">
+                            <td class="greyTextRight">Address <span class="required">*</span></td>
+                            <td><input type="text" name="billingAddress" id="billingAddress" value="#FORM.billingAddress#" class="largeField" maxlength="100" /></td>
+                        </tr>
+                        <tr class="newCreditCardForm displayNone">
+                            <td class="greyTextRight">City <span class="required">*</span></td>
+                            <td><input type="text" name="billingCity" id="billingCity" value="#FORM.billingCity#" class="largeField" maxlength="100" /></td>
+                        </tr>
+                        <!--- US State --->
+                        <tr id="usStateField" class="field newCreditCardForm displayNone">
+                            <td class="greyTextRight">State/Province <span class="required">*</span></td>
+                            <td>
+                                <select name="billingState" id="billingState" class="mediumField usBillingState">
+                                    <option value=""></option>
+                                    <cfloop query="qGetStateList">
+                                        <option value="#qGetStateList.state#" <cfif FORM.billingState EQ qGetStateList.state> selected="selected" </cfif> >#qGetStateList.stateName#</option>
+                                    </cfloop>
+                                </select>
+                            </td>
+                        </tr>
+                        <!--- Non US State --->
+                        <tr id="nonUsStateField" class="field newCreditCardForm displayNone">
+                            <td class="greyTextRight">State/Province <span class="required">*</span></td>
+                            <td><input type="text" name="billingState" id="billingState" value="#FORM.billingState#" class="largeField nonUsBillingState" maxlength="100" /></td>
+                        </tr>
+                        <tr class="newCreditCardForm displayNone">
+                            <td class="greyTextRight">Zip/Postal Code <span class="required">*</span></td>
+                            <td><input type="text" name="billingZipCode" id="billingZipCode" value="#FORM.billingZipCode#" class="smallField" maxlength="20" /></td>
+                        </tr>
+                        <tr class="newCreditCardForm displayNone">
+                            <td>&nbsp;</td>
+                            <td><span class="required">* Required Fields</span></td>
+                        </tr>          
+                    
+						<!--- Submit Button --->
                         <tr>
                         	<td colspan="2" align="center"><a href="javascript:confirmPayment();"><img src="pics/submitBlue.png" border="0" /></a></td>
                         </tr>
@@ -1105,7 +1420,7 @@
                         	<cfif isDate(qGetRegistrationInfo.dateFullyPaid)>
                                 <img src="pics/buttons/received_17.png" border="0" />
                             <cfelse>
-                                <a href="javascript:displayPaymentForm();"><img src="pics/buttons/Notreceived_21.png" border="0" /></a>
+                                <a href="javascript:displayAuthorizePaymentForm();"><img src="pics/buttons/Notreceived_21.png" border="0" /></a>
                             </cfif>
                         </td>
                         

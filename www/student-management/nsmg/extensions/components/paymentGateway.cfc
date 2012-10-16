@@ -194,7 +194,8 @@
 
 	<!--- Get Payment Information --->
 	<cffunction name="getApplicationPaymentByID" access="public" returntype="query" output="false" hint="Gets a payment information.">
-        <cfargument name="ID" required="yes" hint="ID is required" />		
+        <cfargument name="ID" default="" hint="ID is NOT required" />		
+        <cfargument name="authorizeNetPaymentID" default="" hint="authorizeNetPaymentID is NOT required" />		
 
 		<cfquery 
             name="qGetApplicationPaymentByID"
@@ -233,7 +234,15 @@
 				FROM
                 	applicationPayment
                 WHERE
-                	ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
+               	
+                <cfif LEN(ARGUMENTS.ID)>
+                    ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
+                <cfelseif LEN(ARGUMENTS.authorizeNetPaymentID)>
+                    authorizeNetPaymentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.authorizeNetPaymentID)#">
+                <cfelse>
+                	1 != 1
+				</cfif>
+                
 		</cfquery>
 		
 		<cfreturn qGetApplicationPaymentByID />
@@ -432,7 +441,6 @@
 	<!--- Get Customer Profile ID --->
 	<cffunction name="getCustomerProfileID" displayname="Void" hint="Gets the Authorize.net customer profile ID. Always returns an ID." access="public" output="false" returntype="numeric">
 		<cfargument name="customerID" displayName="CustomerID / StudentID" type="numeric" hint="CustomerID / StudentID" required="true" />
-        <cfargument name="companyID" displayName="companyID" default="1" type="numeric" hint="companyID" />
 
 		<cfquery 
             name="qGetCustomerProfileID"
@@ -441,7 +449,8 @@
                 	authorizeNetProfileID,
                     email,
                     firstName,
-                    familyLastName
+                    familyLastName,
+                    companyID
                 FROM
                 	smg_students
                 WHERE
@@ -458,7 +467,7 @@
 				vGetCustomerProfileID = createCustomerProfile(
 					customerID = ARGUMENTS.customerID, 
 					email = qGetCustomerProfileID.email,
-					companyID = ARGUMENTS.companyID,
+					companyID = qGetCustomerProfileID.companyID,
 					studentName = "#qGetCustomerProfileID.firstName# #qGetCustomerProfileID.familyLastName#"
 				);
 				
@@ -645,7 +654,7 @@
                 <cfhttpparam type="XML" value="#xmlcreateCustomerPaymentProfile#"/>
             </cfhttp>
             
-			<cfscript>
+			<cfscript>					
                 // Parse the return value into a ColdFusion XML document. Remove the Byte-Order-Mark (BOM) by stripping all pre-"<" characters. 
                 xmlResult = XmlParse(REReplace( httpResult.FileContent, "^[^<]*", "", "all" ));
                 
@@ -691,14 +700,14 @@
         
         </cfif>
 
-
 		<cfreturn xmlResult/>
 	</cffunction>
 
 
 	<!--- CIM - Authorize and Capture --->
 	<cffunction name="CIMauthorizeAndCapture" displayname="Authorize and Capture" hint="CIM - Authorizes and captures" access="public" output="false" returntype="struct">
-        <cfargument name="customerProfileId" displayName="Customer Profile ID" type="numeric" hint="Authorize.net Customer Profile ID" required="true" />
+        <cfargument name="studentID" displayName="studentID" type="numeric" hint="studentID" required="true" />
+        <cfargument name="description" displayName="description" type="string" hint="description" default="" />
         <cfargument name="customerPaymentProfileId" displayName="Customer Profile ID" type="numeric" hint="Authorize.net Customer Payment Profile ID" required="true" />
   		<cfargument name="invoiceNumber" displayName="Invoice Number" type="string" hint="Invoice Number" required="true" />
         <cfargument name="orderNumber" displayName="Order Number" type="string" hint="Order Number" required="true" />
@@ -710,7 +719,9 @@
         <cfargument name="creditCardTypeID" displayName="creditCardTypeID" type="string" hint="creditCardTypeID" required="true" />	
         <cfargument name="creditCardType" displayName="creditCardType" type="string" hint="creditCardType" required="true" />	
         <cfargument name="nameOnCard" displayName="nameOnCard" type="string" hint="nameOnCard" required="true" />	
+        <cfargument name="cardNumber" displayName="cardNumber" type="string" hint="cardNumber" required="true" />
         <cfargument name="lastDigits" displayName="lastDigits" type="string" hint="lastDigits" required="true" />	
+        <cfargument name="cardCode" displayName="cardCode" type="string" hint="cardCode" required="true" />
         <cfargument name="expirationMonth" displayName="expirationMonth" type="string" hint="expirationMonth" required="true" />	
         <cfargument name="expirationYear" displayName="expirationYear" type="string" hint="expirationYear" required="true" />	
         <cfargument name="billingFirstName" displayName="billingFirstName" type="string" hint="billingFirstName" required="true" />	
@@ -724,36 +735,9 @@
         
 		<cfif find("$",ARGUMENTS.amount) OR find(",",ARGUMENTS.amount)>
 			<cfthrow type="payment.authorize_net.CIM_authorize_and_capture" message="Invalid Amount" detail="The amount to be charged to the credit card can not have dollar signs ($) or Commas (,) in it. Only numbers and a1 decimal place">
-		</cfif>
-
-        <cfoutput>	
-            <cfxml variable="xmlTransAuthCapture">
-				<createCustomerProfileTransactionRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">
-                  <merchantAuthentication>
-                    <name>#TRIM(VARIABLES.loginID)#</name>
-                    <transactionKey>#TRIM(VARIABLES.transactionKey)#</transactionKey>
-                  </merchantAuthentication>
-                  <transaction>
-                    <profileTransAuthCapture>
-                      <amount>#TRIM(ARGUMENTS.amount)#</amount>
-                      <customerProfileId>#TRIM(ARGUMENTS.customerProfileId)#</customerProfileId>
-                      <customerPaymentProfileId>#TRIM(ARGUMENTS.customerPaymentProfileId)#</customerPaymentProfileId>
-                      <order>
-                        <invoiceNumber>#TRIM(ARGUMENTS.invoiceNumber)#</invoiceNumber>
-                        <description>TryEye.com</description>
-                        <purchaseOrderNumber>#TRIM(ARGUMENTS.orderNumber)#</purchaseOrderNumber>
-                      </order>
-                    </profileTransAuthCapture>
-                  </transaction>
-                </createCustomerProfileTransactionRequest>
-            </cfxml>
-        </cfoutput>
-		
-        <cfhttp method="post" url="#variables.CIMprocessingURL#" result="objGet">
-            <cfhttpparam type="XML" value="#xmlTransAuthCapture#"/>
-        </cfhttp>
-
-		<cfscript>
+		</cfif>       
+        
+        <cfscript>
 			// Set Return Struct Struct
 			stResult = structNew();
 			stResult.resultMessage = "";
@@ -761,12 +745,15 @@
 			stResult.ApprovalCode = "";
 			stResult.TransactionID = "";
 			stResult.isApproved = false;
-		
+			
+			// Get Authorize.Net Customer Profile ID
+			vGetCustomerProfileID = getCustomerProfileID(customerID=ARGUMENTS.studentID);
+			
 			// Insert New Payment Information (applicationPayment Table) - That's how we track multiple payments
 			getApplicationPaymentID = insertApplicationPayment( 
 				applicationID=8,
 				sessionInformationID=0,
-				authorizeNetPaymentID=ARGUMENTS.customerPaymentProfileId, // We are using an existing payment profile
+				authorizeNetPaymentID=ARGUMENTS.customerPaymentProfileId,
 				foreignTable='student_tours',
 				foreignID=ARGUMENTS.foreignID,
 				amount=ARGUMENTS.amount,
@@ -787,9 +774,80 @@
 				billingZipCode=ARGUMENTS.billingZipCode,
 				billingCountryID=ARGUMENTS.billingCountryID
 			);
-				
-			// Duplicate Transaction - Error Code E00027
 			
+			// New Credit Card - Register with Authorize.net			
+			if ( ARGUMENTS.customerPaymentProfileId EQ 0 ) {
+
+				try {
+					
+					qGetSelectedCountry = APPLICATION.CFC.LOOKUPTABLES.getCountry(countryID=ARGUMENTS.billingCountryID);
+
+					// expiration month must be in the MM format
+					if (LEN(ARGUMENTS.expirationMonth) EQ 1) {
+						vExpirationDate = ARGUMENTS.expirationYear&'-0'&ARGUMENTS.expirationMonth;
+					} else {
+						vExpirationDate = ARGUMENTS.expirationYear&'-'&ARGUMENTS.expirationMonth;
+					}
+
+					// Create a Payment Profile for a registered customer
+					xmlPaymentProfileID = createCustomerPaymentProfile(
+						customerID = ARGUMENTS.studentID, 												   
+						customerProfileID = vGetCustomerProfileID,											   
+						firstName = ARGUMENTS.billingFirstName,												   
+						lastName = ARGUMENTS.billingLastName,	
+						company = ARGUMENTS.billingCompany,
+						address = ARGUMENTS.billingAddress,
+						city = ARGUMENTS.billingCity,
+						state = ARGUMENTS.billingState,
+						zip = ARGUMENTS.billingZipCode,
+						country = qGetSelectedCountry.countryName,
+						cardNumber = ARGUMENTS.cardNumber,
+						expirationDate = vExpirationDate,
+						cardCode = ARGUMENTS.cardCode,
+						// ApplicationPayment Table
+						applicationPaymentID=getApplicationPaymentID,
+						authorizeNetPaymentID=ARGUMENTS.customerPaymentProfileId
+					);
+					
+					// Set New Customer ID
+					ARGUMENTS.customerPaymentProfileId = xmlPaymentProfileID.createCustomerPaymentProfileResponse.customerPaymentProfileId.XmlText;;
+					
+				} catch(Any excpt) {
+					// A duplicate customer payment profile already exists.
+					Throw(type="AuthorizeNetError",message="A duplicate customer payment profile already exists, please use a different card or select one from the drop down list");
+				}
+
+			}
+		</cfscript>		
+		
+        <cfoutput>	
+            <cfxml variable="xmlTransAuthCapture">
+				<createCustomerProfileTransactionRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">
+                  <merchantAuthentication>
+                    <name>#TRIM(VARIABLES.loginID)#</name>
+                    <transactionKey>#TRIM(VARIABLES.transactionKey)#</transactionKey>
+                  </merchantAuthentication>
+                  <transaction>
+                    <profileTransAuthCapture>
+                      <amount>#TRIM(ARGUMENTS.amount)#</amount>
+                      <customerProfileId>#TRIM(vGetCustomerProfileID)#</customerProfileId>
+                      <customerPaymentProfileId>#TRIM(ARGUMENTS.customerPaymentProfileId)#</customerPaymentProfileId>
+                      <order>
+                        <invoiceNumber>#TRIM(ARGUMENTS.invoiceNumber)#</invoiceNumber>
+                        <description>#TRIM(ARGUMENTS.description)#</description>
+                        <purchaseOrderNumber>#TRIM(ARGUMENTS.orderNumber)#</purchaseOrderNumber>
+                      </order>
+                    </profileTransAuthCapture>
+                  </transaction>
+                </createCustomerProfileTransactionRequest>
+            </cfxml>
+        </cfoutput>
+		
+        <cfhttp method="post" url="#variables.CIMprocessingURL#" result="objGet">
+            <cfhttpparam type="XML" value="#xmlTransAuthCapture#"/>
+        </cfhttp>
+
+		<cfscript>
 			// Parse the return value into a ColdFusion XML document. Remove the Byte-Order-Mark (BOM) by stripping all pre-"<" characters. 
 			xmlResult = XmlParse(REReplace(objGet.FileContent, "^[^<]*", "", "all" ));
 			
@@ -801,15 +859,16 @@
 				stResult.ApprovalCode = ListGetAt(xmlResult.createCustomerProfileTransactionResponse.directResponse.xmlText, 5, ",");			
 				stResult.TransactionID = ListGetAt(xmlResult.createCustomerProfileTransactionResponse.directResponse.xmlText, 7, ",");
 			} catch(Any excpt) {
+				
 				try {
 					// try to get error message.						
 					stResult.resultMessage = xmlResult.createCustomerProfileTransactionResponse.messages.message.text.xmlText;
-					PageMessages.Add("Error: " & resultMessage);
 				}
 				catch(Any excpt) {
 					// Throw Error
 					Throw(type="AuthorizeNetError",message="There was a problem processing this transaction. Please make sure it did not go thru on Authorize.net site before trying again.");
-				}					 
+				}	
+				
 			}
 			
 			// Payment Successfully Submitted
