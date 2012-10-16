@@ -566,32 +566,14 @@
 		// Display Change Placecement
 		displayChangePlacementReason();
 
-		/*
-		$("form").submit(function(){
-			if (this.beenSubmitted)
-				return false;
-			else
-				this.beenSubmitted = true;
+		// Prevent double submission - Disable Button after submiting the form
+		$('form').submit(function() {
+		   $('input[type=image]', this).attr('disabled', 'disabled').css('opacity',0.5);
 		});
 
-		// Prevent double submission
-		$("input:image").click(function(){
-			$("#submit").attr('disabled','disabled').css('opacity',0.5);
-			this.submit();
-		});	
-		
-		$("form").submit(
-						 
-		  function() {
-			  alert('test');
-			$("input.image").attr("disabled","true").css('opacity',0.5);
-		  }
-		);	
-		*/
-		
 	});
-	
-	
+
+
 	var displayFormFields = function() { 			
 		
 		var vDisplaySaveButton = 0;
@@ -1222,7 +1204,7 @@
     </table>                                                
 
 	<!--- Placement Form --->   
-    <cfform name="placementMgmt" id="placementMgmt" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
+    <cfform name="mainForm" id="mainForm" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
         <!--- Update Information Action --->
 		<cfif ListLen(FORM.subAction) GT 1>            
             <input type="hidden" name="subAction" id="subActionPlacement" value="#FORM.subAction#" />
@@ -1748,7 +1730,13 @@
 		<!--- Form Buttons --->  
         <table width="90%" id="tableDisplaySaveButton" border="0" cellpadding="2" cellspacing="0" class="section displayNone" align="center" style="padding:5px;">
             <tr>
-                <td align="center"><input name="submit" id="submit" type="image" src="../../student_app/pics/save.gif" border="0" alt="Save"/></td>
+                <td align="center">
+                	<input type="image" name="submit" id="submit" src="../../student_app/pics/save.gif" border="0" alt="Save" />
+					<!---   
+					<input name="submit" id="submit" type="image" src="../../student_app/pics/save.gif" border="0" alt="Save" onclick="this.disabled=true;this.form.submit();" />             
+					<img id="mainFormImage" class="submitButton" src="../../student_app/pics/save.gif" alt="Click to Submit this Form" onclick="javascript:submitForm('mainForm', this.id);" border="0" />
+					--->
+                </td>
             </tr>                
         </table>    
 
