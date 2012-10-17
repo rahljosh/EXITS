@@ -1365,15 +1365,11 @@
 					<cfelse>
                     	<!--- Get Previous Placement Approved and Current Pending/Approved --->
                     	AND
-                        	(
-                            	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                            OR
-                            	(
-                                    isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                                AND
-                                    datePlaced IS NOT NULL
-                                )
-                            )
+                        (
+                            isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                        OR
+                        	pr_ID IS NOT NULL
+                        )
 					</cfif>
                     ORDER BY
                     	familyLastName
