@@ -18,9 +18,13 @@
     <!--- Param URL variables --->
     <cfparam name="URL.userID" default="0">
     <cfparam name="URL.paymentID" default="0">    
+	
+    <cfscript>
+		vAllowDeleteListID = "7657,1960,9719,11364";
+	</cfscript>
 
-	<!--- Delete Payment - Thea, Craig and Bryan Mc --->
-    <cfif VAL(URL.userID) AND VAL(URL.paymentID) AND ( listfind("7657,1960,9719", CLIENT.userID) OR ListFind("1,2", CLIENT.userType) )>	
+	<!--- Delete Payment - Thea, Craig and Bryan Mc, Stacy --->
+    <cfif VAL(URL.userID) AND VAL(URL.paymentID) AND ( listfind(vAllowDeleteListID, CLIENT.userID) OR ListFind("1,2", CLIENT.userType) )>	
 		
         <cfquery datasource="MySql" result="test">
             DELETE FROM 
@@ -133,8 +137,8 @@
                 <td><b>Amount</b></td>
                 <td><b>Comments</b></td>
                 <td><b>Trans. Type</b></td>
-               	<!--- Delete Payment - Thea, Craig and Bryan Mc --->
-                <cfif listfind("7657,1960,9719", CLIENT.userID) OR ListFind("1,2", CLIENT.userType)>
+               	<!--- Delete Payment - Thea, Craig and Bryan Mc, Stacy --->
+                <cfif listfind(vAllowDeleteListID, CLIENT.userID) OR ListFind("1,2", CLIENT.userType)>
                     <td><b>Delete</b></td>
                 </cfif>            
             </tr>
@@ -148,8 +152,8 @@
                     <td>#LSCurrencyFormat(amount, 'local')#</td>
                     <td>#comment#</td>
                     <td>#transtype#</td>
-                    <!--- Delete Payment - Thea, Craig and Bryan Mc --->
-                    <cfif listfind("7657,1960,9719", CLIENT.userID) OR ListFind("1,2", CLIENT.userType)>
+                    <!--- Delete Payment - Thea, Craig and Bryan Mc, Stacy --->
+                    <cfif listfind(vAllowDeleteListID, CLIENT.userID) OR ListFind("1,2", CLIENT.userType)>
                         <td align="center">
                             <a href="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=paymentHistory&paymentID=#id#&userID=#qGetRepInfo.userid#" onClick="return areYouSure(this);">
                                 <img src="../pics/deletex.gif" border="0"></img>
