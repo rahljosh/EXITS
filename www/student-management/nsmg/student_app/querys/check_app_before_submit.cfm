@@ -29,7 +29,7 @@
 <body bgcolor="#dcdcdc">
 <table class=dashed-border align="center" width = 550 bgcolor="white">
 	<tr>
-		<td><img src="../pics/top-email.gif" width="550" height="75"></td>
+		<td><img src="../pics/EXITSbanner.jpg" width="550" height="75"></td>
 	</tr>
 	<tr>
 		<Td>

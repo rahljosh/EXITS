@@ -49,7 +49,7 @@
     <meta http-equiv="refresh" content="3;url=close_window.cfm">
     <body onLoad="opener.location.reload()"> 
     <table align="center" width="95%" bordercolor="e2efc7" frame="box" cellpadding="0" cellspacing="0">
-        <tr><td><img src="../pics/top-email.gif" border="0"></td></tr>
+        <tr><td><img src="../pics/EXITSbanner.jpg" border="0"></td></tr>
         <tr><td align="center"><br />This application has been received and is now waiting to be approved. <br />This window should close automatically.</td></tr>
         <tr><td bgcolor="e2efc7">&nbsp;</td></tr>
     </table>
@@ -61,7 +61,7 @@
     <meta http-equiv="refresh" content="3;url=close_window.cfm">
     <body onLoad="opener.location.reload()"> 
     <table align="center" width="95%" bordercolor="e2efc7" frame="box" cellpadding="0" cellspacing="0">
-        <tr><td><img src="../pics/top-email.gif" border="0"></td></tr>
+        <tr><td><img src="../pics/EXITSbanner.jpg" border="0"></td></tr>
         <tr><td align="center"><br /><font color="#FF0000"> There was a problem receiving this application. Please try again.</td></tr>
         <tr><td bgcolor="e2efc7">&nbsp;</td></tr>
     </table>
