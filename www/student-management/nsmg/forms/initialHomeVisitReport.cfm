@@ -17,13 +17,12 @@
     <cfparam name="FORM.diningRoom" default="">
     <cfparam name="FORM.kitchen" default="">
     <cfparam name="FORM.homeDetailsOther" default="">
-    <cfparam name="FORM.ownBed" default="">
-    <cfparam name="FORM.bathRoom" default="">
-    <cfparam name="FORM.outdoorsFromBedroom" default="">
-    <cfparam name="FORM.storageSpace" default="">
-    <cfparam name="FORM.privacy" default="">
-    <cfparam name="FORM.studySpace" default="">
-    <cfparam name="FORM.pets" default="">
+    <cfparam name="FORM.famImpression" default="">
+    <cfparam name="FORM.famInterested" default="">
+    <cfparam name="FORM.exchangeInterest" default="">
+    <cfparam name="FORM.livingYear" default="">
+    <cfparam name="FORM.famReservations" default="">
+
     <cfparam name="FORM.other" default="">
     <cfparam name="FORM.dateOfVisit" default="">
 	
@@ -175,14 +174,11 @@
 		FORM.livingRoom = secondVisitAnswers.livingRoom;
 		FORM.diningRoom = secondVisitAnswers.diningRoom;
 		FORM.kitchen = secondVisitAnswers.kitchen;
-		FORM.homeDetailsOther = secondVisitAnswers.homeDetailsOther;
-		FORM.ownBed = secondVisitAnswers.ownBed;
-		FORM.bathRoom = secondVisitAnswers.bathRoom;
-		FORM.outdoorsFromBedroom = secondVisitAnswers.outdoorsFromBedroom;
-		FORM.storageSpace = secondVisitAnswers.storageSpace;
-		FORM.studySpace = secondVisitAnswers.studySpace;
-		FORM.privacy = secondVisitAnswers.privacy;
-		FORM.pets = secondVisitAnswers.pets;
+		FORM.famImpression = secondVisitAnswers.famImpression;
+		FORM.famInterested = secondVisitAnswers.famInterested;
+		FORM.exchangeInterest = secondVisitAnswers.exchangeInterest;
+		FORM.livingYear = secondVisitAnswers.livingYear;
+		FORM.famReservations = secondVisitAnswers.famReservations;
 		FORM.other = secondVisitAnswers.other;
 		FORM.dateOfVisit = secondVisitAnswers.dateOfVisit;
 		
@@ -254,39 +250,28 @@
             }
             
             // Home detials
-            if ( NOT LEN(TRIM(FORM.ownBed)) ) {
+            if ( NOT LEN(TRIM(FORM.famInterested)) ) {
                 // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate if #FORM.studentName# has #FORM.studentSex# own bed.");
+                SESSION.formErrors.Add("Please indicate if family is affectionate and interested in hosting a student.");
             }
             
             // Home detials
-            if ( NOT LEN(TRIM(FORM.bathRoom)) ) {
+            if ( NOT LEN(TRIM(FORM.exchangeInterest)) ) {
                 // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate if #FORM.studentName# has access to #FORM.studentSex# own bathroom.");
+                SESSION.formErrors.Add("Please indicate if family shows interest in the exchange program.");
             }
            
             // Home detials
-            if ( NOT LEN(TRIM(FORM.storageSpace)) ) {
+            if ( NOT LEN(TRIM(FORM.livingYear)) ) {
                 // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate if #FORM.studentName# has adequete storage space.");
+                SESSION.formErrors.Add("Please indicate if you would feel comfortable having your child live with this family.");
             }
               // Home detials
-            if ( NOT LEN(TRIM(FORM.studySpace)) ) {
+            if ( NOT LEN(TRIM(FORM.famReservations)) ) {
                 // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate if #FORM.studentName# has adequete study space.");
+                SESSION.formErrors.Add("Please indicate any reservations you have about this family.");
             }
             
-            // Home detials
-            if ( NOT LEN(TRIM(FORM.privacy)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate if #FORM.studentName# has adequete privacy.");
-            }
-            
-            // Home detials
-            if ( NOT LEN(TRIM(FORM.pets)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate how many and what kind of pets are in the home.");
-            }
         </cfscript>
 
 
@@ -307,13 +292,11 @@
                 diningRoom = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.diningRoom#">,
                 kitchen = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.kitchen#">,
                 homeDetailsOther = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homeDetailsOther#">,
-                ownBed = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ownBed#">,
-                bathRoom =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.bathRoom#">,
-                outdoorsFromBedroom = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.outdoorsFromBedroom#">,
-                storageSpace = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.storageSpace#">,
-                studySpace = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.studySpace#">,
-                privacy = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.privacy#">,
-                pets = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pets#">,
+                famImpression = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.famImpression#">,
+                famInterested = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.famInterested#">,
+                famReservations = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.famReservations#">,
+                exchangeInterest =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.exchangeInterest#">,
+                livingYear = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.livingYear#">,
                 other =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.other#">
             WHERE 
                 fk_reportID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">                  
@@ -678,7 +661,18 @@
         <cfelse>
             #FORM.homeAppearance#
      </Cfif>
+        <br /><br /><br />
         
+        <label>
+        	Family Impression
+            <span class="small"></span>
+        </label>
+        <Cfif allow_save>
+            <input type="radio" name="famImpression" id="name" value='Warm' <cfif FORM.famImpression is 'Warm'>checked</cfif> /> <span class="inputLabel">Warm</span>
+            <input type="radio" name="famImpression" id="name" value='Cold' <cfif FORM.famImpression is 'Cold'>checked</cfif>/> <span class="inputLabel">Cold</span> 
+        <cfelse>
+            #FORM.familyImpression#
+     </Cfif>
         <br /><br /><br />
 
         <label>
@@ -767,81 +761,45 @@
         <hr width=60% />
         <br />
         
-          <label>Does #qGetStudentInfo.firstname# have 
-            <cfif #qGetStudentInfo.sex# is 'male'>
-              his
-              <cfelse>her
-            </cfif>  
-            own permanent bed? 
-            <span class="small">Bed may not be a futon or inflatable</span>
+          <label>In your opinion is the entire family affectionate and interested in hosting a student?
+           <span class="small"></span>
           </label>
           <Cfif allow_save>
-            <input type="text" name="ownBed" size = 30 value="#FORM.ownBed#"/>
+            <input type="text" name="famInterested" size = 30 value="#FORM.famInterested#"/>
             <cfelse>
-            #FORM.ownBed#
+            #FORM.famInterested#
      </Cfif>
           <br /><Br /><Br /><br />
-          <label>Does #qGetStudentInfo.firstname# have access to a bathroom? 
+          <label>Do all family members (including children) show interest in the exchange program?
             <span class="small"></span>
           </label>
           
           <Cfif allow_save>	
-            <input type="text" name="bathRoom" size = 30 value="#FORM.bathRoom#"/>
+            <input type="text" name="exchangeInterest" size = 30 value="#FORM.exchangeInterest#"/>
             <cfelse>
-            #FORM.bathRoom#
+            #FORM.exchangeInterest#
      </Cfif>
-          <br /><Br /><Br />
-          <label>Does #qGetStudentInfo.firstname# have access to the outdoors from 
-            <cfif #qGetStudentInfo.sex# is 'male'>
-              his
-              <cfelse>her
-            </cfif> 
-            bedroom? 
-            <span class="small">i.e. a door or window</span>
+          <br /><Br /><Br /><br />
+          <label>Would you feel comfortable having your child live with this family for up to one year?
+            <span class="small"></span>
           </label>
           <br />
           <Cfif allow_save>	
-            <input type="text" name="outdoorsFromBedroom" size = 30 value="#FORM.outdoorsFromBedroom#"/>
+            <input type="text" name="livingYear" size = 30 value="#FORM.livingYear#"/>
             <cfelse>
-            #FORM.outdoorsFromBedroom#
+            #FORM.livingYear#
      </Cfif>
-          <br /><Br /><Br />
-          <label>Does #qGetStudentInfo.firstname# have adequate storage space? 
+          <br /><Br /><Br /><br />
+          <label>What reservations do you have, if any, about these people as a potential host family?
             <span class="small"></span>
           </label>
           <Cfif allow_save>	
-            <input type="text" name="storageSpace" size = 30 value="#FORM.storageSpace#"/>
+            <input type="text" name="famReservations" size = 30 value="#FORM.famReservations#"/>
             <cfelse>
-            #FORM.storageSpace#
+            #FORM.famReservations#
      </Cfif>
-          <br /><Br /><Br />
-          <label>Does #qGetStudentInfo.firstname# have privacy? 
-            <span class="small">i.e. a door on their room</span>
-          </label>
-          <Cfif allow_save>	
-            <input type="text" name="privacy" size = 30 value="#FORM.privacy#"/>
-            <cfelse>
-            #FORM.privacy#
-     </Cfif>
-          <br /><Br /><Br />
-          <label>Does #qGetStudentInfo.firstname# have adequate study space? 
-            <span class="small"></span>
-          </label>
-          <Cfif allow_save>	
-            <input type="text" name="studySpace" size = 30 value="#FORM.studySpace#"/>
-            <cfelse>
-            #FORM.studySpace#
-     </Cfif>
-          <br /><Br /><Br />
-          <label>Are there pets present in the home? 
-            <span class="small">How many & what kind</span>
-          </label>
-          <Cfif allow_save>	
-            <input type="text" name="pets"  value="#FORM.pets#" size = 30/>
-            <cfelse>
-            #FORM.pets#
-     </Cfif>
-          <br /><Br /><Br />
+                 
+          <br /><Br /><Br /><br />
           <label>Other Comments 
             <span class="small"></span>
           </label>
