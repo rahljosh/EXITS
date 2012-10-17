@@ -391,6 +391,8 @@
                         	uar.userType IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7,15" list="yes"> )
                 INNER JOIN
                 	smg_programs p on p.programID = s.programID
+                    AND
+                    	p.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                 INNER JOIN
                     smg_hosts h ON h.hostID = ht.hostID 
                 INNER JOIN 
@@ -555,6 +557,8 @@
                         	uar.userType IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7,15" list="yes"> )
                 INNER JOIN
                 	smg_programs p on p.programID = s.programID
+                    AND
+                    	p.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                 INNER JOIN
                     smg_hosts h ON h.hostID = ht.hostID 
                 INNER JOIN 
@@ -777,6 +781,8 @@
                         	uar.userType IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7,15" list="yes"> )
                 INNER JOIN
                 	smg_programs p on p.programID = s.programID
+                    AND
+                    	p.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                 INNER JOIN
                     smg_hosts h ON h.hostID = ht.hostID 
                 INNER JOIN 
