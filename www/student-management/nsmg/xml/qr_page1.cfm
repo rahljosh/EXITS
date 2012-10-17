@@ -78,16 +78,15 @@
         where name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#Trim(StudentXMLFile.applications.application[i].page2.languages.language[x].xmlText)#">
         and fieldkey = <cfqueryparam cfsqltype="cf_sql_varchar" value='language'>
         </cfquery> 
-       
-      
-        
-        
-        
-        <Cfif #Trim(StudentXMLFile.applications.application[i].page2.languages.language[x].xmlText)# is 'English'>
-            <cfquery name="getISEStudentID" datasource="#application.dsn#">
+
+         <cfquery name="getISEStudentID" datasource="#application.dsn#">
             select studentID 
             from smg_students where soid = <Cfqueryparam cfsqltype="cf_sql_varchar" value="#StudentXMLFile.applications.application[i].XmlAttributes.studentid#">
             </cfquery>
+           
+           
+        <Cfif #Trim(StudentXMLFile.applications.application[i].page2.languages.language[x].xmlText)# is 'English'>
+           
             <Cfquery datasource="#application.dsn#">
                 update smg_students set
                 yearsenglish = <cfqueryparam cfsqltype="cf_sql_integer" value="#StudentXMLFile.applications.application[i].page2.languages.language[x].yearsofstudy.xmlText#">
@@ -95,10 +94,12 @@
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#getISEStudentID.studentid#">
             </Cfquery>
         <cfelse>
-            <cfquery datasource="#application.dsn#">
-            insert into smg_student_app_language (studentid, languageid, isPrimary, dateCreated)
-                        values (#getISEStudentID.studentid#, #getLangFieldID.fieldid#, #curLangPrim#, #CreateODBCDate(now())#)
-            </cfquery>
+			<cfif getLangFieldID.recordcount neq 0>
+                <cfquery datasource="#application.dsn#">
+                insert into smg_student_app_language (studentid, languageid, isPrimary, dateCreated)
+                            values (<cfqueryparam cfsqltype="cf_sql_integer" value="#getISEStudentID.studentid#">, <cfqueryparam cfsqltype="cf_sql_integer" value="#getLangFieldID.fieldid#">, <cfqueryparam cfsqltype="cf_sql_integer" value="#curLangPrim#">, <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(now())#">)
+                </cfquery>
+            </cfif>
         </Cfif>
         
   <br />
