@@ -593,8 +593,7 @@
             <!---- NOTES ---->
                 <div class="rdholder" style="width:100%;float:left;" > 
 				<div class="rdtop"> 
-                <span class="rdtitle">Notes</span>
-                	 
+                    <span class="rdtitle">Notes</span>
             	</div> 
                 <div class="rdbox">
                 <table width="100%" cellpadding="4" cellspacing="0" border="0">
@@ -975,7 +974,11 @@
                
              <div class="rdholder" style="width:58%;float:right;"  > 
 				<div class="rdtop"> 
-                <span class="rdtitle">Notes</span> 
+	                <span class="rdtitle">Notes</span> 
+                    <!--- DOS Usertype does not have access to edit information --->
+                    <cfif CLIENT.userType NEQ 27>
+                        <a href="index.cfm?curdoc=forms/user_form&userID=#url.userID#"><img src="pics/buttons/pencilBlue23x29.png" class="floatRight" border=0/></a>
+                    </cfif>
             	</div> <!-- end top --> 
              <div class="rdbox">
 
