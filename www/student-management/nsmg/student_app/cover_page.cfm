@@ -132,7 +132,7 @@
             	<td colspan="2" align="center">
 					<!--- EXITS LOGO --->
                     <cfif NOT ListFind(APPLICATION.SETTINGS.COMPANYLIST.ESI, CLIENT.companyID)>
-						<img src="pics/top-email.gif">
+						<img src="pics/EXITSbanner.jpg">
                     <!--- ESI LOGO --->
 					<cfelse>
                         <h2>#CLIENT.companyName#</h2>

@@ -24,7 +24,7 @@ Plase note that this message will go out for all branch offices as well.<br>
 <cfif isDefined('url.us')><br><h2><font color="green">Message Successfully updated.</font></h2><br></cfif></div>
 	<table width=550 class="thin-border" cellspacing="0" cellpadding=0 bgcolor="white" align="center">
 		<tr>
-			<td bgcolor=b5d66e><img src="#CLIENT.exits_url#/nsmg/student_app/pics/top-email.gif" width=550 heignt=75></td>
+			<td bgcolor=b5d66e><img src="#CLIENT.exits_url#/nsmg/student_app/pics/EXITSbanner.jpg" width=550 heignt=75></td>
 		</tr>
 		<tr>
 			<td>
@@ -116,7 +116,7 @@ Plase note that this message will go out for all branch offices as well.<br>
 		
 			<table width=550 class="thin-border" cellspacing="0" cellpadding=0 bgcolor="white" align="center">
 		<tr>
-			<td bgcolor=b5d66e><img src="#CLIENT.exits_url#/nsmg/student_app/pics/top-email.gif" width=550 heignt=75></td>
+			<td bgcolor=b5d66e><img src="#CLIENT.exits_url#/nsmg/student_app/pics/EXITSbanner.jpg" width=550 heignt=75></td>
 		</tr>
 		<tr>
 			<td>

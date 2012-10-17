@@ -228,7 +228,7 @@
             <cfsavecontent variable="vEmailMessage">
                 <cfoutput>
                     <table width="600px" cellspacing="0" cellpadding="0" style="border: 1px solid ##000000; margin-top:15px;">
-                        <tr><td bgcolor="b5d66e"><img src="#CLIENT.exits_url#/nsmg/student_app/pics/top-email.gif" width="600" heignt="75"></td></tr>
+                        <tr><td bgcolor="b5d66e"><img src="#CLIENT.exits_url#/nsmg/student_app/pics/EXITSbanner.jpg" width="600" heignt="75"></td></tr>
                         <tr>
                             <td>
                                 <h2>Congratulations!</h2>

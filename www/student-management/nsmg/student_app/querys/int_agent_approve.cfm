@@ -20,7 +20,7 @@
 	
 	<table align="center">
 		<tr>
-			<td><img src="../pics/top-email.gif"></td>
+			<td><img src="../pics/EXITSbanner.jpg"></td>
 		</tr>
 		<tr>
 			<td>This application has been approved.  This window should close automatically.</td>
