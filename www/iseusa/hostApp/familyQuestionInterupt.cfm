@@ -36,7 +36,7 @@ where shortDesc = 'Mother CBC Auth'
  if ( LEN(TRIM(qHostParentsMembers.motherfirstname)) and not len(trim(qHostParentsMembers.motherdob)) )  {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("#qHostParentsMembers.motherfirstname# is missing her date of birth on page 1 of the application.  It is required to process this page. Please click on Name & Contact info in the menu and enter the date of birth.");
-			}
+			} 
 			
 		   if ( LEN(TRIM(qHostParentsMembers.fatherfirstname)) and not len(trim(qHostParentsMembers.fatherdob)) )  {
                 // Get all the missing items in a list
@@ -51,18 +51,6 @@ where shortDesc = 'Mother CBC Auth'
         />
 <cfabort>
 </cfif>
- <cfscript>
- if (not len(trim(form.motherdob))){
-                // Get all the missing items in a list
-               SESSION.formErrors.Add("#qHostParentsMembers.motherfirstname# is missing her date of birth on page 1 of the applicaiton.  It is required to process this page. ");
-           }	
-		    if (not len(trim(form.motherdob))){
-                // Get all the missing items in a list
-               SESSION.formErrors.Add("#qHostParentsMembers.fatherfirstname# is missing his date of birth on page 1 of the applicaiton.  It is required to process this page. ");
-           }	
-</cfscript>
-<cfif NOT SESSION.formErrors.length()>
-
 <!--- Process Form Submission --->
     <cfif isDefined('FORM.processCBC')>
     
@@ -766,7 +754,7 @@ where shortDesc = 'Mother CBC Auth'
 		</cfif>	
 
  </cfif>
- </cfif>
+ 
 <cfquery name="qHostFamilyMembers" datasource="mysql">
 select k.name, k.lastname, k.birthdate, k.cbc_form_received, k.childid, k.membertype, k.ssn, k.liveathome
 from smg_host_children k
@@ -966,6 +954,7 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
 	</tr>
 </table>
 </cfform>
+
 <p><b>As part of our background check, reports from several sources may be obtained.  Reports may include, but not be limited to, criminal history reports, Social Security verifications, address histories, and Sex Offender Registries.  Should any results from the aforementioned reports indicate that driving history records will need to be reviewed during a more comprehensive assessment, an additional authorization and release will be requested at that time.  You have a the right, upon written request, to complete and accurate disclosure of the nature and scope of the background check. 
 </b></p>
 
