@@ -1,75 +1,73 @@
-<cfif NOT isDefined("FORM.kid_share")>
-	<cfset FORM.kid_share = "no">
-</cfif>
+<!--- Param FORM Variables --->
+<cfparam name="FORM.kid_share" default="no">
 
 <cftransaction action="begin" isolation="serializable">
 	
-    <cfif isDefined("FORM.stulist")>
+    <cfif isDefined("FORM.stuListID")>
     	
-        <cfloop list="#FORM.stulist#" index="x">
+        <cfloop list="#FORM.stuListID#" index="x">
         
-        	<cfif #Evaluate("FORM." & x & "_kid_share")# EQ 'no'>
+        	<!--- Not Sharing a Room - Reset Values --->
+        	<cfif Evaluate("FORM." & x & "_siblingIDSharingRoom") EQ 'no'>
                       
-            	<cfquery name="insert_room_share" datasource="MySQL">
+            	<cfquery datasource="#APPLICATION.DSN#">
 					UPDATE
                     	smg_host_children
 				 	SET
                     	shared = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">,
 				 		roomsharewith = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
 				 	WHERE
-                    	roomsharewith = <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & x & '_studentidsharing')#">
+                    	roomsharewith = <cfqueryparam cfsqltype="cf_sql_integer" value="#x#">
 				</cfquery>
 				
-				<cfquery name="insert_dbl_room_share" datasource="mysql">
+				<cfquery datasource="#APPLICATION.DSN#">
                     UPDATE
                     	smg_students
                   	SET
-                    	double_place_share = 0
+                    	double_place_share = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                     WHERE
-                    	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & x & '_studentidsharing')#">
+                    	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#x#">
                 </cfquery>
-        
-        	<cfelseif #Evaluate("FORM." & x & "_kid_share")# EQ 00>
-            
-            	<cfquery name="get_double_place_id" datasource="MySql">
-					SELECT
-                    	doubleplace
-                   	FROM
-                    	smg_students
-                  	WHERE
-                    	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#x#">
-				</cfquery>
-                <cfquery name="insert_dbl_room_share" datasource="MySql">
+        	
+            <!--- Sharing a Room with a Double Placement Student --->
+        	<cfelseif Left(Evaluate("FORM." & x & "_siblingIDSharingRoom"), 7) EQ 'student'>
+            	
+                <cfset vGetSharingRoomID = ReplaceNoCase(Evaluate("FORM." & x & "_siblingIDSharingRoom"), "student_", "")>
+            	
+                <cfquery datasource="#APPLICATION.DSN#">
                 	UPDATE
                     	smg_students
                   	SET
-                    	double_place_share = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_double_place_id.doubleplace#">
+                    	double_place_share = <cfqueryparam cfsqltype="cf_sql_integer" value="#vGetSharingRoomID#">
                    	WHERE
                     	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#x#">
                 </cfquery>
-                
+            
+            <!--- Sharing a Room with a host sibling --->   
             <cfelse>
-             
-            	<cfquery datasource="MySQL">
+             	
+                <cfset vGetSharingRoomID = ReplaceNoCase(Evaluate("FORM." & x & "_siblingIDSharingRoom"), "sibling_", "")>
+                
+            	<cfquery datasource="#APPLICATION.DSN#">
 					UPDATE
                     	smg_host_children
 				 	SET
-                    	shared = "yes",
-					 	roomsharewith = <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & x & '_studentidsharing')#">
+                    	shared = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">,
+					 	roomsharewith = <cfqueryparam cfsqltype="cf_sql_integer" value="#x#">
 				 	WHERE
-                    	childid = <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & x & '_kid_share')#">
+                    	childid = <cfqueryparam cfsqltype="cf_sql_integer" value="#vGetSharingRoomID#">
 				</cfquery>
                 
-                <cfquery datasource="MySql">
+                <cfquery datasource="#APPLICATION.DSN#">
                 	UPDATE
                     	smg_host_children
                    	SET
                     	shared = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">,
 				 		roomsharewith = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                   	WHERE
-                    	childid != <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & x & '_kid_share')#">
+                    	childid != <cfqueryparam cfsqltype="cf_sql_integer" value="#vGetSharingRoomID#">
                    	AND
-                    	roomsharewith = <cfqueryparam cfsqltype="cf_sql_integer" value="#Evaluate('FORM.' & x & '_studentidsharing')#">
+                    	roomsharewith = <cfqueryparam cfsqltype="cf_sql_integer" value="#x#">
                 </cfquery>
             
             </cfif>
@@ -79,7 +77,7 @@
     <cfelse>
     
     	<cfif FORM.kid_share EQ 0>
-        	<cfquery datasource="MySQL">
+        	<cfquery datasource="#APPLICATION.DSN#">
                 UPDATE
                     smg_host_children
                 SET
@@ -89,7 +87,7 @@
                     hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostID#">
             </cfquery>
         <cfelse>
-        	<cfquery datasource="MySQL">
+        	<cfquery datasource="#APPLICATION.DSN#">
                 UPDATE
                     smg_host_children
                 SET
@@ -97,7 +95,7 @@
                 WHERE
                     childID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.kid_share#">
             </cfquery>
-            <cfquery datasource="MySql">
+            <cfquery datasource="#APPLICATION.DSN#">
                 UPDATE
                     smg_host_children
                 SET
@@ -113,7 +111,7 @@
     </cfif>
     
     <!----Smoking & Allergy Preferences---->
-    <cfquery name="smoking_pref" datasource="MySQL">
+    <cfquery name="smoking_pref" datasource="#APPLICATION.DSN#">
     update smg_hosts
         set acceptsmoking = '#form.stu_smoke#',
             smokeconditions = '#form.smoke_conditions#'
@@ -131,7 +129,7 @@
 				number = Evaluate('FORM.number_pets' & i);
 			</cfscript> 
             <cfif VAL(animalID)>
-                <cfquery name="update_pets" datasource="MySql">
+                <cfquery name="update_pets" datasource="#APPLICATION.DSN#">
                     UPDATE
                         smg_host_animals
                     SET
@@ -142,7 +140,7 @@
                         animalid = <cfqueryparam cfsqltype="cf_sql_integer" value="#animalID#">
                 </cfquery>
             <cfelse>
-                <cfquery name="add_animal" datasource="MySql">
+                <cfquery name="add_animal" datasource="#APPLICATION.DSN#">
                     INSERT INTO
                         smg_host_animals 
                         (
@@ -163,7 +161,7 @@
         </cfif>
  	</cfloop>
     
-    <Cfquery name="church_info" datasource="MySQL">
+    <Cfquery name="church_info" datasource="#APPLICATION.DSN#">
     Update smg_hosts
         set attendchurch = '#form.attend_church#',
             religious_participation = '#form.religious_participation#',

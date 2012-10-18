@@ -75,22 +75,12 @@
     	hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">
 </cfquery>
 
-<cfquery name="check_placed" datasource="MySQL">
-	SELECT
-    	studentID
- 	FROM
-    	smg_students
-  	WHERE
-    	hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">
-  	AND
-    	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-</cfquery>
-
-<cfquery name="get_kids" datasource="MySQL">
+<cfquery name="qGetHostChildren" datasource="MySQL">
 	SELECT
     	childid,
         name,
-        shared
+        shared,
+        roomShareWith
 	FROM
     	smg_host_children
 	WHERE
@@ -99,10 +89,25 @@
     	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 </cfquery>
 
+<cfquery name="qGetPlacedStudents" datasource="MySQL">
+	SELECT
+    	studentID,
+        firstName,
+        familyLastName,
+        double_place_share
+ 	FROM
+    	smg_students
+  	WHERE
+    	hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">
+  	AND
+    	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+</cfquery>
+
+
 <cfinclude template="../querys/family_info.cfm">
 <cfform id="mainForm" action="querys/insert_pis_3.cfm" method="post">
 <cfoutput>
-	<input type="hidden" name="numberPets" id="numberPets" value="#get_pets.recordCount#" />
+	<input type="hidden" name="numberPets" id="numberPets" value="#get_pets.recordCount#" />    
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
 	<tr valign=middle height=24>
 		<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
@@ -120,7 +125,7 @@
 				<tr>
                 	<td colspan="3">
                     	<div class="get_Attention">
-                        	<cfif get_kids.recordcount is 0>
+                        	<cfif qGetHostChildren.recordcount is 0>
                             	Since you don't have any kids or other family members living at home, it is assumend the student will not be sharing a room.  If this is wrong, you will need to go to 
                     			<a href="index.cfm?curdoc=forms/host_fam_mem_form&hostid=#client.hostid#&add=1">add a family member</a>
                             <cfelse>
@@ -129,111 +134,72 @@
                         </div>
 					</td>
               	</tr>
-				<cfif check_placed.recordcount is 0>
-                    <cfquery name="check_share" datasource="MySQL">
-                        SELECT
-                            *
-                        FROM
-                            smg_host_children
-                        WHERE
-                            hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">
-                        AND
-                            shared = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
-                        AND 
-                            isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                    </cfquery>
+                
+                <cfquery name="check_share" datasource="MySQL">
+                    SELECT
+                        *
+                    FROM
+                        smg_host_children
+                    WHERE
+                        hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">
+                    AND
+                        shared = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
+                    AND 
+                        isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                </cfquery>
+                
+				<cfif qGetPlacedStudents.recordcount is 0>
+                    
                     <tr>
                         <td colspan="2">Will the student share a bedroom?</td>
                         <td>
                             <select name="kid_share" id="kid_share">
                                 <option value="0" <cfif NOT VAL(check_share.recordCount)>selected="selected"</cfif>>No</option>
-                                <cfloop query="get_kids">
+                                <cfloop query="qGetHostChildren">
                                     <option value='#childid#' <cfif shared is 'yes'>selected="selected"</cfif>>Yes, with #name#</option>
                                 </cfloop>
                             </select>
                     	</td>
 					</tr>
+                    
 				<cfelse>
-                
-					<!--- check_placed.recordcount --->
-                    <cfquery name="get_students_hosting_if_double" datasource="MySQL">
-                        SELECT
-                            studentid,
-                            firstname,
-                            familylastname
-                        FROM
-                            smg_students
-                        WHERE
-                            hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">
-                        AND
-                            active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                    </cfquery>
-                    <cfquery name="check_share" datasource="MySQL">
-                        SELECT
-                            *
-                        FROM
-                            smg_host_children
-                        WHERE
-                            hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">
-                        AND
-                            shared = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
-                        AND 
-                            isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                    </cfquery>
-					<cfset stulist =''>
-					<cfloop query="get_students_hosting_if_double">
-						<cfset stulist = ListAppend(stulist, #studentid#)>
+                                	
+                    <input type="hidden" name="stuListID" value="#ValueList(qGetPlacedStudents.studentid)#">    
+                                    
+					<cfloop query="qGetPlacedStudents">
 						<tr>
                     		<td colspan="2">
-                                Will #firstname# #familylastname# share a bedroom? 
-                                <input type="hidden" name="#studentid#_studentidsharing" value="#studentid#">
+                                Will #qGetPlacedStudents.firstname# #qGetPlacedStudents.familylastname# (###qGetPlacedStudents.studentID#) share a bedroom? 
                        		</td>
 							<td>
-								<!----Check if sharing with a host child---->
-                                <cfquery name="check_sharing" datasource="MySQL">
-                                    SELECT
-                                        shared,
-                                        roomsharewith,
-                                        childid
-                                    FROM
-                                        smg_host_children
-                                    WHERE
-                                        roomsharewith = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
-                                    AND 
-                                        isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                                </cfquery>
-								<!----Check if sharing with a double placement---->
-                                <cfquery name="check_share_double" datasource="MySQL">
-                                    SELECT
-                                        double_place_share
-                                    FROM
-                                        smg_students where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
-                                </cfquery>
-                        		<select name="#studentid#_kid_share">
+                        		<select name="#qGetPlacedStudents.studentid#_siblingIDSharingRoom" class="xLargeField"> 
                             		<option value='no' <cfif NOT VAL(check_share.recordCount)>selected="selected"</cfif>>No</option>
-                                    <cfloop query="get_kids">
-                                    	<option value="#childID#" <cfif check_sharing.childID EQ childID>selected="selected"</cfif>>Yes, with #name#
+                                    
+                                    <!--- List Host Children --->
+                                    <cfloop query="qGetHostChildren">
+                                    	<option value="sibling_#childID#" <cfif qGetHostChildren.roomsharewith EQ qGetPlacedStudents.studentid>selected="selected"</cfif>>Yes, with #name#</option> 
                                     </cfloop>
-								<cfif check_placed.recordcount gt 0>
-									<cfquery name="check_double" datasource="MySQL">
-										SELECT
-                                        	doubleplace, 
-                                            double_place_share
-										FROM
-                                        	smg_students
-										WHERE
-                                        	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
-									</cfquery>
-									<cfif check_double.doubleplace neq 0>
-										<option value=00 <cfif check_double.double_place_share gt 0>selected="selected"</cfif>>Double Place</option>
-									</cfif>
-								</cfif>
-							</select>
+                                    
+                                    <cfquery name="qGetDoublePlacement" dbtype="query">
+                                    	SELECT 
+                                        	*
+                                        FROM
+                                    		qGetPlacedStudents
+                                        WHERE
+                                        	studentID != <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetPlacedStudents.studentID#">
+                                    </cfquery>
+                                    
+                                    <!--- List Host Students - Double Placements --->
+                                    <cfloop query="qGetDoublePlacement">
+                                        <option value="student_#qGetDoublePlacement.studentID#" <cfif qGetPlacedStudents.double_place_share EQ qGetDoublePlacement.studentID>selected="selected"</cfif>>Yes, with student #qGetDoublePlacement.firstName# #qGetDoublePlacement.familyLastName#</option>
+                                    </cfloop>
+                                
+								</select>
                       	</td>
 					</tr>
-				</cfloop> <!--- get_students_hosting_if_double --->
-				<input type="hidden" name=stulist value=#stulist#></input>
-			</cfif> <!--- check_placed.recordcount --->
+				</cfloop> <!--- qGetPlacedStudents --->
+				
+			</cfif> <!--- qGetPlacedStudents.recordcount --->
 			<!--- RELIGIOUS --->
 			<tr bgcolor="e2efc7">
 				<td colspan="2">Does the Family attend church?</td>
