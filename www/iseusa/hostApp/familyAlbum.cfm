@@ -228,7 +228,7 @@ Select a category for this picture:<br />
     </Tr>
 </table>
 
-*At least on picture from this catagory is required. More than one photo may be needed to clearly depict each room.
+*At least one picture from this catagory is required. More than one photo may be needed to clearly depict each room.
 
 <h3>Your Photo Album</h3>
 <table width=100% cellspacing=0 cellpadding=2 class="border">
