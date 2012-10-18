@@ -33,13 +33,32 @@ where shortDesc = 'Mother CBC Auth'
 </cfquery>
 
  <cfscript>
+ if ( LEN(TRIM(qHostParentsMembers.motherfirstname)) and not len(trim(qHostParentsMembers.motherdob)) )  {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("#qHostParentsMembers.motherfirstname# is missing her date of birth on page 1 of the application.  It is required to process this page. Please click on Name & Contact info in the menu and enter the date of birth.");
+			}
+			
+		   if ( LEN(TRIM(qHostParentsMembers.fatherfirstname)) and not len(trim(qHostParentsMembers.fatherdob)) )  {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("#qHostParentsMembers.fatherfirstname# is missing his date of birth on page 1 of the application.  It is required to process this page. Please click on Name & Contact info in the menu and enter the date of birth.");
+			}
+              
+</cfscript>
+<cfif SESSION.formErrors.length()>
+<gui:displayFormErrors 
+        formErrors="#SESSION.formErrors.GetCollection()#"
+        messageType="section"
+        />
+<cfabort>
+</cfif>
+ <cfscript>
  if (not len(trim(form.motherdob))){
                 // Get all the missing items in a list
                SESSION.formErrors.Add("#qHostParentsMembers.motherfirstname# is missing her date of birth on page 1 of the applicaiton.  It is required to process this page. ");
            }	
 		    if (not len(trim(form.motherdob))){
                 // Get all the missing items in a list
-               SESSION.formErrors.Add("#qHostParentsMembers.fatherfirstname# is missing her date of birth on page 1 of the applicaiton.  It is required to process this page. ");
+               SESSION.formErrors.Add("#qHostParentsMembers.fatherfirstname# is missing his date of birth on page 1 of the applicaiton.  It is required to process this page. ");
            }	
 </cfscript>
 <cfif NOT SESSION.formErrors.length()>
