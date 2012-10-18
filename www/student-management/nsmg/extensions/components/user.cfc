@@ -478,10 +478,11 @@
 			// References - Minimum of 4
 			if ( qGetReferences.recordCount GTE 4 ) {
 				stUserPaperwork.isReferenceCompleted = true;
+				stUserPaperwork.missingReferences = 0;
 			} else {
 				stUserPaperwork.isReferenceCompleted = false;
+				stUserPaperwork.missingReferences = 4 - qGetReferences.recordcount;
 			}
-			stUserPaperwork.missingReferences = 4 - qGetReferences.recordcount;
 			
 			// Training - New Area Rep or Area Rep Refresher
 			if ( isDate(qGetSeasonPaperwork.ar_training) ) {
@@ -539,41 +540,47 @@
 				stUserPaperwork.isDOSCertificationCompleted = true;
 			}
 			
-			// Check if ALL Paperwork have been submitted by the user (Agreement, CBC Authorization, DOS Test, Employment History, References and Training Completed)
+			// Check if initial paperwork have been submitted by the user (Agreement, CBC Authorization, Employment History, References)
 			if ( 	
 					stUserPaperwork.isAgreementCompleted 
 				AND 
 					stUserPaperwork.isCBCAuthorizationCompleted 
-				AND	
-					stUserPaperwork.isDOSCertificationCompleted 
 				AND 
 					stUserPaperwork.isEmploymentHistoryCompleted 
 				AND 
 					stUserPaperwork.isReferenceCompleted 
-				AND 
-					stUserPaperwork.isTrainingCompleted
 				) {
 					
-					// User Has Submitted All Required Paperwork
-					stUserPaperwork.isUserPaperworkCompleted = true;
-					
+					// Check if paperwork is complete ( DOS Test and Training are also required )
+					if ( stUserPaperwork.isDOSCertificationCompleted AND stUserPaperwork.isTrainingCompleted ) {
+						// User Has Submitted All Required Paperwork
+						stUserPaperwork.isUserPaperworkCompleted = true;
+					}
+
+
 					// Check if Reference Questionnaire and CBC have been approved - Account is Compliant
-					if ( stUserPaperwork.isReferenceQuestionnaireCompleted AND stUserPaperwork.isCBCApproved ) {
+					if ( stUserPaperwork.isUserPaperworkCompleted AND stUserPaperwork.isReferenceQuestionnaireCompleted AND stUserPaperwork.isCBCApproved ) {
 						
 						// Paperwork compliant
 						stUserPaperwork.isAccountCompliant = true;
 					
 					//  Check if Reference Questionnaire has been completed - Account Needs Office Review (CBC Approval)
-					} else if ( stUserPaperwork.isReferenceQuestionnaireCompleted ) {
+					} else if ( NOT stUserPaperwork.isCBCApproved AND stUserPaperwork.isReferenceQuestionnaireCompleted ) {
 
 						// Notify Office - Program Manager
 						stUserPaperwork.accountReviewStatus = 'officeReview';
 					
 					// Check if Reference Questionnaire is missing, if so notify Regional Manager 
-					} else  {
+					} else if ( NOT stUserPaperwork.isReferenceQuestionnaireCompleted ) {
 						
 						// Notify Regional Manager
 						stUserPaperwork.accountReviewStatus = 'rmReview';
+										
+					// Missing DOS test and training
+					} else {
+						
+						// Notify Regional Manager
+						stUserPaperwork.accountReviewStatus = 'missingTraining';
 						
 					}
 					
@@ -893,9 +900,9 @@
             <cfsavecontent variable="vEmailMessage">
             
                 <cfoutput>				
-                    <p>#stUserPaperwork.user.displayName# has submitted all required paperwork.</p>
+                    <p>#stUserPaperwork.user.displayName# has submitted initial paperwork required (Agreement, CBC Authorization, Employment History and References).</p>
                     
-                    <p>Please submit at least 2 reference questionnaires in order to activate this account.</p>
+                    <p>Please submit at least 2 reference questionnaires.</p>
             
                     <a href="#CLIENT.exits_url#/nsmg/index.cfm?curdoc=user_info&userID=#stUserPaperwork.user.ID#">View user's account.</a>
                 </cfoutput>
@@ -952,8 +959,7 @@
                     	<p>The references for #stUserPaperwork.user.displayName# have been submitted by the regional manager.</p>
                     </cfif>
                     
-                    <p>A manual review is now required to activate the account.</p>	
-                    <p>Please review all paperwork and submit the CBC for processing. If everything looks good, approval of the CBC will activate this account.</p>		
+                    <p>Please review paperwork and submit the CBC for processing. If everything looks good, approval of the CBC will activate this account.</p>		
                             
                     <a href="#CLIENT.exits_url#/nsmg/index.cfm?curdoc=user_info&userID=#stUserPaperwork.user.ID#">View user's account.</a>
                 </cfoutput>

@@ -88,13 +88,24 @@
 			if ( NOT LEN(FORM.zip) ) {
 				SESSION.formErrors.Add("Please enter your current zip");
 			}
-			
+
+			// DOB
+			if ( NOT LEN(FORM.DOB) ) {
+				FORM.DOB = '';
+				SESSION.formErrors.Add("Please enter a Date of Birth");				
+			}    
+
 			// DOB
 			if ( LEN(FORM.DOB) AND NOT IsDate(FORM.DOB) ) {
 				FORM.DOB = '';
 				SESSION.formErrors.Add("Please enter a valid Date of Birth");				
 			}    
 			
+			// SSN
+			if ( NOT LEN(FORM.SSN) ) {
+				SESSION.formErrors.Add("Please enter a SSN");
+			}    
+
 			// SSN
 			if ( LEN(FORM.SSN) AND Left(FORM.SSN, 3) NEQ 'XXX' AND NOT isValid("social_security_number", Trim(FORM.SSN)) ) {
 				SESSION.formErrors.Add("Please enter a valid SSN");
