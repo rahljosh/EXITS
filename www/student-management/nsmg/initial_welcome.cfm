@@ -603,31 +603,35 @@
                                         </td>
                                         <td>
 											<cfif stUserPaperwork.isAccountCompliant>
-                                           		
-                                                Account Active (Paperwork Compliant)
                                                 
-											<cfelseif stUserPaperwork.accountReviewStatus EQ 'rmReview'>
+                                                Active - Fully Enabled (Paperwork Compliant)
+                                                
+                                            <cfelseif stUserPaperwork.accountReviewStatus EQ 'rmReview'>
                                                
-                                                Active (paperwork received) - 
-                                                <a href="index.cfm?curdoc=user_info&userID=#get_new_users.userID#">References Questionnaire Needed</a>
+                                                Active (Initial Paperwork Received) - 
+                                                <a href="index.cfm?curdoc=user_info&userID=#get_new_users.userID#">RM - Reference Questionnaires Needed</a>
                                                 
-											<cfelseif stUserPaperwork.accountReviewStatus EQ 'officeReview'>
+                                            <cfelseif stUserPaperwork.accountReviewStatus EQ 'officeReview'>
                                             
-                                                Active (paperwork received) - 
-												<cfif APPLICATION.CFC.USER.isOfficeUser()>
-                                                	<a href="index.cfm?curdoc=user/index&action=paperworkDetails&userID=#get_new_users.userID#">Office Verification Needed</a>
-												<cfelse>
-                                                	Office Verification Needed
-												</cfif>
+                                                Active (Initial Paperwork Received) - 
+                                                <cfif APPLICATION.CFC.USER.isOfficeUser()>
+                                                    <a href="index.cfm?curdoc=user/index&action=paperworkDetails&userID=#get_new_users.userID#">Office Verification Needed</a>
+                                                <cfelse>
+                                                    Office Verification Needed
+                                                </cfif>
+                                            
+                                            <cfelseif stUserPaperwork.accountReviewStatus EQ 'missingTraining'>
+                                                                                        
+                                                Active (Initial Paperwork Received) - DOS Certification and/or AR training needed
                                                 
                                             <cfelse>
                                             
                                                 Active - 
                                                 <cfif APPLICATION.CFC.USER.isOfficeUser()>
-                                                	<a href="index.cfm?curdoc=user/index&action=paperworkDetails&userID=#get_new_users.userID#">Missing Paperwork</a>
-												<cfelse>
-                                                	Missing Paperwork
-												</cfif>
+                                                    <a href="index.cfm?curdoc=user/index&action=paperworkDetails&userID=#get_new_users.userID#">Missing Paperwork</a>
+                                                <cfelse>
+                                                    Missing Paperwork
+                                                </cfif>
                                                 
                                             </cfif>
                                         </td>

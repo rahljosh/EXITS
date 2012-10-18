@@ -158,10 +158,21 @@
         </div> <!-- end rdtop --> 
 
         <div class="rdboxPaperwork">
-            
-			<cfif APPLICATION.CFC.USER.getUserSessionPaperwork().isUserPaperworkCompleted>            	
+			
+			<cfif APPLICATION.CFC.USER.getUserSessionPaperwork().accountReviewStatus EQ 'officeReview'>
+                <p align="center">              	
+                    You have submitted initial paperwork for this season and your references have been checked by your Regional Manager. 
+                    Headquarters is going to review your account. <br />
+                </p>
+            <cfelseif APPLICATION.CFC.USER.getUserSessionPaperwork().accountReviewStatus EQ 'rmReview'>
+            	<p align="center"><strong>Paperwork Status:</strong> Initial Paperwork Submitted | <strong>EXITS Access:</strong> Limited</p>
+                <p align="center">                	
+                    You have submitted initial paperwork for this season. 
+                    Your Regional Manager is going to review your account and check your references. <br />
+                </p>
+			<cfelseif APPLICATION.CFC.USER.getUserSessionPaperwork().isUserPaperworkCompleted>            	
             	<p align="center"><strong>Paperwork Status:</strong> Submitted | <strong>EXITS Access:</strong> Limited</p>
-                <p align="center" style="color:##F00">                	
+                <p align="center">             	
                     You have submitted all required paperwork for this season. A manual review is needed in order to fully activate your account. <br />
 					As soon as we review it, you are going to be notified by email and be granted full access to EXITS. <br />
                 </p>

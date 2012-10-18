@@ -377,6 +377,11 @@
         	<h1>Account Review Required</h1>
             <em>CBC Approval Needed.</em>
         </div>
+    <cfelseif stUserPaperwork.accountReviewStatus EQ 'missingTraining'>
+        <div class="alert">
+        	<h1>Account Not Enabled</h1>
+            <em>User has submitted initial paperwork. DOS Certification and/or AR Training needed.</em>
+        </div>
     <cfelseif NOT stUserPaperwork.isAccountCompliant>
         <div class="alert">
 	        <h1>Account Not Enabled</h1>
