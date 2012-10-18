@@ -10,6 +10,10 @@ select h.fatherfirstname, h.fatherdob, h.fatherlastname, h.motherfirstname, h.mo
 from smg_hosts h
 where h.hostid = #client.hostid# 
 </cfquery>
+
+
+
+
 <cfquery name="qHostParentsCBC" datasource="mysql">
 select * 
 from smg_documents
@@ -28,9 +32,17 @@ from qHostParentsCBC
 where shortDesc = 'Mother CBC Auth'
 </cfquery>
 
-
-
-
+ <cfscript>
+ if (not len(trim(form.motherdob))){
+                // Get all the missing items in a list
+               SESSION.formErrors.Add("#qHostParentsMembers.motherfirstname# is missing her date of birth on page 1 of the applicaiton.  It is required to process this page. ");
+           }	
+		    if (not len(trim(form.motherdob))){
+                // Get all the missing items in a list
+               SESSION.formErrors.Add("#qHostParentsMembers.fatherfirstname# is missing her date of birth on page 1 of the applicaiton.  It is required to process this page. ");
+           }	
+</cfscript>
+<cfif NOT SESSION.formErrors.length()>
 
 <!--- Process Form Submission --->
     <cfif isDefined('FORM.processCBC')>
@@ -735,6 +747,7 @@ where shortDesc = 'Mother CBC Auth'
 		</cfif>	
 
  </cfif>
+ </cfif>
 <cfquery name="qHostFamilyMembers" datasource="mysql">
 select k.name, k.lastname, k.birthdate, k.cbc_form_received, k.childid, k.membertype, k.ssn, k.liveathome
 from smg_host_children k
@@ -861,22 +874,7 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
 
         	<Cfloop query="qHostParentsMembers">
            
-            <cfquery name="parentsCBC" datasource="mysql">
-                select *
-                from smg_documents
-                where userid = #client.hostid#
-                
-            </cfquery>
-           	<cfquery name="fatherCBC" dbtype="query">
-            select *
-            from parentsCBC
-            where shortDesc = 'Host Father'
-            </cfquery>
-           <cfquery name="motherCBC" dbtype="query">
-            select *
-            from parentsCBC
-            where shortDesc = 'Host Mother'
-            </cfquery>
+            
 			<cfif fatherfirstname is not ''>
             <tr>
                 <Td><h3><p class=p_uppercase>#fatherfirstname# #fatherlastname#</h3></Td>
@@ -884,7 +882,7 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
                 <cfif checkFatherCBC.recordcount eq 0>
                 	<input type="text" name="FatherSig" size=20/></Td>
                 <cfelse>
-            		<a href="../uploadedfiles/#fatherCBC.filePath#/#fatherCBC.fileName#">View CBC Authoriaztion</a>
+            		<a href="../uploadedfiles/#checkfatherCBC.filePath#/#checkfatherCBC.fileName#">View CBC Authoriaztion</a>
             	</cfif>
             </tr>    
             </cfif>
@@ -895,7 +893,7 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
                 <cfif checkMotherCBC.recordcount eq 0>
                 	<input type="text" name="MotherSig" size=20/>
                 <cfelse>
-            		<a href="../uploadedfiles/#motherCBC.filePath#/#motherCBC.fileName#">View CBC Authoriaztion</a>
+            		<a href="../uploadedfiles/#checkMotherCBC.filePath#/#checkMotherCBC.fileName#">View CBC Authoriaztion</a>
             	</cfif>
                 </Td>
             </tr>    
