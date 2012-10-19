@@ -1138,4 +1138,49 @@
         
     </cffunction>
     
+    <!--- Insert pdf file to the internal virtual folder --->
+    <cffunction name="insertInternalFile" access="public" returntype="string">
+    	<cfargument name="filePath" type="string" required="yes" hint="The full path to the file that will be added">
+        <cfargument name="fieldID" type="numeric" required="yes" hint="The type of document being uploaded (such as Flight Information or Welcome Letters)">
+        <cfargument name="studentID" type="numeric" required="yes" hint="The ID of the student this file belongs to">
+        
+        <cfscript>
+		
+			// Get active placement history record
+			qGetActivePlacement = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=ARGUMENTS.studentID);
+			    
+			// Get folder path 
+			currentDirectory = "#APPLICATION.PATH.onlineApp.internalVirtualFolder##ARGUMENTS.studentid#/#qGetActivePlacement.historyID#";
+			
+			// Make sure the folder Exists
+        	createFolder(currentDirectory);
+			
+		</cfscript>
+        
+        <cffile action="move" source="#ARGUMENTS.filePath#" destination="#currentDirectory#" nameconflict="makeunique" mode="777">
+        
+        <cfdirectory directory="#currentDirectory#" name="mydirectory" sort="datelastmodified DESC" filter="*.*">
+        
+        <cfquery name="insert_category" datasource="#APPLICATION.DSN#">
+            INSERT INTO 
+                smg_internal_virtual_folder 
+                (
+                    studentid,
+                    placementid,
+                    categoryid,
+                    filename, 
+                    filesize
+                )
+            VALUES 
+                (
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentid#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetActivePlacement.historyID#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.fieldID#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#mydirectory.name#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#mydirectory.size#">
+                )
+        </cfquery>
+        
+ 	</cffunction>
+    
 </cfcomponent>
