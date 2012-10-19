@@ -496,10 +496,17 @@
 				TEMPORARY SOLUTION 
 				webEX trainings are not ready to go live, set them as true until we are ready
 				Marcus Melo 09/18/2012
-			****/		
+			****/	
 			if ( now() LT '2012/11/01' ) {
 				stUserPaperwork.isTrainingCompleted = true;
 			}
+
+			// **************************************** BLOCK USERS AFTER 21 DAYS ****************************************
+			if ( now() LT '2012/11/01' AND NOT stUserPaperwork.isDOSCertificationCompleted ) {
+				stUserPaperwork.isDOSCertificationCompleted = true;
+				stUserPaperwork.dateDOSTestExpired = '10/31/2012';
+				
+			}			
 			/**** TEMPORARY SOLUTION ****/			
 			
 
