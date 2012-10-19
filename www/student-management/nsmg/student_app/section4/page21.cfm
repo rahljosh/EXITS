@@ -391,11 +391,12 @@ and sc.fk_companyid = #client.companyid#
                         </div>
                         
                     <cfelse>
-                        <!--- Exchange Service International Application --->
+                    
+                      <!--- Exchange Service International Application --->
                       <Cfif get_Student_info.programid eq 0>
                       <h2><align="Center">You have not selected a program to apply for.  The program is required to see what districts are available.   Please to go to Page 1 of your application, select a program from the drop down, save the page and return to this page to select your district.</align></h2>
                       <cfelse>
-                        <img src="pics/ESI-Map.gif" width="650" height="369" align="middle"><br>
+                        <img src="pics/ESI-Map.gif" width="650" height="380" align="middle"><br>
                        
                         <table cellpadding="2" cellspacing="2" style="margin:10px;">
                             <tr>

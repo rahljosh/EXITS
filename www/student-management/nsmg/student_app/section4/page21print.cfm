@@ -198,7 +198,7 @@
                 <cfelse>
                 	<!--- Exchange Service Information --->
                     
-                    <img src="#vStudentAppRelativePath#pics/ESI-Map.gif" width="650" height="369" align="middle"><br>
+                    <img src="#vStudentAppRelativePath#pics/ESI-Map.gif" width="650" height="380" align="middle"><br>
 
                     <table cellpadding="2" cellspacing="2" style="margin:10px;">
                         <tr>
