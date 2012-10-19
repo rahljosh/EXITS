@@ -72,7 +72,7 @@
                 <cfswitch expression="#ARGUMENTS.sortBy#">
                     
                     <cfcase value="fieldID">                    
-                        fieldKey
+                        fieldID
                     </cfcase>
                 
                     <cfcase value="name">
