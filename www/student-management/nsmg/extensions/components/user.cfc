@@ -496,15 +496,10 @@
 				TEMPORARY SOLUTION 
 				webEX trainings are not ready to go live, set them as true until we are ready
 				Marcus Melo 09/18/2012
-			****/	
+			****/		
 			if ( now() LT '2012/11/01' ) {
 				stUserPaperwork.isTrainingCompleted = true;
 			}
-
-			// **************************************** BLOCK USERS AFTER 21 DAYS ****************************************
-			if ( now() LT '2012/11/01' AND NOT stUserPaperwork.isDOSCertificationCompleted ) {
-				stUserPaperwork.isDOSCertificationCompleted = true;
-			}			
 			/**** TEMPORARY SOLUTION ****/			
 			
 
@@ -527,7 +522,7 @@
 			/**** TEMPORARY SOLUTION ****/
 			
 			
-			// 2nd Visit - Only Agreement and CBC - No References, employment history, trainings and DOS test
+			// 2nd Visit - Only Agreement and CBC - No References, employment history, trainings and DOS Certification
 			if ( vIsSecondVisitRepOnly ) {
 				stUserPaperwork.isReferenceCompleted = true;
 				stUserPaperwork.isReferenceQuestionnaireCompleted = true;
@@ -536,7 +531,7 @@
 				stUserPaperwork.isDOSCertificationCompleted = true;
 			}
 			
-			// ESI - Only Agreement and CBC - No References, employment history, trainings and DOS test
+			// ESI - Only Agreement and CBC - No References, employment history, trainings and DOS Certification
 			if ( CLIENT.companyID EQ APPLICATION.SETTINGS.COMPANYLIST.ESI ) {
 				stUserPaperwork.isReferenceCompleted = true;
 				stUserPaperwork.isEmploymentHistoryCompleted = true;
@@ -556,8 +551,16 @@
 					stUserPaperwork.isReferenceCompleted 
 				) {
 					
-					// Check if paperwork is complete ( DOS Test and Training are also required )
+					// Check if paperwork is complete ( DOS Certification and Training are also required )
+					/*
 					if ( stUserPaperwork.isDOSCertificationCompleted AND stUserPaperwork.isTrainingCompleted ) {
+						// User Has Submitted All Required Paperwork
+						stUserPaperwork.isUserPaperworkCompleted = true;
+					}
+					*/
+					
+					/***** TEMPORARY SOLUTION NOT FORCING DOS CERTIFICATION ******/
+					if ( stUserPaperwork.isTrainingCompleted ) {
 						// User Has Submitted All Required Paperwork
 						stUserPaperwork.isUserPaperworkCompleted = true;
 					}
@@ -581,7 +584,7 @@
 						// Notify Regional Manager
 						stUserPaperwork.accountReviewStatus = 'rmReview';
 										
-					// Missing DOS test and training
+					// Missing DOS Certification and training
 					} else {
 						
 						// Notify Regional Manager
