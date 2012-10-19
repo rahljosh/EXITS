@@ -471,23 +471,42 @@
                                         <td align="center">#qGetHostChildren.membertype#</td>
                                     </tr>
                                 </cfloop>
-                                <cfquery name="qGetShareChildren" dbtype="query">
+                                
+                                <cfquery name="qGetShareChildren" datasource="#APPLICATION.DSN#">
                                 	SELECT
-                                    	*
+                                    	name AS firstName,
+                                        'host sibling' AS relation                                        
                                    	FROM
-                                    	qGetHostChildren
+                                    	smg_host_children
                                    	WHERE
+                                    	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetPlacementHistory.hostID)#">
+                                    AND
                                     	roomShareWith = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
+                                    
+                                    UNION
+                                   
+                                   	SELECT
+                                    	s.firstName,
+                                        'foreign student' AS relation
+                                    FROM
+                                    	smg_students s
+                                    WHERE
+                                    	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                                    AND
+                                    	double_place_share = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
                                 </cfquery>
-                                <tr>
-                                	<td colspan="5">
-                                    	<cfif VAL(qGetShareChildren.recordCount)>
-                                    		#qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# is sharing a room with #qGetShareChildren.name#.
-                                      	</cfif>
-                                    </td>
-                                </tr>
                             </table>
-                            
+						
+							<cfif VAL(qGetShareChildren.recordCount)>
+                                <table width="100%" align="Center" style="margin-top:10px;">
+                                    <tr>
+                                        <td>
+                                            #qGetStudentInfo.firstname# is sharing a room with #qGetShareChildren.relation# #qGetShareChildren.firstName#
+                                        </td>
+                                    </tr>
+                                </table>                                       	
+                            </cfif>
+
                         </td>
     
                         <td valign="top">
