@@ -504,8 +504,6 @@
 			// **************************************** BLOCK USERS AFTER 21 DAYS ****************************************
 			if ( now() LT '2012/11/01' AND NOT stUserPaperwork.isDOSCertificationCompleted ) {
 				stUserPaperwork.isDOSCertificationCompleted = true;
-				stUserPaperwork.dateDOSTestExpired = '10/31/2012';
-				
 			}			
 			/**** TEMPORARY SOLUTION ****/			
 			
