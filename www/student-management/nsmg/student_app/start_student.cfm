@@ -582,7 +582,7 @@
         <tr>
             <td>&nbsp;</td>
             <td>
-                <select name="app_indicated_program" id="app_indicated_program" onchange="displayCanada();">
+                <select name="app_indicated_program" id="app_indicated_program" onchange="displayCanada();" class="xLargeField">
                     <option value="0">To Be Defined</option>
                     <cfloop query="qAppPrograms">
                         <option value="#qAppPrograms.app_programID#" <cfif qAppPrograms.app_programID EQ FORM.app_indicated_program> selected="selected" </cfif> >#qAppPrograms.app_program#</option>
@@ -631,6 +631,7 @@
                   display="programName"
                   selected="#FORM.programID#"
                   bindonload="yes"
+                  class="xLargeField"
                   bind="cfc:nsmg.extensions.components.program.qGetActiveInternalPrograms({app_indicated_program})" />
             </td>
             <td></td>

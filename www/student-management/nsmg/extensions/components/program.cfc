@@ -230,7 +230,7 @@
     <cffunction name="qGetActiveInternalPrograms" access="remote" output="no" returntype="query" hint="Gets a list of active programs associated with the program type indicated. Needs to get the program type id." verifyclient="no" securejson="false">
     	<cfargument name="programTypeID" default="0" hint="programTypeID is not required">
         <cfargument name="currentprogramID" default="0" hint="currentprogramID is not required">
-        <cfargument name="companyID" default="0" hint="pass in companyid if only need specific company">
+        <cfargument name="companyID" default="#CLIENT.companyID#" hint="pass in companyid if only need specific company">
 		
         <cfquery 
 			name="qGetActiveInternalPrograms" 
@@ -258,8 +258,11 @@
                 
 				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, ARGUMENTS.companyid)> 
                     AND 
-                    	( companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.publicHS#" list="yes"> ) 
-                        	OR companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.php#" list="yes"> ) )
+                    	( 
+                        	companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.publicHS#" list="yes"> ) 
+                        OR 
+                        	companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.php#" list="yes"> ) 
+                        )
                 <cfelse>
                 	AND 
                     	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyid#">
