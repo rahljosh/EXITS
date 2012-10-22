@@ -11,7 +11,10 @@
 <cfsilent>
 
 	<!--- Import CustomTag --->
-    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
+    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />
+    
+  	<!--- Ajax Call to the Component --->
+    <cfajaxproxy cfc="nsmg.extensions.components.udf" jsclassname="UDFComponent">
 
     <!--- Param URL Variables --->
     <cfparam name="URL.schoolID" default="0">
@@ -24,6 +27,7 @@
     <cfparam name="FORM.city" default="">
     <cfparam name="FORM.state" default="">
     <cfparam name="FORM.zip" default="">
+    <cfparam name="FORM.zipLookup" default="">
     <cfparam name="FORM.principal" default="">
     <cfparam name="FORM.email" default="">
     <cfparam name="FORM.phone" default="">
@@ -233,9 +237,7 @@
 	
 </cfsilent>
 
-<cfoutput>
-
-<script language="javascript">
+<script type="text/javascript">
 	function checkForm() {
 		<cfif APPLICATION.address_lookup NEQ 2>
 			if (document.schoolForm.state.value.length == 0) {alert("Please select the State."); return false; }
@@ -246,15 +248,201 @@
 	
 	// Fomat Phone/Fax Numbers
 	jQuery(function($){
-	   $("##phone").mask("(999) 999-9999");
-	   $("##fax").mask("(999) 999-9999");
-	});		
+	   $("#phone").mask("(999) 999-9999");
+	   $("#fax").mask("(999) 999-9999");
+	});
+	
+	// Function to find the index in an array of the first entry with a specific value. 
+	// It is used to get the index of a column in the column list. 
+	Array.prototype.findIdx = function(value){ 
+		for (var i=0; i < this.length; i++) { 
+			if (this[i] == value) { 
+				return i; 
+			} 
+		} 
+	} 
+
+	// Create an instance of the proxy. 
+	var udf = new UDFComponent();
+
+	// Use an asynchronous call to get the student details. The function is called when the user selects a student. 
+	var verifyAddress = function() { 
+		
+		// Check required Fields
+		var errorMessage = "";
+		if($("#schoolname").val() == ''){
+			errorMessage = (errorMessage + 'Please enter the School Name. \n')
+		}
+		if($("#address").val() == ''){
+			errorMessage = (errorMessage + 'Please enter the Address. \n')
+		}
+		if($("#city").val() == ''){
+			errorMessage = (errorMessage + 'Please enter the City. \n')
+		}
+		if($("#state").val() == ''){
+			errorMessage = (errorMessage + 'Please select the State. \n')
+		}
+		if($("#zip").val() == ''){
+			errorMessage = (errorMessage + 'Please enter the Zip. \n')
+		}
+		if($("#contact").val() == ''){
+			errorMessage = (errorMessage + 'Please enter the Contact. \n')
+		}
+		if($("#phone").val() == ''){
+			errorMessage = (errorMessage + 'Please enter a phone number. \n')
+		}
+		if (errorMessage != "") {
+			alert(errorMessage);
+		} else {
+			// FORM Variables
+			var address = $("#address").val();
+			var city = $("#city").val();
+			var state = $("#state").val();
+			var zip = $("#zip").val();
+	
+			// Setting a callback handler for the proxy automatically makes the proxy's calls asynchronous. 
+			udf.setCallbackHandler(checkAddress); 
+			udf.setErrorHandler(myErrorHandler); 
+			udf.addressLookup(address,city,state,zip,"232");
+		}
+	}
+
+	// Callback function to handle the results returned by the getHostLeadList function and populate the table. 
+	var checkAddress = function(googleResponse) { 
+
+		var isAddressVerified = googleResponse.ISVERIFIED;
+
+		if ( isAddressVerified == 1 ) {
+		
+			// Get Data Back	
+			var streetAddress = googleResponse.ADDRESS;
+			var city = googleResponse.CITY;
+			var state = googleResponse.STATE;
+			var zip = googleResponse.ZIP.substring('zip='.length);
+			
+			if ((streetAddress == $("#address").val()) && (city == $("#city").val()) && (state == $("#state").val()) && (zip == $("#zip").val()))
+			{
+				$("#schoolForm").submit();
+			} else {
+				$(function() {
+					$( "#dialog:ui-dialog" ).dialog( "destroy" );
+					$( "#dialog-approvePlacement-confirm").empty();
+					$( "#dialog-approvePlacement-confirm" ).append(
+						"<table width='100%'>" +
+							"<tr width='100%'><td width='50%'>Verified Address:</td><td width='50%'>Input Address:</td></tr>" +
+							"<tr><td>" + streetAddress + "</td><td>" + $("#address").val() + "</td></tr>" +
+							"<tr><td>" + city + ", " + state + " " + zip + "</td><td>" + $("#city").val() + ", " + $("#state").val() + " " + $("#zip").val() + "</td></tr>" +
+						"</table>");
+					$( "#dialog-approvePlacement-confirm").dialog({
+						resizable: false,
+						height:230,
+						width:400,
+						modal: true,
+						buttons: {
+							"Use verified": function() {
+								$( this ).dialog( "close" );
+								$("#address").val(streetAddress);
+								$("#city").val(city);
+								$("#state").val(state);
+								$("#zip").val(zip);
+								$("#schoolForm").submit();
+							},
+							"Use input": function() {
+								$( this ).dialog( "close" );
+								$("#schoolForm").submit();
+							},
+							"Go back": function() {
+								$( this ).dialog( "close" );
+							}
+						}
+					});
+				});
+			}
+		} else {
+			$(function() {
+				$( "#dialog:ui-dialog" ).dialog( "destroy" );
+				$( "#dialog-canNotVerify-confirm" ).empty();
+				$( "#dialog-canNotVerify-confirm" ).append("We could not verify the following address:<br />" + $("#address").val() + "<br />" + $("#city").val() + ", " + $("#state").val() + " " + $("#zip").val());
+				$( "#dialog-canNotVerify-confirm").dialog({
+					resizable: false,
+					height:230,
+					width:400,
+					modal: true,
+					buttons: {
+						"Use anyway": function() {
+							$( this ).dialog( "close" );
+							$("#schoolForm").submit();
+						},
+						"Go back": function() {
+							$( this ).dialog( "close" );
+						}
+					}
+				});
+			});
+		}		
+	}
+	
+	// Use an asynchronous call to get the city and state from the zip code. The function is called when the user inputs a zip code. 
+	var getLocationByZip = function() { 
+		
+		// FORM Variables
+		var zip = $("#zipLookup").val();
+		
+		if (zip.length == 5) {
+			// Setting a callback handler for the proxy automatically makes the proxy's calls asynchronous. 
+			udf.setCallbackHandler(checkZip); 
+			udf.setErrorHandler(myErrorHandler); 
+			udf.zipCodeLookUp(zip);
+		} else {
+			alert("Please verify your zip code");
+		}
+	} 
+
+	// Callback function to handle the results returned by the getHostLeadList function and populate the table. 
+	var checkZip = function(googleResponse) { 
+
+		var isAddressVerified = googleResponse.ISVERIFIED;
+
+		if ( isAddressVerified == 1 ) {
+		
+			// Get Data Back	
+			var city = googleResponse.CITY;
+			var state = googleResponse.STATE;
+			
+			$("#city").val(city);
+			$("#state").val(state);
+			$("#zip").val($("#zipLookup").val());
+			$("#zipLookupRow").html("");
+		} else {
+			alert("Please verify your zip code");
+		}
+
+	}
+
+	// Error handler for the asynchronous functions. 
+	var myErrorHandler = function(statusCode, statusMsg) { 
+		alert('Status: ' + statusCode + ', ' + statusMsg); 
+	} 
 	
 	// Error Message
 	<cfif LEN(FORM.errorMsg)>
-		alert('#FORM.errorMsg#');
+		alert('<cfoutput>#FORM.errorMsg#</cfoutput>');
 	</cfif>
 </script>
+
+<cfoutput>
+
+<!--- Modal Dialogs --->
+    
+<!--- Approve Address - Modal Dialog Box --->
+<div id="dialog-approvePlacement-confirm" title="Which address would you like to use?" class="displayNone"> 
+	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span></p>  
+</div>
+
+<!--- Can Not Verify Address - Modal Dialog Box --->
+<div id="dialog-canNotVerify-confirm" title="We could not verify this address." class="displayNone"> 
+	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span></p> 
+</div>
 
 
 <!--- address lookup turned on. / Include Google API --->
@@ -270,7 +458,7 @@
 	tableTitle="School Information"
 />
 
-<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING# " method="post" name="schoolForm" onSubmit="return checkForm();">
+<cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING# " method="post" id="schoolForm" name="schoolForm" onSubmit="return checkForm();">
     <input type="hidden" name="submitted" value="1">
     <input type="hidden" name="schoolID" id="schoolID" value="#VAL(qGetSchoolInfo.schoolID)#">    
     <!--- this gets set to 1 by the javascript lookup function on success. --->
@@ -281,6 +469,10 @@
             <td class="label">School Name: <span class="redtext">*</span></td>
             <td colspan="3"><cfinput type="text" name="schoolname" value="#FORM.schoolName#" size="40" maxlength="200" required="yes" validate="noblanks" message="Please enter the School Name."></td>
 		</tr>
+         <tr id="zipLookupRow">
+        	<td class="label">Zip Lookup: </td>
+            <td colspan="3"><input type="text" name="zipLookup" id="zipLookup" value="#FORM.zipLookup#" size="5" maxlength="5" onblur="getLocationByZip();"></td>
+        </tr>
 
 		<!--- address lookup - auto version. --->
 		<cfif APPLICATION.address_lookup EQ 2>
@@ -406,7 +598,7 @@
 			<cfif VAL(qGetSchoolInfo.recordCount) AND ListFind("1,2,3,4", CLIENT.userType)>
                 <td><a href="?curdoc=querys/delete_school&schoolid=#schoolID#" onClick="return confirm('You are about to delete this School. You will not be able to recover this information. Click OK to continue.')"><img src="pics/delete.gif" border="0"></a></td>
             </cfif>
-            <td align="right"><input name="Submit" type="image" src="pics/submit.gif" border=0></td>
+            <td align="right"><img src="pics/submit.gif" style="cursor:pointer" onclick="javascript:verifyAddress();" /></td>
         </tr>
     </table>
 
