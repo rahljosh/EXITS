@@ -21,7 +21,7 @@
     <cfparam name="studentStatus" default="registered">
     <cfparam name="permissionForm" default="">
     <cfparam name="tour_id" default="0">
-    <cfparam name="orderBy" default="dateCreated">
+    <cfparam name="orderBy" default="paid">
     <cfparam name="recordsToShow" default="500">
 	
     <cfscript>
@@ -248,8 +248,8 @@
             	
                 <cfswitch expression="#orderBy#">
                 
-                	<cfcase value="dateCreated">
-                    	st.dateCreated DESC,
+                	<cfcase value="paid">
+                    	st.paid DESC,
                         t.tour_name,
                         stu.studentID
                     </cfcase>
@@ -267,20 +267,20 @@
 
                 	<cfcase value="tour_name">
                     	t.tour_name,
-                        st.dateCreated DESC,
+                        st.paid DESC,
                         stu.studentID
                     </cfcase>
                     
                 	<cfcase value="permission">
                     	st.permissionForm,
                     	t.tour_name,
-                        st.dateCreated DESC,
+                        st.paid DESC,
                         stu.studentID
                     </cfcase>
                     
                     <cfdefaultcase>
                     	t.tour_name,
-                        st.dateCreated DESC,
+                        st.paid DESC,
                         stu.studentID
                     </cfdefaultcase>
 				
@@ -356,7 +356,7 @@
                 <td>
                     Order By<br />
                     <select name="orderBy" class="mediumField">
-                   		<option value="dateCreated" <cfif orderBy EQ 'dateCreated'>selected</cfif>>Registered On</option>
+                   		<option value="paid" <cfif orderBy EQ 'paid'>selected</cfif>>Registered On</option>
                         <option value="studentID" <cfif orderBy EQ 'studentID'>selected</cfif>>ID</option>
                         <option value="familylastname" <cfif orderBy EQ 'familylastname'>selected</cfif>>Last Name</option>
                         <option value="tour_name" <cfif orderBy EQ 'tour_name'>selected</cfif>>Tour</option>
@@ -488,7 +488,7 @@
 	                            <span style="color:##F00; font-weight:bold;">#DollarFormat(qGetResults.totalCost - qGetResults.totalReceived)#</span>
                             </cfif>
                         </td>                       
-                        <td align="center">#dateFormat(qGetResults.dateCreated, 'mm/dd/yyyy')#</td>
+                        <td align="center">#dateFormat(qGetResults.paid, 'mm/dd/yyyy')#</td>
                         <td align="center"><cfif IsDate(qGetResults.permissionForm)>#DateFormat(qGetResults.permissionForm)#</cfif></td>
                         <td align="center"><cfif LEN(qGetArrivalFlight.departDate)>#DateFormat(qGetArrivalFlight.departDate)#<cfelse>No</cfif></td>
                         <td align="center"><cfif LEN(qGetDepartureFlight.departDate)>#DateFormat(qGetDepartureFlight.departDate)#<cfelse>No</cfif></td>
