@@ -11,6 +11,7 @@
 
 <cftransaction action="begin" isolation="serializable">
 	
+    <!--- Canada --->
 	<cfif CLIENT.companyID EQ 14>
 
         <cfquery name="qCheckCanadaChoice" datasource="MySql">

@@ -31,65 +31,89 @@
 
 <!-----Script to show certain fileds---->
 <script type="text/javascript">
-<!--
-function changeDiv(the_div,the_change)
-{
-  var the_style = getStyleObject(the_div);
-  if (the_style != false)
-  {
-    the_style.display = the_change;
-  }
-}
-function hideAll()
-{
-  changeDiv("1","none");
-  changeDiv("2","none");
-}
-function getStyleObject(objectId) {
-  if (document.getElementById && document.getElementById(objectId)) {
-    return document.getElementById(objectId).style;
-  } else if (document.all && document.all(objectId)) {
-    return document.all(objectId).style;
-  } else {
-    return false;
-  }
-}
-function CheckLink()
-{
-  if (document.page21.CheckChanged.value != 0)
-  {
-    if (confirm("You have made changes on this page that have not been submited.\n\These changes will be lost if you navigate away from this page.\n\Click OK to contine and discard changes, or click cancel and submit to save your changes."))
-      return true;
-    else
-      return false;
-  }
-}
-function DataChanged() {
-  document.page21.CheckChanged.value = 1;
-}
-function CheckStates() {
-	if ((document.page21.state_select[0].checked) && ((document.page21.state1.value == '0') || (document.page21.state2.value == '0') ||  (document.page21.state3.value == '0'))) {
-	 	alert("If you would like a State Choice, you must select three options.");
-		  return false; }			  	
-}
-function NextPage() {
-	document.page21.action = '?curdoc=section4/qr_page21&next';
+	<!--
+	function changeDiv(the_div,the_change) {
+	  var the_style = getStyleObject(the_div);
+	  if (the_style != false)
+	  {
+		the_style.display = the_change;
+	  }
 	}
-//-->
+	
+	function hideAll() {
+	  changeDiv("1","none");
+	  changeDiv("2","none");
+	}
+	
+	function getStyleObject(objectId) {
+	  if (document.getElementById && document.getElementById(objectId)) {
+		return document.getElementById(objectId).style;
+	  } else if (document.all && document.all(objectId)) {
+		return document.all(objectId).style;
+	  } else {
+		return false;
+	  }
+	}
+	
+	function CheckLink() {
+	  if (document.page21.CheckChanged.value != 0)
+	  {
+		if (confirm("You have made changes on this page that have not been submited.\n\These changes will be lost if you navigate away from this page.\n\Click OK to contine and discard changes, or click cancel and submit to save your changes."))
+		  return true;
+		else
+		  return false;
+	  }
+	}
+	
+	function DataChanged() {
+	  document.page21.CheckChanged.value = 1;
+	}
+	
+	function checkOptions() {
+		if ( (document.page21.state_select[0].checked) && ((document.page21.state1.value == '0') || (document.page21.state2.value == '0') ||  (document.page21.state3.value == '0')) ) {
+			alert("If you would like a State Choice, you must select three options.");
+			  return false; 
+		}			  	
+	}
+	
+	function NextPage() {
+		document.page21.action = '?curdoc=section4/qr_page21&next';
+	}
+	//-->
 </script>
-<!--- 
-	if ( (document.page21.state_select[0].checked) && ((document.page21.state1.value == document.page21.state2.value) || (document.page21.state1.value == document.page21.state3.value) ||  (document.page21.state2.value == document.page21.state3.value))) {
-	 	alert("You must select 3 different states, please review your choices and submit this page again.");
-		  return false; }
-	alert("If you would like a State Preference, you must select three different options."); 
---->
+
+
+<!--- ESI - Make sure there are 3 unique selections --->
+<cfif CLIENT.companyID EQ 14>
+
+	<script type="text/javascript">
+		// Display warning when page is ready
+		$(document).ready(function() {
+			
+			// Check Options for ESI
+			$("form").submit(function() {			
+				
+				// Get Options
+				vOption1 = $("#option1").val();
+				vOption2 = $("#option2").val();
+				vOption3 = $("#option3").val();
+				
+				if ( vOption1 == vOption2 || vOption1 == vOption3 || vOption2 == vOption3  ) {
+					alert("You must select 3 different districts, please review your choices and submit this page again.");
+					return false;
+				}
+		
+			});
+
+		});
+	</script>
+
+</cfif>
 
 <Cfset doc = 'page21'>
 
 <cfinclude template="../querys/get_student_info.cfm">
-<cfif client.companyid eq 14>
-</cfif>
-<cfset closedList = ''>
+
 <!---- International Rep - EF ACCOUNTS ---->
 <cfquery name="int_agent" datasource="MySQL">
 	SELECT u.businessname, u.userid, u.master_account, u.master_accountid
@@ -97,28 +121,25 @@ function NextPage() {
 	WHERE u.userid = <cfif get_student_info.branchid EQ '0'>'#get_student_info.intrep#'<cfelse>'#get_student_info.branchid#'</cfif>
 </cfquery>
 
-
 <cfquery name="states" datasource="#application.dsn#">
-select s.statename, s.id
-from smg_states s
-where (s.id < 52 AND s.id !=11 and s.id !=2)
+    select s.statename, s.id
+    from smg_states s
+    where (s.id < 52 AND s.id !=11 and s.id !=2)
 </cfquery>
 
-<Cfquery name="statesClosed" datasource="#application.dsn#">
-select sc.fk_stateID, s.statename
-from regionStateClosure sc 
-LEFT join smg_states s on s.id = sc.fk_stateID
-where  sc.fk_programid = #get_student_info.programid#
-<Cfif client.companyid lte 5 or client.companyid eq 12>
-and sc.fk_companyid = 1
-<Cfelse>
-and sc.fk_companyid = #client.companyid#
-</Cfif>
+<Cfquery name="qGetStateClosed" datasource="#application.dsn#">
+    select sc.fk_stateID, s.statename
+    from regionStateClosure sc 
+    LEFT join smg_states s on s.id = sc.fk_stateID
+    where  sc.fk_programid = #get_student_info.programid#
+    <Cfif client.companyid lte 5 or client.companyid eq 12>
+    and sc.fk_companyid = 1
+    <Cfelse>
+    and sc.fk_companyid = #client.companyid#
+    </Cfif>
 </cfquery>
 
-<Cfloop query="statesClosed">
-	<cfset closedList = #ListAppend(closedList, fk_stateID)#>
-</Cfloop>
+<cfset listClosedStateID = ValueList(qGetStateClosed.fk_stateID)>
 
 <cfquery name="check_if_answered" datasource="MySQL">
 	SELECT smg_students.regionalguarantee, smg_students.regionguar, smg_regions.regionname
@@ -164,7 +185,7 @@ and sc.fk_companyid = #client.companyid#
 	qGetESIDistrictChoice = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='ESIDistrictChoice',sortBy='sortOrder');
 </cfscript>
 
-<cfquery name="districtClosed" datasource="#application.dsn#">
+<cfquery name="qESIDistrictClosed" datasource="#application.dsn#">
 	SELECT
     	sc.fk_districtID
    	FROM
@@ -175,10 +196,7 @@ and sc.fk_companyid = #client.companyid#
     	sc.fk_companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
 </cfquery>
 
-<cfset disClosedList = ''>
-<Cfloop query="districtClosed">
-	<cfset disClosedList = #ListAppend(disClosedList, fk_districtID)#>
-</Cfloop>
+<cfset closedListDistrictID = ValueList(qESIDistrictClosed.fk_districtID)>
 
 <!--- HEADER OF TABLE --->
 <table width="100%" cellpadding="0" cellspacing="0">
@@ -196,7 +214,7 @@ and sc.fk_companyid = #client.companyid#
 
 <cfoutput>
 
-<cfform method="post" name="page21" action="?curdoc=section4/qr_page21" onSubmit="return CheckStates();">
+<cfform method="post" name="page21" action="?curdoc=section4/qr_page21" onSubmit="return checkOptions();">
 <!--- NOT ESI / PROGRAM TYPES 1 = AYP 10 AUG / 2 = AYP 5 AUG / 3 = AYP 5 JAN / 4 = AYP 12 JAN --->
 <cfif check_guarantee.app_region_guarantee gt 0> 
 	<div class="section"><br><br>
@@ -210,21 +228,7 @@ and sc.fk_companyid = #client.companyid#
 	<cfinclude template="../footer_table.cfm">
 	<cfabort>	
 </cfif>
-<!--- NOT ESI / PROGRAM TYPES 1 = AYP 10 AUG / 2 = AYP 5 AUG / 3 = AYP 5 JAN / 4 = AYP 12 JAN --->
-<!----
-<cfif CLIENT.companyID NEQ 14 AND NOT ListFind("7,8,10,11", get_student_info.app_current_status) AND (DateFormat(now(), 'mm') EQ 4 ) AND (get_student_info.app_indicated_program EQ '1' OR get_student_info.app_indicated_program EQ '2')> 
-	<div class="section"><br><br>
-	<table width="670" cellpadding=2 cellspacing=0 align="center">
-		<tr>
-			<td>State Choices are no longer available.</td>
-		</tr>
-	</table><br><br>
-	</div>
-	<!--- FOOTER OF TABLE --->
-	<cfinclude template="../footer_table.cfm">
-	<cfabort>	
-</cfif>
----->
+
 <cfinput type="hidden" name="studentid" value="#get_student_info.studentid#">
 <cfinput type="hidden" name="CheckChanged" value="0">
 
@@ -309,7 +313,7 @@ and sc.fk_companyid = #client.companyid#
                                 <cfselect name="state1" onClick="DataChanged();">
                                         <option value="0"></option>
                                         <cfloop query="states">
-                                        	<cfif not ListFind(closedList, id)>
+                                        	<cfif not ListFind(listClosedStateID, id)>
                                         		<option value="#id#" <cfif states_requested.state1 EQ id> selected </cfif> >#statename#</option>
                                         	</cfif>
                                         </cfloop>
@@ -339,7 +343,7 @@ and sc.fk_companyid = #client.companyid#
                                 <cfselect name="state2" onClick="DataChanged();">
                                         <option value="0"></option>
                                         <cfloop query="states">
-                                        	<cfif not ListFind(closedList, id)>
+                                        	<cfif not ListFind(listClosedStateID, id)>
                                             	<option value="#id#" <cfif states_requested.state2 EQ id> selected </cfif> >#statename#</option>
                                         	</cfif>
                                         </cfloop>
@@ -372,7 +376,7 @@ and sc.fk_companyid = #client.companyid#
                                  <cfselect name="state3" onClick="DataChanged();">
                                         <option value="0"></option>
                                         <cfloop query="states">
-                                        	<cfif not ListFind(closedList, id)>
+                                        	<cfif not ListFind(listClosedStateID, id)>
                                        			<option value="#id#" <cfif states_requested.state3 EQ id> selected </cfif> >#statename#</option>
                                         	</cfif>
                                         </cfloop>
@@ -394,18 +398,17 @@ and sc.fk_companyid = #client.companyid#
                     
                       <!--- Exchange Service International Application --->
                       <Cfif get_Student_info.programid eq 0>
-                      <h2><align="Center">You have not selected a program to apply for.  The program is required to see what districts are available.   Please to go to Page 1 of your application, select a program from the drop down, save the page and return to this page to select your district.</align></h2>
+                          <h2><align="Center">You have not selected a program to apply for.  The program is required to see what districts are available.   Please to go to Page 1 of your application, select a program from the drop down, save the page and return to this page to select your district.</align></h2>
                       <cfelse>
                         <img src="pics/ESI-Map.gif" width="650" height="380" align="middle"><br>
                        
                         <table cellpadding="2" cellspacing="2" style="margin:10px;">
                             <tr>
                                 <td>1st Choice:</td>
-                                <td><select name="option1" onClick="DataChanged();">
+                                <td><select name="option1" id="option1" onClick="DataChanged();">
                                         <option value="0"></option>
                                         <cfloop query="qGetESIDistrictChoice">
-                                        	<cfif not ListFind(disClosedList, id)>
-                                        
+                                        	<cfif NOT ListFind(closedListDistrictID, id) OR qESIDistrictChoice.option1 EQ qGetESIDistrictChoice.fieldID>
                                         	<option value="#qGetESIDistrictChoice.fieldID#" <cfif qESIDistrictChoice.option1 EQ qGetESIDistrictChoice.fieldID>selected</cfif>>#qGetESIDistrictChoice.sortOrder# - #qGetESIDistrictChoice.name#</option>
                                             </cfif>
                                         </cfloop>
@@ -414,10 +417,10 @@ and sc.fk_companyid = #client.companyid#
                             </tr>
                             <tr>                        
                                 <td>2nd Choice:</td>
-                                <td><select name="option2" onClick="DataChanged();">
+                                <td><select name="option2" id="option2" onClick="DataChanged();">
                                         <option value="0"></option>
                                         <cfloop query="qGetESIDistrictChoice">
-                                        <cfif not ListFind(disClosedList, id)>
+                                        <cfif NOT ListFind(closedListDistrictID, id) OR qESIDistrictChoice.option2 EQ qGetESIDistrictChoice.fieldID>
                                         	<option value="#qGetESIDistrictChoice.fieldID#" <cfif qESIDistrictChoice.option2 EQ qGetESIDistrictChoice.fieldID>selected</cfif>>#qGetESIDistrictChoice.sortOrder# - #qGetESIDistrictChoice.name#</option>
                                         </cfif>
                                         </cfloop>
@@ -426,10 +429,10 @@ and sc.fk_companyid = #client.companyid#
                             </tr>
                             <tr>                        
                                 <td>3rd Choice:</td>
-                                <td><select name="option3" onClick="DataChanged();">
+                                <td><select name="option3" id="option3" onClick="DataChanged();">
                                         <option value="0"></option>
                                         <cfloop query="qGetESIDistrictChoice">
-                                        	<cfif not ListFind(disClosedList, id)>
+                                        	<cfif NOT ListFind(closedListDistrictID, id) OR qESIDistrictChoice.option3 EQ qGetESIDistrictChoice.fieldID>
                                         	<option value="#qGetESIDistrictChoice.fieldID#" <cfif qESIDistrictChoice.option3 EQ qGetESIDistrictChoice.fieldID>selected</cfif>>#qGetESIDistrictChoice.sortOrder# - #qGetESIDistrictChoice.name#</option>
                                             </cfif>
                                         </cfloop>
