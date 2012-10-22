@@ -31,7 +31,6 @@
 
 		// Get Programs
 		qGetPrograms = APPLICATION.CFC.PROGRAM.getPrograms(programIDList=FORM.programID);
-
 	</cfscript>	
 
     <!--- FORM Submitted --->
