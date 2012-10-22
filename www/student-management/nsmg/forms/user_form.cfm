@@ -13,6 +13,9 @@
 <cfsilent>
 
 	<cfparam name="URL.userID" default="">
+    
+	<!--- Ajax Call to the Component --->
+    <cfajaxproxy cfc="nsmg.extensions.components.udf" jsclassname="UDFComponent">
 
 	<!--- checkboxes, radio buttons aren't defined if not checked. --->
     <cfparam name="FORM.submitted" default="0">
@@ -28,6 +31,7 @@
     <!--- default to USA for non-international users. --->
     <cfparam name="FORM.country" default="USA">
     <cfparam name="FORM.date_2nd_visit_contract_received" default="">
+    <cfparam name="FORM.zipLookup" default="">
 	
     <cfscript>
 		field_list = 'firstname,middlename,lastname,occupation,businessname,address,address2,city,state,zip,country,drivers_license,dob,sex,phone,phone_ext,work_phone,work_ext,cell_phone,fax,email,email2,skype_id,username,changepass,invoice_access,bypass_checklist,date_contract_received,date_2nd_visit_contract_received,active,dateCancelled,datecreated,usebilling,billing_company,billing_contact,billing_address,billing_address2,billing_city,billing_country,billing_zip,billing_phone,billing_fax,billing_email,comments';
@@ -740,52 +744,238 @@
 </cfif>
 
 <script type="text/javascript">
-function checkForm() {
-	<cfif FORM.usertype EQ 8>
-		if (document.my_FORM.country.value.length == 0) {alert("Please select the Country."); return false; }
-	</cfif>
-	<cfif FORM.usertype NEQ 8 and application.address_lookup NEQ 2>
-		if (document.my_FORM.state.value.length == 0) {alert("Please select the State."); return false; }
-	</cfif>
-	if (document.my_FORM.lookup_success.value != 1) {alert("Please lookup the address."); return false; }
-	if (document.my_FORM.phone.value.length == 0 && document.my_FORM.work_phone.value.length == 0 && document.my_FORM.cell_phone.value.length == 0) {alert("Please enter one of the Phone fields."); return false; }
-	<cfif new>
-		if (document.my_FORM.password.value != document.my_FORM.confirm_password.value) {alert("Password and Confirm Password do not match."); return false; }
-	</cfif>
-	return true;
-}
-function CopyContact() {
-	if (document.my_FORM.copycontact.checked) {
-		document.my_FORM.billing_company.value = document.my_FORM.businessname.value;
-		document.my_FORM.billing_contact.value = document.my_FORM.firstname.value+' '+document.my_FORM.lastname.value;
-		document.my_FORM.billing_address.value = document.my_FORM.address.value;
-		document.my_FORM.billing_address2.value = document.my_FORM.address2.value;
-		document.my_FORM.billing_city.value = document.my_FORM.city.value;      
-		document.my_FORM.billing_country.value = document.my_FORM.country.value;
-		document.my_FORM.billing_zip.value =  document.my_FORM.zip.value;
-		document.my_FORM.billing_phone.value =  document.my_FORM.phone.value;
-		document.my_FORM.billing_fax.value = document.my_FORM.fax.value;
-		document.my_FORM.billing_email.value = document.my_FORM.email.value;
+
+	function CopyContact() {
+		if (document.my_FORM.copycontact.checked) {
+			document.my_FORM.billing_company.value = document.my_FORM.businessname.value;
+			document.my_FORM.billing_contact.value = document.my_FORM.firstname.value+' '+document.my_FORM.lastname.value;
+			document.my_FORM.billing_address.value = document.my_FORM.address.value;
+			document.my_FORM.billing_address2.value = document.my_FORM.address2.value;
+			document.my_FORM.billing_city.value = document.my_FORM.city.value;      
+			document.my_FORM.billing_country.value = document.my_FORM.country.value;
+			document.my_FORM.billing_zip.value =  document.my_FORM.zip.value;
+			document.my_FORM.billing_phone.value =  document.my_FORM.phone.value;
+			document.my_FORM.billing_fax.value = document.my_FORM.fax.value;
+			document.my_FORM.billing_email.value = document.my_FORM.email.value;
+		}
+		else {
+			document.my_FORM.billing_company.value = '';
+			document.my_FORM.billing_contact.value = '';
+			document.my_FORM.billing_address.value =  '';
+			document.my_FORM.billing_address2.value = '';
+			document.my_FORM.billing_city.value = '';      
+			document.my_FORM.billing_country.value = '';
+			document.my_FORM.billing_zip.value =  ''; 
+			document.my_FORM.billing_phone.value =  '';
+			document.my_FORM.billing_fax.value = '';
+			document.my_FORM.billing_email.value = '';
+	   }
 	}
-	else {
-		document.my_FORM.billing_company.value = '';
-		document.my_FORM.billing_contact.value = '';
-		document.my_FORM.billing_address.value =  '';
-		document.my_FORM.billing_address2.value = '';
-		document.my_FORM.billing_city.value = '';      
-		document.my_FORM.billing_country.value = '';
-		document.my_FORM.billing_zip.value =  ''; 
-		document.my_FORM.billing_phone.value =  '';
-		document.my_FORM.billing_fax.value = '';
-		document.my_FORM.billing_email.value = '';
-   }
-}
-function CopyEmail() {
-	document.my_FORM.username.value = document.my_FORM.email.value;
-}
+	
+	function CopyEmail() {
+		document.my_FORM.username.value = document.my_FORM.email.value;
+	}
+
+	// Function to find the index in an array of the first entry with a specific value. 
+	// It is used to get the index of a column in the column list. 
+	Array.prototype.findIdx = function(value){ 
+		for (var i=0; i < this.length; i++) { 
+			if (this[i] == value) { 
+				return i; 
+			} 
+		} 
+	} 
+
+	// Create an instance of the proxy. 
+	var udf = new UDFComponent();
+
+	// Use an asynchronous call to get the student details. The function is called when the user selects a student. 
+	var verifyAddress = function() {
+		
+		// Check required Fields
+		var errorMessage = "";
+		if ($("#firstname").val() == "") {
+			errorMessage += 'Please enter a first name. \n';
+		}
+		if ($("#lastname").val() == "") {
+			errorMessage += 'Please enter a last name. \n';
+		}
+		if ($("#address").val() == "") {
+			errorMessage += 'Please enter an address. \n';
+		}
+		if ($("#city").val() == "") {
+			errorMessage += 'Please enter a city. \n';
+		}
+		if ($("#state").val() == "") {
+			errorMessage += 'Please selecet a state. \n';
+		}
+		if ($("#zip").val() == "") {
+			errorMessage += 'Please enter a zip. \n';
+		}		
+		<cfif FORM.usertype EQ 8>
+			if ($("#country").val() == "") {
+				errorMessage += 'Please select a country. \n';
+			}
+		</cfif>
+		if ($("#phone").val() == "" && $("#work_phone").val() == "" && $("#cell_phone").val() == "") {
+			errorMessage += 'Please enter one of the Phone fields. \n';
+		}
+		if ($("#email").val() == "") {
+			errorMessage += 'Please enter an email address. \n';
+		}
+		if ($("#username").val() == "") {
+			errorMessage += 'Please enter a username. \n';
+		}
+		if ($("#password").val() != $("#confirm_password").val()) {
+			errorMessage += 'Password and Confirm Password do not match. \n';
+		}
+
+		if (errorMessage != "") {
+			alert(errorMessage);
+		} else {
+			<cfif FORM.usertype NEQ 8>
+				// FORM Variables
+				var address = $("#address").val();
+				var city = $("#city").val();
+				var state = $("#state").val();
+				var zip = $("#zip").val();
+		
+				// Setting a callback handler for the proxy automatically makes the proxy's calls asynchronous. 
+				udf.setCallbackHandler(checkAddress); 
+				udf.setErrorHandler(myErrorHandler); 
+				udf.addressLookup(address,city,state,zip,"232");
+			<cfelse>
+				$("#my_form").submit();
+			</cfif>
+		}
+	} 
+
+	// Callback function to handle the results returned by the getHostLeadList function and populate the table. 
+	var checkAddress = function(googleResponse) { 
+		
+		var isAddressVerified = googleResponse.ISVERIFIED;
+		var inputState = googleResponse.INPUTSTATE;
+
+		if ( isAddressVerified == 1 ) {
+		
+			// Get Data Back	
+			var streetAddress = googleResponse.ADDRESS;
+			var city = googleResponse.CITY;
+			var state = googleResponse.STATE;
+			var zip = googleResponse.ZIP;
+			zip = zip.substring('zip='.length);
+			var verifiedStateID = googleResponse.VERIFIEDSTATEID;
+			
+			if ((streetAddress == $("#address").val()) && (city == $("#city").val()) && (state == $("#state").val()) && (zip == $("#zip").val()))
+			{
+				$("#my_form").submit();
+			} else {
+				$(function() {
+					$( "#dialog:ui-dialog" ).dialog( "destroy" );
+					$( "#dialog-approveAddress-confirm" ).empty();
+					$( "#dialog-approveAddress-confirm" ).append(
+						"<table width='100%'>" +
+							"<tr width='100%'><td width='50%'>Verified Address:</td><td width='50%'>Input Address:</td></tr>" +
+							"<tr><td>" + streetAddress + "</td><td>" + $("#address").val() + "</td></tr>" +
+							"<tr><td>" + city + ", " + state + " " + zip + "</td><td>" + $("#city").val() + ", " + $("#state").val() + " " + $("#zip").val() + "</td></tr>" +
+						"</table>");
+					$( "#dialog-approveAddress-confirm").dialog({
+						resizable: false,
+						height:230,
+						width:400,
+						modal: true,
+						buttons: {
+							"Use verified": function() {
+								$( this ).dialog( "close" );
+								$("#address").val(streetAddress);
+								$("#city").val(city);
+								$("#state").val(state);
+								$("#zip").val(zip);
+								$("#my_form").submit();
+							},
+							"Use input": function() {
+								$( this ).dialog( "close" );
+								$("#my_form").submit();
+							},
+							"Go back": function() {
+								$( this ).dialog( "close" );
+							}
+						}
+					});
+				});
+			}
+		} else {
+			$(function() {
+				$( "#dialog:ui-dialog" ).dialog( "destroy" );
+				$( "#dialog-canNotVerify-confirm" ).empty();
+				$( "#dialog-canNotVerify-confirm" ).append("We could not verify the following address:<br />" + $("#address").val() + "<br />" + $("#city").val() + ", " + $("#state").val() + " " + $("#zip").val());
+				$( "#dialog-canNotVerify-confirm").dialog({
+					resizable: false,
+					height:230,
+					width:400,
+					modal: true,
+					buttons: {
+						"Use anyway": function() {
+							$( this ).dialog( "close" );
+							$("#my_form").submit();
+						},
+						"Go back": function() {
+							$( this ).dialog( "close" );
+						}
+					}
+				});
+			});
+		}	
+	}
+	
+	var getLocationByZip = function() { 
+		
+		var zip = $("#zipLookup").val();
+
+		if (zip.length == 5) {
+			udf.setCallbackHandler(checkZip); 
+			udf.setErrorHandler(myErrorHandler); 
+			udf.zipCodeLookUp(zip);
+		} else {
+			alert("Please verify your zip code");
+		}
+	} 
+
+	// Callback function to handle the results returned by the getHostLeadList function and populate the table. 
+	var checkZip = function(googleResponse) { 
+
+		var isAddressVerified = googleResponse.ISVERIFIED;
+
+		if ( isAddressVerified == 1 ) {	
+			var city = googleResponse.CITY;
+			var state = googleResponse.STATE;
+			
+			$("#city").val(city);
+			$("#state").val(state);
+			$("#zip").val($("#zipLookup").val());
+			$("#zipLookupRow").html("");
+		} else {
+			alert("Please verify your zip code");
+		}
+
+	}
+
+	// Error handler for the asynchronous functions. 
+	var myErrorHandler = function(statusCode, statusMsg) { 
+		alert('Status: ' + statusCode + ', ' + statusMsg); 
+	}
 </script>
 
 <cfoutput>
+
+	<!--- Approve Address - Modal Dialog Box --->
+    <div id="dialog-approveAddress-confirm" title="Which address would you like to use?" class="displayNone"> 
+        <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span></p> 
+    </div>
+    <!--- Can Not Verify Address - Modal Dialog Box --->
+    <div id="dialog-canNotVerify-confirm" title="We could not verify this address." class="displayNone"> 
+        <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span></p> 
+    </div>
 
 <!----Header Format Table---->
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
@@ -797,7 +987,7 @@ function CopyEmail() {
 	</tr>
 </table>
 
-<cfform action="index.cfm?curdoc=forms/user_form&userID=#URL.userID#" method="post" name="my_form" onSubmit="return checkForm();">
+<cfform action="index.cfm?curdoc=forms/user_form&userID=#URL.userID#" method="post" name="my_form">
 <input type="hidden" name="submitted" value="1">
 <input type="hidden" name="usertype" value="#FORM.usertype#">
 <input type="hidden" name="lookup_success" value="#FORM.lookup_success#"> <!--- this gets set to 1 by the javascript lookup function on success. --->
@@ -816,23 +1006,23 @@ function CopyEmail() {
             </tr>
             <tr>
             	<td align="right">First Name: <span class="redtext">*</span></td>
-                <td><cfinput type="text" name="firstname" value='#FORM.firstname#' size="20" maxlength="100" required="yes" validate="noblanks" message="Please enter the First Name."></td>
+                <td><input type="text" name="firstname" id="firstname" value="#FORM.firstname#" size="20" maxlength="100" /></td>
             </tr>
             <tr>
             	<td align="right">Middle Name:</td>
-                <td><cfinput type="text" name="middlename" value="#FORM.middlename#" size="20" maxlength="50"></td>
+                <td><cfinput type="text" name="middlename" id="middleName" value="#FORM.middlename#" size="20" maxlength="50"></td>
             </tr>
             <tr>
             	<td align="right">Last Name: <span class="redtext">*</span></td>
-                <td><cfinput type="text" name="lastname" value="#FORM.lastname#" size="20" maxlength="100" required="yes" validate="noblanks" message="Please enter the Last Name."></td>
+                <td><input type="text" name="lastname" id="lastname" value="#FORM.lastname#" size="20" maxlength="100" /></td>
             </tr>
             <tr>
                 <td align="right">Occupation:</td>
-                <td><cfinput type="text" name="occupation" value="#occupation#" size="40" maxlength="150"></td>
+                <td><cfinput type="text" name="occupation" id="occupation" value="#occupation#" size="40" maxlength="150"></td>
             </tr>
             <tr>
                 <td align="right">Company Name:</td>
-                <td><cfinput type="text" name="businessname" value="#FORM.businessname#" size="40" maxlength="150"></td>
+                <td><cfinput type="text" name="businessname" id="businessname" value="#FORM.businessname#" size="40" maxlength="150"></td>
             </tr>
 
 		<!---- Int. Reps ---->
@@ -846,28 +1036,28 @@ function CopyEmail() {
 
             <tr>
             	<td align="right">Address: <span class="redtext">*</span></td>
-                <td><cfinput type="text" name="address" value="#FORM.address#" size="40" maxlength="150" required="yes" validate="noblanks" message="Please enter the Address."></td>
+                <td><cfinput type="text" name="address" id="address" value="#FORM.address#" size="40" maxlength="150" required="yes" validate="noblanks" message="Please enter the Address."></td>
             </tr>
             <tr>
             	<td align="right"></td>
-                <td><cfinput type="text" name="address2" value="#FORM.address2#" size="40" maxlength="150"></td>
+                <td><cfinput type="text" name="address2" id="address2" value="#FORM.address2#" size="40" maxlength="150"></td>
             </tr>
             <tr>
             	<td align="right">City: <span class="redtext">*</span></td>
-                <td><cfinput type="text" name="city" value="#FORM.city#" size="20" maxlength="150" required="yes" validate="noblanks" message="Please enter the City."></td>
+                <td><cfinput type="text" name="city" id="city" value="#FORM.city#" size="20" maxlength="150" required="yes" validate="noblanks" message="Please enter the City."></td>
             </tr>
             <tr>
                 <td align="right">State:</td>
-                <td><cfinput type="text" name="state" value="#FORM.state#" size="20" maxlength="20"></td>
+                <td><cfinput type="text" name="state" id="state" value="#FORM.state#" size="20" maxlength="20"></td>
             </tr>
             <tr>
             	<td align="right">Postal Code (Zip):</td>
-                <td><cfinput type="text" name="zip" value="#FORM.zip#" size="10" maxlength="10"></td>
+                <td><cfinput type="text" name="zip" id="zip" value="#FORM.zip#" size="10" maxlength="10"></td>
             </tr>
             <tr>
                 <td align="right">Country: <span class="redtext">*</span></td>
                 <td>
-                    <cfselect NAME="country" query="country_list" value="countryid" display="countryname" selected="#FORM.country#" queryPosition="below">
+                    <cfselect NAME="country" id="country" query="country_list" value="countryid" display="countryname" selected="#FORM.country#" queryPosition="below">
                         <option value=""></option>
                     </cfselect>
                 </td>
@@ -889,7 +1079,7 @@ function CopyEmail() {
                 </tr>
                 <tr>
                     <td align="right">Address:</td>
-                    <td><cfinput type="text" name="address" value="#FORM.address#" size="40" maxlength="150" readonly="readonly"></td>
+                    <td><cfinput type="text" name="address" id="address" value="#FORM.address#" size="40" maxlength="150" readonly="readonly"></td>
                 </tr>
                 <tr>
                     <td align="right"></td>
@@ -897,21 +1087,25 @@ function CopyEmail() {
                 </tr>
                 <tr>
                     <td align="right">City:</td>
-                    <td><cfinput type="text" name="city" value="#FORM.city#" size="20" maxlength="150" readonly="readonly"></td>
+                    <td><cfinput type="text" name="city" id="city" value="#FORM.city#" size="20" maxlength="150" readonly="readonly"></td>
                 </tr>
                 <tr>
                     <td align="right">State:</td>
-                    <td><cfinput type="text" name="state" value="#FORM.state#" size="2" maxlength="2" readonly="readonly"></td>
+                    <td><cfinput type="text" name="state" id="state" value="#FORM.state#" size="2" maxlength="2" readonly="readonly"></td>
                 </tr>
                 <tr>
                     <td align="right">Zip:</td>
                     <td><cfinput type="text" name="zip" value="#FORM.zip#" size="10" maxlength="10" readonly="readonly"></td>
                 </tr>
             <cfelse>
+            	<tr id="zipLookupRow">
+                	<td align="right">Zip Lookup: </td>
+                    <td><input type="text" name="zipLookup" id="zipLookup" value="#FORM.zipLookup#" size="5" maxlength="5" onblur="getLocationByZip();" />
+                </tr>                
                 <tr>
                     <td align="right">Address: <span class="redtext">*</span></td>
                     <td>
-                    	<cfinput type="text" name="address" value="#FORM.address#" size="40" maxlength="150" required="yes" validate="noblanks" message="Please enter the Address.">
+                    	<cfinput type="text" name="address" id="address" value="#FORM.address#" size="40" maxlength="150" required="yes" validate="noblanks" message="Please enter the Address.">
 			            <font size="1">NO PO BOXES</font>
                     </td>
                 </tr>
@@ -921,24 +1115,27 @@ function CopyEmail() {
                 </tr>
                 <tr>
                     <td align="right">City: <span class="redtext">*</span></td>
-                    <td><cfinput type="text" name="city" value="#FORM.city#" size="20" maxlength="150" required="yes" validate="noblanks" message="Please enter the City."></td>
+                    <td><cfinput type="text" name="city" id="city" value="#FORM.city#" size="20" maxlength="150" required="yes" validate="noblanks" message="Please enter the City."></td>
                 </tr>
-                <tr>
-                    <td align="right">State: <span class="redtext">*</span></td>
+          		<tr>
+                    <td class="label">State: <span class="redtext">*</span></td>
                     <td>
-                        <cfquery name="get_states" datasource="#APPLICATION.DSN#">
+                    	<cfquery name="get_states" datasource="#APPLICATION.DSN#">
                             SELECT state, statename
                             FROM smg_states
                             ORDER BY id
                         </cfquery>
-                        <cfselect NAME="state" query="get_states" value="state" display="statename" selected="#FORM.state#" queryPosition="below">
-                            <option></option>
-                        </cfselect>
+                        <select id="state" name="state" class="largeField">
+                            <option value="0"></option>
+                            <cfloop query="get_states">
+                                <option value="#get_states.state#" <cfif FORM.state EQ get_states.state> selected="selected" </cfif> >#get_states.stateName#</option>
+                            </cfloop>
+                        </select>
                     </td>
                 </tr>
                 <tr>
                     <td align="right">Zip: <span class="redtext">*</span></td>
-                    <td><cfinput type="text" name="zip" value="#FORM.zip#" size="10" maxlength="10" required="yes" validate="zipcode" message="Please enter a valid Zip."></td>
+                    <td><input type="text" name="zip" id="zip" value="#FORM.zip#" size="5" maxlength="5" /></td>
                 </tr>
 				<!--- address lookup - simple version. --->
                 <cfif application.address_lookup EQ 1>
@@ -1003,9 +1200,9 @@ function CopyEmail() {
 					<td>
 						<!---- Int. Reps ---->
                         <cfif FORM.usertype EQ 8>
-                    		<cfinput type="text" name="phone" value="#FORM.phone#" size="20" maxlength="25">
+                    		<cfinput type="text" name="phone" id="phone" value="#FORM.phone#" size="20" maxlength="25">
                     	<cfelse>
-							<cfinput type="text" name="phone" value="#FORM.phone#" size="14" maxlength="14" mask="(999) 999-9999"> <!--- validate="telephone" message="Please enter a valid Home Phone." --->
+							<cfinput type="text" name="phone" id="phone" value="#FORM.phone#" size="14" maxlength="14" mask="(999) 999-9999"> <!--- validate="telephone" message="Please enter a valid Home Phone." --->
                         </cfif>
                         &nbsp; Ext. <cfinput type="text" name="phone_ext" value="#FORM.phone_ext#" size="5" maxlength="11">
                     </td>
@@ -1015,9 +1212,9 @@ function CopyEmail() {
 					<td>
 						<!---- Int. Reps ---->
                         <cfif FORM.usertype EQ 8>
-                    		<cfinput type="text" name="work_phone" value="#FORM.work_phone#" size="20" maxlength="25">
+                    		<cfinput type="text" name="work_phone" id="work_phone" value="#FORM.work_phone#" size="20" maxlength="25">
                     	<cfelse>
-							<cfinput type="text" name="work_phone" value="#FORM.work_phone#" size="14" maxlength="14" mask="(999) 999-9999"> <!--- validate="telephone" message="Please enter a valid Home Phone." --->
+							<cfinput type="text" name="work_phone" id="work_phone" value="#FORM.work_phone#" size="14" maxlength="14" mask="(999) 999-9999"> <!--- validate="telephone" message="Please enter a valid Home Phone." --->
                         </cfif>
                         &nbsp; Ext. <input type="text" name="work_ext" value="#FORM.work_ext#" size="5" maxlength="11">
                     </td>
@@ -1027,9 +1224,9 @@ function CopyEmail() {
 					<td>
 						<!---- Int. Reps ---->
                         <cfif FORM.usertype EQ 8>
-                            <cfinput type="text" name="cell_phone" value="#FORM.cell_phone#" size="20" maxlength="25">
+                            <cfinput type="text" name="cell_phone" id="cell_phone" value="#FORM.cell_phone#" size="20" maxlength="25">
                     	<cfelse>
-							<cfinput type="text" name="cell_phone" value="#FORM.cell_phone#" size="14" maxlength="14" mask="(999) 999-9999"> <!--- validate="telephone" message="Please enter a valid Cell Phone." --->
+							<cfinput type="text" name="cell_phone" id="cell_phone" value="#FORM.cell_phone#" size="14" maxlength="14" mask="(999) 999-9999"> <!--- validate="telephone" message="Please enter a valid Cell Phone." --->
                         </cfif>
                     </td>
 				</tr>
@@ -1052,9 +1249,9 @@ function CopyEmail() {
                         	Login information will be sent on creation of account.<br>
 							Leave email address blank for no email address,<br />
 							no email / error will be generated .<br />
-                        	<cfinput type="text" name="email" value="#FORM.email#" size="30" maxlength="150" required="yes" validate="email" message="Please enter a valid Email." onchange="javascript:CopyEmail()">
+                        	<cfinput type="text" name="email" id="email" value="#FORM.email#" size="30" maxlength="150" required="yes" validate="email" message="Please enter a valid Email." onchange="javascript:CopyEmail()">
                         <cfelse>
-                        	<cfinput type="text" name="email" value="#FORM.email#" size="30" maxlength="150" required="yes" validate="email" message="Please enter a valid Email.">
+                        	<cfinput type="text" name="email" id="email" value="#FORM.email#" size="30" maxlength="150" required="yes" validate="email" message="Please enter a valid Email.">
                         </cfif>
                     </td>
 				</tr>
@@ -1082,7 +1279,7 @@ function CopyEmail() {
 							<cfif new>
                                 Username defaults to email address, change if desired.<br />
                             </cfif>
-                            <cfinput type="text" name="username" value="#FORM.username#" size="30" maxlength="100" required="yes" validate="noblanks" message="Please enter the Username.">
+                            <cfinput type="text" name="username" id="username" value="#FORM.username#" size="30" maxlength="100" required="yes" validate="noblanks" message="Please enter the Username.">
                         </td>
                     </tr>
                 </cfif>
@@ -1090,11 +1287,11 @@ function CopyEmail() {
 				<cfif new>
                     <tr>
                         <td align="right">Password: <span class="redtext">*</span></td>
-                        <td><cfinput type="password" name="password" value="#FORM.password#" size="20" maxlength="15" required="yes" validate="noblanks" message="Please enter the Password."></td>
+                        <td><cfinput type="password" name="password" id="password" value="#FORM.password#" size="20" maxlength="15" required="yes" validate="noblanks" message="Please enter the Password."></td>
                     </tr>
                     <tr>
                         <td align="right">Confirm Password: <span class="redtext">*</span></td>
-                        <td><cfinput type="password" name="confirm_password" value="#FORM.confirm_password#" size="20" maxlength="15" required="yes" validate="noblanks" message="Please confirm the Password."></td>
+                        <td><cfinput type="password" name="confirm_password" id="confirm_password" value="#FORM.confirm_password#" size="20" maxlength="15" required="yes" validate="noblanks" message="Please confirm the Password."></td>
                     </tr>
                 </cfif>
                     
@@ -1252,7 +1449,7 @@ function CopyEmail() {
 
 <table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
 	<tr>
-		<td align="right"><input name="Submit" type="image" src="pics/submit.gif" border=0></td>
+		<td align="right"><img src="pics/submit.gif" style="cursor:pointer" onclick="verifyAddress();" /></td>
 	</tr>
 </table>
 
