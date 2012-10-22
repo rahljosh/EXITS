@@ -45,17 +45,12 @@
     	
         <!--- No Errors Found --->
         <cfif NOT SESSION.formErrors.length()>
-        
-        	<cfquery name="qGetSeasonDates" datasource="#APPLICATION.DSN#">
-            	SELECT
-                	startDate,
-                    endDate
-              	FROM
-                	smg_seasons
-               	WHERE
-                	seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.seasonID)#">
-            </cfquery>
             
+            <cfscript>
+				// Get Season Info
+				qGetSeasonInfo = APPLICATION.CFC.LOOKUPTABLES.getSeason(seasonID=FORM.seasonID);
+			</cfscript>
+                    
             <cfquery name="qGetCompanies" datasource="#APPLICATION.DSN#">
             	SELECT
                 	c.companyName,
@@ -64,7 +59,7 @@
               	FROM
                 	smg_companies c
                	WHERE
-                	c.companyID IN (SELECT company FROM smg_regions WHERE regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> ) )
+                	c.companyID IN ( SELECT company FROM smg_regions WHERE regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> ) )
             </cfquery>
 
 			<cfquery name="qGetTotal" datasource="#APPLICATION.DSN#">
@@ -76,12 +71,22 @@
               	INNER JOIN
                 	user_access_rights uar ON uar.userID = u.userID
               	WHERE
-               		uar.userType = 7
+               		uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="7">
                	AND	
                 	uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )
               	AND
-                	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> = ( SELECT MIN(seasonID) FROM smg_users_paperwork WHERE userID = u.userID  )
-              	GROUP BY
+                	(
+                    	<!--- Users that have started filling out paperwork --->
+                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> = ( SELECT MIN(seasonID) FROM smg_users_paperwork WHERE userID = u.userID  )
+                    OR
+                    	<!--- Users Created during the season period --->
+                        u.dateCreated 
+                        	BETWEEN 
+                            	<cfqueryparam cfsqltype="cf_sql_date" value="#qGetSeasonInfo.datePaperworkStarted#"> 
+                            AND 
+                            	<cfqueryparam cfsqltype="cf_sql_date" value="#qGetSeasonInfo.datePaperworkEnded#"> 
+                    )
+                GROUP BY
                 	u.userID
             </cfquery>
             
@@ -100,7 +105,7 @@
                      	AND
                 			<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> = ( SELECT MIN(seasonID) FROM smg_users_paperwork WHERE userID = u.userID )
               	WHERE
-               		uar.userType = 7
+               		uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="7">
               	AND	
                 	uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )
               	GROUP BY
@@ -120,7 +125,7 @@
                     	AND
                         	s.programID IN ( SELECT programID FROM smg_programs WHERE seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.seasonID)#"> )
               	WHERE
-               		uar.userType = 7
+               		uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="7">
               	AND
                 	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> = ( SELECT MIN(seasonID) FROM smg_users_paperwork WHERE userID = u.userID )
              	AND	
