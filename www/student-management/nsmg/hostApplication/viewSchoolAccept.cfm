@@ -20,6 +20,8 @@
 		t.value=format;
 		}
 		</script>
+        <link href="../linked/css/baseStyle.css" rel="stylesheet" type="text/css" />
+<link href="css/hostApp.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
@@ -95,11 +97,12 @@ and shortDesc =  'School Acceptance'
     </tr>
     </cfloop>
     </Table>
-<div id="slidingDiv" display:"none" align="center"> 
- <img src="../uploadedfiles/#checkDocs.filepath#/#checkDocs.fileName#">
- 
+<div align="center">
+ <img src="../uploadedfiles/#checkDocs.filepath#/#checkDocs.fileName#" width=600 align="center">
+ </div>
  <br />
 <cfinclude template="approveDenyButtonsInclude.cfm">
+<div id="slidingDiv" display:"none" align="center"> 
 </div>
 
 <cfelse>

@@ -1,8 +1,19 @@
 <!--- Import CustomTag Used for Page Messages and Form Errors --->
 <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
-<link href="http://ise.111cooper.com/hostApp/css/hostApp.css" rel="stylesheet" type="text/css" />
-<link href="http://111cooper.com/nsmg/linked/css/baseStyle.css" rel="stylesheet" type="text/css" />
+<link href="../linked/css/baseStyle.css" rel="stylesheet" type="text/css" />
+<link href="css/hostApp.css" rel="stylesheet" type="text/css" />
 <cfparam name="form.picCat" default=''>
+
+<Cfif isDefined('form.verifiedPic') >
+	<cfloop list="#verifiedPic#" index=i>
+    	<cfquery name="verifyPics" datasource="mysql">
+        update smg_host_picture_album
+        set picVerified = <Cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        where cat = <Cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
+        and fk_hostID = <Cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
+        </cfquery>
+    </cfloop>
+</Cfif>
 
 <cfinclude template="approveDenyInclude.cfm">
 
@@ -26,13 +37,13 @@
     
 </cfif>
 <Cfquery name="current_photos" datasource="mysql">
-select filename, description, cat 
+select filename, description, cat, picVerified
 from smg_host_picture_album
 where fk_hostid = #client.hostid#
 </cfquery>
 
 <h2>Picture Album</h2> 
-Please upload photos of you, your family, and your home including the exterior and grounds, kitchen, student's bedroom, student's bathroom, and family and living areas with a brief description of each. <br /><br />
+Please check the box next to each catagory to verify that the picture is what is described. <br /><br />
 <Cfquery name="picCatagories" datasource="mysql">
 select *
 from smg_host_pic_cat
@@ -49,10 +60,18 @@ from smg_host_pic_cat
             <Cfquery name="current_photos" datasource="mysql">
             select filename, description, cat
             from smg_host_picture_album
-            where fk_hostid = #client.hostid#
+            where fk_hostid = <Cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
             </cfquery>
          <div align="center">Descriptions Updated!</div>
-		</cfif>
+    <cfloop list="#verifiedPic#" index=i>
+    	<cfquery name="verifyPics" datasource="mysql">
+        update smg_host_picture_album
+        set picVerified = <Cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        where cat = <Cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
+        and fk_hostID = <Cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
+        </cfquery>
+    </cfloop>
+    </cfif>
 <cfif isDefined('url.delPic')>
    <div align="center">Picture & Descriptions Deleted!</div>
 </cfif>
@@ -189,15 +208,18 @@ Select a catagory for this picture:<br />
    
     <cfloop query="current_photos">
     	<cfquery name="catDesc" datasource="mysql">
-        select cat_name
+        select cat_name, catid
         from smg_host_pic_cat
         where catID = #current_photos.cat#
         </cfquery>
-    	<Td><img src="http://ise.exitsapplication.com/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs/#filename#" height = 100><br />
-                #catDesc.cat_name#<br />
+    	<Td>#catDesc.cat_name# <br />
+       
+        <img src="http://ise.exitsapplication.com/nsmg/uploadedfiles/HostAlbum/#client.hostid#/thumbs/#filename#" height = 100><br />
+                
                 <a href="viewFamPics.cfm?delPic=#filename#&itemID=#url.itemID#"><img src="../pics/buttons/deleteGreyRed.png" height=30  border=0 /></a>
 </Td>
                 <td valign="top">
+                 Picture Verified: <input type="checkbox" name="verifiedPic" value="#catDesc.catID#" <cfif picVerified eq 1>checked</cfif> /><br />
                 Description of picture:<br />
                 <textarea name="desc_#filename#" cols="20" rows="5">#description#</textarea>
               <Cfset count = #count# + 1>

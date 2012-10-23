@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Untitled Document</title>
-<link href="http://ise.111cooper.com/hostApp/css/hostApp.css" rel="stylesheet" type="text/css" />
-<link href="http://ise.exitsapplication.com/nsmg/linked/css/baseStyle.css" rel="stylesheet" type="text/css" />
+<link href="../linked/css/baseStyle.css" rel="stylesheet" type="text/css" />
+<link href="css/hostApp.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="chosen/chosen.css" />
 <!--- Import CustomTag Used for Page Messages and Form Errors --->
 <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
@@ -524,5 +524,5 @@ Describe the points of interest in your  area:</td>
 </cfoutput>
 
 	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js" type="text/javascript"></script>
-  <script src="chosen/chosen.jquery.js" type="text/javascript"></script>
+  <script src="hostApplication/chosen/chosen.jquery.js" type="text/javascript"></script>
   <script type="text/javascript"> $(".chzn-select").chosen(); $(".chzn-select-deselect").chosen({allow_single_deselect:true}); </script>
