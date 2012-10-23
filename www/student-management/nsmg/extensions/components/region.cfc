@@ -169,8 +169,10 @@
                 datasource="#APPLICATION.dsn#">
                     SELECT 
                     	r.regionID, 
+                        4 AS userType,                        
                         r.regionname, 
-                        c.companyshort
+                        c.companyshort,
+                        'Office' AS userAccessLevel
                     FROM 
                     	smg_regions r
                     INNER JOIN 
@@ -200,11 +202,14 @@
                     	uar.regionID, 
                         uar.usertype,
                         r.regionname,
+                        c.companyshort,
                         u.usertype AS userAccessLevel                        
                     FROM 
                     	user_access_rights uar
                     INNER JOIN 
                     	smg_regions r ON r.regionID = uar.regionID
+                    INNER JOIN 
+                    	smg_companies c ON r.company = c.companyID
                     INNER JOIN 
                         smg_usertype u ON  u.userTypeID = uar.userType
                     WHERE 
