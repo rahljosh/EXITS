@@ -1,7 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
     	
-        
+    <link href="../linked/css/baseStyle.css" rel="stylesheet" type="text/css" />
+    <link href="css/hostApp.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="../linked/css/colorbox2.css" />
  <!----
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -163,7 +164,7 @@
 </cfif>
 
 <cfquery name="appStatus" datasource="#application.dsn#">
-select hostAppStatus, fatherlastname, motherlastname, motherfirstname, fatherfirstname, familylastname, email, city, state, password
+select hostAppStatus, fatherlastname, motherlastname, motherfirstname, fatherfirstname, familylastname, email, city, state, password, hostid
 from smg_hosts
 where hostid = #client.hostid#
 </cfquery>
@@ -181,6 +182,7 @@ where hostid = #client.hostid#
     SELECT *
     FROM smg_ToDoList 
     where whoViews LIKE '%#client.usertype#%'
+    order by listOrder
 </cfquery>
 
 <cfquery name="approvalList" datasource="#application.dsn#">
@@ -240,7 +242,7 @@ where hostid = #client.hostid#
 	<tr>
     	<th align="left">Family</th><th align="left">Login Info</th>
     </tr>
-    	<td><cfif appStatus.fatherfirstname is not ''>#appStatus.fatherfirstname#</cfif> <cfif appStatus.fatherfirstname is not '' and appStatus.motherfirstname is not ''>& </cfif>#appStatus.motherfirstname# #appStatus.familylastname#<br />#appStatus.city# #appStatus.state#</td>
+    	<td><cfif appStatus.fatherfirstname is not ''>#appStatus.fatherfirstname#</cfif> <cfif appStatus.fatherfirstname is not '' and appStatus.motherfirstname is not ''>& </cfif>#appStatus.motherfirstname# #appStatus.familylastname# (#appStatus.hostid#)<br />#appStatus.city# #appStatus.state#</td>
         <td>#appStatus.email#<br />#appStatus.password#</td>
     </tr>
 </table>
@@ -278,6 +280,7 @@ where hostid = #client.hostid#
                 <td><h2><font color="##FFFFFF">Item</h2></font></td>
                 <td><h2><font color="##FFFFFF">Action</h2></font></td>
                 <td><h2><font color="##FFFFFF">Area Rep</h2></font></td>
+                <td><h2><font color="##FFFFFF">Advisor</h2></font></td>
                 <td><h2><font color="##FFFFFF">Manager</h2></font></td>
                 <td><h2><font color="##FFFFFF">Facilitator</h2></font></td>
                 
@@ -290,8 +293,8 @@ where hostid = #client.hostid#
        <cfquery datasource="#application.dsn#" name="approvalDates">
        select *
        from smg_ToDoListDates
-       where itemid = #id#
-       and fk_hostid = #hostid#
+       where itemid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ID#">
+       and fk_hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostID#">
        </cfquery>
       <cfif approvalDates.areaRepDenial is not '' 
 	  	OR approvalDates.regionalAdvisorDenial is not ''
@@ -299,6 +302,8 @@ where hostid = #client.hostid#
 		OR approvalDates.facDenial is not ''>
         <cfset appLevelDenied = 1>
       </cfif>
+      
+    
       <!----Figure out of if available for approval--->
       
       	
@@ -338,6 +343,22 @@ where hostid = #client.hostid#
                      <font color="##ccc"><em>N/A</em></font>
                      </Cfif>
                 </td>
+                <td><Cfif listFind(whoViews, 6)>
+                	<!----If the Area Rep should approve, show mask or date of approval, if not, show N/A---->
+						<cfif approvalDates.regionalAdvisorApproval is '' and approvalDates.regionalAdvisorDenial is ''>
+                            <font color="##ccc">MM/DD/YYYY</font>
+                        <cfelseif approvalDates.regionalAdvisorDenial is not ''>
+                        	<a onclick="ShowHide#toDoList.currentrow#(); return false;" href="##"> <strong><font color="##993333">#DateFormat(approvalDates.regionalAdvisorApproval, 'MM/DD/YYYY')#</font></strong></a>
+                        <cfelse>
+                             #DateFormat(approvalDates.regionalAdvisorApproval, 'MM/DD/YYYY')#
+                             <Cfif client.usertype eq 6>
+                             	<cfset itemsApproved = #itemsApproved# + 1>
+                             </Cfif> 
+                        </cfif>
+                     <cfelse>
+                     <font color="##ccc"><em>N/A</em></font>
+                     </Cfif>
+                </td>
                 <td>
                		 <cfif approvalDates.regionalDirectorApproval is '' and approvalDates.regionalDirectorDenial is ''>
                     	<font color="##ccc">MM/DD/YYYY</font>
@@ -366,7 +387,7 @@ where hostid = #client.hostid#
          	</tr>
         	 <Tr id="denialReason#toDoList.currentRow#" style="display: none;"  bgcolor="##FFC2BC">
              	  
-	     	     <td align="left" colspan=6 >
+	     	     <td align="left" colspan=7 >
                  <em>
                  <Cfif approvalDates.areaRepDenial is not ''>
                  Area Rep Denied for: #approvalDates.areaRepDenial#<br />
@@ -387,7 +408,7 @@ where hostid = #client.hostid#
            <!---References: Everyone Sees these---->
             <tr bgcolor="##ccc">
             	
-                <td colspan="6" align="center" ><h2>&lt;&lt; References &gt;&gt;</h2></td>
+                <td colspan="7" align="center" ><h2>&lt;&lt; References &gt;&gt;</h2></td>
             
               
                 
@@ -396,7 +417,7 @@ where hostid = #client.hostid#
                 <cfquery name="dateInfo" datasource="#application.dsn#">
                 select RQT.id, RQT.arApproved, RQT.rdApproved, RQT.rmApproved, RQT.nyApproved, RQT.dateInterview, smg_users.firstname, smg_users.lastname
      			from hostRefQuestionaireTracking RQT
-                left join smg_users on rqt.interviewer = smg_users.userid
+                left join smg_users on RQT.interviewer = smg_users.userid
                 where  RQT.fk_ReferencesID = #refid#
                 </cfquery>
                
@@ -433,7 +454,7 @@ where hostid = #client.hostid#
                     No report has been submitted.
                     </Cfif>
                     </td>
-               	
+               	<td></td>
                 </tr>
                 </cfloop>
          

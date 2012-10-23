@@ -3,8 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Untitled Document</title>
-<link href="http://ise.111cooper.com/hostApp/css/hostApp.css" rel="stylesheet" type="text/css" />
-<link href="http://ise.exitsapplication.com/nsmg/linked/css/baseStyle.css" rel="stylesheet" type="text/css" />
+<link href="../linked/css/baseStyle.css" rel="stylesheet" type="text/css" />
+<link href="css/hostApp.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
