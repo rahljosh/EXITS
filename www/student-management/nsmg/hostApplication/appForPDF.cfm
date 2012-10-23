@@ -30,7 +30,7 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
         where fk_hostid = <cfqueryparam cfsqltype="integer" value="#url.hostid#">
     </cfquery>
       <cfquery name="schoolInfo" datasource="#application.dsn#">
-    select s.schoolname, s.principal, s.address, s.address2, s.city, s.state, s.zip, s.phone, s.phone_ext
+    select s.schoolname, s.principal, s.address, s.address2, s.city, s.state, s.zip, s.phone, s.phone_ext, s.schoolid
     from smg_schools s
     where s.schoolid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.schoolid#">
     </cfquery>
@@ -63,7 +63,28 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
 
     <cfreturn newstr />
 </cffunction>  
+<!----Calculate distance from School to Home---->
+<cfscript>
+                // Get Host Mother CBC
+                schoolDist = APPLICATION.CFC.UDF.calculateAddressDistance(
+                    origin='#qGetHostFamily.address# #qGetHostFamily.city# #qGetHostFamily.state# #qGetHostFamily.zip#', 
+                    destination='#schoolInfo.address# #schoolInfo.city# #schoolInfo.state# #schoolInfo.zip#'
+                );
+            </cfscript>
+            
+            <cfscript>
+                // Get Host Mother CBC
+                cityDist = APPLICATION.CFC.UDF.calculateAddressDistance(
+                    origin='#qGetHostFamily.address# #qGetHostFamily.city# #qGetHostFamily.state# #qGetHostFamily.zip#', 
+                    destination='#qGetHostFamily.NearBigCity#'
+                );
+            </cfscript>
+<cfquery name="kidsAtSchool" datasource="#application.dsn#">
+select name
+from smg_host_children 
+where school = <cfqueryparam cfsqltype="cf_sql_integer" value="#schoolInfo.schoolid#">
 
+</cfquery>
 
 <body>
 <cfoutput>
@@ -542,6 +563,7 @@ son or daughter and their parents, such as personalities, background, lifestyle 
 <!----End of page 3---->
 <div style="page-break-after:always;"></div>
 <!----Page 4---->
+
   <table class="profileTable" align="center">
         <tr>
             <td>
@@ -581,19 +603,32 @@ son or daughter and their parents, such as personalities, background, lifestyle 
                                 <tr>
                                     <td>  <span class="title">City, State Zip</span></td><td>#schoolInfo.city#, #schoolInfo.state# #schoolInfo.zip#</td>
                                 </tr>
+                                <Tr>
+                                	<Td> <span class="title">Distance from Home:</span></Td><td>#schoolDist# miles</td>
+                                </Tr>
                                 <tr>
                                     <td>  <span class="title">Principal</span></td><td>#schoolInfo.principal#</td>
                                 </tr>
                                 <tr>
                                     <td>  <span class="title">Phone</span></td><td>#schoolInfo.phone# <Cfif schoolInfo.phone_ext is not ''>x</Cfif>#schoolInfo.phone_ext#</td>
                                 </tr>
+                                 <tr>
+                                    <td>  <span class="title">Host Children Attending:</span></td><td>
+                                    <cfloop query="kidsAtSchool">
+                                    #name#<cfif kidsAtSchool.currentrow neq kidsAtSchool.recordcount>, </cfif>
+                                    </cfloop>
+                                    </td>
+                                </tr>
                               </table> 
 
                           </td>
                         </tr>
+                       
                          <tr>
                     	<Td width=50% valign="top">
                         	<Table width=100%>
+                            	
+                            
                                 <tr>
                                     <td width=75%>  <span class="title">Does any member of your household work for the high
 school in a coaching/teaching/administrative capacity?</span></td><td><Cfif qGetHostFamily.schoolWorks eq 1>Yes<cfelse>No</Cfif></td>
@@ -745,7 +780,7 @@ if they are different from your own?</span></td><td>#CapFirst1(qGetHostFamily.ch
                     
                     <Tr>
                     	<Td><span class="title">Nearest City</span></Td>
-                        <td>#qGetHostFamily.NearBigCity# (#qGetHostFamily.near_City_Dist# miles)</td>
+                        <td>#qGetHostFamily.NearBigCity# (#cityDist# miles)</td>
                         <Td><span class="title">Population</span></Td>
                         <td>#qGetHostFamily.near_pop#</td>
                         <td><span class="title">#qGetHostFamily.NearBigCity# Airport Code</span></td>
