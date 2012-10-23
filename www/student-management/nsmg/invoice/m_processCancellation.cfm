@@ -1,4 +1,4 @@
-    
+ 
 <!--- code called from m_misc_addCharge (charges NOT tied to a student); look for "END" comment --->
 <cfif ISDEFINED('form.amount') AND form.amount IS NOT 'amount'>    	
 	<cfquery name="insert_charge" datasource="MySQL">
@@ -39,8 +39,8 @@
     
         <cfif ISDEFINED('form.cred#studentid#')>
             <cfquery name="insertCredit" datasource="MySQL">
-            INSERT INTO smg_credit (creditid, agentid, stuid, invoiceid, description, type, amount, date, companyid, chargeid, credit_type)
-            VALUES (0, #EVALUATE('form.agentid' & '#studentid#')#, #studentid#, 0, '#EVALUATE('form.credDescrip' & '#studentid#')#', '#EVALUATE('form.credChoose' & '#studentid#')#', #EVALUATE('form.credAmount' & '#studentid#')#, #Now()#, #EVALUATE('form.companyid' & '#studentid#')#, 0, '#EVALUATE('form.programname' & '#studentid#')#')
+            INSERT INTO smg_credit (creditid, agentid, stuid, invoiceid, description, type, amount, date, companyid, chargeid, credit_type, programID)
+            VALUES (0, #EVALUATE('form.agentid' & '#studentid#')#, #studentid#, 0, '#EVALUATE('form.credDescrip' & '#studentid#')#', '#EVALUATE('form.credChoose' & '#studentid#')#', #EVALUATE('form.credAmount' & '#studentid#')#, #Now()#, #EVALUATE('form.companyid' & '#studentid#')#, 0, '#EVALUATE('form.programname' & '#studentid#')#'), #EVALUATE('form.programid' & '#studentid#')#
             </cfquery>
         </cfif>
     
@@ -91,8 +91,8 @@
             <cfif ISDEFINED('form.chargeid#chargeId#')>
             
                 <cfquery name="insertCancellation" datasource="MySQL">
-                INSERT INTO smg_credit (creditid, agentid, stuid, invoiceid, description, type, amount, date, companyid, chargeid, credit_type)
-                VALUES (0, #EVALUATE('form.agentid' & '#chargeid#')#, #EVALUATE('stuid' & '#chargeid#')#, #EVALUATE('form.invoiceid' & '#chargeid#')#, '#EVALUATE('form.creditDescription' & '#chargeId#')# #variables.cancFeeInv#', 'cancellation', #EVALUATE('form.creditAmount' & '#chargeId#')#, #Now()#, #EVALUATE('form.companyid' & '#chargeid#')#, #chargeId#, '#EVALUATE("form.programname" & "#chargeid#")#')
+                INSERT INTO smg_credit (creditid, agentid, stuid, invoiceid, description, type, amount, date, companyid, chargeid, credit_type, programID)
+                VALUES (0, #EVALUATE('form.agentid' & '#chargeid#')#, #EVALUATE('stuid' & '#chargeid#')#, #EVALUATE('form.invoiceid' & '#chargeid#')#, '#EVALUATE('form.creditDescription' & '#chargeId#')# #variables.cancFeeInv#', 'cancellation', #EVALUATE('form.creditAmount' & '#chargeId#')#, #Now()#, #EVALUATE('form.companyid' & '#chargeid#')#, #chargeId#, '#EVALUATE("form.programname" & "#chargeid#")#', #EVALUATE('form.programid' & '#chargeId#')#)
                 </cfquery>
                 
                 <cfquery name="getTotalCredit" datasource="MySQL">

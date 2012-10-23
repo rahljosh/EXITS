@@ -689,7 +689,7 @@
         <cfinput type="hidden" name="companyid#getChargesCancellations.chargeid#" value="#getChargesCancellations.companyid#">
         <cfinput type="hidden" name="invoiceid#getChargesCancellations.chargeid#" value="#getChargesCancellations.invoiceid#">
         <cfinput type="hidden" name="amount_due#getChargesCancellations.chargeid#" value="#getChargesCancellations.amount_due#">
-    
+
         <cfquery name="getCreditSum" datasource="MySQL">
         SELECT SUM(IFNULL(sc.amount, 0)) AS totalCredit
         FROM smg_credit sc
@@ -792,7 +792,7 @@
             <td class="right">#getCreditsDiscounts.description#</td>                     
         </tr>
     </cfoutput>
-    
+    <cfdump var="#getChargesCancellations#">
 	<cfif getChargesCancellations.recordCount EQ 0>
     	<cfset progrName = #getCurrStudInfo.programname#>
 		<cfelse>
