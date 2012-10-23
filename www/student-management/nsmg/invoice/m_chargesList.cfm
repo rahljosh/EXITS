@@ -249,7 +249,7 @@ WHERE
         sch.programid,
         'credit note', 
         sc.creditid, 
-        sch.date,
+        sc.date,
         
         <!--- high school students table --->
         ss.firstname,
