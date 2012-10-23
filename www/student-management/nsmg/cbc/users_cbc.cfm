@@ -40,22 +40,22 @@
 
 	<cfscript>
 		// Gets List of Companies
-		qGetCompanies = APPCFC.COMPANY.getCompanies();	
+		qGetCompanies = APPLICATION.CFC.COMPANY.getCompanies();	
 		
 		// Get User InFORMation
-		qGetUser = APPCFC.USER.getUserByID(userID=userID);
+		qGetUser = APPLICATION.CFC.USER.getUserByID(userID=userID);
 
 		// Get User CBC
-		qGetCBCUser = APPCFC.CBC.getCBCUserByID(
+		qGetCBCUser = APPLICATION.CFC.CBC.getCBCUserByID(
 			userID=userID,
 			cbcType='user'
 		);
 
 		// Get User Available Seasons
-		qGetUserSeason = APPCFC.CBC.getAvailableSeasons(currentSeasonIDs=ValueList(qGetCBCUser.seasonID));
+		qGetUserSeason = APPLICATION.CFC.CBC.getAvailableSeasons(currentSeasonIDs=ValueList(qGetCBCUser.seasonID));
 
 		// Get Family Member CBC
-		qGetUserMembers = APPCFC.CBC.getEligibleUserMember(userID=userID);
+		qGetUserMembers = APPLICATION.CFC.CBC.getEligibleUserMember(userID=userID);
 
 		// Set Variables
 		userIDs = ValueList(qGetCBCUser.cbcID);
@@ -70,7 +70,7 @@
 			// Check if we have valid data
 			if ( VAL(FORM.seasonID) AND LEN(FORM.date_authorized) ) {
 				// Insert User CBC
-				APPCFC.CBC.insertUserCBC(
+				APPLICATION.CFC.CBC.insertUserCBC(
 					userID=FORM.userID,
 					familyMemberID=0,
 					seasonID=FORM.seasonID, 
@@ -90,13 +90,13 @@
 				}
 				
 				// Update User CBC				
-				APPCFC.CBC.updateUserCBCByID(
+				APPLICATION.CFC.CBC.updateUserCBCByID(
 					cbcID=FORM["cbcID" & i],
 					companyID=FORM["companyID" & i],
 					flagCBC=flagValue,
 					dateAuthorized=FORM["date_authorized" & i],
-					notes = FORM["notes" & i],
-					dateApproved = FORM["date_approved" & i]
+					dateApproved = FORM["date_approved" & i],
+					notes = FORM["notes" & i]
 				);
 				
 			} // End of for
@@ -116,7 +116,7 @@
                 if ( VAL(FORM[ID & "seasonID"]) AND LEN(FORM[ID & "date_authorized"]) ) {
                     
                     // Insert User CBC
-                    APPCFC.CBC.insertUserCBC(
+                    APPLICATION.CFC.CBC.insertUserCBC(
                         userID=FORM.userID,
                         familyMemberID=ID,
                         seasonID=FORM[ID & "seasonID"], 
@@ -136,12 +136,13 @@
                         flagValue = 0;
                     }
 
-                    APPCFC.CBC.updateUserCBCByID(
+                    APPLICATION.CFC.CBC.updateUserCBCByID(
                         cbcID=FORM[ID & "cbcID" & x],
                         companyID=FORM[ID & "companyID" & x],
                         flagCBC=flagValue,
-						notes=FORM[ID & "notes" & x],
-                        dateAuthorized=FORM[ID & "date_authorized" & x]
+						dateAuthorized=FORM[ID & "date_authorized" & x],
+						dateApproved = FORM[ID & "date_approved" & x],
+						notes=FORM[ID & "notes" & x]
                     );
                     
                 } // End of Update Member
@@ -154,13 +155,13 @@
 			*/
 		
 			// Get Pending CBCs User
-            qGetPendingCBCUser = APPCFC.CBC.getPendingCBCUser(
+            qGetPendingCBCUser = APPLICATION.CFC.CBC.getPendingCBCUser(
                 companyID=CLIENT.companyID,
 				userID=FORM.userID
             );	
 
 			// Get Pending CBCs User Member
-			qGetPendingCBCMember = APPCFC.CBC.getPendingCBCUserMember(
+			qGetPendingCBCMember = APPLICATION.CFC.CBC.getPendingCBCUserMember(
 				companyID=CLIENT.companyID,
 				userID=FORM.userID
 			);	
@@ -177,10 +178,10 @@
 					AND LEN(qGetPendingCBCUser.SSN) ) {
 
 					// Get Company ID
-					qGetCompanyID = APPCFC.COMPANY.getCompanies(companyID=qGetPendingCBCUser.companyID);
+					qGetCompanyID = APPLICATION.CFC.COMPANY.getCompanies(companyID=qGetPendingCBCUser.companyID);
 				
                     // Process Batch
-                    CBCStatus = APPCFC.CBC.processBatch(
+                    CBCStatus = APPLICATION.CFC.CBC.processBatch(
                         companyID=qGetCompanyID.companyID,
                         companyShort=qGetCompanyID.companyShort,
                         userType='User',
@@ -214,10 +215,10 @@
 					AND LEN(qGetPendingCBCMember.SSN) ) {
 					
 					// Get Company ID
-					qGetCompanyID = APPCFC.COMPANY.getCompanies(companyID=qGetPendingCBCMember.companyID);
+					qGetCompanyID = APPLICATION.CFC.COMPANY.getCompanies(companyID=qGetPendingCBCMember.companyID);
 				
                     // Process Batch
-                    CBCStatus = APPCFC.CBC.processBatch(
+                    CBCStatus = APPLICATION.CFC.CBC.processBatch(
                         companyID=qGetCompanyID.companyID,
                         companyShort=qGetCompanyID.companyShort,
                         userType='Member',
@@ -262,9 +263,6 @@
     
 </cfsilent>
 
-
-	
-      
 <cfoutput>
 <head>
 	<SCRIPT LANGUAGE="JavaScript">
@@ -314,8 +312,6 @@
 		</script>
 </head>	
 
-    
-    
     <cfif NOT VAL(userID)>
         Sorry, an error has ocurred. Please go back and try again.
         <cfabort>
@@ -355,7 +351,6 @@
             <tr>
             	<th colspan="9" bgcolor="##e2efc7">#qGetUser.firstname# #qGetUser.lastname# (###qGetUser.userID#)</th>
             	<th bgcolor="##e2efc7" colspan=2><a href="cbc/userInfo.cfm?userID=#qGetUser.userID#" class="jQueryModal">Edit User Info</a></th>
-                
             </tr>
             <tr style="font-weight:bold;">
                 <td valign="top">Company</td>
@@ -368,49 +363,45 @@
                 <td valign="top">Date Approved<br><font size="-2">mm/dd/yyyy</font></td>
                 <td valign="top">Notes</td>
             </tr>
+            
             <!--- User UPDATE --->
-            <cfif VAL(qGetCBCUser.recordcount)>
-                
-                <cfloop query="qGetCBCUser">
-                    <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
-                        <td>
-                            <cfif NOT LEN(date_sent)>
-                                <cfselect name="companyID#currentrow#" required="yes" message="You must select a company">
-                                    <cfloop query="qGetCompanies">
-                                        <option value="#companyID#" <cfif qGetCompanies.companyID EQ qGetCBCUser.companyID>selected</cfif>>#companyshort#</option>
-                                    </cfloop>
-                                </cfselect>
-                            <cfelse>
-                                #companyshort#
-                                <input type="hidden" name="companyID#currentrow#" value="#companyID#">
-                            </cfif>
-                        </td>
-                        <td>
-                            <b>#season#</b> 
-                            <input type="hidden" name="cbcid#currentrow#" value="#cbcid#">
-                        </td>
-                        <td>
-                            <cfif NOT LEN(date_sent)>
-                                <cfinput type="Text" name="date_authorized#currentrow#" value="#DateFormat(date_authorized, 'mm/dd/yyyy')#" class="datePicker" validate="date" maxlength="10">
-                            <cfelse>
-                                #DateFormat(date_authorized, 'mm/dd/yyyy')#
-                                <input type="hidden" name="date_authorized#currentrow#" value="#DateFormat(date_authorized, 'mm/dd/yyyy')#">
-                            </cfif>
-                        </td>
-                        <td><cfif isDate(date_sent)>#DateFormat(date_sent, 'mm/dd/yyyy')#<cfelse>processing</cfif></td>
-                        <td><cfif isDate(date_expired)>#DateFormat(date_expired, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
-                        <td><a href="cbc/view_user_cbc.cfm?userID=#qGetCBCUser.userID#&cbcID=#qGetCBCUser.cbcID#&file=batch_#qGetCBCUser.batchID#_user_#qGetCBCUser.userID#_rec.xml" target="_blank">#requestid#</a></td>
-                        <td><input type="checkbox" name="flagCBC_#currentrow#" <cfif VAL(flagCBC)>checked="checked"</cfif>></td>
-                        <td> 
-                        
-                        
-						<input type="text" name="date_approved#currentrow#" message="Please input a valid date."  <cfif date_approved is ''>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif> value="#DateFormat(date_approved, 'mm/dd/yyyy')#" size="8" maxlength="10" >	
-                       <Cfif date_approved is ''><br /><em><font size=-2>click in box for date</font></em></Cfif>
-                        </td>
-                        <td><textarea rows="3" cols=15 name="notes#currentrow#">#notes#</textarea></td>
-                    </tr>
-                </cfloop>
-            </cfif>
+            <cfloop query="qGetCBCUser">
+                <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
+                    <td>
+                        <cfif NOT LEN(date_sent)>
+                            <cfselect name="companyID#currentrow#" required="yes" message="You must select a company">
+                                <cfloop query="qGetCompanies">
+                                    <option value="#companyID#" <cfif qGetCompanies.companyID EQ qGetCBCUser.companyID>selected</cfif>>#companyshort#</option>
+                                </cfloop>
+                            </cfselect>
+                        <cfelse>
+                            #companyshort#
+                            <input type="hidden" name="companyID#currentrow#" value="#companyID#">
+                        </cfif>
+                    </td>
+                    <td>
+                        <b>#season#</b> 
+                        <input type="hidden" name="cbcid#currentrow#" value="#cbcid#">
+                    </td>
+                    <td>
+                        <cfif NOT isDate(date_sent)>
+                            <cfinput type="Text" name="date_authorized#currentrow#" value="#DateFormat(date_authorized, 'mm/dd/yyyy')#" class="datePicker" validate="date" maxlength="10">
+                        <cfelse>
+                            #DateFormat(date_authorized, 'mm/dd/yyyy')#
+                            <input type="hidden" name="date_authorized#currentrow#" value="#DateFormat(date_authorized, 'mm/dd/yyyy')#">
+                        </cfif>
+                    </td>
+                    <td><cfif isDate(date_sent)>#DateFormat(date_sent, 'mm/dd/yyyy')#<cfelse>processing</cfif></td>
+                    <td><cfif isDate(date_expired)>#DateFormat(date_expired, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
+                    <td><a href="cbc/view_user_cbc.cfm?userID=#qGetCBCUser.userID#&cbcID=#qGetCBCUser.cbcID#&file=batch_#qGetCBCUser.batchID#_user_#qGetCBCUser.userID#_rec.xml" target="_blank">#requestid#</a></td>
+                    <td><input type="checkbox" name="flagCBC_#currentrow#" <cfif VAL(flagCBC)>checked="checked"</cfif>></td>
+                    <td> 
+                        <input type="text" name="date_approved#currentrow#" message="Please input a valid date." <cfif NOT IsDate(date_approved) is ''>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif> value="#DateFormat(date_approved, 'mm/dd/yyyy')#" size="8" maxlength="10">	
+                        <cfif NOT IsDate(date_approved)><br /><em><font size=-2>click in box for date</font></em></cfif>
+                    </td>
+                    <td><textarea rows="4" cols="25" name="notes#currentrow#">#notes#</textarea></td>
+                </tr>
+            </cfloop>
             
             <!--- User New --->
             <cfif VAL(qGetUserSeason.recordcount)>
@@ -461,102 +452,109 @@
             <cfif NOT VAL(qGetUserMembers.recordcount)>
                 <tr><td colspan="9">There are no eligible family members.</td></tr>
                 <tr><td colspan="9">&nbsp;</td></tr>
-            <cfelse>	
-                <cfloop query="qGetUserMembers">
-                    
-                    <cfscript>
-                        // Set current Family ID
-                        familyID = qGetUserMembers.id;
-                        
-                        // Gets User Member CBC
-                        qGetCBCMember = APPCFC.CBC.getCBCUserByID(
-                            userID=userID,
-                            familyID=familyID
-                        );		
-    
-                        // Get Member Available Seasons
-                        qGetMemberSeason = APPCFC.CBC.getAvailableSeasons(currentSeasonIDs=ValueList(qGetCBCMember.seasonID));
-                    </cfscript>
-       
-                    <input type="hidden" name="#familyID#count" value="#qGetCBCMember.recordcount#">
-                    
-                    <tr><th colspan="9" bgcolor="##e2efc7">#qGetUserMembers.firstname# #qGetUserMembers.lastname#</th><th bgcolor="##e2efc7"></th></tr>
-                    <tr style="font-weight:bold;">
-                        <td valign="top"><b>Company</b></td>
-                        <td valign="top"><b>Season</b></td>		
-                        <td valign="top"><b>Authorization Received</b> <br><font size="-2">mm/dd/yyyy</font></td>		
-                        <td valign="top"><b>CBC Submitted</b> <br><font size="-2">mm/dd/yyyy</font></td>
-                        <td valign="top"><b>Expiration Date</b> <br><font size="-2">mm/dd/yyyy</font></td>		
-                        <td valign="top"><b>Request ID</b></td>
-                        <th valign="top">Flag CBC</th>
-                    </tr>
-                    
-                    <!--- Member Update --->
-                    <cfif VAL(qGetCBCMember.recordcount)>
-                        
-                        <cfloop query="qGetCBCMember">
-                            <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
-                                <td>
-                                    <cfif NOT isDate(date_sent)>
-                                        <cfselect name="#familyID#companyID#currentrow#" required="yes" message="You must select a company">
-                                            <cfloop query="qGetCompanies">
-                                            <option value="#companyID#" <cfif qGetCompanies.companyID EQ qGetCBCMember.companyID>selected</cfif>>#companyshort#</option>
-                                            </cfloop>
-                                        </cfselect>
-                                    <cfelse>
-                                        #companyshort#
-                                        <input type="hidden" name="#familyID#companyID#currentrow#" value="#companyID#">
-                                    </cfif>
-                                </td>
-                                <td><b>#season#</b> <input type="hidden" name="#familyID#cbcid#currentrow#" value="#cbcid#"></td>
-                                <td>
-                                    <cfif NOT isDate(date_sent)>
-                                        <cfinput type="Text" name="#familyID#date_authorized#currentrow#" value="#DateFormat(date_authorized, 'mm/dd/yyyy')#" class="datePicker" validate="date" maxlength="10">
-                                    <cfelse>
-                                        #DateFormat(date_authorized, 'mm/dd/yyyy')#
-                                        <input type="hidden" name="#familyID#date_authorized#currentrow#" value="#DateFormat(date_authorized, 'mm/dd/yyyy')#">
-                                    </cfif>
-                                </td>
-                                <td><cfif isDate(date_sent)>#DateFormat(date_sent, 'mm/dd/yyyy')#<cfelse>processing</cfif></td>
-                                <td><cfif isDate(date_expired)>#DateFormat(date_expired, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
-                                <td><a href="cbc/view_user_cbc.cfm?userID=#qGetCBCMember.userID#&cbcID=#qGetCBCMember.cbcID#&file=batch_#qGetCBCMember.batchID#_user_#qGetCBCMember.userID#_rec.xml" target="_blank">#requestid#</a></td>
-                                <td><input type="checkbox" name="#familyID#flagCBC#currentrow#" <cfif VAL(flagCBC)>checked="checked"</cfif>></td>
-                            </tr>
-                        </cfloop>
-                        
-                    </cfif>
-                    
-                    <!--- NEW CBC --->
-                    <cfif VAL(qGetMemberSeason.recordcount)>
-                    <tr>
-                        <td>
-                            <cfselect name="#familyID#companyID" required="yes" message="You must select a company">
-                                <cfloop query="qGetCompanies">
-                                <option value="#companyID#" <cfif qGetCompanies.companyID EQ client.companyID>selected</cfif>>#companyshort#</option>
-                                </cfloop>
-                            </cfselect>
-                        </td>						
-                        <td>
-                            <cfselect name="#familyID#seasonID" required="yes" message="You must select a season">
-                                <option value="0">Select a Season</option>
-                                <cfloop query="qGetMemberSeason">
-                                <option value="#seasonID#">#season#</option>
-                                </cfloop>
-                            </cfselect>
-                        </td>
-                        <td><cfinput type="Text" name="#familyID#date_authorized" value="" class="datePicker" validate="date" maxlength="10"></td>
-                        <td>n/a</td>
-                        <td>n/a</td>
-                        <td>n/a</td>
-                        <td width="20%">&nbsp;</td>
-                    </tr>
-                    <tr><td colspan="4"><font size="-2" color="000099">* Season must be selected.</font></td></tr>
-                    <cfelse>
-                        <input type="hidden" name="#familyID#seasonID" value="0">
-                    </cfif>
-                <tr><td colspan="9">&nbsp; <br><br></td></tr>			
-                </cfloop>
             </cfif>
+            	
+            <cfloop query="qGetUserMembers">
+                
+                <cfscript>
+                    // Set current Family ID
+                    familyID = qGetUserMembers.id;
+                    
+                    // Gets User Member CBC
+                    qGetCBCMember = APPLICATION.CFC.CBC.getCBCUserByID(
+                        userID=userID,
+                        familyID=familyID
+                    );		
+
+                    // Get Member Available Seasons
+                    qGetMemberSeason = APPLICATION.CFC.CBC.getAvailableSeasons(currentSeasonIDs=ValueList(qGetCBCMember.seasonID));
+                </cfscript>
+   
+                <input type="hidden" name="#familyID#count" value="#qGetCBCMember.recordcount#">
+                
+                <tr><th colspan="9" bgcolor="##e2efc7">#qGetUserMembers.firstname# #qGetUserMembers.lastname#</th><th bgcolor="##e2efc7"></th></tr>
+                <tr style="font-weight:bold;">
+                    <td valign="top"><b>Company</b></td>
+                    <td valign="top"><b>Season</b></td>		
+                    <td valign="top"><b>Authorization Received</b> <br><font size="-2">mm/dd/yyyy</font></td>		
+                    <td valign="top"><b>CBC Submitted</b> <br><font size="-2">mm/dd/yyyy</font></td>
+                    <td valign="top"><b>Expiration Date</b> <br><font size="-2">mm/dd/yyyy</font></td>		
+                    <td valign="top"><b>Request ID</b></td>
+                    <th valign="top">Flag CBC</th>
+                    <td valign="top">Date Approved<br><font size="-2">mm/dd/yyyy</font></td>
+                    <td valign="top">Notes</td>
+                </tr>
+                
+                <!--- Member Update --->
+                <cfif VAL(qGetCBCMember.recordcount)>
+                    
+                    <cfloop query="qGetCBCMember">
+                        <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
+                            <td>
+                                <cfif NOT isDate(date_sent)>
+                                    <cfselect name="#familyID#companyID#currentrow#" required="yes" message="You must select a company">
+                                        <cfloop query="qGetCompanies">
+                                        <option value="#companyID#" <cfif qGetCompanies.companyID EQ qGetCBCMember.companyID>selected</cfif>>#companyshort#</option>
+                                        </cfloop>
+                                    </cfselect>
+                                <cfelse>
+                                    #companyshort#
+                                    <input type="hidden" name="#familyID#companyID#currentrow#" value="#companyID#">
+                                </cfif>
+                            </td>
+                            <td><b>#season#</b> <input type="hidden" name="#familyID#cbcid#currentrow#" value="#cbcid#"></td>
+                            <td>
+                                <cfif NOT isDate(date_sent)>
+                                    <cfinput type="Text" name="#familyID#date_authorized#currentrow#" value="#DateFormat(date_authorized, 'mm/dd/yyyy')#" class="datePicker" validate="date" maxlength="10">
+                                <cfelse>
+                                    #DateFormat(date_authorized, 'mm/dd/yyyy')#
+                                    <input type="hidden" name="#familyID#date_authorized#currentrow#" value="#DateFormat(date_authorized, 'mm/dd/yyyy')#">
+                                </cfif>
+                            </td>
+                            <td><cfif isDate(date_sent)>#DateFormat(date_sent, 'mm/dd/yyyy')#<cfelse>processing</cfif></td>
+                            <td><cfif isDate(date_expired)>#DateFormat(date_expired, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
+                            <td><a href="cbc/view_user_cbc.cfm?userID=#qGetCBCMember.userID#&cbcID=#qGetCBCMember.cbcID#&file=batch_#qGetCBCMember.batchID#_user_#qGetCBCMember.userID#_rec.xml" target="_blank">#requestid#</a></td>
+                            <td><input type="checkbox" name="#familyID#flagCBC#currentrow#" <cfif VAL(flagCBC)>checked="checked"</cfif>></td>
+                            <td> 
+                                <input type="text" name="#familyID#date_approved#currentrow#" message="Please input a valid date." <cfif NOT IsDate(date_approved) is ''>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif> value="#DateFormat(date_approved, 'mm/dd/yyyy')#" size="8" maxlength="10">	
+                                <cfif NOT IsDate(date_approved)><br /><em><font size=-2>click in box for date</font></em></cfif>
+                            </td>
+                            <td><textarea rows="4" cols="25" name="#familyID#notes#currentrow#">#notes#</textarea></td>
+                        </tr>
+                    </cfloop>
+                    
+                </cfif>
+                
+                <!--- NEW CBC --->
+                <cfif VAL(qGetMemberSeason.recordcount)>
+                <tr>
+                    <td>
+                        <cfselect name="#familyID#companyID" required="yes" message="You must select a company">
+                            <cfloop query="qGetCompanies">
+                            <option value="#companyID#" <cfif qGetCompanies.companyID EQ client.companyID>selected</cfif>>#companyshort#</option>
+                            </cfloop>
+                        </cfselect>
+                    </td>						
+                    <td>
+                        <cfselect name="#familyID#seasonID" required="yes" message="You must select a season">
+                            <option value="0">Select a Season</option>
+                            <cfloop query="qGetMemberSeason">
+                            <option value="#seasonID#">#season#</option>
+                            </cfloop>
+                        </cfselect>
+                    </td>
+                    <td><cfinput type="Text" name="#familyID#date_authorized" value="" class="datePicker" validate="date" maxlength="10"></td>
+                    <td>n/a</td>
+                    <td>n/a</td>
+                    <td>n/a</td>
+                    <td width="20%">&nbsp;</td>
+                </tr>
+                <tr><td colspan="4"><font size="-2" color="000099">* Season must be selected.</font></td></tr>
+                <cfelse>
+                    <input type="hidden" name="#familyID#seasonID" value="0">
+                </cfif>
+            	<tr><td colspan="9">&nbsp; <br><br></td></tr>			
+            </cfloop>
         </table>
         
         <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
