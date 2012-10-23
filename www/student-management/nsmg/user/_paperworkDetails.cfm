@@ -285,14 +285,14 @@
                                 <cfif IsDate(qGetSeasonPaperwork.ar_agreement)>
                                     #DateFormat(qGetSeasonPaperwork.ar_agreement, 'mm/dd/yyyy')#
                                 <cfelse>
-                                    missing
+                                    <span class="required">missing</span>
                                 </cfif>
                            </td>
                             <td class="center">
                                 <cfif IsDate(qGetSeasonPaperwork.ar_cbc_auth_form)>
                                     #DateFormat(qGetSeasonPaperwork.ar_cbc_auth_form, 'mm/dd/yyyy')#
                                 <cfelse>
-                                    missing
+                                    <span class="required">missing</span>
                                 </cfif>
                             </td> 
                                                            
@@ -302,21 +302,21 @@
                                     <cfif IsDate(stUserPaperwork.dateDOSTestExpired)>
                                         #stUserPaperwork.dateDOSTestExpired#
                                     <cfelse>
-                                        missing
+                                        <span class="required">missing</span>
                                     </cfif>
                                 </td>
                                 <td class="center">
                                     <cfif stUserPaperwork.isEmploymentHistoryCompleted>
                                         completed
                                     <cfelse>
-                                        missing
+                                        <span class="required">missing</span>
                                     </cfif>
                                 </td>
                                 <td class="center">
                                     <cfif NOT VAL(stUserPaperwork.missingReferences)>
                                         completed
                                     <cfelse>
-                                        missing #stUserPaperwork.missingReferences#
+                                       <span class="required">missing (#stUserPaperwork.missingReferences#)</span>
                                     </cfif>
                                 </td>
                                 
@@ -337,7 +337,7 @@
                                 <cfif isDate(stUserPaperwork.dateCBCExpired)>
                                     #stUserPaperwork.dateCBCExpired#
                                 <cfelse>
-                                    missing
+                                    <span class="required">missing</span>
                                 </cfif>
                             </td>
                             
@@ -367,7 +367,7 @@
                             <cfelse>
                                 <td class="center" style="border-right:1px solid ##FFF;">
 									<cfif NOT LEN(qGetUserCBC.requestID)>
-                                        CBC hasn't run
+                                        <span class="required">CBC hasn't run</span>
                                     <cfelse>                                        
 										<cfif qGetUserCBC.flagcbc eq 1>
                                             <img src="pics/buttons/warning.png" height=15 width=15 /> Flagged
