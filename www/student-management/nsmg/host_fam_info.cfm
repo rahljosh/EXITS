@@ -507,12 +507,14 @@ div.scroll2 {
                 </td>
           
         <td>
-        <cfif isDefined('sendAppEmail')>
-        <strong><em>Link to application was sent succesfully.</em> </strong>
-        <cfelse>
-                	<form method="post" action="index.cfm?curdoc=host_fam_infoSendLink&&hostid=#url.hostid#">
-                	<input name="sendAppEmail" type="submit" value="Send Application Email"  alt="Send Application" border="0" class="buttonGreen" /></form>
-        </cfif>        
+        <Cfif client.usertype eq 1>
+			<cfif isDefined('sendAppEmail')>
+            <strong><em>Link to application was sent succesfully.</em> </strong>
+            <cfelse>
+                        <form method="post" action="index.cfm?curdoc=host_fam_infoSendLink&&hostid=#url.hostid#">
+                        <input name="sendAppEmail" type="submit" value="Send Application Email"  alt="Send Application" border="0" class="buttonGreen" /></form>
+            </cfif>        
+        </Cfif>
                 </td>
         </tr>
         <cfelse>
