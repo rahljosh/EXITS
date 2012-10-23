@@ -178,6 +178,13 @@
                 </p>
             </cfif>
             
+            <!--- 21 Days Extra Window --->
+            <cfif isDate(APPLICATION.CFC.USER.getUserSessionPaperwork().season.dateExtraPaperworkRequired) AND NOT APPLICATION.CFC.USER.getUserSessionPaperwork().isPaperworkRequired>
+            	<p align="center">
+                	You have until #APPLICATION.CFC.USER.getUserSessionPaperwork().season.dateExtraPaperworkRequired# to complete your Departmenf of State Certificate and/or WebEX Trainings.
+				</p>
+            </cfif>
+            
             <div class="subSection">
             
                 <div class="title">  

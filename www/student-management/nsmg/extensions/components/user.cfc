@@ -371,21 +371,35 @@
 	<cffunction name="getUserPaperwork" access="public" returntype="struct" output="false" hint="Returns a struct with a complete paperwork information for a user">
         <cfargument name="userID" hint="User ID is Required">
 
-        <cfscript>
+        <cfscript>			
+			// Get User Information
+			var qGetUserInfo = getUsers(userID=ARGUMENTS.userID);
+			
+			var vTodayDate = dateFormat(now(), 'mm/dd/yyyy');
+			
 			// New Struct
 			var stUserPaperwork = StructNew();
 			
-			// Get User Information
-			var qGetUserInfo = getUsers(userID=ARGUMENTS.userID);
-
+			
 			// Store User Information as well
 			stUserPaperwork.user = StructNew();
 			
-			// User Information
+			// Store User Information in Structure
 			stUserPaperwork.user.ID = qGetUserInfo.userID;
 			stUserPaperwork.user.displayName = qGetUserInfo.firstName & " " & qGetUserInfo.lastName & " (##" & qGetUserInfo.userID & ")";
-			stUserPaperwork.user.email = qGetUserInfo.email;
+			stUserPaperwork.user.email = qGetUserInfo.email;			
 			stUserPaperwork.user.userType = "";
+
+
+			/**** Set Default Values ****/
+				
+			// Set Paperwork as not Completed
+			stUserPaperwork.isUserPaperworkCompleted = false;
+			// Set Account as non compliant
+			stUserPaperwork.isAccountCompliant = false;
+			// Set which users need to be notified for account review
+			stUserPaperwork.accountReviewStatus = "";
+
 
 			// Get User CBC
 			var qGetUserInfoCBC = APPLICATION.CFC.CBC.getCBCUserByID(userID=ARGUMENTS.userID,cbcType='user');
@@ -412,33 +426,29 @@
 			stUserPaperwork.isDOSCertificationCompleted = stDOSCertification.isDOSCertificationValid;
 			stUserPaperwork.dateDOSTestExpired = stDOSCertification.dateExpired;
 			
-			/**** Set Default Values ****/
-				
-			// Set Paperwork as not Completed
-			stUserPaperwork.isUserPaperworkCompleted = false;
-			// Set Account as non compliant
-			stUserPaperwork.isAccountCompliant = false;
-			// Set which users need to be notified for account review
-			stUserPaperwork.accountReviewStatus = "";
-
+			
 			// Set Current Season Information
 			stUserPaperwork.season = structNew();
 			stUserPaperwork.season.ID = qGetCurrentSeason.seasonID;
 			stUserPaperwork.season.datePaperworkStarted = DateFormat(qGetCurrentSeason.datePaperworkStarted, "mm/dd/yyyy");
 			stUserPaperwork.season.datePaperworkRequired = DateFormat(qGetCurrentSeason.datePaperworkRequired, "mm/dd/yyyy");
 			stUserPaperwork.season.datePaperworkEnded = DateFormat(qGetCurrentSeason.datePaperworkEnded, "mm/dd/yyyy");
+			stUserPaperwork.season.dateExtraPaperworkRequired = '';
+			
 			
 			// Store Date Values
 			stUserPaperwork.dateRMReviewNotified = DateFormat(qGetSeasonPaperwork.dateRMReviewNotified, "mm/dd/yyyy");
 			stUserPaperwork.dateOfficeReviewNotified = DateFormat(qGetSeasonPaperwork.dateOfficeReviewNotified, "mm/dd/yyyy");
 			stUserPaperwork.dateAccessGranted = DateFormat(qGetSeasonPaperwork.dateAccessGranted, "mm/dd/yyyy");
 
-			// Set if we'll force paperwork
+
+			// Set to true to force paperwork, to false to give an option to skip it
 			if ( now() GTE qGetCurrentSeason.datePaperworkRequired ) {
 				stUserPaperwork.isPaperworkRequired = true;
 			} else {
 				stUserPaperwork.isPaperworkRequired = false;
 			}	
+			
 			
 			// Signed Agreement
 			if ( isDate(qGetSeasonPaperwork.ar_agreement) ) {
@@ -447,12 +457,14 @@
 				stUserPaperwork.isAgreementCompleted = false;
 			}
 
+
 			// Signed CBC Authorization
 			if ( isDate(qGetSeasonPaperwork.ar_cbc_auth_form) ) {
 				stUserPaperwork.isCBCAuthorizationCompleted = true;
 			} else {
 				stUserPaperwork.isCBCAuthorizationCompleted = false;
 			}
+			
 			
 			// Check if CBC is valid
 			if ( isDate(qGetUserInfoCBC.date_expired) AND qGetUserInfoCBC.date_expired GTE dateFormat(now(), 'yyyy/mm/dd') ) {
@@ -461,6 +473,7 @@
 				stUserPaperwork.isCBCValid = false;
 			}
 			
+			
 			// CBC Approved
 			if ( stUserPaperwork.isCBCValid AND isDate(qGetUserInfoCBC.date_approved) ) {
 				stUserPaperwork.isCBCApproved = true;
@@ -468,12 +481,14 @@
 				stUserPaperwork.isCBCApproved = false;
 			}
 
+
 			// Employment History - Minimum of 1
 			if ( qGetEmployment.recordCount GTE 1 AND ( NOT VAL(qGetUserInfo.prevOrgAffiliation) OR ( qGetUserInfo.prevOrgAffiliation EQ 1 AND LEN(qGetUserInfo.prevAffiliationName) ) ) ) {
 				stUserPaperwork.isEmploymentHistoryCompleted = true;
 			} else {
 				stUserPaperwork.isEmploymentHistoryCompleted = false;
 			}
+
 
 			// References - Minimum of 4
 			if ( qGetReferences.recordCount GTE 4 ) {
@@ -483,6 +498,7 @@
 				stUserPaperwork.isReferenceCompleted = false;
 				stUserPaperwork.missingReferences = 4 - qGetReferences.recordcount;
 			}
+			
 			
 			// Training - New Area Rep or Area Rep Refresher
 			if ( isDate(qGetSeasonPaperwork.ar_training) ) {
@@ -511,17 +527,27 @@
 			}
 			
 			
-			/**** 
-				TEMPORARY SOLUTION
-				Return users - Set Reference Questionnaire to complete for now until we sort this out. |  New users need to have reference questionnaire
-			****/
+			// Check if is a new or returning user based on number of paperwork seasons			
 			qGetAllSeasonPaperwork = getSeasonPaperwork(userID=ARGUMENTS.userID, getAllRecords=1);
-			if ( qGetAllSeasonPaperwork.recordCount GTE 2 ) {
+			
+			
+			// Returning User 
+			if ( qGetAllSeasonPaperwork.recordCount GTE 2 AND isDate(stUserPaperwork.season.datePaperworkRequired) ) {
+				
+				// Extra Period is 21 days from datePaperworkRequired
+				stUserPaperwork.season.dateExtraPaperworkRequired = DateFormat(DateAdd("d", 21, stUserPaperwork.season.datePaperworkRequired), 'mm/dd/yyyy');				
+
+				/**** TEMPORARY SOLUTION **** Return users - Set Reference Questionnaire to complete for now until we sort this out. |  New users need to have reference questionnaire */
 				stUserPaperwork.isReferenceQuestionnaireCompleted = true;
+				/**** TEMPORARY SOLUTION ****/
+				
+			// New User
+			} else if ( isDate(qGetUserInfo.dateCreated) ) {
+				// Extra Period is 21 days from dateCreated
+				stUserPaperwork.season.dateExtraPaperworkRequired = DateFormat(DateAdd("d", 21, qGetUserInfo.dateCreated), 'mm/dd/yyyy');				
 			}
-			/**** TEMPORARY SOLUTION ****/
 			
-			
+
 			// 2nd Visit - Only Agreement and CBC - No References, employment history, trainings and DOS Certification
 			if ( vIsSecondVisitRepOnly ) {
 				stUserPaperwork.isReferenceCompleted = true;
@@ -531,6 +557,7 @@
 				stUserPaperwork.isDOSCertificationCompleted = true;
 			}
 			
+			
 			// ESI - Only Agreement and CBC - No References, employment history, trainings and DOS Certification
 			if ( CLIENT.companyID EQ APPLICATION.SETTINGS.COMPANYLIST.ESI ) {
 				stUserPaperwork.isReferenceCompleted = true;
@@ -539,6 +566,7 @@
 				stUserPaperwork.isTrainingCompleted = true;
 				stUserPaperwork.isDOSCertificationCompleted = true;
 			}
+			
 			
 			// Check if initial paperwork have been submitted by the user (Agreement, CBC Authorization, Employment History, References)
 			if ( 	
@@ -551,20 +579,16 @@
 					stUserPaperwork.isReferenceCompleted 
 				) {
 					
+					// Allow Skip Paperwork if we are in the 21 extra days window and DOS Certification and/or Trainings are missing and we are in the 21 days window
+					if ( vTodayDate LTE stUserPaperwork.season.dateExtraPaperworkRequired AND ( NOT stUserPaperwork.isDOSCertificationCompleted OR NOT stUserPaperwork.isTrainingCompleted ) ) {
+						stUserPaperwork.isPaperworkRequired = false;
+					}
+					
 					// Check if paperwork is complete ( DOS Certification and Training are also required )
-					/*
 					if ( stUserPaperwork.isDOSCertificationCompleted AND stUserPaperwork.isTrainingCompleted ) {
 						// User Has Submitted All Required Paperwork
 						stUserPaperwork.isUserPaperworkCompleted = true;
 					}
-					*/
-					
-					/***** TEMPORARY SOLUTION NOT FORCING DOS CERTIFICATION ******/
-					if ( stUserPaperwork.isTrainingCompleted ) {
-						// User Has Submitted All Required Paperwork
-						stUserPaperwork.isUserPaperworkCompleted = true;
-					}
-
 
 					// Check if Reference Questionnaire and CBC have been approved - Account is Compliant
 					if ( stUserPaperwork.isUserPaperworkCompleted AND stUserPaperwork.isReferenceQuestionnaireCompleted AND stUserPaperwork.isCBCApproved ) {
@@ -591,7 +615,7 @@
 						stUserPaperwork.accountReviewStatus = 'missingTraining';
 						
 					}
-					
+			
 			} 
 			
 			return stUserPaperwork;
