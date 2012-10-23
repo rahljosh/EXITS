@@ -169,16 +169,16 @@
                 <tr>
                     <td colspan="9" class="projectHelpAreaRep">#rep_firstname# #rep_lastname# (###arearepID#)</td>
                 <tr>
-                <tr align="left">
-                    <th width="15px">&nbsp;</th>
-                    <th>Student</th>
-                    <th>Action</th>
-                    <th>Hours</th>
-                    <th>Completed</th>
-                    <th width="15%">SR Status</th>
-                    <th width="15%">RA Status</th>
-                    <th width="15%">RD Status</th>
-                    <th width="15%">PM Status</th>
+                <tr style="font-weight:bold;">
+                    <td width="15px">&nbsp;</td>
+                    <td>Student</td>
+                    <td>Action</td>
+                    <td>Hours</td>
+                    <td>Completed</td>
+                    <td width="15%">SR Status</td>
+                    <td width="15%">RA Status</td>
+                    <td width="15%">RD Status</td>
+                    <td width="15%">PM Status</td>
                 </tr>
                 
 				<cfoutput> 
