@@ -439,6 +439,7 @@ ORDER BY businessname
                             <option value='travelers check'><font size=-1>Travelers Check</font></option>
                             <option value='cash'><font size=-1>Cash</font></option>
                             <option value='money order'><font size=-1>Money Order</font></option>
+                            <option value='money order'><font size=-1>Chase QuickPay</font></option>
                         </cfselect>
                     </td>
                 </tr>
