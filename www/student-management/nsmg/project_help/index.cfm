@@ -28,10 +28,10 @@
 		}
 
 		// Office Users
-		if ( VAL(CLIENT.userType) LTE 4 ) {
+		if ( APPLICATION.CFC.USER.isOfficeUser() ) {
 		
 			// Get All Regions
-			qGetRegions = APPCFC.REGION.getRegions(			
+			qGetRegions = APPLICATION.CFC.REGION.getRegions(			
 				companyID=CLIENT.companyID,
 				userID=CLIENT.userID
 			);	
@@ -45,7 +45,7 @@
 			}		
 			
 			// Get Student List
-			qGetStudents = APPCFC.STUDENT.getProjectHelpList(
+			qGetStudents = APPLICATION.CFC.STUDENT.getProjectHelpList(
 				userID=CLIENT.userID,
 				userType=CLIENT.userType,
 				regionID=FORM.regionID,
@@ -56,7 +56,7 @@
 		} else {	
 			
 			// Get User Regions
-			qGetRegions = APPCFC.REGION.getUserRegions(			
+			qGetRegions = APPLICATION.CFC.REGION.getUserRegions(			
 				companyID=CLIENT.companyID,
 				userType=CLIENT.userType,
 				userID=CLIENT.userID);
@@ -70,12 +70,20 @@
 			
 			if (NOT VAL(FORM.regionID)) {
 				FORM.regionID = qGetRegions.regionID;	
-			}		
-
+			}				
+			
+			try {
+				// Find Region Position On Query so we can get the correct usertype
+				vUserTypeID = qGetRegions.userType[ListFind(regionList, FORM.regionID)];
+			} catch (Any e) {
+				// Error getting usertype
+				vUserTypeID = CLIENT.userType;
+			}
+			
 			// Get Student List
-			qGetStudents = APPCFC.STUDENT.getProjectHelpList(
+			qGetStudents = APPLICATION.CFC.STUDENT.getProjectHelpList(
 				userID=CLIENT.userID,
-				userType=qGetRegions.userType,
+				userType=vUserTypeID,
 				regionID=FORM.regionID,
 				isActive=FORM.isActive
 			);
@@ -91,52 +99,60 @@
 
 </cfsilent>
 
-<!--- Header --->
-<table width="100%" cellpadding="0" cellspacing="0" border="0" height="24">
-    <tr height="24">
-        <td height="24" width="13" background="pics/header_leftcap.gif">&nbsp;</td>
-        <td width="26" background="pics/header_background.gif"><img src="pics/current_items.gif"></td>
-        <td background="pics/header_background.gif"><h2>H.E.L.P. Community Service Hours - Mandatory 5 Hours</h2></td>
-        <td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
-    </tr>
-</table>
+<cfoutput>
 
-<cfform action="index.cfm?curdoc=project_help" method="post">
-    <input name="submitted" type="hidden" value="1">
-    
-    <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
-        <tr>
-        	<td width="2%">&nbsp;</td>
-        
-			<!--- Include Region Selection for Office Users --->           
-            <td width="15%">
-                Region <br />
-                <cfselect 
-                    name="regionID" 
-                    query="qGetRegions" 
-                    value="regionID" 
-                    display="regionname" 
-                    selected="#FORM.regionID#" />
-            </td>
-            
-            <td width="15%">
-                Student Status<br />
-                <select name="isActive">
-                    <option value="1" <cfif VAL(FORM.isActive)>selected</cfif>>Active</option>
-                    <option value="0" <cfif NOT VAL(FORM.isActive)>selected</cfif>>Cancelled</option>
-                </select>            
-            </td>
-
-            <td width="15%"><input name="submit" type="submit" value="Submit" /></td>
-            
-            <td width="53%"></td>
+	<!--- Header --->
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" height="24">
+        <tr height="24">
+            <td height="24" width="13" background="pics/header_leftcap.gif">&nbsp;</td>
+            <td width="26" background="pics/header_background.gif"><img src="pics/current_items.gif"></td>
+            <td background="pics/header_background.gif"><h2>H.E.L.P. Community Service Hours - Mandatory 5 Hours</h2></td>
+            <td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
         </tr>
     </table>
-</cfform>
+    
+    <cfform action="index.cfm?curdoc=project_help" method="post">
+        <input name="submitted" type="hidden" value="1">
+               
+        <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
+            <tr>
+                <td width="2%">&nbsp;</td>
+            
+                <!--- Include Region Selection for Office Users --->           
+                <td width="15%">
+                    Region <br />
+                    <select name="regionID" id="regionID" class="xLargeField">
+                        <cfloop query="qGetRegions">
+                            <option value="#qGetRegions.regionID#" <cfif ListGetAt(FORM.regionID, 1) EQ qGetRegions.regionID> selected </cfif> >
+                                #qGetRegions.regionName#
+                                <cfif NOT APPLICATION.CFC.USER.isOfficeUser()>
+                                    - #qGetRegions.userAccessLevel#
+                                </cfif>
+                            </option>
+                        </cfloop>
+                    </select>
+                </td>
+                
+                <td width="15%">
+                    Student Status<br />
+                    <select name="isActive" class="mediumField">
+                        <option value="1" <cfif VAL(FORM.isActive)>selected</cfif>>Active</option>
+                        <option value="0" <cfif NOT VAL(FORM.isActive)>selected</cfif>>Cancelled</option>
+                    </select>            
+                </td>
+    
+                <td width="15%"><input name="submit" type="submit" value="Submit" /></td>
+                
+                <td width="53%"></td>
+            </tr>
+        </table>
+    </cfform>
+
+</cfoutput>
 
 <cfif VAL(qGetStudents.recordCount)>
 
-    <table width="100%" class="section">
+    <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
     	<!--- Group By Advisors --->
         <cfoutput query="qGetStudents" group="advisorID">
             <tr>
@@ -169,10 +185,10 @@
 
 					<cfscript>
 						// Get Regional Manager		
-						qGetRD = APPCFC.USER.getRegionalManager(regionID=FORM.regionID);					
+						qGetRD = APPLICATION.CFC.USER.getRegionalManager(regionID=FORM.regionID);					
 					
                         // Get Total of Hours for this project
-                        getPHTotalHours = APPCFC.STUDENT.getProjectHelpTotalHours(projectHelpID=projectHelpID);	
+                        getPHTotalHours = APPLICATION.CFC.STUDENT.getProjectHelpTotalHours(projectHelpID=projectHelpID);	
                     </cfscript>
 
 					<tr bgcolor="#IIF(qGetStudents.currentRow MOD 2 ,DE("EEEEEE") ,DE("FFFFFF") )#">
@@ -228,7 +244,7 @@
                                 </cfif>
 
                             <!--- Office Users --->
-                            <cfelseif VAL(CLIENT.userType) LTE 4>
+                            <cfelseif APPLICATION.CFC.USER.isOfficeUser()>
                             	
                             	<cfif NOT LEN(ny_date_rejected) AND NOT LEN(ny_date_approved) AND 			<!--- Not Rejected and not Approved by Office --->	
 									LEN(rd_date_approved)>													<!--- Approved by RD --->
@@ -311,7 +327,7 @@
         </cfoutput> <!--- group="advisorID" --->
     </table>
 
-    <table width="100%" class="section">
+    <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
         <tr>
             <td>
                 <table>
