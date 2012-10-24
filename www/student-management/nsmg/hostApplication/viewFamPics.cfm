@@ -5,11 +5,16 @@
 <cfparam name="form.picCat" default=''>
 
 <Cfif isDefined('form.verifiedPic') >
+<cfquery name="verifyPics" datasource="mysql">
+        update smg_host_picture_album
+        set picVerified = <Cfqueryparam cfsqltype="cf_sql_integer" value="0">
+        where fk_hostID = <Cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
+        </cfquery>
 	<cfloop list="#verifiedPic#" index=i>
     	<cfquery name="verifyPics" datasource="mysql">
         update smg_host_picture_album
         set picVerified = <Cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        where cat = <Cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
+        where filename = <Cfqueryparam cfsqltype="cf_sql_varchar" value="#i#">
         and fk_hostID = <Cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
         </cfquery>
     </cfloop>
@@ -58,19 +63,12 @@ from smg_host_pic_cat
                 </cfquery>
 			</cfloop>
             <Cfquery name="current_photos" datasource="mysql">
-            select filename, description, cat
+            select filename, description, cat, picVerified
             from smg_host_picture_album
             where fk_hostid = <Cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
             </cfquery>
-         <div align="center">Descriptions Updated!</div>
-    <cfloop list="#verifiedPic#" index=i>
-    	<cfquery name="verifyPics" datasource="mysql">
-        update smg_host_picture_album
-        set picVerified = <Cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        where cat = <Cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
-        and fk_hostID = <Cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
-        </cfquery>
-    </cfloop>
+         <div align="center"><h2>Descriptions and Verifications Updated!</h2></div>
+   
     </cfif>
 <cfif isDefined('url.delPic')>
    <div align="center">Picture & Descriptions Deleted!</div>
@@ -219,7 +217,7 @@ Select a catagory for this picture:<br />
                 <a href="viewFamPics.cfm?delPic=#filename#&itemID=#url.itemID#"><img src="../pics/buttons/deleteGreyRed.png" height=30  border=0 /></a>
 </Td>
                 <td valign="top">
-                 Picture Verified: <input type="checkbox" name="verifiedPic" value="#catDesc.catID#" <cfif picVerified eq 1>checked</cfif> /><br />
+                 Picture Verified: <input type="checkbox" name="verifiedPic" value="#filename#" <cfif picVerified eq 1>checked</cfif> /><br />
                 Description of picture:<br />
                 <textarea name="desc_#filename#" cols="20" rows="5">#description#</textarea>
               <Cfset count = #count# + 1>
