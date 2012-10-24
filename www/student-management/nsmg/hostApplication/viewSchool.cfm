@@ -2,16 +2,104 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Untitled Document</title>
+
 <link href="../linked/css/baseStyle.css" rel="stylesheet" type="text/css" />
 <link href="css/hostApp.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
+<!--- Import CustomTag Used for Page Messages and Form Errors --->
+<cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 <cfinclude template="approveDenyInclude.cfm">
 
 <Cfif isDefined('form.process')>
+ <cfscript>
+			// Name of School
+            if ( NOT LEN(TRIM(FORM.schoolname)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter the name of the school.");
+            }			
+        	
+			// Address
+            if ( NOT LEN(TRIM(FORM.address)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter the address of the school.");
+            }	
+			
+			// City
+            if ( NOT LEN(TRIM(FORM.city)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter the city the school is located in.");
+            }			
+        	
+        	// State
+            if ( NOT LEN(TRIM(FORM.state)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter the state the school is located in.");
+            }		
+			
+			// Zip
+            if ( NOT LEN(TRIM(FORM.zip)) )  {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please enter the school's zip code.");
+            }	
+				// type
+            if (NOT LEN(TRIM(FORM.schoolType)) )  {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate if this is a public or private school.");
+            }
+			if (NOT LEN(TRIM(FORM.schoolFees)) )  {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate if this is a public or private school.");
+            }
+				if (NOT isNumeric(TRIM(FORM.numberofstudents)) )  {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate the number of students attending.  This should be a numeric answer.");
+            }
 
+        	// Works at School
+            if ( form.schoolWorks EQ 3 ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate if any member of your household works for the high school.");
+            }		
+			
+			// Explanation of who works at school
+            if ( (form.schoolWorks EQ 1) AND (NOT LEN(TRIM(FORM.schoolWorksExpl))) ) {
+              // Get all the missing items in a list
+                SESSION.formErrors.Add("You have indicated that someone works with the school, but didn't explain.  Please provide details regarding the posistion.");
+            }	
+			//Been contacted by coach
+			if ( form.schoolCoach EQ 3 ) {
+               // Get all the missing items in a list
+               SESSION.formErrors.Add("Please indicate if a coach has contacted you about hosting an exchange student.");
+            }		
+			
+			// Coach explanation
+            if ( (form.schoolCoach EQ 1) AND (NOT LEN(TRIM(FORM.schoolCoachExpl))) ) {
+              // Get all the missing items in a list
+                SESSION.formErrors.Add("You have indicated that a coach contacted you, but didn't explain.  Please provide details regarding this contact.");
+            }	
+			
+			
+			// Other Transportation 
+            if ( (form.schooltransportation is 'other') AND (NOT LEN(TRIM(FORM.other_desc))) ) {
+              // Get all the missing items in a list
+                SESSION.formErrors.Add("You indicated that the student will get to school but Other, but didn't specify what that other method would be.");
+            }	
+     	   // Transportaion
+            if (NOT LEN(TRIM(FORM.schoolTransportation)) )  {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate how the student will get to school.");
+            }
+			// Extra Curricular Transportaion
+            if (NOT LEN(TRIM(FORM.extraCuricTrans)) )  {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate if you will provide transportation to extracuricular activities.");
+            }
+		
+        </cfscript>
+        
+  <cfif NOT SESSION.formErrors.length()>       
 	<cfquery name="updateSchool" datasource="#application.dsn#">
     	update smg_schools 	
         	set schoolname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.schoolname#">,
@@ -24,7 +112,8 @@
 				phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
 				email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
 				type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.schoolType#">,
-				tuition = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.schoolFees#">
+				tuition = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.schoolFees#">,
+                numberofstudents = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.numberofstudents#">
     	where schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.process#">
     
     </cfquery>
@@ -41,6 +130,8 @@
                 extraCuricTrans = "#form.extraCuricTrans#"
                 where hostid = #client.hostid#
                 </cfquery>
+</cfif>
+
 </Cfif>
 <cfquery name="get_host_school" datasource="MySQL">
 select smg_hosts.schoolid, smg_schools.schoolname, smg_schools.address, smg_schools.address2, smg_schools.principal,smg_schools.city, smg_schools.state, smg_schools.zip, smg_schools.phone, smg_schools.email, smg_schools.tuition, smg_schools.type, smg_schools.numberofstudents
@@ -49,7 +140,7 @@ left join smg_schools on smg_schools.schoolid = smg_hosts.schoolid
 where smg_hosts.hostid = #client.hostid#
 </cfquery>
 <cfquery name="qGetHostInfo" datasource="MySQL">
-select schoolWorks, schoolWorksExpl, schoolCoach, schoolCoachExpl, schooltransportation, schooltransportationother,extraCuricTrans, schoolid
+select address, city, state, zip, schoolWorks, schoolWorksExpl, schoolCoach, schoolCoachExpl, schooltransportation, schooltransportationother,extraCuricTrans, schoolid
 from smg_hosts
 where hostid = #client.hostid#
 </cfquery>
@@ -66,8 +157,8 @@ where hostid = #client.hostid#
  <cfscript>
                 // Get Host Mother CBC
                 homeSchoolDist = APPCFC.udf.calculateAddressDistance(
-                    origin='#localinfo.city# #localinfo.state# #localinfo.zip#', 
-                    destination='#get_host_school.address# #get_host_school.city# #get_host_school.state#'
+                    origin='#qGetHostInfo.address# #qGetHostInfo.city#, #qGetHostInfo.state# #qGetHostInfo.zip#', 
+                    destination='#get_host_school.address# #get_host_school.city#, #get_host_school.state# #get_host_school.zip#'
                 );
             </cfscript>
 <!----The first time the page is loaded, pass in current values, if they exist.---->
@@ -97,6 +188,11 @@ where hostid = #client.hostid#
  <cfoutput>
 <cfform method="post" action="viewSchool.cfm?itemID=#url.itemID#&usertype=#url.usertype#">
 <input type="hidden" name="process" value=#get_host_school.schoolid# />
+<!--- Form Errors --->
+    <gui:displayFormErrors 
+        formErrors="#SESSION.formErrors.GetCollection()#"
+        messageType="tableSection"
+        />
 <h2>School Information</h2>
   <table width=100% cellspacing=0 cellpadding=2 class="border" align="center">
     <tr bgcolor="##deeaf3">
@@ -162,7 +258,7 @@ where hostid = #client.hostid#
 			<td class="label">Student Enrollment</td>
             <td class="form_text" >
             
-             <cfinput name="numberStudents" size=10 type="text" placeholder="1200" value="#FORM.numberofstudents#"></span>
+             <cfinput name="numberofStudents" size=10 type="text" placeholder="1200" value="#FORM.numberofstudents#"></span>
 		</tr>
         <tr   bgcolor="##deeaf3">
 			<td class="label">Distance from Hosts' Home</td><td class="form_text" > #homeSchoolDist# mile<cfif #homeSchoolDist# gt 1>s</cfif></span>
