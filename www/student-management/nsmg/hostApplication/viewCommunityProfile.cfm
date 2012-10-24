@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Untitled Document</title>
+<title>Community Profile</title>
 <link href="../linked/css/baseStyle.css" rel="stylesheet" type="text/css" />
 <link href="css/hostApp.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="chosen/chosen.css" />
@@ -62,6 +62,7 @@ from smg_airports
     from smg_cityState
     where population > 30000
     </Cfquery>
+
 
 <cfif isDefined('form.process')>
 
@@ -127,13 +128,7 @@ from smg_airports
    
        <cfif NOT SESSION.formErrors.length()>
 
-        <cfscript>
-                // Get Host Mother CBC
-                cityDist = APPCFC.udf.calculateAddressDistance(
-                    origin='#localInfo.city# #localInfo.state# #localInfo.zip#', 
-                    destination='#form.near_city#'
-                );
-            </cfscript>
+        
          
             <cfquery name="insert_community_info" datasource="MySQL">
             update smg_hosts
@@ -166,7 +161,11 @@ from smg_airports
                     
               where hostid=#client.hostid#
             </cfquery> 
-           
+           <cfquery name="family_info" datasource="MySQL">
+            select *
+            from smg_hosts
+            where hostid = #client.hostid#
+            </cfquery>
            
            
 	</cfif>
@@ -204,7 +203,13 @@ from smg_airports
 			FORM.neighborhood = family_info.neighborhood;
 		</cfscript>
 </cfif>
-	
+	<cfscript>
+                // Get Host Mother CBC
+                cityDist = APPCFC.udf.calculateAddressDistance(
+                    origin='#family_info.address# #family_info.city#, #family_info.state#', 
+                    destination='#family_info.nearbigcity#'
+                );
+            </cfscript>
 
 <!---Attempt to guess local airport code---->
 <cfif form.local_air_code is ''>
@@ -338,6 +343,8 @@ from smg_airports
         
         
         </span>
+         
+       (#cityDist# miles away)
         </td>
  
      </tr>
@@ -524,5 +531,5 @@ Describe the points of interest in your  area:</td>
 </cfoutput>
 
 	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js" type="text/javascript"></script>
-  <script src="hostApplication/chosen/chosen.jquery.js" type="text/javascript"></script>
+  <script src="chosen/chosen.jquery.js" type="text/javascript"></script>
   <script type="text/javascript"> $(".chzn-select").chosen(); $(".chzn-select-deselect").chosen({allow_single_deselect:true}); </script>
