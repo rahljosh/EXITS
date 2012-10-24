@@ -9,13 +9,11 @@
 Total Number of Applications: #numberofstudents# applications.<br /><br />
 
 <cfloop from="1" to="#numberofstudents#" index="i">
-
-Len: #ArrayLen(StudentXMLFile.applications.application[i].page1.family.siblings)#
-<br /><rb><br />
+<br /><br />
 
 <!----Check if Student has been sumitted---->
 <cfquery name="check_soid" datasource="MySQL">
-select studentid, soid, familylastname, firstname, app_current_status
+select studentid, soid, familylastname, firstname, app_current_status, uniqueID
 from smg_students where soid = '#StudentXMLFile.applications.application[i].XmlAttributes.studentid#'
 </cfquery>
 
@@ -29,6 +27,8 @@ from smg_students where soid = '#StudentXMLFile.applications.application[i].XmlA
 		</cfquery>
 	</cfloop>
 </cfif>
+
+
 <cfif (check_soid.recordcount neq 0 and check_soid.app_current_status lt 11) or (check_soid.recordcount eq 0)>
 
 		<cfset unid = CreateUUID()>
@@ -188,7 +188,9 @@ Set application status to 7 if no items are missing for SMG to approve, set to 5
 
  
 <cfflush>
-
+<Cfelse>
+ <a href="https://ise.exitsapplication.com/nsmg/index.cfm?curdoc=intrep/int_student_info&unqid=#check_soid.uniqueID#">#check_soid.firstname# #check_soid.familylastname# </a>is already in the system. <br /> ISE account: #check_soid.studentid# <Br />Submitting ID: #check_soid.soid#<br />
+  
 	</cfif>
 
 
