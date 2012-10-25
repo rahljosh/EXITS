@@ -505,7 +505,7 @@ Indicate particular clothes, sports equipment, etc. that your student should con
 	</tr>
     <tr bgcolor="##deeaf3">
     	<td>
-<textarea cols="50" rows="4" name="special_cloths" wrap="VIRTUAL" placeholder="Winter coat, swimsuites, hiking boots, etc"><cfoutput>#form.special_cloths#</cfoutput></textarea></td>	
+<textarea cols="50" rows="4" name="special_cloths" wrap="VIRTUAL" ><cfoutput>#form.special_cloths#</cfoutput></textarea></td>	
 	</tr>
     <tr>
     	<td>
@@ -514,7 +514,7 @@ Describe the points of interest in your  area:</td>
     <tr>
     	<Td>
         
-<textarea cols="50" rows="4" name="point_interest" wrap="VIRTUAL" placeholder="Parks, museums, historical sites, local attractions"><cfoutput>#form.point_interest#</cfoutput></textarea><br>
+<textarea cols="50" rows="4" name="point_interest" wrap="VIRTUAL" ><cfoutput>#form.point_interest#</cfoutput></textarea><br>
 		</Td>
     </tr>
  </table>

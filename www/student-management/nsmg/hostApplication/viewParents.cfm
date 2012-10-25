@@ -528,7 +528,7 @@
 
     <tr >
         <td ><h3>Phone <span class="redtext">+</span></h3></td>
-        <td colspan=3><cfinput type="text" name="phone" value="#FORM.phone#" size="16" placeholder="(208) 867-5309" maxlength="14" mask="(999) 999-9999"></td>
+        <td colspan=3><cfinput type="text" name="phone" value="#FORM.phone#" size="16"  maxlength="14" mask="(999) 999-9999"></td>
     </tr>
     <tr bgcolor="##deeaf3">
         <td ><h3>Email</h3></td>
@@ -560,7 +560,7 @@
 	</tr>
   
      <Tr>
-	     <td align="left" colspan=4 id="describeBusiness" <cfif FORM.homeBusinessDesc is ''>  style="display: none;"</cfif>><Br /><strong>Please Describe<span class="redtext">*</span></strong><br><textarea cols="50" rows="4" name="homeBusinessDesc" wrap="VIRTUAL" placeholder="Name of Business, Nature of Business, etc"><Cfoutput>#FORM.homeBusinessDesc#</cfoutput></textarea></td>
+	     <td align="left" colspan=4 id="describeBusiness" <cfif FORM.homeBusinessDesc is ''>  style="display: none;"</cfif>><Br /><strong>Please Describe<span class="redtext">*</span></strong><br><textarea cols="50" rows="4" name="homeBusinessDesc" wrap="VIRTUAL"><Cfoutput>#FORM.homeBusinessDesc#</cfoutput></textarea></td>
 	</tr>   
 </table>
 <br />

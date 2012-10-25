@@ -326,7 +326,7 @@ where hostid = #client.hostid#
                 <Cfif 1 eq 2>
                     <td colspan=4><em><font color="##ccc">No student assigned, student assignment needed for this item.
                     <Cfelse>
-                <td><a class='iframe' href="#link#?itemID=#id#&userType=#client.usertype#&studentid=#studentid#">#linkDesc#</a></td>
+                <td><a class='iframe' href="#link#?itemID=#id#&userType=#client.usertype#">#linkDesc#</a></td>
 				<td><Cfif listFind(whoViews, 7)>
                 	<!----If the Area Rep should approve, show mask or date of approval, if not, show N/A---->
 						<cfif approvalDates.areaRepApproval is '' and approvalDates.areaRepDenial is ''>
