@@ -76,7 +76,7 @@
                         date_expired,
                         xml_received,
                         notes,
-                        isReRun,
+                        isRerun,
                         flagcbc,
                         dateCreated,
                         dateUpdated,
@@ -93,7 +93,7 @@
                     <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCBC.date_expired#">,
                     <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#qGetCBC.xml_received#">,
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCBC.notes#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCBC.isReRun#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCBC.isRerun#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCBC.flagcbc#">,
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#qGetCBC.dateCreated#">,
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#qGetCBC.dateUpdated#">,
@@ -138,7 +138,7 @@
                         date_expired,
                         xml_received,
                         notes,
-                        isReRun,
+                        isRerun,
                         flagcbc,
                         dateCreated,
                         dateUpdated,
@@ -156,7 +156,7 @@
                     <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCBC.date_expired#">,
                     <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#qGetCBC.xml_received#">,
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCBC.notes#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCBC.isReRun#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCBC.isRerun#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCBC.flagcbc#">,
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#qGetCBC.dateCreated#">,
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#qGetCBC.dateUpdated#">,
@@ -436,7 +436,7 @@
         <cfargument name="companyID" required="yes" hint="companyID is required">
         <cfargument name="isNoSSN" default="0" hint="isNoSSN is not required">
         <cfargument name="dateAuthorized" required="yes" hint="Date of Authorization">
-        <cfargument name="isReRun" default="0" hint="isReRun is not required">
+        <cfargument name="isRerun" default="0" hint="isRerun is not required">
 
             <cfquery 
             	name="qCheckPending" 
@@ -468,7 +468,7 @@
                             seasonID, 
                             companyID,
                             isNoSSN,
-                            isReRun, 
+                            isRerun, 
                             date_authorized,
                             dateCreated
                         )
@@ -480,7 +480,7 @@
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">, 
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isNoSSN#">,
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isReRun#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isRerun#">,
                             <cfqueryparam cfsqltype="cf_sql_timestamp" value="#ARGUMENTS.dateAuthorized#" null="#NOT IsDate(ARGUMENTS.dateAuthorized)#">,
                             <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                         )
@@ -861,7 +861,7 @@
         <cfargument name="familyMemberID" default="0" hint="Family Member ID is not required">
         <cfargument name="seasonID" required="yes" hint="SeasonID is required">
         <cfargument name="companyID" required="yes" hint="companyID is required">
-        <cfargument name="isReRun" default="0" hint="isReRun is not required">
+        <cfargument name="isRerun" default="0" hint="isRerun is not required">
         <cfargument name="dateAuthorized" required="yes" hint="Date of Authorization">
 
             <cfquery 
@@ -890,7 +890,7 @@
                             familyid, 
                             seasonid, 
                             companyid,
-                            isReRun, 
+                            isRerun, 
                             date_authorized,
                             dateCreated
                         )
@@ -900,7 +900,7 @@
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.familyMemberID#">,  
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">,
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">,
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isReRun#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isRerun#">,
                             <cfif LEN(ARGUMENTS.dateAuthorized)>
                                 <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.dateAuthorized)#">,
                             <cfelse>
@@ -1160,7 +1160,7 @@
         <cfargument name="DOBMonth" type="numeric" required="yes">
         <cfargument name="DOBDay" type="numeric" required="yes">
         <cfargument name="noSSN" type="numeric" default="0" hint="Optional - Set to 1 to send batch with no SSN">
-        <cfargument name="isReRun" type="numeric" default="0" hint="Set to 1 if re running batches automtically">
+        <cfargument name="isRerun" type="numeric" default="0" hint="Set to 1 if re running batches automtically">
                
 			<cfscript>
 				// declare variable
@@ -1324,7 +1324,7 @@
                         userID=ARGUMENTS.userID,
                         lastName=ARGUMENTS.lastName,
                         firstName=ARGUMENTS.firstName,
-						isReRun=ARGUMENTS.isReRun
+						isRerun=ARGUMENTS.isRerun
                     );				
     
                     // Get Report ID
@@ -1427,7 +1427,7 @@
         <cfargument name="userID" type="numeric" default="0" hint="Optional">        
         <cfargument name="firstName" type="string" default="" hint="Optional">
 		<cfargument name="lastName" type="string" default="" hint="Optional">
-        <cfargument name="isReRun" type="numeric" default="0" hint="Optional - Set to 1 if re running batches automtically">
+        <cfargument name="isRerun" type="numeric" default="0" hint="Optional - Set to 1 if re running batches automtically">
         	
             <cfscript>
 				// Set return variable
@@ -1492,18 +1492,22 @@
 				// Set Email To
 				if ( APPLICATION.isServerLocal ) {
 					emailTo = 'marcus@iseusa.com';
+				} else if ( listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, qGetCompany.companyID) AND VAL(ARGUMENTS.isRerun) ) {
+					// ISE - ReRun - Send email to cbcResults and Program Manager
+					emailTo = "#qGetCompany.gis_email#,#qGetCompany.pm_email#";
 				} else {
+					// Not Re-Run - Send email to cbcResults only
 					emailTo = qGetCompany.gis_email;
 				}
-
+				
 				// Set Email Subject
-				if ( NOT VAL(ARGUMENTS.isReRun) ) {
-	            	emailSubject = 'Background Checks Search for #qGetCompany.companyshort# - #setCBCType# #ARGUMENTS.userType# - #ARGUMENTS.firstName# #ARGUMENTS.lastName# #setCBCID#';
+				if ( NOT VAL(ARGUMENTS.isRerun) ) {
+	            	emailSubject = 'Background Check Search for #qGetCompany.companyshort# - #setCBCType# #ARGUMENTS.userType# - #ARGUMENTS.firstName# #ARGUMENTS.lastName# #setCBCID#';
 				} else {
-	            	emailSubject = 'Scheduled Re-Run Background Checks Search for #qGetCompany.companyshort# - #setCBCType# #ARGUMENTS.userType# - #ARGUMENTS.firstName# #ARGUMENTS.lastName# #setCBCID#';
+	            	emailSubject = 'Scheduled Rerun Background Check Search for #qGetCompany.companyshort# - #setCBCType# #ARGUMENTS.userType# - #ARGUMENTS.firstName# #ARGUMENTS.lastName# #setCBCID#';
 				}
-			</cfscript>
-        		
+			</cfscript>        	
+            	
             <cfmail 
             	from="#qGetCompany.support_email#" 
                 to="#emailTo#"
