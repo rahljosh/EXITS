@@ -154,6 +154,13 @@ select *
 from smg_host_children
 where hostid = #client.hostid#
 </cfquery>
+       <cfquery name="kidsAtSchool" datasource="#application.dsn#">
+                select name
+                from smg_host_children 
+                where school = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_host_school.schoolid#">
+
+</cfquery>
+
  <cfscript>
                 // Get Host Mother CBC
                 homeSchoolDist = APPCFC.udf.calculateAddressDistance(
@@ -238,12 +245,12 @@ where hostid = #client.hostid#
 		</tr>
 		<tr>			
 		<td class="label">Phone</td><td class="form_text" >
-        <cfinput type="text" name="phone" size=20 value="#form.phone#" placeholder="(208) 867-5309" mask='(999) 999-9999'></span>
+        <cfinput type="text" name="phone" size=20 value="#form.phone#"  mask='(999) 999-9999'></span>
 		</tr>
 		
 		<tr  bgcolor="##deeaf3">
 			<td class="label">Contact Email</td><td class="form_text" > 
-            <cfinput name="email" size=20 type="text" value="#form.email#" placeholder="contact@school.edu"></span>
+            <cfinput name="email" size=20 type="text" value="#form.email#"></span>
 		</tr>
         <Tr>
         	<td class="label">School Type</td>
@@ -252,13 +259,13 @@ where hostid = #client.hostid#
         <Tr  bgcolor="##deeaf3">
         	<td class="label">School Fees</td><td  >
             
-            <input type="text" name="schoolFees" size=25 placeholder="amount of tution or fees" value="#form.schoolFees#" /> </td>
+            <input type="text" name="schoolFees" size=25 value="#form.schoolFees#" /> </td>
         </Tr>
         <tr>
 			<td class="label">Student Enrollment</td>
             <td class="form_text" >
             
-             <cfinput name="numberofStudents" size=10 type="text" placeholder="1200" value="#FORM.numberofstudents#"></span>
+             <cfinput name="numberofStudents" size=10 type="text"  value="#FORM.numberofstudents#"></span>
 		</tr>
         <tr   bgcolor="##deeaf3">
 			<td class="label">Distance from Hosts' Home</td><td class="form_text" > #homeSchoolDist# mile<cfif #homeSchoolDist# gt 1>s</cfif></span>
@@ -316,14 +323,15 @@ where hostid = #client.hostid#
 	     <td align="left" colspan=2 id="showCoachExpl" <cfif form.schoolCoach eq 0>style="display: none;"</cfif>><br /><strong>Please describe<span class="redtext">*</span></strong><br><textarea cols="50" rows="4" name="schoolCoachExpl" wrap="VIRTUAL"><Cfoutput>#form.schoolCoachExpl#</cfoutput></textarea></td>
 	</tr>
     <Tr bgcolor="##deeaf3">
-	     <td align="left" colspan=2 >Does anyone in your household attend school here?<br>
-         <cfif hostKids.recordcount eq 0>
-         	<em>Not Applicable as no other household members are listed</em>
-         <cfelse>
-             <cfloop query="hostKids">
-             <input type="checkbox" value="#childid#" /> #name# &nbsp;&nbsp;&nbsp;
-             </cfloop>
-         </cfif>
+	     <td align="left" colspan=2 >Host siblings that also attend this school:<br>
+          <tr>
+            <td>
+     
+                <cfloop query="kidsAtSchool">
+                <strong>#name#</strong><cfif kidsAtSchool.currentrow neq kidsAtSchool.recordcount>, </cfif>
+                </cfloop>
+                </td>
+            </tr>
          </td>
 	</tr>
 </table>

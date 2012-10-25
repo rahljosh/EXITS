@@ -81,17 +81,19 @@
 		<cfoutput>
           The #appStatus.familylastname# application has been approved by #client.name# and is ready for your approval. 
         <br /><br />  
-          You can review the app <a href="http://ise.exitsapplication.com/nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=#client.usertype#">here</a>.
+          You can review the app
+          <Cfif 
+           <a href="#application.exits_url#/nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=#client.usertype#">here</a>.
         
         
         </cfoutput>
     </cfsavecontent>
     </cfif>
     <cfinvoke component="nsmg.cfc.email" method="send_mail">
-    <!----
+   
         <cfinvokeargument name="email_to" value="#mailTo#">
-		---->
-        <cfinvokeargument name="email_to" value="#client.email#">
+		
+         <!----<cfinvokeargument name="email_to" value="#client.email#">---->
         <cfinvokeargument name="email_subject" value="#appStatus.familylastname# App Needs your Approval">
         <cfinvokeargument name="email_message" value="#nextLevel#">
         <cfinvokeargument name="email_from" value="#client.email#">

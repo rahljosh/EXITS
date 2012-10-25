@@ -352,13 +352,14 @@ where school = <cfqueryparam cfsqltype="cf_sql_integer" value="#schoolInfo.schoo
                                		<Tr>
                                			<Td width=80%><span class="title">Does anyone in your home smoke?</span></Td><td>#capFirst1(qGetHostFamily.hostsmokes)#</td>
                               		<tr>
+                                    <!----
                                     <Tr>
                                			<Td><span class="title">Would you host a student who smokes?</span></Td><td>#capFirst1(qGetHostFamily.acceptsmoking)#</td>
                               		<tr>
                                     <Tr>
                                			<Td colspan=2><span class="title">Conditions:</span> #qGetHostFamily.smokeconditions#</td>
                               		<tr>
-
+									---->
                                </table> 
                           </td>
                       </tr>
@@ -663,9 +664,6 @@ regarding the hosting of an exchange student with a particular athletic ability?
                      	<Tr>
                         	<Td>
                             	<Table>
-                                	<Tr>
-                                    	<Td width = 25% valign="top"> <span class="title">Smoking</span></Td><Td>#qGetHostFamily.houserules_smoke#</Td>
-                                    </Tr>
                                     <Tr>
                                     	<Td valign="top"> <span class="title">Curfew on School Nights</span></Td><Td>#qGetHostFamily.houserules_curfewweeknights#</Td>
                                     </Tr>

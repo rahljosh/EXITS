@@ -60,16 +60,23 @@ and shortDesc =  'School Acceptance'
             file="C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/#file.serverfile#">
    <cfelse>
    <!----Make an thumbnail of image so it doesn't take long to display.  keeping original for printing if needed---->
-   
-        <cfinvoke component="nsmg.cfc.ResizeThumb" method="GetImage" returnvariable="myImage">
-            <cfinvokeargument name="img" value="#file.serverfile#"/>
-            <cfinvokeargument name="originalPath" value="hosts/#client.hostid#/">
-            <cfinvokeargument name="newPath" value="hosts/#client.hostid#/thumbs/">
-            <cfinvokeargument name="id" value="#client.hostid#"/>
-        </cfinvoke>
+   	
+    <cfset rfile= "#REReplace("#file.serverfile#",".(jpg|JPG|JPEG|jpeg)",".jpg")#">
+   <Cffile action="rename" source="C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/#file.serverfile#" destination="C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/#REReplace('#rfile#','%20','','ALL')#">
+    
+    <cfset newFilename2 = '#REReplace("#rfile#","%20","","ALL")#'>
+    <Cffile action="rename" source="C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/#rfile#" destination="C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/#REReplace('#newFilename2#','##','','ALL')#">
+    
+
+    
+    <cfset newFilename = '#REReplace("#newFilename2#","##","","ALL")#'>
+       <!----<Cffile action="rename" 
+       		 source="C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/#file.serverfile#"
+             destination="C:/websites/student-management/nsmg/uploadedfiles/hosts/#client.hostid#/#rfile#">---->
+        
 		<cfquery name="addToDoList" datasource="#application.dsn#">
          insert into smg_documents (fileName, type, dateFiled, filePath, description, shortDesc, userid, userType, hostID)
-                				values ('#file.serverfile#', '#file.ServerFileExt#', #now()#, 'hosts/#client.hostid#', 'School Acceptance Form - Signed #form.dateSigned#', 'School Acceptance', #client.userid#, 'Host Family', #client.hostid#)
+                				values ('#newFilename#', '#file.ServerFileExt#', #now()#, 'hosts/#client.hostid#', 'School Acceptance Form - Signed #form.dateSigned#', 'School Acceptance', #client.userid#, 'Host Family', #client.hostid#)
         </cfquery>
 		<cflocation url="viewSchoolAccept.cfm?itemID=#url.itemID#&usertype=#url.usertype#">
 	</cfif>

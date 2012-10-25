@@ -196,11 +196,11 @@ where hostid =<cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
     <tr>
     	<td class="label" valign="top"><h3>Expenses</h3>
         <i>personal expenses expected to be paid by the students</i></td>
-        <td><textarea cols="50" rows="4" name="houserules_expenses" wrap="VIRTUAL"  placeholder="toiletries, eating out with friends, etc">#form.houserules_expenses#</textarea></td>
+        <td><textarea cols="50" rows="4" name="houserules_expenses" wrap="VIRTUAL" >#form.houserules_expenses#</textarea></td>
     </tr> 
      <tr bgcolor="##deeaf3">
     	<td class="label" valign="top"><h3>Other</h3> <i>please include any other rules or expectations you will have of your exchange student</i></td>
-        <td><textarea cols="50" rows="4" name="houserules_other" wrap="VIRTUAL" placeholder="Homework, access to food, etc">#form.houserules_other#</textarea></td>
+        <td><textarea cols="50" rows="4" name="houserules_other" wrap="VIRTUAL" >#form.houserules_other#</textarea></td>
     </tr> 
 </table>
 <br />
