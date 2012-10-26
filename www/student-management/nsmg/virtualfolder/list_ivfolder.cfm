@@ -75,18 +75,15 @@
 		
 		// Get Selected Placement details
 		qGetSelectedPlacementDetails = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=qGetStudentInfo.studentID,historyID=selectedPlacement);
-		
-        // Get Category List
-        qGetInternalVirtualFolderCategoryList = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='internalVirtualFolderCategory');
     
         // Get Folder Path 
-        currentDirectory = "#APPLICATION.PATH.onlineApp.internalVirtualFolder##qGetStudentInfo.studentid#/#selectedPlacement#";
+        flightInfoDirectory = "#APPLICATION.PATH.onlineApp.internalVirtualFolder##qGetStudentInfo.studentid#/#selectedPlacement#/flightInformation";
     
         // Make sure the folder Exists
-        AppCFC.UDF.createFolder(currentDirectory);
+        AppCFC.UDF.createFolder(flightInfoDirectory);
     </cfscript>
 
-	<cfdirectory directory="#currentDirectory#" name="qGetStudentFolder" sort="datelastmodified DESC" filter="*.*">
+	<cfdirectory directory="#flightInfoDirectory#" name="flightDocs" sort="datelastmodified DESC" filter="*.*">
     
 </cfsilent>    
 
@@ -97,50 +94,7 @@
         headerType="applicationNoHeader"
     />	
 
-		<script type="text/javascript">
-            function ProcessForm() {
-               if (document.Upload.UploadFile.value == '') {
-                  alert("You must specify a file.");
-                  document.Upload.UploadFile.focus();
-                  return false;
-               } else if (document.Upload.category.value == 0) {
-                  alert("You must select an option to upload your file.");
-                  document.Upload.category.focus();
-                  return false;
-                } else if (document.Upload.category.value == '6' & document.Upload.other_category.value == '') {
-                  alert("You've selected 'other' as an option. You must complete the text box.");
-                  document.Upload.other_category.focus();
-                  return false;
-                } else {
-                  return true;
-                }
-            }
-            function enableField()
-            {
-                document.Upload.other_category.disabled=true;
-				document.Upload.other_category.required=false;
-				document.Upload.other_category.value = '';
-            }
-            function areYouSure() { 
-               if(confirm("You are about to delete this file. Click OK to continue")) { 
-                 form.submit(); 
-                    return true; 
-               } else { 
-                    return false; 
-               } 
-            }
-            // print images
-            function PrintFile(url)
-            {
-                newwindow=window.open(url, 'PrintFile', 'height=580, width=790, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); 
-                if (window.focus) {newwindow.focus()}
-            }
-			function OpenApp(url)
-			{ 
-				newwindow=window.open(url, 'ViewFile', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); 
-				if (window.focus) {newwindow.focus()}
-			}
-			
+		<script type="text/javascript"> 
 			// Reloads with the chosen placement (assumes that unqID is the only other url variable)
 			function changePlacement(selected) {
 				var place = selected.options[selected.selectedIndex].value;
@@ -151,13 +105,19 @@
 				newLocation = newLocation + "&placement=" + place;
 				window.location.href = newLocation;
 			}
+			
+			// print images
+			function OpenApp(url)
+			{ 
+				newwindow=window.open(url, 'ViewFile', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); 
+				if (window.focus) {newwindow.focus()}
+			}
         </script>
 
 		<!--- Table Header --->
         <gui:tableHeader
             imageName="helpdesk.gif"
             tableTitle="Internal Virtual Folder &nbsp; - &nbsp; #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentid#)"
-            tableRightTitle="#qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)"
             width="98%"
             imagePath="../"
         />    
@@ -176,33 +136,10 @@
             width="98%"
             />
 
-        <table width="98%" border="0" cellpadding="4" cellspacing="0" class="section" align="center" style="padding-top:10px; padding-bottom:15px;">
-            <tr>
-            	<th><h2>Welcome to the Internal Virtual Folder</h2></th>
-            </tr>
-            <tr>
-            	<td style="text-align:justify;">
-                	<p>
-                        In this feature you can upload as many files as you want for your student. For each file upload a notification will be sent out to inform
-                        the appropriate people that you have uploaded a file.
-                    </p>
-                    
-                    <p>
-    	                Each student has his/her own Internal Virtual Folder so please do not upload a file that does not belong to this record.
-                    </p>
-                    
-                    <p>
-                    	The files are organized by the student's placement. Please be sure to select the correct placement when uploading a new file.
-                  	</p>
-                    
-                    <p style="font-weight:bold;">PS: There is a limit of 4mb per file.</p>
-                </td>
-           </tr>
-        </table>
-
         <table width="98%" border="0" cellpadding="4" cellspacing="0" class="section" align="center" style="padding-bottom:15px;">
-        	<tr>
-                <th colspan="5" align="center">Placement:
+        	
+            <tr>
+                <th colspan="2" align="center">Placement:
                 	<select onchange="changePlacement(this)">
                     	<cfloop query="qGetStudentPlacements">
                         	<option value="#historyID#"<cfif URL.placement EQ #historyID#>selected="selected"</cfif>>#familyLastName# (###hostID#)</option>
@@ -211,183 +148,96 @@
              	</th>
             </tr>
             
-     		<cfloop query="qGetInternalVirtualFolderCategoryList">
+            <tr>
+                <th colspan="5" align="center" style="border-bottom:thin solid black;">Documents</th>
+            </tr>
+            <tr bgcolor="##E2EBF0" style="font-weight:bold;">
+                <td width="90%">Document</td>
+                <td align="center" width="10%">View</td>
+            </tr>
             
- 				<tr>
-                	<th colspan="5" align="center" style="border-bottom:thin solid black;">#name#</th>
-              	</tr>
-                
-                <tr bgcolor="##e2efc7" style="font-weight:bold;">
-                    <td>Name</td>
-                    <td>Size</td>
-                    <td>Upload Date</td>
-                    <td align="center">View</td>
-                    <td align="center">Delete</td>
-            	</tr>
-                
-                <cfquery name="qGetFilesInCategory" datasource="#APPLICATION.DSN#">
-                    SELECT 
-                        ivf.studentid, 
-                        ivf.fileName,
-                        ivf.fileSize
-                    FROM 
-                        smg_internal_virtual_folder ivf
-                    WHERE 
-                        ivf.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentid#">
-                    AND 
-                        ivf.categoryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#fieldID#">
-                  	AND
-                    	ivf.placementID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(selectedPlacement)#">
-                </cfquery>
-                
-                <cfif NOT VAL(qGetFilesInCategory.recordcount)>
-                    <tr><td colspan="5">No file has been uploaded.</td></tr>
-                </cfif>
-                
-                <cfloop query="qGetFilesInCategory">
-                
-                	<cfquery name="qGetFileInFolder" dbtype="query">
-                    	SELECT
-                        	*
-                       	FROM
-                        	qGetStudentFolder
-                      	WHERE
-                        	name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetFilesInCategory.fileName#">
-                   		AND 
-                        	size = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetFilesInCategory.fileSize#"> 
-                    </cfquery>
-                
-                    <tr bgcolor="###iif(currentrow MOD 2 ,DE("FFFFE6") ,DE("FFFFFF") )#">
-                        <td>#qGetFileInFolder.name#</td>
-                        <td>#APPLICATION.CFC.UDF.displayFileSize(qGetFileInFolder.size)#</td>
-                        <td>#DateFormat(qGetFileInFolder.dateLastModified,'mmm d, yyyy')#</td>
-                        <td align="center">
-                            <cfif ListFind("jpg,peg,gif,tif,bmp", LCase(Right(qGetFileInFolder.name, 3)))>
-                                <!--- Display Link for Images --->
-                                <a href="javascript:PrintFile('print_internal_file.cfm?studentid=#qGetStudentInfo.studentid#&placement=#selectedPlacement#&file=#qGetFileInFolder.name#');">
-                                    <img src="vfolderview.gif" border="0" alt="View File"></img>
-                                </a>
-                            <cfelse>
-                                <form method="post" action="view_file.cfm">
-                                    <input type="hidden" name="fPath" value="#APPLICATION.PATH.onlineApp.internalVirtualFolder##qGetStudentInfo.studentid#/#selectedPlacement#/#qGetFileInFolder.name#">
-                                    <input type="hidden" name="fName" value="#qGetStudentFolder.name#">
-                                    <input type="image" src="vfolderview.gif" border="0" alt="View File">
-                                </form>
-                            </cfif>
-                        </td>
-                        <td align="center">
-                            <form method="post" action="qr_internal_delete_file.cfm" name="Delete">
-                                <input type="hidden" name="directory" value="#currentDirectory#">
-                                <input type="hidden" name="DeleteFile" value="#qGetFileInFolder.name#">
-                                <input type="hidden" name="filesize" value="#qGetFileInFolder.size#">
-                                <input type="hidden" name="unqID" value="#qGetStudentInfo.uniqueid#">
-                                <input type="image" name="submit" src="vfolderdelete.gif" alt="Delete this file" onclick="return areYouSure(this);"> 
-                            </form>				
-                        </td>
-                    </tr>
-                    
-              	</cfloop>
+            <!--- Placement Information Sheet --->
+            <tr>
+            	<td style="border-bottom:1px solid gray;">Placement Information Sheet</td>
+            	<td align="center" style="border-bottom:1px solid gray;">
+                	<a href="../reports/placementInfoSheet.cfm?uniqueID=#URL.unqID#&historyID=#selectedPlacement#&profileType=pdf">
+                        <img src="vfolderview.gif" border="0" alt="View File"></img>
+                    </a>
+                </td>
+            </tr>
             
-            </cfloop>
-          	
+            <!--- Host Family Welcome Letter --->
+            <tr>
+            	<td style="border-bottom:1px solid gray;">Host Family Welcome Letter</td>
+            	<td align="center" style="border-bottom:1px solid gray;">
+                	<a href="../reports/host_welcome_letter.cfm?historyID=#selectedPlacement#&pdf=1">
+                        <img src="vfolderview.gif" border="0" alt="View File"></img>
+                    </a>
+                </td>
+            </tr>
+            
+            <!--- School Welcome Letter --->
+            <tr>
+            	<td style="border-bottom:1px solid gray;">School Welcome Letter</td>
+            	<td align="center" style="border-bottom:1px solid gray;">
+                	<a href="../reports/school_welcome_letter.cfm?historyID=#selectedPlacement#&pdf=1">
+                        <img src="vfolderview.gif" border="0" alt="View File"></img>
+                    </a>
+                </td>
+            </tr>
+            
             <!--- School Acceptance Letter --->
             <tr>
-                <th colspan="5" align="center" style="border-bottom:thin solid black;">School Acceptance Letter</th>
-            </tr>
-            
-            <tr bgcolor="##e2efc7" style="font-weight:bold;">
-                <td colspan="5" align="center">View</td>
-            </tr>
-            
-            <tr bgcolor="##FFFFE6">
-                <td colspan="5" align="center">
-                    <a href="javascript:PrintFile('school_acceptance.cfm?studentid=#qGetStudentInfo.studentid#&hostID=#qGetSelectedPlacementDetails.hostID#&type=view');">
+            	<td style="border-bottom:1px solid gray;">School Acceptance Letter</td>
+            	<td align="center" style="border-bottom:1px solid gray;">
+                	<a href="school_acceptance.cfm?studentid=#qGetStudentInfo.studentid#&hostID=#qGetSelectedPlacementDetails.hostID#">
                         <img src="vfolderview.gif" border="0" alt="View File"></img>
                     </a>
                 </td>
             </tr>
             
-            <!--- Host Family Application Documents --->
-            <!---
+            <tr><td colspan="2"><br /></td></tr>
+            
             <tr>
-                <th colspan="5" align="center" style="border-bottom:thin solid black;">Host Family Application Documents</th>
+                <th colspan="5" align="center" style="border-bottom:thin solid black;">Flight Information</th>
+            </tr>
+            <tr bgcolor="##E2EBF0" style="font-weight:bold;">
+                <td width="90%">File</td>
+                <td align="center" width="10%">View</td>
             </tr>
             
-            <tr bgcolor="##e2efc7" style="font-weight:bold;">
-                <td>Name</td>
-                <td>Size</td>
-                <td>Upload Date</td>
-                <td colspan="2" align="center">View</td>
-            </tr>
+            <cfloop query="flightDocs">
+            	<tr>
+                	<td style="border-bottom:1px solid gray;">#name# - #DateFormat(dateLastModified,'mm/dd/yyyy')#</td>
+                    <td align="center" style="border-bottom:1px solid gray;">
+                    	<a href="javascript:OpenApp('../uploadedfiles/internalVirtualFolder/#qGetStudentInfo.studentID#/#selectedPlacement#/flightInformation/#name#');">
+                        	<img src="vfolderview.gif" border="0" alt="View File"></img>
+                     	</a>
+                  	</td>
+              	</tr>
+            </cfloop>
             
-            <tr bgcolor="##FFFFE6">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td colspan="2" align="center">
-                    <a href="javascript:PrintFile('school_acceptance.cfm?studentid=#qGetStudentInfo.studentid#&hostID=#qGetSelectedPlacementDetails.hostID#&type=view');">
-                        <img src="vfolderview.gif" border="0" alt="View File"></img>
-                    </a>
-                </td>
-            </tr>
-			--->
         </table>
-<cfset currentDirectory = "#AppPath.onlineApp.internalVirtualFolder##qGetStudentInfo.studentID#">
-<!--- Check to see if the Directory exists. --->
-<cfif NOT DirectoryExists(currentDirectory)>
-   <!--- If TRUE, create the directory. --->
-   <cfdirectory action = "create" directory = "#currentDirectory#" mode="777">
-</cfif>
-<table width="98%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
-        	<Tr>
-            	<td><br />
-                </td>
-            </Tr>
-        </table>
-   <cfif client.usertype lte 4 or client.usertype eq 8>
-		<!--- UPLOADING FILES --->
-        <form method="post" action="qr_internal_upload_file.cfm" name="Upload" enctype="multipart/form-data" onSubmit="return ProcessForm()">
-        	<input type="hidden" name="unqID" value="#qGetStudentInfo.uniqueid#" />
-            <input type="hidden" name="placementID" value="#selectedPlacement#" />
-            
-            <table width="98%" border="0" cellpadding="4" cellspacing="0" class="section" align="center" style="padding-bottom:15px;">
-                <tr><th bgcolor="e2efc7">U P L O A D I N G &nbsp; F I L E S </th></tr>
-                <tr><td>Please upload your file here:</td></tr>
-                <tr>
-                    <td> 
-                        Browse for the file..<br />
-                        <input type="file" name="UploadFile" size="40"><br />
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Please select a reason why are you uploading this file: (It will help our team to proccess it faster)<br />
-                        <select name="category" onChange="enableField()">
-                        	<option value="0">Select an Option</option>
-                        	<cfloop query="qGetInternalVirtualFolderCategoryList">
-                        		<option value="#qGetInternalVirtualFolderCategoryList.fieldID#">#qGetInternalVirtualFolderCategoryList.name#</option>
-                        	</cfloop>
-                        </select>
-                    </td>
-                </tr>
-                <tr><td align="center"><input name="submit" type="image" src="vfolderupload.gif" alt="Upload File"></td></tr>
+        
+	<cfset currentDirectory = "#AppPath.onlineApp.internalVirtualFolder##qGetStudentInfo.studentID#">
+    
+    <!--- Check to see if the Directory exists. --->
+    <cfif NOT DirectoryExists(currentDirectory)>
+       <!--- If TRUE, create the directory. --->
+       <cfdirectory action = "create" directory = "#currentDirectory#" mode="777">
+    </cfif>
+    
+    <table width="98%" border="0" cellpadding="4" cellspacing="0" class="section" align="center" style="padding-bottom:15px;">
+        <tr><td align="center"><input type="image" value="close window" src="../pics/close.gif" onClick="javascript:window.close()"></td></tr>
+    </table>
                 
-                </tr>
-            </table>
-            
-		</form>            
-	</cfif>
-        <table width="98%" border="0" cellpadding="4" cellspacing="0" class="section" align="center" style="padding-bottom:15px;">
-            <tr><td align="center"><input type="image" value="close window" src="../pics/close.gif" onClick="javascript:window.close()"></td></tr>
-        </table>
-            
-        <!--- Table Footer --->
-        <gui:tableFooter 
-  	        width="98%"
-			imagePath="../"
-        />
-
-	<!--- Page Footer --->
+    <!--- Table Footer --->
+    <gui:tableFooter 
+        width="98%"
+        imagePath="../"
+    />
+    
+    <!--- Page Footer --->
     <gui:pageFooter
         footerType="application"
     />

@@ -1152,6 +1152,11 @@
 			// Get folder path 
 			currentDirectory = "#APPLICATION.PATH.onlineApp.internalVirtualFolder##ARGUMENTS.studentid#/#qGetActivePlacement.historyID#";
 			
+			// Set to the flightInformation directory
+			if (fieldID == 1) {
+				currentDirectory = currentDirectory & "/flightInformation";	
+			}
+			
 			// Make sure the folder Exists
         	createFolder(currentDirectory);
 			
@@ -1160,26 +1165,6 @@
         <cffile action="move" source="#ARGUMENTS.filePath#" destination="#currentDirectory#" nameconflict="makeunique" mode="777">
         
         <cfdirectory directory="#currentDirectory#" name="mydirectory" sort="datelastmodified DESC" filter="*.*">
-        
-        <cfquery name="insert_category" datasource="#APPLICATION.DSN#">
-            INSERT INTO 
-                smg_internal_virtual_folder 
-                (
-                    studentid,
-                    placementid,
-                    categoryid,
-                    filename, 
-                    filesize
-                )
-            VALUES 
-                (
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentid#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetActivePlacement.historyID#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.fieldID#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#mydirectory.name#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#mydirectory.size#">
-                )
-        </cfquery>
         
  	</cffunction>
     

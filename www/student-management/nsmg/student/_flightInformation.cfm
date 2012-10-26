@@ -24,17 +24,22 @@
     <cfparam name="URL.uniqueID" type="string" default="">
     <cfparam name="URL.flightID" default="0">
     <cfparam name="URL.programID" default="0">
+    <cfparam name="URL.subAction" default="">
 		        
 	<!--- Param GLOBAL FORM Variables --->
     <cfparam name="FORM.subAction" type="string"  default="">
     <cfparam name="FORM.uniqueID" type="string" default="">
     <cfparam name="FORM.programID" type="string" default="0">
-    <cfparam name="FORM.flight_notes" type="string" default="">
+    <cfparam name="FORM.flightNotes" type="string" default="">
     <cfparam name="FORM.preAYPArrivalCount" default="0">
     <cfparam name="FORM.arrivalCount" default="0">
     <cfparam name="FORM.departureCount" default="0">
     <cfparam name="FORM.dateCreated" default="">
 	
+    <cfif LEN(URL.subAction)>
+    	<cfset FORM.subAction = URL.subAction>
+    </cfif>    
+    
     <cfscript>
 		// Check if there is a valid URL variable
 		if ( LEN(URL.uniqueID) AND NOT LEN(FORM.uniqueID) ) {
