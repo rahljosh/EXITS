@@ -86,7 +86,7 @@ WHERE
 	<cfif CLIENT.companyid EQ 14>
     	companyID = 14
     <cfelse>
-		companyID IN (1,7,8,9,10,12,14)
+		companyID IN (1,2,3,4,7,8,9,10,12,14)
     </cfif>
 AND
 	type NOT IN (6,10,13,14,15,16,17,18,19,20,21)
