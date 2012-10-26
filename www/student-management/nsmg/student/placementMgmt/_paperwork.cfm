@@ -490,6 +490,59 @@
 			// Disable Compliance Check 
 			$(".complianceCheck").attr("disabled","disabled");
 		</cfif>
+
+
+		// Set Todays Date When Clicking on any of the compliance check boxes
+		$(".complianceCheck").click(function () {
+			// Get Field ID from CheckBox ID - Remove the string check_
+			vInputTextID = $(this).attr("id").replace("check_","");	
+			
+			if ( $(this).is(':checked') ) {
+				$("#" + vInputTextID).val(prettyDate);
+			} else {
+				$("#" + vInputTextID).val("");
+			}
+			
+		});
+
+
+		// Check/Uncheck Compliance Checkboxes
+		$("#ckCheckAllCompliance").click(function () {
+			var vStatus = $(this).attr("checked");	
+			if ( vStatus == undefined ) {
+				vStatus = false;
+			}
+			
+			// Loop Checkboxes
+			$(".complianceCheckAll").each(function () {
+				
+				// Get CheckBox ID
+				vCheckBoxID = $(this).attr("id");
+				
+				// Get Field ID from CheckBox ID - Remove the string check_
+				vInputTextID = vCheckBoxID.replace("check_","");				
+				
+				// Get Field Value from Field ID 
+				vInputTextValue = $("#" + vInputTextID).val(); 
+				
+				// Set Today's date - if date is empty 
+				if ( vInputTextValue == "" || vInputTextValue == prettyDate ) { // vInputTextValue == "" || vInputTextValue == prettyDate							
+					
+					$(this).attr("checked",vStatus);
+					
+					if ( vStatus ) {
+						$("#" + vInputTextID).val(prettyDate);
+					} else {
+						$("#" + vInputTextID).val("");
+					}
+										
+				}
+				
+			});
+			
+		});
+		// End of Check/Uncheck Compliance Checkboxes
+		
 	});
 
 	var readOnlyPage = function() {
@@ -503,7 +556,7 @@
 		// Hide Non-Compliant Fields
 		$(".hideField").fadeOut("fast");
 	}
-	
+
 	var displayHiddenFormFields = function() {
 		
 		if( $(".hideField").css("display") == "none" ) {
@@ -585,7 +638,7 @@
 		}
 		
 	}
-	
+
 	// Change Row Color
 	$(function() {
 		
@@ -682,8 +735,8 @@
                         <tr bgcolor="##edeff4">
                             <td class="reportTitleLeftClean" width="5%">&nbsp;</td>
                             <td class="reportTitleLeftClean" width="40%">Single Placement Paperwork</td>
-                            <td class="reportTitleLeftClean" width="45%">Date</td>
-                            <td class="reportTitleLeftClean" width="10%">Compliant</td>
+                            <td class="reportTitleLeftClean" width="40%">Date</td>
+                            <td class="reportTitleLeftClean" width="15%">Compliant</td>
                         </tr>
 					</table>
                     
@@ -694,13 +747,13 @@
                                 <input type="checkbox" name="check_doc_single_place_auth" id="check_doc_single_place_auth" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_single_place_auth');" <cfif isDate(FORM.doc_single_place_auth)>checked</cfif> >
                             </td>
                             <td width="40%"><label for="check_doc_single_place_auth">Single Person Placement Verification</label></td>
-                            <td width="45%">
+                            <td width="40%">
                                 <span class="readOnly displayNone">#DateFormat(FORM.doc_single_place_auth, 'mm/dd/yyyy')#</span>
                                 <input type="text" name="doc_single_place_auth" id="doc_single_place_auth" class="datePicker editPage displayNone hideField" value="#DateFormat(FORM.doc_single_place_auth, 'mm/dd/yyyy')#">
                             </td>
-                            <td width="10%">
+                            <td width="15%">
                             	<span class="readOnly displayNone">#DateFormat(FORM.compliance_single_place_auth, 'mm/dd/yyyy')#</span>
-                                <input type="checkbox" name="check_compliance_single_place_auth" id="check_compliance_single_place_auth" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_single_place_auth');" <cfif isDate(FORM.compliance_single_place_auth)>checked</cfif> >
+                                <input type="checkbox" name="check_compliance_single_place_auth" id="check_compliance_single_place_auth" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_single_place_auth)>checked</cfif> >
                                 <input type="hidden" name="compliance_single_place_auth" id="compliance_single_place_auth" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_single_place_auth, 'mm/dd/yyyy')#">
                             </td>
                         </tr>
@@ -715,7 +768,7 @@
                             </td>
                             <td>
                             	<span class="readOnly displayNone">#DateFormat(FORM.compliance_single_parents_sign_date, 'mm/dd/yyyy')#</span>
-                            	<input type="checkbox" name="check_compliance_single_parents_sign_date" id="check_compliance_single_parents_sign_date" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_single_parents_sign_date');" <cfif isDate(FORM.compliance_single_parents_sign_date)>checked</cfif> >
+                            	<input type="checkbox" name="check_compliance_single_parents_sign_date" id="check_compliance_single_parents_sign_date" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_single_parents_sign_date)>checked</cfif> >
                                 <input type="hidden" name="compliance_single_parents_sign_date" id="compliance_single_parents_sign_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_single_parents_sign_date, 'mm/dd/yyyy')#">
                             </td>
                         </tr>
@@ -730,7 +783,7 @@
                             </td>
                             <td>
                             	<span class="readOnly displayNone">#DateFormat(FORM.compliance_single_student_sign_date, 'mm/dd/yyyy')#</span>
-                            	<input type="checkbox" name="check_compliance_single_student_sign_date" id="check_compliance_single_student_sign_date" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_single_student_sign_date');" <cfif isDate(FORM.compliance_single_student_sign_date)>checked</cfif> >
+                            	<input type="checkbox" name="check_compliance_single_student_sign_date" id="check_compliance_single_student_sign_date" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_single_student_sign_date)>checked</cfif> >
                                 <input type="hidden" name="compliance_single_student_sign_date" id="compliance_single_student_sign_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_single_student_sign_date, 'mm/dd/yyyy')#">
                             </td>
                         </tr>
@@ -747,7 +800,7 @@
                             </td>
                             <td>
                             	<span class="readOnly displayNone">#DateFormat(FORM.compliance_single_ref_form_1, 'mm/dd/yyyy')#</span>
-                            	<input type="checkbox" name="check_compliance_single_ref_form_1" id="check_compliance_single_ref_form_1" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_single_ref_form_1');" <cfif isDate(FORM.compliance_single_ref_form_1)>checked</cfif> >
+                            	<input type="checkbox" name="check_compliance_single_ref_form_1" id="check_compliance_single_ref_form_1" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_single_ref_form_1)>checked</cfif> >
                                 <input type="hidden" name="compliance_single_ref_form_1" id="compliance_single_ref_form_1" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_single_ref_form_1, 'mm/dd/yyyy')#">
                             </td>
                         </tr>
@@ -762,7 +815,7 @@
                             </td>
                             <td>
                             	<span class="readOnly displayNone">#DateFormat(FORM.compliance_single_ref_check1, 'mm/dd/yyyy')#</span>
-                            	<input type="checkbox" name="check_compliance_single_ref_check1" id="check_compliance_single_ref_check1" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_single_ref_check1');" <cfif isDate(FORM.compliance_single_ref_check1)>checked</cfif> >
+                            	<input type="checkbox" name="check_compliance_single_ref_check1" id="check_compliance_single_ref_check1" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_single_ref_check1)>checked</cfif> >
                                 <input type="hidden" name="compliance_single_ref_check1" id="compliance_single_ref_check1" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_single_ref_check1, 'mm/dd/yyyy')#">
                             </td>
                         </tr>
@@ -779,7 +832,7 @@
                             </td>
                             <td>
                             	<span class="readOnly displayNone">#DateFormat(FORM.compliance_single_ref_form_2, 'mm/dd/yyyy')#</span>
-                            	<input type="checkbox" name="check_compliance_single_ref_form_2" id="check_compliance_single_ref_form_2" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_single_ref_form_2');" <cfif isDate(FORM.compliance_single_ref_form_2)>checked</cfif> >
+                            	<input type="checkbox" name="check_compliance_single_ref_form_2" id="check_compliance_single_ref_form_2" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_single_ref_form_2)>checked</cfif> >
                                 <input type="hidden" name="compliance_single_ref_form_2" id="compliance_single_ref_form_2" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_single_ref_form_2, 'mm/dd/yyyy')#">
                             </td>
                         </tr>
@@ -794,7 +847,7 @@
                             </td>
                             <td>
                             	<span class="readOnly displayNone">#DateFormat(FORM.compliance_single_ref_check2, 'mm/dd/yyyy')#</span>
-                            	<input type="checkbox" name="check_compliance_single_ref_check2" id="check_compliance_single_ref_check2" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_single_ref_check2');" <cfif isDate(FORM.compliance_single_ref_check2)>checked</cfif> >
+                            	<input type="checkbox" name="check_compliance_single_ref_check2" id="check_compliance_single_ref_check2" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_single_ref_check2)>checked</cfif> >
                                 <input type="hidden" name="compliance_single_ref_check2" id="compliance_single_ref_check2" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_single_ref_check2, 'mm/dd/yyyy')#">
                             </td>
                         </tr>
@@ -807,8 +860,8 @@
                     <tr bgcolor="##edeff4">
                         <td class="reportTitleLeftClean" width="5%">&nbsp;</td>
                         <td class="reportTitleLeftClean" width="40%">Paperwork</td>
-                        <td class="reportTitleLeftClean" width="45%">Date</td>
-                        <td class="reportTitleLeftClean" width="10%">Compliant</td>
+                        <td class="reportTitleLeftClean" width="40%">Date</td>
+                        <td class="reportTitleLeftClean" width="15%">Compliant <br /> <input type="checkbox" name="ckCheckAllCompliance" id="ckCheckAllCompliance" class="complianceCheck"> <label for="ckCheckAllCompliance">Check All</label></td>
                     </tr>
                 </table>
                 
@@ -820,7 +873,7 @@
                         	<input type="checkbox" name="datePlacedCheckBox" id="datePlacedCheckBox" class="editPage displayNone" <cfif isDate(qGetPlacementHistoryByID.datePlaced)>checked</cfif> <cfif NOT isDate(FORM.datePlaced) OR NOT APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID, role="datePlacedEdit")>disabled="disabled"</cfif> >
 						</td>
                         <td width="40%"><label>Date Placed ( HQ Approval Date )</label></td>
-                        <td width="45%">
+                        <td width="40%">
                         	<span class="readOnly displayNone">#DateFormat(qGetPlacementHistoryByID.datePlaced, 'mm/dd/yyyy')#</span>
 							<cfif isDate(FORM.datePlaced) AND APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID, role="datePlacedEdit")>
                                 <input type="text" name="datePlaced" id="datePlaced" class="datePicker editPage displayNone" value="#DateFormat(FORM.datePlaced, 'mm/dd/yyyy')#">
@@ -829,7 +882,7 @@
                                 <input type="hidden" name="datePlaced" id="datePlaced" class="datePicker editPage displayNone" value="#DateFormat(FORM.datePlaced, 'mm/dd/yyyy')#">
                             </cfif>
                         </td>
-                        <td width="10%">&nbsp;</td>
+                        <td width="15%">&nbsp;</td>
                     </tr>
 
                     <!--- Date Relocated --->
@@ -873,7 +926,7 @@
                         </td>
                         <td>
                         	<span class="readOnly displayNone">#DateFormat(FORM.compliance_host_app_page1_date, 'mm/dd/yyyy')#</span>
-                            <input type="checkbox" name="check_compliance_host_app_page1_date" id="check_compliance_host_app_page1_date" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_host_app_page1_date');" <cfif isDate(FORM.compliance_host_app_page1_date)>checked</cfif> >
+                            <input type="checkbox" name="check_compliance_host_app_page1_date" id="check_compliance_host_app_page1_date" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_host_app_page1_date)>checked</cfif> >
                             <input type="hidden" name="compliance_host_app_page1_date" id="compliance_host_app_page1_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_host_app_page1_date, 'mm/dd/yyyy')#">
                         </td>
                     </tr>
@@ -890,7 +943,7 @@
                         </td>
                         <td>
                         	<span class="readOnly displayNone">#DateFormat(FORM.compliance_host_app_page2_date, 'mm/dd/yyyy')#</span>
-                            <input type="checkbox" name="check_compliance_host_app_page2_date" id="check_compliance_host_app_page2_date" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_host_app_page2_date');" <cfif isDate(FORM.compliance_host_app_page2_date)>checked</cfif> >
+                            <input type="checkbox" name="check_compliance_host_app_page2_date" id="check_compliance_host_app_page2_date" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_host_app_page2_date)>checked</cfif> >
                             <input type="hidden" name="compliance_host_app_page2_date" id="compliance_host_app_page2_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_host_app_page2_date, 'mm/dd/yyyy')#">
                         </td>
                     </tr>
@@ -907,7 +960,7 @@
                         </td>
                         <td>
                         	<span class="readOnly displayNone">#DateFormat(FORM.compliance_letter_rec_date, 'mm/dd/yyyy')#</span>
-                            <input type="checkbox" name="check_compliance_letter_rec_date" id="check_compliance_letter_rec_date" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_letter_rec_date');" <cfif isDate(FORM.compliance_letter_rec_date)>checked</cfif> >
+                            <input type="checkbox" name="check_compliance_letter_rec_date" id="check_compliance_letter_rec_date" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_letter_rec_date)>checked</cfif> >
                             <input type="hidden" name="compliance_letter_rec_date" id="compliance_letter_rec_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_letter_rec_date, 'mm/dd/yyyy')#">
                         </td>
                     </tr>
@@ -924,7 +977,7 @@
                         </td>
                         <td>
                         	<span class="readOnly displayNone">#DateFormat(FORM.compliance_photos_rec_date, 'mm/dd/yyyy')#</span>
-                            <input type="checkbox" name="check_compliance_photos_rec_date" id="check_compliance_photos_rec_date" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_photos_rec_date');" <cfif isDate(FORM.compliance_photos_rec_date)>checked</cfif> >
+                            <input type="checkbox" name="check_compliance_photos_rec_date" id="check_compliance_photos_rec_date" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_photos_rec_date)>checked</cfif> >
                             <input type="hidden" name="compliance_photos_rec_date" id="compliance_photos_rec_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_photos_rec_date, 'mm/dd/yyyy')#">
                         </td>
                     </tr>
@@ -944,7 +997,7 @@
                             </td>
                             <td>
                             	<span class="readOnly displayNone">#DateFormat(FORM.compliance_bedroom_photo, 'mm/dd/yyyy')#</span>
-                                <input type="checkbox" name="check_compliance_bedroom_photo" id="check_compliance_bedroom_photo" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_bedroom_photo');" <cfif isDate(FORM.compliance_bedroom_photo)>checked</cfif> >
+                                <input type="checkbox" name="check_compliance_bedroom_photo" id="check_compliance_bedroom_photo" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_bedroom_photo)>checked</cfif> >
                                 <input type="hidden" name="compliance_bedroom_photo" id="compliance_bedroom_photo" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_bedroom_photo, 'mm/dd/yyyy')#">
                             </td>
                         </tr>
@@ -961,7 +1014,7 @@
                             </td>
                             <td>
                             	<span class="readOnly displayNone">#DateFormat(FORM.compliance_bathroom_photo, 'mm/dd/yyyy')#</span>
-                                <input type="checkbox" name="check_compliance_bathroom_photo" id="check_compliance_bathroom_photo" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_bathroom_photo');" <cfif isDate(FORM.compliance_bathroom_photo)>checked</cfif> >
+                                <input type="checkbox" name="check_compliance_bathroom_photo" id="check_compliance_bathroom_photo" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_bathroom_photo)>checked</cfif> >
                                 <input type="hidden" name="compliance_bathroom_photo" id="compliance_bathroom_photo" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_bathroom_photo, 'mm/dd/yyyy')#">
                             </td>
                         </tr>
@@ -978,7 +1031,7 @@
                             </td>
                             <td>
                             	<span class="readOnly displayNone">#DateFormat(FORM.compliance_kitchen_photo, 'mm/dd/yyyy')#</span>
-                                <input type="checkbox" name="check_compliance_kitchen_photo" id="check_compliance_kitchen_photo" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_kitchen_photo');" <cfif isDate(FORM.compliance_kitchen_photo)>checked</cfif> >
+                                <input type="checkbox" name="check_compliance_kitchen_photo" id="check_compliance_kitchen_photo" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_kitchen_photo)>checked</cfif> >
                                 <input type="hidden" name="compliance_kitchen_photo" id="compliance_kitchen_photo" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_kitchen_photo, 'mm/dd/yyyy')#">
                             </td>
                         </tr>
@@ -995,7 +1048,7 @@
                             </td>
                             <td>
                             	<span class="readOnly displayNone">#DateFormat(FORM.compliance_living_room_photo, 'mm/dd/yyyy')#</span>
-                                <input type="checkbox" name="check_compliance_living_room_photo" id="check_compliance_living_room_photo" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_living_room_photo');" <cfif isDate(FORM.compliance_living_room_photo)>checked</cfif> >
+                                <input type="checkbox" name="check_compliance_living_room_photo" id="check_compliance_living_room_photo" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_living_room_photo)>checked</cfif> >
                                 <input type="hidden" name="compliance_living_room_photo" id="compliance_living_room_photo" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_living_room_photo, 'mm/dd/yyyy')#">
                             </td>
                         </tr>
@@ -1012,7 +1065,7 @@
                             </td>
                             <td>
                             	<span class="readOnly displayNone">#DateFormat(FORM.compliance_outside_photo, 'mm/dd/yyyy')#</span>
-                                <input type="checkbox" name="check_compliance_outside_photo" id="check_compliance_outside_photo" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_outside_photo');" <cfif isDate(FORM.compliance_outside_photo)>checked</cfif> >
+                                <input type="checkbox" name="check_compliance_outside_photo" id="check_compliance_outside_photo" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_outside_photo)>checked</cfif> >
                                 <input type="hidden" name="compliance_outside_photo" id="compliance_outside_photo" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_outside_photo, 'mm/dd/yyyy')#">
                             </td>
                         </tr>
@@ -1031,7 +1084,7 @@
                         </td>
                         <td>
                         	<span class="readOnly displayNone">#DateFormat(FORM.compliance_rules_rec_date, 'mm/dd/yyyy')#</span>
-                            <input type="checkbox" name="check_compliance_rules_rec_date" id="check_compliance_rules_rec_date" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_rules_rec_date');" <cfif isDate(FORM.compliance_rules_rec_date)>checked</cfif> >
+                            <input type="checkbox" name="check_compliance_rules_rec_date" id="check_compliance_rules_rec_date" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_rules_rec_date)>checked</cfif> >
                             <input type="hidden" name="compliance_rules_rec_date" id="compliance_rules_rec_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_rules_rec_date, 'mm/dd/yyyy')#">
                         </td>
                     </tr>
@@ -1046,7 +1099,7 @@
                         </td>
                         <td>
                         	<span class="readOnly displayNone">#DateFormat(FORM.compliance_rules_sign_date, 'mm/dd/yyyy')#</span>
-                            <input type="checkbox" name="check_compliance_rules_sign_date" id="check_compliance_rules_sign_date" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_rules_sign_date');" <cfif isDate(FORM.compliance_rules_sign_date)>checked</cfif> >
+                            <input type="checkbox" name="check_compliance_rules_sign_date" id="check_compliance_rules_sign_date" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_rules_sign_date)>checked</cfif> >
                             <input type="hidden" name="compliance_rules_sign_date" id="compliance_rules_sign_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_rules_sign_date, 'mm/dd/yyyy')#">
                         </td>
                     </tr>
@@ -1063,7 +1116,7 @@
                         </td>
                         <td>
                         	<span class="readOnly displayNone">#DateFormat(FORM.compliance_school_profile_rec, 'mm/dd/yyyy')#</span>
-                            <input type="checkbox" name="check_compliance_school_profile_rec" id="check_compliance_school_profile_rec" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_school_profile_rec');" <cfif isDate(FORM.compliance_school_profile_rec)>checked</cfif> >
+                            <input type="checkbox" name="check_compliance_school_profile_rec" id="check_compliance_school_profile_rec" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_school_profile_rec)>checked</cfif> >
                             <input type="hidden" name="compliance_school_profile_rec" id="compliance_school_profile_rec" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_school_profile_rec, 'mm/dd/yyyy')#">
                         </td>
                     </tr>
@@ -1080,7 +1133,7 @@
                         </td>
                         <td>
                         	<span class="readOnly displayNone">#DateFormat(FORM.compliance_income_ver_date, 'mm/dd/yyyy')#</span>
-                            <input type="checkbox" name="check_compliance_income_ver_date" id="check_compliance_income_ver_date" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_income_ver_date');" <cfif isDate(FORM.compliance_income_ver_date)>checked</cfif> >
+                            <input type="checkbox" name="check_compliance_income_ver_date" id="check_compliance_income_ver_date" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_income_ver_date)>checked</cfif> >
                             <input type="hidden" name="compliance_income_ver_date" id="compliance_income_ver_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_income_ver_date, 'mm/dd/yyyy')#">
                         </td>                        
                     </tr>
@@ -1097,7 +1150,7 @@
                         </td>
                         <td>
                         	<span class="readOnly displayNone">#DateFormat(FORM.compliance_conf_host_rec, 'mm/dd/yyyy')#</span>
-                            <input type="checkbox" name="check_compliance_conf_host_rec" id="check_compliance_conf_host_rec" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_conf_host_rec');" <cfif isDate(FORM.compliance_conf_host_rec)>checked</cfif> >
+                            <input type="checkbox" name="check_compliance_conf_host_rec" id="check_compliance_conf_host_rec" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_conf_host_rec)>checked</cfif> >
                             <input type="hidden" name="compliance_conf_host_rec" id="compliance_conf_host_rec" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_conf_host_rec, 'mm/dd/yyyy')#">
                         </td>
                     </tr>
@@ -1112,7 +1165,7 @@
                         </td>
                         <td>
                         	<span class="readOnly displayNone">#DateFormat(FORM.compliance_date_of_visit, 'mm/dd/yyyy')#</span>
-                            <input type="checkbox" name="check_compliance_date_of_visit" id="check_compliance_date_of_visit" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_date_of_visit');" <cfif isDate(FORM.compliance_date_of_visit)>checked</cfif> >
+                            <input type="checkbox" name="check_compliance_date_of_visit" id="check_compliance_date_of_visit" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_date_of_visit)>checked</cfif> >
                             <input type="hidden" name="compliance_date_of_visit" id="compliance_date_of_visit" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_date_of_visit, 'mm/dd/yyyy')#">
                         </td>
                     </tr>
@@ -1149,7 +1202,7 @@
                             </td>
                             <td>
                             	<span class="readOnly displayNone">#DateFormat(qGetSecondVisitReport.dateCompliance, 'mm/dd/yyyy')#</span>
-                                <input type="checkbox" name="checkSecondVisitDateCompliance" id="checkSecondVisitDateCompliance" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'secondVisitDateCompliance');" <cfif isDate(FORM.secondVisitDateCompliance)>checked</cfif> <cfif NOT qGetSecondVisitReport.recordCount>disabled="disabled"</cfif> >
+                                <input type="checkbox" name="check_secondVisitDateCompliance" id="check_secondVisitDateCompliance" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.secondVisitDateCompliance)>checked</cfif> <cfif NOT qGetSecondVisitReport.recordCount>disabled="disabled"</cfif> >
                                 <input type="hidden" name="secondVisitDateCompliance" id="secondVisitDateCompliance" class="datePicker editPage displayNone" value="#DateFormat(FORM.secondVisitDateCompliance, 'mm/dd/yyyy')#">
                             </td>
                         </tr>
@@ -1168,7 +1221,7 @@
                         </td>
                         <td>
                         	<span class="readOnly displayNone">#DateFormat(FORM.compliance_ref_form_1, 'mm/dd/yyyy')#</span>
-                            <input type="checkbox" name="check_compliance_ref_form_1" id="check_compliance_ref_form_1" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_ref_form_1');" <cfif isDate(FORM.compliance_ref_form_1)>checked</cfif> >
+                            <input type="checkbox" name="check_compliance_ref_form_1" id="check_compliance_ref_form_1" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_ref_form_1)>checked</cfif> >
                             <input type="hidden" name="compliance_ref_form_1" id="compliance_ref_form_1" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_ref_form_1, 'mm/dd/yyyy')#">
                         </td>
                     </tr>
@@ -1183,7 +1236,7 @@
                         </td>
                         <td>
                         	<span class="readOnly displayNone">#DateFormat(FORM.compliance_ref_check1, 'mm/dd/yyyy')#</span>
-                            <input type="checkbox" name="check_compliance_ref_check1" id="check_compliance_ref_check1" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_ref_check1');" <cfif isDate(FORM.compliance_ref_check1)>checked</cfif> >
+                            <input type="checkbox" name="check_compliance_ref_check1" id="check_compliance_ref_check1" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_ref_check1)>checked</cfif> >
                             <input type="hidden" name="compliance_ref_check1" id="compliance_ref_check1" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_ref_check1, 'mm/dd/yyyy')#">
                         </td>
                     </tr>
@@ -1200,7 +1253,7 @@
                         </td>
                         <td>
                         	<span class="readOnly displayNone">#DateFormat(FORM.compliance_ref_form_2, 'mm/dd/yyyy')#</span>
-                            <input type="checkbox" name="check_compliance_ref_form_2" id="check_compliance_ref_form_2" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_ref_form_2');" <cfif isDate(FORM.compliance_ref_form_2)>checked</cfif> >
+                            <input type="checkbox" name="check_compliance_ref_form_2" id="check_compliance_ref_form_2" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_ref_form_2)>checked</cfif> >
                             <input type="hidden" name="compliance_ref_form_2" id="compliance_ref_form_2" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_ref_form_2, 'mm/dd/yyyy')#">
                         </td>
                     </tr>
@@ -1215,7 +1268,7 @@
                         </td>
                         <td>
                         	<span class="readOnly displayNone">#DateFormat(FORM.compliance_ref_check2, 'mm/dd/yyyy')#</span>
-                            <input type="checkbox" name="check_compliance_ref_check2" id="check_compliance_ref_check2" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_ref_check2');" <cfif isDate(FORM.compliance_ref_check2)>checked</cfif> >
+                            <input type="checkbox" name="check_compliance_ref_check2" id="check_compliance_ref_check2" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.compliance_ref_check2)>checked</cfif> >
                             <input type="hidden" name="compliance_ref_check2" id="compliance_ref_check2" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_ref_check2, 'mm/dd/yyyy')#">
                         </td>
                     </tr>
@@ -1237,7 +1290,7 @@
                                 Flight information has not been received
                             </cfif>
                         </td>
-                        <td class="reportTitleLeftClean" width="10%">Compliant</td>
+                        <td class="reportTitleLeftClean" width="15%">Compliant</td>
                     </tr>
                 </table>
                 
@@ -1249,13 +1302,13 @@
                             <input type="checkbox" name="check_doc_school_accept_date" id="check_doc_school_accept_date" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_school_accept_date');" <cfif isDate(FORM.doc_school_accept_date)>checked</cfif> >
 						</td>
                         <td width="40%"><label for="check_doc_school_accept_date">School Acceptance Form</label></td>
-                        <td width="45%">
+                        <td width="40%">
                             <span class="readOnly displayNone">#DateFormat(FORM.doc_school_accept_date, 'mm/dd/yyyy')#</span>
                             <input type="text" name="doc_school_accept_date" id="doc_school_accept_date" class="datePicker editPage displayNone hideField" value="#DateFormat(FORM.doc_school_accept_date, 'mm/dd/yyyy')#">
                         </td>
-                        <td width="10%">
+                        <td width="15%">
                         	<span class="readOnly displayNone">#DateFormat(FORM.compliance_school_accept_date, 'mm/dd/yyyy')#</span>
-                            <input type="checkbox" name="check_compliance_school_accept_date" id="check_compliance_school_accept_date" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_school_accept_date');" <cfif isDate(FORM.compliance_school_accept_date)>checked</cfif> >
+                            <input type="checkbox" name="check_compliance_school_accept_date" id="check_compliance_school_accept_date" class="editPage displayNone complianceCheck" <cfif isDate(FORM.compliance_school_accept_date)>checked</cfif> >
                             <input type="hidden" name="compliance_school_accept_date" id="compliance_school_accept_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_school_accept_date, 'mm/dd/yyyy')#">
                         </td>                        
                     </tr>
@@ -1274,9 +1327,9 @@
 	                            <input type="text" name="doc_school_sign_date" id="doc_school_sign_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_school_sign_date, 'mm/dd/yyyy')#">
     						</cfif>
                         </td>
-                        <td width="10%">
+                        <td width="15%">
                         	<span class="readOnly displayNone">#DateFormat(FORM.compliance_school_sign_date, 'mm/dd/yyyy')#</span>
-                            <input type="checkbox" name="check_compliance_school_sign_date" id="check_compliance_school_sign_date" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_school_sign_date');" <cfif isDate(FORM.compliance_school_sign_date)>checked</cfif> >
+                            <input type="checkbox" name="check_compliance_school_sign_date" id="check_compliance_school_sign_date" class="editPage displayNone complianceCheck" <cfif isDate(FORM.compliance_school_sign_date)>checked</cfif> >
                             <input type="hidden" name="compliance_school_sign_date" id="compliance_school_sign_date" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_school_sign_date, 'mm/dd/yyyy')#">
                         </td>                        
                     </tr>				
@@ -1288,8 +1341,8 @@
                     <tr bgcolor="##edeff4">
                         <td class="reportTitleLeftClean" width="5%">&nbsp;</td>
                         <td class="reportTitleLeftClean" width="40%">CBC - Most Recent Reports</td>
-                        <td class="reportTitleLeftClean" width="45%">Date</td>
-                        <td class="reportTitleLeftClean" width="10%">&nbsp;</td>
+                        <td class="reportTitleLeftClean" width="40%">Date</td>
+                        <td class="reportTitleLeftClean" width="15%">&nbsp;</td>
                     </tr>
     			</table>
                 
@@ -1298,15 +1351,15 @@
                         <tr class="mouseOverColor"> 
                             <td width="5%" class="paperworkLeftColumn">&nbsp;</td>
                             <td width="40%"><label for="#qGetMostRecentCBC.currentRow#-CBC">#qGetMostRecentCBC.fullName#</label></td>
-                            <td width="45%">
+                            <td width="40%">
                                 <span class="readOnly displayNone">#DateFormat(qGetMostRecentCBC.date_sent, 'mm/dd/yyyy')# to #DateFormat(qGetMostRecentCBC.date_expired, 'mm/dd/yyyy')#</span>
                                 <input type="text" name="#qGetMostRecentCBC.currentRow#-CBC" id="#qGetMostRecentCBC.currentRow#-CBC" class="datePicker editPage displayNone" value="#DateFormat(qGetMostRecentCBC.date_sent, 'mm/dd/yyyy')#" disabled="disabled">
                                 <span class="editPage displayNone">to</span>
                                 <input type="text" name="#qGetMostRecentCBC.currentRow#-CBC" id="#qGetMostRecentCBC.currentRow#-CBC" class="datePicker editPage displayNone" value="#DateFormat(qGetMostRecentCBC.date_expired, 'mm/dd/yyyy')#" disabled="disabled">
                             </td>
-                            <td width="10%">
+                            <td width="15%">
                             	<span class="readOnly displayNone">#DateFormat(qGetMostRecentCBC.dateCompliance, 'mm/dd/yyyy')#</span>
-                                <input type="checkbox" name="check_#qGetMostRecentCBC.cbcFamID#_cbcDateCompliance" id="check_#qGetMostRecentCBC.cbcFamID#_cbcDateCompliance" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, '#qGetMostRecentCBC.cbcFamID#_cbcDateCompliance');" <cfif isDate(FORM[qGetMostRecentCBC.cbcFamID & '_cbcDateCompliance'])>checked</cfif> >
+                                <input type="checkbox" name="check_#qGetMostRecentCBC.cbcFamID#_cbcDateCompliance" id="check_#qGetMostRecentCBC.cbcFamID#_cbcDateCompliance" class="editPage displayNone complianceCheck" <cfif isDate(FORM[qGetMostRecentCBC.cbcFamID & '_cbcDateCompliance'])>checked</cfif> >
                                 <input type="hidden" name="#qGetMostRecentCBC.cbcFamID#_cbcDateCompliance" id="#qGetMostRecentCBC.cbcFamID#_cbcDateCompliance" class="datePicker editPage displayNone" value="#DateFormat(FORM[qGetMostRecentCBC.cbcFamID & '_cbcDateCompliance'], 'mm/dd/yyyy')#">
                             </td>
                         </tr>
@@ -1319,8 +1372,8 @@
                     <tr bgcolor="##edeff4">
                         <td class="reportTitleLeftClean" width="5%">&nbsp;</td>
                         <td class="reportTitleLeftClean" width="40%">Arrival Orientation</td>
-                        <td class="reportTitleLeftClean" width="45%">Date</td>
-                        <td class="reportTitleLeftClean" width="10%">Compliant</td>
+                        <td class="reportTitleLeftClean" width="40%">Date</td>
+                        <td class="reportTitleLeftClean" width="15%">Compliant</td>
                     </tr>
                	</table>
                
@@ -1331,13 +1384,13 @@
                             <input type="checkbox" name="check_stu_arrival_orientation" id="check_stu_arrival_orientation" class="editPage displayNone" onclick="setTodayDate(this.id, 'stu_arrival_orientation');" <cfif isDate(FORM.stu_arrival_orientation)>checked</cfif> >
 						</td>
                         <td width="40%"><label for="check_stu_arrival_orientation">Student Orientation</label></td>
-                        <td width="45%">
+                        <td width="40%">
                             <span class="readOnly displayNone">#DateFormat(FORM.stu_arrival_orientation, 'mm/dd/yyyy')#</span>
                             <input type="text" name="stu_arrival_orientation" id="stu_arrival_orientation" class="datePicker editPage displayNone" value="#DateFormat(FORM.stu_arrival_orientation, 'mm/dd/yyyy')#">
                         </td>
-                        <td width="10%">
+                        <td width="15%">
                         	<span class="readOnly displayNone">#DateFormat(FORM.compliance_stu_arrival_orientation, 'mm/dd/yyyy')#</span>
-                            <input type="checkbox" name="check_compliance_stu_arrival_orientation" id="check_compliance_stu_arrival_orientation" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_stu_arrival_orientation');" <cfif isDate(FORM.compliance_stu_arrival_orientation)>checked</cfif> >
+                            <input type="checkbox" name="check_compliance_stu_arrival_orientation" id="check_compliance_stu_arrival_orientation" class="editPage displayNone complianceCheck" <cfif isDate(FORM.compliance_stu_arrival_orientation)>checked</cfif> >
                             <input type="hidden" name="compliance_stu_arrival_orientation" id="compliance_stu_arrival_orientation" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_stu_arrival_orientation, 'mm/dd/yyyy')#">
                         </td>                        
                     </tr>
@@ -1354,7 +1407,7 @@
                         </td>
                         <td>
                         	<span class="readOnly displayNone">#DateFormat(FORM.compliance_host_arrival_orientation, 'mm/dd/yyyy')#</span>
-                            <input type="checkbox" name="check_compliance_host_arrival_orientation" id="check_compliance_host_arrival_orientation" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_host_arrival_orientation');" <cfif isDate(FORM.compliance_host_arrival_orientation)>checked</cfif> >
+                            <input type="checkbox" name="check_compliance_host_arrival_orientation" id="check_compliance_host_arrival_orientation" class="editPage displayNone complianceCheck" <cfif isDate(FORM.compliance_host_arrival_orientation)>checked</cfif> >
                             <input type="hidden" name="compliance_host_arrival_orientation" id="compliance_host_arrival_orientation" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_host_arrival_orientation, 'mm/dd/yyyy')#">
                         </td>                        
                     </tr>
@@ -1371,7 +1424,7 @@
                         </td>
                         <td>
                         	<span class="readOnly displayNone">#DateFormat(FORM.compliance_class_schedule, 'mm/dd/yyyy')#</span>
-                            <input type="checkbox" name="check_compliance_class_schedule" id="check_compliance_class_schedule" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, 'compliance_class_schedule');" <cfif isDate(FORM.compliance_class_schedule)>checked</cfif> >
+                            <input type="checkbox" name="check_compliance_class_schedule" id="check_compliance_class_schedule" class="editPage displayNone complianceCheck" <cfif isDate(FORM.compliance_class_schedule)>checked</cfif> >
                             <input type="hidden" name="compliance_class_schedule" id="compliance_class_schedule" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_class_schedule, 'mm/dd/yyyy')#">
                         </td>                        
                     </tr>
@@ -1405,8 +1458,8 @@
                                 &nbsp; - &nbsp; 
                                 Assigned on #DateFormat(qGetDoublePlacementPaperworkHistory.dateCreated, 'mm/dd/yyyy')#
                             </td>
-                            <td class="reportTitleLeftClean" width="45%">Date</td>
-                            <td class="reportTitleLeftClean" width="10%">Compliant</td>
+                            <td class="reportTitleLeftClean" width="40%">Date</td>
+                            <td class="reportTitleLeftClean" width="15%">Compliant</td>
                         </tr>
                     </table>
 
@@ -1415,7 +1468,7 @@
                         <tr class="mouseOverColor"> 
                             <td width="5%">&nbsp;</td>
                             <td width="40%"><label for="#qGetDoublePlacementPaperworkHistory.ID#_isDoublePlacementPaperworkRequired">Is Paperwork Required?</label></td>
-                            <td width="45%">
+                            <td width="40%">
                                 <span class="readOnly displayNone">#YesNoFormat(VAL(qGetDoublePlacementPaperworkHistory.doublePlacementParentsDateSigned))#</span>
                                 <select name="#qGetDoublePlacementPaperworkHistory.ID#_isDoublePlacementPaperworkRequired" id="#qGetDoublePlacementPaperworkHistory.ID#_isDoublePlacementPaperworkRequired" class="editPage displayNone smallField" onchange="displayDoublePlacementPaperwork(#qGetDoublePlacementPaperworkHistory.ID#);">
                                     <option value="" <cfif NOT LEN(FORM[qGetDoublePlacementPaperworkHistory.ID & '_isDoublePlacementPaperworkRequired'])> selected="selected" </cfif> ></option>
@@ -1423,7 +1476,7 @@
                                     <option value="0" <cfif FORM[qGetDoublePlacementPaperworkHistory.ID & '_isDoublePlacementPaperworkRequired'] EQ 0> selected="selected" </cfif> >No</option>
                                 </select>
                             </td>
-                            <td width="10%">&nbsp;</td>
+                            <td width="15%">&nbsp;</td>
                         </tr>
                         
                         <!--- Natural Family Date Signed --->
@@ -1436,7 +1489,7 @@
                             </td>
                             <td>
                             	<span class="readOnly displayNone">#DateFormat(qGetDoublePlacementPaperworkHistory.doublePlacementParentsDateCompliance, 'mm/dd/yyyy')#</span>
-                                <input type="checkbox" name="#qGetDoublePlacementPaperworkHistory.ID#_checkDoublePlacementParentsDateCompliance" id="#qGetDoublePlacementPaperworkHistory.ID#_checkDoublePlacementParentsDateCompliance" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, '#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementParentsDateCompliance');" <cfif isDate(FORM[qGetDoublePlacementPaperworkHistory.ID & '_doublePlacementParentsDateCompliance'])>checked</cfif> >
+                                <input type="checkbox" name="#qGetDoublePlacementPaperworkHistory.ID#_checkDoublePlacementParentsDateCompliance" id="#qGetDoublePlacementPaperworkHistory.ID#_checkDoublePlacementParentsDateCompliance" class="editPage displayNone complianceCheck" <cfif isDate(FORM[qGetDoublePlacementPaperworkHistory.ID & '_doublePlacementParentsDateCompliance'])>checked</cfif> >
                                 <input type="hidden" name="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementParentsDateCompliance" id="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementParentsDateCompliance" class="datePicker editPage displayNone" value="#DateFormat(FORM[qGetDoublePlacementPaperworkHistory.ID & '_doublePlacementParentsDateCompliance'], 'mm/dd/yyyy')#">
                             </td>
                         </tr>
@@ -1451,7 +1504,7 @@
                             </td>
                             <td>
                             	<span class="readOnly displayNone">#DateFormat(qGetDoublePlacementPaperworkHistory.doublePlacementStudentDateCompliance, 'mm/dd/yyyy')#</span>
-                                <input type="checkbox" name="#qGetDoublePlacementPaperworkHistory.ID#_checkDoublePlacementStudentDateCompliance" id="#qGetDoublePlacementPaperworkHistory.ID#_checkDoublePlacementStudentDateCompliance" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, '#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementStudentDateCompliance');" <cfif isDate(FORM[qGetDoublePlacementPaperworkHistory.ID & '_doublePlacementStudentDateCompliance'])>checked</cfif> >
+                                <input type="checkbox" name="#qGetDoublePlacementPaperworkHistory.ID#_checkDoublePlacementStudentDateCompliance" id="#qGetDoublePlacementPaperworkHistory.ID#_checkDoublePlacementStudentDateCompliance" class="editPage displayNone complianceCheck" <cfif isDate(FORM[qGetDoublePlacementPaperworkHistory.ID & '_doublePlacementStudentDateCompliance'])>checked</cfif> >
                                 <input type="hidden" name="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementStudentDateCompliance" id="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementStudentDateCompliance" class="datePicker editPage displayNone" value="#DateFormat(FORM[qGetDoublePlacementPaperworkHistory.ID & '_doublePlacementStudentDateCompliance'], 'mm/dd/yyyy')#">
                             </td>
                         </tr>
@@ -1466,7 +1519,7 @@
                             </td>
                             <td>
                             	<span class="readOnly displayNone">#DateFormat(qGetDoublePlacementPaperworkHistory.doublePlacementHostFamilyDateCompliance, 'mm/dd/yyyy')#</span>
-                                <input type="checkbox" name="#qGetDoublePlacementPaperworkHistory.ID#_checkDoublePlacementHostFamilyDateCompliance" id="#qGetDoublePlacementPaperworkHistory.ID#_checkDoublePlacementHostFamilyDateCompliance" class="editPage displayNone complianceCheck" onclick="setTodayDate(this.id, '#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementHostFamilyDateCompliance');" <cfif isDate(FORM[qGetDoublePlacementPaperworkHistory.ID & '_doublePlacementHostFamilyDateCompliance'])>checked</cfif> >
+                                <input type="checkbox" name="#qGetDoublePlacementPaperworkHistory.ID#_checkDoublePlacementHostFamilyDateCompliance" id="#qGetDoublePlacementPaperworkHistory.ID#_checkDoublePlacementHostFamilyDateCompliance" class="editPage displayNone complianceCheck" <cfif isDate(FORM[qGetDoublePlacementPaperworkHistory.ID & '_doublePlacementHostFamilyDateCompliance'])>checked</cfif> >
                                 <input type="hidden" name="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementHostFamilyDateCompliance" id="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementHostFamilyDateCompliance" class="datePicker editPage displayNone" value="#DateFormat(FORM[qGetDoublePlacementPaperworkHistory.ID & '_doublePlacementHostFamilyDateCompliance'], 'mm/dd/yyyy')#">
                             </td>
                         </tr>
@@ -1482,7 +1535,7 @@
                         <tr bgcolor="##edeff4">
                             <td class="reportTitleLeftClean" width="5%">&nbsp;</td>
                             <td class="reportTitleLeftClean" width="85%">Compliance Notes</td>
-                            <td class="reportTitleLeftClean" width="10%">
+                            <td class="reportTitleLeftClean" width="15%">
                             	<cfif qGetComplianceHistory.recordCount>
 	                                <a href="printcomplianceHistory.cfm?uniqueID=#qGetStudentInfo.uniqueID#&historyID=#qGetPlacementHistoryByID.historyID#" target="_blank" title="Click to Print Compliance Notes">[ Print ]</a>
                             	</cfif>
@@ -1495,8 +1548,8 @@
                         <tr class="mouseOverColor"> 
                             <td width="5%">&nbsp;</td>
                             <td width="40%" valign="top"><label for="complianceLogNotes">Notes</label></td>
-                            <td width="45%"><textarea name="complianceLogNotes" id="complianceLogNotes" class="xLargeTextArea complianceCheck">#FORM.complianceLogNotes#</textarea></td>
-                            <td width="10%">&nbsp;</td>
+                            <td width="40%"><textarea name="complianceLogNotes" id="complianceLogNotes" class="xLargeTextArea complianceCheck">#FORM.complianceLogNotes#</textarea></td>
+                            <td width="15%">&nbsp;</td>
                         </tr>
                         <!--- Compliance Resolved --->
                         <tr class="mouseOverColor"> 
@@ -1525,7 +1578,7 @@
                             <td class="reportTitleLeftClean" width="20%">Date</td>
                             <td class="reportTitleLeftClean" width="50%">Compliance History</td>
                             <td class="reportTitleLeftClean" width="15%">Entered By</td>
-                            <td class="reportTitleLeftClean" width="10%">Resolved?</td>
+                            <td class="reportTitleLeftClean" width="15%">Resolved?</td>
                         </tr>
                     </table>
                     
@@ -1536,7 +1589,7 @@
                                 <td width="20%">#DateFormat(qGetComplianceHistory.dateCreated, 'mm/dd/yy')# at #TimeFormat(qGetComplianceHistory.dateCreated, 'hh:mm tt')# EST</td>
                                 <td width="50%">#qGetComplianceHistory.actions#</td>
                                 <td width="15%">#qGetComplianceHistory.enteredBy#</td>
-                                <td width="10%">
+                                <td width="15%">
                                     <select name="#qGetComplianceHistory.ID#_complianceLogIsResolved" id="#qGetComplianceHistory.ID#_complianceLogIsResolved" class="xSmallField complianceCheck">
                                         <option value="1" <cfif FORM[qGetComplianceHistory.ID & '_complianceLogIsResolved'] EQ 1> selected="selected" </cfif> >Yes</option>
                                         <option value="0" <cfif FORM[qGetComplianceHistory.ID & '_complianceLogIsResolved'] EQ 0> selected="selected" </cfif> >No</option>
