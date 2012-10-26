@@ -5,7 +5,7 @@
 	Date:		February 15, 2012
 	Desc:		Second Visit Report Matrix
 
-	Updated:	
+	Updated:	10/26/2012 - Set arrival as the default window start date
 
 ----- ------------------------------------------------------------------------- --->
 
@@ -239,7 +239,7 @@
             DATEDIFF( DATE_ADD(dateStartWindowCompliance, INTERVAL complianceWindow DAY), CURRENT_DATE ) AS remainingDays
         FROM
             (	
-				<!--- Query to get 1st (Current) Second Visit Representative Report --->	
+				<!--- Query to get 1st Report of each placement --->	
                 SELECT
                     s.studentID,
                     s.uniqueID,
@@ -303,15 +303,8 @@
                                 ht.dateRelocated IS NOT NULL
                             THEN 
                                 ht.dateRelocated
-							<!--- History Placement | Use Date Placed --->
-                            WHEN 
-                                ht.isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
-                            THEN 
-                                ht.datePlaced                            	
-							<!--- Not a relocation, use flight information --->
-                            WHEN 	
-                                ht.dateRelocated IS NULL 
-                            THEN 
+                            <!--- Use Flight Arrival as default start date --->
+							ELSE 
                                 (
                                     SELECT 
                                         dep_date 
@@ -689,15 +682,8 @@
                                 ht.dateRelocated IS NOT NULL
                             THEN 
                                 ht.dateRelocated
-							<!--- History Placement | Use Date Placed --->
-                            WHEN 
-                                ht.isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
-                            THEN 
-                                ht.datePlaced                            	
-							<!--- Not a relocation, use flight information --->
-                            WHEN 	
-                                ht.dateRelocated IS NULL 
-                            THEN 
+                            <!--- Use Flight Arrival as default start date --->
+							ELSE 
                                 (
                                     SELECT 
                                         dep_date 
