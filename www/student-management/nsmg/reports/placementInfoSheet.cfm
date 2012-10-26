@@ -748,18 +748,16 @@
         #PlacementInfo#
     </cfcase>
     
-    <!--- Save copy of PIS to internal virtual folder --->
-    <cfcase value="save">
-    	
-        <cfset fileName="PIS#qGetStudentInfo.studentID#_#DateFormat(NOW(),'mm-dd-yyyy')#-#TimeFormat(NOW(),'hh-mm')#">
-        <cfdocument format="pdf" filename="#fileName#.pdf" overwrite="yes" orientation="portrait" name="uploadFile">
-            #PlacementInfo#
-        </cfdocument>
-        <cfscript>
-            fullPath=GetDirectoryFromPath(GetCurrentTemplatePath()) & fileName & '.pdf';
-            APPLICATION.CFC.UDF.insertInternalFile(filePath=fullPath,fieldID=2,studentID=qGetStudentInfo.studentID);
-        </cfscript>
-        
+    <!--- Download As PDF --->
+    <cfcase value="pdf">
+    	<cfoutput>
+			<cfset fileName="PIS#CLIENT.studentID#_#DateFormat(NOW(),'mm-dd-yyyy')#-#TimeFormat(NOW(),'hh-mm')#.pdf">
+            <cfdocument format="pdf" filename="#fileName#" overwrite="yes" orientation="portrait" name="uploadFile">
+                #PlacementInfo#
+            </cfdocument>
+            <cfheader name="Content-Disposition" value="attachment; filename=#fileName#">
+            <cfcontent type="application/pdf" file="#GetDirectoryFromPath(GetCurrentTemplatePath())##fileName#" deletefile="yes">
+        </cfoutput>
     </cfcase>
 
     <!--- Email Profile --->

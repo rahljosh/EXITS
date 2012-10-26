@@ -903,18 +903,6 @@
 
 <cfoutput>
 
-	<!---Save new PIS, HF welcome letter, and school welcome letter to internal virtual folder--->
-	<cfif VAL(URL.approved)>
-    	<script type="text/javascript">
-			// PIS
-			window.open('../../reports/placementInfoSheet.cfm?uniqueID=<cfoutput>#FORM.uniqueid#</cfoutput>&profileType=save',"Save PIS","width=10,height=10");
-			// Host Letter
-			window.open('../../reports/host_welcome_letter.cfm?save=save',"Save Host Welcome Letter","width=10,height=10");
-			// School Letter
-			window.open('../../reports/school_welcome_letter.cfm?save=save',"Save School Welcome Letter","width=10,height=10");
-		</script>
-    </cfif>
-
 	<!--- Modal Dialogs --->
     
 	<!--- Approve Placement - Modal Dialog Box --->
