@@ -46,7 +46,7 @@
         </cfloop>
         
         <cfif num GT 0>
-            Percent of students updated before this run: #DecimalFormat( ((qGetActivePlacedStudents.recordCount - num) / qGetActivePlacedStudents.recordCount)*100 )#%
+            Percent of students up to date before this run: #DecimalFormat( ((qGetActivePlacedStudents.recordCount - num) / qGetActivePlacedStudents.recordCount)*100 )#%
             <br />
             Number of students who were run this time: #num# (Run again)
         <cfelse>
@@ -57,5 +57,11 @@
         <br />
         
         #students#
+        
+        <cfif num NEQ 0>
+        	<script type="text/javascript">
+				window.location.reload();
+			</script>
+        </cfif>
     
 </cfoutput>
