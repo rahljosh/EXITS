@@ -1157,11 +1157,6 @@
 				currentDirectory = currentDirectory & "/flightInformation";	
 			}
 			
-			// Delete the file if it is not a directory
-			if(getFileInfo(currentDirectory).type NEQ "Directory") {
-				FileDelete(currentDirectory);
-			}
-			
 			// Make sure the folder Exists
         	createFolder(currentDirectory);
 			
