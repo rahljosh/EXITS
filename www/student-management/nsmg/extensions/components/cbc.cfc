@@ -1328,12 +1328,14 @@
                     );				
     
                     // Get Report ID
-                    if ( responseXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.XmlAttributes.qtyFound NEQ 0 ) {
-                        ReportID = '#responseXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender.record.key.secureKey.XmlText#';
-                    } else {
-                        ReportID = '#responseXML.bgc.XmlAttributes.orderId#';
-                    }
-
+					try { 
+						// Try to get from US One Search (if there is an error, get it from BCG order number)
+						ReportID = '#responseXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender.record.key.secureKey.XmlText#';
+					} catch (Any e) {
+						// Error
+						ReportID = '#responseXML.bgc.XmlAttributes.orderId#';
+					}					
+					
                     // Check if we have successfully submitted the background check
                     if (batchResult.message EQ 'success') {
                         
