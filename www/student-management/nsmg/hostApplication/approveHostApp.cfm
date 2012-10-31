@@ -82,9 +82,11 @@
           The #appStatus.familylastname# application has been approved by #client.name# and is ready for your approval. 
         <br /><br />  
           You can review the app
-          <Cfif 
-           <a href="#application.exits_url#/nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=#client.usertype#">here</a>.
-        
+          <Cfif client.companyid eq 10>
+           <a href="https://case.exitsapplication.com/nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=#client.usertype#">here</a>.
+          <cfelse>
+          <a href="https://ise.exitsapplication.com/nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=#client.usertype#">here</a>.
+          </Cfif>
         
         </cfoutput>
     </cfsavecontent>
