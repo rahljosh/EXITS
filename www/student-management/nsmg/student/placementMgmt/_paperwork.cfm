@@ -5,7 +5,8 @@
 	Date:		June 15, 2011
 	Desc:		Placement Paperwork Management
 
-	Updated:	06/20/2012 - Compliance log added. 
+	Updated:	10/26/2012 - Adding Check All option for paperwork and compliance
+				06/20/2012 - Compliance log added. 
 					PS: smg_hostHistory is already taken by the placement history 
 					so I set foreignTable value as smg_hostHistoryCompliance
 				06/12/2012 - User Role Access Added
@@ -506,38 +507,68 @@
 		});
 
 
-		// Check/Uncheck Compliance Checkboxes
-		$("#ckCheckAllCompliance").click(function () {
+		// Check/Uncheck Paperwork Checkboxes
+		$("#ckCheckAllPaperwork").click(function () {
 			var vStatus = $(this).attr("checked");	
 			if ( vStatus == undefined ) {
 				vStatus = false;
+				$("#labelCheckAllPaperwork").text('[ Check All Paperwork ]');
+			} else {
+				$("#labelCheckAllPaperwork").text('[ Uncheck All Paperwork ]'); 
 			}
 			
 			// Loop Checkboxes
-			$(".complianceCheckAll").each(function () {
-				
+			$(".paperworkCheckAll").each(function () {
 				// Get CheckBox ID
 				vCheckBoxID = $(this).attr("id");
-				
 				// Get Field ID from CheckBox ID - Remove the string check_
 				vInputTextID = vCheckBoxID.replace("check_","");				
-				
 				// Get Field Value from Field ID 
 				vInputTextValue = $("#" + vInputTextID).val(); 
 				
 				// Set Today's date - if date is empty 
-				if ( vInputTextValue == "" || vInputTextValue == prettyDate ) { // vInputTextValue == "" || vInputTextValue == prettyDate							
-					
+				if ( vInputTextValue == "" || vInputTextValue == prettyDate ) { 					
 					$(this).attr("checked",vStatus);
-					
 					if ( vStatus ) {
 						$("#" + vInputTextID).val(prettyDate);
 					} else {
 						$("#" + vInputTextID).val("");
 					}
-										
 				}
+			});
+			
+		});
+		// End of Check/Uncheck Paperwork Checkboxes
+
+
+		// Check/Uncheck Compliance Checkboxes
+		$("#ckCheckAllCompliance").click(function () {
+			var vStatus = $(this).attr("checked");	
+			if ( vStatus == undefined ) {
+				vStatus = false;
+				$("#labelCheckAllCompliance").text('[ Check All Compliant ]');
+			} else {
+				$("#labelCheckAllCompliance").text('[ Uncheck All Compliant ]'); 
+			}
+			
+			// Loop Checkboxes
+			$(".complianceCheckAll").each(function () {
+				// Get CheckBox ID
+				vCheckBoxID = $(this).attr("id");
+				// Get Field ID from CheckBox ID - Remove the string check_
+				vInputTextID = vCheckBoxID.replace("check_","");				
+				// Get Field Value from Field ID 
+				vInputTextValue = $("#" + vInputTextID).val(); 
 				
+				// Set Today's date - if date is empty 
+				if ( vInputTextValue == "" || vInputTextValue == prettyDate ) {						
+					$(this).attr("checked",vStatus);
+					if ( vStatus ) {
+						$("#" + vInputTextID).val(prettyDate);
+					} else {
+						$("#" + vInputTextID).val("");
+					}
+				}
 			});
 			
 		});
@@ -707,13 +738,16 @@
                 <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center"> 
                     <tr>
                         <td class="reportTitleLeftClean" width="5%">&nbsp;</td>
-                        <td class="reportTitleLeftClean" width="70%">Host Family: #qGetHostInfo.familyLastName# (###qGetHostInfo.hostID#)</td>
-                        <td class="reportTitleLeftClean" width="25%">
+                        <td class="reportTitleLeftClean" width="45%">Host Family: #qGetHostInfo.familyLastName# (###qGetHostInfo.hostID#)</td>
+                        <td class="reportTitleLeftClean" width="35%">
                         	<cfif APPLICATION.CFC.USER.isOfficeUser()>
-                                <a href="javascript:displayHiddenFormFields();" id="displayFormFieldLink"title="display/hide fields" style="float:right; padding-right:10px;">[ Display Fields ]</a>
-                            <cfelse>
-                            	&nbsp;
+                            	<label for="ckCheckAllPaperwork" id="labelCheckAllPaperwork" style="cursor:pointer;">[ Check All Paperwork ]</label> <input type="checkbox" name="ckCheckAllPaperwork" id="ckCheckAllPaperwork" class="displayNone">
+                                &nbsp; | &nbsp;
+                                <a href="javascript:displayHiddenFormFields();" id="displayFormFieldLink"title="display/hide fields">[ Display Fields ]</a>
                             </cfif>
+                        </td>
+                        <td class="reportTitleLeftClean" width="15%">
+                        	<label for="ckCheckAllCompliance" id="labelCheckAllCompliance" style="cursor:pointer;">[ Check All Compliant ]</label> <input type="checkbox" name="ckCheckAllCompliance" id="ckCheckAllCompliance" class="displayNone complianceCheck">
                         </td>
                     </tr>
                 </table>
@@ -734,8 +768,8 @@
                     <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center"> 
                         <tr bgcolor="##edeff4">
                             <td class="reportTitleLeftClean" width="5%">&nbsp;</td>
-                            <td class="reportTitleLeftClean" width="40%">Single Placement Paperwork</td>
-                            <td class="reportTitleLeftClean" width="40%">Date</td>
+                            <td class="reportTitleLeftClean" width="45%">Single Placement Paperwork</td>
+                            <td class="reportTitleLeftClean" width="35%">Date</td>
                             <td class="reportTitleLeftClean" width="15%">Compliant</td>
                         </tr>
 					</table>
@@ -746,8 +780,8 @@
                             <td width="5%" class="paperworkLeftColumn">
                                 <input type="checkbox" name="check_doc_single_place_auth" id="check_doc_single_place_auth" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_single_place_auth');" <cfif isDate(FORM.doc_single_place_auth)>checked</cfif> >
                             </td>
-                            <td width="40%"><label for="check_doc_single_place_auth">Single Person Placement Verification</label></td>
-                            <td width="40%">
+                            <td width="45%"><label for="check_doc_single_place_auth">Single Person Placement Verification</label></td>
+                            <td width="35%">
                                 <span class="readOnly displayNone">#DateFormat(FORM.doc_single_place_auth, 'mm/dd/yyyy')#</span>
                                 <input type="text" name="doc_single_place_auth" id="doc_single_place_auth" class="datePicker editPage displayNone hideField" value="#DateFormat(FORM.doc_single_place_auth, 'mm/dd/yyyy')#">
                             </td>
@@ -859,9 +893,9 @@
 				<table width="90%" cellpadding="2" cellspacing="0" class="section" align="center"> 
                     <tr bgcolor="##edeff4">
                         <td class="reportTitleLeftClean" width="5%">&nbsp;</td>
-                        <td class="reportTitleLeftClean" width="40%">Paperwork</td>
-                        <td class="reportTitleLeftClean" width="40%">Date</td>
-                        <td class="reportTitleLeftClean" width="15%">Compliant <br /> <input type="checkbox" name="ckCheckAllCompliance" id="ckCheckAllCompliance" class="complianceCheck"> <label for="ckCheckAllCompliance">Check All</label></td>
+                        <td class="reportTitleLeftClean" width="45%">Paperwork</td>
+                        <td class="reportTitleLeftClean" width="35%">Date</td>
+                        <td class="reportTitleLeftClean" width="15%">Compliant</td>
                     </tr>
                 </table>
                 
@@ -872,8 +906,8 @@
                         <td width="5%" class="paperworkLeftColumn">
                         	<input type="checkbox" name="datePlacedCheckBox" id="datePlacedCheckBox" class="editPage displayNone" <cfif isDate(qGetPlacementHistoryByID.datePlaced)>checked</cfif> <cfif NOT isDate(FORM.datePlaced) OR NOT APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID, role="datePlacedEdit")>disabled="disabled"</cfif> >
 						</td>
-                        <td width="40%"><label>Date Placed ( HQ Approval Date )</label></td>
-                        <td width="40%">
+                        <td width="45%"><label>Date Placed ( HQ Approval Date )</label></td>
+                        <td width="35%">
                         	<span class="readOnly displayNone">#DateFormat(qGetPlacementHistoryByID.datePlaced, 'mm/dd/yyyy')#</span>
 							<cfif isDate(FORM.datePlaced) AND APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID, role="datePlacedEdit")>
                                 <input type="text" name="datePlaced" id="datePlaced" class="datePicker editPage displayNone" value="#DateFormat(FORM.datePlaced, 'mm/dd/yyyy')#">
@@ -917,7 +951,7 @@
                     <!--- Page 1 --->
                     <tr class="mouseOverColor"> 
                         <td class="paperworkLeftColumn">
-                            <input type="checkbox" name="check_doc_host_app_page1_date" id="check_doc_host_app_page1_date" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_host_app_page1_date');" <cfif isDate(FORM.doc_host_app_page1_date)>checked</cfif> >
+                            <input type="checkbox" name="check_doc_host_app_page1_date" id="check_doc_host_app_page1_date" class="editPage displayNone paperworkCheckAll" onclick="setTodayDate(this.id, 'doc_host_app_page1_date');" <cfif isDate(FORM.doc_host_app_page1_date)>checked</cfif> >
 						</td>
                         <td><label for="check_doc_host_app_page1_date">Host Family Application p.1</label></td>
                         <td>
@@ -934,7 +968,7 @@
                     <!--- Page 2 --->
                     <tr class="mouseOverColor"> 
                         <td class="paperworkLeftColumn">
-                            <input type="checkbox" name="check_doc_host_app_page2_date" id="check_doc_host_app_page2_date" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_host_app_page2_date');" <cfif isDate(FORM.doc_host_app_page2_date)>checked</cfif> >
+                            <input type="checkbox" name="check_doc_host_app_page2_date" id="check_doc_host_app_page2_date" class="editPage displayNone paperworkCheckAll" onclick="setTodayDate(this.id, 'doc_host_app_page2_date');" <cfif isDate(FORM.doc_host_app_page2_date)>checked</cfif> >
 						</td>
                         <td><label for="check_doc_host_app_page2_date">Host Family Application p.2</label></td>
                         <td>
@@ -951,7 +985,7 @@
                     <!--- Page 3 - Letter --->
                     <tr class="mouseOverColor">
                         <td class="paperworkLeftColumn">
-                            <input type="checkbox" name="check_doc_letter_rec_date" id="check_doc_letter_rec_date" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_letter_rec_date');" <cfif isDate(FORM.doc_letter_rec_date)>checked</cfif> >
+                            <input type="checkbox" name="check_doc_letter_rec_date" id="check_doc_letter_rec_date" class="editPage displayNone paperworkCheckAll" onclick="setTodayDate(this.id, 'doc_letter_rec_date');" <cfif isDate(FORM.doc_letter_rec_date)>checked</cfif> >
 						</td>
                         <td><label for="check_doc_letter_rec_date">Host Family Letter p.3</label></td>
                         <td>
@@ -968,7 +1002,7 @@
                     <!--- Page 4,5,6 - Photos --->
                     <tr class="mouseOverColor"> 
                         <td class="paperworkLeftColumn">
-                            <input type="checkbox" name="check_doc_photos_rec_date" id="check_doc_photos_rec_date" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_photos_rec_date');" <cfif isDate(FORM.doc_photos_rec_date)>checked</cfif> >
+                            <input type="checkbox" name="check_doc_photos_rec_date" id="check_doc_photos_rec_date" class="editPage displayNone paperworkCheckAll" onclick="setTodayDate(this.id, 'doc_photos_rec_date');" <cfif isDate(FORM.doc_photos_rec_date)>checked</cfif> >
 						</td>
                         <td><label for="check_doc_photos_rec_date">Family Photo</label></td>
                         <td>
@@ -988,7 +1022,7 @@
 						<!--- Student Bedroom Photo --->
                         <tr class="mouseOverColor"> 
                             <td class="paperworkLeftColumn">
-                                <input type="checkbox" name="check_doc_bedroom_photo" id="check_doc_bedroom_photo" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_bedroom_photo');" <cfif isDate(FORM.doc_bedroom_photo)>checked</cfif> >
+                                <input type="checkbox" name="check_doc_bedroom_photo" id="check_doc_bedroom_photo" class="editPage displayNone paperworkCheckAll" onclick="setTodayDate(this.id, 'doc_bedroom_photo');" <cfif isDate(FORM.doc_bedroom_photo)>checked</cfif> >
                             </td>
                             <td><label for="check_doc_bedroom_photo">Student Bedroom Photo</label></td>
                             <td>
@@ -1005,7 +1039,7 @@
                         <!--- Student Bathroom Photo --->
                         <tr class="mouseOverColor"> 
                             <td class="paperworkLeftColumn">
-                                <input type="checkbox" name="check_doc_bathroom_photo" id="check_doc_bathroom_photo" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_bathroom_photo');" <cfif isDate(FORM.doc_bathroom_photo)>checked</cfif> >
+                                <input type="checkbox" name="check_doc_bathroom_photo" id="check_doc_bathroom_photo" class="editPage displayNone paperworkCheckAll" onclick="setTodayDate(this.id, 'doc_bathroom_photo');" <cfif isDate(FORM.doc_bathroom_photo)>checked</cfif> >
                             </td>
                             <td><label for="check_doc_bathroom_photo">Student Bathroom Photo</label></td>
                             <td>
@@ -1022,7 +1056,7 @@
                         <!--- Kitchen Photo --->
                         <tr class="mouseOverColor"> 
                             <td class="paperworkLeftColumn">
-                                <input type="checkbox" name="check_doc_kitchen_photo" id="check_doc_kitchen_photo" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_kitchen_photo');" <cfif isDate(FORM.doc_kitchen_photo)>checked</cfif> >
+                                <input type="checkbox" name="check_doc_kitchen_photo" id="check_doc_kitchen_photo" class="editPage displayNone paperworkCheckAll" onclick="setTodayDate(this.id, 'doc_kitchen_photo');" <cfif isDate(FORM.doc_kitchen_photo)>checked</cfif> >
                             </td>
                             <td><label for="check_doc_kitchen_photo">Kitchen Photo</label></td>
                             <td>
@@ -1039,7 +1073,7 @@
                         <!--- Living Room Photo --->
                         <tr class="mouseOverColor"> 
                             <td class="paperworkLeftColumn">
-                                <input type="checkbox" name="check_doc_living_room_photo" id="check_doc_living_room_photo" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_living_room_photo');" <cfif isDate(FORM.doc_living_room_photo)>checked</cfif> >
+                                <input type="checkbox" name="check_doc_living_room_photo" id="check_doc_living_room_photo" class="editPage displayNone paperworkCheckAll" onclick="setTodayDate(this.id, 'doc_living_room_photo');" <cfif isDate(FORM.doc_living_room_photo)>checked</cfif> >
                             </td>
                             <td><label for="check_doc_living_room_photo">Living Room Photo</label></td>
                             <td>
@@ -1056,7 +1090,7 @@
                         <!--- Outside Photo --->
                         <tr class="mouseOverColor"> 
                             <td class="paperworkLeftColumn">
-                                <input type="checkbox" name="check_doc_outside_photo" id="check_doc_outside_photo" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_outside_photo');" <cfif isDate(FORM.doc_outside_photo)>checked</cfif> >
+                                <input type="checkbox" name="check_doc_outside_photo" id="check_doc_outside_photo" class="editPage displayNone paperworkCheckAll" onclick="setTodayDate(this.id, 'doc_outside_photo');" <cfif isDate(FORM.doc_outside_photo)>checked</cfif> >
                             </td>
                             <td><label for="check_doc_outside_photo">Outside Photo</label></td>
                             <td>
@@ -1075,7 +1109,7 @@
                     <!--- Page 7 - HF Rules --->
                     <tr class="mouseOverColor">
                         <td class="paperworkLeftColumn">
-                            <input type="checkbox" name="check_doc_rules_rec_date" id="check_doc_rules_rec_date" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_rules_rec_date');" <cfif isDate(FORM.doc_rules_rec_date)>checked</cfif> >
+                            <input type="checkbox" name="check_doc_rules_rec_date" id="check_doc_rules_rec_date" class="editPage displayNone paperworkCheckAll" onclick="setTodayDate(this.id, 'doc_rules_rec_date');" <cfif isDate(FORM.doc_rules_rec_date)>checked</cfif> >
 						</td>
                         <td><label for="check_doc_rules_rec_date">Host Family Rules Form</label></td>
                         <td>
@@ -1095,7 +1129,7 @@
                         <td><label for="doc_rules_sign_date">Date Signed</label></td>
                         <td>
                             <span class="readOnly displayNone">#DateFormat(FORM.doc_rules_sign_date, 'mm/dd/yyyy')#</span>
-                            <input type="text" name="doc_rules_sign_date" id="doc_rules_sign_date" class="datePicker editPage displayNone compliantField" value="#DateFormat(FORM.doc_rules_sign_date, 'mm/dd/yyyy')#" onchange="displayNonCompliant('doc_rules_sign_date');">
+                            <input type="text" name="doc_rules_sign_date" id="doc_rules_sign_date" class="datePicker editPage displayNone compliantField paperworkCheckAll" value="#DateFormat(FORM.doc_rules_sign_date, 'mm/dd/yyyy')#" onchange="displayNonCompliant('doc_rules_sign_date');">
                         </td>
                         <td>
                         	<span class="readOnly displayNone">#DateFormat(FORM.compliance_rules_sign_date, 'mm/dd/yyyy')#</span>
@@ -1107,7 +1141,7 @@
                     <!--- Page 8 - School & Community Profile --->
                     <tr class="mouseOverColor"> 
                         <td class="paperworkLeftColumn">
-                            <input type="checkbox" name="check_doc_school_profile_rec" id="check_doc_school_profile_rec" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_school_profile_rec');" <cfif isDate(FORM.doc_school_profile_rec)>checked</cfif> >
+                            <input type="checkbox" name="check_doc_school_profile_rec" id="check_doc_school_profile_rec" class="editPage displayNone paperworkCheckAll" onclick="setTodayDate(this.id, 'doc_school_profile_rec');" <cfif isDate(FORM.doc_school_profile_rec)>checked</cfif> >
 						</td>
                         <td><label for="check_doc_school_profile_rec">School & Community Profile Form</label></td>
                         <td>
@@ -1124,7 +1158,7 @@
                     <!---- Page 9 - Income Verification --->	
                     <tr class="mouseOverColor"> 
                         <td class="paperworkLeftColumn">
-                            <input type="checkbox" name="check_doc_income_ver_date" id="check_doc_income_ver_date" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_income_ver_date');" <cfif isDate(FORM.doc_income_ver_date)>checked</cfif> >
+                            <input type="checkbox" name="check_doc_income_ver_date" id="check_doc_income_ver_date" class="editPage displayNone paperworkCheckAll" onclick="setTodayDate(this.id, 'doc_income_ver_date');" <cfif isDate(FORM.doc_income_ver_date)>checked</cfif> >
 						</td>
                         <td><label for="check_doc_income_ver_date">Income Verification Form</label></td>
                         <td>
@@ -1141,7 +1175,7 @@
                     <!--- Page 10 - Confidential HF Visit --->
                     <tr class="mouseOverColor"> 
                         <td class="paperworkLeftColumn">
-                            <input type="checkbox" name="check_doc_conf_host_rec" id="check_doc_conf_host_rec" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_conf_host_rec');" <cfif isDate(FORM.doc_conf_host_rec)>checked</cfif> >
+                            <input type="checkbox" name="check_doc_conf_host_rec" id="check_doc_conf_host_rec" class="editPage displayNone paperworkCheckAll" onclick="setTodayDate(this.id, 'doc_conf_host_rec');" <cfif isDate(FORM.doc_conf_host_rec)>checked</cfif> >
 						</td>
                         <td><label for="check_doc_conf_host_rec">Confidential Host Family Visit Form</label></td>
                         <td>
@@ -1161,7 +1195,7 @@
                         <td><label for="doc_date_of_visit">Date of Visit</label></td>
                         <td>
                             <span class="readOnly displayNone">#DateFormat(FORM.doc_date_of_visit, 'mm/dd/yyyy')#</span>
-                            <input type="text" name="doc_date_of_visit" id="doc_date_of_visit" class="datePicker editPage displayNone compliantField" value="#DateFormat(FORM.doc_date_of_visit, 'mm/dd/yyyy')#" onchange="displayNonCompliant('doc_date_of_visit');">
+                            <input type="text" name="doc_date_of_visit" id="doc_date_of_visit" class="datePicker editPage displayNone compliantField paperworkCheckAll" value="#DateFormat(FORM.doc_date_of_visit, 'mm/dd/yyyy')#" onchange="displayNonCompliant('doc_date_of_visit');">
                         </td>
                         <td>
                         	<span class="readOnly displayNone">#DateFormat(FORM.compliance_date_of_visit, 'mm/dd/yyyy')#</span>
@@ -1212,7 +1246,7 @@
                     <!--- Page 11 - Reference 1 --->
                     <tr class="mouseOverColor"> 
                         <td class="paperworkLeftColumn">
-                            <input type="checkbox" name="check_doc_ref_form_1" id="check_doc_ref_form_1" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_ref_form_1');" <cfif isDate(FORM.doc_ref_form_1)>checked</cfif> >
+                            <input type="checkbox" name="check_doc_ref_form_1" id="check_doc_ref_form_1" class="editPage displayNone paperworkCheckAll" onclick="setTodayDate(this.id, 'doc_ref_form_1');" <cfif isDate(FORM.doc_ref_form_1)>checked</cfif> >
 						</td>
                         <td><label for="check_doc_ref_form_1">Reference Form 1</label></td>
                         <td>
@@ -1232,7 +1266,7 @@
                         <td><label for="doc_ref_check1">Date of Reference Check 1</label></td>
                         <td>
                             <span class="readOnly displayNone">#DateFormat(FORM.doc_ref_check1, 'mm/dd/yyyy')#</span>
-                            <input type="text" name="doc_ref_check1" id="doc_ref_check1" class="datePicker editPage displayNone compliantField" value="#DateFormat(FORM.doc_ref_check1, 'mm/dd/yyyy')#" onchange="displayNonCompliant('doc_ref_check1');">
+                            <input type="text" name="doc_ref_check1" id="doc_ref_check1" class="datePicker editPage displayNone compliantField paperworkCheckAll" value="#DateFormat(FORM.doc_ref_check1, 'mm/dd/yyyy')#" onchange="displayNonCompliant('doc_ref_check1');">
                         </td>
                         <td>
                         	<span class="readOnly displayNone">#DateFormat(FORM.compliance_ref_check1, 'mm/dd/yyyy')#</span>
@@ -1244,7 +1278,7 @@
                     <!--- Page 12 - Reference 2 --->
                     <tr class="mouseOverColor"> 
                         <td class="paperworkLeftColumn">
-                            <input type="checkbox" name="check_doc_ref_form_2" id="check_doc_ref_form_2" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_ref_form_2');" <cfif isDate(FORM.doc_ref_form_2)>checked</cfif> >
+                            <input type="checkbox" name="check_doc_ref_form_2" id="check_doc_ref_form_2" class="editPage displayNone paperworkCheckAll" onclick="setTodayDate(this.id, 'doc_ref_form_2');" <cfif isDate(FORM.doc_ref_form_2)>checked</cfif> >
 						</td>
                         <td><label for="check_doc_ref_form_2">Reference Form 2</label></td>
                         <td>
@@ -1264,7 +1298,7 @@
                         <td><label for="doc_ref_check2">Date of Reference Check 2</label></td>
                         <td>
                             <span class="readOnly displayNone">#DateFormat(FORM.doc_ref_check2, 'mm/dd/yyyy')#</span>
-                            <input type="text" name="doc_ref_check2" id="doc_ref_check2" class="datePicker editPage displayNone compliantField" value="#DateFormat(FORM.doc_ref_check2, 'mm/dd/yyyy')#" onchange="displayNonCompliant('doc_ref_check2');">
+                            <input type="text" name="doc_ref_check2" id="doc_ref_check2" class="datePicker editPage displayNone compliantField paperworkCheckAll" value="#DateFormat(FORM.doc_ref_check2, 'mm/dd/yyyy')#" onchange="displayNonCompliant('doc_ref_check2');">
                         </td>
                         <td>
                         	<span class="readOnly displayNone">#DateFormat(FORM.compliance_ref_check2, 'mm/dd/yyyy')#</span>
@@ -1301,8 +1335,8 @@
                         <td width="5%" class="paperworkLeftColumn">
                             <input type="checkbox" name="check_doc_school_accept_date" id="check_doc_school_accept_date" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_school_accept_date');" <cfif isDate(FORM.doc_school_accept_date)>checked</cfif> >
 						</td>
-                        <td width="40%"><label for="check_doc_school_accept_date">School Acceptance Form</label></td>
-                        <td width="40%">
+                        <td width="45%"><label for="check_doc_school_accept_date">School Acceptance Form</label></td>
+                        <td width="35%">
                             <span class="readOnly displayNone">#DateFormat(FORM.doc_school_accept_date, 'mm/dd/yyyy')#</span>
                             <input type="text" name="doc_school_accept_date" id="doc_school_accept_date" class="datePicker editPage displayNone hideField" value="#DateFormat(FORM.doc_school_accept_date, 'mm/dd/yyyy')#">
                         </td>
@@ -1340,8 +1374,8 @@
                 <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center"> 
                     <tr bgcolor="##edeff4">
                         <td class="reportTitleLeftClean" width="5%">&nbsp;</td>
-                        <td class="reportTitleLeftClean" width="40%">CBC - Most Recent Reports</td>
-                        <td class="reportTitleLeftClean" width="40%">Date</td>
+                        <td class="reportTitleLeftClean" width="45%">CBC - Most Recent Reports</td>
+                        <td class="reportTitleLeftClean" width="35%">Date</td>
                         <td class="reportTitleLeftClean" width="15%">&nbsp;</td>
                     </tr>
     			</table>
@@ -1350,8 +1384,8 @@
 					<cfloop query="qGetMostRecentCBC">
                         <tr class="mouseOverColor"> 
                             <td width="5%" class="paperworkLeftColumn">&nbsp;</td>
-                            <td width="40%"><label for="#qGetMostRecentCBC.currentRow#-CBC">#qGetMostRecentCBC.fullName#</label></td>
-                            <td width="40%">
+                            <td width="45%"><label for="#qGetMostRecentCBC.currentRow#-CBC">#qGetMostRecentCBC.fullName#</label></td>
+                            <td width="35%">
                                 <span class="readOnly displayNone">#DateFormat(qGetMostRecentCBC.date_sent, 'mm/dd/yyyy')# to #DateFormat(qGetMostRecentCBC.date_expired, 'mm/dd/yyyy')#</span>
                                 <input type="text" name="#qGetMostRecentCBC.currentRow#-CBC" id="#qGetMostRecentCBC.currentRow#-CBC" class="datePicker editPage displayNone" value="#DateFormat(qGetMostRecentCBC.date_sent, 'mm/dd/yyyy')#" disabled="disabled">
                                 <span class="editPage displayNone">to</span>
@@ -1371,8 +1405,8 @@
                 <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center">
                     <tr bgcolor="##edeff4">
                         <td class="reportTitleLeftClean" width="5%">&nbsp;</td>
-                        <td class="reportTitleLeftClean" width="40%">Arrival Orientation</td>
-                        <td class="reportTitleLeftClean" width="40%">Date</td>
+                        <td class="reportTitleLeftClean" width="45%">Arrival Orientation</td>
+                        <td class="reportTitleLeftClean" width="35%">Date</td>
                         <td class="reportTitleLeftClean" width="15%">Compliant</td>
                     </tr>
                	</table>
@@ -1383,8 +1417,8 @@
                         <td width="5%" class="paperworkLeftColumn">
                             <input type="checkbox" name="check_stu_arrival_orientation" id="check_stu_arrival_orientation" class="editPage displayNone" onclick="setTodayDate(this.id, 'stu_arrival_orientation');" <cfif isDate(FORM.stu_arrival_orientation)>checked</cfif> >
 						</td>
-                        <td width="40%"><label for="check_stu_arrival_orientation">Student Orientation</label></td>
-                        <td width="40%">
+                        <td width="45%"><label for="check_stu_arrival_orientation">Student Orientation</label></td>
+                        <td width="35%">
                             <span class="readOnly displayNone">#DateFormat(FORM.stu_arrival_orientation, 'mm/dd/yyyy')#</span>
                             <input type="text" name="stu_arrival_orientation" id="stu_arrival_orientation" class="datePicker editPage displayNone" value="#DateFormat(FORM.stu_arrival_orientation, 'mm/dd/yyyy')#">
                         </td>
@@ -1445,7 +1479,7 @@
                     <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center"> 
                         <tr bgcolor="##edeff4">
                             <td class="reportTitleLeftClean" width="5%">&nbsp;</td>
-                            <td class="reportTitleLeftClean" width="40%">
+                            <td class="reportTitleLeftClean" width="45%">
                                 Double Placement Paperwork 
                                 <br />
                                 <cfif qGetDoublePlacementPaperworkHistory.doublePlacementID EQ qGetPlacementHistoryByID.doublePlacementID>
@@ -1458,7 +1492,7 @@
                                 &nbsp; - &nbsp; 
                                 Assigned on #DateFormat(qGetDoublePlacementPaperworkHistory.dateCreated, 'mm/dd/yyyy')#
                             </td>
-                            <td class="reportTitleLeftClean" width="40%">Date</td>
+                            <td class="reportTitleLeftClean" width="35%">Date</td>
                             <td class="reportTitleLeftClean" width="15%">Compliant</td>
                         </tr>
                     </table>
@@ -1467,8 +1501,8 @@
                         <!--- Is Double Placement Paperwork Required? --->
                         <tr class="mouseOverColor"> 
                             <td width="5%">&nbsp;</td>
-                            <td width="40%"><label for="#qGetDoublePlacementPaperworkHistory.ID#_isDoublePlacementPaperworkRequired">Is Paperwork Required?</label></td>
-                            <td width="40%">
+                            <td width="45%"><label for="#qGetDoublePlacementPaperworkHistory.ID#_isDoublePlacementPaperworkRequired">Is Paperwork Required?</label></td>
+                            <td width="35%">
                                 <span class="readOnly displayNone">#YesNoFormat(VAL(qGetDoublePlacementPaperworkHistory.doublePlacementParentsDateSigned))#</span>
                                 <select name="#qGetDoublePlacementPaperworkHistory.ID#_isDoublePlacementPaperworkRequired" id="#qGetDoublePlacementPaperworkHistory.ID#_isDoublePlacementPaperworkRequired" class="editPage displayNone smallField" onchange="displayDoublePlacementPaperwork(#qGetDoublePlacementPaperworkHistory.ID#);">
                                     <option value="" <cfif NOT LEN(FORM[qGetDoublePlacementPaperworkHistory.ID & '_isDoublePlacementPaperworkRequired'])> selected="selected" </cfif> ></option>
@@ -1547,8 +1581,8 @@
                         <!--- Compliance Notes --->
                         <tr class="mouseOverColor"> 
                             <td width="5%">&nbsp;</td>
-                            <td width="40%" valign="top"><label for="complianceLogNotes">Notes</label></td>
-                            <td width="40%"><textarea name="complianceLogNotes" id="complianceLogNotes" class="xLargeTextArea complianceCheck">#FORM.complianceLogNotes#</textarea></td>
+                            <td width="45%" valign="top"><label for="complianceLogNotes">Notes</label></td>
+                            <td width="35%"><textarea name="complianceLogNotes" id="complianceLogNotes" class="xLargeTextArea complianceCheck">#FORM.complianceLogNotes#</textarea></td>
                             <td width="15%">&nbsp;</td>
                         </tr>
                         <!--- Compliance Resolved --->
