@@ -437,15 +437,6 @@
 			var stUserTraining = isRequiredTrainingComplete(userID=ARGUMENTS.userID, seasonID=qGetCurrentSeason.seasonID);
 			stUserPaperwork.isTrainingCompleted = stUserTraining.isTrainingComplete;
 			stUserPaperwork.dateTrained = stUserTraining.dateTrained;
-			/**** 
-				TEMPORARY SOLUTION 
-				webEX trainings are not ready to go live, set them as true until we are ready
-				Marcus Melo 09/18/2012
-			****/		
-			if ( now() LT '2012/11/03' ) {
-				stUserPaperwork.isTrainingCompleted = true;
-			}
-			/**** TEMPORARY SOLUTION ****/			
 			
 			
 			// DOS Certification
@@ -605,7 +596,7 @@
 					// Missing DOS Certification and training
 					} else {
 						
-						// Notify Regional Manager
+						// Missing DOS Certification and/or AR Training
 						stUserPaperwork.accountReviewStatus = 'missingTraining';
 						
 					}
