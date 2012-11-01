@@ -5,15 +5,15 @@
 
 <div class="pdf"><a href="pdf/2012/ISE-Applicant-Handbook- 2012.pdf"><img src="images/applicant_Handbook.jpg" alt="Application Handbook" border="0" /></a> <a href="pdf/2012/ISE-Applicant-Handbook- 2012.pdf" class="grey">Application Handbook</a></div>
 <h3>Applicant Handbook</h3>
-<p>CSB International, Inc. is proud to invite you to our Trainee Program. We designed this program to offer you an opportunity to learn about American business practices,
+<p>ISE International, Inc. is proud to invite you to our Trainee Program. We designed this program to offer you an opportunity to learn about American business practices,
   get a taste of American culture and, most importantly, advance your career skills.<br /><br />
-We at CSB believe that upon the completion of this program you will be better qualified for your professional, and undoubtedly successful, future.</p>
+We at ISE believe that upon the completion of this program you will be better qualified for your professional, and undoubtedly successful, future.</p>
 <p>We invite you to review this manual to learn more about the exciting opportunities
-available in the CSB Trainee Program and to see if this program is of interest to you.</p>
+available in the ISE Trainee Program and to see if this program is of interest to you.</p>
 <div class="clearfix1px"></div>
 <div class="pdf"><a href="pdf/2012/ISE-Trainee-Welcome-Handbook-2012.pdf"><img src="images/WelcomeHandbook.jpg" alt="Welcome Handbook" border="0" /></a><a href="pdf/2012/ISE-Applicant-Handbook- 2012.pdf" class="grey">Welcome Handbook</a></div>
 <h3>Trainee Welcome Handbook</h3>
-<p>CSB International welcomes you to our Trainee Program!<br /><br />
+<p>ISE International welcomes you to our Trainee Program!<br /><br />
 
 We are glad that you have successfully completed the selection and application process and are now preparing yourself for a challenging and rewarding experience in the United States.<br /><br />
 This handbook was designed to provide you with essential information about your rights and responsibilities as a Trainee Program participant, as well as some guidelines and tips to ensure your smooth adjustment to American culture, American lifestyle and the daily routine of Americans.</p>

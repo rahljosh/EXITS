@@ -143,8 +143,8 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
 </script>
 
 
-<link href="../css/csbusa.css" rel="stylesheet" type="text/css" />
-<cfinclude template="includes/superfish_js.cfm">
+<link href="css/csbusa.css" rel="stylesheet" type="text/css" />
+<cfinclude template="includes/swtsuperfish_js.cfm">
 </head>
 
 <body class="oneColFixCtrHdr">
@@ -376,7 +376,7 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
   <div class="clearfix"></div>
 <!-- end container --></div>
 <div class="clearfixT"></div>
-<cfinclude template="../footer.cfm">
+<cfinclude template="footer.cfm">
 <div class="gStrip"></div>
 </body>
 </html>

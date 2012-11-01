@@ -3,8 +3,8 @@
 
 <h2>Housing</h2>
 
-<p>Trainees will need to secure their own housing while training in the United States. CBS does not arrange or provide the participant with housing. All expenses related to housing and daily living including rent, utilities, furnishings, groceries, etc. are the participant's responsibility.<br /><br />
-You should find housing well in advance of your arrival in the U.S. n many cases, your host organization may have recommendations for short- or long-term housing near your workplace. Some of the useful links to find housing online are included in the Useful Internet Resources of this manual.</p>
+<p>Trainees will need to secure their own housing while training in the United States. ISE does not arrange or provide the participant with housing. All expenses related to housing and daily living including rent, utilities, furnishings, groceries, etc. are the participant's responsibility.<br /><br />
+You should find housing well in advance of your arrival in the U.S. in many cases, your host organization may have recommendations for short- or long-term housing near your workplace. Some of the useful links to find housing online are included in the Useful Internet Resources of this manual.</p>
 <h5>Things to consider while looking for housing:</h5>
 <ul>
   <li><strong><em>Budget</em></strong> &#8211; how much can you afford to pay for your housing. Try to take into consideration your stipend, money that you are going to bring with you, deduct all the expected expenses that you will incur (on food, clothing, transportation, recreation, etc.)</li>

@@ -66,7 +66,7 @@ ul.sf-menu li li li.sfHover ul {
 	padding-top: 0.75em;
 	padding-right: .60em;
 	padding-bottom: 0.75em;
-	padding-left: .60em;
+	padding-left: .95em;
 }
 .sf-menu a, .sf-menu a:visited  { /* visited pseudo selector so IE6 applies text colour*/
 	color:			#000;
@@ -75,9 +75,9 @@ ul.sf-menu li li li.sfHover ul {
 	background:		#FFF;
 }
 .sf-menu li li {
-	background-image: url(../../Trainee/images/navBack.png);
+	background-image: urlimages/navBack.png);
 	background-repeat: repeat;
-	background-color: #005DAB;
+	background-color: #5B96C8;
 }
 .sf-menu li li li {
 	background-color: B9C1D5;
@@ -102,7 +102,7 @@ ul.sf-menu li li li.sfHover ul {
 	height:			10px;
 	text-indent: 	-999em;
 	overflow:		hidden;
-	background:		url('../images/arrows-ccc.png') no-repeat -10px -100px; /* 8-bit indexed alpha png. IE6 gets solid image only */
+	background:		url('images/arrows-ccc.png') no-repeat -10px -100px; /* 8-bit indexed alpha png. IE6 gets solid image only */
 }
 a > .sf-sub-indicator {  /* give all except IE6 the correct values */
 	top:			.8em;
@@ -131,7 +131,7 @@ li.sfHover > a > .sf-sub-indicator {
 
 /*** shadows for all but IE6 ***/
 .sf-shadow ul {
-	background:	url('../images/shadow.png') no-repeat bottom right;
+	background:	url('images/shadow.png') no-repeat bottom right;
 	padding: 0 8px 9px 0;
 	-moz-border-radius-bottomleft: 17px;
 	-moz-border-radius-topright: 17px;

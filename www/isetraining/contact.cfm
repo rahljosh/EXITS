@@ -119,25 +119,25 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
 </style>
 
 
-<link href="../css/csbusa.css" rel="stylesheet" type="text/css" />
-<cfinclude template="includes/superfish_js.cfm">
+<link href="css/csbusa.css" rel="stylesheet" type="text/css" />
+<cfinclude template="includes/swtsuperfish_js.cfm">
 </head>
 
 <body class="oneColFixCtrHdr">
-<cfinclude template="../Trainee/Theader.cfm">
+<cfinclude template="Theader.cfm">
 <div class="clearfixG">Trainee Program</div>
 <div id="container">
 <div class="clearfixT"></div>
-<cfinclude template="../Trainee/includes/t_menu.cfm">
-<div class="animation"><img src="images/TraineeAnimatesm.gif" width="781" height="225"/></div>
+<cfinclude template="includes/t_menu.cfm">
+<div class="animation"><img src="images/TraineeAnimateSM_ISE.gif" width="781" height="225"/></div>
 <div class="checkin"><a href="checkin.cfm"><img src="images/checkin.gif" width="144" height="48" alt="check in" /></a></div>
 <div id="mainContent">
 
 <!---- Becoming a Participant  ---->
 <div id="participant" class="mybox">
-<h2>CSB Trainee Program</h2>
+<h2>ISE Trainee Program</h2>
 <p align="center">Please feel free to contact our main office at any  time.  Our contact information is listed  below.</p>
-<p align="center"><strong>CSB International</strong><br />
+<p align="center"><strong>International Student Exchange - Trainee Program</strong><br />
   119 Cooper Street<br />
   Babylon, NY 11706<br />
   <br />
@@ -156,7 +156,7 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
 <h2>Self-placed without an agent</h2>
 <p>Applicants with confirmed HC in US without an agent</p>
 <h4>Apply for J-1 Visa</h4>
-<p><a href="##"><img src="../images/buttons/apply_25.png" width="97" height="30" alt="apply" border="0" /></a></p></div>
+<p><a href="##"><img src="images/buttons/apply_25.png" width="97" height="30" alt="apply" border="0" /></a></p></div>
 <!---- End selfplaced  ---->
   
 
@@ -241,7 +241,7 @@ If you have any problems or questions while you are in the U.S., you can always 
   <div class="clearfix"></div>
 <!-- end container --></div>
 <div class="clearfixT"></div>
-<cfinclude template="../footer.cfm">
+<cfinclude template="footer.cfm">
 <div class="clearfix1px"></div>
 <div class="gStrip"></div>
 </body>
