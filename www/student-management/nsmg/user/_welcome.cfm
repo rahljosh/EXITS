@@ -159,21 +159,40 @@
 
         <div class="rdboxPaperwork">
 			
-			<cfif APPLICATION.CFC.USER.getUserSessionPaperwork().accountReviewStatus EQ 'officeReview'>
+			<cfif APPLICATION.CFC.USER.getUserSessionPaperwork().isAccountCompliant>
+            	<!--- Full Access --->            	
+            	<p align="center"><strong>Paperwork Status:</strong> Submitted | <strong>EXITS Access:</strong> Granted</p>
+                <p align="center">Your account is compliant.</p>
+            
+			<cfelseif APPLICATION.CFC.USER.getUserSessionPaperwork().accountReviewStatus EQ 'missingTraining'>
+            	<!--- Missing Trainings --->   
+            	<p align="center"><strong>Paperwork Status:</strong> Submitted | <strong>EXITS Access:</strong> Limited</p>
+				<cfif NOT APPLICATION.CFC.USER.getUserSessionPaperwork().isDOSCertificationCompleted AND NOT APPLICATION.CFC.USER.getUserSessionPaperwork().isTrainingCompleted>
+                    <p align="center">You are missing the DOS Certification and WebEx New Area Representative training, please see below.</p>
+                <cfelseif NOT APPLICATION.CFC.USER.getUserSessionPaperwork().isDOSCertificationCompleted>
+                    <p align="center">You are missing the DOS Certification, please see below.</p>
+                <cfelse>
+                    <p align="center">You are missing the WebEx New Area Representative training, please see below.</p>
+                </cfif>
+
+			<cfelseif APPLICATION.CFC.USER.getUserSessionPaperwork().accountReviewStatus EQ 'officeReview'>
+            	<!--- Office Review ---> 
+            	<p align="center"><strong>Paperwork Status:</strong> Submitted | <strong>EXITS Access:</strong> Limited</p>
                 <p align="center">              	
                     You have submitted initial paperwork for this season and your references have been checked by your Regional Manager. 
                     Headquarters is going to review your account. <br />
                 </p>
-            <cfelseif APPLICATION.CFC.USER.getUserSessionPaperwork().accountReviewStatus EQ 'rmReview'>
+            
+			<cfelseif APPLICATION.CFC.USER.getUserSessionPaperwork().accountReviewStatus EQ 'rmReview'>
+            	<!--- RM Review ---> 
             	<p align="center"><strong>Paperwork Status:</strong> Initial Paperwork Submitted | <strong>EXITS Access:</strong> Limited</p>
                 <p align="center">                	
                     You have submitted initial paperwork for this season. 
                     Your Regional Manager is going to review your account and check your references. <br />
                 </p>
-			<cfelseif APPLICATION.CFC.USER.getUserSessionPaperwork().isAccountCompliant>            	
-            	<p align="center"><strong>Paperwork Status:</strong> Submitted | <strong>EXITS Access:</strong> Granted</p>
-                <p align="center">Your account is compliant.</p>
-			<cfelseif APPLICATION.CFC.USER.getUserSessionPaperwork().isUserPaperworkCompleted>            	
+			
+			<cfelseif APPLICATION.CFC.USER.getUserSessionPaperwork().isUserPaperworkCompleted> 
+				<!--- Paperwork Completed --->            	
             	<p align="center"><strong>Paperwork Status:</strong> Submitted | <strong>EXITS Access:</strong> Limited</p>
                 <p align="center">             	
                     You have submitted all required paperwork for this season. A manual review is needed in order to fully activate your account. <br />
@@ -416,11 +435,15 @@
                             <cfif NOT qGetTraining.recordCount>
                                 <tr class="on"><td colspan="5" align="center">You have not taken any trainings this season</td>                                              
                             </cfif>
-                        </table>
+                        </table>                                                
                         
                         <div align="center">
-                            <p>Click Below to view a list of trainigs available</p>
+                        	<p>Click Below to view trainigs available</p>
+                            
                             <a href="index.cfm?curdoc=calendar/index">
+                                <cfif NOT APPLICATION.CFC.USER.getUserSessionPaperwork().isTrainingCompleted>
+                        			<div align="center" style="margin-top:7px;margin-bottom:7px;"><img src="pics/buttons/needInformation.png" border="0" /></div>
+                                </cfif>
                                 <img src="pics/webex-logo.jpg" border="0">
                             </a>
                         </div>                                        
@@ -457,7 +480,7 @@
         <div class="rdbottom"></div> <!-- end rdbottom --> 
         
     </div>
-	
+	    
     <!---
     <cfdump var="#APPLICATION.CFC.USER.getUserSession()#">    
     <cfdump var="#NOT APPLICATION.CFC.USER.getUserSessionPaperwork().isUserPaperworkCompleted#">

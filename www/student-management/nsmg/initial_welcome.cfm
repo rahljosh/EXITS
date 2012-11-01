@@ -621,9 +621,15 @@
                                                 </cfif>
                                             
                                             <cfelseif stUserPaperwork.accountReviewStatus EQ 'missingTraining'>
-                                                                                        
-                                                Active (Initial Paperwork Received) - DOS Certification and/or AR training needed
                                                 
+                                                <cfif NOT stUserPaperwork.isDOSCertificationCompleted AND NOT stUserPaperwork.isTrainingCompleted>
+                                                	Active (Initial Paperwork Received) - DOS Certification and AR training needed
+                                                <cfelseif NOT stUserPaperwork.isDOSCertificationCompleted>
+                                                	Active (Initial Paperwork Received) - DOS Certification training needed
+                                                <cfelse>
+                                                	Active (Initial Paperwork Received) - AR training needed
+                                                </cfif>
+                                                  
                                             <cfelse>
                                             
                                                 Active - 

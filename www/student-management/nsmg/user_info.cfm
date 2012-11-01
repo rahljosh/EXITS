@@ -378,10 +378,16 @@
             <em>CBC Approval Needed.</em>
         </div>
     <cfelseif stUserPaperwork.accountReviewStatus EQ 'missingTraining'>
-        <div class="alert">
+		<div class="alert">
         	<h1>Account Not Enabled</h1>
-            <em>User has submitted initial paperwork. DOS Certification and/or AR Training needed.</em>
-        </div>
+			<cfif NOT stUserPaperwork.isDOSCertificationCompleted AND NOT stUserPaperwork.isTrainingCompleted>
+                <em>User has submitted initial paperwork. DOS Certification and AR Training needed.</em>
+            <cfelseif NOT stUserPaperwork.isDOSCertificationCompleted>
+                <em>User has submitted initial paperwork. DOS Certification needed.</em>
+            <cfelse>
+                <em>User has submitted initial paperwork. AR Training needed.</em>
+            </cfif>
+		</div>
     <cfelseif NOT stUserPaperwork.isAccountCompliant>
         <div class="alert">
 	        <h1>Account Not Enabled</h1>
