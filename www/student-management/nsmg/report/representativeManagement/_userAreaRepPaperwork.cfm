@@ -67,8 +67,7 @@
                     pw.ar_ref_quest1, 
                     pw.ar_ref_quest2, 
                     pw.ar_cbc_auth_form, 
-                    pw.ar_agreement, 
-                    pw.ar_training
+                    pw.ar_agreement 
                 FROM 
                     smg_users u 
                 INNER JOIN
@@ -106,8 +105,6 @@
                             pw.ar_cbc_auth_form IS NULL
                         OR 
                             pw.ar_agreement IS NULL 
-                        OR 
-                            pw.ar_training IS NULL
                     )
               	<!--- Regional Advisors --->
                	<cfif CLIENT.userType EQ 6>
@@ -264,7 +261,6 @@
                         <cfif NOT LEN(ar_ref_quest2)>AR Ref Quest. 2 &nbsp; &nbsp; </cfif>
                         <cfif NOT LEN(ar_cbc_auth_form)>CBC Authorization Form &nbsp; &nbsp; </cfif>
                         <cfif NOT LEN(ar_agreement)>AR Agreement &nbsp; &nbsp; </cfif>
-                        <cfif NOT LEN(ar_training)>AR Training Form &nbsp; &nbsp; </cfif>
                     </td>
                 </tr>
                 
@@ -350,7 +346,6 @@
                                 <cfif NOT LEN(ar_ref_quest2)>AR Ref Quest. 2 &nbsp; &nbsp; </cfif>
                                 <cfif NOT LEN(ar_cbc_auth_form)>CBC Authorization Form &nbsp; &nbsp; </cfif>
                                 <cfif NOT LEN(ar_agreement)>AR Agreement &nbsp; &nbsp; </cfif>
-                                <cfif NOT LEN(ar_training)>AR Training Form &nbsp; &nbsp; </cfif>
                             </td>
                         </tr>
                         

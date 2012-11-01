@@ -18,6 +18,7 @@
     <cfparam name="URL.subAction" default="">
 	<cfparam name="URL.userID" default="0">
 	<cfparam name="URL.seasonID" default="0">
+    <cfparam name="URL.paperworkID" default="0">
 
     <!--- Param FORM Variables --->
     <cfparam name="FORM.subAction" default="">
@@ -53,7 +54,7 @@
         qGetUserCBC = APPLICATION.CFC.CBC.getCBCUserByID(userID=FORM.userID,cbcType='user');
 	</cfscript>
 	
-    <!--- Delete Paperwork --->
+    <!--- Paperwork Action --->
 	<cfswitch expression="#FORM.subAction#">
     
         <cfcase value="update">
@@ -63,15 +64,13 @@
 				<!--- Param FORM Variables --->
                 <cfparam name="FORM.ar_ref_quest1_#x#" default="#qGetSeasonPaperwork.ar_ref_quest1#">
                 <cfparam name="FORM.ar_ref_quest2_#x#" default="#qGetSeasonPaperwork.ar_ref_quest2#">
-                <cfparam name="FORM.ar_training_#x#" default="#qGetSeasonPaperwork.ar_training#">
                 
                 <cfquery datasource="#APPLICATION.DSN#">
                     UPDATE 
                         smg_users_paperwork 
                     SET
 						ar_ref_quest1 = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM['ar_ref_quest1_' & x]#" null="#NOT IsDate(FORM['ar_ref_quest1_' & x])#">,
-                        ar_ref_quest2 = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM['ar_ref_quest2_' & x]#" null="#NOT IsDate(FORM['ar_ref_quest2_' & x])#">,
-                        ar_training = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM['ar_training_' & x]#" null="#NOT IsDate(FORM['ar_training_' & x])#">
+                        ar_ref_quest2 = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM['ar_ref_quest2_' & x]#" null="#NOT IsDate(FORM['ar_ref_quest2_' & x])#">
                     WHERE
                         paperworkID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM['paperworkID_' & x]#">
                     AND
@@ -97,7 +96,7 @@
                 DELETE FROM
                     smg_users_paperwork
                 WHERE
-                    seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.seasonID)#">
+                    paperworkID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.paperworkID)#">
                 AND
                     userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.userID)#">
             </cfquery>
@@ -319,14 +318,13 @@
                                        <span class="required">missing (#stUserPaperwork.missingReferences#)</span>
                                     </cfif>
                                 </td>
+                                <td class="center" style="border-right:1px solid ##FFF;">#stUserPaperwork.dateTrained#</td>
                                 
                                 <!--- Editable for Office Users --->
                             	<cfif APPLICATION.CFC.USER.isOfficeUser()>
-                                    <td class="center" style="border-right:1px solid ##FFF;"><input type="text" name="ar_training_#qGetSeasonPaperwork.currentrow#"  value="#DateFormat(qGetSeasonPaperwork.ar_training, 'mm/dd/yyyy')#" class="datePicker"></td>
                                     <td class="center"><input type="text" name="ar_ref_quest1_#qGetSeasonPaperwork.currentrow#" value="#DateFormat(qGetSeasonPaperwork.ar_ref_quest1, 'mm/dd/yyyy')#" class="datePicker" <cfif NOT IsDate(qGetSeasonPaperwork.ar_ref_quest1)>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif>></td>
                                     <td class="center" style="border-right:1px solid ##FFF;"><input type="text" name="ar_ref_quest2_#qGetSeasonPaperwork.currentrow#" value="#DateFormat(qGetSeasonPaperwork.ar_ref_quest2, 'mm/dd/yyyy')#" class="datePicker" <cfif NOT isDate(qGetSeasonPaperwork.ar_ref_quest2)>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif>></td>
                                 <cfelse>
-                                	<td class="center" style="border-right:1px solid ##FFF;">#DateFormat(qGetSeasonPaperwork.ar_training, 'mm/dd/yyyy')#</td>
                                     <td class="center">#DateFormat(qGetSeasonPaperwork.ar_ref_quest1, 'mm/dd/yyyy')#</td>
                                     <td class="center" style="border-right:1px solid ##FFF;">#DateFormat(qGetSeasonPaperwork.ar_ref_quest2, 'mm/dd/yyyy')#</td>
                                 </cfif>
@@ -361,7 +359,7 @@
                                         </a>
                                     </cfif>
                                 </td>
-                                <td class="center"><a href="index.cfm?curdoc=user/index&action=paperworkDetails&subAction=delete&userID=#qGetSeasonPaperwork.userID#&seasonID=#qGetSeasonPaperwork.seasonID#" title="Delete Season"><img src="pics/x.png" height="20" border="0"></a></td>
+                                <td class="center"><a href="index.cfm?curdoc=user/index&action=paperworkDetails&subAction=delete&userID=#qGetSeasonPaperwork.userID#&paperworkID=#qGetSeasonPaperwork.paperworkID#" title="Delete Season"><img src="pics/x.png" height="20" border="0"></a></td>
 							
 							<!--- Read Only --->
                             <cfelse>

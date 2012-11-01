@@ -110,8 +110,8 @@
 		
 		
 		/*****
-			Reset Paperwork - REMOVE THIS LATER
-		***/
+			Reset Paperwork - REMOVE THIS LATER - 11/01/2012
+		*****/
 		APPLICATION.CFC.USER.getUserSessionPaperwork();
 	</cfscript>
     
@@ -170,6 +170,9 @@
                     You have submitted initial paperwork for this season. 
                     Your Regional Manager is going to review your account and check your references. <br />
                 </p>
+			<cfelseif APPLICATION.CFC.USER.getUserSessionPaperwork().isAccountCompliant>            	
+            	<p align="center"><strong>Paperwork Status:</strong> Submitted | <strong>EXITS Access:</strong> Granted</p>
+                <p align="center">Your account is compliant.</p>
 			<cfelseif APPLICATION.CFC.USER.getUserSessionPaperwork().isUserPaperworkCompleted>            	
             	<p align="center"><strong>Paperwork Status:</strong> Submitted | <strong>EXITS Access:</strong> Limited</p>
                 <p align="center">             	
@@ -455,7 +458,6 @@
         
     </div>
 	
-    
     <!---
     <cfdump var="#APPLICATION.CFC.USER.getUserSession()#">    
     <cfdump var="#NOT APPLICATION.CFC.USER.getUserSessionPaperwork().isUserPaperworkCompleted#">

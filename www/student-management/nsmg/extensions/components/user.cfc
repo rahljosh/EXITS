@@ -202,7 +202,6 @@
 			SESSION.USER.fullName = qGetUserInfo.firstName & " " & qGetUserInfo.lastName;
 			SESSION.USER.dateLastLoggedIn = qGetUserInfo.lastLogin;
 			SESSION.USER.email = qGetUserInfo.email;
-			
 			//SESSION.USER.defaultRegion = "";
 			//SESSION.USER.userType = "";
 			
@@ -353,8 +352,10 @@
 				setUserSessionPaperwork();
 			}
 			
-			// FORCE UPDATE SESSION SO USERS DON'T GET ERRORS | COMMENT THIS LATER 10/05/2012
-			// setUserSessionPaperwork();
+			/*****
+				Reset Paperwork - REMOVE THIS LATER - 11/01/2012
+			*****/
+			setUserSessionPaperwork();
 			
 			// Make Sure Structs are not empty
 			return SESSION.USER.PAPERWORK;
@@ -380,7 +381,6 @@
 			// New Struct
 			var stUserPaperwork = StructNew();
 			
-			
 			// Store User Information as well
 			stUserPaperwork.user = StructNew();
 			
@@ -390,7 +390,6 @@
 			stUserPaperwork.user.email = qGetUserInfo.email;			
 			stUserPaperwork.user.userType = "";
 
-
 			/**** Set Default Values ****/
 				
 			// Set Paperwork as not Completed
@@ -399,7 +398,6 @@
 			stUserPaperwork.isAccountCompliant = false;
 			// Set which users need to be notified for account review
 			stUserPaperwork.accountReviewStatus = "";
-
 
 			// Get User CBC
 			var qGetUserInfoCBC = APPLICATION.CFC.CBC.getCBCUserByID(userID=ARGUMENTS.userID,cbcType='user');
@@ -420,12 +418,6 @@
 			// Check if user is a second visit rep
 			var vIsSecondVisitRepOnly = isUserSecondVisitRepresentativeOnly(userID=ARGUMENTS.userID,companyID=CLIENT.companyID);
 			stUserPaperwork.user.isSecondVisitRepresentative = vIsSecondVisitRepOnly;
-
-			// DOS Certification
-			var stDOSCertification = isDOSCertificationValid(userID=ARGUMENTS.userID);
-			stUserPaperwork.isDOSCertificationCompleted = stDOSCertification.isDOSCertificationValid;
-			stUserPaperwork.dateDOSTestExpired = stDOSCertification.dateExpired;
-			
 			
 			// Set Current Season Information
 			stUserPaperwork.season = structNew();
@@ -434,13 +426,33 @@
 			stUserPaperwork.season.datePaperworkRequired = DateFormat(qGetCurrentSeason.datePaperworkRequired, "mm/dd/yyyy");
 			stUserPaperwork.season.datePaperworkEnded = DateFormat(qGetCurrentSeason.datePaperworkEnded, "mm/dd/yyyy");
 			stUserPaperwork.season.dateExtraPaperworkRequired = '';
-			
-			
+
 			// Store Date Values
 			stUserPaperwork.dateRMReviewNotified = DateFormat(qGetSeasonPaperwork.dateRMReviewNotified, "mm/dd/yyyy");
 			stUserPaperwork.dateOfficeReviewNotified = DateFormat(qGetSeasonPaperwork.dateOfficeReviewNotified, "mm/dd/yyyy");
 			stUserPaperwork.dateAccessGranted = DateFormat(qGetSeasonPaperwork.dateAccessGranted, "mm/dd/yyyy");
 
+
+			// Training - New Area Rep or Area Rep Refresher
+			var stUserTraining = isRequiredTrainingComplete(userID=ARGUMENTS.userID, seasonID=qGetCurrentSeason.seasonID);
+			stUserPaperwork.isTrainingCompleted = stUserTraining.isTrainingComplete;
+			stUserPaperwork.dateTrained = stUserTraining.dateTrained;
+			/**** 
+				TEMPORARY SOLUTION 
+				webEX trainings are not ready to go live, set them as true until we are ready
+				Marcus Melo 09/18/2012
+			****/		
+			if ( now() LT '2012/11/03' ) {
+				stUserPaperwork.isTrainingCompleted = true;
+			}
+			/**** TEMPORARY SOLUTION ****/			
+			
+			
+			// DOS Certification
+			var stDOSCertification = isDOSCertificationValid(userID=ARGUMENTS.userID);
+			stUserPaperwork.isDOSCertificationCompleted = stDOSCertification.isDOSCertificationValid;
+			stUserPaperwork.dateDOSTestExpired = stDOSCertification.dateExpired;
+			
 
 			// Set to true to force paperwork, to false to give an option to skip it
 			if ( now() GTE qGetCurrentSeason.datePaperworkRequired ) {
@@ -499,25 +511,6 @@
 				stUserPaperwork.missingReferences = 4 - qGetReferences.recordcount;
 			}
 			
-			
-			// Training - New Area Rep or Area Rep Refresher
-			if ( isDate(qGetSeasonPaperwork.ar_training) ) {
-				stUserPaperwork.isTrainingCompleted = true;
-			} else {
-				stUserPaperwork.isTrainingCompleted = false;
-			}
-			
-			
-			/**** 
-				TEMPORARY SOLUTION 
-				webEX trainings are not ready to go live, set them as true until we are ready
-				Marcus Melo 09/18/2012
-			****/		
-			if ( now() LT '2012/11/02' ) {
-				stUserPaperwork.isTrainingCompleted = true;
-			}
-			/**** TEMPORARY SOLUTION ****/			
-			
 
 			// Reference Questionnaire - Minimum of 2 - Phase out these two fields and use the reference table instead
 			if ( isDate(qGetSeasonPaperwork.ar_ref_quest1) AND isDate(qGetSeasonPaperwork.ar_ref_quest2) ) { 
@@ -537,7 +530,8 @@
 				// Extra Period is 21 days from datePaperworkRequired
 				stUserPaperwork.season.dateExtraPaperworkRequired = DateFormat(DateAdd("d", 21, stUserPaperwork.season.datePaperworkRequired), 'mm/dd/yyyy');				
 
-				/**** TEMPORARY SOLUTION **** Return users - Set Reference Questionnaire to complete for now until we sort this out. |  New users need to have reference questionnaire */
+				/**** TEMPORARY SOLUTION ****/
+				/* Return users - Set Reference Questionnaire to complete for now until we sort this out. |  New users need to have reference questionnaire */
 				stUserPaperwork.isReferenceQuestionnaireCompleted = true;
 				/**** TEMPORARY SOLUTION ****/
 				
@@ -680,7 +674,6 @@
                     sup.ar_ref_quest2,
                     sup.ar_cbc_auth_form,
                     sup.ar_agreement,
-                    sup.ar_training,
                     sup.agreeSig,
                     sup.cbcSig,
                     sup.dateRMReviewNotified,
@@ -702,9 +695,9 @@
                         sup.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
                 </cfif>
                 
-				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
+				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
                     AND          
-                        sup.fk_companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+                        sup.fk_companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
                 <cfelse>
                     AND          
                         sup.fk_companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
@@ -729,7 +722,7 @@
 			qGetSeasonPaperwork = getSeasonPaperwork(userID=ARGUMENTS.userID,seasonID=ARGUMENTS.seasonID);
 			
 			// Check if we are updating a date or string field
-			vDateFieldList = "ar_ref_quest1,ar_ref_quest2,ar_cbc_auth_form,ar_agreement,ar_training,dateRMReviewNotified,dateOfficeReviewNotified";
+			vDateFieldList = "ar_ref_quest1,ar_ref_quest2,ar_cbc_auth_form,ar_agreement,dateRMReviewNotified,dateOfficeReviewNotified";
 			
 			vStringFieldList = "agreeSig,cbcSig";
 			
@@ -1082,7 +1075,7 @@
                         	subOfRegion = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 					<cfif CLIENT.companyID EQ 5>
                         AND          
-                            r.company IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+                            r.company IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
                     <cfelse>
                         AND          
                             r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
@@ -1119,9 +1112,9 @@
                 	smg_students s ON s.intRep = u.userID
                     	AND
                         	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-						<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
+						<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
                             AND          
-                                s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+                                s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
                         <cfelse>
                             AND          
                                 s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
@@ -1712,7 +1705,51 @@
 	</cffunction>
 
 
-	<cffunction name="isDOSCertificationValid" access="public" returntype="struct" output="false" hint="Returns a structure">
+	<cffunction name="isRequiredTrainingComplete" access="public" returntype="struct" output="false" hint="Returns a structure with the required AR Training Information">
+    	<cfargument name="userID" hint="userID is required">
+        <cfargument name="seasonID" hint="seasonID is required">
+		
+        <cfquery 
+			name="qIsRequiredTrainingComplete" 
+			datasource="#APPLICATION.DSN#">
+                SELECT DISTINCT
+					id,
+                    date_trained
+                FROM 
+                    smg_users_training sut
+                WHERE
+                    user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                    AND          
+                        company_ID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                <cfelse>
+                    AND          
+                        company_ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                </cfif>
+                <!--- 6 = New Area Rep | 10 = Area Rep Refresher --->
+                AND
+                    training_id IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="6,10" list="yes"> )
+                LIMIT 1
+		</cfquery>
+        
+        <cfscript>
+			vReturnStruct = StructNew();			
+		
+			if ( qIsRequiredTrainingComplete.recordCount )  {
+				vReturnStruct.dateTrained = DateFormat(qIsRequiredTrainingComplete.date_trained, 'mm/dd/yyyy');
+				vReturnStruct.isTrainingComplete = true;
+			} else {
+				vReturnStruct.dateTrained = "";
+				vReturnStruct.isTrainingComplete = false;
+			}
+			
+			return vReturnStruct;
+		</cfscript>
+        
+	</cffunction>
+    
+
+	<cffunction name="isDOSCertificationValid" access="public" returntype="struct" output="false" hint="Returns a structure with the DOS Certification Information">
     	<cfargument name="userID" hint="userID is required">
 		
         <cfquery 
@@ -1726,9 +1763,9 @@
                     smg_users_training sut
                 WHERE
                     user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
-				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
+				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
                     AND          
-                        company_ID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+                        company_ID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
                 <cfelse>
                     AND          
                         company_ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
@@ -1852,8 +1889,6 @@
 			
 			// Copy New Area Reps or Area Rep. Refresher trainings to current smg_users_paperwork
 			if ( listFind("6,10", ARGUMENTS.trainingID) ) {
-				// Insert Training Date to the paperwork table
-				updateSeasonPaperwork(userID=ARGUMENTS.userID,fieldName="ar_training",fieldValue=ARGUMENTS.dateTrained);
 				// Check if we need to send out a notification to the regional manager
 				paperworkSubmittedRMNotification(userID=ARGUMENTS.userID);
 			}
