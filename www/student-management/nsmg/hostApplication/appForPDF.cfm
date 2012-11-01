@@ -79,11 +79,11 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
                     destination='#qGetHostFamily.NearBigCity#'
                 );
             </cfscript>
+            
 <cfquery name="kidsAtSchool" datasource="#application.dsn#">
 select name
 from smg_host_children 
-where school = <cfqueryparam cfsqltype="cf_sql_integer" value="#schoolInfo.schoolid#">
-
+where school = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(schoolInfo.schoolid)#">
 </cfquery>
 
 <body>
