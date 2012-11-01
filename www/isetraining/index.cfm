@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>CSB International: Trainee Program</title>
+<title>ISE International: Trainee Program</title>
 <style type="text/css">
 <!--
 .oneColFixCtrHdr #container .animation img {
@@ -26,7 +26,7 @@
 <div class="clearfixG">Trainee Program</div>
 <div id="container">
 <div id="tabsDiv"><cfinclude template="includes/t_menu.cfm"></div>
-<div class="animation"><img src="images/TraineeAnimatesm.gif" width="781" height="225"/></div>
+<div class="animation"><img src="images/TraineeAnimateSM_ISE.gif" width="781" height="225"/></div>
 <div class="checkin"><a href="checkin.cfm"><img src="images/checkin.gif" width="144" height="48" alt="check in" /></a></div>
 <div id="mainContent">
 

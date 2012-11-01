@@ -3,7 +3,7 @@
 <h4>"I want to go home to visit my family during my training. Can I travel outside the United States?"</h4>
 
 <p>First, make sure that you have a multiple visa. If you do, you must send your DS-2019 form to
-CSB to be signed. (Not doing so may cause you to be detained at the border upon your return
+ISE to be signed. (Not doing so may cause you to be detained at the border upon your return
 and/or refused entry into the United States upon your return). Please include a note with the
 dates on which you will be out of the country and the address where you would like your form
 returned. To have it sent via express mail, include a self-addressed, pre-paid envelope. You must
@@ -31,8 +31,8 @@ for up to 18 months. There will be an additional charge to extend a program.</p>
 
 <p>No, this is not a legitimate reason for breaking your contract with your host company. Talk to
 your supervisors at your host company and tell them about your concerns. If you absolutely
-must change your host company, contact CSB. You cannot leave your host company and begin
-training at a new host company without CSB's approval. If you do you may be released from
+must change your host company, contact ISE. You cannot leave your host company and begin
+training at a new host company without ISE's approval. If you do you may be released from
 the program and will be considered OUT OF STATUS immediately. Transfers are authorized in
 exceptional cases and will be decided upon on an individual basis.</p>
 
@@ -49,9 +49,9 @@ Unauthorized employment may lead to your immediate release from the program.</p>
 
 <h4>"My host company had to let me go because they could not continue training me. What should I do?"</h4>
 
-<p>Contact CSB IMMEDIATELY. CSB can assist you in finding another training program. In any
-case that your host company cannot continue your training you must contact CSB immediately
-and cannot begin training at a new host company until CSB has approved the transfer. All host
+<p>Contact ISE IMMEDIATELY. ISE can assist you in finding another training program. In any
+case that your host company cannot continue your training you must contact ISE immediately
+and cannot begin training at a new host company until ISE has approved the transfer. All host
 company transfers must be arranged as soon as possible in order for you to remain in good status
 on the program.</p>
 <br />

@@ -119,17 +119,17 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
 </style>
 
 
-<link href="../css/csbusa.css" rel="stylesheet" type="text/css" />
-<cfinclude template="includes/superfish_js.cfm">
+<link href="css/csbusa.css" rel="stylesheet" type="text/css" />
+<cfinclude template="includes/swtsuperfish_js.cfm">
 </head>
 
 <body class="oneColFixCtrHdr">
-<cfinclude template="../Trainee/Theader.cfm">
+<cfinclude template="Theader.cfm">
 <div class="clearfixG">Trainee Program</div>
 <div id="container">
 <div class="clearfixT"></div>
-<cfinclude template="../Trainee/includes/t_menu.cfm">
-<div class="animation"><img src="images/TraineeAnimatesm.gif" width="781" height="225"/></div>
+<cfinclude template="includes/t_menu.cfm">
+<div class="animation"><img src="images/TraineeAnimateSM_ISE.gif" width="781" height="225"/></div>
 <div class="checkin"><a href="checkin.cfm"><img src="images/checkin.gif" width="144" height="48" alt="check in" /></a></div>
 <div id="mainContent">
 
@@ -137,7 +137,7 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
 <div id="participant" class="mybox">
 <h2>Insurance</h2>
 <p>To find out about insurance benefits please download one of the following plans below:<br />
-<a href="http://www.csb-usa.com/Trainee/pdf/Trifold_CSB_Work_Experience_2011.pdf" class="black">1. IEG for participants with start date before February 1, 2012.</a>
+<a href="pdf/Trifold_CSB_Work_Experience_2011.pdf" class="black">1. IEG for participants with start date before February 1, 2012.</a>
 <br />
 <a href="pdf/2012/Trainee-program insurance-trifold-2012.pdf" class="black">2. UHC for participants with start date after February 1, 2012</a>.</p>
 <p>If you are a current trainee, we suggest that you go to the insurance website <a href="http://www.esecutive.com/myinsurance" target="_blank" class="black">www.esecutive.com/myinsurance</a>. To login you will need to enter your name, date of birth and policy  number (for IEG insurance - IEGC000173263, for UHC insurance - 1190028). On the website you will be able to obtain  additional information, download claim forms as well as print your  insurance card with your name on it.</p>
@@ -151,7 +151,7 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
   <div class="clearfix"></div>
 <!-- end container --></div>
 <div class="clearfixT"></div>
-<cfinclude template="../footer.cfm">
+<cfinclude template="footer.cfm">
 <div class="clearfix1px"></div>
 <div class="gStrip"></div>
 </body>

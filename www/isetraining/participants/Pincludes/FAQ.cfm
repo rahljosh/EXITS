@@ -15,9 +15,9 @@
 
 <h5>CSB J1 Visa Service Information</h5>
 <ul>
-   <li><a href="#question7" class ="blackN">What is the CSB J1 Visa Service?</a></li>
-    <li><a href="#question8" class ="blackN">What does the CSB J1 Visa Service include?</a></li>
-    <li><a href="#question10" class ="blackN">Who is eligible for the CSB J1 Visa Service?</a></li></ul>
+   <li><a href="#question7" class ="blackN">What is the ISE J1 Visa Service?</a></li>
+    <li><a href="#question8" class ="blackN">What does the ISE J1 Visa Service include?</a></li>
+    <li><a href="#question10" class ="blackN">Who is eligible for the ISE J1 Visa Service?</a></li></ul>
 
 <h5>Host Company Information</h5>
 <ul>
@@ -31,9 +31,9 @@
 
 <h5>CSB Information</h5>
 <ul>
-   <li><a href="#question15" class ="blackN">Who is CSB?</a></li>
-    <li><a href="#question16" class ="blackN">Where is CSB located?</a></li>
-    <li><a href="#question17" class ="blackN">How do I contact CSB?</a></li></ul>
+   <li><a href="#question15" class ="blackN">Who is ISE?</a></li>
+    <li><a href="#question16" class ="blackN">Where is ISE located?</a></li>
+    <li><a href="#question17" class ="blackN">How do I contact ISE?</a></li></ul>
 
 <h5>Instructions</h5>
 <ul>
@@ -75,7 +75,7 @@ different field of expertise. All trainees are eligible for additional training 
 
 <p>The first step in the process is to find an organization or agency to sponsor you for the J1 visa.
 Once you've identified a sponsor, you will need to apply for the DS 2019 form, the Certificate of
-Eligibility for Exchange Visitor Status. If you would like CSB to be your sponsor, you can apply
+Eligibility for Exchange Visitor Status. If you would like ISE to be your sponsor, you can apply
 online for the DS 2019. After you obtain your DS 2019, you can schedule your J1 visa interview
 at the nearest U.S. Embassy or Consulate. The Embassy or Consulate will have the final decision
 on granting your J1 visa.</p></div>
@@ -87,16 +87,16 @@ on granting your J1 visa.</p></div>
 
 <p>The cost of obtaining a J1 visa will vary depending on your sponsor and your program duration.
 Please contact the designated Agent in your region to find out the prices. If there is none, please
-contact CSB directly.</p></div>
+contact ISE directly.</p></div>
 
 <a href="#top" class="grey">back to top</a>
 
 <div id="question7">
 <h5>What is the CSB J1 Visa Service?</h5>
 
-<p>CSB J1 Visa Service is a reliable, transparent and cost-effective way for eligible participants to
+<p>ISE J1 Visa Service is a reliable, transparent and cost-effective way for eligible participants to
 apply for the J1 visa for training programs in the USA.</p>
-<p>CSB is committed to providing you with the fastest J1 visa service available. We will typically
+<p>ISE is committed to providing you with the fastest J1 visa service available. We will typically
   issue your DS 2019 form within one-two weeks of receiving your completed application,
   required documents, payment, and host company placement confirmation.</p>
 </div>
@@ -104,16 +104,16 @@ apply for the J1 visa for training programs in the USA.</p>
 <a href="#top" class="grey">back to top</a>
 
 <div id="question8">
-<h5>What does the CSB J1 Visa Service include?</h5>
+<h5>What does the ISE J1 Visa Service include?</h5>
 
-<p>Through the CSB J1 Visa Service, you can apply online for the DS 2019 form, the Certificate
+<p>Through the ISE J1 Visa Service, you can apply online for the DS 2019 form, the Certificate
 of Eligibility for Exchange Visitor Status. CSB will confirm your training placement with your
 host company and verify your eligibility for the program. Once we confirm these details, we will
 complete your registration in SEVIS (Student and Exchange Visitor Information System) and
 issue your DS 2019 form so that you can arrange your interview at the nearest U.S. Embassy or
 Consulate.<br /><br />
 
-As your designated J1 visa sponsor, CSB will conduct a pre-departure orientation to help you
+As your designated J1 visa sponsor, ISE will conduct a pre-departure orientation to help you
 understand the requirements of the J1 visa program and prepare you for your experience in the
 USA. We will also provide you with emergency medical insurance and 24-hour emergency
 support for the duration of your program in the USA.</p></div>
@@ -122,7 +122,7 @@ support for the duration of your program in the USA.</p></div>
 
 
 <div id="question10">
-<h5>Who is eligible for the CSB J1 Visa Service?</h5>
+<h5>Who is eligible for the ISE J1 Visa Service?</h5>
 
 <p>To participate in the J1 Training Program, you must be at least 20 years old and have a university
 degree or certificate and one year of professional experience in your career field or a minimum
@@ -162,9 +162,9 @@ minimum of 25 employees.</li>
 <h5>What if my host company doesn't meet all of the requirements?</h5>
 
 <p>Requirements 1 and 2 above are mandatory requirements of the U.S. Department of State. If your
-host company does not meet these requirements, CSB will be unable to issue the DS 2019 form
+host company does not meet these requirements, ISE will be unable to issue the DS 2019 form
 for your internship. If your host company does not meet requirement 3 above, you may still be
-able to participate in the program if a CSB representative conducts an in-person site visit.</p></div>
+able to participate in the program if a ISE representative conducts an in-person site visit.</p></div>
 
 <a href="#top" class="grey">back to top</a>
 
@@ -177,21 +177,21 @@ able to participate in the program if a CSB representative conducts an in-person
 <a href="#top" class="grey">back to top</a>
 
 <div id="question15">
-<h5>Who is CSB?</h5>
+<h5>Who is ISE?</h5>
 
-<p>CSB Career Development is one of the leaders in work-based cultural exchange programs
-in the United States. CSB has provided international students and young professionals with
+<p>ISE Career Development is one of the leaders in work-based cultural exchange programs
+in the United States. ISE has provided international students and young professionals with
 opportunities to build professional skills and gain valuable international experience through
 seasonal jobs, internships and career training opportunities in the USA.
 </p>
-<p>CSB is an official sponsor designated by the U.S. Department of State to administer the J1
+<p>ISE is an official sponsor designated by the U.S. Department of State to administer the J1
   Exchange Visitor Visa program. </p>
 </div>
 
 <a href="#top" class="grey">back to top</a>
 
 <div id="question16">
-<h5>Where is CSB located?</h5>
+<h5>Where is ISE located?</h5>
 
 <p>Our corporate headquarters are located in Babylon New York, USA.</p>
 </div>
@@ -201,7 +201,7 @@ seasonal jobs, internships and career training opportunities in the USA.
 <div id="question17">
 <h5>How do I contact CSB?</h5>
 
-<p>If you would like to contact CSB regarding our J1 Visa Service, please call our office at 631-
+<p>If you would like to contact ISE regarding our J1 Visa Service, please call our office at 631-
 893-4540 or email sergei@iseusa.com<br /><br />
 
 If you would like to reach our corporate headquarters in the USA, please call 631-893-4540.</p></div>
@@ -227,7 +227,7 @@ If you would like to reach our corporate headquarters in the USA, please call 63
 <div id="question20">
 <h5>How do I pay for the program?</h5>
 
-<p>Once you have selected your preferred program, CSB will send you an invoice via email with
+<p>Once you have selected your preferred program, ISE will send you an invoice via email with
 payment instructions. Payments are accepted via check or wire transfer.</p></div>
 
 <a href="#top" class="grey">back to top</a><br />

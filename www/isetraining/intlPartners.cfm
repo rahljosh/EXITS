@@ -119,17 +119,17 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
 </style>
 
 
-<link href="../css/csbusa.css" rel="stylesheet" type="text/css" />
-<cfinclude template="includes/superfish_js.cfm">
+<link href="css/csbusa.css" rel="stylesheet" type="text/css" />
+<cfinclude template="includes/swtsuperfish_js.cfm">
 </head>
 
 <body class="oneColFixCtrHdr">
-<cfinclude template="../Trainee/Theader.cfm">
+<cfinclude template="Theader.cfm">
 <div class="clearfixG">Trainee Program</div>
 <div id="container">
 <div class="clearfixT"></div>
-<cfinclude template="../Trainee/includes/t_menu.cfm">
-<div class="animation"><img src="images/TraineeAnimatesm.gif" width="781" height="225"/></div>
+<cfinclude template="includes/t_menu.cfm">
+<div class="animation"><img src="images/TraineeAnimateSM_ISE.gif" width="781" height="225"/></div>
 
 <div class="checkin"><a href="checkin.cfm"><img src="images/checkin.gif" width="144" height="48" alt="check in" /></a></div>
 <div id="mainContent">
@@ -144,7 +144,7 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
   <div class="clearfix"></div>
 <!-- end container --></div>
 <div class="clearfixT"></div>
-<cfinclude template="../footer.cfm">
+<cfinclude template="footer.cfm">
 <div class="clearfix1px"></div>
 <div class="gStrip"></div>
 </body>

@@ -12,8 +12,8 @@
     <cfparam name="email" default="">
     <cfparam name="info" default="Not filled in the request form">
 
-<cfmail to='sergei@iseusa.com' cc='jeimi@exitgroup.org' from='sergei@iseusa.com' subject='Become a Partner'>
-     Information was submitted on the OUTBOUND web site on #dateformat(Now(), 'mm/dd/yyyy')#.
+<cfmail to='sergei@iseusa.com' cc='jeimi@exitgroup.org' from='sergei@iseusa.com' subject='Become an ISE Trainee Partner'>
+     Information was submitted on the ISE Trainee web site on #dateformat(Now(), 'mm/dd/yyyy')#.
     
     Name: #form.fname#
     Company Name: #form.companyName#
@@ -43,7 +43,7 @@
 
 <div id="mainContent">
 <h2>Become a Partner</h2>
-<p> To become a CSB partner please fill out the form below and one of our Representatives will get back with you. We look forward to working with you.</p>
+<p> To become a ISE partner please fill out the form below and one of our Representatives will get back with you. We look forward to working with you.</p>
   <cfif isDefined('form.process')>
    
    Your message was sent!
@@ -54,7 +54,7 @@ select id, state
 from smg_states
 </cfquery>
      <cfoutput>
-         <cfform id="form1" name="form1" method="post" action="become.cfm">
+         <cfform id="form1" name="form1" method="post" action="intlPartners/become.cfm">
          <span class="formText">
           <input type="hidden" name="process" />
           Name <i>(First and Last)</i>
@@ -62,7 +62,7 @@ from smg_states
             <cfinput type="text" name="fname" message="Please enter your last name." validate="noblanks" required="yes" id="fname" size=22 typeahead="no" showautosuggestloadingicon="true" /><br />
            
            <span class="formText">Company Name</span><br />
-            <cfinput type="text" name="address" message="Please enter your Company's Name." required="yes" id="companyName" size=22 typeahead="no" showautosuggestloadingicon="true"  /><br />
+            <cfinput type="text" name="companyName" message="Please enter your Company's Name." required="yes" id="companyName" size=22 typeahead="no" showautosuggestloadingicon="true"  /><br />
             
       <span class="formText">Address </span><br />
             <cfinput type="text" name="address" message="Please enter your street address." required="yes" id="address" size=22 typeahead="no" showautosuggestloadingicon="true"  /><br />

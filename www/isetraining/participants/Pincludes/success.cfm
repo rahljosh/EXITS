@@ -1,6 +1,7 @@
 <div id="success" class="mybox">
 <h2>Participant Success Stories</h2>
-<p>CSB strives to create a positive image and desire to participate in our program. <br />Read below for short stories of how the CSB Trainee program has benefited past participants future careers.</p>
+<p>ISE strives to create a positive image and desire to participate in our program. <br />
+Read below for short stories of how the ISE Trainee program has benefited past participants future careers.</p>
 <div class="picPlace"><img src="images/testimonials/Irnya.jpg" width="140" height="168" alt="Irnya" /></div>
 <h4>Featured Participant Success Stories</h4>
 <p>"Enrolling into this program, I got myself wrapped up in a big challenge; the challenge that has already taught me a lot of valuable lessons, both in my professional field and in life. It is all about the precious experiences and people from all walks of life you encounter being a part of this program."<br /><br />
