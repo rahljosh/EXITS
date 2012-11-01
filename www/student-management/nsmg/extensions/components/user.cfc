@@ -513,7 +513,7 @@
 				webEX trainings are not ready to go live, set them as true until we are ready
 				Marcus Melo 09/18/2012
 			****/		
-			if ( now() LT '2012/11/01' ) {
+			if ( now() LT '2012/11/02' ) {
 				stUserPaperwork.isTrainingCompleted = true;
 			}
 			/**** TEMPORARY SOLUTION ****/			
