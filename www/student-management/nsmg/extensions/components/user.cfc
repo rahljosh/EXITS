@@ -519,10 +519,11 @@
 			if ( qGetAllSeasonPaperwork.recordCount GTE 2 AND isDate(stUserPaperwork.season.datePaperworkRequired) ) {
 				
 				// Extra Period is 21 days from datePaperworkRequired
-				stUserPaperwork.season.dateExtraPaperworkRequired = DateFormat(DateAdd("d", 21, stUserPaperwork.season.datePaperworkRequired), 'mm/dd/yyyy');				
+				// stUserPaperwork.season.dateExtraPaperworkRequired = DateFormat(DateAdd("d", 21, stUserPaperwork.season.datePaperworkRequired), 'mm/dd/yyyy');				
 
 				/**** TEMPORARY SOLUTION ****/
 				/* Return users - Set Reference Questionnaire to complete for now until we sort this out. |  New users need to have reference questionnaire */
+				stUserPaperwork.season.dateExtraPaperworkRequired = "11/30/2012";
 				stUserPaperwork.isReferenceQuestionnaireCompleted = true;
 				/**** TEMPORARY SOLUTION ****/
 				
