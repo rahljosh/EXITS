@@ -72,20 +72,33 @@
 	
 	.tableHolder {		
 		width:8.3in; /* 21.6 cm */		
-		/* height:10in; /* 25cm */
+		/* height:10in; */ /* 25cm */
 		padding:0;
-		margin:0.15in 0.75in 0 0.5in;
+		margin:0 0.45in 0 0.45in;
 		/* border:1px solid #CCCCCC; */
 	}
 
 	.tableCell {
 		margin:0;
 		padding:0;
-		height:2.25in; /* 6 cm */
-		width:3.5in; /* 8.9cm */	
+		height:2.34in; /* 5.94 cm */
+		width:3.4in; /* 8.8cm */	
 		/*
 		border-top:1px solid #CCCCCC;
 		border-left:1px solid #CCCCCC;
+		border-right:1px solid #CCCCCC;
+		*/
+	}
+	
+	.tableCellLastRow {
+		margin:0;
+		padding:0;
+		height:2in; /* 5.89 cm */
+		width:3.4in; /* 8.8cm */	
+		/*
+		border-top:1px solid #CCCCCC;
+		border-left:1px solid #CCCCCC;
+		border-right:1px solid #CCCCCC;
 		*/
 	}
 
@@ -93,9 +106,12 @@
 		float:left;
 		margin:0;
 		height:1in;
-		width:3.3in; /* 6.4cm */ 
+		width:3.95in; /* 10.03 cm */ 
 		overflow:hidden;
-		padding:0.72in 0 0 0.1in; /* 2 cm */
+		padding:0.8in 0 0 0.1in; /* 2 cm */
+		/*
+		border:1px solid #CCCCCC;
+		*/
 	}
 
 	/* Student Name, DOB and Dates */
@@ -137,8 +153,17 @@
         <tr>
     </cfif>				
     
+    <cfscript>
+		vSetTableStyle = "tableCell";
+		
+		// Last row is smaller (height) - last row will always end with a 9 and 0 - 19/20
+		if ( ListFind("9,0", Right(qGetStudents.currentRow, 1)) ) {
+			vSetTableStyle = "tableCellLastRow";
+		}
+	</cfscript>
+    
         <!--- Output the label --->			
-        <td class="tableCell" valign="top">
+        <td class="#vSetTableStyle#" valign="top">
     
             <!--- BODY --->
             <div class="informationDiv">
@@ -146,7 +171,7 @@
                 <span class="textStyle">#qGetStudents.familyLastName#, #qGetStudents.firstname# (###qGetStudents.studentID#)</span>
                 
                 <span class="textStyle">#DateFormat(qGetStudents.dob, 'mm/dd/yyyy')#</span>
-                
+            
             </div>   
                  
         </td>
