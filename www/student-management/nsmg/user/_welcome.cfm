@@ -168,11 +168,11 @@
             	<!--- Missing Trainings --->   
             	<p align="center"><strong>Paperwork Status:</strong> Submitted | <strong>EXITS Access:</strong> Limited</p>
 				<cfif NOT APPLICATION.CFC.USER.getUserSessionPaperwork().isDOSCertificationCompleted AND NOT APPLICATION.CFC.USER.getUserSessionPaperwork().isTrainingCompleted>
-                    <p align="center">You are missing the DOS Certification and WebEx New Area Representative training, please see below.</p>
+                    <p align="center">You are missing the DOS Certification and WebEx Area Rep Training (New Area Rep or Refresher), please see below.</p>
                 <cfelseif NOT APPLICATION.CFC.USER.getUserSessionPaperwork().isDOSCertificationCompleted>
                     <p align="center">You are missing the DOS Certification, please see below.</p>
                 <cfelse>
-                    <p align="center">You are missing the WebEx New Area Representative training, please see below.</p>
+                    <p align="center">You are missing the WebEx Area Rep Training (New Area Rep or Refresher), please see below.</p>
                 </cfif>
 
 			<cfelseif APPLICATION.CFC.USER.getUserSessionPaperwork().accountReviewStatus EQ 'officeReview'>
@@ -203,7 +203,7 @@
             <!--- 21 Days Extra Window --->
             <cfif isDate(APPLICATION.CFC.USER.getUserSessionPaperwork().season.dateExtraPaperworkRequired) AND NOT APPLICATION.CFC.USER.getUserSessionPaperwork().isPaperworkRequired>
             	<p align="center">
-                	You have until #APPLICATION.CFC.USER.getUserSessionPaperwork().season.dateExtraPaperworkRequired# to complete your Departmenf of State Certificate and/or WebEX Trainings.
+                	You have until #APPLICATION.CFC.USER.getUserSessionPaperwork().season.dateExtraPaperworkRequired# to complete your paperwork.
 				</p>
             </cfif>
             
