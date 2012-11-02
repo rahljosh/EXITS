@@ -44,7 +44,7 @@
             srp.comment,
             spt.type
         FROM 
-        	smg_rep_payments srp
+        	smg_users_payments srp
         INNER JOIN 
         	smg_payment_types spt ON srp.paymenttype = spt.id 
         WHERE
@@ -58,7 +58,7 @@
             
             <cfquery datasource="MySQL" result="newRecord">
                 INSERT INTO 
-                	smg_rep_payments 
+                	smg_users_payments 
                 (
                 	agentid, 
                     studentID,

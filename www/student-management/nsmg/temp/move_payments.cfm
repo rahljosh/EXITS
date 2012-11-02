@@ -10,7 +10,7 @@ ORDER BY smg_users.userid
 
 <cfloop query="get_users_in_region">
  <cfquery name="update_payments" datasource="mysql">
- update smg_rep_payments
+ update smg_users_payments
 	set companyid = 3
  where agentid = #userid# 
  </cfquery>

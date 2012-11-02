@@ -1510,7 +1510,7 @@
                     SUM(rep.amount) as totalPerProgram,
                     s.season           
                 FROM 
-                    smg_rep_payments rep
+                    smg_users_payments rep
                 LEFT JOIN
                     smg_programs p ON p.programID = rep.programID
                 LEFT JOIN
@@ -1557,7 +1557,7 @@
                     type.type,
                     p.programName
                 FROM 
-                    smg_rep_payments rep
+                    smg_users_payments rep
                 LEFT JOIN 
                     smg_students stu ON stu.studentid = rep.studentid
                 INNER JOIN
@@ -1607,7 +1607,7 @@
                     r.regionID,
                     r.regionName
                 FROM 
-                    smg_rep_payments rep
+                    smg_users_payments rep
                 INNER JOIN
                 	smg_users u ON u.userID = rep.agentID
                 INNER JOIN

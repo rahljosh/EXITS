@@ -109,7 +109,7 @@
     	r.id,
         r.programID
     FROM 
-    	smg_rep_payments r
+    	smg_users_payments r
     INNER JOIN 
     	smg_programs p ON p.programID = r.programID <!--- AND p.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="2,3,4,5,10" list="yes">) --->
     WHERE 
@@ -122,7 +122,7 @@
 
     <cfquery datasource="MySQL">
         UPDATE 
-            smg_rep_payments
+            smg_users_payments
 		SET
         	old_programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qRepPayments.programID#">
         WHERE 
@@ -255,7 +255,7 @@
 		<!--- SMG REP PAYMENTS --->
         <cfquery datasource="MySQL">
             UPDATE 
-                smg_rep_payments
+                smg_users_payments
             SET
                 programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#getISEProg.programID#">
             WHERE 

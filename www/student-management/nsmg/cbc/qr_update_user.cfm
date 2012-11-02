@@ -63,12 +63,12 @@
 	
 	<cfquery name="list_payments" datasource="MySql">
 		SELECT studentid
-		FROM smg_rep_payments
+		FROM smg_users_payments
 		WHERE agentid = '#current_id#'
 	</cfquery>
 	
 	<cfquery name="update_payments" datasource="MySql">
-		UPDATE smg_rep_payments
+		UPDATE smg_users_payments
 		SET agentid = '#current_id#',
 		   comment = 'Amount transf. durring account combining.  old user was #current_id#.'
 		where agentid = #updated_id#
@@ -138,7 +138,7 @@
 	
 	<cfquery name="list_payments" datasource="MySql">
 		SELECT studentid
-		FROM smg_rep_payments
+		FROM smg_users_payments
 		WHERE agentid =#updated_id#
 	</cfquery>	
 	

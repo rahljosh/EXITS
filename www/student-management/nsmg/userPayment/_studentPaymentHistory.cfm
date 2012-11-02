@@ -26,7 +26,7 @@ function areYouSure() {
 		   u.firstName, u.lastname, u.userid,
 		   type.type,
 		   p.programName, p.programID
-	FROM smg_rep_payments rep
+	FROM smg_users_payments rep
 	LEFT JOIN smg_users u ON u.userid = rep.agentid
 	LEFT JOIN smg_payment_types type ON type.id = rep.paymenttype
 	LEFT JOIN smg_programs p ON p.programID = rep.programID

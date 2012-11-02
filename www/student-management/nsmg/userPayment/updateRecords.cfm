@@ -12,7 +12,7 @@
         amount,
         date
 	FROM
-    	smg_rep_payments
+    	smg_users_payments
 	WHERE
 		paymentType = <cfqueryparam cfsqltype="cf_sql_integer" value="17">
 	AND
@@ -45,7 +45,7 @@
             inputBy,
             companyID
         FROM
-            smg_rep_payments
+            smg_users_payments
         WHERE
         	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetFastTrack.studentID#">              
 		AND	
@@ -66,7 +66,7 @@
         <!--- Delete Records --->
         <cfquery datasource="MySQL" result="newRecord">
             DELETE FROM
-                smg_rep_payments
+                smg_users_payments
 			WHERE
             	id IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#listID#" list="yes"> ) 
 			AND	
@@ -77,7 +77,7 @@
         <!--- Insert One Record --->
         <cfquery datasource="MySQL" result="newRecord">
             INSERT INTO 
-                smg_rep_payments
+                smg_users_payments
             (
                 agentid, 
                 studentID, 
