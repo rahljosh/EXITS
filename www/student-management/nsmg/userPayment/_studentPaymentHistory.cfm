@@ -28,7 +28,7 @@ function areYouSure() {
 		   p.programName, p.programID
 	FROM smg_users_payments rep
 	LEFT JOIN smg_users u ON u.userid = rep.agentid
-	LEFT JOIN smg_payment_types type ON type.id = rep.paymenttype
+	LEFT JOIN smg_users_payments_type type ON type.id = rep.paymenttype
 	LEFT JOIN smg_programs p ON p.programID = rep.programID
 	WHERE rep.studentID = <cfqueryparam value="#url.studentID#" cfsqltype="cf_sql_integer">
 	ORDER BY rep.id, rep.date

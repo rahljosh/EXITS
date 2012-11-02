@@ -32,7 +32,7 @@
 					 s.firstName as stufirst, s.familyLastName as stulast, 
 					 office.firstName as officefirst
 				FROM smg_users_payments payments
-				LEFT JOIN smg_payment_types types ON types.id = payments.paymenttype
+				LEFT JOIN smg_users_payments_type types ON types.id = payments.paymenttype
 				LEFT JOIN smg_companies c ON c.companyID = payments.companyID
 				LEFT JOIN smg_programs p ON p.programID = payments.programID
 				LEFT JOIN smg_users u ON u.userid = payments.agentid

@@ -32,7 +32,7 @@
         	id,
             type             
         FROM 
-        	smg_payment_types 
+        	smg_users_payments_type 
         WHERE 
         	paymenttype = <cfqueryparam cfsqltype="cf_sql_varchar" value="Trip">
     </cfquery>
@@ -46,7 +46,7 @@
         FROM 
         	smg_users_payments srp
         INNER JOIN 
-        	smg_payment_types spt ON srp.paymenttype = spt.id 
+        	smg_users_payments_type spt ON srp.paymenttype = spt.id 
         WHERE
         	srp.id = <cfqueryparam cfsqltype="cf_sql_integer" value="#paymentID#">
     </cfquery>

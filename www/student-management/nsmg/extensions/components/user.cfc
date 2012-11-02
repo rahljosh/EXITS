@@ -1565,7 +1565,7 @@
                 INNER JOIN	
                 	smg_seasons s ON s.seasonID = p.seasonID
                 LEFT JOIN 
-                    smg_payment_types type ON type.id = rep.paymenttype
+                    smg_users_payments_type type ON type.id = rep.paymenttype
                 LEFT JOIN 
                     smg_companies c ON c.companyID = rep.companyID
                 WHERE 
@@ -1611,7 +1611,7 @@
                 INNER JOIN
                 	smg_users u ON u.userID = rep.agentID
                 INNER JOIN
-                    smg_payment_types type ON type.id = rep.paymenttype
+                    smg_users_payments_type type ON type.id = rep.paymenttype
                 INNER JOIN
                 	smg_students s ON s.studentID = rep.studentID
                         AND

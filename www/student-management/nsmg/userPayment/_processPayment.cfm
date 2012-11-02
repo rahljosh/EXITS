@@ -65,9 +65,9 @@
             pt.id, 
             pa.amount
         FROM 
-            smg_payment_types pt
+            smg_users_payments_type pt
         LEFT OUTER JOIN
-            smg_payment_amount pa ON pt.id = pa.paymentid
+            smg_users_payments_amount pa ON pt.id = pa.paymentid
             <!--- ISE - Get Amounts for William --->
             <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
                 AND
@@ -89,9 +89,9 @@
             pt.id, 
             pa.amount
         FROM 
-            smg_payment_types pt
+            smg_users_payments_type pt
         LEFT OUTER JOIN
-            smg_payment_amount pa ON pt.id = pa.paymentid
+            smg_users_payments_amount pa ON pt.id = pa.paymentid
             <!--- ISE - Get Amounts for William --->
             <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
                 AND
@@ -113,9 +113,9 @@
             pt.id, 
             pa.amount
         FROM 
-            smg_payment_types pt
+            smg_users_payments_type pt
         LEFT OUTER JOIN
-            smg_payment_amount pa ON pt.id = pa.paymentid
+            smg_users_payments_amount pa ON pt.id = pa.paymentid
             <!--- ISE - Get Amounts for William --->
             <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
                 AND
@@ -210,7 +210,7 @@
             FROM 
                 smg_users_payments srp
             LEFT OUTER JOIN
-                smg_payment_types spt ON spt.ID = srp.paymentType
+                smg_users_payments_type spt ON spt.ID = srp.paymentType
             LEFT OUTER JOIN
                 smg_students s ON s.studentID = srp.studentID                                
             WHERE
@@ -234,7 +234,7 @@
             FROM 
                 smg_users_payments srp
             LEFT OUTER JOIN
-                smg_payment_types spt ON spt.ID = srp.paymentType
+                smg_users_payments_type spt ON spt.ID = srp.paymentType
             LEFT OUTER JOIN
                 smg_students s ON s.studentID = srp.studentID                                
             WHERE
@@ -258,7 +258,7 @@
             FROM 
                 smg_users_payments srp
             LEFT OUTER JOIN
-                smg_payment_types spt ON spt.ID = srp.paymentType
+                smg_users_payments_type spt ON spt.ID = srp.paymentType
             LEFT OUTER JOIN
                 smg_students s ON s.studentID = srp.studentID                                
             WHERE
@@ -626,7 +626,7 @@
                         FROM 
                             smg_users_payments rep
                         INNER JOIN 
-                            smg_payment_types spt ON rep.paymenttype = spt.id
+                            smg_users_payments_type spt ON rep.paymenttype = spt.id
                         LEFT JOIN 
                             smg_programs p ON rep.programID = p.programID
                         LEFT JOIN 
@@ -769,7 +769,7 @@
                         FROM 
                             smg_users_payments rep
                         INNER JOIN 
-                            smg_payment_types spt ON rep.paymenttype = spt.id
+                            smg_users_payments_type spt ON rep.paymenttype = spt.id
                         LEFT JOIN 
                             smg_programs p ON rep.programID = p.programID
                         LEFT JOIN 
@@ -996,7 +996,7 @@
                         FROM 
                             smg_users_payments rep
                         INNER JOIN 
-                            smg_payment_types spt ON rep.paymenttype = spt.id
+                            smg_users_payments_type spt ON rep.paymenttype = spt.id
                         LEFT OUTER JOIN
                         	progress_reports pr ON pr.pr_ID = rep.reportID
                         LEFT OUTER JOIN

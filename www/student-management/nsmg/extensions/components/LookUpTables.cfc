@@ -255,7 +255,7 @@
                     description,
                     paymentType
 				FROM
-                	smg_payment_types
+                	smg_users_payments_type
 				WHERE
                 	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                 
