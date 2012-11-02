@@ -2,7 +2,7 @@
 
 <cfquery name="get_payments" datasource="MySql">
 	SELECT studentID, agentid, count( studentID ) AS totalstudents, paymenttype, programID
-	FROM smg_rep_payments
+	FROM smg_users_payments
 	<!--- WHERE paymenttype = '3' OR paymenttype = '4' OR paymenttype = '5' OR paymenttype = '6' OR paymenttype = '7' OR paymenttype = '8' --->
 	GROUP BY inputby, studentID, agentid, programID, paymenttype
 	ORDER BY companyID, agentid, id
@@ -31,7 +31,7 @@
 					 u.firstName as repfirst, u.lastname as replast, u.userid,
 					 s.firstName as stufirst, s.familyLastName as stulast, 
 					 office.firstName as officefirst
-				FROM smg_rep_payments payments
+				FROM smg_users_payments payments
 				LEFT JOIN smg_payment_types types ON types.id = payments.paymenttype
 				LEFT JOIN smg_companies c ON c.companyID = payments.companyID
 				LEFT JOIN smg_programs p ON p.programID = payments.programID

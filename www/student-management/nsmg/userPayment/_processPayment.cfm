@@ -208,7 +208,7 @@
                 s.familyLastName,
                 s.studentID
             FROM 
-                smg_rep_payments srp
+                smg_users_payments srp
             LEFT OUTER JOIN
                 smg_payment_types spt ON spt.ID = srp.paymentType
             LEFT OUTER JOIN
@@ -232,7 +232,7 @@
                 s.familyLastName,
                 s.studentID
             FROM 
-                smg_rep_payments srp
+                smg_users_payments srp
             LEFT OUTER JOIN
                 smg_payment_types spt ON spt.ID = srp.paymentType
             LEFT OUTER JOIN
@@ -256,7 +256,7 @@
                 s.familyLastName,
                 s.studentID
             FROM 
-                smg_rep_payments srp
+                smg_users_payments srp
             LEFT OUTER JOIN
                 smg_payment_types spt ON spt.ID = srp.paymentType
             LEFT OUTER JOIN
@@ -294,7 +294,7 @@
                 
                     <cfquery datasource="MySQL" result="newRecord">
                         INSERT INTO 
-                            smg_rep_payments
+                            smg_users_payments
                         (
                             agentid, 
                             studentID,
@@ -346,7 +346,7 @@
                 
                     <cfquery datasource="MySQL" result="newRecord">
                         INSERT INTO 
-                            smg_rep_payments
+                            smg_users_payments
                         (
                             agentid, 
                             studentID, 
@@ -400,7 +400,7 @@
                 	
                     <cfquery datasource="MySQL" result="newRecord">
                         INSERT INTO 
-                            smg_rep_payments
+                            smg_users_payments
                         (
                             agentid, 
                             studentID, 
@@ -606,7 +606,7 @@
                             u.firstName, 
                             u.lastname
                         FROM 
-                            smg_rep_payments rep
+                            smg_users_payments rep
                         INNER JOIN 
                             smg_payment_types spt ON rep.paymenttype = spt.id
                         LEFT JOIN 
@@ -749,7 +749,7 @@
                             u.firstName, 
                             u.lastname
                         FROM 
-                            smg_rep_payments rep
+                            smg_users_payments rep
                         INNER JOIN 
                             smg_payment_types spt ON rep.paymenttype = spt.id
                         LEFT JOIN 
@@ -954,7 +954,7 @@
                                     SELECT
                                         reportID
                                     FROM
-                                        smg_rep_payments
+                                        smg_users_payments
                                     WHERE
                                         studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetSecondVisitStudentList.studentID#"> 
                                 )
@@ -976,7 +976,7 @@
                             h.hostID,
                             h.familyLastName                                                      
                         FROM 
-                            smg_rep_payments rep
+                            smg_users_payments rep
                         INNER JOIN 
                             smg_payment_types spt ON rep.paymenttype = spt.id
                         LEFT OUTER JOIN

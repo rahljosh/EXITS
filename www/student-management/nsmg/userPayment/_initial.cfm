@@ -7,6 +7,8 @@
 				
 				index.cfm?curdoc=userPayment/index&action=searchRepresentative
 				
+	Update:		11/02/2012 - Combining all divisions so Thea doesn't need to switch
+				
 ----- ------------------------------------------------------------------------- --->
 
 <!--- Kill extra output --->
@@ -29,8 +31,13 @@
         	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> 
         AND
         	hostid != <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-        AND 
-        	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+		<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+            AND
+            	companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+        <cfelse>
+            AND
+            	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+        </cfif>
         ORDER BY 
         	familyLastName
     </cfquery>
@@ -48,8 +55,13 @@
         	smg_users u ON s.areaRepID = u.userid
         WHERE 
         	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-        AND
-        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+		<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+            AND
+            	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+        <cfelse>
+            AND
+            	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+        </cfif>
         GROUP BY
         	u.userID
         ORDER BY 
@@ -69,8 +81,13 @@
         	smg_users u ON s.placeRepID = u.userid
         WHERE 
         	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-        AND
-        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+		<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+            AND
+            	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+        <cfelse>
+            AND
+            	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+        </cfif>
         GROUP BY
         	u.userID
         ORDER BY 
@@ -90,8 +107,13 @@
         	smg_users u ON s.secondVisitRepID = u.userid
         WHERE 
         	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-        AND
-        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+		<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+            AND
+            	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+        <cfelse>
+            AND
+            	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+        </cfif>
         GROUP BY
         	u.userID
         ORDER BY 
@@ -113,8 +135,13 @@
         	smg_users u ON h.areaRepID = u.userid
         WHERE 
         	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-        AND
-        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+		<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+            AND
+            	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+        <cfelse>
+            AND
+            	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+        </cfif>
 
         UNION
 		
@@ -129,8 +156,13 @@
         	smg_users u ON s.areaRepID = u.userid
         WHERE 
         	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-        AND 
-        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+		<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+            AND
+            	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+        <cfelse>
+            AND
+            	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+        </cfif>
 
         UNION
 		
@@ -147,8 +179,13 @@
         	smg_users u ON h.placeRepID = u.userid
         WHERE 
         	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-        AND 
-        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+		<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+            AND
+            	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+        <cfelse>
+            AND
+            	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+        </cfif>
 
         UNION
 
@@ -163,8 +200,13 @@
         	smg_users u ON s.placeRepID = u.userid
         WHERE 
         	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-        AND 
-        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+		<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+            AND
+            	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+        <cfelse>
+            AND
+            	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+        </cfif>
 		
         UNION
 
@@ -181,8 +223,13 @@
         	smg_users u ON h.secondVisitRepID = u.userid
         WHERE 
         	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-        AND 
-        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+		<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+            AND
+            	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+        <cfelse>
+            AND
+            	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+        </cfif>
 
         UNION
             
@@ -197,8 +244,13 @@
         	smg_users u ON s.secondVisitRepID = u.userid
         WHERE 
         	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-        AND 
-        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+		<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+            AND
+            	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+        <cfelse>
+            AND
+            	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+        </cfif>
 
         UNION
         
@@ -217,8 +269,13 @@
         	smg_students s ON sht.studentID = s.studentID
             AND	
                 s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-            AND 
-                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+			<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                AND
+                    s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+            <cfelse>
+                AND
+                    s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+            </cfif>
         
         GROUP BY 
         	userid

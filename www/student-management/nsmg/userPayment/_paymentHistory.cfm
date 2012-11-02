@@ -28,7 +28,7 @@
 		
         <cfquery datasource="MySql" result="test">
             DELETE FROM 
-            	smg_rep_payments
+            	smg_users_payments
 	        WHERE 
             	id = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.paymentid#">
 			AND
@@ -73,7 +73,7 @@
             s.studentID,
             type.type
         FROM 
-            smg_rep_payments rep
+            smg_users_payments rep
         LEFT JOIN 
             smg_students s ON s.studentID = rep.studentID
         LEFT JOIN 

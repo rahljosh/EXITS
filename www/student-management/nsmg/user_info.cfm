@@ -922,15 +922,14 @@
                         <td style="line-height:22px;" valign="top">
                             <Cfquery name="super_payments" datasource="#APPLICATION.DSN#">
                                 select sum(amount) as amount
-                                from smg_rep_payments
+                                from smg_users_payments
                                 where agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userID#">
                                 and transtype = 'supervision'
-                               AND companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.globalCompanyList#" list="yes">)
-                               
+                               	AND companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.globalCompanyList#" list="yes">)
                             </Cfquery>
                             <Cfquery name="place_payments" datasource="#APPLICATION.DSN#">
                                 select sum(amount) as amount
-                                from smg_rep_payments
+                                from smg_users_payments
                                 where agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userID#">
                                 and transtype = 'placement'
                                 AND companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.globalCompanyList#" list="yes">)
@@ -939,7 +938,7 @@
                             	SELECT
                                 	sum(amount) AS amount
                                	FROM
-                                	smg_rep_payments
+                                	smg_users_payments
                               	WHERE
                                 	agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userID#">
                               	AND
@@ -951,7 +950,7 @@
                             	SELECT
                                 	amount
                                	FROM
-                                	smg_rep_payments
+                                	smg_users_payments
                               	WHERE
                                 	agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userID#">
                               	AND
