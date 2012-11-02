@@ -521,7 +521,13 @@
                             <cfloop query="qGetHostPets">
                                 <tr>		
                                     <td>#qGetHostPets.animaltype#</td>
-                                    <td align="center">#qGetHostPets.number#</td>
+                                    <td align="center">
+                                    	<cfif qGetHostPets.number EQ 11>
+                                        	10+
+                                        <cfelse>
+                                        	#qGetHostPets.number#
+                                        </cfif>
+                                    </td>
                                     <td align="center">#qGetHostPets.indoor#</td>
                                 </tr>
                             </cfloop>
