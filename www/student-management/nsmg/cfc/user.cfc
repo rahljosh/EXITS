@@ -259,22 +259,6 @@
 		<cfset CLIENT.support_email = qGetCompany.support_email> 
         <cfset CLIENT.site_url = qGetCompany.url>
         
-		<!----Get List of sub companies assigned to logged in company---->
-        <cfquery name="company_list" datasource="#APPLICATION.dsn#">
-            SELECT 
-            	companyid
-            FROM	 
-            	smg_companies
-            WHERE 
-            	website = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCompany.website#">
-        </cfquery>
-        
-        <cfset compList = ''>
-        <cfloop query="company_list">
-        	<cfset compList = #ListAppend(compList, companyid)#>
-        </cfloop>
-        <cfset CLIENT.globalCompanyList = '#compList#'>
-        
         <cfquery name="get_usertype" datasource="#APPLICATION.dsn#">
             SELECT 
             	usertype
