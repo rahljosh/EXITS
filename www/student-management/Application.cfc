@@ -281,7 +281,7 @@
         <cfparam name="CLIENT.name" default="">
 
         <!--- Production - Email Error Message - Display HTML Error --->
- 		<cfif NOT APPLICATION.isServerLocal AND NOT LISTFIND('1,20','#CLIENT.userID#') > <!--- Fred from INTO needs to see the errors, josh wants to see the errors --->
+ 		<cfif NOT APPLICATION.isServerLocal AND NOT ListFind('1,20',CLIENT.userID)> <!--- Fred from INTO needs to see the errors, josh wants to see the errors --->
             
 			<cfscript>
                 // Current Path to root errorMessage.cfm file

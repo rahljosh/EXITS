@@ -289,8 +289,8 @@
         s.arearepid, 
         rep.firstName as rep_firstName, 
         rep.lastname as rep_lastname,
-        <!--- alias advisor.userid here instead of using user_access_rights.advisorID because the later can be 0 and we want null, and the 0 might be phased out later. --->
-        advisor.userid AS advisorID, 
+        <!--- alias advisor.userID here instead of using user_access_rights.advisorID because the later can be 0 and we want null, and the 0 might be phased out later. --->
+        advisor.userID AS advisorID, 
         advisor.firstName as advisor_firstName, 
         advisor.lastname as advisor_lastname, 
         spt.aug_report, 
@@ -302,12 +302,12 @@
     FROM 
     	smg_students s
     INNER JOIN 
-        smg_users rep ON s.arearepid = rep.userid
-    INNER JOIN user_access_rights ON s.arearepid = user_access_rights.userid
+        smg_users rep ON s.arearepid = rep.userID
+    INNER JOIN user_access_rights ON s.arearepid = user_access_rights.userID
         AND 
             s.regionassigned = user_access_rights.regionID
     LEFT JOIN 
-    	smg_users advisor ON user_access_rights.advisorID = advisor.userid
+    	smg_users advisor ON user_access_rights.advisorID = advisor.userID
     INNER JOIN 
     	smg_programs p ON s.programid = p.programid
     INNER JOIN
@@ -338,14 +338,14 @@
     <!--- regional advisor sees only their reps or their students. --->
 	<cfif CLIENT.usertype EQ 6>
         AND (
-            	user_access_rights.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+            	user_access_rights.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
             OR 
-                s.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+                s.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
         )
     <!--- supervising reps sees only their students. --->
     <cfelseif CLIENT.usertype EQ 7>
         AND 
-            s.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+            s.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
     </cfif>
 
     <!--- include the advisorID and arearepid because we're grouping by those in the output, just in case two have the same first and last name. --->
@@ -561,7 +561,7 @@
                         	<a name=#qGetResults.studentID#>
                         	<!--- put in red if user is the supervising rep for this student.  don't do for usertype 7 because they see only those students. --->
                             <a href="javascript:OpenLetter('reports/placementInfoSheet.cfm?uniqueID=#qGetResults.uniqueID#');">
-								<cfif arearepid EQ CLIENT.userid and CLIENT.usertype NEQ 7>
+								<cfif arearepid EQ CLIENT.userID and CLIENT.usertype NEQ 7>
                                     <font color="##FF0000"><strong>#qGetResults.firstName# #qGetResults.familyLastName# (###qGetResults.studentID#)</strong></font>
                                 <cfelse>
                                     #qGetResults.firstName# #qGetResults.familyLastName# (###qGetResults.studentID#)
@@ -572,16 +572,16 @@
                             <Cfif qGetResults.canceldate is not ''><span style="font-size:0.8em;"><em>Canceled: #DateFormat(qGetResults.canceldate, 'mm/dd/yyyy')#</em></span></Cfif>
                         </td>
                         <td>#yesNoFormat(qGetCurrentReport.recordCount)#</td>
-                        <td <cfif URL.lastReport eq #qGetResults.studentID#> class="cellStrike"</cfif>>
+                        <td <cfif URL.lastReport eq qGetResults.studentID> class="cellStrike"</cfif>>
 
 							<cfif qGetCurrentReport.recordCount>
                             
 								<!--- access is limited to: CLIENT.usertype LTE 4, second vist rep, supervising rep, regional advisor, regional director, and facilitator. --->
-                                <cfif CLIENT.usertype LTE 4 or listFind("#qGetCurrentReport.fk_secondVisitRep#,#qGetCurrentReport.fk_sr_user#,#qGetCurrentReport.fk_ra_user#,#qGetCurrentReport.fk_rd_user#,#qGetCurrentReport.fk_ny_user#, #qGetCurrentReport.fk_secondVisitRep#", CLIENT.userid)>
+                                <cfif CLIENT.usertype LTE 4 OR listFind("#qGetCurrentReport.fk_secondVisitRep#,#qGetCurrentReport.fk_sr_user#,#qGetCurrentReport.fk_ra_user#,#qGetCurrentReport.fk_rd_user#,#qGetCurrentReport.fk_ny_user#,#qGetCurrentReport.fk_secondVisitRep#", CLIENT.userID)>
 									
 									<!--- restrict view of report until the supervising rep approves it. --->
                                     <!----check the type of report, use appropriate person to view---->
-                                    <cfif qGetCurrentReport.pr_sr_approved_date EQ '' AND areaRepID NEQ CLIENT.userid>
+                                    <cfif qGetCurrentReport.pr_sr_approved_date EQ '' AND areaRepID NEQ CLIENT.userID>
                                     
 										<!----allow office to view so can delete if needed---->
                                         <cfif client.usertype lte 4>
@@ -616,7 +616,7 @@
                                
                                    Not in Country - No Report Required
                                     
-                                <cfelseif (areaRepID EQ CLIENT.userid and vIsPreviousReportApproved eq 1)>
+                                <cfelseif (areaRepID EQ CLIENT.userID and vIsPreviousReportApproved eq 1)>
                             
                                     <form action="index.cfm?curdoc=forms/pr_add" method="post">
                                         <input type="hidden" name="studentID" value="#studentID#">
