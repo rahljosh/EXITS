@@ -435,7 +435,7 @@
 
 			// Training - New Area Rep or Area Rep Refresher
 			var stUserTraining = isRequiredTrainingComplete(userID=ARGUMENTS.userID, seasonID=qGetCurrentSeason.seasonID);
-			stUserPaperwork.isTrainingCompleted = stUserTraining.isTrainingComplete;
+			stUserPaperwork.isTrainingCompleted = stUserTraining.isTrainingCompleted;
 			stUserPaperwork.dateTrained = stUserTraining.dateTrained;
 			
 			
@@ -1729,10 +1729,10 @@
 		
 			if ( qIsRequiredTrainingComplete.recordCount )  {
 				vReturnStruct.dateTrained = DateFormat(qIsRequiredTrainingComplete.date_trained, 'mm/dd/yyyy');
-				vReturnStruct.isTrainingComplete = true;
+				vReturnStruct.isTrainingCompleted = true;
 			} else {
 				vReturnStruct.dateTrained = "";
-				vReturnStruct.isTrainingComplete = false;
+				vReturnStruct.isTrainingCompleted = false;
 			}
 			
 			return vReturnStruct;
