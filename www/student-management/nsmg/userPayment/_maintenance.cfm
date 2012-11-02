@@ -27,7 +27,7 @@
          
             <cfquery name="update_amount" datasource="mySQL">
             	UPDATE 
-                	smg_payment_amount
+                	smg_users_payments_amount
                 SET 
                 	amount = <cfqueryparam cfsqltype="cf_sql_decimal" value="#Evaluate("form." & x & "_amount")#">
                 WHERE 
@@ -53,9 +53,9 @@
             spt.type, 
             spt.active
         FROM 
-	        smg_payment_amount spa
+	        smg_users_payments_amount spa
         LEFT OUTER JOIN 
-        	smg_payment_types spt ON spt.id = spa.paymentid
+        	smg_users_payments_type spt ON spt.id = spa.paymentid
         WHERE 
             
 		<!--- ISE - Get Amounts for William --->

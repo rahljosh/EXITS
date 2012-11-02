@@ -77,7 +77,7 @@
         LEFT JOIN 
             smg_students s ON s.studentID = rep.studentID
         LEFT JOIN 
-            smg_payment_types type ON type.id = rep.paymenttype
+            smg_users_payments_type type ON type.id = rep.paymenttype
         WHERE 
             rep.agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRepInfo.userID#"> 
         
