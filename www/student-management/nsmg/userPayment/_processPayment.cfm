@@ -319,7 +319,13 @@
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="supervision">, 
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">, 
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM[studentID & 'superAmount']#">, 
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">, 
+							<!--- ISE - Set Company to 1 --->
+                            <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                                <cfqueryparam cfsqltype="cf_sql_integer" value="1">,              
+                            <!--- CASE | ESI --->
+                            <cfelse>
+                                <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">,              
+                            </cfif>	                            
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM[studentID & 'superComment']#">
                         )
                     </cfquery>
@@ -371,7 +377,13 @@
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="placement">, 
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">, 
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM[studentID & 'placeAmount']#">, 
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">, 
+							<!--- ISE - Set Company to 1 --->
+                            <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                                <cfqueryparam cfsqltype="cf_sql_integer" value="1">,              
+                            <!--- CASE | ESI --->
+                            <cfelse>
+                                <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">,              
+                            </cfif>	                            
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM[studentID & 'placeComment']#">
                         )
                     </cfquery>
@@ -396,8 +408,8 @@
                 <cfparam name="FORM.#studentID#secondVisitComment" default="">
                 	
                 <!--- Block Payment if report is not selected --->
-                <cfif VAL(FORM[studentID & 'secondVisitPaymentTypeID']) AND isNumeric(FORM[studentID & 'secondVisitreportID'])>
-                	
+                <cfif VAL(FORM[studentID & 'secondVisitPaymentTypeID']) AND isNumeric(FORM[studentID & 'secondVisitAmount'])>
+                    
                     <cfquery datasource="MySQL" result="newRecord">
                         INSERT INTO 
                             smg_users_payments
@@ -427,7 +439,13 @@
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="secondVisit">, 
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">, 
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM[studentID & 'secondVisitAmount']#">, 
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">, 
+							<!--- ISE - Set Company to 1 --->
+                            <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                                <cfqueryparam cfsqltype="cf_sql_integer" value="1">,              
+                            <!--- CASE | ESI --->
+                            <cfelse>
+                                <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">,              
+                            </cfif>	                            
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM[studentID & 'secondVisitComment']#">
                         )
                     </cfquery>
