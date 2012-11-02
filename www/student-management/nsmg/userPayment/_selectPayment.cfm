@@ -132,7 +132,13 @@
                 AND
                 	DATE_ADD(p.endDate, INTERVAL 9 MONTH) >= CURDATE()
         WHERE 
-        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        
+		<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+            s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+        <cfelse>
+            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+        </cfif>
+
         AND	
             s.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
         
@@ -161,8 +167,14 @@
                 smg_hosthistory h ON h.studentID = s.studentID
             WHERE 
                 h.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
-            AND 
-                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+             
+			<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                AND
+                	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+            <cfelse>
+                AND
+                	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+            </cfif>
 			
             UNION
             
@@ -186,8 +198,12 @@
                     AND
                     	sht.fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
             WHERE 
-                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-
+				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                    s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                <cfelse>
+                    s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                </cfif>
+    
             GROUP BY 
                 studentID        
 		</cfif>               
@@ -212,7 +228,11 @@
                 AND
                 	DATE_ADD(p.endDate, INTERVAL 9 MONTH) >= CURDATE()
         WHERE 
-        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+			<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+            <cfelse>
+                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+            </cfif>
         AND	
             s.placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
 
@@ -241,8 +261,13 @@
                 smg_hosthistory h ON h.studentID = s.studentID
              WHERE 
                 h.placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
-             AND 
-                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+			<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                AND
+                	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+            <cfelse>
+                AND
+                	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+            </cfif>
 			
             UNION
             
@@ -266,7 +291,11 @@
                     AND
                     	sht.fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
             WHERE 
-                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                    s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                <cfelse>
+                    s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                </cfif>
 
             GROUP BY 
                 studentID        
@@ -292,7 +321,11 @@
                 AND
                 	DATE_ADD(p.endDate, INTERVAL 9 MONTH) >= CURDATE()
         WHERE 
-        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+			<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+            <cfelse>
+                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+            </cfif>
         AND	
             s.secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
 
@@ -321,8 +354,13 @@
                 smg_hosthistory h ON h.studentID = s.studentID
              WHERE 
                 h.secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
-             AND 
-                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+			<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                AND
+                	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+            <cfelse>
+                AND
+                	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+            </cfif>
 			
             UNION
             
@@ -346,7 +384,11 @@
                     AND
                     	sht.fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
             WHERE 
-                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                    s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                <cfelse>
+                    s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                </cfif>
 
             GROUP BY 
                 studentID        

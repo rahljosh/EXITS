@@ -602,6 +602,7 @@
                             rep.amount,
                             spt.type,
                             p.programName,
+                            u.userID,
                             u.firstName, 
                             u.lastname
                         FROM 
@@ -674,9 +675,9 @@
 							<!--- Display Previous Payment Information --->
                             <cfloop query="qCheckSupervisedCharges">
                                 <p>
-                                    #qCheckSupervisedCharges.type# paid on #DateFormat(qCheckSupervisedCharges.date, 'mm/dd/yyyy')# <br />
+                                    <strong>#qCheckSupervisedCharges.type# paid on #DateFormat(qCheckSupervisedCharges.date, 'mm/dd/yyyy')#</strong> <br />
                                     - Program: #qCheckSupervisedCharges.programName# <br />
-                                    - Rep: #qCheckSupervisedCharges.firstName# #qCheckSupervisedCharges.lastname# <br />
+                                    - Rep: #qCheckSupervisedCharges.firstName# #qCheckSupervisedCharges.lastname# (###qCheckSupervisedCharges.userID#) <br />
                                     - Total Paid: #DollarFormat(qCheckSupervisedCharges.amount)# 
                                 </p>
 							</cfloop>
@@ -695,9 +696,9 @@
                                 <cfelse>
                                     <cfloop query="qCheckSupervisedCharges">
                                         <p>
-                                            #qCheckSupervisedCharges.type# paid on #DateFormat(qCheckSupervisedCharges.date, 'mm/dd/yyyy')# <br />
+                                            <strong>#qCheckSupervisedCharges.type# paid on #DateFormat(qCheckSupervisedCharges.date, 'mm/dd/yyyy')#</strong> <br />
                                             - Program: #qCheckSupervisedCharges.programName# <br />
-                                            - Rep: #qCheckSupervisedCharges.firstName# #qCheckSupervisedCharges.lastname# <br />
+                                            - Rep: #qCheckSupervisedCharges.firstName# #qCheckSupervisedCharges.lastname# (###qCheckSupervisedCharges.userID#) <br />
                                             - Total Paid: #DollarFormat(qCheckSupervisedCharges.amount)# 
                                         </p>
                                     </cfloop>
@@ -744,6 +745,7 @@
                             rep.amount,
                             spt.type,
                             p.programName,
+                            u.userID,
                             u.firstName, 
                             u.lastname
                         FROM 
@@ -851,9 +853,9 @@
                                 <!--- Display Previous Payment Information --->
                                 <cfloop query="qCheckPlacedCharges">
                                     <p>
-                                        #qCheckPlacedCharges.type# paid on #DateFormat(qCheckPlacedCharges.date, 'mm/dd/yyyy')# <br />
+                                        <strong>#qCheckPlacedCharges.type# paid on #DateFormat(qCheckPlacedCharges.date, 'mm/dd/yyyy')#</strong> <br />
                                         - Program #qCheckPlacedCharges.programName# <br />
-                                        - Rep: #qCheckPlacedCharges.firstName# #qCheckPlacedCharges.lastname# <br />
+                                        - Rep: #qCheckPlacedCharges.firstName# #qCheckPlacedCharges.lastname# (###qCheckPlacedCharges.userID#) <br />
                                         - Total Paid: #DollarFormat(qCheckPlacedCharges.amount)#
                                     </p>
 								</cfloop>                               
@@ -875,9 +877,9 @@
 								<cfelse>
                                     <cfloop query="qCheckPlacedCharges">
                                         <p>
-                                            #qCheckPlacedCharges.type# paid on #DateFormat(qCheckPlacedCharges.date, 'mm/dd/yyyy')# <br />
+                                            <strong>#qCheckPlacedCharges.type# paid on #DateFormat(qCheckPlacedCharges.date, 'mm/dd/yyyy')#</strong> <br />
                                             - Program #qCheckPlacedCharges.programName# <br />
-                                            - Rep: #qCheckPlacedCharges.firstName# #qCheckPlacedCharges.lastname# <br />
+                                            - Rep: #qCheckPlacedCharges.firstName# #qCheckPlacedCharges.lastname# (###qCheckPlacedCharges.userID#) <br />
                                             - Total Paid: #DollarFormat(qCheckPlacedCharges.amount)#
                                         </p>
                                     </cfloop>                               
@@ -968,6 +970,7 @@
                             rep.reportID,
                             spt.type,
                             p.programName,
+                            u.userID,
                             u.firstName, 
                             u.lastname,
                             h.hostID,
@@ -1042,10 +1045,10 @@
                                 <!--- Display Previous Payment Information --->
                                 <cfloop query="qCheckSecondVisitCharges">
                                     <p>
-                                        #qCheckSecondVisitCharges.type# paid on #DateFormat(qCheckSecondVisitCharges.date, 'mm/dd/yyyy')# <br />
+                                        <strong>#qCheckSecondVisitCharges.type# paid on #DateFormat(qCheckSecondVisitCharges.date, 'mm/dd/yyyy')#</strong> <br />
                                         - Host: #qCheckSecondVisitCharges.familyLastName# (###qCheckSecondVisitCharges.hostID#) <br />
                                         - Program #qCheckSecondVisitCharges.programName# <br />
-                                        - Rep: #qCheckSecondVisitCharges.firstName# #qCheckSecondVisitCharges.lastname# <br />
+                                        - Rep: #qCheckSecondVisitCharges.firstName# #qCheckSecondVisitCharges.lastname# (###qCheckSecondVisitCharges.userID#) <br />
                                         - Total Paid: #DollarFormat(qCheckSecondVisitCharges.amount)#
                                     </p>
 								</cfloop>   
@@ -1066,10 +1069,10 @@
                                 <cfelse>
                                     <cfloop query="qCheckSecondVisitCharges">
                                         <p>
-                                            #qCheckSecondVisitCharges.type# paid on #DateFormat(qCheckSecondVisitCharges.date, 'mm/dd/yyyy')# <br />
+                                            <strong>#qCheckSecondVisitCharges.type# paid on #DateFormat(qCheckSecondVisitCharges.date, 'mm/dd/yyyy')#</strong> <br />
                                             - Host: #qCheckSecondVisitCharges.familyLastName# (###qCheckSecondVisitCharges.hostID#) <br />
                                             - Program #qCheckSecondVisitCharges.programName# <br />
-                                            - Rep: #qCheckSecondVisitCharges.firstName# #qCheckSecondVisitCharges.lastname# <br />
+                                            - Rep: #qCheckSecondVisitCharges.firstName# #qCheckSecondVisitCharges.lastname# (###qCheckSecondVisitCharges.userID#) <br />
                                             - Total Paid: #DollarFormat(qCheckSecondVisitCharges.amount)#
                                         </p>
                                     </cfloop>                               
