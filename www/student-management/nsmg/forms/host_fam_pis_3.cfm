@@ -254,13 +254,13 @@
                                     <select name="number_pets#get_pets.currentrow#">
                                         <option id="zeroOption#get_pets.currentrow#" value="0"></option>	
                                         <cfloop from="1" to="10" index="i">
-                                            <cfif #number# is #i#>
+                                            <cfif number is i>
                                                 <option value="#i#" selected='selected'>#i#</option>
                                             <cfelse>
                                                 <option value="#i#">#i#</option>
                                             </cfif>
                                         </cfloop>
-                                        <cfif #number# is 11>
+                                        <cfif number is 11>
                                             <option value=11 selected='selected'>10+</option>
                                         <cfelse>
                                             <option value=11>10+</option>
