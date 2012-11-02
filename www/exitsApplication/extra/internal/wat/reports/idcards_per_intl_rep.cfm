@@ -189,8 +189,8 @@
                                     <p class="style2">US Department of State:</p>
                                     <p class="style2">1-866-283-9090</p>
                                     <p class="style2">&nbsp;</p>	
-                                    <p class="style2">Exchange Visitor Program Number:</p>															
-                                    <p class="style2">#APPLICATION.CSB[setSponsor].programNumber#</p>
+                                    <p class="style2">Medical Plan - United Healthcare:</p>															
+                                    <p class="style2">1-800-251-1712</p>
                                 </td>
                             </tr>
                         </table>
