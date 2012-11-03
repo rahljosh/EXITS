@@ -105,13 +105,13 @@
         FROM progress_reports
         WHERE pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
     </cfquery>
-    
+   <!---- 
     <cfquery name="get_second_rep" datasource="#application.dsn#">
         SELECT userid, firstname, lastname
         FROM smg_users
         WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_secondVisitRep#">
     </cfquery>
-    
+    ---->
     <cfquery name="get_rep" datasource="#application.dsn#">
         SELECT userid, firstname, lastname
         FROM smg_users
@@ -155,13 +155,13 @@
         FROM smg_hosts
         WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_host#">
     </cfquery>
-    
+    <!----
     <cfquery name="get_international_rep" datasource="#application.dsn#">
         SELECT userid, businessname
         FROM smg_users
         WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_intrep_user#">
     </cfquery>
- 
+ ---->
   <Cfif not isDefined('form.process')>  
     <cfscript>
 		// Set FORM Values   
@@ -212,7 +212,7 @@
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please describe the homes appearance.");
             }
-            
+          
             // Home Type
             if ( NOT LEN(TRIM(FORM.typeOfHome)) ) {
                 // Get all the missing items in a list
@@ -577,11 +577,13 @@
         </cfif>
             
         <h1> Host Family Home Visit</h1>
+        <!----
         <p>
         	<strong>Student:</strong> #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (#qGetStudentInfo.studentid#)<br />
             <strong>Report ID</strong> #FORM.pr_id#<br />
             <strong>Program:</strong> #qGetProgramInfo.programName#
      </p>
+	 ---->
 
         <p>
             <strong>Family:</strong> #qGetHosts.fatherfirstname# <cfif qGetHosts.fatherfirstname is not ''>&amp;</cfif> #qGetHosts.motherfirstname# #qGetHosts.familylastname# <br />
@@ -591,10 +593,11 @@
      </p>
 
         <p>
-        	<strong>Second Visit Representative::</strong> #get_second_rep.firstname# #get_second_rep.lastname# (#get_second_rep.userid#)<br />
+        <!----
+        	<strong>Second Visit Representative::</strong> #get_second_rep.firstname# #get_second_rep.lastname# (#get_second_rep.userid#)<br />---->
             <strong>Supervising Representative::</strong> #get_rep.firstname# #get_rep.lastname# (#get_rep.userid#)<br />
-            <strong>Placing Representative::</strong> #get_place_rep.firstname# #get_place_rep.lastname# (#get_place_rep.userid#)<br />
-            <strong>Regional Advisor:</strong> <cfif get_report.fk_ra_user EQ ''>
+           <!---- <strong>Placing Representative::</strong> #get_place_rep.firstname# #get_place_rep.lastname# (#get_place_rep.userid#)<br />
+            ----><strong>Regional Advisor:</strong> <cfif get_report.fk_ra_user EQ ''>
                         Reports Directly to Regional Director
                     <cfelse>
                         #get_advisor_for_rep.firstname# #get_advisor_for_rep.lastname# (#get_advisor_for_rep.userid#)
