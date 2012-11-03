@@ -4,6 +4,8 @@
 <!--- Import CustomTag Used for Page Messages and Form Errors --->
 <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 
+<cfinclude template="approveDenyInclude.cfm">
+
 <!--- not defined if not selected. --->
 	<cfparam name="form.name" default="">
     <cfparam name="form.birthdate" default="">

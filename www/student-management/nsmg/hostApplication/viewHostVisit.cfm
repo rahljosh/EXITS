@@ -1,5 +1,5 @@
 <!--- Process Form Submission --->
-
+<cfparam name="form.studentid" default="5">
 <cfquery name="checkHostVisit" datasource="#application.dsn#">
 select * 
 from progress_reports
@@ -13,9 +13,7 @@ from smg_hosts
 where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
 </cfquery>
 
-<Cfif cgi.REMOTE_HOST eq '184.155.138.170'>
-	
-</Cfif>
+
 <cfif checkHostVisit.recordcount gt 0>
 <Cfoutput>
    	<cflocation url="../forms/initialHomeVisitReport.cfm?reportid=#checkHostVisit.pr_id#&itemID=#url.itemID#&userType=#url.usertype#">
@@ -29,13 +27,15 @@ where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
 
 
     <cflock timeout="30">
+   
         <cfquery datasource="#application.dsn#">
-            INSERT INTO progress_reports (fk_reportType, pr_uniqueid, pr_month_of_report, fk_sr_user, fk_ra_user, fk_rd_user, fk_ny_user, fk_host)
+            INSERT INTO progress_reports (fk_reportType, fk_student, pr_uniqueid, pr_month_of_report, fk_sr_user, fk_ra_user, fk_rd_user, fk_ny_user, fk_host)
             VALUES (
             <cfqueryparam cfsqltype="cf_sql_integer" value="#form.type_of_report#">,
-            
+            <cfqueryparam cfsqltype="cf_sql_integer" value="5">,
             <cfqueryparam cfsqltype="cf_sql_idstamp" value="#createuuid()#">,
             <cfqueryparam cfsqltype="cf_sql_integer" value="#form.month_of_report#">,
+            
             
             
             <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_sr_user#">,
@@ -54,6 +54,7 @@ where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
         insert into secondVisitAnswers	(fk_reportID)
         			values (#get_id.pr_id#)
         </Cfquery>
+        
     </cflock>
 
    	<form action="../forms/initialHomeVisitReport.cfm?itemID=#url.itemID#&usertype=#url.usertype#" method="post" name="theForm" id="theForm">
@@ -68,7 +69,7 @@ where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
 <cfelse>
         <Cfparam name="form.month_of_report" default="#DateFormat(now(), 'm')#">
         <cfparam name="form.fk_host" default="#client.hostid#">
-        
+         <cfparam name="form.studentid" default= "1">
         <cfparam name="form.type_of_report" default = "5">
  
 
@@ -144,7 +145,7 @@ where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
 
 <cfinput type="hidden" name="month_of_report" value="#form.month_of_report#">
 <cfinput type="hidden" name="companyid" value="#form.companyid#">
-
+<cfinput type="hidden" name="fk_student" value="5">
 <cfinput type="hidden" name="fk_secondVisitRep" value="">
 <cfinput type="hidden" name="fk_sr_user" value="#form.fk_sr_user#">
 <cfinput type="hidden" name="fk_pr_user" value="">
