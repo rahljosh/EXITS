@@ -80,7 +80,7 @@
                         
                     </cfquery> 
                     
-                    <cfoutput><cfif CLIENT.usertype lte i><a href="index.cfm?curdoc=hostApplication/listOfApps&status=#i#"></cfif>#apps.count#</a></cfoutput>
+                    <cfoutput><a href="index.cfm?curdoc=hostApplication/listOfApps&status=#i#">#apps.count#</a></cfoutput>
                 </td>
             </cfloop>
             </tr>
