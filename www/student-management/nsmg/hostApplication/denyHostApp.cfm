@@ -79,7 +79,7 @@ and (tdld.arearepDenial != '' OR
      tdld.facDenial != '')
 </Cfquery>
 <Cfquery name="hostInfo" datasource="#application.dsn#">
-select email, password
+select email, password, familylastname, hostid
 from smg_hosts
 where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
 </Cfquery>
@@ -94,6 +94,149 @@ update smg_hosts
     reasonAppDenied = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.additionalInfo#">
 where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
 </cfquery>
+
+<cfif appCurrentStatus lte 7>
+<cfsavecontent variable="denyApp">      
+	<style type="text/css">
+                         .rdholder {
+                            height:auto;
+                            width:auto;
+                            margin-bottom:25px;
+                            margin-top: 15px;
+                         } 
+                        
+                        
+                         .rdholder .rdbox {
+                            border-left:1px solid #c6c6c6;
+                            border-right:1px solid #c6c6c6;
+                            padding:2px 15px;
+                            margin:0;
+                            display: block;
+                            min-height: 137px;
+                         } 
+                        
+                         .rdtop {
+                            width:auto;
+                            height:20px;
+                            /* -webkit for Safari and Google Chrome */
+                        
+                          -webkit-border-top-left-radius:12px;
+                            -webkit-border-top-right-radius:12px;
+                            /* -moz for Firefox, Flock and SeaMonkey  */
+                        
+                          -moz-border-radius-topright:12px;
+                            -moz-border-radius-topleft:12px;
+                            background-color: #FFF;
+                            color: #006699;
+                            border-top-width: 1px;
+                            border-right-width: 1px;
+                            border-bottom-width: 0px;
+                            border-left-width: 1px;
+                            border-top-style: solid;
+                            border-right-style: solid;
+                            border-bottom-style: solid;
+                            border-left-style: solid;
+                            border-top-color: #c6c6c6;
+                            border-right-color: #c6c6c6;
+                            border-bottom-color: #c6c6c6;
+                            border-left-color: #c6c6c6;
+                         } 
+                        
+                         .rdtop .rdtitle {
+                            margin:0;
+                            line-height:30px;
+                            font-family:Arial, Geneva, sans-serif;
+                            font-size:20px;
+                            padding-top: 5px;
+                            padding-right: 10px;
+                            padding-bottom: 0px;
+                            padding-left: 10px;
+                            color: #006699;
+                         }
+                        
+                         .rdbottom {
+                        
+                          width:auto;
+                          height:10px;
+                          border-bottom: 1px solid #c6c6c6;
+                          border-left:1px solid #c6c6c6;
+                          border-right:1px solid #c6c6c6;
+                           /* -webkit for Safari and Google Chrome */
+                        
+                          -webkit-border-bottom-left-radius:12px;
+                          -webkit-border-bottom-right-radius:12px;
+                        
+                        
+                         /* -moz for Firefox, Flock and SeaMonkey  */
+                        
+                          -moz-border-radius-bottomright:12px;
+                          -moz-border-radius-bottomleft:12px; 
+                         
+                         }
+                        
+                        .clearfix {
+                            display: block;
+                            height: 5px;
+                            width: 500px;
+                            clear: both;
+                        }
+                        .rdholder .rdbox p, li, td {
+                            font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+                            font-size: .80em;
+                            padding-top: 0px;
+                            padding-right: 20px;
+                            padding-bottom: 0px;
+                            padding-left: 20px;
+                        }
+                        
+						
+						.thinBorder{border:solid 1px;}
+						
+                        </style> 
+                         
+                        <div class="rdholder" style="width: 595px;"> 
+                                        <div class="rdtop"> </div> <!-- end top --> 
+                                     <div class="rdbox">               
+		<cfoutput>
+         The #hostInfo.familylastname# (#hostInfo.hostid#) application has been denied for the following reasons. If you are able to make the necessary changes, please update the application and re-approve it.  If you are unable to make the needed changes, deny the application and it will move back down the hierarchy. 
+          <br /><br />
+          <Cfoutput>
+ 
+<table style="border: solid 1px;" width=80% align="center" cellpadding="4" cellspacing="0" >
+	<Tr >
+    	<Th align="left">Item</Th><th align="left">Problem Found</th>
+    </Tr>
+<cfif getDeniedReasons.recordcount eq 0>
+	<tr bgcolor="##F7F7F7" >
+    	<td colspan=2 align="center">No issues were recorded on specific sections of the application, please see below for general comments.</td>
+    </tr>
+<cfelse>
+    <cfloop query="getDeniedReasons">
+        <Tr <cfif currentRow mod 2> bgcolor="##F7F7F7"</cfif>>
+            <Td>#description#</Td><td>#arearepDenial# #regionalAdvisorDenial# #regionalDirectorDenial# #facdenial#</td>
+        </Tr>       
+    </cfloop>
+</cfif>
+</Table>
+
+
+<br><br>
+</Cfoutput>
+<Cfif form.additionalInfo is not ''>
+<div align="left">
+The following additional information was added:<br><Br>
+#form.additionalInfo#
+</div>
+<br>
+<br>
+</Cfif> 
+
+
+        
+        </cfoutput>
+    </cfsavecontent>
+
+<cfelse>
 <cfsavecontent variable="denyApp">      
 	<style type="text/css">
                          .rdholder {
@@ -240,13 +383,13 @@ The following additional information was added:<br><Br>
         
         </cfoutput>
     </cfsavecontent>
-
+</cfif>
     <cfinvoke component="nsmg.cfc.email" method="send_mail">
     
         <cfinvokeargument name="email_to" value="#mailTo#">
 		<!----
         <cfinvokeargument name="email_to" value="josh@pokytrails.com">
-		---->
+	---->
          <cfinvokeargument name="email_cc" value="#client.email#">
         <cfinvokeargument name="email_subject" value="Problems with Host Application">
         <cfinvokeargument name="email_message" value="#denyApp#">

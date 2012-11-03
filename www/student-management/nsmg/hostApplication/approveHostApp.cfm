@@ -23,6 +23,14 @@
    			 reasonAppDenied = <cfqueryparam  cfsqltype="CF_SQL_VARCHAR" null="yes">
         where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
     </cfquery>
+    <cfloop from="1" to="13" index=i>
+    <cfscript>
+			// Get update ToDoList
+			updateToDoList = APPLICATION.CFC.UDF.updateHostAppToDoList(hostID=client.hostid,studentID=0,itemid=#i#,usertype=client.usertype,denyApp=0);
+			</cfscript>
+    </cfloop>
+    
+    
     <Cfquery name="repInfo" datasource="#application.dsn#">
     select email, firstname, lastname
     from smg_users
@@ -94,7 +102,9 @@
     <cfinvoke component="nsmg.cfc.email" method="send_mail">
    
         <cfinvokeargument name="email_to" value="#mailTo#">
-		
+		<!----
+        <cfinvokeargument name="email_to" value="josh@pokytrails.com">
+		---->
          <!----<cfinvokeargument name="email_to" value="#client.email#">---->
         <cfinvokeargument name="email_subject" value="#appStatus.familylastname# App Needs your Approval">
         <cfinvokeargument name="email_message" value="#nextLevel#">
