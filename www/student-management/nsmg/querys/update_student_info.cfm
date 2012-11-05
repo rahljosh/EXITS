@@ -139,7 +139,7 @@
     
     <cfquery name="active_reason" datasource="#APPLICATION.DSN#">
         INSERT INTO 
-        	smg_students_status_history 
+        	smg_student_status_history 
         (
         	studentID,
             userid, 

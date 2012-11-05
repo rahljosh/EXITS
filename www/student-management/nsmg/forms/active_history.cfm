@@ -10,7 +10,7 @@ where uniqueid = "#url.uniqueid#"
 select history.studentid, history.userid, history.reason, history.date,
 smg_users.firstname, smg_users.lastname
 
-from smg_students_status_history history
+from smg_student_status_history history
 LEFT  JOIN smg_users on smg_users.userid = history.userid
 
 where history.studentid = #get_student_id.studentid#
