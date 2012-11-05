@@ -11,7 +11,6 @@
         <a href="#APPLICATION.siteURL#contact-ISE.cfm" class="bottomLinks3"></a>
         <a href="#APPLICATION.siteURL#scholarships.cfm" class="bottomLinks4"></a>
         <!---<a href="#APPLICATION.siteURL#international-student-grants.cfm" class="bottomLinks5"></a>--->
-    </div>
     </cfoutput>
     
     <script type="text/javascript">

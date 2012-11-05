@@ -1,4 +1,4 @@
-
+<Cfparam name="client.companyid" default="1">
  <Cfif isDefined('form.childID')>
 	  
 	  <cfquery 
@@ -30,8 +30,7 @@
      
 
  </Cfif>
-   <cfquery 
-			name="qGetUserInfo" 
+   <cfquery name="qGetUserInfo" 
 			datasource="MYSQL">
                 SELECT
                 	hostID,
@@ -154,7 +153,7 @@
                     
                
                     WHERE
-                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.hostID)#">
+                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(form.hostID)#">
                
                     
                 ORDER BY 
@@ -170,11 +169,7 @@
 
 <div class="scroll">
          
-  <p>I, 
-  <cfif isDefined('form.childID')>
-  <strong>#qGetMemberInfo.name# #qGetMemberInfo.lastname# </strong>
-  <cfelse>
-  <strong>#qGetUserInfo.firstName# #qGetUserInfo.middlename# #qGetUserInfo.lastname#</strong></cfif> do hereby authorize verification of all information in my application for involvement with the Exchange Program from all necessary sources and additionally authorize any duly recognized agent of General Information Services, Inc. to obtain the said records and any such disclosures.</p>
+  <p>I do hereby authorize verification of all information in my application for involvement with the Exchange Program from all necessary sources and additionally authorize any duly recognized agent of General Information Services, Inc. to obtain the said records and any such disclosures.</p>
 <p>Information appearing on this Authorization will be used exclusively by General Information Services, Inc. for identification
 purposes and for the release of information that will be considered in determining any suitability for participation in the
 Exchange Program.</p>

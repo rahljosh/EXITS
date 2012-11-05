@@ -63,18 +63,17 @@ where hostid =<cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
         </cfscript>
 		<cfif NOT SESSION.formErrors.length()>
             <cfquery name="insert_rules" datasource="MySQL">
-            update smg_hosts
+            update smg_hosts 
                 set
-                   
-                    houserules_curfewweeknights = "#form.houserules_curfewweeknights#",
-                    houserules_curfewweekends = "#form.houserules_curfewweekends#",
-                    houserules_chores = "#form.houserules_chores#",
-                    houserules_church = "#form.houserules_church#",
-                    houserules_other = "#form.houserules_other#",
-                    houserules_inet = "#form.houserules_inet#",
-                    houserules_expenses = "#form.houserules_expenses#"
+                    houserules_curfewweeknights = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.houserules_curfewweeknights#">,
+                    houserules_curfewweekends = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.houserules_curfewweekends#">,
+                    houserules_chores = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.houserules_chores#">,
+                    houserules_church = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.houserules_church#">,
+                    houserules_other = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.houserules_other#">,
+                    houserules_inet = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.houserules_inet#">,
+                    houserules_expenses = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.houserules_expenses#">
                 where
-                    hostid = #client.hostid#
+                    hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
             </cfquery>
     
             <cflocation url="index.cfm?page=familyAlbum">
