@@ -6,8 +6,7 @@
 
 	<!----
 	<cferror type="EXCEPTION" template="AlertForm.cfm">
-    
-    <cferror type="REQUEST" template="AlertForm.cfm">  
+	<cferror type="REQUEST" template="AlertForm.cfm">  
 	---->
 
     <!--- Param URL variable --->
@@ -90,20 +89,20 @@
 		APPLICATION.CFC.SESSION = CreateCFC("session").Init();
 
 
-		/*******************************************
-			Site URL
-		*******************************************/
-		APPLICATION.siteURL = 'http://' & CGI.HTTP_HOST & '/';
+		// Host Family Application - Force SSL for 
+		if ( NOT APPLICATION.isServerLocal AND CGI.SERVER_PORT EQ 80 AND ListFindNoCase(CGI.SCRIPT_NAME, "hostApp", "/") ) {
+			location("https://#CGI.HTTP_HOST##CGI.SCRIPTNAME#", "no");
+		}
 
 
 		/*******************************************
 			jQuery Latest Version 
-			http://code.jquery.com/jquery-latest.min.js
-			http://code.jquery.com/jquery.js
+			https://code.jquery.com/jquery-latest.min.js
+			https://code.jquery.com/jquery.js
 		*******************************************/
 		APPLICATION.PATH = StructNew();
 		/* jQuery Latest Version 
-		http://code.jquery.com/jquery-latest.min.js  /  http://code.jquery.com/jquery.js */		
+		https://code.jquery.com/jquery-latest.min.js  /  https://code.jquery.com/jquery.js */		
 		APPLICATION.PATH.jQuery = 'https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js';	
 		APPLICATION.PATH.jQueryUI = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/jquery-ui.min.js';
 		APPLICATION.PATH.jQueryTheme = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/themes/excite-bike/jquery-ui.css';
@@ -112,15 +111,17 @@
 
 		// Local Enviroment
 		if ( APPLICATION.isServerLocal ) {
-			// Production
+			// Development
 			APPLICATION.PATH.TEMP = 'C:/websites/www/student-management/nsmg/uploadedfiles/temp/';
 			APPLICATION.PATH.tour = 'C:/websites/www/student-management/nsmg/uploadedfiles/tours/';
+			APPLICATION.siteURL = 'http://' & CGI.HTTP_HOST & '/';
 			// Trips URL
 			APPLICATION.tripsURL = 'http://trips.local/';
 		} else {
 			// Production
 			APPLICATION.PATH.TEMP = 'C:/websites/student-management/nsmg/uploadedfiles/temp/';
 			APPLICATION.PATH.tour = 'C:/websites/student-management/nsmg/uploadedfiles/tours/';
+			APPLICATION.siteURL = 'https://' & CGI.HTTP_HOST & '/';
 			// Trips URL
 			APPLICATION.tripsURL = 'https://trips.exitsapplication.com/';
 		}
@@ -177,21 +178,6 @@
 		Constants.hearAboutUs[8] = "Post Card";
 		// ArrayAppend(Constants.hearAboutUs, "Other");
 
-		//Set up constant for payment methods
-		APPLICATION.Constants.paymentMethod = ArrayNew(1);		
-		APPLICATION.Constants.paymentMethod[1] = "Credit Card";	
-		/*
-		APPLICATION.Constants.paymentMethod[2] = "Personal Check";
-		APPLICATION.Constants.paymentMethod[3] = "Wire Transfer";
-		APPLICATION.Constants.paymentMethod[4] = "Money Order";
-		*/
-	
-		//Set up constant for credit card types
-		APPLICATION.Constants.creditCardType = ArrayNew(1);		
-		APPLICATION.Constants.creditCardType[1] = "American Express";
-		APPLICATION.Constants.creditCardType[2] = "Discover";
-		APPLICATION.Constants.creditCardType[3] = "MasterCard";
-		APPLICATION.Constants.creditCardType[4] = "Visa";
 
 		/*******************************************
 			Metadata
