@@ -557,7 +557,7 @@
             
         <cfscript>	
 			// Get Current Placement Information
-			var qGetCurrentPlacementInfo = getPlacementHistory(studentID=ARGUMENTS.studentID);
+			var qGetCurrentPlacementInfo = getPlacementHistory(studentID=ARGUMENTS.studentID,isActive=1);
 			var vHasHostIDChanged = 0;
 			var vHasPlacementChanged = 0;
 		
@@ -794,7 +794,7 @@
                 // Get Student Info
                 var qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID);	
 				
-				var vHostHistoryID = getPlacementHistory(studentID=ARGUMENTS.studentID).historyID;
+				var vHostHistoryID = getPlacementHistory(studentID=ARGUMENTS.studentID,isActive=1).historyID;
             </cfscript>
             
             <cfquery 
@@ -1005,9 +1005,9 @@
                 	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
 		</cfquery>
 
-        		<cfscript>
+		<cfscript>
             // Get History ID
-            vHostHistoryID = getPlacementHistory(studentID=ARGUMENTS.studentID).historyID;
+            vHostHistoryID = getPlacementHistory(studentID=ARGUMENTS.studentID,isActive=1).historyID;
         </cfscript>
         
         <cfquery 
@@ -1154,7 +1154,7 @@
 			// Get Student Info
 			var qGetStudentInfo = getStudentByID(studentID=ARGUMENTS.studentID);
 			
-			vHostHistoryID = getPlacementHistory(studentID=ARGUMENTS.studentID).historyID;			
+			vHostHistoryID = getPlacementHistory(studentID=ARGUMENTS.studentID,isActive=1).historyID;			
 		</cfscript>
         
         <cfquery 
@@ -1301,7 +1301,7 @@
 			vActions = "<p>#vActions#</p>";
 			
 			// Get Current History
-			vHostHistoryID = getPlacementHistory(studentID=ARGUMENTS.studentID).historyID;
+			vHostHistoryID = getPlacementHistory(studentID=ARGUMENTS.studentID,isActive=1).historyID;
 				
 			if ( VAL(vHostHistoryID) ) {
 				
@@ -1349,7 +1349,7 @@
 			var vHostHistoryID = 0;
 			
 			// Stores previous placement history, school dates must be kept the same if changing host family and school remains the same
-			var qGetPreviousPlacementHistory = getPlacementHistory(studentID=ARGUMENTS.studentID, isActive=1);
+			var qGetPreviousPlacementHistory = getPlacementHistory(studentID=ARGUMENTS.studentID,isActive=1);
 			
 			// Set whether we are updating or inserting a record
 			var vQueryType = '';
@@ -1837,7 +1837,7 @@
 		<cfscript>
 			// Get Current HistoryID if we do not have one
 			if ( NOT VAL(vHostHistoryID) ) {
-				vHostHistoryID = getPlacementHistory(studentID=ARGUMENTS.studentID).historyID;
+				vHostHistoryID = getPlacementHistory(studentID=ARGUMENTS.studentID,isActive=1).historyID;
 			}
 				
 			if ( LEN(vQueryType) ) {
@@ -2111,9 +2111,7 @@
 			var vHistoryID = ARGUMENTS.historyID;
 			
 			if ( NOT VAL(vHistoryID) ) {
-				
 				vHistoryID = getPlacementHistory(studentID=VAL(ARGUMENTS.studentID)).historyID;
-				
 			}	
 		</cfscript>
         
