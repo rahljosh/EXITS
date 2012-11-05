@@ -137,10 +137,7 @@ where uar.regionid = #appInfo.regionid# and uar.usertype = 5
   </cfquery>
 </cfif>
   
-
- <h1 class="enter">Welcome #lcase(appInfo.familylastname)# Family!</h1>
- <div align="center"><a href="../hostLogout.cfm">Logout</a></div>
-
+<h1 class="enter">Welcome #lcase(appInfo.familylastname)# Family!</h1>
 
   <table>
   	<tr>
