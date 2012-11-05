@@ -92,7 +92,7 @@
                 t.tour_ID,
                 t.tour_name,
                 t.totalSpots,
-                0 AS total,
+                COUNT(sts.siblingID) AS total,
                 COUNT(hMale.sex) AS totalMale,
                 COUNT(hFemale.sex) AS totalFemale
             FROM 
@@ -108,13 +108,13 @@
                     AND
                         hMale.childID IN ( SELECT siblingID FROM student_tours_siblings WHERE paid IS NOT NULL )
             LEFT OUTER JOIN
-                smg_host_children hFemale ON hMale.childID = sts.siblingID
+                smg_host_children hFemale ON hFemale.childID = sts.siblingID
                     AND
                         hFemale.sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="female">
                     AND
                         hFemale.childID IN ( SELECT siblingID FROM student_tours_siblings WHERE paid IS NOT NULL )
             WHERE
-                t.tour_status = <cfqueryparam cfsqltype="cf_sql_varchar" value="active" >
+                t.tour_status = <cfqueryparam cfsqltype="cf_sql_varchar" value="active">
                         
             GROUP BY
                 t.tour_ID
