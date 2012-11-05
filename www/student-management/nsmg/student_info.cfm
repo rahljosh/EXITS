@@ -254,7 +254,7 @@
         SELECT 
         	max(date) as qLastContact
         FROM 
-        	phone_call_log
+        	smg_student_phone_call_log
         WHERE 
         	fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
     </cfquery>

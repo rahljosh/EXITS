@@ -10,7 +10,7 @@
 <!---- If user is submitting call info, insert it, if not just display the form---->
 <cfif isDefined('form.new')>
 	<cfquery name="insert_info" datasource="#application.dsn#">
-    insert into phone_call_log (fk_userid, fk_studentid, date, notes)
+    insert into smg_student_phone_call_log (fk_userid, fk_studentid, date, notes)
     				values (#client.userid#, #url.studentid#, #now()#, '#form.notes#')
     </cfquery>
 </cfif>
@@ -26,8 +26,8 @@ where studentid = #url.studentid#
 
 <cfquery name="phone_log" datasource="mysql">
 select *, smg_users.firstname, smg_users.lastname
-from phone_call_log
-left join smg_users on smg_users.userid = phone_call_log.fk_userid
+from smg_student_phone_call_log
+left join smg_users on smg_users.userid = smg_student_phone_call_log.fk_userid
 where fk_studentid = #url.studentid#
 order by date desc
 </cfquery>
