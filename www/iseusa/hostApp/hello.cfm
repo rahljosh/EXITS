@@ -118,7 +118,13 @@
  LEFT JOIN smg_users u on u.userid = h.arearepid
  WHERE h.hostid = #client.hostid#
  </cfquery>
-
+<!----Regional Manager---->
+<cfquery name="regionalManager" datasource="mysql">
+select u.firstname, u.lastname
+from smg_users u
+left join user_access_rights uar on uar.userid = u.userid
+where uar.regionid = #appInfo.regionid# and uar.usertype = 5
+</cfquery>
  <Cfset client.hostfam = '#appInfo.familylastname#'>
  <Cfset client.hostemail = '#appInfo.email#'>
 <cfset appNotComplete = 1>
@@ -168,11 +174,9 @@
             	<strong><u>Submitted!</u></strong>
              <cfelse>
            
-					   <cfif appNotComplete gte 180>
-                            <a href="index.cfm?page=checkList" style="text-align: left;"><img src="images/buttons/submitHostApp.png" border="0"></a>
-                       <cfelse>
-                           <a href="index.cfm?page=checkList" style="text-align: left;"><img src="images/buttons/missingInfo.png" border="0"></a>
-                        </cfif>
+					   
+                            <a href="index.cfm?page=checkList" style="text-align: left;">Review Check List</a>
+                      
              </cfif>
                          </td>
                       </Tr>
@@ -208,7 +212,7 @@
             <p><strong>Regional Manager -</strong> 
             <cfif appInfo.regionid eq 0>
               Not Assigned
-              <cfelse>#appInfo.regionname#
+              <cfelse>#regionalManager.firstname# #regionalManager.lastname#  
             </cfif>
             </p>
             <p><strong>Area Representative -</strong> 

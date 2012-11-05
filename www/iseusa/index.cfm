@@ -114,7 +114,7 @@ $("#slidingDiv").animate({"height": "toggle"}, { duration: 1000 });
 ---->
 <div id="topBar">
 <cfinclude template="topBarLinks.cfm">
-<div id="logoBox"><a href="/"><img src="images/ISElogo.png" width="214" height="165" alt="Internation Student Exchange (ISE) logo" border="0" /></a></div>
+<div id="logoBox"><a href="/"><img src="images/ISElogo.png" width="214" height="165" alt="International Student Exchange (ISE) logo" border="0" /></a></div>
 <!-- end topBar --></div>
 <div id="container">
 <div class="spacer2"></div>
@@ -163,7 +163,7 @@ $("#slidingDiv").animate({"height": "toggle"}, { duration: 1000 });
         <div id="studentTrips" class="mybox" style="display:none; text-align:center;":>
             <span class="MOtext" style="background-color: #D0EDF9;"> 
             <strong>Student Trips</strong><br /><br />
-            Internation Student Exchange offers many trips for our students throughout the school year.
+            International Student Exchange offers many trips for our students throughout the school year.
             <br /><br /><p align="center"><a href="trips/exchange-student-trips.cfm"><img src="images/buttons/Details.png" border="0"></a></p></span>
             <span class="bigImage"><img src="images/subPages/subStudentTrips.gif" /></span>
         </div>

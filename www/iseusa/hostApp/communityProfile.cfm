@@ -300,7 +300,7 @@ from smg_airports
 <h2>Community Information for #local.city#, #local.state#</h2>
 		</td>
         <Td align="right">
-        <a href="http://en.wikipedia.org/wiki/#local.city#,_#local.state#" class="iframe">Need more info on #local.city#?</a>
+        <a href="http://en.wikipedia.org/wiki/#local.city#,_#local.state#" target="_new">Need more info on #local.city#?</a>
         </Td>
 <table width=100% cellspacing=0 cellpadding=2 class="border">
 	

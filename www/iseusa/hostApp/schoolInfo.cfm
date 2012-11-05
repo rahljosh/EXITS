@@ -26,9 +26,15 @@
 	where hostid = #client.hostid#
 </cfquery>
 
-<cfquery name="get_schools" datasource="MySQL">
+<cfquery name="get_local_schools" datasource="MySQL">
 select * from smg_schools
-where (city = "#local.city#")and (state = "#local.state#")
+where (city = <cfqueryparam cfsqltype="cf_sql_varchar" value= "#local.city#"> AND state = <cfqueryparam cfsqltype="cf_sql_varchar" value= "#local.state#">)
+order by schoolname
+</cfquery>
+<cfquery name="get_all_schools" datasource="MySQL">
+select * from smg_schools
+where state = <cfqueryparam cfsqltype="cf_sql_varchar" value= "#local.state#"> and city != <cfqueryparam cfsqltype="cf_sql_varchar" value= "#local.city#">
+order by city, schoolname
 </cfquery>
 <cfquery name="get_host_school" datasource="MySQL">
 select smg_hosts.schoolid, smg_schools.schoolname, smg_schools.address, smg_schools.address2, smg_schools.principal,smg_schools.city, smg_schools.state, smg_schools.zip, smg_schools.phone, smg_schools.email, smg_schools.tuition, smg_schools.type
@@ -233,25 +239,29 @@ where hostid = #client.hostid#
         />
 
 
-<cfif get_Schools.recordcount is 0>
-We do not have any schools in <Cfoutput>#local.city# #local.state#</Cfoutput> in our database.  Please add the following information for the school that the student will be attending.
-<cfelse>
-The following schools are in your city, if the student will be attending a school from the list, please select it.  If the school is not found, please enter 
-the information for the school that the student will be attending.
+
+The following schools are in your state.  The top of the list are schools in your city, followed by schools with in the state.  If you start typing in your school name, the list will filter.  If your school is not in the list, please lick the link "Our school is not listed above, I need to add it." and enter your school.
   <table width=100% cellspacing=0 cellpadding=2 class="border">
     <tr>
-        <td class="label">School: </td><td class="form_text"><select name="school">
-						<option value='na' selected>
-						<cfloop query="get_schools">
-						   	<option value=#schoolid#<cfif form.school eq #get_schools.schoolid#> selected</cfif>>#schoolname#
-                     	</cfloop>
-						<option value=0>Other
-						</select></span>
+        <td class="label">School: </td><td class="form_text">
+                        
+                         <select data-placeholder="Start typing your school name..." class="chzn-select" style="width:350px;" tabindex="2" name="school" onchange="this.form.submit(closeCity);">
+               <option value=""></option>
+                    <option value="">-----Schools in your city-----</option>
+                <Cfloop query="get_local_schools">
+                    <option value="#schoolid#" <cfif form.school is #get_local_schools.schoolid#>selected</cfif>>#schoolname# - #city#, #state#</option>
+                </Cfloop>
+                <option value="">-----All other schools-----</option>
+                   <Cfloop query="get_all_schools">
+                    <option value="#schoolid#" <cfif form.school is #get_all_schools.schoolid#>selected</cfif>>#schoolname# - #city#, #state#</option>
+                </Cfloop> 
+                </select>
+               
 			</tr>
 		</table>
  <a onclick="ShowHide(); return false;" href="##">+/- Our school is not listed above, I need to add it.</a>
 <div id="slidingDiv" display:"none">       
-</cfif>
+
   <h2>School Information</h2>
   <table width=100% cellspacing=0 cellpadding=2 class="border">
     <tr bgcolor="##deeaf3">
@@ -317,9 +327,9 @@ the information for the school that the student will be attending.
 	</tr>
 </table>
 <br />
-<cfif get_Schools.recordcount is not 0>
+
 </div>
-</cfif>
+
  <h2>Relationships</h2>
  <table width=100% cellspacing=0 cellpadding=2 class="border" border=0>
     <tr bgcolor="##deeaf3">
@@ -459,3 +469,6 @@ Special programs, unique features or electives available to foreign students
 
 </cfform>
 </cfoutput>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js" type="text/javascript"></script>
+  <script src="chosen/chosen.jquery.js" type="text/javascript"></script>
+  <script type="text/javascript"> $(".chzn-select").chosen(); $(".chzn-select-deselect").chosen({allow_single_deselect:true}); </script>

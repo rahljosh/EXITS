@@ -1,4 +1,16 @@
-<Cfif isDefined('form.processApp')>
+
+    <Cfquery name="checkSig" datasource="mysql">
+    select *
+    from smg_documents
+    where shortDesc = 'Host App Terms'
+    and hostid = #client.hostid#
+    </cfquery>
+    
+    
+
+   
+
+<Cfif checkSig.recordcount gt 0 AND #Right(cgi.HTTP_REFERER, '9')# eq 'checklist'>
 	<cfquery datasource="mysql">
     update smg_hosts
     set hostAppStatus = 7
@@ -10,7 +22,7 @@
     where hostid = #client.hostid#
     </cfquery>
     <cfquery name="emailAddy" datasource="mysql">
-    select email 
+    select smg_users.email 
     from smg_users
     left join smg_hosts on smg_hosts.arearepid = smg_users.userid
     where smg_hosts.hostid = #client.hostid#
@@ -19,13 +31,13 @@
 		<cfoutput>
           The #hostName.familylastname# application has been submitted for your review.
         <br /><br />  
-          You can review the app <a href="http://111cooper.com/nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=#client.usertype#">here</a>.
+          You can review the app <a href="http://ise.exitsapplication.com/nsmg/index.cfm">here</a>.
         
         
         </cfoutput>
     </cfsavecontent>
 
-    <cfinvoke component="nsmg.cfc.email" method="send_mail">
+    <cfinvoke component="cfc.email" method="send_mail">
     <!----
         <cfinvokeargument name="email_to" value="#mailTo#">
 		---->
@@ -888,7 +900,12 @@ where schoolid = #cl.schoolid#
             if(NOT LEN(TRIM(cl.income)))   {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please indicate your household income.");
-            }		
+            }	
+				// Address
+            if (NOT LEN(TRIM(cl.race))) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate the race of your household.");
+            }	
 	</cfscript>
           	<strong><font size=+1>Confidential Information</font></strong><br />
         <cfif NOT SESSION.formErrors.length()>
@@ -1001,11 +1018,11 @@ where schoolid = #cl.schoolid#
         <cfif StillMissingInfo eq 1>
         	<img src="../images/buttons/SubmitApp_03_grey.png" width="244" height="66" />
         <cfelse>
-         <form method="post" action="?index.cfm?page=checklist">
-            	<input name="processApp" type="hidden" value="" />
-        	<input type="image" src="../images/buttons/SubmitApp_03.png" width="244" height="66" />
-            </form>
+          <a href="disclaimer.cfm" class="iframe"><img src="../images/buttons/SubmitApp_03.png" width="244" height="66" /></a>
     	</cfif>
+		
+           
+        
         </Td>
     </tr>
  </table>

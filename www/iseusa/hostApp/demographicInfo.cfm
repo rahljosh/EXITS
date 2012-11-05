@@ -5,11 +5,14 @@
 <cfparam name="form.crimeExpl" default="">
 <cfparam name="form.income" default="0">
 <cfparam name="form.publicAssitanceExpl" default="">
+<cfparam name="form.race" default="">
+<cfparam name="form.ethnicityOther" default="">
+
 <!--- Import CustomTag Used for Page Messages and Form Errors --->
 <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 
 <cfquery name="demoInfo" datasource="MySql">
-select income, publicAssitance, publicAssitanceExpl, crime, crimeExpl, cps, cpsExpl
+select income, publicAssitance, publicAssitanceExpl, crime, crimeExpl, cps, cpsExpl, race, ethnicityOther
 from smg_hosts
 where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#"> 
 </cfquery>
@@ -23,6 +26,10 @@ where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please indicate if any member of your household is receiving any public assistance.");
             }	
+			 if (NOT LEN(TRIM(FORM.race))) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate the race of your household.");
+            }
 			// City
     		  if ( (form.publicAssitance EQ 1) AND (NOT LEN(TRIM(FORM.publicAssitanceExpl))) ) {
               // Get all the missing items in a list
@@ -67,7 +74,9 @@ where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
                     crime = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.crime#">,
                     crimeExpl = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.crimeExpl#">,
                     cps = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.cps#">,
-                    cpsexpl = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.cpsexpl#">
+                    cpsexpl = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.cpsexpl#">,
+                    race = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.race#">,
+                    ethnicityOther = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.ethnicityOther#">
                 where
                     hostid = #client.hostid#
             </cfquery>
@@ -85,7 +94,8 @@ where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.hostid#">
 			FORM.cps = demoInfo.cps;
 			FORM.cpsexpl =  demoInfo.cpsexpl;
 			FORM.income = demoInfo.income;
-			
+			FORM.race = demoInfo.race;
+			FORM.ethnicityOther = demoInfo.ethnicityOther;
 	
 		</cfscript>
 
@@ -184,6 +194,45 @@ The following information is required by the Department of State. This informati
     	<Td id="cpsExpl" <cfif form.cps eq 0>style="display: none;" bgcolor="##deeaf3"</cfif> >Please explain<span class="redtext">*</span><br />
         <textarea name="cpsExpl" cols="50" rows="4">#form.cpsExpl#</textarea></Td>
     </tr>
+ 
+    
+     <tr bgcolor="##deeaf3">
+    	<td class="label" valign="top" colspan="2"><h3>What is the families race? (check as many boxes as needed)<span class="redtext">*</span></h3></td>
+           
+      </tr>
+      <tr bgcolor="##deeaf3">
+      	<td colspan=2>
+        <Table>
+        	<Tr>
+            	<td><input name="race" value="African American" type="checkbox" <cfif ListFind('#race#', 'African American')>checked</cfif> /></td><td>African American</td>
+                <td><input name="race" value="American Indian or Alaska Native" type="checkbox" <cfif ListFind('#race#', 'American Indian or Alaska Native')>checked</cfif> /></td><td>American Indian / Alaska Native</td>
+                <td><input name="race" value="Asian Indian" type="checkbox" <cfif ListFind('#race#', 'Asian Indian')>checked</cfif> /></td><td>Asian Indian</td>
+                <td><input name="race" value="American Indian or Alaska Native" type="checkbox" <cfif ListFind('#race#', 'American Indian or Alaska Native')>checked</cfif> /></td><td>American Indian / Alaska Native</td>
+            </Tr>
+            <Tr>
+            	<td><input name="race" value="Chinese" type="checkbox" <cfif ListFind('#race#', 'Chinese')>checked</cfif> /></td><td>Chinese</td>
+                <td><input name="race" value="Filipino" type="checkbox" <cfif ListFind('#race#', 'Filipino')>checked</cfif> /></td><td>Filipino</td>
+                <td><input name="race" value="Chinese" type="checkbox" <cfif ListFind('#race#', 'Chinese')>checked</cfif> /></td><td>Chinese</td>
+                <td><input name="race" value="Korean" type="checkbox" <cfif ListFind('#race#', 'Korean')>checked</cfif> /></td><td>Korean</td>
+            </Tr>
+            <Tr>
+            	<td><input name="race" value="Native Hawaiian" type="checkbox" <cfif ListFind('#race#', 'Native Hawaiian')>checked</cfif> /></td><td>Native Hawaiian</td>
+                <td><input name="race" value="Vietnamese" type="checkbox" <cfif ListFind('#race#', 'Vietnamese')>checked</cfif> /></td><td>Vietnamese</td>
+                <td><input name="race" value="Samoan" type="checkbox" <cfif ListFind('#race#', 'Samoan')>checked</cfif> /></td><td>Samoan</td>
+                <td><input name="race" value="Guamanian or Chamorro" type="checkbox" <cfif ListFind('#race#', 'Guamanian or Chamorro')>checked</cfif> /></td><td>Guamanian or Chamorro</td>
+            </Tr>
+            <tr>
+            	 <td><input name="race" value="White" type="checkbox" <cfif ListFind('#race#', 'White')>checked</cfif> /></td><td>White</td>
+                 <td></td><Td colspan=3>Other: <input type="text" size=30 name="ethnicityOther" value="#form.ethnicityOther#" /></Td>
+            
+            
+        </Table>
+        
+        
+            </td>
+            
+    </tr>
+   
    </table>
    
 <table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
