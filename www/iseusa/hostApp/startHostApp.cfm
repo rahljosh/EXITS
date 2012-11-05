@@ -257,7 +257,7 @@
                 SESSION.formErrors.Add("Please provide the birthdate for the Host Mother.");
 			}
 			
-						// Father is Required
+			// Father is Required
             if (LEN(TRIM(FORM.motherfirstname)) and not len(trim(FORM.motherworktype)) )  {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please provide the occupation for the Host Mother.");
