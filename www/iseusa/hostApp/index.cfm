@@ -54,7 +54,7 @@ where email = '#client.email#'
 <div id="logoBoxB">
   <div class="blueBox">
   <a href="../index.cfm"><img src="../images/logo_21.png" width="214" height="165" alt="ISE logo" border="0" /></a>
-<cfif url.page is not 'hello' AND url.page is not 'hostLogin'>
+<cfif url.page is not 'hostLogin'>
 	<cfinclude template="includes/leftMenu.cfm">
 </cfif>
 <!--logoBoxB --></div>
