@@ -806,9 +806,11 @@
 		if ($("#city").val() == "") {
 			errorMessage += 'Please enter a city. \n';
 		}
+		<cfif FORM.usertype NEQ 8>
 		if ($("#state").val() == "") {
 			errorMessage += 'Please selecet a state. \n';
 		}
+		</cfif>
 		if ($("#zip").val() == "") {
 			errorMessage += 'Please enter a zip. \n';
 		}		
