@@ -2,23 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>(ISE) International Student Exchange - Foreign Exchange S</title>
-<style type="text/css">
-<!--
-
--->
-</style>
-
 <link href="../css/ISEstyle.css" rel="stylesheet" type="text/css" />
 <link href="../css/baseStyle.css" rel="stylesheet" type="text/css" />
 <link href="css/hostApp.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="chosen/chosen.css" />
 <link rel="stylesheet" href="../css/wiki.css" />
 <link rel="stylesheet" href="../css/colorbox2.css" />
-
 <script src="http://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script src="../linked/js/jquery.colorbox.js"></script>
-
 <script type="text/javascript">
 //<![CDATA[
 	function ShowHide(){
@@ -26,7 +18,6 @@
 	}
 //]]>
 </script>
-
         
 	<script>
 
@@ -74,11 +65,7 @@ where email = '#client.email#'
 <div id="container">
 <div class="spacer2"></div>
 <div class="title"><!-- end title --></div>
-<div class="tabsBar">
-  <!----
-  <cfinclude template="../tabsBar.cfm">
-  ----->
-  <!-- end tabsBar --></div>
+<div class="tabsBar"><!-- end tabsBar --></div>
 <div id="mainContent">
 <div id="subPages">
       <div class="whtTop"></div>
