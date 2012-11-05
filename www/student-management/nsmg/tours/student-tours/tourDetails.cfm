@@ -114,7 +114,7 @@
                     AND
                         hMale.childID IN ( SELECT siblingID FROM student_tours_siblings WHERE paid IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes"> )
             LEFT OUTER JOIN
-                smg_host_children hFemale ON hMale.childID = sts.siblingID
+                smg_host_children hFemale ON hFemale.childID = sts.siblingID
                     AND
                         hFemale.sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="female">
                     AND
