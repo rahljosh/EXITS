@@ -79,9 +79,6 @@
 		// Store the initialized metadata Library object in the Application scope
 		APPLICATION.CFC.metadata = CreateCFC("metadata").Init();
 
-		// Store the initialized paymentGateway Library object in the Application scope
-		APPLICATION.CFC.paymentGateway = CreateCFC("paymentGateway").Init();
-
 		// Store the initialized UDF Library object in the Application scope
 		APPLICATION.CFC.UDF = CreateCFC("udf").Init();
 
