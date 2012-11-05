@@ -527,7 +527,7 @@
                         
                         <cfloop query="qGetTripTotalRegisteredStudents">
                             <tr bgcolor="#iif(qGetTripTotalRegisteredStudents.currentRow MOD 2 ,DE("ffffe6") ,DE("white") )#">
-                                <td>#qGetTripTotalRegisteredStudents.tour_name#</td>
+                                <td><a href="index.cfm?curdoc=tours/student-tours/tourDetails&tour_id=#qGetTripTotalRegisteredStudents.tour_ID#" title="Trip Details">#qGetTripTotalRegisteredStudents.tour_name#</a></td>
                                 <td align="center">#qGetTripTotalRegisteredStudents.totalSpots#</td>
                                 <td align="center">#qGetTripTotalRegisteredStudents.total#</td>
                                 <td align="center">#qGetTripTotalRegisteredStudents.totalMale#</td>
