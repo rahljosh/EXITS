@@ -50,11 +50,13 @@ where email = '#client.email#'
 <cfoutput>
 <div id="topBar">
 
+<cfparam name="CLIENT.hostID" default="0">
+
 <cfinclude template="../topBarLinks.cfm">
 <div id="logoBoxB">
   <div class="blueBox">
   <a href="../index.cfm"><img src="../images/logo_21.png" width="214" height="165" alt="ISE logo" border="0" /></a>
-<cfif url.page is not 'hostLogin'>
+<cfif VAL(CLIENT.hostID) AND url.page is not 'hostLogin'>
 	<cfinclude template="includes/leftMenu.cfm">
 </cfif>
 <!--logoBoxB --></div>
