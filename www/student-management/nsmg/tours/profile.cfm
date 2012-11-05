@@ -807,7 +807,7 @@
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
                     <cfinvokeargument name="email_from" value="<info@mpdtoursamerica.com> (Trip Support)">
                     <cfinvokeargument name="email_to" value="#FORM.emailAddress#">
-                    <cfinvokeargument name="email_cc" value="info@mpdtoursamerica.com,tal@iseusa.com,#qGetRegistrationInfo.hostEmail#">
+                    <cfinvokeargument name="email_cc" value="info@mpdtoursamerica.com,tal@iseusa.com,john@iseusa.com,#qGetRegistrationInfo.hostEmail#">
                     <cfinvokeargument name="email_bcc" value="trips@iseusa.com">
                     <cfinvokeargument name="email_subject" value="#qGetRegistrationInfo.tour_name# Trip - Notice of Cancellation">
                     <cfinvokeargument name="email_message" value="#cancellationMessage#">
