@@ -91,7 +91,7 @@
 
 		// Host Family Application - Force SSL for 
 		if ( NOT APPLICATION.isServerLocal AND CGI.SERVER_PORT EQ 80 AND ListFindNoCase(CGI.SCRIPT_NAME, "hostApp", "/") ) {
-			location("https://#CGI.HTTP_HOST##CGI.SCRIPTNAME#", "no");
+			location("https://#CGI.HTTP_HOST##CGI.SCRIPT_NAME#", "no");
 		}
 
 
