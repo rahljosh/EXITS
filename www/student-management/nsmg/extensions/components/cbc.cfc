@@ -1560,22 +1560,33 @@
 				*/
 
 				// Get Total of Products
-				totalProducts = ArrayLen(readXML.bgc.product);
+				vTotalProducts = ArrayLen(readXML.bgc.product);
 				
 				// Set USOneSearchID, if there is a social is product 2 if there is no social is product 1
-				if ( totalProducts GT 1 ) {
+				if ( vTotalProducts GT 1 ) {
 					usOneSearchID = 2;					
 				} else {
 					usOneSearchID = 1;					
 				}
 				
-				// Get USOneSearch Report ID                
-				if ( readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.XmlAttributes.qtyFound NEQ 0 ) {
-                    ReportID = '#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender.record.key.secureKey.XmlText#';
-                } else {
+				// Get Report ID
+				try { 
+					// Try to get from US One Search (if there is an error, get it from BCG order number)
+                    ReportID = readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender.record.key.secureKey.XmlText;
+				} catch (Any e) {
+					// Error
                     ReportID = '#readXML.bgc.XmlAttributes.orderId#';
-                }
-				
+				}					
+
+				// Get Total Offenses
+				try { 
+					// Get total of items - USOneSearch
+					vTotalOffenses = readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.XmlAttributes.qtyFound;
+				} catch (Any e) {
+					// Get total of items - USOneSearch
+					vTotalOffenses = 0;
+				}					
+
 				// Get Company Information
 				qGetCompany = APPLICATION.CFC.COMPANY.getCompanies(companyID=ARGUMENTS.companyID);
 							
@@ -1631,9 +1642,6 @@
 						}
 					}
 				}
-				
-				// Get total of items - USOneSearch
-				totalItems = readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.XmlAttributes.qtyFound;
             </cfscript>
         
 			<cfoutput>
@@ -1666,7 +1674,7 @@
                     <tr><td colspan="2">&nbsp;</td></tr>
                     
                     <!--- USOneValidate --->
-					<cfif totalProducts GT 1>                   
+					<cfif vTotalProducts GT 1>                   
                         <tr bgcolor="##CCCCCC"><th colspan="2">US ONE VALIDATE</th></tr>
                         <tr><td colspan="2"><b>SSN Validation & Death Master Index Check for #readXML.bgc.product[1].USOneValidate.order.ssn#</b></td></tr>
                         <tr><td colspan="2">&nbsp; &nbsp; &nbsp; #readXML.bgc.product[1].USOneValidate.response.validation.textResponse#</td></tr>	
@@ -1680,19 +1688,19 @@
                     <tr bgcolor="##CCCCCC"><th colspan="2"><b>US ONE SEARCH</b></th></tr>
                     <tr><td colspan="2"><b>You searched for:</b></td></tr>
                     <tr><td colspan="2">&nbsp; &nbsp; &nbsp; <b>#readXML.bgc.product[usOneSearchID].USOneSearch.order.lastName#, #readXML.bgc.product[usOneSearchID].USOneSearch.order.firstName# #readXML.bgc.product[usOneSearchID].USOneSearch.order.middlename#</b></td></tr>
-                    <cfif totalProducts GT 1>    
+                    <cfif vTotalProducts GT 1>    
 	                    <tr><td colspan="2">&nbsp; &nbsp; &nbsp; <b>SSN : </b> #readXML.bgc.product[1].USOneValidate.order.ssn#</td></tr>
                     </cfif>
                     <tr><td colspan="2">&nbsp; &nbsp; &nbsp; <b>DOB : </b> #readXML.bgc.product[usOneSearchID].USOneSearch.order.dob.month#/#readXML.bgc.product[usOneSearchID].USOneSearch.order.dob.day#/#readXML.bgc.product[usOneSearchID].USOneSearch.order.dob.year#</td></tr>						
                     <tr><td colspan="2">&nbsp; &nbsp; &nbsp; <b>Report ID : </b> #ReportID#</td></tr>
-                    <tr><td colspan="2">&nbsp; &nbsp; &nbsp; <b>Number of items: </b> #totalItems#<br></td></tr>
+                    <tr><td colspan="2">&nbsp; &nbsp; &nbsp; <b>Number of items: </b> #vTotalOffenses#<br></td></tr>
                     
                     <tr><td colspan="2"><hr width="100%" align="center"></td></tr>	
                     
-                    <cfif VAL(totalItems)>
+                    <cfif VAL(vTotalOffenses)>
                         
                         <!--- ITEMS - OFFENDER --->
-                        <cfloop from="1" to ="#totalItems#" index="t">				
+                        <cfloop from="1" to ="#vTotalOffenses#" index="t">				
                             <cfset totalOffenses = ArrayLen(readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].offenses.XmlChildren)>
                             <tr>
                                 <td><b>#readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender[t].identity.personal.fullName#</b></td>
@@ -1831,7 +1839,7 @@
                     </cfif>
                     
                     <!--- US ONE TRACE --->
-                    <cfif totalProducts GT 1> 
+                    <cfif vTotalProducts GT 1> 
                     
                         <tr bgcolor="##CCCCCC"><th colspan="2"><b>US ONE TRACE</b></th></tr>
                         <tr><td colspan="2"><b>You searched for:</b></td></tr>
