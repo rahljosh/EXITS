@@ -271,25 +271,12 @@ where studentid = #qGetStudentInfo.studentID#
           <td>#Round(newsize)# kb</td>
           <td>#mydirectory.dateLastModified#</td>
           <td>
-          
-          
-          
-          
             <cfif ListFind("jpg,peg,gif,tif,png", Right(name, 3))>
                 <a href="javascript:OpenApp('../student_app/section4/page22printfile.cfm?studentid=#qGetStudentInfo.studentID#&page=page22&file=#URLEncodedFormat(name)#');"><img src="vfolderview.gif" border="0" alt="View File"></img></a>
             <cfelse>
                 <a href="javascript:OpenApp('../uploadedfiles/virtualfolder/#qGetStudentInfo.studentID#/page22/#name#');"><img src="vfolderview.gif" border="0" alt="View File"></img></a>
             </cfif>
           </td>	
-          <td>
-          <!----
-            <cfform method="post" name="page22delete" action="#AppPath.onlineApp.uploadURL#qr_delete_page22.cfm?referrer=#CGI.HTTP_HOST#">
-                <cfinput type="hidden" name="deletefile" value="#mydirectory.name#">
-                <cfinput type="hidden" name="studentid" value="#qGetStudentInfo.studentID#">
-                <cfinput type="image" name="submit" src="pics/delete.gif" alt="Delete this file" onclick="return areYouSure(this);"> 
-            </cfform>
-			---->
-          </td>
         </tr>
 	</cfloop>
 </table>
