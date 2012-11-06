@@ -58,8 +58,6 @@
                     gis_email,
                     admission_person,
                     verification_letter,
-                    routingNumber,
-                    accountNumber,
                     letterSig,
                     dos_letter_sig,
                     dos_letter_title,
