@@ -201,12 +201,12 @@
         	
             <cfsavecontent variable="xmlHostContactInfo">
                 <PContact>
-                    <LastName>#Left(ARGUMENTS.hostFatherLastName, 40)#</LastName> <!--- Data Length 40 --->
-                    <FirstName>#Left(ARGUMENTS.hostFatherFirstName, 40)#</FirstName> <!--- Data Length 40 --->
+                    <LastName>#XMLFormat(Left(ARGUMENTS.hostFatherLastName, 40))#</LastName> <!--- Data Length 40 --->
+                    <FirstName>#XMLFormat(Left(ARGUMENTS.hostFatherFirstName, 40))#</FirstName> <!--- Data Length 40 --->
                 </PContact>   
                 <SContact>
-                    <LastName>#Left(ARGUMENTS.hostMotherFirstName, 40)#</LastName> <!--- Data Length 40 --->
-                    <FirstName>#Left(ARGUMENTS.hostMotherLastName, 40)#</FirstName> <!--- Data Length 40 --->
+                    <LastName>#XMLFormat(Left(ARGUMENTS.hostMotherFirstName, 40))#</LastName> <!--- Data Length 40 --->
+                    <FirstName>#XMLFormat(Left(ARGUMENTS.hostMotherLastName, 40))#</FirstName> <!--- Data Length 40 --->
                 </SContact>
             </cfsavecontent>
             
@@ -215,8 +215,8 @@
         
             <cfsavecontent variable="xmlHostContactInfo">
                 <PContact>
-                    <LastName>#Left(ARGUMENTS.hostFatherLastName, 40)#</LastName> <!--- Data Length 40 --->
-                    <FirstName>#Left(ARGUMENTS.hostFatherFirstName, 40)#</FirstName> <!--- Data Length 40 --->
+                    <LastName>#XMLFormat(Left(ARGUMENTS.hostFatherLastName, 40))#</LastName> <!--- Data Length 40 --->
+                    <FirstName>#XMLFormat(Left(ARGUMENTS.hostFatherFirstName, 40))#</FirstName> <!--- Data Length 40 --->
                 </PContact>
             </cfsavecontent>
             
@@ -225,8 +225,8 @@
         
             <cfsavecontent variable="xmlHostContactInfo">
                 <PContact>
-                    <LastName>#Left(ARGUMENTS.hostMotherFirstName, 40)#</LastName> <!--- Data Length 40 --->
-                    <FirstName>#Left(ARGUMENTS.hostMotherLastName, 40)#</FirstName> <!--- Data Length 40 --->
+                    <LastName>#XMLFormat(Left(ARGUMENTS.hostMotherFirstName, 40))#</LastName> <!--- Data Length 40 --->
+                    <FirstName>#XMLFormat(Left(ARGUMENTS.hostMotherLastName, 40))#</FirstName> <!--- Data Length 40 --->
                 </PContact>
             </cfsavecontent>
             
@@ -235,13 +235,13 @@
         <cfsavecontent variable="xmlResidentialAddress">
             <ResidentialAddress>
                 <LCCoordinator>
-                    <LastName>#Left(ARGUMENTS.localCoordinatorLastName, 40)#</LastName> <!--- Data Length 40 --->
-                    <FirstName>#Left(ARGUMENTS.localCoordinatorFirstName, 40)#</FirstName> <!--- Data Length 40 --->
+                    <LastName>#XMLFormat(Left(ARGUMENTS.localCoordinatorLastName, 40))#</LastName> <!--- Data Length 40 --->
+                    <FirstName>#XMLFormat(Left(ARGUMENTS.localCoordinatorFirstName, 40))#</FirstName> <!--- Data Length 40 --->
                 </LCCoordinator>
                 <ResidentialType>HST</ResidentialType>
                 <HostFamily>
                     #TRIM(xmlHostContactInfo)#
-                    <cfif LEN(ARGUMENTS.hostPhone) EQ 12><Phone>#ARGUMENTS.hostPhone#</Phone></cfif> <!--- Data Length 12 - format xxx-xxx-xx-xx ---> 
+                    <cfif LEN(ARGUMENTS.hostPhone) EQ 12><Phone>#XMLFormat(ARGUMENTS.hostPhone)#</Phone></cfif> <!--- Data Length 12 - format xxx-xxx-xx-xx ---> 
                 </HostFamily>  
             </ResidentialAddress> 
         </cfsavecontent>
