@@ -181,7 +181,6 @@
 	// URL Used on Upload/Delete Files
 	APPLICATION.PATH.onlineApp.URL = '#CGI.http_host#/nsmg/student_app/';		
 	APPLICATION.PATH.onlineApp.reloadURL = '#CGI.http_host#/nsmg/student_app/querys/reload_window.cfm';
-	APPLICATION.PATH.onlineApp.uploadURL = 'http://new.upload.student-management.com/';
 	
 	APPLICATION.PATH.onlineApp.picture = APPLICATION.PATH.uploadedFiles & "web-students/";
 	APPLICATION.PATH.onlineApp.letters = APPLICATION.PATH.uploadedFiles & "letters/";
