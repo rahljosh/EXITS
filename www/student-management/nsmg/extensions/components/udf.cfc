@@ -433,50 +433,21 @@
 
 
 	<!--- Returns a formatted phone number --->
-	<cffunction name="formatPhoneNumber" access="public" returntype="string" output="no" hint="Returns a formatted phone number">
-		<cfargument name="countryCode" type="string" default="" />
-        <cfargument name="areaCode" type="string" default="" />
-        <cfargument name="prefix" type="string" default="" />
-        <cfargument name="number" type="string" default="" />
+	<cffunction name="formatPhoneNumber" access="public" returntype="string" output="no" hint="Returns a formatted phone number xxx-xxx-xxxx">
+		<cfargument name="phoneNumber" type="string" default="">
 		
         <cfscript>
-			var vPhoneNumber = '';
+			// First lets ditch all non numeric values
+			ARGUMENTS.phoneNumber = ReReplaceNoCase(ARGUMENTS.phoneNumber,"[^0-9]","","ALL");
 			
-			// Remove dashes entered by the user since we use them to define the groups
+			vNumber = Right(ARGUMENTS.phoneNumber,4);
 			
-			if ( LEN(ARGUMENTS.number) ) {
-				vPhoneNumber = ListPrepend(vPhoneNumber, ReplaceNoCase(ARGUMENTS.number, '-', ''), "-"); 
-			}
+			vPrefix = Left(Right(ARGUMENTS.phoneNumber,7),3);
 			
-			if ( LEN(ARGUMENTS.prefix) ) {
-				vPhoneNumber = ListPrepend(vPhoneNumber, ReplaceNoCase(ARGUMENTS.prefix, '-', ''), "-"); 
-			}
-
-			if ( LEN(ARGUMENTS.areaCode) ) {
-				vPhoneNumber = ListPrepend(vPhoneNumber, ReplaceNoCase(ARGUMENTS.areaCode, '-', ''), "-"); 
-			}
-
-			if ( LEN(ARGUMENTS.countryCode) ) {
-				vPhoneNumber = ListPrepend(vPhoneNumber, ReplaceNoCase(ARGUMENTS.countryCode, '-', ''), "-"); 
-			}
+			vAreaCode = Left(Right(ARGUMENTS.phoneNumber,10),3);
 			
-			return vPhoneNumber;
+			return vAreaCode & "-" & vPrefix & "-" & vNumber;
 		</cfscript>
-
-			<!---
-			Code:
-			<cfset phone= "1-612.555.1212">
-			<!--- First lets ditch the dashes --->
-			<cfset phone = REReplace(phone,"\D","","ALL")>
-			<cfoutput>Dashless number: #phone#<BR></cfoutput>
-			<cfset four = Right(phone,4)>
-			<cfset prefix = Left(Right(phone,7),3)>
-			<cfset areacode = Left(Right(phone,10),3)>
-			<cfoutput>Number Nice: (#areacode#) #prefix#-#four#</cfoutput>
-			Yields:
-			Dashless number: 16125551212
-			Number Nice: (612) 555-1212
-			--->			
 	</cffunction>
 
 

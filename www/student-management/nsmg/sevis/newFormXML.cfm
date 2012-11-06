@@ -20,12 +20,12 @@
     
     <cfscript>
 		// Create SEVIS Object
-		s = createObject("component","nsmg.extensions.components.sevis");
+		oSevis = createObject("component","nsmg.extensions.components.sevis");
 		
 		// Create Company Object
-		c = createObject("component","nsmg.extensions.components.company");
+		oCompany = createObject("component","nsmg.extensions.components.company");
 		
-		qGetCompany = c.getCompanies(companyID=CLIENT.companyID);
+		qGetCompany = oCompany.getCompanies(companyID=CLIENT.companyID);
 	</cfscript>
     
     <cfquery name="qGetStudents" datasource="#APPLICATION.DSN#"> 
@@ -42,32 +42,40 @@
             s.ayporientation, 
             s.aypenglish, 
             s.hostID, 
-            s.schoolid, 
+            s.schoolID, 
             s.host_fam_approved, 
-            birth.seviscode as birthseviscode,
-            resident.seviscode as residentseviscode,
-            citizen.seviscode as citizenseviscode,
-            h.familylastname as hostlastname, 
+            birth.seviscode AS birthseviscode,
+            resident.seviscode AS residentseviscode,
+            citizen.seviscode AS citizenseviscode,
+            <!--- Program Information --->
+            p.sevis_startdate, 
+            p.sevis_enddate, 
+            p.preayp_date, 
+            p.type AS programtype,
+            <!--- Intl. Rep Information --->
+            u.businessname,
+            <!--- Host Family Information --->
+            h.familylastname AS hostlastname, 
             h.fatherFirstName,            
             h.fatherlastname, 
             h.motherFirstName,
             h.motherlastname, 
-            h.address as hostaddress, 
-            h.address2 as hostaddress2, 
-            h.city as hostcity, 
-            h.state as hoststate, 
-            h.zip as hostzip,
+            h.address AS hostaddress, 
+            h.address2 AS hostaddress2,
+            h.city AS hostcity, 
+            h.state AS hoststate, 
+            h.zip AS hostzip,
+            h.phone AS hostPhone, 
+            <!--- School Information --->
             sc.schoolname, 
-            sc.address as schooladdress, 
-            sc.address2 as schooladdress2, 
-            sc.city as schoolcity,
-            sc.state as schoolstate, 
-            sc.zip as schoolzip,
-            p.sevis_startdate, 
-            p.sevis_enddate, 
-            p.preayp_date, 
-            p.type as programtype,
-            u.businessname
+            sc.address AS schooladdress, 
+            sc.address2 AS schooladdress2, 
+            sc.city AS schoolcity,
+            sc.state AS schoolstate, 
+            sc.zip AS schoolzip,
+            <!--- Area Representative Information --->
+            areaRep.firstName AS areaRepFirstName,
+            areaRep.lastName AS areaRepLastName
         FROM 
             smg_students s 
         INNER JOIN 
@@ -80,10 +88,12 @@
             smg_countrylist resident ON s.countryresident = resident.countryid
         INNER JOIN 
             smg_countrylist citizen ON s.countrycitizen = citizen.countryid
-        LEFT JOIN 
+        LEFT OUTER JOIN 
             smg_hosts h ON s.hostID = h.hostID
-        LEFT JOIN 
-            smg_schools sc ON s.schoolid = sc.schoolid
+        LEFT OUTER JOIN 
+            smg_schools sc ON s.schoolID = sc.schoolID
+        LEFT OUTER JOIN
+        	smg_users areaRep ON s.areaRepID = areaRep.userID
         WHERE 
             s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND 
@@ -145,7 +155,7 @@
 
 <cfscript>
 	// Insert Batch Information
-	sBatchInfo = s.insertBatch(
+	sBatchInfo = oSevis.insertBatch(
 		companyID=qGetCompany.companyID,			   
 		companyShort=qGetCompany.companyshort_nocolor,							   
 		totalStudents=qGetStudents.recordcount,
@@ -191,7 +201,7 @@
                 </cfif>
             </td>
             <td>
-                <cfif VAL(qGetStudents.schoolid) AND qGetStudents.host_fam_approved LT 5>
+                <cfif VAL(qGetStudents.schoolID) AND qGetStudents.host_fam_approved LT 5>
                     <Address1>#qGetStudents.schooladdress#</Address1>
                     <cfif NOT LEN(qGetStudents.schooladdress2)><Address2>#qGetStudents.schooladdress2#</Address2></cfif>
                     <City>#qGetStudents.schoolcity#</City> 
@@ -233,7 +243,7 @@
             <cfset vSetHostID = qGetStudents.hostID>
             
             <cfsavecontent variable="vHostFamilyAddress">
-                <Address1>#XMLFormat(s.displayHostFamilyName(fatherFirstName=qGetStudents.fatherFirstName,fatherLastName=qGetStudents.fatherLastName,motherFirstName=qGetStudents.motherFirstName,motherLastName=qGetStudents.motherLastName))#</Address1> 	
+                <Address1>#XMLFormat(oSevis.displayHostFamilyName(fatherFirstName=qGetStudents.fatherFirstName,fatherLastName=qGetStudents.fatherLastName,motherFirstName=qGetStudents.motherFirstName,motherLastName=qGetStudents.motherLastName))#</Address1> 	
                 <Address2>#XMLFormat(qGetStudents.hostaddress)#</Address2> 					
                 <City>#XMLFormat(qGetStudents.hostcity)#</City> 
                 <State>#XMLFormat(qGetStudents.hoststate)#</State> 
@@ -251,11 +261,11 @@
                 <State>#qGetCompany.state#</State> 
                 <PostalCode>#qGetCompany.zip#</PostalCode>
             </cfsavecontent>
-            
+			
         </cfif>
 
 		<!--- Site of Activity --->
-		<cfif VAL(qGetStudents.schoolid) AND qGetStudents.host_fam_approved LT 5>
+		<cfif VAL(qGetStudents.schoolID) AND qGetStudents.host_fam_approved LT 5>
         
         	<!--- Student Placed --->
             <cfset vSetSchoolName = XMLFormat(TRIM(qGetStudents.schoolname))>
@@ -304,7 +314,7 @@
 			}
 			
 			// Insert Batch History
-			s.insertBatchHistory(
+			oSevis.insertBatchHistory(
 				batchID=sBatchInfo.newRecord,
 				studentID=qGetStudents.studentID,
 				hostID=vSetHostID,
@@ -332,7 +342,7 @@
 				<cfif LEN(qGetStudents.middlename)><MiddleName>#XMLFormat(qGetStudents.middlename)#</MiddleName></cfif>			
             </FullName>
             <BirthDate>#DateFormat(qGetStudents.dob, 'yyyy-mm-dd')#</BirthDate> 
-            <Gender><cfif qGetStudents.sex EQ 'male'>M<cfelseif qGetStudents.sex EQ 'female'>F</cfif></Gender> 
+            <Gender><cfif qGetStudents.sex EQ 'male'>M<cfelse>F</cfif></Gender> 
             <BirthCity>#XMLFormat(qGetStudents.citybirth)#</BirthCity> 
             <BirthCountryCode>#qGetStudents.birthseviscode#</BirthCountryCode> 
             <CitizenshipCountryCode>#qGetStudents.citizenseviscode#</CitizenshipCountryCode> 
@@ -346,9 +356,7 @@
             <SubjectFieldCode>53.0299</SubjectFieldCode> 
             <Remarks>none</Remarks> 
         </SubjectField>
-        <USAddress>
-        	#TRIM(vHostFamilyAddress)#
-        </USAddress>
+        <USAddress>#TRIM(vHostFamilyAddress)#</USAddress>
         <FinancialInfo>
             <ReceivedUSGovtFunds>false</ReceivedUSGovtFunds> 
             <OtherFunds>
@@ -356,10 +364,19 @@
             </OtherFunds>
         </FinancialInfo>
         <AddSiteOfActivity>
-            <SiteOfActivity>
-            	#TRIM(vSiteOfActivity)#
-			</SiteOfActivity>
+            <SiteOfActivity>#TRIM(vSiteOfActivity)#</SiteOfActivity>
         </AddSiteOfActivity>
+        <cfif VAL(vSetHostID)> <!--- Residential Address Information --->
+        	#oSevis.getResidentialAddressInformation(
+                hostFatherFirstName=qGetStudents.fatherFirstName,
+                hostFatherLastName=qGetStudents.fatherLastName,
+                hostMotherFirstName=qGetStudents.motherFirstName,
+                hostMotherLastName=qGetStudents.motherLastName,
+                hostPhone=APPLICATION.CFC.UDF.formatPhoneNumber(qGetStudents.hostPhone),
+                localCoordinatorFirstName=qGetStudents.areaRepFirstName,
+                localCoordinatorLastName=qGetStudents.areaRepLastName
+            )#
+		</cfif>
 	</ExchangeVisitor>
 </cfloop>
 </CreateEV>
@@ -387,7 +404,7 @@
 
 <!--- <cffile action="write" file="#AppPath.sevis#sevis_batch_#Dateformat(now(), 'mm-dd-yyyy')#_#TimeFormat(now(), 'hh-mm-ss-tt')#.xml" output="#toString(xmlSevisBatch)#"> --->
 <!--- You can view the schemas at: 
-http://www.ice.gov/xmlschema/sevisbatch/alpha/Common.xsd 
+http://www.ice.gov/doclib/sevis/schools/batch/common.xsd 
 http://www.ice.gov/xmlschema/sevisbatch/alpha/Create-UpdateExchangeVisitor.xsd 
 http://www.ice.gov/xmlschema/sevisbatch/alpha/Create-UpdateStudent.xsd 
 http://www.ice.gov/xmlschema/sevisbatch/alpha/SEVISTable.xsd 

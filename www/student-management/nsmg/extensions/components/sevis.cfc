@@ -166,7 +166,6 @@
 				vReturnHostFamilyName = ARGUMENTS.fatherLastName & ', ' & ARGUMENTS.fatherFirstName & ' and ' & ARGUMENTS.motherLastName & ', ' & ARGUMENTS.motherFirstName;
 			// Father only
 			} else if ( LEN(ARGUMENTS.fatherFirstName) AND LEN(ARGUMENTS.fatherLastName) ) {
-				
 				vReturnHostFamilyName = ARGUMENTS.fatherLastName & ', ' & ARGUMENTS.fatherFirstName;
 			// Mother Only
 			} else if ( LEN(ARGUMENTS.motherFirstName) AND LEN(ARGUMENTS.motherLastName) ) {				
@@ -178,6 +177,78 @@
         </cfscript>
 		   
 	</cffunction>
+    
+    
+	<cffunction name="getResidentialAddressInformation" access="public" returntype="xml" output="false" hint="Gets Residential Address Information">
+    	<cfargument name="hostFatherFirstName" default="" hint="hostFatherFirstName">
+        <cfargument name="hostFatherLastName" default="" hint="hostFatherLastName">
+        <cfargument name="hostMotherFirstName" default="" hint="hostMotherFirstName">
+        <cfargument name="hostMotherLastName" default="" hint="hostMotherLastName">
+        <cfargument name="hostPhone" default="" hint="hostPhone">
+    	<cfargument name="localCoordinatorFirstName" default="" hint="localCoordinatorFirstName">
+        <cfargument name="localCoordinatorLastName" default="" hint="localCoordinatorLastName">
 
+		<cfscript>
+			// Declare Variables	
+			var xmlHostContactInfo = '';
+			var xmlResidentialAddress = '';
+        </cfscript>
+		
+        <cfoutput>
+        
+		<!--- Regular Placement --->
+		<cfif LEN(ARGUMENTS.hostFatherFirstName) AND LEN(ARGUMENTS.hostFatherLastName) AND LEN(ARGUMENTS.hostMotherFirstName) AND LEN(ARGUMENTS.hostMotherLastName)>
+        	
+            <cfsavecontent variable="xmlHostContactInfo">
+                <PContact>
+                    <LastName>#Left(ARGUMENTS.hostFatherLastName, 40)#</LastName> <!--- Data Length 40 --->
+                    <FirstName>#Left(ARGUMENTS.hostFatherFirstName, 40)#</FirstName> <!--- Data Length 40 --->
+                </PContact>   
+                <SContact>
+                    <LastName>#Left(ARGUMENTS.hostMotherFirstName, 40)#</LastName> <!--- Data Length 40 --->
+                    <FirstName>#Left(ARGUMENTS.hostMotherLastName, 40)#</FirstName> <!--- Data Length 40 --->
+                </SContact>
+            </cfsavecontent>
+            
+        <!--- Single Father Parent --->
+		<cfelseif LEN(ARGUMENTS.hostFatherFirstName) AND LEN(ARGUMENTS.hostFatherLastName)>
+        
+            <cfsavecontent variable="xmlHostContactInfo">
+                <PContact>
+                    <LastName>#Left(ARGUMENTS.hostFatherLastName, 40)#</LastName> <!--- Data Length 40 --->
+                    <FirstName>#Left(ARGUMENTS.hostFatherFirstName, 40)#</FirstName> <!--- Data Length 40 --->
+                </PContact>
+            </cfsavecontent>
+            
+        <!--- Single Mother Parent --->     
+		<cfelseif LEN(ARGUMENTS.hostMotherFirstName) AND LEN(ARGUMENTS.hostMotherLastName)>
+        
+            <cfsavecontent variable="xmlHostContactInfo">
+                <PContact>
+                    <LastName>#Left(ARGUMENTS.hostMotherFirstName, 40)#</LastName> <!--- Data Length 40 --->
+                    <FirstName>#Left(ARGUMENTS.hostMotherLastName, 40)#</FirstName> <!--- Data Length 40 --->
+                </PContact>
+            </cfsavecontent>
+            
+		</cfif>
+
+        <cfsavecontent variable="xmlResidentialAddress">
+            <ResidentialAddress>
+                <LCCoordinator>
+                    <LastName>#Left(ARGUMENTS.localCoordinatorLastName, 40)#</LastName> <!--- Data Length 40 --->
+                    <FirstName>#Left(ARGUMENTS.localCoordinatorFirstName, 40)#</FirstName> <!--- Data Length 40 --->
+                </LCCoordinator>
+                <ResidentialType>HST</ResidentialType>
+                <HostFamily>
+                    #TRIM(xmlHostContactInfo)#
+                    <cfif LEN(ARGUMENTS.hostPhone) EQ 12><Phone>#ARGUMENTS.hostPhone#</Phone></cfif> <!--- Data Length 12 - format xxx-xxx-xx-xx ---> 
+                </HostFamily>  
+            </ResidentialAddress> 
+        </cfsavecontent>
+
+        </cfoutput>
+        
+        <cfreturn TRIM(xmlResidentialAddress)>
+	</cffunction>
 
 </cfcomponent>
