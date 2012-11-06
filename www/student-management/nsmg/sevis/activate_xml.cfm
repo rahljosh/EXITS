@@ -113,10 +113,10 @@ Sorry, there were no students to populate the XML file at this time.
 <!-- Create an XML document object containing the data -->
 <cfxml variable="sevis_batch">
 <SEVISBatchCreateUpdateEV 
-	xmlns:common="http://www.ice.gov/xmlschema/sevisbatch/alpha/Common.xsd" 
-	xmlns:table="http://www.ice.gov/xmlschema/sevisbatch/alpha/SEVISTable.xsd" 
+	xmlns:common="http://www.ice.gov/xmlschema/sevisbatch/Common.xsd" 
+	xmlns:table="http://www.ice.gov/xmlschema/sevisbatch/SEVISTable.xsd" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:noNamespaceSchemaLocation="http://www.ice.gov/xmlschema/sevisbatch/alpha/Create-UpdateExchangeVisitor.xsd"
+	xsi:noNamespaceSchemaLocation="http://www.ice.gov/xmlschema/sevisbatch/Create-UpdateExchangeVisitor.xsd"
 	userID='#get_company.sevis_userid#'>
 	<BatchHeader>
 		<BatchID>#get_company.companyshort_nocolor#-<cfloop index = "ZeroCount" from = "1" to = #add_zeros#>0</cfloop>#qBatchID.batchid#</BatchID>

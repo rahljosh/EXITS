@@ -20,12 +20,12 @@
     
     <cfscript>
 		// Create SEVIS Object
-		s = createObject("component","nsmg.extensions.components.sevis");
+		oSevis = createObject("component","nsmg.extensions.components.sevis");
 		
 		// Create Company Object
-		c = createObject("component","nsmg.extensions.components.company");
+		oCompany = createObject("component","nsmg.extensions.components.company");
 		
-		qGetCompany = c.getCompanies(companyID=CLIENT.companyID);
+		qGetCompany = oCompany.getCompanies(companyID=CLIENT.companyID);
 	</cfscript>
 
     <cfquery name="qGetStudents" datasource="#APPLICATION.DSN#"> 
@@ -46,6 +46,9 @@
             s.host_fam_approved,
             s.ayporientation, 
             s.aypenglish,
+            <!--- Intl. Rep Information --->
+            u.businessname,
+            <!--- Host Family Information --->
             h.familylastname as hostlastname, 
             h.fatherFirstName,
             h.fatherlastname, 
@@ -56,15 +59,20 @@
             h.city as hostcity, 
             h.state as hoststate, 
             h.zip as hostzip,
-            u.businessname
+            h.phone AS hostPhone, 
+            <!--- Area Representative Information --->
+            areaRep.firstName AS areaRepFirstName,
+            areaRep.lastName AS areaRepLastName
         FROM 
             smg_students s
         INNER JOIN 
             smg_programs p ON s.programid = p.programid
         INNER JOIN 
             smg_users u ON s.intrep = u.userid
-        LEFT JOIN 
+        INNER JOIN
             smg_hosts h ON s.hostid = h.hostid
+        LEFT OUTER JOIN
+        	smg_users areaRep ON s.areaRepID = areaRep.userID
         WHERE  
             s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">    
         AND 
@@ -80,7 +88,7 @@
             
         <!--- Get only the last record. Student could relocate to a previous host family --->
         AND 
-            h.hostid NOT IN (SELECT hostid FROM smg_sevis_history WHERE studentid = s.studentID AND historyID = (SELECT max(historyID) FROM smg_sevis_history WHERE studentid = s.studentID AND isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> ) )
+            h.hostid NOT IN ( SELECT hostid FROM smg_sevis_history WHERE studentid = s.studentID AND historyID = (SELECT max(historyID) FROM smg_sevis_history WHERE studentid = s.studentID AND isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> ) )
         AND 
             s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
     
@@ -107,7 +115,7 @@
             s.firstname
             
         LIMIT 
-            250
+        	250
     </cfquery>
 
 </cfsilent>
@@ -119,7 +127,7 @@
 
 <cfscript>
 	// Insert Batch Information
-	sBatchInfo = s.insertBatch(
+	sBatchInfo = oSevis.insertBatch(
 		companyID=qGetCompany.companyID,			   
 		companyShort=qGetCompany.companyshort_nocolor,							   
 		totalStudents=qGetStudents.recordcount,
@@ -155,10 +163,10 @@
 
 <cfxml variable="xmlSevisBatch">
 <SEVISBatchCreateUpdateEV 
-	xmlns:common="http://www.ice.gov/xmlschema/sevisbatch/alpha/Common.xsd" 
-	xmlns:table="http://www.ice.gov/xmlschema/sevisbatch/alpha/SEVISTable.xsd" 
+	xmlns:common="http://www.ice.gov/xmlschema/sevisbatch/Common.xsd" 
+	xmlns:table="http://www.ice.gov/xmlschema/sevisbatch/SEVISTable.xsd" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:noNamespaceSchemaLocation="http://www.ice.gov/xmlschema/sevisbatch/alpha/Create-UpdateExchangeVisitor.xsd"
+	xsi:noNamespaceSchemaLocation="http://www.ice.gov/xmlschema/sevisbatch/Create-UpdateExchangeVisitor.xsd"
 	userID='#qGetCompany.sevis_userid#'>
 	<BatchHeader>
 		<BatchID>#sBatchInfo.sevisBatchID#</BatchID>
@@ -170,10 +178,10 @@
 		
 			<cfscript> 
 				// Get Active History
-				qGetBatchHistory = s.getBatchHistory(studentID=qGetStudents.studentID);
+				qGetBatchHistory = oSevis.getBatchHistory(studentID=qGetStudents.studentID);
 				
                 // Insert Batch History
-                s.insertBatchHistory(
+                oSevis.insertBatchHistory(
                     batchID=sBatchInfo.newRecord,
                     studentID=qGetStudents.studentID,
                     hostID=qGetStudents.hostID,
@@ -184,17 +192,17 @@
             </cfscript>
 
 			<!--- Host Family Address --->
-            <cfif VAL(qGetStudents.hostid) AND qGetStudents.host_fam_approved LT 5>
+            <cfif VAL(qGetStudents.hostid)>
             
                 <!--- Student Placed --->
                 <cfsavecontent variable="vHostFamilyAddress">
-                    <Address1>#XMLFormat(s.displayHostFamilyName(fatherFirstName=qGetStudents.fatherFirstName,fatherLastName=qGetStudents.fatherLastName,motherFirstName=qGetStudents.motherFirstName,motherLastName=qGetStudents.motherLastName))#</Address1> 	
+                    <Address1>#XMLFormat(oSevis.displayHostFamilyName(fatherFirstName=qGetStudents.fatherFirstName,fatherLastName=qGetStudents.fatherLastName,motherFirstName=qGetStudents.motherFirstName,motherLastName=qGetStudents.motherLastName))#</Address1> 	
                     <Address2>#XMLFormat(qGetStudents.hostaddress)#</Address2> 					
                     <City>#XMLFormat(qGetStudents.hostcity)#</City> 
                     <State>#XMLFormat(qGetStudents.hoststate)#</State> 
                     <PostalCode>#XMLFormat(qGetStudents.hostzip)#</PostalCode>
                 </cfsavecontent>  
-                
+                     
             <cfelse>
             
                 <!--- Student Not Placed --->
@@ -212,7 +220,16 @@
 			<Biographical printForm="false">
 				<USAddress>
 					#TRIM(vHostFamilyAddress)#
-				</USAddress>
+				</USAddress> <!--- Residential Address Information --->
+                #oSevis.getResidentialAddressInformation(
+                    hostFatherFirstName=qGetStudents.fatherFirstName,
+                    hostFatherLastName=qGetStudents.fatherLastName,
+                    hostMotherFirstName=qGetStudents.motherFirstName,
+                    hostMotherLastName=qGetStudents.motherLastName,
+                    hostPhone=APPLICATION.CFC.UDF.formatPhoneNumber(qGetStudents.hostPhone),
+                    localCoordinatorFirstName=qGetStudents.areaRepFirstName,
+                    localCoordinatorLastName=qGetStudents.areaRepLastName
+                )#
 			</Biographical>
 		</ExchangeVisitor>
 	</cfloop>
