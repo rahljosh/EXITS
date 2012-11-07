@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>(ISE) International Student Exchange - Foreign Exchange S</title>
+<title>(ISE) International Student Exchange - Foreign Exchange</title>
 <link href="../css/ISEstyle.css" rel="stylesheet" type="text/css" />
 <link href="../css/baseStyle.css" rel="stylesheet" type="text/css" />
 <link href="css/hostApp.css" rel="stylesheet" type="text/css" />
@@ -16,30 +16,20 @@
 	function ShowHide(){
 	$("#slidingDiv").animate({"height": "toggle"}, { duration: 1000 });
 	}
+
+	$(document).ready(function(){
+		//Examples of how to assign the ColorBox event to elements
+		$(".iframe").colorbox({width:"80%", height:"80%", iframe:true, 
+			onClosed:function(){ location.reload(false); } });
+	});
 //]]>
 </script>
-        
-	<script>
-
-        $(document).ready(function(){
-            //Examples of how to assign the ColorBox event to elements
-            
-            $(".iframe").colorbox({width:"80%", height:"80%", iframe:true, 
-                onClosed:function(){ location.reload(false); } });
-
-            
-        });
-
-    </script>
-
 
 </head>
 
 <body class="oneColFixCtr">
-<!----
-<cfinclude template="../slidingLogin.cfm">
----->
 <Cfparam name="url.page" default="hello">
+<cfparam name="CLIENT.hostID" default="0">
 
 <cfquery name="hostInfo" datasource="mysql">
 SELECT shl.firstname, shl.lastname, shl.address, shl.address2, shl.city, shl.stateID, shl.zipCode, shl.email, shl.phone, smg_states.state
@@ -49,8 +39,6 @@ where email = '#client.email#'
 </cfquery>
 <cfoutput>
 <div id="topBar">
-
-<cfparam name="CLIENT.hostID" default="0">
 
 <cfinclude template="../topBarLinks.cfm">
 <div id="logoBoxB">
@@ -74,7 +62,6 @@ where email = '#client.email#'
   <div class="whtMiddletours2">
         <div class="hostApp">
      		<div class="app_spacing">
-            
        			 <cfinclude template="#url.page#.cfm">
        		</div>
         <div id="main" class="clearfix"></div>
