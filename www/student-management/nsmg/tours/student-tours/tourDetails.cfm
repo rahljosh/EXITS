@@ -322,7 +322,7 @@
                 <td valign="top" align="right"><b>Welcome Packet:</b></div></td>
                 <td valign="top">
                 	<cfinput type="file" name="packetFile" class="xLargeField"> <br />
-                    Current File:  <cfif NOT LEN(FORM.packetfile)><a href="uploadedfiles/tours/#FORM.packetfile#">#FORM.packetfile#</A><cfelse>None</cfif>
+                    Current File:  <cfif LEN(FORM.packetfile)><a href="uploadedfiles/tours/#FORM.packetfile#">#FORM.packetfile#</a><cfelse>NO FILE ON RECORD</cfif>
                 </td>
             </tr>
             <tr>
