@@ -30,7 +30,7 @@
       <div id="studentinfo"></div>
           <ul><li class="List"><a href="exchange-student-trips.cfm">Student Trips</a></li>
       <li class="List"><a href="../contactAStudent.cfm">Become a Student</a></li>
-      <li class="List"><a href="http://www.esecutive.com/index.php">Student Insurance</a></li></ul>
+      <li class="List"><a href="../studentInsurance.cfm">Student Insurance</a></li></ul>
        <div id="repInfo"></div>
            <ul>
            <li class="List"><a href="../beARep.cfm">Become a Rep</a></li></ul>
