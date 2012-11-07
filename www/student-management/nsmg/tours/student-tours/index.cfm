@@ -90,7 +90,7 @@
                     <strong>Date:</strong> #qGetTourList.tour_date#<br />
                     <strong>Price:</strong> #DollarFormat(qGetTourList.tour_price)#<br />
                     <strong>Charge Type:</strong> #qGetTourList.chargeType#<br />
-                    <strong>Packet File:</strong> <Cfif qGetTourList.packetfile is ''>NO FILE ON RECORD<cfelse>#packetfile#</Cfif>
+                    <strong>Packet File:</strong> <cfif LEN(qGetTourList.packetfile)>#qGetTourList.packetfile#<cfelse>NO FILE ON RECORD</cfif>
                 </td>
                 <td width="10%"><div align="center"><a href="?curdoc=tours/student-tours/tourDetails&tour_id=#qGetTourList.tour_id#"><img src="pics/edit.gif" border="0" /></a></div></td>
             </tr>
