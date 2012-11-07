@@ -12,7 +12,6 @@
 <cfsilent>
 	
     <!--- Param Variables --->
-    <cfparam name="CLIENT.initialHostAppType" default="9"> <!--- Started --->
     <cfparam name="CLIENT.hostID" default="0">
     <cfparam name="CLIENT.hostfam" default="">
     <cfparam name="CLIENT.hostemail" default="">
@@ -43,8 +42,12 @@
 		<!--- Host Account found - Log them in --->
         <cfif qLoginHostFamily.recordcount EQ 1>
         	
-            <!--- Login Host Family --->
-            <cfset CLIENT.hostID = qLoginHostFamily.hostID>
+            <cfscript>
+				// Login Host Family
+				CLIENT.hostID = qLoginHostFamily.hostID;
+				// Reload Page to display left menu
+				Location(CGI.SCRIPT_NAME & "?" & CGI.QUERY_STRING);
+			</cfscript>
             
         <cfelse>
         	
@@ -98,7 +101,7 @@
                     )
                     SELECT
                     	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qLoginHostFamily.regionID)#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="8">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="8">, <!--- New Account | Set Status to "Host" --->
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qLoginHostFamily.lastname#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qLoginHostFamily.address#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qLoginHostFamily.address2#">,
@@ -125,9 +128,12 @@
                             )   
                 </cfquery>
                 
-                <!--- New Account | Set Status to "Host" --->
-                <cfset CLIENT.hostID = newRecord.GENERATED_KEY>
-                <cfset CLIENT.initialHostAppType = 8>
+				<cfscript>
+                    // Login Host Family
+                    CLIENT.hostID = newRecord.GENERATED_KEY;
+                    // Reload Page to display left menu
+                    Location(CGI.SCRIPT_NAME & "?" & CGI.QUERY_STRING);
+                </cfscript>
                 
             </cfif>
         
@@ -141,6 +147,7 @@
         <!--- Get Host Family Information --->
         <cfquery name="qGetHostFamilyInfo" datasource="MySQL">
             SELECT 
+            	h.initialHostAppType,
                 h.familylastname, 
                 h.applicationStarted, 
                 h.applicationapproved, 
@@ -378,7 +385,7 @@
         </tr>
     </table>
 	
-    <cfswitch expression="#CLIENT.initialHostAppType#">
+    <cfswitch expression="#qGetHostFamilyInfo.initialHostAppType#">
     
     	<cfcase value="1">
             <p style="background-color:##efefef;padding:10px">This account is not set up for the online applciation system.</p> <br />
