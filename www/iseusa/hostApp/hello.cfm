@@ -211,9 +211,6 @@
 	background-color: #E6F2D5;
 	padding-left: 20px;
 }
-.gradientBack {
-		background-image:url(images/faintGradient.png);
-}
 </style>
 
 <cfoutput> 

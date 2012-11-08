@@ -1,0 +1,130 @@
+@charset "UTF-8";
+/* CSS Document */
+body {
+	margin: 0; /* it's good practice to zero the margin and padding of the body element to account for differing browser defaults */
+	padding: 0;
+	text-align: center; /* this centers the container in IE 5* browsers. The text is then set to the left aligned default in the #container selector */
+	color: #000000;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 100%;
+	background-color: #B8D3E6;
+	background-image: url(/images/bodyBackground.gif);
+	background-repeat: repeat-x;
+}
+.oneColFixCtr #container {
+	width: 758px;
+	margin-top: 0px;
+	margin-right: auto;
+	margin-bottom: 0;
+	margin-left: auto;
+	min-height: 300px;
+	height: auto;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 15px;
+	padding-left: 0px;
+}
+.oneColFixCtr #mainContent {
+	padding: 0 0px; /* remember that padding is the space inside the div box and margin is the space outside the div box */
+}
+.oneColFixCtr #mainContentIndex {
+	padding-top: 0;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	width: 758px;
+}
+.spacer2 {
+	height: 50px;
+}
+.enter {
+	text-align: center;
+}
+
+/* this is all the css code for the top box */
+#topBar {
+	height: 40px;
+	width: 100%;
+	background-color: #000;
+	position: fixed;
+	z-index: 50;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+#topBarLinks {
+	width: 100%;
+	margin-left: 45%;
+}
+/* the end of css code for the top box */
+
+#footer{
+	clear: both;
+	height: 45px;
+	margin: 0;
+	background-color: #000;
+	padding-top: 14;
+	padding-right: 0;
+	padding-bottom: 0;
+	padding-left: 0;
+} 
+.clear {
+	height: 15px;
+}
+#main {padding-bottom: 30px;
+}
+
+#subPages {
+	height: auto;
+	width: 750px;
+	margin-top: 48px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.whtTop {
+	background-image: url(/images/whtBoxTop.png);
+	background-repeat: no-repeat;
+	margin: 0px;
+	padding: 0px;
+	height: 16px;
+	width: 746px;
+}
+.whtMiddle {
+	background-image: url(/images/whtBoxMiddle.png);
+	background-repeat: repeat-y;
+	margin: 0px;
+	height: auto;
+	width: 746px;
+	min-height: 50px;
+	text-align: justify;
+	padding-top: 20px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+}
+.whtBottom {
+	background-image: url(/images/whtBoxBottom.png);
+	background-repeat: no-repeat;
+	margin: 0px;
+	padding: 0px;
+	height: 27px;
+	width: 746px;
+	display: block;
+	clear: both;
+}
+
+.bold {
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+/****Error CSS**/
+#wrapper {width:100%; margin:0 auto}
+.form {float:left; padding:0 10px 10px 10px; background:#f3f3f3; border:2px solid #cfcfcf}
+.form label {float:left; width:100px; padding:10px 10px 0 0; font-weight:bold}
+.form select {float:left; width:146px; margin-top:10px}
+.form input {float:left; margin-top:10px}
+.form .submit {clear:both}
+#msg {display:none; position:absolute; z-index:200; background:url(images/msg_arrow.gif) left center no-repeat; padding-left:7px}
+#msgcontent {display:block; background:#f3e6e6; border:2px solid #924949; border-left:none; padding:5px; min-width:150px; max-width:250px}
+/******End Error**/
