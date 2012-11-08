@@ -25,9 +25,9 @@
 
 	
 	<cffunction name="getRegions" access="public" returntype="query" output="false" hint="Gets a list of regions, if regionID is passed gets a region by ID">
-    	<cfargument name="regionID" default="0" hint="regionID is not required">   
+    	<cfargument name="regionID" default="" hint="regionID is not required">   
         <cfargument name="regionIDList" default="" hint="List of region IDs">     
-        <cfargument name="companyID" default="0" hint="companyID is not required">
+        <cfargument name="companyID" default="" hint="companyID is not required">
         <cfargument name="includeGuaranteed" default="0" hint="Set to 1 to include region preference">
         <cfargument name="isActive" default="1" hint="isActive is not required.">
               
@@ -61,9 +61,9 @@
 	                    r.active = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.isActive)#">                
                 </cfif>
                 
-				<cfif VAL(ARGUMENTS.regionID)>
+				<cfif LEN(ARGUMENTS.regionID)>
                 	AND
-                    	r.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
+                    	r.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
                 </cfif>
                 
                 <cfif LEN(ARGUMENTS.regionIDList)>
@@ -71,7 +71,7 @@
                     	r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionIDList#" list="yes"> )
                 </cfif>
 				
-				<cfif VAL(ARGUMENTS.companyID)>
+				<cfif LEN(ARGUMENTS.companyID)>
                 	AND
                     	r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.companyID)#">
                 </cfif>    
