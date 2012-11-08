@@ -31,12 +31,6 @@
 <Cfparam name="url.page" default="hello">
 <cfparam name="CLIENT.hostID" default="0">
 
-<cfquery name="hostInfo" datasource="mysql">
-SELECT shl.firstname, shl.lastname, shl.address, shl.address2, shl.city, shl.stateID, shl.zipCode, shl.email, shl.phone, smg_states.state
-FROM smg_host_lead shl
-LEFT JOIN smg_states on smg_states.id = shl.stateID
-where email = '#client.email#'
-</cfquery>
 <cfoutput>
 <div id="topBar">
 
@@ -44,7 +38,7 @@ where email = '#client.email#'
 <div id="logoBoxB">
   <div class="blueBox">
   <a href="../index.cfm"><img src="../images/logo_21.png" width="214" height="165" alt="ISE logo" border="0" /></a>
-<cfif VAL(CLIENT.hostID) AND url.page is not 'hostLogin'>
+<cfif VAL(CLIENT.hostID) AND url.page NEQ 'hostLogin'>
 	<cfinclude template="includes/leftMenu.cfm">
 </cfif>
 <!--logoBoxB --></div>

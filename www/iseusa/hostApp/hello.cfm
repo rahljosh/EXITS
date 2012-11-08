@@ -11,11 +11,6 @@
 
 <cfsilent>
 	
-    <!--- Param Variables --->
-    <cfparam name="CLIENT.hostID" default="0">
-    <cfparam name="CLIENT.hostfam" default="">
-    <cfparam name="CLIENT.hostemail" default="">
-
     <!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.username" default="">
@@ -30,6 +25,7 @@
         <cfquery name="qLoginHostFamily" datasource="MySQL">
             SELECT  
                 hostID, 
+                hostAppStatus,
                 initialHostAppType
             FROM 
                 smg_hosts
@@ -45,6 +41,7 @@
             <cfscript>
 				// Login Host Family
 				CLIENT.hostID = qLoginHostFamily.hostID;
+				CLIENT.hostAppStatus = qLoginHostFamily.hostAppStatus;
 				// Reload Page to display left menu
 				Location(CGI.SCRIPT_NAME & "?" & CGI.QUERY_STRING);
 			</cfscript>
@@ -86,7 +83,7 @@
                         smg_hosts 
                     (
                         regionID,
-                        HostAppStatus,
+                        hostAppStatus,
                         familylastname, 
                         address, 
                         address2, 
@@ -131,6 +128,7 @@
 				<cfscript>
                     // Login Host Family
                     CLIENT.hostID = newRecord.GENERATED_KEY;
+					CLIENT.hostAppStatus = 8;
                     // Reload Page to display left menu
                     Location(CGI.SCRIPT_NAME & "?" & CGI.QUERY_STRING);
                 </cfscript>
@@ -148,6 +146,7 @@
         <cfquery name="qGetHostFamilyInfo" datasource="MySQL">
             SELECT 
             	h.initialHostAppType,
+                h.hostAppStatus,
                 h.familylastname, 
                 h.applicationStarted, 
                 h.applicationapproved, 
@@ -157,7 +156,7 @@
                 h.arearepid, 
                 h.reasonAppDenied, 
                 h.lead, 
-                h.HostAppStatus,
+                h.hostAppStatus,
                 r.regionname, 
                 u.firstname as repFirst,
                 u.lastname as repLast
@@ -196,7 +195,7 @@
                 UPDATE 
                     smg_hosts
                 SET 
-                    HostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+                    hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
                 WHERE 
                     hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostID#">
             </cfquery>
@@ -297,7 +296,7 @@
                     </Tr>
                     <tr>
                         <td align="center">
-                            <cfif qGetHostFamilyInfo.HostAppStatus lte 7>
+                            <cfif qGetHostFamilyInfo.hostAppStatus LTE 7>
                                 <strong><u>Submitted!</u></strong>
                             <cfelse>
                                 <a href="index.cfm?page=checkList" style="text-align: left;">Review Check List</a>
@@ -362,7 +361,7 @@
             </td>
             <td>&nbsp;&nbsp;</td>
             <td>	
-                <cfif qGetHostFamilyInfo.HostAppStatus lte 7>
+                <cfif qGetHostFamilyInfo.hostAppStatus LTE 7>
                     <h2 align="center">Thank you!</h2>
                     <p>Thats it!  Your application has been submitted for review.  You will hear from your local representative shortly.</p>
                 <cfelse>

@@ -4,19 +4,20 @@
     sessionmanagement="yes" 
     sessiontimeout="#CreateTimeSpan(0,4,0,0)#">
 
-	<!----
-	<cferror type="EXCEPTION" template="AlertForm.cfm">
-	<cferror type="REQUEST" template="AlertForm.cfm">  
-	---->
-
     <!--- Param URL variable --->
 	<cfparam name="URL.init" default="0">
 
-	<!--- Param Client Variables --->
+	<!--- Param CLIENT Variables --->
 	<cfparam name="CLIENT.hostID" default="0">
 	<cfparam name="CLIENT.name" default="">
     <cfparam name="CLIENT.email" default="">
     <cfparam name="CLIENT.isAdWords" default="0">  
+
+    <!--- Param CLIENT Variables --->
+    <cfparam name="CLIENT.hostID" default="0">
+    <cfparam name="CLIENT.hostAppStatus" default="9">
+    <cfparam name="CLIENT.hostfam" default="">
+    <cfparam name="CLIENT.hostemail" default="">
 
 	<cfscript>
 		// Create a function that let us create CFCs from any location
