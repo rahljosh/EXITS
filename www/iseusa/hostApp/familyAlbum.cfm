@@ -11,7 +11,6 @@
 
 <style type="text/css">
 	.box{
-		
 		margin: 10px 0px;
 		padding:15px 10px 15px 50px;
 		background-repeat: no-repeat;
@@ -19,7 +18,7 @@
 		position:relative;
 		color: #000;
 		background-color:#FFC;
-		background-image: url('../images/info.png');
+		background-image: url('images/info.png');
 	}
 </style>
 <cfparam name="form.picCat" default=''>

@@ -782,7 +782,7 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
 <input type="hidden" name="submitted" value="1" />
 
 <h3>Family Members</h3>
-<table width=100% cellspacing=0 cellpadding=2 class="border">
+<table width="100%" cellspacing=0 cellpadding=4 class="border">
    <Tr>
    	<Th>Name</Th><th>Relation</th><th>Date of Birth</th><th>Age</th><th>Social Security</th>
     </Tr>
@@ -794,12 +794,12 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
     <Cfloop query="qHostParentsMembers">
     <cfif fatherfirstname is not ''>
         <tr <Cfif currentrow mod 2> bgcolor="##deeaf3"</cfif>>
-            <Td><h3><p class=p_uppercase>#fatherfirstname# #fatherlastname#</h3></Td>
-            <Td><h3><p class=p_uppercase>Host Father</h3></Td>
-            <Td><h3>#DateFormat(fatherdob, 'mmm d, yyyy')#</h3></Td>
-            <td><h3>#DateDiff('yyyy',fatherdob,now())#</h3></td> 
+            <Td width="20%"><h3><p class=p_uppercase>#fatherfirstname# #fatherlastname#</h3></Td>
+            <Td width="20%"><h3><p class=p_uppercase>Host Father</h3></Td>
+            <Td width="20%"><h3>#DateFormat(fatherdob, 'mmm d, yyyy')#</h3></Td>
+            <td width="10%"><h3>#DateDiff('yyyy',fatherdob,now())#</h3></td> 
              <input type="hidden" value="#fatherfirstname#" name="fatherfirstname" />
-            <td>
+            <td width="30%">
             
           	<cfif checkFatherCBC.recordcount eq 0>
             	<cfinput type="text"  name="fatherssn"  mask="999-99-9999" size=12 typeahead="no" showautosuggestloadingicon="true" >

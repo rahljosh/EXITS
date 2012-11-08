@@ -26,7 +26,7 @@ text-decoration: none;
 <div id="leftSide">
 
     <table width="154" border="0" border="1">
-        <tr onMouseOver="this.style.background='#8cc540'" onMouseOut="this.style.background=''" <cfif URL.page is 'hello'>bgcolor="#f6931e"</cfif> >
+        <tr onMouseOver="this.style.background='#8cc540'" onMouseOut="this.style.background=''" <cfif URL.page is 'hello'>bgcolor="#8cc540"</cfif> >
             <td><a href="?page=hello" class="whtLinks">Overview</a></td>
         </tr>	
         
@@ -86,8 +86,8 @@ text-decoration: none;
         
         </cfif>
         
-        <tr onMouseOver="this.style.background='#8cc540'" onMouseOut="this.style.background=''"> 
-            <td><a href="../hostLogout.cfm" class="whtLinks">Logout</a></td>
+        <tr onMouseOver="this.style.background='#f6931e'" onMouseOut="this.style.background=''"> 
+            <td><a href="logout.cfm" class="whtLinks">Logout</a></td>
         </tr>
     </table>
     
