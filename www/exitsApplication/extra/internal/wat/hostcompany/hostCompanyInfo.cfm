@@ -59,6 +59,8 @@
     <cfparam name="FORM.authentication_departmentOfLabor" default="0">
     <cfparam name="FORM.authentication_googleEarth" default="0">
     <cfparam name="FORM.authentication_secretaryOfStateExpiration" default="">
+    <cfparam name="FORM.authentication_departmentOfLaborExpiration" default="">
+    <cfparam name="FORM.authentication_googleEarthExpiration" default="">
     <cfparam name="FORM.EIN" default="">
 	<cfparam name="FORM.workmensCompensation" default="">
     <cfparam name="FORM.WCDateExpired" default="">
@@ -82,184 +84,139 @@
     
     <cfquery name="qGetHostCompanyInfo" datasource="MySql">
         SELECT 
-        	eh.hostCompanyID,
+        	eh.hostCompanyID, 
             eh.business_typeID, 
-            eh.name,
-            eh.address,
+            eh.name, 
+            eh.address, 
             eh.city, 
-            eh.state,
-            eh.zip,
-            eh.hqAddress,
-            eh.hqCity,
-            eh.hqState,
+			eh.state, 
+            eh.zip, 
+            eh.hqAddress, 
+            eh.hqCity, 
+            eh.hqState, 
             eh.hqZip,
             eh.phone, 
-            eh.cellPhone,
-            eh.fax,
-            eh.email,
+            eh.cellPhone, 
+            eh.fax, 
+            eh.email, 
             eh.supervisor,
-            eh.supervisor_name,
-            eh.supervisor_phone,
+            eh.supervisor_name, 
+            eh.supervisor_phone, 
             eh.supervisor_cellPhone, 
             eh.supervisor_email, 
-            eh.homepage,
+            eh.homepage, 
             eh.personJobOfferName,
-            eh.personJobOfferTitle,
+            eh.personJobOfferTitle, 
             eh.authentication_secretaryOfState,
-            eh.authentication_departmentOfLabor,
+            eh.authentication_departmentOfLabor, 
             eh.authentication_googleEarth,
-            eh.authentication_secretaryOfStateExpiration,
+            eh.authentication_secretaryOfStateExpiration, 
+            eh.authentication_departmentOfLaborExpiration,
+            eh.authentication_googleEarthExpiration,
             eh.EIN,
-            eh.workmensCompensation,
-            eh.WCDateExpired,
+            eh.workmensCompensation, 
+            eh.WCDateExpired, 
             eh.observations,
-            eh.housing_options,
-            eh.housing_cost,
+            eh.housing_options, 
+            eh.housing_cost, 
             eh.picture_type,
-            eh.enteredBy,
-            eh.entryDate,
-			eh.isHousingProvided,
-            eh.housingProvidedInstructions,
+            eh.enteredBy, 
+            eh.entryDate, 
+            eh.isHousingProvided,
+            eh.housingProvidedInstructions, 
             eh.isPickUpProvided,
-            eh.arrivalAirport,
-            eh.arrivalAirportCity,
+            eh.arrivalAirport, 
+            eh.arrivalAirportCity, 
             eh.arrivalAirportState,
-            eh.arrivalPickUpHours,
-            eh.arrivalInstructions,
+            eh.arrivalPickUpHours, 
+            eh.arrivalInstructions, 
             eh.pickUpContactName,
-            eh.pickUpContactPhone,
-            eh.pickUpContactEmail,
+            eh.pickUpContactPhone, 
+            eh.pickUpContactEmail, 
             eh.pickUpContactHours,
             et.business_type as typeBusiness, 
             s.stateName,  
             workSiteS.stateName as hqStateName,
             airportS.stateName as arrivalAirportStateName            
-        FROM 
-        	extra_hostcompany eh
-        LEFT OUTER JOIN 
-        	smg_states s ON eh.state = s.ID
-        LEFT OUTER JOIN 
-        	smg_states workSiteS ON eh.hqState = workSiteS.ID
-        LEFT OUTER JOIN 
-        	smg_states airportS ON eh.arrivalAirportState = airportS.ID
-        LEFT OUTER JOIN 
-        	extra_typebusiness et ON et.business_typeID = eh.business_typeID
-        WHERE 
-        	eh.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
+        FROM extra_hostcompany eh
+        LEFT OUTER JOIN smg_states s ON eh.state = s.ID
+        LEFT OUTER JOIN smg_states workSiteS ON eh.hqState = workSiteS.ID
+        LEFT OUTER JOIN smg_states airportS ON eh.arrivalAirportState = airportS.ID
+        LEFT OUTER JOIN extra_typebusiness et ON et.business_typeID = eh.business_typeID
+        WHERE eh.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
     </cfquery>
 	
     <cfquery name="qGetenteredBy" datasource="MySql">
-        SELECT 
-        	firstname, 
-            lastname
-        FROM 
-        	smg_users
-        WHERE
-        	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.enteredBy)#"> 
+        SELECT firstname, lastname
+        FROM smg_users
+        WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.enteredBy)#"> 
     </cfquery>
     
     <cfquery name="qGetJobs" datasource="MySql">
-        SELECT 
-        	ej.id, 
-            ej.title, 
-            ej.hours,
-            ej.description,
-            ej.wage, 
-            ej.wage_type
-        FROM 
-        	extra_jobs ej
-        WHERE 
-        	ej.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.hostCompanyID)#"> 
+    	SELECT id, title, hours, description, wage, wage_type
+        FROM extra_jobs
+        WHERE hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.hostCompanyID)#">
     </cfquery> 
     
     <cfquery name="qGetHousing" datasource="MySql">
-        SELECT 
-        	ID,
-            type
-        FROM 
-        	extra_housing	
-        WHERE	
-        	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">	
-        ORDER BY
-        	type					
+    	SELECT ID, type
+        FROM extra_housing
+        WHERE isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+        ORDER BY type					
     </cfquery>
 
     <cfquery name="qGetBusinessType" datasource="MySql">
-        SELECT 
-        	business_typeID, 
-            business_type
-        FROM 
-        	extra_typebusiness
-		ORDER BY
-        	business_type            
+        SELECT business_typeID, business_type
+        FROM extra_typebusiness
+		ORDER BY business_type            
     </cfquery>
 
     <cfquery name="qGetStateList" datasource="MySql">
-        SELECT 
-        	id, 
-            state, 
-            stateName
-        FROM 
-        	smg_states
-      	ORDER BY
-        	stateName
+        SELECT id, state, stateName
+        FROM smg_states
+      	ORDER BY stateName
     </cfquery>
 
     <cfquery name="qGetWorkSiteState" dbtype="query">
-        SELECT 
-        	id, 
-            state, 
-            stateName
-        FROM 
-        	qGetStateList
-      	WHERE
-        	ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.state)#">
+        SELECT id, state, stateName
+        FROM qGetStateList
+      	WHERE ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.state)#">
     </cfquery>
     
     <cfquery name="qGetActivePrograms" datasource="MySql">
-    	SELECT
-        	p.programID,
-            p.startDate,
-            p.programName,
-            j.numberPositions
-      	FROM
-        	smg_programs p
-      	INNER JOIN
-    		smg_companies c ON c.companyid = p.companyid
-       	LEFT OUTER JOIN
-        	extra_j1_positions j ON j.programID = p.programID
-            AND
-            	j.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.hostCompanyID)#">
-      	WHERE
-            dateDiff(p.endDate,NOW()) >= <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-        AND
-            p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        AND
-            p.is_deleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-        AND
-            p.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">
+    	SELECT p.programID, p.startDate, p.programName,
+        	j.numberPositions, j.verifiedDate
+      	FROM smg_programs p
+        INNER JOIN smg_companies c ON c.companyID = p.companyID
+        LEFT OUTER JOIN extra_j1_positions j ON j.programID = p.programID
+			AND j.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.hostCompanyID)#">
+      	WHERE dateDiff(p.endDate,NOW()) >= <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+        AND p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        AND p.is_deleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+        AND p.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">
     </cfquery>
     
-    
+    <cfquery name="qGetProgramParticipation" datasource="MySql">
+    	SELECT p.programName
+        FROM smg_programs p, extra_candidate_place_company ecpc, extra_candidates c
+        WHERE p.programID = c.programID
+        AND c.candidateID = ecpc.candidateID
+        AND ecpc.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
+        GROUP BY p.programName
+    </cfquery>
+                
     <!--- FORM Submitted --->
     <cfif FORM.submitted>
     
         <cfquery name="qCheckForDuplicates" datasource="MySql">
-            SELECT 
-                hostCompanyID, 
-                name
-            FROM 
-                extra_hostcompany
-            WHERE
-                name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.name#">
-			AND
-            	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">                
+            SELECT hostCompanyID, name
+            FROM extra_hostcompany
+            WHERE name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.name#">
+			AND companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">                
             <cfif VAL(FORM.hostCompanyID)>
-                AND
-                    hostCompanyID != <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hostCompanyID#">
+                AND hostCompanyID != <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hostCompanyID#">
             </cfif>
         </cfquery>
-        
         
         <!--- Data Validation --->
 		<cfscript>
@@ -294,13 +251,9 @@
         <cfif LEN(FORM.businessTypeOther) AND FORM.business_typeID EQ 'Other'>
             
             <cfquery name="qCheckBusinessType" datasource="MySql">
-                SELECT
-                    business_typeID,
-                    business_type 
-                FROM
-                    extra_typebusiness
-                WHERE
-                    business_type LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.businessTypeOther#">
+                SELECT business_typeID, business_type 
+                FROM extra_typebusiness
+                WHERE business_type LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.businessTypeOther#">
             </cfquery>
                                 
             <!--- Found a match for business type --->
@@ -379,6 +332,8 @@
                         authentication_departmentOfLabor = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_departmentOfLabor)#">,
                         authentication_googleEarth = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_googleEarth)#">,
                         authentication_secretaryOfStateExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_secretaryOfStateExpiration#">,
+                        authentication_departmentOfLaborExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_departmentOfLaborExpiration#">,
+                        authentication_googleEarthExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_googleEarthExpiration#">,
                         EIN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">,
                         workmensCompensation = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workmensCompensation#" null="#NOT IsNumeric(FORM.workmensCompensation)#">,
                         WCDateExpired = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.WCDateExpired#" null="#NOT IsDate(FORM.WCDateExpired)#">,
@@ -407,30 +362,27 @@
                     <cfset ind += 1>
                     
                     <cfquery name="qCheckRecords" datasource="MySql">
-                    	SELECT
-                        	*
-                       	FROM
-                        	extra_j1_positions
-                       	WHERE
-                            hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
-                        AND
-                            programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetActivePrograms.programID#">
+                    	SELECT *
+                       	FROM extra_j1_positions
+                       	WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
+                        AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetActivePrograms.programID#">
                     </cfquery>
                     
                     <cfscript>
 						number = evaluate("##FORM.numberPositions_" & ind & "##");
+						date = evaluate("##FORM.j1Date_" & ind & "##");
 					</cfscript>
                     
                     <cfif qCheckRecords.recordCount>
                     	<cfquery datasource="MySql">
-                        	UPDATE
-                            	extra_j1_positions
+                        	UPDATE extra_j1_positions
                            	SET
                             	numberPositions = <cfqueryparam cfsqltype="cf_sql_integer" value="#number#">
-                          	WHERE
-                                hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
-                            AND
-                                programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetActivePrograms.programID#">
+                                <cfif isDate('#date#')>
+                                	,verifiedDate = <cfqueryparam cfsqltype="cf_sql_date" value="#date#">
+                             	</cfif>
+                          	WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
+                            AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetActivePrograms.programID#">
                         </cfquery>
                    	<cfelse>
                     	<cfquery datasource="MySql">
@@ -440,12 +392,18 @@
                                 	hostID,
                                     programID,
                                     numberPositions
+                                    <cfif isDate('#date#')>
+                                    	, verifiedDate
+                                  	</cfif>
                                 )
                           	VALUES
                             	(
                                 	<cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">,
                                     <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetActivePrograms.programID#">,
                                     <cfqueryparam cfsqltype="cf_sql_integer" value="#number#">
+                                    <cfif isDate('#date#')>
+                                    	, <cfqueryparam cfsqltype="cf_sql_date" value="#date#">
+                                    </cfif>
                                 )
                         </cfquery>
                     </cfif>
@@ -496,6 +454,8 @@
                         authentication_departmentOfLabor,
                         authentication_googleEarth,
                         authentication_secretaryOfStateExpiration,
+                        authentication_departmentOfLaborExpiration,
+                        authentication_googleEarthExpiration,
                         EIN,
                         workmensCompensation,
                         WCDateExpired,
@@ -554,6 +514,8 @@
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_departmentOfLabor)#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_googleEarth)#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_secretaryOfStateExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_departmentOfLaborExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_googleEarthExpiration#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workmensCompensation#" null="#NOT IsNumeric(FORM.workmensCompensation)#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.WCDateExpired#" null="#NOT IsDate(FORM.WCDateExpired)#">,
@@ -633,6 +595,8 @@
 			FORM.authentication_departmentOfLabor = qGetHostCompanyInfo.authentication_departmentOfLabor;
 			FORM.authentication_googleEarth = qGetHostCompanyInfo.authentication_googleEarth;
 			FORM.authentication_secretaryOfStateExpiration = qGetHostCompanyInfo.authentication_secretaryOfStateExpiration;
+			FORM.authentication_departmentOfLaborExpiration = qGetHostCompanyInfo.authentication_departmentOfLaborExpiration;
+			FORM.authentication_googleEarthExpiration = qGetHostCompanyInfo.authentication_googleEarthExpiration;
 			FORM.EIN = qGetHostCompanyInfo.EIN;
 			FORM.workmensCompensation = qGetHostCompanyInfo.workmensCompensation;
 			FORM.WCDateExpired = qGetHostCompanyInfo.WCDateExpired;
@@ -1090,19 +1054,28 @@
 	}
 	
 	$().ready(function() {
-					   var hostCompanyID = $('#hostCompanyID').val();
-					   new AjaxUpload('business_license_upload', {
-										action: '../wat/hostCompany/imageUploadPrint.cfm?hostCompanyID='+hostCompanyID,
-										name: 'image'
-									  });
-					   });
+		var hostCompanyID = $('#hostCompanyID').val();
+	   	new AjaxUpload('business_license_upload', {
+			action: '../wat/hostCompany/imageUploadPrint.cfm?type=businessLicense&hostCompanyID='+hostCompanyID,
+			name: 'image'
+  		});
+		new AjaxUpload('department_of_labor_upload', {
+			action: '../wat/hostCompany/imageUploadPrint.cfm?type=departmentOfLabor&hostCompanyID='+hostCompanyID,
+			name: 'image'
+ 		});
+		new AjaxUpload('google_earth_upload', {
+			action: '../wat/hostCompany/imageUploadPrint.cfm?type=googleEarth&hostCompanyID='+hostCompanyID,
+			name: 'image'
+  		});
+	});
 	
-	var printBusinessLicense = function() {
+	// Popup to print image that is referenced by the input file type.
+	var printAuthenticationFile = function(file) {
 		var hostCompanyID = $('#hostCompanyID').val();
 		var printURL = document.URL;
 		printURL = printURL.substring(0, printURL.indexOf("/index.cfm"));
-		printURL += "/hostcompany/imageUploadPrint.cfm?hostCompanyID=" + hostCompanyID + "&option=print";
-		window.open(printURL, 300, 400);
+		printURL += "/hostcompany/imageUploadPrint.cfm?option=print&type=" + file + "&hostCompanyID=" + hostCompanyID;
+		window.open(printURL, file, "width=800, height=600");
 	}
 	
 </script>
@@ -1205,7 +1178,17 @@
                             </tr>
                             <tr id="rowBusinessTypeID" class="hiddenField">
                                 <td align="right" class="style1"><strong>Specity if Other:</strong> </td>
-                                <td><input type="text" id="businessTypeOther" name="businessTypeOther" id="businessTypeOther" value="#FORM.businessTypeOther#" class="style1" size="35" maxlength="100"></td>
+                                <td>
+                                	<input 
+                                    	type="text" 
+                                        id="businessTypeOther" 
+                                        name="businessTypeOther" 
+                                        id="businessTypeOther" 
+                                        value="#FORM.businessTypeOther#" 
+                                        class="style1" 
+                                        size="35" 
+                                        maxlength="100">
+                            	</td>
                             </tr>
                         </table>
 
@@ -1241,7 +1224,16 @@
                                         <cfif #hostCompanyID# EQ 0 >
                                             <tr id="trZipLookUp">
                                                 <td class="style1" align="right"><strong>Input your zip code:</strong></td>
-                                                <td class="style1"><input type="text" name="zipLookup" id="zipLookup" size="10" maxlength="5" class="style1 editPage" onBlur="getLocationByZipWorkSite(this.id);"></td>											
+                                                <td class="style1">
+                                                	<input 
+                                                    	type="text" 
+                                                        name="zipLookup" 
+                                                        id="zipLookup" 
+                                                        size="10" 
+                                                        maxlength="5" 
+                                                        class="style1 editPage" 
+                                                        onBlur="getLocationByZipWorkSite(this.id);">
+                                           		</td>											
                                             </tr>
                                         </cfif>
                                         <tr>
@@ -1300,7 +1292,16 @@
                                         <cfif #hostCompanyID# EQ 0 >
                                             <tr id="trZipLookUpHQ">
                                                 <td class="style1" align="right"><strong>Input your zip code:</strong></td>
-                                                <td class="style1"><input type="text" name="zipLookup" id="zipLookupHQ" size="10" maxlength="5" class="style1 editPage" onBlur="getLocationByZipHQ(this.id);"></td>											
+                                                <td class="style1">
+                                                	<input 
+                                                    	type="text" 
+                                                        name="zipLookup" 
+                                                        id="zipLookupHQ" 
+                                                        size="10" 
+                                                        maxlength="5" 
+                                                        class="style1 editPage" 
+                                                        onBlur="getLocationByZipHQ(this.id);">
+                                               	</td>											
                                             </tr>
                                         </cfif>
                                         <tr>
@@ -1333,7 +1334,15 @@
                                             <td class="style1" align="right"><strong>Zip:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">#FORM.hqZip#</span>
-                                                <input type="text" name="hqZip" id="hqZip" value="#FORM.hqZip#" class="style1 editPage" size="10" maxlength="5" onblur="getLocationByZipHQ(this.id);">
+                                                <input 
+                                                	type="text" 
+                                                    name="hqZip" 
+                                                    id="hqZip" 
+                                                    value="#FORM.hqZip#" 
+                                                    class="style1 editPage" 
+                                                    size="10" 
+                                                    maxlength="5" 
+                                                    onblur="getLocationByZipHQ(this.id);">
                                             </td>
                                         </tr>
                                     </table>
@@ -1342,6 +1351,48 @@
                             </tr>
                         </table> 
                         
+                        <br />
+                        
+                        <!--- JOBS --->
+                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+								<td bordercolor="##FFFFFF">
+
+                                    <table width="100%" cellpadding="3" cellspacing="3" border="0">
+                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
+                                            <td colspan="3" class="style2" bgcolor="##8FB6C9">&nbsp;:: Jobs</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1"><strong><u>Job Title</u></strong></td>
+                                            <td class="style1"><strong><u>Wage</u></strong></td>
+                                            <td class="style1"><strong><u>Hours/Week</u></strong></td>
+                                        </tr>
+                                        <cfloop query="qGetJobs">
+                                            <tr bgcolor="###iif(qGetJobs.currentrow MOD 2 ,DE("E9ECF1") ,DE("FFFFFF") )#">
+                                                <td class="style1">
+                                                	<a href="javascript:openWindow('hostcompany/jobInfo.cfm?ID=#id#&hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#', 300, 600);">
+	                                                    #qGetJobs.title#
+                                                    </a>
+                                                </td>
+                                                <td class="style1">#qGetJobs.wage# / #qGetJobs.wage_type#</td>
+                                                <td class="style1">#qGetJobs.hours#</td>
+                                            </tr>
+                                        </cfloop>
+                                        <cfif VAL(qGetHostCompanyInfo.hostCompanyID) AND ListFind("1,2,3,4", CLIENT.userType)>
+                                            <tr>
+                                                <td colspan="3" align="center">
+                                                    <a href="javascript:openWindow('hostcompany/jobInfo.cfm?hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#', 300, 600);" > 
+                                                        <img src="../pics/add-job.gif" width="64" height="20" border="0" />
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </cfif>
+                                    </table>
+
+                                </td>
+                            </tr>
+                        </table> 
+
                         <br />
                         
                         <!--- HOUSING --->
@@ -1363,11 +1414,29 @@
                                                         Will assist in finding
                                                     </cfif>
                                                 </span>
-                                                <input type="radio" name="isHousingProvided" id="isHousingProvidedNo" value="0" class="style1 editPage" <cfif FORM.isHousingProvided EQ 0> checked="checked" </cfif> /> 
+                                                <input 
+                                                	type="radio" 
+                                                    name="isHousingProvided" 
+                                                    id="isHousingProvidedNo" 
+                                                    value="0" 
+                                                    class="style1 editPage" 
+													<cfif FORM.isHousingProvided EQ 0> checked="checked" </cfif> /> 
                                                 <label class="style1 editPage" for="isHousingProvidedNo">No</label>
-                                                <input type="radio" name="isHousingProvided" id="isHousingProvidedYes" value="1" class="style1 editPage" <cfif FORM.isHousingProvided EQ 1> checked="checked" </cfif> /> 
+                                                <input 
+                                                	type="radio" 
+                                                    name="isHousingProvided" 
+                                                    id="isHousingProvidedYes" 
+                                                    value="1" 
+                                                    class="style1 editPage" 
+													<cfif FORM.isHousingProvided EQ 1> checked="checked" </cfif> /> 
                                                 <label class="style1 editPage" for="isHousingProvidedYes">Yes</label>
-                                                <input type="radio" name="isHousingProvided" id="isHousingProvidedWillAssist" value="2" class="style1 editPage" <cfif FORM.isHousingProvided EQ 2> checked="checked" </cfif> /> 
+                                                <input 
+                                                type="radio" 
+                                                name="isHousingProvided" 
+                                                id="isHousingProvidedWillAssist" 
+                                                value="2" 
+                                                class="style1 editPage" 
+												<cfif FORM.isHousingProvided EQ 2> checked="checked" </cfif> /> 
                                                 <label class="style1 editPage" for="isHousingProvidedWillAssist">Will assist in finding</label>
                                             </td>
                                         </tr>
@@ -1375,7 +1444,9 @@
                                             <td class="style1" align="right" valign="top"><strong>Housing Instructions:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">#FORM.housingProvidedInstructions#</span>
-                                                <textarea name="housingProvidedInstructions" id="housingProvidedInstructions" class="style1 editPage" cols="35" rows="4">#FORM.housingProvidedInstructions#</textarea>
+                                                <textarea name="housingProvidedInstructions" id="housingProvidedInstructions" class="style1 editPage" cols="35" rows="4">
+                                                	#FORM.housingProvidedInstructions#
+                                             	</textarea>
                                             </td>
                                         </tr>
 									</table>
@@ -1384,7 +1455,14 @@
                                         <cfloop query="qGetHousing">
                                             <cfif qGetHousing.currentrow MOD 2 EQ 1><tr></cfif>
                                             <td width="20px" class="style1"> 
-                                                <input type="checkbox" name="housing_options" id="housing_options#qGetHousing.id#" value="#qGetHousing.id#" class="formField" disabled <cfif ListFind(FORM.housing_options, qGetHousing.id)>checked</cfif> > 
+                                                <input 
+                                                	type="checkbox" 
+                                                    name="housing_options" 
+                                                    id="housing_options#qGetHousing.id#" 
+                                                    value="#qGetHousing.id#" 
+                                                    class="formField" 
+                                                    disabled 
+													<cfif ListFind(FORM.housing_options, qGetHousing.id)>checked</cfif> /> 
                                             </td>
                                             <td class="style1"><label for="housing_options#qGetHousing.id#">#qGetHousing.type#</label></td>
 											<cfif qGetHousing.currentrow MOD 2 EQ 0></tr></cfif>
@@ -1407,6 +1485,119 @@
                             </tr>
                         </table> 
 
+                        <br />
+                        
+                        <!--- PICK UP/ARRIVAL INFORMATION --->
+                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+								<td bordercolor="##FFFFFF">
+
+                                    <table width="100%" cellpadding="3" cellspacing="3" border="0">
+                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
+                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Arrival Information</td>
+                                        </tr>
+                                        <tr>
+                                            <td width="35%" class="style1" align="right"><strong>Aiport/Station Code:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#FORM.arrivalAirport#</span>
+                                                <input type="text" name="arrivalAirport" id="arrivalAirport" value="#FORM.arrivalAirport#" class="style1 editPage" size="35" maxlength="100">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="35%" class="style1" align="right"><strong>Aiport/Station City:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#FORM.arrivalAirportCity#</span>
+                                                <input type="text" name="arrivalAirportCity" id="arrivalAirportCity" value="#FORM.arrivalAirportCity#" class="style1 editPage" size="35" maxlength="100">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="35%" class="style1" align="right"><strong>Aiport/Station State:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#qGetHostCompanyInfo.arrivalAirportStateName#</span>
+                                                <select name="arrivalAirportState" id="arrivalAirportState" class="style1 editPage">
+                                              		<option value="0"></option>
+                                              		<cfloop query="qGetStateList">
+		                                                <option value="#qGetStateList.ID#" <cfif qGetStateList.ID eq FORM.arrivalAirportState>selected</cfif>>#qGetStateList.stateName#</option>
+        	                                      	</cfloop>
+	                                            </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="35%" class="style1" align="right"><strong>Is pick-up available?</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#YesNoFormat(VAL(FORM.isPickUpProvided))#</span>
+                                                <input 
+                                                	type="radio" 
+                                                    name="isPickUpProvided" 
+                                                    id="isPickUpProvidedNo" 
+                                                    value="0" 
+                                                    class="style1 editPage" 
+                                                    onclick="displayPickUpInfo();" 
+													<cfif FORM.isPickUpProvided EQ 0> checked="checked" </cfif> /> 
+                                                <label class="style1 editPage" for="isPickUpProvidedNo">No</label>
+                                                <input 
+                                                	type="radio" 
+                                                    name="isPickUpProvided" 
+                                                    id="isPickUpProvidedYes" 
+                                                    value="1" 
+                                                    class="style1 editPage" 
+                                                    onclick="displayPickUpInfo();" 
+													<cfif VAL(FORM.isPickUpProvided)> checked="checked" </cfif> /> 
+                                                <label class="style1 editPage" for="isPickUpProvidedYes">Yes</label>
+                                            </td>
+                                        </tr>
+                                        <tr class="hiddenField pickUpInfo">
+                                            <td width="35%" class="style1" align="right"><strong>Pick Up Hours:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#FORM.arrivalPickUpHours#</span>
+                                                <textarea name="arrivalPickUpHours" id="arrivalPickUpHours" class="style1 editPage" cols="35" rows="4">
+                                                	#FORM.arrivalPickUpHours#
+                                               	</textarea>
+                                            </td>
+                                        </tr>
+                                        <tr class="hiddenField pickUpInfo">
+                                            <td class="style1" align="right" valign="top"><strong>Instructions:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                                <span class="readOnly">#FORM.arrivalInstructions#</span>
+                                                <textarea name="arrivalInstructions" id="arrivalInstructions" class="style1 editPage" cols="35" rows="4">
+                                                	#FORM.arrivalInstructions#
+                                               	</textarea>
+                                            </td>
+                                        </tr>
+                                        <tr class="hiddenField pickUpInfo">
+                                            <td width="35%" class="style1" align="right"><strong>Contact Name:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#FORM.pickUpContactName#</span>
+                                                <input type="text" name="pickUpContactName" id="pickUpContactName" value="#FORM.pickUpContactName#" class="style1 editPage" size="35" maxlength="100">
+                                            </td>
+                                        </tr>
+                                        <tr class="hiddenField pickUpInfo">
+                                            <td width="35%" class="style1" align="right"><strong>Contact Phone:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#FORM.pickUpContactPhone#</span>
+                                                <input type="text" name="pickUpContactPhone" id="pickUpContactPhone" value="#FORM.pickUpContactPhone#" class="style1 editPage" size="35" maxlength="100">
+                                            </td>
+                                        </tr>
+                                        <tr class="hiddenField pickUpInfo">
+                                            <td width="35%" class="style1" align="right"><strong>Contact Email:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#FORM.pickUpContactEmail#</span>
+                                                <input type="text" name="pickUpContactEmail" id="pickUpContactEmail" value="#FORM.pickUpContactEmail#" class="style1 editPage" size="35" maxlength="100">
+                                            </td>
+                                        </tr>
+                                        <tr class="hiddenField pickUpInfo">
+                                            <td width="35%" class="style1" align="right"><strong>Hours of Contact:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#FORM.pickUpContactHours#</span>
+                                                <textarea name="pickUpContactHours" id="pickUpContactHours" class="style1 editPage" cols="35" rows="4">#FORM.pickUpContactHours#</textarea>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </td>
+                            </tr>
+                        </table>
+                        
                         <br />
 
                 	</td>        
@@ -1541,75 +1732,213 @@
                                             <cfset ind = 0>
                                             
                                             <!--- J1 Positions --->
-                                            <cfloop query="qGetActivePrograms">
-                                                <cfset ind += 1>
-                                                <tr>
-                                                    <td class="style1" align="right"><strong>J1 Positions - #qGetActivePrograms.programName#:</strong></td>
-                                                    <td class="style1" bordercolor="##FFFFFF">
-                                                        <select name="numberPositions_#ind#" id="numberPositions_#ind#" class="style1 editPage">
-                                                            <cfloop from="0" to="100" index="j">
-                                                                <option value="#j#" <cfif qGetActivePrograms.numberPositions EQ '#j#'>selected</cfif>>#j#</option>
-                                                            </cfloop>
-                                                        </select>
-                                                        <span class="readOnly">#qGetActivePrograms.numberPositions#</span>
-                                                    </td>
-                                                </tr>
-                                            </cfloop>
+                                            <tr>
+                                                <td class="style1" colspan="2">
+                                                    <table width="100%" cellpadding="3" cellspacing="3" align="center" style="border:1px solid ##C7CFDC; background-color:##F7F7F7;">
+                                                        <tr>
+                                                            <td colspan="2">
+                                                                <strong><center>Available J1 Positions</center></strong>
+                                                            </td>
+                                                        </tr>
+                                                        <cfloop query="qGetActivePrograms">
+															<cfset ind += 1>
+                                                            <tr>
+                                                                <td class="style1" align="right" width="30%"><strong>#qGetActivePrograms.programName#:</strong></td>
+                                                                <td class="style1" bordercolor="##FFFFFF" width="70%">
+                                                                    <table width="100%">
+                                                                        <tr>
+                                                                            <td>
+                                                                                <select name="numberPositions_#ind#" id="numberPositions_#ind#" class="style1 editPage">
+                                                                                    <cfloop from="0" to="100" index="j">
+                                                                                        <option value="#j#" <cfif qGetActivePrograms.numberPositions EQ '#j#'>selected</cfif>>#j#</option>
+                                                                                    </cfloop>
+                                                                                </select>
+                                                                                <span class="readOnly">#qGetActivePrograms.numberPositions#</span>
+                                                                            </td>
+                                                                            <td align="right">
+                                                                            	<span class="editPage">
+                                                                                    Verified: 
+                                                                                    <cfset thisDate = 'FORM.j1Date_#ind#'>
+                                                                                    <input type="text"
+                                                                                        name="j1Date_#ind#"
+                                                                                        id="j1Date_#ind#"
+                                                                                        value="#DateFormat(qGetActivePrograms.verifiedDate,'mm/dd/yyyy')#"
+                                                                                        class="style1 datePicker editPage" />
+                                                                               	</span>
+                                                                                <span class="readOnly">
+                                                                                	<cfif LEN(qGetActivePrograms.verifiedDate)>
+                                                                                    	Verified: #DateFormat(qGetActivePrograms.verifiedDate,'mm/dd/yyyy')#
+                                                                                  	</cfif>
+                                                                              	</span>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                    
+                                                                </td>
+                                                            </tr>
+                                                        </cfloop>
+                                                	</table>
+                                             	</td>
+                                         	</tr>
                                             <!--- End J1 Positions --->
                                             
                                             <!--- Authentication --->
                                             <tr>
-                                            
                                                 <td class="style1" colspan="2">
-                
                                                     <table width="100%" cellpadding="3" cellspacing="3" align="center" style="border:1px solid ##C7CFDC; background-color:##F7F7F7;">
-                                                        
                                                         <tr>
                                                             <td colspan="2">
                                                                 <strong><center>Authentication</center></strong>
                                                             </td>
                                                         </tr>
-                                                    
                                                         <tr>
                                                             <td class="style1" align="right" width="30%"><label for="authentication_secretaryOfState"><strong>Secretary of State:</strong></label></td>
                                                             <td class="style1" width="70%">
-                                                                <input type="checkbox" name="authentication_secretaryOfState" id="authentication_secretaryOfState" value="1" class="formField" disabled <cfif VAL(FORM.authentication_secretaryOfState)> checked </cfif> /> 
+                                                                <input 
+                                                                	type="checkbox" 
+                                                                    name="authentication_secretaryOfState" 
+                                                                    id="authentication_secretaryOfState" 
+                                                                    value="1" 
+                                                                    class="formField" 
+                                                                    disabled 
+																	<cfif VAL(FORM.authentication_secretaryOfState)> checked </cfif> />
                                                                 <span class="editPage">
-                                                                    Expiration: <input type="text" name="authentication_secretaryOfStateExpiration" id="authentication_secretaryOfStateExpiration" value="#DateFormat(authentication_secretaryOfStateExpiration, 'mm/dd/yyyy')#" class="style1 datePicker editPage" />
-                                                                    <input type="image" src="../pics/arrowUp.jpg" class="editPage" value="Upload" name="business_license_upload" id="business_license_upload" style="float:right; padding-right:25px;" />										
+                                                                    Expiration: 
+                                                                    <input 
+                                                                    	type="text" 
+                                                                        name="authentication_secretaryOfStateExpiration" 
+                                                                        id="authentication_secretaryOfStateExpiration" 
+                                                                        value="#DateFormat(authentication_secretaryOfStateExpiration, 'mm/dd/yyyy')#" 
+                                                                        class="style1 datePicker editPage" />
+                                                                    <input 
+                                                                    	type="image" 
+                                                                        src="../pics/arrowUp.jpg" 
+                                                                        class="editPage" 
+                                                                        value="Upload" 
+                                                                        name="business_license_upload" 
+                                                                        id="business_license_upload" 
+                                                                        style="float:right; padding-right:25px;" />										
                                                                 </span>
                                                                 <span class="readOnly">
                                                                     <cfif FORM.authentication_secretaryOfStateExpiration NEQ "">
                                                                         Expiration: 
-                                                                        <cfif  FORM.authentication_secretaryOfStateExpiration LT NOW()>
-                                                                            <span style="color:red;">#DateFormat(FORM.authentication_secretaryOfStateExpiration, "mm/dd/yyyy")#</span>
+                                                                        <cfif FORM.authentication_secretaryOfStateExpiration LT NOW()>
+                                                                            <span style="color:red;">
+                                                                            	#DateFormat(FORM.authentication_secretaryOfStateExpiration, "mm/dd/yyyy")#
+                                                                           	</span>
                                                                         <cfelse>
                                                                             #DateFormat(FORM.authentication_secretaryOfStateExpiration, "mm/dd/yyyy")#
                                                                         </cfif>
                                                                     </cfif>
+                                                                    <img
+                                                                    	class="readOnly"
+                                                                        src="../pics/Print30x30.png" 
+                                                                        alt="print" 
+                                                                        onclick="printAuthenticationFile('businessLicense')" 
+                                                                        style="float:right; padding-right:25px;" /> 
                                                                 </span>
-                                                                    <img class="readOnly" src="../pics/Print30x30.png" alt="print" onclick="printBusinessLicense();" style="float:right; padding-right:25px;" />
+                                                                
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td class="style1" align="right"><label for="authentication_departmentOfLabor"><strong>Department of Labor:</strong></label></td>
                                                             <td class="style1">
-                                                                <input type="checkbox" name="authentication_departmentOfLabor" id="authentication_departmentOfLabor" value="1" class="formField" disabled <cfif VAL(FORM.authentication_departmentOfLabor)> checked </cfif> />
+                                                                <input 
+                                                                	type="checkbox" 
+                                                                    name="authentication_departmentOfLabor" 
+                                                                    id="authentication_departmentOfLabor" 
+                                                                    value="1" 
+                                                                    class="formField" 
+                                                                    disabled 
+																	<cfif VAL(FORM.authentication_departmentOfLabor)> checked </cfif> />
+                                                      			<span class="editPage">
+                                                                    Expiration: 
+                                                                    <input 
+                                                                    	type="text" 
+                                                                        name="authentication_departmentOfLaborExpiration" 
+                                                                        id="authentication_departmentOfLaborExpiration" 
+                                                                        value="#DateFormat(authentication_departmentOfLaborExpiration, 'mm/dd/yyyy')#" 
+                                                                        class="style1 datePicker editPage" />
+                                                                    <input 
+                                                                    	type="image" 
+                                                                        src="../pics/arrowUp.jpg" 
+                                                                        class="editPage" 
+                                                                        value="Upload" 
+                                                                        name="department_of_labor_upload" 
+                                                                        id="department_of_labor_upload" 
+                                                                        style="float:right; padding-right:25px;" />										
+                                                                </span>
+                                                                <span class="readOnly">
+                                                                	<cfif FORM.authentication_departmentOfLaborExpiration NEQ "">
+                                                                        Expiration: 
+                                                                        <cfif FORM.authentication_departmentOfLaborExpiration LT NOW()>
+                                                                            <span style="color:red;">
+                                                                            	#DateFormat(FORM.authentication_departmentOfLaborExpiration, "mm/dd/yyyy")#
+                                                                           	</span>
+                                                                        <cfelse>
+                                                                            #DateFormat(FORM.authentication_departmentOfLaborExpiration, "mm/dd/yyyy")#
+                                                                        </cfif>
+                                                                    </cfif>
+                                                                    <img
+                                                                        class="readOnly"
+                                                                        src="../pics/Print30x30.png"
+                                                                        alt="print"
+                                                                        onclick="printAuthenticationFile('departmentOfLabor')"
+                                                                        style="float:right; padding-right:25px;" />
+                                                                </span>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td class="style1" align="right"><label for="authentication_googleEarth"><strong>Google Earth:</strong></label></td>
                                                             <td class="style1">
-                                                                <input type="checkbox" name="authentication_googleEarth" id="authentication_googleEarth" value="1" class="formField" disabled <cfif VAL(FORM.authentication_googleEarth)> checked </cfif> />
+                                                                <input 
+                                                                	type="checkbox" 
+                                                                    name="authentication_googleEarth" 
+                                                                    id="authentication_googleEarth" 
+                                                                    value="1" 
+                                                                    class="formField" 
+                                                                    disabled 
+																	<cfif VAL(FORM.authentication_googleEarth)> checked </cfif> />
+                                                              	<span class="editPage">
+                                                                    Expiration: 
+                                                                    <input 
+                                                                    	type="text" 
+                                                                        name="authentication_googleEarthExpiration" 
+                                                                        id="authentication_googleEarthExpiration" 
+                                                                        value="#DateFormat(authentication_googleEarthExpiration, 'mm/dd/yyyy')#" 
+                                                                        class="style1 datePicker editPage" />
+                                                                    <input 
+                                                                    	type="image" 
+                                                                        src="../pics/arrowUp.jpg" 
+                                                                        class="editPage" 
+                                                                        value="Upload" 
+                                                                        name="google_earth_upload" 
+                                                                        id="google_earth_upload" 
+                                                                        style="float:right; padding-right:25px;" />										
+                                                                </span>
+                                                                <span class="readOnly">
+                                                                	<cfif FORM.authentication_googleEarthExpiration NEQ "">
+                                                                        Expiration: 
+                                                                        <cfif FORM.authentication_googleEarthExpiration LT NOW()>
+                                                                            <span style="color:red;">
+                                                                            	#DateFormat(FORM.authentication_googleEarthExpiration, "mm/dd/yyyy")#
+                                                                           	</span>
+                                                                        <cfelse>
+                                                                            #DateFormat(FORM.authentication_googleEarthExpiration, "mm/dd/yyyy")#
+                                                                        </cfif>
+                                                                    </cfif>
+                                                                    <img 
+                                                                        class="readOnly" 
+                                                                        src="../pics/Print30x30.png" 
+                                                                        alt="print" 
+                                                                        onclick="printAuthenticationFile('googleEarth')" 
+                                                                        style="float:right; padding-right:25px;" />
+                                                                </span>
                                                             </td>
                                                         </tr>
-                                                        
                                                     </table>
-                                                  
                                                 </td>
-                                               
                                             </tr>
-                                            
                                             <tr>
                                                 <td class="style1" align="right"><strong>EIN:</strong></td>
                                                 <td class="style1" bordercolor="##FFFFFF">
@@ -1645,7 +1974,14 @@
                                                             Workmen's compensation is missing.
                                                         </cfif>
                                                     </span>
-                                                        <input type="text" name="WCDateExpired" id="WCDateExpired" value="#DateFormat(WCDateExpired, 'mm/dd/yyyy')#" class="style1 datePicker editPage selfPlacementField" size="35" maxlength="100">
+                                                        <input 
+                                                        	type="text" 
+                                                            name="WCDateExpired" 
+                                                            id="WCDateExpired" 
+                                                            value="#DateFormat(WCDateExpired, 'mm/dd/yyyy')#"
+                                                            class="style1 datePicker editPage selfPlacementField" 
+                                                            size="35" 
+                                                            maxlength="100" />
                                                 </td>
                                             </tr>
                                             <tr>
@@ -1671,142 +2007,25 @@
                             <br />
                             
                       	</cfif>
-
-						<!--- JOBS --->
+                        
+                        <!--- PROGRAM PARTICIPATION --->
                         <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
-                            <tr>
-								<td bordercolor="##FFFFFF">
-
-                                    <table width="100%" cellpadding="3" cellspacing="3" border="0">
+                        	<tr>
+                            	<td>
+                                	<table width="100%" cellpadding="3" cellspacing="3" border="0">
                                         <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
-                                            <td colspan="3" class="style2" bgcolor="##8FB6C9">&nbsp;:: Jobs</td>
+                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Program Participation</td>
                                         </tr>
-                                        <tr>
-                                            <td class="style1"><strong><u>Job Title</u></strong></td>
-                                            <td class="style1"><strong><u>Wage</u></strong></td>
-                                            <td class="style1"><strong><u>Hours/Week</u></strong></td>
-                                        </tr>
-                                        <cfloop query="qGetJobs">
-                                            <tr bgcolor="###iif(qGetJobs.currentrow MOD 2 ,DE("E9ECF1") ,DE("FFFFFF") )#">
-                                                <td class="style1">
-                                                	<a href="javascript:openWindow('hostcompany/jobInfo.cfm?ID=#id#&hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#', 300, 600);">
-	                                                    #qGetJobs.title#
-                                                    </a>
-                                                </td>
-                                                <td class="style1">#qGetJobs.wage# / #qGetJobs.wage_type#</td>
-                                                <td class="style1">#qGetJobs.hours#</td>
+                                        <cfloop query="qGetProgramParticipation">
+                                        	<tr>
+                                            	<td class="style1" valign="top">#programName#</td>
                                             </tr>
                                         </cfloop>
-                                        <cfif VAL(qGetHostCompanyInfo.hostCompanyID) AND ListFind("1,2,3,4", CLIENT.userType)>
-                                            <tr>
-                                                <td colspan="3" align="center">
-                                                    <a href="javascript:openWindow('hostcompany/jobInfo.cfm?hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#', 300, 600);" > 
-                                                        <img src="../pics/add-job.gif" width="64" height="20" border="0" />
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </cfif>
-                                    </table>
-
+                                  	</table>
                                 </td>
                             </tr>
-                        </table> 
-
-						<br />                        
-
-                        <!--- PICK UP/ARRIVAL INFORMATION --->
-                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
-                            <tr>
-								<td bordercolor="##FFFFFF">
-
-                                    <table width="100%" cellpadding="3" cellspacing="3" border="0">
-                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
-                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Arrival Information</td>
-                                        </tr>
-                                        <tr>
-                                            <td width="35%" class="style1" align="right"><strong>Aiport/Station Code:</strong></td>
-                                            <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">#FORM.arrivalAirport#</span>
-                                                <input type="text" name="arrivalAirport" id="arrivalAirport" value="#FORM.arrivalAirport#" class="style1 editPage" size="35" maxlength="100">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="35%" class="style1" align="right"><strong>Aiport/Station City:</strong></td>
-                                            <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">#FORM.arrivalAirportCity#</span>
-                                                <input type="text" name="arrivalAirportCity" id="arrivalAirportCity" value="#FORM.arrivalAirportCity#" class="style1 editPage" size="35" maxlength="100">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="35%" class="style1" align="right"><strong>Aiport/Station State:</strong></td>
-                                            <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">#qGetHostCompanyInfo.arrivalAirportStateName#</span>
-                                                <select name="arrivalAirportState" id="arrivalAirportState" class="style1 editPage">
-                                              		<option value="0"></option>
-                                              		<cfloop query="qGetStateList">
-		                                                <option value="#qGetStateList.ID#" <cfif qGetStateList.ID eq FORM.arrivalAirportState>selected</cfif>>#qGetStateList.stateName#</option>
-        	                                      	</cfloop>
-	                                            </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="35%" class="style1" align="right"><strong>Is pick-up available?</strong></td>
-                                            <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">#YesNoFormat(VAL(FORM.isPickUpProvided))#</span>
-                                                <input type="radio" name="isPickUpProvided" id="isPickUpProvidedNo" value="0" class="style1 editPage" onclick="displayPickUpInfo();" <cfif FORM.isPickUpProvided EQ 0> checked="checked" </cfif> /> 
-                                                <label class="style1 editPage" for="isPickUpProvidedNo">No</label>
-                                                <input type="radio" name="isPickUpProvided" id="isPickUpProvidedYes" value="1" class="style1 editPage" onclick="displayPickUpInfo();" <cfif VAL(FORM.isPickUpProvided)> checked="checked" </cfif> /> 
-                                                <label class="style1 editPage" for="isPickUpProvidedYes">Yes</label>
-                                            </td>
-                                        </tr>
-                                        <tr class="hiddenField pickUpInfo">
-                                            <td width="35%" class="style1" align="right"><strong>Pick Up Hours:</strong></td>
-                                            <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">#FORM.arrivalPickUpHours#</span>
-                                                <textarea name="arrivalPickUpHours" id="arrivalPickUpHours" class="style1 editPage" cols="35" rows="4">#FORM.arrivalPickUpHours#</textarea>
-                                            </td>
-                                        </tr>
-                                        <tr class="hiddenField pickUpInfo">
-                                            <td class="style1" align="right" valign="top"><strong>Instructions:</strong></td>
-                                            <td class="style1" bordercolor="##FFFFFF">
-                                                <span class="readOnly">#FORM.arrivalInstructions#</span>
-                                                <textarea name="arrivalInstructions" id="arrivalInstructions" class="style1 editPage" cols="35" rows="4">#FORM.arrivalInstructions#</textarea>
-                                            </td>
-                                        </tr>
-                                        <tr class="hiddenField pickUpInfo">
-                                            <td width="35%" class="style1" align="right"><strong>Contact Name:</strong></td>
-                                            <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">#FORM.pickUpContactName#</span>
-                                                <input type="text" name="pickUpContactName" id="pickUpContactName" value="#FORM.pickUpContactName#" class="style1 editPage" size="35" maxlength="100">
-                                            </td>
-                                        </tr>
-                                        <tr class="hiddenField pickUpInfo">
-                                            <td width="35%" class="style1" align="right"><strong>Contact Phone:</strong></td>
-                                            <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">#FORM.pickUpContactPhone#</span>
-                                                <input type="text" name="pickUpContactPhone" id="pickUpContactPhone" value="#FORM.pickUpContactPhone#" class="style1 editPage" size="35" maxlength="100">
-                                            </td>
-                                        </tr>
-                                        <tr class="hiddenField pickUpInfo">
-                                            <td width="35%" class="style1" align="right"><strong>Contact Email:</strong></td>
-                                            <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">#FORM.pickUpContactEmail#</span>
-                                                <input type="text" name="pickUpContactEmail" id="pickUpContactEmail" value="#FORM.pickUpContactEmail#" class="style1 editPage" size="35" maxlength="100">
-                                            </td>
-                                        </tr>
-                                        <tr class="hiddenField pickUpInfo">
-                                            <td width="35%" class="style1" align="right"><strong>Hours of Contact:</strong></td>
-                                            <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">#FORM.pickUpContactHours#</span>
-                                                <textarea name="pickUpContactHours" id="pickUpContactHours" class="style1 editPage" cols="35" rows="4">#FORM.pickUpContactHours#</textarea>
-                                            </td>
-                                        </tr>
-                                    </table>
-
-                                </td>
-                            </tr>
-                        </table> 
-						
+                        </table>
+                        
                         <br />
                         
     				</td>
@@ -1815,7 +2034,7 @@
             <!--- END OF INFORMATION SECTION ---> 
             
             <br/>
-
+            
 			<!---- EDIT/UPDATE BUTTONS ---->
             <cfif ListFind("1,2,3,4", CLIENT.userType)>
                 <table width="800px" border="0" cellpadding="0" cellspacing="0" align="center">	
