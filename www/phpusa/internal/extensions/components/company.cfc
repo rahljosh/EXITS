@@ -50,8 +50,6 @@
                     sevis_userID,
                     iap_auth,
                     usbank_iap_aut,
-                    bcc_userID,
-                    bcc_password,
                     gis_account,
                     gis_username,
                     gis_password,
