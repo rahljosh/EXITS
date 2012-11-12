@@ -356,7 +356,7 @@
                     active,
                     startDate,
                     endDate,
-                    DATE_ADD(endDate, INTERVAL 31 DAY) AS newEndDate 
+                    DATE_ADD(endDate, INTERVAL 31 DAY) AS newEndDate,
                     datePaperworkStarted,
                     datePaperworkEnded
 				FROM
