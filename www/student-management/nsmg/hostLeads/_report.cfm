@@ -116,16 +116,16 @@
 		width="100%"
 		/>	
 
-	<table border="0" cellpadding="8" cellspacing="2" width="100%" class="section">
+	<table border="0" cellpadding="8" cellspacing="2" width="100%" >
 		<tr>
 			<td width="50%" valign="top">
 
 				<form action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
 					<input type="hidden" name="submitted" value="1" />
 					
-					<table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
+					<table  cellpadding="6" cellspacing="0" width="100%"  class="blueThemeReportTable">
 						<tr><th colspan="2" bgcolor="##e2efc7">Host Lead Information</th></tr>
-						<tr>
+						<tr class="on">
 							<td>Follow Up Rep:</td>
 							<td>
 								<select name="followUpID" id="followUpID" class="largeField">
@@ -136,7 +136,7 @@
 								</select>
 							</td>
 						</tr>
-						<tr>
+						<tr class="on">
 							<td>Region:</td>
 							<td>
 								<select name="regionID" id="regionID" class="mediumField">
@@ -149,7 +149,7 @@
 								</select>
 							</td>
 						</tr>
-						<tr>
+						<tr class="on">
 							<td>Status:</td>
 							<td>
 								<select name="statusID" id="statusID" class="largeField">
@@ -160,16 +160,16 @@
 								</select>
 							</td>
 						</tr>
-						<tr><td colspan="2">Including Period Below (Received Date)</td></tr>
-						<tr>
+						<tr class="on"><td colspan="2">Including Period Below (Received Date)</td></tr>
+						<tr class="on">
 							<td>From:</td>
 							<td><input type="text" name="dateFrom" value="#DateFormat(FORM.dateFrom, 'mm/dd/yyyy')#" size="7" maxlength="10" class="datePicker"> mm-dd-yyyy</td>
 						</tr>
-						<tr>
+						<tr class="on">
 							<td>To: </td>
 							<td><input type="text" name="dateTo" value="#DateFormat(FORM.dateTo, 'mm/dd/yyyy')#" size="7" maxlength="10" class="datePicker"> mm-dd-yyyy</td>
 						</tr>			
-						<tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
+						<tr><td colspan="2" align="center" bgcolor="##3b5998"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
 					</table>
 					
 				</form>
@@ -180,18 +180,18 @@
             
             	<form action="index.cfm?curdoc=hostLeads/index&action=leadList" method="post">
 					
-					<table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
-						<tr><th colspan="2" bgcolor="##e2efc7">Host Lead List</th></tr>
-						<tr><td colspan="2">Including Period Below (Received Date)</td></tr>
-						<tr>
+					<table cellpadding="6" cellspacing="0" width="100%" class="blueThemeReportTable" >
+						<tr class="on"><th colspan="2" bgcolor="##e2efc7">Host Lead List</th></tr>
+						<tr class="on"><td colspan="2">Including Period Below (Received Date)</td></tr>
+						<tr class="on">
 							<td>From:</td>
 							<td><input type="text" name="dateFrom" value="#DateFormat(FORM.dateFrom, 'mm/dd/yyyy')#" size="7" maxlength="10" class="datePicker"> mm-dd-yyyy</td>
 						</tr>
-						<tr>
+						<tr class="on">
 							<td>To: </td>
 							<td><input type="text" name="dateTo" value="#DateFormat(FORM.dateTo, 'mm/dd/yyyy')#" size="7" maxlength="10" class="datePicker"> mm-dd-yyyy</td>
 						</tr>
-                        <tr>
+                        <tr class="on">
                         	<td>Google Adwords Leads: </td>
                         	<td>
                             	<select name="adwords" id="adwords" class="smallField">
@@ -201,7 +201,7 @@
 								</select>
                             </td>
                         </tr>
-						<tr><td colspan="2" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
+						<tr><td colspan="2" align="center" bgcolor="##3b5998"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
 					</table>
 					
 				</form>
@@ -209,6 +209,107 @@
 			</td>
 			
 		</tr>
+        <tr>
+        <td>
+        <!----Host Lead Stats---->
+          <cfsetting requesttimeout="9999">
+    <Cfset defaultStartDate = '#DatePart('m',now())#/1/#DatePart('yyyy',now())#'>
+    <cfset d=DaysInMonth(defaultStartDate)>
+    <cfset defaultEndDate  = '#DatePart('m',now())#/#d#/#DatePart('yyyy',now())#'>
+
+	
+    <cfscript>	
+		// Param FORM Variables
+		param name="FORM.submitted" default=0;
+		param name="FORM.programID" default=0;	
+		param name="FORM.studentStatus" default="All";
+		param name="FORM.outputType" default="excel";
+
+		// Set Report Title To Keep Consistency
+		vReportTitle = "Host Lead Statistics";
+
+		// Get Programs
+		qGetPrograms = APPLICATION.CFC.PROGRAM.getPrograms(programIDList=FORM.programID);
+		// Get User Regions
+		qGetRegionList = APPLICATION.CFC.REGION.getUserRegions(
+			companyID=CLIENT.companyID,
+			userID=CLIENT.userID,
+			userType=CLIENT.userType
+		);
+	</cfscript>	
+         <form action="hostLeads/index.cfm?action=officeHostLeads" name="officeHostLeads" id="officeHostLeads" method="post" target="blank">
+            <input type="hidden" name="submitted" value="1" />
+            <table width="100%" cellpadding="4" cellspacing="0" class="blueThemeReportTable" align="center">
+                <tr><th colspan="2">#vReportTitle#</th></tr>
+                <tr class="on">
+                    <td class="subTitleRightNoBorder">Time Frame&dagger;: <span class="required"></span></td>
+                    <td>
+                       From: <input type="text" name="fromDate" id="placedDateFrom" value="#defaultStartDate#" size="7" maxlength="10" class="datePicker">
+                       &nbsp;&nbsp;
+                To: <input type="datefield" name="toDate" size=15 value="#defaultEndDate#" size="7" maxlength="10" class="datePicker">
+                    </td>
+                </tr>
+                <tr class="on">
+                    <td class="subTitleRightNoBorder">Region&Dagger;: <span class="required"></span></td>
+                    <td>
+                        <select name="regionID" id="regionID" class="xLargeField" multiple size="6" required>
+                           
+                            <cfloop query="qGetRegionList">
+                            	<option value="#qGetRegionList.regionID#" selected>
+                                	<cfif CLIENT.companyID EQ 5>#qGetRegionList.companyShort# -</cfif>
+                                    #qGetRegionList.regionname#
+                                </option>
+                            </cfloop>
+                        </select>
+                    </td>		
+                </tr>
+                <!---
+                <tr class="on">
+                    <td class="subTitleRightNoBorder">Student Status: <span class="required">*</span></td>
+                    <td>
+                        <select name="studentStatus" id="studentStatus" class="xLargeField" required>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                            <option value="Canceled">Canceled</option>
+                            <option value="All" selected="selected">All</option>
+                        </select>
+                    </td>		
+                </tr>
+				---->
+                <tr class="on">
+                    <td class="subTitleRightNoBorder">Output Type: <span class="required">*</span></td>
+                    <td>
+                        <select name="outputType" id="outputType" class="xLargeField">
+							<option value="onScreen">On Screen</option>
+                            
+                        </select>
+                    </td>		
+                </tr>
+                 <tr class="on">
+                    <td>&nbsp;</td>
+                    <td class="required noteAlert">* Required</td>
+                </tr>
+                <tr class="on">
+                    <td>&nbsp;</td>
+                    <td class="required noteAlert">&dagger; Defaults to Current Month</td>
+                </tr><tr class="on">
+                    <td>&nbsp;</td>
+                    <td class="required noteAlert">&Dagger; Defaults to All Regions</td>
+                </tr>
+                <tr class="on">
+                    <td class="subTitleRightNoBorder">Description:</td>
+                    <td>This report generates the statistics on host leads for a specified time frame and region (optional).</td>		
+                </tr>
+                <tr>
+                    <th colspan="2" align="center"><input type="image" src="pics/view.gif" align="center" border="0"> </th>
+                </tr>
+            </table>
+        </form>            
+
+        
+        </td>
+        
+        </tr>
 	</table>
 
 	<!--- Table Footer --->
@@ -252,7 +353,7 @@
                 );
             </cfscript>
         
-            <tr class="#iif(qGetHostLeadsReport.currentRow MOD 2 ,DE("off") ,DE("on") )#">
+            <tr>
                 <td>
                     <a href="hostLeads/index.cfm?action=detail&id=#qGetHostLeadsReport.ID#&key=#qGetHostLeadsReport.hashID#" class="jQueryModal">
                         #qGetHostLeadsReport.firstName# #qGetHostLeadsReport.lastName# (###qGetHostLeadsReport.ID#)
