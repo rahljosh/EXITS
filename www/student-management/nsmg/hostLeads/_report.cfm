@@ -116,7 +116,7 @@
 		width="100%"
 		/>	
 
-	<table border="0" cellpadding="8" cellspacing="2" width="100%" >
+	<table border="0" cellpadding="8" cellspacing="2" width="100%" class="section" >
 		<tr>
 			<td width="50%" valign="top">
 
