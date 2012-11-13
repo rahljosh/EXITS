@@ -55,15 +55,7 @@
 <cfparam name="TotalnumberOfCommittedLeads" default="">
 <cfparam name="totalFuture" default="">
 <cfparam name="totalNotQualified" default="">
-<!----Future Defaults---->
-<cfparam name="futTotalNumberOfInitialLeads" default="">
-<cfparam name="futTotalnumberOfinterestedLeads" default="">
-<cfparam name="futtotalNotInterested" default="">
-<cfparam name="futtotalAddInfo" default="">
-<cfparam name="futtotalCallBack" default="">
-<cfparam name="futTotalnumberOfCommittedLeads" default="">
-<cfparam name="futtotalFuture" default="">
-<cfparam name="futtotalNotQualified" default="">
+
 <!--- FORM NOT submitted --->
 <cfif NOT VAL(FORM.Submitted)>
 
@@ -79,8 +71,9 @@
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Time Frame&dagger;: <span class="required"></span></td>
                     <td>
-                       From: <input name="fromDate" type="datefield"  value="#defaultStartDate#" size=15> &nbsp;&nbsp;
-                To: <input type="datefield" name="toDate" size=15 value="#defaultEndDate#">
+                       From: <input type="text" name="fromDate" id="placedDateFrom" value="#defaultStartDate#" size="7" maxlength="10" class="datePicker">
+                       &nbsp;&nbsp;
+                To: <input type="datefield" name="toDate" size=15 value="#defaultEndDate#" size="7" maxlength="10" class="datePicker">
                     </td>
                 </tr>
                 <tr class="on">
