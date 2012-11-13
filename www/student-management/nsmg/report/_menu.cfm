@@ -331,13 +331,7 @@
         </td>
         <td class="lastRow">&nbsp;
         	
-			<ul class="mainList">
-                <li onclick="loadSelectedReport('officeHostLeads');">Host Lead Report</li>
-                <ul>
-                    <li>Statistics on host leads</li>
-                    <li>Filter by: Region, Rep, Time Frame</li>
-				</ul>
-            </ul>
+			
            
         </td>
         <td class="lastRow right">
