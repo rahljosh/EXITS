@@ -38,7 +38,7 @@
 --->
 <cfswitch expression="#action#">
 
-	<cfcase value="list,detail,needAttention,export,report,leadList" delimiters=",">
+	<cfcase value="list,detail,needAttention,export,report,leadList,officeHostLeads" delimiters=",">
 
 		<!--- Include template --->
 		<cfinclude template="_#action#.cfm" />
