@@ -1,0 +1,515 @@
+<!--- Import CustomTag Used for Page Messages and Form Errors --->
+<cfimport taglib="extensions/customTags/gui/" prefix="gui" />	
+
+
+<cfparam name="cityPopulation" default="">
+<cfparam name="capitalPopulation" default="">
+<cfparam name="townPopulation" default="">
+<cfparam name="metroPopulation" default="">
+<Cfparam name="FORM.majorAirDist" default="">
+<Cfparam name="FORM.near_city_dist" default="">
+<Cfparam name="FORM.near_city" default="">
+<Cfparam name="FORM.avoidarea" default="">
+<Cfparam name="FORM.population" default="">
+<Cfparam name="FORM.major_air_code" default="">
+<Cfparam name="FORM.point_interest" default="">
+<Cfparam name="FORM.special_cloths" default="">
+<Cfparam name="FORM.summertemp" default="">
+<Cfparam name="FORM.terrain3_desc" default="">
+<Cfparam name="FORM.wintertemp" default="">
+<Cfparam name="FORM.snowy_winter" default="">
+<Cfparam name="FORM.terrain2" default="">
+<Cfparam name="FORM.terrain1" default="">
+<Cfparam name="FORM.terrain3" default="">
+<Cfparam name="FORM.rainy_winter" default="">
+<Cfparam name="FORM.hot_summer" default="">
+<Cfparam name="FORM.mild_summer" default="">
+<Cfparam name="FORM.high_hummidity" default="">
+<Cfparam name="FORM.dry_air" default="">
+<Cfparam name="FORM.community" default="">
+<Cfparam name="FORM.neighborhood" default="">
+<cfparam name="displayMessage" default="">
+
+<cfquery name="local" datasource="#APPLICATION.DSN.Source#">
+	select city,state,zip
+	from smg_hosts
+	where hostID = #APPLICATION.CFC.SESSION.getHostSession().ID#
+</cfquery>
+
+<cfquery name="family_info" datasource="#APPLICATION.DSN.Source#">
+select *
+from smg_hosts
+where hostID = #APPLICATION.CFC.SESSION.getHostSession().ID#
+</cfquery>
+<cfquery name="airports" datasource="#APPLICATION.DSN.Source#">
+select *
+from smg_airports
+</cfquery>
+<cfquery name="cityState" datasource="#APPLICATION.DSN.Source#">
+    select *
+    from smg_cityState
+    where population > 30000
+    </Cfquery>
+
+<cfif isDefined('FORM.process')>
+
+           
+
+     
+	<cfscript>
+    // Family Smokes
+             if(NOT LEN(TRIM(FORM.near_city))) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate the nearest town over 30,000 people.");
+			 }
+    // Family Smokes
+             if(NOT LEN(TRIM(FORM.avoidarea))) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate if there are or are not areas to be avoided in your neighborhood.");
+			 }
+			 
+             if(NOT LEN(TRIM(FORM.local_air_code))) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate your local airport code.");
+			 }
+			 
+			 if(NOT LEN(TRIM(FORM.major_air_code))) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate your major airport code.");
+			 }
+			 
+			  if(NOT LEN(TRIM(FORM.point_interest))) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate any interests in your area.");
+			 }
+			 
+			  if(NOT LEN(TRIM(FORM.special_cloths))) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please provide a list of any special cloths to bring.");
+			 }
+			 
+			 if(NOT LEN(TRIM(FORM.summertemp))) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate the average summer temp.");
+			 }
+			 
+			 if(NOT LEN(TRIM(FORM.wintertemp))) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate the average winter temp.");
+			 }
+			 
+			 if(NOT LEN(TRIM(FORM.community))) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please describe your community.");
+			 }
+			 
+		
+			 
+			 if(NOT LEN(TRIM(FORM.neighborhood))) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please describe your neighborhood.");
+			 }
+			 
+	</cfscript>
+
+
+     
+       <cfif NOT SESSION.formErrors.length()>
+        <cfscript>
+                // Get Host Mother CBC
+                cityDist = APPLICATION.CFC.udf.calculateAddressDistance(
+                    origin='#local.city# #local.state# #local.zip#', 
+                    destination='#FORM.near_city#'
+                );
+            </cfscript>
+         
+            <cfquery name="insert_community_info" datasource="#APPLICATION.DSN.Source#">
+            update smg_hosts
+                set 
+                
+                population="#FORM.population#",
+                    near_City_Dist="cityDist",
+               		nearbigCity="#FORM.near_City#",
+                    neighborhood="#FORM.neighborhood#",
+                    community="#FORM.community#",
+                    avoidArea = "#FORM.avoidArea#",
+                    terrain1="#FORM.terrain1#",
+                    terrain2="#FORM.terrain2#",
+                    <cfif isDefined('FORM.terrain3')>
+                    terrain3 = "#FORM.terrain3#",
+                    terrain3_desc = "#FORM.terrain3_desc#",
+                    </cfif>
+                    wintertemp="#FORM.wintertemp#",
+                    summertemp="#FORM.summertemp#",
+                    special_cloths="#FORM.special_cloths#",
+                    point_interest="#FORM.point_interest#",
+                    local_air_code="#FORM.local_Air_code#",
+                    major_air_code="#FORM.major_air_code#",
+                    snowy_winter = <cfif val(FORM.snowy_winter)>1<cfelse>0</cfif>,
+                    rainy_winter = <cfif val(FORM.rainy_winter)>1<cfelse>0</cfif>,
+                    hot_summer = <cfif val(FORM.hot_summer)>1<cfelse>0</cfif>,
+                    mild_summer = <cfif val(FORM.mild_summer)>1<cfelse>0</cfif>,
+                    high_hummidity = <cfif val(FORM.high_hummidity)>1<cfelse>0</cfif>,
+                    dry_air = <cfif val(FORM.dry_air)>1<cfelse>0</cfif>
+                    
+              where hostID=#APPLICATION.CFC.SESSION.getHostSession().ID#
+            </cfquery> 
+            
+            <cflocation url="index.cfm?section=confidentialData" addtoken="no">
+		
+	</cfif>
+		
+
+
+  
+  
+<cfelse>
+ <cfscript>
+			
+			FORM.population = family_info.population;
+			FORM.near_city_dist = family_info.near_city_dist;
+			FORM.near_city = family_info.nearbigcity;
+			FORM.avoidarea = family_info.avoidarea;
+			FORM.local_air_code = family_info.local_air_code;
+			FORM.major_air_code = family_info.major_air_code;
+			FORM.point_interest = family_info.point_interest;
+			FORM.special_cloths = family_info.special_cloths;
+			FORM.summertemp = family_info.summertemp;
+			FORM.terrain3_desc = family_info.terrain3_desc;  
+			FORM.wintertemp = family_info.wintertemp;
+			FORM.snowy_winter = family_info.snowy_winter;
+			FORM.terrain2 = family_info.terrain2;
+			FORM.terrain1 = family_info.terrain1;
+			FORM.terrain3 = family_info.terrain3;
+			FORM.rainy_winter = family_info.rainy_winter;
+			FORM.hot_summer = family_info.hot_summer;
+			FORM.mild_summer = family_info.mild_summer;
+			FORM.high_hummidity = family_info.high_hummidity;
+			FORM.dry_air = family_info.dry_air;
+			FORM.community = family_info.community;
+			FORM.neighborhood = family_info.neighborhood;
+		</cfscript>
+</cfif>
+<!---Attempt to guess local airport code---->
+<cfif FORM.local_air_code is ''>
+    <cfquery name="guessLocalAirport" datasource="#APPLICATION.DSN.Source#">
+    select *
+    from smg_airports
+    where city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.city#">
+    AND state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.state#">
+    </cfquery>
+
+    <cfif guessLocalAirport.recordcount neq 0>
+		<cfscript>
+            FORM.local_air_code = guessLocalAirport.aircode;
+        </cfscript>
+    </cfif>
+</cfif>
+<cfif FORM.major_air_code is ''>
+    <cfquery name="guessMajorAirport" datasource="#APPLICATION.DSN.Source#">
+    select major_air_code
+    from smg_hosts
+    where city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.city#">
+    AND state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.state#">
+    limit 1
+    </cfquery>
+
+    <cfif guessMajorAirport.recordcount neq 0>
+		<cfscript>
+            FORM.major_air_code = guessMajorAirport.major_air_code;
+        </cfscript>
+    </cfif>
+</cfif>
+<!-----Attempt to get local population---->
+<cfif not val(FORM.population)>
+    <cfquery name="getPopulation" datasource="#APPLICATION.DSN.Source#">
+    select population
+    from smg_cityState
+    where city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.city#">
+    AND state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.state#">
+    </cfquery>
+
+    <cfif getPopulation.recordcount neq 0>
+          <cfset FORM.population = #NumberFormat(getPopulation.population, '__,___')#>
+        
+    </cfif>
+</cfif>
+<!-----Attempt to get local weather---->
+
+<cfif not val(FORM.wintertemp)>
+    <cfquery name="getWeather" datasource="#APPLICATION.DSN.Source#">
+    select wintertemp, summertemp, snowy_winter,terrain2,terrain1, terrain3, rainy_winter, hot_summer, mild_summer, high_hummidity, dry_air, terrain3_desc 		
+    from smg_hosts
+    where city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.city#">
+    AND state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.state#">
+    and summertemp != 0
+    limit 1
+    </cfquery>
+	
+    <cfif getWeather.recordcount neq 0>
+           <cfscript>
+			
+			
+			FORM.summertemp = getWeather.summertemp;
+			FORM.terrain3_desc = getWeather.terrain3_desc;  
+			FORM.wintertemp = getWeather.wintertemp;
+			FORM.snowy_winter = getWeather.snowy_winter;
+			FORM.rainy_winter = getWeather.rainy_winter;
+			FORM.hot_summer = getWeather.hot_summer;
+			FORM.mild_summer = getWeather.mild_summer;
+			FORM.high_hummidity = getWeather.high_hummidity;
+			FORM.dry_air = getWeather.dry_air;
+	
+		</cfscript>
+    </cfif>
+</cfif>
+
+
+
+<cfif not len(FORM.point_interest)>
+    <cfquery name="getInterest" datasource="#APPLICATION.DSN.Source#">
+    select point_interest 		
+    from smg_hosts
+    where city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.city#">
+    AND state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#local.state#">
+    and point_interest != ''
+    limit 1
+    </cfquery>
+
+    <cfif getInterest.recordcount neq 0>
+           <cfscript>
+			FORM.point_interest = getInterest.point_interest;
+		</cfscript>
+    </cfif>
+</cfif>
+
+<cfoutput>
+
+	
+	<!--- Form Errors --->
+    <gui:displayFormErrors 
+        formErrors="#SESSION.formErrors.GetCollection()#"
+        messageType="section"
+        />
+        
+
+
+
+<cfform action="index.cfm?section=communityProfile" method="post">
+<input type="hidden" name="process" />
+<table width="100%">
+	<tr>
+    	<td>
+<h2>Community Information for #local.city#, #local.state#</h2>
+		</td>
+        <Td align="right">
+        <a href="http://en.wikipedia.org/wiki/#local.city#,_#local.state#" target="_new">Need more info on #local.city#?</a>
+        </td>
+<table width="100%" cellspacing="0" cellpadding="2" class="border">
+	
+     <tr>	
+        <td >Population of #local.city# :</td><td class="form_text"><input type="text" size=15 name="population" value='#FORM.population#'/></td>
+        
+      </tr>
+      <tr  bgcolor="##deeaf3">
+        <td class="label">Nearest Major City:</td><td class="form_text">
+                <select data-placeholder="Enter nearest large city (over 30,000)..." class="chzn-select" style="width:350px;" tabindex="2" name="near_city" onchange="this.FORM.submit(closeCity);">
+               
+                    <option value=""></option>
+                <cfloop query="cityState">
+                    <option value="#city#, #state#" <cfif FORM.near_city is '#city#, #state#'>selected</cfif>>#city#, #state# - (pop: #NumberFormat(population, '__,___')#)</option>
+                </cfloop>
+                    
+                </select>
+        
+        
+        </span>
+        </td>
+ 
+     </tr>
+ </table>
+ <h2>Airports</h2>
+
+ <table width="100%" cellspacing="0" cellpadding="2" class="border">
+	
+     <tr>	
+        <td class="label">Your local Airport:</td><td class="form_text">
+        
+           
+        
+                <select data-placeholder="Enter City, Airport or Airport Code" class="chzn-select" style="width:350px;" tabindex="2" name="local_air_code">
+               
+                    <option value=""></option>
+                <cfloop query="airports">
+                    <option value="#airCode#" <cfif '#trim(FORM.local_air_code)#' is '#trim(airCode)#'>selected</cfif>>#aircode# - #airportName# - #city#, #state#</option>
+                </cfloop>
+                    
+                </select>
+    
+        
+       </span>
+      </tr>
+       <!----
+      <tr bgcolor="##deeaf3">	 
+        <td>Nearest Major City (Population):</td><td class="form_text">
+        <select data-placeholder="Enter nearest large city (over 50,000)..." class="chzn-select" style="width:350px;" tabindex="2" name="near_city" onchange="this.FORM.submit();">
+               
+                    <option value=""></option>
+                <cfloop query="cityState">
+                    <option value="#city#, #state#" <cfif FORM.near_city is '#city#, #state#'>selected</cfif>>#city#, #state# - (pop: #NumberFormat(population, '__,___')#)</option>
+                </cfloop>
+                    
+                </select>
+        
+        
+        </span>
+        </td>
+     </tr>
+    
+     <tr>
+        <td class="label">Major City Popluation:</td><td class="form_text">
+        
+        
+        
+        <cfinput type="text" name="near_pop" size=20 value="#family_info.near_pop#"></span>
+     </tr>
+	 ---->
+     
+     <tr bgcolor="##deeaf3" >
+        <td class="label">Major Airport:</td><td class="form_text">
+         <select data-placeholder="Enter City, Airport or Airport Code" class="chzn-select" style="width:350px;" tabindex="2" name="major_air_code" >
+               
+                    <option value=""></option>
+                <cfloop query="airports">
+                    <option value="#airCode#" <cfif FORM.major_air_code eq airCode>selected</cfif>>#aircode# - #airportName# - #city#, #state#</option>
+                </cfloop>
+                    
+                </select>
+        </span>
+     </tr>
+     
+   
+
+		</table>
+        <h2>Climate</h2>
+         
+ <table  width="100%" cellspacing="0" cellpadding="2" class="border">
+
+ 
+ 	<tr bgcolor="##deeaf3">
+		
+<td class="label" colspan=2>Avg temp in winter: </td><td class="form_text" colspan=4><input type="text" size="3" name="wintertemp" value=#FORM.wintertemp#><sup>o</sup>F</span>
+</tr><tr>
+ <td class="label" colspan=2>Avg temp in summer:</td><td class="form_text" colspan=4> <input type="text" size="3" name="summertemp" value=#FORM.summertemp#><sup>o</sup>F</span>
+</tr>
+<tr>
+	<Td colspan=6  bgcolor="##deeaf3">How would you describe your seasons?</td>
+<Tr bgcolor="##deeaf3">
+	<td><input type="checkbox" name="snowy_winter" value=1 <cfif FORM.snowy_winter eq 1>checked </cfif>  />Cold, snowy winters </td>
+    <td><input type="checkbox"  name="rainy_winter" value=1 <cfif FORM.rainy_winter eq 1>checked </cfif>/>Mild, rainy winters</td>
+    <td><input type="checkbox" name="hot_summer" value=1 <cfif FORM.hot_summer eq 1>checked </cfif>  />Hot Summers</td>
+    <td><input type="checkbox"  name="mild_summer" value=1 <cfif FORM.mild_summer eq 1>checked </cfif>/>Mild Summers</td>
+    <td><input type="checkbox" name="high_hummidity" value=1 <cfif FORM.high_hummidity eq 1>checked </cfif> />High Humidity</td>
+    <td><input type="checkbox" name="dry_air" value=1 <cfif FORM.dry_air eq 1>checked </cfif> />Dry air</td>
+</table>
+<h2>Neighborhood & Terrain</h2>
+
+<table width="100%" cellspacing="0" cellpadding="2" class="border">
+	<Tr  bgcolor="##deeaf3">
+        <td class="label">
+You would describe your neighborhood as:
+		</td>
+    </tr>
+    <tr bgcolor="##deeaf3">
+    	<td>
+<cfif #FORM.neighborhood# is 'upper income'><cfinput type="radio" name="neighborhood"  value="upper income"><cfelse> <cfinput type="radio" name="neighborhood" value="upper income" ></cfif>Urban
+<cfif #FORM.neighborhood# is 'white collar'><cfinput type="radio" name="neighborhood" value="white collar" checked> <cfelse><cfinput type="radio" name="neighborhood" value="white collar"></cfif>Suburban
+<cfif #FORM.neighborhood# is 'blue collar'><cfinput type="radio" name="neighborhood" value="blue collar" checked> <cfelse><cfinput type="radio" name="neighborhood" value="blue collar"></cfif>Rural
+<cfif #FORM.neighborhood# is 'tradesman'><cfinput type="radio" name="neighborhood" value="tradesman" checked><cfelse><cfinput type="radio" name="neighborhood" value="tradesman"></cfif>Resort<br><br>
+		</td>
+    </tr>
+    <tr>
+    <Tr >
+    	<td class="label">
+Would you describe the community as:</td>
+	</tr>
+    
+    	<td>
+<cfif #FORM.community# is 'Urban'><cfinput type="radio" name="community" value="Urban" checked><cfelse><cfinput type="radio" name="community" value="Urban"  > </cfif>Urban
+<cfif #FORM.community# is 'suburban'><cfinput type="radio" name="community" value="suburban" checked><cfelse><cfinput type="radio" name="community" value="suburban"></cfif>Suburban
+<cfif #FORM.community# is 'small'><cfinput type="radio" name="community" value="small" checked><cfelse><cfinput type="radio" name="community" value="small"></cfif>Small Town
+<cfif #FORM.community# is 'rural'><cfinput type="radio" name="community" value="rural" checked><cfelse><cfinput type="radio" name="community" value="rural"></cfif>Rural
+		</td>
+	</tr>
+    <Tr bgcolor="##deeaf3">
+    	<Td colspan=2>Areas in or near your neighborhood to be avoided</td>
+    </tr>
+    <Tr colspan=2 bgcolor="##deeaf3">
+        <td><textarea rows="5" cols=70 name="avoidArea">#FORM.avoidArea#</textarea></td>
+    </tr>
+    <tr>
+    	<td class="label">
+ The terrain of your community is (<strong><em>please select one from each row</em></strong>):
+ 		</td>
+    </tr>
+    <tr>
+    	<td>
+             <table border="0" cellpadding="4" cellspacing="0">
+                <tr>
+                    <td><cfif #FORM.terrain1# is 'flat'><cfinput type="radio"  name="terrain1" value="flat" checked><cfelse><cfinput type="radio" name="terrain1" value="flat" ></cfif>Flat</td>
+                    <td><cfif #FORM.terrain1# is 'hilly'> <cfinput type="radio" name="terrain1" value="hilly" checked><cfelse><cfinput type="radio" name="terrain1" value="hilly"></cfif>Hilly</td> <td colspan=2></td>
+                    </tr>
+                    <tr bgcolor="##deeaf3">
+                    
+
+                    <td><cfif #FORM.terrain2# is 'trees'> <cfinput type="radio" name="terrain2" value="trees" checked><cfelse><cfinput type="radio" name="terrain2" value="trees"></cfif>Trees</td><td><cfif #FORM.terrain2# is 'notrees'><cfinput type="radio" name="terrain2" value="notrees" checked><cfelse><cfinput type="radio" name="terrain2" value="notrees"></cfif>No Trees</td><td colspan=2></td>
+                </tr>
+                 <tr>
+                    <td><cfif #FORM.terrain3# is 'ocean'><cfinput type="radio" name="terrain3" value="ocean" checked><cfelse><cfinput type="radio" name="terrain3" value="ocean"></cfif>Ocean</td>
+                    <td><cfif #FORM.terrain3# is 'lakeside'> <cfinput type="radio" name="terrain3" value="lakeside" checked><cfelse> <cfinput type="radio" name="terrain3" value="lakeside"></cfif>Lakeside</td>
+                    <td><cfif #FORM.terrain3# is 'riverside'><cfinput type="radio" name="terrain3" value="riverside" checked><cfelse><cfinput type="radio" name="terrain3" value="riverside"></cfif>Riverside </td>
+                    <td><cfif #FORM.terrain3# is 'other'> <cfinput type="radio" name="terrain3" value="other" checked>Other <cfinput type="text" name="terrain3_desc" size=10 value="#FORM.terrain3_desc#"><cfelse><cfinput type="radio" name="terrain3" value="other">Other <cfinput type="text" name="terrain3_desc" size=10></cfif></td>
+                </tr>
+            </table>
+   </td>
+  </tr>
+ </table>
+
+<h2>Misc. Info</h2>
+ <table  width="100%" cellspacing="0" cellpadding="2" class="border">
+ 	<tr bgcolor="##deeaf3">
+		
+<td class="label" colspan=2>
+Indicate particular clothes, sports equipment, etc. that your student should consider bringing:</td>
+	</tr>
+    <tr bgcolor="##deeaf3">
+    	<td>
+<textarea cols="50" rows="4" name="special_cloths" wrap="VIRTUAL" placeholder="Winter coat, swimsuites, hiking boots, etc"><cfoutput>#FORM.special_cloths#</cfoutput></textarea></td>	
+	</tr>
+    <tr>
+    	<td>
+Describe the points of interest in your  area:</td>
+	</tr>
+    <tr>
+    	<td>
+        
+<textarea cols="50" rows="4" name="point_interest" wrap="VIRTUAL" placeholder="Parks, museums, historical sites, local attractions"><cfoutput>#FORM.point_interest#</cfoutput></textarea><br>
+		</td>
+    </tr>
+ </table>
+<table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
+    <tr>
+       
+        <td align="right">
+      
+        <input name="Submit" type="image" src="/images/buttons/Next.png" border="0"></td>
+    </tr>
+</table>
+</cfform>
+</cfoutput>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js" type="text/javascript"></script>
+  <script src="linked/chosen/chosen.jquery.js" type="text/javascript"></script>
+  <script type="text/javascript"> $(".chzn-select").chosen(); $(".chzn-select-deselect").chosen({allow_single_deselect:true}); </script>
+
+
+	
