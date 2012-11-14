@@ -201,7 +201,7 @@
         FROM smg_programs p, extra_candidate_place_company ecpc, extra_candidates c
         WHERE p.programID = c.programID
         AND c.candidateID = ecpc.candidateID
-        AND ecpc.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
+        AND ecpc.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.hostCompanyID)#">
         GROUP BY p.programName
     </cfquery>
                 
