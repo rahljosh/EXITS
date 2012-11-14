@@ -1,0 +1,154 @@
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		familyRules.cfm
+	Author:		Marcus Melo
+	Date:		November 6, 2012
+	Desc:		Family Rules
+
+	Updated:	
+
+----- ------------------------------------------------------------------------- --->
+
+<cfsilent>
+
+	<!--- Import CustomTag Used for Page Messages and Form Errors --->
+    <cfimport taglib="extensions/customTags/gui/" prefix="gui" />	
+	
+    <!--- Param FORM Variables --->
+    <cfparam name="FORM.submitted" default="0">
+    <cfparam name="FORM.houserules_curfewweeknights" default="">
+    <cfparam name="FORM.houserules_curfewweekends" default="">
+    <cfparam name="FORM.houserules_chores" default="">
+    <cfparam name="FORM.houserules_inet" default="">
+    <cfparam name="FORM.houserules_expenses" default="">
+    <cfparam name="FORM.houserules_other" default="">
+	    
+	<cfif VAL(FORM.submitted)>
+        
+        <cfscript>
+            // Data Validation
+                  
+            // houserules_curfewweeknights
+            if ( NOT LEN(TRIM(FORM.houserules_curfewweeknights)) ) {
+				// Get all the missing items in a list
+				SESSION.formErrors.Add("Please specify the curfew for school nights.");
+            }	
+            
+            // houserules_curfewweekends
+            if ( NOT LEN(TRIM(FORM.houserules_curfewweekends)) ) {
+				// Get all the missing items in a list
+				SESSION.formErrors.Add("Please specify the curfew for weekends.");
+            }			
+            
+            // houserules_chores
+            if ( NOT LEN(TRIM(FORM.houserules_chores)) ) {
+				// Get all the missing items in a list
+				SESSION.formErrors.Add("Please list the chores that the student we responsible for.");
+            }		
+			
+            // houserules_inet
+            if ( NOT LEN(TRIM(FORM.houserules_inet)) )  {
+				// Get all the missing items in a list
+				SESSION.formErrors.Add("Please indicate any internet, computer or email usage restrictions you have.");
+            }			
+            
+            // houserules_expenses
+            if ( NOT LEN(TRIM(FORM.houserules_expenses)) )  {
+				// Get all the missing items in a list
+				SESSION.formErrors.Add("Please indicate any expenses you expect the student to be responsible for.");
+            }	
+        </cfscript>
+        
+        <cfif NOT SESSION.formErrors.length()>
+        
+            <cfquery datasource="#APPLICATION.DSN.Source#">
+                UPDATE 
+                    smg_hosts 
+                SET
+                    houserules_curfewweeknights = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.houserules_curfewweeknights#">,
+                    houserules_curfewweekends = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.houserules_curfewweekends#">,
+                    houserules_chores = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.houserules_chores#">,
+                    houserules_inet = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.houserules_inet#">,
+                    houserules_expenses = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.houserules_expenses#">,
+                    houserules_other = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.houserules_other#">
+                WHERE
+                    hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
+            </cfquery>
+    
+            <cflocation url="index.cfm?section=familyAlbum" addtoken="no">
+            
+        </cfif>
+        
+    <cfelse>
+    
+        <!----The first time the page is loaded, pass in current values, if they exist.---->
+         <cfscript>
+             // Set FORM Values   
+            FORM.houserules_curfewweeknights = qGetHostFamilyInfo.houserules_curfewweeknights;
+            FORM.houserules_curfewweekends = qGetHostFamilyInfo.houserules_curfewweekends;
+            FORM.houserules_chores = qGetHostFamilyInfo.houserules_chores;
+            FORM.houserules_inet = qGetHostFamilyInfo.houserules_inet;
+            FORM.houserules_expenses = qGetHostFamilyInfo.houserules_expenses;
+			FORM.houserules_other = qGetHostFamilyInfo.houserules_other;
+        </cfscript>
+        
+    </cfif>
+
+</cfsilent>
+
+<cfoutput>
+
+    <form action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
+        <input type="hidden" name="submitted" value="1" />
+        
+        <h2>Family Rules</h2>
+        
+		<!--- Form Errors --->
+        <gui:displayFormErrors 
+            formErrors="#SESSION.formErrors.GetCollection()#"
+            messageType="section"
+            />
+        
+        List your household rules and personal expectations. It is very important that your student be treated as a member of your family. 
+        We will share this information with the student you select. 
+        <b>Exchange students MUST abide by all ISE rules and all local, state & federal laws, regardless of home rules.</b>
+        <br /><br />
+        
+        <table width="100%" cellspacing="0" cellpadding="2" class="border">
+            <tr>
+                <td class="label" valign="top"><h3>Curfew on school nights</h3></td>
+                <td><textarea cols="50" rows="4" name="houserules_curfewweeknights" wrap="virtual">#FORM.houserules_curfewweeknights#</textarea></td>
+            </tr>   
+            <tr  bgcolor="##deeaf3">
+                <td class="label" valign="top"><h3>Curfew on weekends</h3></td>
+                <td><textarea cols="50" rows="4" name="houserules_curfewweekends" wrap="virtual">#FORM.houserules_curfewweekends#</textarea></td>
+            </tr> 
+            <tr>
+                <td class="label" valign="top"><h3>Chores</h3></td>
+                <td><textarea cols="50" rows="4" name="houserules_chores" wrap="virtual">#FORM.houserules_chores#</textarea></td>
+            </tr> 
+            <tr  bgcolor="##deeaf3">
+                <td class="label" valign="top"><h3>Computer, Internet, and Email Usage</h3> </td>
+                <td><textarea cols="50" rows="4" name="houserules_inet" wrap="virtual">#FORM.houserules_inet# </textarea></td>
+            </tr> 
+            <tr>
+                <td class="label" valign="top">
+                	<h3>Expenses</h3>
+                	<i>personal expenses expected to be paid by the students</i>
+                </td>
+                <td><textarea cols="50" rows="4" name="houserules_expenses" wrap="virtual"  placeholder="toiletries, eating out with friends, etc">#FORM.houserules_expenses#</textarea></td>
+            </tr> 
+            <tr bgcolor="##deeaf3">
+                <td class="label" valign="top"><h3>Other</h3> <i>please include any other rules or expectations you will have of your exchange student</i></td>
+                <td><textarea cols="50" rows="4" name="houserules_other" wrap="virtual" placeholder="Homework, access to food, etc">#FORM.houserules_other#</textarea></td>
+            </tr> 
+        </table>
+        
+        <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
+            <tr>
+            	<td align="right"><input name="Submit" type="image" src="/images/buttons/Next.png" border="0"></td>
+            </tr>
+        </table>
+    </form>
+
+</cfoutput>
