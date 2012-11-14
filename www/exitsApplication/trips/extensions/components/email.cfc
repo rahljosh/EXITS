@@ -22,10 +22,10 @@
         
         <div class="thin-border">
         
-            <table background="#SESSION.COMPANY.exitsURL#/nsmg/pics/email_textured_background.png" width="600">
+            <table background="#SESSION.COMPANY.exitsURL#nsmg/pics/email_textured_background.png" width="600">
         		<tr>        
         			<td width=94>
-                    	<img src="#SESSION.COMPANY.exitsURL#/nsmg/pics/logos/#SESSION.COMPANY.ID#_header_logo.png">
+                    	<img src="#SESSION.COMPANY.exitsURL#nsmg/pics/logos/#SESSION.COMPANY.ID#_header_logo.png">
                     </td>
 					<td align="center" style="font-weight:bold;">
 						<cfif SESSION.COMPANY.ID EQ 10>
@@ -42,7 +42,7 @@
 					</td>
                 </tr>	        
         		<tr>
-                	<td colspan="2"><img src="#SESSION.COMPANY.exitsURL#/nsmg/pics/logos/#SESSION.COMPANY.ID#_px.png" height="12" width="100%"></td>	
+                	<td colspan="2"><img src="#SESSION.COMPANY.exitsURL#nsmg/pics/logos/#SESSION.COMPANY.ID#_px.png" height="12" width="100%"></td>	
 	        	</tr>
                 
         	</table>
