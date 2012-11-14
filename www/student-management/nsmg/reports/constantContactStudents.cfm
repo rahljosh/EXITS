@@ -22,45 +22,27 @@
         
         <!--- Run Query --->
         <cfquery name="qGetStudents" datasource="mysql">
-        	SELECT DISTINCT
-                s.email,
-                s.firstname,
-                s.familylastname
-          	FROM
-            	smg_students s
-           	INNER JOIN
-            	smg_programs p ON p.programid = s.programid
-            WHERE
-            	s.programid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentProgram#" list="yes"> )
-          	AND
-            	s.email !=  <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-            
+        	SELECT DISTINCT s.email, s.firstname, s.familylastname
+          	FROM smg_students s
+           	INNER JOIN smg_programs p ON p.programid = s.programid
+            WHERE s.programid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentProgram#" list="yes"> )
+          	AND s.email !=  <cfqueryparam cfsqltype="cf_sql_varchar" value="">
             <cfswitch expression="#FORM.studentStatus#">
-                
-                <cfcase value="activeStudent">
-                    AND
-                        s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+               	<cfcase value="activeStudent">
+                    AND s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                 </cfcase>
-
                 <cfcase value="inactiveStudent">
-                    AND
-                        s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">         	
+                    AND s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">         	
                 </cfcase>
-                    
             </cfswitch>
-            
             <cfif CLIENT.companyID EQ 5>
-           		AND          
-           			s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+           		AND s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
            	<cfelse>
-            	AND          
-             		s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#"> 
+            	AND s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyid)#"> 
             </cfif>
             
-        	GROUP BY
-            	s.familylastname
-            ORDER BY
-            	s.familylastname                 
+        	GROUP BY s.familylastname
+            ORDER BY s.familylastname                 
         </cfquery>        
     
     </cfif>
