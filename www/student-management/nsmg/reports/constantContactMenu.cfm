@@ -22,8 +22,8 @@
     <cfparam name="FORM.active" default="">
     
     <cfscript>
-		// Get Program List
-		qGetPrograms = APPLICATION.CFC.PROGRAM.getPrograms(isActive=1,dateActive=1,companyID=CLIENT.companyID);
+		// Get Programs
+		qGetPrograms = APPLICATION.CFC.PROGRAM.getPrograms(programIDList=FORM.programID,dateActive=1);
 		
 		// Get Field User Type
 		qGetUserType = APPLICATION.CFC.LOOKUPTABLES.getUserType(userTypeList="5,6,7,8,9,15");
@@ -75,13 +75,13 @@
                         <tr>
 							<td class="fieldTitle">Program:</td>
 							<td>
-								<select name="studentProgram" class="xLargeField" multiple="multiple" size="10">
+								<select name="studentProgram" class="xLargeField" multiple="multiple" size="5">
 									<cfloop query="qGetPrograms">
                                     	<option value="#qGetPrograms.programid#">#qGetPrograms.programname#</option>
                                     </cfloop>
                                 </select>
 							</td>
-						</tr>		
+						</tr>	
 						<tr><td colspan="2" bgcolor="e2efc7" class="submitButton" align="center"><input type="image" src="pics/view.gif" border="0"></td></tr>
 					</table>
 				</form>
