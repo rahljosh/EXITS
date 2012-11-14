@@ -147,7 +147,7 @@
         Dates: #DateFormat(qGetTourDetails.tour_start, 'mmm d, yyyy')# - #DateFormat(qGetTourDetails.tour_end, 'mmm d, yyyy')#
         
         If you feel that #qGetStudentInfo.firstname# should NOT be going on this trip, please notify us by using this 
-        <a href="#SESSION.COMPANY.exitsURL#/nsmg/index.cfm?curdoc=tours/hold&studentID=#qGetStudentInfo.studentid#&tripID=#qGetTourDetails.tour_id#">form</a> 
+        <a href="#SESSION.COMPANY.exitsURL#nsmg/index.cfm?curdoc=tours/hold&studentID=#qGetStudentInfo.studentid#&tripID=#qGetTourDetails.tour_id#">form</a> 
         (you will need to be logged into follow the link)
     </cfsavecontent>
     

@@ -118,7 +118,7 @@
     <table width="700" cellpadding="2" cellspacing="0" align="Center">
         <tr>
             <td align="Center">    
-                <img src="#SESSION.COMPANY.exitsURL#/nsmg/pics/#SESSION.COMPANY.ID#_short_profile_header.jpg" />
+                <img src="#SESSION.COMPANY.exitsURL#nsmg/pics/#SESSION.COMPANY.ID#_short_profile_header.jpg" />
                 <span class="title"><font size=+1>Trip Permission Form</font></span>
             </td>
         </tr>
@@ -132,7 +132,7 @@
      
     <table width="800" align="center" border="0" cellpadding="3" cellspacing="0">
         <tr>           
-            <td colspan="2" align="center"><img src="#SESSION.COMPANY.exitsURL#/nsmg/pics/student.jpg" /></td>
+            <td colspan="2" align="center"><img src="#SESSION.COMPANY.exitsURL#nsmg/pics/student.jpg" /></td>
         </tr>
         <tr>
             <td valign="top" width="50%">
@@ -196,7 +196,7 @@
     
     <table width="800" align="center" border="0" cellpadding="3" cellspacing="0">
         <tr>           
-            <td colspan="2" align="center"><img src="#SESSION.COMPANY.exitsURL#/nsmg/pics/HFbanner.png" /></td>
+            <td colspan="2" align="center"><img src="#SESSION.COMPANY.exitsURL#nsmg/pics/HFbanner.png" /></td>
         </tr>
         <tr>
             <td valign="top" width="50%">
@@ -264,10 +264,10 @@
                 <!--- Medical Information --->
                 <table width="100%">
                     <tr>
-                        <td colspan="2" align="center"><img src="#SESSION.COMPANY.exitsURL#/nsmg/pics/medicalAllergysm.jpg" /></td>
+                        <td colspan="2" align="center"><img src="#SESSION.COMPANY.exitsURL#nsmg/pics/medicalAllergysm.jpg" /></td>
                     </tr>
                     <tr>
-                        <td colspan="2" align="center"><img src="#SESSION.COMPANY.exitsURL#/nsmg/pics/remembersm.jpg" /></td>
+                        <td colspan="2" align="center"><img src="#SESSION.COMPANY.exitsURL#nsmg/pics/remembersm.jpg" /></td>
                     </tr>                    
                     <tr>
                         <td><span class="title">Medical Allergies:</span></td>
@@ -289,7 +289,7 @@
                 <!--- Tour Details --->
                 <table width="100%">
                     <tr>
-                        <td colspan="2" align="center"><img src="#SESSION.COMPANY.exitsURL#/nsmg/pics/detailssm.jpg" /></td>
+                        <td colspan="2" align="center"><img src="#SESSION.COMPANY.exitsURL#nsmg/pics/detailssm.jpg" /></td>
                     </tr>
                     <tr>
                         <td><span class="title">Tour Name:</span></td>
@@ -311,7 +311,7 @@
     
     <table width="800" align="center" border="0" cellpadding="3" cellspacing="0">
         <tr>           
-            <td colspan="2" align="center"><img src="#SESSION.COMPANY.exitsURL#/nsmg/pics/signatures.jpg" /></td>
+            <td colspan="2" align="center"><img src="#SESSION.COMPANY.exitsURL#nsmg/pics/signatures.jpg" /></td>
         </tr>
         <tr>
             <td colspan="2">

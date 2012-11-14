@@ -54,7 +54,7 @@
             WHERE
                 t.tour_ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.TOUR.tourID)#">
         
-        ) AS deviredTable
+        ) AS t
         
         GROUP BY
         	tour_ID
