@@ -143,18 +143,18 @@
      
 
 <style type="text/css">
-	
-	ul, li {
-		margin:0;
-		padding:0;
-		list-style-type:none;
-	}
-	#outerContainer {
+#outerContainer {
 	width:800px;
 	margin-right:auto;
 	margin-left:auto;
 
-}
+}	
+#outerContainer	ul, li {
+		margin:0;
+		padding:0;
+		list-style-type:none;
+	}
+	
 	#container {
 	width:400px;
 	padding:0px;
@@ -167,7 +167,7 @@
 	border-radius:5px;
 	position:relative;
 }
-h1 {
+#outerContainer h1 {
 	margin:0;
 	padding:10px 0;
 	font-size:24px;
@@ -179,16 +179,16 @@ h1 {
 	text-shadow:1px 1px 0 #fff;
 }
 
-form ul li {
+#outerContainer form ul li {
 	margin:10px 20px;
 
 }
-form ul li:last-child {
+#outerContainer form ul li:last-child {
 	text-align:center;
 	margin:20px 0 25px 0;
 
 }
-input {
+#outerContainer input {
 	padding:10px 10px;
 	border:1px solid #d5d9da;
 	border-radius:5px;
@@ -198,14 +198,14 @@ input {
 	outline:0; /* remove webkit focus styles */
 	font-size:16px; color:#333;
 }
-input:focus {
+#outerContainer input:focus {
 	border:1px solid #b9d4e9;
 	border-top-color:#b6d5ea;
 	border-bottom-color:#b8d4ea;
 	box-shadow:0 0 5px #b9d4e9;
 }
 
-label {
+#outerContainer label {
 	color:#555;
 }
 #container span {
@@ -216,7 +216,7 @@ label {
 	margin-top:5px;
 }
 
-button {
+#outerContainer button {
 	background: #57a9eb; /* Old browsers */
 	background: -moz-linear-gradient(top, #57a9eb 0%, #3a76c4 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#57a9eb), color-stop(100%,#3a76c4)); /* Chrome,Safari4+ */
@@ -236,7 +236,7 @@ button {
 	border-radius:20px;
 	box-shadow:0 1px 0 #bbb, 0 1px 0 #9cccf3 inset;
 }
-button:active {
+#outerContainer button:active {
 	background: #3a76c4; /* Old browsers */
 	background: -moz-linear-gradient(top, #3a76c4 0%, #57a9eb 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3a76c4), color-stop(100%,#57a9eb)); /* Chrome,Safari4+ */
@@ -281,13 +281,13 @@ button:active {
 	display:block;
 }
 
-.invalid {
+#outerContainer .invalid {
 	background:url(pics/invalid.png) no-repeat 0 50%;
 	padding-left:22px;
 	line-height:24px;
 	color:#ec3f41;
 }
-.valid {
+#outerContainer .valid {
 	background:url(pics/valid.png) no-repeat 0 50%;
 	padding-left:22px;
 	line-height:24px;
@@ -298,7 +298,7 @@ button:active {
 	display:none;
 }
 
-.descriptiveText {	
+#outerContainer .descriptiveText {	
 	font-size:16px;
 	float:right;
 	display:block;
@@ -306,24 +306,17 @@ button:active {
 	
 	
 }	
-.descriptiveText p {
+#outerContainer .descriptiveText p {
 	margin:20px;	
 	font-size:16px;
 	
 }	
-.descriptiveText ol {
+#outerContainer .descriptiveText ol {
 	margin:10px;	
 	font-size:16px;
 	background-color:#fff;	
 }	
-
-
 </style>
-
-	
-
-		
-       
 
 <cfoutput>
 	

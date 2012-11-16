@@ -1915,7 +1915,7 @@
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">,
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">
                 FROM 
-                    dual
+                    DUAL
                 <!--- DO NOT INSERT IF ITS ALREADY EXISTS --->
                 WHERE 
                 	NOT EXISTS 
