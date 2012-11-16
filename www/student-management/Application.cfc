@@ -121,59 +121,53 @@
 				CLIENT.studentID = APPLICATION.CFC.STUDENT.getStudentByID(uniqueID=URL.s).studentID;			
 			}
 			
-			// Session has Expired - Go to login page
+			// Not Logged IN | Session has Expired | Go to login page
 			if ( ( findNoCase("nsmg", getBaseTemplatePath()) AND NOT VAL(CLIENT.userType) AND ( NOT VAL(CLIENT.userID) OR NOT VAL(CLIENT.studentID) ) )	) {
+				
 				Location("http://#cgi.http_host#/", "no");
-			}
 			
-			// Always allow logout.
-			if ( NOT findNoCase("nsmg/logout.cfm", getBaseTemplatePath()) ) {  // OR URL.curdoc NEQ "logout"
+			// User Logged In 
+			} else {
 				
-				// Force verify user information.
-				if ( isDefined("CLIENT.verify_info") AND NOT APPLICATION.IsServerLocal ) { // AND NOT APPLICATION.IsServerLocal
+				// Allow access to these pages when forcing verify info / change password / Missing SSN / Paperwork
+				vListOfForcedPages = "logout,user_info,forms/user_form,forms/change_password,forms/verifyInfo,user/index,calendar/index";
+	
+				// Always allow login/logout and access to cfcs
+				if ( CGI.SCRIPT_NAME NEQ "/login.cfm" AND Right(CGI.SCRIPT_NAME, 3) NEQ 'cfc' AND NOT listFindNoCase(vListOfForcedPages, URL.curdoc) ) { 
 					
-					// allow userInfo, user_form and logout
-					if ( NOT ( LEN(URL.curdoc) AND listFindNoCase("user_info,forms/user_form,logout", URL.curdoc)) ) {
+					// Force verify user information | allow userInfo, user_form
+					if ( isDefined("CLIENT.verify_info") AND NOT APPLICATION.IsServerLocal ) { // AND NOT APPLICATION.IsServerLocal
+					
 						Location("index.cfm?curdoc=user_info&userid=#CLIENT.userid#", "no");
-					}
-				
-				// Force change password
-				} else if ( isDefined("CLIENT.change_password") AND NOT APPLICATION.IsServerLocal ) { // AND NOT APPLICATION.IsServerLocal
-					
-					// allow user only on change password page and logout.
-					if ( NOT ( LEN(URL.curdoc) AND listFindNoCase("forms/change_password,logout", URL.curdoc) ) ) {
-						Location("index.cfm?curdoc=forms/change_password", "no");
-					}
-				
-				// Force SSN on PRODUCTION  - Not for Canada
-				} else if ( isDefined('CLIENT.needsSSN') AND CGI.SERVER_NAME NEQ "canada.exitsapplication.com" AND NOT APPLICATION.IsServerLocal ) { // AND NOT APPLICATION.IsServerLocal
-					
-					// allow verifyInfo, verifyInfo2 and logout
-					if ( NOT ( LEN(URL.curdoc) AND listFindNoCase("forms/verifyInfo,forms/verifyInfo2,logout", URL.curdoc)) ) {
+	
+					// Force SSN | Except Canada | Allow access to verifyInfo
+					} else if ( isDefined('CLIENT.needsSSN') AND CGI.SERVER_NAME NEQ "canada.exitsapplication.com" AND NOT APPLICATION.IsServerLocal ) { // AND NOT APPLICATION.IsServerLocal
+						
 						Location("index.cfm?curdoc=forms/verifyInfo", "no");
-					}
-			
-				// Force New Paperwork Section - Not for Canada
-				} else if ( listFind("5,6,7,15", CLIENT.userType) 
-						AND 
-							CGI.SERVER_NAME NEQ "canada.exitsapplication.com" 
-						AND 
-							VAL(APPLICATION.CFC.USER.getUserSession().ID) 
-						AND 
-							NOT APPLICATION.CFC.USER.getUserSessionPaperwork().isAccountCompliant 
-						AND 
-							NOT APPLICATION.CFC.USER.getUserSession().paperworkSkipAllowed
-						// allow paperwork, logout and webEx
-						AND 
-							NOT listFindNoCase("user/index,logout,calendar/index", URL.curdoc)
-						AND 
-							CGI.SCRIPT_NAME NEQ "/nsmg/user/index.cfm" ) {
-							
-							// paperwork page
-							Location("index.cfm?curdoc=user/index", "no"); 
-							
-				}
+	
+					// Force change password | allow access to change password page
+					} else if ( isDefined("CLIENT.change_password") AND NOT APPLICATION.IsServerLocal ) { // AND NOT APPLICATION.IsServerLocal
+						
+						Location("index.cfm?curdoc=forms/change_password", "no");
 				
+					// Force New Paperwork Section - Not for Canada
+					} else if ( listFind("5,6,7,15", CLIENT.userType) 
+							AND 
+								CGI.SERVER_NAME NEQ "canada.exitsapplication.com" 
+							AND 
+								VAL(APPLICATION.CFC.USER.getUserSession().ID) 
+							AND 
+								NOT APPLICATION.CFC.USER.getUserSessionPaperwork().isAccountCompliant 
+							AND 
+								NOT APPLICATION.CFC.USER.getUserSession().paperworkSkipAllowed ) {
+								
+								// paperwork page
+								Location("index.cfm?curdoc=user/index", "no"); 
+								
+					}
+					
+				}
+			
 			}
 			
 			/************************************************************************************************************************
