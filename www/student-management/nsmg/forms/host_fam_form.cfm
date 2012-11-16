@@ -1218,29 +1218,33 @@
 
         <table width="95%" align="center" class="section" border="0" cellpadding="4" cellspacing="0">
             <tr>
-            <cfif qGetHostFamilyInfo.recordCount AND ListFind("1,2,3,4", CLIENT.usertype)>
-                <td valign="top">
-					
-                        <a href="" onClick="return confirm('You are about to delete this Host Family. You will not be able to recover this information. Click OK to continue.')" style="float:left;">
-                            <img src="pics/delete.gif" border="0">
-                        </a>
-                 </td>
-           </cfif>
-           
+				<cfif qGetHostFamilyInfo.recordCount AND ListFind("1,2,3,4", CLIENT.usertype)>
+                    <td valign="top">
+                        
+                            <a href="" onClick="return confirm('You are about to delete this Host Family. You will not be able to recover this information. Click OK to continue.')" style="float:left;">
+                                <img src="pics/delete.gif" border="0">
+                            </a>
+                     </td>
+               </cfif>
+           	
+            	<!---
           		<td valing="top" align="center">
 					<input name="Submit_start" id="submitEHost" type="submit" value="eHost"  alt="Start E-App" border="0" class="buttonBlue" onclick="verifyAddress('submitEHost'); return false;" /> <br />
                		(Host Fam Fills Out App)
                 </td>
+                --->
                 
-                <td align="Center">   
-              		<input name="Submit_start" id="submitStandard" type="submit" value="Submit"  alt="Submit Paper Application" border="0" class="buttonRed" onclick="verifyAddress('submitStandard'); return false;" /><br />
-                  	(Office User Fills Out App)
-                </td>
-                
-                <td align="Center">   
-                	<input name="Submit_start" id="submitUpdate" type="submit" value="Update"  alt="Update Information" border="0" class="buttonGreen" onclick="verifyAddress('submitUpdate'); return false;" /><br />
-                   	(Just Update Info)
-                </td>
+                <cfif VAL(FORM.hostID)>
+                    <td align="Center">   
+                        <input name="Submit_start" id="submitUpdate" type="submit" value="Update"  alt="Update Information" border="0" class="buttonGreen" onclick="verifyAddress('submitUpdate'); return false;" /><br />
+                        (Just Update Info)
+                    </td>
+                <cfelse>
+                    <td align="Center">   
+                        <input name="Submit_start" id="submitStandard" type="submit" value="Submit"  alt="Submit Paper Application" border="0" class="buttonRed" onclick="verifyAddress('submitStandard'); return false;" /><br />
+                        <!--- (Office User Fills Out App) --->
+                    </td>
+                </cfif>
             </tr>
         </table>
     
