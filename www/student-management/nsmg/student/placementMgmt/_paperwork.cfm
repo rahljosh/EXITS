@@ -1591,7 +1591,7 @@
                             <td valign="top"><label for="complianceLogIsResolved">Is this an issue that needs attention?</label></td>
                             <td>
                             	<!--- That's an opposite question so we must change Yes/No value to store the correct data in isResolved? field --->
-                                <select name="complianceLogIsResolved" id="complianceLogIsResolved" class="xSmallField complianceCheck">
+                                <select name="complianceLogIsResolved" id="complianceLogIsResolved" class="xSmallField">
                                     <option value="0" <cfif FORM.complianceLogIsResolved EQ 0> selected="selected" </cfif> >Yes</option>
                                     <option value="1" <cfif FORM.complianceLogIsResolved EQ 1> selected="selected" </cfif> >No</option>
                                 </select>
@@ -1624,7 +1624,7 @@
                                 <td width="50%">#qGetComplianceHistory.actions#</td>
                                 <td width="15%">#qGetComplianceHistory.enteredBy#</td>
                                 <td width="15%">
-                                    <select name="#qGetComplianceHistory.ID#_complianceLogIsResolved" id="#qGetComplianceHistory.ID#_complianceLogIsResolved" class="xSmallField complianceCheck">
+                                    <select name="#qGetComplianceHistory.ID#_complianceLogIsResolved" id="#qGetComplianceHistory.ID#_complianceLogIsResolved" class="xSmallField">
                                         <option value="1" <cfif FORM[qGetComplianceHistory.ID & '_complianceLogIsResolved'] EQ 1> selected="selected" </cfif> >Yes</option>
                                         <option value="0" <cfif FORM[qGetComplianceHistory.ID & '_complianceLogIsResolved'] EQ 0> selected="selected" </cfif> >No</option>
                                     </select>
