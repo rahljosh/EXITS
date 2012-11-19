@@ -287,7 +287,7 @@ ORDER BY candidateid
                 <cfelse>
                 	<cfset programLength = #Int(progLengTest2)# + 1>
             </cfif> --->
-            <cfset insuranceCostPerDay = 25 / 30>
+            <cfset insuranceCostPerDay = 27 / 30>
          <!--- INSURANCE COST PER WEEK DEACTIVATED, CHARGING NOW PER DAY from 01/06/2011   <cfset insuranceCost = Round(#insuranceCostPerDay# * #programLength#)> --->
          	<cfset insuranceCost = Round(#insuranceCostPerDay# * #progLengTest1#)>
         </cfif>
