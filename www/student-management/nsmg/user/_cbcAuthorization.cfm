@@ -478,7 +478,7 @@
                         </tr>
                         <tr>
                             <td>Social Security Number <span class="required">*</span></td>
-                            <td><input type="text" name="ssn" value="#FORM.ssn#" class="mediumField" /></td>
+                            <td><cfinput type="text" name="ssn" value="#FORM.ssn#" class="mediumField" mask="???-??-9999" /></td>
                         </tr>
                         <tr><td colspan="2"><span class="required">* Required Fields</span></td></tr>
                     </table>
