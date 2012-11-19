@@ -1512,7 +1512,7 @@
                             </td>
                             <td width="15%">&nbsp;</td>
                         </tr>
-                        
+
                         <!--- Natural Family Date Signed --->
                         <tr class="mouseOverColor #qGetDoublePlacementPaperworkHistory.ID#_classDoublePlacementPaperwork #vDoublePlacementPaperworkClass#"> 
                             <td>&nbsp;</td>
@@ -1523,7 +1523,7 @@
                             </td>
                             <td>
                             	<span class="readOnly displayNone">#DateFormat(qGetDoublePlacementPaperworkHistory.doublePlacementParentsDateCompliance, 'mm/dd/yyyy')#</span>
-                                <input type="checkbox" name="#qGetDoublePlacementPaperworkHistory.ID#_checkDoublePlacementParentsDateCompliance" id="#qGetDoublePlacementPaperworkHistory.ID#_checkDoublePlacementParentsDateCompliance" class="editPage displayNone complianceCheck" <cfif isDate(FORM[qGetDoublePlacementPaperworkHistory.ID & '_doublePlacementParentsDateCompliance'])>checked</cfif> >
+                                <input type="checkbox" name="check_#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementParentsDateCompliance" id="check_#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementParentsDateCompliance" class="editPage displayNone complianceCheck" <cfif isDate(FORM[qGetDoublePlacementPaperworkHistory.ID & '_doublePlacementParentsDateCompliance'])>checked</cfif> >
                                 <input type="hidden" name="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementParentsDateCompliance" id="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementParentsDateCompliance" class="datePicker editPage displayNone" value="#DateFormat(FORM[qGetDoublePlacementPaperworkHistory.ID & '_doublePlacementParentsDateCompliance'], 'mm/dd/yyyy')#">
                             </td>
                         </tr>
@@ -1538,7 +1538,7 @@
                             </td>
                             <td>
                             	<span class="readOnly displayNone">#DateFormat(qGetDoublePlacementPaperworkHistory.doublePlacementStudentDateCompliance, 'mm/dd/yyyy')#</span>
-                                <input type="checkbox" name="#qGetDoublePlacementPaperworkHistory.ID#_checkDoublePlacementStudentDateCompliance" id="#qGetDoublePlacementPaperworkHistory.ID#_checkDoublePlacementStudentDateCompliance" class="editPage displayNone complianceCheck" <cfif isDate(FORM[qGetDoublePlacementPaperworkHistory.ID & '_doublePlacementStudentDateCompliance'])>checked</cfif> >
+                                <input type="checkbox" name="check_#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementStudentDateCompliance" id="check_#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementStudentDateCompliance" class="editPage displayNone complianceCheck" <cfif isDate(FORM[qGetDoublePlacementPaperworkHistory.ID & '_doublePlacementStudentDateCompliance'])>checked</cfif> >
                                 <input type="hidden" name="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementStudentDateCompliance" id="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementStudentDateCompliance" class="datePicker editPage displayNone" value="#DateFormat(FORM[qGetDoublePlacementPaperworkHistory.ID & '_doublePlacementStudentDateCompliance'], 'mm/dd/yyyy')#">
                             </td>
                         </tr>
@@ -1553,7 +1553,7 @@
                             </td>
                             <td>
                             	<span class="readOnly displayNone">#DateFormat(qGetDoublePlacementPaperworkHistory.doublePlacementHostFamilyDateCompliance, 'mm/dd/yyyy')#</span>
-                                <input type="checkbox" name="#qGetDoublePlacementPaperworkHistory.ID#_checkDoublePlacementHostFamilyDateCompliance" id="#qGetDoublePlacementPaperworkHistory.ID#_checkDoublePlacementHostFamilyDateCompliance" class="editPage displayNone complianceCheck" <cfif isDate(FORM[qGetDoublePlacementPaperworkHistory.ID & '_doublePlacementHostFamilyDateCompliance'])>checked</cfif> >
+                                <input type="checkbox" name="check_#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementHostFamilyDateCompliance" id="check_#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementHostFamilyDateCompliance" class="editPage displayNone complianceCheck" <cfif isDate(FORM[qGetDoublePlacementPaperworkHistory.ID & '_doublePlacementHostFamilyDateCompliance'])>checked</cfif> >
                                 <input type="hidden" name="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementHostFamilyDateCompliance" id="#qGetDoublePlacementPaperworkHistory.ID#_doublePlacementHostFamilyDateCompliance" class="datePicker editPage displayNone" value="#DateFormat(FORM[qGetDoublePlacementPaperworkHistory.ID & '_doublePlacementHostFamilyDateCompliance'], 'mm/dd/yyyy')#">
                             </td>
                         </tr>
