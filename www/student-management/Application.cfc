@@ -131,9 +131,9 @@
 				
 				// Allow access to these pages when forcing verify info / change password / Missing SSN / Paperwork
 				vListOfForcedPages = "logout,user_info,forms/user_form,forms/change_password,forms/verifyInfo,user/index,calendar/index";
-	
+				
 				// Always allow login/logout and access to cfcs
-				if ( CGI.SCRIPT_NAME NEQ "/login.cfm" AND Right(CGI.SCRIPT_NAME, 3) NEQ 'cfc' AND NOT listFindNoCase(vListOfForcedPages, URL.curdoc) ) { 
+				if ( CGI.SCRIPT_NAME NEQ "/login.cfm" AND Right(CGI.SCRIPT_NAME, 3) NEQ 'cfc' AND NOT listFindNoCase(vListOfForcedPages, URL.curdoc) AND CGI.SCRIPT_NAME NEQ '/nsmg/user/index.cfm' ) { 
 					
 					// Force verify user information | allow userInfo, user_form
 					if ( isDefined("CLIENT.verify_info") AND NOT APPLICATION.IsServerLocal ) { // AND NOT APPLICATION.IsServerLocal
