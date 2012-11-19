@@ -11,8 +11,8 @@
     <cfabort>
 </cfif>
 
-<cfparam name="form.report_id" default="">
-<cfif form.report_id EQ "">
+<cfparam name="form.paper_doc_id" default="">
+<cfif form.paper_doc_id EQ "">
 	<!--- only global can add a report because you also need to add the ColdFusion template. --->
     <cfif not client.usertype EQ 1>
         you do not have access to add a report.
@@ -20,53 +20,61 @@
     </cfif>
 	<cfset new = true>
 <cfelse>
-	<cfif not isNumeric(form.report_id)>
-        a numeric report_id is required to edit a report category.
+	<cfif not isNumeric(form.paper_doc_id)>
+        a numeric paper_doc_id is required to edit a report category.
         <cfabort>
 	</cfif>
 	<cfset new = false>
 </cfif>
 
-<cfset field_list = 'report_name,report_description,report_template,report_active,fk_usertype,fk_report_category'>
+<cfset field_list = 'paper_doc_name,paper_doc_description,paper_doc_template,paper_doc_active,fk_usertype,fk_paper_doc_category'>
 <cfset errorMsg = ''>
 
 <!--- Process Form Submission --->
 <cfif isDefined("form.submitted")>
 
 	<!--- checkboxes aren't defined if not checked. --->
-    <cfparam name="form.report_active" default="0">
+    <cfparam name="form.paper_doc_active" default="0">
 
-	<cfif trim(form.report_name) EQ ''>
-		<cfset errorMsg = "Please enter the Report Name.">
-	<cfelseif trim(form.report_template) EQ ''>
-		<cfset errorMsg = "Please enter the Template.">
+	<cfif trim(form.paper_doc_name) EQ ''>
+		<cfset errorMsg = "Please enter the Document Name.">
+	<cfelseif trim(form.paper_doc_template) EQ '' and not val(form.paper_doc_id)>
+		<cfset errorMsg = "Please select file.">
     <cfelse>
 		<cfif new>
+            
+            <cffile action="upload" destination="#APPLICATION.PATH.uploadedFiles#/documents/#client.companyshort#/"  fileField="paper_doc_template" nameconflict="makeunique">
+            
             <cfquery datasource="#application.dsn#">
-                INSERT INTO smg_reports (fk_usertype, fk_report_category, report_name, report_description, report_active, report_template)
+                INSERT INTO smg_paper_doc (fk_usertype, fk_paper_doc_category, paper_doc_name, paper_doc_description, paper_doc_active, paper_doc_template, fk_company)
                 VALUES (
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_usertype#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_report_category#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.report_name#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.report_description#" null="#yesNoFormat(trim(form.report_description) EQ '')#">,
-                <cfqueryparam cfsqltype="cf_sql_bit" value="#form.report_active#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.report_template#">
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_paper_doc_category#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.paper_doc_name#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.paper_doc_description#" null="#yesNoFormat(trim(form.paper_doc_description) EQ '')#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#form.paper_doc_active#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#file.ServerFile#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#client.companyshort#">
                 )  
             </cfquery>
 		<!--- edit --->
 		<cfelse>
+        
 			<cfquery datasource="#application.dsn#">
-				UPDATE smg_reports SET
+				UPDATE smg_paper_doc SET
                 fk_usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_usertype#">,
-                fk_report_category = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_report_category#">,
-                report_name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.report_name#">,
-                report_description = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.report_description#" null="#yesNoFormat(trim(form.report_description) EQ '')#">,
-                report_active = <cfqueryparam cfsqltype="cf_sql_bit" value="#form.report_active#">,
-                report_template = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.report_template#">
-				WHERE report_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.report_id#">
+                fk_paper_doc_category = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_paper_doc_category#">,
+                paper_doc_name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.paper_doc_name#">,
+                paper_doc_description = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.paper_doc_description#" null="#yesNoFormat(trim(form.paper_doc_description) EQ '')#">,
+                <Cfif paper_doc_template is not ''>
+                paper_doc_template = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.paper_doc_template#">,
+                </Cfif>
+                paper_doc_active = <cfqueryparam cfsqltype="cf_sql_bit" value="#form.paper_doc_active#">
+                
+				WHERE paper_doc_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.paper_doc_id#">
 			</cfquery>
 		</cfif>
-        <cflocation url="index.cfm?curdoc=reports" addtoken="no">
+        <cflocation url="index.cfm?curdoc=documents/index" addtoken="no">
 	</cfif>
 
 <!--- add --->
@@ -81,8 +89,8 @@
 
 	<cfquery name="get_record" datasource="#application.dsn#">
 		SELECT *
-		FROM smg_reports
-		WHERE report_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.report_id#">
+		FROM smg_paper_doc
+		WHERE paper_doc_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.paper_doc_id#">
 	</cfquery>
 	<cfloop list="#field_list#" index="counter">
     	<cfset "form.#counter#" = evaluate("get_record.#counter#")>
@@ -98,7 +106,7 @@
 
  <div class="rdholder" style="width: 100%;"> 
 				<div class="rdtop"><span class="rdtitle">
-                Report Maintenance
+                Document Maintenance
                           </span> 
           <span class="imageRight"><img src="pics/buttons/pencilBlue23x29.png" width="23" height="23" /></span>
                
@@ -106,9 +114,9 @@
              <div class="rdbox">
 
 
-<cfform action="index.cfm?curdoc=tools/report_form" method="post">
+<cfform action="index.cfm?curdoc=tools/paper_doc_form" method="post" enctype="multipart/form-data">
 <input type="hidden" name="submitted" value="1">
-<cfinput type="hidden" name="report_id" value="#form.report_id#">
+<cfinput type="hidden" name="paper_doc_id" value="#form.paper_doc_id#">
 
 <table width="100%" border=0 cellpadding=4 cellspacing=0>
 	<tr><td>
@@ -125,7 +133,7 @@
                 AND usertypeid <= 9
                 ORDER BY usertypeid
             </cfquery>
-            Reports Available for
+            Documents Available for
             <cfselect name="fk_usertype" query="get_usertypes" value="usertypeid" display="usertype" selected="#form.fk_usertype#" />
             and Above
         </td>
@@ -135,35 +143,36 @@
         <td>
             <cfquery name="get_categories" datasource="#application.dsn#">
                 SELECT *
-                FROM smg_report_categories
-                ORDER BY report_category_name
+                FROM smg_paper_doc_categories
+                ORDER BY paper_doc_category_name
             </cfquery>
-            <cfselect name="fk_report_category" query="get_categories" value="report_category_id" display="report_category_name" selected="#form.fk_report_category#" />
+            <cfselect name="fk_paper_doc_category" query="get_categories" value="paper_doc_category_id" display="paper_doc_category_name" selected="#form.fk_paper_doc_category#" />
         </td>
     </tr>
     <tr>
-    	<td class="label">Report Name: <span class="redtext">*</span></td>
-        <td><cfinput type="text" name="report_name" value="#form.report_name#" size="65" maxlength="100" required="yes" validate="noblanks" message="Please enter the Report Name."></td>
+    	<td class="label">Document Name: <span class="redtext">*</span></td>
+        <td><cfinput type="text" name="paper_doc_name" value="#form.paper_doc_name#" size="65" maxlength="100" required="yes" validate="noblanks" message="Please enter the document Name."></td>
     </tr>
     <tr>
     	<td class="label">Description:</td>
-        <td><cftextarea name="report_description" value="#form.report_description#" cols="50" rows="6" /></td>
+        <td><cftextarea name="paper_doc_description" value="#form.paper_doc_description#" cols="50" rows="6" /></td>
     </tr>
     <tr>
     	<td class="label">Active:</td>
-        <td><cfinput type="checkbox" name="report_active" value="1" checked="#yesNoFormat(form.report_active EQ 1)#"></td>
+        <td><cfinput type="checkbox" name="paper_doc_active" value="1" checked="#yesNoFormat(form.paper_doc_active EQ 1)#"></td>
     </tr>
-<cfif client.usertype EQ 1>
+
     <tr>
-    	<td class="label">Template: <span class="redtext">*</span></td>
+    	<td class="label">File: <cfif not val(form.paper_doc_id)><span class="redtext">*</span></cfif></td>
         <td>
-        	<cfinput type="text" name="report_template" value="#form.report_template#" size="20" maxlength="50" required="yes" validate="noblanks" message="Please enter the Template.">
-            .cfm
+        	<cfif not val(form.paper_doc_id)>
+        	<cfinput type="file" name="paper_doc_template" message="Please select the file." validate="noblanks" required="yes" size="20">
+            <cfelse>
+            <cfinput type="file" name="paper_doc_template" size="20"> (only upload doc if changes are necessary)
+            </cfif>
         </td>
     </tr>
-<cfelse>
-	<cfinput type="hidden" name="report_template" value="#form.report_template#">
-</cfif>
+
 </table>
 
 	</td>
