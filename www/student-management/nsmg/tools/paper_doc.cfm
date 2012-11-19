@@ -20,7 +20,7 @@
         <cfset client.paper_doc_maintenance = 1>
     </cfcase>
     <!--- turn report maintenance off. --->
-    <cfcase value="report_maintenance_off">
+    <cfcase value="paper_doc_maintenance_off">
         <cfset client.paper_doc_maintenance = 0>
     </cfcase>
     <!--- delete category. --->
@@ -58,20 +58,20 @@
 		</ul>
         </td>
         <td>
-        <cfif client.report_maintenance>
+        <cfif client.paper_doc_maintenance>
         	
             <center>
             <form action="index.cfm?curdoc=tools/paper_doc" method="post">
-            <input type="hidden" name="r_action" value="report_maintenance_off">
-            <input type="image" src= "pics/buttons/reportMain_on.png" value="Turn Report Maintenance Off" />
+            <input type="hidden" name="r_action" value="paper_doc_maintenance_off">
+            <input type="image" src= "pics/buttons/reportMain_on.png" value="Turn Document Maintenance Off" />
             </form>
             </center>
         <cfelse>
         	
             <center>
             <form action="index.cfm?curdoc=tools/paper_doc" method="post">
-            <input type="hidden" name="r_action" value="report_maintenance_on">
-            <input type="image" src= "pics/buttons/reportMain_off.png" value="Turn Report Maintenance On" />
+            <input type="hidden" name="r_action" value="paper_doc_maintenance_on">
+            <input type="image" src= "pics/buttons/reportMain_off.png" value="Turn Document Maintenance On" />
             </form>
             </center>
         </cfif>
@@ -87,11 +87,11 @@
 <br />
  <div class="rdholder" style="width: 100%;"> 
 				<div class="rdtop"><span class="rdtitle">
-               Report Category Maintenance
+               Document Category Maintenance
                           </span> 
             <span class="imageRight">
                <span class="imageRight">
-               	 <a href="index.cfm?curdoc=tools/report_category_form"><img src="pics/buttons/new23x23.png" width="23" height="23" /></a>
+               	 <a href="index.cfm?curdoc=tools/paper_doc_category_form"><img src="pics/buttons/new23x23.png" width="23" height="23" /></a>
                </span>
             </span>
             <!----
@@ -106,7 +106,7 @@
 <cfquery name="getResults" datasource="#application.dsn#">
     SELECT paper_doc_category_id, paper_doc_category_name, COUNT(fk_paper_doc_category) AS count
     FROM smg_paper_doc_categories
-    LEFT JOIN smg_paper_doc_doc ON smg_paper_doc_categories.paper_doc_category_id = smg_reports.fk_paper_doc_category
+    LEFT JOIN smg_paper_doc ON smg_paper_doc_categories.paper_doc_category_id = smg_paper_doc.fk_paper_doc_category
     GROUP BY paper_doc_category_id, paper_doc_category_name
     ORDER BY paper_doc_category_name
 </cfquery>
@@ -118,7 +118,7 @@
             <th>&nbsp;</th>
             <th>&nbsp;</th>
             <th>Category</th>
-            <th>Number of Reports</th>
+            <th>Number of Docs</th>
         </tr>
         <cfoutput query="getResults">
             <tr bgcolor="#iif(currentRow MOD 2 ,DE("edeff4") ,DE("white") )#">
@@ -140,7 +140,7 @@
                     <input name="Submit" type="image" src="pics/buttons/pencilBlue23x29.png" alt="Edit Document Category" border=0>
                     </form>
                 </td>
-                <td>#report_category_name#</td>
+                <td>#paper_doc_category_name#</td>
                 <td>#count#</td>
             </tr>
         </cfoutput>
