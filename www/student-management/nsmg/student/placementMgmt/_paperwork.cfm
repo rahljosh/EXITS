@@ -1582,7 +1582,7 @@
                         <tr class="mouseOverColor"> 
                             <td width="5%">&nbsp;</td>
                             <td width="45%" valign="top"><label for="complianceLogNotes">Notes</label></td>
-                            <td width="35%"><textarea name="complianceLogNotes" id="complianceLogNotes" class="xLargeTextArea complianceCheck">#FORM.complianceLogNotes#</textarea></td>
+                            <td width="35%"><textarea name="complianceLogNotes" id="complianceLogNotes" class="xLargeTextArea">#FORM.complianceLogNotes#</textarea></td>
                             <td width="15%">&nbsp;</td>
                         </tr>
                         <!--- Compliance Resolved --->
