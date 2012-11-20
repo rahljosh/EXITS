@@ -80,6 +80,10 @@
         <cfparam name="URL.curdoc" default="">
         <cfparam name="URL.userType" default="">
         <cfparam name="URL.s" default="">
+        
+        <cfparam name="CLIENT.userID" default="0">
+        <cfparam name="CLIENT.studentID" default="0">
+        <cfparam name="CLIENT.userType" default="0">
         <!--- Online Application - Activation Link - https://ise.exitsapplication.com/nsmg/student_app/index.cfm?s=7DC5F7FE-5056-A020-CC9555F332BD80F3 --->
         
 		<cfscript>
