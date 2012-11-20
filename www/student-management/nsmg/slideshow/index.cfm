@@ -127,7 +127,7 @@ $(".paging a").click(function() {
 <div class="main_view">
     <div class="window">
         <div class="image_reel">
-        	
+        	<a href="slideshow/pdfs/ISE/ISEIncTripRome.pdf" rel="3" target="_new"> <img src="slideshow/images/ISE/slide_3.jpg" alt="" /></a>
             <a href="slideshow/pdfs/ISE/PreAypBonus.pdf" rel="1" target="_new"> <img src="slideshow/images/ISE/slide_1.jpg" alt="" /></a>
             <a href="" rel="2" target="_new"><img src="slideshow/images/ISE/slide_2.jpg" alt="" /></a>
             
