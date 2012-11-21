@@ -258,7 +258,6 @@
 		}
 	}
 	
-	
 	var openWindow = function(url, setHeight, setWidth) { 
 		newwindow = window.open(url, 'Application', 'height=' + setHeight + ', width=' + setWidth + ', location=no, scrollbars=yes, menubar=no, toolbars=no, resizable=yes'); 
 		if(window.focus) {
@@ -610,9 +609,17 @@
                             <tr>
                                 <td align="right" class="style1"><strong>Date of Birth:</strong></td>
                                 <td class="style1">
-                                    <cfinput type="text" name="dob" class="datePicker style1" size="12" value="#dateFormat(qGetCandidate.dob, 'mm/dd/yyyy')#" maxlength="35" validate="date" message="Date of Birth (MM/DD/YYYY)" required="yes">
+                                    <cfinput 
+                                    	type="text" 
+                                        name="dob" 
+                                        class="datePicker style1" 
+                                        size="12" 
+                                        value="#dateFormat(qGetCandidate.dob, 'mm/dd/yyyy')#" 
+                                        maxlength="35" 
+                                        validate="date" 
+                                        message="Date of Birth (MM/DD/YYYY)" 
+                                        required="yes">
                                     &nbsp; 
-                                    
                                     <strong>Sex:</strong> 
                                     <input type="radio" name="sex" value="M" required="yes" message="You must specify the candidate's sex." <cfif qGetCandidate.sex Eq 'M'>checked="checked"</cfif>>Male 
                                     &nbsp;
@@ -822,7 +829,12 @@
                                                         <td class="style1" align="right"><strong>#qGetQuestionsSection1.displayField[3]#:</strong></td>
                                                         <td class="style1">
                                                             <span class="readOnly">#FORM[qGetQuestionsSection1.fieldKey[3]]# &nbsp;</span>
-                                                            <input name="#qGetQuestionsSection1.fieldKey[3]#" class="style1 editPage xLargeField" value="#FORM[qGetQuestionsSection1.fieldKey[3]]#" type="text" maxlength="50">
+                                                            <input 
+                                                            	name="#qGetQuestionsSection1.fieldKey[3]#" 
+                                                                class="style1 editPage xLargeField" 
+                                                                value="#FORM[qGetQuestionsSection1.fieldKey[3]]#" 
+                                                                type="text" 
+                                                                maxlength="50">
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -973,49 +985,112 @@
                                         </tr>
                                         <tr>
                                             <td width="50%" class="style1">
-                                                <input type="checkbox" name="wat_doc_agreement" id="wat_doc_agreement" value="1" class="formField" disabled <cfif VAL(qGetCandidate.wat_doc_agreement)> checked </cfif> > 
+                                                <input 
+                                                	type="checkbox" 
+                                                    name="wat_doc_agreement" 
+                                                    id="wat_doc_agreement" 
+                                                    value="1" 
+                                                    class="formField" 
+                                                    disabled 
+													<cfif VAL(qGetCandidate.wat_doc_agreement)> checked </cfif> > 
                                                 <label for="wat_doc_agreement">Agreement</label>
                                             </td>
                                             <td width="50%" class="style1">
-                                                <input type="checkbox" name="wat_doc_signed_assessment" id="wat_doc_signed_assessment" value="1" class="formField" disabled <cfif VAL(qGetCandidate.wat_doc_signed_assessment)> checked </cfif> >
+                                                <input 
+                                                	type="checkbox" 
+                                                    name="wat_doc_signed_assessment" 
+                                                    id="wat_doc_signed_assessment" 
+                                                    value="1" 
+                                                    class="formField" 
+                                                    disabled 
+													<cfif VAL(qGetCandidate.wat_doc_signed_assessment)> checked </cfif> >
                                                 <label for="wat_doc_signed_assessment">Signed English Assessment</label>
                                             </td>
                                         </tr>
                                         <tr>
                                         	<!--- Walk-In Agreement - Only Available for Walk-In --->
                                             <td class="style1">
-                                                <input type="checkbox" name="wat_doc_walk_in_agreement" id="wat_doc_walk_in_agreement" value="1" <cfif qGetCandidate.wat_placement EQ 'Walk-In'> class="formField" </cfif> disabled <cfif VAL(qGetCandidate.wat_doc_walk_in_agreement)> checked </cfif> > 
+                                                <input 
+                                                	type="checkbox" 
+                                                    name="wat_doc_walk_in_agreement" 
+                                                    id="wat_doc_walk_in_agreement" 
+                                                    value="1" 
+													<cfif qGetCandidate.wat_placement EQ 'Walk-In'> class="formField" </cfif> 
+                                                    disabled 
+													<cfif VAL(qGetCandidate.wat_doc_walk_in_agreement)> checked </cfif> > 
                                                 <label for="wat_doc_walk_in_agreement">Walk-In Agreement</label>
                                             </td>
                                             <td class="style1">
-                                                <input type="checkbox" name="wat_doc_college_letter" id="wat_doc_college_letter" value="1" class="formField" disabled <cfif VAL(qGetCandidate.wat_doc_college_letter)> checked </cfif> >
+                                                <input 
+                                                	type="checkbox" 
+                                                    name="wat_doc_college_letter" 
+                                                    id="wat_doc_college_letter" 
+                                                    value="1" 
+                                                    class="formField" 
+                                                    disabled 
+													<cfif VAL(qGetCandidate.wat_doc_college_letter)> checked </cfif> >
                                                 <label for="wat_doc_college_letter">College Letter</label>
                                             </td>
                                         </tr>
                                         <tr>
                                         	<!--- CV - Only Available for CSB-Placement --->
                                             <td class="style1"> 
-                                                <input type="checkbox" name="wat_doc_cv" id="wat_doc_cv" value="1" <cfif qGetCandidate.wat_placement EQ 'CSB-Placement'> class="formField" </cfif> disabled <cfif VAL(qGetCandidate.wat_doc_cv)> checked </cfif> > 
+                                                <input 
+                                                	type="checkbox" 
+                                                    name="wat_doc_cv" 
+                                                    id="wat_doc_cv" 
+                                                    value="1" 
+													<cfif qGetCandidate.wat_placement EQ 'CSB-Placement'> class="formField" </cfif> 
+                                                    disabled 
+													<cfif VAL(qGetCandidate.wat_doc_cv)> checked </cfif> > 
                                                 <label for="wat_doc_cv">CV</label>
                                             </td>
                                             <td class="style1">
-                                                <input type="checkbox" name="wat_doc_college_letter_translation" id="wat_doc_college_letter_translation" value="1" class="formField" disabled <cfif VAL(qGetCandidate.wat_doc_college_letter_translation)> checked </cfif> > 
+                                                <input 
+                                                	type="checkbox" 
+                                                    name="wat_doc_college_letter_translation" 
+                                                    id="wat_doc_college_letter_translation" 
+                                                    value="1" 
+                                                    class="formField" 
+                                                    disabled 
+													<cfif VAL(qGetCandidate.wat_doc_college_letter_translation)> checked </cfif> > 
                                                 <label for="wat_doc_college_letter_translation">College Letter (translation)</label>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="style1">
-                                                <input type="checkbox" name="wat_doc_passport_copy" id="wat_doc_passport_copy" value="1" class="formField" disabled <cfif VAL(qGetCandidate.wat_doc_passport_copy)> checked </cfif> > 
+                                                <input 
+                                                	type="checkbox" 
+                                                    name="wat_doc_passport_copy" 
+                                                    id="wat_doc_passport_copy" 
+                                                    value="1" 
+                                                    class="formField" 
+                                                    disabled 
+													<cfif VAL(qGetCandidate.wat_doc_passport_copy)> checked </cfif> > 
                                                 <label for="wat_doc_passport_copy">Passport Copy</label>
                                             </td>
                                             <td class="style1">
-                                                <input type="checkbox" name="wat_doc_job_offer_applicant" id="wat_doc_job_offer_applicant" value="1" class="formField" disabled <cfif VAL(qGetCandidate.wat_doc_job_offer_applicant)> checked </cfif> >
+                                                <input 
+                                                	type="checkbox" 
+                                                    name="wat_doc_job_offer_applicant" 
+                                                    id="wat_doc_job_offer_applicant" 
+                                                    value="1" 
+                                                    class="formField" 
+                                                    disabled 
+													<cfif VAL(qGetCandidate.wat_doc_job_offer_applicant)> checked </cfif> >
                                                 <label for="wat_doc_job_offer_applicant">Job Offer Agreement Applicant</label>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="style1">
-                                                <input type="checkbox" name="wat_doc_orientation" id="wat_doc_orientation" value="1" class="formField" disabled <cfif VAL(qGetCandidate.wat_doc_orientation)> checked </cfif> > 
+                                                <input 
+                                                	type="checkbox" 
+                                                    name="wat_doc_orientation" 
+                                                    id="wat_doc_orientation" 
+                                                    value="1" 
+                                                    class="formField" 
+                                                    disabled 
+													<cfif VAL(qGetCandidate.wat_doc_orientation)> checked </cfif> > 
                                                 <label for="wat_doc_orientation">Orientation Sign Off</label>
                                             </td>
                                             <td class="style1">
@@ -1031,7 +1106,12 @@
                                             			</td>
                                                         <td width="65%" class="style1" align="left">
                                                         	<span class="readOnly">#qGetCandidate.wat_doc_other_received#</span>
-                                                            <input type="text" name="wat_doc_other_received" class="style1 editPage xLargeField" value="#qGetCandidate.wat_doc_other_received#" maxlength="250">
+                                                            <input 
+                                                            	type="text" 
+                                                                name="wat_doc_other_received" 
+                                                                class="style1 editPage xLargeField" 
+                                                                value="#qGetCandidate.wat_doc_other_received#" 
+                                                                maxlength="250">
                                                         </td>
                                                 	</tr>
                                                	</table>
@@ -1048,7 +1128,12 @@
                                             			</td>
                                                         <td width="65%" class="style1" align="left">
                                                         	<span class="readOnly">#qGetCandidate.wat_doc_other#</span> 
-                                                            <input type="text" name="wat_doc_other" class="style1 editPage xLargeField" value="#qGetCandidate.wat_doc_other#" maxlength="250">
+                                                            <input 
+                                                            	type="text" 
+                                                                name="wat_doc_other" 
+                                                                class="style1 editPage xLargeField" 
+                                                                value="#qGetCandidate.wat_doc_other#" 
+                                                                maxlength="250">
                                                         </td>
                                                     </tr>
                                					</table>
@@ -1125,7 +1210,7 @@
                                         	<td class="style1" align="right"><strong>Year(s) and sponsor(s) of previous participation:</strong>
                                             <td class="style1">
                                             	<div class="readOnly">#APPLICATION.CFC.UDF.TextAreaOutput(qGetCandidate.wat_participation_info)#</div>
-                                                <textarea name="wat_participation_info" id="wat_participation_info" class="style1 editPage mediumTextArea">#qGetCandidate.wat_participation_info#</textarea>          
+                                                <textarea name="wat_participation_info" id="wat_participation_info" class="style1 editPage mediumTextArea">#qGetCandidate.wat_participation_info#</textarea>
 	                                        </td>
                                         </tr>
                                         <tr>
@@ -1134,7 +1219,11 @@
                                                 <span class="readOnly">
                                                 	<!--- Office View Only --->
                                                     <cfif ListFind("1,2,3,4", CLIENT.userType)>
-	                                                    <a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qRequestedPlacement.hostCompanyID#" class="style4"><strong>#qRequestedPlacement.name#</strong></a>
+	                                                    <a 
+                                                        	href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qRequestedPlacement.hostCompanyID#" 
+                                                            class="style4">
+                                                            	<strong>#qRequestedPlacement.name#</strong>
+                                                     	</a>
                                                     <cfelse>
                                                     	#qRequestedPlacement.name#
                                                     </cfif>
@@ -1309,13 +1398,21 @@
                                             	<span class="readOnly">
                                                 	<!--- Office View Only --->
                                                     <cfif ListFind("1,2,3,4", CLIENT.userType)>
-	                                                    <a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qCandidatePlaceCompany.hostCompanyID#" class="style4" target="_blank"><strong>#qCandidatePlaceCompany.hostCompanyName#</strong></a>
+	                                                    <a 
+                                                        	href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qCandidatePlaceCompany.hostCompanyID#" 
+                                                            class="style4" 
+                                                            target="_blank">
+                                                          	<strong>#qCandidatePlaceCompany.hostCompanyName#</strong>
+                                        				</a>
                                                 	<cfelse>
                                                     	#qCandidatePlaceCompany.hostCompanyName#
                                                     </cfif>
                                                 </span>
-                                                
-                                                <select name="hostCompanyID" id="hostCompanyID" class="style1 editPage xLargeField" onChange="displayHostReason(#VAL(qCandidatePlaceCompany.hostCompanyID)#, this.value); displaySelfPlacementInfo(1);">
+                                                <select 
+                                                	name="hostCompanyID" 
+                                                    id="hostCompanyID" 
+                                                    class="style1 editPage xLargeField" 
+                                                    onChange="displayHostReason(#VAL(qCandidatePlaceCompany.hostCompanyID)#, this.value); displaySelfPlacementInfo(1);">
 	                                                <option value="0">Unplaced</option>
                                                     <cfloop query="qHostCompanyList">
                                                     	<option value="#qHostCompanyList.hostCompanyID#" <cfif qCandidatePlaceCompany.hostCompanyID EQ qHostCompanyList.hostCompanyID> selected </cfif> > 
@@ -1351,7 +1448,14 @@
                                             	<label for="wat_doc_job_offer_employer"><strong>Job Offer Agreement Employer:</strong></label>
                                            	</td>
                                             <td class="style1" align="left" width="70%">
-                                                <input type="checkbox" name="wat_doc_job_offer_employer" id="wat_doc_job_offer_employer" value="1" class="formField" disabled <cfif VAL(qGetCandidate.wat_doc_job_offer_employer)> checked </cfif> > 
+                                                <input 
+                                                	type="checkbox" 
+                                                    name="wat_doc_job_offer_employer" 
+                                                    id="wat_doc_job_offer_employer" 
+                                                    value="1" 
+                                                    class="formField" 
+                                                    disabled 
+													<cfif VAL(qGetCandidate.wat_doc_job_offer_employer)> checked </cfif> > 
                                             </td>
                                         </tr>
                                         <tr class="editPage">
@@ -1420,14 +1524,28 @@
                                                         <cfif FORM.hostCompanyID EQ 0>
                                                         	<cfif qCandidatePlaceCompany.hostCompanyID NEQ 195>
                                                                 <td width="33%" class="style1" align="center" id="newJobOffer">
-                                                                    <input type="checkbox" name="isTransferJobOfferReceived" id="isTransferJobOfferReceived" value="1" class="formField transferCheckBox" disabled <cfif qCandidatePlaceCompany.isTransferJobOfferReceived EQ 1>checked</cfif> > 
+                                                                    <input 
+                                                                    	type="checkbox" 
+                                                                        name="isTransferJobOfferReceived" 
+                                                                        id="isTransferJobOfferReceived" 
+                                                                        value="1" 
+                                                                        class="formField transferCheckBox" 
+                                                                        disabled 
+																		<cfif qCandidatePlaceCompany.isTransferJobOfferReceived EQ 1>checked</cfif> > 
                                                                     <label for="isTransferJobOfferReceived">New Job Offer</label> 
                                                                 </td>
                                                             </cfif>
                                                       	<cfelse>
                                                         	<cfif FORM.hostCompanyID NEQ 195>
                                                             	<td width="33%" class="style1" align="center" id="newJobOffer">
-                                                                    <input type="checkbox" name="isTransferJobOfferReceived" id="isTransferJobOfferReceived" value="1" class="formField transferCheckBox" disabled <cfif qCandidatePlaceCompany.isTransferJobOfferReceived EQ 1>checked</cfif> > 
+                                                                    <input 
+                                                                    	type="checkbox" 
+                                                                        name="isTransferJobOfferReceived" 
+                                                                        id="isTransferJobOfferReceived" 
+                                                                        value="1" 
+                                                                        class="formField transferCheckBox" 
+                                                                        disabled 
+																		<cfif qCandidatePlaceCompany.isTransferJobOfferReceived EQ 1>checked</cfif> > 
                                                                     <label for="isTransferJobOfferReceived">New Job Offer</label> 
                                                                 </td>
                                                             </cfif>
@@ -1437,11 +1555,25 @@
                                                         </cfif>
                                                     	
                                                         <td width="33%" class="style1" align="center">
-                                                            <input type="checkbox" name="isTransferHousingAddressReceived" id="isTransferHousingAddressReceived" value="1" class="formField transferCheckBox" disabled <cfif qCandidatePlaceCompany.isTransferHousingAddressReceived EQ 1>checked</cfif> > 
+                                                            <input 
+                                                            	type="checkbox" 
+                                                                name="isTransferHousingAddressReceived" 
+                                                                id="isTransferHousingAddressReceived" 
+                                                                value="1" 
+                                                                class="formField transferCheckBox" 
+                                                                disabled 
+																<cfif qCandidatePlaceCompany.isTransferHousingAddressReceived EQ 1>checked</cfif> > 
                                                             <label for="isTransferHousingAddressReceived">New Housing Address</label> 
                                                         </td>
                                                         <td width="33%" class="style1" align="center">
-                                                            <input type="checkbox" name="isTransferSevisUpdated" id="isTransferSevisUpdated" value="1" class="formField transferCheckBox" disabled <cfif qCandidatePlaceCompany.isTransferSevisUpdated EQ 1>checked</cfif> > 
+                                                            <input 
+                                                            	type="checkbox" 
+                                                                name="isTransferSevisUpdated" 
+                                                                id="isTransferSevisUpdated" 
+                                                                value="1" 
+                                                                class="formField transferCheckBox" 
+                                                                disabled 
+																<cfif qCandidatePlaceCompany.isTransferSevisUpdated EQ 1>checked</cfif> > 
                                                             <label for="isTransferSevisUpdated">SEVIS Updated</label> 
                                                         </td>
                                                     </tr>
@@ -1457,7 +1589,14 @@
                                             	<!--- Office View Only ---> 
                                             	<cfif ListFind("1,2,3,4", CLIENT.userType)>
 		                                            <span class="readOnly" style="float:right; padding-right:20px;">
-                                                    	<a href="javascript:openWindow('candidate/placementVettingPrint.cfm?uniqueid=#qGetCandidate.uniqueid#&candCompID=#qCandidatePlaceCompany.candCompID#', 800, 900);" class="style2">[ Print ]</a>
+                                                    	<a 
+                                                        	href="
+                                                            	javascript:openWindow('candidate/placementVettingPrint.cfm?uniqueid=#qGetCandidate.uniqueid#&candCompID=#qCandidatePlaceCompany.candCompID#',
+                                                            	800,
+                                                            	900);"
+                                                            class="style2">
+                                                            	[ Print ]
+                                                      	</a>
                                                     </span>
         										</cfif>
                                           	</td>
@@ -1474,12 +1613,22 @@
                                                 </select>
                                             </td>
                                         </tr>
-                                        	
                                         <tr class="hiddenField selfPlacementInfo">
                                             <td class="style1" align="right"><strong>Name:</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly selfPlacementReadOnly">#qCandidatePlaceCompany.selfConfirmationName#</span>
-                                                <input type="text" name="selfConfirmationName" id="selfConfirmationName" value="#qCandidatePlaceCompany.selfConfirmationName#" class="style1 editPage selfPlacementField xLargeField">
+                                                <input 
+                                                	type="text" 
+                                                    name="selfConfirmationName" 
+                                                    id="selfConfirmationName" 
+                                                    value="#qCandidatePlaceCompany.selfConfirmationName#" 
+                                                    class="style1 editPage selfPlacementField xLargeField">
+                                            </td>
+                                        </tr>
+                                        <tr class="hiddenField selfPlacementInfo">
+                                        	<td class="style1" align="right"><strong>Confirmation of Terms:</strong></td>
+                                            <td class="style1">
+                                            	<input type="checkbox" disabled="disabled" <cfif qCandidatePlaceCompany.confirmed EQ 1>checked="checked"</cfif> />
                                             </td>
                                         </tr>
                                         
@@ -1499,19 +1648,40 @@
                                              		<tr class="hiddenField selfPlacementInfo">
                                                         <td class="style1" align="right" width="30%"><label for="authentication_secretaryOfState"><strong>Secretary of State:</strong></label></td>
                                                         <td class="style1" width="70%">
-                                                            <input type="checkbox" name="authentication_secretaryOfState" id="authentication_secretaryOfState" value="1" class="formField" disabled <cfif VAL(qCandidatePlaceCompany.authentication_secretaryOfState)> checked </cfif> />
+                                                            <input 
+                                                            	type="checkbox" 
+                                                                name="authentication_secretaryOfState" 
+                                                                id="authentication_secretaryOfState" 
+                                                                value="1" 
+                                                                class="formField" 
+                                                                disabled 
+																<cfif VAL(qCandidatePlaceCompany.authentication_secretaryOfState)> checked </cfif> />
                                                         </td>
                                                     </tr>
                                                     <tr class="hiddenField selfPlacementInfo">
                                                         <td class="style1" align="right"><label for="authentication_departmentOfLabor"><strong>Department of Labor:</strong></label></td>
                                                         <td class="style1">
-                                                            <input type="checkbox" name="authentication_departmentOfLabor" id="authentication_departmentOfLabor" value="1" class="formField" disabled <cfif VAL(qCandidatePlaceCompany.authentication_departmentOfLabor)> checked </cfif> />
+                                                            <input 
+                                                            	type="checkbox" 
+                                                                name="authentication_departmentOfLabor" 
+                                                                id="authentication_departmentOfLabor" 
+                                                                value="1" 
+                                                                class="formField" 
+                                                                disabled 
+																<cfif VAL(qCandidatePlaceCompany.authentication_departmentOfLabor)> checked </cfif> />
                                                         </td>
                                                     </tr>
                                                     <tr class="hiddenField selfPlacementInfo">
                                                         <td class="style1" align="right"><label for="authentication_googleEarth"><strong>Google Earth:</strong></label></td>
                                                         <td class="style1">
-                                                            <input type="checkbox" name="authentication_googleEarth" id="authentication_googleEarth" value="1" class="formField" disabled <cfif VAL(qCandidatePlaceCompany.authentication_googleEarth)> checked </cfif> />
+                                                            <input 
+                                                            	type="checkbox" 
+                                                                name="authentication_googleEarth" 
+                                                                id="authentication_googleEarth" 
+                                                                value="1" 
+                                                                class="formField" 
+                                                                disabled 
+																<cfif VAL(qCandidatePlaceCompany.authentication_googleEarth)> checked </cfif> />
                                                         </td>
                                                     </tr>
                                                     
@@ -1558,7 +1728,13 @@
                                                     	Workmen's compensation is missing.
                                                  	</cfif>
                                              	</span>
-                                                	<input type="text" name="WCDateExpired" id="WCDateExpired" value="#DateFormat(qCandidatePlaceCompany.WCDateExpired, 'mm/dd/yyyy')#" class="style1 datePicker editPage" maxlength="10">
+                                                <input 
+                                                    type="text" 
+                                                    name="WCDateExpired" 
+                                                    id="WCDateExpired" 
+                                                    value="#DateFormat(qCandidatePlaceCompany.WCDateExpired, 'mm/dd/yyyy')#" 
+                                                    class="style1 datePicker editPage" 
+                                                    maxlength="10">
                                             </td>
                                         </tr>
                                         
@@ -1567,7 +1743,13 @@
                                             <td class="style1" align="right"><strong>Email Confirmation:</strong></td>
                                             <td class="style1" colspan="3">
                                                 <span class="readOnly selfPlacementReadOnly">#DateFormat(qCandidatePlaceCompany.selfEmailConfirmationDate, 'mm/dd/yyyy')#</span>
-                                                <input type="text" name="selfEmailConfirmationDate" id="selfEmailConfirmationDate" class="style1 datePicker editPage selfPlacementField" value="#DateFormat(qCandidatePlaceCompany.selfEmailConfirmationDate, 'mm/dd/yyyy')#" maxlength="10">
+                                                <input 
+                                                	type="text" 
+                                                    name="selfEmailConfirmationDate" 
+                                                    id="selfEmailConfirmationDate" 
+                                                    class="style1 datePicker editPage selfPlacementField" 
+                                                    value="#DateFormat(qCandidatePlaceCompany.selfEmailConfirmationDate, 'mm/dd/yyyy')#" 
+                                                    maxlength="10">
                                                 <cfif NOT LEN(qCandidatePlaceCompany.selfEmailConfirmationDate)><font size="1">(mm/dd/yyyy)</font></cfif>
                                             </td>
                                         </tr>
@@ -1726,6 +1908,12 @@
                                                     <td class="style1">
                                                         <span class="readOnly selfPlacementReadOnly">#qGetAllPlacements.selfConfirmationName#</span>
                                                         <input type="text" name="selfConfirmationName_#qGetAllPlacements.candCompID#" id="selfConfirmationName_#qGetAllPlacements.candCompID#" value="#qGetAllPlacements.selfConfirmationName#" class="style1 editPage selfPlacementField xLargeField">
+                                                    </td>
+                                                </tr>
+                                                <tr class="hiddenField selfPlacementInfo">
+                                                    <td class="style1" align="right"><strong>Confirmation of Terms:</strong></td>
+                                                    <td class="style1">
+                                                        <input type="checkbox" disabled="disabled" <cfif qGetAllPlacements.confirmed EQ 1>checked="checked"</cfif> />
                                                     </td>
                                                 </tr>
                                                 <tr class="hiddenField selfPlacementInfo">

@@ -212,8 +212,17 @@
 	// Host Company Logo
 	APPLICATION.PATH.hostLogo = APPLICATION.PATH.UploadDocumentRoot & 'web-hostlogo/';
 
-	// Business License
+	// Business License - Secretary of State Authentication
 	APPLICATION.PATH.businessLicense = APPLICATION.PATH.UploadDocumentRoot & 'business-license/';
+	
+	// Department of Labor Authentication
+	APPLICATION.PATH.departmentOfLabor = APPLICATION.PATH.UploadDocumentRoot & 'departmentOfLabor/';
+	
+	// Google Earth Authentication
+	APPLICATION.PATH.googleEarth = APPLICATION.PATH.UploadDocumentRoot & 'googleEarth/';
+	
+	// Workmens Compensation
+	APPLICATION.PATH.workmensCompensation = APPLICATION.PATH.UploadDocumentRoot & 'workmensCompensation/';
 
 	// Candidate Picture
 	APPLICATION.PATH.uploadCandidatePicture = APPLICATION.PATH.UploadDocumentRoot & 'web-candidates/';
