@@ -135,7 +135,7 @@
             eh.pickUpContactEmail, 
             eh.pickUpContactHours,
             et.business_type as typeBusiness, 
-            s.stateName,  
+            s.stateName,
             workSiteS.stateName as hqStateName,
             airportS.stateName as arrivalAirportStateName            
         FROM extra_hostcompany eh
@@ -185,11 +185,14 @@
     
     <cfquery name="qGetActivePrograms" datasource="MySql">
     	SELECT p.programID, p.startDate, p.programName,
-        	j.numberPositions, j.verifiedDate
+        	j.numberPositions, j.verifiedDate,
+            conf.confirmed, conf.confirmedDate
       	FROM smg_programs p
         INNER JOIN smg_companies c ON c.companyID = p.companyID
         LEFT OUTER JOIN extra_j1_positions j ON j.programID = p.programID
 			AND j.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.hostCompanyID)#">
+       	LEFT OUTER JOIN extra_confirmations conf ON conf.programID = p.programID
+        	AND conf.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.hostCompanyID)#">
       	WHERE dateDiff(p.endDate,NOW()) >= <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         AND p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND p.is_deleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
@@ -354,12 +357,8 @@
                         hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">
                 </cfquery>
                 
-                <cfset ind = 0>
-                
                 <!--- Update/Insert J1 Positions --->
                 <cfloop query="qGetActivePrograms">
-                	
-                    <cfset ind += 1>
                     
                     <cfquery name="qCheckRecords" datasource="MySql">
                     	SELECT *
@@ -369,8 +368,8 @@
                     </cfquery>
                     
                     <cfscript>
-						number = evaluate("##FORM.numberPositions_" & ind & "##");
-						date = evaluate("##FORM.j1Date_" & ind & "##");
+						number = evaluate("##FORM.numberPositions_" & programID & "##");
+						date = evaluate("##FORM.j1Date_" & programID & "##");
 					</cfscript>
                     
                     <cfif qCheckRecords.recordCount>
@@ -393,7 +392,7 @@
                                     programID,
                                     numberPositions
                                     <cfif isDate('#date#')>
-                                    	, verifiedDate
+                                    	,verifiedDate
                                   	</cfif>
                                 )
                           	VALUES
@@ -410,6 +409,134 @@
                     
                 </cfloop>
                 <!--- End Update / Insert J1 Positions --->
+                
+                <!--- Update / Insert Confirmations --->
+                <cfloop query="qGetActivePrograms">
+                    
+                    <cfquery name="qCheckRecords" datasource="MySql">
+                    	SELECT *
+                       	FROM extra_confirmations
+                       	WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
+                        AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetActivePrograms.programID#">
+                    </cfquery>
+                    
+                    <cfscript>
+						number = evaluate("##FORM.confirmation_" & programID & "##");
+						date = evaluate("##FORM.confirmationDate_" & programID & "##");
+					</cfscript>
+                    
+                    <cfif qCheckRecords.recordCount>
+                    	<cfquery datasource="MySql">
+                        	UPDATE extra_confirmations
+                           	SET
+                            	confirmed = <cfqueryparam cfsqltype="cf_sql_integer" value="#number#">
+                                <cfif isDate('#date#')>
+                                	,confirmedDate = <cfqueryparam cfsqltype="cf_sql_date" value="#date#">
+                             	</cfif>
+                          	WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
+                            AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetActivePrograms.programID#">
+                        </cfquery>
+                   	<cfelse>
+                    	<cfquery datasource="MySql">
+                        	INSERT INTO
+                            	extra_confirmations
+                           		(
+                                	hostID,
+                                    programID,
+                                    confirmed
+                                    <cfif isDate('#date#')>
+                                    	,confrimedDate
+                                  	</cfif>
+                                )
+                          	VALUES
+                            	(
+                                	<cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">,
+                                    <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetActivePrograms.programID#">,
+                                    <cfqueryparam cfsqltype="cf_sql_integer" value="#number#">
+                                    <cfif isDate('#date#')>
+                                    	, <cfqueryparam cfsqltype="cf_sql_date" value="#date#">
+                                    </cfif>
+                                )
+                        </cfquery>
+                    </cfif>
+                    
+                </cfloop>
+                <!--- End Update / Insert Confirmations --->
+                
+                <!--- Add History Record --->
+                <cfquery datasource="MySql">
+                    INSERT INTO extra_hostinfohistory (
+                        hostID,
+                        changedBy,
+                        dateChanged,
+                        personJobOfferName,
+                        personJobOfferTitle,
+                        EIN,
+                        workmensCompensation,
+                        WCDateExpired,
+                        homepage,
+                        observations,
+                        authentication_secretaryOfState,
+                        authentication_departmentOfLabor,
+                        authentication_googleEarth,
+                        authentication_secretaryOfStateExpiration,
+                        authentication_departmentOfLaborExpiration,
+                        authentication_googleEarthExpiration )
+                    VALUES (
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#NOW()#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.personJobOfferName#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.personJobOfferTitle#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workmensCompensation#" null="#NOT IsNumeric(FORM.workmensCompensation)#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.WCDateExpired#" null="#NOT IsDate(FORM.WCDateExpired)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homepage#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.observations#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_secretaryOfState)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_departmentOfLabor)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_googleEarth)#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_secretaryOfStateExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_departmentOfLaborExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_googleEarthExpiration#"> )
+                </cfquery>
+                
+                <cfquery name="qGetNewHistoryID" datasource="MySql">
+                	SELECT historyID
+                    FROM extra_hostinfohistory
+                    WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">
+                    ORDER BY historyID DESC
+                    LIMIT 1
+                </cfquery>
+                
+                <cfloop query="qGetActivePrograms">
+                
+                	<cfscript>
+						confirmed = evaluate("##FORM.confirmation_" & programID & "##");
+						confirmedDate = evaluate("##FORM.confirmationDate_" & programID & "##");
+						j1Number = evaluate("##FORM.numberPositions_" & programID & "##");
+						j1Date = evaluate("##FORM.j1Date_" & programID & "##");
+					</cfscript>
+                
+                	<cfquery datasource="MySql">
+                        INSERT INTO extra_hostseasonhistory (
+                            hostHistoryID,
+                            programID,
+                            j1Date,
+                            confirmedDate,
+                            j1Positions,
+                            confirmed )
+                      	VALUES (
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetNewHistoryID.historyID)#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetActivePrograms.programID)#">,
+                            <cfqueryparam cfsqltype="cf_sql_date" value="#j1Date#">,
+                            <cfqueryparam cfsqltype="cf_sql_date" value="#confirmedDate#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(j1Number)#">,
+                            <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(confirmed)#"> )
+                    </cfquery>
+                    
+                </cfloop>
+                <!--- End Add History Record --->
                 
             <cfelse>
 
@@ -538,13 +665,52 @@
                     )
                 </cfquery>
                 
+                <!--- Add History Record --->
+                <cfquery datasource="MySql">
+                    INSERT INTO extra_hostinfohistory (
+                        hostID,
+                        changedBy,
+                        dateChanged,
+                        personJobOfferName,
+                        personJobOfferTitle,
+                        EIN,
+                        workmensCompensation,
+                        WCDateExpired,
+                        homepage,
+                        observations,
+                        authenticaion_secretaryOfState,
+                        authentication_departmentOfLabor,
+                        authentication_googleEarth,
+                        authentication_secretaryOfStateExpiration,
+                        authentication_departmentOfLaborExpiration,
+                        authentication_googleEarthExpiration )
+                    VALUES (
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#NOW()#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.personJobOfferName#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.personJobOfferTitle#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workmensCompensation#" null="#NOT IsNumeric(FORM.workmensCompensation)#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.WCDateExpired#" null="#NOT IsDate(FORM.WCDateExpired)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homepage#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.observations#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_secretaryOfState)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_departmentOfLabor)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_googleEarth)#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_secretaryOfStateExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_departmentOfLaborExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_googleEarthExpiration#"> )
+                </cfquery>
+                <!--- End Add History Record --->
+                
                 <cfscript>
 					// Set new host company ID
 					FORM.hostCompanyID = newRecord.GENERATED_KEY;
 				</cfscript>
                 
             </cfif> <!--- hostCompanyID --->
-
+            
 			<cfscript>
                 // Set Page Message
                 SESSION.pageMessages.Add("Form successfully submitted.");
@@ -1067,6 +1233,10 @@
 			action: '../wat/hostCompany/imageUploadPrint.cfm?type=googleEarth&hostCompanyID='+hostCompanyID,
 			name: 'image'
   		});
+		new AjaxUpload('workmens_compensation_upload', {
+			action: '../wat/hostCompany/imageUploadPrint.cfm?type=workmensCompensation&hostCompanyID='+hostCompanyID,
+			name: 'image'
+  		});
 	});
 	
 	// Popup to print image that is referenced by the input file type.
@@ -1075,7 +1245,23 @@
 		var printURL = document.URL;
 		printURL = printURL.substring(0, printURL.indexOf("/index.cfm"));
 		printURL += "/hostcompany/imageUploadPrint.cfm?option=print&type=" + file + "&hostCompanyID=" + hostCompanyID;
-		window.open(printURL, file, "width=800, height=600");
+		window.open(printURL, file, "width=800, height=600").print();
+	}
+	
+	// Function to change hidden input field of dynamic confirmation boxes
+	var changeBox = function(program) {
+		var currentValue = $("#confirmation_" + program).val();
+		currentValue = (currentValue * -1) + 1;
+		$("#confirmation_" + program).val(currentValue);
+	}
+	
+	//open window
+	function openWindow(url) {
+		var width = screen.width - 100
+		newWindow=window.open(url, "NewWindow", "width=" + width + ",height=500" + ", location=no, scrollbars=yes, menubar=yes, toolbars=no, resizable=yes"); 
+		if (window.focus) {
+			newWindow.focus();
+		}
 	}
 	
 </script>
@@ -1712,7 +1898,15 @@
     
                                         <table width="100%" cellpadding="3" cellspacing="3" border="0">
                                             <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
-                                                <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Other Information</td>
+                                                <td colspan="2" class="style2" bgcolor="##8FB6C9">
+                                                	&nbsp;:: Other Information
+													<!--- Office View Only ---> 
+                                                    <cfif ListFind("1,2,3,4", CLIENT.userType)>
+                                                        <span style="float:right; padding-right:20px;">
+                                                            <a href="javascript:openWindow('hostCompany/hostCompanyInfoHistory.cfm?hostID=#URL.hostCompanyID#');" class="style2">[ History ]</a>
+                                                        </span>
+                                                    </cfif>
+                                             	</td>
                                             </tr>
                                             <tr>
                                                 <td width="35%" class="style1" align="right"><strong>Person Signing Job Offer:</strong></td>
@@ -1729,7 +1923,58 @@
                                                 </td>
                                             </tr>
                                             
-                                            <cfset ind = 0>
+                                            <!--- Confirmation of Terms --->
+                                            <tr>
+                                                <td class="style1" colspan="2">
+                                                    <table width="100%" cellpadding="3" cellspacing="3" align="center" style="border:1px solid ##C7CFDC; background-color:##F7F7F7;">
+                                                        <tr>
+                                                            <td colspan="2">
+                                                                <strong><center>Confirmation Of Terms</center></strong>
+                                                            </td>
+                                                        </tr>
+                                                        <cfloop query="qGetActivePrograms">
+                                                            <tr>
+                                                                <td class="style1" align="right" width="30%"><strong>#programName#:</strong></td>
+                                                                <td class="style1" bordercolor="##FFFFFF" width="70%">
+                                                                    <table width="100%">
+                                                                        <tr>
+                                                                            <td>
+                                                                            	<input type="hidden" value="#VAL(confirmed)#" name="confirmation_#programID#" id="confirmation_#programID#" />
+                                                                                <input class="editPage"
+                                                                                	type="checkbox"
+																					<cfif confirmed EQ 1>checked</cfif>
+                                                                                    onchange="changeBox(<cfoutput>#programID#</cfoutput>);" />
+                                                                               	<input class="readOnly"
+                                                                                	type="checkbox"
+                                                                                    disabled="disabled"
+																					<cfif confirmed EQ 1>checked</cfif> />
+                                                                            </td>
+                                                                             <td align="right">
+                                                                            	<span class="editPage">
+                                                                                	Date:
+                                                                                    <input 
+                                                                                        type="text" 
+                                                                                        name="confirmationDate_#programID#" 
+                                                                                        id="confirmationDate_#programID#" 
+                                                                                        value="#DateFormat(confirmedDate,'mm/dd/yyyy')#" 
+                                                                                        class="style1 datePicker editPage" />
+                                                                               	</span>
+                                                                                <span class="readOnly">
+                                                                                	<cfif LEN(confirmedDate)>
+                                                                                    	Date: #DateFormat(confirmedDate,'mm/dd/yyyy')#
+                                                                                  	</cfif>
+                                                                              	</span>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                    
+                                                                </td>
+                                                            </tr>
+                                                        </cfloop>
+                                                	</table>
+                                             	</td>
+                                         	</tr>
+                                            <!--- End Confirmation of Terms --->
                                             
                                             <!--- J1 Positions --->
                                             <tr>
@@ -1741,33 +1986,31 @@
                                                             </td>
                                                         </tr>
                                                         <cfloop query="qGetActivePrograms">
-															<cfset ind += 1>
                                                             <tr>
-                                                                <td class="style1" align="right" width="30%"><strong>#qGetActivePrograms.programName#:</strong></td>
+                                                                <td class="style1" align="right" width="30%"><strong>#programName#:</strong></td>
                                                                 <td class="style1" bordercolor="##FFFFFF" width="70%">
                                                                     <table width="100%">
                                                                         <tr>
                                                                             <td>
-                                                                                <select name="numberPositions_#ind#" id="numberPositions_#ind#" class="style1 editPage">
+                                                                                <select name="numberPositions_#programID#" id="numberPositions_#programID#" class="style1 editPage">
                                                                                     <cfloop from="0" to="100" index="j">
-                                                                                        <option value="#j#" <cfif qGetActivePrograms.numberPositions EQ '#j#'>selected</cfif>>#j#</option>
+                                                                                        <option value="#j#" <cfif numberPositions EQ '#j#'>selected</cfif>>#j#</option>
                                                                                     </cfloop>
                                                                                 </select>
-                                                                                <span class="readOnly">#qGetActivePrograms.numberPositions#</span>
+                                                                                <span class="readOnly">#numberPositions#</span>
                                                                             </td>
                                                                             <td align="right">
                                                                             	<span class="editPage">
-                                                                                    Verified: 
-                                                                                    <cfset thisDate = 'FORM.j1Date_#ind#'>
+                                                                                    Verified:
                                                                                     <input type="text"
-                                                                                        name="j1Date_#ind#"
-                                                                                        id="j1Date_#ind#"
-                                                                                        value="#DateFormat(qGetActivePrograms.verifiedDate,'mm/dd/yyyy')#"
+                                                                                        name="j1Date_#programID#"
+                                                                                        id="j1Date_#programID#"
+                                                                                        value="#DateFormat(verifiedDate,'mm/dd/yyyy')#"
                                                                                         class="style1 datePicker editPage" />
                                                                                	</span>
                                                                                 <span class="readOnly">
-                                                                                	<cfif LEN(qGetActivePrograms.verifiedDate)>
-                                                                                    	Verified: #DateFormat(qGetActivePrograms.verifiedDate,'mm/dd/yyyy')#
+                                                                                	<cfif LEN(verifiedDate)>
+                                                                                    	Verified: #DateFormat(verifiedDate,'mm/dd/yyyy')#
                                                                                   	</cfif>
                                                                               	</span>
                                                                             </td>
@@ -1955,6 +2198,12 @@
                                                         <cfelseif FORM.workmensCompensation EQ 2>
                                                             N/A
                                                         </cfif>
+                                                        <img 
+                                                            class="readOnly" 
+                                                            src="../pics/Print30x30.png" 
+                                                            alt="print" 
+                                                            onclick="printAuthenticationFile('workmensCompensation')" 
+                                                            style="float:right; padding-right:25px;" />
                                                     </span>
                                                     <select name="workmensCompensation" id="workmensCompensation" class="style1 editPage selfPlacementField"> 
                                                         <option value="" <cfif NOT LEN(FORM.workmensCompensation)>selected</cfif> ></option>
@@ -1962,6 +2211,14 @@
                                                         <option value="1" <cfif FORM.workmensCompensation EQ 1>selected</cfif> >Yes</option>                                                    
                                                         <option value="2" <cfif FORM.workmensCompensation EQ 2>selected</cfif> >N/A</option>
                                                     </select>
+                                                    <input 
+                                                        type="image" 
+                                                        src="../pics/arrowUp.jpg" 
+                                                        class="editPage" 
+                                                        value="Upload" 
+                                                        name="workmens_compensation_upload" 
+                                                        id="workmens_compensation_upload" 
+                                                        style="float:right; padding-right:25px;" />	
                                                 </td>
                                             </tr>
                                             <tr>

@@ -1,4 +1,3 @@
-
 <!--- Param FORM Variables --->
 <cfparam name="FORM.wat_doc_agreement" default="0">
 <cfparam name="FORM.wat_doc_walk_in_agreement" default="0">

@@ -160,6 +160,6 @@
 			return vReturnArray;
         </cfscript>
 
-    </cffunction> 
+    </cffunction>
 
 </cfcomponent>

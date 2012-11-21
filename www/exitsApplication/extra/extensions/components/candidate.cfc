@@ -928,13 +928,18 @@
                 ecpc.isTransferSevisUpdated,
                 ecpc.dateTransferConfirmed,
                 ej.ID AS jobID,
-                ej.title AS jobTitle
+                ej.title AS jobTitle,
+                ec.confirmed
             FROM
                 extra_candidate_place_company ecpc
             INNER JOIN
                 extra_hostcompany eh ON eh.hostCompanyID = ecpc.hostCompanyID
             LEFT OUTER JOIN
             	extra_jobs ej ON ej.ID = ecpc.jobID
+           	LEFT OUTER JOIN
+            	extra_confirmations ec ON ec.hostID = eh.hostCompanyID
+                	AND
+                    	ec.programID = (SELECT programID FROM extra_candidates WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#"> LIMIT 1)
             WHERE 
                 ecpc.candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">
             
