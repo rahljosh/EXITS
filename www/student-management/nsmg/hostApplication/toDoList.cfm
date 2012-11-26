@@ -9,16 +9,11 @@
 	---->
 	<script src="linked/js/jquery.colorbox.js"></script>
 	
-	
 	<script>
-
         $(document).ready(function(){
             //Examples of how to assign the ColorBox event to elements
-            
             $(".iframe").colorbox({width:"80%", height:"80%", iframe:true, 
-            
                onClosed:function(){ location.reload(true); } });
-
         });
     </script>
     
@@ -326,7 +321,13 @@ where hostid = #client.hostid#
                 <Cfif 1 eq 2>
                     <td colspan=4><em><font color="##ccc">No student assigned, student assignment needed for this item.
                     <Cfelse>
-                <td><a class='iframe' href="#link#?itemID=#id#&userType=#client.usertype#">#linkDesc#</a></td>
+                <td>
+                	<cfif listFind("View Visit Report", linkDesc)>
+                    	<a href="#link#?itemID=#id#&userType=#client.usertype#" target="_blank">#linkDesc#</a>
+                    <cfelse>
+                    	<a href="#link#?itemID=#id#&userType=#client.usertype#" class="iframe">#linkDesc#</a>
+                    </cfif>
+                </td> 
 				<td><Cfif listFind(whoViews, 7)>
                 	<!----If the Area Rep should approve, show mask or date of approval, if not, show N/A---->
 						<cfif approvalDates.areaRepApproval is '' and approvalDates.areaRepDenial is ''>
@@ -438,10 +439,10 @@ where hostid = #client.hostid#
                     <td>
                     
                     	<Cfif dateInfo.arApproved is not ''  OR  dateInfo.rdApproved is not '' OR  dateInfo.nyApproved is not '' OR  dateInfo.rmApproved is not ''  >	 
-                         <a class='iframe' href="forms/viewHostRefrencesQuestionaire.cfm?reportid=#dateInfo.id#" >View Report</a>
+                         <a  href="forms/viewHostRefrencesQuestionaire.cfm?reportid=#dateInfo.id#" target="_blank">View Report</a> <!--- class="iframe" --->
                          <cfset itemsApproved = #itemsApproved# + 1>
                         <cfelse>
-                            <a class='iframe' href="forms/hostRefrencesQuestionaire.cfm?ref=#refid#&rep=#client.userid#&hostid=#hostid#" >Submit Report</a>
+                            <a class="iframe" href="forms/hostRefrencesQuestionaire.cfm?ref=#refid#&rep=#client.userid#&hostid=#hostid#" >Submit Report</a>
                         </Cfif>
                    
 						
@@ -474,7 +475,7 @@ where hostid = #client.hostid#
     
     	
     	<td>
-        <a class='iframe' href="hostApplication/denyHostApp.cfm">
+        <a class="iframe" href="hostApplication/denyHostApp.cfm">
         	<img  src="pics/buttons/deny.png" width=90% border=0>
             </a>
         
