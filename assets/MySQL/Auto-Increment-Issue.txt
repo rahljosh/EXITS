@@ -1,0 +1,12 @@
+Fix auto increment issue, get results from query and run it.
+
+Failed to read auto-increment value from storage engine 
+
+SHOW table STATUS;
+
+SELECT CONCAT
+	('ALTER TABLE ', a.table_name, ' AUTO_INCREMENT = 1;')
+FROM 
+	information_schema.tables a 
+WHERE 
+	a.table_schema = 'smg' 
