@@ -71,7 +71,17 @@
 			alert("This file could not be uploaded");
 		</script>
     </cfif>
-	
+
+<!--- Delete the file --->
+<cfelseif URL.option EQ "delete">
+	<cfdirectory name="deleteFile" action="list" directory="#imagePath#" filter="#URL.hostCompanyID#.*">
+	<cfif ListLen(ValueList(deleteFile.name))>
+    	<cffile action="delete" file="#imagePath##deleteFile.name#">
+        <script type="text/javascript">
+			window.close();
+		</script>
+  	</cfif>
+    
 <!--- Image Print Screen --->
 <cfelse>
 

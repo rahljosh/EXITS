@@ -78,6 +78,12 @@
     <cfparam name="FORM.pickUpContactEmail" default="">
     <cfparam name="FORM.pickUpContactHours" default="">
     
+    <!--- Fields to check if file has been uploaded / deleted (to display message instead of reloading) --->
+    <cfparam name="FORM.authentication_secretaryOfStateFileChange" default="0">
+    <cfparam name="FORM.authentication_departmentOfLaborFileChange" default="0">
+    <cfparam name="FORM.authentication_googleEarthFileChange" default="0">
+    <cfparam name="FORM.authentication_workmensCompensationFileChange" default="0">
+    
     <cfscript>
 		vGoogleMaps = '';
 	</cfscript>
@@ -379,6 +385,8 @@
                             	numberPositions = <cfqueryparam cfsqltype="cf_sql_integer" value="#number#">
                                 <cfif isDate('#date#')>
                                 	,verifiedDate = <cfqueryparam cfsqltype="cf_sql_date" value="#date#">
+                               	<cfelse>
+                                	,verifiedDate = NULL
                              	</cfif>
                           	WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
                             AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetActivePrograms.programID#">
@@ -390,10 +398,8 @@
                            		(
                                 	hostID,
                                     programID,
-                                    numberPositions
-                                    <cfif isDate('#date#')>
-                                    	,verifiedDate
-                                  	</cfif>
+                                    numberPositions,
+                                    verifiedDate
                                 )
                           	VALUES
                             	(
@@ -402,6 +408,8 @@
                                     <cfqueryparam cfsqltype="cf_sql_integer" value="#number#">
                                     <cfif isDate('#date#')>
                                     	, <cfqueryparam cfsqltype="cf_sql_date" value="#date#">
+                                   	<cfelse>
+                                    	, NULL
                                     </cfif>
                                 )
                         </cfquery>
@@ -432,6 +440,8 @@
                             	confirmed = <cfqueryparam cfsqltype="cf_sql_integer" value="#number#">
                                 <cfif isDate('#date#')>
                                 	,confirmedDate = <cfqueryparam cfsqltype="cf_sql_date" value="#date#">
+                              	<cfelse>
+                                	,confirmedDate = NULL
                              	</cfif>
                           	WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
                             AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetActivePrograms.programID#">
@@ -443,10 +453,8 @@
                            		(
                                 	hostID,
                                     programID,
-                                    confirmed
-                                    <cfif isDate('#date#')>
-                                    	,confrimedDate
-                                  	</cfif>
+                                    confirmed,
+                                    confirmedDate
                                 )
                           	VALUES
                             	(
@@ -455,6 +463,8 @@
                                     <cfqueryparam cfsqltype="cf_sql_integer" value="#number#">
                                     <cfif isDate('#date#')>
                                     	, <cfqueryparam cfsqltype="cf_sql_date" value="#date#">
+                                  	<cfelse>
+                                    	, NULL
                                     </cfif>
                                 )
                         </cfquery>
@@ -678,7 +688,7 @@
                         WCDateExpired,
                         homepage,
                         observations,
-                        authenticaion_secretaryOfState,
+                        authentication_secretaryOfState,
                         authentication_departmentOfLabor,
                         authentication_googleEarth,
                         authentication_secretaryOfStateExpiration,
@@ -1248,6 +1258,17 @@
 		window.open(printURL, file, "width=800, height=600").print();
 	}
 	
+	// Delete the file that has been uploaded
+	var deleteAuthenticationFile = function(file) {
+		if (confirm("Are you sure you want to delete this file?")) {
+			var hostCompanyID = $('#hostCompanyID').val();
+			var deleteURL = document.URL;
+			deleteURL = deleteURL.substring(0, deleteURL.indexOf("/index.cfm"));
+			deleteURL += "/hostcompany/imageUploadPrint.cfm?option=delete&type=" + file + "&hostCompanyID=" + hostCompanyID;
+			window.open(deleteURL, file, "width=10, height=10");
+		}
+	}
+	
 	// Function to change hidden input field of dynamic confirmation boxes
 	var changeBox = function(program) {
 		var currentValue = $("#confirmation_" + program).val();
@@ -1630,9 +1651,7 @@
                                             <td class="style1" align="right" valign="top"><strong>Housing Instructions:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">#FORM.housingProvidedInstructions#</span>
-                                                <textarea name="housingProvidedInstructions" id="housingProvidedInstructions" class="style1 editPage" cols="35" rows="4">
-                                                	#FORM.housingProvidedInstructions#
-                                             	</textarea>
+                                                <textarea name="housingProvidedInstructions" id="housingProvidedInstructions" class="style1 editPage" cols="35" rows="4">#Trim(FORM.housingProvidedInstructions)#</textarea>
                                             </td>
                                         </tr>
 									</table>
@@ -1736,18 +1755,14 @@
                                             <td width="35%" class="style1" align="right"><strong>Pick Up Hours:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly">#FORM.arrivalPickUpHours#</span>
-                                                <textarea name="arrivalPickUpHours" id="arrivalPickUpHours" class="style1 editPage" cols="35" rows="4">
-                                                	#FORM.arrivalPickUpHours#
-                                               	</textarea>
+                                                <textarea name="arrivalPickUpHours" id="arrivalPickUpHours" class="style1 editPage" cols="35" rows="4">#FORM.arrivalPickUpHours#</textarea>
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
                                             <td class="style1" align="right" valign="top"><strong>Instructions:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">#FORM.arrivalInstructions#</span>
-                                                <textarea name="arrivalInstructions" id="arrivalInstructions" class="style1 editPage" cols="35" rows="4">
-                                                	#FORM.arrivalInstructions#
-                                               	</textarea>
+                                                <textarea name="arrivalInstructions" id="arrivalInstructions" class="style1 editPage" cols="35" rows="4">#FORM.arrivalInstructions#</textarea>
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
@@ -1938,7 +1953,7 @@
                                                                 <td class="style1" bordercolor="##FFFFFF" width="70%">
                                                                     <table width="100%">
                                                                         <tr>
-                                                                            <td>
+                                                                        	<td width="30%">
                                                                             	<input type="hidden" value="#VAL(confirmed)#" name="confirmation_#programID#" id="confirmation_#programID#" />
                                                                                 <input class="editPage"
                                                                                 	type="checkbox"
@@ -1948,22 +1963,30 @@
                                                                                 	type="checkbox"
                                                                                     disabled="disabled"
 																					<cfif confirmed EQ 1>checked</cfif> />
-                                                                            </td>
-                                                                             <td align="right">
-                                                                            	<span class="editPage">
-                                                                                	Date:
-                                                                                    <input 
-                                                                                        type="text" 
-                                                                                        name="confirmationDate_#programID#" 
-                                                                                        id="confirmationDate_#programID#" 
-                                                                                        value="#DateFormat(confirmedDate,'mm/dd/yyyy')#" 
-                                                                                        class="style1 datePicker editPage" />
-                                                                               	</span>
-                                                                                <span class="readOnly">
-                                                                                	<cfif LEN(confirmedDate)>
-                                                                                    	Date: #DateFormat(confirmedDate,'mm/dd/yyyy')#
-                                                                                  	</cfif>
-                                                                              	</span>
+                                                                        	</td>
+                                                                  			<td width="70%" align="right">
+                                                                            	<table width="100%">
+                                                                                	<tr>
+                                                                                    	<td width="50%" align="center">
+                                                                                        	Date: 
+                                                                                        </td>
+                                                                                        <td width="50%" align="right">
+                                                                                            <span class="editPage">
+                                                                                                <input 
+                                                                                                    type="text" 
+                                                                                                    name="confirmationDate_#programID#" 
+                                                                                                    id="confirmationDate_#programID#" 
+                                                                                                    value="#DateFormat(confirmedDate,'mm/dd/yyyy')#" 
+                                                                                                    class="style1 datePicker editPage" />
+                                                                                            </span>
+                                                                                            <span class="readOnly">
+                                                                                                <cfif LEN(confirmedDate)>
+                                                                                                    #DateFormat(confirmedDate,'mm/dd/yyyy')#
+                                                                                                </cfif>
+                                                                                            </span>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </table>
                                                                             </td>
                                                                         </tr>
                                                                     </table>
@@ -1991,7 +2014,7 @@
                                                                 <td class="style1" bordercolor="##FFFFFF" width="70%">
                                                                     <table width="100%">
                                                                         <tr>
-                                                                            <td>
+                                                                            <td width="30%">
                                                                                 <select name="numberPositions_#programID#" id="numberPositions_#programID#" class="style1 editPage">
                                                                                     <cfloop from="0" to="100" index="j">
                                                                                         <option value="#j#" <cfif numberPositions EQ '#j#'>selected</cfif>>#j#</option>
@@ -1999,20 +2022,28 @@
                                                                                 </select>
                                                                                 <span class="readOnly">#numberPositions#</span>
                                                                             </td>
-                                                                            <td align="right">
-                                                                            	<span class="editPage">
-                                                                                    Verified:
-                                                                                    <input type="text"
-                                                                                        name="j1Date_#programID#"
-                                                                                        id="j1Date_#programID#"
-                                                                                        value="#DateFormat(verifiedDate,'mm/dd/yyyy')#"
-                                                                                        class="style1 datePicker editPage" />
-                                                                               	</span>
-                                                                                <span class="readOnly">
-                                                                                	<cfif LEN(verifiedDate)>
-                                                                                    	Verified: #DateFormat(verifiedDate,'mm/dd/yyyy')#
-                                                                                  	</cfif>
-                                                                              	</span>
+                                                                            <td width="70%" align="right">
+                                                                            	<table width="100%">
+                                                                                	<tr>
+                                                                                    	<td width="50%" align="right">
+                                                                                        	Verified: 
+                                                                                      	</td>
+                                                                                        <td width="50%" align="right">
+                                                                                            <span class="editPage">
+                                                                                                <input type="text"
+                                                                                                    name="j1Date_#programID#"
+                                                                                                    id="j1Date_#programID#"
+                                                                                                    value="#DateFormat(verifiedDate,'mm/dd/yyyy')#"
+                                                                                                    class="style1 datePicker editPage" />
+                                                                                            </span>
+                                                                                            <span class="readOnly">
+                                                                                                <cfif LEN(verifiedDate)>
+                                                                                                    #DateFormat(verifiedDate,'mm/dd/yyyy')#
+                                                                                                </cfif>
+                                                                                            </span>
+                                                                                     	</td>
+                                                                                  	</tr>
+                                                                              	</table>
                                                                             </td>
                                                                         </tr>
                                                                     </table>
@@ -2037,6 +2068,7 @@
                                                         <tr>
                                                             <td class="style1" align="right" width="30%"><label for="authentication_secretaryOfState"><strong>Secretary of State:</strong></label></td>
                                                             <td class="style1" width="70%">
+                                                            	<cfdirectory name="secretaryOfStateFile" action="list" directory="#APPLICATION.PATH.BusinessLicense#" filter="#URL.hostCompanyID#.*">
                                                                 <input 
                                                                 	type="checkbox" 
                                                                     name="authentication_secretaryOfState" 
@@ -2045,26 +2077,34 @@
                                                                     class="formField" 
                                                                     disabled 
 																	<cfif VAL(FORM.authentication_secretaryOfState)> checked </cfif> />
+                                                              	Expiration:
                                                                 <span class="editPage">
-                                                                    Expiration: 
                                                                     <input 
                                                                     	type="text" 
                                                                         name="authentication_secretaryOfStateExpiration" 
                                                                         id="authentication_secretaryOfStateExpiration" 
                                                                         value="#DateFormat(authentication_secretaryOfStateExpiration, 'mm/dd/yyyy')#" 
                                                                         class="style1 datePicker editPage" />
-                                                                    <input 
-                                                                    	type="image" 
-                                                                        src="../pics/arrowUp.jpg" 
-                                                                        class="editPage" 
-                                                                        value="Upload" 
-                                                                        name="business_license_upload" 
-                                                                        id="business_license_upload" 
-                                                                        style="float:right; padding-right:25px;" />										
+                                    								<cfif VAL(ListLen(secretaryOfStateFile.name))>
+                                                                  		<img
+                                                                            class="editPage"
+                                                                            src="../pics/deletex.gif" 
+                                                                            alt="delete" 
+                                                                            onclick="deleteAuthenticationFile('businessLicense')"
+                                                                            style="float:right; margin-right:25px; cursor:pointer" />
+                                                                   	<cfelse>
+                                                                        <input 
+                                                                            type="image" 
+                                                                            src="../pics/arrowUp.jpg" 
+                                                                            class="editPage" 
+                                                                            value="Upload" 
+                                                                            name="business_license_upload" 
+                                                                            id="business_license_upload" 
+                                                                            style="float:right; padding-right:25px; cursor:pointer" />	
+                                                                   	</cfif>							
                                                                 </span>
                                                                 <span class="readOnly">
                                                                     <cfif FORM.authentication_secretaryOfStateExpiration NEQ "">
-                                                                        Expiration: 
                                                                         <cfif FORM.authentication_secretaryOfStateExpiration LT NOW()>
                                                                             <span style="color:red;">
                                                                             	#DateFormat(FORM.authentication_secretaryOfStateExpiration, "mm/dd/yyyy")#
@@ -2073,12 +2113,16 @@
                                                                             #DateFormat(FORM.authentication_secretaryOfStateExpiration, "mm/dd/yyyy")#
                                                                         </cfif>
                                                                     </cfif>
-                                                                    <img
-                                                                    	class="readOnly"
-                                                                        src="../pics/Print30x30.png" 
-                                                                        alt="print" 
-                                                                        onclick="printAuthenticationFile('businessLicense')" 
-                                                                        style="float:right; padding-right:25px;" /> 
+                                                                    <cfif VAL(ListLen(secretaryOfStateFile.name))>
+                                                                        <img
+                                                                            class="readOnly"
+                                                                            src="../pics/Print30x30.png" 
+                                                                            alt="print" 
+                                                                            onclick="printAuthenticationFile('businessLicense')"
+                                                                            style="float:right; margin-right:25px; cursor:pointer" />
+                                                                  	<cfelse>
+                                                                    	<span class="readOnly" style="float:right; margin-right:25px;">No File</span>
+                                                                    </cfif>
                                                                 </span>
                                                                 
                                                             </td>
@@ -2086,6 +2130,7 @@
                                                         <tr>
                                                             <td class="style1" align="right"><label for="authentication_departmentOfLabor"><strong>Department of Labor:</strong></label></td>
                                                             <td class="style1">
+                                                            	<cfdirectory name="departmentOfLaborFile" action="list" directory="#APPLICATION.PATH.DepartmentOfLabor#" filter="#URL.hostCompanyID#.*">
                                                                 <input 
                                                                 	type="checkbox" 
                                                                     name="authentication_departmentOfLabor" 
@@ -2094,26 +2139,34 @@
                                                                     class="formField" 
                                                                     disabled 
 																	<cfif VAL(FORM.authentication_departmentOfLabor)> checked </cfif> />
+                                                              	Expiration: 
                                                       			<span class="editPage">
-                                                                    Expiration: 
                                                                     <input 
                                                                     	type="text" 
                                                                         name="authentication_departmentOfLaborExpiration" 
                                                                         id="authentication_departmentOfLaborExpiration" 
                                                                         value="#DateFormat(authentication_departmentOfLaborExpiration, 'mm/dd/yyyy')#" 
                                                                         class="style1 datePicker editPage" />
-                                                                    <input 
-                                                                    	type="image" 
-                                                                        src="../pics/arrowUp.jpg" 
-                                                                        class="editPage" 
-                                                                        value="Upload" 
-                                                                        name="department_of_labor_upload" 
-                                                                        id="department_of_labor_upload" 
-                                                                        style="float:right; padding-right:25px;" />										
+                                                                  	<cfif VAL(ListLen(departmentOfLaborFile.name))>
+                                                                    	<img
+                                                                            class="editPage"
+                                                                            src="../pics/deletex.gif" 
+                                                                            alt="delete" 
+                                                                            onclick="deleteAuthenticationFile('departmentOfLabor')"
+                                                                            style="float:right; margin-right:25px; cursor:pointer" />
+                                                                    <cfelse>
+                                                                        <input 
+                                                                            type="image" 
+                                                                            src="../pics/arrowUp.jpg" 
+                                                                            class="editPage" 
+                                                                            value="Upload" 
+                                                                            name="department_of_labor_upload" 
+                                                                            id="department_of_labor_upload" 
+                                                                            style="float:right; padding-right:25px; cursor:pointer" />
+                                                                   	</cfif>										
                                                                 </span>
                                                                 <span class="readOnly">
                                                                 	<cfif FORM.authentication_departmentOfLaborExpiration NEQ "">
-                                                                        Expiration: 
                                                                         <cfif FORM.authentication_departmentOfLaborExpiration LT NOW()>
                                                                             <span style="color:red;">
                                                                             	#DateFormat(FORM.authentication_departmentOfLaborExpiration, "mm/dd/yyyy")#
@@ -2122,18 +2175,23 @@
                                                                             #DateFormat(FORM.authentication_departmentOfLaborExpiration, "mm/dd/yyyy")#
                                                                         </cfif>
                                                                     </cfif>
-                                                                    <img
+                                                                    <cfif VAL(ListLen(departmentOfLaborFile.name))>
+                                                                        <img
                                                                         class="readOnly"
                                                                         src="../pics/Print30x30.png"
                                                                         alt="print"
                                                                         onclick="printAuthenticationFile('departmentOfLabor')"
-                                                                        style="float:right; padding-right:25px;" />
+                                                                        style="float:right; padding-right:25px; cursor:pointer" />
+                                                                  	<cfelse>
+                                                                    	<span class="readOnly" style="float:right; margin-right:25px;">No File</span>
+                                                                    </cfif>
                                                                 </span>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td class="style1" align="right"><label for="authentication_googleEarth"><strong>Google Earth:</strong></label></td>
                                                             <td class="style1">
+                                                            	<cfdirectory name="googleEarthFile" action="list" directory="#APPLICATION.PATH.GoogleEarth#" filter="#URL.hostCompanyID#.*">
                                                                 <input 
                                                                 	type="checkbox" 
                                                                     name="authentication_googleEarth" 
@@ -2142,26 +2200,34 @@
                                                                     class="formField" 
                                                                     disabled 
 																	<cfif VAL(FORM.authentication_googleEarth)> checked </cfif> />
+                                                               	Expiration:
                                                               	<span class="editPage">
-                                                                    Expiration: 
                                                                     <input 
                                                                     	type="text" 
                                                                         name="authentication_googleEarthExpiration" 
                                                                         id="authentication_googleEarthExpiration" 
                                                                         value="#DateFormat(authentication_googleEarthExpiration, 'mm/dd/yyyy')#" 
                                                                         class="style1 datePicker editPage" />
-                                                                    <input 
-                                                                    	type="image" 
-                                                                        src="../pics/arrowUp.jpg" 
-                                                                        class="editPage" 
-                                                                        value="Upload" 
-                                                                        name="google_earth_upload" 
-                                                                        id="google_earth_upload" 
-                                                                        style="float:right; padding-right:25px;" />										
+                                                                  	<cfif VAL(ListLen(googleEarthFile.name))>
+                                                                    	<img
+                                                                            class="editPage"
+                                                                            src="../pics/deletex.gif" 
+                                                                            alt="delete" 
+                                                                            onclick="deleteAuthenticationFile('googleEarth')"
+                                                                            style="float:right; margin-right:25px; cursor:pointer" />
+                                                                    <cfelse>
+                                                                        <input 
+                                                                            type="image" 
+                                                                            src="../pics/arrowUp.jpg" 
+                                                                            class="editPage" 
+                                                                            value="Upload" 
+                                                                            name="google_earth_upload" 
+                                                                            id="google_earth_upload" 
+                                                                            style="float:right; padding-right:25px; cursor:pointer" />
+                                                                 	</cfif>							
                                                                 </span>
                                                                 <span class="readOnly">
                                                                 	<cfif FORM.authentication_googleEarthExpiration NEQ "">
-                                                                        Expiration: 
                                                                         <cfif FORM.authentication_googleEarthExpiration LT NOW()>
                                                                             <span style="color:red;">
                                                                             	#DateFormat(FORM.authentication_googleEarthExpiration, "mm/dd/yyyy")#
@@ -2170,12 +2236,16 @@
                                                                             #DateFormat(FORM.authentication_googleEarthExpiration, "mm/dd/yyyy")#
                                                                         </cfif>
                                                                     </cfif>
-                                                                    <img 
-                                                                        class="readOnly" 
-                                                                        src="../pics/Print30x30.png" 
-                                                                        alt="print" 
-                                                                        onclick="printAuthenticationFile('googleEarth')" 
-                                                                        style="float:right; padding-right:25px;" />
+                                                                    <cfif VAL(ListLen(googleEarthFile.name))>
+                                                                        <img 
+                                                                            class="readOnly" 
+                                                                            src="../pics/Print30x30.png" 
+                                                                            alt="print" 
+                                                                            onclick="printAuthenticationFile('googleEarth')" 
+                                                                            style="float:right; padding-right:25px; cursor:pointer" />
+                                                                 	<cfelse>
+                                                                    	<span class="readOnly" style="float:right; margin-right:25px;">No File</span>
+                                                                    </cfif>
                                                                 </span>
                                                             </td>
                                                         </tr>
@@ -2192,18 +2262,23 @@
                                             <tr>
                                                 <td class="style1" align="right"><strong>Workmen's Compensation:</strong></td>
                                                 <td class="style1" bordercolor="##FFFFFF">
+                                                	<cfdirectory name="workmensCompensationFile" action="list" directory="#APPLICATION.PATH.workmensCompensation#" filter="#URL.hostCompanyID#.*">
                                                     <span class="readOnly">
                                                         <cfif ListFind("0,1", FORM.workmensCompensation)>
                                                             #YesNoFormat(VAL(FORM.workmensCompensation))#
                                                         <cfelseif FORM.workmensCompensation EQ 2>
                                                             N/A
                                                         </cfif>
-                                                        <img 
-                                                            class="readOnly" 
-                                                            src="../pics/Print30x30.png" 
-                                                            alt="print" 
-                                                            onclick="printAuthenticationFile('workmensCompensation')" 
-                                                            style="float:right; padding-right:25px;" />
+                                                        <cfif VAL(ListLen(workmensCompensationFile.name))>
+                                                            <img 
+                                                                class="readOnly" 
+                                                                src="../pics/Print30x30.png" 
+                                                                alt="print" 
+                                                                onclick="printAuthenticationFile('workmensCompensation')" 
+                                                                style="float:right; padding-right:25px; cursor:pointer" />
+                                                       	<cfelse>
+                                                            <span class="readOnly" style="float:right; margin-right:25px;">No File</span>
+                                                        </cfif>
                                                     </span>
                                                     <select name="workmensCompensation" id="workmensCompensation" class="style1 editPage selfPlacementField"> 
                                                         <option value="" <cfif NOT LEN(FORM.workmensCompensation)>selected</cfif> ></option>
@@ -2211,14 +2286,23 @@
                                                         <option value="1" <cfif FORM.workmensCompensation EQ 1>selected</cfif> >Yes</option>                                                    
                                                         <option value="2" <cfif FORM.workmensCompensation EQ 2>selected</cfif> >N/A</option>
                                                     </select>
-                                                    <input 
-                                                        type="image" 
-                                                        src="../pics/arrowUp.jpg" 
-                                                        class="editPage" 
-                                                        value="Upload" 
-                                                        name="workmens_compensation_upload" 
-                                                        id="workmens_compensation_upload" 
-                                                        style="float:right; padding-right:25px;" />	
+                                                    <cfif VAL(ListLen(workmensCompensationFile.name))>
+                                                        <img
+                                                            class="editPage"
+                                                            src="../pics/deletex.gif" 
+                                                            alt="delete" 
+                                                            onclick="deleteAuthenticationFile('workmensCompensation')"
+                                                            style="float:right; margin-right:25px; cursor:pointer" />
+                                                  	<cfelse>
+                                                        <input 
+                                                            type="image" 
+                                                            src="../pics/arrowUp.jpg" 
+                                                            class="editPage" 
+                                                            value="Upload" 
+                                                            name="workmens_compensation_upload" 
+                                                            id="workmens_compensation_upload" 
+                                                            style="float:right; padding-right:25px; cursor:pointer" />
+                                                  	</cfif>
                                                 </td>
                                             </tr>
                                             <tr>
