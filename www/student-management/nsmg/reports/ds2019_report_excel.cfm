@@ -63,11 +63,10 @@
 
 <!--- DELETE HISTORY FROM THE SAME DAY --->
 <cfquery name="delete" datasource="MySql">
-	DELETE
-	FROM 
+	DELETE FROM 
     	smg_csiet_history
 	WHERE 
-    	date(datecreated) = <cfqueryparam cfsqltype="cf_sql_date" value="#DateFormat(now, 'yyyy-mm-dd')#">
+    	date(datecreated) = <cfqueryparam cfsqltype="cf_sql_date" value="#DateFormat(now(), 'yyyy-mm-dd')#">
     <cfif CLIENT.companyID EQ 5>
         AND	
             companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
