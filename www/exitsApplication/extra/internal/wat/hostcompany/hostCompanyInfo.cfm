@@ -2092,6 +2092,7 @@
                                                                             alt="delete" 
                                                                             onclick="deleteAuthenticationFile('businessLicense')"
                                                                             style="float:right; margin-right:25px; cursor:pointer" />
+                                                                       	<input type="hidden" id="business_license_upload"/>
                                                                    	<cfelse>
                                                                         <input 
                                                                             type="image" 
@@ -2154,6 +2155,7 @@
                                                                             alt="delete" 
                                                                             onclick="deleteAuthenticationFile('departmentOfLabor')"
                                                                             style="float:right; margin-right:25px; cursor:pointer" />
+                                                                       	<input type="hidden" id="department_of_labor_upload"/>
                                                                     <cfelse>
                                                                         <input 
                                                                             type="image" 
@@ -2215,6 +2217,7 @@
                                                                             alt="delete" 
                                                                             onclick="deleteAuthenticationFile('googleEarth')"
                                                                             style="float:right; margin-right:25px; cursor:pointer" />
+                                                                       	<input type="hidden" id="google_earth_upload"/>
                                                                     <cfelse>
                                                                         <input 
                                                                             type="image" 
@@ -2293,6 +2296,7 @@
                                                             alt="delete" 
                                                             onclick="deleteAuthenticationFile('workmensCompensation')"
                                                             style="float:right; margin-right:25px; cursor:pointer" />
+                                                       	<input type="hidden" id="workmens_compensation_upload"/>
                                                   	<cfelse>
                                                         <input 
                                                             type="image" 
