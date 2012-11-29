@@ -71,7 +71,7 @@
 	}
 	
 	.tableHolder {		
-		width:8.3in; /* 21.6 cm */		
+		width:6.6in; /* 21.6 cm */		
 		/* height:10in; */ /* 25cm */
 		padding:0;
 		margin:0 0.45in 0 0.45in;
@@ -81,8 +81,8 @@
 	.tableCell {
 		margin:0;
 		padding:0;
-		height:2.34in; /* 5.94 cm */
-		width:3.4in; /* 8.8cm */	
+		height:1.85in; /* 5.89 cm */
+		width:3.2in;
 		/*
 		border-top:1px solid #CCCCCC;
 		border-left:1px solid #CCCCCC;
@@ -93,8 +93,8 @@
 	.tableCellLastRow {
 		margin:0;
 		padding:0;
-		height:2in; /* 5.89 cm */
-		width:3.4in; /* 8.8cm */	
+		height:1.6in; /* 5.89 cm */
+		width:3.2in;
 		/*
 		border-top:1px solid #CCCCCC;
 		border-left:1px solid #CCCCCC;
@@ -105,10 +105,9 @@
 	.informationDiv {
 		float:left;
 		margin:0;
-		height:1in;
-		width:3.95in; /* 10.03 cm */ 
 		overflow:hidden;
-		padding:0.8in 0 0 0.1in; /* 2 cm */
+		width:95%;
+		padding:0.69in 0 0 0.1in; /* 2 cm */
 		/*
 		border:1px solid #CCCCCC;
 		*/
@@ -117,7 +116,7 @@
 	/* Student Name, DOB and Dates */
 	.textStyle {
 		font-size: 10pt;
-		line-height:0.35in; /* 0.8cm */
+		line-height:0.28in; /* 0.8cm */
 		display: block;
 		overflow:hidden;
 	}
@@ -163,7 +162,7 @@
 	</cfscript>
     
         <!--- Output the label --->			
-        <td class="#vSetTableStyle#" valign="top">
+        <td class="#vSetTableStyle#" valign="top" width="50%">
     
             <!--- BODY --->
             <div class="informationDiv">
@@ -201,7 +200,6 @@
 <cfelseif VAL(qGetStudents.recordCount MOD 10)>
     </table>
 </cfif>
-    
-
+  
 </body>
 </html>

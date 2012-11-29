@@ -108,7 +108,7 @@
                                 <td align="left">
                                     <select name="batchid" multiple size="6">
                                         <cfloop query="qGetBatches">
-                                            <option value="#batchid#">#batchid# &nbsp; #DateFormat(datecreated,'mm/dd/yy')# &nbsp; #companyShort# &nbsp;</option>
+                                            <option value="#qGetBatches.batchid#">#qGetBatches.batchid# &nbsp; #DateFormat(qGetBatches.datecreated,'mm/dd/yy')# &nbsp; #companyShort# &nbsp;</option>
                                         </cfloop>
                                     </select>
                                 </td>
@@ -200,9 +200,9 @@
                             <tr>
                                 <td>Date Entered: </td>
                                 <td>
-                                    <span style="float:left">From: &nbsp;</span>
+                                    From: &nbsp;
                                     <input type="text" name="date1" class="datePicker" maxlength="10">
-                                    <span style="float:left;">To: &nbsp;</span>
+                                    To: &nbsp;
                                     <input type="text" name="date2" class="datePicker" maxlength="10">                                                                                                                                   
                                 </td>
                             </tr>
@@ -268,7 +268,7 @@
                 </tr>
             </table>
             
-            <br><br>
+            <br /><br />
      
             <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
                 <tr><th colspan="2" bgcolor="##e2efc7">Insurance Cards <font size="-2">(Ordered by Agent)</font></th></tr>
@@ -356,17 +356,17 @@
                 <tr> 
                     <td colspan="2">
                     	<div align="justify">
-                            Set margins to: <br>
-                            <strong>Google Chrome - Default Settings - Preferable</strong>
-                            IE: top: 0.5 / bottom: 0.4 / left: 0.7 / right: 0.5 <br>                                                
-                            Firefox: top: 0.3 / bottom: 0.3 / left: 0.5 / right: 0.5 <br>                                                
-                            Make sure you set page scaling to: Shrink to Printable Area <br>
+                            Set margins to: <br />
+                            <strong>Google Chrome - Default Settings - Preferable</strong> <br />
+                            IE: top: 0.5 / bottom: 0.4 / left: 0.7 / right: 0.5 <br />                                                
+                            Firefox: top: 0.3 / bottom: 0.3 / left: 0.5 / right: 0.5 <br />                                                
+                            Make sure you set page scaling to: Shrink to Printable Area <br />
                         </div>
                     </td>
                 </tr>
             </table>
             
-            <br><br>
+            <br /><br />
             
             <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
                 <tr><th colspan="2" bgcolor="##e2efc7">ID CARDS & MAILING LABELS - STUDENTS IN THE USA <font size="-2">(Approved placements only)</font></th></tr>
@@ -399,9 +399,9 @@
                             <tr>
                                 <td>Date Placed:</td>
                                 <td>
-                                    <span style="float:left">From: &nbsp;</span>
+                                    From: &nbsp;
                                     <input type="text" name="date1" class="datePicker" maxlength="10">
-                                    <span style="float:left;">To: &nbsp;</span>
+                                    To: &nbsp;
                                     <input type="text" name="date2" class="datePicker" maxlength="10">                                                                                                                                   
                                 </td>
                             </tr>
@@ -438,9 +438,9 @@
                             <tr>
                                 <td>Date Placed:</td>
                                 <td>
-                                    <span style="float:left">From: &nbsp;</span>
+                                    From: &nbsp;
                                     <input type="text" name="date1" class="datePicker" maxlength="10">
-                                    <span style="float:left;">To: &nbsp;</span>
+                                    To: &nbsp;
                                     <input type="text" name="date2" class="datePicker" maxlength="10">                                                                                                                                   
                                 </td>
                             </tr>
@@ -453,7 +453,7 @@
                 </tr>
             </table>
             
-            <br><br>
+            <br /><br />
                 
             <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
                 <tr><th colspan="2" bgcolor="##e2efc7">LABELS FOR FILING</th></tr>
@@ -530,7 +530,7 @@
 
             </table>
           
-            <br><br>
+            <br /><br />
 
             <!--- BULK MAILING - LABELS + WELCOME LETTERS --->
             <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
@@ -566,9 +566,9 @@
                             <tr>
                                 <td>Date Placed:</td>
                                 <td>
-                                    <span style="float:left">From: &nbsp;</span>
+                                    From: &nbsp;
                                     <input type="text" name="date1" class="datePicker" maxlength="10">
-                                    <span style="float:left;">To: &nbsp;</span>
+                                    To: &nbsp;
                                     <input type="text" name="date2" class="datePicker" maxlength="10">                                                                                                                                   
                                 </td>
                             </tr>
@@ -608,9 +608,9 @@
                             <tr>
                                 <td>Date Placed:</td>
                                 <td>
-                                    <span style="float:left">From: &nbsp;</span>
+                                    From: &nbsp;
                                     <input type="text" name="date1" class="datePicker" maxlength="10">
-                                    <span style="float:left;">To: &nbsp;</span>
+                                    To: &nbsp;
                                     <input type="text" name="date2" class="datePicker" maxlength="10">                                                                                                                                   
                                 </td>
                             </tr>
@@ -634,9 +634,9 @@
                             <tr>
                                 <td>Date Placed:</td>
                                 <td>
-                                    <span style="float:left">From: &nbsp;</span>
+                                    From: &nbsp;
                                     <input type="text" name="date1" class="datePicker" maxlength="10">
-                                    <span style="float:left;">To: &nbsp;</span>
+                                    To: &nbsp;
                                     <input type="text" name="date2" class="datePicker" maxlength="10">                                                                                                                                   
                                 </td>
                             </tr>
@@ -670,9 +670,9 @@
                             <tr>
                                 <td>Date Placed:</td>
                                 <td>
-                                    <span style="float:left">From: &nbsp;</span>
+                                    From: &nbsp;
                                     <input type="text" name="date1" class="datePicker" maxlength="10">
-                                    <span style="float:left;">To: &nbsp;</span>
+                                    To: &nbsp;
                                     <input type="text" name="date2" class="datePicker" maxlength="10">                                                                                                                                   
                                 </td>
                             </tr>
@@ -696,7 +696,7 @@
                 </tr>	
             </table>
             
-            <br><br>
+            <br /><br />
                 
             <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
                 <tr><th colspan="2" bgcolor="##e2efc7">MAILING LABELS</th></tr>
@@ -705,7 +705,7 @@
                         
                         <cfform action="reports/labels_students.cfm" method="post">
                         <Table class="nav_bar" cellpadding="6" cellspacing="0" width="90%">
-                            <tr><th colspan="3" bgcolor="##e2efc7">Students per period <br> <font size="-2">(Students in the USA - Approved placements only)</font></th></tr>
+                            <tr><th colspan="3" bgcolor="##e2efc7">Students per period <br /> <font size="-2">(Students in the USA - Approved placements only)</font></th></tr>
                             <tr>
                                 <td>Program:</td>
                                 <td><cfselect name="programID" query="qGetProgramList" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
@@ -737,7 +737,7 @@
                         
                         <cfform action="reports/labels_students_id.cfm" method="post">
                         <Table class="nav_bar" cellpadding="6" cellspacing="0" width="90%">
-                            <tr><th colspan="2" bgcolor="##e2efc7">Students per ID <br> <font size="-2">(Students in the USA - Approved placements only)</font> </th></tr>
+                            <tr><th colspan="2" bgcolor="##e2efc7">Students per ID <br /> <font size="-2">(Students in the USA - Approved placements only)</font> </th></tr>
                             <tr>
                             	<td>Country:</td>
                                 <td>
@@ -768,7 +768,7 @@
                     
                         <cfform action="reports/labels_stu_per_region.cfm" method="post">
                         <Table class="nav_bar" cellpadding="6" cellspacing="0" width="90%">
-                            <tr><th colspan="3" bgcolor="##e2efc7">Students in Care of Host Family per Region <br> <font size="-2">(Approved placements only)</font></th></tr>
+                            <tr><th colspan="3" bgcolor="##e2efc7">Students in Care of Host Family per Region <br /> <font size="-2">(Approved placements only)</font></th></tr>
                             <tr>
                                 <td>Program:</td>
                                 <td><cfselect name="programID" query="qGetProgramList" value="programID" display="programname" multiple="yes" size="8"></cfselect></td>
@@ -837,7 +837,7 @@
                 </tr>
             </table>
             
-            <br><br>
+            <br /><br />
                 
     	</td>
     </tr>
