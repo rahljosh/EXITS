@@ -221,6 +221,9 @@
 	// Google Earth Authentication
 	APPLICATION.PATH.googleEarth = APPLICATION.PATH.UploadDocumentRoot & 'googleEarth/';
 	
+	// Authentications
+	APPLICATION.PATH.authentications = APPLICATION.PATH.UploadDocumentRoot & 'authentications/';
+	
 	// Workmens Compensation
 	APPLICATION.PATH.workmensCompensation = APPLICATION.PATH.UploadDocumentRoot & 'workmensCompensation/';
 

@@ -213,6 +213,39 @@
         AND ecpc.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.hostCompanyID)#">
         GROUP BY p.programName
     </cfquery>
+    
+    <cfquery name="qGetAuthenticationFile" datasource="MySql">
+    	SELECT *
+        FROM extra_hostauthenticationfiles
+        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
+        AND (dateExpires >= <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+        OR dateExpires IS NULL)
+        ORDER BY dateAdded DESC
+    </cfquery>
+    
+    <cfquery name="qGetSecretaryOfStateFile" dbtype="query">
+    	SELECT *
+        FROM qGetAuthenticationFile
+        WHERE authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="secretaryOfState">
+    </cfquery>
+    
+    <cfquery name="qGetDepartmentOfLaborFile" dbtype="query">
+    	SELECT *
+        FROM qGetAuthenticationFile
+        WHERE authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="departmentOfLabor">
+    </cfquery>
+    
+    <cfquery name="qGetGoogleEarthFile" dbtype="query">
+    	SELECT *
+        FROM qGetAuthenticationFile
+        WHERE authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="googleEarth">
+    </cfquery>
+    
+    <cfquery name="qGetWorkmensCompensationFile" dbtype="query">
+    	SELECT *
+        FROM qGetAuthenticationFile
+        WHERE authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="workmensCompensation">
+    </cfquery>
                 
     <!--- FORM Submitted --->
     <cfif FORM.submitted>
@@ -362,6 +395,71 @@
                     WHERE
                         hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">
                 </cfquery>
+                
+                <!--- Update authentication file expiration dates --->
+                
+                <!--- These are to enable the expiration dates to be updated on items that have expired but were added within the past day.
+				This is helpful because the expiration date is set on upload and if it is shown as expired it could not otherwise be updated. --->
+                <cfif NOT VAL(qGetSecretaryOfStateFile.recordCount)>
+                	<cfquery name="qGetSecretaryOfStateFile" datasource="MySql">
+                    	SELECT id
+                        FROM extra_hostauthenticationfiles
+                        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
+                        AND authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="secretaryOfState">
+                        AND dateAdded >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-1,NOW())#">
+                    </cfquery>
+                </cfif>
+                <cfif NOT VAL(qGetDepartmentOfLaborFile.recordCount)>
+                	<cfquery name="qGetDepartmentOfLaborFile" datasource="MySql">
+                    	SELECT id
+                        FROM extra_hostauthenticationfiles
+                        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
+                        AND authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="departmentOfLabor">
+                        AND dateAdded >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-1,NOW())#">
+                    </cfquery>
+                </cfif>
+                <cfif NOT VAL(qGetGoogleEarthFile.recordCount)>
+                	<cfquery name="qGetGoogleEarthFile" datasource="MySql">
+                    	SELECT id
+                        FROM extra_hostauthenticationfiles
+                        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
+                        AND authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="googleEarth">
+                        AND dateAdded >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-1,NOW())#">
+                    </cfquery>
+                </cfif>
+                <cfif NOT VAL(qGetWorkmensCompensationFile.recordCount)>
+                	<cfquery name="qGetWorkmensCompensationFile" datasource="MySql">
+                    	SELECT id
+                        FROM extra_hostauthenticationfiles
+                        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
+                        AND authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="workmensCompensation">
+                        AND dateAdded >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-1,NOW())#">
+                    </cfquery>
+                </cfif>
+                
+                <!--- These are the actual updates --->
+                <cfquery datasource="MySql">
+                	UPDATE extra_hostauthenticationfiles
+                    SET dateExpires = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_secretaryOfStateExpiration#">
+                    WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetSecretaryOfStateFile.id)#">
+                </cfquery>
+                <cfquery datasource="MySql">
+                	UPDATE extra_hostauthenticationfiles
+                    SET dateExpires = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_departmentOfLaborExpiration#">
+                    WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetDepartmentOfLaborFile.id)#">
+                </cfquery>
+                <cfquery datasource="MySql">
+                	UPDATE extra_hostauthenticationfiles
+                    SET dateExpires = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_googleEarthExpiration#">
+                    WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetGoogleEarthFile.id)#">
+                </cfquery>
+                <cfquery datasource="MySql">
+                	UPDATE extra_hostauthenticationfiles
+                    SET dateExpires = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.WCDateExpired#">
+                    WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetWorkmensCompensationFile.id)#">
+                </cfquery>
+                
+                <!--- End update authentication file expiration dates --->
                 
                 <!--- Update/Insert J1 Positions --->
                 <cfloop query="qGetActivePrograms">
@@ -522,10 +620,10 @@
                 <cfloop query="qGetActivePrograms">
                 
                 	<cfscript>
-						confirmed = evaluate("##FORM.confirmation_" & programID & "##");
-						confirmedDate = evaluate("##FORM.confirmationDate_" & programID & "##");
+						confirmedNumber = evaluate("##FORM.confirmation_" & programID & "##");
+						confirmedNewDate = evaluate("##FORM.confirmationDate_" & programID & "##");
 						j1Number = evaluate("##FORM.numberPositions_" & programID & "##");
-						j1Date = evaluate("##FORM.j1Date_" & programID & "##");
+						j1NewDate = evaluate("##FORM.j1Date_" & programID & "##");
 					</cfscript>
                 
                 	<cfquery datasource="MySql">
@@ -539,10 +637,10 @@
                       	VALUES (
                         	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetNewHistoryID.historyID)#">,
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetActivePrograms.programID)#">,
-                            <cfqueryparam cfsqltype="cf_sql_date" value="#j1Date#">,
-                            <cfqueryparam cfsqltype="cf_sql_date" value="#confirmedDate#">,
+                            <cfqueryparam cfsqltype="cf_sql_date" value="#j1NewDate#">,
+                            <cfqueryparam cfsqltype="cf_sql_date" value="#confirmedNewDate#">,
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(j1Number)#">,
-                            <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(confirmed)#"> )
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(confirmedNumber)#"> )
                     </cfquery>
                     
                 </cfloop>
@@ -675,6 +773,64 @@
                     )
                 </cfquery>
                 
+                <!--- Get the host company id that was just added --->
+                <cfquery name="qGetNewHost" datasource="MySql">
+                	SELECT hostcompanyid
+                    FROM extra_hostcompany
+                    ORDER BY hostcompanyid DESC
+                    LIMIT 1
+                </cfquery>
+                
+                <!--- Insert J1 Positions --->
+                <cfloop query="qGetActivePrograms">
+                    <cfscript>
+						number = evaluate("##FORM.numberPositions_" & programID & "##");
+						date = evaluate("##FORM.j1Date_" & programID & "##");
+					</cfscript>
+                    <cfquery datasource="MySql">
+               			INSERT INTO extra_j1_positions (
+                            hostID,
+                            programID,
+                            numberPositions,
+                            verifiedDate )
+                  		VALUES (
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetNewHost.hostCompanyID)#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetActivePrograms.programID)#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(number)#">,
+                            <cfif isDate('#date#')>
+                                <cfqueryparam cfsqltype="cf_sql_date" value="#date#">
+                            <cfelse>
+                                NULL
+                            </cfif> )
+                 	</cfquery>
+                </cfloop>
+                <!--- End Insert J1 Positions --->
+                
+                <!--- Insert Confirmations --->
+                <cfloop query="qGetActivePrograms">
+                    <cfscript>
+						number = evaluate("##FORM.confirmation_" & programID & "##");
+						date = evaluate("##FORM.confirmationDate_" & programID & "##");
+					</cfscript>
+                    <cfquery datasource="MySql">
+                        INSERT INTO extra_confirmations (
+                            hostID,
+                            programID,
+                            confirmed,
+                            confirmedDate )
+                        VALUES (
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetNewHost.hostCompanyID)#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetActivePrograms.programID)#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(number)#">,
+                            <cfif isDate('#date#')>
+                                <cfqueryparam cfsqltype="cf_sql_date" value="#date#">
+                            <cfelse>
+                                NULL
+                            </cfif> )
+                    </cfquery>
+                </cfloop>
+                <!--- End Update / Insert Confirmations --->
+                
                 <!--- Add History Record --->
                 <cfquery datasource="MySql">
                     INSERT INTO extra_hostinfohistory (
@@ -695,7 +851,7 @@
                         authentication_departmentOfLaborExpiration,
                         authentication_googleEarthExpiration )
                     VALUES (
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetNewHost.hostCompanyID#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#NOW()#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.personJobOfferName#">,
@@ -1228,44 +1384,51 @@
 	var myErrorHandler = function(statusCode, statusMsg) { 
 		alert('Status: ' + statusCode + ', ' + statusMsg); 
 	}
-	
 	$().ready(function() {
 		var hostCompanyID = $('#hostCompanyID').val();
-	   	new AjaxUpload('business_license_upload', {
-			action: '../wat/hostCompany/imageUploadPrint.cfm?type=businessLicense&hostCompanyID='+hostCompanyID,
+		var secretaryOfState = $('#authentication_secretaryOfStateExpiration').attr('value');
+		var departmentOfLabor = $('#authentication_departmentOfLaborExpiration').val();
+		var googleEarth = $('#authentication_googleEarthExpiration').val();
+		var workmensCompensation = $('#WCDateExpired').val();
+	   	new AjaxUpload('secretary_of_state_upload', {
+			action: '../wat/hostCompany/imageUploadPrint.cfm?option=upload&type=secretaryOfState&hostCompanyID='+hostCompanyID+'&expirationDate='+secretaryOfState,
 			name: 'image'
   		});
 		new AjaxUpload('department_of_labor_upload', {
-			action: '../wat/hostCompany/imageUploadPrint.cfm?type=departmentOfLabor&hostCompanyID='+hostCompanyID,
+			action: '../wat/hostCompany/imageUploadPrint.cfm?option=upload&type=departmentOfLabor&hostCompanyID='+hostCompanyID+'&expirationDate='+departmentOfLabor,
 			name: 'image'
  		});
 		new AjaxUpload('google_earth_upload', {
-			action: '../wat/hostCompany/imageUploadPrint.cfm?type=googleEarth&hostCompanyID='+hostCompanyID,
+			action: '../wat/hostCompany/imageUploadPrint.cfm?option=upload&type=googleEarth&hostCompanyID='+hostCompanyID+'&expirationDate='+googleEarth,
 			name: 'image'
   		});
 		new AjaxUpload('workmens_compensation_upload', {
-			action: '../wat/hostCompany/imageUploadPrint.cfm?type=workmensCompensation&hostCompanyID='+hostCompanyID,
+			action: '../wat/hostCompany/imageUploadPrint.cfm?option=upload&type=workmensCompensation&hostCompanyID='+hostCompanyID+'&expirationDate='+workmensCompensation,
 			name: 'image'
   		});
 	});
 	
 	// Popup to print image that is referenced by the input file type.
-	var printAuthenticationFile = function(file) {
+	var printAuthenticationFile = function(id) {
+		var printURL = document.URL.substring(0, document.URL.indexOf("/index.cfm")) + "/hostcompany/imageUploadPrint.cfm?option=print&fileID="+id;
+		window.open(printURL, "File", "width=800, height=600").print();
+	}
+	
+	// Popup to print all authentication files (will only show pdf files)
+	var printAllAuthenticationFiles = function(id1,id2,id3) {
 		var hostCompanyID = $('#hostCompanyID').val();
-		var printURL = document.URL;
-		printURL = printURL.substring(0, printURL.indexOf("/index.cfm"));
-		printURL += "/hostcompany/imageUploadPrint.cfm?option=print&type=" + file + "&hostCompanyID=" + hostCompanyID;
-		window.open(printURL, file, "width=800, height=600").print();
+		var printURL = document.URL.substring(0,document.URL.indexOf("/index.cfm")) 
+			+ "/hostcompany/imageUploadPrint.cfm?option=printAll&hostCompanyID="+hostCompanyID+"&fileID="+id1+"&fileID2="+id2+"&fileID3="+id3;
+		window.open(printURL, "File", "width=800, height=600");
 	}
 	
 	// Delete the file that has been uploaded
-	var deleteAuthenticationFile = function(file) {
+	var deleteAuthenticationFile = function(id) {
 		if (confirm("Are you sure you want to delete this file?")) {
-			var hostCompanyID = $('#hostCompanyID').val();
 			var deleteURL = document.URL;
 			deleteURL = deleteURL.substring(0, deleteURL.indexOf("/index.cfm"));
-			deleteURL += "/hostcompany/imageUploadPrint.cfm?option=delete&type=" + file + "&hostCompanyID=" + hostCompanyID;
-			window.open(deleteURL, file, "width=10, height=10");
+			deleteURL += "/hostcompany/imageUploadPrint.cfm?option=delete&fileID="+id;
+			window.open(deleteURL, id, "width=10, height=10");
 		}
 	}
 	
@@ -1277,9 +1440,8 @@
 	}
 	
 	//open window
-	function openWindow(url) {
-		var width = screen.width - 100
-		newWindow=window.open(url, "NewWindow", "width=" + width + ",height=500" + ", location=no, scrollbars=yes, menubar=yes, toolbars=no, resizable=yes"); 
+	function openWindow(url, width, height) {
+		newWindow=window.open(url, "NewWindow", "width=" + width + ",height="+height+", location=no, scrollbars=yes, menubar=yes, toolbars=no, resizable=yes"); 
 		if (window.focus) {
 			newWindow.focus();
 		}
@@ -1918,7 +2080,7 @@
 													<!--- Office View Only ---> 
                                                     <cfif ListFind("1,2,3,4", CLIENT.userType)>
                                                         <span style="float:right; padding-right:20px;">
-                                                            <a href="javascript:openWindow('hostCompany/hostCompanyInfoHistory.cfm?hostID=#URL.hostCompanyID#');" class="style2">[ History ]</a>
+                                                            <a href="javascript:openWindow('hostCompany/hostCompanyInfoHistory.cfm?hostID=#URL.hostCompanyID#',1000,500);" class="style2">[ History ]</a>
                                                         </span>
                                                     </cfif>
                                              	</td>
@@ -1944,7 +2106,13 @@
                                                     <table width="100%" cellpadding="3" cellspacing="3" align="center" style="border:1px solid ##C7CFDC; background-color:##F7F7F7;">
                                                         <tr>
                                                             <td colspan="2">
-                                                                <strong><center>Confirmation Of Terms</center></strong>
+                                                            	<strong style="width:100%">
+                                                                	<span style="margin-left:38%">Confirmation Of Terms</span>
+                                                                    <span style="float:right">
+                                                                    	<a href="javascript:openWindow('hostCompany/confirmationHistory.cfm?hostID=#URL.hostCompanyID#',400,500);" class="style1">[ History ]</a>
+                                                                  	</span>
+                                                              	</strong>
+                                                                <u><p style="text-align:right; margin-right:10px;">Verification Date</p></u>
                                                             </td>
                                                         </tr>
                                                         <cfloop query="qGetActivePrograms">
@@ -1967,10 +2135,9 @@
                                                                   			<td width="70%" align="right">
                                                                             	<table width="100%">
                                                                                 	<tr>
-                                                                                    	<td width="50%" align="center">
-                                                                                        	Date: 
+                                                                                    	<td width="60%" align="right">
                                                                                         </td>
-                                                                                        <td width="50%" align="right">
+                                                                                        <td width="40%" align="right">
                                                                                             <span class="editPage">
                                                                                                 <input 
                                                                                                     type="text" 
@@ -2005,7 +2172,13 @@
                                                     <table width="100%" cellpadding="3" cellspacing="3" align="center" style="border:1px solid ##C7CFDC; background-color:##F7F7F7;">
                                                         <tr>
                                                             <td colspan="2">
-                                                                <strong><center>Available J1 Positions</center></strong>
+                                                            	<strong style="width:100%">
+                                                                	<span style="margin-left:38%">Available J1 Positions</span>
+                                                                    <span style="float:right">
+                                                                    	<a href="javascript:openWindow('hostCompany/j1History.cfm?hostID=#URL.hostCompanyID#',400,500);" class="style1">[ History ]</a>
+                                                                  	</span>
+                                                              	</strong>
+                                                                <u><p style="text-align:right; margin-right:10px;">Verification Date</p></u>
                                                             </td>
                                                         </tr>
                                                         <cfloop query="qGetActivePrograms">
@@ -2025,10 +2198,9 @@
                                                                             <td width="70%" align="right">
                                                                             	<table width="100%">
                                                                                 	<tr>
-                                                                                    	<td width="50%" align="right">
-                                                                                        	Verified: 
+                                                                                    	<td width="60%" align="right">
                                                                                       	</td>
-                                                                                        <td width="50%" align="right">
+                                                                                        <td width="40%" align="right">
                                                                                             <span class="editPage">
                                                                                                 <input type="text"
                                                                                                     name="j1Date_#programID#"
@@ -2062,13 +2234,21 @@
                                                     <table width="100%" cellpadding="3" cellspacing="3" align="center" style="border:1px solid ##C7CFDC; background-color:##F7F7F7;">
                                                         <tr>
                                                             <td colspan="2">
-                                                                <strong><center>Authentication</center></strong>
+                                                                <strong style="width:100%">
+                                                                	<span style="margin-left:38%">Authentication</span>
+                                                                    <span style="float:right">
+                                                                    	<a href="javascript:openWindow('hostCompany/authenticationHistory.cfm?hostID=#URL.hostCompanyID#',980,500);" class="style1">[ History ]</a>
+                                                                  	</span>
+                                                              	</strong>
+                                                                <br/>
+                                                                <i style="font-size:9px;">These documents normally will expire at the end of the recruitment year.</i>
+                                                                <span style="margin-left:37%"><u>Expiration Date</u></span>
+                                                                <span style="float:right"><u>File Uploaded</u></span>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td class="style1" align="right" width="30%"><label for="authentication_secretaryOfState"><strong>Secretary of State:</strong></label></td>
                                                             <td class="style1" width="70%">
-                                                            	<cfdirectory name="secretaryOfStateFile" action="list" directory="#APPLICATION.PATH.BusinessLicense#" filter="#URL.hostCompanyID#.*">
                                                                 <input 
                                                                 	type="checkbox" 
                                                                     name="authentication_secretaryOfState" 
@@ -2077,7 +2257,6 @@
                                                                     class="formField" 
                                                                     disabled 
 																	<cfif VAL(FORM.authentication_secretaryOfState)> checked </cfif> />
-                                                              	Expiration:
                                                                 <span class="editPage">
                                                                     <input 
                                                                     	type="text" 
@@ -2085,24 +2264,29 @@
                                                                         id="authentication_secretaryOfStateExpiration" 
                                                                         value="#DateFormat(authentication_secretaryOfStateExpiration, 'mm/dd/yyyy')#" 
                                                                         class="style1 datePicker editPage" />
-                                    								<cfif VAL(ListLen(secretaryOfStateFile.name))>
-                                                                  		<img
-                                                                            class="editPage"
-                                                                            src="../pics/deletex.gif" 
-                                                                            alt="delete" 
-                                                                            onclick="deleteAuthenticationFile('businessLicense')"
-                                                                            style="float:right; margin-right:25px; cursor:pointer" />
-                                                                       	<input type="hidden" id="business_license_upload"/>
-                                                                   	<cfelse>
-                                                                        <input 
-                                                                            type="image" 
-                                                                            src="../pics/arrowUp.jpg" 
-                                                                            class="editPage" 
-                                                                            value="Upload" 
-                                                                            name="business_license_upload" 
-                                                                            id="business_license_upload" 
-                                                                            style="float:right; padding-right:25px; cursor:pointer" />	
-                                                                   	</cfif>							
+                                                                  	<cfif VAL(URL.hostCompanyID)>
+																		<cfif VAL(qGetSecretaryOfStateFile.recordCount)>
+                                                                        	<a
+                                                                                href="##" 
+                                                                                class="editPage"
+                                                                                onclick="deleteAuthenticationFile('#qGetSecretaryOfStateFile.id#')"
+                                                                                style="float:right; cursor:pointer">
+                                                                                DELETE
+                                                                            </a>
+                                                                          	<input type="hidden" id="secretary_of_state_upload"/><!--- This is to prevent errors with ajaxUpload --->
+                                                                       	<cfelse>
+                                                                          	<a
+                                                                            	href="##" 
+                                                                                class="editPage" 
+                                                                                value="Upload" 
+                                                                                name="secretary_of_state_upload" 
+                                                                                id="secretary_of_state_upload" 
+                                                                                style="float:right; cursor:pointer">
+                                                                          		UPLOAD
+                                                                           	</a>
+                                                                        </cfif>
+                                                                        
+                                                                  	</cfif>						
                                                                 </span>
                                                                 <span class="readOnly">
                                                                     <cfif FORM.authentication_secretaryOfStateExpiration NEQ "">
@@ -2114,16 +2298,19 @@
                                                                             #DateFormat(FORM.authentication_secretaryOfStateExpiration, "mm/dd/yyyy")#
                                                                         </cfif>
                                                                     </cfif>
-                                                                    <cfif VAL(ListLen(secretaryOfStateFile.name))>
-                                                                        <img
-                                                                            class="readOnly"
-                                                                            src="../pics/Print30x30.png" 
-                                                                            alt="print" 
-                                                                            onclick="printAuthenticationFile('businessLicense')"
-                                                                            style="float:right; margin-right:25px; cursor:pointer" />
-                                                                  	<cfelse>
-                                                                    	<span class="readOnly" style="float:right; margin-right:25px;">No File</span>
-                                                                    </cfif>
+                                                                    <span style="float:right;">
+																		<cfif VAL(qGetSecretaryOfStateFile.recordCount)>
+                                                                            <a 
+                                                                                href="##"
+                                                                                class="readOnly" 
+                                                                                onclick="printAuthenticationFile('#qGetSecretaryOfStateFile.id#')" 
+                                                                                style="cursor:pointer;">
+                                                                                PRINT
+                                                                            </a>
+                                                                        <cfelse>
+                                                                            <p class="readOnly">NO FILE</p>
+                                                                        </cfif>
+                                                                    </span>
                                                                 </span>
                                                                 
                                                             </td>
@@ -2131,7 +2318,6 @@
                                                         <tr>
                                                             <td class="style1" align="right"><label for="authentication_departmentOfLabor"><strong>Department of Labor:</strong></label></td>
                                                             <td class="style1">
-                                                            	<cfdirectory name="departmentOfLaborFile" action="list" directory="#APPLICATION.PATH.DepartmentOfLabor#" filter="#URL.hostCompanyID#.*">
                                                                 <input 
                                                                 	type="checkbox" 
                                                                     name="authentication_departmentOfLabor" 
@@ -2140,7 +2326,6 @@
                                                                     class="formField" 
                                                                     disabled 
 																	<cfif VAL(FORM.authentication_departmentOfLabor)> checked </cfif> />
-                                                              	Expiration: 
                                                       			<span class="editPage">
                                                                     <input 
                                                                     	type="text" 
@@ -2148,24 +2333,28 @@
                                                                         id="authentication_departmentOfLaborExpiration" 
                                                                         value="#DateFormat(authentication_departmentOfLaborExpiration, 'mm/dd/yyyy')#" 
                                                                         class="style1 datePicker editPage" />
-                                                                  	<cfif VAL(ListLen(departmentOfLaborFile.name))>
-                                                                    	<img
-                                                                            class="editPage"
-                                                                            src="../pics/deletex.gif" 
-                                                                            alt="delete" 
-                                                                            onclick="deleteAuthenticationFile('departmentOfLabor')"
-                                                                            style="float:right; margin-right:25px; cursor:pointer" />
-                                                                       	<input type="hidden" id="department_of_labor_upload"/>
-                                                                    <cfelse>
-                                                                        <input 
-                                                                            type="image" 
-                                                                            src="../pics/arrowUp.jpg" 
-                                                                            class="editPage" 
-                                                                            value="Upload" 
-                                                                            name="department_of_labor_upload" 
-                                                                            id="department_of_labor_upload" 
-                                                                            style="float:right; padding-right:25px; cursor:pointer" />
-                                                                   	</cfif>										
+                                                                  	<cfif VAL(URL.hostCompanyID)>
+																		<cfif VAL(qGetDepartmentOfLaborFile.recordCount)>
+                                                                        	<a
+                                                                                href="##" 
+                                                                                class="editPage"
+                                                                                onclick="deleteAuthenticationFile('#qGetDepartmentOfLaborFile.id#')"
+                                                                                style="float:right; cursor:pointer">
+                                                                                DELETE
+                                                                            </a>
+                                                                      		<input type="hidden" id="department_of_labor_upload"/><!--- This is to prevent errors with ajaxUpload --->
+                                                                        <cfelse>
+                                                                          	<a
+                                                                            	href="##" 
+                                                                                class="editPage" 
+                                                                                value="Upload" 
+                                                                                name="department_of_labor_upload" 
+                                                                                id="department_of_labor_upload" 
+                                                                                style="float:right; cursor:pointer">
+                                                                          		UPLOAD
+                                                                           	</a>
+                                                                        </cfif>	
+                                                                 	</cfif>									
                                                                 </span>
                                                                 <span class="readOnly">
                                                                 	<cfif FORM.authentication_departmentOfLaborExpiration NEQ "">
@@ -2177,23 +2366,25 @@
                                                                             #DateFormat(FORM.authentication_departmentOfLaborExpiration, "mm/dd/yyyy")#
                                                                         </cfif>
                                                                     </cfif>
-                                                                    <cfif VAL(ListLen(departmentOfLaborFile.name))>
-                                                                        <img
-                                                                        class="readOnly"
-                                                                        src="../pics/Print30x30.png"
-                                                                        alt="print"
-                                                                        onclick="printAuthenticationFile('departmentOfLabor')"
-                                                                        style="float:right; padding-right:25px; cursor:pointer" />
-                                                                  	<cfelse>
-                                                                    	<span class="readOnly" style="float:right; margin-right:25px;">No File</span>
-                                                                    </cfif>
+                                                                    <span style="float:right;">
+																		<cfif VAL(qGetDepartmentOfLaborFile.recordCount)>
+                                                                            <a 
+                                                                                href="##"
+                                                                                class="readOnly" 
+                                                                                onclick="printAuthenticationFile('#qGetDepartmentOfLaborFile.id#')" 
+                                                                                style="cursor:pointer;">
+                                                                                PRINT
+                                                                            </a>
+                                                                        <cfelse>
+                                                                            <p class="readOnly">NO FILE</p>
+                                                                        </cfif>
+                                                                    </span>
                                                                 </span>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td class="style1" align="right"><label for="authentication_googleEarth"><strong>Google Earth:</strong></label></td>
                                                             <td class="style1">
-                                                            	<cfdirectory name="googleEarthFile" action="list" directory="#APPLICATION.PATH.GoogleEarth#" filter="#URL.hostCompanyID#.*">
                                                                 <input 
                                                                 	type="checkbox" 
                                                                     name="authentication_googleEarth" 
@@ -2202,7 +2393,6 @@
                                                                     class="formField" 
                                                                     disabled 
 																	<cfif VAL(FORM.authentication_googleEarth)> checked </cfif> />
-                                                               	Expiration:
                                                               	<span class="editPage">
                                                                     <input 
                                                                     	type="text" 
@@ -2210,24 +2400,28 @@
                                                                         id="authentication_googleEarthExpiration" 
                                                                         value="#DateFormat(authentication_googleEarthExpiration, 'mm/dd/yyyy')#" 
                                                                         class="style1 datePicker editPage" />
-                                                                  	<cfif VAL(ListLen(googleEarthFile.name))>
-                                                                    	<img
-                                                                            class="editPage"
-                                                                            src="../pics/deletex.gif" 
-                                                                            alt="delete" 
-                                                                            onclick="deleteAuthenticationFile('googleEarth')"
-                                                                            style="float:right; margin-right:25px; cursor:pointer" />
-                                                                       	<input type="hidden" id="google_earth_upload"/>
-                                                                    <cfelse>
-                                                                        <input 
-                                                                            type="image" 
-                                                                            src="../pics/arrowUp.jpg" 
-                                                                            class="editPage" 
-                                                                            value="Upload" 
-                                                                            name="google_earth_upload" 
-                                                                            id="google_earth_upload" 
-                                                                            style="float:right; padding-right:25px; cursor:pointer" />
-                                                                 	</cfif>							
+                                                                  	<cfif VAL(URL.hostCompanyID)>
+																		<cfif VAL(qGetGoogleEarthFile.recordCount)>
+                                                                            <a
+                                                                                href="##" 
+                                                                                class="editPage"
+                                                                                onclick="deleteAuthenticationFile('#qGetGoogleEarthFile.id#')"
+                                                                                style="float:right; cursor:pointer">
+                                                                                DELETE
+                                                                            </a>
+                                                                           	<input type="hidden" id="google_earth_upload"/><!--- This is to prevent errors with ajaxUpload --->
+                                                                        <cfelse>
+                                                                            <a
+                                                                            	href="##" 
+                                                                                class="editPage" 
+                                                                                value="Upload" 
+                                                                                name="google_earth_upload" 
+                                                                                id="google_earth_upload" 
+                                                                                style="float:right; cursor:pointer">
+                                                                          		UPLOAD
+                                                                           	</a>
+                                                                        </cfif>
+                                                                 	</cfif>						
                                                                 </span>
                                                                 <span class="readOnly">
                                                                 	<cfif FORM.authentication_googleEarthExpiration NEQ "">
@@ -2239,17 +2433,39 @@
                                                                             #DateFormat(FORM.authentication_googleEarthExpiration, "mm/dd/yyyy")#
                                                                         </cfif>
                                                                     </cfif>
-                                                                    <cfif VAL(ListLen(googleEarthFile.name))>
-                                                                        <img 
-                                                                            class="readOnly" 
-                                                                            src="../pics/Print30x30.png" 
-                                                                            alt="print" 
-                                                                            onclick="printAuthenticationFile('googleEarth')" 
-                                                                            style="float:right; padding-right:25px; cursor:pointer" />
-                                                                 	<cfelse>
-                                                                    	<span class="readOnly" style="float:right; margin-right:25px;">No File</span>
-                                                                    </cfif>
+                                                                    <span style="float:right;">
+																		<cfif VAL(qGetGoogleEarthFile.recordCount)>
+                                                                            <a 
+                                                                                href="##"
+                                                                                class="readOnly" 
+                                                                                onclick="printAuthenticationFile('#qGetGoogleEarthFile.id#')" 
+                                                                                style="cursor:pointer;">
+                                                                                PRINT
+                                                                            </a>
+                                                                        <cfelse>
+                                                                            <p class="readOnly">NO FILE</p>
+                                                                        </cfif>
+                                                                    </span>
                                                                 </span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                        	<td colspan="2">
+                                                            	<a 
+                                                                	href="##" 
+                                                                    onclick="printAllAuthenticationFiles(
+                                                                    	'#VAL(qGetSecretaryOfStateFile.id)#',
+                                                                    	'#VAL(qGetDepartmentOfLaborFile.id)#',
+                                                                        '#VAL(qGetGoogleEarthFile.id)#');" 
+                                                                    class="style1" 
+                                                                    style="float:right">
+                                                                    [PRINT ALL]
+                                                        		</a>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                        	<td colspan="2">
+                                                            	<i style="font-size:9px; float:right;">Only pdf files will display with print all.</i>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -2265,23 +2481,25 @@
                                             <tr>
                                                 <td class="style1" align="right"><strong>Workmen's Compensation:</strong></td>
                                                 <td class="style1" bordercolor="##FFFFFF">
-                                                	<cfdirectory name="workmensCompensationFile" action="list" directory="#APPLICATION.PATH.workmensCompensation#" filter="#URL.hostCompanyID#.*">
                                                     <span class="readOnly">
                                                         <cfif ListFind("0,1", FORM.workmensCompensation)>
                                                             #YesNoFormat(VAL(FORM.workmensCompensation))#
                                                         <cfelseif FORM.workmensCompensation EQ 2>
                                                             N/A
                                                         </cfif>
-                                                        <cfif VAL(ListLen(workmensCompensationFile.name))>
-                                                            <img 
-                                                                class="readOnly" 
-                                                                src="../pics/Print30x30.png" 
-                                                                alt="print" 
-                                                                onclick="printAuthenticationFile('workmensCompensation')" 
-                                                                style="float:right; padding-right:25px; cursor:pointer" />
-                                                       	<cfelse>
-                                                            <span class="readOnly" style="float:right; margin-right:25px;">No File</span>
-                                                        </cfif>
+                                                        <span style="float:right;">
+															<cfif VAL(qGetWorkmensCompensationFile.recordCount)>
+                                                                <a 
+                                                                    href="##"
+                                                                    class="readOnly" 
+                                                                    onclick="printAuthenticationFile('#qGetWorkmensCompensationFile.id#')" 
+                                                                    style="cursor:pointer;">
+                                                                    PRINT
+                                                                </a>
+                                                            <cfelse>
+                                                                <p class="readOnly">NO FILE</p>
+                                                            </cfif>
+                                                      	</span>
                                                     </span>
                                                     <select name="workmensCompensation" id="workmensCompensation" class="style1 editPage selfPlacementField"> 
                                                         <option value="" <cfif NOT LEN(FORM.workmensCompensation)>selected</cfif> ></option>
@@ -2289,24 +2507,28 @@
                                                         <option value="1" <cfif FORM.workmensCompensation EQ 1>selected</cfif> >Yes</option>                                                    
                                                         <option value="2" <cfif FORM.workmensCompensation EQ 2>selected</cfif> >N/A</option>
                                                     </select>
-                                                    <cfif VAL(ListLen(workmensCompensationFile.name))>
-                                                        <img
-                                                            class="editPage"
-                                                            src="../pics/deletex.gif" 
-                                                            alt="delete" 
-                                                            onclick="deleteAuthenticationFile('workmensCompensation')"
-                                                            style="float:right; margin-right:25px; cursor:pointer" />
-                                                       	<input type="hidden" id="workmens_compensation_upload"/>
-                                                  	<cfelse>
-                                                        <input 
-                                                            type="image" 
-                                                            src="../pics/arrowUp.jpg" 
-                                                            class="editPage" 
-                                                            value="Upload" 
-                                                            name="workmens_compensation_upload" 
-                                                            id="workmens_compensation_upload" 
-                                                            style="float:right; padding-right:25px; cursor:pointer" />
-                                                  	</cfif>
+                                                    <cfif VAL(URL.hostCompanyID)>
+														<cfif VAL(qGetWorkmensCompensationFile.recordCount)>
+                                                           	<a
+                                                                href="##" 
+                                                                class="editPage"
+                                                                onclick="deleteAuthenticationFile('#qGetWorkmensCompensationFile.id#')"
+                                                                style="float:right; cursor:pointer">
+                                                                DELETE
+                                                            </a>
+                                                           	<input type="hidden" id="workmens_compensation_upload"/><!--- This is to prevent errors with ajaxUpload --->
+                                                        <cfelse>
+                                                          	<a
+                                                                href="##" 
+                                                                class="editPage" 
+                                                                value="Upload" 
+                                                                name="workmens_compensation_upload" 
+                                                                id="workmens_compensation_upload" 
+                                                                style="float:right; cursor:pointer">
+                                                                UPLOAD
+                                                            </a>
+                                                        </cfif>
+                                                 	</cfif>
                                                 </td>
                                             </tr>
                                             <tr>
