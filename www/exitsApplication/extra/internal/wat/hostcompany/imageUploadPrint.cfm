@@ -100,7 +100,7 @@
             OR id = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.fileID3#"> )
       	AND fileType = <cfqueryparam cfsqltype="cf_sql_varchar" value="pdf">
     </cfquery>
-   	<cfif VAL(qGetFiles.recordCount)>
+   	<cfif VAL(qGetAllFiles.recordCount)>
     	<cfoutput>
         	<cfloop query="qGetFiles">
             	<cfif mergePath EQ "">
