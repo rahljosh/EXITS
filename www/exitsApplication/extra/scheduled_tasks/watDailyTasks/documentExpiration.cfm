@@ -43,9 +43,6 @@
    	WHERE authentication_secretaryOfStateExpiration < <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
 </cfquery>
 <cfloop query="qGetHosts_expiredSOS">
-	 <cfif fileExists("#APPLICATION.PATH.businessLicense##hostCompanyID#.jpg")>
-        <cffile action="delete"  file="#APPLICATION.PATH.businessLicense##hostCompanyID#.jpg">
-  	</cfif>
     <cfquery datasource="MySql">
     	UPDATE extra_hostCompany
        	SET authentication_secretaryOfState = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
@@ -60,9 +57,6 @@
    	WHERE authentication_departmentOfLaborExpiration < <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
 </cfquery>
 <cfloop query="qGetHosts_expiredDOL">
-	 <cfif fileExists("#APPLICATION.PATH.departmentOfLabor##hostCompanyID#.jpg")>
-        <cffile action="delete" file="#APPLICATION.PATH.departmentOfLabor##hostCompanyID#.jpg">
-  	</cfif>
     <cfquery datasource="MySql">
     	UPDATE extra_hostCompany
        	SET authentication_departmentOfLabor = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
@@ -76,10 +70,7 @@
    	FROM extra_hostCompany
    	WHERE authentication_googleEarthExpiration < <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
 </cfquery>
-<cfloop query="qGetHosts_expiredDOL">
-	 <cfif fileExists("#APPLICATION.PATH.googleEarth##hostCompanyID#.jpg")>
-        <cffile action="delete"  file="#APPLICATION.PATH.googleEarth##hostCompanyID#.jpg">
-  	</cfif>
+<cfloop query="qGetHosts_expiredGE">
     <cfquery datasource="MySql">
     	UPDATE extra_hostCompany
        	SET authentication_googleEarth = <cfqueryparam cfsqltype="cf_sql_bit" value="0">

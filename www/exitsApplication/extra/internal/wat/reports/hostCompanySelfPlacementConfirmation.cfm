@@ -31,16 +31,16 @@
 	</cfscript>
     
     <cfquery name="qGetHostCompanyList" datasource="MySql">
-        SELECT 
+        SELECT
         	hostcompanyID, 
             name 
-        FROM 
+        FROM
         	extra_hostcompany 
-        WHERE         	
+        WHERE
             companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-        AND 
+        AND
         	name != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-		ORDER BY 
+		ORDER BY
         	name
     </cfquery>
     
@@ -75,6 +75,10 @@
                 ehc.email AS hostCompanyEmail,
                 ehc.supervisor AS hostCompanySupervisor,
                 ehc.personJobOfferName,
+                ehc.address,
+                ehc.city,
+                s.stateName,
+                ehc.zip,
                 <!--- Country --->
                 cl.countryName
             FROM
@@ -92,11 +96,13 @@
                 
 				<cfif VAL(FORM.hostCompanyID)>    
                     AND    
-                        ehc.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">                        
+                        ehc.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">
                 </cfif>
 
             LEFT OUTER JOIN
-            	smg_countryList cl ON cl.countryID = ec.residence_country            
+            	smg_countryList cl ON cl.countryID = ec.residence_country
+          	LEFT JOIN
+            	smg_states s ON s.id = ehc.state          
             WHERE 
                 ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
             AND 
@@ -123,7 +129,7 @@
 
 	$(document).ready(function() {
 		displayEmailOption();
-	});	
+	});
 
 	var displayEmailOption = function() {
 		
@@ -240,16 +246,16 @@
 	</cfscript>
     
 	<cfsavecontent variable="reportContent">
-    	
+
         <cfoutput>
             <div style="border-bottom:1px solid ##999; margin:10px;">&nbsp;</div>
             <div class="style1">&nbsp; &nbsp; <strong>Total Number of Candidates:</strong> #qGetResults.recordCount# <br /><br /> </div>
             <div class="style1">&nbsp; &nbsp; Report Prepared on #DateFormat(now(), 'dddd, mmm, d, yyyy')#</div>
             <div style="border-bottom:1px solid ##999; margin:10px;">&nbsp;</div>
 		</cfoutput>
-        		
+
         <cfoutput query="qGetResults" group="hostCompanyName">
-            
+
             <cfscript>
 				if ( VAL(FORM.emailHostCompany) AND IsValid("email", qGetResults.hostCompanyEmail) ) {
 					// Send Email
@@ -296,9 +302,9 @@
                                 	#qGetResults.firstname# #qGetResults.lastname# (###qGetResults.candidateID#)
                                 <cfelse>
                                     <a href="?curdoc=candidate/candidate_info&uniqueid=#qGetResults.uniqueID#" target="_blank" class="style4">
-										#qGetResults.firstname# #qGetResults.lastname# (###qGetResults.candidateID#)                                     
+										#qGetResults.firstname# #qGetResults.lastname# (###qGetResults.candidateID#)
                                     </a>
-								</cfif>                                    
+								</cfif>
                             </td>
                             <td class="style1">#qGetResults.sex#</td>
                             <td class="style1">#qGetResults.countryName#</td>
@@ -336,6 +342,22 @@
 				}
                 -->
                 </style>
+                
+                <cfquery name="qGetJ1Positions" datasource="MySql">
+                	SELECT *
+                    FROM extra_j1_positions
+                    WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetResults.hostCompanyID)#">
+                    AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
+                    AND verifiedDate IS NOT NULL
+                </cfquery>
+                
+                <cfquery name="qGetConfirmations" datasource="MySql">
+                	SELECT *
+                    FROM extra_confirmations
+                    WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetResults.hostCompanyID)#">
+                    AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
+                    AND confirmedDate IS NOT NULL
+                </cfquery>
             
                 <p class="style1">Dear #qGetResults.hostCompanySupervisor#,</p>
                 
@@ -347,20 +369,76 @@
                 </p>
                 
                 <!--- Display Report Content --->
-                #reportHostCompanyContent#
+             	<table width="99%" cellpadding="4" cellspacing=0 align="center">
+       				<tr>
+                        <td colspan="6">
+                        	<strong>
+                            	#qGetResults.hostCompanyName#
+                                <br />
+                                #qGetResults.address# #qGetResults.city#, #qGetResults.stateName# #qGetResults.zip#
+                          	</strong>
+                      	</td>
+                    </tr>
+                    <tr>
+                        <th width="25%" align="left" class="#tableTitleClass#">Candidate</th>
+                        <th width="10%" align="left" class="#tableTitleClass#">Gender</th>
+                        <th width="18%" align="left" class="#tableTitleClass#">Country</th>
+                        <th width="18%" align="left" class="#tableTitleClass#">Job Title</th>
+                        <th width="11%" align="left" class="#tableTitleClass#">Start Date</th>
+                        <th width="11%" align="left" class="#tableTitleClass#">End Date</th>
+                        <th width="25%" align="left" class="#tableTitleClass#">Email</th>		
+                    </tr>
+                    
+                    <cfscript>
+                        vRowCount = 0;
+                    </cfscript>
+                    
+                    <cfoutput>
+                        <cfscript>
+                            vRowCount = vRowCount + 1;
+                        </cfscript>
+                        <tr <cfif vRowCount MOD 2>bgcolor="##E4E4E4"</cfif>>
+                            <td class="style1">
+                                #qGetResults.firstname# #qGetResults.lastname# (###qGetResults.candidateID#)                                  
+                            </td>
+                            <td class="style1">#qGetResults.sex#</td>
+                            <td class="style1">#qGetResults.countryName#</td>
+                            <td class="style1">#qGetResults.jobTitle#</td>
+                            <td class="style1">#DateFormat(qGetResults.startdate, 'mm/dd/yyyy')#</td>
+                            <td class="style1">#DateFormat(qGetResults.enddate, 'mm/dd/yyyy')#</td>
+                            <!--- This is designed to prevent a link from being automatically generated in email clients --->
+                            <td class="style1"><a href="" style="color:##000001;">#qGetResults.email#</a></td>
+                        </tr>
+                    </cfoutput>        
+                </table>
                 
                 <p class="style1">
                     Please review the below and <font color="##FF0000">reply with complete answers</font> within <font color="##FF0000">5 (five) business days</font> of receiving this note.
                     <ol class="style1">
-                        <li>Please confirm whether the job offer was <strong>signed personally</strong> by <strong>#qGetResults.personJobOfferName#</strong>.</li>
-                        <li>Please confirm the <strong>employment availability</strong> for the above participant(s) and the <strong>start and end date</strong>.</li>
-                        <li>Please confirm the <strong>job title</strong>.</li>
-                        <li>Please confirm the <strong>number of hours of work per week you can provide</strong> for the above participant(s).</li>
-                        <li>
-                            Please confirm that<strong> you have read and will observe the employer's responsibilities</strong> (page ##2 of the job offer form), 
-                            as set by the U.S. Department of State as a core program rule.
-                        </li>
+                    	<li>Was the extended job offer reviewd and <strong>signed personally</strong> by <strong>#qGetResults.personJobOfferName#</strong>?</li>
+                        <li>Please confirm the <strong>employment availability</strong> for the above participant(s) <strong>and the number of hours of paid employment you have agreed to provide to each</strong>.</li>
+                        <li>Please verify <strong>the job title, the start date and the end date.</strong> Please inform CSB of any corrections needed.</li>
+                        <cfif NOT VAL(qGetJ1Positions.recordCount)>
+                        	<li>Please confirm the <strong>total number of J1 placements available</strong> with your company.</li>
+                      	</cfif>
+                        <cfif NOT VAL(qGetConfirmations.recordCount)>
+                        	<li>
+                            	Please confirm that 
+                                <strong>you have read, agreed and certified the employer's terms</strong> 
+                                (page ##2 of the signed job offer form), as set by the U.S. Department of State as a core program rule.
+                         	</li>
+                      	</cfif>
                     </ol>
+                </p>
+                
+                <p class="style1">
+                	<font color="##FF0000">
+                    	<u><b>Important Note:</b></u>
+                        <br />
+                        1. If the job offer is cancelled or revoked due to any circumstances / conditions, please notify CSB immediately.
+                        <br />
+                        2. If during the program there are any changes or deviations in the job placement extended to this participant, please promptly notify CSB.
+                    </font>
                 </p>
                 
                 <p class="style1">
@@ -486,7 +564,7 @@
                     <img src="../../pics/black_pixel.gif" width="100%" height="2">
                     <div class="title1">All active candidates enrolled in the program by Intl. Rep. and Program</div>
                     <img src="../../pics/black_pixel.gif" width="100%" height="2">
-                    
+
                     <!--- Include Report --->
                     #reportContent#
                 </cfdocument>
@@ -512,4 +590,4 @@
         Onscreen will allow you to change criteria with out clicking your back button.
     </div>  <br />
 
-</cfif>    
+</cfif>

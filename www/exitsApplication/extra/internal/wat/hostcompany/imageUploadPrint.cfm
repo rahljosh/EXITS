@@ -13,23 +13,23 @@
 	<cfsetting showdebugoutput="no">
     
     <!--- Param URL Variable --->
-    <cfparam name="URL.type" default="businessLicense">
-    <cfparam name="URL.hostCompanyID" default="0">
     <cfparam name="URL.option" default="upload">
+    <cfparam name="URL.type" default="secretaryOfState">
+    <cfparam name="URL.hostCompanyID" default="0">
+    <cfparam name="URL.expirationDate" default="">
+    <cfparam name="URL.fileID" default="0">
+    <!--- These are only needed if the option is set to printAll --->
+    <cfparam name="URL.fileID2" default="0">
+    <cfparam name="URL.fileID3" default="0">
 
 	<cfscript>
-		imagePath = APPLICATION.PATH;
-		if (URL.type EQ 'businessLicense') {
-			imagePath = APPLICATION.PATH.BusinessLicense;		
-		} else if (URL.type EQ 'departmentOfLabor') {
-			imagePath = APPLICATION.PATH.departmentOfLabor;	
-		} else if (URL.type EQ 'googleEarth') {
-			imagePath = APPLICATION.PATH.googleEarth;	
-		} else if (URL.type EQ 'workmensCompensation') {
-			imagePath = APPLICATION.PATH.workmensCompensation;	
-		}
+		imagePath = APPLICATION.PATH.authentications;
 		if ( NOT DirectoryExists(imagePath) ) {
 			DirectoryCreate(imagePath);
+		}
+		// Make sure the input type is correct, otherwise set as noType to signal a problem
+		if (URL.type NEQ 'secretaryOfState' AND URL.type NEQ 'departmentOfLabor' AND URL.type NEQ 'googleEarth' AND URL.type NEQ 'workmensCompensation') {
+			URL.type = 'noType';	
 		}
 	</cfscript>
 
@@ -42,26 +42,24 @@
     <cffile action="upload" filefield="image" destination="#imagePath#" nameconflict="overwrite">
     
     <!--- Get the file extension --->
-    <cfset fileExt = ListLast(cffile.clientFile,".")>
+    <cfset fileExt = ListLast(cffile.clientfile,".")>
+    
+    <!--- Set the new name for the file --->
+    <cfset fileName = "#URL.hostCompanyID#_#URL.type#_#DateFormat(NOW(),'mm-dd-yyyy')#">
 
 	<!--- Only accept if it is a valid file type --->
-    <cfif ListFind("jpg,jpeg,pdf,doc,docx",fileExt)>
-    	<cfif fileExists("#imagePath##URL.hostCompanyID#.jpg")>
-			<cffile action="delete" file="#imagePath##URL.hostCompanyID#.jpg">
-		</cfif>
-      	<cfif fileExists("#imagePath##URL.hostCompanyID#.jpeg")>
-        	<cffile action="delete" file="#imagePath##URL.hostCompanyID#.jpeg">
-      	</cfif>
-        <cfif fileExists("#imagePath##URL.hostCompanyID#.pdf")>
-        	<cffile action="delete" file="#imagePath##URL.hostCompanyID#.pdf">
-      	</cfif>
-        <cfif fileExists("#imagePath##URL.hostCompanyID#.doc")>
-        	<cffile action="delete" file="#imagePath##URL.hostCompanyID#.doc">
-      	</cfif>
-        <cfif fileExists("#imagePath##URL.hostCompanyID#.docx")>
-        	<cffile action="delete" file="#imagePath##URL.hostCompanyID#.docx">
-		</cfif>
-    	<cffile action="rename" source="#imagePath##cffile.clientFile#" destination="#imagePath##URL.hostCompanyID#.#fileExt#">
+    <cfif ListFind("jpg,jpeg,pdf,doc,docx",fileExt) AND URL.type NEQ 'noType'>
+    	<cffile action="rename" source="#imagePath##cffile.clientFile#" destination="#imagePath##fileName#.#fileExt#">
+        <cfquery datasource="MySql">
+        	INSERT INTO extra_hostauthenticationfiles (hostID, authenticationType, dateAdded, dateExpires, fullPath, fileType)
+            VALUES (
+            	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.hostCompanyID)#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#URL.type#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#URL.expirationDate#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#imagePath##fileName#.#fileExt#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#fileExt#"> )
+        </cfquery>
     	<script type="text/javascript">
 			alert("File uploaded successfully");
 		</script>
@@ -74,37 +72,88 @@
 
 <!--- Delete the file --->
 <cfelseif URL.option EQ "delete">
-	<cfdirectory name="deleteFile" action="list" directory="#imagePath#" filter="#URL.hostCompanyID#.*">
-	<cfif ListLen(ValueList(deleteFile.name))>
-    	<cffile action="delete" file="#imagePath##deleteFile.name#">
-        <script type="text/javascript">
-			window.close();
-		</script>
-  	</cfif>
+	<cfquery name="qGetFile" datasource="MySql">
+    	SELECT *
+        FROM extra_hostauthenticationfiles
+        WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.fileID#">
+    </cfquery>
+    <cfif fileExists(qGetFile.fullPath)>
+    	<cffile action="delete" file="#qGetFile.fullPath#">
+   	</cfif>
+    <cfquery datasource="MySql">
+    	DELETE FROM extra_hostauthenticationfiles
+        WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.fileID#">
+    </cfquery>
+    <script type="text/javascript">
+		window.close();
+	</script>
     
+<!--- Print all authentication files --->
+<cfelseif URL.option EQ "printAll">
+	<cfset mergePath = "">
+    <cfset destination = #imagePath# & "authentication" & #URL.hostCompanyID# & ".pdf">
+    <cfquery name="qGetAllFiles" datasource="MySql">
+    	SELECT *
+        FROM extra_hostauthenticationfiles
+        WHERE ( id = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.fileID#">
+        	OR id = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.fileID2#">
+            OR id = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.fileID3#"> )
+      	AND fileType = <cfqueryparam cfsqltype="cf_sql_varchar" value="pdf">
+    </cfquery>
+   	<cfif VAL(qGetFiles.recordCount)>
+    	<cfoutput>
+        	<cfloop query="qGetFiles">
+            	<cfif mergePath EQ "">
+                	<cfset mergePath = fullPath>
+                <cfelse>
+                	<cfset mergePath = mergePath & "," & fullPath>
+                </cfif>
+            </cfloop>
+            <cfpdf action="merge" source="#mergePath#" destination="#destination#" overwrite="yes">
+            <cfdocument format="flashpaper">
+            	<cfcontent file="#destination#">
+            </cfdocument>
+        </cfoutput>
+        <script type="text/javascript">
+            window.print();
+        </script>
+    <cfelse>
+    	<script type="text/javascript">
+            alert("There were no valid files found. Please note that the print all option will only work with pdf files.");
+			window.close();
+        </script>
+    </cfif>
+
 <!--- Image Print Screen --->
 <cfelse>
+	<!--- Get the reference to the file from the database --->
+	<cfquery name="qGetFile" datasource="MySql">
+    	SELECT *
+        FROM extra_hostauthenticationfiles
+        WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.fileID#">
+    </cfquery>
 
 	<!--- Check if the file exists --->
-    <cfif fileExists("#imagePath##URL.hostCompanyID#.pdf")> <!--- If the file is a pdf --->
-    	<cfdocument format="flashpaper">
-        	<cfcontent file="#imagePath##URL.hostCompanyID#.pdf">
-        </cfdocument>
-   	<cfelseif fileExists("#imagePath##URL.hostCompanyID#.doc")> <!--- If the file is .doc --->
-    	<cfheader name="Content-Disposition" value="attachment; filename=#URL.type#_#URL.hostCompanyID#.doc">
-		<cfcontent type="text/plain" file="#imagePath##URL.hostCompanyID#.doc">
-    <cfelseif fileExists("#imagePath##URL.hostCompanyID#.docx")> <!--- If the file is .docx --->
-    	<cfheader name="Content-Disposition" value="attachment; filename=#URL.type#_#URL.hostCompanyID#.docx">
-		<cfcontent type="text/plain" file="#imagePath##URL.hostCompanyID#.docx">
-    <cfelseif fileExists("#imagePath##URL.hostCompanyID#.jpg")> <!--- If the file extension is .jpg --->
-    	<cfimage action="read" source="#imagePath##URL.hostCompanyID#.jpg" name="image">
-        <cfcontent type="image/jpeg" variable="#imageGetBlob(image)#">
-   	<cfelseif fileExists("#imagePath##URL.hostCompanyID#.jpg")> <!--- If the file extension is .jpeg --->
-    	<cfimage action="read" source="#imagePath##URL.hostCompanyID#.jpeg" name="image">
-        <cfcontent type="image/jpeg" variable="#imageGetBlob(image)#">
-    <cfelse> <!--- If the file does not exist or is not a supported file type --->
+    <cfif fileExists(qGetFile.fullPath)>
+    	<cfif qGetFile.fileType EQ "pdf">
+        	<cfdocument format="flashpaper">
+            	<cfcontent file="#qGetFile.fullPath#">
+           	</cfdocument>
+       	<cfelseif qGetFile.fileType EQ "doc" OR qGetFile.fileType EQ "docx">
+        	<cfheader name="Content-Disposition" value="attachment; filename=#qGetFile.fullPath#">
+			<cfcontent type="text/plain" file="#qGetFile.fullPath#">
+       	<cfelseif qGetFile.fileType EQ "jpg" OR qGetFile.fileType EQ "jpeg">
+        	<cfimage action="read" source="#qGetFile.fullPath#" name="image">
+        	<cfcontent type="image/jpeg" variable="#imageGetBlob(image)#">
+       	<cfelse>
+        	<script type="text/javascript">
+				alert("The file is not in a supported format");
+				window.close();
+			</script>
+        </cfif>
+    <cfelse>
     	<script type="text/javascript">
-			alert("The image could not be found");
+			alert("The file could not be found");
 			window.close();
 		</script>
     </cfif>
