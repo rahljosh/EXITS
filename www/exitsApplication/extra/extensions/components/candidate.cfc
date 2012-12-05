@@ -929,7 +929,9 @@
                 ecpc.dateTransferConfirmed,
                 ej.ID AS jobID,
                 ej.title AS jobTitle,
-                ec.confirmed
+                ec.confirmed,
+                ep.numberPositions,
+                ep.programID
             FROM
                 extra_candidate_place_company ecpc
             INNER JOIN
@@ -940,6 +942,10 @@
             	extra_confirmations ec ON ec.hostID = eh.hostCompanyID
                 	AND
                     	ec.programID = (SELECT programID FROM extra_candidates WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#"> LIMIT 1)
+          	LEFT OUTER JOIN
+            	extra_j1_positions ep ON ep.hostID = eh.hostCompanyID
+                	AND
+                    	ep.programID = (SELECT programID FROM extra_candidates WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#"> LIMIT 1)
             WHERE 
                 ecpc.candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">
             
