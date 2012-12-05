@@ -64,14 +64,25 @@
     
     <cffunction name="getHostCompanyInfo" access="remote" returntype="struct" hint="Gets Host Company Info based on Host Company ID in struct Format">
     	<cfargument name="hostCompanyID" type="numeric" required="yes">
+        <cfargument name="candidateID" type="numeric" required="no" default="0"> <!--- This is used to get confirmation and j1 postions based on a candidate --->
         
         <cfquery name="qGetHCInfo" datasource="MySql">
         	SELECT
-            	*
+            	eh.*,
+                ec.confirmed,
+                ep.numberPositions
           	FROM
-            	extra_hostcompany
+            	extra_hostcompany eh
+			LEFT OUTER JOIN
+            	extra_confirmations ec ON ec.hostID = eh.hostCompanyID
+                	AND
+                    	ec.programID = (SELECT programID FROM extra_candidates WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#"> LIMIT 1)
+          	LEFT OUTER JOIN
+            	extra_j1_positions ep ON ep.hostID = eh.hostCompanyID
+                	AND
+                    	ep.programID = (SELECT programID FROM extra_candidates WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#"> LIMIT 1)
            	WHERE
-            	hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostCompanyID#">
+            	eh.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostCompanyID#">
         </cfquery>
         
         <cfscript>
@@ -83,6 +94,8 @@
 			result.EIN = "";
 			result.WC = 0;
 			result.WCE = "";
+			result.CONFIRMED = 0;
+			result.POSITIONS = 0;
 			
 			if (qGetHCInfo.recordCount) {
 				result.hasCompany = 1;
@@ -92,6 +105,8 @@
 				result.EIN = qGetHCInfo.EIN;
 				result.WC = qGetHCInfo.workmenscompensation;
 				result.WCE = DateFormat(qGetHCInfo.WCDateExpired, 'mm/dd/yyyy');
+				result.CONFIRMED = qGetHCInfo.confirmed;
+				result.POSITIONS = qGetHCInfo.numberPositions;
 			}
 			return result;
 		</cfscript>

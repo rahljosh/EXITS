@@ -403,7 +403,7 @@
 	}
 
 
-	var displayHostReason = function(currentHostPlaceID, selectedHostID) {
+	var displayHostReason = function(currentHostPlaceID, selectedHostID, candidateID) {
 		if ( currentHostPlaceID > '0' && currentHostPlaceID != selectedHostID && $(".trReasonInfo").css("display") == "none" ) {
 			$(".trReasonInfo").fadeIn("fast");
 			
@@ -439,7 +439,7 @@
 		// Setting a callback handler for the proxy automatically makes the proxy's calls asynchronous. 
 		selectedHC.setCallbackHandler(setCompanyInfo); 
 		selectedHC.setErrorHandler(getCompanyInfoError);
-		selectedHC.getHostCompanyInfo(selectedHostID);
+		selectedHC.getHostCompanyInfo(selectedHostID,candidateID);
 	}
 	
 	var setCompanyInfo = function(companyInfo) {
@@ -451,6 +451,8 @@
 			var authEIN = companyInfo.EIN;
 			var authWC = companyInfo.WC;
 			var authWCE = companyInfo.WCE;
+			var confirmed = companyInfo.CONFIRMED;
+			var numberPositions = companyInfo.POSITIONS;
 			
 			if (authSecretaryOfState == 1)
 				$("#authentication_secretaryOfState").attr("checked", "checked");
@@ -467,9 +469,18 @@
 			else
 				$("#authentication_googleEarth").removeAttr("checked");
 				
+			if (confirmed == 1) {
+				$("#confirmation").val(1);
+				$("#confirmationCheckbox").attr("checked","checked");
+			} else {
+				$("#confirmation").val(0);
+				$("#confirmationCheckbox").removeAttr("checked");
+			}
+				
 			$("#EIN").val(authEIN);
 			$("#workmensCompensation").val(authWC);
 			$("#WCDateExpired").val(authWCE);
+			$("#numberPositionsSelect").val(numberPositions);
 		} else {
 			getCompanyInfoError();
 		}
@@ -494,6 +505,14 @@
 			$("#reason_host").focus();
 			return false; 
 		}
+	}
+	
+	// Change values
+	var changeValue = function(id) {
+		if ($("#" + id).val() == 0)
+			$("#" + id).val(1);
+		else
+			$("#" + id).val(0);
 	}
 //-->
 </script> 
@@ -1412,7 +1431,7 @@
                                                 	name="hostCompanyID" 
                                                     id="hostCompanyID" 
                                                     class="style1 editPage xLargeField" 
-                                                    onChange="displayHostReason(#VAL(qCandidatePlaceCompany.hostCompanyID)#, this.value); displaySelfPlacementInfo(1);">
+                                                    onChange="displayHostReason(#VAL(qCandidatePlaceCompany.hostCompanyID)#, this.value, #VAL(qGetCandidate.candidateID)#); displaySelfPlacementInfo(1);">
 	                                                <option value="0">Unplaced</option>
                                                     <cfloop query="qHostCompanyList">
                                                     	<option value="#qHostCompanyList.hostCompanyID#" <cfif qCandidatePlaceCompany.hostCompanyID EQ qHostCompanyList.hostCompanyID> selected </cfif> > 
@@ -1628,7 +1647,19 @@
                                         <tr class="hiddenField selfPlacementInfo">
                                         	<td class="style1" align="right"><strong>Confirmation of Terms:</strong></td>
                                             <td class="style1">
-                                            	<input type="checkbox" disabled="disabled" <cfif qCandidatePlaceCompany.confirmed EQ 1>checked="checked"</cfif> />
+                                            	<input type="hidden" id="confirmation" name="confirmation" <cfif qCandidatePlaceCompany.confirmed EQ 1>value="1"<cfelse>value="0"</cfif> />
+                                                <input class="formField" type="checkbox" class="formField" onclick="changeValue('confirmation')" name="confirmationCheckbox" id="confirmationCheckbox" <cfif qCandidatePlaceCompany.confirmed EQ 1>checked="checked"</cfif> />
+                                            </td>
+                                        </tr>
+                                        <tr class="hiddenField selfPlacementInfo">
+                                        	<td class="style1" align="right"><strong>Available J1 Positions:</strong></td>
+                                            <td class="style1">
+                                            	<span class="readOnly">#qCandidatePlaceCompany.numberPositions#</span>
+                                                <select class="editPage" id="numberPositionsSelect" name="numberPositionsSelect">
+                                                	<cfloop from="0" to="99" index="i">
+                                                    	<option value="#i#" <cfif qCandidatePlaceCompany.numberPositions EQ i>selected</cfif>>#i#</option>
+                                                    </cfloop>
+                                                </select>
                                             </td>
                                         </tr>
                                         
@@ -1913,7 +1944,19 @@
                                                 <tr class="hiddenField selfPlacementInfo">
                                                     <td class="style1" align="right"><strong>Confirmation of Terms:</strong></td>
                                                     <td class="style1">
-                                                        <input type="checkbox" disabled="disabled" <cfif qGetAllPlacements.confirmed EQ 1>checked="checked"</cfif> />
+                                                    	<input type="hidden" id="confirmation_#qGetAllPlacements.candCompID#" name="confirmation_#qGetAllPlacements.candCompID#" <cfif qGetAllPlacements.confirmed EQ 1>value="1"<cfelse>value="0"</cfif> />
+                                                        <input type="checkbox" onClick="changeValue('confirmation_#qGetAllPlacements.candCompID#')" class="formField" name="confirmationCheckbox_#qGetAllPlacements.candCompID#" id="confirmationCheckbox_#qGetAllPlacements.candCompID#" <cfif qGetAllPlacements.confirmed EQ 1>checked="checked"</cfif> />
+                                                    </td>
+                                                </tr>
+                                                <tr class="hiddenField selfPlacementInfo">
+                                                    <td class="style1" align="right"><strong>Available J1 Positions:</strong></td>
+                                                    <td class="style1">
+                                                        <span class="readOnly">#qGetAllPlacements.numberPositions#</span>
+                                                        <select class="editPage" id="numberPositionsSelect_#qGetAllPlacements.candCompID#" name="numberPositionsSelect_#qGetAllPlacements.candCompID#">
+                                                            <cfloop from="0" to="99" index="i">
+                                                                <option value="#i#" <cfif qGetAllPlacements.numberPositions EQ i>selected</cfif>>#i#</option>
+                                                            </cfloop>
+                                                        </select>
                                                     </td>
                                                 </tr>
                                                 <tr class="hiddenField selfPlacementInfo">

@@ -40,6 +40,8 @@
 <cfparam name="FORM.WCDateExpried" default="">
 <cfparam name="FORM.hostCompanyID" default="0">
 <cfparam name="FORM.candCompID" default="0">
+<cfparam name="FORM.confirmation" default="0">
+<cfparam name="FORM.numberPositionsSelect" default="0">
 <!--- End of Host Company --->
 <cfparam name="FORM.selfConfirmationDate" default="">
 <cfparam name="FORM.selfFindJobOffer" default="">
@@ -78,6 +80,8 @@
         <cfparam name="FORM.newHousingAddress_#qGetAllPlacements.candCompID#" default="">
         <cfparam name="FORM.sevisUpdated_#qGetAllPlacements.candCompID#" default="">
         <cfparam name="FORM.jobID_#qGetAllPlacements.candCompID#" default="">
+        <cfparam name="FORM.confirmation_#qGetAllPlacements.candCompID#" default="">
+        <cfparam name="FORM.numberPositionsSelect_#qGetAllPlacements.candCompID#" default="">
     </cfif>
 </cfloop>
 
@@ -227,8 +231,24 @@
                     isTransferJobOfferReceived = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM['newJobOffer_#qGetAllPlacements.candCompID#'])#">,
                 	isTransferHousingAddressReceived = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM['newHousingAddress_#qGetAllPlacements.candCompID#'])#">,                
                 	isTransferSevisUpdated = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM['sevisUpdated_#qGetAllPlacements.candCompID#'])#">
-                WHERE 
+                WHERE
                     candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetAllPlacements.candCompID#">
+            </cfquery>
+            
+            <!--- Update secondary confirmations --->
+            <cfquery datasource="#APPLICATION.DSN.Source#">
+            	UPDATE extra_confirmations
+                SET confirmed = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM['confirmation_#qGetAllPlacements.candCompID#']#">
+                WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetAllPlacements.hostCompanyID)#">
+                AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetAllPlacements.programID)#">
+            </cfquery>
+            
+            <!--- Updated secondary J1 positions --->
+            <cfquery datasource="#APPLICATION.DSN.Source#">
+            	UPDATE extra_j1_positions
+                SET numberPositions = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM['numberPositionsSelect_#qGetAllPlacements.candCompID#']#">
+                WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetAllPlacements.hostCompanyID)#">
+                AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetAllPlacements.programID)#">
             </cfquery>
             
         </cfif>
@@ -240,7 +260,7 @@
 
 <!---- HOST COMPANY INFORMATION ---->
 <cfif VAL(FORM.hostcompanyID)>
-	
+
 	<!--- Update EIN on Host Company Table --->
     <cfif LEN(FORM.EIN)>
     
@@ -501,6 +521,22 @@
     	</cfif>
     
     </cfif>
+    
+	<!--- Update confirmations --->
+    <cfquery datasource="#APPLICATION.DSN.Source#">
+        UPDATE extra_confirmations
+        SET confirmed = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.confirmation#">
+        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.hostCompanyID)#">
+        AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCurrentPlacement.programID)#">
+    </cfquery>
+    
+    <!--- Update J1 positions --->
+    <cfquery datasource="#APPLICATION.DSN.Source#">
+        UPDATE extra_j1_positions
+        SET numberPositions = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.numberPositionsSelect#">
+        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.hostCompanyID)#">
+        AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCurrentPlacement.programID)#">
+    </cfquery>
     
 <!--- Not a valid Host Company Assigned --->
 <cfelseif VAL(qGetCurrentPlacement.candcompid)>
