@@ -541,14 +541,8 @@
 				// Inactivating User
 				if ( VAL(qGetUserInfo.active) AND NOT VAL(FORM.active) ) {
 
-					// Get User Information
-					qGetEnteredBy = APPLICATION.CFC.USER.getUsers(userID=CLIENT.userID);
-					
 					// Set Action Message
 					vActions = "<strong>Representative set as Inactive</strong> <br /> #CHR(13)#";
-
-					// Add User Information
-					vActions = vActions & "Updated by: #qGetEnteredBy.firstName# #qGetEnteredBy.lastName# (###qGetEnteredBy.userID#) <br /> #CHR(13)#";
 
 					APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
 						applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,
@@ -561,20 +555,14 @@
 				// Activating User - Reset fully enabled date
 				} else if ( NOT VAL(qGetUserInfo.active) AND VAL(FORM.active) ) {
 
-					// Get User Information
-					qGetEnteredBy = APPLICATION.CFC.USER.getUsers(userID=CLIENT.userID);
-					
 					// Set Action Message
 					vActions = "<strong>Representative set as Active</strong> <br /> #CHR(13)#";
 
 					//Reset fully enabled date - if user has been enabled before
 					if ( isDate(qGetUserInfo.dateAccountVerified) ) {
 						vResetDateAccountVerified = 1;
-						vActions = vActions & "Previous fully enabled date: #DateFormat(qGetUserInfo.dateAccountVerified, 'mm/dd/yyyy')# <br /> #CHR(13)#";
+						// vActions = vActions & "Previous fully enabled date: #DateFormat(qGetUserInfo.dateAccountVerified, 'mm/dd/yyyy')# <br /> #CHR(13)#";
 					}
-
-					// Add User Information
-					vActions = vActions & "Updated by: #qGetEnteredBy.firstName# #qGetEnteredBy.lastName# (###qGetEnteredBy.userID#) <br /> #CHR(13)#";
 
 					APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
 						applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,
