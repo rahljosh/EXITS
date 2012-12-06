@@ -356,7 +356,7 @@
 <!--- user has no access records - force entry of one. --->
 <cfif uar_usertype EQ 0>
 	<!--- if viewing own profile and not office users abort with message. --->
-	<cfif CLIENT.userID eq rep_info.userID and not CLIENT.usertype LTE 4>
+	<cfif CLIENT.userID eq rep_info.userID and not APPLICATION.CFC.USER.isOfficeUser()>
         You have no Program Manager & Regional Access record assigned.<br />
         One must be assigned first before access to your information is allowed.<br />
     	Contact your facilitator to add the record.
@@ -505,7 +505,7 @@
                             <tr>
                                 <td><strong>Password:</strong></td><td align="left">#password#</td>
                              
-							 <cfelseif CLIENT.usertype LTE uar_usertype> <!--- CLIENT.usertype LTE 4 OR - protect passwords --->
+							 <cfelseif CLIENT.usertype LTE uar_usertype> <!--- APPLICATION.CFC.USER.isOfficeUser() OR - protect passwords --->
                                  <td><strong>Username:</strong></td><td align="left">#username#</td>
                             </tr>    
                             <tr>
@@ -513,9 +513,9 @@
                             </tr></cfif>
                           
                           
-                        <cfif CLIENT.usertype LTE 4 AND rep_info.changepass eq 1><br />
+                        <cfif APPLICATION.CFC.USER.isOfficeUser() AND rep_info.changepass eq 1><br />
 							<tr>
-                            	<td colspan=2><i>User will be required to change password on next log in.</i></td>
+                            	<td colspan="2"><i>User will be required to change password on next log in.</i></td>
                              </tr>
                         </cfif>
                 		</table>
@@ -523,40 +523,35 @@
                         <table border=0>
                        
                         <!--- change password: if viewing own profile. --->
-                        <cfif CLIENT.userID EQ rep_info.userID OR CLIENT.usertype lte 4>
+                        <cfif CLIENT.userID EQ rep_info.userID OR APPLICATION.CFC.USER.isOfficeUser()>
                         <tr>
-                        	<Td colspan=2>
+                        	<td colspan="2">
                             <a href="index.cfm?curdoc=forms/change_password"><img src="pics/buttons/chPass.png" border="0" align="left"> Change Password</a>
                         	</td>
-                        </Tr>	
+                        </tr>	
                         </cfif>
                         
-						
+						<!--- Regional Managers and Above --->
                         <cfif CLIENT.usertype LTE 6>
-                         <tr>
-                        	<Td colspan=2>
-                            <a href="index.cfm?curdoc=history&userID=#rep_info.userID#"><img src="pics/buttons/viewHistory.png" border="0" align="left"> View History</a><br>
-                        </td>
-                        </Tr>	
+                            <tr>
+                                <td colspan="2">
+                                    <a href="index.cfm?curdoc=history&userID=#rep_info.userID#"><img src="pics/buttons/viewHistory.png" border="0" align="left">Page View History</a>
+                                    <cfif APPLICATION.CFC.USER.isOfficeUser()>
+                                        &nbsp; | &nbsp; <a href="user/index.cfm?action=statusHistory&userID=#rep_info.userID#" class="jQueryModal">Status History</a>
+                                    </cfif>
+                                    <br />
+                                </td>
+                            </tr>	
                         </cfif>
-                        <tr>
-                        	<Td colspan=2>
-                        <a href="index.cfm?curdoc=user_info&action=resend_login&userID=#rep_info.userID#"><img src="pics/buttons/emailResend.png" border="0" align="left"> Resend Login Info</a>
                         
-                        <cfif URL.action EQ 'resend_login'><font color="red"> - Sent</font></cfif>
-                         </td>
-                        </Tr>	
+                        <tr>
+                        	<td colspan="2">
+                        		<a href="index.cfm?curdoc=user_info&action=resend_login&userID=#rep_info.userID#"><img src="pics/buttons/emailResend.png" border="0" align="left"> Resend Login Info</a>
+                        		<cfif URL.action EQ 'resend_login'><font color="red"> - Sent</font></cfif>
+                        	</td>
+                        </tr>	
                         </table>
 					</td>
-                    <cfif CLIENT.usertype NEQ 8>
-                    <tr  ><td valign="top" align="right">
-                    <!----
-                    <a href="http://www.showmyweather.com/" title="Show My Weather Forecast" onclick="window.open(this.href);return(false);"><script type="text/javascript" src="https://www.showmyweather.com/weather_widget.php?int=0&type=js&country=us&state=#statename#&city=#city#&smallicon=0&current=1&forecast=0&background_color=ffffff&color=000000&width=175&padding=2&border_width=0&border_color=000000&font_size=10&font_family=Verdana&showicons=1&measure=F&d=#dateFormat(now(), 'yyyy-mm-dd')#"></script></a><div style="width:160px;text-align:center;font-size:0.6em;margin-top:0.5em;"></div>---->
-                  
-                    </td>
-                    
-                    </tr></cfif>
-				
 			</table>
             <!-----*****end Personal Info****---->
 			
@@ -714,7 +709,7 @@
                                                 <td>
                                                     <!--- don't allow delete if user has only one record or for the default record. Dont allow edit on 2nd VIsit Reps.  Must convert to re-block access according to training. --->
                                                     <cfif region_company_access.usertype NEQ 15>
-														<cfif CLIENT.usertype LTE 4 AND ( not (region_company_access.recordcount EQ 1 OR default_access))>
+														<cfif APPLICATION.CFC.USER.isOfficeUser() AND ( not (region_company_access.recordcount EQ 1 OR default_access))>
                                                             <a href="index.cfm?curdoc=user_info&action=delete_uar&id=#id#&userID=#rep_info.userID#" onClick="return confirm('Are you sure you want to delete this Company & Regional Access record?')">
                                                                 <img src="pics/deletex.gif" border="0" alt="Delete">
                                                             </a>                                                    
@@ -853,7 +848,7 @@
                         <td align="center" valign="top"><b>Expiration Date</b> <br><font size="-2">mm/dd/yyyy</font></td>		
                         <td align="center" valign="top"><b>View</b></td>
                         <td align="left" valign="top" colspan="2"><b>Notes</b></td>
-                        <cfif CLIENT.usertype lte 4 and CLIENT.companyid eq 10><td align="center" valign="top"><strong>Delete</strong></td></cfif>
+                        <cfif APPLICATION.CFC.USER.isOfficeUser() and CLIENT.companyid eq 10><td align="center" valign="top"><strong>Delete</strong></td></cfif>
                     </tr>				
                     <cfif get_cbc_user.recordcount EQ '0'>
                         <tr><td align="center" colspan="5">No CBC has been submitted.</td></tr>
@@ -863,15 +858,15 @@
                             <td align="center" style="line-height:20px;"><b>#season#</b></td>
                             <td align="center" style="line-height:20px;"><cfif NOT isDate(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
                             <td align="center" style="line-height:20px;"><cfif NOT isDate(date_expired)>processing<cfelse>#DateFormat(date_expired, 'mm/dd/yyyy')#</cfif></td>
-                            <td align="center" style="line-height:20px;"><cfif NOT LEN(requestID)>processing<cfelseif flagcbc EQ 1>On Hold Contact Compliance<cfelse><cfif CLIENT.usertype lte 4><a href="cbc/view_user_cbc.cfm?userID=#get_cbc_user.userID#&cbcID=#get_cbc_user.cbcID#&file=batch_#get_cbc_user.batchid#_user_#get_cbc_user.userID#_rec.xml" target="_blank"><!----#requestid#---->View </a></cfif></cfif></td>
+                            <td align="center" style="line-height:20px;"><cfif NOT LEN(requestID)>processing<cfelseif flagcbc EQ 1>On Hold Contact Compliance<cfelse><cfif APPLICATION.CFC.USER.isOfficeUser()><a href="cbc/view_user_cbc.cfm?userID=#get_cbc_user.userID#&cbcID=#get_cbc_user.cbcID#&file=batch_#get_cbc_user.batchid#_user_#get_cbc_user.userID#_rec.xml" target="_blank"><!----#requestid#---->View </a></cfif></cfif></td>
                             <td colspan="2">
-								<cfif CLIENT.usertype lte 4>
+								<cfif APPLICATION.CFC.USER.isOfficeUser()>
                                 	#notes#
                             	<cfelse>
                                 	&nbsp;
                                 </cfif>
                             </td>
-                            <cfif CLIENT.usertype lte 4 and CLIENT.companyid eq 10><td align="center" valign="top"><a href="delete_cbc.cfm?type=user&id=#requestid#&userID=#url.userID#"><img src="pics/deletex.gif" border=0/></td></cfif>
+                            <cfif APPLICATION.CFC.USER.isOfficeUser() and CLIENT.companyid eq 10><td align="center" valign="top"><a href="delete_cbc.cfm?type=user&id=#requestid#&userID=#url.userID#"><img src="pics/deletex.gif" border=0/></td></cfif>
                         </tr>
                         </cfloop>
                     </cfif>
@@ -883,8 +878,8 @@
                                 <td align="center" style="line-height:20px;"><b>#season#</b></td>
                                 <td align="center" style="line-height:20px;"><cfif NOT isDate(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
                                 <td align="center" style="line-height:20px;"><cfif NOT isDate(date_expired)>processing<cfelse>#DateFormat(date_expired, 'mm/dd/yyyy')#</cfif></td>
-                                <td align="center" style="line-height:20px;" colspan="2"><cfif NOT LEN(requestID)>processing<cfelse><cfif CLIENT.usertype lte 4>#requestid#</cfif></cfif></td>
-                                <cfif CLIENT.usertype lte 4 and CLIENT.companyid eq 10>
+                                <td align="center" style="line-height:20px;" colspan="2"><cfif NOT LEN(requestID)>processing<cfelse><cfif APPLICATION.CFC.USER.isOfficeUser()>#requestid#</cfif></cfif></td>
+                                <cfif APPLICATION.CFC.USER.isOfficeUser() and CLIENT.companyid eq 10>
                                     <td align="center" valign="top"><a href="delete_cbc.cfm?type=user&id=#requestid#&userID=#url.userID#"><img src="pics/deletex.gif" border=0/></a></td>
                                 </cfif>
                                 <td>
@@ -991,7 +986,7 @@
                             	<strong>Trip Payments:</strong> #LSCurrencyFormat(trip_payments.amount, 'local')#<br>
                            	</cfif>
                             <font size = -2><a href="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=paymentReport&userID=#rep_info.userID#">view details</a></font>
-                            <cfif CLIENT.usertype lte 4> - <font size = -2><a href="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=selectPayment&user=#rep_info.userID#">make payment</a></cfif>
+                            <cfif APPLICATION.CFC.USER.isOfficeUser()> - <font size = -2><a href="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=selectPayment&user=#rep_info.userID#">make payment</a></cfif>
                         </td>
                     </tr>
                    </table>
@@ -1053,7 +1048,7 @@
                       <table width=100% cellspacing=0 cellpadding=2>
                         	<tr>
                             <Th align="left">Name</Th><Th align="left">Date</Th><th  align="left">Type</th>
-                            </Tr>
+                            </tr>
                            <cfif documents.recordcount eq 0>
                             <tr>
                                 <td colspan=7>No documents are on file for #firstname#.</td>
@@ -1062,9 +1057,9 @@
                             <Cfloop query="documents">
                             <tr <cfif currentrow mod 2> bgcolor="##efefef"</cfif>>
                               
-                                <Td valign="middle"><a href="javascript:openPopUp('uploadedfiles/users/#userID#/#name#')">#name#</a></td>
+                                <td valign="middle"><a href="javascript:openPopUp('uploadedfiles/users/#userID#/#name#')">#name#</a></td>
                                 <td valign="middle">#dateFormat(datelastModified, 'mm/dd/yyyy')#</td>
-                                <Td valign="middle"><img src="pics/icons/#Right(name,3)#.png" /></td>
+                                <td valign="middle"><img src="pics/icons/#Right(name,3)#.png" /></td>
                                 
                                
                             </tr>
@@ -1084,7 +1079,7 @@
             <!----Emolyment History---->
             <!--- ------------------------------------------------------------------------- ---->   
                 <br /><br />
-                <cfif CLIENT.usertype lte 4>
+                <cfif APPLICATION.CFC.USER.isOfficeUser()>
                 <cfquery name="qEmploymentHistory" datasource="MySQL">
                 select *
                 from smg_users_employment_history
@@ -1118,9 +1113,9 @@
                                  </cfif>
                                  <br /><br />
                                 </td>
-                           </Tr>
+                           </tr>
                             <Th></Th><Th>Employer</Th><Th>Address</Th><th>City</th><Th>State</Th><th>Zip</th><th>Phone</th>
-                            </Tr>
+                            </tr>
                            <cfif qEmploymentHistory.recordcount eq 0>
                             <tr>
                                 <td colspan=7>No employers are on file for #firstname#.</td>
@@ -1129,9 +1124,9 @@
                             <Cfloop query="qEmploymentHistory">
                             <tr <cfif currentrow mod 2> bgcolor="##efefef"</cfif>>
                                 <td><cfif current eq 1>&radic;</cfif></td>
-                                <Td valign="middle">#employer#</td>
+                                <td valign="middle">#employer#</td>
                                 <td valign="middle">#address# #address2#</td>
-                                <Td valign="middle">#city#</td>
+                                <td valign="middle">#city#</td>
                                 <td valign="middle">#state#</td>
                                 <td valign="middle">#zip#</td>
                                 <td valign="middle">#phone#</td>
@@ -1205,7 +1200,7 @@
                                
                           </table>
      				</td>
-                    <Td width=230>
+                    <td width=230>
                         	<table>
                             	<tr>
                                 	<td><strong>Last Login:</strong></td><td> #DateFormat(lastlogin, 'mm/dd/yyyy')# </td>
@@ -1256,7 +1251,7 @@
                          --->   
 						</cfif>
                     </td>                            
-                  </Tr>
+                  </tr>
                   <tr>
                   	<td align="right" colspan="3"></td>
                   </tr>
@@ -1271,13 +1266,13 @@
                                 <th align="left" class="historyCol">User</th>
                                <th align="left" class="historyCol">Action</th>
                                 <th align="left" class="historyCol">Reason</th>
-                            </Tr>
+                            </tr>
                             <cfloop query="accountDisableHistory">
                             
                             <tr <cfif currentrow mod 2>bgcolor="##cccccc"</cfif>>
                                 <td class="historyItem">#DateFormat(date, 'mm/dd/yyyy')#</td>
-                                <Td class="historyItem">#firstName# #lastname#</td>
-                                <Td class="historyItem">#accountAction#</td>
+                                <td class="historyItem">#firstName# #lastname#</td>
+                                <td class="historyItem">#accountAction#</td>
                                 <td class="historyItem">#reason#</td>
                             </tr>
                             </cfloop>
@@ -1859,7 +1854,7 @@
                                     <th colspan=4><font color="white">Supervising (#qGetSupervisedStudents.recordcount#)</font></th>
                                 </tr>
                                 <cfif qGetSupervisedStudents.recordcount eq 0>
-                                    <tr><td colspan="6" align="left">Rep is not supervising any students</td></Tr>
+                                    <tr><td colspan="6" align="left">Rep is not supervising any students</td></tr>
                                  <cfelse>
                                 <tr>
                                    <Th align="left">First Last (ID)</Th><th align="left">Gender</th><th align="left">Country</th><th align="left">Program</th>
@@ -1886,7 +1881,7 @@
                                     <th colspan=4><font color="white">Second Visit Students: (#qGet2ndVisitStudents.recordcount#)</font></th>
                                 </tr>
                                 <cfif qGet2ndVisitStudents.recordcount EQ 0>
-                                    <tr><td colspan="6" align="left">Rep is not a 2nd Visit rep for any students.</td></Tr>
+                                    <tr><td colspan="6" align="left">Rep is not a 2nd Visit rep for any students.</td></tr>
                                 <cfelse>
                                     <tr>
                                         <Th align="left">First Last (ID)</Th><th align="left">Gender</th><th align="left">Country</th><th align="left">Program</th>
@@ -1942,7 +1937,7 @@
                         </tr>
                         <tr bgcolor="##CCCCCC">
                         	<td>Name</td>
-                        	<Td align="center">Phone</td>                                
+                        	<td align="center">Phone</td>                                
                         	<td align="center">Status</td>
                         	<cfif listFind("1,2,3,4,5,6", CLIENT.userType) AND CLIENT.userID NEQ userID>
                         		<td align="center">Report</td>
@@ -1951,7 +1946,7 @@
                         	<cfif CLIENT.userType NEQ 27 OR APPLICATION.CFC.USER.isOfficeUser() OR CLIENT.userID EQ rep_info.userID>
                         		<td align="center">Actions</td> 
                         	</cfif>
-                        </Tr>
+                        </tr>
                         
                         <cfif NOT VAL(qGetReferences.recordcount)>   	
                             <tr>
@@ -1975,7 +1970,7 @@
                             <tr <cfif qGetReferences.currentrow mod 2>bgcolor=##efefef</cfif>>
                                 <td><strong>#firstname# #lastname#</strong> - <em>#relationship# (#howlong#)</em></td>
                                 <td align="Center">#phone#</td>
-                                <Td align="Center">
+                                <td align="Center">
                                     <cfif getReferenceReportBySeason.recordcount>
 									
 										<cfif qGetReferences.approved eq 0>
@@ -1993,7 +1988,7 @@
                                     </cfif>                                                                         
                                 </td>
                                 <cfif listFind("1,2,3,4,5,6", CLIENT.userType) AND CLIENT.userID NEQ userID> 
-                                    <Td align="Center">
+                                    <td align="Center">
                                         <cfif getReferenceReportBySeason.recordcount>
                                             <a href="javascript:openPopUp('forms/viewRefrencesQuestionaire.cfm?reportid=#getReferenceReportBySeason.id#', 640, 800);">View Report</a>
                                         <cfelse>
@@ -2014,7 +2009,7 @@
                             </tr>
                             <tr <cfif qGetReferences.currentrow mod 2>bgcolor=##efefef</cfif>>
                             	<td colspan="5">#qGetReferences.address# #qGetReferences.address2# #qGetReferences.city# #qGetReferences.state#, #qGetReferences.zip#</td>
-                            </Tr>
+                            </tr>
                         </Cfloop>
                     </table>
                 </div>

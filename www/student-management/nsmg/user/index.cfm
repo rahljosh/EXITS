@@ -18,7 +18,7 @@
 		
 		// Param URL variables
 		param name="URL.uniqueID" default="";
-		param name="URL.userID" default=0;
+		param name="URL.userID" default=0;			
 	</cfscript>		
     
 </cfsilent>
@@ -29,7 +29,7 @@
 
 <cfswitch expression="#action#">
 
-    <cfcase value="welcome,displayAgreement,cbcAuthorization,employmentHistory,reference,paperworkDetails,trackUserPaperwork,traincasterLogin" delimiters=",">
+    <cfcase value="welcome,displayAgreement,cbcAuthorization,employmentHistory,reference,paperworkDetails,trackUserPaperwork,traincasterLogin,statusHistory" delimiters=",">
 
         <!--- Include template --->
         <cfinclude template="_#action#.cfm" />
