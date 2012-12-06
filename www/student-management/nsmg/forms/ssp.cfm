@@ -59,14 +59,14 @@ WHERE studentid = #url.studentid#
     </cfquery>
     <Cffile action="upload" destination="c:\uploadedfiles\student-services\" filefield="suportDoc" mode="777" nameconflict="makeunique" >
 </cfif>
-<h2 align="center">Student Services</h2>
+<h2 align="center">Student Issues</h2>
 <Br />
 <div align="Center">
 <cfif isDefined('form.newInitial')>
 	<!----Initial Incident Entered---->
     <form method="post" action="ssp.cfm?studentid=#url.studentid#" >
     <input type="hidden" name="insertNew" />
-        Please enter a brief  description of the issue.<Br /><em>(40 chareacters or less)</em><Br /><br />
+        Please enter a brief  description of the issue.<Br /><em>(40 characters or less)</em><Br /><br />
         <input name="summary" type ="text" size="30" maxlength="40"/><br />
         <br />
         <br />
