@@ -1,0 +1,25 @@
+Deleting client variables stored in the Registry
+
+Comments (0)
+Ratings:0
+ISSUE
+
+By default, ColdFusion stores client variables in the Registry. This can cause performance degradation in high-traffic sites as the Registry will increase considerably in size, causing ColdFusion server instability. Macromedia recommends storing client variables in an enterprise RDBMS.
+
+You can find directions for specifying the client storage method in the Using Persistent Data and Locking section of the Developing ColdFusion Applications ColdFusion MX documentation book. You can find directions for migrating client variable data in the Basic ColdFusion Server Administration section of the Installing and Configuring ColdFusion Server ColdFusion MX documentation book. Once the client storage has been migrated, the server administrator must clear the Registry of client variables. The following zip file contains templates that will automate the process of client variable removal for the system administrator.
+
+SOLUTION
+
+To use:
+
+Create a folder within your webroot called 'clientvarremoval'.
+Ensure the cfregistry tag is enabled for theclientvarremoval folder.
+Download the clientVarPurger.zip file.
+Extract the contents of the ZIP file intoweb_root/clientvarremoval. Make sure that the file, "Application.cfm" has a capital "A" if you are on Solaris; failing to have a capital "A" will prevent the code in Application.cfm from running first in each request.
+Run index.cfm in a browser. This template displays links to three functions:
+Get Registry Keys: This function will display all of the client variable keys currently stored in the Registry.
+Make Registry Keys: This function will create client variable keys in the Registry for testing.
+Purge Registry Keys: This function will purge all of the client variables keys stored in the Registry.
+To delete all of the current keys in the Registry, click the Purge Registry Keys link. This code will loop over the appropriate Registry keys and delete them.
+If you wish to test the application before you run it against a production machine, click the Make Registry Keys link on a testing server. This will allow you to specify the number of client variable keys to make (default is 200) for the application to retrieve and delete.
+
