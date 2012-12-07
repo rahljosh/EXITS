@@ -1,316 +1,361 @@
-<!--- Import CustomTag Used for Page Messages and Form Errors --->
-<cfimport taglib="extensions/customTags/gui/" prefix="gui" />	
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		references.cfm
+	Author:		Marcus Melo
+	Date:		December 12, 2012
+	Desc:		References
 
-<cfset field_list = 'firstname,lastname,address,address2,city,state,zip,phone,email'>
+	Updated:	
 
-<cfparam name="FORM.firstname" default="">
-<cfparam name="FORM.lastname" default="">
-<cfparam name="FORM.address" default="">
-<cfparam name="FORM.address2" default="">
-<cfparam name="FORM.city" default="">
-<cfparam name="FORM.state" default="">
-<cfparam name="FORM.zip" default="">
-<cfparam name="FORM.phone" default="">
-<cfparam name="FORM.email" default="">
+----- ------------------------------------------------------------------------- --->
 
-<cfif isDefined('URL.delete')>
-	<cfquery datasource="#APPLICATION.DSN.Source#">
-    delete from smg_family_references 
-    where refid = #URL.delete#
-    </cfquery>
-</cfif>
+<cfsilent>
 
+    <!--- Import CustomTag Used for Page Messages and Form Errors --->
+    <cfimport taglib="extensions/customTags/gui/" prefix="gui" />	
+    
+    <!--- PARAM URL Variables --->
+    <cfparam name="URL.refID" default="0">
+    <cfparam name="URL.deleteRefID" default="0">
+    
+    <!--- PARAM FORM Variables --->
+    <cfparam name="FORM.submitted" default="0">
+    <cfparam name="FORM.refID" default="0">
+    <cfparam name="FORM.firstName" default="">
+    <cfparam name="FORM.lastName" default="">
+    <cfparam name="FORM.address" default="">
+    <cfparam name="FORM.address2" default="">
+    <cfparam name="FORM.city" default="">
+    <cfparam name="FORM.state" default="">
+    <cfparam name="FORM.zip" default="">
+    <cfparam name="FORM.phone" default="">
+    <cfparam name="FORM.email" default="">
 
-
-
-<cfif isDefined('FORM.insert')>
-	 <!---Error Checking---->
-         <cfscript>
-            // Data Validation
-			// Family Last Name
-            if ( NOT LEN(TRIM(FORM.firstname)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please enter the first name.");
-            }			
-        	
-			// Address
-            if ( NOT LEN(TRIM(FORM.lastname)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please enter the last name.");
-            }	
+	<cfscript>
+		if ( VAL(URL.refID) ) {
+			FORM.refID = URL.refID;	
+		}
+	
+		// Get All References
+		qGetAllReferences = APPLICATION.CFC.HOST.getHostReferences();
+	
+		// Get Edit Reference Info
+		qGetReferenceInfo = APPLICATION.CFC.HOST.getHostReferences(refID=FORM.refID);
 			
+		// Get State List
+		qGetStateList = APPLICATION.CFC.LOOKUPTABLES.getState();
+			
+		// Check if it is a single placement
+		if ( LEN(qGetHostFamilyInfo.fatherFirstName) ) {
+			vFather=1;
+		} else {
+			vFather=0;
+		}
 		
-        	
-			// Family Last Name
-            if ( NOT LEN(TRIM(FORM.phone)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please enter the phone number.");
-            }			
-       </cfscript>
-  
-  
-     <cfif NOT SESSION.formErrors.length()>
-       <cfif isDefined('URL.edit')>
-            <cfquery name="updateRef" datasource="#APPLICATION.DSN.Source#">
-                update smg_family_references 
-                    set firstname = '#FORM.firstname#',
-                        lastname = '#FORM.lastname#',
-                        address = '#FORM.address#',
-                        address2 = '#FORM.address2#',
-                        city = '#FORM.city#',
-                        state = '#FORM.state#',
-                        zip = '#FORM.zip#',
-                        phone = '#FORM.phone#',
-                        email = '#FORM.email#',
-                        referencefor = #APPLICATION.CFC.SESSION.getHostSession().ID#
-                    where refID = #URL.edit#
-            </Cfquery>
-          `
-        <cfelse>
-            <cfquery datasource="#APPLICATION.DSN.Source#">
-                insert into smg_family_references(firstname, lastname, address, address2, city, state, zip, phone, email, referencefor)
-                values('#FORM.firstname#','#FORM.lastname#', '#FORM.address#', '#FORM.address2#', '#FORM.city#', '#FORM.state#', '#FORM.zip#', '#FORM.phone#', '#FORM.email#', #APPLICATION.CFC.SESSION.getHostSession().ID#)
-            </cfquery>
-              <cfquery name="refID" datasource="#APPLICATION.DSN.Source#">
-                select max(refid) as newID
-                from smg_family_references
-            </cfquery>
-            
-         
-        </cfif>
-        <cfquery name="checkNumberRef" datasource="#APPLICATION.DSN.Source#">
-        select firstname
-        from smg_family_references
-        where referencefor = #APPLICATION.CFC.SESSION.getHostSession().ID#
-        </Cfquery>
-        <!---number kids at home---->
-    <cfquery name="kidsAtHome" datasource="#APPLICATION.DSN.Source#">
-    select count(childid) as kidcount
-    from smg_host_children
-    where liveathome = 'yes' and hostID =#APPLICATION.CFC.SESSION.getHostSession().ID#
-    </cfquery>
- 	<cfquery name="get_host_info" datasource="#APPLICATION.DSN.Source#">
-    select fatherfirstname, motherfirstname
-    from smg_hosts
-    where hostID = #APPLICATION.CFC.SESSION.getHostSession().ID#
-    </cfquery>
+		if ( LEN(qGetHostFamilyInfo.motherFirstName) ) {
+			vMother=1;
+		} else {
+			vMother=0;
+		}
 
-	<cfset father=0>
-    <cfset mother=0>
-  
-    <cfif get_host_info.fatherfirstname is not ''>
-        <cfset father = 1>
-    </cfif>
-    <cfif get_host_info.motherfirstname is not ''>
-        <cfset mother = 1>
-    </cfif>
+		// Get Host Family Members at Home
+		qGetFamilyMembersAtHome = APPLICATION.CFC.HOST.getHostMemberByID(hostID=APPLICATION.CFC.SESSION.getHostSession().ID,liveAtHome="yes");	
+		
+		// Total family members
+		vTotalFamilyCount = vMother + vFather + qGetFamilyMembersAtHome.recordCount;
+		
+		// Single Parent
+		if ( vTotalFamilyCount EQ 1 ) {
+			vNumberOfRequiredReferences = 6;
+		} else {
+			vNumberOfRequiredReferences = 4;
+		}
+		
+		vRemainingReferences = vNumberOfRequiredReferences - qGetAllReferences.recordcount;
+	</cfscript>
+        
+    <!--- Delete Reference --->
+    <cfif VAL(URL.deleteRefID)>
     
-	<cfset vTotalFamilyMembers = #mother# + #father# + #kidsAtHome.kidcount#>
-    <cfif vTotalFamilyMembers eq 1>
-	<cfset refs = 6>
-    <cfelse>
-        <cfset refs = 4>
-    </cfif>
-	<cfset remainingref = #refs# - #checkNumberRef.recordcount#>
-      
+        <cfquery datasource="#APPLICATION.DSN.Source#">
+            DELETE FROM
+                smg_family_references
+            WHERE 
+                refID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.deleteRefID)#">
+            AND
+                referenceFor = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
+            LIMIT 1
+        </cfquery>
+        
         <cfscript>
-        	FORM.firstname = '';
-			FORM.lastname = '';
-			FORM.address = '';
-			FORM.address2 = '';
-			FORM.city = '';
-			FORM.state = '';
-			FORM.zip = '';
-			FORM.phone = '';
-			FORM.email = '';
+			// Set Page Message
+			SESSION.pageMessages.Add("Reference has been deleted");
+			
+			// Refresh Page
+			location("#CGI.SCRIPT_NAME#?section=#URL.section#", "no");
 		</cfscript>
-    <cfif remainingref eq 0>
-        <cflocation url="index.cfm?section=checkList" addtoken="no">
-
+        
     </cfif>
-<cfelse>
 
+    <!--- Process Form Submission --->
+    <cfif VAL(FORM.submitted)>
+        
+        <cfscript>
+        	// Data Validation
+		
+			// Family Last Name
+			if ( NOT LEN(TRIM(FORM.firstName)) ) {
+				SESSION.formErrors.Add("Please enter the first name.");
+			}			
+			
+			// Address
+			if ( NOT LEN(TRIM(FORM.lastName)) ) {
+				SESSION.formErrors.Add("Please enter the last name.");
+			}	
+			
+			// Family Last Name
+			if ( NOT LEN(TRIM(FORM.phone)) ) {
+				SESSION.formErrors.Add("Please enter the phone number.");
+			}			
+        </cfscript>    
+        
+        <!--- No Errors Found --->
+		<cfif NOT SESSION.formErrors.length()>
 
+			<!--- Update --->
+            <cfif VAL(FORM.refID)>
+            
+                <cfquery datasource="#APPLICATION.DSN.Source#">
+                    UPDATE 
+                        smg_family_references 
+                    SET
+                        firstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.firstName#">,
+                        lastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.lastName#">,
+                        address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
+                        address2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address2#">,
+                        city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
+                        state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.state#">,
+                        zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
+                        phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
+                        email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">
+                    WHERE 
+                        refID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.refID)#">
+                    AND
+                        referenceFor = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
+                </cfquery>
+                
+				<cfscript>
+                    // Set Page Message
+                    SESSION.pageMessages.Add("Reference has been updated");
+					
+					// Refresh Page
+					location("#CGI.SCRIPT_NAME#?section=#URL.section#", "no");
+                </cfscript>
+                
+            <!--- INSERT --->
+            <cfelse>
+        
+                <cfquery datasource="#APPLICATION.DSN.Source#">
+                    INSERT INTO 
+                    	smg_family_references 
+                    (
+                        referenceFor, 
+                        firstName, 
+                        lastName,
+                        address,
+                        city, 
+                        state, 
+                        zip, 
+                        phone, 
+                        email
+                    )
+                    VALUES 
+                    (
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.firstName#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.lastName#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.state#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">
+                    )  
+                </cfquery>
 
+				<cfscript>
+					// Set Page Message
+					SESSION.pageMessages.Add("Reference has been added");
+				
+					if ( vRemainingReferences - 1 EQ 0 ) {
+						// References are complete - go to checklist
+						location("#CGI.SCRIPT_NAME#?section=checkList", "no");
+					} else {
+						// Refresh Page
+						location("#CGI.SCRIPT_NAME#?section=#URL.section#", "no");
+					}
+                </cfscript>
 
-</cfif>
-</cfif>
-<cfif isDefined('URL.edit')>
-	<cfquery name="get_record" datasource="#APPLICATION.DSN.Source#">
-		SELECT *
-		FROM smg_family_references
-		WHERE refid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.edit#">
-	</cfquery>
-	<cfloop list="#field_list#" index="counter">
-    	<cfset "FORM.#counter#" = evaluate("get_record.#counter#")>
-	</cfloop>
-</cfif>
-
-
-    <!---number kids at home---->
-    <cfquery name="kidsAtHome" datasource="#APPLICATION.DSN.Source#">
-    select count(childid) as kidcount
-    from smg_host_children
-    where liveathome = 'yes' and hostID =#APPLICATION.CFC.SESSION.getHostSession().ID#
-    </cfquery>
- 	<cfquery name="get_host_info" datasource="#APPLICATION.DSN.Source#">
-    select fatherfirstname, motherfirstname
-    from smg_hosts
-    where hostID = #APPLICATION.CFC.SESSION.getHostSession().ID#
-    </cfquery>
-
-	<cfset father=0>
-    <cfset mother=0>
-  
-    <cfif get_host_info.fatherfirstname is not ''>
-        <cfset father = 1>
-    </cfif>
-    <cfif get_host_info.motherfirstname is not ''>
-        <cfset mother = 1>
-    </cfif>
+            </cfif>
+            
+		</cfif> <!--- No Errors Found --->
+	
+	<!--- FORM NOT Submitted --->
+    <cfelse>
+	
+		 <cfscript>
+            // Set FORM Values   
+            FORM.firstName = qGetReferenceInfo.firstName;
+            FORM.lastName = qGetReferenceInfo.lastName;
+            FORM.address = qGetReferenceInfo.address;
+            FORM.city = qGetReferenceInfo.city;
+            FORM.state = qGetReferenceInfo.state;
+            FORM.zip = qGetReferenceInfo.zip;
+            FORM.phone = qGetReferenceInfo.phone;
+            FORM.email = qGetReferenceInfo.email;
+        </cfscript>    
     
-	<cfset vTotalFamilyMembers = #mother# + #father# + #kidsAtHome.kidcount#>
+	</cfif> <!--- FORM. Submitted --->   
+
+</cfsilent>
+
+<cfoutput>
+
+    <h2>References</h2>
     
-<h2>Current References</h2>
+    <h3>Current References</h3>
+
+	<!--- Page Messages --->
+    <gui:displayPageMessages 
+        pageMessages="#SESSION.pageMessages.GetCollection()#"
+        messageType="section"
+        />
 	
 	<!--- Form Errors --->
     <gui:displayFormErrors 
         formErrors="#SESSION.formErrors.GetCollection()#"
         messageType="section"
         />
+
+	<em><strong>PLEASE NOTE:</strong> The Department of State now requires a second home visit which will be conducted by someone other than your local Area Representative.</em> <br /><br />
+    
+	Please provide at least <cfif vTotalFamilyCount EQ 1>six (6)&dagger;<cfelse>four (4)&dagger;</cfif> references. References can <strong>not</strong> be relatives and must have visited you <strong>in side</strong> your home. <br /><br />
+
+    <table width="100%" cellspacing="0" cellpadding="4" class="border">
+        <tr bgcolor="##deeaf3"> 
+            <th style="border-bottom:1px solid ##000;">Name</th>
+            <th style="border-bottom:1px solid ##000;">Address</th>
+            <th style="border-bottom:1px solid ##000;">City</th>
+            <th style="border-bottom:1px solid ##000;">State</th>
+            <th style="border-bottom:1px solid ##000;">Zip</th>
+            <th style="border-bottom:1px solid ##000;">Phone</th>
+            <th style="border-bottom:1px solid ##000;" width="50px"></th>
+        </tr>
         
-<p><em><strong>PLEASE NOTE:</strong> The Department of State now requires a second home visit which will be conducted by someone other than your local Area Representative.</em></p>
-Please provide at least <cfif vTotalFamilyMembers eq 1>six (6)&dagger;&dagger;<cfelse>four (4)&dagger;</cfif> references.  References can <strong>not</strong> be relatives and must have visited you <strong>in side</strong> your home. 
-<br />
-<cfquery name="qreferences" datasource="#APPLICATION.DSN.Source#">
-select *
-from smg_family_references
-where referencefor = #APPLICATION.CFC.SESSION.getHostSession().ID#
-</cfquery>
-
-<cfoutput>
-
-<table width="100%" cellspacing="0" cellpadding="2" class="border">
-   <tr>
-   	<th>Name</th><th>Address</th><th>City</th><th>State</th><th>Zip</th><th>Phone</th><th></th>
-    </tr>
-   <cfif qreferences.recordcount eq 0>
-    <tr>
-    	<td colspan=7>Currently, no references are on file for you</td>
-    </tr>
+        <cfif NOT qGetAllReferences.recordcount>
+            <tr>
+            	<td colspan="7">Currently, no references are on file for you.</td>
+            </tr>
+        </cfif>
+        
+        <cfloop query="qGetAllReferences">
+            <tr <cfif qGetAllReferences.currentRow MOD 2 EQ 0> bgcolor="##deeaf3"</cfif>>
+                <th>#qGetAllReferences.firstName# #qGetAllReferences.lastName#</th>
+                <td>#qGetAllReferences.address# #qGetAllReferences.address2#</td>
+                <td>#qGetAllReferences.city#</td>
+                <td>#qGetAllReferences.state#</td>
+                <td>#qGetAllReferences.zip#</td>
+                <td>#qGetAllReferences.phone#</td>
+                <td>
+                    <a href="index.cfm?section=references&refID=#qGetAllReferences.refID#"><img src="images/buttons/pencilBlue23x29.png" border="0" height="15" title="Click to edit this reference"/></a> 
+                    <a href="index.cfm?section=references&deleteRefID=#qGetAllReferences.refID#" onClick="return confirm('Are you sure you want to delete this Reference?')"> <img src="images/buttons/delete23x28.png" title="Click to delete this reference" height="15" border="0"/></a>
+                </td>
+            </tr>
+        </cfloop>
+        
+    </table>
+	
+    <!--- Finished with this page --->
+    <div style="display:block; float:right;">
+        <a onclick="ShowHide(); return false;" href="##">I am finished entering references.</a>
+        <div id="slidingDiv" display:"none">
+            <a href="index.cfm?section=checkList"><img src="images/buttons/Next.png" border="0" /></a>
+        </div>	
+    </div>
+    
+    <h3>Add a Reference</h3>
+    
+	<cfif NOT VAL(vRemainingReferences)>
+        No additional references are required.
     <cfelse>
-    <cfloop query="qreferences">
-    <tr <cfif currentrow mod 2> bgcolor="##deeaf3"</cfif>>
-    	<td><h3><p class="p_uppercase">#firstname# #lastname#</h3></td>
-        <td><h3><p class="p_uppercase">#address# #address2#</h3></td>
-        <td><h3>#city#</h3></td>
-        <td><h3>#state#</h3></td>
-        <td><h3>#zip#</h3></td>
-        <td><h3>#phone#</h3></td>
-        <td><a href="?section=references&edit=#refid#"><img src="/images/buttons/pencilBlue23x29.png" border="0" height=20/></a> <a href="?section=references&delete=#refid#" onClick="return confirm('Are you sure you want to delete this reference?')"> <img src="/images/buttons/delete23x28.png" height=20 border="0"/></a></td>
-    </tr>
-    </cfloop>
-    </cfif>
-   </table>
-	
-</cfoutput>
+        #vRemainingReferences# additional references are required based on the information on your application.
+    </cfif> <br /><br />
 
-<h2>Add References</h2>
-<cfoutput>
-<cfif vTotalFamilyMembers eq 1>
-	<cfset refs = 6>
-<cfelse>
-	<cfset refs = 4>
-</cfif>
-<cfset remainingref = #refs# - #qreferences.recordcount#>
+    <span class="required">* Required fields</span>
 
-<cfif remainingref lte 0>
-No additional references are required.
-<cfelse>
-#remainingref# additional references are required based on the information on your application.
-</cfif>
-<div align="center">
-  <span class="redtext">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Required fields </span>
-</div>
-
-<form method="post" action="?section=references<cfif isDefined('URL.edit')>&edit=#URL.edit#</cfif>">
-
-<input type="hidden" name="insert" />
-	  <table width="100%" cellspacing="0" cellpadding="2" class="border">
-    <tr bgcolor="##deeaf3">
-        <td class="label"><h3> First Name<span class="redtext">*</span></h3> </td>
-        <td colspan=3>
-            <input type="text" name="firstname" value="#FORM.firstname#" size="20" maxlength="150">
-        </td>
-      </tr>
-    <tr>
-        <td class="label"><h3> Last Name<span class="redtext">*</span></h3> </td>
-        <td colspan=3>
-            <input type="text" name="lastname" value="#FORM.lastname#" size="20" maxlength="150" >
-        </td>
-      </tr>
-    <tr bgcolor="##deeaf3">
-        <td ><h3>Phone <span class="redtext">*</span></h3></td>
-        <td colspan=3><input type="text" name="phone" value="#FORM.phone#" size="14" maxlength="14" mask="(999) 999-9999"></td>
-    </tr>
-     <tr>
-        <td class="label">
+    <cfform method="post" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#">
+    	<input type="hidden" name="submitted" value="1" />
+        <input type="hidden" name="refID" value="#FORM.refID#" /> 
         
-        <h3>Address </h3></td>
-        <td colspan=2>
-        	<input type="text" name="address" value="#FORM.address#" size="40" maxlength="150" >
-            <font size="1">NO PO BOXES 
-        </td>
-        <td rowspan=2> </td>
-    </tr>
-    <tr>
-        <td></td>
-        <td colspan=3><input type="text" name="address2" value="#FORM.address2#" size="40" maxlength="150"></td>
-    </tr>
-    <tr bgcolor="##deeaf3" >			 
-        <td class="label"><h3>City</h3></td>
-        <td colspan=3><input type="text" name="city" value="#FORM.city#" size="20" maxlength="150" ></td>
-    </tr>
-    <tr>
-        <td class="label"><h3>State </h3></td>
-        <td>
-            <cfquery name="get_states" datasource="#APPLICATION.DSN.Source#">
-                SELECT state, statename
-                FROM smg_states
-                ORDER BY id
-            </cfquery>
-			<select NAME="state" query="get_states">
-			      	<option></option>
-				<cfloop query="get_states">
-                	<option value="#state#" <cfif state eq #FORM.state#>selected</cfif>>#statename#</option>
-                </cfloop>
-            </select>
-        </td>
-        <td class="zip"><h3>Zip</h3> </td>
-        <td><input type="text" name="zip" value="#FORM.zip#" size="5" maxlength="5"></td>
-    </tr>
-	
-    <tr bgcolor="##deeaf3">
-        <td ><h3>Email</h3></td>
-        <td colspan=3><input type="text" name="email" value="#FORM.email#" size="30" maxlength="200" ></td>
-    </tr>
-	</table>
-<table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
-    <tr>
-        <td align="right"><cfif isDefined('URL.edit')><a href="?section=references"><img src="/images/buttons/goBack_44.png" border="0"/></a> <input name="Submit" type="image" src="/images/buttons/update_44.png" border="0"><cfelse><input name="Submit" type="image" src="/images/buttons/addRef.png" border="0"></cfif>
-        <br />
-          <a onclick="ShowHide(); return false;" href="##">
-         I am finished entering references.</a>
-<div id="slidingDiv" display:"none">
-        <a href="index.cfm?section=checkList"><img src="/images/buttons/Next.png" border="0" /></a>	</div>	
+        <table width="100%" cellspacing="0" cellpadding="2" class="border">
+            <tr bgcolor="##deeaf3">
+            	<td class="label"><h3>First Name<span class="required">*</span></h3></td>
+                <td colspan="3"><input type="text" name="firstName" value="#FORM.firstName#" class="largeField" maxlength="150"></td>
+            </tr>
+            <tr>
+                <td class="label"><h3> Last Name<span class="required">*</span></h3></td>
+                <td colspan="3"><input type="text" name="lastName" value="#FORM.lastName#" class="largeField" maxlength="150"></td>
+            </tr>
+            <tr bgcolor="##deeaf3">
+                <td><h3>Phone <span class="required">*</span></h3></td>
+                <td colspan="3"><cfinput type="text" name="phone" value="#FORM.phone#" class="mediumField" placeholder="(999) 999-9999" maxlength="14" mask="(999) 999-9999"></td>
+            </tr>
+            <tr>
+                <td class="label"><h3>Address </h3></td>
+                <td colspan="2">
+            		<input type="text" name="address" value="#FORM.address#" class="xLargeField" maxlength="150">
+           			<font size="1">NO PO BOXES</font> 
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td colspan="3"><input type="text" name="address2" value="#FORM.address2#" class="xLargeField" maxlength="150"></td>
+            </tr>
+            <tr bgcolor="##deeaf3" >			 
+                <td class="label"><h3>City</h3></td>
+                <td colspan="3"><input type="text" name="city" value="#FORM.city#" class="largeField" maxlength="150"></td>
+            </tr>
+            <tr>
+                <td class="label"><h3>State </h3></td>
+                <td>
+                    <select name="state" class="mediumField">
+                        <option></option>
+                        <cfloop query="qGetStateList">
+                            <option value="#qGetStateList.state#" <cfif qGetStateList.state EQ FORM.state>selected</cfif>>#qGetStateList.statename#</option>
+                        </cfloop>
+                    </select>
+                </td>
+                <td class="zip"><h3>Zip</h3></td>
+                <td><input type="text" name="zip" value="#FORM.zip#" class="smallField" maxlength="5"></td>
+            </tr>
+            <tr bgcolor="##deeaf3">
+                <td><h3>Email</h3></td>
+                <td colspan="3"><input type="text" name="email" value="#FORM.email#" class="xLargeField" maxlength="200" ></td>
+            </tr>
+		</table>
         
-        
-       </td>
-    </tr>
-</table>
-
-
-
-	
-</form>
+        <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
+            <tr>
+            	<td align="right">
+					<cfif VAL(URL.refID)>
+                    	<a href="?section=references"><img src="images/buttons/goBack_44.png" border="0"/></a> 
+                        <input name="Submit" type="image" src="images/buttons/update_44.png" border="0">
+					<cfelse>
+                    	<input name="Submit" type="image" src="images/buttons/addRef.png" border="0">
+					</cfif>
+                </td>
+            </tr>
+    	</table>
+    
+    </cfform>
 </cfoutput>

@@ -35,7 +35,7 @@
 
 	<cfparam name="ATTRIBUTES.width" 
     	type="string" 
-        default="100%" />
+        default="95%" />
 
 	<cfparam name="ATTRIBUTES.Clear" 
     	type="boolean" 
@@ -97,7 +97,7 @@
 				<!--- Error displayed on sections --->
                 <cfcase value="section">
                     
-                    <div class="pageMessages">
+                    <div class="pageMessages" style="width:#ATTRIBUTES.width#">
     
 						<!--- Loop over the message --->
                         <cfloop from="1" to="#ArrayLen(ATTRIBUTES.pageMessages)#" index="i">

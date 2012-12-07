@@ -22,6 +22,9 @@
 	// Store the initialized COMPANY Library object in the Application scope
 	APPLICATION.CFC.COMPANY = CreateCFC("company").Init();
 
+	// Store the initialized DOCUMENT Library object in the Application scope
+	APPLICATION.CFC.DOCUMENT = CreateCFC("document").Init();
+
 	// Store the initialized HOST Library object in the Application scope
 	APPLICATION.CFC.HOST = CreateCFC("host").Init();
 

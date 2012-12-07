@@ -196,6 +196,6 @@ General Information Services, Inc. within the two-year period preceding my reque
          
 	</tr>
 </Table> 
-<hr width=50% align="center" />
+<hr width="50%" align="center" />
 
   </cfoutput>

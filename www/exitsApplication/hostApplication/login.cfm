@@ -14,10 +14,13 @@
     <!--- Import CustomTag Used for Page Messages and Form Errors --->
     <cfimport taglib="extensions/customTags/gui/" prefix="gui" />	
 	
+    <!--- Param URL Variables --->
+    <cfparam name="URL.uniqueID" default="">
+    
     <!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.username" default="">
-    <cfparam name="FORM.password" default="">
+    <cfparam name="FORM.password" default="">   
     
 	<!--- FORM Submitted --->
 	<cfif VAL(FORM.submitted)>
@@ -33,13 +36,15 @@
             FROM 
                 smg_hosts
             WHERE 
+            	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.COMPANY.ID)#">
+            AND            
                 email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.username)#"> 
             AND 
                 password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.password)#">
         </cfquery>
         
 		<!--- Host Account found - Log them in --->
-        <cfif qLoginHostFamily.recordcount EQ 1>
+        <cfif qLoginHostFamily.recordcount>
 
 			<!--- Set status from "Started" to "Host" ---> 
             <cfif qLoginHostFamily.hostAppStatus EQ 9>
@@ -64,7 +69,7 @@
 					email=qLoginHostFamily.email
 				);
 
-				// Reload Page to display left menu
+				// Go to overview page
 				Location("?section=overview", "no");
 			</cfscript>
             
@@ -75,8 +80,8 @@
                 SELECT 
                     hl.id,
                     hl.regionID,
-                    hl.firstname, 
-                    hl.lastname, 
+                    hl.firstName, 
+                    hl.lastName, 
                     hl.address, 
                     hl.address2, 
                     hl.city, 
@@ -104,6 +109,7 @@
                     INSERT INTO
                         smg_hosts 
                     (
+                        uniqueID,
                         companyID,
                         regionID,
                         hostAppStatus,
@@ -120,10 +126,11 @@
                         lead
                     )
                     SELECT
-                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.COMPANY.ID)#">,
+                    	<cfqueryparam cfsqltype="cf_sql_varchar" value="#CreateUUID()#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.COMPANY.ID)#">,
                     	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qLoginHostFamily.regionID)#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="8">, <!--- New Account | Set Status to "Host" --->
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#qLoginHostFamily.lastname#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#qLoginHostFamily.lastName#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qLoginHostFamily.address#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qLoginHostFamily.address2#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qLoginHostFamily.city#">,
@@ -161,7 +168,7 @@
 							email=qLoginHostFamily.email
 						);
 					
-						// Reload Page to display left menu
+						// Go to overview page
 						Location("?section=overview", "no");
 					
 					}					
@@ -175,7 +182,49 @@
 			// Error - Could Not Login
 			SESSION.formErrors.Add("The email and password you submitted do not match an account on file.<br />  Please check your information and try again.");
 		</cfscript>
+    
+    <!--- uniqueID Login --->
+    <cfelseif LEN(URL.uniqueID)>    
+
+		<!--- Check if we have a host account --->
+        <cfquery name="qLoginHostFamily" datasource="#APPLICATION.DSN.Source#">
+            SELECT  
+                hostID, 
+                hostAppStatus,
+                initialHostAppType,
+                familylastname,
+                email
+            FROM 
+                smg_hosts
+            WHERE 
+                uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(URL.uniqueID)#"> 
+			AND
+            	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.COMPANY.ID)#">                
+        </cfquery>
+
+		<cfscript>
+            // Host Account found - Log them in
+            if ( qLoginHostFamily.recordcount ) {
         
+                // Login Host Family
+                APPLICATION.CFC.SESSION.setHostSession(
+                    hostID=qLoginHostFamily.hostID,												
+                    applicationStatus=qLoginHostFamily.hostAppStatus,
+                    familyName=qLoginHostFamily.familylastname,
+                    email=qLoginHostFamily.email
+                );
+
+                // Go to overview page
+                Location("?section=overview", "no");
+                
+            } else {
+				
+				// Error - Could Not Login
+				SESSION.formErrors.Add("Sorry but we were not able to login this host family account");
+				
+			}
+        </cfscript>
+		
 	</cfif> <!--- FORM Submitted --->
 
 </cfsilent>
@@ -199,20 +248,20 @@
     <div class="loginBox">
         
         <p align="center" style="margin:5px 5px 30px 5px;">
-            <img src="/images/LoginIcon_2.png" width="196" height="140" align="" /> <br />
+            <img src="images/LoginIcon_2.png" width="196" height="140" align="" /> <br />
         </p>
     
         <table align="center" cellpadding="4" cellspacing="0">
             <tr>
                 <td><label for="username">Email:</label></td>
-                <td><input type="text" name="username" id="username" size="35" /></td>
+                <td><input type="text" name="username" id="username" value="#FORM.userName#" size="35" /></td>
             </tr>
             <tr>
                 <td><label for="password">Password:</label></td>
                 <td><input type="password" name="password" id="password" size="35" /></p></td>
             </tr>
             <tr>
-                <td colspan="2" align="right"><input type="image" name="login" value="Login" src="/images/login.png" /></td>
+                <td colspan="2" align="right"><input type="image" name="login" value="Login" src="images/login.png" /></td>
             </tr>
         </table>
         

@@ -48,31 +48,33 @@
         
         <cfreturn qGetCurrentSeason>        
     </cffunction>
-    
 
-	<cffunction name="getPictureCategory" access="public" returntype="query" output="false" hint="Returns a list of categories">
-    	<cfargument name="ID" default="" hint="ID is not required">
 
-        <cfquery 
-        	name="qGetCountry"
-        	datasource="#APPLICATION.DSN.Source#">
-                SELECT 
-                	catID,
-                    cat_name,
+	<!--- Get Current Paperwork Season Based on Today's date --->
+	<cffunction name="getCurrentPaperworkSeason" access="public" returntype="query" output="false" hint="Get Current Paperwork Season Based on Today's date">
+	
+		<cfquery 
+			name="qGetCurrentPaperworkSeason" 
+			datasource="#APPLICATION.DSN.Source#">
+				SELECT
+                	seasonID,
+                    season,
+                    years,                    
                     active,
-                    requirements,
-                    divName
+                    startDate,
+                    endDate,
+                    datePaperworkStarted,
+                    datePaperworkRequired,
+                    datePaperworkEnded
 				FROM
-                	smg_host_pic_cat
-				<cfif LEN(ARGUMENTS.ID)>
-	                WHERE 
-                        catID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
-                </cfif>                        
-        </cfquery> 
-
-		<cfreturn qGetCountry>
-	</cffunction>
-
+                	smg_seasons
+                WHERE
+					CURRENT_DATE() BETWEEN datePaperworkStarted AND datePaperworkEnded  
+    	</cfquery>
+        
+        <cfreturn qGetCurrentPaperworkSeason>        
+    </cffunction>
+   
 
 	<cffunction name="getCountry" access="public" returntype="query" output="false" hint="Returns a country or list of countries">
     	<cfargument name="countryID" default="0" hint="countryID is not required">

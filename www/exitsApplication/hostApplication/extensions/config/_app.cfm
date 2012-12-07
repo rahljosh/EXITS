@@ -51,6 +51,7 @@
 	} else {
 		
 		// Production
+		APPLICATION.PATH.uploadFolder = "C:/websites/uploads/hostApp/";
 		APPLICATION.PATH.hostApp = "C:/websites/student-management/nsmg/uploadedfiles/hostApp/";
 		APPLICATION.PATH.relativeHostApp = "https://ise.exitsapplication.com/nsmg/uploadedfiles/hostApp/";
 		APPLICATION.PATH.TEMP = 'C:/websites/student-management/nsmg/uploadedfiles/temp/';

@@ -40,7 +40,7 @@
 
 	<cfparam name="ATTRIBUTES.width" 
     	type="string" 
-        default="100%" />
+        default="95%" />
 
 	<cfparam name="ATTRIBUTES.Clear" 
     	type="boolean" 
@@ -102,7 +102,7 @@
 				<!--- Error displayed on sections --->
                 <cfcase value="section">
                     
-                    <div class="errors">
+                    <div class="errors" style="width:#ATTRIBUTES.width#">
                         <p><em>Oops... the following errors were encountered:</em></p>
                 
                         <ul>

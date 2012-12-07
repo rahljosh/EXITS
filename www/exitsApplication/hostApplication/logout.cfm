@@ -16,7 +16,7 @@
 		APPLICATION.CFC.SESSION.doLogout();
 		
 		// Reload Page to display left menu
-		Location("http://#cgi.http_host#/", "no");
+		Location("/", "no");
 	</cfscript>
 
 </cfsilent>
