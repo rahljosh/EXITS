@@ -91,6 +91,11 @@
 			result.authenticationSecretaryOfState = 0;
 			result.authenticationDepartmentOfLabor = 0;
 			result.authenticationGoogleEarth = 0;
+			result.AUTHENTICATIONINCORPORATION = 0;
+			result.AUTHENTICATIONCERTIFICATEOFEXISTENCE = 0;
+			result.AUTHENTICATIONCERTIFICATEOFREINSTATEMENT = 0;
+			result.AUTHENTICATIONDEPARTMENTOFSTATE = 0;
+			result.AUTHENTICATIONBUSINESSLICENSENOTAVAILABLE = 0;
 			result.EIN = "";
 			result.WC = 0;
 			result.WCE = "";
@@ -102,6 +107,11 @@
 				result.authenticationSecretaryOfState = qGetHCInfo.authentication_secretaryOfState;
 				result.authenticationDepartmentOfLabor = qGetHCInfo.authentication_departmentOfLabor;
 				result.authenticationGoogleEarth = qGetHCInfo.authentication_googleEarth;
+				result.AUTHENTICATIONINCORPORATION = qGetHCInfo.authentication_incorporation;
+				result.AUTHENTICATIONCERTIFICATEOFEXISTENCE = qGetHCInfo.authentication_certificateOfExistence;
+				result.AUTHENTICATIONCERTIFICATEOFREINSTATEMENT = qGetHCInfo.authentication_certificateOfReinstatement;
+				result.AUTHENTICATIONDEPARTMENTOFSTATE = qGetHCInfo.authentication_departmentOfState;
+				result.AUTHENTICATIONBUSINESSLICENSENOTAVAILABLE = qGetHCInfo.authentication_businessLicenseNotAvailable;
 				result.EIN = qGetHCInfo.EIN;
 				result.WC = qGetHCInfo.workmenscompensation;
 				result.WCE = DateFormat(qGetHCInfo.WCDateExpired, 'mm/dd/yyyy');

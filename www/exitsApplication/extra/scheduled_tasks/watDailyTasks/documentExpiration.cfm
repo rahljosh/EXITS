@@ -50,6 +50,62 @@
     </cfquery>
 </cfloop>
 
+<!--- Incorporation --->
+<cfquery name="qGetHosts_expiredIncorporation" datasource="MySql">
+	SELECT *
+   	FROM extra_hostCompany
+   	WHERE authentication_incorporationExpiration < <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+</cfquery>
+<cfloop query="qGetHosts_expiredIncorporation">
+    <cfquery datasource="MySql">
+    	UPDATE extra_hostCompany
+       	SET authentication_incorporation = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+       	WHERE hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#hostCompanyID#">
+    </cfquery>
+</cfloop>
+
+<!--- Certificate of Existence --->
+<cfquery name="qGetHosts_expiredCertificateOfExistence" datasource="MySql">
+	SELECT *
+   	FROM extra_hostCompany
+   	WHERE authentication_certificateOfExistenceExpiration < <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+</cfquery>
+<cfloop query="qGetHosts_expiredCertificateOfExistence">
+    <cfquery datasource="MySql">
+    	UPDATE extra_hostCompany
+       	SET authentication_certificateOfExistence = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+       	WHERE hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#hostCompanyID#">
+    </cfquery>
+</cfloop>
+
+<!--- Certificate of Reinstatement --->
+<cfquery name="qGetHosts_expiredCertificateOfReinstatement" datasource="MySql">
+	SELECT *
+   	FROM extra_hostCompany
+   	WHERE authentication_certificateOfReinstatementExpiration < <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+</cfquery>
+<cfloop query="qGetHosts_expiredCertificateOfReinstatement">
+    <cfquery datasource="MySql">
+    	UPDATE extra_hostCompany
+       	SET authentication_certificateOfReinstatement = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+       	WHERE hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#hostCompanyID#">
+    </cfquery>
+</cfloop>
+
+<!--- Department of State --->
+<cfquery name="qGetHosts_expiredDepartmentOfState" datasource="MySql">
+	SELECT *
+   	FROM extra_hostCompany
+   	WHERE authentication_departmentOfStateExpiration < <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+</cfquery>
+<cfloop query="qGetHosts_expiredDepartmentOfState">
+    <cfquery datasource="MySql">
+    	UPDATE extra_hostCompany
+       	SET authentication_departmentOfState = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+       	WHERE hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#hostCompanyID#">
+    </cfquery>
+</cfloop>
+
 <!--- Department Of Labor --->
 <cfquery name="qGetHosts_expiredDOL" datasource="MySql">
 	SELECT *
