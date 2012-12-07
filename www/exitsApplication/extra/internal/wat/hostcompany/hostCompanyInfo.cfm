@@ -55,17 +55,27 @@
     <!--- Other Information --->    
     <cfparam name="FORM.personJobOfferName" default="">
     <cfparam name="FORM.personJobOfferTitle" default="">
-    <cfparam name="FORM.authentication_secretaryOfState" default="0">
-    <cfparam name="FORM.authentication_departmentOfLabor" default="0">
-    <cfparam name="FORM.authentication_googleEarth" default="0">
-    <cfparam name="FORM.authentication_secretaryOfStateExpiration" default="">
-    <cfparam name="FORM.authentication_departmentOfLaborExpiration" default="">
-    <cfparam name="FORM.authentication_googleEarthExpiration" default="">
     <cfparam name="FORM.EIN" default="">
 	<cfparam name="FORM.workmensCompensation" default="">
     <cfparam name="FORM.WCDateExpired" default="">
     <cfparam name="FORM.homepage" default="">
     <cfparam name="FORM.observations" default="">
+    <!--- Authentications --->
+    <cfparam name="FORM.authentication_secretaryOfState" default="0">
+    <cfparam name="FORM.authentication_departmentOfLabor" default="0">
+	<cfparam name="FORM.authentication_googleEarth" default="0">
+    <cfparam name="FORM.authentication_incorporation" default="0">
+    <cfparam name="FORM.authentication_certificateOfExistence" default="0">
+    <cfparam name="FORM.authentication_certificateOfReinstatement" default="0">
+    <cfparam name="FORM.authentication_departmentOfState" default="0">
+    <cfparam name="FORM.authentication_secretaryOfStateExpiration" default="">
+    <cfparam name="FORM.authentication_departmentOfLaborExpiration" default="">
+    <cfparam name="FORM.authentication_googleEarthExpiration" default="">
+    <cfparam name="FORM.authentication_incorporationExpiration" default="">
+    <cfparam name="FORM.authentication_certificateOfExistenceExpiration" default="">
+    <cfparam name="FORM.authentication_certificateOfReinstatementExpiration" default="">
+    <cfparam name="FORM.authentication_departmentOfStateExpiration" default="">
+    <cfparam name="FORM.authentication_businessLicenseNotAvailable" default="0">
 	<!--- Arrival Information --->    
     <cfparam name="FORM.isPickUpProvided" default="0">
     <cfparam name="FORM.arrivalAirport" default="">
@@ -116,9 +126,18 @@
             eh.authentication_secretaryOfState,
             eh.authentication_departmentOfLabor, 
             eh.authentication_googleEarth,
+            eh.authentication_incorporation,
+            eh.authentication_certificateOfExistence,
+            eh.authentication_certificateOfReinstatement,
+            eh.authentication_departmentOfState,
             eh.authentication_secretaryOfStateExpiration, 
             eh.authentication_departmentOfLaborExpiration,
             eh.authentication_googleEarthExpiration,
+            eh.authentication_incorporationExpiration,
+            eh.authentication_certificateOfExistenceExpiration,
+            eh.authentication_certificateOfReinstatementExpiration,
+            eh.authentication_departmentOfStateExpiration,
+            eh.authentication_businessLicenseNotAvailable,
             eh.EIN,
             eh.workmensCompensation, 
             eh.WCDateExpired, 
@@ -214,6 +233,7 @@
         GROUP BY p.programName
     </cfquery>
     
+    <!--- Get database records for authentication files --->
     <cfquery name="qGetAuthenticationFile" datasource="MySql">
     	SELECT *
         FROM extra_hostauthenticationfiles
@@ -246,6 +266,31 @@
         FROM qGetAuthenticationFile
         WHERE authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="workmensCompensation">
     </cfquery>
+    
+    <cfquery name="qGetIncorporationFile" dbtype="query">
+    	SELECT *
+        FROM qGetAuthenticationFile
+        WHERE authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="incorporation">
+    </cfquery>
+    
+    <cfquery name="qGetCertificateOfExistenceFile" dbtype="query">
+    	SELECT *
+        FROM qGetAuthenticationFile
+        WHERE authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="certificateOfExistence">
+    </cfquery>
+    
+    <cfquery name="qGetCertificateOfReinstatementFile" dbtype="query">
+    	SELECT *
+        FROM qGetAuthenticationFile
+        WHERE authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="certificateOfReinstatement">
+    </cfquery>
+    
+    <cfquery name="qGetDepartmentOfStateFile" dbtype="query">
+    	SELECT *
+        FROM qGetAuthenticationFile
+        WHERE authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="departmentOfState">
+    </cfquery>
+    <!--- End of get database records for authentication files --->
                 
     <!--- FORM Submitted --->
     <cfif FORM.submitted>
@@ -373,9 +418,18 @@
                         authentication_secretaryOfState = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_secretaryOfState)#">,
                         authentication_departmentOfLabor = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_departmentOfLabor)#">,
                         authentication_googleEarth = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_googleEarth)#">,
+                        authentication_incorporation = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_incorporation)#">,
+                        authentication_certificateOfExistence = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_certificateOfExistence)#">,
+                        authentication_certificateOfReinstatement = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_certificateOfReinstatement)#">,
+                        authentication_departmentOfState = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_departmentOfState)#">,
                         authentication_secretaryOfStateExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_secretaryOfStateExpiration#">,
                         authentication_departmentOfLaborExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_departmentOfLaborExpiration#">,
                         authentication_googleEarthExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_googleEarthExpiration#">,
+                        authentication_incorporationExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_incorporationExpiration#">,
+						authentication_certificateOfExistenceExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_certificateOfExistenceExpiration#">,
+						authentication_certificateOfReinstatementExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_certificateOfReinstatementExpiration#">,
+						authentication_departmentOfStateExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_departmentOfStateExpiration#">,
+                        authentication_businessLicenseNotAvailable = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.authentication_businessLicenseNotAvailable#">,
                         EIN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">,
                         workmensCompensation = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workmensCompensation#" null="#NOT IsNumeric(FORM.workmensCompensation)#">,
                         WCDateExpired = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.WCDateExpired#" null="#NOT IsDate(FORM.WCDateExpired)#">,
@@ -436,6 +490,42 @@
                         AND dateAdded >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-1,NOW())#">
                     </cfquery>
                 </cfif>
+                <cfif NOT VAL(qGetIncorporationFile.recordCount)>
+                	<cfquery name="qGetIncorporationFile" datasource="MySql">
+                    	SELECT id
+                        FROM extra_hostauthenticationfiles
+                        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
+                        AND authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="incorporation">
+                        AND dateAdded >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-1,NOW())#">
+                    </cfquery>
+                </cfif>
+                <cfif NOT VAL(qGetCertificateOfExistenceFile.recordCount)>
+                	<cfquery name="qGetCertificateOfExistenceFile" datasource="MySql">
+                    	SELECT id
+                        FROM extra_hostauthenticationfiles
+                        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
+                        AND authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="certificateOfExistence">
+                        AND dateAdded >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-1,NOW())#">
+                    </cfquery>
+                </cfif>
+                <cfif NOT VAL(qGetCertificateOfReinstatementFile.recordCount)>
+                	<cfquery name="qGetCertificateOfReinstatementFile" datasource="MySql">
+                    	SELECT id
+                        FROM extra_hostauthenticationfiles
+                        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
+                        AND authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="certificateOfReinstatement">
+                        AND dateAdded >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-1,NOW())#">
+                    </cfquery>
+                </cfif>
+                <cfif NOT VAL(qGetDepartmentOfStateFile.recordCount)>
+                	<cfquery name="qGetDepartmentOfStateFile" datasource="MySql">
+                    	SELECT id
+                        FROM extra_hostauthenticationfiles
+                        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
+                        AND authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="departmentOfState">
+                        AND dateAdded >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',-1,NOW())#">
+                    </cfquery>
+                </cfif>
                 
                 <!--- These are the actual updates --->
                 <cfquery datasource="MySql">
@@ -457,6 +547,26 @@
                 	UPDATE extra_hostauthenticationfiles
                     SET dateExpires = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.WCDateExpired#">
                     WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetWorkmensCompensationFile.id)#">
+                </cfquery>
+                <cfquery datasource="MySql">
+                	UPDATE extra_hostauthenticationfiles
+                    SET dateExpires = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_incorporationExpiration#">
+                    WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetIncorporationFile.id)#">
+                </cfquery>
+                <cfquery datasource="MySql">
+                	UPDATE extra_hostauthenticationfiles
+                    SET dateExpires = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_certificateOfExistenceExpiration#">
+                    WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCertificateOfExistenceFile.id)#">
+                </cfquery>
+                <cfquery datasource="MySql">
+                	UPDATE extra_hostauthenticationfiles
+                    SET dateExpires = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_certificateOfReinstatementExpiration#">
+                    WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCertificateOfReinstatementFile.id)#">
+                </cfquery>
+                <cfquery datasource="MySql">
+                	UPDATE extra_hostauthenticationfiles
+                    SET dateExpires = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_departmentOfStateExpiration#">
+                    WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetDepartmentOfStateFile.id)#">
                 </cfquery>
                 
                 <!--- End update authentication file expiration dates --->
@@ -587,9 +697,18 @@
                         authentication_secretaryOfState,
                         authentication_departmentOfLabor,
                         authentication_googleEarth,
+                        authentication_incorporation,
+                        authentication_certificateOfExistence,
+                        authentication_certificateOfReinstatement,
+                        authentication_departmentOfState,
                         authentication_secretaryOfStateExpiration,
                         authentication_departmentOfLaborExpiration,
-                        authentication_googleEarthExpiration )
+                        authentication_googleEarthExpiration,
+                        authentication_incorporationExpiration,
+                        authentication_certificateOfExistenceExpiration,
+                        authentication_certificateOfReinstatementExpiration,
+                        authentication_departmentOfStateExpiration,
+                        authentication_businessLicenseNotAvailable )
                     VALUES (
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
@@ -604,9 +723,18 @@
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_secretaryOfState)#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_departmentOfLabor)#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_googleEarth)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_incorporation)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_certificateOfExistence)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_certificateOfReinstatement)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_departmentOfState)#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_secretaryOfStateExpiration#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_departmentOfLaborExpiration#">,
-                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_googleEarthExpiration#"> )
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_googleEarthExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_incorporationExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_certificateOfExistenceExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_certificateOfReinstatementExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_departmentOfStateExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.authentication_businessLicenseNotAvailable#"> )
                 </cfquery>
                 
                 <cfquery name="qGetNewHistoryID" datasource="MySql">
@@ -685,12 +813,21 @@
                         <!--- Other Information --->
                         personJobOfferName,
                         personJobOfferTitle,
-                        authentication_secretaryOfState,
+                       	authentication_secretaryOfState,
                         authentication_departmentOfLabor,
                         authentication_googleEarth,
+                        authentication_incorporation,
+                        authentication_certificateOfExistence,
+                        authentication_certificateOfReinstatement,
+                        authentication_departmentOfState,
                         authentication_secretaryOfStateExpiration,
                         authentication_departmentOfLaborExpiration,
                         authentication_googleEarthExpiration,
+                        authentication_incorporationExpiration,
+                        authentication_certificateOfExistenceExpiration,
+                        authentication_certificateOfReinstatementExpiration,
+                        authentication_departmentOfStateExpiration,
+                        authentication_businessLicenseNotAvailable,
                         EIN,
                         workmensCompensation,
                         WCDateExpired,
@@ -748,9 +885,18 @@
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_secretaryOfState)#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_departmentOfLabor)#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_googleEarth)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_incorporation)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_certificateOfExistence)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_certificateOfReinstatement)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_departmentOfState)#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_secretaryOfStateExpiration#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_departmentOfLaborExpiration#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_googleEarthExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_incorporationExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_certificateOfExistenceExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_certificateOfReinstatementExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_departmentOfStateExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.authentication_businessLicenseNotAvailable#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workmensCompensation#" null="#NOT IsNumeric(FORM.workmensCompensation)#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.WCDateExpired#" null="#NOT IsDate(FORM.WCDateExpired)#">,
@@ -847,9 +993,18 @@
                         authentication_secretaryOfState,
                         authentication_departmentOfLabor,
                         authentication_googleEarth,
+                        authentication_incorporation,
+                        authentication_certificateOfExistence,
+                        authentication_certificateOfReinstatement,
+                        authentication_departmentOfState,
                         authentication_secretaryOfStateExpiration,
                         authentication_departmentOfLaborExpiration,
-                        authentication_googleEarthExpiration )
+                        authentication_googleEarthExpiration,
+                        authentication_incorporationExpiration,
+                        authentication_certificateOfExistenceExpiration,
+                        authentication_certificateOfReinstatementExpiration,
+                        authentication_departmentOfStateExpiration,
+                        authentication_businessLicenseNotAvailable )
                     VALUES (
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetNewHost.hostCompanyID#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
@@ -864,9 +1019,18 @@
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_secretaryOfState)#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_departmentOfLabor)#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_googleEarth)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_incorporation)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_certificateOfExistence)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_certificateOfReinstatement)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_departmentOfState)#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_secretaryOfStateExpiration#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_departmentOfLaborExpiration#">,
-                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_googleEarthExpiration#"> )
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_googleEarthExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_incorporationExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_certificateOfExistenceExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_certificateOfReinstatementExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_departmentOfStateExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.authentication_businessLicenseNotAvailable#"> )
                 </cfquery>
                 <!--- End Add History Record --->
                 
@@ -926,9 +1090,18 @@
 			FORM.authentication_secretaryOfState = qGetHostCompanyInfo.authentication_secretaryOfState;
 			FORM.authentication_departmentOfLabor = qGetHostCompanyInfo.authentication_departmentOfLabor;
 			FORM.authentication_googleEarth = qGetHostCompanyInfo.authentication_googleEarth;
+			FORM.authentication_incorporation = qGetHostCompanyInfo.authentication_incorporation;
+			FORM.authentication_certificateOfExistence = qGetHostCompanyInfo.authentication_certificateOfExistence;
+			FORM.authentication_certificateOfReinstatement = qGetHostCompanyInfo.authentication_certificateOfReinstatement;
+			FORM.authentication_departmentOfState = qGetHostCompanyInfo.authentication_departmentOfState;
 			FORM.authentication_secretaryOfStateExpiration = qGetHostCompanyInfo.authentication_secretaryOfStateExpiration;
 			FORM.authentication_departmentOfLaborExpiration = qGetHostCompanyInfo.authentication_departmentOfLaborExpiration;
 			FORM.authentication_googleEarthExpiration = qGetHostCompanyInfo.authentication_googleEarthExpiration;
+			FORM.authentication_incorporationExpiration = qGetHostCompanyInfo.authentication_incorporationExpiration;
+			FORM.authentication_certificateOfExistenceExpiration = qGetHostCompanyInfo.authentication_certificateOfExistenceExpiration;
+			FORM.authentication_certificateOfReinstatementExpiration = qGetHostCompanyInfo.authentication_certificateOfReinstatementExpiration;
+			FORM.authentication_departmentOfStateExpiration = qGetHostCompanyInfo.authentication_departmentOfStateExpiration;
+			FORM.authentication_businessLicenseNotAvailable = qGetHostCompanyInfo.authenticatioN_businessLicenseNotAvailable;
 			FORM.EIN = qGetHostCompanyInfo.EIN;
 			FORM.workmensCompensation = qGetHostCompanyInfo.workmensCompensation;
 			FORM.WCDateExpired = qGetHostCompanyInfo.WCDateExpired;
@@ -1390,6 +1563,10 @@
 		var departmentOfLabor = $('#authentication_departmentOfLaborExpiration').val();
 		var googleEarth = $('#authentication_googleEarthExpiration').val();
 		var workmensCompensation = $('#WCDateExpired').val();
+		var incorporation = $('#authentication_incorporationExpiration').val();
+		var certificateOfExistence = $('#authentication_certificateOfExistenceExpiration').val();
+		var certificateOfReinstatement = $('#authentication_certificateOfReinstatementExpiration').val();
+		var departmentOfState = $('#authentication_departmentOfStateExpiration').val();
 	   	new AjaxUpload('secretary_of_state_upload', {
 			action: '../wat/hostCompany/imageUploadPrint.cfm?option=upload&type=secretaryOfState&hostCompanyID='+hostCompanyID+'&expirationDate='+secretaryOfState,
 			name: 'image'
@@ -1406,6 +1583,22 @@
 			action: '../wat/hostCompany/imageUploadPrint.cfm?option=upload&type=workmensCompensation&hostCompanyID='+hostCompanyID+'&expirationDate='+workmensCompensation,
 			name: 'image'
   		});
+		new AjaxUpload('incorporation_upload', {
+			action: '../wat/hostCompany/imageUploadPrint.cfm?option=upload&type=incorporation&hostCompanyID='+hostCompanyID+'&expirationDate='+incorporation,
+			name: 'image'
+  		});
+		new AjaxUpload('certificate_of_existence_upload', {
+			action: '../wat/hostCompany/imageUploadPrint.cfm?option=upload&type=certificateOfExistence&hostCompanyID='+hostCompanyID+'&expirationDate='+certificateOfExistence,
+			name: 'image'
+  		});
+		new AjaxUpload('certificate_of_reinstatement_upload', {
+			action: '../wat/hostCompany/imageUploadPrint.cfm?option=upload&type=certificateOfReinstatement&hostCompanyID='+hostCompanyID+'&expirationDate='+certificateOfReinstatement,
+			name: 'image'
+  		});
+		new AjaxUpload('department_of_state_upload', {
+			action: '../wat/hostCompany/imageUploadPrint.cfm?option=upload&type=departmentOfState&hostCompanyID='+hostCompanyID+'&expirationDate='+departmentOfState,
+			name: 'image'
+  		});
 	});
 	
 	// Popup to print image that is referenced by the input file type.
@@ -1415,10 +1608,18 @@
 	}
 	
 	// Popup to print all authentication files (will only show pdf files)
-	var printAllAuthenticationFiles = function(id1,id2,id3) {
+	var printMainAuthenticationFiles = function(id1,id2,id3) {
 		var hostCompanyID = $('#hostCompanyID').val();
 		var printURL = document.URL.substring(0,document.URL.indexOf("/index.cfm")) 
 			+ "/hostcompany/imageUploadPrint.cfm?option=printAll&hostCompanyID="+hostCompanyID+"&fileID="+id1+"&fileID2="+id2+"&fileID3="+id3;
+		window.open(printURL, "File", "width=800, height=600");
+	}
+	
+	// Popup to print all authentication files, including the additional authentications (will only show pdf files)
+	var printAllAuthenticationFiles = function(id1,id2,id3,id4,id5,id6,id7) {
+		var hostCompanyID = $('#hostCompanyID').val();
+		var printURL = document.URL.substring(0,document.URL.indexOf("/index.cfm")) 
+			+ "/hostcompany/imageUploadPrint.cfm?option=printAll&hostCompanyID="+hostCompanyID+"&fileID="+id1+"&fileID2="+id2+"&fileID3="+id3+"&fileID4="+id4+"&fileID5="+id5+"&fileID6="+id6+"&fileID7="+id7;
 		window.open(printURL, "File", "width=800, height=600");
 	}
 	
@@ -1437,6 +1638,19 @@
 		var currentValue = $("#confirmation_" + program).val();
 		currentValue = (currentValue * -1) + 1;
 		$("#confirmation_" + program).val(currentValue);
+	}
+	
+	var changeAuthenticationAvailable = function() {
+		var currentValue = $("#authentication_businessLicenseNotAvailable").val();
+		if (currentValue == 0) {
+			$("#authentication_businessLicenseNotAvailable").attr("value", 1);
+			$(".additionalAuthentications").removeAttr("style");
+			// This is to prevent displaying readOnly fields when changing this option.
+			$(".readOnly").css("display","none");
+		} else {
+			$("#authentication_businessLicenseNotAvailable").attr("value", 0);
+			$(".additionalAuthentications").css("display","none");
+		}
 	}
 	
 	//open window
@@ -2228,7 +2442,7 @@
                                          	</tr>
                                             <!--- End J1 Positions --->
                                             
-                                            <!--- Authentication --->
+                                            <!--- Authentications --->
                                             <tr>
                                                 <td class="style1" colspan="2">
                                                     <table width="100%" cellpadding="3" cellspacing="3" align="center" style="border:1px solid ##C7CFDC; background-color:##F7F7F7;">
@@ -2246,8 +2460,26 @@
                                                                 <span style="float:right"><u>File Uploaded</u></span>
                                                             </td>
                                                         </tr>
+                                                        <!--- Business License (Secretary of State) --->
                                                         <tr>
-                                                            <td class="style1" align="right" width="30%"><label for="authentication_secretaryOfState"><strong>Secretary of State:</strong></label></td>
+                                                            <td class="style1" align="right" width="30%">
+                                                            	<label for="authentication_secretaryOfState"><strong>Business License:</strong></label>
+                                                                <br />
+                                                            	<i>Not Available:</i>
+                                                                <input 
+                                                                	type="hidden"
+                                                                    id="authentication_businessLicenseNotAvailable"
+                                                                    name="authentication_businessLicenseNotAvailable"
+                                                                    value="#VAL(FORM.authentication_businessLicenseNotAvailable)#" />
+                                                                <input
+                                                                    id="businessLicenseNotAvailable" 
+                                                                    name="businessLicenseNotAvailable" 
+                                                                    class="formField" 
+                                                                    disabled="disabled"
+                                                                    type="checkbox"
+                                                                    onclick="changeAuthenticationAvailable()"
+                                                                    <cfif VAL(FORM.authentication_businessLicenseNotAvailable)>checked </cfif> />
+                                                          	</td>
                                                             <td class="style1" width="70%">
                                                                 <input 
                                                                 	type="checkbox" 
@@ -2285,7 +2517,8 @@
                                                                           		UPLOAD
                                                                            	</a>
                                                                         </cfif>
-                                                                        
+                                                                   	<cfelse>
+                                                                 		<input type="hidden" id="secretary_of_state_upload"/><!--- This is to prevent errors with ajaxUpload --->  
                                                                   	</cfif>						
                                                                 </span>
                                                                 <span class="readOnly">
@@ -2312,9 +2545,277 @@
                                                                         </cfif>
                                                                     </span>
                                                                 </span>
-                                                                
                                                             </td>
                                                         </tr>
+                                                        
+                                                        <!--- Additional authentication (displayed when business license is not available) --->
+                                                        <!--- Incorporation --->
+                                                        <tr class="additionalAuthentications" <cfif NOT VAL(FORM.authentication_businessLicenseNotAvailable)>style="display:none"</cfif>>
+                                                            <td class="style1" align="right"><label for="authentication_incorporation"><strong>Incorporation:</strong></label></td>
+                                                           	<td class="style1">
+                                                            	<input 
+                                                                	type="checkbox" 
+                                                                    name="authentication_incorporation" 
+                                                                    id="authentication_incorporation" 
+                                                                    value="1" 
+                                                                    class="formField" 
+                                                                    disabled 
+																	<cfif VAL(FORM.authentication_incorporation)> checked </cfif> />
+                                                             	<span class="editPage">
+                                                                    <input 
+                                                                    	type="text" 
+                                                                        name="authentication_incorporationExpiration" 
+                                                                        id="authentication_incorporationExpiration" 
+                                                                        value="#DateFormat(authentication_incorporationExpiration, 'mm/dd/yyyy')#" 
+                                                                        class="style1 datePicker editPage" />
+                                                                  	<cfif VAL(URL.hostCompanyID)>
+																		<cfif VAL(qGetIncorporationFile.recordCount)>
+                                                                        	<a
+                                                                                href="##" 
+                                                                                class="editPage"
+                                                                                onclick="deleteAuthenticationFile('#qGetIncorporationFile.id#')"
+                                                                                style="float:right; cursor:pointer">
+                                                                                DELETE
+                                                                            </a>
+                                                                      		<input type="hidden" id="incorporation_upload"/><!--- This is to prevent errors with ajaxUpload --->
+                                                                        <cfelse>
+                                                                          	<a
+                                                                            	href="##" 
+                                                                                class="editPage" 
+                                                                                value="Upload" 
+                                                                                name="incorporation_upload" 
+                                                                                id="incorporation_upload" 
+                                                                                style="float:right; cursor:pointer">
+                                                                          		UPLOAD
+                                                                           	</a>
+                                                                        </cfif>
+                                                                   	<cfelse>
+                                                                    	<input type="hidden" id="incorporation_upload"/><!--- This is to prevent errors with ajaxUpload --->
+                                                                 	</cfif>									
+                                                                </span>
+                                                                <span class="readOnly">
+                                                                	<cfif FORM.authentication_incorporationExpiration NEQ "">
+                                                                  		<span <cfif FORM.authentication_incorporationExpiration LT NOW()>style="color:red;"</cfif>>
+                                                                            #DateFormat(FORM.authentication_incorporationExpiration, "mm/dd/yyyy")#
+                                                                        </span>
+                                                                    </cfif>
+                                                                    <span style="float:right;">
+																		<cfif VAL(qGetIncorporationFile.recordCount)>
+                                                                            <a 
+                                                                                href="##"
+                                                                                class="readOnly" 
+                                                                                onclick="printAuthenticationFile('#qGetIncorporationFile.id#')" 
+                                                                                style="cursor:pointer;">
+                                                                                PRINT
+                                                                            </a>
+                                                                        <cfelse>
+                                                                            <p class="readOnly">NO FILE</p>
+                                                                        </cfif>
+                                                                    </span>
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                        <!--- Certificate Of Existence --->
+                                                        <tr class="additionalAuthentications" <cfif NOT VAL(FORM.authentication_businessLicenseNotAvailable)>style="display:none"</cfif>>
+                                                            <td class="style1" align="right"><label for="authentication_certificateOfExistence"><strong>Certificate of Existence:</strong></label></td>
+                                                           	<td class="style1">
+                                                            	<input 
+                                                                	type="checkbox" 
+                                                                    name="authentication_certificateOfExistence" 
+                                                                    id="authentication_certificateOfExistence" 
+                                                                    value="1" 
+                                                                    class="formField" 
+                                                                    disabled 
+																	<cfif VAL(FORM.authentication_certificateOfExistence)> checked </cfif> />
+                                                             	<span class="editPage">
+                                                                    <input 
+                                                                    	type="text" 
+                                                                        name="authentication_certificateOfExistenceExpiration" 
+                                                                        id="authentication_certificateOfExistenceExpiration" 
+                                                                        value="#DateFormat(authentication_certificateOfExistenceExpiration, 'mm/dd/yyyy')#" 
+                                                                        class="style1 datePicker editPage" />
+                                                                  	<cfif VAL(URL.hostCompanyID)>
+																		<cfif VAL(qGetCertificateOfExistenceFile.recordCount)>
+                                                                        	<a
+                                                                                href="##" 
+                                                                                class="editPage"
+                                                                                onclick="deleteAuthenticationFile('#qGetCertificateOfExistenceFile.id#')"
+                                                                                style="float:right; cursor:pointer">
+                                                                                DELETE
+                                                                            </a>
+                                                                      		<input type="hidden" id="certificate_of_existence_upload"/><!--- This is to prevent errors with ajaxUpload --->
+                                                                        <cfelse>
+                                                                          	<a
+                                                                            	href="##" 
+                                                                                class="editPage" 
+                                                                                value="Upload" 
+                                                                                name="certificate_of_existence_upload" 
+                                                                                id="certificate_of_existence_upload" 
+                                                                                style="float:right; cursor:pointer">
+                                                                          		UPLOAD
+                                                                           	</a>
+                                                                        </cfif>
+                                                                   	<cfelse>
+                                                                    	<input type="hidden" id="certificate_of_existence_upload"/><!--- This is to prevent errors with ajaxUpload --->
+                                                                 	</cfif>									
+                                                                </span>
+                                                                <span class="readOnly">
+                                                                	<cfif FORM.authentication_certificateOfExistenceExpiration NEQ "">
+                                                                  		<span <cfif FORM.authentication_certificateOfExistenceExpiration LT NOW()>style="color:red;"</cfif>>
+                                                                            #DateFormat(FORM.authentication_certificateOfExistenceExpiration, "mm/dd/yyyy")#
+                                                                        </span>
+                                                                    </cfif>
+                                                                    <span style="float:right;">
+																		<cfif VAL(qGetCertificateOfExistenceFile.recordCount)>
+                                                                            <a 
+                                                                                href="##"
+                                                                                class="readOnly" 
+                                                                                onclick="printAuthenticationFile('#qGetCertificateOfExistenceFile.id#')" 
+                                                                                style="cursor:pointer;">
+                                                                                PRINT
+                                                                            </a>
+                                                                        <cfelse>
+                                                                            <p class="readOnly">NO FILE</p>
+                                                                        </cfif>
+                                                                    </span>
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                        <!--- Certificate Of Reinstatement --->
+                                                        <tr class="additionalAuthentications" <cfif NOT VAL(FORM.authentication_businessLicenseNotAvailable)>style="display:none"</cfif>>
+                                                            <td class="style1" align="right"><label for="authentication_certificateOfReinstatement"><strong>Certificate of Reinstatement:</strong></label></td>
+                                                           	<td class="style1">
+                                                            	<input 
+                                                                	type="checkbox" 
+                                                                    name="authentication_certificateOfReinstatement" 
+                                                                    id="authentication_certificateOfReinstatement" 
+                                                                    value="1" 
+                                                                    class="formField" 
+                                                                    disabled 
+																	<cfif VAL(FORM.authentication_certificateOfReinstatement)> checked </cfif> />
+                                                             	<span class="editPage">
+                                                                    <input 
+                                                                    	type="text" 
+                                                                        name="authentication_certificateOfReinstatementExpiration" 
+                                                                        id="authentication_certificateOfReinstatementExpiration" 
+                                                                        value="#DateFormat(authentication_certificateOfReinstatementExpiration, 'mm/dd/yyyy')#" 
+                                                                        class="style1 datePicker editPage" />
+                                                                  	<cfif VAL(URL.hostCompanyID)>
+																		<cfif VAL(qGetCertificateOfReinstatementFile.recordCount)>
+                                                                        	<a
+                                                                                href="##" 
+                                                                                class="editPage"
+                                                                                onclick="deleteAuthenticationFile('#qGetCertificateOfReinstatementFile.id#')"
+                                                                                style="float:right; cursor:pointer">
+                                                                                DELETE
+                                                                            </a>
+                                                                      		<input type="hidden" id="certificate_of_reinstatement_upload"/><!--- This is to prevent errors with ajaxUpload --->
+                                                                        <cfelse>
+                                                                          	<a
+                                                                            	href="##" 
+                                                                                class="editPage" 
+                                                                                value="Upload" 
+                                                                                name="certificate_of_reinstatement_upload" 
+                                                                                id="certificate_of_reinstatement_upload" 
+                                                                                style="float:right; cursor:pointer">
+                                                                          		UPLOAD
+                                                                           	</a>
+                                                                        </cfif>
+                                                                   	<cfelse>
+                                                                    	<input type="hidden" id="certificate_of_reinstatement_upload"/><!--- This is to prevent errors with ajaxUpload --->
+                                                                 	</cfif>									
+                                                                </span>
+                                                                <span class="readOnly">
+                                                                	<cfif FORM.authentication_certificateOfReinstatementExpiration NEQ "">
+                                                                  		<span <cfif FORM.authentication_certificateOfReinstatementExpiration LT NOW()>style="color:red;"</cfif>>
+                                                                            #DateFormat(FORM.authentication_certificateOfReinstatementExpiration, "mm/dd/yyyy")#
+                                                                        </span>
+                                                                    </cfif>
+                                                                    <span style="float:right;">
+																		<cfif VAL(qGetCertificateOfReinstatementFile.recordCount)>
+                                                                            <a 
+                                                                                href="##"
+                                                                                class="readOnly" 
+                                                                                onclick="printAuthenticationFile('#qGetCertificateOfReinstatementFile.id#')" 
+                                                                                style="cursor:pointer;">
+                                                                                PRINT
+                                                                            </a>
+                                                                        <cfelse>
+                                                                            <p class="readOnly">NO FILE</p>
+                                                                        </cfif>
+                                                                    </span>
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                        <!--- Department Of State --->
+                                                        <tr class="additionalAuthentications" <cfif NOT VAL(FORM.authentication_businessLicenseNotAvailable)>style="display:none"</cfif>>
+                                                            <td class="style1" align="right"><label for="authentication_certificateOfReinstatement"><strong>Department of State:</strong></label></td>
+                                                           	<td class="style1">
+                                                            	<input 
+                                                                	type="checkbox" 
+                                                                    name="authentication_departmentOfState" 
+                                                                    id="authentication_departmentOfState" 
+                                                                    value="1" 
+                                                                    class="formField" 
+                                                                    disabled 
+																	<cfif VAL(FORM.authentication_departmentOfState)> checked </cfif> />
+                                                             	<span class="editPage">
+                                                                    <input 
+                                                                    	type="text" 
+                                                                        name="authentication_departmentOfStateExpiration" 
+                                                                        id="authentication_departmentOfStateExpiration" 
+                                                                        value="#DateFormat(authentication_departmentOfStateExpiration, 'mm/dd/yyyy')#" 
+                                                                        class="style1 datePicker editPage" />
+                                                                  	<cfif VAL(URL.hostCompanyID)>
+																		<cfif VAL(qGetDepartmentOfStateFile.recordCount)>
+                                                                        	<a
+                                                                                href="##" 
+                                                                                class="editPage"
+                                                                                onclick="deleteAuthenticationFile('#qGetDepartmentOfStateFile.id#')"
+                                                                                style="float:right; cursor:pointer">
+                                                                                DELETE
+                                                                            </a>
+                                                                      		<input type="hidden" id="department_of_state_upload"/><!--- This is to prevent errors with ajaxUpload --->
+                                                                        <cfelse>
+                                                                          	<a
+                                                                            	href="##" 
+                                                                                class="editPage" 
+                                                                                value="Upload" 
+                                                                                name="department_of_state_upload" 
+                                                                                id="department_of_state_upload" 
+                                                                                style="float:right; cursor:pointer">
+                                                                          		UPLOAD
+                                                                           	</a>
+                                                                        </cfif>
+                                                                   	<cfelse>
+                                                                    	<input type="hidden" id="department_of_state_upload"/><!--- This is to prevent errors with ajaxUpload --->
+                                                                 	</cfif>									
+                                                                </span>
+                                                                <span class="readOnly">
+                                                                	<cfif FORM.authentication_departmentOfStateExpiration NEQ "">
+                                                                  		<span <cfif FORM.authentication_departmentOfStateExpiration LT NOW()>style="color:red;"</cfif>>
+                                                                            #DateFormat(FORM.authentication_departmentOfStateExpiration, "mm/dd/yyyy")#
+                                                                        </span>
+                                                                    </cfif>
+                                                                    <span style="float:right;">
+																		<cfif VAL(qGetDepartmentOfStateFile.recordCount)>
+                                                                            <a 
+                                                                                href="##"
+                                                                                class="readOnly" 
+                                                                                onclick="printAuthenticationFile('#qGetDepartmentOfStateFile.id#')" 
+                                                                                style="cursor:pointer;">
+                                                                                PRINT
+                                                                            </a>
+                                                                        <cfelse>
+                                                                            <p class="readOnly">NO FILE</p>
+                                                                        </cfif>
+                                                                    </span>
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                        <!--- End Additional authentication (displayed when business license is not available) --->
+                                                                                                      
+                                                        <!--- Department of Labor --->
                                                         <tr>
                                                             <td class="style1" align="right"><label for="authentication_departmentOfLabor"><strong>Department of Labor:</strong></label></td>
                                                             <td class="style1">
@@ -2353,7 +2854,9 @@
                                                                                 style="float:right; cursor:pointer">
                                                                           		UPLOAD
                                                                            	</a>
-                                                                        </cfif>	
+                                                                        </cfif>
+                                                                   	<cfelse>
+                                                                    	<input type="hidden" id="department_of_labor_upload"/><!--- This is to prevent errors with ajaxUpload --->
                                                                  	</cfif>									
                                                                 </span>
                                                                 <span class="readOnly">
@@ -2382,6 +2885,7 @@
                                                                 </span>
                                                             </td>
                                                         </tr>
+                                                        <!--- Google Earth --->
                                                         <tr>
                                                             <td class="style1" align="right"><label for="authentication_googleEarth"><strong>Google Earth:</strong></label></td>
                                                             <td class="style1">
@@ -2421,6 +2925,8 @@
                                                                           		UPLOAD
                                                                            	</a>
                                                                         </cfif>
+                                                                   	<cfelse>
+                                                                    	<input type="hidden" id="google_earth_upload"/><!--- This is to prevent errors with ajaxUpload --->
                                                                  	</cfif>						
                                                                 </span>
                                                                 <span class="readOnly">
@@ -2451,16 +2957,33 @@
                                                         </tr>
                                                         <tr>
                                                         	<td colspan="2">
-                                                            	<a 
-                                                                	href="##" 
-                                                                    onclick="printAllAuthenticationFiles(
-                                                                    	'#VAL(qGetSecretaryOfStateFile.id)#',
-                                                                    	'#VAL(qGetDepartmentOfLaborFile.id)#',
-                                                                        '#VAL(qGetGoogleEarthFile.id)#');" 
-                                                                    class="style1" 
-                                                                    style="float:right">
-                                                                    [PRINT ALL]
-                                                        		</a>
+                                                            	<cfif NOT VAL(FORM.authentication_businessLicenseNotAvailable)>
+                                                                    <a 
+                                                                        href="##" 
+                                                                        onclick="printMainAuthenticationFiles(
+                                                                            '#VAL(qGetSecretaryOfStateFile.id)#',
+                                                                            '#VAL(qGetDepartmentOfLaborFile.id)#',
+                                                                            '#VAL(qGetGoogleEarthFile.id)#');" 
+                                                                        class="style1" 
+                                                                        style="float:right">
+                                                                        [PRINT ALL]
+                                                                    </a>
+                                                              	<cfelse>
+                                                                	<a 
+                                                                        href="##" 
+                                                                        onclick="printAllAuthenticationFiles(
+                                                                            '#VAL(qGetSecretaryOfStateFile.id)#',
+                                                                            '#VAL(qGetIncorporationFile.id)#',
+                                                                            '#VAL(qGetCertificateOfExistenceFile.id)#',
+                                                                            '#VAL(qGetCertificateOfReinstatementFile.id)#',
+                                                                            '#VAL(qGetDepartmentOfStateFile.id)#',
+                                                                            '#VAL(qGetDepartmentOfLaborFile.id)#',
+                                                                            '#VAL(qGetGoogleEarthFile.id)#');" 
+                                                                        class="style1" 
+                                                                        style="float:right">
+                                                                        [PRINT ALL]
+                                                                    </a>
+                                                                </cfif>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -2528,6 +3051,8 @@
                                                                 UPLOAD
                                                             </a>
                                                         </cfif>
+                                                  	<cfelse>
+                                                    	<input type="hidden" id="workmens_compensation_upload"/><!--- This is to prevent errors with ajaxUpload --->
                                                  	</cfif>
                                                 </td>
                                             </tr>

@@ -21,15 +21,16 @@
     <!--- These are only needed if the option is set to printAll --->
     <cfparam name="URL.fileID2" default="0">
     <cfparam name="URL.fileID3" default="0">
+    <!--- These are for the additional authentication files when the option is set to printAll --->
+    <cfparam name="URL.fileID4" default="0">
+    <cfparam name="URL.fileID5" default="0">
+    <cfparam name="URL.fileID6" default="0">
+    <cfparam name="URL.fileID7" default="0">
 
 	<cfscript>
 		imagePath = APPLICATION.PATH.authentications;
 		if ( NOT DirectoryExists(imagePath) ) {
 			DirectoryCreate(imagePath);
-		}
-		// Make sure the input type is correct, otherwise set as noType to signal a problem
-		if (URL.type NEQ 'secretaryOfState' AND URL.type NEQ 'departmentOfLabor' AND URL.type NEQ 'googleEarth' AND URL.type NEQ 'workmensCompensation') {
-			URL.type = 'noType';	
 		}
 	</cfscript>
 
@@ -97,12 +98,16 @@
         FROM extra_hostauthenticationfiles
         WHERE ( id = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.fileID#">
         	OR id = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.fileID2#">
-            OR id = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.fileID3#"> )
+            OR id = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.fileID3#">
+            OR id = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.fileID4#">
+            OR id = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.fileID5#">
+            OR id = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.fileID6#">
+            OR id = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.fileID7#"> )
       	AND fileType = <cfqueryparam cfsqltype="cf_sql_varchar" value="pdf">
     </cfquery>
    	<cfif VAL(qGetAllFiles.recordCount)>
     	<cfoutput>
-        	<cfloop query="qGetFiles">
+        	<cfloop query="qGetAllFiles">
             	<cfif mergePath EQ "">
                 	<cfset mergePath = fullPath>
                 <cfelse>
