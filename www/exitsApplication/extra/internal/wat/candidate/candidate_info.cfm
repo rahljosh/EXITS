@@ -448,6 +448,11 @@
 			var authSecretaryOfState = companyInfo.AUTHENTICATIONSECRETARYOFSTATE;
 			var authDepartmentOfLabor = companyInfo.AUTHENTICATIONDEPARTMENTOFLABOR;
 			var authGoogleEarth = companyInfo.AUTHENTICATIONGOOGLEEARTH;
+			var authIncorporation = companyInfo.AUTHENTICATIONINCORPORATION;
+			var authCertificateOfExistance = companyInfo.AUTHENTICATIONCERTIFICATEOFEXISTENCE;
+			var authCertificateOfReinstatement = companyInfo.AUTHENTICATIONCERTIFICATEOFREINSTATEMENT;
+			var authDepartmentOfState = companyInfo.AUTHENTICATIONDEPARTMENTOFSTATE;
+			var authBusinessLicenseNotAvailable = companyInfo.AUTHENTICATIONBUSINESSLICENSENOTAVAILABLE;
 			var authEIN = companyInfo.EIN;
 			var authWC = companyInfo.WC;
 			var authWCE = companyInfo.WCE;
@@ -468,6 +473,34 @@
 				$("#authentication_googleEarth").attr("checked", "checked");
 			else
 				$("#authentication_googleEarth").removeAttr("checked");
+				
+			if (authIncorporation == 1)
+				$("#authentication_incorporation").attr("checked", "checked");
+			else
+				$("#authentication_incorporation").removeAttr("checked");
+				
+			if (authCertificateOfExistance == 1)
+				$("#authentication_certificateOfExistence").attr("checked", "checked");
+			else
+				$("#authentication_certificateOfExistence").removeAttr("checked");
+				
+			if (authCertificateOfReinstatement == 1)
+				$("#authentication_certificateOfReinstatement").attr("checked", "checked");
+			else
+				$("#authentication_certificateOfReinstatement").removeAttr("checked");
+				
+			if (authDepartmentOfState == 1)
+				$("#authentication_departmentOfState").attr("checked", "checked");
+			else
+				$("#authentication_departmentOfState").removeAttr("checked");
+				
+			if (authBusinessLicenseNotAvailable == 1) {
+				$("#authentication_businessLicenseNotAvailable").attr("checked", "checked");
+				$(".additionalAuthentications").removeAttr("style");
+			} else {
+				$("#authentication_businessLicenseNotAvailable").removeAttr("checked");
+				$(".additionalAuthentications").css("display","none");
+			}
 				
 			if (confirmed == 1) {
 				$("#confirmation").val(1);
@@ -514,6 +547,25 @@
 		else
 			$("#" + id).val(0);
 	}
+	
+	// To hide or show the additional authentications
+	var changeAuthenticationAvailable = function() {
+		if ($("#authentication_businessLicenseNotAvailable").attr("checked")) {
+			$(".additionalAuthentications").removeAttr("style");
+		} else {
+			$(".additionalAuthentications").css("display","none");
+		}
+	}
+	
+	// To hide or show the additional authentications for secondary placements
+	var changeSecondaryAuthenticationAvailable = function(id) {
+		if ($("#authentication_businessLicenseNotAvailable_"+id).attr("checked")) {
+			$(".additionalAuthentications_"+id).removeAttr("style");
+		} else {
+			$(".additionalAuthentications_"+id).css("display","none");
+		}
+	}
+	
 //-->
 </script> 
 
@@ -1677,7 +1729,20 @@
                                                     </tr>
                                                 
                                              		<tr class="hiddenField selfPlacementInfo">
-                                                        <td class="style1" align="right" width="30%"><label for="authentication_secretaryOfState"><strong>Secretary of State:</strong></label></td>
+                                                        <td class="style1" align="right" width="30%">
+                                                        	<label for="authentication_secretaryOfState"><strong>Business License:</strong></label>
+                                                            <br />
+                                                            <i>Not Available:</i>
+                                                            <input
+                                                                id="authentication_businessLicenseNotAvailable" 
+                                                                name="authentication_businessLicenseNotAvailable" 
+                                                                class="formField" 
+                                                                disabled="disabled"
+                                                                type="checkbox"
+                                                                onclick="changeAuthenticationAvailable()"
+                                                                value="1"
+                                                                <cfif VAL(qCandidatePlaceCompany.authentication_businessLicenseNotAvailable)>checked </cfif> />
+                                                       	</td>
                                                         <td class="style1" width="70%">
                                                             <input 
                                                             	type="checkbox" 
@@ -1689,6 +1754,68 @@
 																<cfif VAL(qCandidatePlaceCompany.authentication_secretaryOfState)> checked </cfif> />
                                                         </td>
                                                     </tr>
+                                                    <!--- Additional Authentications --->
+                                                    <tr 
+                                                    	class="additionalAuthentications" 
+														<cfif NOT VAL(qCandidatePlaceCompany.authentication_businessLicenseNotAvailable)>style="display:none;"</cfif>>
+                                                        <td class="style1" align="right"><label for="authentication_incorporation"><strong>Incorporation:</strong></label></td>
+                                                        <td class="style1">
+                                                            <input 
+                                                            	type="checkbox" 
+                                                                name="authentication_incorporation" 
+                                                                id="authentication_incorporation" 
+                                                                value="1" 
+                                                                class="formField" 
+                                                                disabled 
+																<cfif VAL(qCandidatePlaceCompany.authentication_incorporation)> checked </cfif> />
+                                                        </td>
+                                                    </tr>
+                                                    <tr 
+                                                    	class="additionalAuthentications" 
+														<cfif NOT VAL(qCandidatePlaceCompany.authentication_businessLicenseNotAvailable)>style="display:none;"</cfif>>
+                                                        <td class="style1" align="right"><label for="authentication_certificateOfExistence"><strong>Certificate of Existence:</strong></label></td>
+                                                        <td class="style1">
+                                                            <input 
+                                                            	type="checkbox" 
+                                                                name="authentication_certificateOfExistence" 
+                                                                id="authentication_certificateOfExistence" 
+                                                                value="1" 
+                                                                class="formField" 
+                                                                disabled 
+																<cfif VAL(qCandidatePlaceCompany.authentication_certificateOfExistence)> checked </cfif> />
+                                                        </td>
+                                                    </tr>
+                                                    <tr 
+                                                    	class="additionalAuthentications" 
+														<cfif NOT VAL(qCandidatePlaceCompany.authentication_businessLicenseNotAvailable)>style="display:none;"</cfif>>
+                                                        <td class="style1" align="right"><label for="authentication_certificateOfReinstatement"><strong>Certificate of Reinstatement:</strong></label></td>
+                                                        <td class="style1">
+                                                            <input 
+                                                            	type="checkbox"
+                                                                name="authentication_certificateOfReinstatement" 
+                                                                id="authentication_certificateOfReinstatement" 
+                                                                value="1" 
+                                                                class="formField" 
+                                                                disabled 
+																<cfif VAL(qCandidatePlaceCompany.authentication_certificateOfReinstatement)> checked </cfif> />
+                                                        </td>
+                                                    </tr>
+                                                    <tr 
+                                                    	class="additionalAuthentications" 
+														<cfif NOT VAL(qCandidatePlaceCompany.authentication_businessLicenseNotAvailable)>style="display:none;"</cfif>>
+                                                        <td class="style1" align="right"><label for="authentication_departmentOfState"><strong>Department of State:</strong></label></td>
+                                                        <td class="style1">
+                                                            <input 
+                                                            	type="checkbox" 
+                                                                name="authentication_departmentOfState" 
+                                                                id="authentication_departmentOfState" 
+                                                                value="1" 
+                                                                class="formField" 
+                                                                disabled 
+																<cfif VAL(qCandidatePlaceCompany.authentication_departmentOfState)> checked </cfif> />
+                                                        </td>
+                                                    </tr>
+                                                    <!--- End Additional Authentications --->
                                                     <tr class="hiddenField selfPlacementInfo">
                                                         <td class="style1" align="right"><label for="authentication_departmentOfLabor"><strong>Department of Labor:</strong></label></td>
                                                         <td class="style1">
@@ -1961,6 +2088,7 @@
                                                 </tr>
                                                 <tr class="hiddenField selfPlacementInfo">
                                                     <td class="style1" colspan="2">
+                                                    	<!--- Secondary Authentications --->
                                                         <table width="100%" cellpadding="3" cellspacing="3" align="center" style="border:1px solid ##C7CFDC; background-color:##F7F7F7;">
                                                             <tr class="hiddenField selfPlacementInfo">
                                                                 <td colspan="2">
@@ -1968,11 +2096,93 @@
                                                                 </td>
                                                             </tr>
                                                             <tr class="hiddenField selfPlacementInfo">
-                                                                <td class="style1" align="right" width="30%"><label for="authentication_secretaryOfState_#qGetAllPlacements.candCompID#"><strong>Secretary of State:</strong></label></td>
+                                                                <td class="style1" align="right" width="30%">
+                                                                	<label for="authentication_secretaryOfState_#qGetAllPlacements.candCompID#"><strong>Secretary of State:</strong></label>
+                                                                    <br />
+                                                                    <i>Not Available:</i>
+                                                                    <input
+                                                                        id="authentication_businessLicenseNotAvailable_#qGetAllPlacements.candCompID#" 
+                                                                        name="authentication_businessLicenseNotAvailable_#qGetAllPlacements.candCompID#" 
+                                                                        class="formField" 
+                                                                        disabled="disabled"
+                                                                        type="checkbox"
+                                                                        onclick="changeSecondaryAuthenticationAvailable('#qGetAllPlacements.candCompID#')"
+                                                                        value="1"
+                                                                        <cfif VAL(authentication_businessLicenseNotAvailable)>checked </cfif> />
+                                                              	</td>
                                                                 <td class="style1" width="70%">
                                                                     <input type="checkbox" name="authentication_secretaryOfState_#qGetAllPlacements.candCompID#" id="authentication_secretaryOfState_#qGetAllPlacements.candCompID#" value="1" class="formField hostCheckBox" disabled <cfif VAL(qGetAllPlacements.authentication_secretaryOfState)> checked </cfif> />
                                                                 </td>
                                                             </tr>
+                                                            <!--- Additional Secondary Authentications --->
+                                                            <tr 
+                                                            	class="additionalAuthentications_#qGetAllPlacements.candCompID#"
+                                                                <cfif NOT VAL(qGetAllPlacements.authentication_businessLicenseNotAvailable)>style="display:none;"</cfif>>
+                                                                <td class="style1" align="right">
+                                                                	<label for="authentication_incorporation_#qGetAllPlacements.candCompID#"><strong>Incorporation:</strong></label>
+                                                             	</td>
+                                                                <td class="style1">
+                                                                    <input 
+                                                                    	type="checkbox" 
+                                                                        name="authentication_incorporation_#qGetAllPlacements.candCompID#" 
+                                                                        id="authentication_departmentOfLabor_#qGetAllPlacements.candCompID#" 
+                                                                        value="1" 
+                                                                        class="formField hostCheckBox" 
+                                                                        disabled <cfif VAL(qGetAllPlacements.authentication_incorporation)> checked </cfif> />
+                                                                </td>
+                                                            </tr>
+                                                            <tr 
+                                                            	class="additionalAuthentications_#qGetAllPlacements.candCompID#"
+                                                                <cfif NOT VAL(qGetAllPlacements.authentication_businessLicenseNotAvailable)>style="display:none;"</cfif>>
+                                                                <td class="style1" align="right">
+                                                                	<label for="authentication_certificationOfExistence_#qGetAllPlacements.candCompID#"><strong>Certification of Existence:</strong></label>
+                                                              	</td>
+                                                                <td class="style1">
+                                                                    <input 
+                                                                    	type="checkbox" 
+                                                                        name="authentication_certificateOfExistence_#qGetAllPlacements.candCompID#" 
+                                                                        id="authentication_certificateOfExistence_#qGetAllPlacements.candCompID#" 
+                                                                        value="1" 
+                                                                        class="formField hostCheckBox" 
+                                                                        disabled 
+																		<cfif VAL(qGetAllPlacements.authentication_certificateOfExistence)> checked </cfif> />
+                                                                </td>
+                                                            </tr>
+                                                            <tr 
+                                                            	class="additionalAuthentications_#qGetAllPlacements.candCompID#"
+                                                                <cfif NOT VAL(qGetAllPlacements.authentication_businessLicenseNotAvailable)>style="display:none;"</cfif>>
+                                                                <td class="style1" align="right">
+                                                                	<label for="authentication_certificateOfReinstatement_#qGetAllPlacements.candCompID#"><strong>Certification of Reinstatement:</strong></label>
+                                                              	</td>
+                                                                <td class="style1">
+                                                                    <input 
+                                                                    type="checkbox" 
+                                                                    name="authentication_certificateOfReinstatement_#qGetAllPlacements.candCompID#" 
+                                                                    id="authentication_certificateOfReinstatement_#qGetAllPlacements.candCompID#" 
+                                                                    value="1" 
+                                                                    class="formField hostCheckBox" 
+                                                                    disabled 
+																	<cfif VAL(qGetAllPlacements.authentication_certificateOfReinstatement)> checked </cfif> />
+                                                                </td>
+                                                            </tr>
+                                                            <tr 
+                                                            	class="additionalAuthentications_#qGetAllPlacements.candCompID#"
+                                                                <cfif NOT VAL(qGetAllPlacements.authentication_businessLicenseNotAvailable)>style="display:none;"</cfif>>
+                                                                <td class="style1" align="right">
+                                                                	<label for="authentication_departmentOfState_#qGetAllPlacements.candCompID#"><strong>Department of State:</strong></label>
+                                                              	</td>
+                                                                <td class="style1">
+                                                                    <input 
+                                                                    	type="checkbox" 
+                                                                        name="authentication_departmentOfState_#qGetAllPlacements.candCompID#" 
+                                                                        id="authentication_departmentOfState_#qGetAllPlacements.candCompID#" 
+                                                                        value="1" 
+                                                                        class="formField hostCheckBox" 
+                                                                        disabled 
+																		<cfif VAL(qGetAllPlacements.authentication_departmentOfState)> checked </cfif> />
+                                                                </td>
+                                                            </tr>
+                                                            <!--- End Additional Secondary Authentications --->
                                                             <tr class="hiddenField selfPlacementInfo">
                                                                 <td class="style1" align="right"><label for="authentication_departmentOfLabor_#qGetAllPlacements.candCompID#"><strong>Department of Labor:</strong></label></td>
                                                                 <td class="style1">
@@ -1986,6 +2196,7 @@
                                                                 </td>
                                                             </tr>
                                                         </table>
+                                                        <!--- End Secondary Authentications --->
                                                     </td>
                                                 </tr>
                                                 <tr class="hiddenField selfPlacementInfo">
