@@ -359,7 +359,11 @@
                                         </a>
                                     </cfif>
                                 </td>
-                                <td class="center"><a href="index.cfm?curdoc=user/index&action=paperworkDetails&subAction=delete&userID=#qGetSeasonPaperwork.userID#&paperworkID=#qGetSeasonPaperwork.paperworkID#" title="Delete Season"><img src="pics/x.png" height="20" border="0"></a></td>
+                                <td class="center">
+                                	<cfif CLIENT.userType EQ 1>
+	                                	<a href="index.cfm?curdoc=user/index&action=paperworkDetails&subAction=delete&userID=#qGetSeasonPaperwork.userID#&paperworkID=#qGetSeasonPaperwork.paperworkID#" title="Delete Season"><img src="pics/x.png" height="20" border="0"></a>
+									</cfif>
+                                </td>
 							
 							<!--- Read Only --->
                             <cfelse>
