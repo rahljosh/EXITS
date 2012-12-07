@@ -35,6 +35,11 @@
 <cfparam name="FORM.authentication_secretaryOfState" default="0">
 <cfparam name="FORM.authentication_departmentOfLabor" default="0">
 <cfparam name="FORM.authentication_googleEarth" default="0">
+<cfparam name="FORM.authentication_incorporation" default="0">
+<cfparam name="FORM.authentication_certificateOfExistence" default="0">
+<cfparam name="FORM.authentication_certificateOfReinstatement" default="0">
+<cfparam name="FORM.authentication_departmentOfState" default="0">
+<cfparam name="FORM.authentication_businessLicenseNotAvailable" default="0">
 <cfparam name="FORM.EIN" default="">
 <cfparam name="FORM.workmensCompensation" default="">
 <cfparam name="FORM.WCDateExpried" default="">
@@ -72,6 +77,11 @@
         <cfparam name="FORM.authentication_secretaryOfState_#qGetAllPlacements.candCompID#" default="0">
         <cfparam name="FORM.authentication_departmentOfLabor_#qGetAllPlacements.candCompID#" default="0">
         <cfparam name="FORM.authentication_googleEarth_#qGetAllPlacements.candCompID#" default="0">
+        <cfparam name="FORM.authentication_incorporation_#qGetAllPlacements.candCompID#" default="0">
+        <cfparam name="FORM.authentication_certificateOfExistence_#qGetAllPlacements.candCompID#" default="0">
+        <cfparam name="FORM.authentication_certificateOfReinstatement_#qGetAllPlacements.candCompID#" default="0">
+        <cfparam name="FORM.authentication_departmentOfState_#qGetAllPlacements.candCompID#" default="0">
+        <cfparam name="FORM.authentication_businessLicenseNotAvailable_#qGetAllPlacements.candCompID#" default="0">
         <cfparam name="FORM.EIN_#qGetAllPlacements.candCompID#" default="">
         <cfparam name="FORM.workmensCompensation_#qGetAllPlacements.candCompID#" default="0">
         <cfparam name="FORM.WCDateExpried_#qGetAllPlacements.candCompID#" default="">
@@ -212,6 +222,11 @@
                     authentication_secretaryOfState = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM['authentication_secretaryOfState_#qGetAllPlacements.candCompID#']#">,
                     authentication_departmentOfLabor = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM['authentication_departmentOfLabor_#qGetAllPlacements.candCompID#']#">,
                     authentication_googleEarth = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM['authentication_googleEarth_#qGetAllPlacements.candCompID#']#">,
+                    authentication_incorporation = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM['authentication_incorporation_#qGetAllPlacements.candCompID#']#">,
+                    authentication_certificateOfExistence = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM['authentication_certificateOfExistence_#qGetAllPlacements.candCompID#']#">,
+                    authentication_certificateOfReinstatement = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM['authentication_certificateOfReinstatement_#qGetAllPlacements.candCompID#']#">,
+                    authentication_departmentOfState = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM['authentication_departmentOfState_#qGetAllPlacements.candCompID#']#">,
+                    authentication_businessLicenseNotAvailable = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM['authentication_businessLicenseNotAvailable_#qGetAllPlacements.candCompID#']#">,
                     workmensCompensation = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM['workmensCompensation_#qGetAllPlacements.candCompID#']#" null="#NOT IsNumeric(FORM['workmensCompensation_#qGetAllPlacements.candCompID#'])#">,
                     WCDateExpired = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM['WCDateExpired_#qGetAllPlacements.candCompID#']#" null="#NOT IsDate(FORM['WCDateExpired_#qGetAllPlacements.candCompID#'])#">
                 WHERE
@@ -274,42 +289,23 @@
         </cfquery> 
 
 	</cfif>
-       
-   	<!--- Update authentication_secretaryOfState on Host Company Table ---> 
-    <cfif LEN(FORM.authentication_secretaryOfState)>
-        <cfquery datasource="#APPLICATION.DSN.Source#">
-            UPDATE
-                extra_hostCompany
-            SET
-                authentication_secretaryOfState = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.authentication_secretaryOfState#">
-            WHERE
-                hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">	
-        </cfquery>
-   	</cfif>
     
-    <!--- Update authentication_departmentOfLabor on Host Company Table --->
-    <cfif LEN(FORM.authentication_departmentOfLabor)>
-        <cfquery datasource="#APPLICATION.DSN.Source#">
-            UPDATE
-                extra_hostCompany
-            SET
-                authentication_departmentOfLabor = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.authentication_departmentOfLabor#">
-            WHERE
-                hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">	
-        </cfquery>
-   	</cfif>
-    
-    <!--- Update authentication_googleEarth on Host Company Table --->
-    <cfif LEN(FORM.authentication_googleEarth)>
-        <cfquery datasource="#APPLICATION.DSN.Source#">
-            UPDATE
-                extra_hostCompany
-            SET
-                authentication_googleEarth = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.authentication_googleEarth#">
-            WHERE
-                hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">	
-        </cfquery>
-   	</cfif>
+    <!--- Update authentications on Host Company Table --->
+    <cfquery datasource="#APPLICATION.DSN.Source#">
+    	UPDATE 
+        	extra_hostcompany
+        SET
+        	authentication_secretaryOfState = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_secretaryOfState)#">,
+            authentication_departmentOfLabor = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_departmentOfLabor)#">,
+            authentication_googleEarth = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_googleEarth)#">,
+            authentication_incorporation = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_incorporation)#">,
+            authentication_certificateOfExistence = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_certificateOfExistence)#">,
+            authentication_certificateOfReinstatement = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_certificateOfReinstatement)#">,
+            authentication_departmentOfState = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_departmentOfState)#">,
+            authentication_businessLicenseNotAvailable = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_businessLicenseNotAvailable)#">
+      	WHERE
+       		hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">	
+    </cfquery>
     
 	<!--- Update workmensCompensation on Host Company Table --->
     <cfif LEN(FORM.workmensCompensation)>
