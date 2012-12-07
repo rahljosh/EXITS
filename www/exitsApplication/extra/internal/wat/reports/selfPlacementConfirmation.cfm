@@ -101,6 +101,11 @@
                 ehc.authentication_secretaryOfState,
                 ehc.authentication_departmentOfLabor,
                 ehc.authentication_googleEarth,
+                ehc.authentication_incorporation,
+                ehc.authentication_certificateOfExistence,
+                ehc.authentication_certificateOfReinstatement,
+                ehc.authentication_departmentOfState,
+                ehc.authentication_businessLicenseNotAvailable,
                 ehc.name,
                 ehc.EIN, 
                 ehc.workmensCompensation,
@@ -431,11 +436,20 @@
                             <td class="style1">#qTotalPerAgent.selfConfirmationName#</td>
                             <td class="style1">
                             	<cfif CLIENT.userType NEQ 8>
-									<cfif VAL(qTotalPerAgent.authentication_secretaryOfState)>Secretary of State<br /></cfif>
-                                    <cfif VAL(qTotalPerAgent.authentication_departmentOfLabor)>Deparment of Labor<br /></cfif>
-                                    <cfif VAL(qTotalPerAgent.authentication_googleEarth)>Google Earth<br /></cfif>
+									<cfif VAL(qTotalPerAgent.authentication_secretaryOfState)>-Secretary of State<br /></cfif>
+                                    <cfif VAL(qTotalPerAgent.authentication_incorporation)>-Incorporation<br /></cfif>
+                                    <cfif VAL(qTotalPerAgent.authentication_certificateOfExistence)>-Certificate of Existence<br /></cfif>
+                                    <cfif VAL(qTotalPerAgent.authentication_certificateOfReinstatement)>-Certificate of Reinstatement<br /></cfif>
+                                    <cfif VAL(qTotalPerAgent.authentication_departmentOfState)>-Department of State<br /></cfif>
+                                    <cfif VAL(qTotalPerAgent.authentication_departmentOfLabor)>-Deparment of Labor<br /></cfif>
+                                    <cfif VAL(qTotalPerAgent.authentication_googleEarth)>-Google Earth<br /></cfif>
                               	<cfelse>
-                                	<cfif VAL(qTotalPerAgent.authentication_secretaryOfState) AND VAL(qTotalPerAgent.authentication_departmentOfLabor) AND VAL(qTotalPerAgent.authentication_googleEarth)>
+                                	<cfif ( ( VAL(qTotalPerAgent.authentication_businessLicenseNotAvailable) 
+										AND  VAL(qTotalPerAgent.authentication_incorporation) 
+										AND VAL(qTotalPerAgent.authentication_certificateOfExistence) )
+										OR VAL(qTotalPerAgent.authentication_secretaryOfState) )
+										AND VAL(qTotalPerAgent.authentication_departmentOfLabor) 
+										AND VAL(qTotalPerAgent.authentication_googleEarth)>
                                     	Yes
                                    	<cfelse>
                                     	No
