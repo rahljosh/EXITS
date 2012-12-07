@@ -31,7 +31,7 @@
 <cfparam name="SESSION.HOST.PATH.docs" default="">
 <!--- Relative Paths --->
 <cfparam name="SESSION.HOST.PATH.relativeAlbumLarge" default="">
-<cfparam name="APPLICATION.CFC.SESSION.getHostSession().PATH.relativeAlbumThumbs" default="">
+<cfparam name="SESSION.HOST.PATH.relativeAlbumThumbs" default="">
 <cfparam name="SESSION.HOST.PATH.relativeDocs" default="">
 
 
@@ -69,7 +69,7 @@
 		Create SESSION.EMAIL structure
 	*******************************************/
 	
-	if ( ListFindNoCase(CGI.SERVER_NAME, 'caseusa', '.') ) {
+	if ( ListFindNoCase(CGI.SERVER_NAME, "case-usa", ".") ) {
 		
 		// CASE
 		SESSION.COMPANY.ID = 10;

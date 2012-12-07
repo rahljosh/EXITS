@@ -28,33 +28,28 @@
         <cfscript>
             // Data Validation
                   
-            // houserules_curfewweeknights
+            // Curfew School Nights
             if ( NOT LEN(TRIM(FORM.houserules_curfewweeknights)) ) {
-				// Get all the missing items in a list
 				SESSION.formErrors.Add("Please specify the curfew for school nights.");
             }	
             
-            // houserules_curfewweekends
+            // Curfew Weekends
             if ( NOT LEN(TRIM(FORM.houserules_curfewweekends)) ) {
-				// Get all the missing items in a list
 				SESSION.formErrors.Add("Please specify the curfew for weekends.");
             }			
             
-            // houserules_chores
+            // Chores
             if ( NOT LEN(TRIM(FORM.houserules_chores)) ) {
-				// Get all the missing items in a list
 				SESSION.formErrors.Add("Please list the chores that the student we responsible for.");
             }		
 			
-            // houserules_inet
+            // Computer Usage
             if ( NOT LEN(TRIM(FORM.houserules_inet)) )  {
-				// Get all the missing items in a list
 				SESSION.formErrors.Add("Please indicate any internet, computer or email usage restrictions you have.");
             }			
             
-            // houserules_expenses
+            // Expenses
             if ( NOT LEN(TRIM(FORM.houserules_expenses)) )  {
-				// Get all the missing items in a list
 				SESSION.formErrors.Add("Please indicate any expenses you expect the student to be responsible for.");
             }	
         </cfscript>
@@ -116,37 +111,37 @@
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr>
-                <td class="label" valign="top"><h3>Curfew on school nights</h3></td>
-                <td><textarea cols="50" rows="4" name="houserules_curfewweeknights" wrap="virtual">#FORM.houserules_curfewweeknights#</textarea></td>
+                <td class="label" valign="top"><h3>Curfew on school nights <span class="required">*</span></h3></td>
+                <td><textarea cols="50" rows="4" name="houserules_curfewweeknights">#FORM.houserules_curfewweeknights#</textarea></td>
             </tr>   
             <tr  bgcolor="##deeaf3">
-                <td class="label" valign="top"><h3>Curfew on weekends</h3></td>
-                <td><textarea cols="50" rows="4" name="houserules_curfewweekends" wrap="virtual">#FORM.houserules_curfewweekends#</textarea></td>
+                <td class="label" valign="top"><h3>Curfew on weekends <span class="required">*</span></h3></td>
+                <td><textarea cols="50" rows="4" name="houserules_curfewweekends">#FORM.houserules_curfewweekends#</textarea></td>
             </tr> 
             <tr>
-                <td class="label" valign="top"><h3>Chores</h3></td>
-                <td><textarea cols="50" rows="4" name="houserules_chores" wrap="virtual">#FORM.houserules_chores#</textarea></td>
+                <td class="label" valign="top"><h3>Chores <span class="required">*</span></h3></td>
+                <td><textarea cols="50" rows="4" name="houserules_chores">#FORM.houserules_chores#</textarea></td>
             </tr> 
             <tr  bgcolor="##deeaf3">
-                <td class="label" valign="top"><h3>Computer, Internet, and Email Usage</h3> </td>
-                <td><textarea cols="50" rows="4" name="houserules_inet" wrap="virtual">#FORM.houserules_inet# </textarea></td>
+                <td class="label" valign="top"><h3>Computer, Internet, and Email Usage <span class="required">*</span></h3> </td>
+                <td><textarea cols="50" rows="4" name="houserules_inet">#FORM.houserules_inet# </textarea></td>
             </tr> 
             <tr>
                 <td class="label" valign="top">
-                	<h3>Expenses</h3>
+                	<h3>Expenses <span class="required">*</span></h3>
                 	<i>personal expenses expected to be paid by the students</i>
                 </td>
-                <td><textarea cols="50" rows="4" name="houserules_expenses" wrap="virtual"  placeholder="toiletries, eating out with friends, etc">#FORM.houserules_expenses#</textarea></td>
+                <td><textarea cols="50" rows="4" name="houserules_expenses"  placeholder="toiletries, eating out with friends, etc">#FORM.houserules_expenses#</textarea></td>
             </tr> 
             <tr bgcolor="##deeaf3">
                 <td class="label" valign="top"><h3>Other</h3> <i>please include any other rules or expectations you will have of your exchange student</i></td>
-                <td><textarea cols="50" rows="4" name="houserules_other" wrap="virtual" placeholder="Homework, access to food, etc">#FORM.houserules_other#</textarea></td>
+                <td><textarea cols="50" rows="4" name="houserules_other" placeholder="Homework, access to food, etc">#FORM.houserules_other#</textarea></td>
             </tr> 
         </table>
         
         <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
             <tr>
-            	<td align="right"><input name="Submit" type="image" src="/images/buttons/Next.png" border="0"></td>
+            	<td align="right"><input name="Submit" type="image" src="images/buttons/Next.png" border="0"></td>
             </tr>
         </table>
     </form>

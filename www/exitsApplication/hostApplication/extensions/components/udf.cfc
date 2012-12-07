@@ -32,7 +32,7 @@
 		<cfscript>
 			// Check for local servers
 			if (	
-				FindNoCase("dev.iseusa.com", CGI.http_host) OR 
+				FindNoCase("host.local", CGI.http_host) OR
 				FindNoCase("developer", server.ColdFusion.ProductLevel)
 			){
 				return(true);
@@ -40,46 +40,6 @@
 				return(false);
 			}
 		</cfscript>
-	</cffunction>
-
-
-	<!--- Create Folder if it does not exist --->
-	<cffunction name="createFolder" access="public" returntype="void" output="no" hint="Check if folder exits, if it does not, it creates it">
-        <cfargument name="fullPath" type="string" required="yes" hint="Full Path is required" />
-        
-		<cftry>
-        
-			<!--- Make sure the directories are set up correctly --->
-            <cfif NOT directoryExists(ARGUMENTS.fullPath)>
-                
-                <cfdirectory 
-                	action="create" 
-                    directory="#ARGUMENTS.fullPath#" 
-					mode="777"
-                	/>
-            
-            </cfif>
-		
-            <cfcatch type="any">
-            	<!--- Error Handler --->
-				
-            </cfcatch>
-               
-        </cftry>
-        
-	</cffunction>
-
-
-	<!--- This hashes the given ID for security reasons --->
-	<cffunction name="generateHashID" access="public" returntype="string" output="no" hint="Hashes the given ID for security reasons">
-		<cfargument name="ID" type="numeric" required="yes" />
-		
-		<!--- Return hash --->
-		<cfreturn (
-			((ARGUMENTS.ID * 64) MOD 29) & 
-			Chr(Right(ARGUMENTS.ID, 1) + 65) & 
-			(ARGUMENTS.ID MOD 4)
-			) />
 	</cffunction>
 
 

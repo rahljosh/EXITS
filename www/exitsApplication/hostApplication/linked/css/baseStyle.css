@@ -8,7 +8,7 @@ body {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 100%;
 	background-color: #B8D3E6;
-	background-image: url(/images/bodyBackground.gif);
+	background-image: url(../../images/bodyBackground.gif);
 	background-repeat: repeat-x;
 }
 .oneColFixCtr #container {
@@ -40,7 +40,11 @@ body {
 .enter {
 	text-align: center;
 }
-
+.greenBackground {
+	background-color: #E6F2D5;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+}
 /* this is all the css code for the top box */
 #topBar {
 	height: 40px;
@@ -82,7 +86,7 @@ body {
 }
 
 .whtTop {
-	background-image: url(/images/whtBoxTop.png);
+	background-image: url(../../images/whtBoxTop.png);
 	background-repeat: no-repeat;
 	margin: 0px;
 	padding: 0px;
@@ -90,7 +94,7 @@ body {
 	width: 746px;
 }
 .whtMiddle {
-	background-image: url(/images/whtBoxMiddle.png);
+	background-image: url(../../images/whtBoxMiddle.png);
 	background-repeat: repeat-y;
 	margin: 0px;
 	height: auto;
@@ -103,7 +107,7 @@ body {
 	padding-left: 0px;
 }
 .whtBottom {
-	background-image: url(/images/whtBoxBottom.png);
+	background-image: url(../../images/whtBoxBottom.png);
 	background-repeat: no-repeat;
 	margin: 0px;
 	padding: 0px;
@@ -166,12 +170,95 @@ div.loginBox label {
 	text-align: left;
 }
 
+#leftMenu .whtLinks{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #FFF;
+	text-decoration: none;
+}
+
+#leftMenu .whtLinks:links{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #FFF;
+ 	text-decoration: none;
+}
+
 #leftMenu .whtLinks:hover{
+	color: #FFF;
+	text-decoration: none;
+}
+
+#leftMenu .whtLinks:active{
 	color: #FFF;
 	text-decoration: none;
 }
 /********************************************
 	END OF LEFT MENU
+********************************************/
+
+
+/********************************************
+	MAIN BODY
+********************************************/
+#logoBoxB {
+	background-image: url(../../images/logobox.png);
+	background-repeat: no-repeat;
+	width: 200px;
+	z-index: 50;
+	display: block;
+	clear: both;
+	position: relative;
+	float: none;
+	margin-right: auto;
+	margin-left: auto;
+	top: 0px;
+	left: -435px;
+}
+
+.hostApp {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	width: 675px;
+	margin-left: 45px;
+	margin-top: 5px;
+	padding: 0px;
+}
+
+.blueBox {
+	width: 190px;
+	margin-left: 0px;
+	background-image: url(../../images/blueStrip_32.png);
+	background-repeat: repeat-y;
+	margin-right: 10px;
+	display: block;
+}
+
+.p_uppercase { 
+	text-transform: capitalize;
+	padding-top: 2px;
+	margin: 0px;
+}
+
+.clearfix {
+	display: block;
+	height: 5px;
+}
+
+a.external {
+    padding-right: 13px;
+	color:#666;
+}
+
+#slidingDiv {
+    display: none;
+}
+
+.border{
+	border:solid 1px;
+}
+/********************************************
+	END OF MAIN BODY
 ********************************************/
 
 
@@ -239,6 +326,80 @@ div.errors ol {
 }
 /********************************************
 	 END OF ERROR MESSAGE
+********************************************/
+
+
+/********************************************
+	FORM FIELDS
+********************************************/
+.required {
+	color:#FF0000;
+	font-weight:bold;
+}
+
+.datePicker {
+	width:80px;
+	border:1px solid #999;	
+}
+
+.xSmallField {
+	width : 60px;
+	border:1px solid #999;	
+}
+
+.smallField {
+	width : 80px;
+	border:1px solid #999;	
+}
+
+.mediumField {
+	width : 140px;
+	border:1px solid #999;	
+}
+
+.largeField {
+	width : 200px;
+	border:1px solid #999;	
+}
+
+.xLargeField {
+	width : 260px;
+	border:1px solid #999;	
+}
+
+.largeTextArea {
+	height: 60px;
+	width : 300px;
+	margin-bottom: .5em;
+	border:1px solid #999;	
+}
+
+.longTextAreaa {
+	height: 80px;
+	width : 500px;
+	margin-bottom: .5em;
+	border:1px solid #999;	
+}
+
+.xLargeTextArea {
+	height: 80px;
+	width : 350px;
+	margin-bottom: .5em;
+	border:1px solid #999;	
+}
+
+.xxLargeTextArea {
+	height: 130px;
+	width : 450px;
+	margin-bottom: .5em;
+	border:1px solid #999;	
+}
+
+.displayNone {
+	display:none;
+}
+/********************************************
+	END OF FORM FIELDS
 ********************************************/
 
 

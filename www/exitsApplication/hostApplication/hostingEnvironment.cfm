@@ -1,521 +1,524 @@
-<!--- Import CustomTag Used for Page Messages and Form Errors --->
-<cfimport taglib="extensions/customTags/gui/" prefix="gui" />	
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		hostingEnvironment.cfm
+	Author:		Marcus Melo
+	Date:		November 19, 2012
+	Desc:		Community Profile Page
 
-<!--- Process Form Submission --->
-<cfparam name="FORM.smokes" default="">
-<cfparam name="FORM.stu_smoke" default="">
-<cfparam name="FORM.famDietRest" default="3">
-<cfparam name="FORM.stuDietRest" default="3">
-<cfparam name="FORM.threesquares" default="3">
-<cfparam name="FORM.share_room" default="0">
-<cfparam name="FORM.allergic" default="3">
-<cfparam name="FORM.kid_share" default="0">
-<cfparam name="URL.animalid" default="">
-<cfparam name="URL.hostID" default='#APPLICATION.CFC.SESSION.getHostSession().ID#'>
-<cfparam name="FORM.indoor" default="na">
-<cfparam name="FORM.animaltype" default="">
-<cfparam name="FORM.dietaryRestriction" default='3'>
-<!----Delete a Pet---->
-<cfif isDefined('URL.delete_animal')>
-	<cfquery datasource="#APPLICATION.DSN.Source#">
-    delete from smg_host_animals
-    where animalid = #URL.delete_animal#
-    </Cfquery>
-</cfif>
-<!---Get host information---->
-   <cfquery name="qGetHostInfo" datasource="#APPLICATION.DSN.Source#">
-        SELECT  
+	Updated:	
+
+----- ------------------------------------------------------------------------- --->
+
+<cfsilent>
+
+    <!--- Import CustomTag Used for Page Messages and Form Errors --->
+    <cfimport taglib="extensions/customTags/gui/" prefix="gui" />	
+
+    <!--- Param FORM Variables --->
+    <cfparam name="URL.deletePetID" default="0">
+    
+    <!--- Param FORM Variables --->
+    <cfparam name="FORM.action" default="">
+	<!--- Add Pet --->
+    <cfparam name="FORM.animalType" default="">
+    <cfparam name="FORM.number" default="">
+    <cfparam name="FORM.indoor" default="">
+	<!--- Form --->
+    <cfparam name="FORM.pet_allergies" default="">
+    <cfparam name="FORM.share_room" default="0">
+    <cfparam name="FORM.sharingWithID" default="">
+    <cfparam name="FORM.hostSmokes" default="">
+    <cfparam name="FORM.smoke_conditions" default="">
+    <cfparam name="FORM.famDietRest" default="">
+    <cfparam name="FORM.famDietRestDesc" default="">
+    <cfparam name="FORM.stuDietRest" default="">
+    <cfparam name="FORM.stuDietRestDesc" default="">
+    <cfparam name="FORM.dietaryRestriction" default="">
+    <cfparam name="FORM.threesquares" default="">
+
+	<cfscript>
+		// Get Host Members
+		qGetHostMembers = APPLICATION.CFC.HOST.getHostMemberByID(hostID=APPLICATION.CFC.SESSION.getHostSession().ID);
+		
+		// Get Host Pets
+		qGetHostPets = APPLICATION.CFC.HOST.getHostPets(hostID=APPLICATION.CFC.SESSION.getHostSession().ID);
+	</cfscript>
+    
+    <cfquery name="qGetWhoIsSharingRoom" dbtype="query">
+        SELECT 
         	*
         FROM 
-        	smg_hosts shl
-        LEFT JOIN 
-        	smg_states on smg_states.state = shl.state
+        	qGetHostMembers
         WHERE 
-        	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
+        	shared = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
     </cfquery>
-<!----Add a pet---->
- <cfif isDefined('FORM.addPet')>
-  
-         <!---Error Checking---->
+    
+	<!--- Delete a Pet --->
+    <cfif VAL(URL.deletePetID)>
+    
+        <cfquery datasource="#APPLICATION.DSN.Source#">
+            DELETE FROM 
+            	smg_host_animals
+            WHERE 
+            	animalid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.deletePetID)#">
+            AND
+            	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
+        </cfquery>
 
-         <cfscript>
-   		 //Animal 1
-			if  ( (LEN(TRIM(FORM.animaltype))) AND (FORM.number_pets eq 0) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("You've indicated you have a(n) #FORM.animaltype# but didn't indicate how many.");
-			 }
-			if  ( (LEN(TRIM(FORM.animaltype))) AND (FORM.number_pets neq 0) AND FORM.indoor is 'na'  ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("You've indicated you have #FORM.number_pets# #FORM.animaltype#(s) but didn't indicate if they are indoor, outdoor or both.");
-			 } 
-			if  ( (NOT LEN(TRIM(FORM.animaltype))) AND (FORM.number_pets eq 0) AND FORM.indoor is 'na'  ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("You have not indicated any details on a pet, please indicate which type of animal you have, where they live, and how many you have.");
-			 }	
-			 if  ( (NOT LEN(TRIM(FORM.animaltype))) AND (FORM.number_pets neq 0) AND FORM.indoor is not 'na'  ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("You have not indicated what type of animal you have, only the number and where it lives.");
-			 }
-    	</cfscript>
-    		<cfif NOT SESSION.formErrors.length()>
-                 <cfquery name="addPet" datasource="#APPLICATION.DSN.Source#">
-                    insert into smg_host_animals (hostID, animaltype,number, indoor)
-                            values(#APPLICATION.CFC.SESSION.getHostSession().ID#, '#FORM.animaltype#','#FORM.number_pets#','#FORM.indoor#')
-                    </Cfquery>
-        	</cfif>
-  </cfif>
-
-<cfif isDefined('FORM.process')>
-
+		<cfscript>
+            // Set Page Message
+            SESSION.pageMessages.Add("Pet has been deleted");
+			// Refresh Page
+			location("index.cfm?section=hostingEnvironment", "no");
+        </cfscript>
         
- 
+    </cfif>
+    
+    <!--- Insert Pet --->    
+    <cfif FORM.action EQ "insertPet">
+    
+		<cfscript>
+            // Data Validation 
+            
+            // Animal Type
+            if ( NOT LEN(TRIM(FORM.animalType)) ) {
+                SESSION.formErrors.Add("Please indicate which type of animal you have");
+            }
+            
+            // Where do they live
+            if ( NOT LEN(FORM.indoor) ) {
+                SESSION.formErrors.Add("Please indicate if they are indoor, outdoor or both");
+            }
+            
+            // How Many
+            if ( NOT LEN(FORM.number) ) {
+                SESSION.formErrors.Add("Please indicate how many animals you have");
+            }
+        </cfscript>
         
-       
-       
-        <!---Error Checking---->
+        <!--- No Errors found --->
+        <cfif NOT SESSION.formErrors.length()>
+        
+            <cfquery datasource="#APPLICATION.DSN.Source#">
+                INSERT INTO 
+                    smg_host_animals 
+                (
+                    hostID, 
+                    animalType,
+                    number, 
+                    indoor
+                )
+                VALUES
+                (
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.animalType#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.number#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.indoor#">
+                )
+            </cfquery>
+            
+            <cfscript>
+                // Set Page Message
+                SESSION.pageMessages.Add("Pet has been added");
+                // Refresh Page
+                location("index.cfm?section=hostingEnvironment", "no");
+            </cfscript>
+            
+        </cfif>
 
-         <cfscript>
-            // Data Validation
-			//Play in Band
-			 if (( FORM.share_room EQ 1) AND (FORM.kid_share EQ 0))  {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("You have indicated that the student will share a room, but have not indicated with whom they will share the room.");
-			 }
+	<!--- Form Submitted --->
+	<cfelseif FORM.action EQ "submitted">
+    
+		<cfscript>
+			// Data Validation
+
+			// Allergies
+			if ( NOT LEN(FORM.pet_allergies) ) {
+				SESSION.formErrors.Add("Please indicate if you would be willing to host a student who is allergic to animals");
+			}
+
+			// Room Sharing
+			if ( qGetHostMembers.recordcount AND NOT LEN(FORM.share_room) ) {
+				SESSION.formErrors.Add("Please indicate if the student is going to share a bedroom");
+			}
+
+			// Room Sharing
+			if ( FORM.share_room EQ 1 AND NOT VAL(FORM.sharingWithID) )  {
+				SESSION.formErrors.Add("You have indicated that the student will share a room, but have not indicated with whom they will share the room");
+			}
 			
 			// Family Smokes
-             if(NOT LEN(TRIM(FORM.smokes))) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate if any one in your family smokes.");
-			 }
-			 
-			
-			 //Student smoke conditions
-			 if (( FORM.stu_smoke EQ 1) AND NOT LEN(TRIM(FORM.smoke_conditions)) )  {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("You have indicated that you would host a student who smokes, but did not indicate under what conditions.");
+			if ( NOT LEN(TRIM(FORM.hostSmokes)) ) {
+				SESSION.formErrors.Add("Please indicate if any one in your family smokes");
 			}
 			
-			 // Family Dietary Restrictions
-             if ( FORM.famDietRest EQ 3) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate if your family follows any dietary restrictions.");
-			 }
-					 // Family Dietary Restrictions
-             if ( FORM.dietaryRestriction EQ 3) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate if you would have problems hosting a student with dietary restrictions.");
-			 }
-			 if (( FORM.famDietRest EQ 1) AND NOT LEN(TRIM(FORM.famDietRestDesc)) )  {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("You have indicated that your family has dietary restrictions, but did not describe them.");
+			// Family Smokes Conditions
+			if ( FORM.hostSmokes EQ "yes" AND NOT LEN(TRIM(FORM.smoke_conditions)) ) {
+				SESSION.formErrors.Add("Please indicate under what conditions someone in your family smokes");
 			}
-			 
-			// Student Dietery Restrictions
-            if ( FORM.stuDietRest EQ 3) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate if you expect the student to follow any dietary restrictions.");
-			 }
-			 if (( FORM.stuDietRest EQ 1) AND NOT LEN(TRIM(FORM.stuDietRestDesc)) )  {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("You have indicated that you expect the student to follow certain dietary restrictions, but did not describe them.");
+			
+			// Family Dietary Restrictions
+			if ( NOT LEN(FORM.famDietRest) ) {
+				SESSION.formErrors.Add("Please indicate if your family follows any dietary restrictions");
 			}
-			 
-			 // Three Squares
-             if ( FORM.threesquares EQ 3) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate if you are prepared to provide three (3) quality meals per day.");
-			 }
 			
-			 
-			// Allergies
-            if ( FORM.allergic EQ 3) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate if you would be willing to host a student who is allergic to animals.");
-			 }
-		
-		
-			
-		</cfscript>
-        <cfif NOT SESSION.formErrors.length()>
-       
-       
-			<CFIF not isdefined("FORM.share_room")>
-                <CFSET FORM.share_room = "">
-            </cfif>
-            <cftransaction action="BEGIN" isolation="SERIALIZABLE">
-                    <!----share room---->
-                    <cfif #FORM.share_room# is "yes">
-                    <!---_THey answerd yes, but didn't indicate a kid... don't update until question is answerd.---->
-                        <cfif FORM.kid_share neq 0>
-                            <cfquery name="insert_room_share" datasource="#APPLICATION.DSN.Source#">
-                            update smg_host_children
-                             set shared = "yes"
-                             where childid = #FORM.kid_share#
-                            </cfquery>
-                        </cfif>
-                    </cfif>
-                    <!----Smoking & Allergy Preferences---->
-                    <cfquery name="smoking_pref" datasource="#APPLICATION.DSN.Source#">
-                    update smg_hosts
-                        set hostSmokes = '#FORM.smokes#',
-                           
-                            smokeconditions = '#FORM.smoke_conditions#',
-                            pet_allergies = '#FORM.allergic#',
-                            famDietRest = '#FORM.famDietRest#',
-                            famDietRestDesc = '#FORM.famDietRestDesc#',
-                            stuDietRest = '#FORM.stuDietRest#',
-                            stuDietRestDesc = '#FORM.stuDietRestDesc#',
-                            threesquares = '#FORM.threesquares#',
-                            dietaryRestriction = '#FORM.dietaryRestriction#'
-                            
-                        where hostID = #APPLICATION.CFC.SESSION.getHostSession().ID#
-                    </cfquery>
-                    </cftransaction>
-			<cflocation url="index.cfm?section=religiousPreference" addtoken="no">
+			// Family Dietary Description
+			if ( FORM.famDietRest EQ 1 AND NOT LEN(FORM.famDietRestDesc) ) {
+				SESSION.formErrors.Add("You have indicated that someone in your family follows a dietary restriction but have not describe it");
+			}
+
+			// Student Follow Dietary Restrictions
+			if ( NOT LEN(FORM.stuDietRest) ) {
+				SESSION.formErrors.Add("Please indicate if the student is to follow any dietary restrictions");
+			}
+
+			// Student Follow Dietary Description
+			if ( FORM.stuDietRest EQ 1 AND NOT LEN(FORM.stuDietRestDesc) ) {
+				SESSION.formErrors.Add("You have indicated the student is to follow a dietary restriction but have not describe it");
+			}
+
+			// Hosting a student with dietary resctriction
+			if ( NOT LEN(FORM.dietaryRestriction) ) {
+				SESSION.formErrors.Add("Please indicate if you would have problems hosting a student with dietary restrictions");
+			}
+
+			// Three Squares
+			if ( NOT LEN(FORM.threesquares) ) {
+				SESSION.formErrors.Add("Please indicate if you are prepared to provide three (3) quality meals per day");
+			}
+        </cfscript>
         
-        </cfif>
-<cfelse>
+        <!--- No Errors found --->
+        <cfif NOT SESSION.formErrors.length()>
+        	
+            <cfscript>
+				// Reset Hidden Fields
+				if ( FORM.hostSmokes EQ "no" ) {
+					FORM.smoke_conditions = "";
+				}
+				
+				if ( NOT VAL(FORM.share_room) ) {
+					FORM.sharingWithID = "";
+				}
 
-		 <cfscript>
-			 // Set FORM Values   
-			FORM.smokes = qGetHostInfo.hostsmokes;
-			// Father --->
-			FORM.stu_smoke = qGetHostInfo.acceptsmoking;
-			FORM.smoke_conditions = qGetHostInfo.smokeconditions;
-			FORM.allergic = qGetHostInfo.pet_allergies;
-			FORM.famDietRest = qGetHostInfo.famDietRest;
-			FORM.famDietRestDesc = qGetHostInfo.famDietRestDesc;
-			FORM.stuDietRest = qGetHostInfo.stuDietRest;
-			FORM.stuDietRestDesc = qGetHostInfo.stuDietRestDesc;
-			FORM.threesquares = qGetHostInfo.threesquares;
-			FORM.dietaryRestriction = qGetHostInfo.dietaryRestriction;
-			
-		</cfscript>
+				if ( NOT VAL(FORM.famDietRest) ) {
+					FORM.famDietRestDesc = "";
+				}
+				
+				if ( NOT VAL(FORM.stuDietRest) ) {
+					FORM.stuDietRestDesc = "";
+				}
+			</cfscript>
+            
+			<!--- share room --->
+            <cfif VAL(FORM.share_room) AND VAL(FORM.sharingWithID)>
+            
+                <cfquery datasource="#APPLICATION.DSN.Source#">
+                    UPDATE 
+                        smg_host_children
+                    SET
+                        shared = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
+                    WHERE
+                        childid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.sharingWithID)#">
+                    AND
+                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
+                </cfquery>
+            
+            <cfelse>
+            
+                <cfquery datasource="#APPLICATION.DSN.Source#">
+                    UPDATE 
+                        smg_host_children
+                    SET
+                        shared = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">
+                    WHERE
+                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
+                </cfquery>
+                
+            </cfif>
+            
+            <cfquery datasource="#APPLICATION.DSN.Source#">
+                UPDATE 
+                	smg_hosts
+                SET
+                	pet_allergies = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pet_allergies#">,
+                	hostSmokes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hostSmokes#">,
+                    smokeconditions = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.smoke_conditions#">,
+                    famDietRest = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.famDietRest#">,
+                    famDietRestDesc = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.famDietRestDesc#">,
+                    stuDietRest = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.stuDietRest#">,
+                    stuDietRestDesc = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.stuDietRestDesc#">,
+                    dietaryRestriction = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.dietaryRestriction#">,
+                    threesquares = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.threesquares#">
+                WHERE 
+                	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
+            </cfquery>
+            
+            <cflocation url="index.cfm?section=religiousPreference" addtoken="no">
+        
+		</cfif> <!--- No Errors found --->
+        
+	<cfelse>
 
-</cfif>
-<!----script to hide kids names if they are not going to share a room---->
+		<cfscript>
+            // Set Default Values
+			FORM.pet_allergies = qGetHostFamilyInfo.pet_allergies;
+            FORM.hostSmokes = qGetHostFamilyInfo.hostSmokes;
+            FORM.smoke_conditions = qGetHostFamilyInfo.smokeconditions;
+            FORM.famDietRest = qGetHostFamilyInfo.famDietRest;
+            FORM.famDietRestDesc = qGetHostFamilyInfo.famDietRestDesc;
+            FORM.stuDietRest = qGetHostFamilyInfo.stuDietRest;
+            FORM.stuDietRestDesc = qGetHostFamilyInfo.stuDietRestDesc;
+            FORM.dietaryRestriction = qGetHostFamilyInfo.dietaryRestriction;
+            FORM.threesquares = qGetHostFamilyInfo.threesquares;
 
-<cfquery name="get_pets" datasource="#APPLICATION.DSN.Source#">
-select *
-from smg_host_animals 
-where hostID = #APPLICATION.CFC.SESSION.getHostSession().ID#
-</cfquery>
+			if ( qGetWhoIsSharingRoom.recordcount ) {
+				FORM.share_room = 1;
+				FORM.sharingWithID = qGetWhoIsSharingRoom.childID;
+			}
+        </cfscript>
+    
+    </cfif>
 
-<cfquery name="get_kids" datasource="#APPLICATION.DSN.Source#">
-select childid, name, shared
-from smg_host_children
-where hostID = #APPLICATION.CFC.SESSION.getHostSession().ID#
-</cfquery>
-<cfquery name="family_info" datasource="#APPLICATION.DSN.Source#">
-select *
-from smg_hosts
-where hostID = #APPLICATION.CFC.SESSION.getHostSession().ID#
-</cfquery>
-<h2>Hosting Environment</h2>
+</cfsilent>
+
+<cfoutput>
+
+    <h2>Hosting Environment</h2>
+	
+	<!--- Page Messages --->
+    <gui:displayPageMessages 
+        pageMessages="#SESSION.pageMessages.GetCollection()#"
+        messageType="section"
+        />
 	
 	<!--- Form Errors --->
     <gui:displayFormErrors 
         formErrors="#SESSION.formErrors.GetCollection()#"
         messageType="section"
         />
-        
-<div class="row">
 
-<h3>Current Pets</h3>
-<cfquery name="qPets" datasource="#APPLICATION.DSN.Source#">
-select *
-from smg_host_animals
-where hostID = #APPLICATION.CFC.SESSION.getHostSession().ID#
-</cfquery>
-<cfif qPets.recordcount eq 0>
-	No pets have been added.
-</cfif>
-<cfoutput>
-<table width="100%" cellspacing="0" cellpadding="2" class="border">
-   <tr>
-   	<th>Type</th><th>Indoor / Outdoor</th><th>How many?</th><th></th>
-    </tr>
-   <cfif qPets.recordcount eq 0>
-    <tr>
-    	<td>Currently, no pets are indicated as living in your home.</td>
-    </tr>
-    <cfelse>
-    <cfloop query="qPets">
-    <tr <cfif currentrow mod 2> bgcolor="##deeaf3"</cfif>>
-    	<td><h3><p class="p_uppercase">#animaltype#</h3></td>
-        <td><h3><p class="p_uppercase">#indoor#</h3></td>
-        <td><h3>#number#</h3></td>
-        <td><a href="index.cfm?section=hostingEnvironment&delete_animal=<cfoutput>#animalid#&hostID=#APPLICATION.CFC.SESSION.getHostSession().ID#</cfoutput>" onClick="return confirm('Are you sure you want to delete this pet?')"><img src="/images/buttons/delete23x28.png" title="Click to delete this pet" height=20 border="0"/></a></td>
-    </tr>
-    </cfloop>
-    </cfif>
-   </table>
-	
-</cfoutput>
-
-<cfform action="index.cfm?section=hostingEnvironment&animalid=#URL.animalid#&hostID=#APPLICATION.CFC.SESSION.getHostSession().ID#" method="post" preloader="no">
-<input type="hidden" name="addPet" value="1">
-
-
-<h3>Pets </h3>
-Please include all animals that live in or outside your home.<br />
-<span class="redtext">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Required fields</span>
-(if submitting animals)
-<table width="100%" cellspacing="0" cellpadding="2" class="border">
-    <tr bgcolor="#deeaf3">
-    	<td class="label"><h3>Type of Animal<span class="redtext">*</span></h3></td>	
-        <td class="label"><h3>Where do they live?<span class="redtext">*</span></h3></td>
-        <td class="label"><h3>How Many? <span class="redtext">*</span></h3></td>
-    </tr>
-    <tr>    
-        <td><cfinput type="text" name="animaltype" size=15></td>
-
+    <h3>Current Pets</h3>
     
-        <td>
-        	<cfinput type="radio" name=indoor value="indoor"> Indoor 
-		<cfinput type="radio" name=indoor value="outdoor"> Outdoor <cfinput type="radio" name=indoor value="both">Both
-        </td>
-
-    	
-        <td><select name="number_pets"><option value=0 selected>
-			<option value=1>1
-			<option value=2>2
-			<option value=3>3
-			<option value=4>4
-			<option value=5>5
-			<option value=6>6
-			<option value=7>7
-			<option value=8>8
-			<option value=9>9
-			<option value=10>10
-			<option value='10+'>10+
-			</select>
-         </td>
+    <table width="100%" cellspacing="0" cellpadding="2" class="border">
+        <tr>
+            <th>Type</th>
+            <th>Indoor / Outdoor</th>
+            <th>How many?</th>
+            <th></th>
+        </tr>
         
-    </tr>
-   
-</table>
-
-	</td>
-	</tr>
-</table>
- <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
-    <tr>
-       
-        <td align="right">
-       
-        <input type="image" src="/images/buttons/addPet.png" /></td>
-    </tr>
-</table>
-</cfform>
-<br />
-	<hr width="50%" align="center"/>
- <br />
- 
- <cfform action="index.cfm?section=hostingEnvironment" method="post">
-<h3>Allergies</h3>
-<table width="100%" cellspacing="0" cellpadding="2" class="border">
-	<Tr bgcolor="#deeaf3">
-    	<td>
-Would you be willing to host a student who is allergic to animals?<span class="redtext">*</span><Br /> (If they are able to handle the allergy with medication)
-		</td>
-        <td>
-
-   <label>
-            <cfinput type="radio" name="allergic" value="1"
-             checked="#FORM.allergic eq 1#"  />
-            Yes
-            </label>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <label>
-            <cfinput type="radio" name="allergic" value="0"
-             checked="#FORM.allergic eq 0#" />
-            No
-            </label>
-     </tr>
- </table>
- <br />
-<h3>Room Sharing</h3>
-<div class="get_Attention">The student may share a bedroom with someone of the same sex and within a reasonable age difference, but must have his/her own bed.</div>
-<table width="100%" cellspacing="0" cellpadding="2" class="border">
-<cfif get_kids.recordcount is 0>
-	<tr>
-    	<td colspan=4 bgcolor="#deeaf3">
-<div class="get_Attention">Since you don't have any kids or other family members living at home, it is assumend the student will not be sharing a room.  If this is wrong, 
-you will need to <a href="index.cfm?section=familyMembers">add a family member</a>.
-</div>
-		</td>
-     </tr>
-<cfelse>
-
-	<tr bgcolor="#deeaf3">
-		<td id="shareBedroom" width=50%>Will the student share a bedroom?<span class="redtext">*</span></td>
-        <td>
-        <cfquery name="whoShare" dbtype="query">
-        select *
-        from get_kids
-        where shared = 'yes'
-        </cfquery>
-        <cfif whoShare.recordcount eq 0>
-        	<cfset roomShare=0>
-        <cfelse>
-        	<cfset roomShare=1>
+        <cfloop query="qGetHostPets">
+            <tr <cfif qGetHostPets.currentRow MOD 2> bgcolor="##deeaf3"</cfif>>
+                <td><h3><p class="p_uppercase">#qGetHostPets.animalType#</h3></td>
+                <td><h3><p class="p_uppercase">#qGetHostPets.indoor#</h3></td>
+                <td><h3>#qGetHostPets.number#</h3></td>
+                <td><a href="index.cfm?section=hostingEnvironment&deletePetID=#qGetHostPets.animalid#" onClick="return confirm('Are you sure you want to delete this pet?')"><img src="images/buttons/delete23x28.png" title="Click to delete this pet" height="20" border="0"/></a></td>
+            </tr>
+        </cfloop>
+        
+        <cfif qGetHostPets.recordcount eq 0>
+        	<tr>
+        		<td>Currently, no pets are indicated as living in your home.</td>
+        	</tr>
         </cfif>
-    		 <label>
-            <cfinput type="radio" name="share_room" value="1"
-            onclick="document.getElementById('showname').style.display='table-row';" checked="#roomShare eq 1#" />
-           
-            Yes
-            </label>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <label>
-            <cfinput type="radio" 
-            name="share_room" 
-            value="0"
-            onclick="document.getElementById('showname').style.display='none';" 
-            checked="#roomShare eq 0#" />
+    </table>
+	
+    <form action="index.cfm?section=hostingEnvironment" method="post" preloader="no">
+        <input type="hidden" name="action" value="insertPet">
+    
+        <h3>Pets </h3>
+        
+    	Please include all animals that live in or outside your home.<br />
+    	<span class="required">* Required fields</span> (if submitting pets)
+        
+        <table width="100%" cellspacing="0" cellpadding="2" class="border">
+            <tr bgcolor="##deeaf3">
+                <td class="label"><h3>Type of Animal <span class="required">*</span></h3></td>	
+                <td class="label"><h3>Where do they live? <span class="required">*</span></h3></td>
+                <td class="label"><h3>How Many?  <span class="required">*</span></h3></td>
+            </tr>
+            <tr>    
+                <td><input type="text" name="animalType" value="#FORM.animalType#" class="largeField"></td>
+                <td>
+                    <input type="radio" name="indoor" id="indoor" value="indoor" <cfif FORM.indoor EQ "indoor">checked="checked"</cfif> > <label for="indoor">Indoor</label>
+                    <input type="radio" name="indoor" id="outdoor" value="outdoor" <cfif FORM.indoor EQ "outdoor">checked="checked"</cfif> > <label for="outdoor">Outdoor</label> 
+                    <input type="radio" name="indoor" id="both" value="both" <cfif FORM.indoor EQ "both">checked="checked"</cfif> > <label for="both">Both</label>
+            	</td>
+                <td>
+                    <select name="number" class="smallField">
+                        <option value="" <cfif NOT LEN(FORM.number)>selected="selected"</cfif> ></option>	
+                        <cfloop from="1" to="10" index="i">
+                            <option value="#i#" <cfif FORM.number EQ i>selected="selected"</cfif> >#i#</option>
+                        </cfloop>
+                        <option value="10+" <cfif FORM.number EQ "10+">selected="selected"</cfif> >10+
+                    </select>
+                </td>
+            </tr>
+        </table>
+    
+        <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
+            <tr>
+            	<td align="right"><input type="image" src="images/buttons/addPet.png" /></td>
+            </tr>
+        </table>
+        
+    </form>
+    
+    <hr width="50%" align="center"/>
+    
+    <cfform action="index.cfm?section=hostingEnvironment" method="post">
+    	<input type="hidden" name="action" value="submitted" />
+    
+    	<h3>Allergies</h3>
+    
+        <table width="100%" cellspacing="0" cellpadding="2" class="border">
+            <tr bgcolor="##deeaf3">
+                <td>
+                	Would you be willing to host a student who is allergic to animals? <span class="required">*</span>
+                    <br /> (If they are able to handle the allergy with medication)
+                </td>
+                <td>
+                    <cfinput type="radio" name="pet_allergies" id="pet_allergies1" value="1" checked="#FORM.pet_allergies EQ 1#"/>
+                    <label for="pet_allergies1">Yes</label>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <cfinput type="radio" name="pet_allergies" id="pet_allergies0" value="0" checked="#FORM.pet_allergies EQ 0#"/>
+                    <label for="pet_allergies0">No</label>
+				</td>          
+            </tr>
+        </table>
+        
+        <br />
+        
+        <h3>Room Sharing</h3>
+        
+        <div class="get_Attention">The student may share a bedroom with someone of the same sex and within a reasonable age difference, but must have his/her own bed.</div>
+        
+        <table width="100%" cellspacing="0" cellpadding="2" class="border">
+			<cfif NOT qGetHostMembers.recordcount>
+                <tr>
+                    <td colspan="4" bgcolor="##deeaf3">
+                        <div class="get_Attention">
+                        	Since you don't have any kids or other family members living at home, it is assumend the student will not be sharing a room. If this is wrong, 
+                        	you will need to <a href="index.cfm?section=familyMembers">add a family member</a>.
+                		</div>
+                	</td>
+                </tr>
+            <cfelse>
+                <tr bgcolor="##deeaf3">
+                    <td id="shareBedroom" width="50%">Will the student share a bedroom? <span class="required">*</span></td>
+                    <td>
+                        <cfinput type="radio" name="share_room" id="share_room1" value="1" onclick="document.getElementById('showname').style.display='table-row';" checked="#FORM.share_room EQ 1#" />
+                        <label for="share_room1">Yes</label>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <cfinput type="radio" name="share_room" id="share_room0" value="0" onclick="document.getElementById('showname').style.display='none';" checked="#FORM.share_room EQ 0#" />
+                        <label for="share_room0">No</label>
+                    </td>
+                </tr>
+                
+                <tr id="showname" <cfif FORM.share_room NEQ 1>class="displayNone"</cfif> >
+                    <td width="50%">Who will they share a room with? <span class="required">*</span></td>
+                    <td> 
+                        <select name="sharingWithID" class="largeField">
+                            <option value=""></option>
+                            <cfloop query="qGetHostMembers">
+                                <option value="#qGetHostMembers.childid#" <cfif qGetHostMembers.childID EQ FORM.sharingWithID> selected</cfif> >#qGetHostMembers.name#</option>
+                            </cfloop>
+                        </select>
+                    </td>
+                </tr>
+            </cfif>
+        </table>
+    
+    	<h3>Smoking</h3>
+        
+        <table width="100%" cellspacing="0" cellpadding="2" class="border" border="0">
+            <tr>
+                <td align="left" width="50%">Does anyone in your family smoke? <span class="required">*</span></td>
+                <td>
+                    <cfinput type="radio" name="hostSmokes" id="hostSmokesYes" value="yes" checked="#FORM.hostSmokes eq 'yes'#"  onclick="document.getElementById('showsmoke').style.display='table-row';" />
+                    <label for="hostSmokesYes">Yes</label>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <cfinput type="radio" name="hostSmokes" id="hostSmokesNo" value="no" checked="#FORM.hostSmokes eq 'no'#" onclick="document.getElementById('showsmoke').style.display='none';" />
+                    <label for="hostSmokesNo">No</label>
+            	</td>
+            </tr>
+            <tr>
+            	<td align="left" colspan="2" id="showsmoke" <cfif FORM.hostSmokes NEQ 1>class="displayNone"</cfif>>
+                	Under what conditions? <span class="required">*</span>
+                    <br />
+                    <textarea name="smoke_conditions" placeholder="inside, outside, etc" class="largeTextArea">#FORM.smoke_conditions#</textarea>
+				</td>
+            </tr>
+        </table>
+    
+        <h3>Dietary Needs</h3>
+        
+        <table width="100%" cellspacing="0" cellpadding="2" class="border">
+            <tr bgcolor="##deeaf3">
+                <td>Does anyone in your family follow any dietary restrictions? <span class="required">*</span></td>
+            	<td>
+                    <cfinput type="radio" name="famDietRest" id="famDietRest1" value="1" onclick="document.getElementById('famDietRestDesc').style.display='table-row';" checked="#FORM.famDietRest eq 1#" />
+                    <label for="famDietRest1">Yes</label>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <cfinput type="radio" name="famDietRest" id="famDietRest0" value="0"  onclick="document.getElementById('famDietRestDesc').style.display='none';" checked="#FORM.famDietRest eq 0#"  />
+                    <label for="famDietRest0">No</label>
+            	</td>
+            </tr>
+            <tr id="famDietRestDesc" bgcolor="##deeaf3" <cfif FORM.famDietRest NEQ 1>class="displayNone"</cfif>>
+                <td>Please describe</td>
+                <td><textarea name="famDietRestDesc" class="largeTextArea">#FORM.famDietRestDesc#</textarea></td>
+            </tr>
+            <tr>
+                <td>Do you expect the student to follow any dietary restrictions? <span class="required">*</span></td>
+                <td>
+                    <cfinput type="radio" name="stuDietRest" id="stuDietRest1" value="1" onclick="document.getElementById('stuDietRestDesc').style.display='table-row';" checked="#FORM.stuDietRest eq 1#" />
+                    <label for="stuDietRest1">Yes</label>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <cfinput type="radio" name="stuDietRest" id="stuDietRest0" value="0" onclick="document.getElementById('stuDietRestDesc').style.display='none';" checked="#FORM.stuDietRest eq 0#"  />
+                    <label for="stuDietRest0">No</label>
+                </td>
+            </tr>
+            <tr id="stuDietRestDesc" <cfif FORM.stuDietRest NEQ 1>class="displayNone"</cfif>>
+                <td>Please describe</td>
+                <td><textarea name="stuDietRestDesc" class="largeTextArea">#FORM.stuDietRestDesc#</textarea></td>
+            </tr>
+            <tr bgcolor="##deeaf3">
+                <td>
+                    Would you feel comfortable hosting a student with a dietary restriction? <span class="required">*</span>
+                    <br /> (vegetarian, vegan, etc.)
+                </td>
+                <td>
+                    <cfinput type="radio" name="dietaryRestriction" id="dietaryRestriction1" value="1" checked="#FORM.dietaryRestriction eq 1#" />
+                    <label for="dietaryRestriction1">Yes</label>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <cfinput type="radio" name="dietaryRestriction" id="dietaryRestriction0" value="0" checked="#FORM.dietaryRestriction eq 0#"  />
+                    <label for="dietaryRestriction0">No</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                	Are you prepared to provide three (3) quality meals per day? <span class="required">*</span>
+                    <br /> (students are expected to provide and/or pay for school lunches)
+                </td>
+                <td>
+                    <cfinput type="radio" name="threesquares" id="threesquares1" value="1" checked="#FORM.threesquares eq 1#" />
+                    <label for="threesquares1">Yes</label>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <cfinput type="radio" name="threesquares" id="threesquares0" value="0" checked="#FORM.threesquares eq 0#" />
+                    <label for="threesquares0">No</label>
+                </td>
+            </tr>
+        </table>
+    
+        <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
+            <tr>
+                <td align="right">
+    	            <input name="submit" type="image" src="images/buttons/Next.png" border="0">
+                </td>
+            </tr>
+        </table>
 
-            No
-            </label>
-      	
-        </td>
-	</tr>
-
-	<tr id="showname" <cfif roomShare eq 0>style="display: none;"</cfif>  >
-		<td width=50%> Who will they share a room with?</td><td> 
-        	<select name="kid_share">
-            	<option value=0> </option>
-            <cfoutput query="get_kids">
-				 <option value=#childid# <cfif get_kids.shared is 'yes'> selected</cfif>>#name#</option>
-             </cfoutput>
-             </select>
-             </td>
-	</tr>
-</cfif>
-</table>
-
-
-
-<h3>Smoking</h3>
-<table width="100%" cellspacing="0" cellpadding="2" class="border" border="0">
-	<tr>
-		<td align="left" width=50%>Does anyone in your family smoke?<span class="redtext">*</span></td><td>
-            <label>
-            <cfinput type="radio" name="smokes" value="yes"
-            checked="#FORM.smokes eq 'yes'#"  onclick="document.getElementById('showsmoke').style.display='table-row';" />
-            Yes
-            </label>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <label>
-            <cfinput type="radio" name="smokes" value="no"
-           checked="#FORM.smokes eq 'no'#" onclick="document.getElementById('showsmoke').style.display='none';" />
-            No
-            </label>
-		 
- </td>
-	</tr>
-		
-		<tr>
-		<td align="left" colspan="2" id="showsmoke" <cfif FORM.stu_smoke neq 1>style="display: none;"</cfif>>Under what conditions?<br><textarea cols="50" rows="4" name="smoke_conditions" wrap="VIRTUAL" placeholder="inside, outside, etc"><Cfoutput>#FORM.smoke_conditions#</cfoutput></textarea></td>
-	</tr>
-</table>
-<span cless="spacer"></span>
-
-<h3>Dietary Needs</h3>
-<table width="100%" cellspacing="0" cellpadding="2" class="border">
-	<Tr bgcolor="#deeaf3">
-    	<td>
-		Does anyone in your family follow any dietary restrictions?<span class="redtext">*</span>
-	</td>
-    <td>
-   <label>
-            <cfinput type="radio" name="famDietRest" value="1" onclick="document.getElementById('famDietRestDesc').style.display='table-row';"
-             checked="#FORM.famDietRest eq 1#" />
-            Yes
-            </label>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <label>
-            <cfinput type="radio" name="famDietRest" value="0"  onclick="document.getElementById('famDietRestDesc').style.display='none';"
-             checked="#FORM.famDietRest eq 0#"  />
-            No
-            </label>
-     </td>
-     </tr>
-     <Tr id="famDietRestDesc"  <cfif FORM.famDietRest neq 1>style="display: none;"</cfif> bgcolor="#deeaf3">
-     	<td>Please describe</td>
-        <td><textarea cols=30 rows=5 name="famDietRestDesc"><Cfoutput>#FORM.famDietRestDesc#</Cfoutput></textarea></td>
-     </tr>
-     <tr>
-    	<td>
-			Do you expect the student to follow any dietary restrictions?<span class="redtext">*</span>
-		</td>
-        <td>
-   		<label>
-            <cfinput type="radio" name="stuDietRest" value="1" onclick="document.getElementById('stuDietRestDesc').style.display='table-row';"
-             checked="#FORM.stuDietRest eq 1#" />
-            Yes
-            </label>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <label>
-            <cfinput type="radio" name="stuDietRest" value="0" onclick="document.getElementById('stuDietRestDesc').style.display='none';"
-             checked="#FORM.stuDietRest eq 0#"  />
-            No
-        </label>
-     	</td>
-     </tr>
-      <Tr id="stuDietRestDesc"   <cfif FORM.stuDietRest neq 1>style="display: none;"</cfif>>
-     	<td>Please describe</td>
-        <td><textarea cols=30 rows=5 name="stuDietRestDesc"><cfoutput>#FORM.stuDietRestDesc#</cfoutput></textarea></td>
-     </tr>
-     <Tr  bgcolor="#deeaf3">
-    	<td>
-			Would you feel comfortable hosting a student with a dietary restriction?<span class="redtext">*</span><br /> (vegetarian, vegan, etc.)
-		</td>
-        <td>
-   		<label>
-            <cfinput type="radio" name="dietaryRestriction" value="1" 
-             checked="#FORM.dietaryRestriction eq 1#"  />
-            Yes
-            </label>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <label>
-            <cfinput type="radio" name="dietaryRestriction" value="0" 
-             checked="#FORM.dietaryRestriction eq 0#"  />
-            No
-        </label>
-     	</td>
-     </tr>
-     <tr>
-    	<td>
-			Are you prepared to provide three (3) quality meals per day?<span class="redtext">*</span><br /> (students are expected to provide and/or pay for school lunches)
-		</td>
-        <td>
-   		<label>
-            <cfinput type="radio" name="threesquares" value="1" 
-             checked="#FORM.threesquares eq 1#"  />
-            Yes
-            </label>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <label>
-            <cfinput type="radio" name="threesquares" value="0" 
-             checked="#FORM.threesquares eq 0#"  />
-            No
-        </label>
-     	</td>
-     </tr>
- </table>
-
-
-
- <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
-    <tr>
-       
-        <td align="right">
-        <input type="hidden" name="process">
-        <input name="Submit" type="image" src="/images/buttons/Next.png" border="0"></td>
-    </tr>
-</table>
-<span class="spacer"></span>
-</div>
-
-</cfform>
+	</cfform>
+    
+</cfoutput>

@@ -15,6 +15,10 @@
     <cfparam name="URL.section" default="login">
 
     <cfscript>
+		if ( VAL(APPLICATION.CFC.SESSION.getHostSession().ID) AND URL.section EQ "login" ) {
+			URL.section = "overview";
+		}
+	
 		// Get Host Family Info - Accessible from any page
 		qGetHostFamilyInfo = APPLICATION.CFC.HOST.getHosts(hostID=APPLICATION.CFC.SESSION.getHostSession().ID);
 	</cfscript>
@@ -25,31 +29,31 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title><cfoutput>#SESSION.COMPANY.pageTitle#</cfoutput></title>
 <link href="linked/css/baseStyle.css" rel="stylesheet" type="text/css" />
-<link href="linked/css/hostApp.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="linked/chosen/chosen.css" />
 <link rel="stylesheet" href="linked/css/wiki.css" />
 <link rel="stylesheet" href="linked/css/colorbox.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script src="/linked/js/jquery.colorbox-min.js"></script>
+<script src="linked/chosen/chosen.jquery.js" type="text/javascript"></script>
+<script src="linked/js/jquery.colorbox-min.js"></script>
 <script type="text/javascript">
-//<![CDATA[
+	//<![CDATA[
 	function ShowHide(){
-	$("#slidingDiv").animate({"height": "toggle"}, { duration: 300 });
+		$("#slidingDiv").animate({"height": "toggle"}, { duration: 300 });
 	}
-//]]>
+	//]]>
 </script>
 </head>
 
 <cfoutput>
 
-<body class="oneColFixCtr">
+<body>
 
     <div id="topBar">
     
         <div id="logoBoxB">
         
             <div class="blueBox">
-                <a href="../index.cfm"><img src="/images/#SESSION.COMPANY.logoImage#" width="214" height="165" alt="ISE logo" border="0" /></a>
+                <a href="../index.cfm"><img src="images/#SESSION.COMPANY.logoImage#" width="214" height="165" alt="ISE logo" border="0" /></a>
                 <!--- Include Left Menu --->
                 <cfinclude template="includes/leftMenu.cfm">
             </div><!--blueBox -->
@@ -74,7 +78,7 @@
             
                 <div class="whtTop"></div>
                 
-                <div class="whtMiddletours2">
+                <div class="whtMiddle">
                 
                     <div class="hostApp">
                     
@@ -104,7 +108,7 @@
                     
                     <div id="main" class="clearfix"></div>
                     
-                </div><!-- end whtMiddletours2 -->
+                </div><!-- end whtMiddle -->
                 
                 <div class="whtBottom"></div>
                 
@@ -125,5 +129,6 @@
 
 </cfoutput>
 
+<cfdump var="#client#">
 <cfdump var="#session#">
 <cfdump var="#APPLICATION#">

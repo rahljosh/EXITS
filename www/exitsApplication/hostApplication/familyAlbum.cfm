@@ -23,89 +23,40 @@
     <cfparam name="FORM.categoryID" default="">
 	
     <cfscript>
+		// Get Uploaded Images
+		qGetUploadedImages = APPLICATION.CFC.DOCUMENT.getDocuments(documentGroup="picture");
+	
 		// Get Category List
-		qGetCategoryList = APPLICATION.CFC.LOOKUPTABLES.getPictureCategory();
-	</cfscript>
-
-    <cfquery name="qGetImages" datasource="#APPLICATION.DSN.Source#">
-        SELECT 
-        	pa.ID,
-        	pa.filename, 
-            pa.description, 
-            pa.cat,
-            cat_name
-        FROM 
-        	smg_host_picture_album pa
-        LEFT OUTER JOIN
-        	smg_host_pic_cat c ON c.catID = pa.cat
-        WHERE 
-        	pa.fk_hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
-    </cfquery>
+		qGetCategoryList = APPLICATION.CFC.DOCUMENT.getDocumentType(documentGroup="picture");
+	
+    	vUploadedImageList = ValueList(qGetUploadedImages.documentTypeID);
+    </cfscript>
 
 	<!--- Delete Image --->
     <cfif VAL(URL.deleteImageID)>
     	        
-        <cftry>
-        	
-            <!--- Get Image Name --->			
-            <cfquery name="qGetImageInfo" datasource="#APPLICATION.DSN.Source#">
-                SELECT 
-                    ID,
-                    filename 
-                FROM 
-                    smg_host_picture_album
-                WHERE 
-                    fk_hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
-                AND
-                	ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.deleteImageID#">
-            </cfquery>
-            
-            <!--- Delete Large Image --->
-            <cffile action="delete" file="#APPLICATION.CFC.SESSION.getHostSession().PATH.albumLarge##qGetImageInfo.filename#">
-            
-            <!--- Delete Thumb Image --->
-            <cffile action="delete" file="#APPLICATION.CFC.SESSION.getHostSession().PATH.albumThumbs##qGetImageInfo.filename#"> 
-            
-            <cfcatch type="any">
-            	<!--- Errors Found --->
-            </cfcatch>
-            
-        </cftry>
-		
-        <!--- Delete Record --->
-        <cfquery datasource="#APPLICATION.DSN.Source#">
-            DELETE FROM
-                smg_host_picture_album
-            WHERE 
-                fk_hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
-            AND
-            	ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.deleteImageID#">
-        </cfquery>
-
 		<cfscript>
-            // Set Page Message
+            // Delete Document
+            APPLICATION.CFC.DOCUMENT.deleteDocumentByID(ID=URL.deleteImageID, documentGroup="picture");
+
+			// Set Page Message
             SESSION.pageMessages.Add("Picture has been deleted");
+			
+			// Refresh Page
+			location("index.cfm?section=familyAlbum", "no");
         </cfscript>
-        
-        <cflocation url="index.cfm?section=familyAlbum" addtoken="no">
 
     </cfif>
 
 	<!--- Update Descriptions --->
     <cfif FORM.action EQ 'updateDescription'>
     
-        <cfloop query="qGetImages">
-        
-            <cfquery datasource="#APPLICATION.DSN.Source#">
-                UPDATE
-                	smg_host_picture_album
-                SET 
-                	description = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form['desc_' & qGetImages.ID]#"> 
-                WHERE 
-                	fk_hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
-                AND
-                    ID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetImages.ID#">   
-            </cfquery>
+        <cfloop query="qGetUploadedImages">
+        	
+            <cfscript>
+				// Update Description
+				APPLICATION.CFC.DOCUMENT.updateDocumentDescriptionByID(ID=qGetUploadedImages.ID,description=FORM['desc_' & qGetUploadedImages.ID]);
+			</cfscript>
             
         </cfloop>
         
@@ -120,13 +71,11 @@
         <cfscript>
             // Data Validation
             if ( NOT LEN(FORM.fileData) ) {
-                // Get all the missing items in a list
                 SESSION.formErrors.Add("Please select a file to upload.");
             }
 			
             // Data Validation
             if ( NOT LEN(FORM.categoryID) ) {
-                // Get all the missing items in a list
                 SESSION.formErrors.Add("Please indicate which catagory this picture belongs to.");
             }
         </cfscript>
@@ -136,7 +85,7 @@
         	
             <cfinvoke component="extensions.components.document" method="familyAlbumUpload" returnvariable="stResult">
                 <cfinvokeargument name="formField" value="#FORM.fileData#">
-                <cfinvokeargument name="categoryID" value="#ReplaceNoCase(FORM.categoryID,'area','')#">
+                <cfinvokeargument name="documentTypeID" value="#ReplaceNoCase(FORM.categoryID,'area','')#">
             </cfinvoke>
             
             <cfscript>
@@ -213,22 +162,26 @@
             <tr>
                 <td colspan="4">
                     <cfloop query="qGetCategoryList">
-                        <div id="divarea#catid#" class="box" display="hidden">#requirements#</div>
+                        <div id="divarea#ID#" class="box" display="hidden">#qGetCategoryList.description#</div>
                     </cfloop>
                 </td>
             </tr>
             <tr>
                 <td>
                     Select a category for this picture:<br />
-                    <select name="categoryID" id="dropdown">
+                    <select name="categoryID" id="dropdown" class="xLargeField">
                         <option value="0"></option>
                         <cfloop query="qGetCategoryList">
-                            <option value="area#catID#" <cfif FORM.categoryID EQ "area#qGetCategoryList.catID#">selected</cfif>>#qGetCategoryList.cat_name#<cfif qGetCategoryList.catid NEQ 7>*</cfif></option>
+                            <option value="area#qGetCategoryList.ID#" <cfif ListFind(vUploadedImageList, qGetCategoryList.ID)> style="background-color:##deeaf3;" </cfif> <cfif FORM.categoryID EQ "area#qGetCategoryList.ID#">selected</cfif>>
+                            	#qGetCategoryList.name#
+                            	<cfif ListFind(vUploadedImageList, qGetCategoryList.ID)>(Uploaded)</cfif>
+                                <cfif qGetCategoryList.ID NEQ 26><span class="required">*</span></cfif>
+                            </option>
                         </cfloop>
                     </select>
                 </td>
                 <td><input type="file" name="fileData" /><br /></td>
-				<td><input type="image" src="/images/buttons/BlkSubmit.png" /></td>
+				<td><input type="image" src="images/buttons/BlkSubmit.png" /></td>
 		    </tr>
 		</table>
 	</form>
@@ -243,40 +196,40 @@
         <cfset vTrRowCount = 1>
     	<table width="100%" cellspacing="0" cellpadding="4" class="border">
             <tr>
-                <cfloop query="qGetImages">
+                <cfloop query="qGetUploadedImages">
                 	<td width="50%" valign="top" align="center">
                         
                         <div style="display:block; margin:5px 0 2px 0;">
 							
                             <span style="float:left; margin-right:3px;">
-                                <label for="#qGetImages.ID#" style="font-weight:bold;">
-                                	<span style="display:block; margin-bottom:5px;">#qGetImages.cat_name#</span>
-                                	<img src="#APPLICATION.CFC.SESSION.getHostSession().PATH.relativeAlbumThumbs##qGetImages.filename#">
-                                    <!--- <cfimage action="writeToBrowser" source="#APPLICATION.CFC.SESSION.getHostSession().PATH.albumThumbs##qGetImages.filename#"> --->
+                                <label for="#qGetUploadedImages.ID#" style="font-weight:bold;">
+                                	<span style="display:block; margin-bottom:5px;">#qGetUploadedImages.documentType#</span>
+                                	<img src="#APPLICATION.CFC.SESSION.getHostSession().PATH.relativeAlbumThumbs##qGetUploadedImages.fileName#">
+                                    <!--- <cfimage action="writeToBrowser" source="#APPLICATION.CFC.SESSION.getHostSession().PATH.albumThumbs##qGetUploadedImages.fileName#"> --->
                                 </label>
                             </span>    
                             
                             <span style="display:block; margin-bottom:5px;">Description of picture:</span>
-                            <textarea name="desc_#qGetImages.ID#" id="#qGetImages.ID#" cols="20" rows="6">#qGetImages.description#</textarea>
+                            <textarea name="desc_#qGetUploadedImages.ID#" id="#qGetUploadedImages.ID#" cols="20" rows="6">#qGetUploadedImages.description#</textarea>
                             
                         </div>
                          
                         <div style="display:block; margin:3px 0 5px 0;"> 
-                            <a href="index.cfm?section=familyAlbum&deleteImageID=#qGetImages.ID#" onClick="return confirm('Are you sure you want to delete the #qGetImages.cat_name# picture?')">
-                                <img src="/images/buttons/deleteGreyRed.png" height="30" border="0" />
+                            <a href="index.cfm?section=familyAlbum&deleteImageID=#qGetUploadedImages.ID#" onClick="return confirm('Are you sure you want to delete the #qGetUploadedImages.documentType# picture?')">
+                                <img src="images/buttons/deleteGreyRed.png" height="30" border="0" />
                             </a>
                         </div>
                     </td>
-            		<cfif qGetImages.currentRow MOD 2 EQ 0>
+            		<cfif qGetUploadedImages.currentRow MOD 2 EQ 0>
                     	<cfset vTrRowCount ++>
                         </tr>
 		                <tr <cfif vTrRowCount MOD 2 EQ 0> bgcolor="##deeaf3" </cfif> >
-                    <cfelseif qGetImages.currentRow EQ qGetImages.recordCount>
+                    <cfelseif qGetUploadedImages.currentRow EQ qGetUploadedImages.recordCount>
                     	<td width="50%">&nbsp;</td> 
         		    </cfif>
 		        </cfloop>
             
-			<cfif NOT qGetImages.recordcount>
+			<cfif NOT qGetUploadedImages.recordcount>
                 <tr><td align="center"><h3>No pictures were found.  Not a  problem though, just upload a few and you'll be set.</h3></td></tr>
             </cfif>
     	</table>
@@ -287,7 +240,7 @@
                 	When you are done editing the descriptions, just click "Next"
 				</td>                    
                 <td align="right">
-                    <input name="Submit" type="image" src="/images/buttons/Next.png"/>
+                    <input name="Submit" type="image" src="images/buttons/Next.png"/>
                 </td>
             </tr>
         </table>

@@ -12,7 +12,7 @@
 		<cfargument name="email_message" type="string" required="false" default="">
 		<!--- the following are used for specific emails in email_template.cfm. --->
 		<cfargument name="include_content" type="string" required="false" default="">
-		<cfargument name="userid" type="string" required="false" default="">
+		<cfargument name="userID" type="string" required="false" default="">
 		<!--- optional attachment. --->
 		<cfargument name="email_file" type="string" required="false" default="" hint="optional attachment">
 		<cfargument name="email_file2" type="string" required="false" default="" hint="optional attachment">        

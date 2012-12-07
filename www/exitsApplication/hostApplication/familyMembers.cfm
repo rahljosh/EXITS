@@ -2,7 +2,7 @@
 	
 	File:		familyMembers.cfm
 	Author:		Marcus Melo
-	Date:		November 12, 2012
+	Date:		December 12, 2012
 	Desc:		Family Member Page
 
 	Updated:	
@@ -37,6 +37,9 @@
 		if ( VAL(URL.childID) ) {
 			FORM.childID = URL.childID;	
 		}
+		
+		// Get Host Family Members
+		qGetHostMemberInfo = APPLICATION.CFC.HOST.getHostMemberByID(hostID=APPLICATION.CFC.SESSION.getHostSession().ID,childID=VAL(FORM.childID));		
 	</cfscript>
 
     <cfquery name="qGetAllFamilyMembers" datasource="#APPLICATION.DSN.Source#">
@@ -51,15 +54,6 @@
         	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
     </cfquery>
     
-    <cfquery name="qGetHostMemberInfo" dbtype="query">
-        SELECT 
-            *
-        FROM 
-            qGetAllFamilyMembers
-        WHERE 
-            childID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.childID)#">
-    </cfquery>
-
 	<cfscript>
 		// Check if member belongs to the current logged in host family
 		if ( VAL(FORM.childID) AND NOT qGetHostMemberInfo.recordCount ) {
@@ -103,7 +97,6 @@
             LIMIT 1
         </cfquery>
         
-        
         <cfscript>
 			// Set Page Message
 			SESSION.pageMessages.Add("Family member has been deleted");
@@ -129,65 +122,56 @@
 			
             // First Name
             if ( NOT LEN(TRIM(FORM.name)) ) {
-                // Get all the missing items in a list
                 SESSION.formErrors.Add("Please enter the First Name.");
             }			
             
             // Last Name
             if ( NOT LEN(TRIM(FORM.lastName)) ) {
-                // Get all the missing items in a list
                 SESSION.formErrors.Add("Please enter the Last Name.");
             }			
             
             // Gender
             if ( NOT LEN(TRIM(FORM.sex)) ) {
-                // Get all the missing items in a list
                 SESSION.formErrors.Add("Please select the Gender.");
             }
             
             // Birthdate
             if ( NOT isDate(TRIM(FORM.birthdate)) ) {
-                // Get all the missing items in a list
                 SESSION.formErrors.Add("Please enter a valid Date of Birth.");
             }			
             
             // Birthdate
             if ( vCalculateAge GT 120 ) {
-                // Get all the missing items in a list
                 SESSION.formErrors.Add("The birthdate indicates the person is over 120 years old.  Please check the birthdate.");				
             }	
             
             // Birthdate
             if ( vCalculateAge LTE 0 ) {
-                // Get all the missing items in a list
                 SESSION.formErrors.Add("The birthdate indicates this person has not been born yet.");				
             }	
             
             // Relation
             if ( NOT LEN(TRIM(FORM.membertype)) ) {
-                // Get all the missing items in a list
                 SESSION.formErrors.Add("Please enter the Relation.");
             }	
             
             // Interests
             if ( NOT LEN(TRIM(FORM.interests)) ) {
-                // Get all the missing items in a list
                 SESSION.formErrors.Add("Please enter some interests for this person.");
             }
             
             // Living at home
             if ( NOT LEN(TRIM(FORM.liveathome)) ) {
-                // Get all the missing items in a list
                 SESSION.formErrors.Add("Please indicate if person is living at home.");
             }
             
             // liveathomePartTime
             if ( NOT LEN(TRIM(FORM.liveathomePartTime)) ) {
-                // Get all the missing items in a list
                 SESSION.formErrors.Add("Please indicate if living at home at all durring the exchange period.");
             }	
         </cfscript>
         
+        <!--- No Errors Found --->
 		<cfif NOT SESSION.formErrors.length()>
         
 			<!--- Update --->
@@ -222,7 +206,8 @@
             <cfelse>
             
                 <cfquery datasource="#APPLICATION.DSN.Source#">
-                    INSERT INTO smg_host_children 
+                    INSERT INTO 
+                    	smg_host_children 
                     (
                         hostID, 
                         name, 
@@ -268,7 +253,7 @@
 				location("#CGI.SCRIPT_NAME#?section=#URL.section#", "no");
             </cfscript>
             
-		</cfif>
+		</cfif> <!--- No Errors Found --->
 
 	<!--- FORM NOT Submitted --->
     <cfelse>
@@ -294,8 +279,10 @@
 </cfsilent>
 
 <cfoutput>
-
-    <h2>Current Family Members</h2>
+	
+    <h2>Family Members</h2>
+    
+    <h3>Current Family Members</h3>
 
 	<!--- Page Messages --->
     <gui:displayPageMessages 
@@ -309,91 +296,89 @@
         messageType="section"
         />
                 
-    <table width="100%" cellspacing="0" cellpadding="2" class="border">
-        <tr>
-            <th>Name</th>
-            <th>Gender</th>
-            <th>Date of Birth</th>
-            <th>Relation</th>
-            <th>At Home?</th>
-            <th>School</th>
-            <th></th>
+    <table width="100%" cellspacing="0" cellpadding="4" class="border">
+        <tr bgcolor="##deeaf3">
+            <th style="border-bottom:1px solid ##000;">Name</th>
+            <th style="border-bottom:1px solid ##000;">Gender</th>
+            <th style="border-bottom:1px solid ##000;">Date of Birth</th>
+            <th style="border-bottom:1px solid ##000;">Relation</th>
+            <th style="border-bottom:1px solid ##000;">At Home?</th>
+            <th style="border-bottom:1px solid ##000;">School</th>
+            <th style="border-bottom:1px solid ##000;" width="50px"></th>
         </tr>
-        <cfif qGetAllFamilyMembers.recordcount eq 0>
+        
+        <cfif NOT qGetAllFamilyMembers.recordcount>
             <tr>
-            	<td colspan="8">Currently, no other family members are indicated as living in your home.</td>
+            	<td colspan="7">Currently, no other family members are indicated as living in your home.</td>
             </tr>
-        <cfelse>
-            <cfloop query="qGetAllFamilyMembers">
-                <tr <cfif qGetAllFamilyMembers.currentrow mod 2> bgcolor="##deeaf3"</cfif>>
-                    <th><h3><p class="p_uppercase">#qGetAllFamilyMembers.name# #qGetAllFamilyMembers.lastName#</h3></th>
-                    <td><h3><p class="p_uppercase">#qGetAllFamilyMembers.sex#</h3></td>
-                    <td><h3>#DateFormat(qGetAllFamilyMembers.birthdate, 'mmm d, yyyy')#</h3></td>
-                    <td><h3><p class="p_uppercase">#qGetAllFamilyMembers.membertype#</h3></td>
-                    <td><h3><p class="p_uppercase"><cfif qGetAllFamilyMembers.liveathome is 'yes'>Yes<cfelseif qGetAllFamilyMembers.liveathomePartTime is 'yes'>Part Time<cfelse>No</cfif></h3></td>
-                    <td><h3><p class="p_uppercase">#qGetAllFamilyMembers.schoolname#</h3></td>
-                    <td>
-                        <a href="index.cfm?section=familyMembers&childID=#qGetAllFamilyMembers.childID#"><img src="/images/buttons/pencilBlue23x29.png" border="0" height="20" title="Click to edit this family member"/></a> 
-                        <a href="index.cfm?section=familyMembers&deleteChildID=#qGetAllFamilyMembers.childID#" onClick="return confirm('Are you sure you want to delete this Family Member?')"> <img src="/images/buttons/delete23x28.png" title="Click to delete this family member" height=20 border="0"/></a>
-                    </td>
-                </tr>
-            </cfloop>
         </cfif>
+        
+        <cfloop query="qGetAllFamilyMembers">
+            <tr <cfif qGetAllFamilyMembers.currentRow MOD 2	EQ 0> bgcolor="##deeaf3"</cfif>>
+                <th>#qGetAllFamilyMembers.name# #qGetAllFamilyMembers.lastName#</th>
+                <td>#qGetAllFamilyMembers.sex#</td>
+                <td>#DateFormat(qGetAllFamilyMembers.birthdate, 'mmm d, yyyy')#</td>
+                <td>#qGetAllFamilyMembers.membertype#</td>
+                <td><cfif qGetAllFamilyMembers.liveathome is 'yes'>Yes<cfelseif qGetAllFamilyMembers.liveathomePartTime is 'yes'>Part Time<cfelse>No</cfif></td>
+                <td>#qGetAllFamilyMembers.schoolname#</td>
+                <td>
+                    <a href="index.cfm?section=familyMembers&childID=#qGetAllFamilyMembers.childID#"><img src="images/buttons/pencilBlue23x29.png" border="0" height="15" title="Click to edit this family member"/></a> 
+                    <a href="index.cfm?section=familyMembers&deleteChildID=#qGetAllFamilyMembers.childID#" onClick="return confirm('Are you sure you want to delete this Family Member?')"> <img src="images/buttons/delete23x28.png" title="Click to delete this family member" height="15" border="0"/></a>
+                </td>
+            </tr>
+        </cfloop>
+        
     </table>
 	
     <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" preloader="no">
     	<input type="hidden" name="submitted" value="1" />
         <input type="hidden" name="childID" value="#FORM.childID#" /> 
-
-        <table width="100%">
-            <tr>
-                <td>
-                    <h2>Family Members </h2>
-                </td>
-                <td align="right">
-                    <a onclick="ShowHide(); return false;" href="##">No <cfif qGetAllFamilyMembers.recordcount neq 0>other</cfif> family members to add</a>
-                    <div id="slidingDiv" display:"none">
-                        <a href="index.cfm?section=cbcAuthorization"><img src="/images/buttons/Next.png" border="0" /></a>	
-                    </div>	
-                </td>
-            </tr>        
-        </table>
+		
+        <!--- Finished with this page --->
+        <div style="display:block; float:right;">
+            <a onclick="ShowHide(); return false;" href="##">No <cfif qGetAllFamilyMembers.recordcount neq 0>other</cfif> family members to add</a>
+            <div id="slidingDiv" display:"none">
+                <a href="index.cfm?section=cbcAuthorization"><img src="images/buttons/Next.png" border="0" /></a>	
+            </div>	
+        </div>
+        
+        <h3>Add a Family Members</h3>
 	
         Please include all your children, whether they are living at home or not, and <span style="background-color:##FF0; padding: 3px;"><strong> any other persons</strong></span> 
-        who live with you on a regular basis.<br />
+        who live with you on a regular basis.<br /><br />
         
-        <span class="redtext">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Required fields</span>
+        <span class="required">* Required fields</span>
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr>
-                <td class="label"><h3>First Name<span class="redtext">*</span></h3></td>
-                <td><cfinput type="text" name="name" value="#FORM.name#" size="20" maxlength="50" message="Please enter the First Name."></td>
+                <td class="label"><h3>First Name<span class="required">*</span></h3></td>
+                <td><cfinput type="text" name="name" value="#FORM.name#" class="largeField" maxlength="50" message="Please enter the First Name."></td>
             </tr>
             <tr bgcolor="##deeaf3">
-                <td class="label"><h3>Last Name<span class="redtext">*</span></h3></td>
-                <td><cfinput type="text" name="lastName" value="#FORM.lastName#" size="20" maxlength="50" message="Please enter the Name."></td>
+                <td class="label"><h3>Last Name<span class="required">*</span></h3></td>
+                <td><cfinput type="text" name="lastName" value="#FORM.lastName#" class="largeField" maxlength="50" message="Please enter the Name."></td>
             </tr>
             <tr>
                 <td class="label"><h3>Middle Name</h3></td>
-                <td><cfinput type="text" name="middleName" value="#FORM.middleName#" size="20" maxlength="50"></td>
+                <td><cfinput type="text" name="middleName" value="#FORM.middleName#" class="largeField" maxlength="50"></td>
             </tr>
             <tr bgcolor="##deeaf3">
-                <td class="label"><h3>Gender <span class="redtext">*</span></h3></td>
+                <td class="label"><h3>Gender <span class="required">*</span></h3></td>
                 <td>
                     <cfinput type="radio" name="sex" id="sexMale" value="Male" checked="#yesNoFormat(FORM.sex EQ 'Male')#"> <label for="sexMale">Male</label>
                     <cfinput type="radio" name="sex" id="sexFemale" value="Female" checked="#yesNoFormat(FORM.sex EQ 'Female')#"> <label for="sexFemale">Female</label>
                 </td>
             </tr>
             <tr>
-                <td class="label"><h3>Date of Birth <span class="redtext">*</span></h3></td>
-                <td><cfinput type="text" name="birthdate" value="#dateFormat(FORM.birthdate, 'mm/dd/yyyy')#" size="12" maxlength="10" placeholder="MM/DD/YYYY" mask="99/99/9999"></td>
+                <td class="label"><h3>Date of Birth <span class="required">*</span></h3></td>
+                <td><cfinput type="text" name="birthdate" value="#dateFormat(FORM.birthdate, 'mm/dd/yyyy')#" class="mediumField" maxlength="10" placeholder="MM/DD/YYYY" mask="99/99/9999"></td>
             </tr>
             <tr bgcolor="##deeaf3">
-                <td class="label"><h3>Relation<span class="redtext">*</span></h3> </td>
-                <td><cfinput type="text" name="membertype" value="#FORM.membertype#" size="20" maxlength="150"></td>
+                <td class="label"><h3>Relation<span class="required">*</span></h3> </td>
+                <td><cfinput type="text" name="membertype" value="#FORM.membertype#" class="largeField" maxlength="150"></td>
             </tr>
             <tr>
-                <td class="label"><h3>Living at Home <span class="redtext">*</span></h3></td>
+                <td class="label"><h3>Living at Home <span class="required">*</span></h3></td>
                 <td>
                     <cfinput type="radio" name="liveathome" id="liveAtHomeYes" value="Yes" checked="#yesNoFormat(FORM.liveathome EQ 'Yes')#"/> <label for="liveAtHomeYes">Yes</label>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -404,7 +389,7 @@
                 <td class="label">
                 	<h3>Will this person live at the home at any<br /> 
                 	time during the exchange period?<br />
-                	<font size=-1> (i.e. college students home for holiday, etc)</font> <span class="redtext">*</span></h3>
+                	<font size=-1> (i.e. college students home for holiday, etc)</font> <span class="required">*</span></h3>
                 </td>
                 <td>
                     <cfinput type="radio" name="liveathomePartTime" id="liveAtHomePartTimeYes" value="Yes" checked="#yesNoFormat(FORM.liveathomePartTime EQ 'Yes')#" > <label for="liveAtHomePartTimeYes">Yes</label>
@@ -415,9 +400,9 @@
             <tr>
                 <td class="label"><h3>Current School Attending</h3></td>
                 <td>
-                    <select name="school">
+                    <select name="school" class="largeField">
                         <option value='-1' selected>Not Applicable</option>
-                        <option value=0>Other</option>
+                        <option value="0">Other</option>
                         <cfloop query="qGetSchoolList">
                             <option value=#schoolid#<cfif FORM.school eq qGetSchoolList.schoolid> selected</cfif>>#schoolname#</option>
                         </cfloop>
@@ -427,7 +412,7 @@
             <tr  bgcolor="##deeaf3" >
                 <td class="label"><h3>Grade in School</h3></td>
                 <td>
-                    <select name="gradeInSchool" id="gradeInSchool">
+                    <select name="gradeInSchool" id="gradeInSchool" class="mediumField">
                         <option value=""></option>
                         <option value="Pre-Kindergarten">Pre-Kindergarten</option>
                         <option value="Kindergarten">Kindergarten</option>
@@ -460,7 +445,7 @@
                 <td><cftextarea name="employer" rows="3" cols="25" placeholder="Name, Title, Contact Info">#FORM.employer#</cftextarea></td>
             </tr>
             <tr  bgcolor="##deeaf3">
-                <td class="label" valign="top" ><h3>Interests <span class="redtext">*</span></h3></td>
+                <td class="label" valign="top" ><h3>Interests <span class="required">*</span></h3></td>
                 <td><cftextarea name="interests" rows="5" cols="25" placeholder="Mountain biking, swimming, theatre, music, movies">#FORM.interests#</cftextarea></td>
             </tr>
         </table>
@@ -470,10 +455,10 @@
                 <td align="right">
                     <cfif VAL(qGetHostMemberInfo.childID)>
                         <a href="?section=familyMembers">
-                        <img src="/images/buttons/goBack_44.png" border="0"/></a> 
-                        <input name="Submit" type="image" src="/images/buttons/update_44.png" border="0"> 
+                        <img src="images/buttons/goBack_44.png" border="0"/></a> 
+                        <input name="Submit" type="image" src="images/buttons/update_44.png" border="0"> 
                     <cfelse>
-                        <input name="Submit" type="image" src="/images/buttons/addMember.png" border="0">
+                        <input name="Submit" type="image" src="images/buttons/addMember.png" border="0">
                     </cfif> 
                 </td>
             </tr>

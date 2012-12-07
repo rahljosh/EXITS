@@ -1,41 +1,40 @@
-<cfset vCurrentSeasonID = APPLICATION.CFC.LOOKUPTABLES.getCurrentSeason().seasonID>
+<cfset vCurrentSeasonID = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID>
 
 <!--- Import CustomTag Used for Page Messages and Form Errors --->
 <cfimport taglib="extensions/customTags/gui/" prefix="gui" />	
 <cfparam name="submitForm" default=0>
+
 <cfquery name="qHostParentsMembers" datasource="#APPLICATION.DSN.Source#">
-select h.fatherfirstname, h.fatherdob, h.fatherlastname, h.motherfirstname, h.motherlastname, h.motherdob, h.fatherssn, h.motherssn, h.companyid, h.regionid, h.email
-from smg_hosts h
-where h.hostID = #APPLICATION.CFC.SESSION.getHostSession().ID# 
+    select h.fatherFirstName, h.fatherdob, h.fatherlastname, h.motherFirstName, h.motherlastname, h.motherdob, h.fatherssn, h.motherssn, h.companyid, h.regionid, h.email
+    from smg_hosts h
+    where h.hostID = #APPLICATION.CFC.SESSION.getHostSession().ID# 
 </cfquery>
 
 <cfquery name="qHostParentsCBC" datasource="#APPLICATION.DSN.Source#">
-select * 
-from smg_documents
-where hostID = #APPLICATION.CFC.SESSION.getHostSession().ID#
+    select * 
+    from smg_documents
+    where hostID = #APPLICATION.CFC.SESSION.getHostSession().ID#
 </cfquery>
 
 <cfquery name="checkFatherCBC" dbtype="query">
-select *
-from qHostParentsCBC
-where shortDesc = 'Father CBC Auth'
+    select *
+    from qHostParentsCBC
+    where shortDesc = 'Father CBC Auth'
 </cfquery>
 
 <cfquery name="checkMotherCBC" dbtype="query">
-select *
-from qHostParentsCBC
-where shortDesc = 'Mother CBC Auth'
+    select *
+    from qHostParentsCBC
+    where shortDesc = 'Mother CBC Auth'
 </cfquery>
 
  <cfscript>
- if ( LEN(TRIM(qHostParentsMembers.motherfirstname)) and not len(trim(qHostParentsMembers.motherdob)) )  {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("#qHostParentsMembers.motherfirstname# is missing her date of birth on page 1 of the application.  It is required to process this page. Please click on Name & Contact info in the menu and enter the date of birth.");
+ if ( LEN(TRIM(qHostParentsMembers.motherFirstName)) and not len(trim(qHostParentsMembers.motherdob)) )  {
+                SESSION.formErrors.Add("#qHostParentsMembers.motherFirstName# is missing her date of birth on page 1 of the application.  It is required to process this page. Please click on Name & Contact info in the menu and enter the date of birth.");
 			} 
 			
-		   if ( LEN(TRIM(qHostParentsMembers.fatherfirstname)) and not len(trim(qHostParentsMembers.fatherdob)) )  {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("#qHostParentsMembers.fatherfirstname# is missing his date of birth on page 1 of the application.  It is required to process this page. Please click on Name & Contact info in the menu and enter the date of birth.");
+		   if ( LEN(TRIM(qHostParentsMembers.fatherFirstName)) and not len(trim(qHostParentsMembers.fatherdob)) )  {
+                SESSION.formErrors.Add("#qHostParentsMembers.fatherFirstName# is missing his date of birth on page 1 of the application.  It is required to process this page. Please click on Name & Contact info in the menu and enter the date of birth.");
 			}
               
 </cfscript>
@@ -59,12 +58,10 @@ where shortDesc = 'Mother CBC Auth'
 			
 			// Valid SSN
            if  ( LEN(TRIM(FORM.fatherssn)) NEQ 11) {
-                // Get all the missing items in a list
-               SESSION.formErrors.Add("The SSN for #FORM.fatherfirstname# does not appear to be a valid SSN. <br> Please make sure the SSN is entered in the 999-99-9999 format.");
+               SESSION.formErrors.Add("The SSN for #FORM.fatherFirstName# does not appear to be a valid SSN. <br> Please make sure the SSN is entered in the 999-99-9999 format.");
            }	
 		   if (not len(trim(FORM.fathersig))){
-                // Get all the missing items in a list
-               SESSION.formErrors.Add("The signature for #FORM.fatherfirstname# is missing");
+               SESSION.formErrors.Add("The signature for #FORM.fatherFirstName# is missing");
            }	
 		 </cfscript>
    		</cfif>	
@@ -75,12 +72,10 @@ where shortDesc = 'Mother CBC Auth'
 			
 			// Valid SSN
            if  ( LEN(TRIM(FORM.motherssn)) NEQ 11) {
-                // Get all the missing items in a list
-               SESSION.formErrors.Add("The SSN for #FORM.motherfirstname# does not appear to be a valid SSN. <br> Please make sure the SSN is entered in the 999-99-9999 format.");
+               SESSION.formErrors.Add("The SSN for #FORM.motherFirstName# does not appear to be a valid SSN. <br> Please make sure the SSN is entered in the 999-99-9999 format.");
            }	
 		   if (not len(trim(FORM.mothersig))){
-                // Get all the missing items in a list
-               SESSION.formErrors.Add("The signature for #FORM.motherfirstname# is missing");
+               SESSION.formErrors.Add("The signature for #FORM.motherFirstName# is missing");
            }
 		 </cfscript>
    		</cfif>	
@@ -91,7 +86,7 @@ where shortDesc = 'Mother CBC Auth'
         	<cfif structKeyExists(form, "#x#_ssn")>
         	
             <cfquery name="cbcCheck" datasource="#APPLICATION.DSN.Source#">
-            select k.name, k.lastname, k.birthdate, k.cbc_form_received, k.childid, k.membertype, k.ssn, k.liveathome
+            select k.name, k.lastName, k.birthdate, k.cbc_form_received, k.childid, k.membertype, k.ssn, k.liveathome
             from smg_host_children k
             where k.childid = #x# 
             </cfquery>
@@ -103,13 +98,11 @@ where shortDesc = 'Mother CBC Auth'
                     
                     // Valid SSN
                    if  ( LEN(TRIM(#form[x & "_ssn"]#)) NEQ 11) {
-                        // Get all the missing items in a list
-                       SESSION.formErrors.Add("The SSN for #form[x & "_name"]# does not appear to be a valid SSN. <br> Please make sure the SSN is entered in the 999-99-9999 format.");
+                               SESSION.formErrors.Add("The SSN for #form[x & "_name"]# does not appear to be a valid SSN. <br> Please make sure the SSN is entered in the 999-99-9999 format.");
                    }	
                     // Valid Signature
                    if  ( NOT LEN(TRIM(#form[x & "_sig"]#))) {
-                        // Get all the missing items in a list
-                       SESSION.formErrors.Add("The signature for #form[x & "_name"]# is missing.");
+                               SESSION.formErrors.Add("The signature for #form[x & "_name"]# is missing.");
                    }	
                 
                 </cfscript>
@@ -134,18 +127,18 @@ where shortDesc = 'Mother CBC Auth'
                     <cfset FORM.report_mode = 'print'>
                     <cfset FORM.pdf = 1>
                     <cfinclude template="cbcAuthorizationText.cfm">
-                    <br /><Br />
-                    <Cfoutput>
-                    Electronically Signed<Br />
+                    <br /><br />
+                    <cfoutput>
+                    Electronically Signed<br />
                     #FORM.fatherSig#<br />
-                    #DateFormat(now(), 'mmm d, yyyy')# at #TimeFormat(now(), 'h:mm:ss tt')#<Br />
+                    #DateFormat(now(), 'mmm d, yyyy')# at #TimeFormat(now(), 'h:mm:ss tt')#<br />
                     IP: #cgi.REMOTE_ADDR# 
-                    </Cfoutput>
+                    </cfoutput>
                 </cfdocument>   
                 
                 <cfquery name="insertDocInfo" datasource="#APPLICATION.DSN.Source#">
-                	insert into smg_documents (fileName, type, dateFiled, filePath, description, shortDesc, userid, userType, hostID, seasonID)
-	                values('#FORM.fatherSig#_cbcAuthorization.pdf', 'pdf', #now()#, '#APPLICATION.CFC.SESSION.getHostSession().PATH.DOCS#', 'CBC Authorization for #FORM.fatherSig#','Father CBC Auth',#APPLICATION.CFC.SESSION.getHostSession().ID#, 'Host Father',#APPLICATION.CFC.SESSION.getHostSession().ID#, #vCurrentSeasonID#)
+                	insert into smg_documents (fileName, type, dateFiled, filePath, description, shortDesc, userID, userType, hostID, seasonID)
+	                values('#FORM.fatherSig#_cbcAuthorization.pdf', 'pdf', #now()#, '#APPLICATION.CFC.SESSION.getHostSession().PATH.DOCS#', 'CBC Authorization for #FORM.fatherSig#','Father CBC Authorization',#APPLICATION.CFC.SESSION.getHostSession().ID#, 'hostFather',#APPLICATION.CFC.SESSION.getHostSession().ID#, #vCurrentSeasonID#)
                 </cfquery> 
 
                 <cfquery name="cbcInfo" datasource="#APPLICATION.DSN.Source#">
@@ -170,24 +163,24 @@ where shortDesc = 'Mother CBC Auth'
                     <cfset FORM.report_mode = 'print'>
                     <cfset FORM.pdf = 1>
                     <cfinclude template="cbcAuthorizationText.cfm">
-                    <br /><Br />
-                    <Cfoutput>
-                    Electronically Signed<Br />
+                    <br /><br />
+                    <cfoutput>
+                    Electronically Signed<br />
                     #FORM.motherSig#<br />
-                    #DateFormat(now(), 'mmm d, yyyy')# at #TimeFormat(now(), 'h:mm:ss tt')#<Br />
+                    #DateFormat(now(), 'mmm d, yyyy')# at #TimeFormat(now(), 'h:mm:ss tt')#<br />
                     IP: #cgi.REMOTE_ADDR# 
-                    </Cfoutput>
+                    </cfoutput>
                 </cfdocument> 
                 <cfquery name="insertDocInfo" datasource="#APPLICATION.DSN.Source#">
-                insert into smg_documents (fileName, type, dateFiled, filePath, description, shortDesc, userid, usertype, hostID, seasonID)
-                				values('#FORM.motherSig#_cbcAuthorization.pdf', 'pdf', #now()#, '#APPLICATION.CFC.SESSION.getHostSession().PATH.DOCS#', 'CBC Authorization for #FORM.motherSig#','Mother CBC Auth',#APPLICATION.CFC.SESSION.getHostSession().ID#,'Host Mother',#APPLICATION.CFC.SESSION.getHostSession().ID#, #vCurrentSeasonID#)
+                insert into smg_documents (fileName, type, dateFiled, filePath, description, shortDesc, userID, usertype, hostID, seasonID)
+                				values('#FORM.motherSig#_cbcAuthorization.pdf', 'pdf', #now()#, '#APPLICATION.CFC.SESSION.getHostSession().PATH.DOCS#', 'CBC Authorization for #FORM.motherSig#','Mother CBC Authorization',#APPLICATION.CFC.SESSION.getHostSession().ID#,'hostMother',#APPLICATION.CFC.SESSION.getHostSession().ID#, #vCurrentSeasonID#)
                 </cfquery> 
 
              </cfif>
               <cfloop list="#famList#" index="x">
               <cfif structKeyExists(form, "#x#_ssn")>
                <cfquery name="cbcCheck" datasource="#APPLICATION.DSN.Source#">
-                select k.name, k.lastname, k.birthdate, k.cbc_form_received, k.childid, k.membertype, k.ssn, k.liveathome
+                select k.name, k.lastName, k.birthdate, k.cbc_form_received, k.childid, k.membertype, k.ssn, k.liveathome
                 from smg_host_children k
                 where k.childid = #x# 
                 </cfquery>
@@ -207,17 +200,17 @@ where shortDesc = 'Mother CBC Auth'
                     <cfset FORM.childid = #x#>
                     
                     <cfinclude template="cbcAuthorizationText.cfm">
-                    <br /><Br />
-                    <Cfoutput>
-                    Electronically Signed<Br />
+                    <br /><br />
+                    <cfoutput>
+                    Electronically Signed<br />
                     #form[x & "_sig"]#<br />
-                    #DateFormat(now(), 'mmm d, yyyy')# at #TimeFormat(now(), 'h:mm:ss tt')#<Br />
+                    #DateFormat(now(), 'mmm d, yyyy')# at #TimeFormat(now(), 'h:mm:ss tt')#<br />
                     IP: #cgi.REMOTE_ADDR# 
-                    </Cfoutput>
+                    </cfoutput>
                 </cfdocument> 
                  <cfquery name="insertDocInfo" datasource="#APPLICATION.DSN.Source#">
-                insert into smg_documents (fileName, type, dateFiled, filePath, description, shortDesc, userid, usertype, hostID, seasonid)
-                				values('#form[x & "_sig"]#_cbcAuthorization.pdf', 'pdf', #now()#, '#APPLICATION.CFC.SESSION.getHostSession().PATH.DOCS#', 'CBC Authorization for family member #form[x & "_sig"]#','Member CBC Auth', #x#, 'Fam Member',#APPLICATION.CFC.SESSION.getHostSession().ID#, #vCurrentSeasonID#)
+                insert into smg_documents (fileName, type, dateFiled, filePath, description, shortDesc, userID, usertype, hostID, seasonID)
+                				values('#form[x & "_sig"]#_cbcAuthorization.pdf', 'pdf', #now()#, '#APPLICATION.CFC.SESSION.getHostSession().PATH.DOCS#', 'CBC Authorization for family member #form[x & "_sig"]#','Member CBC Authorization', #x#, 'hostMember',#APPLICATION.CFC.SESSION.getHostSession().ID#, #vCurrentSeasonID#)
                 </cfquery> 
                 </cfif>
               	</cfloop>
@@ -239,16 +232,16 @@ where shortDesc = 'Mother CBC Auth'
             select *
             from smg_documents
             where hostID = #APPLICATION.CFC.SESSION.getHostSession().ID#
-            </Cfquery>
+            </cfquery>
             
              <cfsavecontent variable="hostCBCEmailMessage">
-              <Cfoutput>	
+              <cfoutput>	
               
                 Attached are copies of the Criminal Background Check Authorization you and any members of your family have electronically signed.  
                 <br /><br />
-                Regards-<Br />
+                Regards-<br />
                 ISE Support
-              </Cfoutput>
+              </cfoutput>
                 </cfsavecontent>
 
             <cfinvoke component="extensions.components.email" method="send_mail">
@@ -258,10 +251,10 @@ where shortDesc = 'Mother CBC Auth'
                 <cfinvokeargument name="email_message" value="#hostCBCEmailMessage#">
                 
                 <cfloop query="getCBCs">
-                    <cfif getCBCs.currentrow eq 1>
+                    <cfif getCBCs.currentRow eq 1>
                         <cfinvokeargument name="email_file" value="#filePath##fileName#">
                     <cfelse>
-                        <cfinvokeargument name="email_file#currentrow#" value="#filePath##fileName#">
+                        <cfinvokeargument name="email_file#currentRow#" value="#filePath##fileName#">
                     </cfif>
                </cfloop>
             
@@ -275,22 +268,22 @@ where shortDesc = 'Mother CBC Auth'
         where companyid = #qHostParentsMembers.companyid#
         </cfquery>
         <cfquery name="facilitator" datasource="#APPLICATION.DSN.Source#">
-        select uar.userid, u.email
+        select uar.userID, u.email
         from user_access_rights uar
-        left join smg_users u on u.userid = uar.userid
+        left join smg_users u on u.userID = uar.userID
         where regionid = #qHostParentsMembers.regionid#
         </cfquery>
             <cfsavecontent variable="hostCBCEmailMessage">
-              <Cfoutput>	
+              <cfoutput>	
               
                 The following CBC Authorization forms have been submitted for the <strong>#qHostParentsMembers.fatherlastname#</strong> family.  Please review and process the CBC's when possible.  
                 <br /><br />
                 You can process the CBC's here: 
                 http://ise.exitsapplication.com/nsmg/index.cfm?curdoc=cbc/hosts_cbc&hostID=#APPLICATION.CFC.SESSION.getHostSession().ID#
                 <br /><br />
-                Regards-<Br />
+                Regards-<br />
                 ISE Support
-              </Cfoutput>
+              </cfoutput>
                 </cfsavecontent>
 
             <cfinvoke component="extensions.components.email" method="send_mail">
@@ -300,10 +293,10 @@ where shortDesc = 'Mother CBC Auth'
                 <cfinvokeargument name="email_message" value="#hostCBCEmailMessage#">
                 
                 <cfloop query="getCBCs">
-                    <cfif getCBCs.currentrow eq 1>
+                    <cfif getCBCs.currentRow eq 1>
                         <cfinvokeargument name="email_file" value="#filePath##fileName#">
                     <cfelse>
-                        <cfinvokeargument name="email_file#currentrow#" value="#filePath##fileName#">
+                        <cfinvokeargument name="email_file#currentRow#" value="#filePath##fileName#">
                     </cfif>
                </cfloop>
                
@@ -358,12 +351,12 @@ where shortDesc = 'Mother CBC Auth'
  </cfif>
  
 <cfquery name="qHostFamilyMembers" datasource="#APPLICATION.DSN.Source#">
-select k.name, k.lastname, k.birthdate, k.cbc_form_received, k.childid, k.membertype, k.ssn, k.liveathome
+select k.name, k.lastName, k.birthdate, k.cbc_form_received, k.childid, k.membertype, k.ssn, k.liveathome
 from smg_host_children k
 where k.hostID = #APPLICATION.CFC.SESSION.getHostSession().ID# 
 </cfquery>
 <cfquery name="qActiveSeasons" datasource="#APPLICATION.DSN.Source#">
-select s.seasonid, s.season 
+select s.seasonID, s.season 
 from smg_seasons s
 where active = 1
 </cfquery>
@@ -375,8 +368,8 @@ where active = 1
         messageType="section"
         />
         
-Due to Department of State Regulations&dagger;, criminal background checks will need to be run on the following persons.  Please provide the following information on each person so that we can complete the background check. <Br />
-<Br />
+Due to Department of State Regulations&dagger;, criminal background checks will need to be run on the following persons.  Please provide the following information on each person so that we can complete the background check. <br />
+<br />
 
 <cfform method="post" action="?section=cbcAuthorization">
 
@@ -396,13 +389,13 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
     </tr>
     <cfelse>
     <cfloop query="qHostParentsMembers">
-    <cfif fatherfirstname is not ''>
-        <tr <cfif currentrow mod 2> bgcolor="##deeaf3"</cfif>>
-            <Td width="20%"><h3><p class="p_uppercase">#fatherfirstname# #fatherlastname#</h3></td>
-            <Td width="20%"><h3><p class="p_uppercase">Host Father</h3></td>
-            <Td width="20%"><h3>#DateFormat(fatherdob, 'mmm d, yyyy')#</h3></td>
+    <cfif fatherFirstName is not ''>
+        <tr <cfif currentRow MOD 2> bgcolor="##deeaf3"</cfif>>
+            <td width="20%"><h3><p class="p_uppercase">#fatherFirstName# #fatherlastname#</h3></td>
+            <td width="20%"><h3><p class="p_uppercase">Host Father</h3></td>
+            <td width="20%"><h3>#DateFormat(fatherdob, 'mmm d, yyyy')#</h3></td>
             <td width="10%"><h3>#DateDiff('yyyy',fatherdob,now())#</h3></td> 
-             <input type="hidden" value="#fatherfirstname#" name="fatherfirstname" />
+             <input type="hidden" value="#fatherFirstName#" name="fatherFirstName" />
             <td width="30%">
             
           	<cfif checkFatherCBC.recordcount eq 0>
@@ -414,13 +407,13 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
             </td>
       </tr>
     </cfif>
-    <cfif motherfirstname is not ''>
+    <cfif motherFirstName is not ''>
         <tr>
-            <td><h3><p class="p_uppercase">#motherfirstname# #motherlastname#</h3></td>
+            <td><h3><p class="p_uppercase">#motherFirstName# #motherlastname#</h3></td>
             <td><h3><p class="p_uppercase">Host Mother</h3></td>
             <td><h3>#DateFormat(motherdob, 'mmm d, yyyy')#</h3></td>
             <td><h3>#DateDiff('yyyy',motherdob,now())#</h3></td> 
-           <input type="hidden" value="#motherfirstname#" name="motherfirstname" />
+           <input type="hidden" value="#motherFirstName#" name="motherFirstName" />
            
             <td>
             <cfif checkMotherCBC.recordcount eq 0>
@@ -436,7 +429,7 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
     </cfloop>
     <cfif qHostFamilyMembers.recordcount gt 0>
     <tr>
-    	<Td colspan=7><hr width=60% align="center"></td>
+    	<td colspan=7><hr width=60% align="center"></td>
     </tr>
     </cfif>
     <cfset famMembersList =''>
@@ -444,8 +437,8 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
     <cfif #DateDiff('yyyy',birthdate,now())# gte 18>
 		<cfset famMembersList = #ListAppend(famMembersList,#qHostFamilyMembers.childid#)#>
 	</cfif>
-        <tr <cfif currentrow mod 2> bgcolor="##deeaf3"</cfif>>
-            <td><h3><p class="p_uppercase">#name# #lastname#</h3></td>
+        <tr <cfif currentRow MOD 2> bgcolor="##deeaf3"</cfif>>
+            <td><h3><p class="p_uppercase">#name# #lastName#</h3></td>
             <td><h3><p class="p_uppercase">#membertype#</h3></td>
             <td><h3>#DateFormat(birthdate, 'mmm d, yyyy')#</h3></td>
             <td><h3>#DateDiff('yyyy',birthdate,now())#</h3></td> 
@@ -460,7 +453,7 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
                 <cfset submitForm = 1></td>
               </cfif>	
             <cfelse>
-                <td colspan=2 >Background check is not required for #name#.</td>
+                <td colspan="2" >Background check is not required for #name#.</td>
             </cfif> 
         </tr>
 
@@ -470,39 +463,39 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
    </table>
 <h3>Signature(s)</h3>
 	<table width="100%" cellspacing="0" cellpadding="2" class="border">
-   <Tr  bgcolor="##deeaf3">
-   	<Th align="center">I/We are submitting this authorization for a criminal background check on the above individuals.  Please use our typed name in place of a signature to initiate the background check process.<br />
+   <tr  bgcolor="##deeaf3">
+   	<th align="center">I/We are submitting this authorization for a criminal background check on the above individuals.  Please use our typed name in place of a signature to initiate the background check process.<br />
     
     </th>
     
     </tr>
     <tr  bgcolor="##deeaf3">
     
-    	<td >
+    	<td>
         <table align="center">
  
         
 
         	<cfloop query="qHostParentsMembers">
             
-				<cfif fatherfirstname is not ''>
+				<cfif fatherFirstName is not ''>
                     <tr>
-                        <td><h3><p class="p_uppercase">#fatherfirstname# #fatherlastname#</h3></td>
+                        <td><h3><p class="p_uppercase">#fatherFirstName# #fatherlastname#</h3></td>
                         <td>
                         <cfif checkFatherCBC.recordcount eq 0>
-                            <input type="text" name="FatherSig" size=20/></td>
+                            <input type="text" name="FatherSig" class="largeField"/></td>
                         <cfelse>
                             <a href="#APPLICATION.CFC.SESSION.getHostSession().PATH.relativeDocs##checkfatherCBC.fileName#" target="_blank">View CBC Authoriaztion</a>
                         </cfif>
                     </tr>    
                 </cfif>
                 
-                <cfif motherfirstname is not ''>
+                <cfif motherFirstName is not ''>
                     <tr>
-                        <td><h3><p class="p_uppercase">#motherfirstname# #motherlastname#</h3></td>
+                        <td><h3><p class="p_uppercase">#motherFirstName# #motherlastname#</h3></td>
                         <td>
                         <cfif checkMotherCBC.recordcount eq 0>
-                            <input type="text" name="MotherSig" size=20/>
+                            <input type="text" name="MotherSig" class="largeField"/>
                         <cfelse>
                             <a href="#APPLICATION.CFC.SESSION.getHostSession().PATH.relativeDocs##checkMotherCBC.fileName#" target="_blank">View CBC Authoriaztion</a>
                         </cfif>
@@ -518,13 +511,13 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
                     from 
                     	smg_documents
                     where 
-                    	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qHostFamilyMembers.childID#">
+                    	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qHostFamilyMembers.childID#">
                     AND
                     	shortDesc = <cfqueryparam cfsqltype="cf_sql_varchar" value="Member CBC Auth">
                 </cfquery>
 				<cfif DateDiff('yyyy',birthdate,now()) gte 18 and liveathome is 'yes'>
                     <tr>
-                		<td><h3><p class="p_uppercase">#name# #lastname#</p></h3></td><td>
+                		<td><h3><p class="p_uppercase">#name# #lastName#</p></h3></td><td>
                         <cfif cbcInfo.recordCount>
                         <a href="#APPLICATION.CFC.SESSION.getHostSession().PATH.relativeDocs##cbcInfo.fileName#" target="_blank">View CBC Authoriaztion
                         <cfelse>
@@ -541,7 +534,7 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
 </cfoutput>
 
 <p>&nbsp;</p>
-<p><Br />
+<p><br />
 </p>
 <p>By providing this information and clicking on submit I do hereby authorize verification of all information in my application for involvement with the Exchange Program from all necessary sources and additionally authorize any duly recognized agent of General Information Services, Inc. to obtain the said records and such disclosures.</p>
 <p>Information entered on this Authorization will be used exclusively by General Information Services, Inc. for identification purposes and for the release of information that will be considered in determining any suitability for participation in the Exchange Program. </p>
@@ -549,7 +542,7 @@ Due to Department of State Regulations&dagger;, criminal background checks will 
 <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
 	<tr>
 		<td align="right">
-        <input name="Submit" type="image" src="/images/buttons/BlkSubmit.png" border="0">
+        <input name="Submit" type="image" src="images/buttons/BlkSubmit.png" border="0">
 		</td>
 	</tr>
 </table>

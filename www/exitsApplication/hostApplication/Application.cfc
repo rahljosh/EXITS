@@ -5,7 +5,8 @@
 
 	<cfscript>
 		// Set up the application.
-		THIS.Name = "EXITS-Host-Application-" & Hash(GetCurrentTemplatePath()); // "MPDToursV1-" & Hash(GetCurrentTemplatePath());
+		//THIS.Name = "EXITS";
+		THIS.Name = "EXITS-Host-Application-" & Hash(GetCurrentTemplatePath());
 		THIS.ApplicationTimeout = CreateTimeSpan( 0, 1, 0, 0 );
 		THIS.SessionManagement = true;
 		THIS.sessionTimeout = CreateTimeSpan( 0, 4, 0, 0 ); // Session Expires in 4 hours
@@ -88,8 +89,8 @@
 				URL.section="login";
 			}
 			
-			// Force SSL 
-			if ( NOT APPLICATION.isServerLocal AND CGI.SERVER_PORT EQ 80 ) {
+			// Force SSL - CASE needs a certificate
+			if ( NOT APPLICATION.isServerLocal AND CGI.SERVER_PORT EQ 80 AND ListFindNoCase(CGI.SERVER_NAME, "iseusa", ".") ) {
 				location("https://#CGI.HTTP_HOST##CGI.SCRIPT_NAME#", "no");
 			}
 		</cfscript>

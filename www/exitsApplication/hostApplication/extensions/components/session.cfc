@@ -132,9 +132,9 @@
 				SESSION.HOST.PATH.docs = APPLICATION.PATH.hostApp & ARGUMENTS.hostID & "/docs/";
 
 				// Make sure folders exist
-				APPLICATION.CFC.UDF.createFolder(SESSION.HOST.PATH.albumLarge);
-				APPLICATION.CFC.UDF.createFolder(SESSION.HOST.PATH.albumThumbs);
-				APPLICATION.CFC.UDF.createFolder(SESSION.HOST.PATH.docs);
+				APPLICATION.CFC.DOCUMENT.createFolder(SESSION.HOST.PATH.albumLarge);
+				APPLICATION.CFC.DOCUMENT.createFolder(SESSION.HOST.PATH.albumThumbs);
+				APPLICATION.CFC.DOCUMENT.createFolder(SESSION.HOST.PATH.docs);
 
 				// Set Relative Paths
 				SESSION.HOST.PATH.relativeAlbumLarge = APPLICATION.PATH.relativeHostApp & ARGUMENTS.hostID & "/album/large/"; 
@@ -188,11 +188,9 @@
 		<cfscript>
 			// Clear Session
 			structClear(SESSION.HOST);	
-			// Set Session with default options
-			//setHostSession();			
 		</cfscript>
 	
     </cffunction>
-    
+
 
 </cfcomponent>
