@@ -190,8 +190,11 @@
         <cfargument name="ID" default="" hint="ID is required">
 		<cfargument name="foreignTable" type="string" default="smg_hosts" />
 		<cfargument name="foreignID" type="numeric" required="no" default="#APPLICATION.CFC.SESSION.getHostSession().ID#" />
-		<cfargument name="documentGroup" default="" hint="documentGroup is not required">            
-
+        <cfargument name="foreignIDList" default="" hint="List of foreign IDs">
+		<cfargument name="documentGroup" default="" hint="documentGroup is not required">   
+        <cfargument name="documentTypeID" default="" hint="documentTypeID is not required">
+        <cfargument name="seasonID" default="" hint="seasonID is not required">
+        
         <cfquery 
 			name="qGetDocuments" 
 			datasource="#APPLICATION.DSN.Source#">
@@ -201,6 +204,7 @@
                     d.foreignTable,
                     d.foreignID,
                     d.documentTypeID,
+                    d.seasonID,
                     d.description,
                     d.serverName,
                     d.serverExt,
@@ -214,28 +218,47 @@
                     CONCAT(serverName, '.', serverExt) AS fileName,
                     CONCAT(location, serverName, '.', serverExt) AS filePath,
                     dt.ID AS documentTypeID,
-                    dt.name AS documentType
+                    dt.name AS documentType,
+                    s.season
                 FROM 
                     document d
 				LEFT OUTER JOIN                      
                 	documentType dt ON dt.ID = d.documentTypeID
-				WHERE 
+				LEFT OUTER JOIN
+                	smg_seasons s ON s.seasonID = d.seasonID
+                WHERE 
                 	d.isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                 AND    
                     d.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">
-				AND
-                	d.foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.foreignID)#">  
+				
+                <cfif LEN(ARGUMENTS.foreignIDList)>
+                    AND    
+                        d.foreignID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.foreignIDList#" list="yes"> )
+                <cfelse>
+                    AND
+                        d.foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.foreignID)#">  
+				</cfif>                
                 
                 <cfif LEN(ARGUMENTS.ID)>
                     AND    
-                        d.ID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(ARGUMENTS.ID)#">
-                </cfif>
+                        d.ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
+				</cfif>
                     
 				<cfif LEN(ARGUMENTS.documentGroup)>
 	                AND 
                         dt.documentGroup = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.documentGroup#">
                 </cfif>  
-                    
+                
+  				<cfif LEN(ARGUMENTS.documentTypeID)>
+	                AND 
+                        d.documentTypeID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(ARGUMENTS.documentTypeID)#">
+                </cfif>  
+                
+  				<cfif LEN(ARGUMENTS.seasonID)>
+	                AND 
+                        d.seasonID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(ARGUMENTS.seasonID)#">
+                </cfif>  
+
                 ORDER BY
                     d.dateCreated DESC     
 		</cfquery>
@@ -293,7 +316,7 @@
 			<!--- Delete File | Document or Large Image | --->
             <cffile action="delete" file="#qGetDoc.filePath#">            
 			
-            <cfif ARGUMENTS.documentGroup EQ 'picture'>
+            <cfif ARGUMENTS.documentGroup EQ 'familyAlbum'>
             
                 <!--- Delete Thumb Image --->
                 <cffile action="delete" file="#APPLICATION.CFC.SESSION.getHostSession().PATH.albumThumbs##qGetDoc.filename#"> 
@@ -307,7 +330,69 @@
         </cftry>
            
 	</cffunction>
+    
+    
+    <!---  Insert the document into the database --->
+	<cffunction name="insertDocument" access="public" returntype="void" hint="Inserts a document">
+		<cfargument name="foreignTable" default="" hint="foreignTable is not required">
+		<cfargument name="foreignID" default="0" hint="foreignID is not required">
+		<cfargument name="documentTypeID" default="0" hint="documentTypeID is not required">
+        <cfargument name="seasonID" default="0" hint="seasonID is not required">
+		<cfargument name="serverExt" default="" hint="serverExt is not required">
+		<cfargument name="serverName" default="" hint="serverName is not required">
+		<cfargument name="clientExt" default="" hint="clientExt is not required">
+		<cfargument name="clientName" default="" hint="clientName is not required">
+		<cfargument name="fileSize" default="" hint="fileSize is not required">
+        <cfargument name="fileLocation" default="" hint="location is not required">
 
+		<!--- Insert the document into the database --->
+        <cfquery 
+            datasource="#APPLICATION.DSN.Source#"
+            result="newRecord">
+                INSERT INTO 
+                    document
+                (
+                    foreignTable,
+                    foreignID,
+                    documentTypeID,
+                    seasonID,
+                    serverExt,
+                    serverName,
+                    clientExt,
+                    clientName,
+                    fileSize,
+                    location,
+                    dateCreated
+                )
+                VALUES
+                (
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#" />,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.foreignID)#" />,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.documentTypeID)#" />,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#" />,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.serverExt#" />,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.serverName#" />,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.clientExt#" />,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.clientName#" />,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fileSize#" />,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fileLocation#" />,
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                )
+        </cfquery>
+
+        <!--- Insert hashID based on the document ID --->
+        <cfquery 
+            datasource="#APPLICATION.DSN.Source#">
+                UPDATE
+                    document
+                SET
+                    hashID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#generateHashID(newRecord.GENERATED_KEY)#">
+                WHERE
+                    ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#newRecord.GENERATED_KEY#">
+        </cfquery>
+                
+	</cffunction>                
+    
 
     <!--- Upload Family Album --->
     <cffunction name="familyAlbumUpload" hint="Upload family album images (large/resize)" returntype="struct">
@@ -335,7 +420,7 @@
 			var vFileCount = 0;
 
 			// Check if default name is available
-			while ( fileExists(APPLICATION.CFC.SESSION.getHostSession().PATH.albumLarge & vNewFileName) ) { 
+			while ( fileExists(APPLICATION.CFC.SESSION.getHostSession().PATH.albumLarge & vNewFileName & "." & vNewFileExtension) ) { 
 				vFileCount ++;
 				if ( VAL(vFileCount) ) {
 					vNewFileName = vCategoryName & vFileCount;
@@ -382,53 +467,21 @@
                     
                     // Save Thumb Image / eliminate problems with url friendly encoding when getting our images re-replace %20 with no-space
                     imageWrite(vOriginalImage, "#APPLICATION.CFC.SESSION.getHostSession().PATH.albumThumbs#/#REReplace(vCompleteFileName,'%20','','ALL')#", "true");
-                </cfscript>
-
-				<!--- Insert the document into the database --->
-                <cfquery 
-                    datasource="#APPLICATION.DSN.Source#"
-                    result="newRecord">
-                        INSERT INTO 
-                            document
-                        (
-                            foreignTable,
-                            foreignID,
-                            documentTypeID,
-                            serverExt,
-                            serverName,
-                            clientExt,
-                            clientName,
-                            fileSize,
-                            location,
-                            dateCreated
-                        )
-                        VALUES
-                        (
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#" />,
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(ARGUMENTS.foreignID)#" />,
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.documentTypeID#" />,
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#vNewFileExtension#" />,
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#vNewFileName#" />,
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#LCase(CFFILE.ClientFileExt)#" />,
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#CFFILE.ClientFileName#" />,
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.displayFileSize(CFFILE.FileSize)#" />,
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.SESSION.getHostSession().PATH.albumLarge#" />,
-                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-                        )
-                </cfquery>
-                
-                <!--- Insert hashID based on the document ID --->
-                <cfquery 
-                    datasource="#APPLICATION.DSN.Source#">
-                        UPDATE
-                            document
-                        SET
-                            hashID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#generateHashID(newRecord.GENERATED_KEY)#">
-                        WHERE
-                            ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#newRecord.GENERATED_KEY#">
-                </cfquery>
-    
-                <cfscript>
+					
+					// Insert Document Record
+					insertDocument(
+						foreignTable = ARGUMENTS.foreignTable,	   
+						foreignID = ARGUMENTS.foreignID,	   
+						documentTypeID = ARGUMENTS.documentTypeID,
+						seasonID = APPLICATION.CFC.SESSION.getHostSession().seasonID,
+						serverExt = vNewFileExtension,
+						serverName = vNewFileName,
+						clientExt = LCase(CFFILE.ClientFileExt),
+						clientName = CFFILE.ClientFileName,
+						fileSize = APPLICATION.CFC.UDF.displayFileSize(CFFILE.FileSize),
+						fileLocation = APPLICATION.CFC.SESSION.getHostSession().PATH.albumLarge
+					);
+						
                     // Set Page Message
                     stResult.message = "Picture has been uploaded";
                 </cfscript>
@@ -466,5 +519,261 @@
         
     </cffunction>
     
+
+	<!--- Creaates CBC Authorization PDF Document --->
+	<cffunction name="generateCBCAuthorization" access="public" returntype="struct" output="no" hint="Creates PDF files and return status message">
+		<cfargument name="foreignTable" type="string" default="" />
+		<cfargument name="foreignID" type="numeric" required="no" default="" />
+        <cfargument name="documentTypeID" type="numeric" required="yes" />
+        <cfargument name="signature" default="" hint="signature is not required" />
+		<cfargument name="address" default="" hint="Address is not required" />
+        <cfargument name="address2" default="" hint="address2 is not required" />
+        <cfargument name="city" default="" hint="city is not required" />
+        <cfargument name="state" default="" hint="state is not required" />
+        <cfargument name="zip" default="" hint="zip is not required" />
+		
+        <cfscript>
+			// Set Result Message
+			var stResult = StructNew();
+			stResult.isSuccess = true;
+			stResult.message = "";
+			
+			// Remove Blank Spaces From File Name
+			vFileName = ReplaceNoCase(ARGUMENTS.signature, " ", "-", "All") & "-season" & APPLICATION.CFC.SESSION.getHostSession().seasonID & "-cbcAuthorization";
+			// File Extension
+			vFileExtension = "pdf";
+		</cfscript>
+        
+        <cftry>
+        
+			<cfscript>
+                // Set desired file name (keep extension consistent as jpg)
+                var vNewFileName = vFileName;
+                
+                // Used to try different file names kitchen.jpg / kitchen1.jpg etc.
+                var vFileCount = 0;
     
+                // Check if default name is available
+                while ( fileExists(APPLICATION.CFC.SESSION.getHostSession().PATH.DOCS & vNewFileName & "." & vFileExtension) ) { 
+                    vFileCount ++;
+                    if ( VAL(vFileCount) ) {
+                        vNewFileName = vFileName & vFileCount;
+                    } else {
+                        vNewFileName = vFileName;
+                    }
+                }	
+                
+                // Complete File Name
+                vCompleteFileName = vNewFileName & "." & vFileExtension;
+            </cfscript>
+            
+            <!--- Create PDF --->
+            <cfdocument format="PDF" filename="#APPLICATION.CFC.SESSION.getHostSession().PATH.DOCS##vCompleteFileName#" overwrite="no">
+                <cfoutput>
+                    <img src="#SESSION.COMPANY.exitsURL#nsmg/pics/#SESSION.COMPANY.ID#_short_profile_header.jpg" />
+                    
+                    <p>
+                        As mandated by the Department of State, a Criminal Background Check on all Office Staff, Regional Directors/
+                        Managers, Regional Advisors, Area Representatives and all members of the host family aged 18 and above is 
+                        required for involvement with the J-1 Secondary School Exchange Visitor Program.
+                    </p>
+                    
+                    <p>
+                        I do hereby authorize verification of all information in my application for involvement with the Exchange Program from all necessary sources and additionally 
+                        authorize any duly recognized agent of General Information Services, Inc. to obtain the said records and any such disclosures.
+                    </p>
+                    
+                    <p>
+                        Information appearing on this Authorization will be used exclusively by General Information Services, Inc. for identification
+                        purposes and for the release of information that will be considered in determining any suitability for participation in the Exchange Program.
+                    </p>
+                    
+                    <p>
+                        Upon proper identification and via a request submitted directly to General Information Services, Inc., I have the right to
+                        request from General Information Services, Inc. information about the nature and substance of all records on file about me
+                        at the time of my request. This may include the type of information requested as well as those who requested reports from
+                        General Information Services, Inc. within the two-year period preceding my request.  <br />
+                    </p>
+                    
+                    <table>
+                        <tr>
+                            <td><u>Current Address</u></td>
+                        </tr>
+                        <tr>    
+                            <td>
+                                <strong>
+                                    #ARGUMENTS.address#<br />
+                                    <cfif LEN(ARGUMENTS.address2)>#ARGUMENTS.address2#<br /></cfif>
+                                    #ARGUMENTS.city# #ARGUMENTS.state#, #ARGUMENTS.zip#
+                                </strong>
+                            </td>
+                        </tr>
+                    </table>   
+                
+                    <br /><br />
+
+                    <hr width="70%" align="center" />
+                    
+                    <br /><br />
+                
+                    <u>Electronically Signed</u><br />
+                    #ARGUMENTS.signature#<br />
+                    <em>(typing your name above is considered the same as a physical signature)</em> <br />
+                    #DateFormat(now(), 'mmm d, yyyy')# at #TimeFormat(now(), 'h:mm:ss tt')#<br />
+                    IP: #CGI.REMOTE_ADDR# <br /><br />
+                </cfoutput>
+            </cfdocument>
+            
+            <cfscript>
+                // Get File Information
+                stGetFileInfo = GetFileInfo(APPLICATION.CFC.SESSION.getHostSession().PATH.DOCS & vNewFileName & "." & vFileExtension);
+            
+                // Insert Document Record
+                insertDocument(
+                    foreignTable = ARGUMENTS.foreignTable,	   
+                    foreignID = ARGUMENTS.foreignID,	   
+                    documentTypeID = ARGUMENTS.documentTypeID,	
+					seasonID = APPLICATION.CFC.SESSION.getHostSession().seasonID,
+                    serverExt = vFileExtension,
+                    serverName = vNewFileName,
+                    clientExt = vFileExtension,
+                    clientName = vNewFileName,
+                    fileSize = APPLICATION.CFC.UDF.displayFileSize(stGetFileInfo.size),
+                    fileLocation = APPLICATION.CFC.SESSION.getHostSession().PATH.DOCS
+                );
+            </cfscript>
+
+            <cfcatch type="any">
+            
+				<cfscript>
+                    // Error - Could not generate CBC
+                    stResult.isSuccess = false;
+                    stResult.message = "There was a problem generating the CBC authorization, please try again. If problem persists, please contact support.";
+                </cfscript>
+                            
+            </cfcatch>
+        
+        </cftry>
+        
+        <cfreturn stResult>        
+	</cffunction>
+    
+    
+	<!--- Creaates CBC Authorization PDF Document --->
+	<cffunction name="generateDisclaimer" access="public" returntype="struct" output="no" hint="Creates PDF files and return status message">
+		<cfargument name="foreignTable" type="string" default="" />
+		<cfargument name="foreignID" type="numeric" required="no" default="" />
+        <cfargument name="documentTypeID" type="numeric" required="yes" />
+        <cfargument name="signature" default="" hint="signature is not required" />
+		
+        <cfscript>
+			// Set Result Message
+			var stResult = StructNew();
+			stResult.isSuccess = true;
+			stResult.message = "";
+			
+			// Remove Blank Spaces From File Name
+			vFileName = ReplaceNoCase(ARGUMENTS.signature, " ", "-", "All") & "-season" & APPLICATION.CFC.SESSION.getHostSession().seasonID & "-disclaimer";
+			// File Extension
+			vFileExtension = "pdf";
+		</cfscript>
+        
+        <cftry>
+        
+			<cfscript>
+                // Set desired file name (keep extension consistent as jpg)
+                var vNewFileName = vFileName;
+                
+                // Used to try different file names kitchen.jpg / kitchen1.jpg etc.
+                var vFileCount = 0;
+    
+                // Check if default name is available
+                while ( fileExists(APPLICATION.CFC.SESSION.getHostSession().PATH.DOCS & vNewFileName & "." & vFileExtension) ) { 
+                    vFileCount ++;
+                    if ( VAL(vFileCount) ) {
+                        vNewFileName = vFileName & vFileCount;
+                    } else {
+                        vNewFileName = vFileName;
+                    }
+                }	
+                
+                // Complete File Name
+                vCompleteFileName = vNewFileName & "." & vFileExtension;
+            </cfscript>
+            
+            <!--- Create PDF --->
+            <cfdocument format="PDF" filename="#APPLICATION.CFC.SESSION.getHostSession().PATH.DOCS##vCompleteFileName#" overwrite="no">
+                <cfoutput>
+                    <img src="#SESSION.COMPANY.exitsURL#nsmg/pics/#SESSION.COMPANY.ID#_short_profile_header.jpg" />
+                    
+                    <h2>Terms for Submission</h2>
+                    
+                    <p>
+                        Applicants and their families certify that all information submitted in the Host Family Application - including the application, 
+                        the Host Family Letter, any supplements, and any other supporting materials - is honestly presented and accurate; and that these documents 
+                        will become the property of the exchange organization and will not be returned.         
+                    </p>        
+                    
+                    <p>
+                        Applicants and their families understand that the signature below constitutes a willingness of all members of the household to host an Exchange Student 
+                        through the exchange organization and comply with the exchange organization and the Department of State Regulations. 
+                        Applicants also agree, as per Department of State mandate, to notify the exchange organization if the composition of their household changes and if additional 
+                        criminal background checks need to be conducted.
+                    </p>
+                    
+                    <p>
+                        Applicants and their families understand and acknowledge that by signing this application the exchange organization maintains jurisdiction over all aspects 
+                        of the student exchange program.  In the event of any problem between the student and the American host family, the exchange organization reserves the right to 
+                        remove the student at any time to resolve the situation.
+                    </p>        
+        			
+                    <br /><br />
+
+                    <hr width="70%" align="center" />
+                    
+                    <br /><br />
+                
+                    <u>Electronically Signed</u><br />
+                    #ARGUMENTS.signature#<br />
+                    <em>(typing your name above is considered the same as a physical signature)</em> <br />
+                    #DateFormat(now(), 'mmm d, yyyy')# at #TimeFormat(now(), 'h:mm:ss tt')#<br />
+                    IP: #CGI.REMOTE_ADDR# <br /><br />
+                </cfoutput>
+            </cfdocument>
+            
+            <cfscript>
+                // Get File Information
+                stGetFileInfo = GetFileInfo(APPLICATION.CFC.SESSION.getHostSession().PATH.DOCS & vNewFileName & "." & vFileExtension);
+            
+                // Insert Document Record
+                insertDocument(
+                    foreignTable = ARGUMENTS.foreignTable,	   
+                    foreignID = ARGUMENTS.foreignID,	   
+                    documentTypeID = ARGUMENTS.documentTypeID,	
+					seasonID = APPLICATION.CFC.SESSION.getHostSession().seasonID,
+                    serverExt = vFileExtension,
+                    serverName = vNewFileName,
+                    clientExt = vFileExtension,
+                    clientName = vNewFileName,
+                    fileSize = APPLICATION.CFC.UDF.displayFileSize(stGetFileInfo.size),
+                    fileLocation = APPLICATION.CFC.SESSION.getHostSession().PATH.DOCS
+                );
+            </cfscript>
+
+            <cfcatch type="any">
+            
+				<cfscript>
+                    // Error - Could not generate CBC
+                    stResult.isSuccess = false;
+                    stResult.message = "There was a problem generating the disclaimer, please try again. If problem persists, please contact support.";
+                </cfscript>
+                            
+            </cfcatch>
+        
+        </cftry>
+        
+        <cfreturn stResult>        
+	</cffunction>
+
+        
 </cfcomponent>

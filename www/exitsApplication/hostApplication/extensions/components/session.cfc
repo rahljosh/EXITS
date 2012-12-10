@@ -29,6 +29,7 @@
         <cfparam name="SESSION.HOST.applicationStatus" default="9">
         <cfparam name="SESSION.HOST.familyName" default="">
         <cfparam name="SESSION.HOST.email" default="">
+        <cfparam name="SESSION.HOST.seasonID" default="0">
 		<!--- Full Paths --->
         <cfparam name="SESSION.HOST.PATH.albumLarge" default="">
         <cfparam name="SESSION.HOST.PATH.albumThumbs" default="">
@@ -122,7 +123,8 @@
 			SESSION.HOST.applicationStatus = VAL(ARGUMENTS.applicationStatus);
 			SESSION.HOST.familyName = ARGUMENTS.familyName;
 			SESSION.HOST.email = ARGUMENTS.email;
-			
+			SESSION.HOST.seasonID = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
+
 			// Set Folders
 			if ( VAL(ARGUMENTS.hostID) ) {
 				

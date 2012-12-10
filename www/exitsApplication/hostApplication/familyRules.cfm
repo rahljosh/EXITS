@@ -22,7 +22,8 @@
     <cfparam name="FORM.houserules_inet" default="">
     <cfparam name="FORM.houserules_expenses" default="">
     <cfparam name="FORM.houserules_other" default="">
-	    
+	  
+    <!--- FORM Submitted --->    
 	<cfif VAL(FORM.submitted)>
         
         <cfscript>
@@ -54,6 +55,7 @@
             }	
         </cfscript>
         
+        <!--- No Errors Found --->
         <cfif NOT SESSION.formErrors.length()>
         
             <cfquery datasource="#APPLICATION.DSN.Source#">

@@ -137,6 +137,83 @@
     	</cfscript>
     
     </cffunction>
+    
+
+	<!--- Encrypt Variable --->
+	<cffunction name="encryptVariable" access="public" returntype="string" output="false" hint="Encrypts a variable">
+    	<cfargument name="varString" hint="String">
+
+		<cfscript>			
+			// Declare Key
+			var encryptKey = "BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR";
+			var resultKey = '';
+			
+			try {
+				// Encrypt Variable
+				resultKey = Encrypt(TRIM(ARGUMENTS.varString), encryptKey, "desede", "hex");
+			} catch (Any e) {
+				// Set Encrypt Value to ''
+				resultKey = '';
+			}
+	
+			// Return Encrypted Variable
+			return(resultKey);
+        </cfscript>
+		   
+	</cffunction>
+
+	
+    <!--- Decrypt Variable --->
+	<cffunction name="decryptVariable" access="public" returntype="string" output="false" hint="Decrypts a variable">
+    	<cfargument name="varString" hint="String">
+
+		<cfscript>
+			// Declare Key
+			var decryptKey = "BB9ztVL+zrYqeWEq1UALSj4pkc4vZLyR";
+			var resultKey = '';
+			
+			try {
+				// Decrypt Variable
+				resultKey = Decrypt(ARGUMENTS.varString, decryptKey, "desede", "hex");
+			} catch (Any e) {
+				// Set Decrypt Value to ''
+				resultKey = '';
+			}
+	
+			// Return Decrypted Variable
+			return(resultKey);
+        </cfscript>
+		   
+	</cffunction>
+    
+
+    <!--- Display Social Security Number --->
+	<cffunction name="displaySSN" access="public" returntype="string" output="false" hint="returns a masked SSN">
+    	<cfargument name="varString" hint="String">
+		<cfargument name="displayType" default="" hint="user / hostFamily">
+        
+		<cfscript>
+			// Declare Variables		
+			if ( LEN(ARGUMENTS.varString) ) {
+			
+				// Decrypt SSN
+				var vDecryptedSSN = decryptVariable(ARGUMENTS.varString);
+	
+				// SET return masked SSN as default
+				vReturnSSN = "XXX-XX-" & Right(vDecryptedSSN, 4);
+			
+			} else {
+				
+				// Return Blank
+				vReturnSSN = '';
+				
+			}
+			
+			// Return Encrypted Variable
+			return(vReturnSSN);
+        </cfscript>
+		   
+	</cffunction>        
 
 
 	<!--- This removes foreign accents from online application fields --->

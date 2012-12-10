@@ -188,7 +188,7 @@
                 </td>
             </tr>
             <tr bgcolor="##deeaf3">
-                <td class="label" valign="top"><h3>Has any member of your household ever been charged<Br> with a crime?<span class="required">*</span></h3></td>
+                <td class="label" valign="top"><h3>Has any member of your household ever been charged<br /> with a crime?<span class="required">*</span></h3></td>
                 <td>   
                     <cfinput type="radio" name="crime" id="crimeYes" value="1" checked="#FORM.crime EQ 1#" onclick="document.getElementById('crimeExpl').style.display='table-row';" />
                     <label for="crimeYes">Yes</label>

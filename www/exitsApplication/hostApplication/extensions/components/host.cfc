@@ -55,6 +55,7 @@
         <cfargument name="hostID" default="" hint="HostID is not required">
         <cfargument name="liveAtHome" default="" hint="liveAtHome is not required">
         <cfargument name="getAllMembers" default="0" hint="Returns all family members including deleted">
+        <cfargument name="get18AndOlder" default="" hint="Returns all family members 18 and older">
         
         <cfquery 
 			name="qGetHostMemberByID" 
@@ -103,6 +104,11 @@
                 <cfif LEN(ARGUMENTS.liveAtHome)>
                     AND
                         liveAtHome = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.liveAtHome#">
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.get18AndOlder)>
+                    AND
+                        FLOOR(datediff (now(), birthDate)/365) >= <cfqueryparam cfsqltype="cf_sql_integer" value="18">
                 </cfif>
 				
 		</cfquery>
@@ -166,77 +172,6 @@
 	</cffunction>
     
 
-	<cffunction name="getHostDocuments" access="public" returntype="query" output="false" hint="Returns a list of documents">
-        <cfargument name="hostID" default="#APPLICATION.CFC.SESSION.getHostSession().ID#" hint="HostID is not required">
-        <cfargument name="seasonID" default="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#" hint="HostID is not required">
-		<cfargument name="userType" hint="Usertype is required (hostFather, hostMother, hostMember">
-        <cfargument name="userID" default="" hint="userID is not required, used for host members">
-        
-        <!--- Delete This Later --->
-        <cfquery 
-        	datasource="#APPLICATION.DSN.Source#">
-				UPDATE
-                	smg_documents
-                SET
-                	userType = <cfqueryparam cfsqltype="cf_sql_varchar" value="hostFather">
-                WHERE
-                	userType = <cfqueryparam cfsqltype="cf_sql_varchar" value="Host Father">   
-    	</cfquery>
-        
-        <cfquery 
-        	datasource="#APPLICATION.DSN.Source#">
-				UPDATE
-                	smg_documents
-                SET
-                	userType = <cfqueryparam cfsqltype="cf_sql_varchar" value="hostMother">
-                WHERE
-                	userType = <cfqueryparam cfsqltype="cf_sql_varchar" value="Host Mother">   
-    	</cfquery>
-
-        <cfquery 
-        	datasource="#APPLICATION.DSN.Source#">
-				UPDATE
-                	smg_documents
-                SET
-                	userType = <cfqueryparam cfsqltype="cf_sql_varchar" value="hostMember">
-                WHERE
-                	userType = <cfqueryparam cfsqltype="cf_sql_varchar" value="Fam Member">   
-    	</cfquery>
-        <!--- Delete This Later --->
-        
-        <cfquery 
-        	name="qGetHostDocuments"
-        	datasource="#APPLICATION.DSN.Source#">
-                SELECT 
-                	ID,
-                    userID,
-                    userType,
-                    hostID,
-                    seasonID,
-                    fileName,
-                    type,
-                    dateFiled,
-                    filePath,
-                    description,
-                    shortDesc
-				FROM
-                	smg_documents
-                WHERE 
-                    hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
-				AND
-                	userType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.userType#">   
-                AND
-                	seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#"> 
-                <cfif LEN(ARGUMENTS.userID)>
-                    AND
-                        userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#"> 
-                </cfif>                
-        </cfquery> 
-
-		<cfreturn qGetHostDocuments>
-	</cffunction>
-
-
     <cffunction name="getApplicationProcess" access="public" returntype="struct" output="false" hint="Gets application process status">
         <cfargument name="hostID" default="#APPLICATION.CFC.SESSION.getHostSession().ID#" hint="HostID is not required">
     
@@ -256,14 +191,29 @@
 			
 			// Get Host Family Members
 			var qGetFamilyMembers = getHostMemberByID(hostID=ARGUMENTS.hostID);
-
+			
 			// Get Host Family Members
 			var qGetFamilyMembersAtHome = getHostMemberByID(hostID=ARGUMENTS.hostID,liveAtHome="yes");
-
-			// CBC Authorization
-			var qGetFatherCBCAuthorization = getHostDocuments(hostID=ARGUMENTS.hostID, usertype="hostFather");
-			var qGetMotherCBCAuthorization = getHostDocuments(hostID=ARGUMENTS.hostID, usertype="hostMother");			
 			
+			// Get Host Family Members at Home
+			var qGetFamilyMembers18AndOlder = APPLICATION.CFC.HOST.getHostMemberByID(hostID=APPLICATION.CFC.SESSION.getHostSession().ID,liveAtHome="yes", get18AndOlder=1);	
+			
+			// Father CBC Authorization
+			var qGetFatherCBCAuthorization = APPLICATION.CFC.DOCUMENT.getDocuments(
+				foreignTable="smg_hosts",																		   
+				foreignID=APPLICATION.CFC.SESSION.getHostSession().ID, 
+				documentTypeID=APPLICATION.DOCUMENT.hostFatherCBCAuthorization, 
+				seasonID=APPLICATION.CFC.SESSION.getHostSession().seasonID
+			);
+			
+			// Mother CBC Authorization
+			var qGetMotherCBCAuthorization = APPLICATION.CFC.DOCUMENT.getDocuments(
+				foreignTable="smg_hosts",																   	
+				foreignID=APPLICATION.CFC.SESSION.getHostSession().ID, 
+				documentTypeID=APPLICATION.DOCUMENT.hostMotherCBCAuthorization, 
+				seasonID=APPLICATION.CFC.SESSION.getHostSession().seasonID
+			);
+
 			// Store results into a struct
 			var stResults = StructNew();
 			
@@ -509,8 +459,8 @@
 			}	
 			
 			// Father CBC Authorization
-			if ( LEN(qGetHostInfo.fatherFirstName) AND LEN(qGetHostInfo.fatherLastName) AND NOT LEN(qGetHostInfo.fatherSSN) AND NOT qGetFatherCBCAuthorization.recordCount ) {
-				SESSION.formErrors.Add("The signature for #qGetHostInfo.fatherFirstName# is missing.");
+			if ( LEN(qGetHostInfo.fatherFirstName) AND LEN(qGetHostInfo.fatherLastName) AND NOT qGetFatherCBCAuthorization.recordCount ) {
+				SESSION.formErrors.Add("The CBC authorization signature for #qGetHostInfo.fatherFirstName# is missing.");
 			}
 				
 			// Mother SSN
@@ -519,18 +469,23 @@
 			}
 			
 			// Mother CBC Authorization
-			if ( LEN(qGetHostInfo.motherFirstName) AND LEN(qGetHostInfo.motherLastName) AND isValid("ssn", qGetHostInfo.motherSSN) AND NOT qGetMotherCBCAuthorization.recordCount ) {
-				SESSION.formErrors.Add("The signature for #qGetHostInfo.motherFirstName# is missing.");
+			if ( LEN(qGetHostInfo.motherFirstName) AND LEN(qGetHostInfo.motherLastName) AND NOT qGetMotherCBCAuthorization.recordCount ) {
+				SESSION.formErrors.Add("The CBC authorization signature for #qGetHostInfo.motherFirstName# is missing.");
 			}
 
 			// Members - Loop through query
-			for( x=1; x LTE qGetFamilyMembers.recordCount; x++ ) {
+			for( x=1; x LTE qGetFamilyMembers18AndOlder.recordCount; x++ ) {
 				
-				// CBC Authorization
-				var qGetMemberCBCAuthorization = getHostDocuments(hostID=ARGUMENTS.hostID, usertype="hostMember", userID=qGetFamilyMembers.childID[x]);
+				// Member CBC Authorization
+				var qGetMemberCBCAuthorization = APPLICATION.CFC.DOCUMENT.getDocuments(
+					foreignTable="smg_host_children",
+					foreignID=qGetFamilyMembers18AndOlder.childID[x], 
+					documentTypeID=APPLICATION.DOCUMENT.hostMemberCBCAuthorization, 
+					seasonID=APPLICATION.CFC.SESSION.getHostSession().seasonID
+				);
 				
-				if ( qGetFamilyMembers.age[x] GTE 18 AND NOT qGetMemberCBCAuthorization.recordCount ) {
-					SESSION.formErrors.Add("The CBC authorization signature for host member #qGetFamilyMembers.name[x]# is missing.");										
+				if ( NOT qGetMemberCBCAuthorization.recordCount ) {
+					SESSION.formErrors.Add("The CBC authorization signature for host member #qGetFamilyMembers18AndOlder.name[x]# is missing.");										
 				}
 				
 			}
@@ -732,8 +687,8 @@
 				8 - Family Album
 			********************************************/
 			
-			var qCategoryList = APPLICATION.CFC.DOCUMENT.getDocumentType(documentGroup="picture");
-			var qUploadedPictureCategoryList = APPLICATION.CFC.DOCUMENT.getDocuments(documentGroup="picture");
+			var qCategoryList = APPLICATION.CFC.DOCUMENT.getDocumentType(documentGroup="familyAlbum");
+			var qUploadedPictureCategoryList = APPLICATION.CFC.DOCUMENT.getDocuments(documentGroup="familyAlbum");
 			
 			var vCategoryArray = ListToArray(ValueList(qCategoryList.ID));
 			var vUploadedPictureCategoryList = ValueList(qUploadedPictureCategoryList.documentTypeID);

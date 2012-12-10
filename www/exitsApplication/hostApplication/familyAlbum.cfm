@@ -24,10 +24,10 @@
 	
     <cfscript>
 		// Get Uploaded Images
-		qGetUploadedImages = APPLICATION.CFC.DOCUMENT.getDocuments(documentGroup="picture");
+		qGetUploadedImages = APPLICATION.CFC.DOCUMENT.getDocuments(documentGroup="familyAlbum");
 	
 		// Get Category List
-		qGetCategoryList = APPLICATION.CFC.DOCUMENT.getDocumentType(documentGroup="picture");
+		qGetCategoryList = APPLICATION.CFC.DOCUMENT.getDocumentType(documentGroup="familyAlbum");
 	
     	vUploadedImageList = ValueList(qGetUploadedImages.documentTypeID);
     </cfscript>
@@ -37,7 +37,7 @@
     	        
 		<cfscript>
             // Delete Document
-            APPLICATION.CFC.DOCUMENT.deleteDocumentByID(ID=URL.deleteImageID, documentGroup="picture");
+            APPLICATION.CFC.DOCUMENT.deleteDocumentByID(ID=URL.deleteImageID, documentGroup="familyAlbum");
 
 			// Set Page Message
             SESSION.pageMessages.Add("Picture has been deleted");
@@ -83,12 +83,10 @@
         <!--- No Errors - we have a file and category --->
         <cfif NOT SESSION.formErrors.length()>
         	
-            <cfinvoke component="extensions.components.document" method="familyAlbumUpload" returnvariable="stResult">
-                <cfinvokeargument name="formField" value="#FORM.fileData#">
-                <cfinvokeargument name="documentTypeID" value="#ReplaceNoCase(FORM.categoryID,'area','')#">
-            </cfinvoke>
-            
             <cfscript>
+				// Upload Image
+				stResult = APPLICATION.CFC.DOCUMENT.familyAlbumUpload(formField=FORM.fileData, documentTypeID=ReplaceNoCase(FORM.categoryID,'area','') );														   
+			
 				if ( stResult.isSuccess ) {
                     // Set Page Message
                     SESSION.pageMessages.Add(stResult.message);
