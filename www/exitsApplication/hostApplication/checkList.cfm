@@ -19,59 +19,6 @@
 		stApplicationStatus = APPLICATION.CFC.HOST.getApplicationProcess();
 	</cfscript>
 
-	<!--- Check if disclaimer has been signed --->
-    <cfquery name="checkSig" datasource="#APPLICATION.DSN.Source#">
-        SELECT 
-        	*
-        FROM 
-        	smg_documents
-        WHERE 
-        	shortDesc = <cfqueryparam cfsqltype="cf_sql_varchar" value="Host App Terms">
-        AND 
-        	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
-    </cfquery>
-
-	<cfif checkSig.recordcount gt 0 AND Right(cgi.HTTP_REFERER, '9') EQ 'checklist'>
-    
-        <cfquery datasource="#APPLICATION.DSN.Source#">
-            UPDATE 
-            	smg_hosts
-            SET 
-            	hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="7">
-            WHERE
-            	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
-        </cfquery>
-        
-        <cfquery name="emailAddy" datasource="#APPLICATION.DSN.Source#">
-            SELECT 
-            	u.email 
-            FROM 
-            	smg_users u
-            LEFT OUTER JOIN 
-            	smg_hosts h ON h.areaRepID = u.userID
-            WHERE 
-            	h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
-        </cfquery>
-        
-        <cfsavecontent variable="nextLevel">                      
-			<cfoutput>
-                The #qGetHostFamilyInfo.familylastname# application has been submitted for your review.
-                <br /><br />  
-                You can review the app <a href="http://ise.exitsapplication.com/">here</a>.
-            </cfoutput>
-        </cfsavecontent>
-    
-        <cfinvoke component="extensions.components.email" method="send_mail">
-            <cfinvokeargument name="emailTo" value="#mailTo#">
-            <cfinvokeargument name="email_subject" value="#qGetHostFamilyInfo.familylastname# App Needs your Approval">
-            <cfinvokeargument name="email_message" value="#nextLevel#">
-        </cfinvoke>
-        
-    	<cflocation url="?curdoc=overview" addtoken="no">
-    
-    </cfif>
-
-
 </cfsilent>
 
 <script type="text/javascript">

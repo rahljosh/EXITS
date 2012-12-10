@@ -21,6 +21,15 @@
 
 
 	/*******************************************
+		Set up Document Type ID 
+	*******************************************/
+	APPLICATION.DOCUMENT.hostFatherCBCAuthorization = 16;
+	APPLICATION.DOCUMENT.hostMotherCBCAuthorization = 17;
+	APPLICATION.DOCUMENT.hostMemberCBCAuthorization = 18;
+	APPLICATION.DOCUMENT.disclaimer = 19;
+
+
+	/*******************************************
 		jQuery Latest Version 
 		http://code.jquery.com/jquery-latest.min.js
 		http://code.jquery.com/jquery.js

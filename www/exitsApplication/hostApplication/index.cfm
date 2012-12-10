@@ -128,7 +128,3 @@
 </html>
 
 </cfoutput>
-
-<cfdump var="#client#">
-<cfdump var="#session#">
-<cfdump var="#APPLICATION#">

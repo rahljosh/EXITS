@@ -18,7 +18,7 @@
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.signature" default="">
 
-    <!--- Process Form Submission --->
+    <!--- Form Submitted --->
     <cfif VAL(FORM.submitted)>
     
 		<cfscript>
@@ -33,99 +33,79 @@
 		<!--- No Errors Found --->
 		<cfif NOT SESSION.formErrors.length()>
         
-			<cfscript>
-                FORM.report_mode = 'print';
-                FORM.pdf = 1;
-            </cfscript>
-        
-            <cfdocument format="PDF" filename="#APPLICATION.CFC.SESSION.getHostSession().PATH.DOCS#hostApplicationTerms.pdf" overwrite="yes">
-                <cfoutput>
-                    <table align="center" width="80%" cellpadding="4">
-                        <tr>
-                            <th align="left"><h2>Terms for Submission</h2></th>
-                        </tr>
-                        <tr>
-                            <td><hr width="70%" /></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>
-                                    Applicants and their families certify that all information submitted in the Host Family Application - including the application, 
-                                    the Host Family Letter, any supplements, and any other supporting materials - is honestly presented and accurate; and that these documents 
-                                    will become the property of the exchange organization and will not be returned.         
-                                </p>        
-                                
-                                <p>
-                                    Applicants and their families understand that the signature below constitutes a willingness of all members of the household to host an Exchange Student 
-                                    through the exchange organization and comply with the exchange organization and the Department of State Regulations. 
-                                    Applicants also agree, as per Department of State mandate, to notify the exchange organization if the composition of their household changes and if additional 
-                                    criminal background checks need to be conducted.
-                                </p>
-                                
-                                <p>
-                                    Applicants and their families understand and acknowledge that by signing this application the exchange organization maintains jurisdiction over all aspects 
-                                    of the student exchange program.  In the event of any problem between the student and the American host family, the exchange organization reserves the right to 
-                                    remove the student at any time to resolve the situation.
-                                </p>        
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Signature: #FORM.signature#<br />
-                                <em>(typing your name above is considered the same as a physical signature)</em> <br /><br />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Electronically Signed<br />
-                                #FORM.signature#<br />
-                                #DateFormat(now(), 'mmm d, yyyy')# at #TimeFormat(now(), 'h:mm:ss tt')#<br />
-                                IP: #cgi.REMOTE_ADDR# 
-                            </td>
-                        </tr>
-                    </table>
-                </cfoutput>                
-            </cfdocument>  
-             
-            <cfquery datasource="#APPLICATION.DSN.Source#">
-                INSERT INTO
-                    smg_documents 
-                (
-                    hostID, 
-                    userID, 
-                    seasonID,
-                    userType,
-                    fileName, 
-                    type, 
-                    dateFiled, 
-                    filePath, 
-                    description, 
-                    shortDesc 
-                )
-                VALUES
-                (
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#">,                                
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="Host Family">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="hostApplicationTerms.pdf">, 
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="pdf">, 
-                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.SESSION.getHostSession().PATH.DOCS#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="Terms for Submission of Host Application">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="Host Application Terms">
-                )
-            </cfquery> 
-            
             <cfscript>
-				// Set Page Message
-				SESSION.pageMessages.Add("Host Family Application Succesfully Submited");
-				SESSION.pageMessages.Add("This window should close shortly");
+				// Generate Disclaimer
+				stResult = APPLICATION.CFC.DOCUMENT.generateDisclaimer(
+					foreignTable = "smg_hosts",
+					foreignID = APPLICATION.CFC.SESSION.getHostSession().ID,
+					documentTypeID = APPLICATION.DOCUMENT.disclaimer,
+					signature = FORM.signature																		  
+				);
 			</cfscript>
+            
+            <!--- File Generated Successfully --->
+            <cfif stResult.isSuccess>
+            	
+                <cfscript>
+					// Get Host Family Info - Accessible from any page
+					qGetHostFamilyInfo = APPLICATION.CFC.HOST.getHosts(hostID=APPLICATION.CFC.SESSION.getHostSession().ID);				
+				
+					// Set Page Message
+					SESSION.pageMessages.Add("Host Family Application Succesfully Submited");
+					SESSION.pageMessages.Add("This window should close shortly");
+				</cfscript>
+
+                <cfquery datasource="#APPLICATION.DSN.Source#">
+                    UPDATE 
+                        smg_hosts
+                    SET 
+                        hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="7">
+                    WHERE
+                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
+                </cfquery>
+                
+                <cfquery name="qGetEmailNotification" datasource="#APPLICATION.DSN.Source#">
+                    SELECT 
+                        u.email 
+                    FROM 
+                        smg_users u
+                    LEFT OUTER JOIN 
+                        smg_hosts h ON h.areaRepID = u.userID
+                    WHERE 
+                        h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
+                </cfquery>
+                
+                <cfif isValid("email", qGetEmailNotification.email)>
+                
+                    <cfsavecontent variable="vEmailMessage">                      
+                        <cfoutput>
+                            The #qGetHostFamilyInfo.familylastname# application has been submitted for your review.
+                            <br /><br />  
+                            You can review the app <a href="#SESSION.COMPANY.exitsURL#">here</a>.
+                        </cfoutput>
+                    </cfsavecontent>
+                
+                    <cfinvoke component="extensions.components.email" method="send_mail">
+                        <cfinvokeargument name="emailTo" value="#qGetEmailNotification.email#">
+                        <cfinvokeargument name="emailSubject" value="#qGetHostFamilyInfo.familylastname# Host Family Application Needs your Approval">
+                        <cfinvokeargument name="emailMessage" value="#vEmailMessage#">
+                    </cfinvoke>            
+    			
+                </cfif>
+                
+            <!--- Errors --->
+            <cfelse>
+
+                <cfscript>
+					// Set Error Message
+					SESSION.formErrors.Add(stResult.message);
+				</cfscript>
+				
+			</cfif> <!--- stResult.isSuccess --->
+            
+        </cfif> <!--- No Errors Found --->
         
-        </cfif>
-        
-    </cfif>        
+    </cfif> <!--- Form Submitted --->   
     
 </cfsilent>    
     

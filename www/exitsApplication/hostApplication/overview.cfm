@@ -122,7 +122,31 @@
                     <cfelseif LEN(qGetHostFamilyInfo.applicationApproved)>
                         Approved - #DateFormat(qGetHostFamilyInfo.applicationApproved, 'mmm d, yyyy')#
                     <cfelse>
-                        In Progress
+                    	
+                        <cfswitch expression="#qGetHostFamilyInfo.hostAppStatus#">
+                        	
+                            <cfcase value="1,2,3,4">
+                            	Submitted to Headquarters
+                            </cfcase>
+
+                            <cfcase value="5">
+                            	Submitted to Regional Manager
+                            </cfcase>
+
+                            <cfcase value="6">
+                            	Submitted to Regional Advisor
+                            </cfcase>
+
+                            <cfcase value="7">
+                            	Submitted to Area Representative
+                            </cfcase>
+                            
+                            <cfdefaultcase>
+                            	In Progress
+                            </cfdefaultcase>
+                        
+                        </cfswitch>
+                        
                     </cfif>
                 </p>
                 
@@ -157,7 +181,7 @@
                                        
             </td>
             <td>&nbsp;&nbsp;</td>
-            <td>	
+            <td valign="top">	
                 <cfif qGetHostFamilyInfo.hostAppStatus LTE 7>
                     <h2 align="center">Thank you!</h2>
                     <p>Thats it!  Your application has been submitted for review.  You will hear from your local representative shortly.</p>

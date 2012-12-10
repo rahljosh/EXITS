@@ -25,6 +25,7 @@
 <cfparam name="SESSION.HOST.applicationStatus" default="9">
 <cfparam name="SESSION.HOST.familyName" default="">
 <cfparam name="SESSION.HOST.email" default="">
+<cfparam name="SESSION.HOST.seasonID" default="0">
 <!--- Full Paths --->
 <cfparam name="SESSION.HOST.PATH.albumLarge" default="">
 <cfparam name="SESSION.HOST.PATH.albumThumbs" default="">
