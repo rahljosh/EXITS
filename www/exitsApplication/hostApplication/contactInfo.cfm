@@ -517,15 +517,15 @@
   </table>
 
 <br />
-  <h2>Father's Information</h2>
+  <h3>Father's Information</h3>
   <table width="100%" cellspacing="0" cellpadding="2" class="border">
-    <tr>
-    	<td class="label"><h3>Last Name</h3></td>
-        <td><cfinput type="text" name="fatherlastname" value="#FORM.fatherlastname#" class="largeField" maxlength="150"></td>
-    </tr>
     <tr bgcolor="##deeaf3">
     	<td class="label"><h3>First Name</h3></td>
         <td><cfinput type="text" name="fatherFirstName" value="#FORM.fatherFirstName#" class="largeField" maxlength="150"></td>
+    </tr>
+    <tr>
+    	<td class="label"><h3>Last Name</h3></td>
+        <td><cfinput type="text" name="fatherlastname" value="#FORM.fatherlastname#" class="largeField" maxlength="150"></td>
     </tr>
     <tr>
     	<td class="label"><h3>Middle Name</h3></td>
@@ -556,15 +556,15 @@
 </table>
 
 <br />
-  <h2>Mother's Information</h2>
+  <h3>Mother's Information</h3>
   <table width="100%" cellspacing="0" cellpadding="2" class="border">
-    <tr>
-    	<td class="label"><h3>Last Name</h3></td>
-        <td><cfinput type="text" name="motherlastname" value="#FORM.motherlastname#" class="largeField" maxlength="150"></td>
-    </tr>
     <tr  bgcolor="##deeaf3">
     	<td class="label"><h3>First Name</h3></td>
         <td><cfinput type="text" name="motherFirstName" value="#FORM.motherFirstName#" class="largeField" maxlength="150"></td>
+    </tr>
+    <tr>
+    	<td class="label"><h3>Last Name</h3></td>
+        <td><cfinput type="text" name="motherlastname" value="#FORM.motherlastname#" class="largeField" maxlength="150"></td>
     </tr>
     <tr>
     	<td class="label"><h3>Middle Name</h3></td>
