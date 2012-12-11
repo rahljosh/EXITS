@@ -25,7 +25,6 @@
     <cfparam name="FORM.fathermiddlename" default="">
     <cfparam name="FORM.fatherdob" default="">
     <cfparam name="FORM.fatherbirth" default="">
-    <cfparam name="FORM.fatherssn" default="">
     <cfparam name="FORM.fatherworktype" default="">
     <cfparam name="FORM.fatherEmployeer" default="">
     <cfparam name="FORM.father_cell" default="">
@@ -36,7 +35,6 @@
     <cfparam name="FORM.mothermiddlename" default="">
     <cfparam name="FORM.motherdob" default="">
     <cfparam name="FORM.motherbirth" default="">
-    <cfparam name="FORM.motherssn" default="">
     <cfparam name="FORM.motherworktype" default="">
     <cfparam name="FORM.motherEmployeer" default="">
     <cfparam name="FORM.mother_cell" default="">
@@ -146,9 +144,9 @@
                 SESSION.formErrors.Add("The email address you have entered does not appear to be valid.");
             }	
 			
-			// Valid Email Address
-            if ( LEN(TRIM(FORM.password)) LT 8) {
-                SESSION.formErrors.Add("Your password must be at least 8 characters long.");
+			// Valid Password
+            if ( LEN(TRIM(FORM.password)) LT 6) {
+                SESSION.formErrors.Add("Your password must be at least 6 characters long.");
             }	
 			
 			// Valid Father's DOB
@@ -300,7 +298,6 @@
 			FORM.fathermiddlename = qGetHostInfo.fathermiddlename;
 			FORM.fatherbirth = qGetHostInfo.fatherbirth;
 			FORM.fatherdob = qGetHostInfo.fatherdob;
-			FORM.fatherssn = qGetHostInfo.fatherssn;
 			FORM.fatherworktype = qGetHostInfo.fatherworktype;
 			FORM.fatherEmployeer = qGetHostInfo.fatheremployeer;
 			FORM.father_cell = qGetHostInfo.father_cell;
@@ -311,7 +308,6 @@
 			FORM.mothermiddlename = qGetHostInfo.mothermiddlename;
 			FORM.motherbirth = qGetHostInfo.motherbirth;
 			FORM.motherdob = qGetHostInfo.motherdob;
-			FORM.motherssn = qGetHostInfo.motherssn;
 			FORM.motherworktype = qGetHostInfo.motherworktype;
 			FORM.mother_cell = qGetHostInfo.mother_cell;
 			FORM.motherfullpart = qGetHostInfo.motherfullpart;
@@ -345,9 +341,6 @@
          </cfscript>
          
     </cfif>    
-
-    <cfset FORM.allow_fatherssn = 0>
-    <cfset FORM.allow_motherssn = 0>
 
 </cfsilent>
 
@@ -400,8 +393,6 @@
 
 <cfform method="post" action="index.cfm?section=contactInfo" name="my_form"  onsubmit="return validate(this)"> <!--- onSubmit="return checkForm();" --->
     <input type="hidden" name="submitted" value="1">
-    <input type="hidden" name="allow_fatherssn" value="#FORM.allow_fatherssn#">
-    <input type="hidden" name="allow_motherssn" value="#FORM.allow_motherssn#">
 
 	<!--- Form Errors --->
     <gui:displayFormErrors 
@@ -416,7 +407,7 @@
   <h2>Home Address, Phone & Email</h2>
   <table width="100%" cellspacing="0" cellpadding="2" class="border">
     <tr>
-        <td class="label"><h3>Family Name<span class="required">*</span></h3> </td>
+        <td class="label"><h3>Family Name <span class="required">*</span></h3> </td>
         <td colspan="3"><input type="text" name="familylastname" id="familylastname" value="#FORM.familylastname#" class="largeField" maxlength="150"></td>
     </tr>
 
@@ -456,7 +447,7 @@
 				<option></option>
 			</cfselect>
         </td>
-        <td class="zip"><h3>Zip<span class="required">*</span></h3> </td>
+        <td class="zip"><h3>Zip <span class="required">*</span></h3> </td>
         <td><cfinput type="text" name="zip" value="#FORM.zip#" class="smallField" maxlength="5" ></td>
     </tr>
     <tr>
@@ -476,7 +467,7 @@
  <h2>Home Based Business</h2>
   <table width="100%" cellspacing="0" cellpadding="2" class="border">
     <tr bgcolor="##deeaf3">
-        <td class="label" colspan="3"><h3>Is the residence the site of a functioning business?(e.g. daycare, farm)<span class="required">*</span></h3> </td>
+        <td class="label" colspan="3"><h3>Is the residence the site of a functioning business?(e.g. daycare, farm) <span class="required">*</span></h3> </td>
         <td>
             <cfinput type="radio" name="homeIsFunctBusiness" id="homeIsFunctBusiness1" value="1"
             	checked="#FORM.homeIsFunctBusiness eq 1#" onclick="document.getElementById('describeBusiness').style.display='table-row';" 
@@ -493,7 +484,7 @@
 	</tr>
   
      <tr>
-	     <td align="left" colspan="4" id="describeBusiness" <cfif FORM.homeBusinessDesc is ''>  class="displayNone"</cfif>><br /><strong>Please Describe<span class="required">*</span></strong><br><textarea cols="50" rows="4" name="homeBusinessDesc" placeholder="Name of Business, Nature of Business, etc"><cfoutput>#FORM.homeBusinessDesc#</cfoutput></textarea></td>
+	     <td align="left" colspan="4" id="describeBusiness" <cfif FORM.homeBusinessDesc is ''>  class="displayNone"</cfif>><br /><strong>Please Describe <span class="required">*</span></strong><br><textarea cols="50" rows="4" name="homeBusinessDesc" placeholder="Name of Business, Nature of Business, etc"><cfoutput>#FORM.homeBusinessDesc#</cfoutput></textarea></td>
 	</tr>   
 </table>
 <br />
@@ -520,7 +511,7 @@
 				<option></option>
 			</cfselect>
         </td>
-        <td class="zip"><h3>Zip<span class="required">*</span></h3> </td>
+        <td class="zip"><h3>Zip <span class="required">*</span></h3> </td>
         <td><cfinput type="text" name="mailzip" value="#FORM.mailzip#" class="smallField" maxlength="5" ></td>
     </tr>
   </table>
@@ -562,12 +553,6 @@
         <td class="label"><h3>Cell Phone <span class="required">+</span></h3></td>
         <td colspan="3"><cfinput type="text" name="father_cell" value="#FORM.father_cell#" size="14" maxlength="14" placeholder="(999) 999-9999"  mask="(999) 999-9999" ></td>
     </tr>
-        <cfif FORM.allow_fatherssn eq 1>
-        <tr>
-        	<td class="label"><h3>SSN</h3></td>
-            <td><cfinput type="text" name="fatherssn" value="#FORM.fatherssn#" size="11" maxlength="11" mask="999-99-9999" > <em>We use this durring the background check.</em></td>
-        </tr>	
-    </cfif>
 </table>
 
 <br />
@@ -607,12 +592,6 @@
         <td class="label"><h3>Cell Phone <span class="required">+</span></h3></td>
         <td colspan="3"><cfinput type="text" name="mother_cell" value="#FORM.mother_cell#" size="14" maxlength="14" placeholder="(999) 999-9999" mask="(999) 999-9999" ></td>
     </tr>
-        <cfif FORM.allow_motherssn eq 1>
-        <tr>
-        	<td class="label"><h3>SSN</h3></td>
-            <td><cfinput type="text" name="motherssn" value="#FORM.motherssn#" size="11" maxlength="11" mask="999-99-9999" validate="social_security_number" message="Please enter a valid Mother's SSN."> <em>We use this durring the background check.</em></td>
-        </tr>		
-    </cfif>
 </table> 		
 
 <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">

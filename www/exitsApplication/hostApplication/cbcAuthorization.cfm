@@ -82,33 +82,33 @@
 		
         <cfscript>
 			// Data Validation
-			
+
 			// Father
-			if ( LEN(qGetHostFamilyInfo.fatherFirstName) ) {
+			if ( LEN(qGetHostFamilyInfo.fatherFirstName) OR LEN(qGetHostFamilyInfo.fatherLastName) ) {
 				
 				// SSN
 				if  ( NOT LEN(qGetHostFamilyInfo.fatherSSN) AND NOT IsValid("ssn", FORM.fatherSSN) ) {
-					SESSION.formErrors.Add("The SSN for #qGetHostFamilyInfo.fatherFirstName# does not appear to be a valid SSN. Please make it is entered in the 999-99-9999 format.");
+					SESSION.formErrors.Add("The SSN for #qGetHostFamilyInfo.fatherFirstName# #qGetHostFamilyInfo.fatherLastName# does not appear to be a valid SSN. Please make it is entered in the 999-99-9999 format.");
 				}	
 				
 				// Signature
-				if ( NOT qGetFatherCBCAuthorization.recordCount AND NOT LEN(TRIM(FORM.fatherSignature))){
-					SESSION.formErrors.Add("The signature for #qGetHostFamilyInfo.fatherFirstName# is missing");
+				if ( NOT qGetFatherCBCAuthorization.recordCount AND NOT LEN(TRIM(FORM.fatherSignature)) ) {
+					SESSION.formErrors.Add("The CBC authorization signature for #qGetHostFamilyInfo.fatherFirstName# #qGetHostFamilyInfo.fatherLastName# is missing.");
 				}	
 			
 			}
 			
 			// Mother
-			if ( LEN(qGetHostFamilyInfo.motherFirstName) ) {
+			if ( LEN(qGetHostFamilyInfo.motherFirstName) OR LEN(qGetHostFamilyInfo.motherLastName) ) {
 				
 				// SSN
 				if  ( NOT LEN(qGetHostFamilyInfo.motherSSN) AND NOT IsValid("ssn", FORM.motherSSN) ) {
-					SESSION.formErrors.Add("The SSN for #qGetHostFamilyInfo.motherFirstName# does not appear to be a valid SSN. Please make it is entered in the 999-99-9999 format.");
+					SESSION.formErrors.Add("The SSN for #qGetHostFamilyInfo.motherFirstName# #qGetHostFamilyInfo.motherLastName# does not appear to be a valid SSN. Please make it is entered in the 999-99-9999 format.");
 				}	
 				
 				// Signature
-				if ( NOT qGetMotherCBCAuthorization.recordCount AND NOT LEN(TRIM(FORM.motherSignature))){
-					SESSION.formErrors.Add("The signature for #qGetHostFamilyInfo.motherFirstName# is missing");
+				if ( NOT qGetMotherCBCAuthorization.recordCount AND NOT LEN(TRIM(FORM.motherSignature)) ){
+					SESSION.formErrors.Add("The CBC authorization signature for #qGetHostFamilyInfo.motherFirstName# #qGetHostFamilyInfo.motherLastName# is missing.");
 				}	
 			
 			}
@@ -184,7 +184,7 @@
 				/***************************
 					Father Authorization 
 				***************************/
-				if ( NOT qGetFatherCBCAuthorization.recordCount ) {
+				if ( NOT qGetFatherCBCAuthorization.recordCount AND LEN(qGetHostFamilyInfo.fatherFirstName) AND LEN(qGetHostFamilyInfo.fatherlastname) ) {
 				
 					// Generate CBC Authorization
 					stResult = APPLICATION.CFC.DOCUMENT.generateCBCAuthorization(
@@ -210,7 +210,7 @@
 				/***************************
 					Mother Authorization 
 				***************************/
-				if ( NOT qGetMotherCBCAuthorization.recordCount ) {
+				if ( NOT qGetMotherCBCAuthorization.recordCount AND LEN(qGetHostFamilyInfo.motherFirstName) AND LEN(qGetHostFamilyInfo.motherlastname) ) {
 					
 					// Generate CBC Authorization
 					stResult = APPLICATION.CFC.DOCUMENT.generateCBCAuthorization(
@@ -238,7 +238,7 @@
 				***************************/
 				for ( i=1; i LTE qGetFamilyMembers18AndOlder.recordCount; i++ ) {
 					
-					if ( NOT LEN(FORM[qGetFamilyMembers18AndOlder.childID[i] & "memberFileName"]) ) {
+					if ( NOT LEN(FORM[qGetFamilyMembers18AndOlder.childID[i] & "memberFileName"]) AND LEN(qGetFamilyMembers18AndOlder.name[i]) AND LEN(qGetFamilyMembers18AndOlder.lastName[i]) ) {
 					
 						// Generate CBC Authorization
 						stResult = APPLICATION.CFC.DOCUMENT.generateCBCAuthorization(
@@ -346,6 +346,11 @@
     <cfelse>
 
 		<cfscript>
+			// Section 1 Not Complete
+			if ( NOT LEN(qGetHostFamilyInfo.fatherFirstName) AND NOT LEN(qGetHostFamilyInfo.fatherLastName) AND NOT LEN(qGetHostFamilyInfo.motherFirstName) AND NOT LEN(qGetHostFamilyInfo.motherLastName) ) {
+				SESSION.formErrors.Add("Prior to complete this page, please complete page Name & Contact Info.");
+			}
+		
 			// Address
 			if ( NOT LEN(qGetHostFamilyInfo.address) OR NOT LEN(qGetHostFamilyInfo.city) OR NOT LEN(qGetHostFamilyInfo.state) OR NOT LEN(qGetHostFamilyInfo.zip) ) {
 				 SESSION.formErrors.Add("A complete address is missing. Please click on Name & Contact info in the left menu and enter the address prior to complete this section."); 
@@ -362,10 +367,16 @@
             }     
 			
 			// Family Members - Check if we have a valid DOB for all members 
-			for ( i=1; i LTE qGetAllFamilyMembersAtHome.recordCount; i++ ) {				
+			for ( i=1; i LTE qGetAllFamilyMembersAtHome.recordCount; i++ ) {	
+
+				if ( NOT LEN(qGetAllFamilyMembersAtHome.lastName[i]) ) {				
+					SESSION.formErrors.Add("Last Name is missing for host member #qGetAllFamilyMembersAtHome.name[i]#. Please click on Family Members in the left menu and enter the date of birth prior to complete this section.");
+				}
+
 				if ( LEN(qGetAllFamilyMembersAtHome.name[i]) AND NOT isDate(qGetAllFamilyMembersAtHome.birthDate[i]) ) {				
 					SESSION.formErrors.Add("Date of birth is missing for host member #qGetAllFamilyMembersAtHome.name[i]#. Please click on Family Members in the left menu and enter the date of birth prior to complete this section.");
 				}
+			
 			}
 			
 			// No Errors Found
@@ -417,7 +428,7 @@
                 </tr>
                 
                 <!--- Host Father --->
-                <cfif LEN(qGetHostFamilyInfo.fatherFirstName)>
+                <cfif LEN(qGetHostFamilyInfo.fatherFirstName) OR LEN(qGetHostFamilyInfo.fatherlastname)>
                     <tr <cfif vSSNCurrentRow MOD 2> bgcolor="##deeaf3" </cfif> >
                         <td><h3>#qGetHostFamilyInfo.fatherFirstName# #qGetHostFamilyInfo.fatherlastname#</h3></td>
                         <td><h3>Host Father</h3></td>
@@ -439,7 +450,7 @@
                 </cfif>
                 
                 <!--- Host Mother --->
-                <cfif LEN(qGetHostFamilyInfo.motherFirstName)>
+                <cfif LEN(qGetHostFamilyInfo.motherFirstName) OR LEN(qGetHostFamilyInfo.motherlastname)>
                     <tr <cfif vSSNCurrentRow MOD 2> bgcolor="##deeaf3" </cfif> >
                         <td><h3>#qGetHostFamilyInfo.motherFirstName# #qGetHostFamilyInfo.motherlastname#</h3></td>
                         <td><h3>Host Mother</h3></td>
@@ -474,13 +485,13 @@
                 </tr>
                 
                 <cfif NOT qGetAllFamilyMembersAtHome.recordCount>
-                	<tr <cfif vSSNCurrentRow MOD 2> bgcolor="##deeaf3"</cfif> >
+                	<tr <cfif qGetAllFamilyMembersAtHome.currentRow MOD 2> bgcolor="##deeaf3"</cfif> >
                     	<td colspan="5">There are no family members on file, if you would like to add a family member please click on "Family Members" on the left menu</td>
                     </tr>
                 </cfif>            
 
                 <cfloop query="qGetAllFamilyMembersAtHome">
-                    <tr <cfif vSSNCurrentRow MOD 2> bgcolor="##deeaf3"</cfif> >
+                    <tr <cfif vSSNCurrentRow MOD 2 EQ 0> bgcolor="##deeaf3"</cfif> >
                         <td><h3>#qGetAllFamilyMembersAtHome.name# #qGetAllFamilyMembersAtHome.lastName#</h3></td>
                         <td><h3>#qGetAllFamilyMembersAtHome.membertype#</h3></td>
                         <td><h3><cfif isDate(qGetAllFamilyMembersAtHome.birthDate)>#DateFormat(qGetAllFamilyMembersAtHome.birthDate, 'mmm d, yyyy')#</cfif></h3></td>
@@ -498,10 +509,6 @@
                             <td>Not required</td>
                         </cfif> 
                     </tr>            
-                    <cfscript>
-                        // Increase value of current row
-                        vSSNCurrentRow ++;
-                    </cfscript>
                 </cfloop>
             </table>
     

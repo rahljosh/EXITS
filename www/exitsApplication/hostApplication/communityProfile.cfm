@@ -369,7 +369,7 @@
                 <td class="form_text"><input type="text" size=15 name="population" value="#FORM.population#"/></td>
             </tr>
             <tr bgcolor="##deeaf3">
-            	<td class="label">Nearest Major City:</td>
+            	<td class="label">Nearest Major City: <span class="required">*</span></td>
                 <td class="form_text">
                     <select data-placeholder="Enter nearest large city (over 30,000)..." class="chzn-select" style="width:350px;" tabindex="2" name="nearbigCity" onchange="this.FORM.submit(closeCity);">
                         <option value=""></option>
@@ -385,7 +385,7 @@
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr>	
-                <td class="label">Your local Airport:</td>
+                <td class="label">Your local Airport: <span class="required">*</span></td>
                 <td class="form_text">
                     <select data-placeholder="Enter City, Airport or Airport Code" class="chzn-select" style="width:350px;" tabindex="2" name="local_air_code">
                         <option value=""></option>
@@ -397,7 +397,7 @@
             </tr>
         
             <tr bgcolor="##deeaf3" >
-                <td class="label">Major Airport:</td>
+                <td class="label">Major Airport: <span class="required">*</span></td>
                 <td class="form_text">
                     <select data-placeholder="Enter City, Airport or Airport Code" class="chzn-select" style="width:350px;" tabindex="2" name="major_air_code" >
                         <option value=""></option>
@@ -413,11 +413,11 @@
         
         <table  width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr bgcolor="##deeaf3">
-                <td class="label" colspan="2">Avg temp in winter: </td>
+                <td class="label" colspan="2">Avg temp in winter: <span class="required">*</span></td>
                 <td class="form_text" colspan="4"><input type="text" size="3" name="wintertemp" value=#FORM.wintertemp#><sup>o</sup>F</td>
             </tr>
             <tr>
-                <td class="label" colspan="2">Avg temp in summer:</td>
+                <td class="label" colspan="2">Avg temp in summer: <span class="required">*</span></td>
                 <td class="form_text" colspan="4"><input type="text" size="3" name="summertemp" value=#FORM.summertemp#><sup>o</sup>F</td>
             </tr>
             <tr>
@@ -437,7 +437,7 @@
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr  bgcolor="##deeaf3">
-            	<td class="label">You would describe your neighborhood as:</td>
+            	<td class="label">You would describe your neighborhood as: <span class="required">*</span></td>
             </tr>
             <tr bgcolor="##deeaf3">
                 <td>
@@ -448,7 +448,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="label">Would you describe the community as:</td>
+                <td class="label">Would you describe the community as: <span class="required">*</span></td>
             </tr>
        		<tr>
                 <td>
@@ -459,7 +459,7 @@
                 </td>
         	</tr>
             <tr bgcolor="##deeaf3">
-            	<td colspan="2">Areas in or near your neighborhood to be avoided</td>
+            	<td colspan="2">Areas in or near your neighborhood to be avoided: <span class="required">*</span></td>
             </tr>
             <tr colspan="2" bgcolor="##deeaf3">
                 <td><textarea rows="5" cols="70" name="avoidArea">#FORM.avoidArea#</textarea></td>
@@ -494,13 +494,13 @@
         
         <table  width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr bgcolor="##deeaf3">
-                <td class="label" colspan="2">Indicate particular clothes, sports equipment, etc. that your student should consider bringing:</td>
+                <td class="label" colspan="2">Indicate particular clothes, sports equipment, etc. that your student should consider bringing: <span class="required">*</span></td>
             </tr>
             <tr bgcolor="##deeaf3">
                 <td><textarea cols="50" rows="4" name="special_cloths" placeholder="Winter coat, swimsuites, hiking boots, etc"><cfoutput>#FORM.special_cloths#</cfoutput></textarea></td>	
             </tr>
             <tr>
-                <td>Describe the points of interest in your  area:</td>
+                <td>Describe the points of interest in your area:</td>
             </tr>
             <tr>
                 <td><textarea cols="50" rows="4" name="point_interest" placeholder="Parks, museums, historical sites, local attractions"><cfoutput>#FORM.point_interest#</cfoutput></textarea></td>

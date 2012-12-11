@@ -11,6 +11,11 @@ body {
 	background-image: url(../../images/bodyBackground.gif);
 	background-repeat: repeat-x;
 }
+
+hr {
+	border:1px solid #CCC;	
+}
+
 .oneColFixCtr #container {
 	width: 758px;
 	margin-top: 0px;

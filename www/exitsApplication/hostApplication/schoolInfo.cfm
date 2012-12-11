@@ -32,14 +32,19 @@
     <cfparam name="FORM.schoolType" default="">
     <cfparam name="FORM.schoolFees" default="">
 	<!--- School Details --->
-    <cfparam name="FORM.schoolWorks" default="3">
+    <cfparam name="FORM.schoolWorks" default="">
     <cfparam name="FORM.schoolWorksExpl" default="">
-    <cfparam name="FORM.schoolCoach" default="3">
+    <cfparam name="FORM.schoolCoach" default="">
     <cfparam name="FORM.schoolCoachExpl" default="">
     <cfparam name="FORM.schoolTransportation" default="">
     <cfparam name="FORM.schoolTransportationOther" default="">
     <cfparam name="FORM.extraCuricTrans" default="">
 	
+    <cfscript>
+		// Get States
+		qGetStateList = APPLICATION.CFC.LOOKUPTABLES.getState();
+	</cfscript>
+    
     <cfquery name="qGetLocalSchools" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	* 
@@ -67,14 +72,6 @@
             schoolname
     </cfquery>
         
-    <cfquery name="qGetStates" datasource="#APPLICATION.DSN.Source#">
-        SELECT 
-        	state, 
-            statename
-        FROM 
-	        smg_states
-    </cfquery>
-
 	<cfif VAL(FORM.submitted)>
     
     	<!--- New School --->
@@ -115,13 +112,18 @@
         </cfif>
         
 		<cfscript>
+			// School
+			if ( NOT VAL(FORM.schoolID) AND NOT VAL(FORM.newSchool) ) {
+				SESSION.formErrors.Add("You must select a school from the drop down list, if school is not listed, please click on +/- Our school is not listed above, I need to add it.");
+			}
+			
 			// Works at School
 			if ( NOT LEN(FORM.schoolWorks) ) {
 				SESSION.formErrors.Add("Please indicate if any member of your household works for the high school.");
 			}		
 			
 			// Explanation of who works at school
-			if ( FORM.schoolWorks EQ 1 AND NOT LEN(TRIM(FORM.schoolWorksExpl)) ) {
+			if ( VAL(FORM.schoolWorks)  AND NOT LEN(TRIM(FORM.schoolWorksExpl)) ) {
 				SESSION.formErrors.Add("You have indicated that someone works with the school, but didn't explain.  Please provide details regarding the posistion.");
 			}	
 			
@@ -131,7 +133,7 @@
 			}		
 			
 			// Coach explanation
-			if ( FORM.schoolCoach EQ 1 AND NOT LEN(TRIM(FORM.schoolCoachExpl)) ) {
+			if ( VAL(FORM.schoolCoach) AND NOT LEN(TRIM(FORM.schoolCoachExpl)) ) {
 				SESSION.formErrors.Add("You have indicated that a coach contacted you, but didn't explain.  Please provide details regarding this contact.");
 			}	
 			
@@ -276,11 +278,11 @@
         <input type="hidden" name="submitted" value="1" />
         <input type="hidden" name="newSchool" id="newSchool" value="#FORM.newSchool#" />
 
-        The following schools are in your state.  The top of the list are schools in your city, followed by schools with in the state.  If you start typing in your school name, the list will filter.  If your school is not in the list, please lick the link "Our school is not listed above, I need to add it." and enter your school.
+        The following schools are in your state. The top of the list are schools in your city, followed by schools with in the state.  If you start typing in your school name, the list will filter.  If your school is not in the list, please lick the link "Our school is not listed above, I need to add it." and enter your school.
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr>
-                <td class="label">School: </td>
+                <td class="label">School: <span class="required">*</span></td>
                 <td class="form_text">
                     <select name="schoolID" id="schoolID" data-placeholder="Start typing your school name..." class="chzn-select" style="width:350px;" tabindex="2" onchange="this.form.submit(closeCity);">
                         <option value="" <cfif NOT LEN(FORM.schoolID)> selected="selected" </cfif> ></option>
@@ -305,11 +307,11 @@
             
             <table width="100%" cellspacing="0" cellpadding="2" class="border">
                 <tr bgcolor="##deeaf3">
-                	<td class="label"><h3>School Name<span class="required">*</span></h3></td>
+                	<td class="label"><h3>School Name <span class="required">*</span></h3></td>
                     <td class="form_text" colspan="3"><input type="text" name="schoolname" class="largeField" value="#FORM.schoolname#"></td>
                 </tr>
                 <tr>
-                	<td class="label"><h3>Address<span class="required">*</span></h3></td>
+                	<td class="label"><h3>Address <span class="required">*</span></h3></td>
                     <td colspan="3" class="form_text"><input type="text" name="address" class="largeField" value="#FORM.address#"></td>
                 </tr>
                 <tr>
@@ -317,20 +319,20 @@
                     <td colspan="3" class="form_text"> <input type="text" name="address2" class="largeField" value="#FORM.address2#"></td>
                 </tr>
                 <tr bgcolor="##deeaf3">			 
-                	<td class="label"><h3>City<span class="required">*</span></h3></td>
+                	<td class="label"><h3>City <span class="required">*</span></h3></td>
                     <td colspan="3" class="form_text"><input type="text" name="city" class="largeField" value="#FORM.city#"></td>
                 </tr> 
                 <tr>	
-               		<td class="label"><h3>State<span class="required">*</span></h3></td>
+               		<td class="label"><h3>State <span class="required">*</span></h3></td>
                     <td width="10" class="form_Text">
                 		<select name="state" id="state" class="mediumField">
                         	<option value=""></option>
-                            <cfloop query="qGetStates">
-                            	<option value="#qGetStates.state#" <cfif FORM.state EQ qGetStates.state> selected="selected" </cfif> >#qGetStates.statename#</option>
+                            <cfloop query="qGetStateList">
+                            	<option value="#qGetStateList.state#" <cfif FORM.state EQ qGetStateList.state> selected="selected" </cfif> >#qGetStateList.statename#</option>
                             </cfloop>
                         </select>
                 	</td>
-                    <td class="zip"><h3>Zip<span class="required">*</span></h3></td>
+                    <td class="zip"><h3>Zip <span class="required">*</span></h3></td>
                     <td class="form_text"><input type="text" name="zip" class="smallField" value="#FORM.zip#"></td>
                 </tr>
                 <tr bgcolor="##deeaf3">
@@ -346,7 +348,7 @@
                     <td class="form_text" colspan="3"> <input name="email" class="largeField" type="text" value="#FORM.email#" placeholder="contact@school.edu"></td>
                 </tr>
                 <tr>
-                	<td class="label"><h3>School Type<span class="required">*</span></h3></td>
+                	<td class="label"><h3>School Type <span class="required">*</span></h3></td>
                 	<td  colspan="3">
                     	<input type="radio" value="public" name="schoolType" id="schoolTypePublic" <cfif FORM.schooltype EQ 'public'>checked</cfif> /> <label for="schoolTypePublic">Public</label>
                         &nbsp;&nbsp; 
@@ -362,10 +364,11 @@
             <br />
         </div>
         
-        <h2>Relationships</h2>
+        <h3>Relationships</h3>
+        
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr bgcolor="##deeaf3">
-            	<td class="label">Does any member of your household work for the high<br /> school in a coaching/teaching/administrative capacity?<span class="required">*</span></td>
+            	<td class="label">Does any member of your household work for the high<br /> school in a coaching/teaching/administrative capacity? <span class="required">*</span></td>
                 <td>
                     <cfinput type="radio" name="schoolWorks" id="schoolWorks1" value="1" checked="#FORM.schoolWorks EQ 1#" onclick="document.getElementById('showSchoolWorks').style.display='table-row';" />
                     <label for="schoolWorks1">Yes</label>
@@ -375,15 +378,15 @@
                 </td>
             </tr>
             <tr>
-                <td align="left" colspan="2" id="showSchoolWorks" <cfif FORM.schoolWorks EQ 0>class="displayNone"</cfif>>
+                <td align="left" colspan="2" id="showSchoolWorks" <cfif FORM.schoolWorks NEQ 1>class="displayNone"</cfif>>
                     <br />
-					<strong>Job Title & Duties<span class="required">*</span></strong>
+					<strong>Job Title & Duties <span class="required">*</span></strong>
                     <br />
                     <textarea name="schoolWorksExpl" class="xLargeTextArea">#FORM.schoolWorksExpl#</textarea>
 				</td>
             </tr>   
             <tr>
-                <td class="label">Has any member of your household had contact with a coach<br /> regarding the hosting of an exchange student with a particular athletic ability?<span class="required">*</span></td>
+                <td class="label">Has any member of your household had contact with a coach<br /> regarding the hosting of an exchange student with a particular athletic ability? <span class="required">*</span></td>
                 <td>
                     <cfinput type="radio" name="schoolCoach" id="schoolCoach1" value="1" checked="#FORM.schoolCoach EQ 1#" onclick="document.getElementById('showCoachExpl').style.display='table-row';" />
                     <label for="schoolCoach1">Yes</label>
@@ -393,18 +396,19 @@
                 </td>
             </tr>
             <tr>
-            	<td align="left" colspan="2" id="showCoachExpl" <cfif FORM.schoolCoach EQ 0>class="displayNone"</cfif>>
+            	<td align="left" colspan="2" id="showCoachExpl" <cfif FORM.schoolCoach NEQ 1>class="displayNone"</cfif>>
                 	<br />
-                    <strong>Please describe<span class="required">*</span></strong>
+                    <strong>Please describe <span class="required">*</span></strong>
                     <br />
                     <textarea name="schoolCoachExpl" class="xLargeTextArea">#FORM.schoolCoachExpl#</textarea>
                	</td>
             </tr>
         </table>
         
-        <h2>Transportation</h2>
-        How will the student get to school?<span class="required">*</span>
-        <table width="100%" cellspacing="0" cellpadding="2" class="border">
+        <h3>Transportation</h3>
+        
+        How will the student get to school? <span class="required">*</span>
+        <table width="100%" cellspacing="0" cellpadding="4" class="border">
             <tr bgcolor="##deeaf3">
                 <td class="label"><cfinput type="radio" name="schoolTransportation" id="schoolTransportation1"  value="School Bus"  checked="#FORM.schoolTransportation EQ 'School Bus'#"><label for="schoolTransportation1">School Bus</label></td>
                 <td class="form_text"><cfinput type="radio" name="schoolTransportation" id="schoolTransportation2" value="Car" checked="#FORM.schoolTransportation EQ 'Car'#"><label for="schoolTransportation2">Car</label></td>
@@ -416,7 +420,7 @@
                 <td>&nbsp;</td>
             </tr>
             <tr bgcolor="##deeaf3">
-                <td class="label" colspan="2">Will you provide transportation for extracurricular activities?<span class="required">*</span></td>
+                <td class="label" colspan="2">Will you provide transportation for extracurricular activities? <span class="required">*</span></td>
                 <td>
                     <cfinput type="radio" name="extraCuricTrans" id="extraCuricTrans1" value="1" checked="#FORM.extraCuricTrans EQ 1#" />
                     <label for="extraCuricTrans1">Yes</label>

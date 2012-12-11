@@ -28,7 +28,7 @@
     <cfparam name="FORM.share_room" default="0">
     <cfparam name="FORM.sharingWithID" default="">
     <cfparam name="FORM.hostSmokes" default="">
-    <cfparam name="FORM.smoke_conditions" default="">
+    <cfparam name="FORM.smokeConditions" default="">
     <cfparam name="FORM.famDietRest" default="">
     <cfparam name="FORM.famDietRestDesc" default="">
     <cfparam name="FORM.stuDietRest" default="">
@@ -153,7 +153,7 @@
 			}
 			
 			// Family Smokes Conditions
-			if ( FORM.hostSmokes EQ "yes" AND NOT LEN(TRIM(FORM.smoke_conditions)) ) {
+			if ( FORM.hostSmokes EQ "yes" AND NOT LEN(TRIM(FORM.smokeConditions)) ) {
 				SESSION.formErrors.Add("Please indicate under what conditions someone in your family smokes");
 			}
 			
@@ -194,7 +194,7 @@
             <cfscript>
 				// Reset Hidden Fields
 				if ( FORM.hostSmokes EQ "no" ) {
-					FORM.smoke_conditions = "";
+					FORM.smokeConditions = "";
 				}
 				
 				if ( NOT VAL(FORM.share_room) ) {
@@ -243,7 +243,7 @@
                 SET
                 	pet_allergies = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pet_allergies#">,
                 	hostSmokes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hostSmokes#">,
-                    smokeconditions = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.smoke_conditions#">,
+                    smokeconditions = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.smokeConditions#">,
                     famDietRest = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.famDietRest#">,
                     famDietRestDesc = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.famDietRestDesc#">,
                     stuDietRest = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.stuDietRest#">,
@@ -264,7 +264,7 @@
             // Set Default Values
 			FORM.pet_allergies = qGetHostFamilyInfo.pet_allergies;
             FORM.hostSmokes = qGetHostFamilyInfo.hostSmokes;
-            FORM.smoke_conditions = qGetHostFamilyInfo.smokeconditions;
+            FORM.smokeConditions = qGetHostFamilyInfo.smokeconditions;
             FORM.famDietRest = qGetHostFamilyInfo.famDietRest;
             FORM.famDietRestDesc = qGetHostFamilyInfo.famDietRestDesc;
             FORM.stuDietRest = qGetHostFamilyInfo.stuDietRest;
@@ -300,20 +300,20 @@
 
     <h3>Current Pets</h3>
     
-    <table width="100%" cellspacing="0" cellpadding="2" class="border">
-        <tr>
-            <th>Type</th>
-            <th>Indoor / Outdoor</th>
-            <th>How many?</th>
-            <th></th>
-        </tr>
+    <table width="100%" cellspacing="0" cellpadding="4" class="border">
+        <tr bgcolor="##deeaf3">
+            <th style="border-bottom:1px solid ##000;">Type</th>
+            <th style="border-bottom:1px solid ##000;">Indoor / Outdoor</th>
+            <th style="border-bottom:1px solid ##000;">How many?</th>
+            <th style="border-bottom:1px solid ##000;" width="50px"></th>
+        </tr>        
         
         <cfloop query="qGetHostPets">
-            <tr <cfif qGetHostPets.currentRow MOD 2> bgcolor="##deeaf3"</cfif>>
-                <td><h3><p class="p_uppercase">#qGetHostPets.animalType#</h3></td>
-                <td><h3><p class="p_uppercase">#qGetHostPets.indoor#</h3></td>
-                <td><h3>#qGetHostPets.number#</h3></td>
-                <td><a href="index.cfm?section=hostingEnvironment&deletePetID=#qGetHostPets.animalid#" onClick="return confirm('Are you sure you want to delete this pet?')"><img src="images/buttons/delete23x28.png" title="Click to delete this pet" height="20" border="0"/></a></td>
+            <tr <cfif qGetHostPets.currentRow MOD 2 EQ 0> bgcolor="##deeaf3"</cfif>>
+                <th>#qGetHostPets.animalType#</th>
+                <td>#qGetHostPets.indoor#</td>
+                <td>#qGetHostPets.number#</td>
+                <td><a href="index.cfm?section=hostingEnvironment&deletePetID=#qGetHostPets.animalid#" onClick="return confirm('Are you sure you want to delete this pet?')"><img src="images/buttons/delete23x28.png" title="Click to delete this pet" height="15" border="0"/></a></td>
             </tr>
         </cfloop>
         
@@ -365,7 +365,7 @@
         
     </form>
     
-    <hr width="50%" align="center"/>
+    <hr width="80%" align="center"/>
     
     <cfform action="index.cfm?section=hostingEnvironment" method="post">
     	<input type="hidden" name="action" value="submitted" />
@@ -447,7 +447,7 @@
             	<td align="left" colspan="2" id="showsmoke" <cfif FORM.hostSmokes NEQ 1>class="displayNone"</cfif>>
                 	Under what conditions? <span class="required">*</span>
                     <br />
-                    <textarea name="smoke_conditions" placeholder="inside, outside, etc" class="largeTextArea">#FORM.smoke_conditions#</textarea>
+                    <textarea name="smokeConditions" placeholder="inside, outside, etc" class="largeTextArea">#FORM.smokeConditions#</textarea>
 				</td>
             </tr>
         </table>

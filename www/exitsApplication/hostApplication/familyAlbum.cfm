@@ -173,7 +173,7 @@
                             <option value="area#qGetCategoryList.ID#" <cfif ListFind(vUploadedImageList, qGetCategoryList.ID)> style="background-color:##deeaf3;" </cfif> <cfif FORM.categoryID EQ "area#qGetCategoryList.ID#">selected</cfif>>
                             	#qGetCategoryList.name#
                             	<cfif ListFind(vUploadedImageList, qGetCategoryList.ID)>(Uploaded)</cfif>
-                                <cfif qGetCategoryList.ID NEQ 26><span class="required">*</span></cfif>
+                                <cfif qGetCategoryList.ID NEQ 26> <span class="required">*</span></cfif>
                             </option>
                         </cfloop>
                     </select>

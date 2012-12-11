@@ -139,7 +139,7 @@ order by interest
         messageType="section"
         />
         
-<h4>Quick basics here. Let us know what activties your family does in their free time. <br />Please select at LEAST 3 activities from the list below.<span class="required">*</span></h4>
+<h4>Quick basics here. Let us know what activties your family does in their free time. <br />Please select at LEAST 3 activities from the list below. <span class="required">*</span></h4>
 
 
 <cfform method="post" action="index.cfm?section=familyInterests">
@@ -169,7 +169,7 @@ order by interest
 
 <table width="100%" cellspacing="0" cellpadding="2" class="border">
 	<tr bgcolor="##deeaf3">
-		<td align="left">Does anyone play in a Band?<span class="required">*</span></td>
+		<td align="left">Does anyone play in a Band? <span class="required">*</span></td>
         <td>
 		  <label>
             <cfinput type="radio" name="playBand" value="1"
@@ -192,10 +192,10 @@ order by interest
 			</td>
 	</tr>
     <tr  bgcolor="##deeaf3" id="showInst"  <cfif host_interests.playBand eq 0>class="displayNone"</cfif>>
-    	<td>What instrument?<span class="required">*</span></td><td><input type="text" name="bandInstrument" class="largeField" value="#FORM.bandInstrument#" /></td>        	
+    	<td>What instrument? <span class="required">*</span></td><td><input type="text" name="bandInstrument" class="largeField" value="#FORM.bandInstrument#" /></td>        	
     </tr>
 		<tr>
-		<td align="left">Does anyone play in an Orchestra?<span class="required">*</span></td>
+		<td align="left">Does anyone play in an Orchestra? <span class="required">*</span></td>
         <td>
         <label>
             <cfinput type="radio" name="playOrchestra" value="1"
@@ -216,10 +216,10 @@ order by interest
 			 </td>
 	</tr>
         <tr  id="showOrcInst" <cfif host_interests.playOrchestra eq 0>class="displayNone"</cfif>>
-    	<td>What instrument?<span class="required">*</span></td><td><input type="text" name="OrcInstrument" class="largeField" value="#FORM.OrcInstrument#"/></td>        	
+    	<td>What instrument? <span class="required">*</span></td><td><input type="text" name="OrcInstrument" class="largeField" value="#FORM.OrcInstrument#"/></td>        	
     </tr>
 		<tr bgcolor="##deeaf3">
-		<td align="left">Does anyone play in competitive sports?<span class="required">*</span></td>
+		<td align="left">Does anyone play in competitive sports? <span class="required">*</span></td>
         <td> 
 		  <label>
             <cfinput type="radio" name="playCompSports" value="1"
@@ -240,7 +240,7 @@ order by interest
 			 </td>
 	</tr>
             <tr  id="sportDesc" bgcolor="##deeaf3" <cfif host_interests.playCompSports eq 0>class="displayNone"</cfif>>
-    	<td>What sport?<span class="required">*</span></td><td><input type="text" name="sportDesc" class="largeField" value="#FORM.sportDesc#"/></td>        	
+    	<td>What sport? <span class="required">*</span></td><td><input type="text" name="sportDesc" class="largeField" value="#FORM.sportDesc#"/></td>        	
     </tr>
     </table>
     

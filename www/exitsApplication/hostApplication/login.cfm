@@ -211,7 +211,8 @@
                     hostID=qLoginHostFamily.hostID,												
                     applicationStatus=qLoginHostFamily.hostAppStatus,
                     familyName=qLoginHostFamily.familylastname,
-                    email=qLoginHostFamily.email
+                    email=qLoginHostFamily.email,
+					isMenuBlocked=false
                 );
 
                 // Go to overview page
