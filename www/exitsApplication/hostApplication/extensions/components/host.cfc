@@ -301,8 +301,8 @@
             }	
             
             // Valid Email Address
-            if ( LEN(TRIM(qGetHostInfo.password)) LT 8 ) {
-                SESSION.formErrors.Add("Your password must be at least 8 characters long.");
+            if ( LEN(TRIM(qGetHostInfo.password)) LT 6 ) {
+                SESSION.formErrors.Add("Your password must be at least 6 characters long.");
             }	
             
             // Valid Father's DOB
@@ -383,11 +383,11 @@
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
 				stResults.contactInfo.isComplete = true;
-				stResults.contactInfo.errorMessage = "";
+				stResults.contactInfo.message = "";
             // Errors Found - Erase queue for next section	
             } else {
 				stResults.contactInfo.isComplete = false;
-				stResults.contactInfo.errorMessage = SESSION.formErrors.GetCollection();
+				stResults.contactInfo.message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
 
@@ -440,11 +440,17 @@
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
 				stResults.familyMembers.isComplete = true;
-				stResults.familyMembers.errorMessage = "";
+				
+				if ( NOT qGetFamilyMembers.recordCount ) {
+					stResults.familyMembers.message = "(assuming you have no other family members)";
+				} else {
+					stResults.familyMembers.message = "";
+				}
+					
             // Errors Found - Erase queue for next section	
             } else {
 				stResults.familyMembers.isComplete = false;
-				stResults.familyMembers.errorMessage = SESSION.formErrors.GetCollection();
+				stResults.familyMembers.message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
 			
@@ -453,24 +459,39 @@
 				3 - Background Checks
 			********************************************/
 			
-			// Father SSN
-			if ( LEN(qGetHostInfo.fatherFirstName) AND LEN(qGetHostInfo.fatherLastName) AND NOT LEN(qGetHostInfo.fatherSSN) ) {
-				SESSION.formErrors.Add("The SSN for #qGetHostInfo.fatherFirstName# does not appear to be a valid SSN. <br> Please make sure the SSN is entered in the 999-99-9999 format.");
-			}	
-			
-			// Father CBC Authorization
-			if ( LEN(qGetHostInfo.fatherFirstName) AND LEN(qGetHostInfo.fatherLastName) AND NOT qGetFatherCBCAuthorization.recordCount ) {
-				SESSION.formErrors.Add("The CBC authorization signature for #qGetHostInfo.fatherFirstName# is missing.");
+			// Section 1 Not Complete
+			if ( NOT LEN(qGetHostInfo.fatherFirstName) AND NOT LEN(qGetHostInfo.fatherLastName) AND NOT LEN(qGetHostInfo.motherFirstName) AND NOT LEN(qGetHostInfo.motherLastName) ) {
+				SESSION.formErrors.Add("Prior to complete this page, please complete page Name & Contact Info.");
 			}
+			
+			// Father
+			if ( LEN(qGetHostInfo.fatherFirstName) OR LEN(qGetHostInfo.fatherLastName) ) {
 				
-			// Mother SSN
-			if ( LEN(qGetHostInfo.motherFirstName) AND LEN(qGetHostInfo.motherLastName) AND NOT LEN(qGetHostInfo.motherSSN) ) {
-				SESSION.formErrors.Add("The SSN for #qGetHostInfo.motherFirstName# does not appear to be a valid SSN. <br> Please make sure the SSN is entered in the 999-99-9999 format.");
-			}
+				// SSN
+				if  ( NOT LEN(qGetHostInfo.fatherSSN) ) {
+					SESSION.formErrors.Add("The SSN for #qGetHostInfo.fatherFirstName# #qGetHostInfo.fatherLastName# does not appear to be a valid SSN. Please make it is entered in the 999-99-9999 format.");
+				}	
+				
+				// Signature
+				if ( NOT qGetFatherCBCAuthorization.recordCount ) {
+					SESSION.formErrors.Add("The CBC authorization signature for #qGetHostInfo.fatherFirstName# #qGetHostInfo.fatherLastName# is missing.");
+				}	
 			
-			// Mother CBC Authorization
-			if ( LEN(qGetHostInfo.motherFirstName) AND LEN(qGetHostInfo.motherLastName) AND NOT qGetMotherCBCAuthorization.recordCount ) {
-				SESSION.formErrors.Add("The CBC authorization signature for #qGetHostInfo.motherFirstName# is missing.");
+			}
+
+			// Mother
+			if ( LEN(qGetHostInfo.motherFirstName) OR LEN(qGetHostInfo.motherLastName) ) {
+				
+				// SSN
+				if  ( NOT LEN(qGetHostInfo.motherSSN) ) {
+					SESSION.formErrors.Add("The SSN for #qGetHostInfo.motherFirstName# #qGetHostInfo.motherLastName# does not appear to be a valid SSN. Please make it is entered in the 999-99-9999 format.");
+				}	
+				
+				// Signature
+				if ( NOT qGetMotherCBCAuthorization.recordCount ) {
+					SESSION.formErrors.Add("The CBC authorization signature for #qGetHostInfo.motherFirstName# #qGetHostInfo.motherLastName# is missing.");
+				}	
+			
 			}
 
 			// Members - Loop through query
@@ -494,11 +515,11 @@
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
 				stResults.backgroundChecks.isComplete = true;
-				stResults.backgroundChecks.errorMessage = "";
+				stResults.backgroundChecks.message = "";
             // Errors Found - Erase queue for next section	
             } else {
 				stResults.backgroundChecks.isComplete = false;
-				stResults.backgroundChecks.errorMessage = SESSION.formErrors.GetCollection();
+				stResults.backgroundChecks.message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
 			
@@ -521,11 +542,11 @@
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
 				stResults.personalDescription.isComplete = true;
-				stResults.personalDescription.errorMessage = "";
+				stResults.personalDescription.message = "";
             // Errors Found - Erase queue for next section	
             } else {
 				stResults.personalDescription.isComplete = false;
-				stResults.personalDescription.errorMessage = SESSION.formErrors.GetCollection();
+				stResults.personalDescription.message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
 			
@@ -547,7 +568,7 @@
 			}
 			
 			// Family Smokes Conditions
-			if ( qGetHostInfo.hostSmokes EQ "yes" AND NOT LEN(TRIM(qGetHostInfo.smoke_conditions)) ) {
+			if ( qGetHostInfo.hostSmokes EQ "yes" AND NOT LEN(TRIM(qGetHostInfo.smokeConditions)) ) {
 				SESSION.formErrors.Add("Please indicate under what conditions someone in your family smokes");
 			}
 			
@@ -585,11 +606,11 @@
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
 				stResults.hostingEnvironment.isComplete = true;
-				stResults.hostingEnvironment.errorMessage = "";
+				stResults.hostingEnvironment.message = "";
             // Errors Found - Erase queue for next section	
             } else {
 				stResults.hostingEnvironment.isComplete = false;
-				stResults.hostingEnvironment.errorMessage = SESSION.formErrors.GetCollection();
+				stResults.hostingEnvironment.message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
 
@@ -632,11 +653,11 @@
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
 				stResults.religiousPreference.isComplete = true;
-				stResults.religiousPreference.errorMessage = "";
+				stResults.religiousPreference.message = "";
             // Errors Found - Erase queue for next section	
             } else {
 				stResults.religiousPreference.isComplete = false;
-				stResults.religiousPreference.errorMessage = SESSION.formErrors.GetCollection();
+				stResults.religiousPreference.message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
 
@@ -674,11 +695,11 @@
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
 				stResults.familyRules.isComplete = true;
-				stResults.familyRules.errorMessage = "";
+				stResults.familyRules.message = "";
             // Errors Found - Erase queue for next section	
             } else {
 				stResults.familyRules.isComplete = false;
-				stResults.familyRules.errorMessage = SESSION.formErrors.GetCollection();
+				stResults.familyRules.message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
 
@@ -706,11 +727,11 @@
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
 				stResults.familyAlbum.isComplete = true;
-				stResults.familyAlbum.errorMessage = "";
+				stResults.familyAlbum.message = "";
             // Errors Found - Erase queue for next section	
             } else {
 				stResults.familyAlbum.isComplete = false;
-				stResults.familyAlbum.errorMessage = SESSION.formErrors.GetCollection();
+				stResults.familyAlbum.message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
 
@@ -763,11 +784,11 @@
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
 				stResults.schoolInfo.isComplete = true;
-				stResults.schoolInfo.errorMessage = "";
+				stResults.schoolInfo.message = "";
             // Errors Found - Erase queue for next section	
             } else {
 				stResults.schoolInfo.isComplete = false;
-				stResults.schoolInfo.errorMessage = SESSION.formErrors.GetCollection();
+				stResults.schoolInfo.message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
 
@@ -830,11 +851,11 @@
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
 				stResults.communityProfile.isComplete = true;
-				stResults.communityProfile.errorMessage = "";
+				stResults.communityProfile.message = "";
             // Errors Found - Erase queue for next section	
             } else {
 				stResults.communityProfile.isComplete = false;
-				stResults.communityProfile.errorMessage = SESSION.formErrors.GetCollection();
+				stResults.communityProfile.message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
 
@@ -887,11 +908,11 @@
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
 				stResults.confidentialData.isComplete = true;
-				stResults.confidentialData.errorMessage = "";
+				stResults.confidentialData.message = "";
             // Errors Found - Erase queue for next section	
             } else {
 				stResults.confidentialData.isComplete = false;
-				stResults.confidentialData.errorMessage = SESSION.formErrors.GetCollection();
+				stResults.confidentialData.message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
 
@@ -933,11 +954,11 @@
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
 				stResults.references.isComplete = true;
-				stResults.references.errorMessage = "";
+				stResults.references.message = "";
             // Errors Found - Erase queue for next section	
             } else {
 				stResults.references.isComplete = false;
-				stResults.references.errorMessage = SESSION.formErrors.GetCollection();
+				stResults.references.message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
 			

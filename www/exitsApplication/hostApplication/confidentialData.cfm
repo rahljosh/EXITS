@@ -59,11 +59,6 @@
 				SESSION.formErrors.Add("You have indicated that you receive public assistance, but did not explain.");
 			}	
 			
-			// race
-			if ( NOT LEN(TRIM(FORM.race)) ) {
-				SESSION.formErrors.Add("Please indicate the race of your household.");
-			}
-			
 			// Income
 			if ( NOT LEN(FORM.income) ) {
 				SESSION.formErrors.Add("Please indicate your household income.");
@@ -88,6 +83,11 @@
 			if ( FORM.cps EQ 1 AND NOT LEN(TRIM(FORM.cpsExpl)) ) {
 				SESSION.formErrors.Add("You have indicated that you have been contacted by Child Protective Services, but did not explain.");
 			}	
+			
+			// race
+			if ( NOT LEN(TRIM(FORM.race)) ) {
+				SESSION.formErrors.Add("Please indicate the race of your household.");
+			}
 		</cfscript>
         
         <!--- No Errors Found --->
@@ -160,7 +160,7 @@
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr bgcolor="##deeaf3">
-                <td class="label" valign="top"><h3>Is any member of your household receiving<br> any kind of public assistance?<span class="required">*</span><sup>&dagger;&dagger;</sup></h3></td>
+                <td class="label" valign="top"><h3>Is any member of your household receiving<br> any kind of public assistance? <span class="required">*</span><sup>&dagger;&dagger;</sup></h3></td>
                 <td>
                     <cfinput type="radio" name="publicAssitance" id="publicAssitanceYes" value="1" checked="#FORM.publicAssitance EQ 1#" onclick="document.getElementById('publicAssitanceExpl').style.display='table-row';" />
                     <label for="publicAssitanceYes">Yes</label>
@@ -171,12 +171,12 @@
             </tr>
             <tr bgcolor="##deeaf3" id="publicAssitanceExpl" <cfif FORM.publicAssitance NEQ 1>class="displayNone"</cfif> >
                 <td colspan="2">
-                	Please explain<span class="required">*</span><br />
+                	Please explain <span class="required">*</span><br />
             		<textarea name="publicAssitanceExpl" cols="50" rows="4">#FORM.publicAssitanceExpl#</textarea>
                 </td>
             </tr>
             <tr>
-                <td class="label" valign="top"><h3>Average annual income range<span class="required">*</span><sup>&dagger;&dagger;</sup></h3></td>
+                <td class="label" valign="top"><h3>Average annual income range <span class="required">*</span><sup>&dagger;&dagger;</sup></h3></td>
                 <td>
                     <cfinput checked="#FORM.income EQ 25#" type="radio" name="income" id="income25" value="25" /><label for="income25">Less then $25,000</label><br />
                     <cfinput checked="#FORM.income EQ 35#" type="radio" name="income" id="income35" value="35" /><label for="income35">$25,000 - $35,000</label><br />
@@ -188,7 +188,7 @@
                 </td>
             </tr>
             <tr bgcolor="##deeaf3">
-                <td class="label" valign="top"><h3>Has any member of your household ever been charged<br /> with a crime?<span class="required">*</span></h3></td>
+                <td class="label" valign="top"><h3>Has any member of your household ever been charged<br /> with a crime? <span class="required">*</span></h3></td>
                 <td>   
                     <cfinput type="radio" name="crime" id="crimeYes" value="1" checked="#FORM.crime EQ 1#" onclick="document.getElementById('crimeExpl').style.display='table-row';" />
                     <label for="crimeYes">Yes</label>
@@ -199,7 +199,7 @@
             </tr>
             <tr bgcolor="##deeaf3" id="crimeExpl" <cfif FORM.crime NEQ 1>class="displayNone"</cfif>>
                 <td colspan="2">
-                    Please explain<span class="required">*</span><br />
+                    Please explain <span class="required">*</span><br />
                     <textarea name="crimeExpl" cols="50" rows="4">#FORM.crimeExpl#</textarea>
                 </td>
             </tr>
@@ -215,12 +215,12 @@
             </tr>
             <tr id="cpsExpl" <cfif FORM.cps NEQ 1>class="displayNone"</cfif>>
                 <td colspan="2">
-                	Please explain<span class="required">*</span><br />
+                	Please explain <span class="required">*</span><br />
                     <textarea name="cpsExpl" cols="50" rows="4">#FORM.cpsExpl#</textarea>
                 </td>
             </tr>
             <tr bgcolor="##deeaf3">
-                <td class="label" valign="top" colspan="2"><h3>What is the families race? (check as many boxes as needed)<span class="required">*</span></h3></td>
+                <td class="label" valign="top" colspan="2"><h3>What is the families race? (check as many boxes as needed) <span class="required">*</span></h3></td>
             </tr>
             <tr bgcolor="##deeaf3">
                 <td colspan="2">

@@ -239,7 +239,8 @@
 
 	<em><strong>PLEASE NOTE:</strong> The Department of State now requires a second home visit which will be conducted by someone other than your local Area Representative.</em> <br /><br />
     
-	Please provide at least <cfif vTotalFamilyCount EQ 1>six (6)&dagger;<cfelse>four (4)&dagger;</cfif> references. References can <strong>not</strong> be relatives and must have visited you <strong>in side</strong> your home. <br /><br />
+	Please provide at least <cfif vTotalFamilyCount EQ 1>six (6)&dagger;<cfelse>four (4)&dagger;</cfif> references. References can <strong>not</strong> 
+    be relatives and must have visited you <strong>in side</strong> your home. <br /><br />
 
     <table width="100%" cellspacing="0" cellpadding="4" class="border">
         <tr bgcolor="##deeaf3"> 
@@ -276,11 +277,8 @@
     </table>
 	
     <!--- Finished with this page --->
-    <div style="display:block; float:right;">
-        <a onclick="ShowHide(); return false;" href="##">I am finished entering references.</a>
-        <div id="slidingDiv" display:"none">
-            <a href="index.cfm?section=checkList"><img src="images/buttons/Next.png" border="0" /></a>
-        </div>	
+    <div style="display:block; float:right; margin-top:5px;">
+        <a href="index.cfm?section=checkList">I am finished entering references.</a>
     </div>
     
     <h3>Add a Reference</h3>
@@ -299,11 +297,11 @@
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr bgcolor="##deeaf3">
-            	<td class="label"><h3>First Name<span class="required">*</span></h3></td>
+            	<td class="label"><h3>First Name <span class="required">*</span></h3></td>
                 <td colspan="3"><input type="text" name="firstName" value="#FORM.firstName#" class="largeField" maxlength="150"></td>
             </tr>
             <tr>
-                <td class="label"><h3> Last Name<span class="required">*</span></h3></td>
+                <td class="label"><h3> Last Name <span class="required">*</span></h3></td>
                 <td colspan="3"><input type="text" name="lastName" value="#FORM.lastName#" class="largeField" maxlength="150"></td>
             </tr>
             <tr bgcolor="##deeaf3">

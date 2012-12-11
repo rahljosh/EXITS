@@ -34,7 +34,13 @@
 <cfoutput>
 
     <h2 align="center">Application Checklist</h2>
-    
+
+	<!--- Page Messages --->
+    <gui:displayPageMessages 
+        pageMessages="#SESSION.pageMessages.GetCollection()#"
+        messageType="section"
+        />
+
     <p>Please use the menu on the left or the section title to navigate to the section that is missing information.</p>
     
     <p>
@@ -53,8 +59,8 @@
         <cfelse>
             <cfscript>
 				// Loop Through Array and Populate Errors
-				for( x=1; x LTE ArrayLen(stApplicationStatus.contactInfo.errorMessage); x++ ) {
-					SESSION.formErrors.Add(stApplicationStatus.contactInfo.errorMessage[x]);
+				for( x=1; x LTE ArrayLen(stApplicationStatus.contactInfo.message); x++ ) {
+					SESSION.formErrors.Add(stApplicationStatus.contactInfo.message[x]);
 				}
 			</cfscript>
             
@@ -71,12 +77,12 @@
     
     <p style="margin-top:-15px;">
 		<cfif stApplicationStatus.familyMembers.isComplete>
-            <font color="##00CC00">&##10004;</font> This section is complete.
+            <font color="##00CC00">&##10004;</font> This section is complete. #stApplicationStatus.familyMembers.message#
         <cfelse>
             <cfscript>
 				// Loop Through Array and Populate Errors
-				for( x=1; x LTE ArrayLen(stApplicationStatus.familyMembers.errorMessage); x++ ) {
-					SESSION.formErrors.Add(stApplicationStatus.familyMembers.errorMessage[x]);
+				for( x=1; x LTE ArrayLen(stApplicationStatus.familyMembers.message); x++ ) {
+					SESSION.formErrors.Add(stApplicationStatus.familyMembers.message[x]);
 				}
 			</cfscript>
             
@@ -97,8 +103,8 @@
         <cfelse>
             <cfscript>
 				// Loop Through Array and Populate Errors
-				for( x=1; x LTE ArrayLen(stApplicationStatus.backgroundChecks.errorMessage); x++ ) {
-					SESSION.formErrors.Add(stApplicationStatus.backgroundChecks.errorMessage[x]);
+				for( x=1; x LTE ArrayLen(stApplicationStatus.backgroundChecks.message); x++ ) {
+					SESSION.formErrors.Add(stApplicationStatus.backgroundChecks.message[x]);
 				}
 			</cfscript>
             
@@ -119,8 +125,8 @@
         <cfelse>
             <cfscript>
 				// Loop Through Array and Populate Errors
-				for( x=1; x LTE ArrayLen(stApplicationStatus.personalDescription.errorMessage); x++ ) {
-					SESSION.formErrors.Add(stApplicationStatus.personalDescription.errorMessage[x]);
+				for( x=1; x LTE ArrayLen(stApplicationStatus.personalDescription.message); x++ ) {
+					SESSION.formErrors.Add(stApplicationStatus.personalDescription.message[x]);
 				}
 			</cfscript>
             
@@ -141,8 +147,8 @@
         <cfelse>
             <cfscript>
 				// Loop Through Array and Populate Errors
-				for( x=1; x LTE ArrayLen(stApplicationStatus.hostingEnvironment.errorMessage); x++ ) {
-					SESSION.formErrors.Add(stApplicationStatus.hostingEnvironment.errorMessage[x]);
+				for( x=1; x LTE ArrayLen(stApplicationStatus.hostingEnvironment.message); x++ ) {
+					SESSION.formErrors.Add(stApplicationStatus.hostingEnvironment.message[x]);
 				}
 			</cfscript>
             
@@ -163,8 +169,8 @@
         <cfelse>
             <cfscript>
 				// Loop Through Array and Populate Errors
-				for( x=1; x LTE ArrayLen(stApplicationStatus.religiousPreference.errorMessage); x++ ) {
-					SESSION.formErrors.Add(stApplicationStatus.religiousPreference.errorMessage[x]);
+				for( x=1; x LTE ArrayLen(stApplicationStatus.religiousPreference.message); x++ ) {
+					SESSION.formErrors.Add(stApplicationStatus.religiousPreference.message[x]);
 				}
 			</cfscript>
             
@@ -185,8 +191,8 @@
         <cfelse>
             <cfscript>
 				// Loop Through Array and Populate Errors
-				for( x=1; x LTE ArrayLen(stApplicationStatus.familyRules.errorMessage); x++ ) {
-					SESSION.formErrors.Add(stApplicationStatus.familyRules.errorMessage[x]);
+				for( x=1; x LTE ArrayLen(stApplicationStatus.familyRules.message); x++ ) {
+					SESSION.formErrors.Add(stApplicationStatus.familyRules.message[x]);
 				}
 			</cfscript>
             
@@ -207,8 +213,30 @@
         <cfelse>
             <cfscript>
 				// Loop Through Array and Populate Errors
-				for( x=1; x LTE ArrayLen(stApplicationStatus.familyAlbum.errorMessage); x++ ) {
-					SESSION.formErrors.Add(stApplicationStatus.familyAlbum.errorMessage[x]);
+				for( x=1; x LTE ArrayLen(stApplicationStatus.familyAlbum.message); x++ ) {
+					SESSION.formErrors.Add(stApplicationStatus.familyAlbum.message[x]);
+				}
+			</cfscript>
+            
+			<!--- Form Errors --->
+            <gui:displayFormErrors 
+                formErrors="#SESSION.formErrors.GetCollection()#"
+                messageType="checklist"
+                />
+        </cfif>
+    </p>
+
+
+    <h2><p>School Info</p></h2>
+
+    <p style="margin-top:-15px;">
+		<cfif stApplicationStatus.schoolInfo.isComplete>
+            <font color="##00CC00">&##10004;</font> This section is complete.
+        <cfelse>
+            <cfscript>
+				// Loop Through Array and Populate Errors
+				for( x=1; x LTE ArrayLen(stApplicationStatus.schoolInfo.message); x++ ) {
+					SESSION.formErrors.Add(stApplicationStatus.schoolInfo.message[x]);
 				}
 			</cfscript>
             
@@ -229,8 +257,8 @@
         <cfelse>
             <cfscript>
 				// Loop Through Array and Populate Errors
-				for( x=1; x LTE ArrayLen(stApplicationStatus.communityProfile.errorMessage); x++ ) {
-					SESSION.formErrors.Add(stApplicationStatus.communityProfile.errorMessage[x]);
+				for( x=1; x LTE ArrayLen(stApplicationStatus.communityProfile.message); x++ ) {
+					SESSION.formErrors.Add(stApplicationStatus.communityProfile.message[x]);
 				}
 			</cfscript>
             
@@ -251,8 +279,8 @@
         <cfelse>
             <cfscript>
 				// Loop Through Array and Populate Errors
-				for( x=1; x LTE ArrayLen(stApplicationStatus.confidentialData.errorMessage); x++ ) {
-					SESSION.formErrors.Add(stApplicationStatus.confidentialData.errorMessage[x]);
+				for( x=1; x LTE ArrayLen(stApplicationStatus.confidentialData.message); x++ ) {
+					SESSION.formErrors.Add(stApplicationStatus.confidentialData.message[x]);
 				}
 			</cfscript>
             
@@ -273,8 +301,8 @@
         <cfelse>
             <cfscript>
 				// Loop Through Array and Populate Errors
-				for( x=1; x LTE ArrayLen(stApplicationStatus.references.errorMessage); x++ ) {
-					SESSION.formErrors.Add(stApplicationStatus.references.errorMessage[x]);
+				for( x=1; x LTE ArrayLen(stApplicationStatus.references.message); x++ ) {
+					SESSION.formErrors.Add(stApplicationStatus.references.message[x]);
 				}
 			</cfscript>
             

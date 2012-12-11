@@ -30,6 +30,7 @@
         <cfparam name="SESSION.HOST.familyName" default="">
         <cfparam name="SESSION.HOST.email" default="">
         <cfparam name="SESSION.HOST.seasonID" default="0">
+        <cfparam name="SESSION.HOST.isMenuBlocked" default="false">
 		<!--- Full Paths --->
         <cfparam name="SESSION.HOST.PATH.albumLarge" default="">
         <cfparam name="SESSION.HOST.PATH.albumThumbs" default="">
@@ -112,6 +113,7 @@
 		<cfargument name="applicationStatus" default="9" hint="applicationStatus">
         <cfargument name="familyName" default="" hint="familyName">
         <cfargument name="email" default="" hint="email">
+        <cfargument name="isMenuBlocked" default="" hint="email">
         
         <cfscript>
 			// New Struct
@@ -124,7 +126,16 @@
 			SESSION.HOST.familyName = ARGUMENTS.familyName;
 			SESSION.HOST.email = ARGUMENTS.email;
 			SESSION.HOST.seasonID = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
-
+			
+			// Disable menu for host family account
+			if ( LEN(ARGUMENTS.isMenuBlocked) ) {
+				SESSION.HOST.isMenuBlocked = ARGUMENTS.isMenuBlocked;	
+			} else if ( ListFind("9,8", ARGUMENTS.applicationStatus) ) {
+				SESSION.HOST.isMenuBlocked = false;		
+			} else {
+				SESSION.HOST.isMenuBlocked = true;		
+			}
+			
 			// Set Folders
 			if ( VAL(ARGUMENTS.hostID) ) {
 				
@@ -160,6 +171,18 @@
 		
 	</cffunction>
 
+
+	<!--- Log In --->
+	<cffunction name="setHostSessionisMenuBlocked" access="public" returntype="void" output="false" hint="Set Host Session Variables">
+        <cfargument name="isMenuBlocked" default="false" hint="email">
+        
+        <cfscript>
+			// Disable Menu
+			SESSION.HOST.isMenuBlocked = ARGUMENTS.isMenuBlocked;	
+		</cfscript>
+		
+	</cffunction>
+        
 
 	<cffunction name="getHostSession" access="public" returntype="struct" hint="Get HOST Session variables" output="no">
 

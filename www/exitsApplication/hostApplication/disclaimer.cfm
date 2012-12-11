@@ -49,12 +49,15 @@
                 <cfscript>
 					// Get Host Family Info - Accessible from any page
 					qGetHostFamilyInfo = APPLICATION.CFC.HOST.getHosts(hostID=APPLICATION.CFC.SESSION.getHostSession().ID);				
-				
+					
+					// Disable Left Menu Navigation
+					APPLICATION.CFC.SESSION.setHostSessionisMenuBlocked(isMenuBlocked=true);
+					
 					// Set Page Message
 					SESSION.pageMessages.Add("Host Family Application Succesfully Submited");
 					SESSION.pageMessages.Add("This window should close shortly");
 				</cfscript>
-
+				
                 <cfquery datasource="#APPLICATION.DSN.Source#">
                     UPDATE 
                         smg_hosts
@@ -69,7 +72,7 @@
                         u.email 
                     FROM 
                         smg_users u
-                    LEFT OUTER JOIN 
+                    INNER JOIN 
                         smg_hosts h ON h.areaRepID = u.userID
                     WHERE 
                         h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
@@ -130,6 +133,8 @@
         <script type="text/javascript">
             // Close Window After 1.5 Seconds
             setTimeout(function() { parent.$.fn.colorbox.close(); }, 1500);
+			
+			window.parent.location.href = "index.cfm?section=overview";
         </script>
         
     </cfif>

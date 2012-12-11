@@ -14,6 +14,11 @@
     <!--- Import CustomTag Used for Page Messages and Form Errors --->
     <cfimport taglib="extensions/customTags/gui/" prefix="gui" />	
 
+	<cfscript>
+		// Get Application Status
+		stApplicationStatus = APPLICATION.CFC.HOST.getApplicationProcess();
+	</cfscript>
+
 	<!--- Get Host Family Information --->
     <cfquery name="qGetHostFamilyInfo" datasource="#APPLICATION.DSN.Source#">
         SELECT 
@@ -59,6 +64,16 @@
     
 </cfsilent>
 
+<script type="text/javascript">
+//<![CDATA[
+	$(document).ready(function(){
+		//Examples of how to assign the ColorBox event to elements
+		$(".iframe").colorbox({width:"80%", height:"80%", iframe:true, 
+			onClosed:function(){ location.reload(false); } });
+	});
+//]]>
+</script>
+
 <cfoutput> 
   
     <h1 align="center">Welcome #qGetHostFamilyInfo.familylastname# Family!</h1>
@@ -79,7 +94,7 @@
                             <table border="0" cellpadding="0" cellspacng="0" width="300" align="center">
                                 <tr>
                                     <td colspan="5" align="left" style="border:1px solid ##03518d;">
-                                        <img src="images/gradient.png" alt="Percentage Complete" name="Percent Complete" width="#APPLICATION.CFC.HOST.getApplicationProcess().applicationProgress#" height="15" />
+                                        <img src="images/gradient.png" alt="Percentage Complete" name="Percent Complete" width="#stApplicationStatus.applicationProgress#" height="15" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -104,7 +119,7 @@
                     </tr>
                 </table>
                 
-                <hr align="center" width="80%" />
+                <br /> <hr align="center" width="80%" /> <br />
                 
                 <p>
                     <strong> Application Started -</strong> 
@@ -114,7 +129,7 @@
                         #DateFormat(qGetHostFamilyInfo.applicationStarted, 'mmm d, yyyy')#
                     </cfif>
                 </p>
-    
+                
                 <p>
                     <strong>Application Status:</strong>
                     <cfif LEN(qGetHostFamilyInfo.applicationDenied)>
@@ -142,7 +157,13 @@
                             </cfcase>
                             
                             <cfdefaultcase>
-                            	In Progress
+                            	
+                                <cfif stApplicationStatus.isComplete>
+									Complete
+                                <cfelse>
+                                	In Progress - #round(100 * stApplicationStatus.applicationProgress / 300)#% Complete
+								</cfif>
+                                
                             </cfdefaultcase>
                         
                         </cfswitch>
@@ -150,7 +171,7 @@
                     </cfif>
                 </p>
                 
-                <hr align="center" width="80%" />
+                <br /> <hr align="center" width="80%" /> <br />
                 
                 <p>
                     <strong>Region:</strong>
@@ -186,20 +207,34 @@
                     <h2 align="center">Thank you!</h2>
                     <p>Thats it!  Your application has been submitted for review.  You will hear from your local representative shortly.</p>
                 <cfelse>
-                    <p>Congratulations on the decission to host a student with ISE.  We are excited to be working with you.</p>
-                    <div align="center">
-                        <a href="index.cfm?section=contactInfo"><img src="images/buttons/contApp.png" alt="continue" border="0" /></a>
-                    </div>
-                    <p>
-                        Your student's family will receive selected  information from this application. 
-                        Student and their families will not receive any confidential infromation.  
-                        Please be aware that the Department of State has specific requirements regarding the photos that are uploaded on the family album.  
-                        We are mandated to have photos of specific areas of your home on file. 
-                        <br /><br /> 
-                        Before your applcation can be approved background checks will need to be run on all household members over the age of 18.
-                        <br /><br />
-                        If you have not already been in contact with a representative, you will be contacted shortly after your application is submitted.
-                    </p>
+                	
+                    <cfif stApplicationStatus.isComplete>
+						<p><strong>Your application is complete!</strong> Happy with how everything looks? Click the button to the right to submit your application.</p>
+                        
+                        <p align="center">
+                        	<a href="disclaimer.cfm" class="iframe"><img src="images/buttons/#SESSION.COMPANY.submitImage#"/></a>
+                        </p>
+                        
+                    <cfelse>
+                
+                        <p>Congratulations on the decission to host a student with ISE.  We are excited to be working with you.</p>
+                        <div align="center">
+                            <a href="index.cfm?section=contactInfo"><img src="images/buttons/contApp.png" alt="continue" border="0" /></a>
+                        </div>
+                        
+                    </cfif>
+                    
+                        <p>
+                            Your student's family will receive selected  information from this application. 
+                            Student and their families will not receive any confidential infromation.  
+                            Please be aware that the Department of State has specific requirements regarding the photos that are uploaded on the family album.  
+                            We are mandated to have photos of specific areas of your home on file. 
+                            <br /><br /> 
+                            Before your applcation can be approved background checks will need to be run on all household members over the age of 18.
+                            <br /><br />
+                            If you have not already been in contact with a representative, you will be contacted shortly after your application is submitted.
+                        </p>
+					
                 </cfif>
             </td>
         </tr>

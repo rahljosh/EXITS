@@ -22,8 +22,8 @@
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.childID" default="0">
     <cfparam name="FORM.name" default="">
-    <cfparam name="FORM.middleName" default="">
     <cfparam name="FORM.lastName" default="">
+    <cfparam name="FORM.middleName" default="">
     <cfparam name="FORM.birthdate" default="">
     <cfparam name="FORM.membertype" default="">
     <cfparam name="FORM.interests" default="">
@@ -211,8 +211,8 @@
                     (
                         hostID, 
                         name, 
-                        middleName,
                         lastName,
+                        middleName,
                         sex, 
                         birthdate, 
                         membertype, 
@@ -329,19 +329,16 @@
         </cfloop>
         
     </table>
-	
+    
+	<!--- Finished with this page --->
+    <div style="display:block; float:right; margin-top:5px;">
+        <a href="index.cfm?section=cbcAuthorization">No <cfif qGetAllFamilyMembers.recordcount neq 0>other</cfif> family members to add</a>
+    </div>
+    
     <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" preloader="no">
     	<input type="hidden" name="submitted" value="1" />
         <input type="hidden" name="childID" value="#FORM.childID#" /> 
-		
-        <!--- Finished with this page --->
-        <div style="display:block; float:right;">
-            <a onclick="ShowHide(); return false;" href="##">No <cfif qGetAllFamilyMembers.recordcount neq 0>other</cfif> family members to add</a>
-            <div id="slidingDiv" display:"none">
-                <a href="index.cfm?section=cbcAuthorization"><img src="images/buttons/Next.png" border="0" /></a>	
-            </div>	
-        </div>
-        
+
         <h3>Add a Family Members</h3>
 	
         Please include all your children, whether they are living at home or not, and <span style="background-color:##FF0; padding: 3px;"><strong> any other persons</strong></span> 
@@ -351,11 +348,11 @@
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr>
-                <td class="label"><h3>First Name<span class="required">*</span></h3></td>
+                <td class="label"><h3>First Name <span class="required">*</span></h3></td>
                 <td><cfinput type="text" name="name" value="#FORM.name#" class="largeField" maxlength="50" message="Please enter the First Name."></td>
             </tr>
             <tr bgcolor="##deeaf3">
-                <td class="label"><h3>Last Name<span class="required">*</span></h3></td>
+                <td class="label"><h3>Last Name <span class="required">*</span></h3></td>
                 <td><cfinput type="text" name="lastName" value="#FORM.lastName#" class="largeField" maxlength="50" message="Please enter the Name."></td>
             </tr>
             <tr>
@@ -374,7 +371,7 @@
                 <td><cfinput type="text" name="birthdate" value="#dateFormat(FORM.birthdate, 'mm/dd/yyyy')#" class="mediumField" maxlength="10" placeholder="MM/DD/YYYY" mask="99/99/9999"></td>
             </tr>
             <tr bgcolor="##deeaf3">
-                <td class="label"><h3>Relation<span class="required">*</span></h3> </td>
+                <td class="label"><h3>Relation <span class="required">*</span></h3> </td>
                 <td><cfinput type="text" name="membertype" value="#FORM.membertype#" class="largeField" maxlength="150"></td>
             </tr>
             <tr>
@@ -414,6 +411,7 @@
                 <td>
                     <select name="gradeInSchool" id="gradeInSchool" class="mediumField">
                         <option value=""></option>
+                        <option value="Not-Applicable">Not Applicable</option>
                         <option value="Pre-Kindergarten">Pre-Kindergarten</option>
                         <option value="Kindergarten">Kindergarten</option>
                         <cfloop from="1" to="12" index="i">

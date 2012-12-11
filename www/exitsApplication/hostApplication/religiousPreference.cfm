@@ -235,12 +235,12 @@
                 </td>
             </tr>
             <tr colspan="2" id="showname" <cfif FORM.religious_participation EQ "Inactive">class="displayNone"</cfif>>
-                <td>Would you expect your exchange student to attend services with your family?<span class="required">*</span> </td>
+                <td>Would you expect your exchange student to attend services with your family? <span class="required">*</span> </td>
                 <td>
-                    <cfinput type="radio" name="churchFam" id="churchFamYes" value="1" checked="#FORM.churchFam eq 'yes'#" />
+                    <cfinput type="radio" name="churchFam" id="churchFamYes" value="yes" checked="#FORM.churchFam eq 'yes'#" />
                     <label for="churchFamYes">Yes</label>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <cfinput type="radio" name="churchFam" id="churchFamNo" value="0" checked="#FORM.churchFam eq 'no'#" />
+                    <cfinput type="radio" name="churchFam" id="churchFamNo" value="no" checked="#FORM.churchFam eq 'no'#" />
                     <label for="churchFamNo">No</label>
                 </td>
             </tr>

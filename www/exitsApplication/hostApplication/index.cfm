@@ -18,7 +18,12 @@
 		if ( VAL(APPLICATION.CFC.SESSION.getHostSession().ID) AND URL.section EQ "login" ) {
 			URL.section = "overview";
 		}
-	
+		
+		// Check if access is blocked
+		if ( APPLICATION.CFC.SESSION.getHostSession().isMenuBlocked AND NOT ListFind("overview,logout", URL.section) ) {
+			URL.section = "overview";
+		} 
+		
 		// Get Host Family Info - Accessible from any page
 		qGetHostFamilyInfo = APPLICATION.CFC.HOST.getHosts(hostID=APPLICATION.CFC.SESSION.getHostSession().ID);
 	</cfscript>
@@ -86,7 +91,7 @@
                         <cfswitch expression="#URL.section#">
                         
                             <cfcase value="login,overview,contactInfo,familyMembers,cbcAuthorization,personalDescription,hostingEnvironment,religiousPreference,familyRules,familyAlbum,schoolInfo,communityProfile,confidentialData,references,checkList,logout" delimiters=",">
-                        
+                        		
                                 <!--- Include template --->
                                 <cfinclude template="#URL.section#.cfm" />
                         
