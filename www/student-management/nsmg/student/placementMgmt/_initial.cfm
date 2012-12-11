@@ -206,10 +206,12 @@
 				if ( VAL(FORM.secondVisitRepID) AND VAL(FORM.placeRepID) AND FORM.secondVisitRepID EQ FORM.placeRepID ) { 
 					SESSION.formErrors.Add("Second Visit Representative must be different than Placing Representative");
 				}	
-
+				
+				/* Commented out as per Brian Hause request - 12/11/2012
 				if ( CLIENT.companyID NEQ 10 AND VAL(FORM.secondVisitRepID) AND VAL(FORM.areaRepID) AND FORM.secondVisitRepID EQ FORM.areaRepID ) { 
 					SESSION.formErrors.Add("Second Visit Representative must be different than Supervising Representative");
 				}	
+				*/
 
 			}
 			
@@ -299,9 +301,11 @@
 				SESSION.formErrors.Add("Second Visit Representative must be different than Placing Representative");
 			}	
 			
+			/* Commented out as per Brian Hause request - 12/11/2012
 			if ( CLIENT.companyID NEQ 10 AND VAL(FORM.secondVisitRepID) AND VAL(FORM.areaRepID) AND FORM.secondVisitRepID EQ FORM.areaRepID ) { 
 				SESSION.formErrors.Add("Second Visit Representative must be different than Supervising Representative");
-			}	
+			}
+			*/
 			
 			if ( VAL(FORM.hostID) AND VAL(FORM.doublePlace) AND qGetPlacementHistoryByID.doublePlacementID NEQ FORM.doublePlace ) { 
 			
