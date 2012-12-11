@@ -198,11 +198,13 @@
 						signature = FORM.fatherSignature																		  
 					);
 					
-					if ( NOT stResult.isSuccess ) {
+					if ( stResult.isSuccess ) {
+						// Send Out Email
+						vSendOutEmail = true;
+					} else {
 						// Set Error Message
 						SESSION.formErrors.Add(stResult.message);
-						vSendOutEmail = true;
-					}	
+					}
 				
 				}
 				
@@ -224,11 +226,13 @@
 						signature = FORM.motherSignature																		  
 					);
 					
-					if ( NOT stResult.isSuccess ) {
+					if ( stResult.isSuccess ) {
+						// Send Out Email
+						vSendOutEmail = true;
+					} else {
 						// Set Error Message
 						SESSION.formErrors.Add(stResult.message);
-						vSendOutEmail = true;
-					}	
+					}
 				
 				}
 				
@@ -252,10 +256,12 @@
 							signature = FORM[qGetFamilyMembers18AndOlder.childID[i] & 'memberSignature']																		  
 						);
 							
-						if ( NOT stResult.isSuccess ) {
+						if ( stResult.isSuccess ) {
+							// Send Out Email
+							vSendOutEmail = true;
+						} else {
 							// Set Error Message
 							SESSION.formErrors.Add(stResult.message);
-							vSendOutEmail = true;
 						}
 					
 					}
@@ -438,8 +444,7 @@
                             <cfif NOT LEN(qGetHostFamilyInfo.fatherSSN)>
                                 <cfinput type="text" name="fatherSSN" value="#FORM.fatherSSN#" mask="999-99-9999" class="mediumField">
                             <cfelse>
-                                <!--- #FORM.fatherSSN# --->
-                                Submitted
+                                Submitted <!--- #FORM.fatherSSN# --->
                             </cfif>
                         </td>
                     </tr>
@@ -460,8 +465,7 @@
                             <cfif NOT LEN(qGetHostFamilyInfo.motherSSN)>
                                 <cfinput type="text" name="motherSSN" value="#FORM.motherSSN#" mask="999-99-9999" class="mediumField">
                             <cfelse>
-                                <!--- #FORM.motherSSN# --->
-                                Submitted
+                                Submitted <!--- #FORM.motherSSN# --->
                             </cfif>
                         </td>
                     </tr>
@@ -501,8 +505,7 @@
                                 <cfif NOT LEN(qGetAllFamilyMembersAtHome.ssn)>
                                     <cfinput type="text" name="#qGetAllFamilyMembersAtHome.childID#memberSSN" value="#FORM[qGetAllFamilyMembersAtHome.childID & 'memberSSN']#" mask="999-99-9999" class="mediumField">
                                 <cfelse>
-                                    <!--- #FORM[qGetAllFamilyMembersAtHome.childID & 'memberSSN']# --->
-                                    Submitted
+                                    Submitted <!--- #FORM[qGetAllFamilyMembersAtHome.childID & 'memberSSN']# --->
                                 </cfif>
                             </td>                        	
                         <cfelse>
