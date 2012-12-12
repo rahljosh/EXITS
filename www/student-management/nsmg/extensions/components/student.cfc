@@ -1217,9 +1217,9 @@
         <cfargument name="changedBy" hint="changedBy is required">
         <cfargument name="userType" hint="userType is required">
         <cfargument name="reason" default="" hint="Field is used for rejection/resubmit comments">
-        <cfargument name="placementAction" default="" hint="Approve/Reject/Resubmit/unplaceStudent/setFamilyAsPermanent">
+        <cfargument name="placementAction" default="" hint="Approve/Reject/Resubmit/unplaceStudent/setFamilyAsPermanent/Received">
         <cfargument name="dateSetHostPermanent" default="" hint="dateSetHostPermanent is not required">
-	
+		<cfargument name="dateReceived" default="" hint="dateReceived is not required">
     	<cfscript>
 			// History ID
 			var vHostHistoryID = 0;
@@ -1257,7 +1257,11 @@
 			
 			// Set Track Placement Status Action Message
 			switch(ARGUMENTS.placementAction) { 
-
+				// RECEIVED
+				case 'Received':
+					vActions = "<strong>Host Application Received by #vUpdatedBy# on #ARGUMENTS.dateReceived#</strong> <br /> #CHR(13)#";
+					break; 
+					
 				// PLACEMENT APPROVED
 				case 'Approve':
 					vActions = "<strong>Placement Approved by #vUpdatedBy#</strong> <br /> #CHR(13)#";
