@@ -709,7 +709,11 @@
 			********************************************/
 			
 			var qCategoryList = APPLICATION.CFC.DOCUMENT.getDocumentType(documentGroup="familyAlbum");
-			var qUploadedPictureCategoryList = APPLICATION.CFC.DOCUMENT.getDocuments(documentGroup="familyAlbum");
+			var qUploadedPictureCategoryList = APPLICATION.CFC.DOCUMENT.getDocuments(
+				foreignTable="smg_hosts",	
+				foreignID=APPLICATION.CFC.SESSION.getHostSession().ID, 
+				documentGroup="familyAlbum"
+			);
 			
 			var vCategoryArray = ListToArray(ValueList(qCategoryList.ID));
 			var vUploadedPictureCategoryList = ValueList(qUploadedPictureCategoryList.documentTypeID);

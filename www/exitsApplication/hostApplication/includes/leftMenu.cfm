@@ -76,7 +76,7 @@
 			</cfif>
             
             <tr onMouseOver="this.style.background='#0171bd'"> 
-                <td><a href="logout.cfm" class="whtLinks">Logout</a></td>
+                <td><a href="?section=logout" class="whtLinks">Logout</a></td>
             </tr>
         </table>
         

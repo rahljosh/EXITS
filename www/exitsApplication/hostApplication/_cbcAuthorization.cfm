@@ -73,7 +73,7 @@
         
     	<cfparam name="FORM.#qGetAllFamilyMembersAtHome.childID#memberSSN" default="">
         <cfparam name="FORM.#qGetAllFamilyMembersAtHome.childID#memberSignature" default="">
-        <cfparam name="FORM.#qGetAllFamilyMembersAtHome.childID#memberFileName" default="#qGetMemberCBCAuthorization.fileName#">
+        <cfparam name="FORM.#qGetAllFamilyMembersAtHome.childID#documentID" default="#qGetMemberCBCAuthorization.ID#">
         
     </cfloop>
     
@@ -122,7 +122,7 @@
 				}	
 				
 				// Signature
-				if ( NOT LEN(FORM[qGetFamilyMembers18AndOlder.childID[i] & "memberFileName"]) AND NOT LEN(TRIM(FORM[qGetFamilyMembers18AndOlder.childID[i] & "memberSignature"])) ){
+				if ( NOT LEN(FORM[qGetFamilyMembers18AndOlder.childID[i] & "documentID"]) AND NOT LEN(TRIM(FORM[qGetFamilyMembers18AndOlder.childID[i] & "memberSignature"])) ){
 					SESSION.formErrors.Add("The signature for #qGetFamilyMembers18AndOlder.name[i]# is missing");
 				}	
 				
@@ -242,7 +242,7 @@
 				***************************/
 				for ( i=1; i LTE qGetFamilyMembers18AndOlder.recordCount; i++ ) {
 					
-					if ( NOT LEN(FORM[qGetFamilyMembers18AndOlder.childID[i] & "memberFileName"]) AND LEN(qGetFamilyMembers18AndOlder.name[i]) AND LEN(qGetFamilyMembers18AndOlder.lastName[i]) ) {
+					if ( NOT LEN(FORM[qGetFamilyMembers18AndOlder.childID[i] & "documentID"]) AND LEN(qGetFamilyMembers18AndOlder.name[i]) AND LEN(qGetFamilyMembers18AndOlder.lastName[i]) ) {
 					
 						// Generate CBC Authorization
 						stResult = APPLICATION.CFC.DOCUMENT.generateCBCAuthorization(
@@ -537,7 +537,8 @@
                             <cfif NOT qGetFatherCBCAuthorization.recordcount>
                                 <input type="text" name="fatherSignature" value="#FORM.fatherSignature#" class="largeField"/>
                             <cfelse>
-                                <a href="#APPLICATION.CFC.SESSION.getHostSession().PATH.relativeDocs##qGetFatherCBCAuthorization.fileName#" target="_blank">View CBC Authoriaztion</a>
+                                <a href="publicDocument.cfm?ID=#qGetFatherCBCAuthorization.ID#&Key=#APPLICATION.CFC.DOCUMENT.generateHashID(qGetFatherCBCAuthorization.ID)#" target="_blank">Download CBC Authoriaztion</a>
+                                <!--- <a href="#APPLICATION.CFC.SESSION.getHostSession().PATH.relativeDocs##qGetFatherCBCAuthorization.fileName#" target="_blank">View CBC Authoriaztion</a> --->
                             </cfif>
                         </td>                        
                     </tr>  
@@ -555,7 +556,7 @@
                             <cfif NOT qGetMotherCBCAuthorization.recordcount>
                                 <input type="text" name="motherSignature" value="#FORM.motherSignature#" class="largeField"/>
                             <cfelse>
-                                <a href="#APPLICATION.CFC.SESSION.getHostSession().PATH.relativeDocs##qGetMotherCBCAuthorization.fileName#" target="_blank">View CBC Authoriaztion</a>
+                            	<a href="publicDocument.cfm?ID=#qGetMotherCBCAuthorization.ID#&Key=#APPLICATION.CFC.DOCUMENT.generateHashID(qGetMotherCBCAuthorization.ID)#" target="_blank">Download CBC Authoriaztion</a>
                             </cfif>
                         </td>
                     </tr> 
@@ -571,10 +572,10 @@
                     <tr <cfif vSignatureCurrentRow MOD 2> bgcolor="##deeaf3" </cfif> >
                         <td><h3>#qGetFamilyMembers18AndOlder.name# #qGetFamilyMembers18AndOlder.lastName#</h3></td>
                         <td>
-                            <cfif NOT LEN(FORM[qGetFamilyMembers18AndOlder.childID & "memberFileName"])>
+                            <cfif NOT LEN(FORM[qGetFamilyMembers18AndOlder.childID & "documentID"])>
                                 <input type="text" name="#qGetFamilyMembers18AndOlder.childID#memberSignature" value="#FORM[qGetFamilyMembers18AndOlder.childID & 'memberSignature']#" class="largeField" />
                             <cfelse>
-                                <a href="#APPLICATION.CFC.SESSION.getHostSession().PATH.relativeDocs##FORM[qGetFamilyMembers18AndOlder.childID & 'memberFileName']#" target="_blank">View CBC Authoriaztion</a>
+                                <a href="publicDocument.cfm?ID=#FORM[qGetFamilyMembers18AndOlder.childID & 'documentID']#&Key=#APPLICATION.CFC.DOCUMENT.generateHashID(FORM[qGetFamilyMembers18AndOlder.childID & 'documentID'])#" target="_blank">Download CBC Authoriaztion</a>
                             </cfif>
                         </td>
                     </tr>

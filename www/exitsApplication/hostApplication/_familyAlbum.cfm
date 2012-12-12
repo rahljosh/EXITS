@@ -24,7 +24,11 @@
 	
     <cfscript>
 		// Get Uploaded Images
-		qGetUploadedImages = APPLICATION.CFC.DOCUMENT.getDocuments(documentGroup="familyAlbum");
+		qGetUploadedImages = APPLICATION.CFC.DOCUMENT.getDocuments(
+			foreignTable="smg_hosts",	
+			foreignID=APPLICATION.CFC.SESSION.getHostSession().ID, 			
+			documentGroup="familyAlbum"
+		);
 	
 		// Get Category List
 		qGetCategoryList = APPLICATION.CFC.DOCUMENT.getDocumentType(documentGroup="familyAlbum");
