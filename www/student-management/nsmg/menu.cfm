@@ -400,7 +400,7 @@
                         <li><a href="index.cfm?curdoc=tools/programs">Programs</a></li>
     
                         <li><a href="index.cfm?curdoc=tools/progress_report_questions">PR Questions</a></li>
-    
+    					<li><a href="index.cfm?curdoc=tools/receiveHostApp">Receive Apps</a></li>
                         <li><a href="index.cfm?curdoc=tools/regions">Region Maintenance</a></li>
                         
 						<li><a href="index.cfm?curdoc=tools/regionAllocation">Region Allocation</a></li>
