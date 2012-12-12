@@ -8,12 +8,17 @@ http://shrew.net/download
 
 list of users: 
 
-MarcusMelo -hya76Hyag
+user: MarcusMelo
+pass: hya76Hyag
 
-JoshRahl - jkau762gY
+user: JoshRahl 
+pass: jkau762gY
 
-JamesGriffiths - oKay672bT
+user: JamesGriffiths 
+pass: oKay672bT
 
-JeimiWoffinden - vbTy62ba7
+user: JeimiWoffinden
+pass: vbTy62ba7
 
-MarcelMaebara - ha8H2LO01
+user: MarcelMaebara 
+pass: ha8H2LO01
