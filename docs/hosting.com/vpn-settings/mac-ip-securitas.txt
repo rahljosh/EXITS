@@ -1,7 +1,0 @@
-Hello,
-
-I've attached the ipSecuritas policy which I just made up for you to this email. The password to import it is 'hms'.
-
-I tested this one out and it's connecting and working normally for me.
-
-If you have any questions or problems, please let us know.
