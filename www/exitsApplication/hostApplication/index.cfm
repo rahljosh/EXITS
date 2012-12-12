@@ -93,7 +93,7 @@
                             <cfcase value="login,overview,contactInfo,familyMembers,cbcAuthorization,personalDescription,hostingEnvironment,religiousPreference,familyRules,familyAlbum,schoolInfo,communityProfile,confidentialData,references,checkList,logout" delimiters=",">
                         		
                                 <!--- Include template --->
-                                <cfinclude template="#URL.section#.cfm" />
+                                <cfinclude template="_#URL.section#.cfm" />
                         
                             </cfcase>
                         
@@ -101,7 +101,7 @@
                             <cfdefaultcase>
                                 
                                 <!--- Include template --->
-                                <cfinclude template="overview.cfm" />
+                                <cfinclude template="_overview.cfm" />
                         
                             </cfdefaultcase>
                         

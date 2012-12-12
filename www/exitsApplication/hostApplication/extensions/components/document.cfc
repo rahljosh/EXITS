@@ -188,8 +188,8 @@
     <!--- Function to get a document list --->
 	<cffunction name="getDocuments" access="public" returntype="query" output="false" hint="Returns a list of documents">
         <cfargument name="ID" default="" hint="ID is required">
-		<cfargument name="foreignTable" type="string" default="smg_hosts" />
-		<cfargument name="foreignID" type="numeric" required="no" default="#APPLICATION.CFC.SESSION.getHostSession().ID#" />
+		<cfargument name="foreignTable" type="string" default="" />
+		<cfargument name="foreignID" required="no" default="" />
         <cfargument name="foreignIDList" default="" hint="List of foreign IDs">
 		<cfargument name="documentGroup" default="" hint="documentGroup is not required">   
         <cfargument name="documentTypeID" default="" hint="documentTypeID is not required">
@@ -228,21 +228,24 @@
                 	smg_seasons s ON s.seasonID = d.seasonID
                 WHERE 
                 	d.isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-                AND    
-                    d.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">
-				
-                <cfif LEN(ARGUMENTS.foreignIDList)>
-                    AND    
-                        d.foreignID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.foreignIDList#" list="yes"> )
-                <cfelse>
-                    AND
-                        d.foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.foreignID)#">  
-				</cfif>                
-                
+
                 <cfif LEN(ARGUMENTS.ID)>
                     AND    
                         d.ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
 				</cfif>
+                
+                <cfif LEN(ARGUMENTS.foreignTable)>
+                AND    
+                    d.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">
+				</cfif>
+                
+                <cfif LEN(ARGUMENTS.foreignIDList)>
+                    AND    
+                        d.foreignID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.foreignIDList#" list="yes"> )
+                <cfelseif LEN(ARGUMENTS.foreignID)>
+                    AND
+                        d.foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.foreignID)#">  
+				</cfif>                
                     
 				<cfif LEN(ARGUMENTS.documentGroup)>
 	                AND 
