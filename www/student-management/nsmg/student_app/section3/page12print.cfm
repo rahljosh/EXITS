@@ -62,7 +62,7 @@
 	
 	<tr><td width="10">&nbsp;</td>
 		<td width="80" align="right"><em>Height:</em> </td>
-		<td width="130">#get_student_info.height# &nbsp;<em>inchs</em><br><img src="#vStudentAppRelativePath#pics/line.gif" width="120" height="1" border="0" align="absmiddle"></td>
+		<td width="130">#get_student_info.height# &nbsp;<em>feet/inches</em><br><img src="#vStudentAppRelativePath#pics/line.gif" width="120" height="1" border="0" align="absmiddle"></td>
 		
 		<td width="110" align="right"><em>Weight:</em></td>
 		<td width="120">#get_student_info.weight# &nbsp;<em>lbs</em><br><img src="#vStudentAppRelativePath#pics/line.gif" width="110" height="1" border="0" align="absmiddle"></td>

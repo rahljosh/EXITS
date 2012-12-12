@@ -67,7 +67,7 @@
 	UPDATE 
     	smg_students
 	SET	
-    	height = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.height)#">,
+    	height = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.height#">,
 		weight = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.weight)#">,
 		haircolor = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.haircolor#">,
 		eyecolor = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.eyecolor#">

@@ -111,7 +111,7 @@ function NextPage() {
 	
 	<tr><td width="10">&nbsp;</td>
 		<td width="80" align="right"><em>Height:</em> </td>
-		<td width="130"><cfinput type="text" name="heightcm" size="8" validate="integer" message="Please, enter only number on Height cm statement" onChange = "DataChanged();calc(this.value,0.032808399,'height')">&nbsp;<em>cm or</em></td>
+		<td width="130"><cfinput type="text" name="heightcm" size="8" onChange = "DataChanged();calc(this.value,0.032808399,'height')">&nbsp;<em>cm or</em></td>
 		
 		<td width="110" align="right"><em>Weight:</em></td>
 		<td width="120"><cfinput type="text" name="weightkg" size="8" onchange="DataChanged();calc(this.value,2.2046,'weight')">&nbsp;<em>kg or</em></td>
@@ -124,7 +124,7 @@ function NextPage() {
 							<option value="heavy" <cfif get_health.clinical_build EQ 'heavy'>selected</cfif> >Heavy</option>
 						</select></td></tr>
 						
-	<tr><td colspan="2"></td><td><cfinput type="text" name="height" size="8" value="#get_student_info.height#" maxlength="4" onchange="DataChanged();calc(this.value,30.48,'heightcm');">&nbsp;<em>inches</em></td>
+	<tr><td colspan="2"></td><td><cfinput type="text" name="height" size="8" value="#get_student_info.height#" maxlength="4" onchange="DataChanged();calc(this.value,30.48,'heightcm');">&nbsp;<em>feet/inches</em></td>
 		<td>&nbsp;</td><td colspan="3"><cfinput type="text" name="weight" size="8" value="#get_student_info.weight#" maxlength="6" onchange="DataChanged();calc(this.value,0.453592,'weightkg');">&nbsp;<em>lbs</em></td></tr>
 	<tr><td colspan="2"></td><td colspan="5"><em>Enter only numbers in appropriate boxes above eg. 180 for cm and 80 for kg.</em></td></tr>
 
