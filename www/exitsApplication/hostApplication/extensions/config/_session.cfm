@@ -70,12 +70,11 @@
 		Create SESSION.EMAIL structure
 	*******************************************/
 	
-	if ( ListFindNoCase(CGI.SERVER_NAME, "case-usa", ".") ) {
+	if ( ListFindNoCase(CGI.SERVER_NAME, "case-usa", ".") OR FindNoCase("case.exitsapplication.com", CGI.HTTP_REFERER) ) {
 		
 		// CASE
 		SESSION.COMPANY.ID = 10;
 		// Query to Get Company Info
-		//
 		SESSION.COMPANY.name = "Cultural Academic Student Exchange";
 		SESSION.COMPANY.shortName = "CASE";
 		SESSION.COMPANY.siteURL = "http://www.case-usa.org/";
@@ -94,7 +93,6 @@
 		// ISE
 		SESSION.COMPANY.ID = 1;		
 		// Query to Get Company Info
-		//
 		SESSION.COMPANY.name = "International Student Exchange";
 		SESSION.COMPANY.shortName = "ISE";
 		SESSION.COMPANY.siteURL = "https://www.iseusa.com/";
