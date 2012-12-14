@@ -16,13 +16,16 @@ where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
             where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#"> 
             AND hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#hostStuCombo.hostid#"> 
             </Cfquery>
+           <!---
+				<cfscript>
+                // Get Family Member CBC
+                 APPLICATION.CFC.STUDENT.insertPlacementActionHistory(studentid=i,changedby=client.userid,usertype=client.usertype,placementAction=Received);
+                </cfscript>
+			---->
         </Cfif>
     </cfif>
     </cfoutput>
-   <cfscript>
-		// Get Family Member CBC
-		 APPLICATION.CFC.STUDENT.insertPlacementActionHistory(studentid=i);
-	</cfscript>
+   
     </cfloop>
 </Cfloop>
 </cfif>
@@ -197,7 +200,11 @@ where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
                     <cfset submittedHostList = #LIstAppend(submittedHostList, #hostid#)#>
                    		<tr  <Cfif hostid eq 0> bgcolor="##FC6"<<Cfelse><cfif currentrow mod 2>bgcolor="##a6bfe8"</cfif></cfif>>
                         	<td>#familylastname# (#hostid#)</td>
-                            <td><Cfif hostid eq 0><em>Problem with HOST assignment</em><cfelse><input type="datefield" name=#i#_#hostid# size=10 <cfif NOT IsDate(dateReceived) is ''>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif> value="#DateFormat(dateReceived, 'mm/dd/yyyy')#" size="8" maxlength="10"></Cfif>
+                            <td><Cfif hostid eq 0><em>Problem with HOST assignment</em><cfelse>
+                            
+                            
+                            <input type="datefield" name=#i#_#hostid# size=10 <cfif NOT IsDate(dateReceived) is ''>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif> value="#DateFormat(dateReceived, 'mm/dd/yyyy')#" size="8" maxlength="10"></Cfif>
+                           
                             </td>
                           
                             <td><Cfif isWelcomeFamily eq 1>Yes<cfelse>No</Cfif></td>
