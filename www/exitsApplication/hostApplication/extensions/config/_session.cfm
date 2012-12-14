@@ -27,6 +27,7 @@
 <cfparam name="SESSION.HOST.email" default="">
 <cfparam name="SESSION.HOST.seasonID" default="0">
 <cfparam name="SESSION.HOST.isMenuBlocked" default="false">
+<cfparam name="SESSION.HOST.isExitsLogin" default="false">
 <!--- Full Paths --->
 <cfparam name="SESSION.HOST.PATH.albumLarge" default="">
 <cfparam name="SESSION.HOST.PATH.albumThumbs" default="">
@@ -36,8 +37,7 @@
 <cfparam name="SESSION.HOST.PATH.relativeAlbumThumbs" default="">
 <cfparam name="SESSION.HOST.PATH.relativeDocs" default="">
 
-
-<!--- Param Session Variables --->
+<!--- Param Company Variables --->
 <cfparam name="SESSION.COMPANY.ID" default="0">
 <cfparam name="SESSION.COMPANY.name" default="">
 <cfparam name="SESSION.COMPANY.shortName" default="">
@@ -49,7 +49,6 @@
 <cfparam name="SESSION.COMPANY.EMAIL.support" default="">
 <cfparam name="SESSION.COMPANY.EMAIL.errors" default="">
 <cfparam name="SESSION.COMPANY.EMAIL.hostApp" default="">
-
 
 <cfscript>
 	// Store session information

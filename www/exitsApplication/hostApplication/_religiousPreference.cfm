@@ -99,7 +99,10 @@
                     hostID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
             </cfquery>
                 
-            <cflocation url="index.cfm?section=familyRules" addtoken="no">
+            <cfscript>
+				// Successfully Updated - Set navigation page
+				Location(APPLICATION.CFC.UDF.setPageNavigation(section=URL.section), "no");
+			</cfscript>
             
 		</cfif>
 
@@ -135,10 +138,12 @@
         messageType="section"
         />
 
-    <cfform action="index.cfm?section=religiousPreference">
+    <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
         <input type="hidden" name="submitted" value="1">
          
         <h3>Transportation</h3>
+        
+        <span class="required">* Required fields</span>
     
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr bgcolor="##deeaf3">
@@ -151,9 +156,7 @@
                     <label for="churchTransNo">No</label>
                 </td>
             </tr>
-        </table>
-        
-        <br />
+        </table> <br />
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr>
@@ -176,7 +179,7 @@
                     <label for="hostingDiffNo">No</label>
 				</td>
             </tr>
-        </table>
+        </table> <br />
         
         <div id="informReligiousPrefDiv" style="width:100%;" <cfif FORM.informReligiousPref NEQ 1>class="displayNone"</cfif>>
         
@@ -198,7 +201,7 @@
         
             <br />
 		
-        </div>
+        </div> 
         
         <h3>Religious Attendance</h3>
         

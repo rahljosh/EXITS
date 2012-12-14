@@ -85,7 +85,7 @@ hr {
 #subPages {
 	height: auto;
 	width: 750px;
-	margin-top: 48px;
+	margin-top: 0px;
 	margin-right: auto;
 	margin-left: auto;
 }
@@ -98,6 +98,7 @@ hr {
 	height: 16px;
 	width: 746px;
 }
+
 .whtMiddle {
 	background-image: url(../../images/whtBoxMiddle.png);
 	background-repeat: repeat-y;
@@ -106,11 +107,12 @@ hr {
 	width: 746px;
 	min-height: 50px;
 	text-align: justify;
-	padding-top: 20px;
+	padding-top: 10px;
 	padding-right: 0px;
 	padding-bottom: 0px;
 	padding-left: 0px;
 }
+
 .whtBottom {
 	background-image: url(../../images/whtBoxBottom.png);
 	background-repeat: no-repeat;
@@ -226,8 +228,12 @@ div.loginBox label {
 	font-size: 12px;
 	width: 675px;
 	margin-left: 45px;
-	margin-top: 5px;
 	padding: 0px;
+}
+
+.hostApp h3,
+.hostApp h2 {
+	margin-top:0;
 }
 
 .blueBox {

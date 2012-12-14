@@ -11,16 +11,14 @@
 
 <cfsilent>
 	
-    <!--- Param URL Variables --->
-    <cfparam name="URL.section" default="login">
-
     <cfscript>
+		// If Host is logged in skip the login page
 		if ( VAL(APPLICATION.CFC.SESSION.getHostSession().ID) AND URL.section EQ "login" ) {
 			URL.section = "overview";
 		}
 		
-		// Check if access is blocked
-		if ( APPLICATION.CFC.SESSION.getHostSession().isMenuBlocked AND NOT ListFind("overview,logout", URL.section) ) {
+		// Submitted applications have access only to overview and logout pages
+		if ( APPLICATION.CFC.SESSION.getHostSession().isMenuBlocked AND NOT APPLICATION.CFC.SESSION.getHostSession().isExitsLogin AND NOT ListFind("login,overview,logout", URL.section) ) {
 			URL.section = "overview";
 		} 
 		
@@ -37,7 +35,7 @@
 <link rel="stylesheet" href="linked/chosen/chosen.css" />
 <link rel="stylesheet" href="linked/css/wiki.css" />
 <link rel="stylesheet" href="linked/css/colorbox.css" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="linked/chosen/chosen.jquery.js" type="text/javascript"></script>
 <script src="linked/js/jquery.colorbox-min.js"></script>
 <script type="text/javascript">
@@ -59,7 +57,7 @@
         
             <div class="blueBox">
                 <a href="../index.cfm"><img src="images/#SESSION.COMPANY.logoImage#" width="214" height="165" alt="ISE logo" border="0" /></a>
-                <!--- Include Left Menu --->
+				<!--- Include Left Menu --->
                 <cfinclude template="includes/leftMenu.cfm">
             </div><!--blueBox -->
             
@@ -72,10 +70,6 @@
     <div id="container">
     
         <div class="spacer2"></div>
-    
-        <div class="title"></div><!-- end title -->
-    
-        <div class="tabsBar"></div><!-- end tabsBar -->
     
         <div id="mainContent">
         

@@ -72,8 +72,11 @@
                     hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
             </cfquery>
     
-            <cflocation url="index.cfm?section=familyAlbum" addtoken="no">
-            
+			<cfscript>
+				// Successfully Updated - Set navigation page
+				Location(APPLICATION.CFC.UDF.setPageNavigation(section=URL.section), "no");
+			</cfscript>				
+
         </cfif>
         
     <cfelse>
@@ -94,22 +97,30 @@
 </cfsilent>
 
 <cfoutput>
+    
+    <h2>Family Rules</h2>
+    
+    <!--- Page Messages --->
+    <gui:displayPageMessages 
+        pageMessages="#SESSION.pageMessages.GetCollection()#"
+        messageType="section"
+        />
+
+    <!--- Form Errors --->
+    <gui:displayFormErrors 
+        formErrors="#SESSION.formErrors.GetCollection()#"
+        messageType="section"
+        />
+    
+    List your household rules and personal expectations. It is very important that your student be treated as a member of your family. 
+    We will share this information with the student you select. 
+    <b>Exchange students MUST abide by all ISE rules and all local, state & federal laws, regardless of home rules.</b>
+    <br /><br />
+    
+    <span class="required">* Required fields</span>
 
     <form action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
         <input type="hidden" name="submitted" value="1" />
-        
-        <h2>Family Rules</h2>
-        
-		<!--- Form Errors --->
-        <gui:displayFormErrors 
-            formErrors="#SESSION.formErrors.GetCollection()#"
-            messageType="section"
-            />
-        
-        List your household rules and personal expectations. It is very important that your student be treated as a member of your family. 
-        We will share this information with the student you select. 
-        <b>Exchange students MUST abide by all ISE rules and all local, state & federal laws, regardless of home rules.</b>
-        <br /><br />
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr>
@@ -146,6 +157,7 @@
             	<td align="right"><input name="Submit" type="image" src="images/buttons/Next.png" border="0"></td>
             </tr>
         </table>
+        
     </form>
 
 </cfoutput>

@@ -151,7 +151,10 @@
                     hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
             </cfquery> 
     
-    		<cflocation url="index.cfm?section=confidentialData" addtoken="no">
+            <cfscript>
+				// Successfully Updated - Set navigation page
+				Location(APPLICATION.CFC.UDF.setPageNavigation(section=URL.section), "no");
+			</cfscript>
     
 		</cfif>
     
@@ -338,7 +341,7 @@
 
 <cfoutput>
 
-    <h2>Community Information for #qGetHostFamilyInfo.city#, #qGetHostFamilyInfo.state#</h2>
+    <h2>Community Profile - #qGetHostFamilyInfo.city#, #qGetHostFamilyInfo.state#</h2>
 
 	<!--- Page Messages --->
     <gui:displayPageMessages 
@@ -352,11 +355,14 @@
         messageType="section"
         />
 
-    <form action="index.cfm?section=communityProfile" method="post">
+    <form action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
         <input type="hidden" name="submitted" value="1" />
         
         <table width="100%" cellspacing="0" cellpadding="2">
             <tr>
+            	<td align="left">
+	                <span class="required">* Required fields</span>
+                </td>
                 <td align="right">
                     <a href="http://en.wikipedia.org/wiki/#qGetHostFamilyInfo.city#,_#qGetHostFamilyInfo.state#" target="_new">Need more info on #qGetHostFamilyInfo.city#?</a>
                 </td>
@@ -379,9 +385,9 @@
                     </select>
 	            </td>
             </tr>
-        </table>
+        </table> <br />
 
-        <h2>Airports</h2>
+        <h3>Airports</h3>
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr>	
@@ -407,9 +413,9 @@
                     </select>
 				</td>                    
             </tr>
-        </table>
+        </table> <br />
         
-        <h2>Climate</h2>
+        <h3>Climate</h3>
         
         <table  width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr bgcolor="##deeaf3">
@@ -431,9 +437,9 @@
                 <td><input type="checkbox" name="high_hummidity" id="high_hummidity" value="1" <cfif FORM.high_hummidity EQ 1> checked="checked" </cfif> /> <label for="high_hummidity">High Humidity</label></td>
                 <td><input type="checkbox" name="dry_air" id="dry_air" value="1" <cfif FORM.dry_air EQ 1> checked="checked" </cfif> /> <label for="dry_air">Dry air</label></td>
 			</tr>            
-        </table>
+        </table> <br />
         
-        <h2>Neighborhood & Terrain</h2>
+        <h3>Neighborhood & Terrain</h3>
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr  bgcolor="##deeaf3">
@@ -488,9 +494,9 @@
 					</table>
 				</td>
 			</tr>                                                    
-        </table>
+        </table> <br />
         
-        <h2>Miscellaneous Info</h2>
+        <h3>Miscellaneous Info</h3>
         
         <table  width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr bgcolor="##deeaf3">

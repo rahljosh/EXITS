@@ -186,10 +186,10 @@
 				<cfscript>
 					// Set Page Message
 					SESSION.pageMessages.Add("Reference has been added");
-				
-					if ( vRemainingReferences - 1 EQ 0 ) {
-						// References are complete - go to checklist
-						location("#CGI.SCRIPT_NAME#?section=checkList", "no");
+					
+					if ( vRemainingReferences - 1 LTE 0 ) {
+						// Successfully Updated - Set navigation page
+						Location(APPLICATION.CFC.UDF.setPageNavigation(section=URL.section), "no");
 					} else {
 						// Refresh Page
 						location("#CGI.SCRIPT_NAME#?section=#URL.section#", "no");
@@ -274,7 +274,7 @@
             </tr>
         </cfloop>
         
-    </table>
+    </table> <br />
 	
     <!--- Finished with this page --->
     <div style="display:block; float:right; margin-top:5px;">

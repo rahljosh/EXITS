@@ -110,7 +110,10 @@
                 	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
             </cfquery>
 
-            <cflocation url="index.cfm?section=references" addtoken="no">
+            <cfscript>
+				// Successfully Updated - Set navigation page
+				Location(APPLICATION.CFC.UDF.setPageNavigation(section=URL.section), "no");
+			</cfscript>
         
         </cfif>
 
@@ -136,7 +139,7 @@
 
 <cfoutput>
 
-    <h2>Confidential Information</h2>
+    <h2>Confidential Data</h2>
 	
 	<!--- Page Messages --->
     <gui:displayPageMessages 
@@ -150,17 +153,17 @@
         messageType="section"
         />
         
-	<p>    
-        The following information is required by the Department of State. 
-        This information will be kept confidential by the exchange company and will not be distributed to the student, the natural family, or the International Agent. <sup>&dagger;</sup>
-    </p>
+    The following information is required by the Department of State. 
+    This information will be kept confidential by the exchange company and will not be distributed to the student, the natural family, or the International Agent. <sup>&dagger;</sup> <br /><br />
+    
+    <span class="required">* Required fields</span>
 
-    <cfform method="post" action="index.cfm?section=confidentialData">
+    <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
         <input type="hidden" name="submitted" value="1" />
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr bgcolor="##deeaf3">
-                <td class="label" valign="top"><h3>Is any member of your household receiving<br> any kind of public assistance? <span class="required">*</span><sup>&dagger;&dagger;</sup></h3></td>
+                <td class="label" valign="top"><h3>Is any member of your household receiving<br /> any kind of public assistance? <span class="required">*</span><sup>&dagger;&dagger;</sup></h3></td>
                 <td>
                     <cfinput type="radio" name="publicAssitance" id="publicAssitanceYes" value="1" checked="#FORM.publicAssitance EQ 1#" onclick="document.getElementById('publicAssitanceExpl').style.display='table-row';" />
                     <label for="publicAssitanceYes">Yes</label>

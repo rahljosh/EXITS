@@ -48,7 +48,10 @@
                 	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
             </cfquery>
     
-    		<cflocation url="index.cfm?section=hostingEnvironment" addtoken="no">
+    		<cfscript>
+				// Successfully Updated - Set navigation page
+				Location(APPLICATION.CFC.UDF.setPageNavigation(section=URL.section), "no");
+			</cfscript>
         
 		</cfif>
     
@@ -79,7 +82,7 @@
         messageType="section"
         />
 
-    <form method="post" action="index.cfm?section=personalDescription">
+    <form method="post" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#">
     	<input type="hidden" name="submitted" value="1" />
     
         Your personal description is the most important part of this application. Along with photos of your family and your home, this description will be your
@@ -87,6 +90,8 @@
     	
         We ask that you be brief yet thorough with your introduction to your 'extended' family. Please include all information that might be of importance to your newest
     	son or daughter and their parents, such as personalities, background, lifestyle and hobbies. <br /><br />
+        
+        <span class="required">* Required fields</span>
     
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr bgcolor="##deeaf3">

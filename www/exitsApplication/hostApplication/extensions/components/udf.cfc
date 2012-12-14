@@ -43,6 +43,75 @@
 	</cffunction>
 
 
+	<cffunction name="buildLeftMenu" access="public" returntype="struct" output="No" hint="Build the Left Menu Items">
+    
+		<cfscript>
+			// Create structure
+			stBuildMenu = StructNew();
+			
+			// These are allowed for blocked Menus			
+			stBuildMenu.allowedMenuList = "1,14,15"; 
+			
+			// Set Menu Link Section
+			stBuildMenu.linkSection = arrayNew(1);
+			stBuildMenu.linkSection[1] = "overview";
+			stBuildMenu.linkSection[2] = "contactInfo";
+			stBuildMenu.linkSection[3] = "familyMembers";
+			stBuildMenu.linkSection[4] = "cbcAuthorization";
+			stBuildMenu.linkSection[5] = "personalDescription";
+			stBuildMenu.linkSection[6] = "hostingEnvironment";
+			stBuildMenu.linkSection[7] = "religiousPreference";
+			stBuildMenu.linkSection[8] = "familyRules";
+			stBuildMenu.linkSection[9] = "familyAlbum";
+			stBuildMenu.linkSection[10] = "schoolInfo";
+			stBuildMenu.linkSection[11] = "communityProfile";
+			stBuildMenu.linkSection[12] = "confidentialData";
+			stBuildMenu.linkSection[13] = "references";
+			stBuildMenu.linkSection[14] = "checkList";
+			stBuildMenu.linkSection[15] = "logout";
+
+			// Set Menu Display Section
+			stBuildMenu.displaySection = arrayNew(1);
+			stBuildMenu.displaySection[1] = "Overview";
+			stBuildMenu.displaySection[2] = "Name & Contact Info";
+			stBuildMenu.displaySection[3] = "Family Members";
+			stBuildMenu.displaySection[4] = "Background Checks";
+			stBuildMenu.displaySection[5] = "Personal Description";
+			stBuildMenu.displaySection[6] = "Hosting Environment";
+			stBuildMenu.displaySection[7] = "Religious Preference";
+			stBuildMenu.displaySection[8] = "Family Rules";
+			stBuildMenu.displaySection[9] = "Family Album";
+			stBuildMenu.displaySection[10] = "School Info";
+			stBuildMenu.displaySection[11] = "Community Profile";	
+			stBuildMenu.displaySection[12] = "Confidential Data";
+			stBuildMenu.displaySection[13] = "References";
+			stBuildMenu.displaySection[14] = "Checklist";
+			stBuildMenu.displaySection[15] = "Logout";
+			
+			// Set Menu Color Section
+			stBuildMenu.colorSection = arrayNew(1);
+			stBuildMenu.colorSection[1] = "##8cc540";
+			stBuildMenu.colorSection[2] = "##00aeef";
+			stBuildMenu.colorSection[3] = "##f6931e";
+			stBuildMenu.colorSection[4] = "##c0272c";
+			stBuildMenu.colorSection[5] = "##0171bd";
+			stBuildMenu.colorSection[6] = "##8cc540";
+			stBuildMenu.colorSection[7] = "##00aeef";
+			stBuildMenu.colorSection[8] = "##f6931e";
+			stBuildMenu.colorSection[9] = "##c0272c";
+			stBuildMenu.colorSection[10] = "##0171bd";
+			stBuildMenu.colorSection[11] = "##8cc540";
+			stBuildMenu.colorSection[12] = "##00aeef";
+			stBuildMenu.colorSection[13] = "##f6931e";
+			stBuildMenu.colorSection[14] = "##c0272c";
+			stBuildMenu.colorSection[15] = "##0171bd";
+		
+        	return stBuildMenu;
+        </cfscript>
+        
+	</cffunction>
+
+
 	<!--- Check if Password is valid --->
 	<cffunction name="IsValidPassword" access="public" returntype="struct" hint="Determines if the password is of valid format">
 		<cfargument name="Password" type="string" required="Yes" />
@@ -137,7 +206,86 @@
     	</cfscript>
     
     </cffunction>
-    
+
+
+	<!--- Encrypt Variable --->
+	<cffunction name="setPageNavigation" access="public" returntype="string" output="false" hint="Sets the next page navigation after submitting a form, returns a string">
+    	<cfargument name="section" default="overview" hint="section is required">
+
+		<cfscript>
+			// Set Default Navigation to the same page
+			vSetNavigation = "index.cfm?section=#ARGUMENTS.section#";
+			
+			// Menu Blocked - Set default page message
+			if ( APPLICATION.CFC.SESSION.getHostSession().isMenuBlocked AND APPLICATION.CFC.SESSION.getHostSession().isExitsLogin AND NOT ListFind("login,overview", ARGUMENTS.section) ) {
+	
+				// Set Page Message
+				SESSION.pageMessages.Add("Page has been updated");
+
+			// If menu is not hidden we need to navigate to the next section
+			} else {
+				
+				// Navigate to next section
+				switch(ARGUMENTS.section) { 
+					
+					case "contactInfo":
+						vSetNavigation = "index.cfm?section=familyMembers";
+						break; 
+						
+					case "familyMembers":
+						vSetNavigation = "index.cfm?section=cbcAuthorization";
+						break; 
+						
+					case "cbcAuthorization":
+						vSetNavigation = "index.cfm?section=personalDescription";
+						break; 
+
+					case "personalDescription":
+						vSetNavigation = "index.cfm?section=hostingEnvironment";
+						break; 
+
+					case "hostingEnvironment":
+						vSetNavigation = "index.cfm?section=religiousPreference";
+						break; 
+
+					case "religiousPreference":
+						vSetNavigation = "index.cfm?section=familyRules";
+						break; 
+
+					case "familyRules":
+						vSetNavigation = "index.cfm?section=familyAlbum";
+						break; 
+
+					case "familyAlbum":
+						vSetNavigation = "index.cfm?section=schoolInfo";
+						break; 
+
+					case "schoolInfo":
+						vSetNavigation = "index.cfm?section=communityProfile";
+						break; 
+
+					case "communityProfile":
+						vSetNavigation = "index.cfm?section=confidentialData";
+						break; 
+						
+					case "confidentialData":
+						vSetNavigation = "index.cfm?section=references";
+						break; 
+						
+					case "references":
+						vSetNavigation = "index.cfm?section=checklist";
+						break; 
+
+				} 
+				//end switch
+				
+			}	
+			
+			return vSetNavigation;
+        </cfscript>
+		   
+	</cffunction>
+
 
 	<!--- Encrypt Variable --->
 	<cffunction name="encryptVariable" access="public" returntype="string" output="false" hint="Encrypts a variable">

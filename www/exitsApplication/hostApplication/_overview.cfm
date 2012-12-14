@@ -76,7 +76,7 @@
 
 <cfoutput> 
   
-    <h1 align="center">Welcome #qGetHostFamilyInfo.familylastname# Family!</h1>
+    <h1 align="center">Welcome #qGetHostFamilyInfo.familylastname# Family!</h1> <br />
     
     <table width="100%" cellspacing="0" cellpadding="2"> 
         <tr>
