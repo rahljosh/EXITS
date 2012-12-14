@@ -202,6 +202,25 @@
 			SESSION.USER.fullName = qGetUserInfo.firstName & " " & qGetUserInfo.lastName;
 			SESSION.USER.dateLastLoggedIn = qGetUserInfo.lastLogin;
 			SESSION.USER.email = qGetUserInfo.email;
+			
+			// Company Based Variables
+			if ( APPLICATION.isServerlocal ) {
+				
+				// Local Environment
+				SESSION.USER.companyURL = "http://smg.local/";
+				SESSION.USER.emailSupport = 'support@student-management.com';
+				
+			} else { 
+			
+				// Production Environment
+				SESSION.USER.companyURL = "https://#CGI.SERVER_NAME#/";
+				if ( FindNoCase("case.exitsapplication.com", CGI.SERVER_NAME) ) {
+					SESSION.USER.emailSupport = 'support@case-usa.org';
+				} else {
+					SESSION.USER.emailSupport = 'support@iseusa.com';
+				}
+				
+			}
 			//SESSION.USER.defaultRegion = "";
 			//SESSION.USER.userType = "";
 			
@@ -389,7 +408,6 @@
 			stUserPaperwork.user.displayName = qGetUserInfo.firstName & " " & qGetUserInfo.lastName & " (##" & qGetUserInfo.userID & ")";
 			stUserPaperwork.user.email = qGetUserInfo.email;			
 			stUserPaperwork.user.userType = "";
-
 			/**** Set Default Values ****/
 				
 			// Set Paperwork as not Completed
@@ -513,10 +531,16 @@
 			
 			// Check if is a new or returning user based on number of paperwork seasons			
 			qGetAllSeasonPaperwork = getSeasonPaperwork(userID=ARGUMENTS.userID, getAllRecords=1);
-			
+
+			// Set if user is returning or not
+			if ( qGetAllSeasonPaperwork.recordCount GTE 2 ) {
+				stUserPaperwork.isReturningUser = true;
+			} else {
+				stUserPaperwork.isReturningUser = false;
+			}
 			
 			// Returning User 
-			if ( qGetAllSeasonPaperwork.recordCount GTE 2 AND isDate(stUserPaperwork.season.datePaperworkRequired) ) {
+			if ( stUserPaperwork.isReturningUser AND isDate(stUserPaperwork.season.datePaperworkRequired) ) {
 				
 				// Extra Period is 21 days from datePaperworkRequired
 				// stUserPaperwork.season.dateExtraPaperworkRequired = DateFormat(DateAdd("d", 21, stUserPaperwork.season.datePaperworkRequired), 'mm/dd/yyyy');				
@@ -529,8 +553,10 @@
 				
 			// New User
 			} else if ( isDate(qGetUserInfo.dateCreated) ) {
+				
 				// Extra Period is 21 days from dateCreated
-				stUserPaperwork.season.dateExtraPaperworkRequired = DateFormat(DateAdd("d", 21, qGetUserInfo.dateCreated), 'mm/dd/yyyy');				
+				stUserPaperwork.season.dateExtraPaperworkRequired = DateFormat(DateAdd("d", 21, qGetUserInfo.dateCreated), 'mm/dd/yyyy');	
+				
 			}
 			
 
@@ -1323,6 +1349,11 @@
         <cfargument name="is2ndVisitIncluded" default="0" type="numeric" hint="is2ndVisitIncluded is not required">
         <cfargument name="includeUserIDs" default="" hint="area reps will be able to see themselves and current assigned users on the list">
         
+        <cfscript>
+			// Get Current Paperwork Season ID
+			vCurrentSeasonID = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
+		</cfscript>
+        
         <!--- Office Users --->
         <cfif ListFind("1,2,3,4", ARGUMENTS.userType)>
             
@@ -1336,10 +1367,11 @@
                     	smg_users u
                     INNER JOIN 
                     	user_access_rights uar ON uar.userID = u.userID
+                    <!--- Get Commpliant Users Only --->    
+                    LEFT OUTER JOIN
+                    	smg_users_paperwork sup ON sup.userID = u.userID
                     WHERE 
                     	u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                    AND 
-                    	uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
            			
 					<cfif VAL(ARGUMENTS.regionID)>
                         AND
@@ -1351,13 +1383,6 @@
                            uar.regionid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionIDList#" list="yes"> )
                 	</cfif>
                     
-                    AND
-                    	u.accountCreationVerified != <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                    <!---
-					AND
-						u.dateAccountVerified IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
-					--->
-                    						
                     <cfif VAL(is2ndVisitIncluded)>
                         AND 
                             uar.usertype IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7,15" list="yes"> )
@@ -1365,6 +1390,12 @@
                         AND 
                             uar.usertype IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )
                     </cfif>
+                    
+                    <!--- Get Only Current Season Compliant Users --->
+                    AND
+                        sup.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vCurrentSeasonID)#">
+                    AND
+                        sup.dateAccessGranted IS NOT NULL
 
                     <!--- Include Current Assigned User --->
                     <cfif LEN(ARGUMENTS.includeUserIDs)>
@@ -1391,11 +1422,11 @@
                     	smg_users u
                     INNER JOIN 
                     	user_access_rights uar ON uar.userID = u.userID
+                    LEFT OUTER JOIN
+                    	smg_users_paperwork sup ON sup.userID = u.userID
                     WHERE 
                     	u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                    AND
-                    	u.accountCreationVerified != <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                                            
+
 					<cfif VAL(ARGUMENTS.regionID)>
                         AND
                             uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
@@ -1438,6 +1469,12 @@
                         </cfcase>
                         
                     </cfswitch>
+					
+                    <!--- Get Only Current Season Compliant Users --->
+                    AND
+                        sup.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vCurrentSeasonID)#">
+                    AND
+                        sup.dateAccessGranted IS NOT NULL
 					
                     <!--- Include Current Placing/Supervising representatives Assigned to student --->
                     <cfif LEN(ARGUMENTS.includeUserIDs)>
