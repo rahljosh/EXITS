@@ -281,8 +281,10 @@
                     hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
             </cfquery>
             
-            <!--- Successfully Updated - Go to Next Page --->
-            <cflocation url="index.cfm?section=familyMembers" addtoken="No">
+            <cfscript>
+				// Successfully Updated - Set navigation page
+				Location(APPLICATION.CFC.UDF.setPageNavigation(section=URL.section), "no");
+			</cfscript>
     
     	</cfif> <!--- NOT SESSION.formErrors.length() --->
     
@@ -348,7 +350,7 @@
 	// JQuery Document Ready
 	$(document).ready(function() {
 		// Call animated scroll to anchor/id function - This will scroll up the page to the student detail div
-		$('html,body').animate({scrollTop: $("#hostFamilyHeader").offset().top},'fast');
+		//$('html,body').animate({scrollTop: $("#hostFamilyHeader").offset().top},'fast');
 		// Set focus to the first field
 		$("#familylastname").focus();
 	});
@@ -358,20 +360,19 @@
 	}
 
 	// Copy Fields
-	function FillFields(box) 
-	{
+	function FillFields(box) {
 		if (box.checked == false) { 
-			document.my_form.mailaddress.value  = '';
-			document.my_form.mailaddress2.value = '';
-			document.my_form.mailcity.value = '';
-			document.my_form.mailstate.value = '';
-			document.my_form.mailzip.value = '';
+			$("#mailaddress").val("");
+			$("#mailaddress2").val("");
+			$("#mailcity").val("");
+			$("#mailstate").val("");
+			$("#mailzip").val("");
 		} else {
-			document.my_form.mailaddress.value  = document.my_form.address.value;
-			document.my_form.mailaddress2.value = document.my_form.address2.value;
-			document.my_form.mailcity.value = document.my_form.city.value;
-			document.my_form.mailstate.value = document.my_form.state.value;
-			document.my_form.mailzip.value = document.my_form.zip.value;
+			$("#mailaddress").val($("#address").val());
+			$("#mailaddress2").val($("#address2").val());
+			$("#mailcity").val($("#city").val());
+			$("#mailstate").val($("#state").val());
+			$("#mailzip").val($("#zip").val());
 		}
 	}
 
@@ -384,222 +385,221 @@
 
 <cfoutput>
 
-<h1 class="enter" id="hostFamilyHeader">#lcase(FORM.familylastname)# Family Application</h1>
-<p>
-	Completing the host family application will take between 15 and 60 minutes.  
-    You do not have to complete it all at once, feel free to come back and complete it.
-</p>
-<p>Use the menu on the left to navigate to any section of the application.</p>
-
-<cfform method="post" action="index.cfm?section=contactInfo" name="my_form"  onsubmit="return validate(this)"> <!--- onSubmit="return checkForm();" --->
-    <input type="hidden" name="submitted" value="1">
-
-	<!--- Form Errors --->
-    <gui:displayFormErrors 
-        formErrors="#SESSION.formErrors.GetCollection()#"
-        messageType="section"
-        />
-        
-    <div align="center">
-      <span class="required">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Required fields &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + One phone field is required</span>
-    </div>
-  
-  <h2>Home Address, Phone & Email</h2>
-  <table width="100%" cellspacing="0" cellpadding="2" class="border">
-    <tr>
-        <td class="label"><h3>Family Name <span class="required">*</span></h3> </td>
-        <td colspan="3"><input type="text" name="familylastname" id="familylastname" value="#FORM.familylastname#" class="largeField" maxlength="150"></td>
-    </tr>
-
-    <tr bgcolor="##deeaf3">
-        <td class="label">
-        
-        <h3>Address <span class="required">*</span></h3></td>
-        <td colspan="2">
-        	<cfinput type="text" name="address" value="#FORM.address#" size="40" maxlength="150"  validate="noblanks" >
-            <font size="1">NO PO BOXES</font>
-        </td>
-        <td rowspan=2> 
-        	<p>
-            	<font size=-1>
-                	<em>
-                    	physical address where <br /> 
-          				student will be living. <br /> Mailing address can be<br />
-           				added below, if different.
-                    </em>
-				</font>
-			</p>
- 	   </td>
-    </tr>
-    <tr bgcolor="##deeaf3">
-        <td></td>
-        <td colspan="3"><cfinput type="text" name="address2" value="#FORM.address2#" size="40" maxlength="150"></td>
-    </tr>
-    <tr>			 
-        <td class="label"><h3>City <span class="required">*</span></h3></td>
-        <td colspan="3"><cfinput type="text" name="city" value="#FORM.city#" class="largeField" maxlength="150"></td>
-    </tr>
-
-    <tr bgcolor="##deeaf3">
-        <td class="label"><h3>State <span class="required">*</span></h3></td>
-        <td>
-			<cfselect name="state" query="qGetStates" value="state" display="statename" selected="#FORM.state#" queryPosition="below">
-				<option></option>
-			</cfselect>
-        </td>
-        <td class="zip"><h3>Zip <span class="required">*</span></h3> </td>
-        <td><cfinput type="text" name="zip" value="#FORM.zip#" class="smallField" maxlength="5" ></td>
-    </tr>
-    <tr>
-        <td><h3>Phone <span class="required">+</span></h3></td>
-        <td colspan="3"><cfinput type="text" name="phone" value="#FORM.phone#" class="mediumField" placeholder="(999) 999-9999" maxlength="14" mask="(999) 999-9999"></td>
-    </tr>
-    <tr bgcolor="##deeaf3">
-        <td><h3>Email</h3></td>
-        <td colspan="3"><cfinput type="text" name="email" value="#FORM.email#" class="xLargeField" maxlength="200"></td>
-    </tr>
-    <tr>
-        <td><h3>Password</h3></td>
-        <td colspan="3"><cfinput type="text" name="password" value="#FORM.password#" class="xLargeField" maxlength="200"> 
-        8 characters minimum</td>
-    </tr>
-  </table>
- <h2>Home Based Business</h2>
-  <table width="100%" cellspacing="0" cellpadding="2" class="border">
-    <tr bgcolor="##deeaf3">
-        <td class="label" colspan="3"><h3>Is the residence the site of a functioning business?(e.g. daycare, farm) <span class="required">*</span></h3> </td>
-        <td>
-            <cfinput type="radio" name="homeIsFunctBusiness" id="homeIsFunctBusiness1" value="1"
-            	checked="#FORM.homeIsFunctBusiness eq 1#" onclick="document.getElementById('describeBusiness').style.display='table-row';" 
-            	 />
-            <label for="homeIsFunctBusiness1">Yes</label>
-            
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            
-            <cfinput type="radio" name="homeIsFunctBusiness" id="homeIsFunctBusiness0" value="0"
-            	checked="#FORM.homeIsFunctBusiness eq 0#" onclick="document.getElementById('describeBusiness').style.display='none';" 
-           		 />
-            <label for="homeIsFunctBusiness0">No</label>
-		 </td>
-	</tr>
-  
-     <tr>
-	     <td align="left" colspan="4" id="describeBusiness" <cfif FORM.homeBusinessDesc is ''>  class="displayNone"</cfif>><br /><strong>Please Describe <span class="required">*</span></strong><br><textarea cols="50" rows="4" name="homeBusinessDesc" placeholder="Name of Business, Nature of Business, etc"><cfoutput>#FORM.homeBusinessDesc#</cfoutput></textarea></td>
-	</tr>   
-</table>
-<br />
-
-<h3>Mailing Address <font size=-1><input name="ShipSame" id="ShipSame" type="checkbox" class="formCheckbox" onClick="FillFields(this)" value="Same"<cfif IsDefined('FORM.ShipSame')> checked</cfif>><label for="ShipSame">Use Home Address</label></font></h3>
-  <table width="100%" cellspacing="0" cellpadding="2" class="border">
-   <tr bgcolor="##deeaf3">
-        <td class="label"><h3>Address <span class="required">*</span></h3></td>
-        <td colspan="3">
-        	<cfinput type="text" name="mailaddress" value="#FORM.mailaddress#" size="40" maxlength="150"></td>
-    </tr>
-    <tr bgcolor="##deeaf3">
-        <td></td>
-        <td colspan="3"><cfinput type="text" name="mailaddress2" value="#FORM.mailaddress2#" size="40" maxlength="150"></td>
-    </tr>
-    <tr>			 
-        <td class="label"><h3>City <span class="required">*</span></h3></td>
-        <td colspan="3"><cfinput type="text" name="mailcity" value="#FORM.mailcity#" class="largeField" maxlength="150"></td>
-    </tr>
-    <tr bgcolor="##deeaf3">
-        <td class="label"><h3>State <span class="required">*</span></h3></td>
-        <td>
-			<cfselect name="mailstate" query="qGetStates" value="state" display="statename" selected="#FORM.mailstate#" queryPosition="below">
-				<option></option>
-			</cfselect>
-        </td>
-        <td class="zip"><h3>Zip <span class="required">*</span></h3> </td>
-        <td><cfinput type="text" name="mailzip" value="#FORM.mailzip#" class="smallField" maxlength="5" ></td>
-    </tr>
-  </table>
-
-<br />
-  <h3>Father's Information</h3>
-  <table width="100%" cellspacing="0" cellpadding="2" class="border">
-    <tr bgcolor="##deeaf3">
-    	<td class="label"><h3>First Name</h3></td>
-        <td><cfinput type="text" name="fatherFirstName" value="#FORM.fatherFirstName#" class="largeField" maxlength="150"></td>
-    </tr>
-    <tr>
-    	<td class="label"><h3>Last Name</h3></td>
-        <td><cfinput type="text" name="fatherlastname" value="#FORM.fatherlastname#" class="largeField" maxlength="150"></td>
-    </tr>
-    <tr>
-    	<td class="label"><h3>Middle Name</h3></td>
-        <td><cfinput type="text" name="fathermiddlename" value="#FORM.fathermiddlename#" class="largeField" maxlength="150"></td>
-    </tr>
-    <tr bgcolor="##deeaf3">
-    	<td class="label"><h3>Date of Birth</h3></td>
-        <td><cfinput type="text" name="fatherdob" value="#dateFormat(FORM.fatherdob, 'mm/dd/yyyy')#" size="10" maxlength="10" mask="99/99/9999" placeholder="MM/DD/YYYY"> </td>
-    </tr>
-
-    <tr>
-    	<td class="label"><h3>Occupation</h3></td>
-        <td>
-        	<cfinput type="text" name="fatherworktype" value="#FORM.fatherworktype#" size="50" maxlength="200"> 
-            <input name="fatherfullpart" id="fatherFullTime" type="radio" value="1" <cfif FORM.fatherfullpart eq 1>checked</cfif>> <label for="fatherFullTime">Full Time</label>
-            <input name="fatherfullpart" id="fatherPartTime" type="radio" value="0" <cfif FORM.fatherfullpart eq 0>checked</cfif>> <label for="fatherPartTime">Part Time</label>
-        </td>
-    </tr>
- <tr>
-    	<td class="label"><h3>Employer</h3></td>
-        <td><cfinput type="text" name="fatherEmployeer" value="#FORM.fatherEmployeer#" size="50" maxlength="200"> 
-         </td>
-    </tr>
-    <tr bgcolor="##deeaf3">
-        <td class="label"><h3>Cell Phone <span class="required">+</span></h3></td>
-        <td colspan="3"><cfinput type="text" name="father_cell" value="#FORM.father_cell#" size="14" maxlength="14" placeholder="(999) 999-9999"  mask="(999) 999-9999" ></td>
-    </tr>
-</table>
-
-<br />
-  <h3>Mother's Information</h3>
-  <table width="100%" cellspacing="0" cellpadding="2" class="border">
-    <tr  bgcolor="##deeaf3">
-    	<td class="label"><h3>First Name</h3></td>
-        <td><cfinput type="text" name="motherFirstName" value="#FORM.motherFirstName#" class="largeField" maxlength="150"></td>
-    </tr>
-    <tr>
-    	<td class="label"><h3>Last Name</h3></td>
-        <td><cfinput type="text" name="motherlastname" value="#FORM.motherlastname#" class="largeField" maxlength="150"></td>
-    </tr>
-    <tr>
-    	<td class="label"><h3>Middle Name</h3></td>
-        <td><cfinput type="text" name="mothermiddlename" value="#FORM.mothermiddlename#" class="largeField" maxlength="150"></td>
-    </tr>			
-    <tr  bgcolor="##deeaf3">
-    	<td class="label"><h3>Date of Birth</h3></td>
-        <td><cfinput type="text" name="motherdob" value="#dateFormat(FORM.motherdob, 'mm/dd/yyyy')#" class="mediumField" maxlength="10" mask="99/99/9999" placeholder="MM/DD/YYYY"> </td>
-    </tr>
-
-    <tr>
-    	<td class="label"><h3>Occupation</h3></td>
-        <td>
-            <cfinput type="text" name="motherworktype" value="#FORM.motherworktype#" size="50" maxlength="200">  
-            <input name="motherfullpart" id="motherFullTime" type="radio" value="1" <cfif FORM.motherfullpart eq 1>checked</cfif>> <label for="motherFullTime">Full Time</label>
-            <input name="motherfullpart" id="motherPartTime" type="radio" value="0" <cfif FORM.motherfullpart eq 0>checked</cfif>> <label for="motherPartTime">Part Time</label>
-        </td>
-    </tr>
- 	<tr>
-    	<td class="label"><h3>Employer</h3></td>
-        <td><cfinput type="text" name="motherEmployeer" value="#FORM.motherEmployeer#" size="50" maxlength="200"> 
-         </td>
-    </tr>
-    <tr   bgcolor="##deeaf3">
-        <td class="label"><h3>Cell Phone <span class="required">+</span></h3></td>
-        <td colspan="3"><cfinput type="text" name="mother_cell" value="#FORM.mother_cell#" size="14" maxlength="14" placeholder="(999) 999-9999" mask="(999) 999-9999" ></td>
-    </tr>
-</table> 		
-
-<table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
-    <tr>
-       
-        <td align="right"><input name="Submit" type="image" src="images/buttons/Next.png" border="0"></td>
-    </tr>
-</table>
+    <h1 class="enter" id="hostFamilyHeader">#lcase(FORM.familylastname)# Family Application</h1>
     
-</cfform>
+    <p>
+        Completing the host family application will take between 15 and 60 minutes.  
+        You do not have to complete it all at once, feel free to come back and complete it.
+    </p>
+    
+    <p>Use the menu on the left to navigate to any section of the application.</p>
+
+	<!--- Page Messages --->
+    <gui:displayPageMessages 
+    pageMessages="#SESSION.pageMessages.GetCollection()#"
+    messageType="section"
+    />
+    
+    <!--- Form Errors --->
+    <gui:displayFormErrors 
+    formErrors="#SESSION.formErrors.GetCollection()#"
+    messageType="section"
+    />
+    
+    <cfform method="post" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" name="my_form"  onsubmit="return validate(this)"> <!--- onSubmit="return checkForm();" --->
+        <input type="hidden" name="submitted" value="1">
+        
+        <h3>Name &amp; Contact Info</h3>
+        
+        <span class="required">* Required fields &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + One phone field is required</span>
+        
+        <table width="100%" cellspacing="0" cellpadding="2" class="border">
+            <tr>
+                <td class="label" width="110px"><h3>Family Name <span class="required">*</span></h3></td>
+                <td colspan="3"><input type="text" name="familylastname" id="familylastname" value="#FORM.familylastname#" class="xLargeField" maxlength="150"></td>
+            </tr>
+            <tr bgcolor="##deeaf3">
+                <td class="label"><h3>Address <span class="required">*</span></h3></td>
+                <td colspan="2">
+                    <cfinput type="text" name="address" id="address" value="#FORM.address#" class="xLargeField" maxlength="150" validate="noblanks"> <br />
+                    <font size="1">NO PO BOXES</font>
+                </td>
+                <td rowspan="2"> 
+                    <p style="font-size:-1;">
+                        <em>
+                            physical address where student will be living. <br />
+                            Mailing address can be added below, if different.
+                        </em>
+                    </p>
+                </td>
+            </tr>
+            <tr bgcolor="##deeaf3">
+                <td></td>
+                <td colspan="3"><input type="text" name="address2" id="address2" value="#FORM.address2#" class="xLargeField" maxlength="150"></td>
+            </tr>
+            <tr>			 
+                <td class="label"><h3>City <span class="required">*</span></h3></td>
+                <td colspan="3"><input type="text" name="city" id="city" value="#FORM.city#" class="xLargeField" maxlength="150"></td>
+            </tr>
+            <tr bgcolor="##deeaf3">
+                <td class="label"><h3>State <span class="required">*</span></h3></td>
+                <td>
+                    <cfselect name="state" id="state" query="qGetStates" value="state" display="statename" selected="#FORM.state#" queryPosition="below" class="largeField">
+                        <option></option>
+                    </cfselect>
+                </td>
+                <td class="zip"><h3>Zip <span class="required">*</span></h3> </td>
+                <td><input type="text" name="zip" id="zip" value="#FORM.zip#" class="mediumField" maxlength="5"></td>
+            </tr>
+            <tr>
+                <td><h3>Phone <span class="required">+</span></h3></td>
+                <td colspan="3"><cfinput type="text" name="phone" value="#FORM.phone#" class="mediumField" placeholder="(999) 999-9999" maxlength="14" mask="(999) 999-9999"></td>
+            </tr>
+            <tr bgcolor="##deeaf3">
+                <td><h3>Email</h3></td>
+                <td colspan="3"><input type="text" name="email" value="#FORM.email#" class="xLargeField" maxlength="200"></td>
+            </tr>
+            <tr>
+                <td><h3>Password</h3></td>
+                <td colspan="3">
+                    <input type="text" name="password" value="#FORM.password#" class="xLargeField" maxlength="30"> 
+                    <font size="1">6 characters minimum</font>
+                </td>
+            </tr>
+        </table> <br />
+        
+        <h3>Home Based Business</h3>
+        
+        <table width="100%" cellspacing="0" cellpadding="2" class="border">
+            <tr bgcolor="##deeaf3">
+                <td class="label" colspan="3"><h3>Is the residence the site of a functioning business?(e.g. daycare, farm) <span class="required">*</span></h3> </td>
+                <td>
+                    <cfinput type="radio" name="homeIsFunctBusiness" id="homeIsFunctBusiness1" value="1" checked="#FORM.homeIsFunctBusiness eq 1#" onclick="document.getElementById('describeBusiness').style.display='table-row';"/>
+                    <label for="homeIsFunctBusiness1">Yes</label>        
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        
+                    <cfinput type="radio" name="homeIsFunctBusiness" id="homeIsFunctBusiness0" value="0" checked="#FORM.homeIsFunctBusiness eq 0#" onclick="document.getElementById('describeBusiness').style.display='none';" />
+                    <label for="homeIsFunctBusiness0">No</label>
+                </td>
+            </tr>
+            <tr>
+                <td align="left" colspan="4" id="describeBusiness" <cfif FORM.homeBusinessDesc is ''>class="displayNone"</cfif>>
+                    <strong>Please Describe <span class="required">*</span></strong><br />
+                    <textarea cols="50" rows="4" name="homeBusinessDesc" placeholder="Name of Business, Nature of Business, etc">#FORM.homeBusinessDesc#</textarea>
+                </td>
+            </tr>   
+        </table> <br />
+        
+        <h3>
+            Mailing Address <input name="ShipSame" id="ShipSame" type="checkbox" class="formCheckbox" onClick="FillFields(this)" value="Same"<cfif IsDefined('FORM.ShipSame')> checked</cfif>>
+            <label for="ShipSame"><font size="-1">Use Home Address</font></label>
+        </h3>
+        
+        <table width="100%" cellspacing="0" cellpadding="2" class="border">
+            <tr bgcolor="##deeaf3">
+                <td class="label"><h3>Address <span class="required">*</span></h3></td>
+                <td colspan="3"><input type="text" name="mailaddress" id="mailaddress" value="#FORM.mailaddress#" class="xLargeField" maxlength="150"></td>
+            </tr>
+            <tr bgcolor="##deeaf3">
+                <td></td>
+                <td colspan="3"><input type="text" name="mailaddress2" id="mailaddress2" value="#FORM.mailaddress2#" class="xLargeField" maxlength="150"></td>
+            </tr>
+            <tr>			 
+                <td class="label"><h3>City <span class="required">*</span></h3></td>
+                <td colspan="3"><input type="text" name="mailcity" id="mailcity" value="#FORM.mailcity#" class="xLargeField" maxlength="150"></td>
+            </tr>
+            <tr bgcolor="##deeaf3">
+                <td class="label"><h3>State <span class="required">*</span></h3></td>
+                <td>
+                    <cfselect name="mailstate" id="mailstate" query="qGetStates" value="state" display="statename" selected="#FORM.mailstate#" queryPosition="below" class="largeField">
+                        <option></option>
+                    </cfselect>
+                </td>
+                <td class="zip"><h3>Zip <span class="required">*</span></h3> </td>
+                <td><input type="text" name="mailzip" id="mailzip" value="#FORM.mailzip#" class="smallField" maxlength="5"></td>
+            </tr>
+        </table> <br />
+        
+        <h3>Father's Information</h3>
+        
+        <table width="100%" cellspacing="0" cellpadding="2" class="border">
+            <tr bgcolor="##deeaf3">
+                <td class="label"><h3>First Name</h3></td>
+                <td><input type="text" name="fatherFirstName" value="#FORM.fatherFirstName#" class="xLargeField" maxlength="150"></td>
+            </tr>
+            <tr>
+                <td class="label"><h3>Last Name</h3></td>
+                <td><input type="text" name="fatherlastname" value="#FORM.fatherlastname#" class="xLargeField" maxlength="150"></td>
+            </tr>
+            <tr>
+                <td class="label"><h3>Middle Name</h3></td>
+                <td><input type="text" name="fathermiddlename" value="#FORM.fathermiddlename#" class="xLargeField" maxlength="150"></td>
+            </tr>
+            <tr bgcolor="##deeaf3">
+                <td class="label"><h3>Date of Birth</h3></td>
+                <td><cfinput type="text" name="fatherdob" value="#dateFormat(FORM.fatherdob, 'mm/dd/yyyy')#" size="10" maxlength="10" mask="99/99/9999" placeholder="MM/DD/YYYY"> </td>
+            </tr>
+            <tr>
+                <td class="label"><h3>Occupation</h3></td>
+                <td>
+                    <input type="text" name="fatherworktype" value="#FORM.fatherworktype#" class="xLargeField" maxlength="200"> 
+                    <input name="fatherfullpart" id="fatherFullTime" type="radio" value="1" <cfif FORM.fatherfullpart eq 1>checked</cfif>> <label for="fatherFullTime">Full Time</label>
+                    <input name="fatherfullpart" id="fatherPartTime" type="radio" value="0" <cfif FORM.fatherfullpart eq 0>checked</cfif>> <label for="fatherPartTime">Part Time</label>
+                </td>
+            </tr>
+            <tr>
+                <td class="label"><h3>Employer</h3></td>
+                <td><input type="text" name="fatherEmployeer" value="#FORM.fatherEmployeer#" class="xLargeField" maxlength="200"> </td>
+            </tr>
+            <tr bgcolor="##deeaf3">
+                <td class="label"><h3>Cell Phone <span class="required">+</span></h3></td>
+                <td colspan="3"><cfinput type="text" name="father_cell" value="#FORM.father_cell#" size="14" maxlength="14" placeholder="(999) 999-9999"  mask="(999) 999-9999" ></td>
+            </tr>
+        </table> <br />
+        
+        <h3>Mother's Information</h3>
+        
+        <table width="100%" cellspacing="0" cellpadding="2" class="border">
+            <tr bgcolor="##deeaf3">
+                <td class="label"><h3>First Name</h3></td>
+                <td><input type="text" name="motherFirstName" value="#FORM.motherFirstName#" class="xLargeField" maxlength="150"></td>
+            </tr>
+            <tr>
+                <td class="label"><h3>Last Name</h3></td>
+                <td><input type="text" name="motherlastname" value="#FORM.motherlastname#" class="xLargeField" maxlength="150"></td>
+            </tr>
+            <tr>
+                <td class="label"><h3>Middle Name</h3></td>
+                <td><input type="text" name="mothermiddlename" value="#FORM.mothermiddlename#" class="xLargeField" maxlength="150"></td>
+            </tr>			
+            <tr bgcolor="##deeaf3">
+                <td class="label"><h3>Date of Birth</h3></td>
+                <td><cfinput type="text" name="motherdob" value="#dateFormat(FORM.motherdob, 'mm/dd/yyyy')#" class="mediumField" maxlength="10" mask="99/99/9999" placeholder="MM/DD/YYYY"> </td>
+            </tr>
+            
+            <tr>
+                <td class="label"><h3>Occupation</h3></td>
+                <td>
+                    <input type="text" name="motherworktype" value="#FORM.motherworktype#" class="xLargeField" maxlength="200">  
+                    <input name="motherfullpart" id="motherFullTime" type="radio" value="1" <cfif FORM.motherfullpart eq 1>checked</cfif>> <label for="motherFullTime">Full Time</label>
+                    <input name="motherfullpart" id="motherPartTime" type="radio" value="0" <cfif FORM.motherfullpart eq 0>checked</cfif>> <label for="motherPartTime">Part Time</label>
+                </td>
+            </tr>
+            <tr>
+                <td class="label"><h3>Employer</h3></td>
+                <td><input type="text" name="motherEmployeer" value="#FORM.motherEmployeer#" class="xLargeField" maxlength="200"></td>
+            </tr>
+            <tr bgcolor="##deeaf3">
+                <td class="label"><h3>Cell Phone <span class="required">+</span></h3></td>
+                <td colspan="3"><cfinput type="text" name="mother_cell" value="#FORM.mother_cell#" size="14" maxlength="14" placeholder="(999) 999-9999" mask="(999) 999-9999" ></td>
+            </tr>
+        </table> 		
+        
+        <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
+            <tr>
+                <td align="right"><input name="Submit" type="image" src="images/buttons/Next.png" border="0"></td>
+            </tr>
+        </table>
+    
+	</cfform>
+    
 </cfoutput>

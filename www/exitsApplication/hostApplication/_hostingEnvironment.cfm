@@ -69,7 +69,7 @@
             // Set Page Message
             SESSION.pageMessages.Add("Pet has been deleted");
 			// Refresh Page
-			location("index.cfm?section=hostingEnvironment", "no");
+			location("#CGI.SCRIPT_NAME#?section=#URL.section#", "no");
         </cfscript>
         
     </cfif>
@@ -120,8 +120,8 @@
             <cfscript>
                 // Set Page Message
                 SESSION.pageMessages.Add("Pet has been added");
-                // Refresh Page
-                location("index.cfm?section=hostingEnvironment", "no");
+			// Refresh Page
+			location("#CGI.SCRIPT_NAME#?section=#URL.section#", "no");
             </cfscript>
             
         </cfif>
@@ -254,7 +254,10 @@
                 	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
             </cfquery>
             
-            <cflocation url="index.cfm?section=religiousPreference" addtoken="no">
+            <cfscript>
+				// Successfully Updated - Set navigation page
+				Location(APPLICATION.CFC.UDF.setPageNavigation(section=URL.section), "no");
+			</cfscript>
         
 		</cfif> <!--- No Errors found --->
         
@@ -322,7 +325,7 @@
         		<td>Currently, no pets are indicated as living in your home.</td>
         	</tr>
         </cfif>
-    </table>
+    </table> <br />
 	
     <form action="index.cfm?section=hostingEnvironment" method="post" preloader="no">
         <input type="hidden" name="action" value="insertPet">
@@ -355,7 +358,7 @@
                     </select>
                 </td>
             </tr>
-        </table>
+        </table> <br />
     
         <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
             <tr>
@@ -365,9 +368,9 @@
         
     </form>
     
-    <hr width="80%" align="center"/>
+    <br /><hr width="80%" align="center"/><br />
     
-    <cfform action="index.cfm?section=hostingEnvironment" method="post">
+    <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
     	<input type="hidden" name="action" value="submitted" />
     
     	<h3>Allergies</h3>
@@ -386,9 +389,7 @@
                     <label for="pet_allergies0">No</label>
 				</td>          
             </tr>
-        </table>
-        
-        <br />
+        </table> <br />
         
         <h3>Room Sharing</h3>
         
@@ -428,7 +429,7 @@
                     </td>
                 </tr>
             </cfif>
-        </table>
+        </table> <br />
     
     	<h3>Smoking</h3>
         
@@ -450,7 +451,7 @@
                     <textarea name="smokeConditions" placeholder="inside, outside, etc" class="largeTextArea">#FORM.smokeConditions#</textarea>
 				</td>
             </tr>
-        </table>
+        </table> <br />
     
         <h3>Dietary Needs</h3>
         

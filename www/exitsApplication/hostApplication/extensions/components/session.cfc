@@ -31,6 +31,7 @@
         <cfparam name="SESSION.HOST.email" default="">
         <cfparam name="SESSION.HOST.seasonID" default="0">
         <cfparam name="SESSION.HOST.isMenuBlocked" default="false">
+        <cfparam name="SESSION.HOST.isExitsLogin" default="false">
 		<!--- Full Paths --->
         <cfparam name="SESSION.HOST.PATH.albumLarge" default="">
         <cfparam name="SESSION.HOST.PATH.albumThumbs" default="">
@@ -113,7 +114,8 @@
 		<cfargument name="applicationStatus" default="9" hint="applicationStatus">
         <cfargument name="familyName" default="" hint="familyName">
         <cfargument name="email" default="" hint="email">
-        <cfargument name="isMenuBlocked" default="" hint="email">
+        <cfargument name="isMenuBlocked" default="false" hint="Set to true to block menu after HF submits application">
+        <cfargument name="isExitsLogin" default="false" hint="Set to true when logging in from EXITS">       
         
         <cfscript>
 			// New Struct
@@ -127,15 +129,12 @@
 			SESSION.HOST.email = ARGUMENTS.email;
 			SESSION.HOST.seasonID = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
 			
-			// Disable menu for host family account
-			if ( LEN(ARGUMENTS.isMenuBlocked) ) {
-				SESSION.HOST.isMenuBlocked = ARGUMENTS.isMenuBlocked;	
-			} else if ( ListFind("9,8", ARGUMENTS.applicationStatus) ) {
-				SESSION.HOST.isMenuBlocked = false;		
-			} else {
-				SESSION.HOST.isMenuBlocked = true;		
-			}
-			
+			// Set to true after HF submits app
+			SESSION.HOST.isMenuBlocked = ARGUMENTS.isMenuBlocked;	
+
+			// Set tp true when logged in from EXITS
+			SESSION.HOST.isExitsLogin = ARGUMENTS.isExitsLogin;	
+
 			// Set Folders
 			if ( VAL(ARGUMENTS.hostID) ) {
 				
@@ -172,7 +171,7 @@
 	</cffunction>
 
 
-	<!--- Log In --->
+	<!--- Set Host Session Menu As Blocked --->
 	<cffunction name="setHostSessionisMenuBlocked" access="public" returntype="void" output="false" hint="Set Host Session Variables">
         <cfargument name="isMenuBlocked" default="false" hint="email">
         

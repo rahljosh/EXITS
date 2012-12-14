@@ -342,7 +342,8 @@
 			<!--- Go to next section --->
             <cfscript>
 				if ( NOT SESSION.formErrors.length() ) {
-					Location("?section=personalDescription", "no");
+					// Successfully Updated - Set navigation page
+					Location(APPLICATION.CFC.UDF.setPageNavigation(section=URL.section), "no");
 				}
 			</cfscript>				
             
@@ -424,13 +425,15 @@
     
             <h3>Host Parent(s)</h3>
             
+            <span class="required">* Required fields</span>
+            
             <table width="100%" cellspacing="0" cellpadding="4" class="border">
                 <tr bgcolor="##deeaf3">
                     <th width="28%">Name</th>
                     <th width="17%">Relation</th>
                     <th width="20%">Date of Birth</th>
                     <th width="10%">Age</th>
-                    <th width="25%">Social Security ##</th>
+                    <th width="25%">Social Security ## <span class="required">*</span></th>
                 </tr>
                 
                 <!--- Host Father --->
@@ -474,7 +477,7 @@
                         vSSNCurrentRow ++;
                     </cfscript>
                 </cfif>			
-            </table>                
+            </table> <br />             
             
             <!--- Host Members --->
             <h3>Host Members(s)</h3>
@@ -485,7 +488,7 @@
                     <th width="17%">Relation</th>
                     <th width="20%">Date of Birth</th>
                     <th width="10%">Age</th>
-                    <th width="25%">Social Security ##</th>
+                    <th width="25%">Social Security ## <span class="required">*</span></h3></th>
                 </tr>
                 
                 <cfif NOT qGetAllFamilyMembersAtHome.recordCount>
@@ -513,7 +516,7 @@
                         </cfif> 
                     </tr>            
                 </cfloop>
-            </table>
+            </table> <br />
     
     		<!--- Singatures --->
             <h3>Signature(s)</h3>
@@ -526,7 +529,7 @@
             <table width="100%" cellspacing="0" cellpadding="4" class="border">
                 <tr bgcolor="##deeaf3">
                     <th>Name</th>
-                    <th>Signature</th>
+                    <th>Signature <span class="required">*</span></h3></th>
                 </tr>                
                 
                 <!--- Host Father --->

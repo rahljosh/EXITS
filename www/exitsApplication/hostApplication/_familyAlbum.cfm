@@ -47,7 +47,7 @@
             SESSION.pageMessages.Add("Picture has been deleted");
 			
 			// Refresh Page
-			location("index.cfm?section=familyAlbum", "no");
+			location("#CGI.SCRIPT_NAME#?section=#URL.section#", "no");
         </cfscript>
 
     </cfif>
@@ -64,7 +64,10 @@
             
         </cfloop>
         
-        <cflocation url="index.cfm?section=schoolInfo" addtoken="no">
+		<cfscript>
+            // Successfully Updated - Set navigation page
+            Location(APPLICATION.CFC.UDF.setPageNavigation(section=URL.section), "no");
+        </cfscript>				
         
     </cfif>
     
@@ -100,7 +103,7 @@
 				}	
 				
 				// Refresh Page
-				location("index.cfm?section=familyAlbum", "no");
+				location("#CGI.SCRIPT_NAME#?section=#URL.section#", "no");
 			</cfscript>
             
 		</cfif>
@@ -136,14 +139,7 @@
 
 <cfoutput>
 
-    <h2>Picture Album</h2> 
-    
-    Please upload photos of you, your family, and your home including the exterior and grounds, kitchen, student's bedroom, student's bathroom, 
-    and family and living areas with a brief description of each. <br /><br />
-    
-    <h3>Upload Single Pictures<br /></h3>
-    
-    <font size=-2><em>Once you upload a picture, you will be able to add a description for each picture.</em></font><br /><br />
+    <h2>Family Album</h2> 
 
 	<!--- Page Messages --->
     <gui:displayPageMessages 
@@ -156,6 +152,15 @@
         formErrors="#SESSION.formErrors.GetCollection()#"
         messageType="section"
         />
+    
+    Please upload photos of you, your family, and your home including the exterior and grounds, kitchen, student's bedroom, student's bathroom, 
+    and family and living areas with a brief description of each. <br /><br />
+    
+    <h3>Upload Single Pictures<br /></h3>
+    
+    <font size=-2><em>Once you upload a picture, you will be able to add a description for each picture.</em></font><br /><br />
+    
+    <span class="required">* Required fields</span>
 	
     <!--- Upload Form --->        
 	<form method="post" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" enctype="multipart/form-data">  
@@ -186,9 +191,9 @@
 				<td><input type="image" src="images/buttons/BlkSubmit.png" /></td>
 		    </tr>
 		</table>
-	</form>
+	</form> <br />
     
-	*At least one picture from this catagory is required. More than one photo may be needed to clearly depict each room.
+	*At least one picture from this catagory is required. More than one photo may be needed to clearly depict each room. <br /><br />
 
     <h3>Your Photo Album</h3>
     

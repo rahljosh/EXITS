@@ -13,10 +13,7 @@
 
     <!--- Import CustomTag Used for Page Messages and Form Errors --->
     <cfimport taglib="extensions/customTags/gui/" prefix="gui" />	
-	
-    <!--- Param URL Variables --->
-    <cfparam name="URL.uniqueID" default="">
-    
+	    
     <!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.username" default="">
@@ -70,7 +67,7 @@
 				);
 
 				// Go to overview page
-				Location("?section=overview", "no");
+				Location(APPLICATION.CFC.UDF.setPageNavigation(), "no");
 			</cfscript>
             
         <cfelse>
@@ -169,7 +166,7 @@
 						);
 					
 						// Go to overview page
-						Location("?section=overview", "no");
+						Location(APPLICATION.CFC.UDF.setPageNavigation(), "no");
 					
 					}					
                 </cfscript>
@@ -182,50 +179,7 @@
 			// Error - Could Not Login
 			SESSION.formErrors.Add("The email and password you submitted do not match an account on file.<br />  Please check your information and try again.");
 		</cfscript>
-    
-    <!--- uniqueID Login --->
-    <cfelseif LEN(URL.uniqueID)>    
-
-		<!--- Check if we have a host account --->
-        <cfquery name="qLoginHostFamily" datasource="#APPLICATION.DSN.Source#">
-            SELECT  
-                hostID, 
-                hostAppStatus,
-                initialHostAppType,
-                familylastname,
-                email
-            FROM 
-                smg_hosts
-            WHERE 
-                uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(URL.uniqueID)#"> 
-			AND
-            	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.COMPANY.ID)#">                
-        </cfquery>
-
-		<cfscript>
-            // Host Account found - Log them in
-            if ( qLoginHostFamily.recordcount ) {
-        
-                // Login Host Family
-                APPLICATION.CFC.SESSION.setHostSession(
-                    hostID=qLoginHostFamily.hostID,												
-                    applicationStatus=qLoginHostFamily.hostAppStatus,
-                    familyName=qLoginHostFamily.familylastname,
-                    email=qLoginHostFamily.email,
-					isMenuBlocked=false
-                );
-
-                // Go to overview page
-                Location("?section=overview", "no");
-                
-            } else {
-				
-				// Error - Could Not Login
-				SESSION.formErrors.Add("Sorry but we were not able to login this host family account");
-				
-			}
-        </cfscript>
-		
+    	
 	</cfif> <!--- FORM Submitted --->
 
 </cfsilent>

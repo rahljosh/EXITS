@@ -328,7 +328,7 @@
             </tr>
         </cfloop>
         
-    </table>
+    </table> <br />
     
 	<!--- Finished with this page --->
     <div style="display:block; float:right; margin-top:5px;">

@@ -6,11 +6,11 @@
 	<cfscript>
 		// Set up the application.
 		//THIS.Name = "EXITS";
-		THIS.Name = "EXITS-Host-Application-" & Hash(GetCurrentTemplatePath());
-		THIS.ApplicationTimeout = CreateTimeSpan( 0, 1, 0, 0 );
-		THIS.SessionManagement = true;
+		THIS.Name = "EXITS-HostApplication"; //  & Hash(GetCurrentTemplatePath())
+		THIS.applicationTimeout = CreateTimeSpan( 0, 1, 0, 0 );
+		THIS.sessionManagement = true;
 		THIS.sessionTimeout = CreateTimeSpan( 0, 4, 0, 0 ); // Session Expires in 4 hours
-		THIS.ClientManagement = true;
+		THIS.clientManagement = true;
 		
 		// Create a function that let us create CFCs from any location
 		function CreateCFC(strCFCName){
@@ -67,7 +67,9 @@
 		<cfparam name="URL.init" default="0">
         <cfparam name="URL.initApp" default="0">
         <cfparam name="URL.initSession" default="0">
+        <cfparam name="URL.uniqueID" default="">
         <cfparam name="URL.section" default="login">
+        <cfparam name="URL.section" default="">
         
 		<cfscript>
 			// Reset Application and Session
@@ -75,17 +77,81 @@
 				THIS.OnApplicationStart();
 				THIS.OnSessionStart();
 			}
-
+			
+			// Init Application
 			if ( URL.initApp EQ 1 ) {
 				THIS.OnApplicationStart();
 			}
 			
+			// Init Session
 			if ( URL.initSession EQ 1 ) {
 				THIS.OnSessionStart();
 			}
 			
+			/***
+				Check to see if the current path is legal. The user cannot access 
+				files starting with "_" so throw error if need be. 
+			***/
+			currentPage = APPLICATION.CFC.UDF.GetCurrentPageFromPath(CGI.cf_template_path);
+		</cfscript>
+        
+		<!--- uniqueID Login | Make sure the link is coming from EXITS --->  
+        <cfif LEN(URL.uniqueID) AND FindNoCase("smg.local", CGI.HTTP_REFERER) OR FindNoCase("exitsapplication.com", CGI.HTTP_REFERER)>
+    
+            <!--- Check if we have a host account --->
+            <cfquery name="qLoginHostFamily" datasource="#APPLICATION.DSN.Source#">
+                SELECT  
+                    hostID, 
+                    hostAppStatus,
+                    initialHostAppType,
+                    familylastname,
+                    email
+                FROM 
+                    smg_hosts
+                WHERE 
+                    uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(URL.uniqueID)#"> 
+                AND
+                    companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.COMPANY.ID)#">                
+            </cfquery>
+    
+            <cfscript>
+                // Host Account found - Log them in
+                if ( qLoginHostFamily.recordcount ) {
+                    
+                    if ( ListFind("login,overview", URL.section) ) {
+    
+                        // Login Host Family - Menu Available
+                        APPLICATION.CFC.SESSION.setHostSession(
+                            hostID=qLoginHostFamily.hostID,												
+                            applicationStatus=qLoginHostFamily.hostAppStatus,
+                            familyName=qLoginHostFamily.familylastname,
+                            email=qLoginHostFamily.email,							
+                            isMenuBlocked=false,
+							isExitsLogin=true
+                        );
+    
+                    } else {
+                        
+                        // Login Host Family - Block Menu - Displaying specific section
+                        APPLICATION.CFC.SESSION.setHostSession(
+                            hostID=qLoginHostFamily.hostID,												
+                            applicationStatus=qLoginHostFamily.hostAppStatus,
+                            familyName=qLoginHostFamily.familylastname,
+                            email=qLoginHostFamily.email,
+                            isMenuBlocked=true,
+							isExitsLogin=true
+                        );
+                        
+                    }
+                                                        
+                }
+            </cfscript>
+        
+        </cfif>
+
+        <cfscript>				
 			// If not logged in go to the login page
-			if ( NOT APPLICATION.CFC.SESSION.getHostSession().ID ) {
+			if ( NOT VAL(APPLICATION.CFC.SESSION.getHostSession().ID) ) {
 				URL.section="login";
 			}
 			
@@ -94,13 +160,8 @@
 				location("https://#CGI.HTTP_HOST##CGI.SCRIPT_NAME#", "no");
 			}
 		</cfscript>
-        
-		<!--- 
-			Check to see if the current path is legal. The user cannot access 
-			files starting with "_" so throw error if need be. 
-		--->
-        <cfset currentPage = APPLICATION.CFC.UDF.GetCurrentPageFromPath(CGI.cf_template_path)>        
 		
+        <!--- Cannot access files that start with _ --->
 		<cfif NOT Compare(Left(currentPage, 1), "_")>
             <cfthrow 
                 message="Cannot access files that start with _" 

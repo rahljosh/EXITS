@@ -74,10 +74,10 @@
         
 	<cfif VAL(FORM.submitted)>
     
-    	<!--- New School --->
-		<cfif VAL(FORM.newSchool)>
-        
-            <cfscript>
+		<cfscript>
+			// New School - Check for these fields
+			if ( VAL(FORM.newSchool) ) {
+				
 				// Name of School
 				if ( NOT LEN(TRIM(FORM.schoolname)) ) {
 					SESSION.formErrors.Add("Please enter the name of the school.");
@@ -107,11 +107,9 @@
 				if ( NOT LEN(TRIM(FORM.schoolType) ) )  {
 					SESSION.formErrors.Add("Please indicate if this is a public or private school.");
 				}
-            </cfscript>
-        
-        </cfif>
-        
-		<cfscript>
+				
+			} // New School - Check for these fields
+		
 			// School
 			if ( NOT VAL(FORM.schoolID) AND NOT VAL(FORM.newSchool) ) {
 				SESSION.formErrors.Add("You must select a school from the drop down list, if school is not listed, please click on +/- Our school is not listed above, I need to add it.");
@@ -213,7 +211,10 @@
                 	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
             </cfquery>
     
-    		<cflocation url="index.cfm?section=communityProfile" addtoken="no">
+            <cfscript>
+				// Successfully Updated - Set navigation page
+				Location(APPLICATION.CFC.UDF.setPageNavigation(section=URL.section), "no");
+			</cfscript>
     
     	</cfif>
         
@@ -274,12 +275,16 @@
         messageType="section"
         />
         
-    <cfform method="post" action="index.cfm?section=schoolInfo">
+    <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
         <input type="hidden" name="submitted" value="1" />
         <input type="hidden" name="newSchool" id="newSchool" value="#FORM.newSchool#" />
 
-        The following schools are in your state. The top of the list are schools in your city, followed by schools with in the state.  If you start typing in your school name, the list will filter.  If your school is not in the list, please lick the link "Our school is not listed above, I need to add it." and enter your school.
-        
+        The following schools are in your state. The top of the list are schools in your city, followed by schools with in the state.  
+        If you start typing in your school name, the list will filter.  
+        If your school is not in the list, please lick the link "Our school is not listed above, I need to add it." and enter your school. <br /><br />
+
+		<span class="required">* Required fields</span>
+                
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr>
                 <td class="label">School: <span class="required">*</span></td>
@@ -299,7 +304,7 @@
             </tr>
         </table> <br />
         
-        <a onclick="showSchoolInfo();" href="##">+/- Our school is not listed above, I need to add it.</a>
+        <a onclick="showSchoolInfo();" href="##">+/- Our school is not listed above, I need to add it.</a> <br /><br />
         
         <div id="newSchoolDiv" <cfif NOT VAL(FORM.newSchool)> class="displayNone" </cfif> >  
              
@@ -379,13 +384,11 @@
             </tr>
             <tr>
                 <td align="left" colspan="2" id="showSchoolWorks" <cfif FORM.schoolWorks NEQ 1>class="displayNone"</cfif>>
-                    <br />
-					<strong>Job Title & Duties <span class="required">*</span></strong>
-                    <br />
+					 <br /> <strong>Job Title & Duties <span class="required">*</span></strong> <br />
                     <textarea name="schoolWorksExpl" class="xLargeTextArea">#FORM.schoolWorksExpl#</textarea>
 				</td>
             </tr>   
-            <tr>
+            <tr bgcolor="##deeaf3">
                 <td class="label">Has any member of your household had contact with a coach<br /> regarding the hosting of an exchange student with a particular athletic ability? <span class="required">*</span></td>
                 <td>
                     <cfinput type="radio" name="schoolCoach" id="schoolCoach1" value="1" checked="#FORM.schoolCoach EQ 1#" onclick="document.getElementById('showCoachExpl').style.display='table-row';" />
@@ -397,18 +400,20 @@
             </tr>
             <tr>
             	<td align="left" colspan="2" id="showCoachExpl" <cfif FORM.schoolCoach NEQ 1>class="displayNone"</cfif>>
-                	<br />
-                    <strong>Please describe <span class="required">*</span></strong>
-                    <br />
+                	<br /> <strong>Please describe <span class="required">*</span></strong> <br />
                     <textarea name="schoolCoachExpl" class="xLargeTextArea">#FORM.schoolCoachExpl#</textarea>
                	</td>
             </tr>
-        </table>
+        </table> <br />
         
         <h3>Transportation</h3>
         
-        How will the student get to school? <span class="required">*</span>
         <table width="100%" cellspacing="0" cellpadding="4" class="border">
+            <tr>
+            	<td colspan="3">
+                	<strong>How will the student get to school? </strong> <span class="required">*</span>
+                </td>
+			</tr>                
             <tr bgcolor="##deeaf3">
                 <td class="label"><cfinput type="radio" name="schoolTransportation" id="schoolTransportation1"  value="School Bus"  checked="#FORM.schoolTransportation EQ 'School Bus'#"><label for="schoolTransportation1">School Bus</label></td>
                 <td class="form_text"><cfinput type="radio" name="schoolTransportation" id="schoolTransportation2" value="Car" checked="#FORM.schoolTransportation EQ 'Car'#"><label for="schoolTransportation2">Car</label></td>

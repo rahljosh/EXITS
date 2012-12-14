@@ -27,6 +27,15 @@
 	APPLICATION.DOCUMENT.hostMotherCBCAuthorization = 17;
 	APPLICATION.DOCUMENT.hostMemberCBCAuthorization = 18;
 	APPLICATION.DOCUMENT.disclaimer = 19;
+	
+	
+	/*******************************************
+		Set Up Left Menu
+		We could eventually move this to a 
+		SESSION variable and create the menu 
+		according to user/status
+	*******************************************/
+	APPLICATION.leftMenu = APPLICATION.CFC.UDF.buildLeftMenu();
 
 
 	/*******************************************
