@@ -24,7 +24,7 @@
     <cfparam name="FORM.changepass" default="1">
     <cfparam name="FORM.bypass_checklist" default="0">
     <cfparam name="FORM.invoice_access" default="0">
-    <cfparam name="FORM.active" default="0">
+    <cfparam name="FORM.active" default="1">
     <cfparam name="FORM.usebilling" default="0">
     <!--- these fields aren't always displayed. --->
     <cfparam name="FORM.comments" default="">
