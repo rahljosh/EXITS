@@ -15,14 +15,15 @@
 	<cfparam name="action" default="login">
 
     <!--- Param URL variables --->
+    <cfparam name="URL.ID" default="">
 	<cfparam name="URL.hashID" default="">
 
     <cfscript>
 		// Check if Office is opening an application
-		if ( LEN(URL.hashID) ) {
+		if ( LEN(URL.ID) AND LEN(URL.hashID) ) {
 			
 			// Get Candidate Information
-			qAuthenticateCandidate = APPLICATION.CFC.STUDENT.getStudentByHashID(hashID=URL.hashID);
+			qAuthenticateCandidate = APPLICATION.CFC.STUDENT.getStudentByHashID(id=URL.ID,hashID=URL.hashID);
 						
 			// Check if we have a valid student
 			if ( qAuthenticateCandidate.recordCount ) {

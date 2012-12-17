@@ -277,6 +277,7 @@
 
 	<!--- Get Student By HashID --->
 	<cffunction name="getStudentByHashID" access="public" returntype="query" output="false" hint="Gets student information by Hash ID">
+		<cfargument name="ID" required="yes" hint="ID" />
 		<cfargument name="hashID" required="yes" hint="Hash ID" />
 
 		<cfquery 
@@ -307,9 +308,11 @@
 				FROM
 					student
 				WHERE
+	                ID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.ID#">
+				AND                    
 	                hashID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.hashID#">
 		</cfquery>
-		
+        
 		<cfreturn qGetStudentByHashID /> 
 	</cffunction>
 
@@ -545,9 +548,9 @@
                     s.hashID,
                     s.applicationStatusID,
                     s.applicationPaymentID,
-                    CONVERT(CONCAT('<a href="javascript:popUpApplication(''', s.hashID, ''');">', s.firstName, '</a>') USING latin1) AS firstName,
+                    CONVERT(CONCAT('<a href="javascript:popUpApplication(''', s.ID, ''',''', s.hashID, ''');">', s.firstName, '</a>') USING latin1) AS firstName,
                     s.middleName,                    
-                    CONVERT(CONCAT('<a href="javascript:popUpApplication(''', s.hashID, ''');">', s.lastName, '</a>') USING latin1) AS lastName,
+                    CONVERT(CONCAT('<a href="javascript:popUpApplication(''', s.ID, ''',''', s.hashID, ''');">', s.lastName, '</a>') USING latin1) AS lastName,
                     s.preferredName,
                     s.email,
                     s.password,
@@ -562,7 +565,7 @@
                     DATE_FORMAT(s.dateLastLoggedIn, '%m/%d/%y') AS dateLastLoggedIn,
                     DATE_FORMAT(s.dateCreated, '%m/%d/%y') AS displayDateCreated,
                     s.dateupdated,
-					CONVERT(CONCAT('<a href="javascript:popUpApplication(''', s.hashID, ''');">[Open]</a>') USING latin1) AS action,
+					CONVERT(CONCAT('<a href="javascript:popUpApplication(''', s.ID, ''',''', s.hashID, ''');">[Open]</a>') USING latin1) AS action,
                     c.name as homeCountry,        
        				cCitizen.name AS citizenCountry,
                     aps.name AS statusName
@@ -633,9 +636,9 @@
                     s.hashID,
                     s.applicationStatusID,
                     s.applicationPaymentID,
-                    CONVERT(CONCAT('<a href="javascript:popUpApplication(''', s.hashID, ''');">', s.firstName, '</a>') USING latin1) AS firstName,
+                    CONVERT(CONCAT('<a href="javascript:popUpApplication(''', s.ID, ''',''', s.hashID, ''');">', s.firstName, '</a>') USING latin1) AS firstName,
                     s.middleName,                    
-                    CONVERT(CONCAT('<a href="javascript:popUpApplication(''', s.hashID, ''');">', s.lastName, '</a>') USING latin1) AS lastName,
+                    CONVERT(CONCAT('<a href="javascript:popUpApplication(''', s.ID, ''',''', s.hashID, ''');">', s.lastName, '</a>') USING latin1) AS lastName,
                     s.preferredName,
                     s.email,
                     s.password,
@@ -651,7 +654,7 @@
                     s.dateCreated,
                     DATE_FORMAT(s.dateCreated, '%m/%d/%y') AS displayDateCreated,
                     s.dateupdated,
-					CONVERT(CONCAT('<a href="javascript:popUpApplication(''', s.hashID, ''');">[Open]</a>') USING latin1) AS action,
+					CONVERT(CONCAT('<a href="javascript:popUpApplication(''', s.ID, ''',''', s.hashID, ''');">[Open]</a>') USING latin1) AS action,
                     c.name as homeCountry,        
        				cCitizen.name AS citizenCountry,
                     aps.name AS statusName
