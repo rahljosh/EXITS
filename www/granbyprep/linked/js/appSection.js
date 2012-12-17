@@ -5,9 +5,8 @@
 **********************************************************/
 
 // Pop Up Application 
-var popUpApplication = function(hashID) { 	
-	//alert(hashID);
-	setURL = '../admissions/index.cfm?action=initial&hashID=' + hashID;
+var popUpApplication = function(studentID, hashID) { 	
+	setURL = '../admissions/index.cfm?action=initial&ID=' + studentID + '&hashID=' + hashID;
 	window.open(setURL, 'onlineApplication', 'height=600, width=1100, toolbar=0, scrollbars=1, status=1, resizable=1').focus();
 }
 
