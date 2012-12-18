@@ -24,7 +24,7 @@
     <cfparam name="FORM.changepass" default="1">
     <cfparam name="FORM.bypass_checklist" default="0">
     <cfparam name="FORM.invoice_access" default="0">
-    <cfparam name="FORM.active" default="1">
+    <cfparam name="FORM.active" default="0">
     <cfparam name="FORM.usebilling" default="0">
     <!--- these fields aren't always displayed. --->
     <cfparam name="FORM.comments" default="">
@@ -35,10 +35,15 @@
 	
     <cfscript>
 		field_list = 'firstname,middlename,lastname,occupation,businessname,address,address2,city,state,zip,country,drivers_license,dob,sex,phone,phone_ext,work_phone,work_ext,cell_phone,fax,email,email2,skype_id,username,changepass,invoice_access,bypass_checklist,date_contract_received,date_2nd_visit_contract_received,active,dateCancelled,datecreated,usebilling,billing_company,billing_contact,billing_address,billing_address2,billing_city,billing_country,billing_zip,billing_phone,billing_fax,billing_email,comments';
-		
-		// Set new default value
-		new = true;
 
+		// Set new default value
+		if ( LEN(URL.userID) ) {
+			new = false;			
+		} else {
+			new = true;
+			FORM.active = 1;
+		}
+		
 		// Set Display SSN - Sets to 1 if user has access to compliance
 		vDisplaySSN = APPLICATION.CFC.USER.hasLoggedInUserComplianceAccess(userID=CLIENT.userID);
 
@@ -69,8 +74,6 @@
 </cfsilent>
 
 <cfif LEN(URL.userID)>
-
-	<cfset new = false>
 
 	<cfif NOT isNumeric(URL.userID)>
         a numeric userID is required.
@@ -1317,21 +1320,6 @@
                     </cfif>
                 </td>
               </tr>
-              <!--- Throwing error on dev ---
-			  <cfif URL.usertype eq 15>
-              <tr>
-                <td align="right">2nd Visit Rep. Contract Received:</td>
-                <td>
-                    <cfif listFind("1,2,3,4", CLIENT.userType)>
-                        <cfinput type="text" name="date_2nd_visit_contract_received" value="#dateFormat(FORM.date_2nd_visit_contract_received,'mm/dd/yyyy')#" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid 2nd Visit Contract Received."> mm/dd/yyyy
-                    <cfelse>
-                        #dateFormat(FORM.date_2nd_visit_contract_received, 'mm/dd/yyyy')#
-	                    <input type="hidden" name="date_2nd_visit_contract_received" value="#FORM.date_2nd_visit_contract_received#">
-                    </cfif>
-                </td>
-              </tr>
-              </cfif>
-			  --->
               <tr>
                 <td align="right">Active:</td>
                 <td>
