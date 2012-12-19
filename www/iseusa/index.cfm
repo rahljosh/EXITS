@@ -1,7 +1,7 @@
 
 <cfparam name="client.companyid" default="1">
 
-<cfinclude template="extensions/includes/_pageHeader.cfm"> <!--- Include Page Header --->
+<cfinclude template="/extensions/includes/_pageHeader.cfm"> <!--- Include Page Header --->
 <script type="text/javascript" language="JavaScript">
     var GB_ROOT_DIR = "http://www.iseusa.com/greybox/";
 </script>
@@ -153,9 +153,15 @@ $("#slidingDiv").animate({"height": "toggle"}, { duration: 1000 });
       	</div>
         
         <!---Travel Abroad---->
-        <div id="travelAbroad" class="mybox" style="display:none; text-align:center;":>
+        <div id="travelAbroad" class="mybox" style="display:none; text-align:center;font-size: 90%;":>
             <span class="MOtext" style="background-color: #F1D0D1;">
-            <strong>Travel Abroad</strong><br />American students are invited to go outbound to learn and study in different countries.  ISE offers many different types of individualized programs to fit your personal needs. <br /><Br />Become a world leader of tomorrow by expanding your horizons, learning new languages, and being an ambassador for your country!<p align="center"><a href="http://outbound.iseusa.com/"><img src="images/buttons/RExplore.png" border="0"></a></p></span>
+            <strong>Travel Abroad</strong><br/><br/>
+
+American students are invited to go outbound to learn and study in different countries. ISE offers many different types of individualized programs to fit your personal needs. <br/><br/>
+
+Become a world leader of tomorrow by expanding your horizons, learning new languages, and being an ambassador for your country!  
+         
+ <!--<br />American students are invited to go outbound to learn and study in different countries.  ISE offers many different types of individualized programs to fit your personal needs. <br /><Br />Become a world leader of tomorrow by expanding your horizons, learning new languages, and being an ambassador for your country!--><p align="center"><a href="mailto:john@student-management.com"><img src="images/contactUsButton.png" width="75px" border="0"></a></p></span>
             <span class="bigImage"><img src="images/subPages/subTravel.gif" /></span>
       	</div>
         
