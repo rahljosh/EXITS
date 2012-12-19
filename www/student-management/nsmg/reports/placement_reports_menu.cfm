@@ -265,7 +265,7 @@
     <table cellpadding=6 cellspacing="0" align="center" width="97%">
         <tr>
             <td width="50%" align="left" valign="top">
-                <form action="reports/document_tracking2.cfm" method="POST" target="blank">
+                <form action="reports/document_tracking.cfm" method="POST" target="blank">
                     <table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
                         <tr><th colspan="3" bgcolor="##e2efc7">Missing Placement Docs</th></tr>
                         <tr align="left">
@@ -286,6 +286,13 @@
                                         <option value="#qGetRegions.regionid#" <cfif qGetRegions.recordcount eq 1>selected</cfif>>#qGetRegions.regionname#</option>
                                     </cfloop> 
                                 </select>
+                            </td>
+                        </tr>
+                         <tr align="left">
+                            <td>Include only active students :</td>
+                            <td>
+                                <input type="radio" name="sendemail" id="activeNo" value="0" checked="checked"> <label for="activeNo">No</label>  
+                                <input type="radio" name="sendemail" id="ativeYes" value="1"> <label for="ativeYes">Yes</label>
                             </td>
                         </tr>
                         <!--- Add Option to List by Facilitator --->

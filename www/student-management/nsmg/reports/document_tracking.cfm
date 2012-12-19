@@ -21,6 +21,8 @@
 	<cfparam name="FORM.dateFrom" default="">
     <cfparam name="FORM.dateTo" default="">
     <cfparam name="FORM.previousPlacementDocs" default="0">
+    <cfparam name="FORM.activeOnly" default="0">
+    
     <!-----Company Information----->
     <cfinclude template="../querys/get_company_short.cfm">
 	
@@ -240,8 +242,10 @@
                     secondVisitReport.pr_ny_approved_date IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">                    
         WHERE 
         <!--- Regular Students --->
+        <Cfif val(activeOnly)>
             s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND 
+        </Cfif>
             s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegions.regionID#"> 
         AND 
             s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
