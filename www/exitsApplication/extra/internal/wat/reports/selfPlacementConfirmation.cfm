@@ -119,7 +119,9 @@
                 ecpc.selfConfirmationNotes,
                 ecpc.placement_date,
                 ej.title AS jobTitle,          
-                u.businessName
+                u.businessName,
+                conf.confirmed,
+                j1.numberPositions
             FROM
                 extra_candidates ec
             LEFT OUTER JOIN
@@ -136,7 +138,14 @@
                 smg_programs ON smg_programs.programID = ec.programID
             INNER JOIN 
                 smg_users u ON u.userid = ec.intrep
-            
+            LEFT JOIN
+            	extra_confirmations conf ON conf.hostID = ecpc.hostcompanyID
+                	AND
+                    	conf.programID = ec.programID
+          	LEFT JOIN
+            	extra_j1_positions j1 ON j1.hostID = ecpc.hostcompanyID
+                	AND
+                    	j1.programID = ec.programID
             WHERE 
                 ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
             AND 
@@ -357,14 +366,14 @@
                 </cfscript>
                 
                 <cfquery name="qCountFormsIssued" dbtype="query">
-                SELECT
-                	ds2019
-                FROM
-                	qTotalPerAgent
-                WHERE
-                	ds2019 is not null
-				AND
-                	ds2019 != ''
+                    SELECT
+                        ds2019
+                    FROM
+                        qTotalPerAgent
+                    WHERE
+                        ds2019 is not null
+                    AND
+                        ds2019 != ''
                 </cfquery>
                 
                 <cfset formsIssued = qCountFormsIssued.recordCount>
@@ -397,6 +406,8 @@
                         	<th align="left" class="#tableTitleClass#">Contact Date</th>
                         </cfif>
                         <th align="left" class="#tableTitleClass#">Contact Name</th>
+                        <th align="left" class="#tableTitleClass#">Confirmation of Terms</th>
+                        <th align="left" class="#tableTitleClass#">Available J1 Positions</th>
                         <th align="left" class="#tableTitleClass#">Authentication</th>
                         <th align="left" class="#tableTitleClass#">EIN</th>
                         <th align="left" class="#tableTitleClass#">Workmen's Compensation</th>
@@ -435,13 +446,21 @@
                             </cfif>
                             <td class="style1">#qTotalPerAgent.selfConfirmationName#</td>
                             <td class="style1">
+                            	<cfif qTotalPerAgent.confirmed EQ 1>
+                                	Yes
+                               	<cfelse>
+                                	No
+                               	</cfif>
+                          	</td>
+                            <td class="style1">#qTotalPerAgent.numberPositions#</td>
+                            <td class="style1">
                             	<cfif CLIENT.userType NEQ 8>
 									<cfif VAL(qTotalPerAgent.authentication_secretaryOfState)>-Secretary of State<br /></cfif>
                                     <cfif VAL(qTotalPerAgent.authentication_incorporation)>-Incorporation<br /></cfif>
                                     <cfif VAL(qTotalPerAgent.authentication_certificateOfExistence)>-Certificate of Existence<br /></cfif>
                                     <cfif VAL(qTotalPerAgent.authentication_certificateOfReinstatement)>-Certificate of Reinstatement<br /></cfif>
                                     <cfif VAL(qTotalPerAgent.authentication_departmentOfState)>-Department of State<br /></cfif>
-                                    <cfif VAL(qTotalPerAgent.authentication_departmentOfLabor)>-Deparment of Labor<br /></cfif>
+                                    <cfif VAL(qTotalPerAgent.authentication_departmentOfLabor)>-Department of Labor<br /></cfif>
                                     <cfif VAL(qTotalPerAgent.authentication_googleEarth)>-Google Earth<br /></cfif>
                               	<cfelse>
                                 	<cfif ( ( VAL(qTotalPerAgent.authentication_businessLicenseNotAvailable) 
