@@ -18,11 +18,7 @@
     <cfparam name="FORM.facilitatorID" default="0">
 	<cfparam name="FORM.reportBy" default="Placing"> <!--- Placing/Supervising representatives --->
     <cfparam name="FORM.sendEmail" default="0">
-	<cfparam name="FORM.dateFrom" default="">
-    <cfparam name="FORM.dateTo" default="">
-    <cfparam name="FORM.previousPlacementDocs" default="0">
-    <cfparam name="FORM.activeOnly" default="0">
-    
+
     <!-----Company Information----->
     <cfinclude template="../querys/get_company_short.cfm">
 	
@@ -134,12 +130,7 @@
 	<table width="100%" cellpadding="4" cellspacing="0" align="center" style="border:1px solid ##000;">
 		<tr>
 			<td align="center">
-				<span class="application_section_header">#companyshort.companyshort# - Missing
-                <cfif val(previousPlacementDocs)>
-                Previous Placement Documents Report
-                <cfelse>
-                 Placement Documents Report
-                 </cfif></span> <br />
+				<span class="application_section_header">#companyshort.companyshort# - Missing Placement Documents Report</span> <br />
 				Program(s) Included in this Report:<br />
 				<cfloop query="qGetPrograms">
 					<strong>#qGetPrograms.programname# &nbsp; (###qGetPrograms.programID#)</strong><br />
@@ -169,177 +160,7 @@
         // Get Regional Manager
         qGetRegionalManager = APPLICATION.CFC.USER.getRegionalManager(regionID=qGetRegions.regionID);
     </cfscript>
-<Cfif val(form.previousPlacementDocs)>  
-<!----Previous Docs---->
-    <cfquery name="qGetAllStudentsInRegion" datasource="MySQL">
-        SELECT 
-            s.studentID, 
-            s.countryresident, 
-            s.firstname, 
-            s.familylastname, 
-            s.sex, 
-            s.programID, 
-            s.areaRepID,
-            s.placeRepID,
-            sh.datePlaced,
-            sh.doc_host_app_page1_date,
-            sh.doc_host_app_page2_date,
-            sh.doc_letter_rec_date, 
-            sh.doc_rules_rec_date,
-            sh.doc_rules_sign_date, 
-            sh.doc_photos_rec_date,
-			<!--- Added 02/27/2012 - Required for August 12 Students --->
-            sh.doc_bedroom_photo,
-            sh.doc_bathroom_photo,
-            sh.doc_kitchen_photo,
-            sh.doc_living_room_photo,
-            sh.doc_outside_photo,
-            <!--- End of Added 02/27/2012 - Required for August 12 Students --->
-            sh.doc_school_accept_date, 
-            sh.doc_school_profile_rec,
-            sh.doc_conf_host_rec, 
-            sh.doc_date_of_visit, 
-            sh.doc_ref_form_1, 
-            sh.doc_ref_form_2, 
-            sh.doc_single_place_auth,
-            sh.stu_arrival_orientation, 
-            sh.host_arrival_orientation, 
-            sh.doc_class_schedule,
-            sh.doc_income_ver_date,
-            sh.doc_single_ref_check1,
-            sh.doc_single_ref_check2,
-            secondVisitReport.pr_ny_approved_date,
-            p.seasonID,
-            u.userID,
-            u.email as repEmail,
-            CONCAT(u.firstName, ' ', u.lastName) AS repName,
-            h.hostID, 
-            h.motherFirstName, 
-            h.fatherFirstName, 
-            h.familyLastName as hostLastName 
-        FROM 
-            smg_students s
-        INNER JOIN
-        	smg_hosthistory sh ON sh.studentID = s.studentID
-            	AND
-                	sh.isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                AND
-                	sh.hostID != s.hostID
-        INNER JOIN
-            smg_programs p on p.programid = s.programid
-        INNER JOIN
-            smg_hosts h ON h.hostID = sh.hostID
-        LEFT OUTER JOIN 
-            smg_users u ON s.#tableField# = u.userID
-        <!--- Second Visit Report - Check the report itself and not the fields on placement paperwork --->
-        LEFT OUTER JOIN 
-            progress_reports secondVisitReport ON secondVisitReport.fk_student = s.studentID
-                AND
-                	secondVisitReport.fk_host = sh.hostID
-                AND
-                    secondVisitReport.fk_reporttype = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
-                AND
-                    secondVisitReport.pr_ny_approved_date IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">                    
-        WHERE 
-        <!--- Regular Students --->
-        <Cfif val(activeOnly)>
-            s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        AND 
-        </Cfif>
-            s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegions.regionID#"> 
-        AND 
-            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
-        AND 
-            s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> ) 
-        <!--- From / To Dates --->
-        <cfif isDate(FORM.dateFrom) AND isDate(FORM.dateTo)> 
-        	AND
-            	sh.datePlaced >= <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(FORM.dateFrom)#">
-        	AND
-            	sh.datePlaced <= <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(FORM.dateTo)#">
-        </cfif>       
-        AND 
-            (
-                sh.doc_host_app_page1_date IS NULL 
-            OR 
-                sh.doc_host_app_page2_date IS NULL 
-            OR 
-                sh.doc_letter_rec_date IS NULL 
-            OR 
-                sh.doc_rules_rec_date IS NULL 
-            OR
-            	sh.doc_rules_sign_date IS NULL
-            OR
-                sh.doc_photos_rec_date IS NULL 
-            OR 
-                sh.doc_school_accept_date IS NULL 
-            OR 
-                sh.doc_school_profile_rec IS NULL 
-            OR
-                sh.doc_conf_host_rec IS NULL 
-            OR 
-                sh.doc_date_of_visit IS NULL 
-            OR 
-                sh.doc_ref_form_1 IS NULL 
-            OR 
-                sh.doc_ref_form_2 IS NULL
-            OR 
-                sh.stu_arrival_orientation IS NULL 
-            OR 
-                sh.host_arrival_orientation IS NULL 
-            OR 
-                sh.doc_class_schedule IS NULL
-			OR
-                sh.doc_income_ver_date IS NULL
-            OR
-                sh.doc_single_ref_check1 IS NULL
-            OR
-                sh.doc_single_ref_check2 IS NULL            
-            <!---  Second Visit Report - Check the report itself - OR s.doc_conf_host_rec2 IS NULL --->
-            OR
-                secondVisitReport.pr_ny_approved_date IS NULL 
-            )
-      
-        <!--- Added 02/27/2012 / Required starting Aug 12 --->                                                               
-        OR
-        	(
-                    s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                AND 
-                    s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegions.regionID#"> 
-                AND 
-                    s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
-                AND 
-                    s.onhold_approved <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
-                AND 
-                    s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> ) 
-                AND
-                    p.seasonID >= <cfqueryparam cfsqltype="cf_sql_integer" value="9">
-				<!--- From / To Dates --->
-                <cfif isDate(FORM.dateFrom) AND isDate(FORM.dateTo)> 
-                    AND
-                        sh.datePlaced >= <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(FORM.dateFrom)#">
-                    AND
-                        sh.datePlaced <= <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(FORM.dateTo)#">
-                </cfif>       
-                AND 
-                    (                   	
-                        sh.doc_bedroom_photo IS NULL   
-                    OR
-                        sh.doc_bathroom_photo IS NULL   
-                    OR
-                        sh.doc_kitchen_photo IS NULL   
-                    OR
-                        sh.doc_living_room_photo IS NULL   
-                    OR
-                        sh.doc_outside_photo IS NULL   
-                    )                        
-        	)
-        ORDER BY            
-            repName,
-            s.firstName,
-            sh.datePlaced DESC
-    </cfquery> 
-<cfelse>
+    
     <cfquery name="qGetAllStudentsInRegion" datasource="MySQL">
         SELECT 
             s.studentID, 
@@ -491,7 +312,7 @@
             repName,
             s.firstName            
     </cfquery> 
-</Cfif>
+
     <cfquery name="qGetRepsInRegion" dbtype="query">
         SELECT DISTINCT	
             userID,
@@ -616,20 +437,18 @@
 
                                 // Set Variable to Handle Missing Documents
                                 missingDocumentsList = '';
-								// Set Variable to Host App Docs
-                                hostAppsDocs = '';	
-								
+							
                                 // Required for Single Parents 
                                 if ( qGetStudentsByRep.seasonID GTE 8 AND totalFamilyMembers EQ 1 ) { // 
                                     
 									// Single Person Placement Verification
 									if ( NOT isDate(qGetStudentsByRep.doc_single_place_auth) ) {
-                                    	hostAppsDocs = ListAppend(hostAppsDocs, "Single Person Placement Verification &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    	missingDocumentsList = ListAppend(missingDocumentsList, "Single Person Placement Verification &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 	}
 									
 									// Date of S.P. Reference Check 1
 									if ( NOT isDate(qGetStudentsByRep.doc_single_ref_check1) ) {
-										hostAppsDocs = ListAppend(hostAppsDocs, "Ref Check (Single) &nbsp; &nbsp;", " &nbsp; &nbsp;");
+										missingDocumentsList = ListAppend(missingDocumentsList, "Ref Check (Single) &nbsp; &nbsp;", " &nbsp; &nbsp;");
 									}
 
 									// Date of S.P. Reference Check 2
@@ -641,32 +460,32 @@
 								
                                 // Host Family Application p.1
                                 if ( NOT isDate(qGetStudentsByRep.doc_host_app_page1_date) ) {
-                                    hostAppsDocs = ListAppend(hostAppsDocs, "Host Family Application p.1 &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "Host Family Application p.1 &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 
                                 // Host Family Application p.2
                                 if ( NOT isDate(qGetStudentsByRep.doc_host_app_page2_date) ) {
-                                    hostAppsDocs = ListAppend(hostAppsDocs, "Host Family Application p.2 &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "Host Family Application p.2 &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 
                                 // Host Family Letter
                                 if ( NOT isDate(qGetStudentsByRep.doc_letter_rec_date) ) {
-                                    hostAppsDocs = ListAppend(hostAppsDocs, "Host Family Letter p.3 &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "Host Family Letter p.3 &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 								
                                 // Host Family Rules Form
                                 if ( NOT isDate(qGetStudentsByRep.doc_rules_rec_date) ) {
-                                    hostAppsDocs = ListAppend(hostAppsDocs, "HF Rules &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "HF Rules &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 								
                                 // Host Family Rules Date Signed
                                 if ( NOT isDate(qGetStudentsByRep.doc_rules_sign_date) ) {
-                                    hostAppsDocs = ListAppend(hostAppsDocs, "HF Rules Date Signed &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "HF Rules Date Signed &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }		
 								
                                 // Family Photo
                                 if ( NOT isDate(qGetStudentsByRep.doc_photos_rec_date) ) {
-                                    hostAppsDocs = ListAppend(hostAppsDocs, "Family Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "Family Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 
                                 // Required starting Aug 12
@@ -674,54 +493,54 @@
                                     
 									// Student Bedroom Photo
 									if ( NOT isDate(qGetStudentsByRep.doc_bedroom_photo) ) {
-										hostAppsDocs = ListAppend(hostAppsDocs, "Student Bedroom Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+										missingDocumentsList = ListAppend(missingDocumentsList, "Student Bedroom Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
 									}
 
 									// Student Bathroom Photo
 									if ( NOT isDate(qGetStudentsByRep.doc_bathroom_photo) ) {
-										hostAppsDocs = ListAppend(hostAppsDocs, "Student Bathroom Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+										missingDocumentsList = ListAppend(missingDocumentsList, "Student Bathroom Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
 									}
 
 									// Kitchen Photo
 									if ( NOT isDate(qGetStudentsByRep.doc_kitchen_photo) ) {
-										hostAppsDocs = ListAppend(hostAppsDocs, "Kitchen Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+										missingDocumentsList = ListAppend(missingDocumentsList, "Kitchen Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
 									}
 
 									// Living Room Photo
 									if ( NOT isDate(qGetStudentsByRep.doc_living_room_photo) ) {
-										hostAppsDocs = ListAppend(hostAppsDocs, "Living Room Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+										missingDocumentsList = ListAppend(missingDocumentsList, "Living Room Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
 									}
 									
 									// Outside Photo
 									if ( NOT isDate(qGetStudentsByRep.doc_outside_photo) ) {
-										hostAppsDocs = ListAppend(hostAppsDocs, "Outside Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+										missingDocumentsList = ListAppend(missingDocumentsList, "Outside Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
 									}
 
                                 }  
 								
                                 // School & Community Profile Form
                                 if ( NOT isDate(qGetStudentsByRep.doc_school_profile_rec) ) {
-                                    hostAppsDocs = ListAppend(hostAppsDocs, "School & Community Profile &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "School & Community Profile &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 								
                                 // Confidential Host Family Visit Form
                                 if ( NOT isDate(qGetStudentsByRep.doc_conf_host_rec) ) {
-                                    hostAppsDocs = ListAppend(hostAppsDocs, "Visit Form &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "Visit Form &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 								
                                 // Confidential Host Family Visit Form - Date of Visit
                                 if ( NOT isDate(qGetStudentsByRep.doc_date_of_visit) ) {
-                                    hostAppsDocs = ListAppend(hostAppsDocs, "Date of Visit &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "Date of Visit &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 								
                                 // Reference Form 1
                                 if ( NOT isDate(qGetStudentsByRep.doc_ref_form_1) ) {
-                                    hostAppsDocs = ListAppend(hostAppsDocs, "Ref. 1 &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "Ref. 1 &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 								
                                 // Reference Form 2
                                 if ( NOT isDate(qGetStudentsByRep.doc_ref_form_2) ) {
-                                    hostAppsDocs = ListAppend(hostAppsDocs, "Ref. 2 &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    missingDocumentsList = ListAppend(missingDocumentsList, "Ref. 2 &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 								
                                 // School Acceptance Form
@@ -731,12 +550,12 @@
 
 								// Income Verification Form
 								if ( NOT isDate(qGetStudentsByRep.doc_income_ver_date) ) {
-									hostAppsDocs = ListAppend(hostAppsDocs, "Income Verification &nbsp; &nbsp;", " &nbsp; &nbsp;");
+									missingDocumentsList = ListAppend(missingDocumentsList, "Income Verification &nbsp; &nbsp;", " &nbsp; &nbsp;");
 								}
 								
 								// 2nd Confidential Host Family Visit Form
 								if ( NOT isDate(qGetStudentsByRep.pr_ny_approved_date) ) { 
-									hostAppsDocs = ListAppend(hostAppsDocs, "2nd Conf. Host Visit &nbsp; &nbsp;", " &nbsp; &nbsp;");
+									missingDocumentsList = ListAppend(missingDocumentsList, "2nd Conf. Host Visit &nbsp; &nbsp;", " &nbsp; &nbsp;");
 								}
 
                                 // Student Orientation
@@ -755,13 +574,13 @@
                                 }
                             </cfscript>
                             
-                            <cfif LEN(missingDocumentsList) or LEN(hostAppsDocs)>
+                            <cfif LEN(missingDocumentsList)>
                                 <tr bgcolor="###iif(qGetStudentsByRep.currentrow MOD 2 ,DE("EDEDED") ,DE("FFFFFF") )#">
                                     <td>#qGetStudentsByRep.studentID#</td>
                                     <td>#qGetStudentsByRep.firstname# #qGetStudentsByRep.familylastname#</td>
                                     <td>#qGetStudentsByRep.hostLastName# (###qGetStudentsByRep.hostID#)</td>
                                     <td>#DateFormat(qGetStudentsByRep.datePlaced, 'mm/dd/yyyy')#</td>
-                                    <td align="left"><i><font size="-2"><Cfif len(hostAppsDocs)> Host Application &nbsp;&nbsp;</Cfif>#missingDocumentsList#</font></i></td>		
+                                    <td align="left"><i><font size="-2">#missingDocumentsList#</font></i></td>		
                                 </tr>	
                             </cfif>
                                                                                         
@@ -806,11 +625,7 @@
             <cfinvokeargument name="email_to" value="#qGetRegionalManager.email#">
             <cfinvokeargument name="email_cc" value="#CLIENT.email#">
             <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
-            <cfif val(previousPlacementDocs)>
-            	<cfinvokeargument name="email_subject" value="MISSING PREVIOUS PLACEMENT DOCUMENTS REPORT - #companyshort.companyshort# - #qGetRegions.regionName# Region">
-            <cfelse>
-            	<cfinvokeargument name="email_subject" value="MISSING PLACEMENT DOCUMENTS REPORT - #companyshort.companyshort# - #qGetRegions.regionName# Region">
-            </cfif>
+            <cfinvokeargument name="email_subject" value="MISSING PLACEMENT DOCUMENTS REPORT - #companyshort.companyshort# - #qGetRegions.regionName# Region">
             <cfinvokeargument name="email_message" value="#emailBody#">
         </cfinvoke>
             
