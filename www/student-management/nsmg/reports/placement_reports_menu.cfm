@@ -255,14 +255,8 @@
 	</table><br>
 	</cfif>
 	
-	
-	<!----Combined placement docs report------>
-    
-    
-   
-    <!--- Row 4 - 2 boxes --->
-	
-    <table cellpadding=6 cellspacing="0" align="center" width="97%">
+	<!--- Row 4 - 2 boxes --->
+	<table cellpadding=6 cellspacing="0" align="center" width="97%">
         <tr>
             <td width="50%" align="left" valign="top">
                 <form action="reports/document_tracking.cfm" method="POST" target="blank">
@@ -286,13 +280,6 @@
                                         <option value="#qGetRegions.regionid#" <cfif qGetRegions.recordcount eq 1>selected</cfif>>#qGetRegions.regionname#</option>
                                     </cfloop> 
                                 </select>
-                            </td>
-                        </tr>
-                         <tr align="left">
-                            <td>Include only active students :</td>
-                            <td>
-                                <input type="radio" name="sendemail" id="activeNo" value="0" checked="checked"> <label for="activeNo">No</label>  
-                                <input type="radio" name="sendemail" id="ativeYes" value="1"> <label for="ativeYes">Yes</label>
                             </td>
                         </tr>
                         <!--- Add Option to List by Facilitator --->
@@ -324,27 +311,12 @@
                             </td>
                         </tr>
                         <tr>
-                        	<td colspan=2 align="Center"><font color="##999999">----Previous Placement Missing Docs----</font></td> 
-                        </tr>
-                        <tr>
-                        	<td>Previous Placement Docs</td><td><input type="checkbox" name="previousPlacementDocs" value=1/></td>
-                        </tr>
-                         <tr align="left">
-                        	<td>Date Placed From : </td>
-                        	<td><input type="text" name="dateFrom" size="8" maxlength="10" value="" class="datePicker"></td>
-                        </tr>
-                        <tr align="left">
-                        	<td>To : </td>
-                            <td><input type="text" name="dateTo" size="8" maxlength="10" value="" class="datePicker"></td>
-                        </tr>
-                        <tr>
                             <td colspan="3" align="center" bgcolor="##e2efc7"><input type="image" src="pics/view.gif" align="center" border=0></td>
                         </tr>
                     </table>
                 </form>
             </td>
             <td width="50%" align="right" valign="top">
-            <!---
 				<cfform action="reports/document_tracking_previous_host.cfm" method="POST" target="blank">
 					<table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
 						<tr><th colspan="2" bgcolor="##e2efc7">Missing Previous Placement Docs</th></tr>
@@ -409,18 +381,11 @@
                         </tr>
 					</table>
 				</cfform>
-				---->
             </td>
         </tr>
 	</table>
 	<br>
-    
-   
-    
-    
-    
-    
-    <!-----  ------>
+	
 	<cfif client.usertype LTE '4'>
 	
 	<!--- Row 6 - 2 boxes --->
