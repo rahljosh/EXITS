@@ -419,7 +419,7 @@
                         <li>Please confirm the <strong>employment availability</strong> for the above participant(s) <strong>and the number of hours of paid employment you have agreed to provide to each</strong>.</li>
                         <li>Please verify <strong>the job title, the start date and the end date.</strong> Please inform CSB of any corrections needed.</li>
                         <cfif NOT VAL(qGetJ1Positions.recordCount)>
-                        	<li>Please confirm the <strong>total number of J1 placements available</strong> with your company.</li>
+                        	<li>Please confirm the <strong>total number of J1 placements available</strong> for CSB with your company.</li>
                       	</cfif>
                         <cfif NOT VAL(qGetConfirmations.recordCount)>
                         	<li>
@@ -443,11 +443,6 @@
                 
                 <p class="style1">
                 	Thank you for your support for the exchange programs and we are here to assist you with any further question you may have. 
-                </p>
-                
-                <p class="style1">
-                	<span style="color:##FF0000; text-decoration:underline; font-weight:bold;">Important note:</span>
-                    If the job offer is cancelled or revoked due to any circumstances/ conditions, please notify CSB and the participant immediately.
                 </p>
                 
                 <p class="style1">
