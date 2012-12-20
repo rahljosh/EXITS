@@ -128,7 +128,7 @@
         1-631-693-4540 ext. 131<br />
         sergei@iseusa.com<br />
         <p align="center" class="style1">
-            www.isetraining.com
+            www.isetraining.org
         </p>
   	</cfoutput>
     
