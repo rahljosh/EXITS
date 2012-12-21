@@ -26,6 +26,12 @@
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
 	</cfscript>
     
+	<cfquery name="qGetStateList" datasource="MySql">
+        SELECT id, state, stateName
+        FROM smg_states
+      	ORDER BY stateName
+    </cfquery>
+    
 </cfsilent>    
 
 <!--- Ajax Call to the Component --->
@@ -88,6 +94,10 @@
 			tableHeader += '<td class="listTitle style2">Program <br /> Start Date</td>';
 			tableHeader += '<td class="listTitle style2">Program <br /> End Date</td>';
 			tableHeader += '<td class="listTitle style2">U.S. Phone</td>';
+			tableHeader += '<td class="listTitle style2">Address</td>';
+			tableHeader += '<td class="listTitle style2">City</td>';
+			tableHeader += '<td class="listTitle style2">State</td>';
+			tableHeader += '<td class="listTitle style2">Zip</td>';
             tableHeader += '<td class="listTitle style2" align="center">Actions</td>';                                                          
 		tableHeader += '</tr>';
 		
@@ -115,6 +125,14 @@
 			var startDate = verList.DATA[i][verList.COLUMNS.findIdx('STARTDATE')];
 			var endDate = verList.DATA[i][verList.COLUMNS.findIdx('ENDDATE')];
 			var usPhone = verList.DATA[i][verList.COLUMNS.findIdx('US_PHONE')];
+			
+			var arrival_address = verList.DATA[i][verList.COLUMNS.findIdx('ARRIVAL_ADDRESS')];
+			var arrival_city = verList.DATA[i][verList.COLUMNS.findIdx('ARRIVAL_CITY')];
+			var arrival_state = verList.DATA[i][verList.COLUMNS.findIdx('ARRIVAL_STATE')];
+			var arrival_zip = verList.DATA[i][verList.COLUMNS.findIdx('ARRIVAL_ZIP')];
+			if (arrival_address == null) arrival_address = "";
+			if (arrival_city == null) arrival_city = "";
+			if (arrival_zip == null) arrival_zip = "";
 
 			// Create Table Rows
 			var tableBody = '';	
@@ -135,6 +153,18 @@
 				tableBody += '<td class="style5">' + startDate + '</td>';
 				tableBody += '<td class="style5">' + endDate + '</td>';
 				tableBody += '<td class="style5"><input type="text" size="12" id="usphone' + candidateID + '" value="' + usPhone + '" onclick="applyPhoneMask(this.id);" /></td>';
+				tableBody += '<td class="style5"><input type="text" size="12" id="arrival_address' + candidateID + '" value="' + arrival_address + '" /></td>';
+				tableBody += '<td class="style5"><input type="text" size="12" id="arrival_city' + candidateID + '" value="' + arrival_city + '" /></td>';
+				tableBody += '<td class="style5"><select id="arrival_state' + candidateID + '"><option value="0"></option>';
+				<cfoutput query="qGetStateList">
+					if (arrival_state == #id#) {
+						tableBody += '<option value="#id#" selected="selected">#state#</option>';
+					} else {
+						tableBody += '<option value="#id#">#state#</option>';
+					}
+				</cfoutput>
+				tableBody += '</select>';
+				tableBody += '<td class="style5"><input type="text" size="5" maxlength="5" id="arrival_zip' + candidateID + '" value="' + arrival_zip + '" /></td>';
 				tableBody += '<td align="center" class="style5"><a href="javascript:setCheckInReceived(' + candidateID + ');" class="style4">[Received]</a></td>';
 			tableBody += '</tr>';
 			// Append table rows
@@ -153,13 +183,17 @@
 		var c = new candidate();
 		
 		var initPhone = document.getElementById('usphone' + candidateID).value;
+		var initAddress = document.getElementById('arrival_address' + candidateID).value;
+		var initCity = document.getElementById('arrival_city' + candidateID).value;
+		var initState = document.getElementById('arrival_state' + candidateID).value;
+		var initZip = document.getElementById('arrival_zip' + candidateID).value;		
 
 		// Setting a callback handler for the proxy automatically makes the proxy's calls asynchronous. 
 		c.setCallbackHandler(checkInReceived(candidateID)); 
 		c.setErrorHandler(myErrorHandler); 
 		
 		// This time, pass the intlRep ID to the getVerificationList CFC function. 
-		c.confirmCheckInReceived(candidateID, initPhone);
+		c.confirmCheckInReceived(candidateID, initPhone, initAddress, initCity, initState, initZip);
 		
 	}
 	
