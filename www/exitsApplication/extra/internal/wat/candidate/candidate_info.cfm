@@ -2410,14 +2410,14 @@
                                         	<td class="style1" width="30%" align="right"><label for="usPhone"><strong>Address:</strong></label></td>
                                         	<td class="style1" width="70%">
                                             	<span class="readOnly">#qGetCandidate.arrival_address#</span>
-                                                <input type="text" name="arrival_address" id="arrival_address" class="style1 editPage" value="#qGetCandidate.arrival_address#" maxlength="10">
+                                                <input type="text" name="arrival_address" id="arrival_address" class="style1 editPage" value="#qGetCandidate.arrival_address#">
                                             </td>
                                         </tr>
                                         <tr>
                                         	<td class="style1" width="30%" align="right"><label for="usPhone"><strong>City:</strong></label></td>
                                         	<td class="style1" width="70%">
                                             	<span class="readOnly">#qGetCandidate.arrival_city#</span>
-                                                <input type="text" name="arrival_city" id="arrival_city" class="style1 editPage" value="#qGetCandidate.arrival_city#" maxlength="10">
+                                                <input type="text" name="arrival_city" id="arrival_city" class="style1 editPage" value="#qGetCandidate.arrival_city#">
                                             </td>
                                         </tr>
                                         <tr>
