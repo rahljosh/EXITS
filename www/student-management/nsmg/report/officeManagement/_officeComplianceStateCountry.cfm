@@ -141,20 +141,24 @@
 <cfif val(form.showCountryReport)>
 <table width=95% align="center">
 	<tr>
+<cffile action = "read" 
+    file = "C:\websites\student-management\nsmg\temp\ds2019idList.csv" 
+    variable = "idnos">
 
+<Cfset newList = ''>
+<Cfloop list = '#idnos#' index=i>
+	<cfset newList = ListAppend(newList, '#trim(i)#')>
+</Cfloop>
 <cfloop index="i" list="#form.programid#">
 <td valign="top">
 <cfquery name="allStudents" datasource="#application.dsn#">
-select s.studentid, s.programid, h.state, s.sex, s.companyid, s.countryresident, s.firstname, s.familylastname
+select s.studentid, s.programid, s.sex, s.companyid, s.countryresident, s.firstname, s.familylastname, s.ds2019_no
 from smg_students s
-left join smg_hosts h on h.hostid = s.hostid
-where (s.active = 1 OR canceldate != '')  and s.programid = #i# 
-<cfif client.companyid eq 10>
-and s.companyid = 10
-<cfelse>
-and (s.companyid <= 5 OR s.companyid = 12)
-</cfif>
-</cfquery>
+
+where 
+s.ds2019_no IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#newList#" list="yes">)
+
+</Cfquery>
 
 <cfquery name="noCR" dbtype="query">
 select *
@@ -312,15 +316,13 @@ where countryresident = #countryid# and sex = ''
 <cfloop index="i" list="#form.programid#">
 <td valign="top">
 <cfquery name="allStudents" datasource="#application.dsn#">
-select s.studentid, s.programid, h.state, s.sex
+select s.studentid, s.programid, s.sex, s.companyid, s.countryresident, h.state, s.firstname, s.familylastname, s.ds2019_no
 from smg_students s
 left join smg_hosts h on h.hostid = s.hostid
-where (s.active = 1 OR canceldate != '') and s.programid = #i# 
-<cfif client.companyid eq 10>
-and s.companyid = 10
-<cfelse>
-and (s.companyid <= 5 OR s.companyid = 12)
-</cfif>
+where 
+s.ds2019_no IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#newList#" list="yes">)
+
+
 </cfquery>
 <cfquery name="programName" datasource="#application.dsn#">
 select programname 
