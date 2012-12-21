@@ -98,6 +98,12 @@
 		
     <cfinclude template="../querys/fieldstudy.cfm">
     <cfinclude template="../querys/program.cfm">
+    
+    <cfquery name="qGetStateList" datasource="MySql">
+        SELECT id, state, stateName
+        FROM smg_states
+      	ORDER BY stateName
+    </cfquery>
 	
 	<!--- Query of Queries --->
     <cfquery name="qGetProgramInfo" dbtype="query">
@@ -2375,7 +2381,15 @@
                         
                                     <table width="100%" cellpadding=3 cellspacing="0" border="0">
                                         <tr bgcolor="##C2D1EF">
-                                        	<td colspan="4" class="style2" bgcolor="##8FB6C9">&nbsp;:: Arrival Verification</td>
+                                        	<td colspan="4" class="style2" bgcolor="##8FB6C9">
+                                            	&nbsp;:: Arrival Verification
+                                            	<!--- Office View Only --->  
+                                            	<cfif ListFind("1,2,3,4", CLIENT.userType)>    
+                                                	<span style="float:right; padding-right:20px;">
+                                                    	<a href="javascript:openWindow('candidate/arrival_history.cfm?uniqueID=#URL.uniqueid#', 400, 600);" class="style2">[ History ]</a>
+                                                    </span>
+                                            	</cfif>
+                                         	</td>
                                         </tr>
                                         <tr>
                                         	<td class="style1" width="30%" align="right"><label for="watDateCheckedIn"><strong>Check-in/Validation Date:</strong></label></td>
@@ -2390,6 +2404,45 @@
                                         	<td class="style1" width="70%">
                                             	<span class="readOnly">#qGetCandidate.us_phone#</span>
                                                 <input type="text" name="usPhone" id="usPhone" class="style1 editPage" value="#qGetCandidate.us_phone#" maxlength="10">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" width="30%" align="right"><label for="usPhone"><strong>Address:</strong></label></td>
+                                        	<td class="style1" width="70%">
+                                            	<span class="readOnly">#qGetCandidate.arrival_address#</span>
+                                                <input type="text" name="arrival_address" id="arrival_address" class="style1 editPage" value="#qGetCandidate.arrival_address#" maxlength="10">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" width="30%" align="right"><label for="usPhone"><strong>City:</strong></label></td>
+                                        	<td class="style1" width="70%">
+                                            	<span class="readOnly">#qGetCandidate.arrival_city#</span>
+                                                <input type="text" name="arrival_city" id="arrival_city" class="style1 editPage" value="#qGetCandidate.arrival_city#" maxlength="10">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" width="30%" align="right"><label for="usPhone"><strong>State:</strong></label></td>
+                                        	<td class="style1" width="70%">
+                                            	<span class="readOnly">
+                                                	<cfloop query="qGetStateList">
+                                                    	<cfif id EQ qGetCandidate.arrival_state>
+                                                        	#state#
+                                                        </cfif>
+                                                   	</cfloop>
+                                             	</span>
+                                                <select name="arrival_state" id="arrival_state" class="style1 editPage">
+                                                	<option value="0"></option>
+                                                	<cfloop query="qGetStateList">
+                                                    	<option value="#id#" <cfif id EQ qGetCandidate.arrival_state>selected="selected"</cfif>>#state#</option>
+                                                    </cfloop>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" width="30%" align="right"><label for="usPhone"><strong>Zip:</strong></label></td>
+                                        	<td class="style1" width="70%">
+                                            	<span class="readOnly">#qGetCandidate.arrival_zip#</span>
+                                                <input type="text" name="arrival_zip" id="arrival_zip" class="style1 editPage" value="#qGetCandidate.arrival_zip#" size="5" maxlength="5">
                                             </td>
                                         </tr>
                         			</table>
