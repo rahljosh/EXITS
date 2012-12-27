@@ -549,7 +549,10 @@
 					vIsCompliant = 0;
 					vMissingDocumentsMessage = '';
 					vOutOfComplianceDocuments = '';
-	
+					
+					// Treat all docs assoc with host app as one missing item.
+                    vHostAppsDocsMessage = '';	
+					
 					vIsFatherHome = 0;
 					vIsMotherHome = 0;
 					vTotalFamilyMembers = 0;
@@ -570,59 +573,59 @@
 						
 						// Single Person Placement Verification
 						if ( NOT isDate(qGetResults.doc_single_place_auth) ) {
-							vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Single Person Placement Verification <br />", " <br />");
+							vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Single Person Placement Verification <br />", " <br />");
 						}
 						
 						// Date of S.P. Reference Check 1
 						if ( NOT isDate(qGetResults.doc_single_ref_check1) ) {
-							vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Ref Check (Single) <br />", " <br />");
+							vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Ref Check (Single) <br />", " <br />");
 						}
 	
 						// Date of S.P. Reference Check 2
 						if ( NOT isDate(qGetResults.doc_single_ref_check2) ) {
-							vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "2nd Ref Check (Single) <br />", " <br />");
+							vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "2nd Ref Check (Single) <br />", " <br />");
 						}
 						
 					}
 	
 					// Host Family Application p.1
 					if ( NOT isDate(qGetResults.doc_host_app_page1_date) ) {
-						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Host Family Application p.1 <br />", " <br />");
+						vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Host Family Application p.1 <br />", " <br />");
 					}
 
 					// Host Family Application p.2
 					if ( NOT isDate(qGetResults.doc_host_app_page2_date) ) {
-						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Host Family Application p.2 <br />", " <br />");
+						vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Host Family Application p.2 <br />", " <br />");
 					}
 
 					// Host Family Letter p.3
 					if ( NOT isDate(qGetResults.doc_letter_rec_date) ) {
-						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Host Family Letter p.3 <br />", " <br />");
+						vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Host Family Letter p.3 <br />", " <br />");
 					}
 					
 					// Host Family Rules Form
 					if ( NOT isDate(qGetResults.doc_rules_rec_date) ) {
-						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "HF Rules <br />", " <br />");
+						vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "HF Rules <br />", " <br />");
 					}
 					
 					// Host Family Rules Date Signed
 					if ( NOT isDate(qGetResults.doc_rules_sign_date) ) {
-						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "HF Rules Date Signed <br />", " <br />");
+						vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "HF Rules Date Signed <br />", " <br />");
 					}		
 					
 					// Family Photo
 					if ( NOT isDate(qGetResults.doc_photos_rec_date) ) {
-						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Family Photo <br />", " <br />");
+						vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Family Photo <br />", " <br />");
 					}
 	
 					// Student Bedroom Photo
 					if ( NOT isDate(qGetResults.doc_bedroom_photo) ) {
-						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Student Bedroom Photo <br />", " <br />");
+						vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Student Bedroom Photo <br />", " <br />");
 					}
 
 					// Student Bathroom Photo
 					if ( NOT isDate(qGetResults.doc_bathroom_photo) ) {
-						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Student Bathroom Photo <br />", " <br />");
+						vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Student Bathroom Photo <br />", " <br />");
 					}
 
 					// Kitchen Photo
@@ -632,37 +635,37 @@
 
 					// Living Room Photo
 					if ( NOT isDate(qGetResults.doc_living_room_photo) ) {
-						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Living Room Photo <br />", " <br />");
+						vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Living Room Photo <br />", " <br />");
 					}
 					
 					// Outside Photo
 					if ( NOT isDate(qGetResults.doc_outside_photo) ) {
-						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Outside Photo <br />", " <br />");
+						vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Outside Photo <br />", " <br />");
 					}
 	
 					// School & Community Profile Form
 					if ( NOT isDate(qGetResults.doc_school_profile_rec) ) {
-						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "School & Community Profile <br />", " <br />");
+						vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "School & Community Profile <br />", " <br />");
 					}
 					
 					// Confidential Host Family Visit Form
 					if ( NOT isDate(qGetResults.doc_conf_host_rec) ) {
-						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Visit Form <br />", " <br />");
+						vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Visit Form <br />", " <br />");
 					}
 					
 					// Confidential Host Family Visit Form - Date of Visit
 					if ( NOT isDate(qGetResults.doc_date_of_visit) ) {
-						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Date of Visit <br />", " <br />");
+						vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Date of Visit <br />", " <br />");
 					}
 					
 					// Reference Form 1
 					if ( NOT isDate(qGetResults.doc_ref_form_1) ) {
-						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Ref. 1 <br />", " <br />");
+						vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Ref. 1 <br />", " <br />");
 					}
 					
 					// Reference Form 2
 					if ( NOT isDate(qGetResults.doc_ref_form_2) ) {
-						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Ref. 2 <br />", " <br />");
+						vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Ref. 2 <br />", " <br />");
 					}
 					
 					// School Acceptance Form
@@ -672,12 +675,12 @@
 	
 					// Income Verification Form
 					if ( NOT isDate(qGetResults.doc_income_ver_date) ) {
-						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Income Verification <br />", " <br />");
+						vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Income Verification <br />", " <br />");
 					}
 					
 					// 2nd Confidential Host Family Visit Form
 					if ( NOT isDate(qGetResults.pr_ny_approved_date) ) { 
-						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "2nd Conf. Host Visit <br />", " <br />");
+						vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "2nd Conf. Host Visit <br />", " <br />");
 					}
 	
 					// Student Orientation
@@ -697,7 +700,7 @@
 					
 					// Check if is compliant
 					/*
-					if ( NOT LEN(vMissingDocumentsMessage) AND NOT LEN(vOutOfComplianceDocuments) ) {
+					if ( NOT LEN(vMissingDocumentsMessage) AND NOT LEN(vOutOfComplianceDocuments)  AND NOT LEN(vHostAppsDocsMessage)  ) {
 						vIsCompliant = 1;
 					}
 					*/
@@ -756,6 +759,7 @@
                             <cfif VAL(vIsCompliant)>
                                 compliant
                             <cfelse>
+                            <Cfif len(vHostAppsDocsMessage)> Host Application &nbsp;&nbsp;&nbsp;&nbsp; </Cfif>
                                 #vMissingDocumentsMessage#
                                 
                                 #vOutOfComplianceDocuments#
@@ -888,6 +892,9 @@
 								vMissingDocumentsMessage = '';
                                 vOutOfComplianceDocuments = '';
 
+								// Treat all docs assoc with host app as one missing item.
+                    			vHostAppsDocsMessage = '';	
+					
                                 vIsFatherHome = 0;
                                 vIsMotherHome = 0;
                                 vTotalFamilyMembers = 0;
@@ -908,99 +915,99 @@
                                     
 									// Single Person Placement Verification
 									if ( NOT isDate(qGetStudentsInRegion.doc_single_place_auth) ) {
-                                    	vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Single Person Placement Verification &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    	vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Single Person Placement Verification &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 	}
 									
 									// Date of S.P. Reference Check 1
 									if ( NOT isDate(qGetStudentsInRegion.doc_single_ref_check1) ) {
-										vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Ref Check (Single) &nbsp; &nbsp;", " &nbsp; &nbsp;");
+										vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Ref Check (Single) &nbsp; &nbsp;", " &nbsp; &nbsp;");
 									}
 
 									// Date of S.P. Reference Check 2
                                     if ( NOT isDate(qGetStudentsInRegion.doc_single_ref_check2) ) {
-                                        vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "2nd Ref Check (Single) &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                        vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "2nd Ref Check (Single) &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                     }
 									
                                 }
 
                                 // Host App Page 1
                                 if ( NOT isDate(qGetStudentsInRegion.doc_host_app_page1_date) ) {
-                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Host App Page 1 &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Host App Page 1 &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 
                                 // Host App Page 2
                                 if ( NOT isDate(qGetStudentsInRegion.doc_host_app_page2_date) ) {
-                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Host App Page 2 &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Host App Page 2 &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 								
                                 // Host Family Letter
                                 if ( NOT isDate(qGetStudentsInRegion.doc_letter_rec_date) ) {
-                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "HF Letter &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "HF Letter &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 								
                                 // Host Family Rules Form
                                 if ( NOT isDate(qGetStudentsInRegion.doc_rules_rec_date) ) {
-                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "HF Rules &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "HF Rules &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 								
                                 // Host Family Rules Date Signed
                                 if ( NOT isDate(qGetStudentsInRegion.doc_rules_sign_date) ) {
-                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "HF Rules Date Signed &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "HF Rules Date Signed &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }		
 								
                                 // Family Photo
                                 if ( NOT isDate(qGetStudentsInRegion.doc_photos_rec_date) ) {
-                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Family Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Family Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 
 								// Student Bedroom Photo
 								if ( NOT isDate(qGetStudentsInRegion.doc_bedroom_photo) ) {
-									vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Student Bedroom Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+									vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Student Bedroom Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
 								}
 
 								// Student Bathroom Photo
 								if ( NOT isDate(qGetStudentsInRegion.doc_bathroom_photo) ) {
-									vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Student Bathroom Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+									vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Student Bathroom Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
 								}
 
 								// Kitchen Photo
 								if ( NOT isDate(qGetStudentsInRegion.doc_kitchen_photo) ) {
-									vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Kitchen Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+									vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Kitchen Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
 								}
 
 								// Living Room Photo
 								if ( NOT isDate(qGetStudentsInRegion.doc_living_room_photo) ) {
-									vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Living Room Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+									vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Living Room Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
 								}
 								
 								// Outside Photo
 								if ( NOT isDate(qGetStudentsInRegion.doc_outside_photo) ) {
-									vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Outside Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
+									vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Outside Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
 								}
 
                                 // School & Community Profile Form
                                 if ( NOT isDate(qGetStudentsInRegion.doc_school_profile_rec) ) {
-                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "School & Community Profile &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "School & Community Profile &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 								
                                 // Confidential Host Family Visit Form
                                 if ( NOT isDate(qGetStudentsInRegion.doc_conf_host_rec) ) {
-                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Visit Form &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Visit Form &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 								
                                 // Confidential Host Family Visit Form - Date of Visit
                                 if ( NOT isDate(qGetStudentsInRegion.doc_date_of_visit) ) {
-                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Date of Visit &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Date of Visit &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 								
                                 // Reference Form 1
                                 if ( NOT isDate(qGetStudentsInRegion.doc_ref_form_1) ) {
-                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Ref. 1 &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Ref. 1 &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 								
                                 // Reference Form 2
                                 if ( NOT isDate(qGetStudentsInRegion.doc_ref_form_2) ) {
-                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Ref. 2 &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                    vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Ref. 2 &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 								
                                 // School Acceptance Form
@@ -1010,12 +1017,12 @@
 
 								// Income Verification Form
 								if ( NOT isDate(qGetStudentsInRegion.doc_income_ver_date) ) {
-									vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Income Verification &nbsp; &nbsp;", " &nbsp; &nbsp;");
+									vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Income Verification &nbsp; &nbsp;", " &nbsp; &nbsp;");
 								}
 								
 								// 2nd Confidential Host Family Visit Form
 								if ( NOT isDate(qGetStudentsInRegion.pr_ny_approved_date) ) { 
-									vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "2nd Conf. Host Visit &nbsp; &nbsp;", " &nbsp; &nbsp;");
+									vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "2nd Conf. Host Visit &nbsp; &nbsp;", " &nbsp; &nbsp;");
 								}
 
                                 // Student Orientation
@@ -1035,7 +1042,7 @@
 								
                                 // Check if is compliant
                                 /*
-								if ( NOT LEN(vMissingDocumentsMessage) AND NOT LEN(vOutOfComplianceDocuments) ) {
+								if ( NOT LEN(vMissingDocumentsMessage) AND NOT LEN(vOutOfComplianceDocuments) AND NOT LEN(vHostAppsDocsMessage) ) {
                                     vIsCompliant = 1;
                                 }
 								*/
@@ -1082,6 +1089,7 @@
                                         <cfif VAL(vIsCompliant)>
                                             compliant
                                         <cfelse>
+                                       	 <Cfif len(vHostAppsDocsMessage)> Host Application &nbsp;&nbsp;&nbsp;&nbsp;</Cfif>
                                             #vMissingDocumentsMessage#
                                             
                                             #vOutOfComplianceDocuments#
