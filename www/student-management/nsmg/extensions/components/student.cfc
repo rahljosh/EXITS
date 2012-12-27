@@ -2434,6 +2434,7 @@
                     reason,
                     changePlacementReasonID,
                     changePlacementExplanation,
+                    dateHostAppReceived,
                     datePlaced,
                     datePlacedEnded,
                     dateRelocated,
