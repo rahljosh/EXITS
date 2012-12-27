@@ -453,8 +453,10 @@
                                	</cfif>
                           	</td>
                             <td class="style1">
-                            	<cfif qTotalPerAgent.confirmed EQ 1>
-                                	#qTotalPerAgent.numberPositions#
+                            	<cfif qTotalPerAgent.confirmed EQ 1 AND VAL(qTotalPerAgent.numberPositions)>
+                                	Yes
+                               	<cfelse>
+                                	No
                                	</cfif>
                           	</td>
                             <td class="style1">
