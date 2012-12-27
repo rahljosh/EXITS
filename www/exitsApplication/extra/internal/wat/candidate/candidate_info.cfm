@@ -1899,8 +1899,8 @@
                                                     name="WC_carrierName" 
                                                     id="WC_carrierName" 
                                                     value="#qCandidatePlaceCompany.WC_carrierName#" 
-                                                    class="style1 editPage" 
-                                                    maxlength="10">
+                                                    class="style1 editPage"
+                                                    size="40">
                                             </td>
                                         </tr>
                                         <tr class="hiddenField selfPlacementInfo">
@@ -1914,8 +1914,8 @@
                                                     name="WC_carrierPhone" 
                                                     id="WC_carrierPhone" 
                                                     value="#qCandidatePlaceCompany.WC_carrierPhone#" 
-                                                    class="style1 editPage" 
-                                                    maxlength="10">
+                                                    class="style1 editPage"
+                                                    size="40">
                                             </td>
                                         </tr>
                                         <tr class="hiddenField selfPlacementInfo">
@@ -1930,7 +1930,7 @@
                                                     id="WC_policyNumber" 
                                                     value="#qCandidatePlaceCompany.WC_policyNumber#" 
                                                     class="style1 editPage" 
-                                                    maxlength="10">
+                                                    size="40">
                                             </td>
                                         </tr>
                                         <tr>
@@ -2294,7 +2294,8 @@
                                                             name="WC_carrierName_#qGetAllPlacements.candCompID#" 
                                                             id="WC_carrierName_#qGetAllPlacements.candCompID#" 
                                                             value="#qGetAllPlacements.WC_carrierName#" 
-                                                            class="style1 editPage selfPlacementField" />
+                                                            class="style1 editPage selfPlacementField"
+                                                            size="40" />
                                                     </td>
                                                 </tr>
                                                 <tr class="hiddenField selfPlacementInfo">
@@ -2308,7 +2309,8 @@
                                                             name="WC_carrierPhone_#qGetAllPlacements.candCompID#" 
                                                             id="WC_carrierPhone_#qGetAllPlacements.candCompID#" 
                                                             value="#qGetAllPlacements.WC_carrierPhone#" 
-                                                            class="style1 editPage selfPlacementField" />
+                                                            class="style1 editPage selfPlacementField"
+                                                            size="40" />
                                                     </td>
                                                 </tr>
                                                 <tr class="hiddenField selfPlacementInfo">
@@ -2322,7 +2324,8 @@
                                                             name="WC_policyNumber_#qGetAllPlacements.candCompID#" 
                                                             id="WC_policyNumber_#qGetAllPlacements.candCompID#" 
                                                             value="#qGetAllPlacements.WC_policyNumber#" 
-                                                            class="style1 editPage selfPlacementField" />
+                                                            class="style1 editPage selfPlacementField"
+                                                            size="40" />
                                                     </td>
                                                 </tr>
                                                 <tr>
