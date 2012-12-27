@@ -76,7 +76,11 @@
                             </table>	
                       	</td>
                         <td class="style2" bgcolor="8FB6C9">EIN</td>
-                        <td class="style2" bgcolor="8FB6C9">Workmens Compensation</td>
+                        <td class="style2" bgcolor="8FB6C9">WC</td>
+                        <td class="style2" bgcolor="8FB6C9">WC Expiration</td>
+                        <td class="style2" bgcolor="8FB6C9">Carrier Name</td>
+                        <td class="style2" bgcolor="8FB6C9">Carrier Phone</td>
+                        <td class="style2" bgcolor="8FB6C9">Policy Number</td>
                         <td class="style2" bgcolor="8FB6C9">Homepage</td>
                         <td class="style2" bgcolor="8FB6C9">Observations</td>
                     </tr>
@@ -127,11 +131,15 @@
                                 <td align="left" class="style5">#ein#</td>
                                 <td align="left" class="style5">
                                 	<cfif workmensCompensation EQ 1>
-                                    	Yes - #DateFormat(WCDateExpired,'mm/dd/yyyy')#
+                                    	Yes
                                    	<cfelse>
-                                    	No - #DateFormat(WCDateExpired,'mm/dd/yyyy')#
+                                    	No
                                   	</cfif>
                                	</td>
+                                <td align="left" class="style5">#DateFormat(WCDateExpired,'mm/dd/yyyy')#</td>
+                                <td align="left" class="style5">#WC_carrierName#</td>
+                                <td align="left" class="style5">#WC_carrierPhone#</td>
+                                <td align="left" class="style5">#WC_policyNumber#</td>
                                 <td align="left" class="style5">#homepage#</td>
                                 <td align="left" class="style5">#observations#</td>
                             </tr>
