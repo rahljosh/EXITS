@@ -57,6 +57,9 @@
     <cfparam name="FORM.personJobOfferTitle" default="">
     <cfparam name="FORM.EIN" default="">
 	<cfparam name="FORM.workmensCompensation" default="">
+    <cfparam name="FORM.WC_carrierName" default="">
+    <cfparam name="FORM.WC_carrierPhone" default="">
+    <cfparam name="FORM.WC_policyNumber" default="">
     <cfparam name="FORM.WCDateExpired" default="">
     <cfparam name="FORM.homepage" default="">
     <cfparam name="FORM.observations" default="">
@@ -139,7 +142,10 @@
             eh.authentication_departmentOfStateExpiration,
             eh.authentication_businessLicenseNotAvailable,
             eh.EIN,
-            eh.workmensCompensation, 
+            eh.workmensCompensation,
+            eh.WC_carrierName,
+            eh.WC_carrierPhone,
+            eh.WC_policyNumber, 
             eh.WCDateExpired, 
             eh.observations,
             eh.housing_options, 
@@ -432,6 +438,9 @@
                         authentication_businessLicenseNotAvailable = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.authentication_businessLicenseNotAvailable#">,
                         EIN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">,
                         workmensCompensation = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workmensCompensation#" null="#NOT IsNumeric(FORM.workmensCompensation)#">,
+                        WC_carrierName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.WC_carrierName#">,
+                        WC_carrierPhone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.WC_carrierPhone#">,
+                        WC_policyNumber = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.WC_policyNumber#">,
                         WCDateExpired = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.WCDateExpired#" null="#NOT IsDate(FORM.WCDateExpired)#">,
                         homepage = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homepage#">,
                         observations = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.observations#">,
@@ -691,6 +700,9 @@
                         personJobOfferTitle,
                         EIN,
                         workmensCompensation,
+                        WC_carrierName,
+                        WC_carrierPhone,
+                        WC_policyNumber,
                         WCDateExpired,
                         homepage,
                         observations,
@@ -717,6 +729,9 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.personJobOfferTitle#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workmensCompensation#" null="#NOT IsNumeric(FORM.workmensCompensation)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.WC_carrierName#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.WC_carrierPhone#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.WC_policyNumber#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.WCDateExpired#" null="#NOT IsDate(FORM.WCDateExpired)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homepage#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.observations#">,
@@ -830,6 +845,9 @@
                         authentication_businessLicenseNotAvailable,
                         EIN,
                         workmensCompensation,
+                        WC_carrierName,
+                        WC_carrierPhone,
+                        WC_policyNumber,
                         WCDateExpired,
                         homepage,
                         observations,
@@ -899,6 +917,9 @@
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.authentication_businessLicenseNotAvailable#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workmensCompensation#" null="#NOT IsNumeric(FORM.workmensCompensation)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.WC_carrierName#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.WC_carrierPhone#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.WC_policyNumber#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.WCDateExpired#" null="#NOT IsDate(FORM.WCDateExpired)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homepage#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.observations#">,
@@ -987,6 +1008,9 @@
                         personJobOfferTitle,
                         EIN,
                         workmensCompensation,
+                        WC_carrierName,
+                        WC_carrierPhone,
+                        WC_policyNumber,
                         WCDateExpired,
                         homepage,
                         observations,
@@ -1013,6 +1037,9 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.personJobOfferTitle#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workmensCompensation#" null="#NOT IsNumeric(FORM.workmensCompensation)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.WC_carrierName#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.WC_carrierPhone#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.WC_policyNumber#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.WCDateExpired#" null="#NOT IsDate(FORM.WCDateExpired)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homepage#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.observations#">,
@@ -1104,6 +1131,9 @@
 			FORM.authentication_businessLicenseNotAvailable = qGetHostCompanyInfo.authenticatioN_businessLicenseNotAvailable;
 			FORM.EIN = qGetHostCompanyInfo.EIN;
 			FORM.workmensCompensation = qGetHostCompanyInfo.workmensCompensation;
+			FORM.WC_carrierName = qGetHostCompanyInfo.WC_carrierName;
+			FORM.WC_carrierPhone = qGetHostCompanyInfo.WC_carrierPhone;
+			FORM.WC_policyNumber = qGetHostCompanyInfo.WC_policyNumber;
 			FORM.WCDateExpired = qGetHostCompanyInfo.WCDateExpired;
 			FORM.homepage = qGetHostCompanyInfo.homepage;
 			FORM.observations = qGetHostCompanyInfo.observations;
@@ -1243,6 +1273,7 @@
 	   $("#supervisor_phone").mask("(999)999-9999");
 	   $("#supervisor_cellPhone").mask("(999)999-9999");
 	   $("#pickUpContactPhone").mask("(999)999-9999");
+	   $("#WC_carrierPhone").mask("(999)999-9999");
 	});	
 	// --> 
 	
@@ -3057,6 +3088,54 @@
                                                 </td>
                                             </tr>
                                             <tr>
+                                            	<td class="style1" align="right"><strong>Carrier Name:</strong></td>
+                                                <td class="style1" bordercolor="##FFFFFF">
+                                                	<span class="readOnly">
+                                                    	#FORM.WC_carrierName#
+                                                    </span>
+                                                    <input 
+                                                        type="text" 
+                                                        name="WC_carrierName" 
+                                                        id="WC_carrierName" 
+                                                        value="#FORM.WC_carrierName#"
+                                                        class="style1 editPage selfPlacementField" 
+                                                        size="35" 
+                                                        maxlength="100" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                            	<td class="style1" align="right"><strong>Carrier Phone:</strong></td>
+                                                <td class="style1" bordercolor="##FFFFFF">
+                                                	<span class="readOnly">
+                                                   		#FORM.WC_carrierPhone#
+                                                    </span>
+                                                    <input 
+                                                        type="text" 
+                                                        name="WC_carrierPhone" 
+                                                        id="WC_carrierPhone" 
+                                                        value="#FORM.WC_carrierPhone#"
+                                                        class="style1 editPage selfPlacementField" 
+                                                        size="35" 
+                                                        maxlength="100" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                            	<td class="style1" align="right"><strong>Policy Number:</strong></td>
+                                                <td class="style1" bordercolor="##FFFFFF">
+                                                	<span class="readOnly">
+                                                    	#FORM.WC_policyNumber#
+                                                    </span>
+                                                    <input 
+                                                        type="text" 
+                                                        name="WC_policyNumber" 
+                                                        id="WC_policyNumber" 
+                                                        value="#FORM.WC_policyNumber#"
+                                                        class="style1 editPage selfPlacementField" 
+                                                        size="35" 
+                                                        maxlength="100" />
+                                                </td>
+                                            </tr>
+                                            <tr>
                                                 <td class="style1" align="right"><strong>WC Expiration Date:</strong></td>
                                                 <td class="style1" bordercolor="##FFFFFF">
                                                     <span class="readOnly">
@@ -3066,14 +3145,14 @@
                                                             Workmen's compensation is missing.
                                                         </cfif>
                                                     </span>
-                                                        <input 
-                                                        	type="text" 
-                                                            name="WCDateExpired" 
-                                                            id="WCDateExpired" 
-                                                            value="#DateFormat(WCDateExpired, 'mm/dd/yyyy')#"
-                                                            class="style1 datePicker editPage selfPlacementField" 
-                                                            size="35" 
-                                                            maxlength="100" />
+                                                    <input 
+                                                        type="text" 
+                                                        name="WCDateExpired" 
+                                                        id="WCDateExpired" 
+                                                        value="#DateFormat(WCDateExpired, 'mm/dd/yyyy')#"
+                                                        class="style1 datePicker editPage selfPlacementField" 
+                                                        size="35" 
+                                                        maxlength="100" />
                                                 </td>
                                             </tr>
                                             <tr>

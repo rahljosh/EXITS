@@ -909,6 +909,9 @@
                 eh.authentication_businessLicenseNotAvailable,
                 eh.EIN,
                 eh.workmensCompensation,
+                eh.WC_carrierName,
+                eh.WC_carrierPhone,
+                eh.WC_policyNumber,
                 eh.WCDateExpired,
                 <!--- Candidate Place Company --->
                 ecpc.candCompID,

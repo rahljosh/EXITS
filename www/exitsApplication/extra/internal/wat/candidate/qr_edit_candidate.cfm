@@ -46,6 +46,9 @@
 <cfparam name="FORM.authentication_businessLicenseNotAvailable" default="0">
 <cfparam name="FORM.EIN" default="">
 <cfparam name="FORM.workmensCompensation" default="">
+<cfparam name="FORM.WC_carrierName" default="">
+<cfparam name="FORM.WC_carrierPhone" default="">
+<cfparam name="FORM.WC_policyNumber" default="">
 <cfparam name="FORM.WCDateExpried" default="">
 <cfparam name="FORM.hostCompanyID" default="0">
 <cfparam name="FORM.candCompID" default="0">
@@ -88,6 +91,9 @@
         <cfparam name="FORM.authentication_businessLicenseNotAvailable_#qGetAllPlacements.candCompID#" default="0">
         <cfparam name="FORM.EIN_#qGetAllPlacements.candCompID#" default="">
         <cfparam name="FORM.workmensCompensation_#qGetAllPlacements.candCompID#" default="0">
+        <cfparam name="FORM.WC_carrierName_#qGetAllPlacements.candCompID#" default="">
+        <cfparam name="FORM.WC_carrierPhone_#qGetAllPlacements.candCompID#" default="">
+        <cfparam name="FORM.WC_policyNumber_#qGetAllPlacements.candCompID#" default="">
         <cfparam name="FORM.WCDateExpried_#qGetAllPlacements.candCompID#" default="">
         <cfparam name="FORM.selfFindJobOffer_#qGetAllPlacements.candCompID#" default="">
         <cfparam name="FORM.newJobOffer_#qGetAllPlacements.candCompID#" default="">
@@ -108,6 +114,16 @@
     	extra_candidates
     WHERE 
     	uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#URL.uniqueid#">
+</cfquery>
+
+<cfquery name="qGetActivePrograms" datasource="MySql">
+    SELECT p.programID, p.startDate, p.programName
+    FROM smg_programs p
+    INNER JOIN smg_companies c ON c.companyID = p.companyID
+    WHERE dateDiff(p.endDate,NOW()) >= <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+    AND p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+    AND p.is_deleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+    AND p.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">
 </cfquery>
 	
 <cfscript>
@@ -232,6 +248,9 @@
                     authentication_departmentOfState = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM['authentication_departmentOfState_#qGetAllPlacements.candCompID#']#">,
                     authentication_businessLicenseNotAvailable = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM['authentication_businessLicenseNotAvailable_#qGetAllPlacements.candCompID#']#">,
                     workmensCompensation = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM['workmensCompensation_#qGetAllPlacements.candCompID#']#" null="#NOT IsNumeric(FORM['workmensCompensation_#qGetAllPlacements.candCompID#'])#">,
+                    WC_carrierName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['WC_carrierName_#qGetAllPlacements.candCompID#']#">,
+                    WC_carrierPhone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['WC_carrierPhone_#qGetAllPlacements.candCompID#']#">,
+                    WC_policyNumber = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['WC_policyNumber_#qGetAllPlacements.candCompID#']#">,
                     WCDateExpired = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM['WCDateExpired_#qGetAllPlacements.candCompID#']#" null="#NOT IsDate(FORM['WCDateExpired_#qGetAllPlacements.candCompID#'])#">
                 WHERE
                     hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetAllPlacements.hostCompanyID#">
@@ -270,6 +289,117 @@
                 AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetAllPlacements.programID)#">
             </cfquery>
             
+             <cfquery name="qGetHost" datasource="#APPLICATION.DSN.Source#">
+                SELECT *
+                FROM extra_hostcompany
+                WHERE hostcompanyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetAllPlacements.hostCompanyID)#">
+            </cfquery>
+            
+            <!--- Add History Record --->
+            <cfoutput query="qGetHost">
+                <cfquery datasource="MySql">
+                    INSERT INTO extra_hostinfohistory (
+                        hostID,
+                        changedBy,
+                        dateChanged,
+                        personJobOfferName,
+                        personJobOfferTitle,
+                        EIN,
+                        workmensCompensation,
+                        WC_carrierName,
+                        WC_carrierPhone,
+                        WC_policyNumber,
+                        WCDateExpired,
+                        homepage,
+                        observations,
+                        authentication_secretaryOfState,
+                        authentication_departmentOfLabor,
+                        authentication_googleEarth,
+                        authentication_incorporation,
+                        authentication_certificateOfExistence,
+                        authentication_certificateOfReinstatement,
+                        authentication_departmentOfState,
+                        authentication_secretaryOfStateExpiration,
+                        authentication_departmentOfLaborExpiration,
+                        authentication_googleEarthExpiration,
+                        authentication_incorporationExpiration,
+                        authentication_certificateOfExistenceExpiration,
+                        authentication_certificateOfReinstatementExpiration,
+                        authentication_departmentOfStateExpiration,
+                        authentication_businessLicenseNotAvailable )
+                    VALUES (
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#hostCompanyID#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#NOW()#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#personJobOfferName#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#personJobOfferTitle#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#EIN#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#workmensCompensation#" null="#NOT IsNumeric(workmensCompensation)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#WC_carrierName#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#WC_carrierPhone#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#WC_policyNumber#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#WCDateExpired#" null="#NOT IsDate(WCDateExpired)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#homepage#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#observations#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(authentication_secretaryOfState)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(authentication_departmentOfLabor)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(authentication_googleEarth)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(authentication_incorporation)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(authentication_certificateOfExistence)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(authentication_certificateOfReinstatement)#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(authentication_departmentOfState)#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#authentication_secretaryOfStateExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#authentication_departmentOfLaborExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#authentication_googleEarthExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#authentication_incorporationExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#authentication_certificateOfExistenceExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#authentication_certificateOfReinstatementExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#authentication_departmentOfStateExpiration#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#authentication_businessLicenseNotAvailable#"> )
+                </cfquery>
+           	</cfoutput>
+            <!--- End Add History Record --->
+            
+            <!--- Insert Season History --->
+            <cfquery name="qGetNewHistoryID" datasource="#APPLICATION.DSN.Source#">
+                SELECT historyID
+                FROM extra_hostinfohistory
+                WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHost.hostCompanyID#">
+                ORDER BY historyID DESC
+                LIMIT 1
+            </cfquery>
+            <cfloop query="qGetActivePrograms">
+                <cfquery name="qGetNewConfirmations" datasource="#APPLICATION.DSN.Source#">
+                    SELECT confirmed, confirmedDate
+                    FROM extra_confirmations
+                    WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHost.hostCompanyID#">
+                    AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#programID#">
+                </cfquery>
+                <cfquery name="qGetNewPositions" datasource="#APPLICATION.DSN.Source#">
+                    SELECT numberPositions, verifiedDate
+                    FROM extra_j1_positions
+                    WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHost.hostCompanyID#">
+                    AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#programID#">
+                </cfquery>
+                <cfquery datasource="#APPLICATION.DSN.Source#">
+                    INSERT INTO extra_hostseasonhistory (
+                        hostHistoryID,
+                        programID,
+                        j1Date,
+                        confirmedDate,
+                        j1Positions,
+                        confirmed )
+                    VALUES (
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetNewHistoryID.historyID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#programID#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#qGetNewPositions.verifiedDate#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#qGetNewConfirmations.confirmedDate#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetNewPositions.numberPositions#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetNewConfirmations.confirmed#"> )
+                </cfquery>
+          	</cfloop>
+            <!--- End Insert Season History --->
+            
         </cfif>
         
     </cfif>
@@ -306,7 +436,10 @@
             authentication_certificateOfExistence = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_certificateOfExistence)#">,
             authentication_certificateOfReinstatement = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_certificateOfReinstatement)#">,
             authentication_departmentOfState = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_departmentOfState)#">,
-            authentication_businessLicenseNotAvailable = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_businessLicenseNotAvailable)#">
+            authentication_businessLicenseNotAvailable = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authentication_businessLicenseNotAvailable)#">,
+            WC_carrierName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.WC_carrierName#">,
+            WC_carrierPhone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.WC_carrierPhone#">,
+            WC_policyNumber = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.WC_policyNumber#">
       	WHERE
        		hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">	
     </cfquery>
@@ -537,6 +670,117 @@
         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.hostCompanyID)#">
         AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCurrentPlacement.programID)#">
     </cfquery>
+    
+    <cfquery name="qGetHost" datasource="#APPLICATION.DSN.Source#">
+    	SELECT *
+        FROM extra_hostcompany
+        WHERE hostcompanyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.hostCompanyID)#">
+    </cfquery>
+    
+    <!--- Add History Record --->
+    <cfoutput query="qGetHost">
+        <cfquery datasource="MySql">
+            INSERT INTO extra_hostinfohistory (
+                hostID,
+                changedBy,
+                dateChanged,
+                personJobOfferName,
+                personJobOfferTitle,
+                EIN,
+                workmensCompensation,
+                WC_carrierName,
+                WC_carrierPhone,
+                WC_policyNumber,
+                WCDateExpired,
+                homepage,
+                observations,
+                authentication_secretaryOfState,
+                authentication_departmentOfLabor,
+                authentication_googleEarth,
+                authentication_incorporation,
+                authentication_certificateOfExistence,
+                authentication_certificateOfReinstatement,
+                authentication_departmentOfState,
+                authentication_secretaryOfStateExpiration,
+                authentication_departmentOfLaborExpiration,
+                authentication_googleEarthExpiration,
+                authentication_incorporationExpiration,
+                authentication_certificateOfExistenceExpiration,
+                authentication_certificateOfReinstatementExpiration,
+                authentication_departmentOfStateExpiration,
+                authentication_businessLicenseNotAvailable )
+            VALUES (
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#hostCompanyID#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
+                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#NOW()#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#personJobOfferName#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#personJobOfferTitle#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#EIN#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#workmensCompensation#" null="#NOT IsNumeric(workmensCompensation)#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#WC_carrierName#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#WC_carrierPhone#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#WC_policyNumber#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#WCDateExpired#" null="#NOT IsDate(WCDateExpired)#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#homepage#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#observations#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(authentication_secretaryOfState)#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(authentication_departmentOfLabor)#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(authentication_googleEarth)#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(authentication_incorporation)#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(authentication_certificateOfExistence)#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(authentication_certificateOfReinstatement)#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(authentication_departmentOfState)#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#authentication_secretaryOfStateExpiration#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#authentication_departmentOfLaborExpiration#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#authentication_googleEarthExpiration#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#authentication_incorporationExpiration#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#authentication_certificateOfExistenceExpiration#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#authentication_certificateOfReinstatementExpiration#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#authentication_departmentOfStateExpiration#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#authentication_businessLicenseNotAvailable#"> )
+        </cfquery>
+   	</cfoutput>
+    <!--- End Add History Record --->
+    
+    <!--- Insert Season History --->
+    <cfquery name="qGetNewHistoryID" datasource="#APPLICATION.DSN.Source#">
+        SELECT historyID
+        FROM extra_hostinfohistory
+        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHost.hostCompanyID#">
+        ORDER BY historyID DESC
+        LIMIT 1
+    </cfquery>
+    <cfloop query="qGetActivePrograms">
+        <cfquery name="qGetNewConfirmations" datasource="#APPLICATION.DSN.Source#">
+            SELECT confirmed, confirmedDate
+            FROM extra_confirmations
+            WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHost.hostCompanyID#">
+            AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#programID#">
+        </cfquery>
+        <cfquery name="qGetNewPositions" datasource="#APPLICATION.DSN.Source#">
+            SELECT numberPositions, verifiedDate
+            FROM extra_j1_positions
+            WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHost.hostCompanyID#">
+            AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#programID#">
+        </cfquery>
+        <cfquery datasource="#APPLICATION.DSN.Source#">
+            INSERT INTO extra_hostseasonhistory (
+                hostHistoryID,
+                programID,
+                j1Date,
+                confirmedDate,
+                j1Positions,
+                confirmed )
+            VALUES (
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetNewHistoryID.historyID)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#programID#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetNewPositions.verifiedDate#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetNewConfirmations.confirmedDate#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetNewPositions.numberPositions#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetNewConfirmations.confirmed#"> )
+        </cfquery>
+   	</cfloop>
+    <!--- End Insert Season History --->
     
 <!--- Not a valid Host Company Assigned --->
 <cfelseif VAL(qGetCurrentPlacement.candcompid)>

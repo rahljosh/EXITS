@@ -99,6 +99,9 @@
 			result.EIN = "";
 			result.WC = 0;
 			result.WCE = "";
+			result.WC_CARRIERNAME = "";
+			result.WC_CARRIERPHONE = "";
+			result.WC_POLICYNUMBER = "";
 			result.CONFIRMED = 0;
 			result.POSITIONS = 0;
 			
@@ -115,6 +118,9 @@
 				result.EIN = qGetHCInfo.EIN;
 				result.WC = qGetHCInfo.workmenscompensation;
 				result.WCE = DateFormat(qGetHCInfo.WCDateExpired, 'mm/dd/yyyy');
+				result.WC_CARRIERNAME = qGetHCInfo.WC_carrierName;
+				result.WC_CARRIERPHONE = qGetHCInfo.WC_carrierPhone;
+				result.WC_POLICYNUMBER = qGetHCInfo.WC_policyNumber;
 				result.CONFIRMED = qGetHCInfo.confirmed;
 				result.POSITIONS = qGetHCInfo.numberPositions;
 			}
