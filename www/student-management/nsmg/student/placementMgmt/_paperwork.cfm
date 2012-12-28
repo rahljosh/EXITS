@@ -900,7 +900,18 @@
                 </table>
                 
                 <table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center"> 
-
+				
+					<!--- Host  Received --->
+                    <tr class="mouseOverColor"> 
+                        <td width="5%" class="paperworkLeftColumn"></td>
+                        <td width="40%"><label>Host App Received ( HQ Received App )</label></td>
+                        <td width="45%">
+                            #DateFormat(qGetPlacementHistoryByID.dateReceived, 'mm/dd/yyyy')#
+                          
+                        </td>
+                        <td width="10%">&nbsp;</td>
+                    </tr>
+                   
                     <!--- PIS Approved --->
                     <tr class="mouseOverColor"> 
                         <td width="5%" class="paperworkLeftColumn">
