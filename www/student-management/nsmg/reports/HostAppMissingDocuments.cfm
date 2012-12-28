@@ -33,7 +33,7 @@
             <Cfelseif client.usertype eq 5>
                     where s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.regionid#">
             <cfelseif client.usertype eq 6>
-                    where arearepid in (#userUnderList#) 
+                    where s.arearepid in (#userUnderList#) 
             <cfelseif client.usertype eq 7>
                   where s.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
             </Cfif>
