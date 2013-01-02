@@ -1727,7 +1727,7 @@
                                             </td>
                                         </tr>
                                         
-                                        <!--- Authentication --->
+                                        <!--- Authentications --->
                                         <tr class="hiddenField selfPlacementInfo">
                                         
                                         	<td class="style1" colspan="2">
@@ -1737,6 +1737,8 @@
                                                     <tr class="hiddenField selfPlacementInfo">
                                                     	<td colspan="2">
                                                         	<strong><center>Authentication</center></strong>
+                                                            <br />
+                                                            <span style="margin-left:35%"><u>Expiration Date</u></span>
                                                         </td>
                                                     </tr>
                                                 
@@ -1764,6 +1766,9 @@
                                                                 class="formField" 
                                                                 disabled 
 																<cfif VAL(qCandidatePlaceCompany.authentication_secretaryOfState)> checked </cfif> />
+                                                         	<span style="padding-left:3px;<cfif qCandidatePlaceCompany.authentication_secretaryOfStateExpiration LT NOW()>color:red;</cfif>">
+                                                            	#DateFormat(qCandidatePlaceCompany.authentication_secretaryOfStateExpiration,'mm/dd/yyyy')#
+                                                            </span>
                                                         </td>
                                                     </tr>
                                                     <!--- Additional Authentications --->
@@ -1780,6 +1785,9 @@
                                                                 class="formField" 
                                                                 disabled 
 																<cfif VAL(qCandidatePlaceCompany.authentication_incorporation)> checked </cfif> />
+                                                         	<span style="padding-left:3px;<cfif qCandidatePlaceCompany.authentication_incorporationExpiration LT NOW()>color:red;</cfif>">
+                                                            	#DateFormat(qCandidatePlaceCompany.authentication_incorporationExpiration,'mm/dd/yyyy')#
+                                                            </span>
                                                         </td>
                                                     </tr>
                                                     <tr 
@@ -1795,6 +1803,9 @@
                                                                 class="formField" 
                                                                 disabled 
 																<cfif VAL(qCandidatePlaceCompany.authentication_certificateOfExistence)> checked </cfif> />
+                                                         	<span style="padding-left:3px;<cfif qCandidatePlaceCompany.authentication_certificateOfExistenceExpiration LT NOW()>color:red;</cfif>">
+                                                            	#DateFormat(qCandidatePlaceCompany.authentication_certificateOfExistenceExpiration,'mm/dd/yyyy')#
+                                                            </span>
                                                         </td>
                                                     </tr>
                                                     <tr 
@@ -1810,6 +1821,9 @@
                                                                 class="formField" 
                                                                 disabled 
 																<cfif VAL(qCandidatePlaceCompany.authentication_certificateOfReinstatement)> checked </cfif> />
+                                                           	<span style="padding-left:3px;<cfif qCandidatePlaceCompany.authentication_certificateOfReinstatementExpiration LT NOW()>color:red;</cfif>">
+                                                            	#DateFormat(qCandidatePlaceCompany.authentication_certificateOfReinstatementExpiration,'mm/dd/yyyy')#
+                                                            </span>
                                                         </td>
                                                     </tr>
                                                     <tr 
@@ -1825,6 +1839,9 @@
                                                                 class="formField" 
                                                                 disabled 
 																<cfif VAL(qCandidatePlaceCompany.authentication_departmentOfState)> checked </cfif> />
+                                                          	<span style="padding-left:3px;<cfif qCandidatePlaceCompany.authentication_departmentOfStateExpiration LT NOW()>color:red;</cfif>">
+                                                            	#DateFormat(qCandidatePlaceCompany.authentication_departmentOfStateExpiration,'mm/dd/yyyy')#
+                                                            </span>
                                                         </td>
                                                     </tr>
                                                     <!--- End Additional Authentications --->
@@ -1839,6 +1856,9 @@
                                                                 class="formField" 
                                                                 disabled 
 																<cfif VAL(qCandidatePlaceCompany.authentication_departmentOfLabor)> checked </cfif> />
+                                                           	<span style="padding-left:3px;<cfif qCandidatePlaceCompany.authentication_departmentOfLaborExpiration LT NOW()>color:red;</cfif>">
+                                                            	#DateFormat(qCandidatePlaceCompany.authentication_departmentOfLaborExpiration,'mm/dd/yyyy')#
+                                                            </span>
                                                         </td>
                                                     </tr>
                                                     <tr class="hiddenField selfPlacementInfo">
@@ -1852,6 +1872,9 @@
                                                                 class="formField" 
                                                                 disabled 
 																<cfif VAL(qCandidatePlaceCompany.authentication_googleEarth)> checked </cfif> />
+                                                          	<span style="padding-left:3px;<cfif qCandidatePlaceCompany.authentication_googleEarthExpiration LT NOW()>color:red;</cfif>">
+                                                            	#DateFormat(qCandidatePlaceCompany.authentication_googleEarthExpiration,'mm/dd/yyyy')#
+                                                            </span>
                                                         </td>
                                                     </tr>
                                                     
@@ -1939,7 +1962,9 @@
                                             	<span class="readOnly selfPlacementReadOnly">
                                                 	<cfif IsDate(qCandidatePlaceCompany.WCDateExpired) AND qCandidatePlaceCompany.WCDateExpired GT NOW()>
                                                     	#DateFormat(qCandidatePlaceCompany.WCDateExpired, 'mm/dd/yyyy')#
-                                                  	<cfelse>
+                                                  	<cfelseif IsDate(qCandidatePlaceCompany.WCDateExpired)>
+                                                    	<font color="red">Expired</font>
+                                                    <cfelse>
                                                     	Workmen's compensation is missing.
                                                  	</cfif>
                                              	</span>
@@ -2168,7 +2193,17 @@
                                                                         <cfif VAL(authentication_businessLicenseNotAvailable)>checked </cfif> />
                                                               	</td>
                                                                 <td class="style1" width="70%">
-                                                                    <input type="checkbox" name="authentication_secretaryOfState_#qGetAllPlacements.candCompID#" id="authentication_secretaryOfState_#qGetAllPlacements.candCompID#" value="1" class="formField hostCheckBox" disabled <cfif VAL(qGetAllPlacements.authentication_secretaryOfState)> checked </cfif> />
+                                                                    <input 
+                                                                    	type="checkbox" 
+                                                                        name="authentication_secretaryOfState_#qGetAllPlacements.candCompID#" 
+                                                                        id="authentication_secretaryOfState_#qGetAllPlacements.candCompID#" 
+                                                                        value="1" 
+                                                                        class="formField hostCheckBox" 
+                                                                        disabled 
+																		<cfif VAL(qGetAllPlacements.authentication_secretaryOfState)> checked </cfif> />
+                                                                  	<span style="padding-left:3px;<cfif qGetAllPlacements.authentication_secretaryOfStateExpiration LT NOW()>color:red;</cfif>">
+                                                                        #DateFormat(qGetAllPlacements.authentication_secretaryOfStateExpiration,'mm/dd/yyyy')#
+                                                                    </span>
                                                                 </td>
                                                             </tr>
                                                             <!--- Additional Secondary Authentications --->
@@ -2186,6 +2221,9 @@
                                                                         value="1" 
                                                                         class="formField hostCheckBox" 
                                                                         disabled <cfif VAL(qGetAllPlacements.authentication_incorporation)> checked </cfif> />
+                                                                  	<span style="padding-left:3px;<cfif qGetAllPlacements.authentication_incorporationExpiration LT NOW()>color:red;</cfif>">
+                                                                        #DateFormat(qGetAllPlacements.authentication_incorporationExpiration,'mm/dd/yyyy')#
+                                                                    </span>
                                                                 </td>
                                                             </tr>
                                                             <tr 
@@ -2203,6 +2241,9 @@
                                                                         class="formField hostCheckBox" 
                                                                         disabled 
 																		<cfif VAL(qGetAllPlacements.authentication_certificateOfExistence)> checked </cfif> />
+                                                                   	<span style="padding-left:3px;<cfif qGetAllPlacements.authentication_certificateOfExistenceExpiration LT NOW()>color:red;</cfif>">
+                                                                        #DateFormat(qGetAllPlacements.authentication_certificateOfExistenceExpiration,'mm/dd/yyyy')#
+                                                                    </span>
                                                                 </td>
                                                             </tr>
                                                             <tr 
@@ -2213,13 +2254,16 @@
                                                               	</td>
                                                                 <td class="style1">
                                                                     <input 
-                                                                    type="checkbox" 
-                                                                    name="authentication_certificateOfReinstatement_#qGetAllPlacements.candCompID#" 
-                                                                    id="authentication_certificateOfReinstatement_#qGetAllPlacements.candCompID#" 
-                                                                    value="1" 
-                                                                    class="formField hostCheckBox" 
-                                                                    disabled 
-																	<cfif VAL(qGetAllPlacements.authentication_certificateOfReinstatement)> checked </cfif> />
+                                                                        type="checkbox" 
+                                                                        name="authentication_certificateOfReinstatement_#qGetAllPlacements.candCompID#" 
+                                                                        id="authentication_certificateOfReinstatement_#qGetAllPlacements.candCompID#" 
+                                                                        value="1" 
+                                                                        class="formField hostCheckBox" 
+                                                                        disabled 
+																		<cfif VAL(qGetAllPlacements.authentication_certificateOfReinstatement)> checked </cfif> />
+                                                                	<span style="padding-left:3px;<cfif qGetAllPlacements.authentication_certificateOfReinstatementExpiration LT NOW()>color:red;</cfif>">
+                                                                        #DateFormat(qGetAllPlacements.authentication_certificateOfReinstatementExpiration,'mm/dd/yyyy')#
+                                                                    </span>
                                                                 </td>
                                                             </tr>
                                                             <tr 
@@ -2237,19 +2281,41 @@
                                                                         class="formField hostCheckBox" 
                                                                         disabled 
 																		<cfif VAL(qGetAllPlacements.authentication_departmentOfState)> checked </cfif> />
+                                                                  	<span style="padding-left:3px;<cfif qGetAllPlacements.authentication_departmentOfStateExpiration LT NOW()>color:red;</cfif>">
+                                                                        #DateFormat(qGetAllPlacements.authentication_departmentOfStateExpiration,'mm/dd/yyyy')#
+                                                                    </span>
                                                                 </td>
                                                             </tr>
                                                             <!--- End Additional Secondary Authentications --->
                                                             <tr class="hiddenField selfPlacementInfo">
                                                                 <td class="style1" align="right"><label for="authentication_departmentOfLabor_#qGetAllPlacements.candCompID#"><strong>Department of Labor:</strong></label></td>
                                                                 <td class="style1">
-                                                                    <input type="checkbox" name="authentication_departmentOfLabor_#qGetAllPlacements.candCompID#" id="authentication_departmentOfLabor_#qGetAllPlacements.candCompID#" value="1" class="formField hostCheckBox" disabled <cfif VAL(qGetAllPlacements.authentication_departmentOfLabor)> checked </cfif> />
+                                                                    <input 
+                                                                    	type="checkbox" 
+                                                                        name="authentication_departmentOfLabor_#qGetAllPlacements.candCompID#" 
+                                                                        id="authentication_departmentOfLabor_#qGetAllPlacements.candCompID#" 
+                                                                        value="1" 
+                                                                        class="formField hostCheckBox" 
+                                                                        disabled 
+																		<cfif VAL(qGetAllPlacements.authentication_departmentOfLabor)> checked </cfif> />
+                                                                    <span style="padding-left:3px;<cfif qGetAllPlacements.authentication_departmentOfLaborExpiration LT NOW()>color:red;</cfif>">
+                                                                        #DateFormat(qGetAllPlacements.authentication_departmentOfLaborExpiration,'mm/dd/yyyy')#
+                                                                    </span>
                                                                 </td>
                                                             </tr>
                                                             <tr class="hiddenField selfPlacementInfo">
                                                                 <td class="style1" align="right"><label for="authentication_googleEarth_#qGetAllPlacements.candCompID#"><strong>Google Earth:</strong></label></td>
                                                                 <td class="style1">
-                                                                    <input type="checkbox" name="authentication_googleEarth_#qGetAllPlacements.candCompID#" id="authentication_googleEarth_#qGetAllPlacements.candCompID#" value="1" class="formField hostCheckBox" disabled <cfif VAL(qGetAllPlacements.authentication_googleEarth)> checked </cfif> />
+                                                                    <input 
+                                                                    	type="checkbox" 
+                                                                        name="authentication_googleEarth_#qGetAllPlacements.candCompID#" 
+                                                                        id="authentication_googleEarth_#qGetAllPlacements.candCompID#" 
+                                                                        value="1" class="formField hostCheckBox" 
+                                                                        disabled 
+																		<cfif VAL(qGetAllPlacements.authentication_googleEarth)> checked </cfif> />
+                                                                    <span style="padding-left:3px;<cfif qGetAllPlacements.authentication_googleEarthExpiration LT NOW()>color:red;</cfif>">
+                                                                        #DateFormat(qGetAllPlacements.authentication_googleEarthExpiration,'mm/dd/yyyy')#
+                                                                    </span>
                                                                 </td>
                                                             </tr>
                                                         </table>
@@ -2334,6 +2400,8 @@
                                                         <span class="readOnly selfPlacementReadOnly">
                                                             <cfif IsDate(qGetAllPlacements.WCDateExpired) AND qGetAllPlacements.WCDateExpired GT NOW()>
                                                                 #DateFormat(qGetAllPlacements.WCDateExpired, 'mm/dd/yyyy')#
+                                                            <cfelseif IsDate(qGetAllPlacements.WCDateExpired)>
+                                                                <font color="red">Expired</font>
                                                             <cfelse>
                                                                 Workmen's compensation is missing.
                                                             </cfif>
