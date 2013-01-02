@@ -3141,6 +3141,8 @@
                                                     <span class="readOnly">
                                                         <cfif IsDate(FORM.WCDateExpired) AND FORM.WCDateExpired GT NOW()>
                                                             #DateFormat(FORM.WCDateExpired, 'mm/dd/yyyy')#
+                                                       	<cfelseif IsDate(FORM.WCDateExpired)>
+                                                      		<font color="red">Expired</font>
                                                         <cfelse>
                                                             Workmen's compensation is missing.
                                                         </cfif>

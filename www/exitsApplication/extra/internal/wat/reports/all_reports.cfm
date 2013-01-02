@@ -110,6 +110,8 @@
                             
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/housingAddressList" class="style4">- Housing Address List</a></p>
                             
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/evaluationStatus" class="style4">- Evaluation Status Report</a></p>
+                            
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/taxback" class="style4">- Report for Taxback</a></p>
                       </td>
                     </tr>
