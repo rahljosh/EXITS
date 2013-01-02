@@ -93,6 +93,7 @@
 			tableHeader += '<td class="listTitle style2">Intl. Rep.</td>';
 			tableHeader += '<td class="listTitle style2">Program <br /> Start Date</td>';
 			tableHeader += '<td class="listTitle style2">Program <br /> End Date</td>';
+			tableHeader += '<td class="listTitle style2">Arrival</td>';
 			tableHeader += '<td class="listTitle style2">U.S. Phone</td>';
 			tableHeader += '<td class="listTitle style2">Address</td>';
 			tableHeader += '<td class="listTitle style2">City</td>';
@@ -125,7 +126,6 @@
 			var startDate = verList.DATA[i][verList.COLUMNS.findIdx('STARTDATE')];
 			var endDate = verList.DATA[i][verList.COLUMNS.findIdx('ENDDATE')];
 			var usPhone = verList.DATA[i][verList.COLUMNS.findIdx('US_PHONE')];
-			
 			var arrival_address = verList.DATA[i][verList.COLUMNS.findIdx('ARRIVAL_ADDRESS')];
 			var arrival_city = verList.DATA[i][verList.COLUMNS.findIdx('ARRIVAL_CITY')];
 			var arrival_state = verList.DATA[i][verList.COLUMNS.findIdx('ARRIVAL_STATE')];
@@ -133,9 +133,39 @@
 			if (arrival_address == null) arrival_address = "";
 			if (arrival_city == null) arrival_city = "";
 			if (arrival_zip == null) arrival_zip = "";
-
-			// Create Table Rows
-			var tableBody = '';	
+			
+			var arrivalDate = "n/a";
+			var departDate = verList.DATA[i][verList.COLUMNS.findIdx('DEPARTDATE')];
+			var isOvernightFlight = verList.DATA[i][verList.COLUMNS.findIdx('ISOVERNIGHTFLIGHT')];
+			var warning = 1;
+			var nonCompliant = 1;
+			if (departDate != null) {
+				var arrive;
+				if (isOvernightFlight == 1) {
+					arrive = new Date(departDate);
+					arrive.setDate(arrive.getDate()+1);
+				} else {
+					var arrive = new Date(departDate);
+				}
+				var month = arrive.getMonth() + 1;
+				arrivalDate = month.toString() + "/" + arrive.getDate().toString() + "/" + arrive.getFullYear().toString();
+				
+				var now = new Date();
+				var nowInMillis = now.getTime();
+				var arrivalInMillis = arrive.getTime();
+				var millisInDay = 86400000;
+				if (nowInMillis - arrivalInMillis < (10*millisInDay)) {
+					nonCompliant = 0;
+				}
+				if (nowInMillis - arrivalInMillis < (5*millisInDay)) {
+					warning = 0;
+				}
+			}
+			
+			var show = $("#reportType").val();
+			if (show == 0 || (show == 1 && warning == 1) || (show == 2 && nonCompliant == 1)) {
+				// Create Table Rows
+				var tableBody = '';	
 				if (i % 2 == 0) {
 					tableBody += '<tr id="' + candidateID + '" class="rowOff">';
 				} else {
@@ -152,6 +182,7 @@
 				tableBody += '<td class="style5">' + businessName + '</td>';
 				tableBody += '<td class="style5">' + startDate + '</td>';
 				tableBody += '<td class="style5">' + endDate + '</td>';
+				tableBody += '<td class="style5">' + arrivalDate + '</td>';
 				tableBody += '<td class="style5"><input type="text" size="12" id="usphone' + candidateID + '" value="' + usPhone + '" onclick="applyPhoneMask(this.id);" /></td>';
 				tableBody += '<td class="style5"><input type="text" size="12" id="arrival_address' + candidateID + '" value="' + arrival_address + '" /></td>';
 				tableBody += '<td class="style5"><input type="text" size="12" id="arrival_city' + candidateID + '" value="' + arrival_city + '" /></td>';
@@ -166,9 +197,10 @@
 				tableBody += '</select>';
 				tableBody += '<td class="style5"><input type="text" size="5" maxlength="5" id="arrival_zip' + candidateID + '" value="' + arrival_zip + '" /></td>';
 				tableBody += '<td align="center" class="style5"><a href="javascript:setCheckInReceived(' + candidateID + ');" class="style4">[Received]</a></td>';
-			tableBody += '</tr>';
-			// Append table rows
-			$("#verificationList").append(tableBody);
+				tableBody += '</tr>';
+				// Append table rows
+				$("#verificationList").append(tableBody);
+			}
 			
 		} 
 		
@@ -318,12 +350,17 @@
                     </cfloop>
                 </select>
                 &nbsp;
+                Show:
+                <select name="reportType" id="reportType">
+                	<option value="0">All</option>
+                    <option value="1">Warning</option>
+                    <option value="2">Non-Compliant</option>
+                </select>
+                &nbsp;
                 <input name="send" type="submit" value="Submit" onclick="getVerificationList();" />
             </td>                
         </tr>   
-        
-        
-                 
+         
     </table>
 
     <!--- Verification List --->

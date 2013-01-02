@@ -1253,6 +1253,8 @@
                     ec.arrival_city,
                     ec.arrival_state,
                     ec.arrival_zip,
+                    ef.departDate,
+                    ef.isOvernightFlight,
 					CASE 
                     	WHEN ec.sex = 'f' THEN 'female' 
                         WHEN ec.sex = 'm' THEN 'male' 
@@ -1271,6 +1273,9 @@
                 	smg_programs p ON p.programID = ec.programID
 				LEFT OUTER JOIN
                     smg_countrylist c ON c.countryid = ec.residence_country  
+               	LEFT OUTER JOIN extra_flight_information ef ON ef.candidateID = ec.candidateID
+            		AND ef.programID = p.programID
+                    AND flightType = 'Arrival'
                 WHERE
                     ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
                 AND
