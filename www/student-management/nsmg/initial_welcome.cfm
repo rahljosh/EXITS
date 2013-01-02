@@ -173,7 +173,69 @@
         ORDER BY 
         	u.datecreated DESC
     </cfquery>
-    
+    <!----Get a list of users that report to the person logged in, for displaying hierachy in missing docs section.---->
+    <cfset userUnderList ='#client.userid#'>
+	<cfquery name="usersUnder" datasource="#application.dsn#">
+    select userid
+    from user_access_rights
+    where regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.regionid#">
+    AND advisorid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+    and companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+    </cfquery>
+    <cfloop query="usersUnder">
+    <Cfset userUnderList = #ListAppend(userUnderList, userid)#> 
+	</cfloop>
+<!----Get students with issues that are not resolved in paperwork---->
+        <cfquery name="qGetStudentWithMissingCompliance" datasource="#application.dsn#">
+            select hh.studentid, hh.hostid, hh.historyid, ah.actions, s.firstname, s.familylastname, s.studentid, h.familylastname as hostLast, s.regionassigned, s.arearepid, u.firstname as repFirst, u.lastname as repLast, r.regionname
+            from smg_hosthistory hh
+            left join smg_students s on s.studentid = hh.studentid 
+            left join applicationhistory ah on ah.foreignid = hh.historyid
+            left join smg_hosts h on h.hostid = hh.hostid
+            left join smg_regions r on r.regionid = s.regionassigned
+            left join smg_users u on u.userid = s.arearepid
+            where s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+            <Cfif client.usertype eq 5>
+                    AND s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.regionid#">
+            <cfelseif client.usertype eq 6>
+                    AND s.arearepid in (#userUnderList#)
+            <cfelseif client.usertype eq 7>
+                  AND s.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+            </Cfif>
+           
+            and s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> and ah.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="smg_hosthistorycompliance">
+            and ah.isResolved = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+            order by regionname
+        </cfquery>
+<!----Get the list of host apps, and when received, if received---->
+
+		<cfquery name="qGetHostAppsReceived" datasource="#application.dsn#">
+            select distinct s.hostID,  s.firstname as studentFirst, s.familylastname as studentLast, s.studentid, s.regionassigned, s.arearepid,
+            hh.dateReceived,
+            h.familylastname as hostLast,
+            p.programname,
+            u.firstname as repFirst, u.lastname as repLast, r.regionname
+            from smg_students s
+            left outer join smg_hostHistory hh on hh.hostID = s.hostid
+            left join smg_hosts h on h.hostid = s.hostid
+            left join smg_regions r on r.regionid = s.regionassigned
+            left join smg_users u on u.userid = s.arearepid
+            left join smg_programs p on p.programid = s.programid
+          
+                 where s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+            <Cfif client.usertype eq 5>
+                    AND s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.regionid#">
+            <cfelseif client.usertype eq 6>
+                    AND s.arearepid in (#userUnderList#)  
+            <cfelseif client.usertype eq 7>
+                  AND s.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+            </Cfif>
+            
+            and s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            and s.hostid > 0
+            order by s.programid desc, studentLast, hostLast
+         </cfquery>
+
 	<cfquery name="placed_students" datasource="#application.dsn#">
         SELECT 
         	COUNT(*) AS Count
@@ -223,6 +285,12 @@
 	// End -->
 </script>
 
+<script type="text/javascript" language="JavaScript">
+<!-- Script to Swap div area
+	function HideDIV(d) { document.getElementById(d).style.display = "none"; }
+	function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
+//-->
+</script>
 <!--- Display Host Lead Pop Up --->
 <cfif CLIENT.displayHostLeadPopUp>
 
@@ -236,11 +304,111 @@
 </cfif>
 
 <style type="text/css">
-	<!--
-	.new_weeks {
-		font-size: 10px;
-	}
-	-->
+  <style type="text/css">
+  <style type="text/css">
+/* Form */
+ .Tabs {
+	height:30px;
+	width:auto;
+	margin-bottom: 5px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #c6c6c6;
+ } 
+
+
+ .Tabs .rdTab {
+	border-left:1px solid #c6c6c6;
+	border-right:1px solid #c6c6c6;
+	padding:10px 15px;
+	margin:0;
+	display: block;
+ } 
+.clearfix {
+	display: block;
+	clear: both;
+	height: 5px;
+	width: auto;
+}
+
+ .rdtopTab {
+	width:auto;
+	height:30px;
+	/* -webkit for Safari and Google Chrome */
+
+  -webkit-border-top-left-radius:15px;
+	-webkit-border-top-right-radius:15px;
+	/* -moz for Firefox, Flock and SeaMonkey  */
+
+  -moz-border-radius-topright:15px;
+	-moz-border-radius-topleft:15px;
+	border-top-right-radius:15px;
+	border-top-left-radius:15px;
+	background-color: #FFF;
+	color: #006699;
+	background-image: linear-gradient(top, rgb(235,235,235) 22%, rgb(255,255,255) 64%);
+	background-image: -o-linear-gradient(top, rgb(235,235,235) 22%, rgb(255,255,255) 64%);
+	background-image: -moz-linear-gradient(top, rgb(235,235,235) 22%, rgb(255,255,255) 64%);
+	background-image: -webkit-linear-gradient(top, rgb(235,235,235) 22%, rgb(255,255,255) 64%);
+	background-image: -ms-linear-gradient(top, rgb(235,235,235) 22%, rgb(255,255,255) 64%);
+	background-image: -webkit-gradient(
+	linear,
+	left top,
+	left bottom,
+	color-stop(0.22, rgb(235,235,235)),
+	color-stop(0.64, rgb(255,255,255))
+);
+	border: 1px solid #c6c6c6;
+ }
+.rdtopTab {
+	 behavior: url(/css/border-radius.htc);
+    border-radius-topright: 15px;
+	border-radius-topleft: 15px;
+	  }
+	  
+ .rdtopTab .rdtitleTab {
+	margin:0;
+	line-height:30px;
+	font-family:Arial, Geneva, sans-serif;
+	font-size:14px;
+	padding-top: 5px;
+	padding-right: 10px;
+	padding-bottom: 0px;
+	padding-left: 10px;
+	color: #0066A4;
+	text-align: center;	
+ }
+.rdtopTab:link{
+	text-decoration: none;
+}
+.rdtopTab:hover{
+	text-decoration: none;
+	color: #999;
+	/* IE10 Consumer Preview */ 
+background-image: -ms-linear-gradient(bottom, #FFFFFF 0%, #CCCCCC 100%);
+
+/* Mozilla Firefox */ 
+background-image: -moz-linear-gradient(bottom, #FFFFFF 0%, #CCCCCC 100%);
+
+/* Opera */ 
+background-image: -o-linear-gradient(bottom, #FFFFFF 0%, #CCCCCC 100%);
+
+/* Webkit (Safari/Chrome 10) */ 
+background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #FFFFFF), color-stop(1, #CCCCCC));
+
+/* Webkit (Chrome 11+) */ 
+background-image: -webkit-linear-gradient(bottom, #FFFFFF 0%, #CCCCCC 100%);
+
+/* W3C Markup, IE10 Release Preview */ 
+background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
+}
+ .rdtitleTab:link {
+	text-decoration: none;
+ }
+  .rdtitleTab:hover {
+	color: #666;
+ }
+	
 </style>
 
 <cfoutput>
@@ -309,8 +477,52 @@
                 </cfif>
 				<!--- End of News Messages --->
                 
+                   <!--- Missing complinace documents --->
+             <cfquery name="numberHostProbs" dbtype="query">
+                select distinct hostid
+                from qGetStudentWithMissingCompliance
+                </cfquery>
+              <div class="rdholder" style="width:100%; float:right;"> 
                 
-                <!--- Online Reports --->
+                    <div class="rdtop"> 
+                        <span class="rdtitle">Current Host Status</span> 
+                    </div> <!-- end top --> 
+                     
+                    
+                    <div class="rdbox">
+                    <div class="Tabs"> 
+                        <div class="rdtopTab" style="width: 170px; float: left;">
+                        <span class="rdtitleTab" onmouseover="HideDIV('receivedStatus');DisplayDIV('missingDocs')" style="cursor:pointer;">Missing Placement Doc</a></span></div><!-- end top -->
+                            
+                          <div class="rdtopTab" style="width: 240px; float: left;">
+                            <span class="rdtitleTab" onmouseover="HideDIV('missingDocs');DisplayDIV('receivedStatus')"  style="cursor:pointer;">Received/Missing Host Application</span>  
+                                
+                        </div><!-- end top -->
+                            
+                        </div>
+                        <div class="clearfix"></div>
+                                             
+                     
+                    
+                    
+                      <div id="missingDocs" class="mybox">
+                            <span class="MOtext" style="background-color: ##E6F2D5;">
+                                <cfinclude template="reports/welcomePageMissingPlacementDocs.cfm">
+                            </span>
+                        </div>
+                    <!---Recieived Students---->
+                    <div id="receivedStatus" class="mybox" style="display:none;":>
+                        <span class="MOtext" style="background-color: ##E6F2D5;">
+                        
+                      			<cfinclude template="reports/welcomePageHostReceivedStatus.cfm">  
+                      
+                       	</span>
+                    </div>
+                </div>
+                   
+                	<div class="rdbottom"></div> <!-- end bottom --> 
+                </div>
+				<!--- Online Reports --->
                 <div class="rdholder" style="width:100%; float:left;"> 
                 	
                     <div class="rdtop"> 
@@ -434,8 +646,12 @@
                     
                 </div>
                 <!--- End of New Students --->
-            
-            </div>
+                
+         
+                   </div>
+              
+                <!--- End of Missing Compliance Docs  --->
+            	</div>
         	
             <!--- Right Column --->
             <div style="width:49%;float:right;display:block;">
