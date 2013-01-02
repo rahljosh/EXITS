@@ -15,19 +15,7 @@
  </script>
 <cfoutput>
 <!----Current Issues---->
-<Cfquery name="qCheckCurrent" datasource="#application.dsn#">
-SELECT sp.studentID, 
-       sp.idproblem, 
-       sp.userID,
-       sp.summary,
-       sp.date,
-       u.firstname as userFirst,
-       u.lastname as userLast
-FROM services_project sp
-LEFT JOIN smg_users u on u.userID = sp.userid
-WHERE studentid = #url.studentid#
 
-</Cfquery>
 
 
 
@@ -59,6 +47,19 @@ WHERE studentid = #url.studentid#
     </cfquery>
     <Cffile action="upload" destination="c:\uploadedfiles\student-services\" filefield="suportDoc" mode="777" nameconflict="makeunique" >
 </cfif>
+<Cfquery name="qCheckCurrent" datasource="#application.dsn#">
+SELECT sp.studentID, 
+       sp.idproblem, 
+       sp.userID,
+       sp.summary,
+       sp.date,
+       u.firstname as userFirst,
+       u.lastname as userLast
+FROM services_project sp
+LEFT JOIN smg_users u on u.userID = sp.userid
+WHERE studentid = #url.studentid#
+
+</Cfquery>
 <h2 align="center">Student Issues</h2>
 <Br />
 <div align="Center">
