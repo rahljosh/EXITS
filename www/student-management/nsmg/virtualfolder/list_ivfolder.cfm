@@ -85,6 +85,13 @@
 
 	<cfdirectory directory="#flightInfoDirectory#" name="flightDocs" sort="datelastmodified DESC" filter="*.*">
     
+    <cfquery name="qGetOtherFiles" datasource="MySql">
+    	SELECT *
+        FROM smg_internal_virtual_folder
+        WHERE placementID = <cfqueryparam cfsqltype="cf_sql_integer" value="#selectedPlacement#">
+        ORDER BY type
+    </cfquery>
+    
 </cfsilent>    
 
 <cfoutput>
@@ -94,7 +101,7 @@
         headerType="applicationNoHeader"
     />	
 
-		<script type="text/javascript"> 
+		<script type="text/javascript">
 			// Reloads with the chosen placement (assumes that unqID is the only other url variable)
 			function changePlacement(selected) {
 				var place = selected.options[selected.selectedIndex].value;
@@ -111,6 +118,13 @@
 			{ 
 				newwindow=window.open(url, 'ViewFile', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); 
 				if (window.focus) {newwindow.focus()}
+			}
+			
+			// confirm deletion
+			function confirmDelete(id) {
+				if (confirm("Are you sure you want to delete this file?")) {
+					window.location.href = "qr_internal_delete_file.cfm?fileID="+id;
+				}
 			}
         </script>
 
@@ -139,7 +153,7 @@
         <table width="98%" border="0" cellpadding="4" cellspacing="0" class="section" align="center" style="padding-bottom:15px;">
         	
             <tr>
-                <th colspan="2" align="center">Placement:
+                <th colspan="3" align="center">Placement:
                 	<select onchange="changePlacement(this)">
                     	<cfloop query="qGetStudentPlacements">
                         	<option value="#historyID#"<cfif URL.placement EQ #historyID#>selected="selected"</cfif>>#familyLastName# (###hostID#)</option>
@@ -148,17 +162,18 @@
              	</th>
             </tr>
             
+            <!--- Automatic Files --->
             <tr>
-                <th colspan="5" align="center" style="border-bottom:thin solid black;">Documents</th>
+                <th colspan="3" align="center" style="border-bottom:thin solid black;">Automatic Documents</th>
             </tr>
             <tr bgcolor="##E2EBF0" style="font-weight:bold;">
-                <td width="90%">Document</td>
+                <td width="90%" colspan="2">Document</td>
                 <td align="center" width="10%">View</td>
             </tr>
             
             <!--- Placement Information Sheet --->
             <tr>
-            	<td style="border-bottom:1px solid gray;">Placement Information Sheet</td>
+            	<td style="border-bottom:1px solid gray;" colspan="2">Placement Information Sheet</td>
             	<td align="center" style="border-bottom:1px solid gray;">
                 	<a href="../reports/placementInfoSheet.cfm?uniqueID=#URL.unqID#&historyID=#selectedPlacement#&profileType=pdf">
                         <img src="vfolderview.gif" border="0" alt="View File"></img>
@@ -168,7 +183,7 @@
             
             <!--- Host Family Welcome Letter --->
             <tr>
-            	<td style="border-bottom:1px solid gray;">Host Family Welcome Letter</td>
+            	<td style="border-bottom:1px solid gray;" colspan="2">Host Family Welcome Letter</td>
             	<td align="center" style="border-bottom:1px solid gray;">
                 	<a href="../reports/host_welcome_letter.cfm?historyID=#selectedPlacement#&pdf=1">
                         <img src="vfolderview.gif" border="0" alt="View File"></img>
@@ -178,7 +193,7 @@
             
             <!--- School Welcome Letter --->
             <tr>
-            	<td style="border-bottom:1px solid gray;">School Welcome Letter</td>
+            	<td style="border-bottom:1px solid gray;" colspan="2">School Welcome Letter</td>
             	<td align="center" style="border-bottom:1px solid gray;">
                 	<a href="../reports/school_welcome_letter.cfm?historyID=#selectedPlacement#&pdf=1">
                         <img src="vfolderview.gif" border="0" alt="View File"></img>
@@ -188,7 +203,7 @@
             
             <!--- School Acceptance Letter --->
             <tr>
-            	<td style="border-bottom:1px solid gray;">School Acceptance Letter</td>
+            	<td style="border-bottom:1px solid gray;" colspan="2">School Acceptance Letter</td>
             	<td align="center" style="border-bottom:1px solid gray;">
                 	<a href="school_acceptance.cfm?studentid=#qGetStudentInfo.studentid#&hostID=#qGetSelectedPlacementDetails.hostID#">
                         <img src="vfolderview.gif" border="0" alt="View File"></img>
@@ -196,19 +211,44 @@
                 </td>
             </tr>
             
-            <tr><td colspan="2"><br /></td></tr>
+            <tr><td colspan="3"><br /></td></tr>
             
+            <!--- Uploaded Files --->
             <tr>
-                <th colspan="5" align="center" style="border-bottom:thin solid black;">Flight Information</th>
+                <th colspan="3" align="center" style="border-bottom:thin solid black;">Uploaded Documents</th>
             </tr>
             <tr bgcolor="##E2EBF0" style="font-weight:bold;">
-                <td width="90%">File</td>
+            	<td width="45%">Type</td>
+                <td width="45%">Name</td>
+                <td align="center" width="10%">View</td>
+            </tr>
+            <cfloop query="qGetOtherFiles">
+           		<tr>
+                	<td style="border-bottom:1px solid gray;">#type#</td>
+                    <td style="border-bottom:1px solid gray;">#fileName#</td>
+                    <td align="center" style="border-bottom:1px solid gray;">
+                    	<a href="print_internal_file.cfm?fileID=#id#">
+                            <img src="vfolderview.gif" border="0" alt="View File"></img>
+                        </a>
+                        <img src="vfolderdelete.gif" border="0" alt="Delete File" onclick="confirmDelete(#id#)"></img>
+                    </td>
+                </tr>
+            </cfloop>
+            
+            <tr><td colspan="3"><br /></td></tr>
+            
+            <!--- Flight Information --->
+            <tr>
+                <th colspan="3" align="center" style="border-bottom:thin solid black;">Flight Information</th>
+            </tr>
+            <tr bgcolor="##E2EBF0" style="font-weight:bold;">
+                <td width="90%" colspan="2">File</td>
                 <td align="center" width="10%">View</td>
             </tr>
             
             <cfloop query="flightDocs">
             	<tr>
-                	<td style="border-bottom:1px solid gray;">#name# - #DateFormat(dateLastModified,'mm/dd/yyyy')#</td>
+                	<td style="border-bottom:1px solid gray;" colspan="2">#name# - #DateFormat(dateLastModified,'mm/dd/yyyy')#</td>
                     <td align="center" style="border-bottom:1px solid gray;">
                     	<a href="javascript:OpenApp('../uploadedfiles/internalVirtualFolder/#qGetStudentInfo.studentID#/#selectedPlacement#/flightInformation/#name#');">
                         	<img src="vfolderview.gif" border="0" alt="View File"></img>
@@ -216,6 +256,29 @@
                   	</td>
               	</tr>
             </cfloop>
+            
+            <tr><td colspan="3"><br /></td></tr>
+            
+            <!--- FILE UPLOAD SECTION --->
+            <cfif client.usertype lte 4 or client.usertype eq 8>
+            	<form method="post" action="qr_internal_upload_file.cfm" name="Upload" enctype="multipart/form-data">
+                	<input type="hidden" name="placementID" value="#selectedPlacement#" />
+                    <input type="hidden" name="studentID" value="#qGetStudentInfo.studentID#" />
+                	<tr>
+                        <th colspan="3" align="center" style="border-bottom:thin solid black;">Upload</th>
+                    </tr>
+                    <tr bgcolor="##E2EBF0" style="font-weight:bold;">
+                        <td width="45%">File</td>
+                        <td width="45%">Type</td>
+                        <td align="center" width="10%">Upload</td>
+                    </tr>
+                	<tr>
+                    	<td><input type="file" name="file" size="40" /></td>
+                        <td><input type="text" name="type" size="20" /><font size="0"><i>pdf,png,jpg,jpeg</i></font></td>
+                        <td><input name="submit" type="image" src="vfolderupload.gif" alt="Upload File"></td>
+                    </tr>
+                </form>
+            </cfif>
             
         </table>
         
