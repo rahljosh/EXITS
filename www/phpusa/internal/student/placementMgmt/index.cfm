@@ -371,7 +371,11 @@
 										if (DatePart('d',NOW()) GTE 15) {
 											date = CreateDate(DatePart('yyyy',NOW()),DatePart('m',NOW()),15);
 										} else {
-											date = CreateDate(DatePart('yyyy',NOW()),DatePart('m',NOW())-1,15);
+											if (DatePart('m',NOW()) EQ 1) {
+												date = CreateDate(DatePart('yyyy',NOW())-1,12,15);
+											} else {
+												date = CreateDate(DatePart('yyyy',NOW()),DatePart('m',NOW())-1,15);
+											}
 										}
 										days = DateDiff('d',date,qGetPlacementHistory.datePlaced);
 										if (days GTE 0) {
@@ -510,7 +514,11 @@
 												if (DatePart('d',NOW()) GTE 15) {
 													date = CreateDate(DatePart('yyyy',NOW()),DatePart('m',NOW()),15);
 												} else {
-													date = CreateDate(DatePart('yyyy',NOW()),DatePart('m',NOW())-1,15);
+													if (DatePart('m',NOW()) EQ 1) {
+														date = CreateDate(DatePart('yyyy',NOW())-1,12,15);
+													} else {
+														date = CreateDate(DatePart('yyyy',NOW()),DatePart('m',NOW())-1,15);
+													}
 												}
 												days = DateDiff('d',date,qGetPlacementHistory.datePlaced[currentrow-1]);
 												if (days GTE 0) {
