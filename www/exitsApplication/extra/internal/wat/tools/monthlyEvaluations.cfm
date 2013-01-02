@@ -95,7 +95,8 @@
 			tableHeader += '<td class="listTitle style2">Program <br /> End Date</td>';
 			tableHeader += '<td class="listTitle style2">Check-in Date</td>';
 			tableHeader += '<td class="listTitle style2">Days since check-in</td>';
-			tableHeader +=  '<td class="listTitle style2" align="center">Cultural Activity</td>';
+			tableHeader += '<td class="listTitle style2" align="center">Cultural Activity</td>';
+			tableHeader += '<td class="listTitle style2" align="center">Evaluation Tracking</td>';
 			if ( (evaluationID == 1) || (evaluationID == 5) ) {
 				// Month 1
 				tableHeader += '<td class="listTitle style2" align="center">Evaluation 1</td>';
@@ -194,6 +195,7 @@
 					tableBody += '<td class="style5" style="text-align:center;">' + dateDiff + '</td>';
 				}
 				tableBody += '<td align="center" class="style5"><a href="" onClick="javascript:culturalActivityPopup(\'' + uniqueID + '\')" class="style4 jQueryModal">Add</a>';
+				tableBody += '<td align="center" class="style5"><a href="" onClick="javascript:evaluationTrackingPopup(\'' + uniqueID + '\',\'' + evaluationID + '\')" class="style4 jQueryModal">Track</a>';
 				if (evaluationID == 1) {
 					tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',1);" class="style4">Received</a></td>';
 				} else if (evaluationID == 2) {
@@ -213,6 +215,19 @@
 	
 	var culturalActivityPopup = function(unqID) {
 		var url = "candidate/culturalActivityReport.cfm?uniqueID=" + unqID;
+		$(".jQueryModal").colorbox( {
+			width:"50%", 
+			height:"60%", 
+			iframe:true,
+			overlayClose:false,
+			escKey:false,
+			href:url,
+			onClosed:function(){}
+		});	
+	}
+	
+	var evaluationTrackingPopup = function(unqID, trackID) {
+		var url = "candidate/evaluation_tracking.cfm?uniqueID=" + unqID + "&id=" + trackID;
 		$(".jQueryModal").colorbox( {
 			width:"50%", 
 			height:"60%", 

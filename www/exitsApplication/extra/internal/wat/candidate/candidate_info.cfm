@@ -2570,6 +2570,12 @@
                                                        	</a>
                                                   	</font>
 												</cfif>
+                                                
+                                                <cfif ListFind("1,2,3,4",CLIENT.userType)>
+                                                	<font size="1" style="float:right">
+                                                    	<a href="candidate/evaluation_tracking.cfm?uniqueID=#URL.uniqueid#&id=1" class="style1 jQueryModal">[ Tracking ]</a>
+                                                    </font>
+                                                </cfif>
                                             </td>
                                         </tr>
                                         <tr>
@@ -2584,6 +2590,12 @@
                                                        	</a>
                                                   	</font>
 												</cfif>
+                                                
+                                                <cfif ListFind("1,2,3,4",CLIENT.userType)>
+                                                	<font size="1" style="float:right">
+                                                    	<a href="candidate/evaluation_tracking.cfm?uniqueID=#URL.uniqueid#&id=2" class="style1 jQueryModal">[ Tracking ]</a>
+                                                    </font>
+                                                </cfif>
                                             </td>
                                         </tr>
                                         <tr>
@@ -2598,6 +2610,12 @@
                                                        	</a>
                                                   	</font>
 												</cfif>
+                                                
+                                                <cfif ListFind("1,2,3,4",CLIENT.userType)>
+                                                	<font size="1" style="float:right">
+                                                    	<a href="candidate/evaluation_tracking.cfm?uniqueID=#URL.uniqueid#&id=3" class="style1 jQueryModal">[ Tracking ]</a>
+                                                    </font>
+                                                </cfif>
                                             </td>
                                         </tr>
                                         <tr>
@@ -2612,6 +2630,12 @@
                                                        	</a>
                                                   	</font>
 												</cfif>
+                                                
+                                                <cfif ListFind("1,2,3,4",CLIENT.userType)>
+                                                	<font size="1" style="float:right">
+                                                    	<a href="candidate/evaluation_tracking.cfm?uniqueID=#URL.uniqueid#&id=4" class="style1 jQueryModal">[ Tracking ]</a>
+                                                    </font>
+                                                </cfif>
                                             </td>
                                         </tr>
                         			</table>

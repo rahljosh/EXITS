@@ -776,8 +776,8 @@
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#programID#">,
                 <cfqueryparam cfsqltype="cf_sql_date" value="#qGetNewPositions.verifiedDate#">,
                 <cfqueryparam cfsqltype="cf_sql_date" value="#qGetNewConfirmations.confirmedDate#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetNewPositions.numberPositions#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetNewConfirmations.confirmed#"> )
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetNewPositions.numberPositions)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetNewConfirmations.confirmed)#"> )
         </cfquery>
    	</cfloop>
     <!--- End Insert Season History --->
