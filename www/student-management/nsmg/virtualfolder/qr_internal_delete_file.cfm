@@ -1,30 +1,28 @@
 <cftry>
 
-	<cfif NOT IsDefined("form.DeleteFile") AND NOT IsDefined('form.directory') AND NOT IsDefined('form.unqid')>
+	<cfif NOT IsDefined("URL.fileID")>
 		<cfinclude template="error_message.cfm">
 		<cfabort>
 	</cfif>
-
-	<cfquery name="get_student_info" datasource="MySql">
-		SELECT studentid
-		FROM smg_students
-		WHERE uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.unqid#">
-	</cfquery>
-
-	<cffile action = "delete" file = "#form.directory#/#form.DeleteFile#">
-	
-	<cfquery name="delete_category" datasource="MySql">
-		DELETE FROM smg_internal_virtual_folder
-		WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
-			AND filename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.DeleteFile#">
-			AND filesize = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.filesize#">
-	</cfquery>
-
-    <cfscript>
-        // Set Page Message
-        SESSION.pageMessages.Add("You have successfully deleted the file #form.DeleteFile# from this Virtual Folder.");
-        Location("list_ivfolder.cfm?unqid=#FORM.unqid#", "no");
-    </cfscript>
+    
+    <cfquery name="qGetFile" datasource="MySql">
+    	SELECT *
+        FROM smg_internal_virtual_folder
+        WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.fileID#">
+    </cfquery>
+    
+    <cfoutput>
+    	<cffile action="delete" file="#qGetFile.fullPath#">
+  	</cfoutput>
+    
+    <cfquery datasource="MySql">
+    	DELETE FROM smg_internal_virtual_folder
+        WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.fileID#">
+    </cfquery>
+    
+    <script type="text/javascript">
+		window.location.href = document.referrer;
+	</script>
 
     <cfcatch type="any">
         <cfinclude template="error_message.cfm">

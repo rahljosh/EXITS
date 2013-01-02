@@ -8,25 +8,32 @@
 <title>EXITS - INTERNAL VIRTUAL FOLDER</title>
 </head>
 
-<body onLoad="print()">
+<body>
 
-<cfif NOT IsDefined('url.studentid') OR NOT IsDefined('url.file') OR NOT IsDefined('URL.placement')>
+<cfif NOT IsDefined('url.fileID')>
 	Sorry, an error has occurred. Please try again.<br>
 	If this error persists please contact the system administrator support@student-management.com
 	<cfabort>
 </cfif>
 
-<cfoutput>
-	<!--- internal virtual folder --->
-    <table width="680" border="0" cellpadding="3" cellspacing="0" align="center">
-        <tr><td><img src="../uploadedfiles/internalVirtualfolder/#URL.studentid#/#URL.placement#/#url.file#" width="680" height="860"></td></tr>
-    </table>
+<cfquery name="qGetFile" datasource="MySql">
+	SELECT *
+    FROM smg_internal_virtual_folder
+    WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.fileID#">
+</cfquery>
+
+<cfoutput query="qGetFile">
+	<cfif fileType EQ "pdf">
+    	<cfdocument format="flashpaper">
+            <cfcontent file="#fullPath#">
+        </cfdocument>
+    <cfelseif fileType EQ "jpg" OR fileType EQ "jpeg" OR fileType EQ "png">
+    	<cfimage action="writetobrowser" source="#fullPath#">
+    </cfif>
 </cfoutput>
 
 </body>
 </html>
-
-<!--- </cfdocument> --->
 
 <cfcatch type="any">
 	<cfinclude template="../error_message.cfm">
