@@ -1112,6 +1112,28 @@
 		   
 		<cfreturn qGetFacilitators>
 	</cffunction>
+    
+    
+	<cffunction name="getRegionFacilitator" access="public" returntype="query" output="false" hint="Gets a list of facilitators assigned to a region">
+        <cfargument name="regionID" type="numeric" hint="regionID is required">
+
+        <cfquery 
+			name="qGetRegionFacilitator" 
+			datasource="#APPLICATION.DSN#">
+                SELECT 
+                    r.regionfacilitator, 
+                    u.email, 
+                    u.firstName
+                FROM 
+                    smg_regions r
+                LEFT OUTER JOIN 
+                    smg_users u ON u.userID = r.regionfacilitator
+                WHERE 
+                    regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
+			</cfquery>
+		   
+		<cfreturn qGetRegionFacilitator>
+	</cffunction>    
 
 
 	<cffunction name="getIntlRepresentatives" access="public" returntype="query" output="false" hint="Gets a list of intl. representatives assigned to active students">
