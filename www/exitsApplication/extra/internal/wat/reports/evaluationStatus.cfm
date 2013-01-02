@@ -166,6 +166,9 @@
         
         <cfsavecontent variable="reportContent">
         
+        	<cfset totalCandidatesCount = 0>
+        	<span style="font-size:12px" id="totalCandidatesInput"></span>
+        
         	<cfloop query="qGetIntlReps">
             
             	<cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#">
@@ -217,6 +220,8 @@
                 
                 <cfif VAL(qGetCandidates.recordCount)>
                 
+                	<cfset totalCandidatesCount = totalCandidatesCount + qGetCandidates.recordCount>
+                
                 	<table width="99%" cellpadding="4" cellspacing=0 align="center">
                         <tr>
                             <td colspan="11">
@@ -247,41 +252,45 @@
                                 <td class="style1">#sex#</td>
                                 <td class="style1">#DateFormat(watDateCheckedIn,'mm/dd/yyyy')#</td>
                                 <td class="style1">
-                                	<cfif DATEDIFF('d', watDateCheckedIn, NOW()) GT 30>
-                                    	First Evaluation: 
-                                    	<cfif watDateEvaluation1 NEQ "">
-                                            #DateFormat(watDateEvaluation1,'mm/dd/yyyy')#
-                                        <cfelse>
-                                            pending
+                                	<cfif isDate(watDateCheckedIn)>
+										<cfif DATEDIFF('d', watDateCheckedIn, NOW()) GT 30>
+                                            First Evaluation: 
+                                            <cfif watDateEvaluation1 NEQ "" AND isDate(watDateEvaluation1)>
+                                                #DateFormat(watDateEvaluation1,'mm/dd/yyyy')#
+                                            <cfelse>
+                                                pending
+                                            </cfif>
                                         </cfif>
-                                    </cfif>
-                                    <cfif DATEDIFF('d', watDateCheckedIn, NOW()) GT 60>
-                                    	<br/>
-                                    	Second Evaluation: 
-                                    	<cfif watDateEvaluation2 NEQ "">
-                                            #DateFormat(watDateEvaluation2,'mm/dd/yyyy')#
-                                        <cfelse>
-                                            pending
+                                        <cfif DATEDIFF('d', watDateCheckedIn, NOW()) GT 60>
+                                            <br/>
+                                            Second Evaluation: 
+                                            <cfif watDateEvaluation2 NEQ "" AND isDate(watDateEvaluation2)>
+                                                #DateFormat(watDateEvaluation2,'mm/dd/yyyy')#
+                                            <cfelse>
+                                                pending
+                                            </cfif>
                                         </cfif>
-                                    </cfif>
-                                    <cfif DATEDIFF('d', watDateCheckedIn, NOW()) GT 90>
-                                    	<br />
-                                    	Third Evaluation: 
-                                    	<cfif watDateEvaluation3 NEQ "">
-                                            #DateFormat(watDateEvaluation3,'mm/dd/yyyy')#
-                                        <cfelse>
-                                            pending
+                                        <cfif DATEDIFF('d', watDateCheckedIn, NOW()) GT 90>
+                                            <br />
+                                            Third Evaluation: 
+                                            <cfif watDateEvaluation3 NEQ "" AND isDate(watDateEvaluation3)>
+                                                #DateFormat(watDateEvaluation3,'mm/dd/yyyy')#
+                                            <cfelse>
+                                                pending
+                                            </cfif>
                                         </cfif>
-                                    </cfif>
-                                    <cfif DATEDIFF('d', watDateCheckedIn, NOW()) GT 120>
-                                    	<br />
-                                        Fourth Evaluation: 
-                                    	<cfif watDateEvaluation4 NEQ "">
-                                            #DateFormat(watDateEvaluation4,'mm/dd/yyyy')#
-                                        <cfelse>
-                                            pending
+                                        <cfif DATEDIFF('d', watDateCheckedIn, NOW()) GT 120>
+                                            <br />
+                                            Fourth Evaluation: 
+                                            <cfif watDateEvaluation4 NEQ "" AND isDate(watDateEvaluation4)>
+                                                #DateFormat(watDateEvaluation4,'mm/dd/yyyy')#
+                                            <cfelse>
+                                                pending
+                                            </cfif>
                                         </cfif>
-                                    </cfif>
+                                   	<cfelse>
+                                    	missing check-in date
+                                  	</cfif>
                               	</td>
                             </tr>
                         </cfloop>
@@ -290,6 +299,14 @@
                 </cfif>
             
             </cfloop>
+            
+            <input type="hidden" id="totalCandidates" value="#totalCandidatesCount#" />
+            
+            <script type="text/javascript">
+				$(document).ready(function() {
+					$("##totalCandidatesInput").text("Total Number of Students: " + $('##totalCandidates').val());
+				});
+			</script>
         
         </cfsavecontent>
         
