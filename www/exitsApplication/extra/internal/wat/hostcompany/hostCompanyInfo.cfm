@@ -228,6 +228,7 @@
         AND p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND p.is_deleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         AND p.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">
+        GROUP BY p.programID
     </cfquery>
     
     <cfquery name="qGetProgramParticipation" datasource="MySql">
