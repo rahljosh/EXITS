@@ -23,7 +23,11 @@
                     <p class="bold">Rules</p>
                         
                     <ul class="paragraphRules">
-                        <li>**All Flights must be booked through MPD</li>
+                        <li>
+                        	**All Flights must be booked through MPD's Travel Agent by e-mail: 
+                            <a href="mailto:dees626@verizon.net"><u>dees626@verizon.net</u></a>
+                            , or by telephone: <u>626-376-1178</u>
+                      	</li>
                         <li>**All paperwork must be submitted before we are able to book your flight</li>
                     </ul>
 
@@ -38,7 +42,10 @@
                             <li><font size=-1>If you want to go on other tours, you will need to do this process for <em><strong>each</strong></em> tour you want to go on.</font></li>
                         </ul>
                     
-                        <li>Submit permission form and payment forms with all signatures to MPD Tours.</li>
+                        <li>
+                        	Submit permission form and payment forms with all signatures to MPD Tour America either by fax at: <u>718-439-8565</u> or by e-mail: 
+                        	<a href="mailto:info@mpdtoursamerica.com"><u>info@mpdtoursamerica.com</u></a>
+                      	</li>
                         <ul class="paragraphRules">
                             <li>#APPLICATION.MPD.email#
                             <li>fax:   +1 718 439 8565  

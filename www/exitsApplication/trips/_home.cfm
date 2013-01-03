@@ -26,6 +26,13 @@
                     #APPLICATION.MPD.name# will be organizing 10 trips, chaperoned and supervised exclusively by our representatives for the 2012-13 season.
                 </p>
                 
+                <strong>
+                	NEW THIS SEASON: STUDENTS DO NOT PURCHASE THEIR OWN AIRFARE. Once you are registered for a tour and receive a Confirmation of Payment, a Blank Permission form and a 
+                    Student Packet (travel packet) will be sent via your e-mail then you can contact our travel agent at: <a href="mailto:dees626@verizon.net"><u>dees626@verizon.net</u></a> 
+                    or telephone number <u>626-376-1178</u> for a flight but make sure you have verbal (ask for permission then get form sent to us after all completed signatures are on form 
+                    as soon as possible). If you are on more than one tour then you need to get a form for each individual trip!
+                </strong>
+                
                 <strong>NEW THIS SEASON: STUDENTS DO NOT PURCHASE THEIR OWN AIRFARE.  Once you are registered for a tour, you will be contacted regarding airfare.</strong></p>
             </td>
         </tr> 
