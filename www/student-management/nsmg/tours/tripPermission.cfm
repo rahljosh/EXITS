@@ -177,16 +177,16 @@
                     </tr>
                     <tr>
                         <td><span class="title">Airport (pref/alt):</span></td>
-                        <td><cfif LEN(qGetStudentFullInformation.local_air_code)><em>None on File</em><cfelse>#qGetStudentFullInformation.local_air_code#</cfif> / #qGetStudentFullInformation.major_air_code#</td>
+                        <td><cfif NOT LEN(qGetStudentFullInformation.local_air_code)><em>None on File</em><cfelse>#qGetStudentFullInformation.local_air_code#</cfif> / #qGetStudentFullInformation.major_air_code#</td>
                     </tr>
                     
                     <tr>
                         <td valign="top"><span class="title">Roommate Preference:</span></td>
                         <td>
                             #qGetRegistrationInfo.nationality# 
-                            <cfif NOT LEN(qGetRegistrationInfo.person1)><br /> #qGetRegistrationInfo.person1#,</cfif>
-                            <cfif NOT LEN(qGetRegistrationInfo.person2)><br /> #qGetRegistrationInfo.person2#,</cfif>
-                            <cfif NOT LEN(qGetRegistrationInfo.person3)><br /> #qGetRegistrationInfo.person3#</cfif>
+                            <cfif LEN(qGetRegistrationInfo.person1)><br /> #qGetRegistrationInfo.person1#,</cfif>
+                            <cfif LEN(qGetRegistrationInfo.person2)><br /> #qGetRegistrationInfo.person2#,</cfif>
+                            <cfif LEN(qGetRegistrationInfo.person3)><br /> #qGetRegistrationInfo.person3#</cfif>
                         </td>
                     </tr>                
                 </table>
@@ -240,7 +240,7 @@
                         <td width="100" valign="top"><span class="title">Address:</span></td>
                         <td>
                             #qGetStudentFullInformation.address#<br />
-                            <cfif NOT LEN(qGetStudentFullInformation.address2)>#qGetStudentFullInformation.address2#<br /></cfif>
+                            <cfif LEN(qGetStudentFullInformation.address2)>#qGetStudentFullInformation.address2#<br /></cfif>
                             #qGetStudentFullInformation.city# #qGetStudentFullInformation.state# #qGetStudentFullInformation.zip#
                         </td>
                     </tr>
@@ -345,7 +345,7 @@
                         <td>&nbsp;</td>
                         <td valign="top">
                             #qGetStudentFullInformation.fatherfirstname# #qGetStudentFullInformation.fatherlastname# 
-                            <cfif NOT LEN(qGetStudentFullInformation.fatherfirstname) AND NOT LEN(qGetStudentFullInformation.motherfirstname)> or </cfif> 
+                            <cfif LEN(qGetStudentFullInformation.fatherfirstname) AND LEN(qGetStudentFullInformation.motherfirstname)> or </cfif> 
                             #qGetStudentFullInformation.motherfirstname# #qGetStudentFullInformation.motherlastname#
                         </td>
                         <td>&nbsp;</td>
