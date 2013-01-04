@@ -91,8 +91,9 @@
         <td> 
             <select name="studentStatus" class="style1">
             	<option value="All" <cfif "All" eq FORM.studentStatus> selected</cfif>>All</option>
-                <option value="0" <cfif 0 eq FORM.studentStatus> selected</cfif>>Canceled</option>
                 <option value="1" <cfif 1 eq FORM.studentStatus> selected</cfif>>Active</option>
+                <option value="0" <cfif 0 eq FORM.studentStatus> selected</cfif>>Inactive</option>
+                <option value="canceled" <cfif "canceled" eq FORM.studentStatus> selected</cfif>>Canceled</option>
             </select>
         </td>
     </tr>
@@ -138,7 +139,7 @@
     	1 = 1
 	<cfif FORM.studentStatus IS NOT "All">
     	AND
-        	ec.status = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentStatus#">
+        	ec.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.studentStatus#">
     </cfif>
     <cfif VAL(FORM.userID)>
         AND

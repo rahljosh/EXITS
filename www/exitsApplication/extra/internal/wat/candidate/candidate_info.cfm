@@ -459,6 +459,13 @@
 			var authCertificateOfReinstatement = companyInfo.AUTHENTICATIONCERTIFICATEOFREINSTATEMENT;
 			var authDepartmentOfState = companyInfo.AUTHENTICATIONDEPARTMENTOFSTATE;
 			var authBusinessLicenseNotAvailable = companyInfo.AUTHENTICATIONBUSINESSLICENSENOTAVAILABLE;
+			var authSecretaryOfStateExpiration = companyInfo.AUTHENTICATIONSECRETARYOFSTATEEXPIRATION;
+			var authDepartmentOfLaborExpiration = companyInfo.AUTHENTICATIONDEPARTMENTOFLABOREXPIRATION;
+			var authGoogleEarthExpiration = companyInfo.AUTHENTICATIONGOOGLEEARTHEXPIRATION;
+			var authIncorporationExpiration = companyInfo.AUTHENTICATIONINCORPORATIONEXPIRATION;
+			var authCertificateOfExistenceExpiration = companyInfo.AUTHENTICATIONCERTIFICATEOFEXISTENCEEXPIRATION;
+			var authCertificateOfReinstatementExpiration = companyInfo.AUTHENTICATIONCERTIFICATEOFREINSTATEMENTEXPIRATION;
+			var authDepartmentOfStateExpiration = companyInfo.AUTHENTICATIONDEPARTMENTOFSTATEEXPIRATION;
 			var authEIN = companyInfo.EIN;
 			var authWC = companyInfo.WC;
 			var authWCE = companyInfo.WCE;
@@ -510,6 +517,14 @@
 				$("#authentication_businessLicenseNotAvailable").removeAttr("checked");
 				$(".additionalAuthentications").css("display","none");
 			}
+			
+			$("#authentication_secretaryOfStateExpiration").html(getFormattedDate(authSecretaryOfStateExpiration));
+			$("#authentication_departmentOfLaborExpiration").html(getFormattedDate(authDepartmentOfLaborExpiration));
+			$("#authentication_googleEarthExpiration").html(getFormattedDate(authGoogleEarthExpiration));
+			$("#authentication_incorporationExpiration").html(getFormattedDate(authIncorporationExpiration));
+			$("#authentication_certificateOfExistenceExpiration").html(getFormattedDate(authCertificateOfExistenceExpiration));
+			$("#authentication_certificateOfReinstatementExpiration").html(getFormattedDate(authCertificateOfReinstatementExpiration));
+			$("#authentication_departmentOfStateExpiration").html(getFormattedDate(authDepartmentOfStateExpiration));
 				
 			if (confirmed == 1) {
 				$("#confirmation").val(1);
@@ -529,6 +544,22 @@
 		} else {
 			getCompanyInfoError();
 		}
+	}
+	
+	var getFormattedDate = function(inputDate) {
+		var returnDate = "";
+		if (inputDate != "") {
+			var newDate = new Date(inputDate);
+			var month = newDate.getMonth()+1;
+			var day = newDate.getDate();
+			var year = newDate.getFullYear();
+			if (month < 10) month = "0" + month;
+			if (day < 10) day = "0" + day;
+			returnDate = month + "/" + day + "/" + year;
+		} else {
+			returnDate = "";
+		}
+		return returnDate;
 	}
 	
 	var getCompanyInfoError = function() {
@@ -669,7 +700,7 @@
                                         INACTIVE 
                                     <cfelseif qGetCandidate.status EQ 'canceled'>
                                         CANCELED
-                                    </cfif> 
+                                    </cfif>
                                     </strong>
                                 </td>
                             </tr>													
@@ -1766,8 +1797,14 @@
                                                                 class="formField" 
                                                                 disabled 
 																<cfif VAL(qCandidatePlaceCompany.authentication_secretaryOfState)> checked </cfif> />
-                                                         	<span style="padding-left:3px;<cfif qCandidatePlaceCompany.authentication_secretaryOfStateExpiration LT NOW()>color:red;</cfif>">
-                                                            	#DateFormat(qCandidatePlaceCompany.authentication_secretaryOfStateExpiration,'mm/dd/yyyy')#
+                                                         	<span id="authentication_secretaryOfStateExpiration" style="padding-left:3px;">
+                                                           		<cfif qCandidatePlaceCompany.authentication_secretaryOfStateExpiration LT NOW()>
+                                                                	<font style="color:red;">
+                                                                    	#DateFormat(qCandidatePlaceCompany.authentication_secretaryOfStateExpiration,'mm/dd/yyyy')#
+                                                                    </font>
+                                                               	<cfelse>
+                                                                	#DateFormat(qCandidatePlaceCompany.authentication_secretaryOfStateExpiration,'mm/dd/yyyy')#
+                                                                </cfif>
                                                             </span>
                                                         </td>
                                                     </tr>
@@ -1785,8 +1822,14 @@
                                                                 class="formField" 
                                                                 disabled 
 																<cfif VAL(qCandidatePlaceCompany.authentication_incorporation)> checked </cfif> />
-                                                         	<span style="padding-left:3px;<cfif qCandidatePlaceCompany.authentication_incorporationExpiration LT NOW()>color:red;</cfif>">
-                                                            	#DateFormat(qCandidatePlaceCompany.authentication_incorporationExpiration,'mm/dd/yyyy')#
+                                                          	<span id="authentication_incorporationExpiration" style="padding-left:3px;">
+                                                           		<cfif qCandidatePlaceCompany.authentication_incorporationExpiration LT NOW()>
+                                                                	<font style="color:red;">
+                                                                    	#DateFormat(qCandidatePlaceCompany.authentication_incorporationExpiration,'mm/dd/yyyy')#
+                                                                    </font>
+                                                               	<cfelse>
+                                                                	#DateFormat(qCandidatePlaceCompany.authentication_incorporationExpiration,'mm/dd/yyyy')#
+                                                                </cfif>
                                                             </span>
                                                         </td>
                                                     </tr>
@@ -1803,8 +1846,14 @@
                                                                 class="formField" 
                                                                 disabled 
 																<cfif VAL(qCandidatePlaceCompany.authentication_certificateOfExistence)> checked </cfif> />
-                                                         	<span style="padding-left:3px;<cfif qCandidatePlaceCompany.authentication_certificateOfExistenceExpiration LT NOW()>color:red;</cfif>">
-                                                            	#DateFormat(qCandidatePlaceCompany.authentication_certificateOfExistenceExpiration,'mm/dd/yyyy')#
+                                                            <span id="authentication_certificateOfExistenceExpiration" style="padding-left:3px;">
+                                                           		<cfif qCandidatePlaceCompany.authentication_certificateOfExistenceExpiration LT NOW()>
+                                                                	<font style="color:red;">
+                                                                    	#DateFormat(qCandidatePlaceCompany.authentication_certificateOfExistenceExpiration,'mm/dd/yyyy')#
+                                                                    </font>
+                                                               	<cfelse>
+                                                                	#DateFormat(qCandidatePlaceCompany.authentication_certificateOfExistenceExpiration,'mm/dd/yyyy')#
+                                                                </cfif>
                                                             </span>
                                                         </td>
                                                     </tr>
@@ -1821,8 +1870,14 @@
                                                                 class="formField" 
                                                                 disabled 
 																<cfif VAL(qCandidatePlaceCompany.authentication_certificateOfReinstatement)> checked </cfif> />
-                                                           	<span style="padding-left:3px;<cfif qCandidatePlaceCompany.authentication_certificateOfReinstatementExpiration LT NOW()>color:red;</cfif>">
-                                                            	#DateFormat(qCandidatePlaceCompany.authentication_certificateOfReinstatementExpiration,'mm/dd/yyyy')#
+                                                            <span id="authentication_certificateOfReinstatementExpiration" style="padding-left:3px;">
+                                                           		<cfif qCandidatePlaceCompany.authentication_certificateOfReinstatementExpiration LT NOW()>
+                                                                	<font style="color:red;">
+                                                                    	#DateFormat(qCandidatePlaceCompany.authentication_certificateOfReinstatementExpiration,'mm/dd/yyyy')#
+                                                                    </font>
+                                                               	<cfelse>
+                                                                	#DateFormat(qCandidatePlaceCompany.authentication_certificateOfReinstatementExpiration,'mm/dd/yyyy')#
+                                                                </cfif>
                                                             </span>
                                                         </td>
                                                     </tr>
@@ -1839,8 +1894,14 @@
                                                                 class="formField" 
                                                                 disabled 
 																<cfif VAL(qCandidatePlaceCompany.authentication_departmentOfState)> checked </cfif> />
-                                                          	<span style="padding-left:3px;<cfif qCandidatePlaceCompany.authentication_departmentOfStateExpiration LT NOW()>color:red;</cfif>">
-                                                            	#DateFormat(qCandidatePlaceCompany.authentication_departmentOfStateExpiration,'mm/dd/yyyy')#
+                                                            <span id="authentication_departmentOfStateExpiration" style="padding-left:3px;">
+                                                           		<cfif qCandidatePlaceCompany.authentication_departmentOfStateExpiration LT NOW()>
+                                                                	<font style="color:red;">
+                                                                    	#DateFormat(qCandidatePlaceCompany.authentication_departmentOfStateExpiration,'mm/dd/yyyy')#
+                                                                    </font>
+                                                               	<cfelse>
+                                                                	#DateFormat(qCandidatePlaceCompany.authentication_departmentOfStateExpiration,'mm/dd/yyyy')#
+                                                                </cfif>
                                                             </span>
                                                         </td>
                                                     </tr>
@@ -1856,8 +1917,14 @@
                                                                 class="formField" 
                                                                 disabled 
 																<cfif VAL(qCandidatePlaceCompany.authentication_departmentOfLabor)> checked </cfif> />
-                                                           	<span style="padding-left:3px;<cfif qCandidatePlaceCompany.authentication_departmentOfLaborExpiration LT NOW()>color:red;</cfif>">
-                                                            	#DateFormat(qCandidatePlaceCompany.authentication_departmentOfLaborExpiration,'mm/dd/yyyy')#
+                                                            <span id="authentication_departmentOfLaborExpiration" style="padding-left:3px;">
+                                                           		<cfif qCandidatePlaceCompany.authentication_departmentOfLaborExpiration LT NOW()>
+                                                                	<font style="color:red;">
+                                                                    	#DateFormat(qCandidatePlaceCompany.authentication_departmentOfLaborExpiration,'mm/dd/yyyy')#
+                                                                    </font>
+                                                               	<cfelse>
+                                                                	#DateFormat(qCandidatePlaceCompany.authentication_departmentOfLaborExpiration,'mm/dd/yyyy')#
+                                                                </cfif>
                                                             </span>
                                                         </td>
                                                     </tr>
@@ -1872,8 +1939,14 @@
                                                                 class="formField" 
                                                                 disabled 
 																<cfif VAL(qCandidatePlaceCompany.authentication_googleEarth)> checked </cfif> />
-                                                          	<span style="padding-left:3px;<cfif qCandidatePlaceCompany.authentication_googleEarthExpiration LT NOW()>color:red;</cfif>">
-                                                            	#DateFormat(qCandidatePlaceCompany.authentication_googleEarthExpiration,'mm/dd/yyyy')#
+                                                            <span id="authentication_googleEarthExpiration" style="padding-left:3px;">
+                                                           		<cfif qCandidatePlaceCompany.authentication_googleEarthExpiration LT NOW()>
+                                                                	<font style="color:red;">
+                                                                    	#DateFormat(qCandidatePlaceCompany.authentication_googleEarthExpiration,'mm/dd/yyyy')#
+                                                                    </font>
+                                                               	<cfelse>
+                                                                	#DateFormat(qCandidatePlaceCompany.authentication_googleEarthExpiration,'mm/dd/yyyy')#
+                                                                </cfif>
                                                             </span>
                                                         </td>
                                                     </tr>
