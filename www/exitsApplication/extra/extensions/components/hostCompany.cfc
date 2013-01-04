@@ -96,6 +96,13 @@
 			result.AUTHENTICATIONCERTIFICATEOFREINSTATEMENT = 0;
 			result.AUTHENTICATIONDEPARTMENTOFSTATE = 0;
 			result.AUTHENTICATIONBUSINESSLICENSENOTAVAILABLE = 0;
+			result.AUTHENTICATIONSECRETARYOFSTATEEXPIRATION = "";
+			result.AUTHENTICATIONDEPARTMENTOFLABOREXPIRATION = "";
+			result.AUTHENTICATIONGOOGLEEARTHEXPIRATION = "";
+			result.AUTHENTICATIONINCORPORATIONEXPIRATION = "";
+			result.AUTHENTICATIONCERTIFICATEOFEXISTENCEEXPIRATION = "";
+			result.AUTHENTICATIONCERTIFICATEOFREINSTATEMENTEXPIRATION = "";
+			result.AUTHENTICATIONDEPARTMENTOFSTATEEXPIRATION = "";
 			result.EIN = "";
 			result.WC = 0;
 			result.WCE = "";
@@ -115,6 +122,13 @@
 				result.AUTHENTICATIONCERTIFICATEOFREINSTATEMENT = qGetHCInfo.authentication_certificateOfReinstatement;
 				result.AUTHENTICATIONDEPARTMENTOFSTATE = qGetHCInfo.authentication_departmentOfState;
 				result.AUTHENTICATIONBUSINESSLICENSENOTAVAILABLE = qGetHCInfo.authentication_businessLicenseNotAvailable;
+				result.AUTHENTICATIONSECRETARYOFSTATEEXPIRATION = qGetHCInfo.authentication_secretaryOfStateExpiration;
+				result.AUTHENTICATIONDEPARTMENTOFLABOREXPIRATION = qGetHCInfo.authentication_departmentOfLaborExpiration;
+				result.AUTHENTICATIONGOOGLEEARTHEXPIRATION = qGetHCInfo.authentication_googleEarthExpiration;
+				result.AUTHENTICATIONINCORPORATIONEXPIRATION = qGetHCInfo.authentication_incorporationExpiration;
+				result.AUTHENTICATIONCERTIFICATEOFEXISTENCEEXPIRATION = qGetHCInfo.authentication_certificateOfExistenceExpiration;
+				result.AUTHENTICATIONCERTIFICATEOFREINSTATEMENTEXPIRATION = qGetHCInfo.authentication_certificateOfReinstatementExpiration;
+				result.AUTHENTICATIONDEPARTMENTOFSTATEEXPIRATION = qGetHCInfo.authentication_departmentOfStateExpiration;
 				result.EIN = qGetHCInfo.EIN;
 				result.WC = qGetHCInfo.workmenscompensation;
 				result.WCE = DateFormat(qGetHCInfo.WCDateExpired, 'mm/dd/yyyy');
