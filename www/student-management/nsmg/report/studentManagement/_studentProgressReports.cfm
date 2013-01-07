@@ -275,7 +275,7 @@
          
       	 <table width="98%" cellpadding="4" cellspacing="0" align="center" border="1">
       		<tr>
-                <th colspan="5">#vReportTitle#</th>            
+                <th colspan="5"><cfoutput>#vReportTitle#</cfoutput></th>            
             </tr>
             <tr style="font-weight:bold;">
                 <td>Region</td>
@@ -487,6 +487,8 @@
                                 fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentsInRegion.studentid#">
                             AND 
                                 pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
+                          	AND
+                            	fk_reportType = 1
                         </cfquery>
                         <cfscript>
                             if ( FORM.status EQ "missing") {
@@ -571,31 +573,38 @@
                                     fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentsInRegion.studentid#">
                                 AND 
                                     pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
+                               	AND
+                            		fk_reportType = 1
                             </cfquery>
                             
                             <cfscript>
                             
-                                if ( FORM.status EQ "missing") {
-                                    if ( NOT VAL(qGetmonthID.recordCount) AND (ListLast(FORM.monthID) NEQ i) ) {
-                                    vMissingReportsList = vMissingReportsList & MonthAsString(i) & ", &nbsp;";	
-                                    } else if ( NOT VAL(qGetmonthID.recordCount) ) {
-                                        vMissingReportsList = vMissingReportsList & MonthAsString(i);
-                                    }
-                                } else if (FORM.status EQ "approved") {
-                                    if ( VAL(qGetmonthID.recordCount) AND (qGetMonthID.pr_ny_approved_date NEQ "") )
-                                        if ( VAL(qGetmonthID.recordCount) AND (ListLast(FORM.monthID) NEQ i) ) {
-                                        vMissingReportsList = vMissingReportsList & MonthAsString(i) & ", &nbsp;";	
-                                        } else if ( VAL(qGetmonthID.recordCount) ) {
-                                            vMissingReportsList = vMissingReportsList & MonthAsString(i);
-                                        }
-                                } else {
-                                    if ( VAL(qGetmonthID.recordCount) AND (qGetMonthID.pr_ny_approved_date EQ "") )
-                                        if ( VAL(qGetmonthID.recordCount) AND (ListLast(FORM.monthID) NEQ i) ) {
-                                        vMissingReportsList = vMissingReportsList & MonthAsString(i) & ", &nbsp;";	
-                                        } else if ( VAL(qGetmonthID.recordCount) ) {
-                                            vMissingReportsList = vMissingReportsList & MonthAsString(i);
-                                        }
-                                }							
+                                if (FORM.status EQ "missing") {
+									if (NOT VAL(qGetMonthID.recordCount)) {
+										if (ListLast(FORM.monthID) EQ i) {
+											vMissingReportsList = vMissingReportsList & MonthAsString(i);
+										} else {
+											vMissingReportsList = vMissingReportsList & MonthAsString(i) & ", &nbsp;";	
+										}
+									}
+								} else if (FORM.status EQ "approved") {
+									if ( VAL(qGetmonthID.recordCount) AND (qGetMonthID.pr_ny_approved_date NEQ "") ) {
+										if (ListLast(FORM.monthID) EQ i) {
+											vMissingReportsList = vMissingReportsList & MonthAsString(i);
+										} else {
+											vMissingReportsList = vMissingReportsList & MonthAsString(i) & ", &nbsp;";	
+										}
+									}
+								} else {
+									if ( VAL(qGetmonthID.recordCount) AND (qGetMonthID.pr_ny_approved_date EQ "") ) {
+										if (ListLast(FORM.monthID) EQ i) {
+											vMissingReportsList = vMissingReportsList & MonthAsString(i);
+										} else {
+											vMissingReportsList = vMissingReportsList & MonthAsString(i) & ", &nbsp;";
+										}
+									}
+								}	
+								
                             </cfscript>
                             
                         </cfloop>
