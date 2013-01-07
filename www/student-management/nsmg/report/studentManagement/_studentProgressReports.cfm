@@ -353,24 +353,26 @@
 						
 							if ( FORM.status EQ "missing") {
 								if ( NOT VAL(qGetmonthID.recordCount) AND (ListLast(FORM.monthID) NEQ i) ) {
-								vMissingReportsList = vMissingReportsList & MonthAsString(i) & ", &nbsp;";	
+									vMissingReportsList = vMissingReportsList & MonthAsString(i) & ", &nbsp;";	
 								} else if ( NOT VAL(qGetmonthID.recordCount) ) {
 									vMissingReportsList = vMissingReportsList & MonthAsString(i);
 								}
 							} else if (FORM.status EQ "approved") {
-								if ( VAL(qGetmonthID.recordCount) AND (qGetMonthID.pr_ny_approved_date NEQ "") )
+								if ( VAL(qGetmonthID.recordCount) AND (qGetMonthID.pr_ny_approved_date NEQ "") ) {
 									if ( VAL(qGetmonthID.recordCount) AND (ListLast(FORM.monthID) NEQ i) ) {
-									vMissingReportsList = vMissingReportsList & MonthAsString(i) & ", &nbsp;";	
+										vMissingReportsList = vMissingReportsList & MonthAsString(i) & ", &nbsp;";	
 									} else if ( VAL(qGetmonthID.recordCount) ) {
 										vMissingReportsList = vMissingReportsList & MonthAsString(i);
 									}
+								}
 							} else {
-								if ( VAL(qGetmonthID.recordCount) AND (qGetMonthID.pr_ny_approved_date EQ "") )
+								if ( VAL(qGetmonthID.recordCount) AND (qGetMonthID.pr_ny_approved_date EQ "") ) {
 									if ( VAL(qGetmonthID.recordCount) AND (ListLast(FORM.monthID) NEQ i) ) {
-									vMissingReportsList = vMissingReportsList & MonthAsString(i) & ", &nbsp;";	
+										vMissingReportsList = vMissingReportsList & MonthAsString(i) & ", &nbsp;";	
 									} else if ( VAL(qGetmonthID.recordCount) ) {
 										vMissingReportsList = vMissingReportsList & MonthAsString(i);
 									}
+								}
 							}							
 						</cfscript>
 						
