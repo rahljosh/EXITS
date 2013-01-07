@@ -369,7 +369,7 @@
 										vMissingReportsList = vMissingReportsList & MonthAsString(i) & ", &nbsp;";	
 									}
 								}
-							} else if (FORM.status EQ "notApproved") {
+							} else {
 								if ( VAL(qGetmonthID.recordCount) AND (qGetMonthID.pr_ny_approved_date EQ "") ) {
 									if (ListLast(FORM.monthID) EQ i) {
 										vMissingReportsList = vMissingReportsList & MonthAsString(i);
