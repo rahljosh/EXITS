@@ -1139,4 +1139,61 @@
         
  	</cffunction>
     
+     <!--- Send Compliance Log Email --->
+    <cffunction name="sendComplianceLog" access="public" returntype="string">
+        
+    	<cfargument name="email_to" type="string" required="yes" hint="pass in list of emails to sent to">
+    	<cfargument name="stuNameID" type="string" required="yes" hint="pass in name and id of student with problem">
+        <cfargument name="historyID" type="string" required="yes" hint="pass in historyID">
+        <cfargument name="foreignTable" type="string" required="yes" hint="pass in historyID">
+    	<cfscript>
+       // Get Compliance Log
+		qGetComplianceHistory = APPLICATION.CFC.LOOKUPTABLES.getApplicationHistory(
+			applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,																				   
+			foreignTable=ARGUMENTS.foreignTable,
+			foreignID=ARGUMENTS.historyID
+		);
+    	</cfscript>
+    <cfsavecontent variable="mailMessage">                      
+		<cfoutput>
+        The following compliance issues need to be resolved for #ARGUMENTS.stuNameID#
+        
+        <br><br>
+      			 <table width="90%" cellpadding="2" cellspacing="0"align="center">       
+                 		<Tr bgcolor="##666666">
+                        	<td></td><td><font color="white">Date</td><td><font color="white">Issue</td><td><font color="white">Recorded By</td>
+                           
+                        </Tr>                  
+                        <cfloop query="qGetComplianceHistory">                    
+                            <tr <cfif qGetComplianceHistory.currentrow mod 2>bgcolor="##ccc"</cfif>> 
+                                <td width="5%">&nbsp;</td>
+                                <td width="20%">#DateFormat(qGetComplianceHistory.dateCreated, 'mm/dd/yy')# at #TimeFormat(qGetComplianceHistory.dateCreated, 'hh:mm tt')# EST</td>
+                                <td width="50%">#qGetComplianceHistory.actions#</td>
+                                <td width="15%">#qGetComplianceHistory.enteredBy#</td>
+                                
+                            </tr>
+                        </cfloop>                        
+                    </table>
+      <br>
+      	<hr widht=75% align="center">
+       <br><br>
+      Regards-<br>
+      Compliance Department
+		</cfoutput>
+    </cfsavecontent>
+      <cfinvoke component="nsmg.cfc.email" method="send_mail">
+      			<!----
+                <cfinvokeargument name="email_to" value="#get_user.email#">
+				---->
+                <cfinvokeargument name="email_to" value="#email_to#">
+                <cfinvokeargument name="email_replyto" value="#CLIENT.email#">
+                <cfinvokeargument name="email_subject" value="Compliance Issues with Host Family">
+                <cfinvokeargument name="email_message" value="#mailMessage#">
+                
+       </cfinvoke>
+	 
+    
+         
+        
+ 	</cffunction>
 </cfcomponent>
