@@ -776,6 +776,10 @@
                             smg_users u ON rep.agentid = u.userid
                         WHERE 
                             rep.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetPlacedStudentList.studentID#"> 
+						
+                        <!--- Check if there is payment for this placement --->                        
+                        AND
+                            rep.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetPlacedStudentList.hostID#">
                         
                         <!--- 
 							These are mutually exclusive. Only one per student
