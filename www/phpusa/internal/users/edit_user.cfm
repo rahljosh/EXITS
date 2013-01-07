@@ -24,6 +24,10 @@
 </head>
 
 <body>
+
+<cfscript>
+	qGetSeasons = APPLICATION.CFC.SEASON.getSeasons(active=2);
+</cfscript>
 	
 <cfquery name="userinfo" datasource="mysql">
 	SELECT 
@@ -289,7 +293,53 @@
 					<td class="groupBottom" colspan="2"><img height=1 src='spacer.gif' width=1 ></td>
 					<td class="groupBottomRight"><img height=1 src='spacer.gif' width=1 ></td>
 				</tr>
-			</table> 
+			</table>
+            
+            <!--- Training Approved --->
+            <table cellspacing="0" cellpadding="3" width="100%" border="0">
+				<tr>
+					<td class="groupTopLeft">&nbsp;</td>
+					<td class="groupCaption" nowrap="true">Training Approved</td>
+					<td class="groupTop" width="95%">&nbsp;</td>
+					<td class="groupTopRight">&nbsp;</td>
+				</tr>
+				<tr>
+					<td class="groupLeft">&nbsp;</td>
+					<td colspan="2">
+						<table id="rgbAddressDetails" cellpadding="0" cellspacing="0" border="0" width="100%">
+							<tr>
+								<td>
+									<table cellSpacing="0" cellPadding="0" width="100%" border="0">
+                                    	<cfloop query="qGetSeasons">
+                                            <cfquery name="qGetTrainingApproved" datasource="#APPLICATION.DSN#">
+                                                SELECT *
+                                                FROM php_intl_rep_season
+                                                WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(userinfo.userID)#">
+                                                AND seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(seasonID)#">
+                                            </cfquery>
+                                            <tr valign="middle" height="30">
+                                            	<td width="20" align="center"></td>
+                                                <td><span class="normalLabel">#season#:</span></td>
+                                                <td>
+                                                	<input name="training_#seasonID#" type="radio" value="1" <cfif VAL(qGetTrainingApproved.approvedTraining)>checked="checked"</cfif> />Yes 
+                                                    <input name="training_#seasonID#" type="radio" value="0" <cfif NOT VAL(qGetTrainingApproved.approvedTraining)>checked="checked"</cfif> />No
+                                             	</td>
+                                                <td height="1" colspan="2"><img height="1" src="spacer.gif" width="20" /></td>
+                                            </tr>
+                                      	</cfloop>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</td>
+					<td class="groupRight">&nbsp;</td>
+				</tr>
+				<tr>
+					<td class="groupBottomLeft"><img height=5 src='spacer.gif' width=1 ></td>
+					<td class="groupBottom" colspan="2"><img height=1 src='spacer.gif' width=1 ></td>
+					<td class="groupBottomRight"><img height=1 src='spacer.gif' width=1 ></td>
+				</tr>
+			</table>
 			
 			<!--- Address details --->
 			<table cellspacing="0" cellpadding="3" width="100%" border="0">

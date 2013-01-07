@@ -17,6 +17,10 @@
     <cfparam name="URL.userID" default="0">
     <cfparam name="URL.ID" default="0">
     
+    <cfscript>
+		qGetSeasons = APPLICATION.CFC.SEASON.getSeasons(active=2);
+	</cfscript>
+    
 	<cfif LEN(URL.uniqueID)>
     
         <cfquery name="qGetUserID" datasource="MySQL">
@@ -280,6 +284,31 @@
                                                                             
                                                               			</td>
                                                                 	</tr>
+                                                                    <!--- Training Approved section --->
+                                                                    <cfif qGetUserInformation.userType EQ 7 AND CLIENT.userType LTE 3>
+                                                                    	<tr>
+                                                                        	<td>
+                                                                            	<br/>
+                                                                            	<b>Training Approved</b>
+                                                                                <cfloop query="qGetSeasons">
+                                                                                	<cfquery name="qGetTrainingApproved" datasource="#APPLICATION.DSN#">
+                                                                                        SELECT *
+                                                                                        FROM php_intl_rep_season
+                                                                                        WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetUserInformation.userID)#">
+                                                                                        AND seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(seasonID)#">
+                                                                                    </cfquery>
+                                                                                	<br/>
+                                                                                    <input
+                                                                                    	type="checkbox"
+                                                                                        disabled="disabled"
+                                                                                    	<cfif VAL(qGetTrainingApproved.approvedTraining)>
+                                                                                      		checked="checked"
+                                                                                       	</cfif> />
+                                                                                  	&nbsp;#season#
+                                                                                </cfloop>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </cfif>
                                                         		</table>
 															</td>
 														</tr>

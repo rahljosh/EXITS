@@ -1,3 +1,7 @@
+<cfscript>
+	qGetSeasons = APPLICATION.CFC.SEASON.getSeasons(active=2);
+</cfscript>
+
 <cfquery name="check_email" datasource="MySql">
 	SELECT 
     	userid, 
@@ -95,6 +99,35 @@
 	</cfif>
     
 </cfoutput>
+
+<!--- Go through trainings, update if they exist otherwise insert --->
+<cfloop query="qGetSeasons">
+	<cfquery name="qGetTrainingApproved" datasource="#APPLICATION.DSN#">
+        SELECT *
+        FROM php_intl_rep_season
+        WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.userID)#">
+        AND seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(seasonID)#">
+    </cfquery>
+    <cfif VAL(qGetTrainingApproved.recordCount)>
+    	<cfquery datasource="#APPLICATION.DSN#">
+        	UPDATE php_intl_rep_season
+            SET approvedTraining = <cfqueryparam cfsqltype="cf_sql_integer" value="#EVALUATE('FORM.training_#seasonID#')#">
+            WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.userID)#">
+            AND seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(seasonID)#">
+        </cfquery>
+    <cfelse>
+    	<cfquery datasource="#APPLICATION.DSN#">
+        	INSERT INTO php_intl_rep_season (
+            	userID,
+                seasonID,
+                approvedTraining )
+           	VALUES (
+            	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.userID)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(seasonID)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#EVALUATE('FORM.training_#seasonID#')#"> )
+        </cfquery>
+    </cfif>
+</cfloop>
 
 <cfquery name="update_users" datasource="MySql">
 	UPDATE
