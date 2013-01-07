@@ -40,8 +40,16 @@
             uar.usertype IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7,15" list="yes"> )
         AND 
             u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-        AND 
-            uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+            
+		<!--- ISE --->
+		<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+            AND            
+            	uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+        <!--- CASE/ESI --->
+		<cfelse>
+            AND
+            	uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+        </cfif>
             
         <cfif LEN(FORM.lastName)>
             AND 

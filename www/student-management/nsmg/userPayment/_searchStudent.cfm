@@ -40,8 +40,15 @@
                 AND
                     p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', -15, now())#">
         WHERE 
-            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
 
+		<!--- ISE --->
+		<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+            s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+        <!--- CASE/ESI --->
+		<cfelse>
+            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+        </cfif>
+                                
 		<cfif LEN(FORM.familyLastName)>
             AND 
                 s.familyLastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#FORM.familyLastName#%">
