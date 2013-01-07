@@ -27,7 +27,7 @@
     <cfimport taglib="../../extensions/customTags/gui/" prefix="gui" />	
 	
     <!--- Param FORM Variables --->
-    
+    <cfparam name="FORM.sendEmail" default="0">
 	<!--- Single Person Placement --->
     <cfparam name="FORM.doc_single_place_auth" default="">
     <cfparam name="FORM.compliance_single_place_auth" default="">
@@ -117,7 +117,16 @@
     <cfparam name="FORM.cbcDateComplianceIDList" default="">
 	<!--- Compliance Log --->
     <cfparam name="FORM.compliandeLogIDList" default="">
-
+	<!----Emails Possibly Sent---->
+    <cfparam name="FORM.rmEmail" default="">
+    <cfparam name="FORM.arEmail" default="">
+	<cfparam name="FORM.ccEmail" default="">
+	<cfparam name="FORM.otherEmail" default="">
+    <cfparam name="FORM.stuNameID" default="">
+	
+    <cfset tempEmail = "#form.rmEmail#, #form.arEmail#, #FORM.ccEmail#, #FORM.otherEMail#">
+	<cfset FORM.email_to = rereplace(tempEmail, " , ", "", "all")> 
+    <cfset FORM.logMessage = "Log sent to #FORM.email_to#">
     <cfscript>
 		// PS: smg_hostHistory is already taken by the placement history so I set table name as smg_hostHistoryCompliance
 		vComplianceTableName = "smg_hostHistoryCompliance";
@@ -125,6 +134,9 @@
 		// Get Most Recent CBCs
 		qGetMostRecentCBC = APPLICATION.CFC.CBC.getLastHostCBC(hostID=qGetPlacementHistoryByID.hostID);
 
+		// Get Student Info
+		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentFullInformationByID(studentID=client.studentID);
+		
 		// Param CBC Compliance FORM Variables 
 		for ( i=1; i LTE qGetMostRecentCBC.recordCount; i=i+1 ) {
 			param name="FORM.#qGetMostRecentCBC.cbcFamID[i]#_cbcDateCompliance" default="";
@@ -274,7 +286,8 @@
 					);	
 					
 				}
-
+				
+			
 				// Update CBC Compliance Date Check
 				for (i=1;i LTE ListLen(FORM.cbcDateComplianceIDList); i=i+1) {
 					
@@ -310,7 +323,36 @@
 
 		  // Set Page Message
 		  SESSION.pageMessages.Add("Form successfully submitted.");
-		  
+		 
+		  if (val(form.sendEmail))
+					{
+					APPLICATION.CFC.UDF.sendComplianceLog(
+						email_to=FORM.email_to,
+						stuNameID = FORM.stuNameID,
+						historyID = qGetPlacementHistoryByID.historyID,
+						foreignTable = vComplianceTableName);
+						
+					//Set success message
+					SESSION.pageMessages.Add("Emails succesfully sent.");
+					
+					// Insert record of email sent  Log Into Separate Table
+					APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
+						applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,																	  
+						foreignTable=vComplianceTableName,
+						foreignID=qGetPlacementHistoryByID.historyID,
+						enteredByID=CLIENT.userID,
+						actions= FORM.logMessage,
+						formatActionsText=1,
+						isResolved=1
+					);	
+					}
+		 		 // Check if we have an entry for the compliance Log
+				
+				
+							
+				
+				
+			
 		  // Reload page
 		  location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");		
 		
@@ -465,8 +507,20 @@
 			
 		}
 	</cfscript>
-            
+    
+   
+    <!---Regional Manager  ---->
+    <Cfquery name ="RegionalManager" datasource="#application.dsn#">
+    select firstname, lastname, email
+    from smg_users
+    left join user_access_rights uar on uar.userid = smg_users.userid
+    where uar.usertype = 5 
+    and uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.regionassigned#">
+    
+    </Cfquery>
+
 </cfsilent>
+
 
 <script type="text/javascript">
 <!-- Begin
@@ -1626,7 +1680,40 @@
                             <td class="reportTitleLeftClean" width="15%">Resolved?</td>
                         </tr>
                     </table>
-                    
+                  <!----Send Email---->
+                  <cfif qGetComplianceHistory.recordcount gt 0>
+                    <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center"> 
+                    	<Tr class="<cfif FORM[qGetComplianceHistory.ID & '_complianceLogIsResolved'] EQ 1>mouseOverColor<cfelse>attention</cfif>">
+                        	<td class="reportTitleLeftClean" width="5%">&nbsp;</td>
+                            <Td colspan=2>Send Compliance Log as Email</Td>
+                            <td align="center">
+                            <input type="hidden" name="stuNameID" value="#qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (#qGetStudentInfo.studentid#)" />
+       						
+                            <input type="radio" name="sendEmail" value="1" id="sendEmail"
+                                    onclick="document.getElementById('showList').style.display='table-row';" 
+                                     />
+                                    Yes
+                                    </label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label>
+                                    <input type="radio" name="sendEmail" value="0" id="sendEmail"
+                                  checked='1' onclick="document.getElementById('showList').style.display='none';" 
+                                   />
+            No</td>
+                            
+                        </Tr>
+                        <tr id="showList" style="display: none;">
+                        	<td class="reportTitleLeftClean" width="5%">&nbsp;</td>
+                            <td colspan=2><input name='rmEmail' type="checkbox" value='#RegionalManager.email#' id='rmEmail' checked="checked" />#RegionalManager.firstname# #RegionalManager.lastname# (#RegionalManager.email#) <br />
+                            	<input name='arEmail' type="checkbox" value='#qGetStudentInfo.areaRepEmail#' id='arEmail' checked="checked" />#qGetStudentInfo.areaRepFirstName# #qGetStudentInfo.areaRepLastName# (#qGetStudentInfo.areaRepEmail#) </td>
+                            <td>
+                            <input name='ccEmail' type="checkbox" value='#client.email#' id='ccEmail' />#client.name# (#client.email#)<br />
+                            Add'l Email(s):<input type="text" name='otherEmail' id='otherEmail' size=10/>
+                            
+                        </tr>
+                    </table>
+                  </cfif>
+                  <!----End Send Email---->
                     <table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center">                         
                         <cfloop query="qGetComplianceHistory">                    
                             <tr class="<cfif FORM[qGetComplianceHistory.ID & '_complianceLogIsResolved'] EQ 1>mouseOverColor<cfelse>attention</cfif>"> 
