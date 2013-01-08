@@ -1151,7 +1151,8 @@
 		qGetComplianceHistory = APPLICATION.CFC.LOOKUPTABLES.getApplicationHistory(
 			applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,																				   
 			foreignTable=ARGUMENTS.foreignTable,
-			foreignID=ARGUMENTS.historyID
+			foreignID=ARGUMENTS.historyID,
+			isResolved = 0
 		);
     	</cfscript>
     <cfsavecontent variable="mailMessage">                      
@@ -1163,16 +1164,22 @@
                  		<Tr bgcolor="##666666">
                         	<td></td><td><font color="white">Date</td><td><font color="white">Issue</td><td><font color="white">Recorded By</td>
                            
-                        </Tr>                  
-                        <cfloop query="qGetComplianceHistory">                    
-                            <tr <cfif qGetComplianceHistory.currentrow mod 2>bgcolor="##ccc"</cfif>> 
-                                <td width="5%">&nbsp;</td>
-                                <td width="20%">#DateFormat(qGetComplianceHistory.dateCreated, 'mm/dd/yy')# at #TimeFormat(qGetComplianceHistory.dateCreated, 'hh:mm tt')# EST</td>
-                                <td width="50%">#qGetComplianceHistory.actions#</td>
-                                <td width="15%">#qGetComplianceHistory.enteredBy#</td>
-                                
-                            </tr>
-                        </cfloop>                        
+                        </Tr>     
+                        <cfif qGetComplianceHistory.recordcount eq 0>
+                        <tr>
+                        	<Td colspan=4>Ooops.  No unresolved issues found in the compliance log.</Td>
+                        </tr>
+                        <cfelse>             
+                            <cfloop query="qGetComplianceHistory">                    
+                                <tr <cfif qGetComplianceHistory.currentrow mod 2>bgcolor="##ccc"</cfif>> 
+                                    <td width="5%">&nbsp;</td>
+                                    <td width="20%">#DateFormat(qGetComplianceHistory.dateCreated, 'mm/dd/yy')# at #TimeFormat(qGetComplianceHistory.dateCreated, 'hh:mm tt')# EST</td>
+                                    <td width="50%">#qGetComplianceHistory.actions#</td>
+                                    <td width="15%">#qGetComplianceHistory.enteredBy#</td>
+                                    
+                                </tr>
+                            </cfloop>
+                        </cfelse>                        
                     </table>
       <br>
       	<hr widht=75% align="center">
