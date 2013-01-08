@@ -1179,7 +1179,7 @@
                                     
                                 </tr>
                             </cfloop>
-                        </cfelse>                        
+                        </cfif>                        
                     </table>
       <br>
       	<hr widht=75% align="center">
