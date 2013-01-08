@@ -176,6 +176,8 @@
             ap.authIsSuccess = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         AND
         	ap.foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegistrationInfo.ID#">
+		AND
+        	ap. authorizeNetPaymentID != <cfqueryparam cfsqltype="cf_sql_varchar" value="0">           
         GROUP BY
         	authorizeNetPaymentID
 	</cfquery>   
