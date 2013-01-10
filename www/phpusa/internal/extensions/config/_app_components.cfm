@@ -39,9 +39,6 @@
 
 	// Store the initialized program object in the Application scope
 	APPLICATION.CFC.program = CreateCFC("program").Init();
-	
-	// Store the initialized season object in the Application scope
-	APPLICATION.CFC.season = CreateCFC("season").Init();
 
 	// Store the initialized school object in the Application scope
 	APPLICATION.CFC.school = CreateCFC("school").Init();

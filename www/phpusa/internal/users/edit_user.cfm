@@ -26,7 +26,7 @@
 <body>
 
 <cfscript>
-	qGetSeasons = APPLICATION.CFC.SEASON.getSeasons(active=2);
+	qGetPrograms = APPLICATION.CFC.PROGRAM.getPrograms(isActive=1,dateActive=1,companyID=6);
 </cfscript>
 	
 <cfquery name="userinfo" datasource="mysql">
@@ -310,19 +310,19 @@
 							<tr>
 								<td>
 									<table cellSpacing="0" cellPadding="0" width="100%" border="0">
-                                    	<cfloop query="qGetSeasons">
+                                    	<cfloop query="qGetPrograms">
                                             <cfquery name="qGetTrainingApproved" datasource="#APPLICATION.DSN#">
                                                 SELECT *
                                                 FROM php_intl_rep_season
                                                 WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(userinfo.userID)#">
-                                                AND seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(seasonID)#">
+                                                AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(programID)#">
                                             </cfquery>
                                             <tr valign="middle" height="30">
                                             	<td width="20" align="center"></td>
-                                                <td><span class="normalLabel">#season#:</span></td>
+                                                <td><span class="normalLabel">#programName#:</span></td>
                                                 <td>
-                                                	<input name="training_#seasonID#" type="radio" value="1" <cfif VAL(qGetTrainingApproved.approvedTraining)>checked="checked"</cfif> />Yes 
-                                                    <input name="training_#seasonID#" type="radio" value="0" <cfif NOT VAL(qGetTrainingApproved.approvedTraining)>checked="checked"</cfif> />No
+                                                	<input name="training_#programID#" type="radio" value="1" <cfif VAL(qGetTrainingApproved.approvedTraining)>checked="checked"</cfif> />Yes 
+                                                    <input name="training_#programID#" type="radio" value="0" <cfif NOT VAL(qGetTrainingApproved.approvedTraining)>checked="checked"</cfif> />No
                                              	</td>
                                                 <td height="1" colspan="2"><img height="1" src="spacer.gif" width="20" /></td>
                                             </tr>
