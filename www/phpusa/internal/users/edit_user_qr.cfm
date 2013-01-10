@@ -1,5 +1,5 @@
 <cfscript>
-	qGetSeasons = APPLICATION.CFC.SEASON.getSeasons(active=2);
+	qGetPrograms = APPLICATION.CFC.PROGRAM.getPrograms(isActive=1,dateActive=1,companyID=6);
 </cfscript>
 
 <cfquery name="check_email" datasource="MySql">
@@ -101,30 +101,30 @@
 </cfoutput>
 
 <!--- Go through trainings, update if they exist otherwise insert --->
-<cfloop query="qGetSeasons">
+<cfloop query="qGetPrograms">
 	<cfquery name="qGetTrainingApproved" datasource="#APPLICATION.DSN#">
         SELECT *
         FROM php_intl_rep_season
         WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.userID)#">
-        AND seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(seasonID)#">
+        AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(programID)#">
     </cfquery>
     <cfif VAL(qGetTrainingApproved.recordCount)>
     	<cfquery datasource="#APPLICATION.DSN#">
         	UPDATE php_intl_rep_season
             SET approvedTraining = <cfqueryparam cfsqltype="cf_sql_integer" value="#EVALUATE('FORM.training_#seasonID#')#">
             WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.userID)#">
-            AND seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(seasonID)#">
+            AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(programID)#">
         </cfquery>
     <cfelse>
     	<cfquery datasource="#APPLICATION.DSN#">
         	INSERT INTO php_intl_rep_season (
             	userID,
-                seasonID,
+                programID,
                 approvedTraining )
            	VALUES (
             	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.userID)#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(seasonID)#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#EVALUATE('FORM.training_#seasonID#')#"> )
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(programID)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#EVALUATE('FORM.training_#programID#')#"> )
         </cfquery>
     </cfif>
 </cfloop>

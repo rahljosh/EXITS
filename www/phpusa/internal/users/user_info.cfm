@@ -18,7 +18,7 @@
     <cfparam name="URL.ID" default="0">
     
     <cfscript>
-		qGetSeasons = APPLICATION.CFC.SEASON.getSeasons(active=2);
+		qGetPrograms = APPLICATION.CFC.PROGRAM.getPrograms(isActive=1,dateActive=1,companyID=6);
 	</cfscript>
     
 	<cfif LEN(URL.uniqueID)>
@@ -290,12 +290,12 @@
                                                                         	<td>
                                                                             	<br/>
                                                                             	<b>Training Approved</b>
-                                                                                <cfloop query="qGetSeasons">
+                                                                                <cfloop query="qGetPrograms">
                                                                                 	<cfquery name="qGetTrainingApproved" datasource="#APPLICATION.DSN#">
                                                                                         SELECT *
                                                                                         FROM php_intl_rep_season
                                                                                         WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetUserInformation.userID)#">
-                                                                                        AND seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(seasonID)#">
+                                                                                        AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(programID)#">
                                                                                     </cfquery>
                                                                                 	<br/>
                                                                                     <input
@@ -304,7 +304,7 @@
                                                                                     	<cfif VAL(qGetTrainingApproved.approvedTraining)>
                                                                                       		checked="checked"
                                                                                        	</cfif> />
-                                                                                  	&nbsp;#season#
+                                                                                  	&nbsp;#programName#
                                                                                 </cfloop>
                                                                             </td>
                                                                         </tr>

@@ -22,7 +22,6 @@
 		</cfscript>
         
 	</cffunction>
-
 	
 	<cffunction name="getPrograms" access="public" returntype="query" output="false" hint="Gets a list of programs, if programID is passed gets a program by ID">
     	<cfargument name="programID" default="0" hint="programID is not required">

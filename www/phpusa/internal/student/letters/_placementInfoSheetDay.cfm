@@ -209,6 +209,12 @@
                 <td>
                     <p style="margin-top:5px;">We are pleased to give you the placement information for #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentid#).</p>
                     
+                    <cfif VAL(qGetStudentInfo.isWelcomeFamily)>
+                    	<p style="margin-bottom:5px;">
+                           	Please note, this is a Welcome Family, we will have news on the new permanent placement as soon as possible.
+                        </p>
+                    </cfif>
+                    
                     <cfif VAL(qGetFacilitator.recordCount)>
                         <p style="margin-bottom:5px;">
                             Please note for the Agent and Student, the Main Office Student Services Facilitator will be #qGetFacilitator.firstName# #qGetFacilitator.lastName#. <br />              
