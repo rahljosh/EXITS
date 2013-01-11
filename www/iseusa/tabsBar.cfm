@@ -13,7 +13,7 @@
         </span>
         
         <span onmouseover="HideDIV('initDiv');HideDIV('webstore');HideDIV('studentTrips');HideDIV('hostFam');HideDIV('meetStudents');HideDIV('blog');DisplayDIV('travelAbroad')"  style="cursor:pointer;">
-            <a href="mailto:john@student-management.com" class="tabs3" target="_blank"></a>
+            <a href="mailto:john@iseusa.com" class="tabs3" target="_blank"></a>
         </span>
         
         <span onmouseover="HideDIV('initDiv');HideDIV('webstore');HideDIV('travelAbroad');HideDIV('hostFam');HideDIV('meetStudents');HideDIV('blog');DisplayDIV('studentTrips')"   style="cursor:pointer;">
