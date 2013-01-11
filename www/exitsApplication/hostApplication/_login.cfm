@@ -58,12 +58,20 @@
             </cfif>
         
             <cfscript>
+				if ( qLoginHostFamily.hostAppStatus LTE 7 ) {
+					vIsMenuBlocked = true;
+				} else {
+					vIsMenuBlocked = false;
+				}
+			
 				// Login Host Family
 				APPLICATION.CFC.SESSION.setHostSession(
 					hostID=qLoginHostFamily.hostID,												
 					applicationStatus=qLoginHostFamily.hostAppStatus,
 					familyName=qLoginHostFamily.familylastname,
-					email=qLoginHostFamily.email
+					email=qLoginHostFamily.email,
+					isMenuBlocked=vIsMenuBlocked,
+					isExitsLogin=false
 				);
 
 				// Go to overview page
@@ -162,7 +170,9 @@
 							hostID=newRecord.GENERATED_KEY,												
 							applicationStatus=8,
 							familyName=qLoginHostFamily.lastName,
-							email=qLoginHostFamily.email
+							email=qLoginHostFamily.email,
+							isMenuBlocked=vIsMenuBlocked,
+							isExitsLogin=false
 						);
 					
 						// Go to overview page

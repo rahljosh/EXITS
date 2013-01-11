@@ -18,7 +18,7 @@
 		}
 		
 		// Submitted applications have access only to overview and logout pages
-		if ( APPLICATION.CFC.SESSION.getHostSession().isMenuBlocked AND NOT APPLICATION.CFC.SESSION.getHostSession().isExitsLogin AND NOT ListFind("login,overview,logout", URL.section) ) {
+		if ( APPLICATION.CFC.SESSION.getHostSession().isMenuBlocked AND NOT APPLICATION.CFC.SESSION.getHostSession().isExitsLogin AND NOT ListFind("login,checkList,overview,logout", URL.section) ) {
 			URL.section = "overview";
 		} 
 		
