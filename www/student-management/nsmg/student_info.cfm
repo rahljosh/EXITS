@@ -630,17 +630,17 @@
 					<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#qGetStudentInfo.studentID#', 700, 500);" class="nav_bar">Representative Payments</a> 					
                     <a href="javascript:openPopUp('forms/missing_documents.cfm', 450, 500);" class="nav_bar">Missing Documents</a>
 					<a href="javascript:openPopUp('forms/notes.cfm', 450, 500);" class="nav_bar"><cfif LEN(qGetStudentInfo.notes)><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Notes</a> 	
-                    <a href="javascript:openPopUp('forms/ssp.cfm?studentid=#CLIENT.studentid#', 600, 450);" class="nav_bar">Student Services Project</a>	
+                    <a href="javascript:openPopUp('forms/ssp.cfm?studentid=#CLIENT.studentid#', 600, 450);" class="nav_bar">Student Issues</a>	
 				</cfif> 
                 
 				<!--- OFFICE - MANAGERS ONLY --->
 				<cfif CLIENT.usertype LTE 5> 
 					<a href="" onClick="javascript: win=window.open('forms/profile_adjustments.cfm', 'Settings', 'height=500, width=663, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Profile Adjustments</a>		
                 </cfif> 
-                <!----Blocking to test load				
+                		
 				<!----All Users---->				
 				<a href="" onClick="javascript: win=window.open('virtualfolder/list_vfolder.cfm?unqid=#qGetStudentInfo.uniqueid#', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><cfif VAL(getVirtualFolder.recordcount)><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Virtual Folder</a>
-                ---->
+             
 				<!--- OFFICE USERS ONLY --->
 				<cfif APPLICATION.CFC.USER.isOfficeUser()>
                 	<a href="" onClick="javascript: win=window.open('virtualfolder/list_ivfolder.cfm?unqid=#qGetStudentInfo.uniqueid#', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><cfif VAL(getInternalVirtualFolder.recordcount)><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Internal Virtual Folder</a>
