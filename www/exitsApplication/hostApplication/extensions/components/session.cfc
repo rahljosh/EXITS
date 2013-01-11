@@ -171,9 +171,21 @@
 	</cffunction>
 
 
+	<cffunction name="setHostSessionApplicationStatus" access="public" returntype="void" output="false" hint="Set an specific Session Variables">
+        <cfargument name="applicationStatus" default="" hint="applicationStatus">
+        
+        <cfscript>
+			if ( listFind("7,8,9", ARGUMENTS.applicationStatus) ) {
+				SESSION.HOST.applicationStatus = ARGUMENTS.applicationStatus;	
+			}
+		</cfscript>
+		
+	</cffunction>
+
+
 	<!--- Set Host Session Menu As Blocked --->
-	<cffunction name="setHostSessionisMenuBlocked" access="public" returntype="void" output="false" hint="Set Host Session Variables">
-        <cfargument name="isMenuBlocked" default="false" hint="email">
+	<cffunction name="setHostSessionisMenuBlocked" access="public" returntype="void" output="false" hint="Set an specific Session Variables">
+        <cfargument name="isMenuBlocked" default="false" hint="isMenuBlocked">
         
         <cfscript>
 			// Disable Menu
