@@ -111,7 +111,7 @@
                     <tr>
                         <td align="center">
                             <cfif qGetHostFamilyInfo.hostAppStatus LTE 7>
-                                <strong><u>Submitted!</u></strong>
+                                <p><strong><u>Submitted!</u></strong></p>
                             <cfelse>
                                 <a href="index.cfm?section=checkList" style="text-align: left;">Review Checklist</a>
                             </cfif>

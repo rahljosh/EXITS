@@ -11,6 +11,7 @@
 
 <cfsilent>
 
+
     <!--- Import CustomTag Used for Page Messages and Form Errors --->
     <cfimport taglib="extensions/customTags/gui/" prefix="gui" />	
 
@@ -316,25 +317,27 @@
 
 	
     <!--- Submit Application --->
-    <table class="greenBackground" cellpadding="8">
-        <tr>
-            <cfif stApplicationStatus.isComplete>
-                <td>
-                    Happy with how everything looks?  Click the button to the right to submit your application.
-                </td>
-                <td>
-                    <a href="disclaimer.cfm" class="iframe"><img src="images/buttons/#SESSION.COMPANY.submitImage#"/></a>
-                </td>
-            <cfelse>
-                <td>
-                    Looks like your still missing some information, please review the sections listed above. 
-                    The botton to the right will not be active (the arrow will turn red) until all the required information above has been filled out. 
-                </td>
-                <td>
-                    <img src="images/buttons/#SESSION.COMPANY.submitGreyImage#" />
-                </td>
-            </cfif>
-        </tr>
-    </table>
+    <cfif ListFind("8,9", APPLICATION.CFC.SESSION.getHostSession().applicationStatus)>
+        <table class="greenBackground" cellpadding="8">
+            <tr>
+                <cfif stApplicationStatus.isComplete>
+                    <td>
+                        Happy with how everything looks?  Click the button to the right to submit your application.
+                    </td>
+                    <td>
+                        <a href="disclaimer.cfm" class="iframe"><img src="images/buttons/#SESSION.COMPANY.submitImage#"/></a>
+                    </td>
+                <cfelse>
+                    <td>
+                        Looks like your still missing some information, please review the sections listed above. 
+                        The botton to the right will not be active (the arrow will turn red) until all the required information above has been filled out. 
+                    </td>
+                    <td>
+                        <img src="images/buttons/#SESSION.COMPANY.submitGreyImage#" />
+                    </td>
+                </cfif>
+            </tr>
+        </table>
+	</cfif>        
 
 </cfoutput>

@@ -346,15 +346,7 @@
 
 </cfsilent>
 
-<script language="javascript">
-	// JQuery Document Ready
-	$(document).ready(function() {
-		// Call animated scroll to anchor/id function - This will scroll up the page to the student detail div
-		//$('html,body').animate({scrollTop: $("#hostFamilyHeader").offset().top},'fast');
-		// Set focus to the first field
-		$("#familylastname").focus();
-	});
-
+<script type="text/javascript">
 	function ShowHide(){
 		$("#slidingDiv").animate({"height": "toggle"}, { duration: 300 });
 	}
