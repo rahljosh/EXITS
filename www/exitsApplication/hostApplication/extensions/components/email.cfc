@@ -66,11 +66,11 @@
                 <div class="thin-border">
                     <table background="#SESSION.COMPANY.exitsURL#nsmg/pics/email_textured_background.png" width="700px">
                         <tr>
-                            <td width="94"><img src="#SESSION.COMPANY.exitsURL#nsmg/pics/logos/#SESSION.COMPANY.ID#_header_logo.png"></td>
+                            <td width="94"><img src="#SESSION.COMPANY.exitsURL#nsmg/pics/logos/#SESSION.COMPANY.ID#_header_logo.png" border="0"></td>
                             <td><strong><font size=+2>#SESSION.COMPANY.name#</font></strong></td>
                         </tr>	
                         <tr>
-                            <td colspan="2"><img src="#SESSION.COMPANY.exitsURL#nsmg/pics/logos/#SESSION.COMPANY.ID#_px.png" height="12" width="100%"></td>
+                            <td colspan="2"><img src="#SESSION.COMPANY.exitsURL#nsmg/pics/logos/#SESSION.COMPANY.ID#_px.png" height="12" width="100%" border="0"></td>
                         </tr>
                     </table>
                     

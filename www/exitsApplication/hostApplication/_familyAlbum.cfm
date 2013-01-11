@@ -211,7 +211,7 @@
                             <span style="float:left; margin-right:3px;">
                                 <label for="#qGetUploadedImages.ID#" style="font-weight:bold;">
                                 	<span style="display:block; margin-bottom:5px;">#qGetUploadedImages.documentType#</span>
-                                	<img src="#APPLICATION.CFC.SESSION.getHostSession().PATH.relativeAlbumThumbs##qGetUploadedImages.fileName#">
+                                	<img src="#APPLICATION.CFC.SESSION.getHostSession().PATH.relativeAlbumThumbs##qGetUploadedImages.fileName#" border="0">
                                     <!--- <cfimage action="writeToBrowser" source="#APPLICATION.CFC.SESSION.getHostSession().PATH.albumThumbs##qGetUploadedImages.fileName#"> --->
                                 </label>
                             </span>    
@@ -223,7 +223,7 @@
                          
                         <div style="display:block; margin:3px 0 5px 0;"> 
                             <a href="index.cfm?section=familyAlbum&deleteImageID=#qGetUploadedImages.ID#" onClick="return confirm('Are you sure you want to delete the #qGetUploadedImages.documentType# picture?')">
-                                <img src="images/buttons/deleteGreyRed.png" height="30" border="0" />
+                                <img src="images/buttons/deleteGreyRed.png" height="30" border="0"/>
                             </a>
                         </div>
                     </td>

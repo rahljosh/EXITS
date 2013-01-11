@@ -213,7 +213,7 @@
     <div class="loginBox">
         
         <p align="center" style="margin:5px 5px 30px 5px;">
-            <img src="images/LoginIcon_2.png" width="196" height="140" align="" /> <br />
+            <img src="images/LoginIcon_2.png" width="196" height="140" border="0" /> <br />
         </p>
     
         <table align="center" cellpadding="4" cellspacing="0">
