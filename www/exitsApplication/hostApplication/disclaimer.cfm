@@ -47,12 +47,17 @@
             <cfif stResult.isSuccess>
             	
                 <cfscript>
+					vApprovedStatus = 7;
+				
 					// Get Host Family Info - Accessible from any page
 					qGetHostFamilyInfo = APPLICATION.CFC.HOST.getHosts(hostID=APPLICATION.CFC.SESSION.getHostSession().ID);				
 					
+					// Set New Status
+					APPLICATION.CFC.SESSION.setHostSessionApplicationStatus(applicationStatus=vApprovedStatus);
+					
 					// Disable Left Menu Navigation
 					APPLICATION.CFC.SESSION.setHostSessionisMenuBlocked(isMenuBlocked=true);
-					
+							
 					// Set Page Message
 					SESSION.pageMessages.Add("Host Family Application Succesfully Submited");
 					SESSION.pageMessages.Add("This window should close shortly");
@@ -62,7 +67,7 @@
                     UPDATE 
                         smg_hosts
                     SET 
-                        hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="7">
+                        hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="#vApprovedStatus#">
                     WHERE
                         hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
                 </cfquery>
