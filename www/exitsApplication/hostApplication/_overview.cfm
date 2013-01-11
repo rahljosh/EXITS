@@ -94,7 +94,7 @@
                             <table border="0" cellpadding="0" cellspacng="0" width="300" align="center">
                                 <tr>
                                     <td colspan="5" align="left" style="border:1px solid ##03518d;">
-                                        <img src="images/gradient.png" alt="Percentage Complete" name="Percent Complete" width="#stApplicationStatus.applicationProgress#" height="15" />
+                                        <img src="images/gradient.png" alt="Percentage Complete" name="Percent Complete" width="#stApplicationStatus.applicationProgress#" height="15" border="0" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -212,7 +212,7 @@
 						<p><strong>Your application is complete!</strong> Happy with how everything looks? Click the button to the right to submit your application.</p>
                         
                         <p align="center">
-                        	<a href="disclaimer.cfm" class="iframe"><img src="images/buttons/#SESSION.COMPANY.submitImage#"/></a>
+                        	<a href="disclaimer.cfm" class="iframe"><img src="images/buttons/#SESSION.COMPANY.submitImage#" border="0"/></a>
                         </p>
                         
                     <cfelse>
