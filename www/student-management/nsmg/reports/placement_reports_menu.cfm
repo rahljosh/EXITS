@@ -265,7 +265,7 @@
     <table cellpadding=6 cellspacing="0" align="center" width="97%">
         <tr>
             <td width="50%" align="left" valign="top">
-                <form action="reports/document_tracking.cfm" method="POST" target="blank">
+                <form action="reports/missingDocTracking.cfm" method="POST" target="blank">
                     <table class="nav_bar" cellpadding=6 cellspacing="0" width="100%">
                         <tr><th colspan="3" bgcolor="##e2efc7">Missing Placement Docs</th></tr>
                         <tr align="left">
@@ -291,8 +291,8 @@
                         <tr align="left">
                             <td>Documents to Show :</td>
                             <td>
-                                <input type="radio" name="docType" id="docType" value="Place" checked="checked"> <label for="activeNo">Placement</label>  
-                                <input type="radio" name="docType" id="docType" value="complinace" > <label for="ativeYes">Compliance</label>
+                                <input type="radio" name="docShow" id="docShow" value="placement" checked="checked"> <label for="activeNo">Placement</label>  
+                                <Cfif client.usertype lte 4><input type="radio" name="docShow" id="docShow" value="compliance" > <label for="ativeYes">Compliance</label></Cfif>
                             </td>
                         </tr>
                          <tr align="left">
