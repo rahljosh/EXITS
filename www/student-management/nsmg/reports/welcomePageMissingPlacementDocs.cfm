@@ -9,7 +9,7 @@
     <h3>There are<strong> #numberHostProbs.recordcount#</strong> host families with issues on their applications.</h3>
             </td>
             <td align="center">
-            <a href="reports/HostAppMissingDocuments.cfm" target="_new"><img src="pics/buttons/viewFullReport.png" height=30/></a>
+            <a href="reports/HostAppMissingDocuments.cfm" target="_new"><img src="pics/buttons/viewFullReport.png" height=30 border=0/></a>
             </td>
             <td align="right"><div style="cursor:pointer" onclick="hide('expand1')"></div></td>
         </Tr>
@@ -39,7 +39,7 @@
         
         <cfif client.usertype lte 4>
         <tr <Cfif regions.currentrow mod 2>bgcolor="##90B2D5"<Cfelse>bgcolor="##efefef"</cfif>>
-          <td><a href="reports/HostAppMissingDocuments.cfm?region=#regionassigned#" target="_new"><font color="black">#regionname#</font></a></td><td align="right">Apps with issues: #appsInRegion.recordcount#</td>
+          <td><a href="reports/HostAppMissingDocuments.cfm?region=#regionassigned#" target="_new"><font color="black">#regionname#</font></a></td><td align="right"> #appsInRegion.recordcount#</td>
         </tr>
         </cfif>
         <cfif client.usertype gt 4>
@@ -54,7 +54,7 @@
                 
             <cfif client.usertype neq 7>
             <tr bgcolor="##7aaac7">
-                <td><a href="reports/HostAppMissingDocuments.cfm?rep=#arearepid#" target="_new"><font color="black">Representative: #repFirst# #repLast# (#arearepid#)</font></a></td><td align="right"> Apps with Issues: #studentList.recordcount#</td>
+                <td><a href="reports/HostAppMissingDocuments.cfm?rep=#arearepid#" target="_new"><font color="black">Representative: #repFirst# #repLast# (#arearepid#)</font></a></td><td align="right"> #studentList.recordcount#</td>
             </tr>
              </cfif>
              
