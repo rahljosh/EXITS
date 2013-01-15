@@ -22,29 +22,16 @@
     
 <cfquery name="qGetHostAppsReceived" datasource="#application.dsn#">
 			select distinct hh.dateReceived, s.firstName as studentFirst, s.familylastname as studentLast, s.studentid, s.regionassigned, s.arearepid, h.hostid,
- s.programID, p.programname, h.familylastname as hostLast,  u.firstname as repFirst, u.lastname as repLast, p.programname, r.regionname
-from smg_hosthistory hh
-left join smg_students s on s.studentid = hh.studentid
-left join smg_programs p on p.programID = s.programID
-left join smg_hosts h on h.hostid = hh.hostid
-left join smg_regions r on r.regionid = s.regionassigned
- left join smg_users u  on u.userid = s.arearepid
-
-
-		<!----
-            select distinct s.hostID,  s.firstname as studentFirst, s.familylastname as studentLast, s.studentid, s.regionassigned, s.arearepid,
-            u.firstname as repFirst, u.lastname as repLast,
-            hh.dateReceived,
-          
-             u.firstname as repFirst, u.lastname as repLast,
-            p.programname, r.regionname
-            from smg_students s
-            left outer join smg_hostHistory hh on hh.hostID = s.hostid
-           
-            left join smg_programs p on p.programid = s.programid
+             s.programID, p.programname, h.familylastname as hostLast,  u.firstname as repFirst, u.lastname as repLast, p.programname, r.regionname,
+             hh.datePlaced
+            from smg_hosthistory hh
+            left join smg_students s on s.studentid = hh.studentid
+            left join smg_programs p on p.programID = s.programID
+            left join smg_hosts h on h.hostid = hh.hostid
             left join smg_regions r on r.regionid = s.regionassigned
             left join smg_users u  on u.userid = s.arearepid
-			---->
+
+
         	
             <Cfif client.usertype lte  4>
                  where s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
@@ -67,7 +54,7 @@ left join smg_regions r on r.regionid = s.regionassigned
             </Cfif>
             and s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
             and hh.hostid > <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-            
+            and hh.datePlaced is not null
             order by s.programid desc, studentLast
          </cfquery>
          
