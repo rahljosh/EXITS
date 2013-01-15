@@ -173,13 +173,13 @@
     
     <tr>
         <td>
-            <ul class="mainList">
-                <li onclick="loadSelectedReport('studentProgressReports');">Progress Reports</li>
+              <ul class="mainList">
+                <li onclick="loadSelectedReport('studentCompliancePaperwork');">Compliance Placement Paperwork by Region</li>
                 <ul>
-                    <li>Generate a report of missing/approved/not approved progress reports</li>
-                    <li>Filter by: program, region, month, and status (missing, approved, not approved)</li>
+                    <li>Generate a list of all students in your region and paperwork that is not compliant.</li>
+                    <li>Filter by: Rep (place vs super), program, date placed</li>
 				</ul>
-            </ul>  
+            </ul>
         </td>
         <td>
         	<ul class="mainList">
@@ -200,6 +200,21 @@
             </ul> 
         </td>
 	</tr> 
+    <tr>
+    	<td>
+        	<ul class="mainList">
+                <li onclick="loadSelectedReport('studentProgressReports');">Progress Reports</li>
+                <ul>
+                    <li>Generate a report of missing/approved/not approved progress reports</li>
+                    <li>Filter by: program, region, month, and status (missing, approved, not approved)</li>
+				</ul>
+            </ul> 
+         </td>
+         <td>
+         </td>
+         <td class="right">
+         </td>
+    </tr>
 </table>    
 
     

@@ -48,7 +48,7 @@
 	
     
     <!--- List of Student Management Reports --->
-    <cfcase value="studentByRegion,studentFlightInformation,studentHelpCommunityService,studentPlacementPaperworkByRegion,studentRelocation,studentProgressReports,studentSecondVisitRepCompliance,studentDoublePlacementPaperworkByRegion,studentDoublePlacementPaperworkByIntlRep">
+    <cfcase value="studentByRegion,studentFlightInformation,studentHelpCommunityService,studentPlacementPaperworkByRegion,studentRelocation,studentProgressReports,studentSecondVisitRepCompliance,studentDoublePlacementPaperworkByRegion,studentDoublePlacementPaperworkByIntlRep,studentCompliancePaperwork">
 
         <cfinclude template="studentManagement/_#action#.cfm" />
 
