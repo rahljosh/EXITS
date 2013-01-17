@@ -1690,7 +1690,7 @@
                             </select>
                             
                             <p class="formNote">
-                            	List of students assigned to the #qGetHostInfo.familyLastName# family
+                            	List of students assigned to the family
 							</p>
 
                             <!--- Display only if it's an update --->
