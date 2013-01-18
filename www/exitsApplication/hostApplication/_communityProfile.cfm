@@ -18,7 +18,6 @@
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.population" default="">
     <cfparam name="FORM.nearbigCity" default="">
-    <cfparam name="FORM.local_air_code" default="">
     <cfparam name="FORM.major_air_code" default="">
     <cfparam name="FORM.wintertemp" default="">
     <cfparam name="FORM.summertemp" default="">
@@ -65,11 +64,6 @@
                 SESSION.formErrors.Add("Please indicate the nearest town over 30,000 people.");
             }
 
-			// local_air_code
-            if( NOT LEN(TRIM(FORM.local_air_code)) ) {
-                SESSION.formErrors.Add("Please indicate your local airport code.");
-            }
-            
 			// major_air_code
             if( NOT LEN(TRIM(FORM.major_air_code)) ) {
                 SESSION.formErrors.Add("Please indicate your major airport code.");
@@ -128,7 +122,6 @@
                     population = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.population#">,
                     near_city_dist = <cfqueryparam cfsqltype="cf_sql_varchar" value="#vCityDistance#">,
                     nearbigCity = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.nearbigCity#">,
-                    local_air_code = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.local_Air_code#">,
                     major_air_code = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.major_air_code#">,
                     wintertemp = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.wintertemp#">,
                     summertemp = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.summertemp#">,
@@ -165,7 +158,6 @@
 			FORM.population = qGetHostFamilyInfo.population;
 			FORM.near_city_dist = qGetHostFamilyInfo.near_city_dist;
 			FORM.nearbigCity = qGetHostFamilyInfo.nearbigcity;
-			FORM.local_air_code = qGetHostFamilyInfo.local_air_code;
 			FORM.major_air_code = qGetHostFamilyInfo.major_air_code;
 			FORM.wintertemp = qGetHostFamilyInfo.wintertemp;
 			FORM.summertemp = qGetHostFamilyInfo.summertemp;
@@ -184,31 +176,6 @@
 			FORM.terrain3_desc = qGetHostFamilyInfo.terrain3_desc;  
 			FORM.special_cloths = qGetHostFamilyInfo.special_cloths;
 			FORM.point_interest = qGetHostFamilyInfo.point_interest;
-        </cfscript>
-        
-    </cfif>
-    
-    <!---- Attempt to get local airport --->
-    <cfif NOT LEN(FORM.local_air_code)>
-    
-        <cfquery name="qGuessLocalAirport" datasource="#APPLICATION.DSN.Source#">
-            SELECT 
-            	*
-            FROM	 
-            	smg_airports
-            WHERE 
-            	city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostFamilyInfo.city#">
-            AND 
-            	state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostFamilyInfo.state#">
-            AND
-            	aircode != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-			LIMIT 1                
-        </cfquery>
-    
-        <cfscript>
-			if ( qGuessLocalAirport.recordcount ) {
-        		FORM.local_air_code = qGuessLocalAirport.aircode;
-			}
         </cfscript>
         
     </cfif>
@@ -390,18 +357,6 @@
         <h3>Airports</h3>
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
-            <tr>	
-                <td class="label">Your local Airport: <span class="required">*</span></td>
-                <td class="form_text">
-                    <select data-placeholder="Enter City, Airport or Airport Code" class="chzn-select" style="width:350px;" tabindex="2" name="local_air_code">
-                        <option value=""></option>
-                        <cfloop query="qGetAirportList">
-                            <option value="#airCode#" <cfif '#trim(FORM.local_air_code)#' EQ '#trim(airCode)#'>selected</cfif>>#aircode# - #airportName# - #city#, #state#</option>
-                        </cfloop>
-                    </select>
-				</td>
-            </tr>
-        
             <tr bgcolor="##deeaf3" >
                 <td class="label">Major Airport: <span class="required">*</span></td>
                 <td class="form_text">
