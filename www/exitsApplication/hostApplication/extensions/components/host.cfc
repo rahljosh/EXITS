@@ -806,11 +806,6 @@
                 SESSION.formErrors.Add("Please indicate the nearest town over 30,000 people.");
             }
 
-			// local_air_code
-            if( NOT LEN(TRIM(qGetHostInfo.local_air_code)) ) {
-                SESSION.formErrors.Add("Please indicate your local airport code.");
-            }
-            
 			// major_air_code
             if( NOT LEN(TRIM(qGetHostInfo.major_air_code)) ) {
                 SESSION.formErrors.Add("Please indicate your major airport code.");
