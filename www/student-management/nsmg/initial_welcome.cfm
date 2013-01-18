@@ -584,6 +584,8 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                     
                     <div class="rdbox">
 						<cfif CLIENT.companyID lte 5>
+                         There are currently no available bonuses
+                         <!----
                             <table width="90%" align="center" cellpadding="4">
                                 <tr>
                                     <td width=22><img src="pics/icons/bonus.png" /></td>
@@ -598,6 +600,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                                     <td><a href="slideshow/pdfs/CASE/CEOBonus.pdf" target="_blank">CEO Placement Bonus</a></td>
                                 </tr>
                             </table>
+							---->
                         <cfelse>
                             There are currently no available bonuses
                         </cfif>
