@@ -510,14 +510,13 @@
     
    
     <!---Regional Manager  ---->
-    <Cfquery name ="RegionalManager" datasource="#application.dsn#">
-    select firstname, lastname, email
-    from smg_users
-    left join user_access_rights uar on uar.userid = smg_users.userid
-    where uar.usertype = 5 
-    and uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.regionassigned#">
-    
-    </Cfquery>
+    <cfquery name ="RegionalManager" datasource="#application.dsn#">
+    	SELECT firstname, lastname, email
+    	FROM smg_users
+    	LEFT JOIN user_access_rights uar on uar.userid = smg_users.userid
+    	WHERE uar.usertype = 5
+    	AND uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.regionassigned)#">
+    </cfquery>
 
 </cfsilent>
 
