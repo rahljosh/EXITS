@@ -45,7 +45,7 @@ under:active {
 	padding-right: 0px;
 	padding-bottom: 0px;
 	padding-left: 0px;
-	height: 1865px;
+	height: 2030px;
 }
 .clearFixLG {
 	display: block;
@@ -319,43 +319,57 @@ under:active {
             <tr>
             	<td>&nbsp;</td>
             </tr>
-            <tr>
-              <th class="lightGreen" scope="row"><img src="images/webstore/carmagnet-01.jpg" width="225" height="150" border="1" /></th>
+            <!----Water Bottle and Bracelet---->
+             <tr>
+              <th class="lightGreen" scope="row"><img src="images/webstore/waterbottle.jpg"  height="150" border="1" /></th>
               <td>&nbsp;</td>
-              <td class="lightGText">
-             <strong> Ordering a magnet? </strong><Br /><Br /> Once your order is processed, you will be contacted regarding the information you would like on the magnet.
-              <!----
-              <cfif not isDefined('form.sendEmail')>
-			  <cfoutput>
-  <cfform id="RequestInfo" name="RequestInfo" method="post" action="#CGI.SCRIPT_NAME#">
-  <cfinput type="hidden" name="sendEmail" value=1/>
-              <p>If you are ordering the magnet, <br>
-                please fill out form below.</p>
-                
-                  Territory:
-                    <cfinput type="text" name="Territory" required="yes"><br />
-                  Full Name: 
-                  <cfinput type="text" name="fullname" required="yes"><br />
-                  Phone:&nbsp; &nbsp; 
-                  <cfinput type="text" name="phone" required="yes"><br />
-                  Email:&nbsp; &nbsp; &nbsp; 
-                  <cfinput type="text" name="email" required="yes"><br />
-                  Website:
-                  <cfinput type="text" name="website" required="yes"><br />
-                  <cfinput type="submit" name="submit" value="Submit" />
-      </cfform>
-                
-</cfoutput>
-<cfelse>
-<p class="paragraphText"><STRONG>THANK YOU FOR SUBMITTING YOUR INFORMATION <br>
-  FOR A PERSONALIZED ISE MAGNET.</STRONG></p>
-<p class="paragraphText">AN ISE REPRESENTATIVE WILL BE SENDING YOU<br>
-AN ARTWORK PROOF FOR YOUR APPROVAL.</p>
-              </cfif>
-               --->
-              <p><a href="mailto:budge@iseusa.com"></a><a href="pdfs/carmagnetInfo.pdf" title="Car Magnet Info" target="_blank"></a></p></td>
+              <th class="lightGreen"><img src="images/webstore/bracelet.jpg" width="200" height="150" border="1" /></th>
             </tr>
             <tr>
+              <th class="lightGreen" scope="row"><FORM action="http://www.coolcart.net/shop/coolcart.aspx/studentmanagement" method=post name="waterBottle" id="waterBottle" target="loja">
+              Sport Water Bottle<br />
+                <img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
+			<INPUT NAME="Qty" class="style1" VALUE="" size=3>
+     		 Quantity - <strong>$2.00</strong> each 
+ 			 <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'>
+            <INPUT TYPE="HIDDEN" NAME="ID" VALUE="WTR">
+            <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Water Bottle">
+            <INPUT TYPE="HIDDEN" NAME="Price" VALUE="2.00">
+            <INPUT TYPE="HIDDEN" NAME="Ship" VALUE="">
+            <INPUT TYPE="HIDDEN" NAME="Multi" VALUE="Y">
+                
+                <br />
+                 <INPUT TYPE="image" src="images/webstore/addtoCart.png" class="style1"  VALUE="Add to Cart">
+                </FORM></th>
+              <td>&nbsp;</td>
+              <th class="lightGreen"><FORM action="http://www.coolcart.net/shop/coolcart.aspx/studentmanagement" method=post name="bag" id="bag" target="loja">
+              Bracelet<br />
+                <img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
+			<INPUT NAME="Qty" class="style1" VALUE="" size=3>
+     		 Quantity - <strong>$1.50</strong> each 
+ 			 <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'>
+            <INPUT TYPE="HIDDEN" NAME="ID" VALUE="BRC">
+            <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Bracelet">
+            <INPUT TYPE="HIDDEN" NAME="Price" VALUE="1.50">
+            <INPUT TYPE="HIDDEN" NAME="Ship" VALUE="">
+            <INPUT TYPE="HIDDEN" NAME="Multi" VALUE="Y">
+                
+                <br />
+                 <INPUT TYPE="image" src="images/webstore/addtoCart.png" class="style1"  VALUE="Add to Cart">
+              </FORM></th>
+            </tr>
+            <tr>
+            	<td>&nbsp;</td>
+            </tr>
+            
+            <tr>
+              <th class="lightGreen" scope="row"><img src="images/webstore/carmagnet-01.jpg" width="225" height="150" border="1" /></th>
+             
+               <td>&nbsp;</td>
+              <th class="lightGreen"><img src="images/webstore/backpack.jpg"  height="150" border="1" /></th>
+              
+           </tr>
+           
               <th class="lightGreen" scope="row"><FORM action="http://www.coolcart.net/shop/coolcart.aspx/studentmanagement" method=post name="bag" id="bag" target="loja">
               Magnets - Fully Personalized 12&quot; x 18&quot;<br />
                 <img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
@@ -370,8 +384,24 @@ AN ARTWORK PROOF FOR YOUR APPROVAL.</p>
                 
                 <br />
                  <INPUT TYPE="image" src="images/webstore/addtoCart.png" class="style1"  VALUE="Add to Cart">
-                </FORM></th>
+                </FORM>
+               </th>
               <td>&nbsp;</td>
+              <th class="lightGreen" scope="row"><FORM action="http://www.coolcart.net/shop/coolcart.aspx/studentmanagement" method=post name="waterBottle" id="waterBottle" target="loja">
+              Backpack<br />
+                <img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
+			<INPUT NAME="Qty" class="style1" VALUE="" size=3>
+     		 Quantity - <strong>$3.50</strong> each 
+ 			 <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'>
+            <INPUT TYPE="HIDDEN" NAME="ID" VALUE="BAK">
+            <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Backpack">
+            <INPUT TYPE="HIDDEN" NAME="Price" VALUE="3.50">
+            <INPUT TYPE="HIDDEN" NAME="Ship" VALUE="">
+            <INPUT TYPE="HIDDEN" NAME="Multi" VALUE="Y">
+                
+                <br />
+                 <INPUT TYPE="image" src="images/webstore/addtoCart.png" class="style1"  VALUE="Add to Cart">
+                </FORM></th>
               <th class="lightGreen"><FORM action="http://www.coolcart.net/shop/coolcart.aspx/studentmanagement" method=post name="bag" id="bag" target="loja">
               </FORM></th>
             </tr>
