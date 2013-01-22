@@ -335,27 +335,25 @@
         </td>
 	</tr>   
     <tr>
-        <td class="lastRow">&nbsp;
+        <td>&nbsp;
 			<ul class="mainList">
-                <li onclick="loadSelectedReport('officeRecruitmentReport');">Recruitment Report</li>
+                <li onclick="loadSelectedReport('officeRegionGoalByProgram');">Region Goal by Program</li>
                 <ul>
-                    <li>Generate a total by region of new area reps</li>
-                    <li>Filter by: Region, Season</li>
+                    <li>Generate a report of allocations by company and region</li>
+                    <li>Filter by: program, August/January goals, region</li>
 				</ul>
             </ul>
         </td>
-        <td class="lastRow"><ul class="mainList">
-          <li onclick="loadSelectedReport('officeComplianceStateCountry');">Compliance Students per State / Country</li>
-          <ul>
-            <li>Breakdown of students per State &amp; Country</li>
-            <li>Filter by: Program</li>
-          </ul>
-        </ul>
-        	
-			
-           
-        </td>
-        <td class="lastRow right">
+        <td>
+        	<ul class="mainList">
+          		<li onclick="loadSelectedReport('officeComplianceStateCountry');">Compliance Students per State / Country</li>
+              	<ul>
+                	<li>Breakdown of students per State &amp; Country</li>
+                	<li>Filter by: Program</li>
+              	</ul>
+         	</ul>
+     	</td>
+        <td class="right">
 			<ul class="mainList">
                 <li onclick="loadSelectedReport('officeDOSRelocation');">DOS Relocation</li>
                 <ul>
@@ -364,7 +362,18 @@
 				</ul>
             </ul>
         </td>
-	</tr> 
+	</tr>
+    <tr>
+        <td class="lastRow">&nbsp;
+            <ul class="mainList">
+                <li onclick="loadSelectedReport('officeRecruitmentReport');">Recruitment Report</li>
+                <ul>
+                    <li>Generate a total by region of new area reps</li>
+                    <li>Filter by: Region, Season</li>
+                </ul>
+            </ul>
+        </td>
+    </tr>
 </table> 
 
 
