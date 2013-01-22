@@ -111,16 +111,20 @@ order by ARQ.id
 	<cfquery name="markApproved" datasource="#application.dsn#">
     update hostRefQuestionaireTracking
     set 
-    	<Cfif usertype eq 7>
-        arApproved = 
-        <cfelseif usertype eq 6>
-        rmApproved = 
-        <cfelseif usertype eq 5>
-        rdApproved = 
-        <cfelseif usertype lte 4>
-        nyApproved = 
+    	isSubmitted = <cfqueryparam cfsqltype="cf_sql_bit" value="1">,
+    	<Cfif client.usertype eq 7>
+            areaRepStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="approved">,
+            areaRepDateStatus = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+        <cfelseif client.usertype eq 6>
+            regionalAdvisorStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="approved">,
+            regionalAdvisorDateStatus = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+        <cfelseif client.usertype eq 5>
+            regionalManagerStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="approved">,
+            regionalManagerDateStatus = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+        <cfelseif client.usertype lte 4>
+            facilitatorStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="approved">,
+            facilitatorDateStatus = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
         </Cfif>
-        <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
     where  fk_ReferencesID = <cfqueryparam cfsqltype="cf_sql_integer" value="#questionTracking.fk_ReferencesID#"> 
     </cfquery>
 	<Cfif client.usertype lte 5>

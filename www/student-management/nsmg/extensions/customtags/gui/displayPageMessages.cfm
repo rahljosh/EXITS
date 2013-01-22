@@ -99,7 +99,7 @@
 				<!--- Error displayed on divOnly --->
                 <cfcase value="divOnly">
 
-                    <div class="pageMessages">
+                    <div class="pageMessages" style="width:#ATTRIBUTES.width#;">
                     
                         <!--- Loop over the message --->
                         <cfloop from="1" to="#ArrayLen(ATTRIBUTES.pageMessages)#" index="i">

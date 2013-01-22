@@ -82,7 +82,7 @@
 }
 
 .datePicker {
-	width:80px;
+	width:100px;
 	border:1px solid #999;	
 }
 
@@ -109,6 +109,19 @@
 .xLargeField {
 	width : 260px;
 	border:1px solid #999;	
+}
+
+.smallTextArea {
+	height: 50px;
+	width : 300px;
+	border:1px solid #999;
+	display:block;
+}
+
+.mediumTextArea {
+	height: 50px;
+	width : 260px;
+	border:1px solid #999;
 }
 
 .largeTextArea {

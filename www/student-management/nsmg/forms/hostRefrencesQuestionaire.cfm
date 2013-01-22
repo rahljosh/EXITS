@@ -156,24 +156,29 @@ where active = 1
             </cfloop>
         <cfquery name="markApproved" datasource="#application.dsn#">
         update hostRefQuestionaireTracking
-        set 
+        set
+        	isSubmitted = <cfqueryparam cfsqltype="cf_sql_bit" value="1">,
     	<Cfif client.usertype eq 7>
-        arApproved = 
+            areaRepStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="approved">,
+            areaRepDateStatus = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
         <cfelseif client.usertype eq 6>
-        rmApproved = 
+            regionalAdvisorStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="approved">,
+            regionalAdvisorDateStatus = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
         <cfelseif client.usertype eq 5>
-        rdApproved = 
+            regionalManagerStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="approved">,
+            regionalManagerDateStatus = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
         <cfelseif client.usertype lte 4>
-        nyApproved = 
+            facilitatorStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="approved">,
+            facilitatorDateStatus = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
         </Cfif>
-        <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
-    where  id = <cfqueryparam cfsqltype="cf_sql_integer" value="#reportid.reportid#">
+    	where  id = <cfqueryparam cfsqltype="cf_sql_integer" value="#reportid.reportid#">
     </cfquery>
             <body onload="opener.location.reload()">
            
-            <SCRIPT LANGUAGE="JavaScript"><!--
-			setTimeout('self.close()',2000);
-			//--></SCRIPT>
+			<script language="javascript">
+                // Close Window After 1.5 Seconds
+                setTimeout(function() { parent.$.fn.colorbox.close(); }, 1500);
+            </script>
 		
             
             <div align="center">

@@ -191,7 +191,9 @@
 
 
 	<cffunction name="getProgressReportByID" access="public" returntype="query" output="false" hint="Gets a progress report by ID">
-    	<cfargument name="prID" default="0" hint="Progress Report ID">
+    	<cfargument name="prID" default="" hint="Progress Report ID">
+        <cfargument name="hostID" default="" hint="host ID">
+        <cfargument name="reportType" default="" hint="Report Type">
               
         <cfquery 
 			name="qGetProgressReportByID" 
@@ -220,7 +222,23 @@
                 FROM 
                 	progress_reports
                 WHERE 
-                	pr_ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.prID#">
+                	1 = 1
+                
+                <cfif LEN(ARGUMENTS.prID)>
+                    AND
+                        pr_ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.prID)#">
+                </cfif>                       	
+
+                <cfif LEN(ARGUMENTS.hostID)>
+                    AND
+                        fk_host = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+                </cfif>                       	
+
+                <cfif LEN(ARGUMENTS.reportType)>
+                    AND
+                        fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.reportType)#">
+                </cfif>                       	
+
 		</cfquery>
 		   
 		<cfreturn qGetProgressReportByID>
@@ -232,6 +250,93 @@
 		Second Visit Report
 	
 	----- ------------------------------------------------------------------------- --->
+
+	<cffunction name="getVisitInformation" access="public" returntype="query" output="false" hint="Gets the initial/second host family visit">
+    	<cfargument name="prID" default="" hint="Progress Report ID">
+        <cfargument name="hostID" default="" hint="host ID">
+        <cfargument name="reportType" default="" hint="Report Type">
+		
+        <cfquery 
+			name="qGetVisitInformation" 
+			datasource="#APPLICATION.dsn#">
+                SELECT 
+					pr.pr_ID,
+					pr.fk_student,
+                    pr.pr_uniqueID,
+                    pr.pr_month_of_report,
+                    pr.pr_sr_approved_date,
+                    pr.pr_ssr_approved_date,
+                    pr.pr_ra_approved_date,
+                    pr.pr_rd_approved_date,
+                    pr.pr_ny_approved_date,
+                    pr.pr_rejected_date,
+                    pr.fk_rejected_by_user,
+                    pr.pr_rejection_reason,
+                    pr.fk_sr_user,
+					pr.fk_ssr_user,
+                    pr.fk_ra_user,
+                    pr.fk_rd_user,
+                    pr.fk_ny_user,
+                    pr.fk_intrep_user,
+                    pr.fk_host,
+                    pr.fk_program,
+                    sva.ID,
+                    sva.fk_reportID,                    
+                    sva.fk_studentID,
+                    sva.neighborhoodAppearance,
+                    sva.avoid,
+                    sva.homeAppearance,
+                    sva.typeOfHome,
+                    sva.numberBedrooms,
+                    sva.numberBathrooms,
+                    sva.livingRoom,
+                    sva.diningRoom,
+                    sva.kitchen,
+                    sva.homeDetailsOther,
+                    sva.ownBed,
+                    sva.bathroom,
+                    sva.outdoorsFromBedroom,
+                    sva.storageSpace,
+                    sva.privacy,
+                    sva.studySpace,
+                    sva.pets,
+                    sva.other,
+                    sva.dateOfVisit,
+                    sva.dateCompliance,
+                    sva.famImpression,
+                    sva.famInterested,
+                    sva.exchangeInterest,
+                    sva.livingYear,
+                    sva.famReservations,
+                    sva.dueFromDate,
+                    sva.dueToDate
+                FROM 
+                	progress_reports pr
+                LEFT OUTER JOIN    
+                    secondVisitAnswers sva ON sva.fk_reportID = pr.pr_ID
+                WHERE 
+                	1 = 1
+                    
+                <cfif LEN(ARGUMENTS.prID)>
+                    AND
+                        pr_ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.prID)#">
+                </cfif>                       	
+
+                <cfif LEN(ARGUMENTS.hostID)>
+                    AND
+                        fk_host = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+                </cfif>                       	
+
+                <cfif LEN(ARGUMENTS.reportType)>
+                    AND
+                        fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.reportType)#">
+                </cfif>   
+
+		</cfquery>
+        
+		<cfreturn qGetVisitInformation>
+	</cffunction>
+
     
 	<cffunction name="getSecondHostFamilyVisitReport" access="public" returntype="query" output="false" hint="Gets the second host family visit">
     	<cfargument name="studentID" hint="studentID is required">

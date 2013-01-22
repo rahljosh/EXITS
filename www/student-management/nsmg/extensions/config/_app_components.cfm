@@ -38,6 +38,9 @@
 	// Store the initialized Company object in the Application scope
 	APPLICATION.CFC.Company = CreateCFC("company").Init();
 
+	// Store the initialized document object in the Application scope
+	APPLICATION.CFC.document = CreateCFC("document").Init();
+
 	// Store the initialized Host object in the Application scope
 	APPLICATION.CFC.Host = CreateCFC("host").Init();
 
