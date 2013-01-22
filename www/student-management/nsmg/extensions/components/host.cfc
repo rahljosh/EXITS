@@ -696,20 +696,22 @@
                     <cfif LEN(ARGUMENTS.hostID)>
                         AND
                             h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
-                    </cfif>
+                    <cfelse>
+                    
+						<!--- ISE - Displays all apps |  OR APPLICATION.CFC.USER.isOfficeUser() --->
+                        <cfif ARGUMENTS.companyID EQ 5>
+                            AND          
+                                h.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                        <cfelseif VAL(ARGUMENTS.companyID)>
+                            AND          
+                                h.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#"> 
+                        </cfif>
+                        
+					</cfif>
                     
                     <cfif LEN(ARGUMENTS.statusID)>
                         AND
                             h.hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.statusID)#">
-                    </cfif>
-                    
-                    <!--- ISE - Displays all apps |  OR APPLICATION.CFC.USER.isOfficeUser() --->
-                    <cfif ARGUMENTS.companyID EQ 5>
-                        AND          
-                            h.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
-                    <cfelseif VAL(ARGUMENTS.companyID)>
-                        AND          
-                            h.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#"> 
                     </cfif>
                     
                     <cfswitch expression="#ARGUMENTS.userType#">
@@ -754,8 +756,7 @@
                              
                 ORDER BY 
                     regionName,
-                    familyLastName,
-                    applicationDenied
+                    familyLastName
 		</cfquery>
         
 		<cfreturn qGetApplicationList>
