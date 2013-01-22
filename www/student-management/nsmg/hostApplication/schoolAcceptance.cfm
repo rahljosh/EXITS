@@ -48,8 +48,6 @@
 			documentGroup="schoolAcceptance",
 			seasonID=APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID
 		);
-		
-		writedump(qGetSchoolAcceptance);abort;
 	</cfscript>
     
     <!--- FORM Submitted --->
