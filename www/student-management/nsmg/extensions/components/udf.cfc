@@ -988,127 +988,6 @@
 	</cffunction>
 
     
-    <!-----Update the ToDoList, and if user is a Facilitor or Office person, update paperwork as well.---->
-	<cffunction name="updateHostAppToDoList" access="public" returntype="string">
-        <cfargument name="hostid" type="numeric" required="yes" default="" hint="Pass in host id you are updating">
-        <cfargument name="studentid" type="numeric" required="no" default="0" hint="student id of student assigned to host">
-        <Cfargument name="itemID" type="numeric" required="yes" default="0" hint="Item that is being approved">
-        <cfargument name="userType" type="numeric" required="yes" default="0" hint="the user type updating, so we know what date to insert.">
-        <cfargument name="denyApp" type="numeric" required="no" default="0" hint="the user type updating, so we know what date to insert.">
-        
-        
-        <!----Check if there is a record on file for this host.  First we check if any record exits for current student.  If not student is assigned, make sure only one non-studet assigned exits, we don't need multiple non-assigned records for any given host family.---->
-        
-        <cfquery name="checkRecord" datasource="#APPLICATION.DSN#">
-            SELECT
-             id, fk_studentid, fk_hostid
-            FROM
-                smg_ToDoListDates
-            WHERE 
-                fk_HostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostid)#">
-            AND
-            	itemID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.itemID)#">
-            <!----<cfif #VAL(ARGUMENTS.studentid)#>
-            AND
-                fk_StudentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentid)#">
-            </cfif>
-			---->
-           
-        </cfquery>
-       
-        
-        <Cfif checkRecord.recordcount gt 1>
-			<cfset status = 'Multiple records with out a student assigned.  Please contact IT.'>
-             <cfscript>
-                return(status);
-            </cfscript>
-        <Cfelseif checkRecord.recordcount eq 1>
-        	<Cfquery name="updateToDoList" datasource="#application.dsn#">
-        	update smg_ToDoListDates
-				set  
-                <Cfif val(ARGUMENTS.studentid)>
-                	fk_StudentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">,
-                </Cfif>
-                <cfif ARGUMENTS.denyApp eq 1>
-                	<Cfif ARGUMENTS.userType eq 7>
-                    	areaRepDenial 
-                    <cfelseif ARGUMENTS.userType eq 6>
-                    	regionalAdvisorDenial 
-                    <cfelseif ARGUMENTS.userType eq 5>
-                    	regionalDirectorDenial 
-                    <cfelseif ARGUMENTS.userType lte 4>
-                    	facDenial 
-                    </Cfif>
-                     = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.denyReason#">,
-                <Cfelse>
-                	<Cfif ARGUMENTS.userType eq 7>
-                    	areaRepDenial 
-                    <cfelseif ARGUMENTS.userType eq 6>
-                    	regionalAdvisorDenial 
-                    <cfelseif ARGUMENTS.userType eq 5>
-                    	regionalDirectorDenial 
-                    <cfelseif ARGUMENTS.userType lte 4>
-                    	facDenial 
-                    </Cfif>
-                     = <cfqueryparam cfsqltype="cf_sql_varchar" value="">,
-                </cfif>
-                	<Cfif ARGUMENTS.userType eq 7>
-                    	areaRepApproval 
-                    <cfelseif ARGUMENTS.userType eq 6>
-                    	regionalAdvisorApproval
-                    <cfelseif ARGUMENTS.userType eq 5>
-                    	regionalDirectorApproval
-                    <cfelseif ARGUMENTS.userType lte 4>
-                    	facApproval
-                    </Cfif>
-               
-                       =   <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">     
-                
-             WHERE id =  <cfqueryparam cfsqltype="cf_sql_integer" value="#checkRecord.id# ">   
-            </Cfquery>
-            <cfset status = 'Information Updated'>
-        <Cfelse>
-        	<Cfquery name="updateToDoList" datasource="#application.dsn#">
-        	insert into smg_ToDoListDates (
-				<Cfif ARGUMENTS.userType eq 7>
-                    	areaRepApproval 
-                    <cfelseif ARGUMENTS.userType eq 6>
-                    	regionalAdvisorApproval
-                    <cfelseif ARGUMENTS.userType eq 5>
-                    	regionalDirectorApproval
-                    <cfelseif ARGUMENTS.userType lte 4>
-                    	facApproval
-                    </Cfif>, itemID, fk_hostid, fk_studentid,
-                    
-						<Cfif ARGUMENTS.userType eq 7>
-                            areaRepDenial 
-                        <cfelseif ARGUMENTS.userType eq 6>
-                            regionalAdvisorDenial 
-                        <cfelseif ARGUMENTS.userType eq 5>
-                            regionalDirectorDenial 
-                        <cfelseif ARGUMENTS.userType lte 4>
-                            facDenial 
-                        </Cfif>
-                    
-               
-                    )
-      values(<cfqueryparam cfsqltype="cf_sql_date" value="#now()#">, <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.itemid# ">,
-      			       <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostid# ">, <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentid# ">, <cfif ARGUMENTS.denyApp eq 1><cfqueryparam cfsqltype="cf_sql_varchar" value="#form.denyReason#"><cfelse><cfqueryparam cfsqltype="cf_sql_varchar" value=""></cfif>)     
-      
-            </Cfquery>
-            <cfset status = 'Record Updated'>  
-        </Cfif>
-        
-        <cfif ARGUMENTS.userType LTE 4>
-        	<!----need t update final paperwork screen---->
-        </cfif>
-         	
-		<cfscript>
-            return status;
-        </cfscript>	
-        
-    </cffunction>
-    
     <!--- Insert pdf file to the internal virtual folder --->
     <cffunction name="insertInternalFile" access="public" returntype="string">
     	<cfargument name="filePath" type="string" required="yes" hint="The full path to the file that will be added">
@@ -1139,68 +1018,63 @@
         
  	</cffunction>
     
-     <!--- Send Compliance Log Email --->
+    
+    <!--- Send Compliance Log Email --->
     <cffunction name="sendComplianceLog" access="public" returntype="string">
-        
     	<cfargument name="email_to" type="string" required="yes" hint="pass in list of emails to sent to">
     	<cfargument name="stuNameID" type="string" required="yes" hint="pass in name and id of student with problem">
         <cfargument name="historyID" type="string" required="yes" hint="pass in historyID">
         <cfargument name="foreignTable" type="string" required="yes" hint="pass in historyID">
-    	<cfscript>
-       // Get Compliance Log
-		qGetComplianceHistory = APPLICATION.CFC.LOOKUPTABLES.getApplicationHistory(
-			applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,																				   
-			foreignTable=ARGUMENTS.foreignTable,
-			foreignID=ARGUMENTS.historyID,
-			isResolved = 0
-		);
-    	</cfscript>
-    <cfsavecontent variable="mailMessage">                      
-		<cfoutput>
-        The following compliance issues need to be resolved for #ARGUMENTS.stuNameID#
         
-        <br><br>
-      			 <table width="90%" cellpadding="2" cellspacing="0"align="center">       
-                 		<Tr bgcolor="##666666">
-                        	<td></td><td><font color="white">Date</td><td><font color="white">Issue</td><td><font color="white">Recorded By</td>
-                           
-                        </Tr>     
-                        <cfif qGetComplianceHistory.recordcount eq 0>
-                        <tr>
-                        	<Td colspan=4>Ooops.  No unresolved issues found in the compliance log.</Td>
-                        </tr>
-                        <cfelse>             
-                            <cfloop query="qGetComplianceHistory">                    
-                                <tr <cfif qGetComplianceHistory.currentrow mod 2>bgcolor="##ccc"</cfif>> 
-                                    <td width="5%">&nbsp;</td>
-                                    <td width="20%">#DateFormat(qGetComplianceHistory.dateCreated, 'mm/dd/yy')# at #TimeFormat(qGetComplianceHistory.dateCreated, 'hh:mm tt')# EST</td>
-                                    <td width="50%">#qGetComplianceHistory.actions#</td>
-                                    <td width="15%">#qGetComplianceHistory.enteredBy#</td>
-                                    
-                                </tr>
-                            </cfloop>
-                        </cfif>                        
-                    </table>
-      <br>
-      	<hr widht=75% align="center">
-       <br><br>
-      Regards-<br>
-      Compliance Department
-		</cfoutput>
-    </cfsavecontent>
-      <cfinvoke component="nsmg.cfc.email" method="send_mail">
-      			<!----
-                <cfinvokeargument name="email_to" value="#get_user.email#">
-				---->
-                <cfinvokeargument name="email_to" value="#email_to#">
-                <cfinvokeargument name="email_replyto" value="#CLIENT.email#">
-                <cfinvokeargument name="email_subject" value="Compliance Issues with Host Family">
-                <cfinvokeargument name="email_message" value="#mailMessage#">
-                
-       </cfinvoke>
-	 
-    
-         
+    	<cfscript>
+		   // Get Compliance Log
+			qGetComplianceHistory = APPLICATION.CFC.LOOKUPTABLES.getApplicationHistory(
+				applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,																				   
+				foreignTable=ARGUMENTS.foreignTable,
+				foreignID=ARGUMENTS.historyID,
+				isResolved = 0
+			);
+    	</cfscript>
+        
+        <cfsavecontent variable="mailMessage">                      
+            <cfoutput>
+            	<p>The following compliance issues need to be resolved for #ARGUMENTS.stuNameID#</p>
+                 <table width="90%" cellpadding="2" cellspacing="0"align="center">       
+                    <Tr bgcolor="##666666">
+                        <td></td><td><font color="white">Date</td><td><font color="white">Issue</td><td><font color="white">Recorded By</td>
+                       
+                    </Tr>     
+                    <cfif qGetComplianceHistory.recordcount eq 0>
+                    <tr>
+                        <Td colspan=4>Ooops.  No unresolved issues found in the compliance log.</Td>
+                    </tr>
+                    <cfelse>             
+                        <cfloop query="qGetComplianceHistory">                    
+                            <tr <cfif qGetComplianceHistory.currentrow mod 2>bgcolor="##ccc"</cfif>> 
+                                <td width="5%">&nbsp;</td>
+                                <td width="20%">#DateFormat(qGetComplianceHistory.dateCreated, 'mm/dd/yy')# at #TimeFormat(qGetComplianceHistory.dateCreated, 'hh:mm tt')# EST</td>
+                                <td width="50%">#qGetComplianceHistory.actions#</td>
+                                <td width="15%">#qGetComplianceHistory.enteredBy#</td>
+                                
+                            </tr>
+                        </cfloop>
+                    </cfif>                        
+                </table>
+          		<br>
+            	<hr widht=75% align="center">
+           		<br><br>
+          		Regards-<br>
+          		Compliance Department
+            </cfoutput>
+        </cfsavecontent>
+        
+        <cfinvoke component="nsmg.cfc.email" method="send_mail">
+            <cfinvokeargument name="email_to" value="#email_to#">
+            <cfinvokeargument name="email_replyto" value="#CLIENT.email#">
+            <cfinvokeargument name="email_subject" value="Compliance Issues with Host Family">
+            <cfinvokeargument name="email_message" value="#mailMessage#">
+        </cfinvoke>
         
  	</cffunction>
+    
 </cfcomponent>

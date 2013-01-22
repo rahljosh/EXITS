@@ -37,6 +37,7 @@
 	APPLICATION.SETTINGS.COMPANYLIST.ISE = "1,2,3,4,12";
 	APPLICATION.SETTINGS.COMPANYLIST.ISESMG = "1,2,3,4,5,12";
 	APPLICATION.SETTINGS.COMPANYLIST.publicHS = "1,2,3,4,5,10,12";
+	APPLICATION.SETTINGS.COMPANYLIST.SMG = 5;
 	// PHP 6, Case 10, WEP 11, Canada 13, ESI 14
 	APPLICATION.SETTINGS.COMPANYLIST.NonISE = "10,11,13,14";
 	APPLICATION.SETTINGS.COMPANYLIST.PHP = 6;
@@ -174,8 +175,8 @@
 	APPLICATION.PATH.tours = APPLICATION.PATH.uploadedFiles & "tours/";
 	APPLICATION.PATH.profileFactPics = APPLICATION.PATH.uploadedFiles & "profileFactPics/";
 	APPLICATION.PATH.users = APPLICATION.PATH.uploadedFiles & "users/";
-	APPLICATION.PATH.studentServices = APPLICATION.PATH.uploadedFiles & "student-services/";
-	
+	APPLICATION.PATH.hostApp = APPLICATION.PATH.uploadedFiles & "hostApp/";
+
 	// These are used in the student online application
 	APPLICATION.PATH.onlineApp = StructNew();
 	

@@ -105,6 +105,65 @@
 	</cffunction>
 
 
+	<cffunction name="getUserOneLevelUpInfo" access="public" returntype="struct" output="false" hint="Returns the next level up user, eg. RA next level is RM">
+    	<cfargument name="currentUserType" type="string" default="">
+    	<cfargument name="regionalAdvisorID" type="string" default="">
+        
+        <cfscript>
+			// new structure
+			var stFieldSet = StructNew();
+			
+            // Set Field Names
+            switch ( ARGUMENTS.currentUserType ) {
+                
+                // Area Representative
+                case 7: 
+					
+					// Next Level Regional Advisor
+					if ( VAL(ARGUMENTS.regionalAdvisorID) ) {
+						stFieldSet.userType = 6;
+						stFieldSet.description = "Regional Advisor";
+					// Next Level Regional Manager
+					} else  {
+						stFieldSet.userType = 5;
+						stFieldSet.description = "Regional Manager";
+					}
+
+				break;
+				
+				// Regional Advisor
+				case 6:
+					// Next Level Regional Manager
+					stFieldSet.userType = 5;
+					stFieldSet.description = "Regional Manager";
+				break;
+
+				// Regional Manager
+				case 5:
+				case 4:
+				case 3:
+				case 2:
+				case 1:
+					// Next Level Regional Manager
+					stFieldSet.userType = 4;
+					stFieldSet.description = "Headquarters";
+				break;
+
+                // User Not Found - Default to lowest level
+                default: 
+					// Default Values - Lowest user type
+					stFieldSet.userType = 7;
+					stFieldSet.description = "Area Representative";
+				break;
+	
+			}
+			
+			return stFieldSet;
+		</cfscript>
+		
+	</cffunction>
+
+
 	<cffunction name="isOfficeUser" access="public" returntype="boolean" output="No" hint="Returns true or false">
         <cfargument name="userType" type="numeric" default="#VAL(CLIENT.userType)#" required="no" hint="Usertype is not required" />
         
@@ -1123,7 +1182,10 @@
                 SELECT 
                     r.regionfacilitator, 
                     u.email, 
-                    u.firstName
+                    u.firstName,
+                    u.lastName,
+                    u.userID,
+                    CAST(CONCAT(u.firstName, ' ', u.lastName,  ' ##', u.userID) AS CHAR) AS regionFacilitator 
                 FROM 
                     smg_regions r
                 LEFT OUTER JOIN 
@@ -1361,6 +1423,46 @@
 		   
 		<cfreturn qGetRegionalManager>
 	</cffunction>
+    
+
+	<cffunction name="getRegionalAdvisor" access="public" returntype="query" output="false" hint="Gets a regional advisor for a given region">
+        <cfargument name="regionID" type="numeric" default="0" hint="regionID is required">
+        <cfargument name="userID" type="numeric" default="0" hint="userID is required">
+              
+        <cfquery 
+			name="qGetRegionalAdvisor" 
+			datasource="#APPLICATION.DSN#">
+                SELECT 
+                	u.userID,
+                    u.firstName,
+                    u.middleName,
+                    u.lastName,
+                    u.email,
+                    u.fax,
+                    u.phone,
+                    u.work_phone,
+                    u.address,
+                    u.address2,
+                    u.city,
+                    u.state,
+                    u.zip,
+                    r.regionName
+                FROM 
+                	smg_users u
+                INNER JOIN 
+                	user_access_rights uar ON u.userID = uar.advisorID
+                    AND 
+                        uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
+				INNER JOIN
+                	smg_regions r ON r.regionID = uar.regionID                    
+                WHERE 
+                	u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+				AND
+                	uar.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+		</cfquery>
+		   
+		<cfreturn qGetRegionalAdvisor>
+	</cffunction>    
 
 
 	<cffunction name="getSupervisedUsers" access="public" returntype="query" output="false" hint="Gets a list of supervised users">
@@ -1397,12 +1499,12 @@
            			
 					<cfif VAL(ARGUMENTS.regionID)>
                         AND
-                            uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
+                            uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
                 	</cfif>
                     
 					<cfif LEN(ARGUMENTS.regionIDList)>
                         AND
-                           uar.regionid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionIDList#" list="yes"> )
+                           uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionIDList#" list="yes"> )
                 	</cfif>
                     
                     <cfif VAL(is2ndVisitIncluded)>
@@ -1416,8 +1518,10 @@
                     <!--- Get Only Current Season Compliant Users --->
                     AND
                         sup.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vCurrentSeasonID)#">
+                    <!---
                     AND
                         sup.dateAccessGranted IS NOT NULL
+					--->						
 
                     <!--- Include Current Assigned User --->
                     <cfif LEN(ARGUMENTS.includeUserIDs)>
@@ -1451,12 +1555,12 @@
 
 					<cfif VAL(ARGUMENTS.regionID)>
                         AND
-                            uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
+                            uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
                 	</cfif>
                     
 					<cfif LEN(ARGUMENTS.regionIDList)>
                         AND
-                           uar.regionid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionIDList#" list="yes"> )
+                           uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionIDList#" list="yes"> )
                 	</cfif>
                         
                     <cfswitch expression="#ARGUMENTS.userType#">
@@ -1495,8 +1599,10 @@
                     <!--- Get Only Current Season Compliant Users --->
                     AND
                         sup.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vCurrentSeasonID)#">
+                    <!---
                     AND
                         sup.dateAccessGranted IS NOT NULL
+					--->						
 					
                     <!--- Include Current Placing/Supervising representatives Assigned to student --->
                     <cfif LEN(ARGUMENTS.includeUserIDs)>
@@ -1513,7 +1619,7 @@
             </cfquery>
         
         </cfif>
-               
+        
 		<cfreturn qGetSupervisedUsers>
 	</cffunction>
 

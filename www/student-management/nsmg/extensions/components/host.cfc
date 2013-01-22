@@ -33,158 +33,9 @@
         
         <cfquery 
 			name="qGetHosts" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
-                	hostID,
-                    uniqueID,
-                    familyLastName,
-                    fatherLastName,
-                    fatherFirstName,
-                    fatherMiddleName,
-                    fatherBirth,
-                    fatherDOB,
-                    fatherSSN,
-                    father_cell,
-                    fatherDriver,
-                    fatherCompany,
-                    fatherWorkPhone,
-                    fatherWorkPosition,
-                    fatherfullpart,
-                    fatherWorkType,
-                    fatherEmployeer,
-                    motherLastName,
-                    motherFirstName,
-                    motherMiddleName,
-                    motherBirth,
-                    motherDOB,
-                    motherSSN,
-                    mother_cell,
-                    motherDriver,
-                    motherCompany,
-                    motherWorkPhone,
-                    motherWorkPosition,
-                    motherfullpart,
-                    motherWorkType,
-                    motherEmployeer,
-                    address,
-                    address2,
-                    city,
-                    state,
-                    zip,
-                    datesOfResidence,
-                    mailAddress,
-                    mailCity,
-                    mailState,
-                    mailZip,
-                    phone,
-                    fax,
-                    email,
-                    emergency_contact_name,
-                    emergency_phone,
-                    yrsAtAddress,
-                    regionID,
-                    schoolID,
-                    schoolCosts,
-                    schoolDistance,
-                    schoolTransportation,
-                    schoolTransportationOther,
-                    schoolWorks,
-                    schoolWorksExpl,
-                    schoolCoach,
-                    schoolCoachExpl,
-                    cityPopulation,
-                    communityType,
-                    nearBigCity,
-                    bigCityDistance,
-                    local_air_code,
-                    major_air_code,
-                    airport_city,
-                    airport_state,
-                    sexPref,
-                    hostSmokes,
-                    acceptSmoking,
-                    smokeConditions,
-                    famDietRest,
-                    famDietRestDesc,
-                    stuDietRest,
-                    stuDietRestDesc,
-                    threesquares,
-                    areaRepID,
-                    active,
-                    dateProcessed,
-                    current_state,
-                    approved,
-                    interests,
-                    interests_other,
-                    band,
-                    playBand,
-                    bandInstrument,
-                    orchestra,
-                    playOrchestra,
-                    OrcInstrument,
-                    playCompSports,
-                    comp_sports,
-                    sportDesc,
-                    pet_allergies,
-                    religion,
-                    churchID,
-                    religious_participation,
-                    churchFam,
-                    churchTrans,
-                    attendChurch,
-                    houserules_smoke,
-                    houserules_curfewWeekNights,
-                    houserules_curfewWeekends,
-                    houserules_chores,
-                    houserules_church,
-                    houserules_other,
-                    population,
-                    near_city,
-                    near_city_dist,
-                    near_pop,
-                    neighborhood,
-                    community,
-                    terrain1,
-                    terrain2,
-                    terrain3,
-                    terrain3_desc,
-                    winterTemp,
-                    summerTemp,
-                    snowy_winter,
-                    rainy_winter,
-                    hot_summer,
-                    mild_summer,
-                    high_hummidity,
-                    dry_air,
-                    special_cloths,
-                    point_interest,
-                    income,
-                    publicAssitance,
-                    crime,
-                    crimeExpl,
-                    cps,
-                    cpsexpl,
-                    school_trans,
-                    other_trans,
-                    familyLetter,
-                    pictures,
-                    applicationSent,
-                    applicationApproved,
-                    applicationStarted,
-                    previousHost,
-                    home_first_call,
-                    home_last_visit,
-                    home_visited,
-                    pert_info,
-                    companyID,
-                    host_start_date,
-                    host_end_date,
-                    studentHosting,
-                    dietaryRestriction,
-                    houserules_expenses,
-                    houserules_inet,
-                    hostingDiff,
-                    imported         
+                	*        
                 FROM 
                     smg_hosts
                 WHERE
@@ -205,7 +56,7 @@
                         companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
                 <cfelseif VAL(ARGUMENTS.companyID)>
                     AND          
-                        companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                        companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#"> 
                 </cfif>
                     
                 ORDER BY 
@@ -214,14 +65,14 @@
 		   
 		<cfreturn qGetHosts>
 	</cffunction>
-
+    
 
 	<cffunction name="getCompleteHostAddress" access="public" returntype="query" output="false" hint="Returns complete host family address">
     	<cfargument name="hostID" default="" hint="HostID is required">
         
         <cfquery 
 			name="qGetCompleteHostAddress" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
                 	hostID,
                     CONCAT(address, ', ', city, ', ', state, ', ', zip) AS completeAddress
@@ -247,7 +98,7 @@
         
         <cfquery 
 			name="qRemoteLookUpHost" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT 
                 	hostID,
 					CAST( 
@@ -298,7 +149,7 @@
 
 		<cfscript>
 			// Loop through query
-            For ( i=1; i LTE qRemoteLookUpHost.recordCount; i=i+1 ) {
+            For ( i=1; i LTE qRemoteLookUpHost.recordCount; i++ ) {
 
 				vUserStruct = structNew();
 				vUserStruct.hostID = qRemoteLookUpHost.hostID[i];
@@ -320,7 +171,7 @@
         <!--- Do search --->
         <cfquery 
 			name="qLookupHostFamily" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT 
                 	hostID,
 					CAST( 
@@ -360,12 +211,6 @@
                             ')'                    
 						) 
 					AS CHAR) LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.search#%">
-                
-				<!---
-                AND                    
-                    familyLastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.search#%">
-				--->
-                
                 ORDER BY 
                     familyLastName
         </cfquery>
@@ -389,7 +234,7 @@
         
             <cfquery 
                 name="qGetHostByName" 
-                datasource="#APPLICATION.dsn#">
+                datasource="#APPLICATION.DSN#">
                     SELECT
                         hostID
                     FROM
@@ -469,7 +314,7 @@
         
         <cfquery 
 			name="qGetHostMemberByID" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
 					childID,
                     hostID,
@@ -524,7 +369,7 @@
         
         <cfquery 
 			name="qGetHostPets" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
 					animalID,
                     hostID,
@@ -562,7 +407,7 @@
 
 		<cfscript>
 			// Declare Variables		
-			vReturnName = '';
+			vReturnName = "";
 			
 			if ( LEN(ARGUMENTS.fatherFirstName) ) {
 				
@@ -601,12 +446,1184 @@
         </cfscript>
 		   
 	</cffunction>
+
+
+	<cffunction name="isSingleParentFamily" access="public" returntype="boolean" output="false" hint="Calculate the total of members at home and returns true/false">
+        <cfargument name="hostID" default="" hint="hostID">
+
+        <cfquery name="qCalculateMembersAtHome" datasource="#APPLICATION.DSN#">
+            SELECT 
+            	*,
+                (isFatherHome + isMotherHome + totalChildrenAtHome) AS totalFamilyMembers
+            FROM 
+            (
+                SELECT 
+                    <!--- Host Family --->
+                    h.hostID,             
+                    h.familyLastName as hostFamilyLastName,
+                    <!--- Is father home? --->
+                    (
+                        CASE 
+                            WHEN 
+                                h.fatherFirstName != '' 
+                            THEN 
+                                1
+                            WHEN 	
+                                h.fatherFirstName = ''  
+                            THEN 
+                                0
+                        END
+                    ) AS isFatherHome,
+                    <!--- Is mother home? --->
+                    (
+                        CASE 
+                            WHEN 
+                                h.motherFirstName != '' 
+                            THEN 
+                                1
+                            WHEN 	
+                                h.motherFirstName = ''  
+                            THEN 
+                                0                               
+                        END
+                    ) AS isMotherHome,
+                    <!--- Total of Children at home --->
+                    (
+                        SELECT 
+                            COUNT(shc.childID) 
+                        FROM 
+                            smg_host_children shc
+                        WHERE
+                            shc.hostID = h.hostID
+                        AND
+                            shc.liveathome = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
+                        AND	
+                            shc.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                    ) AS totalChildrenAtHome
+                FROM 
+                    smg_hosts h
+                WHERE 
+                    h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+            ) AS tmpTable          
+        </cfquery>
+        
+        <cfscript>
+			if ( qCalculateMembersAtHome.totalFamilyMembers EQ 1 ) {
+				return true;
+			} else {
+				return false;	
+			}		
+		</cfscript>
+        
+	</cffunction>
+
+
+	<!--- ------------------------------------------------------------------------- ----
+		HOST FAMILY APPLICATION
+	----- ------------------------------------------------------------------------- --->
+
+	<cffunction name="getApplicationList" access="public" returntype="query" output="false" hint="Gets a list of host family applications">
+        <cfargument name="hostID" default="" hint="hostID">
+        <cfargument name="statusID" default="" hint="statusID is not required">
+        <cfargument name="companyID" default="#CLIENT.companyID#" hint="CompanyID is not required">
+        <cfargument name="userType" default="#CLIENT.userType#" hint="userType is not required">
+        <cfargument name="regionID" default="#CLIENT.regionID#" hint="regionID is not required">
+        <cfargument name="userID" default="#CLIENT.userID#" hint="userID is not required">
+		
+        <cfquery 
+			name="qGetApplicationList" 
+			datasource="#APPLICATION.DSN#">
+                SELECT
+                	*,
+                     <!--- Total Family At Home --->
+                    (isFatherHome + isMotherHome + totalChildrenAtHome) AS totalFamilyMembers,
+                    <!--- Regional Manager Info --->
+                    rm.userID AS regionalManagerID,
+                    (
+                        CASE 
+                            WHEN 
+                                regionalManagerID IS NULL
+                            THEN 
+                                "Not Assigned"
+                            ELSE 
+                            	CAST(CONCAT(rm.firstName, ' ', rm.lastName,  ' (##', rm.userID, ')' ) AS CHAR)
+                            END
+                    ) AS regionalManager,
+                    rm.email AS regionalManagerEmail
+                FROM
+                (
+                    SELECT
+                        h.*,
+                        <!--- Host Family Display Name --->
+                        CAST( 
+                            CONCAT(                      
+                                h.familyLastName,
+                                ' - ', 
+                                IFNULL(h.fatherFirstName, ''),                                                  
+                                IF (h.fatherFirstName != '', IF (h.motherFirstName != '', ' and ', ''), ''),
+                                IFNULL(h.motherFirstName, ''),
+                                ' (##',
+                                h.hostID,
+                                ')'                    
+                            ) 
+                        AS CHAR) AS displayHostFamily,
+                        <!--- Is father home? --->
+                        (
+                            CASE 
+                                WHEN 
+                                    h.fatherFirstName != '' 
+                                THEN 
+                                    1
+                                WHEN 	
+                                    h.fatherFirstName = ''  
+                                THEN 
+                                    0
+                            END
+                        ) AS isFatherHome,
+                        <!--- Is mother home? --->
+                        (
+                            CASE 
+                                WHEN 
+                                    h.motherFirstName != '' 
+                                THEN 
+                                    1
+                                WHEN 	
+                                    h.motherFirstName = ''  
+                                THEN 
+                                    0                               
+                            END
+                        ) AS isMotherHome,
+                        <!--- Total of Children at home --->
+                        (
+                            SELECT 
+                                COUNT(shc.childID) 
+                            FROM 
+                                smg_host_children shc
+                            WHERE
+                                shc.hostID = h.hostID
+                            AND
+                                shc.liveathome = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
+                            AND	
+                                shc.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                        ) AS totalChildrenAtHome,
+                        <!--- Region --->
+                        (
+                            CASE 
+                                WHEN 
+                                    r.regionID > 0
+                                THEN 
+                                    r.regionName 
+                                ELSE 
+                                    "Not Assigned"
+                            END
+                        ) AS regionName,
+                        <!--- Get Regional Manager ID --->
+                        (
+                            SELECT 
+                                rm.userID
+                            FROM
+                                smg_users rm
+                            INNER JOIN
+                                user_access_rights uarRM ON uarRM.userID = rm.userID
+                            WHERE 
+                                rm.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                            AND 
+                                uarRM.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
+                            AND 
+                                uarRM.regionID = r.regionID
+                            LIMIT 1 
+                        ) AS regionalManagerID,
+						<!--- Regional Advisor Info --->
+                        ra.userID AS regionalAdvisorID,
+                        (
+                            CASE 
+                                WHEN 
+                                    ra.userID IS NULL
+                                THEN 
+                                    "n/a"
+                                ELSE 
+                                    CAST(CONCAT(ra.firstName, ' ', ra.lastName,  ' (##', ra.userID, ')' ) AS CHAR)
+                                END
+                        ) AS regionalAdvisor,
+                        ra.email AS regionalAdvisorEmail,
+                        <!--- Area Representative Info --->
+                        u.userID AS areaRepresentativeID,
+                        (
+                            CASE 
+                                WHEN 
+                                    u.userID IS NULL
+                                THEN 
+                                    "Not Assigned"
+                                ELSE 
+                                    CAST(CONCAT(u.firstName, ' ', u.lastName,  ' (##', u.userID, ')' ) AS CHAR)
+                            END
+                        ) AS areaRepresentative,
+                        u.email AS areaRepresentativeEmail,
+                        <!--- Facilitator --->
+                        fac.userID AS facilitatorID,
+                        (
+                            CASE 
+                                WHEN 
+                                    fac.userID IS NULL
+                                THEN 
+                                    "Not Assigned"
+                                ELSE 
+                                    CAST(CONCAT(fac.firstName, ' ', fac.lastName,  ' (##', fac.userID, ')' ) AS CHAR)
+                            END
+                        ) AS facilitator,
+                        fac.email AS facilitatorEmail	                        
+                    FROM 
+                        smg_hosts h
+                    <!--- Region --->
+                    LEFT OUTER JOIN
+                        smg_regions r ON r.regionID = h.regionID
+                    <!--- Area Representative --->
+                    LEFT OUTER JOIN
+                        smg_users u ON u.userID = h.areaRepID
+                    LEFT OUTER JOIN
+                        user_access_rights uar ON uar.userID = u.userID
+                            AND
+                                h.regionID = uar.regionID
+					<!--- Regional Advisor Info --->
+                    LEFT OUTER JOIN
+                        smg_users ra ON ra.userID = uar.advisorID
+					<!--- Facilitator --->
+                    LEFT OUTER JOIN
+                        smg_users fac ON fac.userID = r.regionFacilitator
+                    WHERE
+                        h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                    
+                    <cfif LEN(ARGUMENTS.hostID)>
+                        AND
+                            h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+                    </cfif>
+                    
+                    <cfif LEN(ARGUMENTS.statusID)>
+                        AND
+                            h.hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.statusID)#">
+                    </cfif>
+                    
+                    <!--- ISE - Displays all apps |  OR APPLICATION.CFC.USER.isOfficeUser() --->
+                    <cfif ARGUMENTS.companyID EQ 5>
+                        AND          
+                            h.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                    <cfelseif VAL(ARGUMENTS.companyID)>
+                        AND          
+                            h.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#"> 
+                    </cfif>
+                    
+                    <cfswitch expression="#ARGUMENTS.userType#">
+                        
+                        <!--- Regional Manager --->
+                        <cfcase value="5">
+                            AND 
+                                h.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
+                        </cfcase>
+                        
+                        <!--- Regional Advisor --->
+                        <cfcase value="6">
+                            AND 
+                                h.areaRepID IN ( 
+                                    SELECT
+                                        uarSU.userID
+                                    FROM
+                                        user_access_rights uarSU
+                                    WHERE
+                                        uarSU.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
+                                    AND 
+                                        (
+                                            uarSU.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+                                        OR
+                                            uarSU.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+                                        )
+                                ) 
+                        </cfcase>
+                        
+                        <!--- Area Rep --->
+                        <cfcase value="7">
+                            AND 
+                                h.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+                        </cfcase>
+                        
+                    </cfswitch>
+				) AS tmpTable     
+
+				<!--- Regional Manager Info --->
+                LEFT OUTER JOIN
+                    smg_users rm ON rm.userID = regionalManagerID
+                             
+                ORDER BY 
+                    regionName,
+                    familyLastName,
+                    applicationDenied
+		</cfquery>
+        
+		<cfreturn qGetApplicationList>
+	</cffunction>
+    
+    
+	<cffunction name="updateApplicationStatus" access="public" returntype="void" output="false" hint="Updates a host family application status">
+        <cfargument name="hostID" default="" hint="HostID is not required">
+        <cfargument name="statusID" default="" hint="statusID is not required">
+			
+            <cfif VAL(ARGUMENTS.hostID) AND listFind("1,2,3,4,5,6,7,8,9,99", ARGUMENTS.statusID)>
+            
+                <cfquery datasource="#APPLICATION.DSN#">
+                    UPDATE
+                        smg_hosts
+                    SET 
+                        hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.statusID#">
+                    WHERE        	
+                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
+                </cfquery>
+                
+			</cfif>                
+	
+    </cffunction>
+    
+
+	<cffunction name="getReferences" access="public" returntype="query" output="false" hint="Gets references for a host family application">
+        <cfargument name="hostID" default="" hint="HostID is not required">
+        <cfargument name="getCurrentUserApprovedReferences" default="0" hint="Pass userType to get current user ID approved references">
+        
+        <cfquery 
+			name="qGetReferences" 
+			datasource="#APPLICATION.DSN#">
+                SELECT
+					sfr.refID,
+                    sfr.firstName,
+                    sfr.lastName,
+                    sfr.address,
+                    sfr.address2,
+                    sfr.city,
+                    sfr.state,
+                    sfr.zip,
+                    sfr.phone,
+                    sfr.email,
+                    sfr.referenceFor,
+                    sfr.approved,
+                    hrqt.ID,
+                    hrqt.season,
+                    hrqt.isSubmitted,
+                    hrqt.areaRepStatus,
+                    hrqt.areaRepDateStatus,
+                    hrqt.areaRepNotes,                    
+                    hrqt.regionalAdvisorStatus,
+                    hrqt.regionalAdvisorDateStatus,
+                    hrqt.regionalAdvisorNotes,
+                    hrqt.regionalManagerStatus,
+                    hrqt.regionalManagerDateStatus,
+                    hrqt.regionalManagerNotes,
+                    hrqt.facilitatorStatus,
+                    hrqt.facilitatorDateStatus,
+                    hrqt.facilitatorNotes, 
+                    hrqt.dateInterview, 
+                    CAST(CONCAT(u.firstName, ' ', u.lastName,  ' (##', u.userID, ')' ) AS CHAR) AS submittedBy  
+                FROM 
+                    smg_family_references sfr
+                LEFT OUTER JOIN
+                	hostRefQuestionaireTracking hrqt ON hrqt.fk_referencesID = sfr.refID
+                LEFT OUTER JOIN
+                	smg_users u ON u.userID = hrqt.interviewer
+                WHERE
+                	referenceFor = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+
+				<!--- Get Approved References for current User --->
+                <cfswitch expression="#ARGUMENTS.getCurrentUserApprovedReferences#">
+                	
+                    <!--- Office --->
+                    <cfcase value="1,2,3,4">
+                    	AND	
+                        	hrqt.facilitatorStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="approved">
+                        AND
+                            hrqt.facilitatorDateStatus IS NOT NULL
+                    </cfcase>
+                    
+                    <!--- Regional Manager --->
+                    <cfcase value="5">
+                    	AND	
+                        	hrqt.regionalManagerStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="approved">
+                        AND
+                            hrqt.regionalManagerDateStatus IS NOT NULL
+                    </cfcase>
+
+					<!--- Regional Advisor --->
+                    <cfcase value="6">
+                    	AND	
+                        	hrqt.regionalAdvisorStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="approved">
+                        AND
+                            hrqt.regionalAdvisorDateStatus IS NOT NULL
+                    </cfcase>
+					
+                    <!--- Area Representative --->
+                    <cfcase value="7">
+                    	AND	
+                        	hrqt.areaRepStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="approved">
+                        AND
+                            hrqt.areaRepDateStatus IS NOT NULL
+                    </cfcase>
+                   
+                </cfswitch>
+                    
+		</cfquery>
+        		   
+		<cfreturn qGetReferences>
+	</cffunction>
+
+
+	<cffunction name="getApplicationApprovalHistory" access="public" returntype="query" output="false" hint="Gets a list of items and their approval history">
+        <cfargument name="hostID" default="" hint="HostID is not required">
+        <cfargument name="seasonID" default="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#" hint="Gets current paperwork season ID">
+        <cfargument name="whoViews" default="" hint="whoViews is not required">
+        <cfargument name="itemID" default="" hint="itemID is not required">
+       
+        <cfquery 
+			name="qGetApplicationApprovalHistory" 
+			datasource="#APPLICATION.DSN#">
+                SELECT
+					ap.ID,
+                    ap.itemName,
+                    ap.link,
+                    ap.section,
+                    ap.linkDesc,
+                    ap.whoViews,
+                    ap.description,
+                    ap.isStudentRequired,
+                    ap.isRequiredForApproval,
+                    ap.listOrder,
+                    h.areaRepStatus,
+                    h.areaRepDateStatus,
+                    h.areaRepNotes,                    
+                    h.regionalAdvisorStatus,
+                    h.regionalAdvisorDateStatus,
+                    h.regionalAdvisorNotes,
+                    h.regionalManagerStatus,
+                    h.regionalManagerDateStatus,
+                    h.regionalManagerNotes,
+                    h.facilitatorStatus,
+                    h.facilitatorDateStatus,
+                    h.facilitatorNotes
+                FROM 
+                    smg_host_app_section ap
+				LEFT OUTER JOIN	
+					smg_host_app_history h ON h.itemID = ap.ID                  
+                    AND
+                        h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+                    AND
+                        h.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+                WHERE
+                	1 = 1
+                      
+                <cfif LEN(ARGUMENTS.whoViews)>
+                	AND
+                    	ap.whoViews LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#VAL(ARGUMENTS.whoViews)#%">
+                </cfif>
+		                    
+                <cfif LEN(ARGUMENTS.itemID)>
+                	AND
+                    	ap.ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.itemID)#">
+                </cfif>
+
+				ORDER BY
+                	ap.listOrder                                
+		</cfquery>
+		   
+		<cfreturn qGetApplicationApprovalHistory>
+	</cffunction>
+
+
+	<cffunction name="getApprovalFieldNames" access="public" returntype="struct" output="false" hint="Returns the fields used in the approval process based on the logged in user">
+        <cfargument name="userType" default="#CLIENT.userType#" hint="userType">
+        
+        <cfscript>
+			var stFieldSet = StructNew();
+			
+			// This is the same for any levels
+			stFieldSet.prDateRejectName = "pr_rejected_date";
+			
+            // Set Field Names
+            switch ( ARGUMENTS.usertype ) {
+                
+                // Area Representative
+                case 7: 
+                    stFieldSet.statusFieldName = "areaRepStatus";
+                    stFieldSet.dateFieldName = "areaRepDateStatus";
+                    stFieldSet.notesFieldName = "areaRepNotes";
+					// Used for Initial Host Family Visit
+					stFieldSet.prUserFieldName = "fk_sr_user";
+                    stFieldSet.prApproveFieldName = "pr_sr_approved_date";
+                break;
+                
+                // Regional Advisor
+                case 6: 
+                    stFieldSet.statusFieldName = "regionalAdvisorStatus";
+                    stFieldSet.dateFieldName = "regionalAdvisorDateStatus";
+                    stFieldSet.notesFieldName = "regionalAdvisorNotes";
+					// Used for Initial Host Family Visit
+					stFieldSet.prUserFieldName = "fk_ra_user";
+                    stFieldSet.prApproveFieldName = "pr_ra_approved_date";
+                break;
+                
+                // Regional Manager
+                case 5:
+                    stFieldSet.statusFieldName = "regionalManagerStatus";
+                    stFieldSet.dateFieldName = "regionalManagerDateStatus";
+                    stFieldSet.notesFieldName = "regionalManagerNotes";
+					// Used for Initial Host Family Visit
+					stFieldSet.prUserFieldName = "fk_rd_user";
+                    stFieldSet.prApproveFieldName = "pr_rd_approved_date";
+				break;
+                
+                // Office Users
+                case 4: 
+                case 3:
+                case 2:
+                case 1: 
+                    stFieldSet.statusFieldName = "facilitatorStatus";
+                    stFieldSet.dateFieldName = "facilitatorDateStatus";
+                    stFieldSet.notesFieldName = "facilitatorNotes";
+					// Used for Initial Host Family Visit
+					stFieldSet.prUserFieldName = "fk_ny_user";
+                    stFieldSet.prApproveFieldName = "pr_ny_approved_date";
+                break;
+                
+                // User Not Found - Default to lowest level
+                default: 
+                    stFieldSet.statusFieldName = "areaRepStatus";
+                    stFieldSet.dateFieldName = "areaRepDateStatus";
+                    stFieldSet.notesFieldName = "areaRepNotes";
+					// Used for Initial Host Family Visit
+					stFieldSet.prUserFieldName = "fk_sr_user";
+                    stFieldSet.prApproveFieldName = "pr_sr_approved_date";
+				break;
+            }	 
+            
+            return stFieldSet;       
+       </cfscript>
+       
+	</cffunction>
+    
+    
+	<cffunction name="updateSectionStatus" access="public" returntype="void" output="false" hint="Approves/Denies sections">
+        <cfargument name="hostID" default="" hint="HostID is not required">
+        <cfargument name="itemID" default="" hint="itemID">
+        <cfargument name="seasonID" default="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#" hint="Gets current paperwork season ID">
+        <cfargument name="action" default="" hint="Approve/Deny an item">
+        <cfargument name="notes" default="" hint="notes, usually reason for denial">
+        <cfargument name="areaRepID" default="0" hint="areaRepID is not required">
+        <cfargument name="regionalAdvisorID" default="0" hint="regionalAdvisorID is not required">
+        <cfargument name="regionalManagerID" default="0" hint="regionalManagerID is not required">
+
+        <cfscript>
+			// This returns the approval fields for the logged in user
+			stFieldSet = getApprovalFieldNames();
+		</cfscript>
+        
+        <cfif listFind("approved,denied", ARGUMENTS.action)>
+        
+            <cfquery 
+                name="qCheckRecord" 
+                datasource="#APPLICATION.DSN#">
+                    SELECT
+                        ID
+                    FROM
+                        smg_host_app_history
+                    WHERE
+                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+                    AND
+                        itemID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.itemID)#">                  
+                    AND
+                        seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">                   
+            </cfquery>	
+            
+            <!--- Update --->
+            <cfif qCheckRecord.recordCount>
+    
+                <cfquery 
+                    datasource="#APPLICATION.DSN#">
+                        UPDATE	
+                            smg_host_app_history
+                        SET
+                            #stFieldSet.statusFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.action#">,
+                            #stFieldSet.dateFieldName# = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                            #stFieldSet.notesFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#" null="#yesNoFormat(NOT LEN(ARGUMENTS.notes))#">
+                        WHERE
+                            ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qCheckRecord.ID)#">
+                </cfquery>	
+            
+            <!--- Insert --->
+            <cfelse>
+    
+                <cfquery 
+                    datasource="#APPLICATION.DSN#">
+                        INSERT INTO	
+                            smg_host_app_history
+                        (
+                            hostID,
+                            itemID,
+                            seasonID,
+                            #stFieldSet.statusFieldName#,
+                            #stFieldSet.dateFieldName#,
+                            #stFieldSet.notesFieldName#,
+                            dateCreated
+                        )
+                        VALUES
+                        (
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.itemID)#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.action#">,
+                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#">,
+                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                        )
+                </cfquery>	
+            
+            </cfif>
+            
+            <!--- Reset approval level of denied items | RA denies section 1 and 2 so we'll need to resset the AR approval to NULL for these sections --->
+            <cfif ARGUMENTS.action EQ 'denied' AND listFind("regionalAdvisorStatus,regionalManagerStatus,facilitatorStatus", stFieldSet.statusFieldName)>
+            	
+                <cfscript>
+					// Default Values
+					vUserTypeOneLevelDown = 0;
+				
+					// Reset Area Representative
+					if ( stFieldSet.statusFieldName EQ 'regionalAdvisorStatus' OR stFieldSet.statusFieldName EQ 'regionalManagerStatus' AND NOT VAL(ARGUMENTS.regionalAdvisorID) ) {
+						vUserTypeOneLevelDown = 7;
+					// Reset Regional Advisor
+					} else if ( stFieldSet.statusFieldName EQ 'regionalManagerStatus' AND VAL(ARGUMENTS.regionalAdvisorID) ) {
+						vUserTypeOneLevelDown = 6;
+					// Reset Regional Manager
+					} else if ( stFieldSet.statusFieldName EQ 'facilitatorStatus' ) {
+						vUserTypeOneLevelDown = 5;
+					}
+					
+					// This returns the fields that need to be reset
+					stFieldReset = getApprovalFieldNames(userType=vUserTypeOneLevelDown);
+				</cfscript>
+                
+				<!--- Update --->
+                <cfif VAL(vUserTypeOneLevelDown)>
+        
+                    <cfquery 
+                        datasource="#APPLICATION.DSN#">
+                            UPDATE	
+                                smg_host_app_history
+                            SET
+                                #stFieldReset.statusFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="">,
+                                #stFieldReset.dateFieldName# = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
+                                #stFieldReset.notesFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" null="yes">
+                            WHERE
+                                hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+                            AND
+                                itemID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.itemID)#">                  
+                            AND
+                                seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">                   
+                    </cfquery>	
+                    
+              	</cfif> 
+                                
+            </cfif>
+    
+    	</cfif>
+    
+    </cffunction>     
+    
+    
+	<cffunction name="updateReferenceStatus" access="public" returntype="void" output="false" hint="Approves/Denies references">
+        <cfargument name="hostID" default="" hint="HostID is not required">
+        <cfargument name="referenceID" default="" hint="referenceID">
+        <cfargument name="seasonID" default="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#" hint="Gets current paperwork season ID">
+        <cfargument name="action" default="" hint="Approve/Deny an item">
+        <cfargument name="notes" default="" hint="notes, usually reason for denial">
+        <cfargument name="areaRepID" default="0" hint="areaRepID is not required">
+        <cfargument name="regionalAdvisorID" default="0" hint="regionalAdvisorID is not required">
+        <cfargument name="regionalManagerID" default="0" hint="regionalManagerID is not required">
+
+        <cfscript>
+			// This returns the approval fields for the logged in user
+			stFieldSet = getApprovalFieldNames();
+		</cfscript>
+        
+        <cfif listFind("approved,denied", ARGUMENTS.action)>
+        
+            <!--- Update --->
+            <cfquery 
+                datasource="#APPLICATION.DSN#">
+                    UPDATE	
+                        hostRefQuestionaireTracking
+                    SET
+                        #stFieldSet.statusFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.action#">,
+                        #stFieldSet.dateFieldName# = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                        #stFieldSet.notesFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#" null="#yesNoFormat(NOT LEN(ARGUMENTS.notes))#">
+                    WHERE
+                        ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.referenceID)#">
+            </cfquery>	
+            
+            
+            <!--- Reset approval level of denied items | RA denies section 1 and 2 so we'll need to resset the AR approval to NULL for these sections --->
+            <cfif ARGUMENTS.action EQ 'denied' AND listFind("regionalAdvisorStatus,regionalManagerStatus,facilitatorStatus", stFieldSet.statusFieldName)>
+            	
+                <cfscript>
+					// Default Values
+					vUserTypeOneLevelDown = 0;
+				
+					// Reset Area Representative
+					if ( stFieldSet.statusFieldName EQ 'regionalAdvisorStatus' OR stFieldSet.statusFieldName EQ 'regionalManagerStatus' AND NOT VAL(ARGUMENTS.regionalAdvisorID) ) {
+						vUserTypeOneLevelDown = 7;
+					// Reset Regional Advisor
+					} else if ( stFieldSet.statusFieldName EQ 'regionalManagerStatus' AND VAL(ARGUMENTS.regionalAdvisorID) ) {
+						vUserTypeOneLevelDown = 6;
+					// Reset Regional Manager
+					} else if ( stFieldSet.statusFieldName EQ 'facilitatorStatus' ) {
+						vUserTypeOneLevelDown = 5;
+					}
+					
+					// This returns the fields that need to be reset
+					stFieldReset = getApprovalFieldNames(userType=vUserTypeOneLevelDown);
+				</cfscript>
+                
+				<!--- Update --->
+                <cfif VAL(vUserTypeOneLevelDown)>
+        
+                    <cfquery 
+                        datasource="#APPLICATION.DSN#">
+                            UPDATE	
+                                hostRefQuestionaireTracking
+                            SET
+                                #stFieldReset.statusFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="">,
+                                #stFieldReset.dateFieldName# = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
+                                #stFieldReset.notesFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" null="yes">
+                            WHERE
+                                ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.referenceID)#">                 
+                    </cfquery>	
+                    
+              	</cfif> 
+                                
+            </cfif>
+    
+    	</cfif>
+    
+    </cffunction>         
+        
+    
+	<cffunction name="submitApplication" access="public" returntype="struct" output="false" hint="Approves a Host Family Application">
+        <cfargument name="hostID" default="" hint="hostID">
+        <cfargument name="action" default="" hint="approve/deny">
+        <cfargument name="issueList" default="" hint="Lists issues when denying an application">
+        <cfargument name="userType" default="#CLIENT.userType#" hint="userType">
+
+        <cfscript>
+			// These are returned to the calling page
+			var stReturnMessage = structNew();
+			var stReturnMessage.pageMessages = "";
+			var stReturnMessage.formErrors = "";
+
+			// Make sure we have correct data
+			if ( NOT ListFind("approved,denied", ARGUMENTS.action) ) {
+				//throw("The action passed is not recognized, please try again", "invalidAction", "This argument must receive an approved/denied variable", "customHostAction1"); 	
+				stReturnMessage.formErrors = "The action value passed is not recognized, it must be either approved or denied. Please try again";
+				abort;
+			}			
+
+			// this is used in the email notification
+			var vEmailTo = "";
+			
+			// Default Values
+			var vNextStatus = CLIENT.userType;
+			var vSetEmailTemplate = "";
+			
+			// Get Host Family Info - Includes AR, RA, RD and Facilitator information
+			var qGetHostInfo = getApplicationList(hostID=FORM.hostID);	
+			
+			// Get Current User
+			var vSubmittedBy = SESSION.USER.fullName & " (##" & SESSION.USER.ID & ")";
+			var vSubmittedByEmail = SESSION.USER.email;
+			
+			// Set Next Status Level
+            switch ( ARGUMENTS.usertype ) {
+                
+                // Area Representative
+                case 7: 
+                    
+					// Approved
+					if ( ARGUMENTS.action EQ 'approved' ) {
+						
+						// Submit to RA - AR and RA must not be the same
+						if ( VAL(qGetHostInfo.regionalAdvisorID) AND qGetHostInfo.regionalAdvisorID NEQ qGetHostInfo.areaRepID ) {
+							vNextStatus = 6;	
+							vEmailTo = qGetHostInfo.regionalAdvisorEmail;
+							vSetEmailTemplate = "submitToRegionalAdvisor";
+							stReturnMessage.pageMessages = "Application has been submitted to your Regional Advisor #qGetHostInfo.regionalAdvisor# for review. Thank you.";
+						// Submit to RM - AR and RM must not be the same
+						} else if ( VAL(qGetHostInfo.regionalManagerID) AND qGetHostInfo.regionalManagerID NEQ qGetHostInfo.areaRepID ) {
+							vNextStatus = 5;
+							vEmailTo = qGetHostInfo.regionalManagerEmail;
+							vSetEmailTemplate = "submitToRegionalManager";
+							stReturnMessage.pageMessages = "Application has been submitted to your Regional Manager #qGetHostInfo.regionalManager# for review. Thank you.";
+						// Submit to Headquarters
+					    } else {
+							vNextStatus = 4;
+							vEmailTo = qGetHostInfo.facilitatorEmail;
+							vSetEmailTemplate = "submitToFacilitator";
+							stReturnMessage.pageMessages = "Application has been submitted to your Region Facilitator #qGetHostInfo.facilitator# for review. Thank you.";
+						}
+						
+					// Denied
+					} else {
+						// Reject to Host Family
+						vNextStatus = 8;
+						vEmailTo = qGetHostInfo.email;
+						vSetEmailTemplate = "denyToHostFamily";
+						stReturnMessage.pageMessages = "Application has been sent back to Host Family as you have suggested some changes. Thank you.";
+					}
+					
+                break;
+			
+                // Regional Advisor
+                case 6: 
+				
+					// Approved
+					if ( ARGUMENTS.action EQ 'approved' ) {
+						
+						// Submit to RM - RA and RM must not be the same
+						if ( VAL(qGetHostInfo.regionalManagerID) AND qGetHostInfo.regionalManagerID NEQ qGetHostInfo.regionalAdvisorID ) {
+							vNextStatus = 5;
+							vEmailTo = qGetHostInfo.regionalManagerEmail;
+							vSetEmailTemplate = "submitToRegionalManager";
+							stReturnMessage.pageMessages = "Application has been submitted to your Regional Manager #qGetHostInfo.regionalManager# for review. Thank you.";
+						// Submit to Headquarters
+						} else {
+							vNextStatus = 4;
+							vEmailTo = qGetHostInfo.facilitatorEmail;
+							vSetEmailTemplate = "submitToFacilitator";
+							stReturnMessage.pageMessages = "Application has been submitted to your Region Facilitator #qGetHostInfo.facilitator# for review. Thank you.";							
+						}						
+					
+					// Denied
+					} else {
+						
+						// Reject to AR - RA and AR must not be the same
+						if ( VAL(qGetHostInfo.regionalAdvisorID) AND ( qGetHostInfo.regionalAdvisorID NEQ qGetHostInfo.areaRepID ) ) {
+							// Reject to AR
+							vNextStatus = 7;
+							vEmailTo = qGetHostInfo.areaRepresentativeEmail;
+							vSetEmailTemplate = "denyToAreaRepresentative";
+							stReturnMessage.pageMessages = "Application has been sent back to Area Representative #qGetHostInfo.areaRepresentative# as you have suggested some changes. Thank you.";
+						} else {
+							// Reject to Host Family
+							vNextStatus = 8;
+							vEmailTo = qGetHostInfo.email;
+							vSetEmailTemplate = "denyToHostFamily";
+							stReturnMessage.pageMessages = "Application has been sent back to Host Family as you have suggested some changes. Thank you.";
+						}
+							
+					}
+					
+				break;
+                
+                // Regional Manager
+                case 5:
+				
+					// Approved
+					if ( ARGUMENTS.action EQ 'approved' ) {
+						// Submit to Headquarters
+						vNextStatus = 4;
+						vEmailTo = qGetHostInfo.facilitatorEmail;
+						vSetEmailTemplate = "submitToFacilitator";
+						stReturnMessage.pageMessages = "Application has been submitted to your Region Facilitator #qGetHostInfo.facilitator# for review. Thank you.";
+					// Denied
+					} else {
+						
+						// Reject to RA - RM and RA must not be the same
+						if ( VAL(qGetHostInfo.regionalAdvisorID) AND qGetHostInfo.regionalAdvisorID NEQ qGetHostInfo.regionalManagerID ) {
+							vNextStatus = 6;
+							vEmailTo = qGetHostInfo.regionalAdvisorEmail;
+							vSetEmailTemplate = "denyToRegionalAdvisor";
+							stReturnMessage.pageMessages = "Application has been sent back to Regional Advisor #qGetHostInfo.regionalAdvisor# as you have suggested some changes. Thank you.";
+						// Reject to AR	- RM and AR must not be the same
+						} else if ( VAL(qGetHostInfo.areaRepID) AND qGetHostInfo.areaRepID NEQ qGetHostInfo.regionalManagerID ) {
+							vNextStatus = 7;
+							vEmailTo = qGetHostInfo.areaRepresentativeEmail;
+							vSetEmailTemplate = "denyToAreaRepresentative";
+							stReturnMessage.pageMessages = "Application has been sent back to Area Representative #qGetHostInfo.areaRepresentative# as you have suggested some changes. Thank you.";
+						// Reject to HF
+						} else {
+							// Reject to Host Family
+							vNextStatus = 8;
+							vEmailTo = qGetHostInfo.email;
+							vSetEmailTemplate = "denyToHostFamily";
+							stReturnMessage.pageMessages = "Application has been sent back to Host Family as you have suggested some changes. Thank you.";
+						}
+						
+					}
+					
+				break;
+                
+                // Office Users
+                case 4: 
+                case 3:
+                case 2:
+                case 1: 
+
+					// Approved
+					if ( ARGUMENTS.action EQ 'approved' ) {
+						// Approve Application
+						vNextStatus = 3;
+						vEmailTo = qGetHostInfo.regionalManagerEmail;
+						vSetEmailTemplate = "applicationApproved";
+						stReturnMessage.pageMessages = "Application has been approved. Thank you.";
+					// Denied
+					} else {
+						// Reject to RM
+						vNextStatus = 5;
+						vEmailTo = qGetHostInfo.areaRepresentativeEmail;
+						vSetEmailTemplate = "denyToRegionalManager";
+						stReturnMessage.pageMessages = "Application has been sent back to Regional Manager #qGetHostInfo.regionalManager# as you have suggested some changes. Thank you.";
+					}
+
+				break;
+
+			}
+				
+			// Get Email Template
+			vGetEmailTemplate = getApplicationEmailTemplate(
+				applicatonStatus = qGetHostInfo.hostAppStatus,
+				issueList = ARGUMENTS.issueList,												
+				emailTemplate = vSetEmailTemplate,
+				submittedBy = vsubmittedBy,
+				hostFamily = qGetHostInfo.displayHostFamily,
+				areaRepresentative = qGetHostInfo.areaRepresentative,
+				regionalAdvisor = qGetHostInfo.regionalAdvisor,
+				regionalManager = qGetHostInfo.regionalManager,
+				facilitator = qGetHostInfo.facilitator
+			);
+			
+			// Try to send out email
+			try {
+			
+				// Create Email Object
+				e = createObject("component","nsmg.cfc.email");
+				// Send Email
+				e.send_mail(
+					email_from = CLIENT.email,
+					email_to = vEmailTo,
+					email_subject = vGetEmailTemplate.emailSubject,
+					email_message = vGetEmailTemplate.emailBody
+				);
+			
+			// Deal with error - most likely not a valid email address - Append error message
+			} catch( any error ) {
+				stReturnMessage.formErrors = "There was a problem sending out an email notification";
+			}
+
+			// Update Host Status According to usertype approving/denying the application
+			updateApplicationStatus(hostID=ARGUMENTS.hostID,statusID=vNextStatus);
+
+			return stReturnMessage;
+		</cfscript>
+        
+    </cffunction>
+    
+
+	<cffunction name="getApplicationEmailTemplate" access="public" returntype="struct" output="false" hint="Retuns templates based on action">
+        <cfargument name="applicationStatus" default="" hint="Current status so we can set the link">
+        <cfargument name="issueList" default="" hint="Not required">
+        <cfargument name="emailTemplate" default="" hint="Display Name - Not required">
+        <cfargument name="submittedBy" default="" hint="Display Name - Not required">
+        <cfargument name="hostFamily" default="" hint="Display Name - Not required">
+        <cfargument name="areaRepresentative" default="" hint="Display Name - Not required">
+        <cfargument name="regionalAdvisor" default="" hint="Display Name - Not required">
+        <cfargument name="regionalManager" default="" hint="Display Name - Not required">
+        <cfargument name="facilitator" default="" hint="Display Name - Not required">
+		
+        <cfscript>
+			// Declare Struct
+			var stReturnData = StructNew();
+			var stReturnData.emailSubject = "";
+			var stReturnData.emailBody = "";	
+			
+			var vDisplayIssues = "";
+			
+			// Set List of Issues
+			if ( listFind("denyToHostFamily,denyToAreaRepresentative,denyToRegionalAdvisor,denyToRegionalManager", ARGUMENTS.emailTemplate) ) {
+				vDisplayIssues = "<p>Please see below a list of issues found:</p><ul>#ARGUMENTS.issueList#</ul>";
+			}
+			
+			/***
+				HF Submits = Notify AR
+				AR Approves = Notify Advisor/Manager
+				AR Denies = Notify HF
+				Advisor Approves = Notify Manager
+				Advisor Denies = Notify AR
+				Manager Approves = Notify Office
+				Manager Denies = Notify AR/Advisor
+				Office Approves = Notify Host, AR, RA/Manager
+			***/
+		</cfscript>
+    
+    	<cfswitch expression="#ARGUMENTS.emailTemplate#">
+        	
+            <!--- Approved - Submit To Regional Advisor --->
+        	<cfcase value="submitToRegionalAdvisor">
+				
+                <cfscript>
+					stReturnData.emailSubject = "Host Family Application Submitted for your review";
+				</cfscript>
+                
+                <cfsavecontent variable="stReturnData.emailBody">
+					<cfoutput>
+                    	<p>Dear #ARGUMENTS.regionalAdvisor#,</p>
+                        <p>The #ARGUMENTS.hostFamily# host family application has been submitted for your review by #ARGUMENTS.submittedBy#.</p>
+                        <p>You can review the application <a href="#APPLICATION.CFC.USER.getUserSession().companyURL#nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=#VAL(ARGUMENTS.applicationStatus)#">here</a>.</p>
+                        #CLIENT.companyName#
+                    </cfoutput>
+                </cfsavecontent>
+                            
+            </cfcase>
+            
+            <!--- Approved - Submit To Regional Manager --->
+        	<cfcase value="submitToRegionalManager">
+            
+                <cfscript>
+					stReturnData.emailSubject = "Host Family Application Submitted for your review";
+				</cfscript>
+                
+                <cfsavecontent variable="stReturnData.emailBody">
+					<cfoutput>
+                    	<p>Dear #ARGUMENTS.regionalManager#,</p>
+                        <p>The #ARGUMENTS.hostFamily# host family application has been submitted for your review by #ARGUMENTS.submittedBy#.</p>
+                        <p>You can review the application <a href="#APPLICATION.CFC.USER.getUserSession().companyURL#nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=#VAL(ARGUMENTS.applicationStatus)#">here</a>.</p>
+                        #CLIENT.companyName#
+                    </cfoutput>
+                </cfsavecontent>
+                            
+            </cfcase>
+            
+            <!--- Approved - Submit To Facilitator --->
+        	<cfcase value="submitToFacilitator">
+            
+                <cfscript>
+					stReturnData.emailSubject = "Host Family Application Submitted for your review";
+				</cfscript>
+                
+                <cfsavecontent variable="stReturnData.emailBody">
+					<cfoutput>
+                        <p>Dear #ARGUMENTS.facilitator#,</p>
+                        <p>The #ARGUMENTS.hostFamily# host family application has been submitted for your review by #ARGUMENTS.submittedBy#.</p>
+                        <p>You can review the application <a href="#APPLICATION.CFC.USER.getUserSession().companyURL#nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=#VAL(ARGUMENTS.applicationStatus)#">here</a>.</p>
+                        #CLIENT.companyName#
+                    </cfoutput>
+                </cfsavecontent>
+                            
+            </cfcase>
+            
+            <!--- Approved - Notify Host Family | Regional Manager | Regional Advisor | Area Representative --->
+        	<cfcase value="applicationApproved">
+
+                <cfscript>
+					stReturnData.emailSubject = "Host Family Application Approved";
+				</cfscript>
+                				
+                <cfsavecontent variable="stReturnData.emailBody">
+					<cfoutput>
+                    	<p>Dear #ARGUMENTS.hostFamily#,</p>
+                        <p>Your host family application has been approved by headquarters.</p>
+                        #CLIENT.companyName#
+                    </cfoutput>
+                </cfsavecontent>
+                            
+            </cfcase>
+        	
+            <!--- Denied - Sent back to Host Family --->
+        	<cfcase value="denyToHostFamily">
+
+                <cfscript>
+					stReturnData.emailSubject = "Host Family Application Needs Updates";
+				</cfscript>
+				
+                <cfsavecontent variable="stReturnData.emailBody">
+                	<cfoutput>
+                        <p>Dear #ARGUMENTS.hostFamily#,</p>
+                        <p>#ARGUMENTS.submittedBy# has suggested you make changes on the host family application. Please re-submit the application once changes are complete.</p>
+                        #vDisplayIssues#
+                        #CLIENT.companyName#
+					</cfoutput>                        
+                </cfsavecontent>
+                            
+            </cfcase>
+
+            <!--- Denied - Sent back to Area Representatitve --->
+        	<cfcase value="denyToAreaRepresentative">
+
+                <cfscript>
+					stReturnData.emailSubject = "Host Family Application Needs Updates";
+				</cfscript>
+				
+                <cfsavecontent variable="stReturnData.emailBody">
+                	<cfoutput>
+                        <p>Dear #ARGUMENTS.areaRepresentative#,</p>
+                        <p>#ARGUMENTS.submittedBy# has suggested you make changes on the host family application. Please re-submit the application once changes are complete.</p>
+                        #vDisplayIssues#
+                        #CLIENT.companyName#
+					</cfoutput>
+                </cfsavecontent>
+                            
+            </cfcase>
+            
+            <!--- Denied - Sent back to Regional Advisor --->
+        	<cfcase value="denyToRegionalAdvisor">
+
+                <cfscript>
+					stReturnData.emailSubject = "Host Family Application Needs Updates";
+				</cfscript>
+				
+                <cfsavecontent variable="stReturnData.emailBody">
+                	<cfoutput>
+                        <p>Dear #ARGUMENTS.regionalAdvisor#,</p>
+                        <p>#ARGUMENTS.submittedBy# has suggested you make changes on the host family application. Please re-submit the application once changes are complete.</p>
+                        #vDisplayIssues#
+                        #CLIENT.companyName#
+					</cfoutput>                        
+                </cfsavecontent>
+                            
+            </cfcase>
+
+            <!--- Denied - Sent back to Regional Manager --->
+        	<cfcase value="denyToRegionalManager">
+
+                <cfscript>
+					stReturnData.emailSubject = "Host Family Application Needs Updates";
+				</cfscript>
+				
+                <cfsavecontent variable="stReturnData.emailBody">
+                	<cfoutput>
+                        <p>Dear #ARGUMENTS.regionalManager#,</p>
+                        <p>#ARGUMENTS.submittedBy# has suggested you make changes on the host family application. Please re-submit the application once changes are complete.</p>
+                        #vDisplayIssues#
+                        #CLIENT.companyName#
+					</cfoutput>                        
+                </cfsavecontent>
+                            
+            </cfcase>
+            
+        </cfswitch>
+        
+        <cfscript>
+			return stReturnData;
+		</cfscript>
+
+	</cffunction>     
     
 
 	<!--- ------------------------------------------------------------------------- ----
-		
+		END OF HOST FAMILY APPLICATION
+	----- ------------------------------------------------------------------------- --->
+
+
+	<!--- ------------------------------------------------------------------------- ----
 		HOST LEADS
-	
 	----- ------------------------------------------------------------------------- --->
 
 	<cffunction name="getHostLeads" access="public" returntype="query" output="false" hint="Gets host leads entered from ISEUSA.com">
@@ -616,7 +1633,7 @@
         
         <cfquery 
 			name="qGetHostLeads" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
 					hl.ID,
                     hl.regionID,
@@ -710,7 +1727,7 @@
         
         <cfquery 
 			name="qGetPendingHostLeads" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
 					hl.ID,
                     hl.hashID,
@@ -800,7 +1817,7 @@
         
         <cfquery 
 			name="qGetHostLeadByID" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
 					hl.ID,
                     hl.hashID,
@@ -871,7 +1888,7 @@
 		<!--- Insert HashID --->
         <cfquery 
 			name="qGetHostNoHashID" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
                     ID
                 FROM
@@ -894,7 +1911,7 @@
         <!--- Insert Initial Comment --->
         <cfquery 
 			name="qGetHostNoHistory" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
             SELECT
                 ID,
                 dateCreated,
@@ -915,7 +1932,7 @@
 
 		<cfscript>
 			// Loop through query
-            For ( i=1; i LTE qGetHostNoHistory.recordCount; i=i+1 ) {
+            For ( i=1; i LTE qGetHostNoHistory.recordCount; i++ ) {
 				
 				// Insert Initial Comment
                 APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
@@ -944,7 +1961,7 @@
         
         <cfscript>
 			// Set actions
-			var vActions = '';
+			var vActions = "";
 			
 			// Get current host lead information
 			qGetHostLead = getHostLeadByID(ID=ARGUMENTS.ID);				
@@ -1094,7 +2111,7 @@
 			
 		<!--- Update Host Lead --->
         <cfquery 
-            datasource="#APPLICATION.dsn#">
+            datasource="#APPLICATION.DSN#">
                 UPDATE
                     smg_host_lead
                 SET
@@ -1114,7 +2131,7 @@
         
         <cfquery 
 			name="qExportHostLeads" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
                 	ID,
                     firstName,
@@ -1149,7 +2166,7 @@
         <cfif LEN(vIDList)>
        
             <cfquery 
-                datasource="#APPLICATION.dsn#">
+                datasource="#APPLICATION.DSN#">
                     UPDATE
                         smg_host_lead
                     SET	
@@ -1168,7 +2185,7 @@
 
         <cfquery 
 			name="qGetHostLeadExportHistory" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
                 	count(ID) AS totalLeads,
 					dateExported
@@ -1213,7 +2230,7 @@
               
         <cfquery 
 			name="qGetHostLeadsRemote" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
 					hl.ID,
                     <!--- 17E0 was being displayed as 17 or 17.0 --->
@@ -1444,7 +2461,7 @@
 			// Populate query below
 			if ( qGetHostLeadsRemote.recordCount ) {
 				
-				For ( i=stResult.recordFrom; i LTE stResult.recordTo; i=i+1 ) {
+				For ( i=stResult.recordFrom; i LTE stResult.recordTo; i++ ) {
 					QueryAddRow(resultQuery);
 					QuerySetCell(resultQuery, "ID", qGetHostLeadsRemote.ID[i]);
 					QuerySetCell(resultQuery, "HASHID", qGetHostLeadsRemote.hashID[i]);
@@ -1478,7 +2495,7 @@
         <cfargument name="ID" type="numeric" hint="ID is not required">
 		
         <cfquery 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 UPDATE
                 	smg_host_lead
 				SET
@@ -1507,7 +2524,7 @@
         
         <cfquery 
 			name="qGetHostLeadFollowUpReport" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
 					hl.ID,
                     hl.hashID,
@@ -1616,7 +2633,7 @@
         
         <cfquery 
 			name="qGetHostLeadFollowUpReport" 
-			datasource="#APPLICATION.dsn#">
+			datasource="#APPLICATION.DSN#">
                 SELECT
 					hl.ID,
                     hl.hashID,
@@ -1686,9 +2703,7 @@
 	</cffunction>   
 
 	<!--- ------------------------------------------------------------------------- ----
-		
 		END OF HOST LEADS
-	
 	----- ------------------------------------------------------------------------- --->
     
 </cfcomponent>
