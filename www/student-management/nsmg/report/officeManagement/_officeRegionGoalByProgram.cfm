@@ -26,7 +26,7 @@
 		param name="FORM.outputType" default="flashPaper";
 
 		// Set Report Title To Keep Consistency
-		vReportTitle = "Office Management - Region Goal";
+		vReportTitle = "Office Management - Region Goal By Program";
 
 		// Set Program Types
 		if ( FORM.goalPeriod EQ 'January' ) {
