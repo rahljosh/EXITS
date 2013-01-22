@@ -135,8 +135,7 @@ a:active {
 														  <option value="Size: Large $22.00 each">Large$22.00 </option>
 														  <option value="Size: XL $22.00 each">XLarge $22.00 </option>
 														  <option value="Size: XXL $24.00 each^2.00">XXLarge $24.00</option>
-														  <option value="Size: 1X Plus $25.00 each^3.00">1X Plus $25.00</option>
-														  <option value="Size: 2X Plus $26.00 each^4.00">2X Plus $26.00</option>
+													
 				  </select><Br />
 														<input type="image" src="images/webstore/addtoCart.png" width="57" height="22" alt="cart button" /></p></FORM></td>
               <td>&nbsp;</td>
@@ -159,8 +158,7 @@ a:active {
                             <option value="Size: Large $22.00 each">Large$22.00 </option>
                             <option value="Size: XL $22.00 each">XLarge $22.00 </option>
                             <option value="Size: XXL 24.00 each^2.00">XXLarge $24.00 </option>
-                            <option value="Size: 1X Plus $25.00 each^3.00">1X Plus $25.00 </option>
-                            <option value="Size: 2X Plus $26.00 each^4.00">2X Plus $26.00 </option>
+                           
                           </SELECT> 
                           <br /><input type="image" src="images/webstore/addtoCart.png" width="57" height="22" alt="cart button" /></FORM></td>
             </tr>
@@ -193,8 +191,7 @@ a:active {
                               <option value="Size: Large $36.00 each">Large$36.00 </option>
                               <option value="Size: XL $36.00 each">XLarge $36.00 </option>
                               <option value="Size: XXL 37.00 each^1.00">XXLarge $37.00 </option>
-                              <option value="Size: 1X Plus $39.00 each^3.00">1X Plus $39.00</option>
-                              <option value="Size: 2X Plus $41.00 each^5.00">2X Plus $41.00 </option>
+                          
                             </SELECT><br /> <input type="image" src="images/webstore/addtoCart.png" width="57" height="22" alt="cart button" /></form></td>
               <td>&nbsp;</td>
               <td class="lightGreen"><FORM action="http://www.coolcart.net/shop/coolcart.aspx/studentmanagement" method=post name="5930" id="5930" target="loja"><span class="bold">Mens Jacket</span><br />
@@ -215,8 +212,7 @@ a:active {
                     <option value="Size: Large $36.00 each">Large$36.00 </option>
                     <option value="Size: XL $36.00 each">XLarge $36.00 </option>
                     <option value="Size: XXL 37.00 each^1.00">XXLarge $37.00 </option>
-                    <option value="Size: 1X Plus $39.00 each^3.00">1X Plus $39.00 </option>
-                    <option value="Size: 2X Plus $41.00 each^5.00">2X Plus $41.00 </option>
+                  
                 </SELECT> 
                 <br />   <input type="image" src="images/webstore/addtoCart.png" width="57" height="22" alt="cart button" /></form></td>
             </tr>
@@ -224,35 +220,13 @@ a:active {
             	<td>&nbsp;</td>
             </tr>
               <tr>
-              <th class="lightGreen" scope="row"><img src="images/webstore/clothing/packaway_jacket.jpg" width="150" height="184" border="1"/></th>
-              <td>&nbsp;</td>
               <td class="lightGreen" align="center"><img src="images/webstore/clothing/996n2csmall.jpg" width="150" height="150"border="1" /></td>
+             
+              <td>&nbsp;</td>
+               <th class="lightGreen" scope="row"><!----<img src="images/webstore/clothing/packaway_jacket.jpg" width="150" height="184" border="1"/>----></th>
             </tr>
             <tr>
-              <td class="lightGreen" scope="row"><p><span class="bold">Packaway Jacket</span><br />
-                Great value in a solid color nylon hooded anorak with flannel lining (upper body/hood) for added warmth. Adjustable fit thanks to the drawstring on hood/hem. Anorak easily folds into front pouch for convenience.
-                100% nylon shell with lightweight flannel upper body lining/hood, nylon-lined sleeves/lower body for easy on/off.<br />
-                Navy with White Logo
-                <img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
-                Quantity <INPUT NAME="Qty" class="style1" VALUE="1" size=3> 
-                            <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'>
-						                <INPUT TYPE="HIDDEN" NAME="ID" VALUE="JP73">
-            						    <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Pakaway Jacket">
-						                <INPUT TYPE="HIDDEN" NAME="Price" VALUE="28.00">
-						                <INPUT TYPE="HIDDEN" NAME="Ship" VALUE="">
-            						    <INPUT TYPE="HIDDEN" NAME="Multi" VALUE="Y">
-                                        <br />
-              <SELECT NAME=Size class="style1">
-                              <option value="Size: Small $28.00 each" selected>Small $28.00 </option>
-                              <option value="Size: Medium $28.00 each">Medium $28.00 </option>
-                              <option value="Size: Large $28.00 each">Large$28.00 </option>
-                              <option value="Size: XL $28.00 each">XLarge $28.00 </option>
-                              <option value="Size: XXL 29.50 each^1.50">Size: XXLarge $29.50 </option>
-                              <option value="Size: 1X Plus $31.00 each^3.00">1X Plus $31.00 </option>
-                              <option value="Size: 2X Plus $32.00 each^4.00">2X Plus $32.00 </option>
-                            </SELECT><br /><input type="image" src="images/webstore/addtoCart.png" width="57" height="22" alt="cart button" /></p></td>
-              <td>&nbsp;</td>
-              <td class="lightGreen"><FORM action="http://www.coolcart.net/shop/coolcart.aspx/studentmanagement" method=post name="5930" id="5930" target="loja"><span class="bold">Hooded Sweatshirt</span><br />
+               <td class="lightGreen"><FORM action="http://www.coolcart.net/shop/coolcart.aspx/studentmanagement" method=post name="5930" id="5930" target="loja"><span class="bold">Hooded Sweatshirt</span><br />
 Great value in a solid color nylon hooded anorak with flannel lining (upper body/hood) for added warmth. Adjustable fit thanks to the drawstring on hood/hem. Anorak easily folds into front pouch for convenience.
 100% nylon shell with lightweight flannel upper body lining/hood, nylon-lined sleeves/lower body for easy on/off.<br />Athletic Heather
 <img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
@@ -277,6 +251,29 @@ Great value in a solid color nylon hooded anorak with flannel lining (upper body
                             <br />
 
 <input type="image" src="images/webstore/addtoCart.png" width="57" height="22" alt="cart button" /></FORM></td>
+              <td>&nbsp;</td>
+              <td class="lightGreen" scope="row"><!----<FORM action="http://www.coolcart.net/shop/coolcart.aspx/studentmanagement" method=post name="5930" id="5930" target="loja"><p><span class="bold">Packaway Jacket</span><br />
+                Great value in a solid color nylon hooded anorak with flannel lining (upper body/hood) for added warmth. Adjustable fit thanks to the drawstring on hood/hem. Anorak easily folds into front pouch for convenience.
+                100% nylon shell with lightweight flannel upper body lining/hood, nylon-lined sleeves/lower body for easy on/off.<br />
+                Navy with White Logo
+                <img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
+                Quantity <INPUT NAME="Qty" class="style1" VALUE="1" size=3> 
+                            <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'>
+						                <INPUT TYPE="HIDDEN" NAME="ID" VALUE="JP73">
+            						    <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Pakaway Jacket">
+						                <INPUT TYPE="HIDDEN" NAME="Price" VALUE="28.00">
+						                <INPUT TYPE="HIDDEN" NAME="Ship" VALUE="">
+            						    <INPUT TYPE="HIDDEN" NAME="Multi" VALUE="Y">
+                                        <br />
+              <SELECT NAME=Size class="style1">
+                              <option value="Size: Small $28.00 each" selected>Small $28.00 </option>
+                              <option value="Size: Medium $28.00 each">Medium $28.00 </option>
+                              <option value="Size: Large $28.00 each">Large$28.00 </option>
+                              <option value="Size: XL $28.00 each">XLarge $28.00 </option>
+                              <option value="Size: XXL 29.50 each^1.50">Size: XXLarge $29.50 </option>
+                           
+                            </SELECT><br /><input type="image" src="images/webstore/addtoCart.png" width="57" height="22" alt="cart button" /></p></FORM>----></td>
+             
             </tr>
             <tr>
             	<td colspan=4 align="center"><p><strong><font color="#CC0000">All items run approx. 1 size smaller than normal.</font><br />Allow 2 to 3 weeks shipping for all clothing.</strong></p></td>
