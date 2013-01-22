@@ -1,83 +1,3 @@
-<Cfif isDefined('form.approvehostApp')> 
- 	<cfquery name="approvehostApp" datasource="#application.dsn#">
-        update smg_hosts
-        set HostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.usertype#"> 
-        where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.hostid#">  
-        </cfquery> 
-	<cfif client.usertype eq 7>  
-        <cfquery name="getEmail" datasource="#application.dsn#">
-        select advisorid, email
-        from user_access_rights uar
-        left outer join smg_users u on u.userid = uar.advisorid
-        where uar.userid = #client.userid# and regionid = #client.regionid#
-        </cfquery>
-            <cfif getEmail.advisorid eq 0>
-                <cfscript>
-                // Get Host Mother CBC
-                getEmail = APPCFC.user.getRegionalManager(
-                    regionid= #client.regionid#
-                );
-                </cfscript>
-            </cfif>
-        <cfelseif client.usertype eq 6>
-        	<cfscript>
-                // Get Host Mother CBC
-                getEmail = APPCFC.user.getRegionalManager(
-                    regionid= #client.regionid#
-                );
-                </cfscript>
-        <cfelseif client.usertype lte 5>
-        	
-            <cfscript>
-                // Get Host Mother CBC
-                getEmail = APPCFC.region.getRegionFacilitatorByRegionID(
-                    regionid= #client.regionid#
-                );
-                </cfscript>
-        </cfif>
-        <cfoutput>
-        <!-----Send email indicationg app was approved---->
-    <cfquery name="hostInfo" datasource="mysql">
-    select familylastname
-    from smg_hosts where hostid = #url.hostid#
-    </Cfquery>
-   
-   <cfsavecontent variable="emailMessage">
-                <p>The attached application was approved by #client.name# on #dateformat(now(), 'mm/dd/yyyy')#</p>
-               ******Would be sent to*****
-               sent to #getEmail.email#
-   			   ***************************
-   </cfsavecontent>
-            
-            <!--- Create PDF File - Include Profile and Letters --->
-            <cfdocument name="HostApp" format="pdf">
-	            <!--- Include Application Template --->
-                <cfinclude template="appForPDF.cfm">
-            </cfdocument>
-            
-            <!--- Save PDF File --->
-            
-            <cffile action="write" file="#AppPath.temp#HostApplication.pdf" output="#HostApp#" nameconflict="overwrite">    
-           
-            
-            <!--- send email --->
-            <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                <cfinvokeargument name="email_to" value="#client.email#">
-                <cfinvokeargument name="email_subject" value="Host Application APPROVED for #hostInfo.familylastname# family ">
-                <cfinvokeargument name="email_message" value="#emailMessage#">
-                <cfinvokeargument name="email_from" value="""Host Application Support"" <HostApplication@iseusa.com>">
-                <!--- Attach Students Profile  --->
-                <cfinvokeargument name="email_file" value="#AppPath.temp#HostApplication.pdf">
-         		
-               
-               
-            </cfinvoke>
-      </cfoutput>
-
-
-</Cfif>
-
-
 <cfparam name="form.submitted" default="0">
 <cfparam name="form.regionid" default="#client.regionid#">
 <cfparam name="form.keyword" default="">
@@ -337,7 +257,7 @@
                 <th>Student</th>
                 <th>Status</th>
                 <th>% Complete</th>
-                <th>Approve</th>
+                <th>Actions</th>
             </tr>
             <cfloop query="getResults" startrow="#startrow#" endrow="#endrow#">
                 <cfquery name="RegionName" datasource="#application.dsn#">
@@ -373,11 +293,7 @@
 					<cfif hostAppStatus lte #client.usertype#>
                   		Submitted
                   <cfelse>
-                      <form method="post" action="index.cfm?curdoc=hostApplication/hostAppIndex&hostid=#hostid#">
-                        <input type="image" src="pics/approve.gif" value="ApproveApp"/>
-                        <input type="hidden" name="approveHostApp" />
-                        <input name="submitted" type="hidden" value="1">
-                      </form>
+
                   </cfif> </td>
                 </tr>
             </cfloop>

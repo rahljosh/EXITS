@@ -1,0 +1,46 @@
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		readMe.txt
+	Author:		Marcus Melo
+	Date:		January 22, 2013
+	Desc:		Host Family App Instructions
+
+	Notes:		In order to open the online application from exitsapplication/hostApplication 
+				a virtual directory must be created on IIS/Apache in the root directory.
+				
+				structure:
+				
+				student-management/hostApplication/ (vitual directory from exitsApplication/hostApplication)
+				
+				student-management/nsmg/hostApplication/ (internal HF process)
+
+	
+	************** Production - IIS ************** 
+	
+	Import virtual folder file to IIS site
+	
+	You can find detail instructions on the repository --> Websites\docs\hosting.com
+		
+				
+	************** Development - Apache ************** 
+	
+	http.conf
+	
+	- Add these lines inside the <IfModule alias_module> 
+	
+	# ADD THIS LINE FOR YOUR VIRTUAL DIRECTORY
+    Alias /hostApplication "C:\Websites\www\exitsApplication\hostApplication"	
+	
+	
+	- Add these lines after the first <Directory></Directory>
+	
+	# SETTING DIRECTORY FOR /hostApplication
+	<Directory "C:\Websites\www\exitsApplication\hostApplication">
+		Options None
+		AllowOverride All
+		Order allow,deny
+		Allow from all
+	</Directory>						
+	
+----- ------------------------------------------------------------------------- --->
+
