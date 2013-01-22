@@ -604,7 +604,7 @@
           <p><em> We have just launched this electronic  host family application, and you are one of the first families to use  this new tool.  Please bear with  us as we work out the final bugs. Should you get any errors or feel  that something is confusing, please feel free to let us know how we can  improve the process.  There is a live chat and email support available  through the application if you need immediate assistance while filling  out the application.  Any and all feedback would be greatly appreciated.</em></p>
                             
                               <div style="display: block; float: left; width: 250px;  padding: 10px;  font-family:Arial, Helvetica, sans-serif; font-size: .80em"> <strong><em>To start filling out your application, please click on the following link:</em></strong><br /><br />
-         <Cfif client.companyid eq 10><a href="http://www.case-usa.org/hostApp/" target="_blank"><cfelse><a href="https://www.iseusa.com/hostApp/" target="_blank"></cfif><img src="#client.exits_url#/nsmg/pics/hostAppEmail.jpg" width="200" height="56" border="0"></a> <br /></div>
+         <Cfif client.companyid eq 10><a href="http://www.case-usa.org/hostApplication/" target="_blank"><cfelse><a href="https://www.iseusa.com/hostApplication/" target="_blank"></cfif><img src="#client.exits_url#/nsmg/pics/hostAppEmail.jpg" width="200" height="56" border="0"></a> <br /></div>
          <div style="display: block; float: right; width: 270px; padding: 10px; font-family:Arial, Helvetica, sans-serif; font-size: .80em; border: thin solid ##CCC;"><div><strong><em>Please use the following login information:</em></strong></div><br /><br />
 <div style="width: 50px; float: left;"><img src="#client.exits_url#/nsmg/pics/lock.png" width="39" height="56"></div>
    <div> <strong>Username / Email:</strong><br /> <a href="mailto:#form.email#" target="_blank">#form.email#</a><br />
@@ -1227,12 +1227,12 @@
                      </td>
                </cfif>
            	
-            	<!---
-          		<td valing="top" align="center">
-					<input name="Submit_start" id="submitEHost" type="submit" value="eHost"  alt="Start E-App" border="0" class="buttonBlue" onclick="verifyAddress('submitEHost'); return false;" /> <br />
-               		(Host Fam Fills Out App)
-                </td>
-                --->
+            	<cfif APPLICATION.CFC.USER.isOfficeUser()>
+                    <td valing="top" align="center">
+                        <input name="Submit_start" id="submitEHost" type="submit" value="eHost"  alt="Start E-App" border="0" class="buttonBlue" onclick="verifyAddress('submitEHost'); return false;" /> <br />
+                        (Host Fam Fills Out App)
+                    </td>
+                </cfif>
                 
                 <cfif VAL(FORM.hostID)>
                     <td align="Center">   

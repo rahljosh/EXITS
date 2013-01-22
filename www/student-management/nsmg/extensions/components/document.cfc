@@ -432,8 +432,8 @@
         <!--- Check if we have a valid file || isImageFile(); isImage(); --->
         <cfif ListFindNoCase(vAcceptedFilesList,FILE.ServerFileExt)>
 				
-			<!--- Try to resize images, if they are not a valid File CF throws an error --->
-            <!--- <cftry> --->
+			<!--- Try to move file to new folder --->
+            <cftry>
             
                 <cfscript>
 					// Used to try different file names kitchen.jpg / kitchen1.jpg etc.
@@ -480,7 +480,6 @@
                     stResult.message = "File has been uploaded";
                 </cfscript>
            
-           <!--- 
                 <cfcatch type="any">
                 
                     <cfscript>
@@ -492,7 +491,6 @@
                 </cfcatch>
             
             </cftry>  
-			--->           
                 
         <!--- Not a valid File --->
         <cfelse>
