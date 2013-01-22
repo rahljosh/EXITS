@@ -17,20 +17,6 @@
     <!--- Param URL variables --->
 	<cfparam name="URL.hashID" default="">
 
-    <cfscript>
-		// Check if Office is opening an application
-		if ( LEN(URL.hashID) ) {
-			
-			// Get Candidate Information
-			//qAuthenticateCandidate = APPLICATION.CFC.STUDENT.getStudentByHashID(hashID=URL.hashID);
-						
-			// Check if we have a valid student
-			if ( qAuthenticateCandidate.recordCount ) {
-					
-			}
-		}
-	</cfscript>
-
 </cfsilent>
 	
 <!--- 
