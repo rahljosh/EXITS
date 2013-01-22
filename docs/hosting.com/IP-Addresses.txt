@@ -1,0 +1,12 @@
+204.12.102.11 - various
+
+204.12.118.242 - extra.exitsapplication.com
+
+204.12.118.243 - macduffie.exitsapplication.com (needs different IP for SSL)
+
+204.12.118.244 - trips.exitsapplication.com (needs different IP for SSL)
+
+204.12.118.245 - *.exitsapplication.com (SSL)
+
+204.12.118.246 - iseusa.com (SSL)
+
