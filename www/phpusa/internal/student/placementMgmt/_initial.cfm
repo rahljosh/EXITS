@@ -41,6 +41,7 @@
     <cfparam name="FORM.reason" default="" /> 
 
     <cfscript>
+	
 		// Check if Student has arrived
 		vHasStudentArrived = 0;
 		vDisableRelocation = '';
@@ -160,13 +161,16 @@
 					changedBy = CLIENT.userID,
 					userType = CLIENT.userType,
 					placementStatus = vPlacementStatus
-				);													 
+				);
 			
 				// Set Page Message
 				SESSION.pageMessages.Add("Form successfully submitted.");
 				
 				// Reload page
-				location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");		
+				//location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");
+				
+				// Go to PIS in order to send it to the intl. rep. - that page redirects back here.
+				location("../letters/_placementInfoSheetDay.cfm?uniqueID=#URL.uniqueID#&assignedID=#URL.assignedID#&pisAction=emailPIS&auto=#CGI.SCRIPT_NAME#");
 			
 			}
 
@@ -227,13 +231,16 @@
 					changedBy = CLIENT.userID,
 					userType = CLIENT.userType,
 					placementStatus = vPlacementStatus
-				);													 
+				);
 			
 				// Set Page Message
 				SESSION.pageMessages.Add("Form successfully submitted.");
 				
 				// Reload page
-				location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");		
+				//location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");
+				
+				// Go to PIS in order to send it to the intl. rep. - that page redirects back here.
+				location("../letters/_placementInfoSheetDay.cfm?uniqueID=#URL.uniqueID#&assignedID=#URL.assignedID#&pisAction=emailPIS&auto=#CGI.SCRIPT_NAME#");
 			
 			}
 		
@@ -347,15 +354,18 @@
 
 </cfsilent>
 
-<script language="javascript">
+<script type="text/javascript">
 	// Display warning when page is ready
 	$(document).ready(function() {
 							   
 		// opener.location.reload();
 		// Display Form Fields
 		displayFormFields();
-		
 	});
+	
+	var sendPIS = function() {
+		alert("HELLO");
+	}
 	
 	var displayFormFields = function() { 			
 		
@@ -582,6 +592,10 @@
 </script>
 
 <cfoutput>
+
+	<cfscript>
+		SESSION.pageMessages.Add("Student has been unplaced.");
+	</cfscript>
     
 	<!--- Page Messages --->
     <gui:displayPageMessages 
@@ -795,7 +809,7 @@
                                 name="hostIDSuggest" 
                                 id="hostIDSuggest"
                                 value="#FORM.hostIDSuggest#" 
-                                autosuggest="cfc:internal.extensions.components.host.lookupHostFamily({cfautosuggestvalue})" 
+                                autosuggest="cfc:internal.extensions.components.host.lookupHostFamily({cfautosuggestvalue},true)" 
                                 class="xLargeField"
                                 maxResultsDisplay="10"
                                 showautosuggestloadingicon="true"
@@ -803,7 +817,11 @@
                                 
 							<cfinput type="hidden" name="hostID" id="hostID" value="#FORM.hostID#" bind="cfc:internal.extensions.components.host.getHostByName({hostIDSuggest})" />
                             
-                            <p class="formNote">Type in host family last name and select it from the list.</p>
+                            <p class="formNote">
+                            	Type in host family last name and select it from the list.
+                            	<br/>
+                                NOTE: If you do not see the family you are looking for listed check their CBCs.
+                          	</p>
 
                             <!--- Welcome Family --->
                             <span>Is this a Welcome Family? <em>*</em></span>

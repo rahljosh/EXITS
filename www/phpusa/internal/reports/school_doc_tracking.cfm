@@ -8,122 +8,153 @@
 
 <body>
 
-<cfif not IsDefined('FORM.programid')>
-	<cfinclude template="../error_message.cfm">
-</cfif>
+<cfsilent>
 
-<cfparam name="FORM.showOriginalSchoolAcceptance" default="">
-
-<!--- Get Program --->
-<cfquery name="qGetPrograms" datasource="MYSQL">
-	SELECT	
-    	*
-	FROM 	
-    	smg_programs 
-	LEFT JOIN 
-    	smg_program_type ON type = programtypeid
-	WHERE 
-    	programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> )
-</cfquery>
-
-<cfquery name="qGetResults" datasource="MySql">
-	SELECT 
-    	s.studentid, 
-        s.firstname, 
-        s.familylastname, 
-        s.sex, 
-        s.country, 
-        s.uniqueid, 
-        s.programid, 
-        s.dob,
-        s.php_grade_student,
-		smg_programs.programname,
-		u.businessname,
-		sc.schoolname,
-		php.datecreated, 
-        php.dateplaced, 
-        php.school_acceptance,
-        php.original_school_acceptance,
-        php.hf_placement, 
-        php.i20received,
-		php.hf_application, 
-        php.transfer_type, 
-        php.return_student,
-        
-        IFNULL(alp.name, 'n/a') AS PHPReturnOption
-	FROM 
-    	smg_students s
-	INNER JOIN
-    	php_students_in_program php ON php.studentid = s.studentid
-	LEFT JOIN 
-    	smg_programs ON smg_programs.programid = php.programid 
-	LEFT JOIN 
-    	smg_users u on u.userid = s.intrep 
-	LEFT JOIN 
-    	php_schools sc ON sc.schoolid = php.schoolid
-    LEFT OUTER JOIN
-        applicationLookUp alp ON alp.fieldID = php.return_student
-             AND
-                fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="PHPReturnOptions">            
-    WHERE 
-    	php.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#"> 
-    AND 
-    	php.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-    AND
-    	php.programid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> )
-    ORDER BY 
-    	#FORM.orderby# 
-</cfquery>
+    <cfparam name="FORM.programID" default="0">
+    <cfparam name="FORM.documents" default="">
+    <cfparam name="FORM.orderBy" default="">
+    
+    <!--- Get Programs --->
+    <cfquery name="qGetPrograms" datasource="#APPLICATION.DSN#">
+        SELECT *
+        FROM smg_programs 
+        LEFT JOIN smg_program_type ON type = programtypeid
+        WHERE programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> )
+    </cfquery>
+    
+    <cfquery name="qGetResults" datasource="#APPLICATION.DSN#">
+        SELECT 
+            s.studentid, 
+            s.firstname, 
+            s.familylastname, 
+            s.sex, 
+            s.country, 
+            s.uniqueid, 
+            s.programid, 
+            s.dob,
+            s.php_grade_student,
+            smg_programs.programname,
+            u.businessname,
+            sc.schoolname,
+            php.hostID,
+            php.areaRepID,
+            php.datecreated, 
+            php.dateplaced, 
+            php.school_acceptance,
+            php.original_school_acceptance,
+            php.hf_placement, 
+            php.i20received,
+            php.hf_application, 
+            php.transfer_type, 
+            php.return_student,
+            php.orientationSignOff_host,
+            php.orientationSignOff_student,
+            IFNULL(alp.name, 'n/a') AS PHPReturnOption
+        FROM 
+            smg_students s
+        INNER JOIN
+            php_students_in_program php ON php.studentid = s.studentid
+        LEFT JOIN 
+            smg_programs ON smg_programs.programid = php.programid 
+        LEFT JOIN 
+            smg_users u on u.userid = s.intrep 
+        LEFT JOIN 
+            php_schools sc ON sc.schoolid = php.schoolid
+        LEFT OUTER JOIN
+            applicationLookUp alp ON alp.fieldID = php.return_student
+                 AND
+                    fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="PHPReturnOptions">            
+        WHERE
+            php.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#"> 
+        AND
+            php.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        AND
+            php.programid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> )
+        ORDER BY 
+            #FORM.orderby# 
+    </cfquery>
+    
+</cfsilent>
 
 <!-----Company Information----->
 <cfinclude template="../querys/get_company_short.cfm">
 
 <cfoutput>
 
-<table width="95%" cellpadding=0 cellspacing="0" align="center">
-	<tr><td align="center"><span class="application_section_header">#companyshort.companyshort# - Document Tracking Report</span></td></tr>
-</table><br>
-
-<table width="95%" cellpadding=4 cellspacing="0" align="center" frame="box">
-	<tr><td align="center">
-		Program(s) Included in this Report:<br>
-		<cfloop query="qGetPrograms"><b>#programname# &nbsp; (#ProgramID#)</b><br></cfloop>
-		Total of Students <b>placed</b> in program: #qGetResults.recordcount#
-	</td></tr>
-</table><br>
-
-<table width="95%" cellpadding="3" cellspacing="0" align="center" style="border:1px solid ##666;">	
-	<tr>
-		<td width="15%"><b>Student</b></td>
-        <td width="6%"><b>GRD.</b></td>
-		<td width="7%"><b>DOB</b></td>
-		<td width="15%"><b>Intl. Agent</b></td>
-		<td width="7%"><b>Date Entered</b></td>
-		<td width="16%"><b>School</b></td>
-		<td width="7%"><b>Ret/Trans/Ext</b></td>
-     	<td width="7%"><b>Orig. School Accep.</b></td>
-		<td width="7%"><b>School Accep.</b></td>
-		<td width="6%"><b>I-20</b></td>
-		<td width="7%"><b>HF Place</b></td>
-		<td width="7%"><b>HF App</b></td>
-	</tr>
-	<cfloop query="qGetResults">
-		<tr bgcolor="#iif(qGetResults.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
-			<td>#qGetResults.firstname# #qGetResults.familylastname# (###qGetResults.studentid#)</td>
-            <td><cfif VAL(qGetResults.php_grade_student)>#qGetResults.php_grade_student#th</cfif></td>
-			<td><cfif qGetResults.dob NEQ ''>#DateFormat(qGetResults.dob, 'mm/dd/yyyy')#</cfif></td>			
-			<td>#qGetResults.businessname#</td>
-			<td><cfif qGetResults.datecreated NEQ ''>#DateFormat(qGetResults.datecreated, 'mm/dd/yyyy')#</cfif></td>
-			<td>#qGetResults.schoolname#</td>
-			<td><i><font size="-2">#qGetResults.PHPReturnOption#</font></i></td>
-       		<td><i><font size="-2"><cfif qGetResults.original_school_acceptance NEQ ''>#DateFormat(qGetResults.original_school_acceptance, 'mm/dd/yy')#<cfelse>n/a</cfif></font></i></td>
-			<td><i><font size="-2"><cfif qGetResults.school_acceptance NEQ ''>#DateFormat(qGetResults.school_acceptance, 'mm/dd/yy')#<cfelse>n/a</cfif></font></i></td>
-			<td><i><font size="-2"><cfif qGetResults.i20received NEQ ''>#DateFormat(qGetResults.i20received, 'mm/dd/yy')#<cfelse>n/a</cfif></font></i></td>
-			<td><i><font size="-2"><cfif qGetResults.hf_placement NEQ ''>#DateFormat(qGetResults.hf_placement, 'mm/dd/yy')#<cfelse>n/a</cfif></font></i></td>
-			<td><i><font size="-2"><cfif qGetResults.hf_application NEQ ''>#DateFormat(qGetResults.hf_application, 'mm/dd/yy')#<cfelse>n/a</cfif></font></i></td>		
-		</tr>								
-	</cfloop>
-</table>
+    <table width="95%" cellpadding=0 cellspacing="0" align="center">
+        <tr><td align="center"><span class="application_section_header">#companyshort.companyshort# - Document Tracking Report</span></td></tr>
+    </table><br/>
+    
+    <table width="95%" cellpadding=4 cellspacing="0" align="center" frame="box">
+        <tr><td align="center">
+            Program(s) Included in this Report:<br/>
+            <cfloop query="qGetPrograms"><b>#programname# &nbsp; (#ProgramID#)</b><br/></cfloop>
+            Total of Students <b>placed</b> in program: #qGetResults.recordcount#
+        </td></tr>
+    </table><br/>
+    
+    <table width="95%" cellpadding="3" cellspacing="0" align="center" style="border:1px solid ##666;">	
+        <tr>
+            <td><b>Student</b></td>
+            <td><b>GRD.</b></td>
+            <td><b>DOB</b></td>
+            <td><b>Intl. Agent</b></td>
+            <td><b>Date Entered</b></td>
+            <td><b>School</b></td>
+            <td><b>Ret/Trans/Ext</b></td>
+            <cfloop list="#FORM.documents#" index="i">
+            	<cfif i EQ 'original_school_acceptance'><td><b>Orig. School Accep.</b></td></cfif>
+                <cfif i EQ 'school_acceptance'><td><b>School Accep.</b></td></cfif>
+                <cfif i EQ 'i20received'><td><b>I-20</b></td></cfif>
+                <cfif i EQ 'hf_placement'><td><b>HF Place</b></td></cfif>
+                <cfif i EQ 'hf_application'><td><b>HF App</b></td></cfif>
+                <cfif i EQ 'orientationSignOff_host'><td><b>HF Orientation Sign-Off </b></td></cfif>
+                <cfif i EQ 'orientationSignOff_student'><td><b>Student Orientation Sign-Off</b></td></cfif>
+                <cfif i EQ 'hf_cbc'><td><b>HF CBC</b></td></cfif>
+                <cfif i EQ 'rep_cbc'><td><b>Representative CBC</b></td></cfif>
+                <cfif i EQ 'rep_training'><td><b>Representative Training</b></td></cfif>
+           	</cfloop>
+        </tr>
+        <cfloop query="qGetResults">
+            <tr bgcolor="#iif(qGetResults.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
+                <td>#qGetResults.firstname# #qGetResults.familylastname# (###qGetResults.studentid#)</td>
+                <td><cfif VAL(qGetResults.php_grade_student)>#qGetResults.php_grade_student#th</cfif></td>
+                <td><cfif qGetResults.dob NEQ ''>#DateFormat(qGetResults.dob, 'mm/dd/yyyy')#</cfif></td>			
+                <td>#qGetResults.businessname#</td>
+                <td><cfif qGetResults.datecreated NEQ ''>#DateFormat(qGetResults.datecreated, 'mm/dd/yyyy')#</cfif></td>
+                <td>#qGetResults.schoolname#</td>
+                <td><i><font size="-2">#qGetResults.PHPReturnOption#</font></i></td>
+                <cfloop list="#FORM.documents#" index="i">
+                	<cfif i NEQ 'hf_cbc' AND i NEQ 'rep_cbc' AND i NEQ 'rep_training'>
+                    	<td><i><font size="-2"><cfif Evaluate('qGetResults.#i#') NEQ ''>#DateFormat(Evaluate('qGetResults.#i#'), 'mm/dd/yy')#<cfelse>n/a</cfif></font></i></td>
+                    <cfelseif i EQ 'hf_cbc'>
+                    	<cfscript>
+							vIsHostCBCValid = APPLICATION.CFC.Host.isCBCValid(hostID = #VAL(hostID)#);
+						</cfscript>
+                        <td><i><font size="-2"><cfif vIsHostCBCValid AND VAL(hostID)>Valid<cfelse>n/a</cfif></font></i></td>
+                   	<cfelseif i EQ 'rep_cbc'>
+                    	<cfscript>
+							qIsRepCBCValid = APPLICATION.CFC.User.getCBC(userID=#VAL(areaRepID)#,isNotExpired=true);
+						</cfscript>
+                        <td><i><font size="-2"><cfif VAL(qIsRepCBCValid.recordCount) AND VAL(areaRepID)>Valid<cfelse>n/a</cfif></font></i></td>
+                    <cfelseif i EQ 'rep_training'>
+                    	<cfset vTrainingDisplay = "">
+                    	<cfloop list="#FORM.programID#" index="j">
+                        	<cfscript>
+								if(NOT VAL(APPLICATION.CFC.User.getRepTraining(userID=#VAL(areaRepID)#,programID=#j#).approvedTraining)) {
+									vTrainingDisplay = "n/a";
+								}
+							</cfscript>
+                        </cfloop>
+                        <cfif vTrainingDisplay EQ "">
+                        	<cfset vTrainingDisplay = "complete">
+                       	</cfif>
+                        <td><i><font size="-2">#vTrainingDisplay#</font></i></td>
+					</cfif>
+                </cfloop>
+            </tr>								
+        </cfloop>
+    </table>
 
 </cfoutput>
 

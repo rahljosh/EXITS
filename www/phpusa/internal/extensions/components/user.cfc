@@ -79,7 +79,6 @@
 		<cfreturn qGetUsers>
 	</cffunction>
 
-
 	<cffunction name="getFieldUsers" access="public" returntype="query" output="false" hint="Gets a list of supervised users | Managers - Advisors - Area Reps">
         <cfargument name="usertype" type="numeric" hint="usertype is required">
         <cfargument name="userID" type="numeric" hint="userID is required">
@@ -176,6 +175,99 @@
                
 		<cfreturn qGetFieldUsers>
 	</cffunction>
+    
+    <cffunction name="getRepTraining" access="public" returntype="query" output="no" hint="gets the training records for the given user">
+    	<cfargument name="userID" type="numeric" required="yes" hint="userID is required">
+        <cfargument name="programID" type="numeric" required="no" hint="programID is not required">
+        
+        <cfquery name="qGetTraining" datasource="#APPLICATION.DSN#">
+   			SELECT t.*
+            FROM php_rep_season t
+            WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+            <cfif ARGUMENTS.programID>
+            	AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.programID)#">
+           	</cfif>
+        </cfquery>
+        
+        <cfreturn qGetTraining>
+        
+    </cffunction>
 
+	<!--- ------------------------------------------------------------------------- ----
+		
+		CBC FUNCTIONS
+	
+	----- ------------------------------------------------------------------------- --->
+    
+    <cffunction name="getCBC" access="public" returntype="query" output="no" hint="Gets the cbc records associated with the given user">
+    	<cfargument name="userID" type="numeric" hint="userID is required">
+        <cfargument name="isNotExpired" type="boolean" default="false" hint="isNotExpired is not required (if set to true it will only return records that have not yet expired AND are approved)">
+        
+        <cfquery name="qGetCBC" datasource="#APPLICATION.DSN#">
+            SELECT
+            	u.userID,
+                u.firstName,
+                u.lastName,
+                u.SSN,
+                u.DOB,
+                cbc.*
+            FROM smg_users u
+            INNER JOIN php_users_cbc cbc ON cbc.userID = u.userID
+            WHERE u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+            <cfif ARGUMENTS.isNotExpired>
+                AND cbc.date_expiration > NOW()
+                AND cbc.date_approved IS NOT NULL
+            </cfif>
+            ORDER BY date_submitted DESC
+        </cfquery>
+        <cfreturn qGetCBC>
+    </cffunction>
+    
+    <cffunction name="setCBC" access="public" returntype="void" output="no" hint="inserts or updates a user cbc record">
+    	<cfargument name="date_submitted" type="string" hint="date_submitted is required">
+        <cfargument name="userID" type="numeric" default="0" hint="userID is not required (but it is neccessary when adding)">
+        <cfargument name="date_authorization" type="string" default="" hint="date_authorization is not required">
+        <cfargument name="date_approved" type="string" default="" hint="date_approved is not required">
+        <cfargument name="notes" type="string" default="" hint="notes is not required">
+        <cfargument name="id" type="numeric" default="0" hint="id is not required (if this equals 0 it will insert, otherwise it will attempt to update that record)">
+        
+        <cfif VAL(ARGUMENTS.id)>
+       		<cfquery datasource="#APPLICATION.DSN#">
+            	UPDATE 
+                	php_users_cbc
+                SET
+                    notes = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.notes#">,
+                    date_authorization = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date_authorization#" null="#NOT IsDate(ARGUMENTS.date_authorization)#">,
+                    date_submitted = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date_submitted#" null="#NOT IsDate(ARGUMENTS.date_submitted)#">,
+                    date_expiration = <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('yyyy',+1,ARGUMENTS.date_submitted)#">,
+                    date_approved = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date_approved#" null="#NOT IsDate(ARGUMENTS.date_approved)#">
+              	WHERE
+                	Id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.id)#">
+            </cfquery>
+        <cfelse>
+        	<cfquery datasource="#APPLICATION.DSN#">
+            	INSERT INTO php_users_cbc (
+                	userID,
+                    notes,
+                    date_authorization,
+                    date_submitted,
+                    date_expiration,
+                    date_approved )
+               	VALUES (
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.notes#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date_authorization#" null="#NOT IsDate(ARGUMENTS.date_authorization)#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date_submitted#" null="#NOT IsDate(ARGUMENTS.date_submitted)#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('yyyy',+1,ARGUMENTS.date_submitted)#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date_approved#" null="#NOT IsDate(ARGUMENTS.date_approved)#"> )
+            </cfquery>
+        </cfif>
+    </cffunction>
+    
+    <!--- ------------------------------------------------------------------------- ----
+		
+		END CBC FUNCTIONS
+	
+	----- ------------------------------------------------------------------------- --->
 
 </cfcomponent>

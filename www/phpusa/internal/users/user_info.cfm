@@ -17,10 +17,6 @@
     <cfparam name="URL.userID" default="0">
     <cfparam name="URL.ID" default="0">
     
-    <cfscript>
-		qGetPrograms = APPLICATION.CFC.PROGRAM.getPrograms(isActive=1,dateActive=1,companyID=6);
-	</cfscript>
-    
 	<cfif LEN(URL.uniqueID)>
     
         <cfquery name="qGetUserID" datasource="MySQL">
@@ -39,6 +35,12 @@
         <cfset URL.userID = URL.ID>	
 
     </cfif>
+    
+    <cfscript>
+		qGetPrograms = APPLICATION.CFC.PROGRAM.getPrograms(isActive=1,dateActive=1,companyID=6);
+		qGetCBC = APPLICATION.CFC.user.getCBC(userID = #URL.userID#);
+		qValidCBC = APPLICATION.CFC.user.getCBC(userID = #URL.userID#,isNotExpired=true);
+	</cfscript>
 
 	<!----Rep Info---->
     <cfquery name="qGetUserInformation" datasource="mysql">
@@ -176,6 +178,8 @@
 					<tr>
                     	<td colSpan="3" height="10">&nbsp;</td>
                   	</tr>
+                    
+                    <!--- TOP ROW - BEGIN --->
 					<tr>
 						<td width="10">&nbsp;</td>
 						<td colspan=3>
@@ -291,12 +295,9 @@
                                                                             	<br/>
                                                                             	<b>Training Approved</b>
                                                                                 <cfloop query="qGetPrograms">
-                                                                                	<cfquery name="qGetTrainingApproved" datasource="#APPLICATION.DSN#">
-                                                                                        SELECT *
-                                                                                        FROM php_intl_rep_season
-                                                                                        WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetUserInformation.userID)#">
-                                                                                        AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(programID)#">
-                                                                                    </cfquery>
+                                                                                	<cfscript>
+																						qGetTrainingApproved = APPLICATION.CFC.User.getRepTraining(userID=#qGetUserInformation.userID#,programID=#programID#);
+																					</cfscript>
                                                                                 	<br/>
                                                                                     <input
                                                                                     	type="checkbox"
@@ -334,6 +335,9 @@
                       	</td>
 						<td width="10">&nbsp;</td>
 					</tr>
+                    <!--- TOP ROW - END --->
+                    
+                    <!--- SECOND ROW - BEGIN --->
 					<tr>
 						<td width="10">&nbsp;</td>
 						<td width=50%>
@@ -526,6 +530,9 @@
                        		</table>
                   		</td>
                    	</tr>
+                    <!--- SECOND ROW - END --->
+                    
+                    <!--- THIRD ROW - BEGIN --->
                     <tr>
                     	<td width="10">&nbsp;</td>
                         <td width=50%>
@@ -593,6 +600,70 @@
 							</table> 
 						</td>
                    	</tr>
+                    <!--- THIRD ROW - END --->
+                    
+                    <!--- FOURTH ROW - BEGIN --->
+                    <cfif qGetUserInformation.userType EQ 7 AND CLIENT.userType LTE 3>
+                        <tr>
+                            <td width="10">&nbsp;</td>
+                            <!--- CBCs --->
+                            <td width="100%" colspan="3">
+                                <table cellspacing="0" cellpadding="3" width="100%" border="0">
+                                    <tr>
+                                        <td class="groupTopLeft">&nbsp;</td>
+                                        <td class="groupCaption" nowrap="true">
+                                        	Criminal Background Checks
+											<cfif not isDefined('URL.access')>
+                                            	[ <A href="?curdoc=users/edit_user_cbc&id=#URL.userID#">EDIT</a> ]
+											</cfif>
+											<cfif NOT VAL(qValidCBC.recordCount)>
+                                            	<font color="red"> - ATTENTION: this user does not have a valid CBC.</font>
+											</cfif>
+                                      	</td>
+                                        <td class="groupTop" width="95%">&nbsp;</td>
+                                        <td class="groupTopRight">&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="groupLeft">&nbsp;</td>
+                                        <td colspan="2">
+                                            <table id="rgbPersonalDetails" cellpadding="0" cellspacing="0" border="0" width="100%">
+                                                <tr>
+                                                    <td><u><b>Date Authorized</b></u></td>
+                                                    <td><u><b>Date Submitted</b></u></td>
+                                                    <td><u><b>Date Expired</b></u></td>
+                                                    <td><u><b>Date Approved</b></u></td>
+                                                    <td><u><b>Notes</b></u></td>
+                                                </tr>
+                                                <!--- loop through here --->
+                                                <cfloop query="qGetCBC">
+                                                	<tr>
+                                                    	<td>#DateFormat(date_authorization,'mm/dd/yyyy')#</td>
+                                                        <td>#DateFormat(date_submitted,'mm/dd/yyyy')#</td>
+                                                        <td><font <cfif date_expiration LT NOW()>color="red"</cfif>>#DateFormat(date_expiration,'mm/dd/yyyy')#</font></td>
+                                                        <td><cfif LEN(date_approved)>#DateFormat(date_approved,'mm/dd/yyyy')#<cfelse><font color="red">Missing</font></cfif></td>
+                                                        <td>#notes#</td>
+                                                    </tr>
+                                                </cfloop>
+                                            </table>
+                                        </td>
+                                        <td class="groupRight">&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="groupBottomLeft">
+                                            <img height=5 src='spacer.gif' width=1 >
+                                        </td>
+                                        <td class="groupBottom" colspan="2">
+                                            <img height=1 src='spacer.gif' width=1 >
+                                        </td>
+                                        <td class="groupBottomRight">
+                                            <img height=1 src='spacer.gif' width=1 >
+                                        </td>
+                                    </tr>
+                                </table> 
+                            </td>
+                        </tr>
+                  	</cfif>
+                    <!--- FOURTH ROW - END --->
                	</table>
 			</td>
        	</tr>

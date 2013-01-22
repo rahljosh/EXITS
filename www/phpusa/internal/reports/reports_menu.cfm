@@ -29,26 +29,45 @@
 	<table cellpadding=3 cellspacing="0" align="center" width="100%">
 		<tr>
 			<td width="50%" valign="top">
-				<cfform action="reports/school_doc_tracking.cfm" method="POST" target="blank">
-				<Table cellpadding=3 cellspacing="0" width="100%">
-					<tr><th colspan="2" bgcolor="##C4CDE7">Document Tracking Report</th></tr>
-					<tr>
-						<td align="right">Program :</td>
-						<td><cfselect name="programid" multiple size="5">
-								<cfloop query="get_programs"><option value="#programid#">#programname#</option></cfloop>
-							</cfselect>
-						</td>
-					</tr>							
-					<tr>
-						<td align="right">Order by:</td>
-						<td><cfselect name="orderby">
-								<option value="schoolname" selected="selected">School Name</option>
-								<option value="businessname">Intl. Agent</option>
-							</cfselect>
-						</td>
-					</tr>
-					<tr><td colspan="2" align="center" bgcolor="##C4CDE7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
-				</table>
+            	<cfform action="reports/school_doc_tracking.cfm" method="POST" target="blank">
+					<table cellpadding=3 cellspacing="0" width="100%">
+						<tr><th colspan="2" bgcolor="##C4CDE7">Document Tracking Report</th></tr>
+						<tr>
+                            <td align="right" width="40%">Program :</td>
+                            <td width="60%">
+                            	<cfselect name="programid" multiple size="5" style="width:200px;">
+                                    <cfloop query="get_programs"><option value="#programid#">#programname#</option></cfloop>
+                                </cfselect>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">Documents :</td>
+                            <td>
+                            	<cfselect name="documents" multiple size="5" style="width:200px;">
+                                    <option value="original_school_acceptance">Original School Acceptance</option>
+                                    <option value="school_acceptance">School Acceptance</option>
+                                    <option value="i20received">I-20</option>
+                                    <option value="hf_placement">HF Placement</option>
+                                    <option value="hf_application">HF Application</option>
+                                    <option value="orientationSignOff_host">HF Orientation Sign-Off</option>
+                                    <option value="orientationSignOff_student">Student Orientation Sign-Off</option>
+                                    <option value="hf_cbc">HF CBC</option>
+                                    <option value="rep_cbc">Representative CBC</option>
+                                    <option value="rep_training">Representative Training</option>
+                                </cfselect>
+                            </td>
+                        </tr>					
+                        <tr>
+                            <td align="right">Order by:</td>
+                            <td>
+                            	<cfselect name="orderby" style="width:200px;">
+                                    <option value="schoolname" selected="selected">School Name</option>
+                                    <option value="businessname">Intl. Agent</option>
+                                </cfselect>
+                            </td>
+                        </tr>
+                        <tr><td colspan="2" align="center" bgcolor="##C4CDE7"><input type="image" src="pics/view.gif" align="center" border=0></td></tr>
+                    </table>
 				</cfform>
 			</td>
 			<td width="50%" valign="top">
