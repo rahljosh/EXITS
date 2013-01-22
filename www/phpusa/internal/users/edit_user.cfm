@@ -311,12 +311,9 @@
 								<td>
 									<table cellSpacing="0" cellPadding="0" width="100%" border="0">
                                     	<cfloop query="qGetPrograms">
-                                            <cfquery name="qGetTrainingApproved" datasource="#APPLICATION.DSN#">
-                                                SELECT *
-                                                FROM php_intl_rep_season
-                                                WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(userinfo.userID)#">
-                                                AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(programID)#">
-                                            </cfquery>
+                                            <cfscript>
+												qGetTrainingApproved = APPLICATION.CFC.User.getRepTraining(userID=#userInfo.userID#,programID=#programID#);
+											</cfscript>
                                             <tr valign="middle" height="30">
                                             	<td width="20" align="center"></td>
                                                 <td><span class="normalLabel">#programName#:</span></td>

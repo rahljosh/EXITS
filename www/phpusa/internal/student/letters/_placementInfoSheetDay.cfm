@@ -17,6 +17,7 @@
     <cfparam name="URL.uniqueID" default="">
     <cfparam name="URL.assignedID" default="">
     <cfparam name="URL.pisAction" default="">
+    <cfparam name="URL.auto" default="">
     
     <!--- Param FORM Variables --->    
     <cfparam name="FORM.submitted" default="0">
@@ -40,6 +41,13 @@
 		// Check if there is a valid URL variable
 		if ( LEN(URL.pisAction) ) {
 			FORM.pisAction = URL.pisAction;
+		}
+		
+		// Set the level directory variable based on wether or not auto is set
+		if ( LEN(URL.auto) ) {
+			level = "../";	
+		} else {
+			level = "";	
 		}
 
 		// Get Student Information by uniqueID
@@ -174,12 +182,12 @@
                 <tr>
                     <td>&nbsp;</td>
                     <td>
-                        <input name="Submit" type="image" src="../pics/submit.gif" border="0" alt=" Send Email ">
+                        <input name="Submit" type="image" src="#level#../pics/submit.gif" border="0" alt=" Send Email ">
                         &nbsp; &nbsp; &nbsp;
-                        <input type="image" value="close window" src="../pics/close.gif" alt=" Close this Screen " onClick="javascript:window.close()">
+                        <input type="image" value="close window" src="#level#../pics/close.gif" alt=" Close this Screen " onClick="javascript:window.close()">
                         &nbsp; &nbsp; &nbsp;
                         <a href="http://#CGI.HTTP_HOST#/#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#&pisAction=printPIS">
-                            <img src="../pics/print.png" border="0" alt=" Print ">
+                            <img src="#level#../pics/print.png" border="0" alt=" Print ">
                         </a>
                     </td>
                 </tr>
@@ -196,7 +204,7 @@
 			<!--- Header --->
             <tr>
                 <td align="center">
-                    <img src="../../images/#CLIENT.companyID#_short_profile_header.jpg" width="790" height="170" />
+                    <img src="#level#../../images/#CLIENT.companyID#_short_profile_header.jpg" width="790" height="170" />
                 </td>
             </tr>
             <tr>
@@ -224,7 +232,7 @@
                 </td>
             </tr>  
             <!--- Host Family --->
-            <tr class="placementLetterBlueplacementLetterDetail"><td><img src="../pics/pisHostFamily.png" /></td></tr> 
+            <tr class="placementLetterBlueplacementLetterDetail"><td><img src="#level#../pics/pisHostFamily.png" /></td></tr> 
             <tr>
                 <td>                
 
@@ -311,9 +319,9 @@
                     <table cellpadding="2" cellspacing="0" align="center" class="placementLetterTableNoBorder">
                         
                         <tr class="placementLetterBlueplacementLetterDetail">
-                            <td><img src="../pics/pisSiblings.png" /></td>
-                            <td><img src="../pics/pisPets.png" /></td>
-                            <td><img src="../pics/pisInterests.png" /></td>
+                            <td><img src="#level#../pics/pisSiblings.png" /></td>
+                            <td><img src="#level#../pics/pisPets.png" /></td>
+                            <td><img src="#level#../pics/pisInterests.png" /></td>
                         </tr> 
                         <tr>
                         	<td valign="top">
@@ -332,7 +340,7 @@
                                             <td>
                                                 #REReplace(qGetHostChildren.name,"^(#RepeatString('[^ ]* ',1)#).*","\1")#
                                                 <cfif qGetHostChildren.shared EQ 'yes'>
-                                                    <img src="../pics/pisShareRoomIcon.png" height="16" border="0">
+                                                    <img src="#level#../pics/pisShareRoomIcon.png" height="16" border="0">
                                                 </Cfif>
                                             </td>
                                             <td align="center">
@@ -455,7 +463,7 @@
 			--->
                           	
             <!--- School Address & Contact Info --->    
-            <tr class="placementLetterBlueplacementLetterDetail"><td><img src="../pics/pisSchool.png" /></td></tr> 
+            <tr class="placementLetterBlueplacementLetterDetail"><td><img src="#level#../pics/pisSchool.png" /></td></tr> 
             <tr>
                 <td> 
                      
@@ -554,7 +562,7 @@
             </tr>
             
             <!--- Area Representative --->
-            <tr class="placementLetterBlueplacementLetterDetail"><td><img src="../pics/pisAreaRep.png" /></td></tr> 
+            <tr class="placementLetterBlueplacementLetterDetail"><td><img src="#level#../pics/pisAreaRep.png" /></td></tr> 
             <tr>
                 <td> 
 
@@ -589,7 +597,7 @@
             </tr>
             
             <!--- Student Information ---> 
-            <tr class="placementLetterBlueplacementLetterDetail"><td><img src="../pics/pisStudentInfo.png" /></td></tr>  
+            <tr class="placementLetterBlueplacementLetterDetail"><td><img src="#level#../pics/pisStudentInfo.png" /></td></tr>  
             <tr>
                 <td>
                     <p style="margin-top:5px;">Student is applying for the #qGetProgramInfo.programName# program starting in #DateFormat(qGetSchoolDates.year_begins, 'mmmm')#.</p>	
@@ -604,11 +612,11 @@
             <tr>
                 <td align="center">
                     <div class="placementLetterButtons">
-                    	<img src="../pics/pisShareRoomIcon.png" height="16"> Sharing a Room 
+                    	<img src="#level#../pics/pisShareRoomIcon.png" height="16"> Sharing a Room 
 	                    &nbsp; &middot; &nbsp;
-                        <img src="../pics/pisWikipediaIcon.png" height="16"> Wikipedia Information 
+                        <img src="#level#../pics/pisWikipediaIcon.png" height="16"> Wikipedia Information 
                         &nbsp; &middot; &nbsp;
-                        <img src="../pics/pisAirportIcon.png" height="16"> Airport Information              
+                        <img src="#level#../pics/pisAirportIcon.png" height="16"> Airport Information              
                     </div>
                 </td>
             </tr>                    
@@ -664,7 +672,7 @@
             <!--- Create PDF File - Include PIS --->
             <cfdocument name="placementInfoPDF" format="pdf">
                 <!--- Include CSS --->
-                <link rel="stylesheet" href="../linked/css/baseStyle.css" type="text/css">
+                <link rel="stylesheet" href="#level#../linked/css/baseStyle.css" type="text/css">
 
 	            <!--- Include PIS Template --->
                 #placementInfo#	
@@ -687,7 +695,7 @@
             <gui:pageHeader
                 headerType="applicationNoHeader"
                  width="98%"
-                filePath="../"
+                filePath="#level#../"
             />	
 
             <cfif SESSION.pageMessages.length()>
@@ -719,13 +727,18 @@
             <gui:pageFooter
                 footerType="application"
                  width="98%"
-                filePath="../"
+                filePath="#level#../"
             />
             
-            <script language="javascript">
-                // Close Window After 2 Seconds
-                setTimeout(function() { parent.$.fn.colorbox.close(); }, 2000);
-            </script>
+            <!--- Redirect back to the calling page if it was called --->
+            <cfif LEN(URL.auto)>
+            	<cflocation url="#URL.auto#?unqID=#URL.uniqueID#&assignedID=#URL.assignedID#">
+            <cfelse>
+				<script language="javascript">
+                    // Close Window After 2 Seconds
+                    setTimeout(function() { parent.$.fn.colorbox.close(); }, 2000);
+                </script>
+         	</cfif>
             
         </cfcase>    
         

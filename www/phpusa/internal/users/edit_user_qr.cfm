@@ -102,22 +102,19 @@
 
 <!--- Go through trainings, update if they exist otherwise insert --->
 <cfloop query="qGetPrograms">
-	<cfquery name="qGetTrainingApproved" datasource="#APPLICATION.DSN#">
-        SELECT *
-        FROM php_intl_rep_season
-        WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.userID)#">
-        AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(programID)#">
-    </cfquery>
+	<cfscript>
+		qGetTrainingApproved = APPLICATION.CFC.User.getRepTraining(userID=#FORM.userID#,programID=#programID#);
+	</cfscript>
     <cfif VAL(qGetTrainingApproved.recordCount)>
     	<cfquery datasource="#APPLICATION.DSN#">
-        	UPDATE php_intl_rep_season
+        	UPDATE php_rep_season
             SET approvedTraining = <cfqueryparam cfsqltype="cf_sql_integer" value="#EVALUATE('FORM.training_#seasonID#')#">
             WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.userID)#">
             AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(programID)#">
         </cfquery>
     <cfelse>
     	<cfquery datasource="#APPLICATION.DSN#">
-        	INSERT INTO php_intl_rep_season (
+        	INSERT INTO php_rep_season (
             	userID,
                 programID,
                 approvedTraining )
