@@ -366,34 +366,38 @@
     </cfif>
 </cfif>
 <cfoutput query="rep_info">
-
-	<cfif stUserPaperwork.accountReviewStatus EQ 'rmReview'>
-        <div class="alert">
-        	<h1>Account Review Required</h1>
-            <em>Reference Questionnaire Needed.</em>
-        </div>
-    <cfelseif stUserPaperwork.accountReviewStatus EQ 'officeReview'>
-        <div class="alert">
-        	<h1>Account Review Required</h1>
-            <em>CBC Approval Needed.</em>
-        </div>
-    <cfelseif stUserPaperwork.accountReviewStatus EQ 'missingTraining'>
-		<div class="alert">
-        	<h1>Account Not Enabled</h1>
-			<cfif NOT stUserPaperwork.isDOSCertificationCompleted AND NOT stUserPaperwork.isTrainingCompleted>
-                <em>User has submitted initial paperwork. DOS Certification and AR Training needed.</em>
-            <cfelseif NOT stUserPaperwork.isDOSCertificationCompleted>
-                <em>User has submitted initial paperwork. DOS Certification needed.</em>
-            <cfelse>
-                <em>User has submitted initial paperwork. AR Training needed.</em>
-            </cfif>
-		</div>
-    <cfelseif NOT stUserPaperwork.isAccountCompliant>
-        <div class="alert">
-	        <h1>Account Not Enabled</h1>
-    	    <em>User has not submitted all required paperwork for this season. Please review items missing in the paperwork section.</em>
-        </div>
-        <br />
+	
+    <cfif NOT listFind("8,11", uar_usertype)>
+    
+		<cfif stUserPaperwork.accountReviewStatus EQ 'rmReview'>
+            <div class="alert">
+                <h1>Account Review Required</h1>
+                <em>Reference Questionnaire Needed.</em>
+            </div>
+        <cfelseif stUserPaperwork.accountReviewStatus EQ 'officeReview'>
+            <div class="alert">
+                <h1>Account Review Required</h1>
+                <em>CBC Approval Needed.</em>
+            </div>
+        <cfelseif stUserPaperwork.accountReviewStatus EQ 'missingTraining'>
+            <div class="alert">
+                <h1>Account Not Enabled</h1>
+                <cfif NOT stUserPaperwork.isDOSCertificationCompleted AND NOT stUserPaperwork.isTrainingCompleted>
+                    <em>User has submitted initial paperwork. DOS Certification and AR Training needed.</em>
+                <cfelseif NOT stUserPaperwork.isDOSCertificationCompleted>
+                    <em>User has submitted initial paperwork. DOS Certification needed.</em>
+                <cfelse>
+                    <em>User has submitted initial paperwork. AR Training needed.</em>
+                </cfif>
+            </div>
+        <cfelseif NOT stUserPaperwork.isAccountCompliant>
+            <div class="alert">
+                <h1>Account Not Enabled</h1>
+                <em>User has not submitted all required paperwork for this season. Please review items missing in the paperwork section.</em>
+            </div>
+            <br />
+        </cfif>
+    
     </cfif>
     
 	<!--- INFORMATION --->
