@@ -315,7 +315,7 @@
             <tr <cfif qGetHostPets.currentRow MOD 2 EQ 0> bgcolor="##deeaf3"</cfif>>
                 <th>#qGetHostPets.animalType#</th>
                 <td>#qGetHostPets.indoor#</td>
-                <td>#qGetHostPets.number#</td>
+                <td><cfif qGetHostPets.number EQ 11>10+<cfelse>#qGetHostPets.number#</cfif></td>
                 <td><a href="index.cfm?section=hostingEnvironment&deletePetID=#qGetHostPets.animalid#" onClick="return confirm('Are you sure you want to delete this pet?')"><img src="images/buttons/delete23x28.png" title="Click to delete this pet" height="15" border="0"/></a></td>
             </tr>
         </cfloop>
@@ -354,7 +354,7 @@
                         <cfloop from="1" to="10" index="i">
                             <option value="#i#" <cfif FORM.number EQ i>selected="selected"</cfif> >#i#</option>
                         </cfloop>
-                        <option value="10+" <cfif FORM.number EQ "10+">selected="selected"</cfif> >10+
+                        <option value="11" <cfif FORM.number EQ "10+">selected="selected"</cfif> >10+
                     </select>
                 </td>
             </tr>
