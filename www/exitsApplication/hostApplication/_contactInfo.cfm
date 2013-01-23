@@ -144,10 +144,12 @@
                 SESSION.formErrors.Add("The email address you have entered does not appear to be valid.");
             }	
 			
+			/*
 			// Valid Password
             if ( LEN(TRIM(FORM.password)) LT 6) {
                 SESSION.formErrors.Add("Your password must be at least 6 characters long.");
             }	
+			*/
 			
 			// Valid Father's DOB
             if ( LEN(TRIM(FORM.fatherdob)) AND NOT isValid("date", TRIM(FORM.fatherdob)) ) {
@@ -267,7 +269,7 @@
                     zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
                     phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
                     email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
-                    password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.password#">,
+                    <!--- password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.password#">, --->
                     <!--- Mailing Address --->
                     mailaddress = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailaddress#">,
                     mailaddress2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailaddress2#">,
@@ -322,7 +324,7 @@
 			FORM.zip = qGetHostInfo.zip;
 			FORM.phone = qGetHostInfo.phone;
 			FORM.email = qGetHostInfo.email;
-			FORM.password = qGetHostInfo.password;
+			// FORM.password = qGetHostInfo.password;
 			// Mailing Address --->
 			FORM.mailaddress = qGetHostInfo.mailaddress;
 			FORM.mailaddress2 = qGetHostInfo.mailaddress2;
@@ -377,7 +379,7 @@
 
 <cfoutput>
 
-    <h1 class="enter" id="hostFamilyHeader">#lcase(FORM.familylastname)# Family Application</h1>
+    <h1 class="enter" id="hostFamilyHeader">#FORM.familylastname# Family Application</h1>
     
     <p>
         Completing the host family application will take between 15 and 60 minutes.  
@@ -451,6 +453,7 @@
                 <td><h3>Email</h3></td>
                 <td colspan="3"><input type="text" name="email" value="#FORM.email#" class="xLargeField" maxlength="200"></td>
             </tr>
+            <!---
             <tr>
                 <td><h3>Password</h3></td>
                 <td colspan="3">
@@ -458,6 +461,7 @@
                     <font size="1">6 characters minimum</font>
                 </td>
             </tr>
+			--->
         </table> <br />
         
         <h3>Home Based Business</h3>
@@ -528,7 +532,7 @@
             </tr>
             <tr bgcolor="##deeaf3">
                 <td class="label"><h3>Date of Birth</h3></td>
-                <td><cfinput type="text" name="fatherdob" value="#dateFormat(FORM.fatherdob, 'mm/dd/yyyy')#" size="10" maxlength="10" mask="99/99/9999" placeholder="MM/DD/YYYY"> </td>
+                <td><cfinput type="text" name="fatherdob" value="#dateFormat(FORM.fatherdob, 'mm/dd/yyyy')#" class="mediumField" maxlength="10" mask="99/99/9999" placeholder="MM/DD/YYYY"> </td>
             </tr>
             <tr>
                 <td class="label"><h3>Occupation</h3></td>

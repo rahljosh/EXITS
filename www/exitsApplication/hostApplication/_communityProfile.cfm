@@ -444,7 +444,7 @@
                             <td><input type="radio" name="terrain3" id="terrain3Lakeside" value="lakeside" <cfif FORM.terrain3 EQ "lakeside"> checked="checked" </cfif> /> <label for="terrain3Lakeside">Lakeside</label></td>
                             <td><input type="radio" name="terrain3" id="terrain3Riverside" value="riverside" <cfif FORM.terrain3 EQ "riverside"> checked="checked" </cfif> /> <label for="terrain3Riverside">Riverside</label></td>
                             <td><input type="radio" name="terrain3" id="terrain3Other" value="other" <cfif FORM.terrain3 EQ "other"> checked="checked" </cfif> /> <label for="terrain3Other">Other</label></td>
-                            <td><input type="text" name="terrain3_desc" size="15" value="#FORM.terrain3_desc#"></td>                            
+                            <td><input type="text" name="terrain3_desc" size="15" value="#FORM.terrain3_desc#" maxlength="100"></td>                            
                         </tr>
 					</table>
 				</td>

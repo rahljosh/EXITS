@@ -266,7 +266,7 @@
                             <td><label for="raceWhite">White</label></td>
                         </tr>
                         <tr>
-                            <td colspan="4"><label for="ethnicityOther">Other:</label><input type="text" size=30 name="ethnicityOther" id="ethnicityOther" value="#FORM.ethnicityOther#" /></td>
+                            <td colspan="4"><label for="ethnicityOther">Other:</label><input type="text" size=30 name="ethnicityOther" id="ethnicityOther" value="#FORM.ethnicityOther#" maxlength="100" /></td>
                         </tr>
                     </table>
             
