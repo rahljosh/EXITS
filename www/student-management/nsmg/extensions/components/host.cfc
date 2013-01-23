@@ -691,12 +691,17 @@
                     LEFT OUTER JOIN
                         smg_users fac ON fac.userID = r.regionFacilitator
                     WHERE
-                        h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                        1 = 1 
                     
+                    <!--- If hostID is passed ignore active and companyID filters --->
                     <cfif LEN(ARGUMENTS.hostID)>
                         AND
                             h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
-                    <cfelse>
+					<!--- We are getting a list of families so make sure we get only active and families from the appropriate company --->
+					<cfelse>
+                    
+                    	AND
+                        	h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                     
 						<!--- ISE - Displays all apps |  OR APPLICATION.CFC.USER.isOfficeUser() --->
                         <cfif ARGUMENTS.companyID EQ 5>
