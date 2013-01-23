@@ -533,7 +533,7 @@
         <cfquery 
 			name="qGetApplicationList" 
 			datasource="#APPLICATION.DSN#">
-                SELECT
+                SELECT DISTINCT
                 	*,
                      <!--- Total Family At Home --->
                     (isFatherHome + isMotherHome + totalChildrenAtHome) AS totalFamilyMembers,
