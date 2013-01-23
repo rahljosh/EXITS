@@ -360,18 +360,18 @@
                 <cfif CLIENT.companyID NEQ 14>
                 	<li><a href="index.cfm?curdoc=pdf_docs/index">#qGetCompany.companyShort_noColor# Docs</a></li>
                 </cfif>
-                
-                <li>
-                	<a href="index.cfm?curdoc=reports/index">Reports</a>
-					<cfif APPLICATION.CFC.USER.isOfficeUser()>
+                <cfif client.userid eq 1 or client.userid eq 12313 or client.userid eq 17438>
+                    <li>
+                        <a href="index.cfm?curdoc=reports/index">Reports</a>
+                        
+                    </li>
+				</cfif>
+                <li><a href="index.cfm?curdoc=report/index">New Reports</a></li>
+                <cfif APPLICATION.CFC.USER.isOfficeUser()>
 						<ul>
 							<li><a href="index.cfm?curdoc=reports/constantContactMenu">Constant Contact</a></li>
 						</ul>
 					</cfif>
-                </li>
-
-                <li><a href="index.cfm?curdoc=report/index">New Reports</a></li>
-                
                 <li>
                     <a href="##">Tools</a>                
                     <ul>
