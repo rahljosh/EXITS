@@ -360,7 +360,7 @@
                 <cfif CLIENT.companyID NEQ 14>
                 	<li><a href="index.cfm?curdoc=pdf_docs/index">#qGetCompany.companyShort_noColor# Docs</a></li>
                 </cfif>
-                <cfif client.userid eq 1 or client.userid eq 12313 or client.userid eq 17438>
+                <cfif client.userid eq 1 or client.userid eq 12313 or client.userid eq 17438 or client.userid eq 17972>
                     <li>
                         <a href="index.cfm?curdoc=reports/index">Reports</a>
                         
