@@ -152,6 +152,7 @@
                             sh.isWelcomeFamily,
                             sh.isActive AS isActivePlacement,
                             sh.datePlaced,
+                            sh.dateReceived,
                             sh.doc_host_app_page1_date,
                             sh.doc_host_app_page2_date,
                             sh.doc_letter_rec_date, 
@@ -880,36 +881,9 @@
                             vCurrentRow = 0;			
                         </cfscript>
                         
-                        <!--- Loop Through Query --->
-                        <cfoutput>
-                            
-                            <cfscript>
-                                // Increase Current Row
-                                vCurrentRow ++;
-                                
-                                // Set Variable to Handle Missing Documents
-                                vIsCompliant = 0;
-								vMissingDocumentsMessage = '';
-                                vOutOfComplianceDocuments = '';
-
-								// Treat all docs assoc with host app as one missing item.
-                    			vHostAppsDocsMessage = '';	
-					
-                                vIsFatherHome = 0;
-                                vIsMotherHome = 0;
-                                vTotalFamilyMembers = 0;
-								
-                                // Father is Home
-                                if ( LEN(qGetStudentsInRegion.fatherFirstName) ) {
-                                    vIsFatherHome = 1;
-                                }
-                                
-                                if ( LEN(qGetStudentsInRegion.motherFirstName) ) {
-                                    vIsMotherHome = 1;
-                                }
-                                
-                                vTotalFamilyMembers = vIsFatherHome + vIsMotherHome + qGetStudentsInRegion.totalChildrenAtHome;
-
+                        
+                        <!----
+						
                                 // Required for Single Parents 
                                 if ( vTotalFamilyMembers EQ 1 ) {  
                                     
@@ -1010,11 +984,6 @@
                                     vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Ref. 2 &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 								
-                                // School Acceptance Form
-                                if ( NOT isDate(qGetStudentsInRegion.doc_school_accept_date) ) {
-                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "School Acceptance &nbsp; &nbsp;", " &nbsp; &nbsp;");
-                                }								
-
 								// Income Verification Form
 								if ( NOT isDate(qGetStudentsInRegion.doc_income_ver_date) ) {
 									vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Income Verification &nbsp; &nbsp;", " &nbsp; &nbsp;");
@@ -1024,6 +993,51 @@
 								if ( NOT isDate(qGetStudentsInRegion.pr_ny_approved_date) ) { 
 									vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "2nd Conf. Host Visit &nbsp; &nbsp;", " &nbsp; &nbsp;");
 								}
+								// Class Schedule
+                                if ( NOT isDate(qGetStudentsInRegion.doc_class_schedule) ) {
+                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Class Schedule &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }
+								---->
+                        
+                        
+                        <!--- Loop Through Query --->
+                        <cfoutput>
+                            
+                            <cfscript>
+                                // Increase Current Row
+                                vCurrentRow ++;
+                                
+                                // Set Variable to Handle Missing Documents
+                                vIsCompliant = 0;
+								vMissingDocumentsMessage = '';
+                                vOutOfComplianceDocuments = '';
+
+								// Treat all docs assoc with host app as one missing item.
+                    			vHostAppsDocsMessage = '';	
+					
+                                vIsFatherHome = 0;
+                                vIsMotherHome = 0;
+                                vTotalFamilyMembers = 0;
+								
+                                // Father is Home
+                                if ( LEN(qGetStudentsInRegion.fatherFirstName) ) {
+                                    vIsFatherHome = 1;
+                                }
+                                
+                                if ( LEN(qGetStudentsInRegion.motherFirstName) ) {
+                                    vIsMotherHome = 1;
+                                }
+                                
+                                vTotalFamilyMembers = vIsFatherHome + vIsMotherHome + qGetStudentsInRegion.totalChildrenAtHome;
+								// Date Host App Received
+                                if ( NOT isDate(qGetStudentsInRegion.dateReceived) ) {
+                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Host Application &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }	
+								
+                                // School Acceptance Form
+                                if ( NOT isDate(qGetStudentsInRegion.doc_school_accept_date) ) {
+                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "School Acceptance &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                }								
 
                                 // Student Orientation
                                 if ( NOT isDate(qGetStudentsInRegion.stu_arrival_orientation) ) {
@@ -1035,10 +1049,7 @@
                                     vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "HF Orientation &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 								
-                                // Class Schedule
-                                if ( NOT isDate(qGetStudentsInRegion.doc_class_schedule) ) {
-                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Class Schedule &nbsp; &nbsp;", " &nbsp; &nbsp;");
-                                }
+                                
 								
                                 // Check if is compliant
                                 /*
