@@ -109,9 +109,7 @@
                 FROM 
                     smg_hosts
                 WHERE 
-                    uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(URL.uniqueID)#"> 
-                AND
-                    companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.COMPANY.ID)#">                
+                    uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(URL.uniqueID)#">              
             </cfquery>
     
             <cfscript>
