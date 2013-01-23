@@ -569,10 +569,10 @@
                               	<cfif qGetApprovalHistory.ID EQ 2>
                                 	
                                     <cfif NOT qGetSchoolAcceptance.recordCount>
-                                        <a href="#qGetApprovalHistory.link#?hostID=#qGetHostInfo.hostID#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Upload Form ]</a>
+                                        <a href="#qGetApprovalHistory.link#?hostID=#qGetHostInfo.hostID#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Upload School Acceptance Letter ]</a>
                                     <!--- Print View Default --->
                                     <cfelseif qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'approved' OR qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'denied'>
-                                        <a href="publicDocument.cfm?ID=#qGetSchoolAcceptance.ID#&key=#qGetSchoolAcceptance.hashID#" target="_blank" style="display:block;">[ Download File ]</a>
+                                        <a href="publicDocument.cfm?ID=#qGetSchoolAcceptance.ID#&key=#qGetSchoolAcceptance.hashID#" target="_blank" style="display:block;">[ Download School Acceptance Letter ]</a>
                                     	<!--- ADD OPTION TO DELETE A FILE --->
 									<!--- Delete --->
                                     <cfelse>
@@ -586,13 +586,13 @@
                                     
                                     <!--- Report Never Submitted --->
                                     <cfif NOT qGetConfidentialVisitForm.recordCount> 
-                                        <a href="#qGetApprovalHistory.link#?hostID=#qGetHostInfo.hostID#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Submit Report ]</a>
+                                        <a href="#qGetApprovalHistory.link#?hostID=#qGetHostInfo.hostID#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Submit Visit Form ]</a>
                                     <!--- Print View Default --->
                                     <cfelseif qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'approved' OR qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'denied'>
-                                        <a href="#qGetApprovalHistory.link#?hostID=#qGetHostInfo.hostID#" target="_blank" style="display:block;">[ View Report ]</a>
+                                        <a href="#qGetApprovalHistory.link#?hostID=#qGetHostInfo.hostID#" target="_blank" style="display:block;">[ View Visit Form ]</a>
                                     <!--- Report Denied by up level user - Edit Report --->
                                     <cfelse>
-                                        <a href="#qGetApprovalHistory.link#?hostID=#qGetHostInfo.hostID#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Edit Report ]</a>
+                                        <a href="#qGetApprovalHistory.link#?hostID=#qGetHostInfo.hostID#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Edit Visit Form ]</a>
                                     </cfif>   
                                     
                               </cfif>
@@ -711,9 +711,9 @@
 						
                         	<span style="color:##FFFFFF; font-weight:bold;">
 								<cfif qGetHostInfo.totalFamilyMembers GT 1>
-                                    This is a traditional host family - 2 references are required
+                                    This is a traditional host family - 2 reference questionnaires are required
                                 <cfelse>
-                                    This is a single host family - 4 references are required
+                                    This is a single host family - 4 reference questionnaires are required
                                 </cfif>
                             </span>
                         </td>
@@ -757,13 +757,13 @@
                                         
                                     </cfif>
                                     
-                                    <a href="forms/viewHostRefrencesQuestionaire.cfm?reportid=#qGetReferences.id#" target="_blank" style="display:block;">[ View Report ]</a> 
+                                    <a href="forms/viewHostRefrencesQuestionaire.cfm?reportid=#qGetReferences.id#" target="_blank" style="display:block;">[ View Reference Questionnaire ]</a> 
                                     <span style="display:block; color:##CCCCCC;"><em>Submitted on #DateFormat(qGetReferences.dateInterview,'mm/dd/yyyy')# by #qGetReferences.submittedBy#</em></span>
                                     
                                 <cfelse>
                                 
                                     <a class="jQueryModalRefresh" href="forms/hostRefrencesQuestionaire.cfm?ref=#refid#&rep=#CLIENT.userid#&hostid=#hostid#">
-                                   		[ Submit Report ]
+                                   		[ Submit Reference Questionnaire ]
                                     </a>
                                     
                                 </cfif>
