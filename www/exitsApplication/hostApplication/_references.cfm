@@ -268,8 +268,8 @@
                 <td>#qGetAllReferences.zip#</td>
                 <td>#qGetAllReferences.phone#</td>
                 <td>
-                    <a href="index.cfm?section=references&refID=#qGetAllReferences.refID#"><img src="images/buttons/pencilBlue23x29.png" border="0" height="15" title="Click to edit this reference"/></a> 
-                    <a href="index.cfm?section=references&deleteRefID=#qGetAllReferences.refID#" onClick="return confirm('Are you sure you want to delete this Reference?')"> <img src="images/buttons/delete23x28.png" title="Click to delete this reference" height="15" border="0"/></a>
+                    <a href="index.cfm?section=references&refID=#qGetAllReferences.refID#" style="padding-right:5px;"><img src="images/buttons/pencilBlue23x29.png" border="0" height="15" title="Click to edit this reference"/></a> 
+                    <a href="index.cfm?section=references&deleteRefID=#qGetAllReferences.refID#" title="Click to delete this reference" onClick="return confirm('Are you sure you want to delete this Reference?')"><img src="images/buttons/deleteRedX.png" border="0"/></a>
                 </td>
             </tr>
         </cfloop>

@@ -118,7 +118,7 @@
 
 
 	<cffunction name="getHostPets" access="public" returntype="query" output="false" hint="Gets a host pets by ID">
-    	<cfargument name="animalID" default="" hint="Child ID is not required">
+    	<cfargument name="animalID" default="" hint="animalID is not required">
         <cfargument name="hostID" default="" hint="HostID is not required">
         
         <cfquery 

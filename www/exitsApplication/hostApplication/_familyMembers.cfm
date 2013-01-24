@@ -52,6 +52,8 @@
         	smg_schools on smg_schools.schoolid = smg_host_children.school
         WHERE
         	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
+		AND
+        	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">            
     </cfquery>
     
 	<cfscript>
@@ -322,8 +324,8 @@
                 <td><cfif qGetAllFamilyMembers.liveathome is 'yes'>Yes<cfelseif qGetAllFamilyMembers.liveathomePartTime is 'yes'>Part Time<cfelse>No</cfif></td>
                 <td>#qGetAllFamilyMembers.schoolname#</td>
                 <td>
-                    <a href="index.cfm?section=familyMembers&childID=#qGetAllFamilyMembers.childID#"><img src="images/buttons/pencilBlue23x29.png" border="0" height="15" title="Click to edit this family member"/></a> 
-                    <a href="index.cfm?section=familyMembers&deleteChildID=#qGetAllFamilyMembers.childID#" onClick="return confirm('Are you sure you want to delete this Family Member?')"> <img src="images/buttons/delete23x28.png" title="Click to delete this family member" height="15" border="0"/></a>
+                    <a href="index.cfm?section=familyMembers&childID=#qGetAllFamilyMembers.childID#" title="Click to edit this family member" style="padding-right:5px;"><img src="images/buttons/pencilBlue23x29.png" border="0" height="15"/></a> 
+                    <a href="index.cfm?section=familyMembers&deleteChildID=#qGetAllFamilyMembers.childID#" title="Click to delete this family member" onClick="return confirm('Are you sure you want to delete this Family Member?')"> <img src="images/buttons/deleteRedX.png" border="0"/></a>
                 </td>
             </tr>
         </cfloop>

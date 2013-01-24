@@ -52,7 +52,7 @@
                     SET 
                         hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
                     WHERE 
-                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
+                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qLoginHostFamily.hostID)#">
                 </cfquery>
                 
             </cfif>
@@ -104,6 +104,12 @@
                     hl.email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.username)#">
                 AND 
                     hl.password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.password)#">
+                <!--- ********************************************************************************
+					Remove the line below to allow host family leads to create a host family account
+					on their own
+				********************************************************************************* --->
+                AND
+                	1 != 1
             </cfquery>
         	            
             <!--- Host Lead Account Found - Convert to Host Family and log them in --->

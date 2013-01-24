@@ -15,11 +15,13 @@
     <cfimport taglib="extensions/customTags/gui/" prefix="gui" />	
 
     <!--- Param FORM Variables --->
-    <cfparam name="URL.deletePetID" default="0">
+    <cfparam name="URL.animalID" default="0">
+    <cfparam name="URL.deleteAnimalID" default="0">
     
     <!--- Param FORM Variables --->
     <cfparam name="FORM.action" default="">
 	<!--- Add Pet --->
+    <cfparam name="FORM.animalID" default="">
     <cfparam name="FORM.animalType" default="">
     <cfparam name="FORM.number" default="">
     <cfparam name="FORM.indoor" default="">
@@ -37,11 +39,18 @@
     <cfparam name="FORM.threesquares" default="">
 
 	<cfscript>
+		if ( VAL(URL.animalID) ) {
+			FORM.animalID = URL.animalID;	
+		}
+
+		// Get Host Pets
+		qGetPetsList = APPLICATION.CFC.HOST.getHostPets(hostID=APPLICATION.CFC.SESSION.getHostSession().ID);
+
+		// Get Host Pets
+		qGetPetDetails = APPLICATION.CFC.HOST.getHostPets(hostID=APPLICATION.CFC.SESSION.getHostSession().ID,animalID=VAL(FORM.animalID));
+
 		// Get Host Members
 		qGetHostMembers = APPLICATION.CFC.HOST.getHostMemberByID(hostID=APPLICATION.CFC.SESSION.getHostSession().ID);
-		
-		// Get Host Pets
-		qGetHostPets = APPLICATION.CFC.HOST.getHostPets(hostID=APPLICATION.CFC.SESSION.getHostSession().ID);
 	</cfscript>
     
     <cfquery name="qGetWhoIsSharingRoom" dbtype="query">
@@ -54,13 +63,13 @@
     </cfquery>
     
 	<!--- Delete a Pet --->
-    <cfif VAL(URL.deletePetID)>
+    <cfif VAL(URL.deleteAnimalID)>
     
         <cfquery datasource="#APPLICATION.DSN.Source#">
             DELETE FROM 
             	smg_host_animals
             WHERE 
-            	animalid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.deletePetID)#">
+            	animalid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.deleteAnimalID)#">
             AND
             	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
         </cfquery>
@@ -75,7 +84,7 @@
     </cfif>
     
     <!--- Insert Pet --->    
-    <cfif FORM.action EQ "insertPet">
+    <cfif FORM.action EQ "submitPetForm">
     
 		<cfscript>
             // Data Validation 
@@ -98,33 +107,62 @@
         
         <!--- No Errors found --->
         <cfif NOT SESSION.formErrors.length()>
-        
-            <cfquery datasource="#APPLICATION.DSN.Source#">
-                INSERT INTO 
-                    smg_host_animals 
-                (
-                    hostID, 
-                    animalType,
-                    number, 
-                    indoor
-                )
-                VALUES
-                (
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.animalType#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.number#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.indoor#">
-                )
-            </cfquery>
             
-            <cfscript>
-                // Set Page Message
-                SESSION.pageMessages.Add("Pet has been added");
-			// Refresh Page
-			location("#CGI.SCRIPT_NAME#?section=#URL.section#", "no");
-            </cfscript>
+			<!--- Update --->
+            <cfif VAL(FORM.animalID)>
+            
+                <cfquery datasource="#APPLICATION.DSN.Source#">
+                    UPDATE
+                        smg_host_animals 
+                    SET
+                    	animalType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.animalType#">,
+                        number = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.number#">,
+                        indoor = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.indoor#">
+                    WHERE
+                    	animalID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.animalID)#">
+                    AND
+                    	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
+                </cfquery>
+                
+                <cfscript>
+                    // Set Page Message
+                    SESSION.pageMessages.Add("Pet has been updated");
+                </cfscript>
+            
+            <!--- Insert --->
+            <cfelse>
+            
+                <cfquery datasource="#APPLICATION.DSN.Source#">
+                    INSERT INTO 
+                        smg_host_animals 
+                    (
+                        hostID, 
+                        animalType,
+                        number, 
+                        indoor
+                    )
+                    VALUES
+                    (
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.animalType#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.number#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.indoor#">
+                    )
+                </cfquery>
+                
+                <cfscript>
+                    // Set Page Message
+                    SESSION.pageMessages.Add("Pet has been added");
+                </cfscript>
+            
+            </cfif>
             
         </cfif>
+		
+        <cfscript>    
+            // Refresh Page
+            location("#CGI.SCRIPT_NAME#?section=#URL.section#", "no");
+        </cfscript>
 
 	<!--- Form Submitted --->
 	<cfelseif FORM.action EQ "submitted">
@@ -265,6 +303,11 @@
 
 		<cfscript>
             // Set Default Values
+			FORM.animalID = qGetPetDetails.animalID;
+			FORM.animalType = qGetPetDetails.animalType;
+			FORM.number = qGetPetDetails.number;
+			FORM.indoor = qGetPetDetails.indoor;
+
 			FORM.pet_allergies = qGetHostFamilyInfo.pet_allergies;
             FORM.hostSmokes = qGetHostFamilyInfo.hostSmokes;
             FORM.smokeConditions = qGetHostFamilyInfo.smokeconditions;
@@ -311,16 +354,19 @@
             <th style="border-bottom:1px solid ##000;" width="50px"></th>
         </tr>        
         
-        <cfloop query="qGetHostPets">
-            <tr <cfif qGetHostPets.currentRow MOD 2 EQ 0> bgcolor="##deeaf3"</cfif>>
-                <th>#qGetHostPets.animalType#</th>
-                <td>#qGetHostPets.indoor#</td>
-                <td><cfif qGetHostPets.number EQ 11>10+<cfelse>#qGetHostPets.number#</cfif></td>
-                <td><a href="index.cfm?section=hostingEnvironment&deletePetID=#qGetHostPets.animalid#" onClick="return confirm('Are you sure you want to delete this pet?')"><img src="images/buttons/delete23x28.png" title="Click to delete this pet" height="15" border="0"/></a></td>
+        <cfloop query="qGetPetsList">
+            <tr <cfif qGetPetsList.currentRow MOD 2 EQ 0> bgcolor="##deeaf3"</cfif>>
+                <th>#qGetPetsList.animalType#</th>
+                <td>#qGetPetsList.indoor#</td>
+                <td><cfif qGetPetsList.number EQ 11>10+<cfelse>#qGetPetsList.number#</cfif></td>
+                <td>
+	                <a href="index.cfm?section=hostingEnvironment&animalID=#qGetPetsList.animalID#" title="Click to edit this pet" style="padding-right:5px;"><img src="images/buttons/pencilBlue23x29.png" border="0" height="15"/></a> 
+                	<a href="index.cfm?section=hostingEnvironment&deleteAnimalID=#qGetPetsList.animalid#" title="Click to delete this pet" onClick="return confirm('Are you sure you want to delete this pet?')"><img src="images/buttons/deleteRedX.png" border="0"/></a>
+				</td>
             </tr>
         </cfloop>
         
-        <cfif qGetHostPets.recordcount eq 0>
+        <cfif qGetPetsList.recordcount EQ 0>
         	<tr>
         		<td>Currently, no pets are indicated as living in your home.</td>
         	</tr>
@@ -328,7 +374,8 @@
     </table> <br />
 	
     <form action="index.cfm?section=hostingEnvironment" method="post" preloader="no">
-        <input type="hidden" name="action" value="insertPet">
+        <input type="hidden" name="action" value="submitPetForm">
+        <input type="hidden" name="animalID" value="#FORM.animalID#">
     
         <h3>Pets </h3>
         
@@ -362,7 +409,13 @@
     
         <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
             <tr>
-            	<td align="right"><input type="image" src="images/buttons/addPet.png" /></td>
+            	<td align="right">
+                    <cfif VAL(FORM.animalID)>
+                        <input name="Submit" type="image" src="images/buttons/update_44.png" border="0"> 
+                    <cfelse>
+                        <input type="image" src="images/buttons/addPet.png" />
+                    </cfif> 
+				</td>
             </tr>
         </table>
         
