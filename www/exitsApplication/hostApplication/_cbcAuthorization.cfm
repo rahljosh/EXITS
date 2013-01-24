@@ -88,7 +88,7 @@
 				
 				// SSN
 				if  ( NOT LEN(qGetHostFamilyInfo.fatherSSN) AND NOT IsValid("ssn", FORM.fatherSSN) ) {
-					SESSION.formErrors.Add("The SSN for #qGetHostFamilyInfo.fatherFirstName# #qGetHostFamilyInfo.fatherLastName# does not appear to be a valid SSN. Please make it is entered in the 999-99-9999 format.");
+					SESSION.formErrors.Add("The SSN for #qGetHostFamilyInfo.fatherFirstName# #qGetHostFamilyInfo.fatherLastName# does not appear to be a valid SSN. Please make sure it is entered in the 999-99-9999 format.");
 				}	
 				
 				// Signature
@@ -103,7 +103,7 @@
 				
 				// SSN
 				if  ( NOT LEN(qGetHostFamilyInfo.motherSSN) AND NOT IsValid("ssn", FORM.motherSSN) ) {
-					SESSION.formErrors.Add("The SSN for #qGetHostFamilyInfo.motherFirstName# #qGetHostFamilyInfo.motherLastName# does not appear to be a valid SSN. Please make it is entered in the 999-99-9999 format.");
+					SESSION.formErrors.Add("The SSN for #qGetHostFamilyInfo.motherFirstName# #qGetHostFamilyInfo.motherLastName# does not appear to be a valid SSN. Please make sure it is entered in the 999-99-9999 format.");
 				}	
 				
 				// Signature
@@ -118,7 +118,7 @@
 				
 				// SSN
 				if  ( NOT LEN(qGetFamilyMembers18AndOlder.ssn[i]) AND NOT IsValid("ssn", FORM[qGetFamilyMembers18AndOlder.childID[i] & "memberSSN"]) ) {
-					SESSION.formErrors.Add("The SSN for #qGetFamilyMembers18AndOlder.name[i]# does not appear to be a valid SSN. Please make it is entered in the 999-99-9999 format.");
+					SESSION.formErrors.Add("The SSN for #qGetFamilyMembers18AndOlder.name[i]# does not appear to be a valid SSN. Please make sure it is entered in the 999-99-9999 format.");
 				}	
 				
 				// Signature
