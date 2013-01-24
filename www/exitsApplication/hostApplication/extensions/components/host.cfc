@@ -469,7 +469,7 @@
 				
 				// SSN
 				if  ( NOT LEN(qGetHostInfo.fatherSSN) ) {
-					SESSION.formErrors.Add("The SSN for #qGetHostInfo.fatherFirstName# #qGetHostInfo.fatherLastName# does not appear to be a valid SSN. Please make it is entered in the 999-99-9999 format.");
+					SESSION.formErrors.Add("The SSN for #qGetHostInfo.fatherFirstName# #qGetHostInfo.fatherLastName# does not appear to be a valid SSN. Please make sure it is entered in the 999-99-9999 format.");
 				}	
 				
 				// Signature
@@ -484,7 +484,7 @@
 				
 				// SSN
 				if  ( NOT LEN(qGetHostInfo.motherSSN) ) {
-					SESSION.formErrors.Add("The SSN for #qGetHostInfo.motherFirstName# #qGetHostInfo.motherLastName# does not appear to be a valid SSN. Please make it is entered in the 999-99-9999 format.");
+					SESSION.formErrors.Add("The SSN for #qGetHostInfo.motherFirstName# #qGetHostInfo.motherLastName# does not appear to be a valid SSN. Please make sure it is entered in the 999-99-9999 format.");
 				}	
 				
 				// Signature
