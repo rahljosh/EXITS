@@ -6,7 +6,7 @@
 </head>
 
 <body>
-
+<Cfparam name='form.supportDoc' default="">
  <script type="text/javascript">
   function DoNav(theUrl)
   {
@@ -40,12 +40,20 @@
     </cfquery>
 </cfif>
 <cfif isDefined('form.insertDetails')>
-	<cfquery datasource="#application.dsn#">
-    insert into  servicesproject_details (fk_idProblem, fk_servicesprojecttype, notes)
-    				values  (#client.studentproblem.idProblem#, 1, '#form.notes#')
+	
+    		<cfif DirectoryExists('#APPLICATION.PATH.studentServices##url.studentid#')>
+            <cfelse>
+                <cfdirectory action = "create" directory = "#APPLICATION.PATH.studentServices##url.studentid#" >
+            </cfif>	
+            <cfif len(form.supportDoc)>
+    			<Cffile action="upload" destination="#APPLICATION.PATH.studentServices##url.studentid#" filefield="supportDoc"  nameconflict="makeunique" >
+        	</cfif>
+            
+    <cfquery datasource="#application.dsn#">
+    insert into  servicesproject_details (fk_idProblem, fk_servicesprojecttype, notes, file, date)
+    				values  (#client.studentproblem.idProblem#, 1, '#form.notes#','#file.clientfile#', #now()#)
 
     </cfquery>
-    <Cffile action="upload" destination="c:\uploadedfiles\student-services\" filefield="suportDoc" mode="777" nameconflict="makeunique" >
 </cfif>
 <Cfquery name="qCheckCurrent" datasource="#application.dsn#">
 SELECT sp.studentID, 
@@ -94,7 +102,7 @@ WHERE studentid = #url.studentid#
         Please enter as much  additional information as necessary.<Br /><br />
         <textarea cols=50 rows=10 name="notes"></textarea><br /><br />
         
-        Attach any supporting documents:<br /> <input type="file" name="suportDoc" />
+        Attach any supporting documents:<br /> <input type="file" name="supportDoc" />
         <br />
         <br />
         <input type="image" src="../pics/next.gif" />
