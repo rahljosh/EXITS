@@ -266,12 +266,12 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
      where studentid = #qGetStudentInfo.studentID#
      </cfquery>
      <cfquery name="numberSis" dbtype="query">
-         select count(sex)
+         select count(sex) as numberSis
          from sibling
          where sex = 'female'
      </cfquery>
      <cfquery name="numberBro" dbtype="query">
-         select count(sex)
+         select count(sex) as numberBro
          from sibling
          where sex = 'male'
      </cfquery>
@@ -281,10 +281,10 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
       
         <tr>
             <td>
-           <span class="title">Sisters</span> #numberSis.recordcount# 
+           <span class="title">Sisters</span> #numberSis.numberSis# 
             </td>
             <td>
-       		 <span class="title">Brothers</span> #numberBro.recordcount# 
+       		 <span class="title">Brothers</span> #numberBro.numberBro# 
             </td>
             
         </tr>    
