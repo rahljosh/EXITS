@@ -221,9 +221,9 @@
                             
                         </div>
                          
-                        <div style="display:block; margin:3px 0 5px 0;"> 
-                            <a href="index.cfm?section=familyAlbum&deleteImageID=#qGetUploadedImages.ID#" onClick="return confirm('Are you sure you want to delete the #qGetUploadedImages.documentType# picture?')">
-                                <img src="images/buttons/deleteGreyRed.png" height="30" border="0"/>
+                        <div style="display:block; margin:3px 0 5px 0; clear:both;"> 
+                            <a href="index.cfm?section=familyAlbum&deleteImageID=#qGetUploadedImages.ID#" title="Click to delete #qGetUploadedImages.documentType# picture" onClick="return confirm('Are you sure you want to delete the #qGetUploadedImages.documentType# picture?')">
+                                <img src="images/buttons/deleteGreyRed.png" border="0"/>
                             </a>
                         </div>
                     </td>
