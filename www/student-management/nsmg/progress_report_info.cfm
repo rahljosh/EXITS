@@ -658,6 +658,7 @@ function OpenLetter(url) {
             <th> Contact for this Report</th>
 		<cfif allow_edit and FORM.report_mode EQ 'view'>
             <td width="1">
+          
 		        <!--- add contact date. --->
                 <form action="index.cfm?curdoc=forms/pr_date_form" method="post">
                     <input type="hidden" name="pr_id" value="#FORM.pr_id#">
