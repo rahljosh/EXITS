@@ -1814,7 +1814,6 @@
         <cfargument name="doc_conf_host_rec" default="" hint="doc_conf_host_rec is not required">
         <cfargument name="doc_ref_form_1" default="" hint="doc_ref_form_1 is not required">
         <cfargument name="doc_ref_form_2" default="" hint="doc_ref_form_2 is not required">
-        <cfargument name="orientationSignOff_host" default="" hint="orientationSignOff_host is not required">
         <cfargument name="orientationSignOff_student" default="" hint="orientationSignOff_student is not required">
         		
         <cfquery 
@@ -1838,7 +1837,6 @@
                     doc_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_conf_host_rec#" null="#NOT IsDate(ARGUMENTS.doc_conf_host_rec)#">,
                     doc_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_form_1#" null="#NOT IsDate(ARGUMENTS.doc_ref_form_1)#">,
                     doc_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_form_2#" null="#NOT IsDate(ARGUMENTS.doc_ref_form_2)#">,
-                    orientationSignOff_host = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.orientationSignOff_host#" null="#NOT IsDate(ARGUMENTS.orientationSignOff_host)#">,
                     orientationSignOff_student = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.orientationSignOff_student#" null="#NOT IsDate(ARGUMENTS.orientationSignOff_student)#">
                 WHERE 
                     studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">                    	
