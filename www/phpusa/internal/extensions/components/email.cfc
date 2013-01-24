@@ -1,4 +1,17 @@
-<cfcomponent>
+<cfcomponent
+	displayname="email"
+	output="false" 
+	hint="A collection of functions for emails">
+    
+    <!--- Return the initialized Email object --->
+	<cffunction name="Init" access="public" returntype="email" output="false" hint="Returns the initialized Email object">
+		
+		<cfscript>
+			// There is nothing really to initiate, so just return this
+			return(this);
+		</cfscript>
+        
+	</cffunction>
 
 	<!--- Import CustomTag --->
     <cfimport taglib="../../extensions/customTags/gui/" prefix="gui" />	

@@ -290,8 +290,32 @@
     <!--- THIRD TABLE --->
     <table width="95%" border="1" align="center" cellpadding="8" cellspacing="8" bordercolor="##C7CFDC" bgcolor="##FFFFFF">
     	<tr>
+        	<!--- HOST FAMILY PAPERWORK --->
+            <td width="30%" align="right" valign="top" class="box">
+            	<table width="100%" cellpadding="0" cellspacing="0" border="0" height="24" bgcolor="##DFDFDF">
+					<tr valign=middle bgcolor="##C2D1EF" height=24>
+			  			<td><b><font size="+1">&nbsp; Paperwork </font></b></td>
+						<td width=16><a href="?curdoc=forms/host_update_paperwork"><img src="pics/edit-p.gif" alt="Edit" width="18" height="16" border=0></a></td>
+						<td width=17>&nbsp;</td>
+		  			</tr>
+				</table>
+                <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="##ffffff">
+                	<tr>
+                    	<td width="50%">Orientation Sign-off:</td>
+                        <td width="50%">
+							<cfif family_info.php_orientationSignOff EQ "">
+                            	<font color="red">Missing</font>
+							<cfelseif DateAdd('yyyy',1,family_info.php_orientationSignOff) LT NOW()>
+                            	<font color="red">Expired</font>
+                           	<cfelse>
+                            	#DateFormat(family_info.php_orientationSignOff,'mm/dd/yyyy')#
+                            </cfif>
+                      	</td>
+                  	</tr>
+             	</table>
+            </td>
         	<!--- HOST FAMILY CBCs --->
-        	<td width="100%" align="right" valign="top" class="box">
+        	<td width="70%" align="right" valign="top" class="box">
             	<table width="100%" cellpadding="0" cellspacing="0" border="0" height="24" bgcolor="##DFDFDF">
 					<tr valign=middle bgcolor="##C2D1EF" height=24>
 			  			<td><b><font size="+1">&nbsp; Criminal Background Checks </font></b><cfif NOT vCBCValid><font color="red">- ATTENTION: one or more necessary CBCs are missing or expired.</font></cfif></td>

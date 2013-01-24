@@ -203,7 +203,6 @@
                     php.inputBy,
                     php.dateCreated,
                     php.dateUpdated,
-                    php.orientationSignOff_host,
                     php.orientationSignOff_student
                 FROM 
                 	smg_students s

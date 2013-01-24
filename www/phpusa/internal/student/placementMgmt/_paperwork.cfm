@@ -33,7 +33,6 @@
     <cfparam name="FORM.doc_conf_host_rec" default="">
     <cfparam name="FORM.doc_ref_form_1" default="">
     <cfparam name="FORM.doc_ref_form_2" default="">
-    <cfparam name="FORM.orientationSignOff_host" default="">
     <cfparam name="FORM.orientationSignOff_student" default="">
     
     <cfscript>
@@ -60,7 +59,6 @@
 				doc_conf_host_rec = FORM.doc_conf_host_rec,
 				doc_ref_form_1 = FORM.doc_ref_form_1,
 				doc_ref_form_2 = FORM.doc_ref_form_2,
-				orientationSignOff_host = FORM.orientationSignOff_host,
 				orientationSignOff_student = FORM.orientationSignOff_student
 			);
 			
@@ -90,7 +88,6 @@
 			FORM.doc_conf_host_rec = qGetStudentInfo.doc_conf_host_rec;
 			FORM.doc_ref_form_1 = qGetStudentInfo.doc_ref_form_1;
 			FORM.doc_ref_form_2 = qGetStudentInfo.doc_ref_form_2;
-			FORM.orientationSignOff_host = qGetStudentInfo.orientationSignOff_host;
 			FORM.orientationSignOff_student = qGetStudentInfo.orientationSignOff_student;
 		}
 	</cfscript>
@@ -292,18 +289,6 @@
                         <td>
                             <span class="readOnly displayNone">#DateFormat(FORM.hf_application, 'mm/dd/yyyy')#</span>
                             <input type="text" name="hf_application" id="hf_application" class="datePicker editPage displayNone" value="#DateFormat(FORM.hf_application, 'mm/dd/yyyy')#">
-                        </td>
-                    </tr>
-                    
-                    <!--- Host Family Orientation Sign-Off --->
-                    <tr>
-                        <td class="paperworkLeftColumn">
-                            <input type="checkbox" name="orientationSignOff_hostCheckBox" id="orientationSignOff_hostCheckBox" class="editPage displayNone" onclick="setTodayDate(this.id, 'orientationSignOff_host');" <cfif isDate(FORM.orientationSignOff_host)>checked</cfif> >
-						</td>
-                        <td><label for="hfApplicationCheckBox">Host Family Orientation Sign Off</label></td>
-                        <td>
-                            <span class="readOnly displayNone">#DateFormat(FORM.orientationSignOff_host, 'mm/dd/yyyy')#</span>
-                            <input type="text" name="orientationSignOff_host" id="orientationSignOff_host" class="datePicker editPage displayNone" value="#DateFormat(FORM.orientationSignOff_host, 'mm/dd/yyyy')#">
                         </td>
                     </tr>
 	

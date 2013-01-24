@@ -49,7 +49,7 @@
                                     <option value="i20received">I-20</option>
                                     <option value="hf_placement">HF Placement</option>
                                     <option value="hf_application">HF Application</option>
-                                    <option value="orientationSignOff_host">HF Orientation Sign-Off</option>
+                                    <option value="php_orientationSignOff">HF Orientation Sign-Off</option>
                                     <option value="orientationSignOff_student">Student Orientation Sign-Off</option>
                                     <option value="hf_cbc">HF CBC</option>
                                     <option value="rep_cbc">Representative CBC</option>

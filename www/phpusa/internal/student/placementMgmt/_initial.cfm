@@ -169,8 +169,10 @@
 				// Reload page
 				//location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");
 				
-				// Go to PIS in order to send it to the intl. rep. - that page redirects back here.
-				location("../letters/_placementInfoSheetDay.cfm?uniqueID=#URL.uniqueID#&assignedID=#URL.assignedID#&pisAction=emailPIS&auto=#CGI.SCRIPT_NAME#");
+				// Go to PIS in order to send it to the intl. rep. - that page redirects back here (only do this if there is a host family).
+				if ( ListFindNoCase(FORM.subAction, "updatehostID") OR FORM.hostID NEQ 0 ) {
+					location("../letters/_placementInfoSheetDay.cfm?uniqueID=#URL.uniqueID#&assignedID=#URL.assignedID#&pisAction=emailPIS&auto=#CGI.SCRIPT_NAME#");
+				}
 			
 			}
 
@@ -239,8 +241,10 @@
 				// Reload page
 				//location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");
 				
-				// Go to PIS in order to send it to the intl. rep. - that page redirects back here.
-				location("../letters/_placementInfoSheetDay.cfm?uniqueID=#URL.uniqueID#&assignedID=#URL.assignedID#&pisAction=emailPIS&auto=#CGI.SCRIPT_NAME#");
+				// Go to PIS in order to send it to the intl. rep. - that page redirects back here (only do this if there is a host family).
+				if ( ListFindNoCase(FORM.subAction, "updatehostID") OR FORM.hostID NEQ 0 ) {
+					location("../letters/_placementInfoSheetDay.cfm?uniqueID=#URL.uniqueID#&assignedID=#URL.assignedID#&pisAction=emailPIS&auto=#CGI.SCRIPT_NAME#");
+				}
 			
 			}
 		
