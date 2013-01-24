@@ -120,18 +120,16 @@
             s.firstname, 
             s.sex, 
             s.DOB
-        FROM 
-        	smg_students s
-        INNER JOIN 
-        	php_students_in_program php ON php.studentid = s.studentid
-     	       AND 	
-     	           php.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-        WHERE 
-        	php.hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.hostID#">
-        AND
-            s.studentid != <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#">
-        ORDER BY 
-        	s.familylastname
+        FROM smg_students s
+        INNER JOIN php_students_in_program php ON php.studentid = s.studentid
+    		AND php.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+        WHERE s.studentid != <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#">
+      	<cfif qGetStudentInfo.hostID EQ 0>
+        	AND 1 = 0
+       	<cfelse>
+        	AND php.hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.hostID#">
+      	</cfif>
+        ORDER BY s.familylastname
 	</cfquery>
     
 </cfsilent>

@@ -44,11 +44,11 @@
             php.original_school_acceptance,
             php.hf_placement, 
             php.i20received,
-            php.hf_application, 
+            php.hf_application,
             php.transfer_type, 
             php.return_student,
-            php.orientationSignOff_host,
             php.orientationSignOff_student,
+            h.php_orientationSignOff,
             IFNULL(alp.name, 'n/a') AS PHPReturnOption
         FROM 
             smg_students s
@@ -60,6 +60,8 @@
             smg_users u on u.userid = s.intrep 
         LEFT JOIN 
             php_schools sc ON sc.schoolid = php.schoolid
+      	LEFT JOIN
+        	smg_hosts h ON h.hostID = s.hostID
         LEFT OUTER JOIN
             applicationLookUp alp ON alp.fieldID = php.return_student
                  AND
@@ -108,7 +110,7 @@
                 <cfif i EQ 'i20received'><td><b>I-20</b></td></cfif>
                 <cfif i EQ 'hf_placement'><td><b>HF Place</b></td></cfif>
                 <cfif i EQ 'hf_application'><td><b>HF App</b></td></cfif>
-                <cfif i EQ 'orientationSignOff_host'><td><b>HF Orientation Sign-Off </b></td></cfif>
+                <cfif i EQ 'php_orientationSignOff'><td><b>HF Orientation Sign-Off </b></td></cfif>
                 <cfif i EQ 'orientationSignOff_student'><td><b>Student Orientation Sign-Off</b></td></cfif>
                 <cfif i EQ 'hf_cbc'><td><b>HF CBC</b></td></cfif>
                 <cfif i EQ 'rep_cbc'><td><b>Representative CBC</b></td></cfif>
@@ -125,8 +127,22 @@
                 <td>#qGetResults.schoolname#</td>
                 <td><i><font size="-2">#qGetResults.PHPReturnOption#</font></i></td>
                 <cfloop list="#FORM.documents#" index="i">
-                	<cfif i NEQ 'hf_cbc' AND i NEQ 'rep_cbc' AND i NEQ 'rep_training'>
+                	<cfif i NEQ 'hf_cbc' AND i NEQ 'rep_cbc' AND i NEQ 'rep_training' AND i NEQ 'php_orientationSignOff'>
                     	<td><i><font size="-2"><cfif Evaluate('qGetResults.#i#') NEQ ''>#DateFormat(Evaluate('qGetResults.#i#'), 'mm/dd/yy')#<cfelse>n/a</cfif></font></i></td>
+                   	<cfelseif i EQ 'php_orientationSignOff'>
+                    	<td>
+                        	<i>
+                            	<font size="-2">
+									<cfif php_orientationSignOff EQ "">
+                                        n/a
+                                    <cfelseif DateAdd('yyyy',1,php_orientationSignOff) LT NOW()>
+                                        Expired
+                                    <cfelse>
+                                        #DateFormat(family_info.php_orientationSignOff,'mm/dd/yyyy')#
+                                    </cfif>
+                           		</font>
+                          	</i>
+                      	</td>
                     <cfelseif i EQ 'hf_cbc'>
                     	<cfscript>
 							vIsHostCBCValid = APPLICATION.CFC.Host.isCBCValid(hostID = #VAL(hostID)#);
