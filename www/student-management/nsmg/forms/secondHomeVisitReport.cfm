@@ -59,7 +59,7 @@
 	<!----Save Report---->
 	<cfif pr_action EQ 'save'>
      
-        <cfquery datasource="mysql">
+        <cfquery datasource="#application.dsn#">
             UPDATE 
                 secondvisitanswers 
             SET
@@ -191,7 +191,10 @@
   
 		<cfscript>
 			// Data Validation
-			
+			//Date is within range.
+			if ( isDate(FORM.dateOfVisit) AND ( FORM.dateOfVisit LT secondvisitanswers.dueFromDate OR FORM.dateOfVisit GT secondvisitanswers.dueToDate ) ) {
+			SESSION.formErrors.Add("Contact date must be between #dateFormat(secondvisitanswers.dueFromDate, 'mm/dd/yyyy')# and #dateFormat(secondvisitanswers.dueToDate, 'mm/dd/yyyy')#");
+		}	
             // Date of Visit
             if ( NOT LEN(TRIM(FORM.dateOfVisit)) ) {
                 // Get all the missing items in a list
