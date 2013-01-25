@@ -1,5 +1,17 @@
 <cfset errorMsg = ''>
 
+<cfquery name="get_record" datasource="#application.dsn#">
+    SELECT fk_intrep_user
+    FROM progress_reports
+    WHERE pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
+</cfquery>
+
+<cfparam name="FORM.automatic" default="0">
+<cfif VAL(FORM.automatic)>
+	<cfset FORM.submitted = 1>
+    <cfset FORM.email_to = CLIENT.userID & "," & get_record.fk_intrep_user>
+</cfif>
+
 <!--- Process Form Submission --->
 <cfif isDefined("form.submitted")>
 
@@ -53,13 +65,22 @@
             <cfinvokeargument name="email_message" value="#email_message#">
             <cfinvokeargument name="email_file" value="#file_path#">
         </cfinvoke>
-                        
-        <form action="index.cfm?curdoc=lists/progress_report_info" method="post" name="theForm" id="theForm">
-        <input type="hidden" name="pr_id" value="<cfoutput>#form.pr_id#</cfoutput>">
-        </form>
-        <script>
-        document.theForm.submit();
-        </script>
+      	
+        <cfif VAL(FORM.automatic)>
+			<script type="text/javascript">
+                $(document).ready(function() {
+					window.open('', '_self', ''); 
+					window.close();
+                });
+            </script>
+        <cfelse>               
+            <form action="index.cfm?curdoc=lists/progress_report_info" method="post" name="theForm" id="theForm">
+            	<input type="hidden" name="pr_id" value="<cfoutput>#form.pr_id#</cfoutput>">
+            </form>
+            <script>
+            	document.theForm.submit();
+            </script>
+     	</cfif>
         
 	</cfif>
         
@@ -72,11 +93,6 @@
         <cfabort>
 	</cfif>
 
-	<cfquery name="get_record" datasource="#application.dsn#">
-        SELECT fk_intrep_user
-        FROM progress_reports
-        WHERE pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.pr_id#">
-	</cfquery>
     <cfset form.fk_intrep_user = get_record.fk_intrep_user>
      
 </cfif>
@@ -87,48 +103,53 @@
     </script>
 </cfif>
 
-<cfform action="index.cfm?curdoc=forms/pr_email" method="post">
+<!--- Don't display anything if this is the automatic email version --->
+<cfif NOT VAL(FORM.automatic)>
 
-<br />
-<!--- outside table --->
-<table cellpadding="5" align="center" bgcolor="#ffffff" class="box">
-    <tr bgcolor="#C2D1EF">
-        <td><span class="get_attention"><b>::</b> Email Progress Report</span></td>
-    </tr>
-    <tr>
-        <td>
-
-<input type="hidden" name="submitted" value="1">
-<cfinput type="hidden" name="pr_id" value="#form.pr_id#">
-<cfinput type="hidden" name="fk_intrep_user" value="#form.fk_intrep_user#">
-
-<span class="redtext">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Required fields</span>
-<table border=0 cellpadding=4 cellspacing=0>
-    <tr>
-    	<td class="label">Recipients: <span class="redtext">*</span></td>
-        <td>
-            <cfquery name="get_international_rep" datasource="#application.dsn#">
-                SELECT businessname
-                FROM smg_users
-                WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_intrep_user#">
-            </cfquery>
-        	<cfoutput>
-        	<cfinput type="checkbox" name="email_to" value="#client.userid#" required="yes" message="Please select at least one Recipient."> #client.firstname# #client.lastname#<br />
-        	<cfinput type="checkbox" name="email_to" value="#form.fk_intrep_user#"> International Agent <!---#get_international_rep.businessname#---><br />
-			</cfoutput>
+    <cfform action="index.cfm?curdoc=forms/pr_email" method="post">
+    
+    <br />
+    <!--- outside table --->
+    <table cellpadding="5" align="center" bgcolor="#ffffff" class="box">
+        <tr bgcolor="#C2D1EF">
+            <td><span class="get_attention"><b>::</b> Email Progress Report</span></td>
+        </tr>
+        <tr>
+            <td>
+    
+    <input type="hidden" name="submitted" value="1">
+    <cfinput type="hidden" name="pr_id" value="#form.pr_id#">
+    <cfinput type="hidden" name="fk_intrep_user" value="#form.fk_intrep_user#">
+    
+    <span class="redtext">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Required fields</span>
+    <table border=0 cellpadding=4 cellspacing=0>
+        <tr>
+            <td class="label">Recipients: <span class="redtext">*</span></td>
+            <td>
+                <cfquery name="get_international_rep" datasource="#application.dsn#">
+                    SELECT businessname
+                    FROM smg_users
+                    WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.fk_intrep_user#">
+                </cfquery>
+                <cfoutput>
+                <cfinput type="checkbox" name="email_to" value="#client.userid#" required="yes" message="Please select at least one Recipient."> #client.firstname# #client.lastname#<br />
+                <cfinput type="checkbox" name="email_to" value="#form.fk_intrep_user#"> International Agent <!---#get_international_rep.businessname#---><br />
+                </cfoutput>
+            </td>
+        </tr>
+    </table>
+    
+    <table border=0 cellpadding=4 cellspacing=0 width=100%>
+        <tr>
+            <td align="right"><input name="Submit" type="image" src="pics/submit.gif" border=0></td>
+        </tr>
+    </table>
+    
         </td>
-    </tr>
-</table>
+      </tr>
+    </table>
+    <!--- outside table --->
+    
+    </cfform>
 
-<table border=0 cellpadding=4 cellspacing=0 width=100%>
-	<tr>
-		<td align="right"><input name="Submit" type="image" src="pics/submit.gif" border=0></td>
-	</tr>
-</table>
-
-    </td>
-  </tr>
-</table>
-<!--- outside table --->
-
-</cfform>
+</cfif>

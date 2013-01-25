@@ -1,8 +1,19 @@
-
 <!--- Import CustomTag --->
 <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 
-<cfparam name="form.pr_action" default="">
+<cfparam name="URL.pr_id" default="0">
+<cfparam name="URL.report_mode" default="">
+<cfparam name="FORM.pr_action" default="">
+<cfparam name="FORM.printReport" default="0">
+<cfparam name="FORM.emailReport" default="0">
+
+<cfif VAL(URL.pr_id)>
+	<cfset FORM.pr_id = URL.pr_id>
+</cfif>
+<cfif LEN(URL.report_mode)>
+	<cfset FORM.report_mode = URL.report_mode>
+</cfif>
+
 <cfswitch expression="#form.pr_action#">
 <!--- delete contact date. --->
 <cfcase value="delete_date">
@@ -29,7 +40,6 @@
     <!--- NY --->
     <cfelseif client.userid EQ get_report.fk_ny_user and get_report.pr_ny_approved_date EQ ''>
     	<cfset approve_field = 'pr_ny_approved_date'>
-        
     </cfif>
     <!--- if user was none of the above but usertype LTE 4 approve NY. --->
     <cfif approve_field EQ '' and client.usertype LTE 4>
@@ -43,15 +53,31 @@
             WHERE pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.pr_id#">
         </cfquery>
         <cfquery name="get_student_id_pr" datasource="#application.dsn#">
-        select fk_student 
-        from progress_reports 
-        where pr_id = #form.pr_id#
+            select fk_student 
+            from progress_reports 
+            where pr_id = #form.pr_id#
         </cfquery>
         <cfquery datasource="#application.dsn#">
         	update php_students_in_program
             set doc_evaluation#get_report.pr_month_of_report# = #now()#
             where studentid = '#get_student_id_pr.fk_student#'
         </cfquery>
+        <!--- print report if box is checked --->
+		<cfif FORM.printReport EQ 1>
+        	<script type="text/javascript">
+				window.open("<cfoutput>lists/progress_report_info.cfm?pr_id=#FORM.pr_id#&report_mode=print</cfoutput>","Print").print();
+			</script>
+        </cfif>
+        <!--- email report if box is checked --->
+        <cfif FORM.emailReport EQ 1>
+			<form id="emailForm" action="index.cfm?curdoc=forms/pr_email" method="post" target="_self">
+         		<input type="hidden" name="pr_id" value="<cfoutput>#form.pr_id#</cfoutput>" />
+                <input type="hidden" name="automatic" value="1" />
+       		</form>
+            <script type="text/javascript">
+				$("#emailForm").submit();
+			</script>
+        </cfif>
     </cfif>
 </cfcase>
 <!--- delete report. --->
@@ -549,29 +575,40 @@ span.mainSpan {
     <cfif allow_approve and get_report.pr_rejected_date NEQ ''>
         <table border=0 cellpadding=4 cellspacing=0 width=100%>
             <tr>
-                <td><font color="FF0000">
-                   	This report has been rejected.  Approval will "unreject" this report.
-                </font></td>
+                <td>
+                	<font color="FF0000">
+                   		This report has been rejected. Approval will "unreject" this report.
+                	</font>
+              	</td>
             </tr>
         </table>
     </cfif>
     
         <table border=0 align="center">
         <tr valign="top">
-          <td>
+          <td style="vertical-align:bottom; border:1px solid black">
           	<!--- approve --->
             <cfif allow_approve>
-                <form action="index.cfm?curdoc=lists/progress_report_info" method="post" onclick="return confirm('Are you sure you want to approve this report?  You will no longer be able to edit this report after approval.')">
-                <input type="hidden" name="pr_action" value="approve">
-                <input type="hidden" name="pr_id" value="#form.pr_id#">
-                <input name="Submit" type="image" src="pics/approve.gif" alt="Approve Report" border=0>
+                <form 
+                	action="index.cfm?curdoc=lists/progress_report_info" 
+                    method="post" 
+                    onSubmit="return confirm('Are you sure you want to approve this report?  You will no longer be able to edit this report after approval.')">
+                    <input type="hidden" name="pr_action" value="approve">
+                    <input type="hidden" name="pr_id" value="#form.pr_id#">
+                    <label style="vertical-align:top;">
+                    	<input type="checkbox" name="printReport" id="printReport" value="1" style="vertical-align:top;" <cfif VAL(FORM.printReport)>checked="checked"</cfif> />Print
+                 	</label>
+                    <label style="vertical-align:top;">
+                    	<input type="checkbox" name="emailReport" id="emailReport" value="1" style="vertical-align:top;" <cfif VAL(FORM.emailReport)>checked="checked"</cfif> />Email
+                  	</label>
+                    <input name="Submit" type="image" src="pics/approve.gif" alt="Approve Report" border=0>
                 </form>
             <cfelseif CLIENT.usertype NEQ 8>
             	<img src="pics/no_approve.jpg" alt="Approve Report" border=0>
             </cfif>
           </td>
           <td width="15">&nbsp;</td>
-          <td>
+          <td style="vertical-align:bottom">
           	<!--- reject --->
             <cfif allow_reject>
                 <form action="index.cfm?curdoc=forms/pr_reject" method="post">
@@ -583,7 +620,7 @@ span.mainSpan {
             </cfif>
           </td>
           <td width="15">&nbsp;</td>
-          <td>
+          <td style="vertical-align:bottom">
           	<!--- delete --->
             <cfif allow_delete>
                 <form action="index.cfm?curdoc=lists/progress_report_info" method="post" onclick="return confirm('Are you sure you want to delete this report?')">
@@ -598,7 +635,7 @@ span.mainSpan {
 		<!--- disable print and email for rejected reports. --->
         <cfif get_report.pr_rejected_date EQ ''>
               <td width="15">&nbsp;</td>
-              <td>
+              <td style="vertical-align:bottom">
                 <!--- print --->
                 <cfif CLIENT.usertype EQ 8>
                 	<form action="progress_report_info.cfm" method="post" target="_blank">
@@ -617,7 +654,7 @@ span.mainSpan {
               </td>
             <cfif client.usertype LTE 4>
                 <td width="15">&nbsp;</td>
-                <td>
+                <td style="vertical-align:bottom">
                     <!--- email --->
                     <form action="index.cfm?curdoc=forms/pr_email" method="post">
                     <input type="hidden" name="pr_id" value="#form.pr_id#">
