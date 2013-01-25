@@ -59,12 +59,17 @@
 	// Local Enviroment
 	if ( APPLICATION.isServerLocal ) {
 		
+		// Staging Site
+		if ( CGI.SERVER_NAME EQ 'host.marcusmelo.com' ) {
+			APPLICATION.PATH.relativeHostApp = "http://exits.marcusmelo.com/nsmg/uploadedfiles/hostApp/";
+		} else {
+			APPLICATION.PATH.relativeHostApp = "http://smg.local/nsmg/uploadedfiles/hostApp/";
+		}
+		
 		// Local Enviroment
 		APPLICATION.PATH.hostApp = "C:/websites/www/student-management/nsmg/uploadedfiles/hostApp/";
-		APPLICATION.PATH.relativeHostApp = "http://smg.local/nsmg/uploadedfiles/hostApp/";
 		APPLICATION.PATH.TEMP = 'C:/websites/www/student-management/nsmg/uploadedfiles/temp/';
 		APPLICATION.siteURL = 'http://' & CGI.HTTP_HOST & '/';
-		
 	
 	} else {
 		
