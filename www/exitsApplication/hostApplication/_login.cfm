@@ -33,7 +33,11 @@
             FROM 
                 smg_hosts
             WHERE 
-            	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.COMPANY.ID)#">
+			<cfif SESSION.COMPANY.ID EQ	1>
+            	companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,12" list="yes"> )
+            <cfelse>
+                companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.COMPANY.ID)#">
+            </cfif>                
             AND            
                 email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.username)#"> 
             AND 
