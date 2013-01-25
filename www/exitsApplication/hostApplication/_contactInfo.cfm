@@ -107,6 +107,7 @@
 			// Zip
             if ( NOT isValid("zipcode", TRIM(FORM.zip)) ) {
                 SESSION.formErrors.Add("The zip code for home address is not a valid zip code.");
+				FORM.zip = "";
             }	
 
 			// Mailing Address
@@ -127,6 +128,7 @@
 			// Mailing Zip
             if ( NOT isValid("zipcode", TRIM(FORM.mailzip)) ) {
                 SESSION.formErrors.Add("The zip code for mailing address is not a valid zip code.");
+				FORM.mailzip = "";
             }	
 	
 			// Phones
@@ -154,6 +156,7 @@
 			// Valid Father's DOB
             if ( LEN(TRIM(FORM.fatherdob)) AND NOT isValid("date", TRIM(FORM.fatherdob)) ) {
                 SESSION.formErrors.Add("Please enter a valid Date of Birth for the Father");
+				FORM.fatherdob = "";
             }	
 
 			// Valid Father's Phone
@@ -164,6 +167,7 @@
 			// Valid Mother's DOB
             if ( LEN(TRIM(FORM.motherdob)) AND NOT isValid("date", TRIM(FORM.motherdob)) ) {
                 SESSION.formErrors.Add("The date you specified is not valid for Mother's Date of Birth");
+				FORM.motherdob = "";
             }	
 			
 			// Valid Mother's Phone

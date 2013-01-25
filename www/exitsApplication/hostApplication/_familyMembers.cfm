@@ -140,6 +140,7 @@
             // Birthdate
             if ( NOT isDate(TRIM(FORM.birthdate)) ) {
                 SESSION.formErrors.Add("Please enter a valid Date of Birth.");
+				FORM.birthdate = "";
             }			
             
             // Birthdate
