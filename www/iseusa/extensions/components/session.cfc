@@ -19,25 +19,6 @@
 		type="struct" 
 		hint="A structure containing internal variables for this session controller" />
 	
-    <!--- SESSION VARIABLES --->
-	<cfproperty
-    	name="isSection1Completed"
-        type="numeric"
-        hint="Set to 1 if section 1 is completed"
-        default="0" />
-
-	<cfproperty
-    	name="isSection2Completed"
-        type="numeric"
-        hint="Set to 1 if section 2 is completed"
-        default="0" />
-
-	<cfproperty
-    	name="isSection3Completed"
-        type="numeric"
-        hint="Set to 1 if section 3 is completed"
-        default="0" />
-
 		
 	<!--- initializes and returns a session instance --->
 	<cffunction name="Init" access="public" returntype="session" output="No" hint="Returns the initialized session object">
