@@ -26,7 +26,6 @@
             h.hostAppStatus,
             h.familylastname, 
             h.applicationStarted, 
-            h.applicationapproved, 
             h.email, 
             h.regionID, 
             h.areaRepID, 
