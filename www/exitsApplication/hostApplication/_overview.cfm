@@ -27,11 +27,9 @@
             h.familylastname, 
             h.applicationStarted, 
             h.applicationapproved, 
-            h.applicationDenied, 
             h.email, 
             h.regionID, 
             h.areaRepID, 
-            h.reasonAppDenied, 
             h.lead, 
             h.hostAppStatus,
             r.regionname, 
@@ -132,11 +130,6 @@
                 
                 <p>
                     <strong>Application Status:</strong>
-                    <cfif LEN(qGetHostFamilyInfo.applicationDenied)>
-                        Denied - #DateFormat(qGetHostFamilyInfo.applicationDenied, 'mmm d, yyyy')#<br />
-                    <cfelseif LEN(qGetHostFamilyInfo.applicationApproved)>
-                        Approved - #DateFormat(qGetHostFamilyInfo.applicationApproved, 'mmm d, yyyy')#
-                    <cfelse>
                     	
                         <cfswitch expression="#qGetHostFamilyInfo.hostAppStatus#">
                         	
