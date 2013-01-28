@@ -69,7 +69,7 @@ where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepi
                         </Td>
                         <Td align="right">
                         <span class="title">Started:</span> #DateFormat(qGetHostFamily.applicationStarted, 'mmm, d, yyyy')#<br />
-                        <span class="title">Approved:</span> <cfif qGetHostFamily.applicationapproved is ''>Not Approved<cfelse>#DateFormat(qGetHostFamily.applicationapproved, 'mmm, d, yyyy')#</cfif>
+                        <!---<span class="title">Approved:</span> <cfif qGetHostFamily. is ''>Not Approved<cfelse>#DateFormat(qGetHostFamily., 'mmm, d, yyyy')#</cfif> --->
                         </Td>
                     </tr>
                 </table>
