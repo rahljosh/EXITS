@@ -130,38 +130,35 @@
                 
                 <p>
                     <strong>Application Status:</strong>
-                    	
-                        <cfswitch expression="#qGetHostFamilyInfo.hostAppStatus#">
-                        	
-                            <cfcase value="1,2,3,4">
-                            	Submitted to Headquarters
-                            </cfcase>
+                    <cfswitch expression="#qGetHostFamilyInfo.hostAppStatus#">
+                        
+                        <cfcase value="1,2,3,4">
+                            Submitted to Headquarters
+                        </cfcase>
 
-                            <cfcase value="5">
-                            	Submitted to Regional Manager
-                            </cfcase>
+                        <cfcase value="5">
+                            Submitted to Regional Manager
+                        </cfcase>
 
-                            <cfcase value="6">
-                            	Submitted to Regional Advisor
-                            </cfcase>
+                        <cfcase value="6">
+                            Submitted to Regional Advisor
+                        </cfcase>
 
-                            <cfcase value="7">
-                            	Submitted to Area Representative
-                            </cfcase>
+                        <cfcase value="7">
+                            Submitted to Area Representative
+                        </cfcase>
+                        
+                        <cfdefaultcase>
                             
-                            <cfdefaultcase>
-                            	
-                                <cfif stApplicationStatus.isComplete>
-									Complete
-                                <cfelse>
-                                	In Progress - #round(100 * stApplicationStatus.applicationProgress / 300)#% Complete
-								</cfif>
-                                
-                            </cfdefaultcase>
-                        
-                        </cfswitch>
-                        
-                    </cfif>
+                            <cfif stApplicationStatus.isComplete>
+                                Complete
+                            <cfelse>
+                                In Progress - #round(100 * stApplicationStatus.applicationProgress / 300)#% Complete
+                            </cfif>
+                            
+                        </cfdefaultcase>
+                    
+                    </cfswitch>
                 </p>
                 
                 <br /> <hr align="center" width="80%" /> <br />
