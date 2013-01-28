@@ -137,7 +137,6 @@
                     familyLetter,
                     pictures,
                     applicationSent,
-                    applicationApproved,
                     previousHost,
                     home_first_call,
                     home_last_visit,
