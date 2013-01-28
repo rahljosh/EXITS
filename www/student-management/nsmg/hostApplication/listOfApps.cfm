@@ -164,9 +164,9 @@
                         <td>#qGetHostApplications.regionalAdvisor#</td> 
                         <td>#qGetHostApplications.regionalManager#</td> 
                         <td width="350" align="center">
-                            <a class="jQueryModal" href="/hostApplication/index.cfm?uniqueID=#qGetHostApplications.uniqueID#" title="Open Application"><img src="pics/buttons/viewApp.png" width="90" border="0"></a>
+                            <a class="jQueryModal" href="/hostApplication/index.cfm?uniqueID=#qGetHostApplications.uniqueID#" title="Open Application"><img src="pics/buttons/openApplication.png" border="0"></a>
                             &nbsp; &nbsp; 
-                            <a href="index.cfm?curdoc=hostApplication/toDoList&hostID=#qGetHostApplications.hostID#" title="View Details"><img src="pics/buttons/approve.png" width="90" border="0"></a>
+                            <a href="index.cfm?curdoc=hostApplication/toDoList&hostID=#qGetHostApplications.hostID#" title="View Details"><img src="pics/buttons/approve.png" width="110" border="0"></a>
                             &nbsp; &nbsp; 
                             <a class="jQueryModal" href="hostApplication/viewPDF.cfm?hostID=#qGetHostApplications.hostID#&pdf" title="Print Application"><img src="pics/buttons/print50x50.png" width="40" border="0"></a>
                             
@@ -174,7 +174,7 @@
                             	<form id="frSetRecordToPaper#qGetHostApplications.hostID#" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
                                 	<input type="hidden" name="setHostIDAsPaper" value="#qGetHostApplications.hostID#" />
                                 </form>
-                            	<a href="javascript:setRecordToPaperApplication(#qGetHostApplications.hostID#);">[ Convert to Paper ]</a>
+                            	<a href="javascript:setRecordToPaperApplication(#qGetHostApplications.hostID#);"><img src="pics/buttons/convertPaper.png" border="0"></a>
                             </cfif>
                         </td>
             		</tr>

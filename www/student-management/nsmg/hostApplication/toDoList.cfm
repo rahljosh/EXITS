@@ -322,12 +322,12 @@
             <table width="100%" cellpadding="2" cellspacing="0" align="center">
             	<tr>
             		<th width="18%" align="left">Host Family</th>
-                    <th width="14%" align="left">Area Representative</th>
-                    <th width="14%" align="left">Regional Advisor</th>
-                    <th width="14%" align="left">Regional Manager</th>
-                    <th width="14%" align="left">Facilitator</th>
-                    <th width="14%" align="left">Status</th>
-            		<th width="12%" align="left">Actions</th>
+                    <th width="13%" align="left">Area Representative</th>
+                    <th width="13%" align="left">Regional Advisor</th>
+                    <th width="13%" align="left">Regional Manager</th>
+                    <th width="13%" align="left">Facilitator</th>
+                    <th width="16%" align="left">Status</th>
+            		<th width="14%" align="left">Actions</th>
             	</tr>
                 <tr>
                     <td>
@@ -396,7 +396,7 @@
                         </cfif>
                     </td>                    
                     <td valign="top">
-                        <a class="jQueryModal" href="/hostApplication/index.cfm?uniqueID=#qGetHostInfo.uniqueID#" title="View Complete Application"><img src="pics/buttons/viewApp.png" width="90" border="0"></a>
+                        <a class="jQueryModal" href="/hostApplication/index.cfm?uniqueID=#qGetHostInfo.uniqueID#" title="View Complete Application"><img src="pics/buttons/openApplication.png" border="0"></a>
                         &nbsp; &nbsp; 
                         <a class="jQueryModal" href="hostApplication/viewPDF.cfm?hostID=#hostID#&pdf" title="Print Application"><img src="pics/buttons/print50x50.png" width="40" border="0"></a>
                     </td>
@@ -574,12 +574,11 @@
                                     <cfelseif qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'approved' OR qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'denied'>
                                         <a href="publicDocument.cfm?ID=#qGetSchoolAcceptance.ID#&key=#qGetSchoolAcceptance.hashID#" target="_blank" style="display:block;">[ Download School Acceptance Letter ]</a>
                                     	<!--- ADD OPTION TO DELETE A FILE --->
-									<!--- Delete --->
+										<!--- Delete --->
                                     <cfelse>
                                     	<!--- ADD OPTION TO DELETE A FILE --->
                                     	<!--- <a href="" title="Click to delete this item" class="jQueryModalRefresh" style="display:block;">[ Delete File ]</a> --->
                                     </cfif>
-                                    
 
 							  	<!--- Confidential HF Visit --->
                               	<cfelseif qGetApprovalHistory.ID EQ 8>
